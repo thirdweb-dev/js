@@ -121,9 +121,6 @@ describe("session_proposal", () => {
         },
       },
     });
-    // expect(getActiveWalletConnectSession(walletMock)?.topic).toEqual(
-    //   mocks.session.topic,
-    // );
   });
 
   it("should disconnect existing session", async () => {
@@ -184,5 +181,19 @@ describe("session_proposal", () => {
     await expect(promise).rejects.toThrow(
       "[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace",
     );
+  });
+
+  it("should call onConnect on successful connection", async () => {
+    const onConnect = vi.fn();
+    await onSessionProposal({
+      walletConnectClient: signClientMock,
+      wallet: walletMock,
+      event: PROPOSAL_EVENT_MOCK,
+      onConnect,
+    });
+    expect(onConnect).toHaveBeenCalledWith({
+      origin: expect.anything(),
+      topic: mocks.session.topic,
+    });
   });
 });

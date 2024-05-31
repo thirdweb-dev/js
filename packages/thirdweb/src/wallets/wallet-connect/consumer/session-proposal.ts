@@ -16,8 +16,9 @@ export async function onSessionProposal(options: {
   wallet: Wallet;
   walletConnectClient: WalletConnectClient;
   event: WalletConnectSessionProposalEvent;
+  onConnect?: (session: WalletConnectSession) => void;
 }) {
-  const { wallet, walletConnectClient, event } = options;
+  const { wallet, walletConnectClient, event, onConnect } = options;
 
   const account = wallet.getAccount();
   if (!account) {
@@ -35,6 +36,8 @@ export async function onSessionProposal(options: {
   });
 
   await saveSession(session);
+
+  onConnect?.(session);
 }
 
 /**

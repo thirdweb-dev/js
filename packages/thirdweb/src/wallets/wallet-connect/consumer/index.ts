@@ -20,6 +20,30 @@ import type {
 
 export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>;
 
+export type CreateWalletConnectClientOptions = Prettify<
+  WalletConnectConfig & {
+    /**
+     * Your application's thirdweb client.
+     */
+    client: ThirdwebClient;
+
+    /**
+     * The wallet to connect with.
+     */
+    wallet: Wallet;
+
+    /**
+     * Custom RPC handlers to override the defaults. Useful when creating a custom approval UI.
+     */
+    requestHandlers?: WalletConnectRequestHandlers;
+
+    /**
+     * Callback triggered whenever a session is successfully created.
+     */
+    onConnect?: (session: WalletConnectSession) => void;
+  }
+>;
+
 export type CreateWalletConnectSessionOptions = {
   /**
    * The WalletConnect client returned from `createWalletConnectClient`
@@ -30,18 +54,17 @@ export type CreateWalletConnectSessionOptions = {
    * The WalletConnect session URI retrieved from the dApp to connect with.
    */
   uri: string;
+
+  /**
+   * Callback triggered when the session is successfully created.
+   */
+  onConnect?: (session: WalletConnectSession) => void;
 };
 
 export async function createWalletConnectClient(
-  options: Prettify<
-    WalletConnectConfig & {
-      client: ThirdwebClient;
-      wallet: Wallet;
-      requestHandlers?: WalletConnectRequestHandlers;
-    }
-  >,
+  options: CreateWalletConnectClientOptions,
 ): Promise<WalletConnectClient> {
-  const { wallet, requestHandlers } = options;
+  const { wallet, requestHandlers, onConnect } = options;
 
   initializeSessionStore({ clientId: options.client.clientId });
 
@@ -60,7 +83,12 @@ export async function createWalletConnectClient(
     "session_proposal",
     async (event: WalletConnectSessionProposalEvent) => {
       const { onSessionProposal } = await import("./session-proposal.js");
-      onSessionProposal({ wallet, walletConnectClient, event });
+      onSessionProposal({
+        wallet,
+        walletConnectClient,
+        event,
+        onConnect,
+      });
     },
   );
 
