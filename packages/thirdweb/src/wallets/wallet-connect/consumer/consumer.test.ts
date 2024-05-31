@@ -8,7 +8,12 @@ import {
   type WalletConnectClient,
   createWalletConnectClient,
   createWalletConnectSession,
+  disconnectWalletConnectSession,
+  getActiveWalletConnectSessions,
 } from "./index.js";
+import * as SessionProposal from "./session-proposal.js";
+import * as SessionRequest from "./session-request.js";
+import * as SessionStore from "./session-store.js";
 
 const TEST_METADATA = {
   name: "test",
@@ -21,8 +26,12 @@ const URI_MOCK =
 
 const DEFAULT_METADATA = getDefaultAppMetadata();
 
+const listeners: Record<string, (event?: unknown) => Promise<void>> = {};
+
 const signClientMock = {
-  on: vi.fn(),
+  on: vi.fn((event, listener) => {
+    listeners[event] = listener;
+  }),
   respond: vi.fn(),
   disconnect: vi.fn(),
   core: {
@@ -35,6 +44,16 @@ const signClientMock = {
 const signClientInitMock = vi
   .spyOn(WCSignClientExports.SignClient, "init")
   .mockResolvedValue(signClientMock);
+const onSessionProposal = vi
+  .spyOn(SessionProposal, "onSessionProposal")
+  .mockResolvedValue();
+const fulfillRequest = vi
+  .spyOn(SessionRequest, "fulfillRequest")
+  .mockResolvedValue();
+const removeSession = vi
+  .spyOn(SessionStore, "removeSession")
+  .mockResolvedValue();
+vi.spyOn(SessionStore, "getSessions").mockResolvedValue([{ topic: "test" }]);
 
 afterAll(() => {
   vi.restoreAllMocks();
@@ -96,6 +115,22 @@ describe("createWalletConnectClient", () => {
     });
     expect(client).toEqual(signClientMock);
   });
+
+  it("adds listeners for session events", async () => {
+    await createWalletConnectClient({
+      client: TEST_CLIENT,
+      wallet: TEST_IN_APP_WALLET_A,
+    });
+
+    await listeners.session_proposal?.();
+    expect(onSessionProposal).toHaveBeenCalled();
+
+    await listeners.session_request?.();
+    expect(fulfillRequest).toHaveBeenCalled();
+
+    await listeners.session_delete?.({ topic: "test" });
+    expect(removeSession).toHaveBeenCalled();
+  });
 });
 
 describe("createWalletConnectSession", () => {
@@ -108,5 +143,41 @@ describe("createWalletConnectSession", () => {
     expect(signClientMock.core.pairing.pair).toHaveBeenCalledWith({
       uri: URI_MOCK,
     });
+  });
+});
+
+describe("disconnectWalletConnectSession", () => {
+  it("disconnects a session", async () => {
+    await disconnectWalletConnectSession({
+      walletConnectClient: signClientMock,
+      session: {
+        topic: "test",
+      },
+    });
+
+    expect(signClientMock.disconnect).toHaveBeenCalled();
+    expect(removeSession).toHaveBeenCalled();
+  });
+
+  it("removes session anyway if disconnect throws", async () => {
+    signClientMock.disconnect = vi.fn().mockRejectedValue(new Error("test"));
+    await disconnectWalletConnectSession({
+      walletConnectClient: signClientMock,
+      session: {
+        topic: "test",
+      },
+    });
+    expect(removeSession).toHaveBeenCalled();
+  });
+});
+
+describe("getActiveWalletConnectSession", () => {
+  it("gets the active sessions", async () => {
+    const session = await getActiveWalletConnectSessions();
+    expect(session).toEqual([
+      {
+        topic: "test",
+      },
+    ]);
   });
 });

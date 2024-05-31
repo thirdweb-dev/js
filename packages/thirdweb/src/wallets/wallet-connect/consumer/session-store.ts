@@ -68,3 +68,12 @@ export async function removeSession(
     JSON.stringify(newSessions),
   );
 }
+
+/**
+ * @internal FOR TESTING ONLY
+ */
+export function setWalletConnectSessions(
+  storage: LocalStorage | undefined,
+): void {
+  walletConnectSessions = storage;
+}
