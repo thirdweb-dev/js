@@ -1,5 +1,27 @@
 # @thirdweb-dev/react
 
+## 4.6.28
+
+### Patch Changes
+
+- Updated dependencies [[`8d0c985`](https://github.com/thirdweb-dev/js/commit/8d0c985c45fc85b220784f841c1de7533ad8ebf8)]:
+  - @thirdweb-dev/chains@0.1.115
+  - @thirdweb-dev/react-core@4.6.28
+  - @thirdweb-dev/sdk@4.0.89
+  - @thirdweb-dev/wallets@2.5.29
+
+## 4.6.27
+
+### Patch Changes
+
+- [#3153](https://github.com/thirdweb-dev/js/pull/3153) [`3b03cd0`](https://github.com/thirdweb-dev/js/commit/3b03cd098716070821c6b20ecedacec1df47648f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve the copy on the pending connection QR code screen in the connect modal
+
+- Updated dependencies [[`bd8fb7a`](https://github.com/thirdweb-dev/js/commit/bd8fb7a576ada21381625f1a241b10a6e68ef1f7)]:
+  - @thirdweb-dev/chains@0.1.114
+  - @thirdweb-dev/sdk@4.0.88
+  - @thirdweb-dev/react-core@4.6.27
+  - @thirdweb-dev/wallets@2.5.28
+
 ## 4.6.26
 
 ### Patch Changes

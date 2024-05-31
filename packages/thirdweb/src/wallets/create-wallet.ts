@@ -296,7 +296,6 @@ export function walletConnect() {
  * import { smartWallet } from "thirdweb/wallets";
  *
  * const wallet = smartWallet({
- *  factoryAddress: "0x1234...",
  *  chain: sepolia,
  *  gasless: true,
  * });
@@ -416,6 +415,7 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
+ *
  * Enable smart accounts and sponsor gas for your users:
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
@@ -442,12 +442,11 @@ export function smartWallet(
  * });
  * ```
  *
- * Connect to an ecosystem wallet with your designated integratorId
- * @note The integrator ID will be provided to you by the ecosystem with which you're integrating.
+ * Hide the ability to export the private key within the Connect Modal
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * const wallet = inAppWallet({
- *  integratorId: "..."
+ *  hidePrivateKeyExport: true
  * });
  * ```
  * @wallet

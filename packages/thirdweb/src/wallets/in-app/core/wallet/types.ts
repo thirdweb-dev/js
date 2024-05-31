@@ -29,7 +29,6 @@ export type InAppWalletAuth =
 
 export type InAppWalletCreationOptions =
   | {
-      smartAccount?: SmartWalletOptions;
       auth?: {
         options: InAppWalletAuth[];
       };
@@ -41,6 +40,8 @@ export type InAppWalletCreationOptions =
           alt?: string;
         };
       };
+      smartAccount?: SmartWalletOptions;
+      hidePrivateKeyExport?: boolean;
     }
   | undefined;
 

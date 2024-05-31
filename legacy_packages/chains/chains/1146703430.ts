@@ -6,22 +6,10 @@ export default {
     {
       "name": "CybEthExplorer",
       "url": "http://cybeth1.cyberdeck.eu:8000",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
-        "width": 193,
-        "height": 214,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTvYMJXeZeWxYPuoQ15mHCS8K5EQzkMMCHQVs3GshooyR",
-    "width": 193,
-    "height": 214,
-    "format": "png"
-  },
   "infoURL": "https://cyberdeck.eu",
   "name": "CyberdeckNet",
   "nativeCurrency": {

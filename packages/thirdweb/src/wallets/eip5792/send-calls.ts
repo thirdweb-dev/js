@@ -56,7 +56,7 @@ export type SendCallsResult = WalletSendCallsId;
  * This function works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792.
  * Transactions will be bundled and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
  *
- * Note: This function is dependent on the wallet's support for EIP-5792 and could fail.
+ * @note This function is dependent on the wallet's support for EIP-5792 and could fail.
  *
  * @param {SendCallsOptions} options
  * @param {Wallet} options.wallet - The wallet to send the calls to.
@@ -106,8 +106,9 @@ export type SendCallsResult = WalletSendCallsId;
  *     }
  *   }
  * });
+ * @note We recommend proxying any paymaster calls via an API route you setup and control.
  * ```
- * @wallets
+ * @extension EIP5792
  */
 export async function sendCalls<const ID extends WalletId>(
   options: SendCallsOptions<ID>,

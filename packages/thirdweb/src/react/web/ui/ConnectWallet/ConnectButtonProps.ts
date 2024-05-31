@@ -647,8 +647,8 @@ export type ConnectButtonProps = {
   supportedTokens?: SupportedTokens;
 
   /**
-   * Callback to be called on successful connection of wallet - including auto connect.
-   * The callback is called with the connected wallet
+   * Called on connection of a wallet - including auto connect.
+   * The callback is called with the connected wallet as an argument.
    *
    * ```tsx
    * <ConnectButton
@@ -659,6 +659,19 @@ export type ConnectButtonProps = {
    * ```
    */
   onConnect?: (wallet: Wallet) => void;
+
+  /**
+   * Called when a wallet is disconnected.
+   *
+   * ```tsx
+   * <ConnectButton
+   *  onDisconnect={() => {
+   *    console.log("disconnected")
+   *  }}
+   * />
+   * ```
+   */
+  onDisconnect?: () => void;
 
   /**
    * Configure options for WalletConnect

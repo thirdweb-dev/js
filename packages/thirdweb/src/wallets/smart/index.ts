@@ -345,6 +345,7 @@ async function _deployAccount(args: {
     chain: options.chain,
     to: accountContract.address,
     value: 0n,
+    gas: 50000n, // force gas to avoid simulation error
   });
   const deployResult = await sendTransaction({
     transaction: dummyTx,

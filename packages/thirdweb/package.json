@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.24.0",
+  "version": "5.25.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -110,54 +110,22 @@
   },
   "typesVersions": {
     "*": {
-      "adapters/*": [
-        "./dist/types/exports/adapters/*.d.ts"
-      ],
-      "auth": [
-        "./dist/types/exports/auth.d.ts"
-      ],
-      "chains": [
-        "./dist/types/exports/chains.d.ts"
-      ],
-      "contract": [
-        "./dist/types/exports/contract.d.ts"
-      ],
-      "deploys": [
-        "./dist/types/exports/deploys.d.ts"
-      ],
-      "event": [
-        "./dist/types/exports/event.d.ts"
-      ],
-      "extensions/*": [
-        "./dist/types/exports/extensions/*.d.ts"
-      ],
-      "pay": [
-        "./dist/types/exports/pay.d.ts"
-      ],
-      "react": [
-        "./dist/types/exports/react.d.ts"
-      ],
-      "react-native": [
-        "./dist/types/exports/react-native.d.ts"
-      ],
-      "rpc": [
-        "./dist/types/exports/rpc.d.ts"
-      ],
-      "storage": [
-        "./dist/types/exports/storage.d.ts"
-      ],
-      "transaction": [
-        "./dist/types/exports/transaction.d.ts"
-      ],
-      "utils": [
-        "./dist/types/exports/utils.d.ts"
-      ],
-      "wallets": [
-        "./dist/types/exports/wallets.d.ts"
-      ],
-      "wallets/*": [
-        "./dist/types/exports/wallets/*.d.ts"
-      ]
+      "adapters/*": ["./dist/types/exports/adapters/*.d.ts"],
+      "auth": ["./dist/types/exports/auth.d.ts"],
+      "chains": ["./dist/types/exports/chains.d.ts"],
+      "contract": ["./dist/types/exports/contract.d.ts"],
+      "deploys": ["./dist/types/exports/deploys.d.ts"],
+      "event": ["./dist/types/exports/event.d.ts"],
+      "extensions/*": ["./dist/types/exports/extensions/*.d.ts"],
+      "pay": ["./dist/types/exports/pay.d.ts"],
+      "react": ["./dist/types/exports/react.d.ts"],
+      "react-native": ["./dist/types/exports/react-native.d.ts"],
+      "rpc": ["./dist/types/exports/rpc.d.ts"],
+      "storage": ["./dist/types/exports/storage.d.ts"],
+      "transaction": ["./dist/types/exports/transaction.d.ts"],
+      "utils": ["./dist/types/exports/utils.d.ts"],
+      "wallets": ["./dist/types/exports/wallets.d.ts"],
+      "wallets/*": ["./dist/types/exports/wallets/*.d.ts"]
     }
   },
   "browser": {
@@ -176,7 +144,7 @@
     "!tsconfig.build.json"
   ],
   "dependencies": {
-    "@coinbase/wallet-sdk": "4.0.0-rc.2",
+    "@coinbase/wallet-sdk": "4.0.3",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
     "@google/model-viewer": "2.1.1",
@@ -201,6 +169,7 @@
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
     "@aws-sdk/credential-providers": "^3",
+    "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
     "amazon-cognito-identity-js": "^6",
     "aws-amplify": "^5",
@@ -209,12 +178,15 @@
     "react": ">=18",
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
-    "react-native-quick-crypto": ">=0.6.1",
+    "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "react-native": {
       "optional": true
     },
     "ethers": {
@@ -249,6 +221,9 @@
     },
     "@react-native-async-storage/async-storage": {
       "optional": true
+    },
+    "@coinbase/wallet-mobile-sdk": {
+      "optional": true
     }
   },
   "scripts": {
@@ -282,6 +257,7 @@
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
     "@aws-sdk/credential-providers": "3.577.0",
+    "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
