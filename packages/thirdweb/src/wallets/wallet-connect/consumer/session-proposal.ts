@@ -37,6 +37,10 @@ export async function onSessionProposal(options: {
 
   await saveSession(session);
 
+  wallet.subscribe("disconnect", () => {
+    disconnectWalletConnectSession({ session, walletConnectClient });
+  });
+
   onConnect?.(session);
 }
 
