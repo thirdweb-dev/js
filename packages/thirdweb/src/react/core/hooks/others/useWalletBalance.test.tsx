@@ -20,7 +20,7 @@ const createWrapper = () => {
 };
 
 describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
-  it("should return the correct balance", async () => {
+  it("should return the correct balance for erc20", async () => {
     const erc20Address = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
@@ -63,12 +63,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("useWalletBalance", () => {
         wrapper: createWrapper(),
       },
     );
+
+    const defaultDecimal = 18;
+
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toBeDefined();
-    expect(result.current.data?.decimals).toBe(18);
+    expect(result.current.data?.decimals).toBe(defaultDecimal);
     expect(result.current.data?.symbol).toBeDefined();
     expect(result.current.data?.name).toBeDefined();
-    expect(result.current.data?.value).toBe(BigInt(amount) * 10n ** 18n);
     expect(result.current.data?.displayValue).toBe(amount.toString());
+    expect(result.current.data?.value).toBe(
+      BigInt(amount) * 10n ** BigInt(defaultDecimal),
+    );
   });
 });

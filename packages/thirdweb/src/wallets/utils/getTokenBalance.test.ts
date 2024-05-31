@@ -7,10 +7,10 @@ import { getContract } from "../../contract/contract.js";
 import { mintTo } from "../../extensions/erc20/write/mintTo.js";
 import { deployERC20Contract } from "../../extensions/prebuilts/deploy-erc20.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { getWalletBalance } from "./getWalletBalance.js";
+import { getTokenBalance } from "./getTokenBalance.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("getWalletBalance", () => {
-  it("should work for erc20 token", async () => {
+describe("getTokenBalance", () => {
+  it("should work for ERC20 token", async () => {
     const erc20Address = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
@@ -41,12 +41,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("getWalletBalance", () => {
       account: TEST_ACCOUNT_A,
     });
 
-    const result = await getWalletBalance({
-      address: TEST_ACCOUNT_A.address,
+    const result = await getTokenBalance({
       client: TEST_CLIENT,
-      chain: ANVIL_CHAIN,
+      account: TEST_ACCOUNT_A,
       tokenAddress: erc20Address,
+      chain: ANVIL_CHAIN,
     });
+
     const expectedDecimal = 18;
     expect(result).toBeDefined();
     expect(result.decimals).toBe(expectedDecimal);
