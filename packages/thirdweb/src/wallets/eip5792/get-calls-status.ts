@@ -16,7 +16,7 @@ export type GetCallsStatusOptions = {
 /**
  * Get the status of an [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) bundle.
  *
- * Note: This function is dependent on the wallet's support for EIP-5792 and could fail.
+ * @note This function is dependent on the wallet's support for EIP-5792 and could fail.
  *
  * @param {GetCallsStatusOptions} options
  * @param {Wallet} options.wallet - The wallet that send the original calls.
@@ -39,7 +39,8 @@ export type GetCallsStatusOptions = {
  *    result = await getCallsStatus({ wallet, client, bundleId });
  *  }
  * ```
- * @wallets
+ * @extension EIP5792
+ * @extension EIP5792
  */
 export async function getCallsStatus({
   wallet,
@@ -56,7 +57,7 @@ export async function getCallsStatus({
   // These conveniently operate the same
   if (isSmartWallet(wallet) || isInAppWallet(wallet)) {
     const { inAppWalletGetCallsStatus } = await import(
-      "../in-app/core/lib/in-app-wallet-calls.js"
+      "../in-app/core/eip5972/in-app-wallet-calls.js"
     );
     return inAppWalletGetCallsStatus({ wallet, client, bundleId });
   }

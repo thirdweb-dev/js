@@ -73,6 +73,10 @@ pnpm test:dev <YOUR TEST FILE PATH>
 
 > Specifying your test file path is optional, but will save time by only running specific tests each time. Before opening your PR, run `pnpm test` from the monorepo root (without specifying your test file) to ensure your changes didn't break any existing tests.
 
+Many of the tests use forked versions of live chains like mainnet. We fork these chains at a specific arbitrary block number so results are consistent across test runs. If you're interacting with on-chain data, you can write tests that interact with real contracts at the same block number by using `FORKED_ETHEREUM_CHAIN`. However, if you don't need to interact with existing contracts, we recommend running your tests against `ANVIL_CHAIN`.
+
+If you need to use accounts in your tests, use the predefined accounts in `test/src/test-wallets.ts`. These are the default anvil accounts that are pre-funded on the local test forks.
+
 #### Linting
 
 We use a linter to maintain best practices across projects. Once your changes are complete (or periodically while making changes), run the linter with the following command from the repo root:
@@ -83,39 +87,9 @@ pnpm lint
 
 If there are errors, try running `pnpm fix` to auto-fix any basic errors. Other linter errors, like missing documentation, will need to be fixed manually. See existing files for examples of inline documentation.
 
-#### Creating a Local Test Project
+#### Testing on the Demo Apps
 
-You can use [yalc](https://github.com/wclr/yalc) to test changes on a local project.
-
-Install the yalc CLI globally:
-
-```bash
-pnpm add yalc -g
-```
-
-First, create a test project where you can experiment with your changes. This can be any node project that uses your changes.
-
-
-Push your local version to your `yalc` store with:
-
-```bash
-pnpm build && pnpm push
-```
-
-Link your local changes in the monorepo to the test project by running the following command from your test repo:
-
-```bash
-yalc add thirdweb
-```
-
-Now, each time you make a change to the monorepo, you can run `pnpm push` from the monorepo then `yalc update thirdweb` from your test project to publish your latest changes to the test project.
-
-If your changes modify dependencies, you may need to reinstall dependencies on your test project with `pnpm install`
-
-To make sure your latest changes are used, in your test project you may need to:
-
-1. Delete the dependencies cache. If you're using Next.js, that's the `.next` directory, and if you're using CRA, that's the `node_modules/.cache` directory.
-2. Restart the development server.
+You can test your changes on any of the demo apps within the `/apps` directory without linking or publishing your changes to npm. When you run `pnpm dev` from the root directory, turbo will start the demo apps and watch the dependent packages for changes. Any time you make a change anywhere in the repo, the apps will hot reload and the changes will be reflected in the browser.
 
 #### Testing from npm
 
@@ -169,4 +143,3 @@ git push origin <YOUR BRANCH NAME>
 ```
 
 4. Create a [pull request](https://www.atlassian.com/git/tutorials/making-a-pull-request) to the `main` branch of the official (not your fork) SDK repo.
-

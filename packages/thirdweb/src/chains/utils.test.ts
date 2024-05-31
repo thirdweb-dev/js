@@ -6,7 +6,15 @@ import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
 import { getRpcClient, prepareTransaction } from "../exports/thirdweb.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
-import { defineChain } from "./utils.js";
+import { avalanche } from "./chain-definitions/avalanche.js";
+import { ethereum } from "./chain-definitions/ethereum.js";
+import {
+  defineChain,
+  getCachedChain,
+  getChainDecimals,
+  getChainNativeCurrencyName,
+  getChainSymbol,
+} from "./utils.js";
 
 describe("defineChain", () => {
   it("should convert viem chain to thirdweb chain", () => {
@@ -77,5 +85,33 @@ describe("defineChain", () => {
 
     await account.sendTransaction(serializableTransaction);
     expect(defineChain(1).rpc).not.toEqual(chain2.rpc);
+  });
+
+  it("should return a default chain object if un-cached", () => {
+    const uncachedChainId = 12345654321;
+    const result = getCachedChain(uncachedChainId);
+    expect(result.id).toBe(uncachedChainId);
+    expect(result.rpc).toBe(`https://${uncachedChainId}.rpc.thirdweb.com`);
+  });
+
+  it("should return correct symbols for default chains", async () => {
+    const avalancheResult = await getChainSymbol(avalanche);
+    expect(avalancheResult).toBe("AVAX");
+    const ethResult = await getChainSymbol(ethereum);
+    expect(ethResult).toBe("ETH");
+  });
+
+  it("should return correct decimals for default chains", async () => {
+    const avalancheResult = await getChainDecimals(avalanche);
+    expect(avalancheResult).toBe(18);
+    const ethResult = await getChainDecimals(ethereum);
+    expect(ethResult).toBe(18);
+  });
+
+  it("should return correct native currency name for default chains", async () => {
+    const avalancheResult = await getChainNativeCurrencyName(avalanche);
+    expect(avalancheResult).toBe("Avalanche");
+    const ethResult = await getChainNativeCurrencyName(ethereum);
+    expect(ethResult).toBe("Ether");
   });
 });

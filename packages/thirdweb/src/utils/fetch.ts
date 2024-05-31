@@ -126,11 +126,12 @@ export function getPlatformHeaders() {
     os = detectOS(navigator.userAgent);
   }
 
-  const bundleId =
-    typeof globalThis !== "undefined" && "APP_BUNDLE_ID" in globalThis
-      ? // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
-        ((globalThis as any).APP_BUNDLE_ID as string)
-      : undefined;
+  let bundleId: string | undefined = undefined;
+  if (typeof globalThis !== "undefined" && "Application" in globalThis) {
+    // shims use wallet connect RN module which injects Application info in globalThis
+    // biome-ignore lint/suspicious/noExplicitAny: get around globalThis typing
+    bundleId = (globalThis as any).Application.applicationId;
+  }
 
   previousPlatform = Object.entries({
     "x-sdk-platform": detectPlatform(),

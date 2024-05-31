@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
-import { AutoConnect } from "../../../core/hooks/connection/useAutoConnect.js";
+import { AutoConnect } from "../../../core/hooks/connection/AutoConnect.js";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -34,7 +34,7 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
 
 /**
  * A component that allows the user to connect their wallet.
- * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in the `ThirdwebProvider`'s `wallets` prop.
+ * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in `wallets` prop.
  * @example
  * ```tsx
  * <ConnectButton
@@ -117,12 +117,13 @@ export function ConnectButton(props: ConnectButtonProps) {
               : props.connectModal?.size || "wide",
         },
         onConnect: props.onConnect,
+        onDisconnect: props.onDisconnect,
         auth: props.auth,
       }}
     >
-      <WalletUIStatesProvider theme={props.theme}>
+      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
         <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
-        <ConnectModal />
+        <ConnectModal shouldSetActive={true} />
         {autoConnectComp}
       </WalletUIStatesProvider>
     </ConnectUIContext.Provider>
@@ -285,6 +286,9 @@ function ConnectButtonInner(
         // logout on explicit disconnect!
         if (siweAuth.requiresAuth) {
           siweAuth.doLogout();
+        }
+        if (props.onDisconnect) {
+          props.onDisconnect();
         }
       }}
       chains={props?.chains || []}

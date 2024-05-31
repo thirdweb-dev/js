@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { render, screen } from "../../../../../test/src/react-render.js";
+import {
+  render,
+  screen,
+  waitFor,
+} from "../../../../../test/src/react-render.js";
 import { TEST_CLIENT } from "../../../../../test/src/test-clients.js";
 import { MediaRenderer } from "./MediaRenderer.js";
 
@@ -23,8 +27,8 @@ describe("MediaRenderer", () => {
         src="https://i.seadn.io/gae/r_b9GB0iYA39ichUlKdFLeG4UliK7YXi9SsM0Xdvm6pNDChYbN5E7Fxop1MdJCbmNvSlbER73YiA9WY1JbhEfkuIktoHfN9UlEZy4A?auto=format&dpr=1&w=1000"
       />,
     );
-    setTimeout(() => {
+    waitFor(() => {
       expect(screen.getByRole("img")).toBeInTheDocument();
-    }, 1000);
+    });
   });
 });

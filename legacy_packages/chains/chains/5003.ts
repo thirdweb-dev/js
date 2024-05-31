@@ -12,6 +12,7 @@ export default {
   "faucets": [
     "https://faucet.sepolia.mantle.xyz"
   ],
+  "features": [],
   "infoURL": "https://mantle.xyz",
   "name": "Mantle Sepolia Testnet",
   "nativeCurrency": {
@@ -20,6 +21,7 @@ export default {
     "decimals": 18
   },
   "networkId": 5003,
+  "redFlags": [],
   "rpc": [
     "https://5003.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia.mantle.xyz"

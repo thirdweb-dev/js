@@ -38,7 +38,10 @@ export function useBuyTxStates(options: {
       }
 
       try {
-        const totalCost = await getTotalTxCostForBuy(buyForTx.tx, account);
+        const totalCost = await getTotalTxCostForBuy(
+          buyForTx.tx,
+          account?.address,
+        );
 
         if (!mounted) {
           return;

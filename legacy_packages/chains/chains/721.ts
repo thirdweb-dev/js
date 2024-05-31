@@ -11,9 +11,9 @@ export default {
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://Qmc8hsCbUUjnJDnXrDhFh4V1xk1gJwZbUyNJ39p72javji",
-    "width": 400,
-    "height": 400,
+    "url": "ipfs://QmZsp3gnmHCJPw3qReiqV8P8Ct5Eidib4E5jDNfBUxYEgP",
+    "width": 512,
+    "height": 512,
     "format": "png"
   },
   "infoURL": "https://lycanchain.com",
@@ -26,7 +26,12 @@ export default {
   "networkId": 721,
   "rpc": [
     "https://721.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.lycanchain.com/"
+    "https://rpc.lycanchain.com/",
+    "https://us-east.lycanchain.com",
+    "https://us-west.lycanchain.com",
+    "https://eu-north.lycanchain.com",
+    "https://eu-west.lycanchain.com",
+    "https://asia-southeast.lycanchain.com"
   ],
   "shortName": "LYC",
   "slug": "lycan-chain",

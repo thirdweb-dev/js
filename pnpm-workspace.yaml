@@ -1,6 +1,7 @@
 packages:
   - "packages/*"
   - "legacy_packages/*"
+  - "apps/*"
   # fully exclude react native for now
   - "!legacy_packages/react-native"
   - "!legacy_packages/react-native-compat"

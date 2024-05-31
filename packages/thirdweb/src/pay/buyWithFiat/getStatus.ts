@@ -158,7 +158,7 @@ export type BuyWithFiatStatus =
  * // when the fiatStatus.status is "ON_RAMP_TRANSFER_COMPLETED" - the process is complete
  * // when the fiatStatus.status is "CRYPTO_SWAP_REQUIRED" - start the swap process
  * ```
- * @buyFiat
+ * @buyCrypto
  */
 export async function getBuyWithFiatStatus(
   params: GetBuyWithFiatStatusParams,

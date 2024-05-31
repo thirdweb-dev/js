@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
-import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/implementations/index.js";
+import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
@@ -209,7 +209,6 @@ export function InAppWalletOTPLoginUI(props: {
               setValue={(value) => {
                 setOtpInput(value);
                 setVerifyStatus("idle"); // reset error
-                verify(value);
               }}
               onEnter={() => {
                 verify(otpInput);

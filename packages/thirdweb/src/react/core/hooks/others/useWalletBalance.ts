@@ -7,10 +7,22 @@ import {
 // NOTE: Do not use useConnectUI here - because this hook is also used outside of Connect UI context
 
 /**
- * Custom hook to fetch the balance of a wallet for a specific token.
- * @param options - The options for fetching the wallet balance.
- * @returns The result of the query.
- * @internal
+ * Fetch the balance of a wallet for a specific token.
+ * @note Leave `tokenAddress` undefined to fetch the native token balance.
+ * @param options {@link GetWalletBalanceOptions} - The options for fetching the wallet balance.
+ * @param options.chain - The chain to fetch the wallet balance from.
+ * @param options.address - The address of the wallet to fetch the balance from.
+ * @param options.client - The client to use to fetch the wallet balance.
+ * @param [options.tokenAddress] - The address of the token to fetch the balance for.
+ * @returns {@link GetWalletBalanceResult} The result of the query.
+ *
+ * @example
+ * ```ts
+ * import { useWalletBalance } from "thirdweb/react";
+ *
+ * const { data, isLoading, isError } = useWalletBalance({ chain, address, client, tokenAddress });
+ * ```
+ * @wallet
  */
 export function useWalletBalance(options: Partial<GetWalletBalanceOptions>) {
   const { chain, address, tokenAddress, client } = options;

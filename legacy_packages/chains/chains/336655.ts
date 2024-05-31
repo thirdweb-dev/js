@@ -6,13 +6,7 @@ export default {
     {
       "name": "UPchain Testnet Explorer",
       "url": "https://explorer-testnet.uniport.network",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmNMqcPyQnaaFfUDsmsnu2T6agZfoWij3zFYebCNUPkfAH",
-        "width": 320,
-        "height": 320,
-        "format": "jpg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
@@ -23,12 +17,6 @@ export default {
       "name": "EIP155"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmNMqcPyQnaaFfUDsmsnu2T6agZfoWij3zFYebCNUPkfAH",
-    "width": 320,
-    "height": 320,
-    "format": "jpg"
-  },
   "infoURL": "https://uniport.network",
   "name": "UPchain Testnet",
   "nativeCurrency": {

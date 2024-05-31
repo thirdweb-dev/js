@@ -80,7 +80,10 @@ function prepareParams<const TParams extends readonly AbiParameter[]>({
   return preparedParams;
 }
 
-function prepareParam<const TParam extends AbiParameter>({
+/**
+ * @internal Export for unit test
+ */
+export function prepareParam<const TParam extends AbiParameter>({
   param,
   value,
 }: {
@@ -151,7 +154,10 @@ function encodeParams(preparedParams: PreparedParam[]): Hex {
 
 /////////////////////////////////////////////////////////////////
 
-function encodeAddress(value: Hex): PreparedParam {
+/**
+ * @internal Export for unit test
+ */
+export function encodeAddress(value: Hex): PreparedParam {
   if (!isAddress(value)) {
     throw new Error("Invalid address.");
   }

@@ -1,6 +1,7 @@
 import type { TypedData } from "abitype";
 import { type TypedDataDefinition, hashTypedData } from "viem";
 import type { Hex } from "../encoding/hex.js";
+import { parseTypedData } from "./helpers/parseTypedData.js";
 import { sign } from "./sign.js";
 import { signatureToHex } from "./signature-to-hex.js";
 
@@ -24,6 +25,7 @@ export type SignTypedDataOptions<
  *   ...typedData
  * });
  * ```
+ * @utils
  */
 export function signTypedData<
   const typedData extends TypedData | Record<string, unknown>,
@@ -31,8 +33,11 @@ export function signTypedData<
 >(options: SignTypedDataOptions<typedData, primaryType>): Hex {
   const { privateKey, ...typedData } =
     options as unknown as SignTypedDataOptions;
+
+  const parsedTypeData = parseTypedData(typedData);
+
   const signature = sign({
-    hash: hashTypedData(typedData), // TODO: Implement native hashTypedData
+    hash: hashTypedData(parsedTypeData), // TODO: Implement native hashTypedData
     privateKey,
   });
   return signatureToHex(signature);
