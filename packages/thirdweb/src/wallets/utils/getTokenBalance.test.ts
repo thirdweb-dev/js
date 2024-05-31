@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ANVIL_CHAIN } from "~test/chains.js";
+import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
@@ -10,6 +10,22 @@ import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-co
 import { getTokenBalance } from "./getTokenBalance.js";
 
 describe("getTokenBalance", () => {
+  it("should work for native token", async () => {
+    const result = await getTokenBalance({
+      account: TEST_ACCOUNT_A,
+      client: TEST_CLIENT,
+      chain: FORKED_ETHEREUM_CHAIN,
+    });
+
+    expect(result).toStrictEqual({
+      decimals: 18,
+      displayValue: "10000",
+      name: "Ether",
+      symbol: "ETH",
+      value: 10000000000000000000000n,
+    });
+  });
+
   it("should work for ERC20 token", async () => {
     const erc20Address = await deployERC20Contract({
       client: TEST_CLIENT,
