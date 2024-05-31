@@ -167,10 +167,15 @@ export async function fulfillRequest(options: {
       }
     }
   } catch (error: unknown) {
-    console.error(error);
     result = {
-      code: 500,
-      message: error instanceof Error ? error.message : "Unknown error",
+      code:
+        typeof error === "object" && error !== null && "code" in error
+          ? (error as { code: number }).code
+          : 500,
+      message:
+        typeof error === "object" && error !== null && "message" in error
+          ? (error as { message: string }).message
+          : "Unknown error",
     };
   }
 
