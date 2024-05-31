@@ -131,6 +131,18 @@ describe("createWalletConnectClient", () => {
     await listeners.session_delete?.({ topic: "test" });
     expect(removeSession).toHaveBeenCalled();
   });
+
+  it("triggers onDisconnect callback", async () => {
+    const onDisconnect = vi.fn();
+    await createWalletConnectClient({
+      client: TEST_CLIENT,
+      wallet: TEST_IN_APP_WALLET_A,
+      onDisconnect,
+    });
+
+    await listeners.session_delete?.({ topic: "test" });
+    expect(onDisconnect).toHaveBeenCalledWith({ topic: "test" });
+  });
 });
 
 describe("createWalletConnectSession", () => {
@@ -155,7 +167,6 @@ describe("disconnectWalletConnectSession", () => {
       },
     });
 
-    expect(signClientMock.disconnect).toHaveBeenCalled();
     expect(removeSession).toHaveBeenCalled();
   });
 

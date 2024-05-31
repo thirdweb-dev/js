@@ -41,6 +41,11 @@ export type CreateWalletConnectClientOptions = Prettify<
      * Callback triggered whenever a session is successfully created.
      */
     onConnect?: (session: WalletConnectSession) => void;
+
+    /**
+     * Callback triggered whenever a session is disconnected.
+     */
+    onDisconnect?: (session: WalletConnectSession) => void;
   }
 >;
 
@@ -64,7 +69,7 @@ export type CreateWalletConnectSessionOptions = {
 export async function createWalletConnectClient(
   options: CreateWalletConnectClientOptions,
 ): Promise<WalletConnectClient> {
-  const { wallet, requestHandlers, onConnect } = options;
+  const { wallet, requestHandlers, onConnect, onDisconnect } = options;
 
   initializeSessionStore({ clientId: options.client.clientId });
 
@@ -109,28 +114,36 @@ export async function createWalletConnectClient(
   walletConnectClient.on(
     "session_event",
     async (_event: WalletConnectSessionEvent) => {
-      console.log("Received session event", _event);
       // TODO
     },
   );
 
   walletConnectClient.on(
     "session_ping",
-    (event: { id: number; topic: string }) => {
-      console.log("Received session ping", event);
+    (_event: { id: number; topic: string }) => {
       // TODO
     },
   );
 
   walletConnectClient.on(
     "session_delete",
-    (event: { id: number; topic: string }) => {
-      console.log("Received session delete", event);
-      removeSession({
-        topic: event.topic,
+    async (event: { id: number; topic: string }) => {
+      await disconnectWalletConnectSession({
+        session: { topic: event.topic },
+        walletConnectClient,
       });
     },
   );
+
+  // disconnects can come from the user or the connected app, so we inject the callback to ensure its always triggered
+  const _disconnect = walletConnectClient.disconnect;
+  walletConnectClient.disconnect = async (args) => {
+    const result = await _disconnect(args);
+    if (onDisconnect) {
+      disconnectHook({ topic: args.topic, onDisconnect });
+    }
+    return result;
+  };
 
   return walletConnectClient;
 }
@@ -163,4 +176,20 @@ export async function disconnectWalletConnectSession(options: {
     // ignore, the session doesn't exist already
   }
   removeSession(options.session);
+}
+
+/**
+ * @internal
+ */
+async function disconnectHook(options: {
+  topic: string;
+  onDisconnect: (session: WalletConnectSession) => void;
+}) {
+  const { topic, onDisconnect } = options;
+  const sessions = await getSessions();
+  onDisconnect(
+    sessions.find((s) => s.topic === topic) ?? {
+      topic,
+    },
+  );
 }
