@@ -61,7 +61,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const { wallet } = props;
   const config = wallet.getConfig();
   const { data: ecosystemData, isFetched: ecosystemFetched } = useEcosystem({
-    integratorId: config?.integratorId,
+    integratorId: undefined,
   });
 
   const setData = useSetSelectionData() as (
@@ -201,7 +201,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         </Container>
       )}
 
-      {!config?.metadata?.image && config?.integratorId && (
+      {!config?.metadata?.image && false && (
         <Container flex="row" center="both" gap="sm">
           {/* Only show an image if it's loading or one has been successfully fetched */}
           {(!ecosystemFetched || ecosystemData?.imageUrl) && (
@@ -225,7 +225,9 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
           )}
           {ecosystemFetched ? (
             // Don't show the name if there is none
-            ecosystemData?.name && <ModalTitle>{ecosystemData.name}</ModalTitle>
+            ecosystemData?.name && (
+              <ModalTitle>{ecosystemData?.name}</ModalTitle>
+            )
           ) : (
             <Skeleton width="100px" height={fontSize.md} />
           )}
