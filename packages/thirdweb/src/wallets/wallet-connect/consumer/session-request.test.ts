@@ -86,15 +86,24 @@ describe("session_request", () => {
     const unsupportedRequest = cloneObject(REQUEST_EVENT_MOCK);
     unsupportedRequest.params.request.method = "eth_unsupported";
 
-    const promise = fulfillRequest({
+    await fulfillRequest({
       walletConnectClient: signClientMock,
       wallet: walletMock,
       event: unsupportedRequest,
     });
 
-    await expect(promise).rejects.toThrow(
-      "[WalletConnect] Unsupported request method: eth_unsupported",
-    );
+    expect(signClientMock.respond).toHaveBeenCalledWith({
+      topic: REQUEST_EVENT_MOCK.topic,
+      response: {
+        id: REQUEST_EVENT_MOCK.id,
+        jsonrpc: "2.0",
+        result: {
+          code: 500,
+          message:
+            "[WalletConnect] Unsupported request method: eth_unsupported",
+        },
+      },
+    });
   });
 
   it("should use custom request handlers", async () => {
@@ -110,6 +119,7 @@ describe("session_request", () => {
       event,
       handlers: customHandlers,
     });
+
     await expect(promise).resolves.not.toThrow();
     expect(customHandlers.eth_magic).toHaveBeenCalledWith({
       account: TEST_ACCOUNT_A,
@@ -149,15 +159,23 @@ describe("session_request", () => {
     it("should reject if active account address differs from requested address", async () => {
       personalSignRequest.params.request.params[1] = TEST_ACCOUNT_B.address;
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: personalSignRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message: `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
+          },
+        },
+      });
     });
 
     it("should use custom handler if provided", async () => {
@@ -221,15 +239,23 @@ describe("session_request", () => {
         TEST_ACCOUNT_B.address,
       ] as WalletConnectSignRequestPrams;
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message: `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
+          },
+        },
+      });
     });
 
     it("should use custom handler if provided", async () => {
@@ -276,6 +302,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: ethSignTypedDataRequest,
       });
+
       expect(signClientMock.respond).toHaveBeenCalledWith({
         topic: REQUEST_EVENT_MOCK.topic,
         response: {
@@ -298,6 +325,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: ethSignTypedDataRequest,
       });
+
       expect(signClientMock.respond).toHaveBeenCalledWith({
         topic: REQUEST_EVENT_MOCK.topic,
         response: {
@@ -315,15 +343,23 @@ describe("session_request", () => {
         typedData.basic,
       ] as WalletConnectSignTypedDataRequestParams;
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignTypedDataRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message: `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
+          },
+        },
+      });
     });
 
     it("should use custom handler if provided", async () => {
@@ -387,15 +423,24 @@ describe("session_request", () => {
         signTransaction: undefined,
       });
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: signTransactionRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        "[WalletConnect] The current account does not support signing transactions",
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message:
+              "[WalletConnect] The current account does not support signing transactions",
+          },
+        },
+      });
     });
 
     it("should throw if from field is different from account", async () => {
@@ -407,15 +452,23 @@ describe("session_request", () => {
         transaction,
       ] as WalletConnectTransactionRequestParams;
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: signTransactionRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message: `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
+          },
+        },
+      });
     });
 
     it("should use custom handler if provided", async () => {
@@ -478,15 +531,24 @@ describe("session_request", () => {
     it("should throw if no chain is provided", async () => {
       sendTransactionRequest.params.chainId = "eip155:?";
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendTransactionRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        "[WalletConnect] Invalid chainId eip155:?, should have the format 'eip155:1'",
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message:
+              "[WalletConnect] Invalid chainId eip155:?, should have the format 'eip155:1'",
+          },
+        },
+      });
     });
 
     it("should throw if from address differs from account", async () => {
@@ -499,15 +561,23 @@ describe("session_request", () => {
         transaction,
       ] as WalletConnectTransactionRequestParams;
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendTransactionRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message: `[WalletConnect] Failed to validate account address (${TEST_ACCOUNT_A.address}), differs from ${TEST_ACCOUNT_B.address}`,
+          },
+        },
+      });
     });
 
     it("should use custom handler if provided", async () => {
@@ -572,29 +642,47 @@ describe("session_request", () => {
     it("should throw if the account does not support sending raw transactions", async () => {
       TEST_ACCOUNT_A.sendRawTransaction = undefined;
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendRawTransactionRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        "[WalletConnect] The current account does not support sending raw transactions",
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message:
+              "[WalletConnect] The current account does not support sending raw transactions",
+          },
+        },
+      });
     });
 
     it("should throw if no chain is provided", async () => {
       sendRawTransactionRequest.params.chainId = "eip155:?";
 
-      const promise = fulfillRequest({
+      await fulfillRequest({
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendRawTransactionRequest,
       });
 
-      await expect(promise).rejects.toThrow(
-        "[WalletConnect] Invalid chainId eip155:?, should have the format 'eip155:1'",
-      );
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message:
+              "[WalletConnect] Invalid chainId eip155:?, should have the format 'eip155:1'",
+          },
+        },
+      });
     });
 
     it("should use custom handler if provided", async () => {

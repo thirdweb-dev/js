@@ -86,6 +86,7 @@ export function createWalletConnectSession(
   walletConnectClient.on(
     "session_event",
     async (_event: WalletConnectSessionEvent) => {
+      console.log("Received session event", _event);
       // TODO
     },
   );

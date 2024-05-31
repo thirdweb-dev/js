@@ -3,4 +3,4 @@ export {
   createWalletConnectSession,
   hasActiveWalletConnectSession,
   getActiveWalletConnectSession,
-} from "../../wallets/wallet-connect/consumer.js";
+} from "../../wallets/wallet-connect/consumer/index.js";

@@ -106,37 +106,42 @@ export type WalletConnectRequestHandlers = Prettify<
     personal_sign?: (_: {
       account: Account;
       params: WalletConnectSignRequestPrams;
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
     eth_sign?: (_: {
       account: Account;
       params: WalletConnectSignRequestPrams;
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
     eth_signTypedData?: (_: {
       account: Account;
       params: WalletConnectSignTypedDataRequestParams;
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
     eth_signTransaction?: (_: {
       account: Account;
       params: WalletConnectTransactionRequestParams;
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
     eth_sendRawTransaction?: (_: {
       account: Account;
       chainId: number;
       params: WalletConnectRawTransactionRequestParams;
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
     eth_sendTransaction?: (_: {
       account: Account;
       chainId: number;
       params: WalletConnectTransactionRequestParams;
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
   } & {
     [code: string]: (_: {
       account: Account;
       chainId: number;
       params: unknown[];
-    }) => Promise<Hex>;
+    }) => Promise<Hex | WalletConnectRequestError>;
   }
 >;
+
+export type WalletConnectRequestError = {
+  code: number;
+  message: string;
+};
 
 type WalletConnectRequestParams =
   | WalletConnectSignRequestPrams
