@@ -9,7 +9,8 @@ import { prepareTransaction } from "../../prepare-transaction.js";
 import { sendEip712Transaction } from "./send-eip712-transaction.js";
 
 describe("sendEip712Transaction", () => {
-  it("should send eip712 transaction", async () => {
+  // re-enable for testing, but disable for CI since it requires testnet funds
+  it.skip("should send eip712 transaction", async () => {
     const transaction = prepareTransaction({
       chain: defineChain(300),
       client: TEST_CLIENT,
@@ -25,7 +26,6 @@ describe("sendEip712Transaction", () => {
       account: TEST_ACCOUNT_A,
       transaction,
     });
-
     expect(res.transactionHash.length).toBe(66);
   });
 });
