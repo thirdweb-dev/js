@@ -1,9 +1,7 @@
 import type { Account, Wallet } from "../../interfaces/wallet.js";
-import {
-  type WalletConnectClient,
-  disconnectWalletConnectSession,
-} from "./index.js";
+import { disconnectWalletConnectSession } from "./index.js";
 import { getSessions, saveSession } from "./session-store.js";
+import type { WalletConnectClient } from "./types.js";
 import type {
   WalletConnectSession,
   WalletConnectSessionProposalEvent,
