@@ -6,17 +6,44 @@ import type { PreparedTransaction } from "../prepare-transaction.js";
 import { encode } from "./encode.js";
 import { estimateGas } from "./estimate-gas.js";
 
-export type ToSerialiableTransactionOptions = {
+export type ToSerializableTransactionOptions = {
+  /**
+   * The transaction to convert to a serializable transaction.
+   */
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   transaction: PreparedTransaction<any>;
+  /**
+   * The from address to use for gas estimation.
+   */
   from?: string;
 };
 
 /**
- * @internal
+ * Converts a prepared transaction to a serializable transaction.
+ * @param options - The transaction and additional options for conversion
+ * @returns A serializable transaction for inspection or submission to an account.
+ *
+ * @note For easier transaction sending, {@see sendTransaction}
+ * @example
+ * ```ts
+ * import { prepareTransaction, toSerializableTransaction } from "thirdweb/transaction";
+ *
+ * const transaction = await prepareTransaction({
+ *   transaction: {
+ *     to: "0x...",
+ *     value: 100,
+ *   },
+ * });
+ * const serializableTransaction = await toSerializableTransaction({
+ *   transaction,
+ * });
+ *
+ * account.sendTransaction(serializableTransaction);
+ * ```
+ * @transaction
  */
 export async function toSerializableTransaction(
-  options: ToSerialiableTransactionOptions,
+  options: ToSerializableTransactionOptions,
 ) {
   const rpcRequest = getRpcClient(options.transaction);
   const chainId = options.transaction.chain.id;
