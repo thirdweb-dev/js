@@ -7,10 +7,7 @@ Exports toSerializableTransaction to convert preparedTransaction into a fully se
 ### Usage
 
 ```ts
-import {
-  prepareTransaction,
-  toSerializableTransaction,
-} from "thirdweb/transaction";
+import { prepareTransaction, toSerializableTransaction } from "thirdweb";
 
 const transaction = await prepareTransaction({
   transaction: {
