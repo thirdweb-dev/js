@@ -44,11 +44,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         personalAccount,
       });
       smartWalletAddress = smartAccount.address;
-      accountContract = getContract({
-        address: smartWalletAddress,
-        chain,
-        client,
-      });
     });
 
     it("should send a transactions", async () => {
