@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { ANVIL_PKEY_C } from "../../../test/src/test-wallets.js";
 import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
-import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { getContract } from "../../contract/contract.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { smartWallet } from "../create-wallet.js";
@@ -13,7 +13,6 @@ let wallet: Wallet;
 let smartAccount: Account;
 let smartWalletAddress: string;
 let personalAccount: Account;
-let accountContract: ThirdwebContract;
 
 const chain = zkSyncSepolia;
 const client = TEST_CLIENT;

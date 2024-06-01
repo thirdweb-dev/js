@@ -57,7 +57,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getWalletBalance", () => {
     expect(result.displayValue).toBe(amount.toString());
   });
 
-  it("should work for native token", async () => {
+  it("should work for un-named token", async () => {
     const result = await getWalletBalance({
       address: TEST_ACCOUNT_A.address,
       client: TEST_CLIENT,

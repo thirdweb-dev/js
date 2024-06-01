@@ -5,10 +5,12 @@ import {
   TEST_IN_APP_WALLET_A,
 } from "../../../../test/src/test-wallets.js";
 import { cloneObject } from "../../../../test/src/utils.js";
-import type { WalletConnectClient } from "./index.js";
 import { onSessionProposal } from "./session-proposal.js";
 import * as SessionStore from "./session-store.js";
-import type { WalletConnectSessionProposalEvent } from "./types.js";
+import type {
+  WalletConnectClient,
+  WalletConnectSessionProposalEvent,
+} from "./types.js";
 
 const PROPOSAL_EVENT_MOCK: WalletConnectSessionProposalEvent = {
   id: 1717020142228697,

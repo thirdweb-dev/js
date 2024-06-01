@@ -39,8 +39,8 @@ export async function getCurrencyMetadata(
   try {
     const [name_, symbol_, decimals_] = await Promise.all([
       name(options).catch(() => ""),
-      symbol(options).catch(() => ""),
-      decimals(options).catch(() => 18),
+      symbol(options),
+      decimals(options),
     ]);
 
     return {
