@@ -18,6 +18,7 @@ import {
   MANAGED_ACCOUNT_GAS_BUFFER,
   getDefaultBundlerUrl,
 } from "./constants.js";
+import { hexlifyUserOp } from "./utils.js";
 
 /**
  * @internal
