@@ -35,3 +35,5 @@ export { zoraSepolia } from "../chains/chain-definitions/zora-sepolia.js";
 export { zora } from "../chains/chain-definitions/zora.js";
 export { bsc } from "../chains/chain-definitions/bsc.js";
 export { bscTestnet } from "../chains/chain-definitions/bsc-testnet.js";
+export { zkSync } from "../chains/chain-definitions/zksync.js";
+export { zkSyncSepolia } from "../chains/chain-definitions/zksync-sepolia.js";

@@ -1,4 +1,7 @@
 import { concat } from "viem";
+import { zkSyncSepolia } from "../../../chains/chain-definitions/zksync-sepolia.js";
+import { zkSync } from "../../../chains/chain-definitions/zksync.js";
+import type { Chain } from "../../../chains/types.js";
 import { isHex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
 import type { UserOperation, UserOperationHexed } from "../types.js";
 
@@ -39,4 +42,8 @@ export function hexlifyUserOp(userOp: UserOperation): UserOperationHexed {
       isHex(val) ? val : toHex(val),
     ]),
   ) as UserOperationHexed;
+}
+
+export function isNativeAAChain(chain: Chain) {
+  return chain.id === zkSync.id || chain.id === zkSyncSepolia.id;
 }
