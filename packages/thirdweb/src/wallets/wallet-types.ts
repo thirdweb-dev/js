@@ -12,6 +12,10 @@ import type {
 } from "./coinbase/coinbaseSDKWallet.js";
 import type { COINBASE } from "./constants.js";
 import type {
+  EcosystemWalletConnectionOptions,
+  EcosystemWalletCreationOptions,
+} from "./ecosystem/types.js";
+import type {
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
   InAppWalletCreationOptions,
@@ -31,8 +35,11 @@ export type WalletId =
   | "embedded" // deprecated
   | "smart"
   | "adapter"
+  | EcosystemWalletIds
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
+
+export type EcosystemWalletIds = "xai" | "treasure"; // TODO: generate this
 
 export type DeepLinkSupportedWalletCreationOptions =
   | {
@@ -80,17 +87,19 @@ export type WalletConnectionOption<T extends WalletId> =
       : // inApp wallet
         T extends "inApp" | "embedded"
         ? InAppWalletConnectionOptions
-        : // coinbase wallet (inhected + coinbaseWallet)
-          T extends typeof COINBASE
-          ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
-          : // injected + wc both supported
-            T extends InjectedSupportedWalletIds & WCSupportedWalletIds
-            ? InjectedConnectOptions | WCConnectOptions
-            : // injected only
-              T extends InjectedSupportedWalletIds
-              ? InjectedConnectOptions
-              : // wc only
-                WCConnectOptions;
+        : T extends EcosystemWalletIds
+          ? EcosystemWalletConnectionOptions
+          : // coinbase wallet (inhected + coinbaseWallet)
+            T extends typeof COINBASE
+            ? InjectedConnectOptions | CoinbaseSDKWalletConnectionOptions
+            : // injected + wc both supported
+              T extends InjectedSupportedWalletIds & WCSupportedWalletIds
+              ? InjectedConnectOptions | WCConnectOptions
+              : // injected only
+                T extends InjectedSupportedWalletIds
+                ? InjectedConnectOptions
+                : // wc only
+                  WCConnectOptions;
 
 /**
  * Generic type for getting the type of object that the `wallet.autoConnect` method takes as the first argument.
@@ -130,11 +139,13 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
     ? InAppWalletCreationOptions
     : T extends typeof COINBASE
       ? CoinbaseWalletCreationOptions
-      : T extends "adapter"
-        ? AdapterWalletOptions
-        : T extends DeepLinkSupportedWalletIds
-          ? DeepLinkSupportedWalletCreationOptions
-          : undefined;
+      : T extends EcosystemWalletIds
+        ? EcosystemWalletCreationOptions
+        : T extends "adapter"
+          ? AdapterWalletOptions
+          : T extends DeepLinkSupportedWalletIds
+            ? DeepLinkSupportedWalletCreationOptions
+            : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.

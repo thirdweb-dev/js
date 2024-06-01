@@ -6,6 +6,7 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
+  EcosystemWalletIds,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
   WalletConnectionOption,
@@ -295,7 +296,6 @@ export function walletConnect() {
  * import { smartWallet } from "thirdweb/wallets";
  *
  * const wallet = smartWallet({
- *  factoryAddress: "0x1234...",
  *  chain: sepolia,
  *  gasless: true,
  * });
@@ -415,6 +415,7 @@ export function smartWallet(
  *   strategy: "google",
  * });
  * ```
+ *
  * Enable smart accounts and sponsor gas for your users:
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
@@ -441,12 +442,11 @@ export function smartWallet(
  * });
  * ```
  *
- * Connect to an ecosystem wallet with your designated integratorId
- * @note The integrator ID will be provided to you by the ecosystem with which you're integrating.
+ * Hide the ability to export the private key within the Connect Modal
  * ```ts
  * import { inAppWallet } from "thirdweb/wallets";
  * const wallet = inAppWallet({
- *  integratorId: "..."
+ *  hidePrivateKeyExport: true
  * });
  * ```
  * @wallet
@@ -487,6 +487,138 @@ export function inAppWallet(
       return account;
     },
     connect: async (options) => {
+      const { connectInAppWallet } = await import(
+        "./in-app/core/wallet/index.js"
+      );
+
+      const [connectedAccount, connectedChain] = await connectInAppWallet(
+        options,
+        createOptions,
+      );
+      // set the states
+      client = options.client;
+      account = connectedAccount;
+      chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "inApp",
+        walletAddress: account.address,
+      });
+      // return only the account
+      return account;
+    },
+    disconnect: async () => {
+      // If no client is assigned, we should be fine just unsetting the states
+      if (client) {
+        const result = await logoutAuthenticatedUser({ client });
+        if (!result.success) {
+          throw new Error("Failed to logout");
+        }
+      }
+      account = undefined;
+      chain = undefined;
+      emitter.emit("disconnect", undefined);
+    },
+    switchChain: async (newChain) => {
+      if (createOptions?.smartAccount && client && account) {
+        // if account abstraction is enabled, reconnect to smart account on the new chain
+        const { autoConnectInAppWallet } = await import(
+          "./in-app/core/wallet/index.js"
+        );
+        const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+          {
+            chain: newChain,
+            client,
+          },
+          createOptions,
+        );
+        account = connectedAccount;
+        chain = connectedChain;
+      } else {
+        // if not, simply set the new chain
+        chain = newChain;
+      }
+      emitter.emit("chainChanged", newChain);
+    },
+  };
+}
+
+/**
+ * Creates an ecosystem wallet.
+ * @param createOptions - configuration options
+ * @returns The created ecosystem wallet.
+ * @example
+ * ```ts
+ * import { ecosystemWallet } from "thirdweb/wallets";
+ *
+ * const wallet = ecosystemWallet("thirdweb");
+ *
+ * const account = await wallet.connect({
+ *   client,
+ *   chain,
+ *   strategy: "google",
+ * });
+ * ```
+ * Enable smart accounts and sponsor gas for your users:
+ * ```ts
+ * import { ecosystemWallet } from "thirdweb/wallets";
+ * const wallet = ecosystemWallet("thirdweb", {
+ *  smartAccount: {
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * },
+ * });
+ * ```
+ *
+ * Connect to a restricted ecosystem wallet with your designated integratorId
+ * @note The integrator ID will be provided to you by the ecosystem with which you're integrating.
+ * ```ts
+ * import { ecosystemWallet } from "thirdweb/wallets";
+ * const wallet = ecosystemWallet("thirdweb", {
+ *  integratorId: "..."
+ * });
+ * ```
+ * @wallet
+ */
+export function ecosystemWallet(
+  ...args: CreateWalletArgs<EcosystemWalletIds>
+): Wallet<EcosystemWalletIds> {
+  const [id, createOptions] = args;
+  // Under the hood, the ecosystem wallet is just an in-app wallet
+  const emitter = createWalletEmitter<EcosystemWalletIds>();
+  let account: Account | undefined = undefined;
+  let chain: Chain | undefined = undefined;
+  let client: ThirdwebClient | undefined;
+
+  return {
+    id,
+    subscribe: emitter.subscribe,
+    getChain: () => chain,
+    getConfig: () => args[1],
+    getAccount: () => account,
+    autoConnect: async (options) => {
+      const { autoConnectInAppWallet } = await import(
+        "./in-app/core/wallet/index.js"
+      );
+
+      const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
+        options,
+        args[1],
+      );
+      // set the states
+      client = options.client;
+      account = connectedAccount;
+      chain = connectedChain;
+      trackConnect({
+        client: options.client,
+        walletType: "inApp",
+        walletAddress: account.address,
+      });
+      // return only the account
+      return account;
+    },
+    connect: async (options) => {
+      // TODO: Check that the login method is valid with the ecosystem first
       const { connectInAppWallet } = await import(
         "./in-app/core/wallet/index.js"
       );
