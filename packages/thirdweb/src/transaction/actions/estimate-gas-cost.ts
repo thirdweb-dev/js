@@ -5,7 +5,13 @@ import { toEther } from "../../utils/units.js";
 import { type EstimateGasOptions, estimateGas } from "./estimate-gas.js";
 
 export type EstimateGasCostResult = {
+  /**
+   * The estimated gas cost in ether.
+   */
   ether: string;
+  /**
+   * The estimated gas cost in wei.
+   */
   wei: bigint;
 };
 
