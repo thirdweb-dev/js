@@ -10,7 +10,13 @@ export type EstimateGasCostResult = {
 };
 
 /**
- * @internal
+ * Estimate the gas cost of a transaction in ether and wei.
+ * @example
+ * ```ts
+ * import { estimateGasCost } from "thirdweb";
+ *
+ * const gasCost = await estimateGasCost({ transaction });
+ * ```
  */
 export async function estimateGasCost(
   options: EstimateGasOptions,

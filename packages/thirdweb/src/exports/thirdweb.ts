@@ -98,6 +98,7 @@ export {
   estimateGas,
   type EstimateGasOptions,
 } from "../transaction/actions/estimate-gas.js";
+export { estimateGasCost } from "../transaction/actions/estimate-gas-cost.js";
 export {
   getGasPrice,
   type GetGasPriceOptions,
