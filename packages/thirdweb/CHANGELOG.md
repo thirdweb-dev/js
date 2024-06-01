@@ -1,5 +1,83 @@
 # thirdweb
 
+## 5.27.0
+
+### Minor Changes
+
+- [#3181](https://github.com/thirdweb-dev/js/pull/3181) [`a346111`](https://github.com/thirdweb-dev/js/commit/a3461114c5e9adb8d0ea2f36bc9fb3d96366c5b9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds headless functions for creating and managing a WalletConnect session with a connected wallet
+
+  ### `createWalletConnectClient`
+
+  ```ts
+  import { createWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+
+  createWalletConnectClient({
+    client: client,
+    wallet: wallet,
+    onConnect: (session: any) => {
+      alert("Connected");
+    },
+    onDisconnect: (session: any) => {
+      alert("Disconnected");
+    },
+  });
+  ```
+
+  ### `createWalletConnectSession`
+
+  ```ts
+  import { createWalletConnectSession } from "thirdweb/wallets/wallet-connect";
+
+  createWalletConnectSession({
+    walletConnectClient: wcClient,
+    uri: "wc:...",
+  });
+  ```
+
+  ### `getWalletConnectSessions`
+
+  ```ts
+  import {
+    getWalletConnectSession,
+    type WalletConnectSession,
+  } from "thirdweb/wallets/wallet-connect";
+
+  const sessions: WalletConnectSession[] = await getWalletConnectSessions();
+  ```
+
+  ### `disconnectWalletConnectClient`
+
+  ```ts
+  import { disconnectWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+
+  disconnectWalletConnectClient({ session, walletConnectClient: wcClient });
+  ```
+
+- [#3105](https://github.com/thirdweb-dev/js/pull/3105) [`51e7ada`](https://github.com/thirdweb-dev/js/commit/51e7adaeb0fe050eb132510291ecac7a12e4c4ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - First party support for zkSync native account abstraction
+
+  You can now use smart accounts on zkSync and zkSync sepolia without any extra setup.
+
+  ```ts
+  const wallet = smartWallet({
+    chain: zkSync,
+    sponsorGas: true,
+  });
+
+  const smartAccount = await wallet.connect({
+    client,
+    personalAccount,
+  });
+
+  // now your can perform transactions normally, gas will be sponsored
+  sendTransaction({ transaction, account: smartAccount });
+  ```
+
+- [#3105](https://github.com/thirdweb-dev/js/pull/3105) [`51e7ada`](https://github.com/thirdweb-dev/js/commit/51e7adaeb0fe050eb132510291ecac7a12e4c4ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ZkSync transaction support
+
+### Patch Changes
+
+- [#3195](https://github.com/thirdweb-dev/js/pull/3195) [`3f66945`](https://github.com/thirdweb-dev/js/commit/3f669453d086487a217ae9af82745199e26550c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix `estimateGas` type resolution
+
 ## 5.26.0
 
 ### Minor Changes
