@@ -1,12 +1,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { ANVIL_PKEY_C } from "../../../test/src/test-wallets.js";
-import { defineChain } from "../../chains/utils.js";
+import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { sendTransaction } from "../../transaction/actions/send-transaction.js";
-import { setThirdwebDomains } from "../../utils/domains.js";
 import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { privateKeyToAccount } from "../private-key.js";
@@ -17,7 +15,7 @@ let smartWalletAddress: string;
 let personalAccount: Account;
 let accountContract: ThirdwebContract;
 
-const chain = defineChain(300);
+const chain = zkSyncSepolia;
 const client = TEST_CLIENT;
 
 const contract = getContract({
@@ -34,9 +32,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   },
   () => {
     beforeAll(async () => {
-      setThirdwebDomains({
-        rpc: "rpc.thirdweb-dev.com",
-      });
       personalAccount = privateKeyToAccount({
         client,
         privateKey: ANVIL_PKEY_C,
@@ -44,9 +39,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       wallet = smartWallet({
         chain,
         gasless: true,
-        overrides: {
-          bundlerUrl: "http://localhost:55264?chain=300",
-        },
       });
       smartAccount = await wallet.connect({
         client: TEST_CLIENT,

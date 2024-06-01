@@ -129,8 +129,8 @@ export async function populateEip712Transaction(
     };
     gas = toBigInt(result.gas_limit);
     const baseFee = toBigInt(result.max_fee_per_gas);
-    maxFeePerGas = baseFee + baseFee / 2n; // bumping the base fee per gas to ensure fast inclusion
-    maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas);
+    maxFeePerGas = baseFee * 2n; // bumping the base fee per gas to ensure fast inclusion
+    maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas) || 1n;
     gasPerPubdata = toBigInt(result.gas_per_pubdata_limit);
   }
 

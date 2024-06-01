@@ -40,8 +40,8 @@ import {
 } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
+import { isNativeAAChain } from "./lib/utils.js";
 import type {
-  PmTransactionData,
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
@@ -90,7 +90,7 @@ export async function connectSmartWallet(
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
 
-  if (chain.id === 300) {
+  if (isNativeAAChain(chain)) {
     return [
       createZkSyncAccount({
         creationOptions,
