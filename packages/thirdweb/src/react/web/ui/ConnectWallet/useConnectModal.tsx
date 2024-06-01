@@ -42,7 +42,7 @@ import type { WelcomeScreen } from "./screens/types.js";
  * The returned `connect` method takes an object of type [UseConnectModalOptions](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps)
  * as an argument to customize the Connect Modal UI. Refer to [UseConnectModalOptions](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available options.
  *
- * @connectWallet
+ * @walletConnection
  */
 export function useConnectModal() {
   const setRootEl = useContext(SetRootElementContext);

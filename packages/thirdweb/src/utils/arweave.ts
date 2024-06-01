@@ -15,6 +15,7 @@ export type ResolveArweaveSchemeOptions = {
  * import { resolveArweaveScheme } from "thirdweb/storage";
  * const url = resolveArweaveScheme({ uri: "ar://<fileId>" });
  * ```
+ * @storage
  */
 export function resolveArweaveScheme(options: ResolveArweaveSchemeOptions) {
   if (options.uri.startsWith("ar://")) {

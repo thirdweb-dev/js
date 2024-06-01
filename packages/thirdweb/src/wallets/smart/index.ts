@@ -114,9 +114,10 @@ export async function connectSmartWallet(
     ...options,
   })
     .then((address) => address)
-    .catch(() => {
+    .catch((err) => {
       throw new Error(
         `Failed to get account address with factory contract ${factoryContract.address} on chain ID ${chain.id}. Are you on the right chain?`,
+        { cause: err },
       );
     });
 

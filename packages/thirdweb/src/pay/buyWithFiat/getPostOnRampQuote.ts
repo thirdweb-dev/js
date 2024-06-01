@@ -54,7 +54,7 @@ export type GetPostOnRampQuoteParams = {
  *  });
  * }
  * ```
- * @buyFiat
+ * @buyCrypto
  */
 export async function getPostOnRampQuote({
   client,

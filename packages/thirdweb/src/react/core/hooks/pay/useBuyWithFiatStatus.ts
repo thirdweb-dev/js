@@ -31,7 +31,7 @@ import {
  *   return <div>...</div>;
  * }
  * ```
- * @buyFiat
+ * @buyCrypto
  */
 export function useBuyWithFiatStatus(
   params?: GetBuyWithFiatStatusParams,

@@ -73,6 +73,10 @@ pnpm test:dev <YOUR TEST FILE PATH>
 
 > Specifying your test file path is optional, but will save time by only running specific tests each time. Before opening your PR, run `pnpm test` from the monorepo root (without specifying your test file) to ensure your changes didn't break any existing tests.
 
+Many of the tests use forked versions of live chains like mainnet. We fork these chains at a specific arbitrary block number so results are consistent across test runs. If you're interacting with on-chain data, you can write tests that interact with real contracts at the same block number by using `FORKED_ETHEREUM_CHAIN`. However, if you don't need to interact with existing contracts, we recommend running your tests against `ANVIL_CHAIN`.
+
+If you need to use accounts in your tests, use the predefined accounts in `test/src/test-wallets.ts`. These are the default anvil accounts that are pre-funded on the local test forks.
+
 #### Linting
 
 We use a linter to maintain best practices across projects. Once your changes are complete (or periodically while making changes), run the linter with the following command from the repo root:
