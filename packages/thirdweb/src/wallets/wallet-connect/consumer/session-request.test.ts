@@ -6,9 +6,9 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { typedData } from "../../../../test/src/typed-data.js";
 import { cloneObject } from "../../../../test/src/utils.js";
-import type { WalletConnectClient } from "./index.js";
 import { fulfillRequest } from "./session-request.js";
 import type {
+  WalletConnectClient,
   WalletConnectRawTransactionRequestParams,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,

@@ -5,7 +5,6 @@ import { TEST_IN_APP_WALLET_A } from "../../../../test/src/test-wallets.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
 import {
-  type WalletConnectClient,
   createWalletConnectClient,
   createWalletConnectSession,
   disconnectWalletConnectSession,
@@ -14,6 +13,7 @@ import {
 import * as SessionProposal from "./session-proposal.js";
 import * as SessionRequest from "./session-request.js";
 import * as SessionStore from "./session-store.js";
+import type { WalletConnectClient } from "./types.js";
 
 const TEST_METADATA = {
   name: "test",
