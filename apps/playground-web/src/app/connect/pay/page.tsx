@@ -36,7 +36,7 @@ export default function Page() {
                     target="_blank"
                     href="https://portal.thirdweb.com/connect/pay/get-started"
                   >
-                    Get Started
+                    View docs
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg">

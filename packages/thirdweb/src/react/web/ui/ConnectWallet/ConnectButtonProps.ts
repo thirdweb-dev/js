@@ -220,8 +220,9 @@ export type ConnectButton_detailsButtonOptions = {
    * ```tsx
    * <ConnectButton detailsButton={{
    *    balanceToken:{
-   *      // show USDC balance when connected to Ethereum mainnet
-   *      1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *      // show USDC balance when connected to Ethereum mainnet or Polygon
+   *      [ethereum.id]: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *      [polygon.id]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
    *    }
    *  })
    * />
