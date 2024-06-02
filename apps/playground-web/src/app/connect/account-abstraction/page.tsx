@@ -1,10 +1,11 @@
 import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectButton } from "@/components/styled-connect-button";
-import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { chain } from "../../../components/account-abstraction/constants";
+import { SponsoredTx } from "../../../components/account-abstraction/sponsored-tx";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -21,19 +22,19 @@ export default function Page() {
           <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
-                The easiest way for users to sign in to your app
+                Account abstraction made easy
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                Let users sign in with their email, phone number, social media
-                accounts or directly with a wallet. Seemlessly integrate account
-                abstraction and SIWE auth.
+                Let users connect to their smart accounts with any wallet and
+                unlock gas sponsorship, batched transactions, session keys and
+                full wallet programmability.
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
               <Button asChild size="lg">
                 <Link
                   target="_blank"
-                  href="https://portal.thirdweb.com/connect/sign-in"
+                  href="https://portal.thirdweb.com/connect/account-abstraction"
                 >
                   View docs
                 </Link>
@@ -47,11 +48,16 @@ export default function Page() {
           </div>
           <div className="w-full mx-auto my-auto sm:w-full lg:order-last relative flex flex-col space-y-2">
             <div className="mx-auto">
-              <StyledConnectButton />
+              <StyledConnectButton
+                accountAbstraction={{
+                  chain,
+                  sponsorGas: true,
+                }}
+              />
             </div>
 
             <p className="md:text-xl text-center text-muted-foreground">
-              <small>👆 This is live, try it out! 👆</small>
+              <small>👆 Connect to your smart account 👆</small>
             </p>
           </div>
         </div>
@@ -60,59 +66,28 @@ export default function Page() {
       <section className="container px-4 md:px-6 space-y-8">
         <div className="space-y-2">
           <h2 className="text-4xl font-semibold tracking-tight">
-            Connect Button
+            Sponsored Transactions
           </h2>
           <p className="max-w-[600px]">
-            When clicked opens a modal and allows users to connect to various
-            wallets.
+            One simple flag to enable transactions for your users.
             <br />
-            It is extremely customizable and very easy to use.
+            Free on testnets, billed at the end of the month on mainnets.
           </p>
         </div>
 
         <CodeExample
-          preview={<StyledConnectButton />}
-          code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
+          preview={<SponsoredTx />}
+          code={`import { claimTo } from "thirdweb/extensions/erc1155";
+          import { ConnectButton, TransactionButton } from "thirdweb/react";
 
-const THIRDWEB_CLIENT = createThirdwebClient({
-  clientId: "<YOUR_CLIENT_ID>"
-});
+          function App(){
+            return (<>
+{/* converts any wallet to a smart account */}
+<ConnectButton client={client} accountAbstraction={{ chain, sponsorGas: true }} />
 
-function App(){
-  return (
-    <ConnectButton client={THIRDWEB_CLIENT} />
-  );
-};`}
-          lang="tsx"
-        />
-      </section>
-
-      <section className="container px-4 md:px-6 space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-semibold tracking-tight">
-            Connect Embed
-          </h2>
-          <p className="max-w-[600px]">
-            When clicked opens a modal and allows users to connect to various
-            wallets.
-            <br />
-            It is extremely customizable and very easy to use.
-          </p>
-        </div>
-        <CodeExample
-          preview={<StyledConnectEmbed />}
-          code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectEmbed } from "thirdweb/react";
-
-const THIRDWEB_CLIENT = createThirdwebClient({
-  clientId: "<YOUR_CLIENT_ID>"
-});
-
-function App(){
-  return (
-    <ConnectEmbed client={THIRDWEB_CLIENT} />
-  );
+{/* all transactions will be sponsored */}
+<TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
+</>);
 };`}
           lang="tsx"
         />
