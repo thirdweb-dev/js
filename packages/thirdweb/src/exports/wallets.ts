@@ -1,5 +1,6 @@
 export {
   createWallet,
+  ecosystemWallet,
   smartWallet,
   inAppWallet,
   /**

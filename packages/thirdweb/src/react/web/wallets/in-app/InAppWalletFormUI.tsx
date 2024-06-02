@@ -6,7 +6,6 @@ import type {
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useEcosystem } from "../../../core/hooks/others/useEcosystem.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
@@ -19,12 +18,10 @@ import {
   phoneIcon,
 } from "../../ui/ConnectWallet/icons/dataUris.js";
 import { Img } from "../../ui/components/Img.js";
-import { Skeleton } from "../../ui/components/Skeleton.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
-import { ModalTitle } from "../../ui/components/modalElements.js";
 import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
@@ -60,9 +57,9 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
   const { chain, client, connectModal } = useConnectUI();
   const { wallet } = props;
   const config = wallet.getConfig();
-  const { data: ecosystemData, isFetched: ecosystemFetched } = useEcosystem({
-    integratorId: config?.integratorId,
-  });
+  // const { data: ecosystemData, isFetched: ecosystemFetched } = useEcosystem({
+  // integratorId: config?.integratorId,
+  // });
 
   const setData = useSetSelectionData() as (
     value: InAppWalletSelectUIState,
@@ -201,9 +198,9 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         </Container>
       )}
 
-      {!config?.metadata?.image && config?.integratorId && (
+      {/* {!config?.metadata?.image && config?.integratorId && (
         <Container flex="row" center="both" gap="sm">
-          {/* Only show an image if it's loading or one has been successfully fetched */}
+          
           {(!ecosystemFetched || ecosystemData?.imageUrl) && (
             <Container
               style={{
@@ -230,7 +227,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
             <Skeleton width="100px" height={fontSize.md} />
           )}
         </Container>
-      )}
+      )} */}
 
       {/* Social Login */}
       {hasSocialLogins && (
