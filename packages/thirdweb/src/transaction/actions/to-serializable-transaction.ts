@@ -19,14 +19,14 @@ export type ToSerializableTransactionOptions = {
 };
 
 /**
- * Converts a prepared transaction to a serializable transaction.
+ * Converts a prepared transaction to a transaction with populated options.
  * @param options - The transaction and additional options for conversion
  * @returns A serializable transaction for inspection or submission to an account.
  *
  * @note For easier transaction sending, {@see sendTransaction}
  * @example
  * ```ts
- * import { prepareTransaction, toSerializableTransaction } from "thirdweb";
+ * import { prepareTransaction, populateTransaction } from "thirdweb";
  *
  * const transaction = await prepareTransaction({
  *   transaction: {
@@ -34,11 +34,11 @@ export type ToSerializableTransactionOptions = {
  *     value: 100,
  *   },
  * });
- * const serializableTransaction = await toSerializableTransaction({
+ * const finalTx = await populateTransaction({
  *   transaction,
  * });
  *
- * account.sendTransaction(serializableTransaction);
+ * account.sendTransaction(finalTx);
  * ```
  * @transaction
  */

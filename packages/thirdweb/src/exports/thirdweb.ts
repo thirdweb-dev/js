@@ -119,7 +119,10 @@ export {
 export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 export { signTransaction } from "../transaction/actions/sign-transaction.js";
 export { serializeTransaction } from "../transaction/serialize-transaction.js";
-export { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
+export {
+  toSerializableTransaction as populateTransaction,
+  type ToSerializableTransactionOptions as PopulateTransactionOptions,
+} from "../transaction/actions/to-serializable-transaction.js";
 
 /**
  * EVENTS
