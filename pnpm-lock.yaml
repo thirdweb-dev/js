@@ -1371,8 +1371,8 @@ importers:
         specifier: ^7.6.2
         version: 7.6.2
       '@magic-sdk/provider':
-        specifier: ^13.6.2
-        version: 13.6.2(localforage@1.10.0)
+        specifier: ^28.0.2
+        version: 28.0.2(localforage@1.10.0)
       '@metamask/eth-sig-util':
         specifier: ^4.0.1
         version: 4.0.1
@@ -7858,8 +7858,25 @@ packages:
       - supports-color
     dev: false
 
+  /@magic-sdk/provider@28.0.2(localforage@1.10.0):
+    resolution: {integrity: sha512-QonHCnSDu2nn8yBY2/rKliU55OLZJtEJO0bJStIPlTiiCuV+qmjs96BLjKdDczT3NBa0weedSugPK9UuCp0c2Q==}
+    peerDependencies:
+      localforage: ^1.7.4
+    dependencies:
+      '@magic-sdk/types': 24.0.1
+      eventemitter3: 4.0.7
+      localforage: 1.10.0
+      web3-core: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@magic-sdk/types@11.6.2:
     resolution: {integrity: sha512-+Emd+9HeeVi2E0bktJ33YleA/ozEuKYCBfmSbGRxlntdyUvaojeC+WPf2jN1WH8FjUEiljAjrEJTTZyRGCL8SQ==}
+    dev: false
+
+  /@magic-sdk/types@24.0.1:
+    resolution: {integrity: sha512-MM3UbIJoc5fQOnA6/X7TcuIToSApmNPoEJSPpL2m41IQ0DwpbTsgdynNhxM3e8g6Bx6BsDrkQk9h+tjJ0qDhrw==}
     dev: false
 
   /@manypkg/cli@0.21.3:
