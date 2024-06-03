@@ -27,7 +27,7 @@
     "eslint-config-thirdweb": "workspace:*",
     "hardhat": "^2.22.2",
     "ora": "^6.3.1",
-    "tsup": "8.0.2",
+    "tsup": "8.1.0",
     "typescript": "5.4.4"
   },
   "dependencies": {

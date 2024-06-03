@@ -16,6 +16,6 @@
     "typedoc": "^0.25.13"
   },
   "devDependencies": {
-    "tsup": "8.0.2"
+    "tsup": "8.1.0"
   }
 }
