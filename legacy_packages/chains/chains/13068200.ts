@@ -18,12 +18,6 @@ export default {
   "faucets": [
     "https://faucet.coti.io"
   ],
-  "icon": {
-    "url": "ipfs://QmR58SroHx7ovpqEB5iRkw4PufEXmcCBAJ8AZ7mChDgTfV",
-    "width": 528,
-    "height": 528,
-    "format": "png"
-  },
   "infoURL": "https://coti.io/",
   "name": "COTI Devnet",
   "nativeCurrency": {

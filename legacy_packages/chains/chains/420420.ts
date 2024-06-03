@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://mainnet-explorer.kekchain.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
-        "width": 401,
-        "height": 401,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNzwHAmaaQyuvKudrzGkrTT2GMshcmCmJ9FH8gG2mNJtM",
-    "width": 401,
-    "height": 401,
-    "format": "svg"
-  },
   "infoURL": "https://kekchain.com",
   "name": "Kekchain",
   "nativeCurrency": {

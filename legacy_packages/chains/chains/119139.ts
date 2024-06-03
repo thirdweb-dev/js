@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmcCFUTStKKJKfzTwrjfMFoVaPCMsvAvWXRdDkYMvCkEs3",
-    "width": 800,
-    "height": 800,
-    "format": "svg"
-  },
   "infoURL": "https://metadap.io/",
   "name": "MetaDAP Enterprise Testnet",
   "nativeCurrency": {

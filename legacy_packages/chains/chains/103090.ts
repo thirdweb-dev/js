@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://scan.crystaleum.org",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
-        "width": 150,
-        "height": 150,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://Qmbry1Uc6HnXmqFNXW5dFJ7To8EezCCjNr4TqqvAyzXS4h",
-    "width": 150,
-    "height": 150,
-    "format": "png"
-  },
   "infoURL": "https://crystaleum.org",
   "name": "Crystaleum",
   "nativeCurrency": {

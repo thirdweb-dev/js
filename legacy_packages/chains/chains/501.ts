@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmSEoUonisawfCvT3osysuZzbqUEHugtgNraePKWL8PKYa",
-    "width": 768,
-    "height": 768,
-    "format": "png"
-  },
   "infoURL": "https://camino.network/",
   "name": "Columbus Test Network",
   "nativeCurrency": {

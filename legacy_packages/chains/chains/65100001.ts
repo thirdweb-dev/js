@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://Qme5nxFZZoNNpiT8u9WwcBot4HyLTg2jxMxRnsbc5voQwB",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://autonity.org/",
   "name": "Autonity Piccadilly (Barada) Testnet",
   "nativeCurrency": {

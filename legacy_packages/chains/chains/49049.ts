@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmTAyT3YrW2654CBRqRkec2cCznv6EBsbsRc2y6WQPbvXx",
-    "width": 1280,
-    "height": 1280,
-    "format": "png"
-  },
   "infoURL": "https://wireshape.org",
   "name": "Wireshape Floripa Testnet",
   "nativeCurrency": {

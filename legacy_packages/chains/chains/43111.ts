@@ -4,12 +4,6 @@ export default {
   "chainId": 43111,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmfP6GDn5eXFcpWuoiyWn5pjn6PYB7HQhRD8nSko1zR8KD",
-    "width": 1200,
-    "height": 1200,
-    "format": "png"
-  },
   "infoURL": "https://hemi.xyz",
   "name": "Hemi Network",
   "nativeCurrency": {

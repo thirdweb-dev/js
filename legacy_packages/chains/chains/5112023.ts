@@ -6,22 +6,10 @@ export default {
     {
       "name": "NumBlock Explorer",
       "url": "https://mainnet.numblock.org",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmRY72AKDaUwxgPukdfSBj19NfMrmsSm48mdBe9zJcW3jB",
-        "width": 200,
-        "height": 200,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmRY72AKDaUwxgPukdfSBj19NfMrmsSm48mdBe9zJcW3jB",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://numblock.org",
   "name": "NumBlock Chain",
   "nativeCurrency": {

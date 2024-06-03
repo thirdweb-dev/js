@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://Qmb7oJY9zd9sTzxNNQNTVZQz2hkd1aA94mWm4cvXfJ9QxV",
-    "width": 1280,
-    "height": 1280,
-    "format": "png"
-  },
   "infoURL": "https://gesoten.com/",
   "name": "Gesoten Verse Testnet",
   "nativeCurrency": {

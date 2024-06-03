@@ -6,13 +6,7 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockexplorer.thesecurityteam.rocks",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmVgFqXA3kkCrVYGcWFF7Mhx8JUSe9vSCauNamuKWSvCym",
-        "width": 1000,
-        "height": 1000,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmVgFqXA3kkCrVYGcWFF7Mhx8JUSe9vSCauNamuKWSvCym",
-    "width": 1000,
-    "height": 1000,
-    "format": "png"
-  },
   "infoURL": "https://electroneum.com",
   "name": "Electroneum Testnet",
   "nativeCurrency": {
