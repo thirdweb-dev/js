@@ -274,12 +274,7 @@ export async function coinbaseSDKWalletGetCallsStatus(args: {
   }) as Promise<GetCallsStatusResponse>;
 }
 
-function onConnect(
-  address: string,
-  chain: Chain,
-  provider: ProviderInterface,
-  emitter: WalletEmitter<typeof COINBASE>,
-): [Account, Chain, DisconnectFn, SwitchChainFn] {
+function createAccount(provider: ProviderInterface, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -350,6 +345,17 @@ function onConnect(
     },
   };
 
+  return account;
+}
+
+function onConnect(
+  address: string,
+  chain: Chain,
+  provider: ProviderInterface,
+  emitter: WalletEmitter<typeof COINBASE>,
+): [Account, Chain, DisconnectFn, SwitchChainFn] {
+  const account = createAccount(provider, address);
+
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -364,10 +370,7 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {
