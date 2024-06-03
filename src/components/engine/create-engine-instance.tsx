@@ -75,7 +75,12 @@ export const CreateEngineInstanceButton = ({
           });
           return;
         }
-        throw new Error(`Unexpected status ${res.status}`);
+
+        const json = await res.json();
+        const error =
+          json.error?.message ??
+          "Unexpected error. Please try again or visit https://thirdweb.com/support.";
+        throw error;
       }
 
       toast({
@@ -88,7 +93,7 @@ export const CreateEngineInstanceButton = ({
     } catch (e) {
       toast({
         status: "error",
-        description: "There was an error with your Engine deployment.",
+        description: `${e}`,
       });
     }
   };
