@@ -1,9 +1,10 @@
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { constants, utils } from "ethers";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { defineChain } from "thirdweb";
+import { createThirdwebClient, defineChain } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "../../../constants/rpc";
+import { IPFS_GATEWAY_URL } from "../../../lib/sdk";
 
 export type BalanceQueryRequest = {
   chainId: SUPPORTED_CHAIN_ID;
@@ -34,7 +35,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const balance = await getWalletBalance({
       address,
       chain,
-      client: thirdwebClient,
+      client: createThirdwebClient({
+        secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+        config: {
+          storage: {
+            gatewayUrl: IPFS_GATEWAY_URL,
+          },
+        },
+      }),
     });
     return [
       {
