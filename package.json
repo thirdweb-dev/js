@@ -72,7 +72,7 @@
     "knip": "5.9.4",
     "mitata": "0.1.11",
     "react": "18.2.0",
-    "rimraf": "5.0.5",
+    "rimraf": "5.0.7",
     "sharp": "^0.33.3",
     "size-limit": "11.1.2",
     "typedoc-gen": "workspace:*",
