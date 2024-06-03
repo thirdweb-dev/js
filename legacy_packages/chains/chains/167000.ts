@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
   "chainId": 167000,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "etherscan",
+      "url": "https://taikoscan.io",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -25,11 +31,11 @@ export default {
     "https://rpc.mainnet.taiko.xyz/",
     "https://rpc.ankr.com/taiko/",
     "https://rpc.taiko.xyz/",
-    "https://rpc.taiko.xyz",
-    "wss://ws.taiko.xyz"
+    "https://rpc.mainnet.taiko.xyz",
+    "wss://ws.mainnet.taiko.xyz"
   ],
   "shortName": "tko-mainnet",
   "slug": "taiko",
-  "status": "incubating",
+  "status": "active",
   "testnet": false
 } as const satisfies Chain;

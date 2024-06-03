@@ -125,16 +125,7 @@ export async function autoConnectInjectedWallet(
   return onConnect(provider, address, connectedChain, emitter);
 }
 
-/**
- * Call this method when the wallet provider is connected or auto connected
- * @internal
- */
-async function onConnect(
-  provider: Ethereum,
-  address: string,
-  chain: Chain,
-  emitter: WalletEmitter<InjectedSupportedWalletIds>,
-): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
+function createAccount(provider: Ethereum, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -206,6 +197,20 @@ async function onConnect(
     },
   };
 
+  return account;
+}
+
+/**
+ * Call this method when the wallet provider is connected or auto connected
+ * @internal
+ */
+async function onConnect(
+  provider: Ethereum,
+  address: string,
+  chain: Chain,
+  emitter: WalletEmitter<InjectedSupportedWalletIds>,
+): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
+  const account = createAccount(provider, address);
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -219,10 +224,7 @@ async function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
 
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
