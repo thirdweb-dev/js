@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Nahmii 3 Testnet Explorer",
-      "url": "https://explorer.testnet.n3.nahmii.io",
+      "url": "https://explorer.testnet.nahmii.io",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
@@ -25,26 +25,27 @@ export default {
   "infoURL": "https://nahmii.io",
   "name": "Nahmii 3 Testnet",
   "nativeCurrency": {
-    "name": "Goerli Ether",
+    "name": "Sepolia Ether",
     "symbol": "ETH",
     "decimals": 18
   },
   "networkId": 4062,
   "parent": {
     "type": "L2",
-    "chain": "eip155-3",
+    "chain": "eip155-11155111",
     "bridges": [
       {
-        "url": "https://bridge.testnet.n3.nahmii.io"
+        "url": "https://accounts.testnet.nahmii.io"
       }
     ]
   },
   "rpc": [
     "https://4062.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://ngeth.testnet.n3.nahmii.io"
+    "https://rpc.testnet.nahmii.io"
   ],
   "shortName": "Nahmii3Testnet",
   "slip44": 1,
   "slug": "nahmii-3-testnet",
+  "status": "active",
   "testnet": true
 } as const satisfies Chain;

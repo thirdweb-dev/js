@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXiatdz5WBFypfsudoDsFnsLdiHzDwcD3pWcHwBovbPiZ",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "infoURL": "https://lumio.io/",
   "name": "SuperLumio",
   "nativeCurrency": {
