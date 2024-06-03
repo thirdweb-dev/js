@@ -24,7 +24,6 @@ import {
 } from "./zkDeployContractDeterministic";
 import invariant from "tiny-invariant";
 import { zkVerify } from "./zksync-verification";
-import { zkComputeDeploymentInfo } from "./zkComputeDeploymentInfo";
 import { zkComputeDeploymentAddress } from "./zkComputeDeploymentAddress";
 import { hashBytecode } from "zksync-ethers/build/utils";
 import { isZkContractDeployed } from "./isZkContractDeployed";
@@ -101,6 +100,7 @@ export async function zkDeployContractFromUri(
   storage: ThirdwebStorage,
   chainId: number,
   options?: DeployOptions,
+  directDeployDeterministic?: boolean,
   clientId?: string,
   secretKey?: string,
 ): Promise<string> {
@@ -233,7 +233,11 @@ export async function zkDeployContractFromUri(
       constructorParamValues,
     );
 
-    if (deterministicDeployment) {
+    if (directDeployDeterministic && !deterministicDeployment) {
+      throw new Error(
+        "Deterministic deployment not supported for this contract.",
+      );
+    } else if (directDeployDeterministic && deterministicDeployment) {
       const create2Factory = await zkDeployCreate2Factory(signer as ZkSigner);
 
       const encodedArgs = utils.defaultAbiCoder.encode(
