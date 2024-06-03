@@ -424,8 +424,8 @@ importers:
         specifier: ^0.6.0
         version: 0.6.0
       fastify-type-provider-zod:
-        specifier: ^1.1.9
-        version: 1.1.9(fastify@4.27.0)(zod@3.22.4)
+        specifier: ^1.2.0
+        version: 1.2.0(fastify@4.27.0)(zod@3.22.4)
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -17797,8 +17797,8 @@ packages:
     resolution: {integrity: sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==}
     dev: false
 
-  /fastify-type-provider-zod@1.1.9(fastify@4.27.0)(zod@3.22.4):
-    resolution: {integrity: sha512-Ztnu1ZWJEKJouZvdTyfgjuVqS+A4JLoCbWBvFqFhfnrg6YQvEvW+5cJvP98kNbuV5gjfpWmHSOTi3BpkidJPQg==}
+  /fastify-type-provider-zod@1.2.0(fastify@4.27.0)(zod@3.22.4):
+    resolution: {integrity: sha512-2zkPEWFIBYzkGQ0kmn8gOW5tlQOmdDWn5edF5LQ2r0RiydFGhD86FVZX6wLraXAmdFm8P1CMmo19lwlGb0mZrA==}
     peerDependencies:
       fastify: ^4.0.0
       zod: ^3.14.2
