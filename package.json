@@ -22,7 +22,7 @@
     "update-checkly": "npx checkly deploy"
   },
   "dependencies": {
-    "@apollo/client": "^3.9.11",
+    "@apollo/client": "^3.10.4",
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/styled-system": "^2.9.2",
     "@chakra-ui/theme-tools": "^2.1.2",
