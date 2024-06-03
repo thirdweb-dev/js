@@ -4,8 +4,11 @@ import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { chain } from "../../../components/account-abstraction/constants";
+import { inAppWallet } from "thirdweb/wallets/in-app";
 import { SponsoredTx } from "../../../components/account-abstraction/sponsored-tx";
+import { AnyAuth } from "../../../components/in-app-wallet/any-auth";
+import { InAppConnectButton } from "../../../components/in-app-wallet/connect-button";
+import { SponsoredInAppTx } from "../../../components/in-app-wallet/sponsored-tx";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -22,19 +25,18 @@ export default function Page() {
           <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
-                Account abstraction
+                Onboard users to web3
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                Let users connect to their smart accounts with any wallet and
-                unlock gas sponsorship, batched transactions, session keys and
-                full wallet programmability.
+                Onboard anyone with flexible auth options, secure account
+                recovery, and smart account integration.
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
               <Button asChild size="lg">
                 <Link
                   target="_blank"
-                  href="https://portal.thirdweb.com/connect/account-abstraction"
+                  href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
                 >
                   View docs
                 </Link>
@@ -48,16 +50,11 @@ export default function Page() {
           </div>
           <div className="w-full mx-auto my-auto sm:w-full lg:order-last relative flex flex-col space-y-2">
             <div className="mx-auto">
-              <StyledConnectButton
-                accountAbstraction={{
-                  chain,
-                  sponsorGas: true,
-                }}
-              />
+              <InAppConnectButton />
             </div>
 
             <p className="md:text-xl text-center text-muted-foreground">
-              <small>👆 Connect to your smart account 👆</small>
+              <small>👆 Connect to your in-app wallet 👆</small>
             </p>
           </div>
         </div>
@@ -66,26 +63,71 @@ export default function Page() {
       <section className="container px-4 md:px-6 space-y-8">
         <div className="space-y-2">
           <h2 className="text-4xl font-semibold tracking-tight">
-            Sponsored Transactions
+            Any Auth Method
           </h2>
           <p className="max-w-[600px]">
-            One simple flag to enable transactions for your users.
+            Use any of the built-in auth methods or bring your own.
             <br />
-            Free on testnets, billed at the end of the month on mainnets.
+            Supports custom auth endpoints to integrate with your existing user
+            base.
           </p>
         </div>
 
         <CodeExample
-          preview={<SponsoredTx />}
-          code={`import { claimTo } from "thirdweb/extensions/erc1155";
+          preview={<AnyAuth />}
+          code={`import { inAppWallet } from "thirdweb/wallets";
+          import { ConnectEmbed } from "thirdweb/react";
+
+          
+          const wallets = [
+            inAppWallet(
+              // built-in auth methods
+              { auth: ["email", "phone", "passkey", "google", "apple", "facebook"] }
+              // or bring your own auth endpoint
+            )
+          ];
+
+          function App(){
+            return (
+<ConnectEmbed client={client} wallets={wallets} />);
+};`}
+          lang="tsx"
+        />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <div className="space-y-2">
+          <h2 className="text-4xl font-semibold tracking-tight">
+            Signless Sponsored Transactions
+          </h2>
+          <p className="max-w-[600px]">
+            With in-app wallets, users don&apos;t need to confirm every
+            transaction.
+            <br />
+            Combine it with smart account flag to cover gas costs for the best
+            UX.
+          </p>
+        </div>
+
+        <CodeExample
+          preview={<SponsoredInAppTx />}
+          code={`import { inAppWallet } from "thirdweb/wallets";
+          import { claimTo } from "thirdweb/extensions/erc1155";
           import { ConnectButton, TransactionButton } from "thirdweb/react";
+
+          
+          const wallets = [
+            inAppWallet(
+              // turn on gas sponsorship for in-app wallets
+              { smartAccount: { chain, sponsorGas: true }}
+            )
+          ];
 
           function App(){
             return (<>
-{/* converts any wallet to a smart account */}
-<ConnectButton client={client} accountAbstraction={{ chain, sponsorGas: true }} />
+<ConnectButton client={client} wallets={wallets} />
 
-{/* all transactions will be sponsored */}
+{/* signless, sponsored transactions */}
 <TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
 </>);
 };`}

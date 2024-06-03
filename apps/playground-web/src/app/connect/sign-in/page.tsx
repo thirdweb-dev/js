@@ -21,12 +21,12 @@ export default function Page() {
           <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
-                The easiest way for users to sign in to your app
+                Sign in
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                Let users sign in with their email, phone number, social media
-                accounts or directly with a wallet. Seemlessly integrate account
-                abstraction and SIWE auth.
+                Create a login experience tailor-made for your app. Add your
+                wallets of choice, enable web2 sign-in options and create a
+                modal that fits your brand.
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
@@ -60,13 +60,13 @@ export default function Page() {
       <section className="container px-4 md:px-6 space-y-8">
         <div className="space-y-2">
           <h2 className="text-4xl font-semibold tracking-tight">
-            Connect Button
+            Button Component
           </h2>
           <p className="max-w-[600px]">
             When clicked opens a modal and allows users to connect to various
             wallets.
             <br />
-            It is extremely customizable and very easy to use.
+            Extremely customizable and easy to use.
           </p>
         </div>
 
@@ -91,13 +91,12 @@ function App(){
       <section className="container px-4 md:px-6 space-y-8">
         <div className="space-y-2">
           <h2 className="text-4xl font-semibold tracking-tight">
-            Connect Embed
+            Embed Component
           </h2>
           <p className="max-w-[600px]">
-            When clicked opens a modal and allows users to connect to various
-            wallets.
+            Inline component to connect to various wallets.
             <br />
-            It is extremely customizable and very easy to use.
+            Use this to create your own full screen login page.
           </p>
         </div>
         <CodeExample
