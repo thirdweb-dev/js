@@ -1422,8 +1422,8 @@ importers:
         specifier: ^2.13.0
         version: 2.13.0
       '@walletconnect/web3wallet':
-        specifier: ^1.11.2
-        version: 1.12.0
+        specifier: ^1.12.1
+        version: 1.12.1
       asn1.js:
         specifier: 5.4.1
         version: 5.4.1
@@ -13002,13 +13002,13 @@ packages:
       '@ethersproject/transactions': 5.7.0
       '@stablelib/random': 1.0.2
       '@stablelib/sha256': 1.0.1
-      '@walletconnect/core': 2.13.0
+      '@walletconnect/core': 2.13.1(@react-native-async-storage/async-storage@1.23.1)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/utils': 2.13.0
+      '@walletconnect/utils': 2.13.1(@react-native-async-storage/async-storage@1.23.1)
       events: 3.3.0
       isomorphic-unfetch: 3.1.0
     transitivePeerDependencies:
@@ -13419,38 +13419,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@walletconnect/sign-client@2.13.0:
-    resolution: {integrity: sha512-En7KSvNUlQFx20IsYGsFgkNJ2lpvDvRsSFOT5PTdGskwCkUfOpB33SQJ6nCrN19gyoKPNvWg80Cy6MJI0TjNYA==}
-    dependencies:
-      '@walletconnect/core': 2.13.0
-      '@walletconnect/events': 1.0.1
-      '@walletconnect/heartbeat': 1.2.2
-      '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/logger': 2.1.2
-      '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.13.0
-      '@walletconnect/utils': 2.13.0
-      events: 3.3.0
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@react-native-async-storage/async-storage'
-      - '@upstash/redis'
-      - '@vercel/kv'
-      - bufferutil
-      - encoding
-      - ioredis
-      - uWebSockets.js
-      - utf-8-validate
-    dev: false
-
   /@walletconnect/sign-client@2.13.1(@react-native-async-storage/async-storage@1.23.1):
     resolution: {integrity: sha512-e+dcqcLsedB4ZjnePFM5Cy8oxu0dyz5iZfhfKH/MOrQV/hyhZ+hJwh4MmkO2QyEu2PERKs9o2Uc6x8RZdi0UAQ==}
     dependencies:
@@ -13701,17 +13669,17 @@ packages:
       - uWebSockets.js
     dev: false
 
-  /@walletconnect/web3wallet@1.12.0:
-    resolution: {integrity: sha512-u+krMeatqnlm086fG+587pHide9LOGd8gATA0EGYNnc7nVUWc3+xjhKR8C7YcWNBTGOH0cWdh/OFWMzUPnHGtw==}
+  /@walletconnect/web3wallet@1.12.1:
+    resolution: {integrity: sha512-34h7UkWjZvZdtCc/t6tZCSBPjDzJbfG1+OPkJ6FiD1KJP+a0wSwuI7l4LliGgvAdsXfrM+sn3ZEWVWy62zeRDA==}
     dependencies:
       '@walletconnect/auth-client': 2.1.2
-      '@walletconnect/core': 2.13.0
+      '@walletconnect/core': 2.13.1(@react-native-async-storage/async-storage@1.23.1)
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.13.0
-      '@walletconnect/types': 2.13.0
-      '@walletconnect/utils': 2.13.0
+      '@walletconnect/sign-client': 2.13.1(@react-native-async-storage/async-storage@1.23.1)
+      '@walletconnect/types': 2.13.1(@react-native-async-storage/async-storage@1.23.1)
+      '@walletconnect/utils': 2.13.1(@react-native-async-storage/async-storage@1.23.1)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
