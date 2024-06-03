@@ -1,5 +1,25 @@
 # @thirdweb-dev/react
 
+## 4.6.30
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.91
+  - @thirdweb-dev/react-core@4.6.30
+  - @thirdweb-dev/wallets@2.5.31
+
+## 4.6.29
+
+### Patch Changes
+
+- [#3183](https://github.com/thirdweb-dev/js/pull/3183) [`7bb241f`](https://github.com/thirdweb-dev/js/commit/7bb241f7db12e97b7eff7583548638b7ab2e5b77) Thanks [@MananTank](https://github.com/MananTank)! - Improved OTP input using input-otp library
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.90
+  - @thirdweb-dev/react-core@4.6.29
+  - @thirdweb-dev/wallets@2.5.30
+
 ## 4.6.28
 
 ### Patch Changes

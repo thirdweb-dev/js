@@ -31,15 +31,12 @@ function WalletsSection() {
           description="Flexible user sign-up flow with wallet and social sign-in methods"
           icon={WalletsConnectIcon}
         />
-
-        <ComingSoonWrapper>
-          <ArticleCardIndex
-            href="/connect/account-abstraction"
-            title="Account abstraction"
-            description="Complete toolkit for Account Abstraction"
-            icon={WalletsSmartIcon}
-          />
-        </ComingSoonWrapper>
+        <ArticleCardIndex
+          href="/connect/account-abstraction"
+          title="Account abstraction"
+          description="Complete toolkit for Account Abstraction"
+          icon={WalletsSmartIcon}
+        />
         <ComingSoonWrapper>
           <ArticleCardIndex
             title="In-App Wallet"

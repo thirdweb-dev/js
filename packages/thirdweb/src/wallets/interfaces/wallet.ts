@@ -23,6 +23,11 @@ export type SendTransactionOption = TransactionSerializable & {
   chainId: number;
 };
 
+export type SendRawTransactionOptions = {
+  rawTransaction: Hex;
+  chainId: number;
+};
+
 /**
  * Wallet interface
  */
@@ -61,5 +66,8 @@ export type Account = {
   signTransaction?: (tx: TransactionSerializable) => Promise<Hex>;
   sendBatchTransaction?: (
     txs: SendTransactionOption[],
+  ) => Promise<SendTransactionResult>;
+  sendRawTransaction?: (
+    tx: SendRawTransactionOptions,
   ) => Promise<SendTransactionResult>;
 };

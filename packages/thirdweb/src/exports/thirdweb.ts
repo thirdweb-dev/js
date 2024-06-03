@@ -210,6 +210,7 @@ export {
   type StringToHexOpts,
   type ToHexParameters,
   type Uint8ArrayToHexOpts,
+  type Hex,
 } from "../utils/encoding/hex.js";
 export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
 

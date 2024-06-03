@@ -313,7 +313,6 @@ export const EmbeddedWalletOTPLoginUI: React.FC<
               setValue={(value) => {
                 setOtpInput(value);
                 setVerifyStatus("idle"); // reset error
-                verify(value);
               }}
               onEnter={() => {
                 verify(otpInput);
