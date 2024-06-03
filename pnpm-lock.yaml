@@ -1734,8 +1734,8 @@ importers:
         specifier: 0.2.2
         version: 0.2.2(react-native@0.74.1)(react@18.2.0)
       react-native-quick-crypto:
-        specifier: 0.7.0-rc.6
-        version: 0.7.0-rc.6(react-native@0.74.1)(react@18.2.0)
+        specifier: 0.7.0-rc.9
+        version: 0.7.0-rc.9(react-native@0.74.1)(react@18.2.0)
       shamir-secret-sharing:
         specifier: 0.0.3
         version: 0.0.3
@@ -23213,6 +23213,20 @@ packages:
     transitivePeerDependencies:
       - react
       - react-native
+    dev: false
+
+  /react-native-quick-crypto@0.7.0-rc.9(react-native@0.74.1)(react@18.2.0):
+    resolution: {integrity: sha512-xs6IpzKnxsFQ47r1d7KXZN7ZJfBM2qIPd6MPFnLtPwAPV8ObBjxjnfnV92npzRLMadicIHmXXN86cb2bDMWk8g==}
+    dependencies:
+      '@craftzdog/react-native-buffer': 6.0.5(react-native@0.74.1)(react@18.2.0)
+      events: 3.3.0
+      readable-stream: 4.5.2
+      string_decoder: 1.3.0
+      util: 0.12.5
+    transitivePeerDependencies:
+      - react
+      - react-native
+    dev: true
 
   /react-native-url-polyfill@1.3.0(react-native@0.74.1):
     resolution: {integrity: sha512-w9JfSkvpqqlix9UjDvJjm1EjSt652zVQ6iwCIj1cVVkwXf4jQhQgTNXY6EVTwuAmUjg6BC6k9RHCBynoLFo3IQ==}
