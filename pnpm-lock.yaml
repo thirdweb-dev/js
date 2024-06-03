@@ -32,8 +32,8 @@ importers:
         specifier: 2.27.1
         version: 2.27.1
       '@manypkg/cli':
-        specifier: 0.21.3
-        version: 0.21.3
+        specifier: 0.21.4
+        version: 0.21.4
       '@manypkg/get-packages':
         specifier: 2.2.1
         version: 2.2.1
@@ -7862,8 +7862,8 @@ packages:
     resolution: {integrity: sha512-+Emd+9HeeVi2E0bktJ33YleA/ozEuKYCBfmSbGRxlntdyUvaojeC+WPf2jN1WH8FjUEiljAjrEJTTZyRGCL8SQ==}
     dev: false
 
-  /@manypkg/cli@0.21.3:
-    resolution: {integrity: sha512-ro6j5b+44dN2AfId23voWxdlOqUCSbCwUHrUwq0LpoN/oZy6zQFAHDwYHbw50j2nL9EgpwIA03ZjaBceuUcMrw==}
+  /@manypkg/cli@0.21.4:
+    resolution: {integrity: sha512-EACxxb+c/t6G0l1FrlyewZeBnyR5V1cLkXjnBfsay5TN1UgbilFpG6POglzn+lVJet9NqnEKe3RLHABzkIDZ0Q==}
     engines: {node: '>=14.18.0'}
     hasBin: true
     dependencies:
