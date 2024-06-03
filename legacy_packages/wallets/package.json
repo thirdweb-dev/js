@@ -584,7 +584,7 @@
     "@babel/plugin-transform-private-methods": "^7.24.1",
     "@microsoft/api-extractor": "^7.43.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.4",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.5",
     "abitype": "1.0.0",

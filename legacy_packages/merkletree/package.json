@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "eslint": "8.57.0",
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.4",
     "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/treeify": "^1.0.3",

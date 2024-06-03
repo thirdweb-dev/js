@@ -435,7 +435,7 @@
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@preconstruct/cli": "2.7.0",
+    "@preconstruct/cli": "2.8.4",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@typechain/ethers-v5": "10.0.0",
     "eslint-config-thirdweb": "workspace:*",
