@@ -2,6 +2,7 @@ import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME,
+  WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
 } from "../../../core/constants/settings.js";
 
@@ -42,6 +43,25 @@ export class LocalStorage {
       return true;
     }
     return false;
+  }
+
+  /**
+   * @internal
+   */
+  async getWalletConnectSessions(): Promise<string | null> {
+    return this.getItem(
+      WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME(this.clientId),
+    );
+  }
+
+  /**
+   * @internal
+   */
+  async saveWalletConnectSessions(stringifiedSessions: string): Promise<void> {
+    await this.setItem(
+      WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME(this.clientId),
+      stringifiedSessions,
+    );
   }
 
   /**

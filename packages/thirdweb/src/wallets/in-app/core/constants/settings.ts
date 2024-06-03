@@ -63,5 +63,11 @@ export const DEVICE_SHARE_LOCAL_STORAGE_NAME = (
 /**
  * @internal
  */
+export const WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME = (clientId: string) =>
+  `walletConnectSessions-${clientId}`;
+
+/**
+ * @internal
+ */
 export const DEVICE_SHARE_LOCAL_STORAGE_NAME_DEPRECATED = (clientId: string) =>
   `${DEVICE_SHARE_LOCAL_STORAGE_PREFIX}-${clientId}`;

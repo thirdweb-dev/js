@@ -14,22 +14,17 @@ export type CodeProps = {
 };
 
 export const Code: React.FC<CodeProps> = async ({ code, lang }) => {
-  const formattedCode = await format(
-    `// @noErrors
-  ${code}`,
-    {
-      parser: "babel-ts",
-      plugins: [parserBabel, estree],
-      printWidth: 50,
-    },
-  );
+  const formattedCode = await format(code, {
+    parser: "babel-ts",
+    plugins: [parserBabel, estree],
+    printWidth: 50,
+  });
   const html = await codeToHtml(formattedCode, {
     lang: lang,
     themes: {
       light: "github-light",
       dark: "github-dark-default",
     },
-    transformers: [transformerTwoslash()],
   });
 
   return (
