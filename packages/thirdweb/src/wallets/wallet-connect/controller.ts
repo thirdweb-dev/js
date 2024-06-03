@@ -49,6 +49,7 @@ import {
   saveConnectParamsToStorage,
 } from "../storage/walletStorage.js";
 import type { WalletId } from "../wallet-types.js";
+import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
 
 const asyncLocalStorage = getStorage();
 
@@ -60,9 +61,6 @@ type SavedConnectParams = {
   pairingTopic?: string;
 };
 
-const defaultWCProjectId = "08c4b07e3ad25f1a27c14a4e8cecb6f0";
-
-const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
 const defaultShowQrModal = true;
@@ -242,7 +240,7 @@ async function initProvider(
       : wcOptions?.showQrModal === undefined
         ? defaultShowQrModal
         : wcOptions.showQrModal,
-    projectId: wcOptions?.projectId || defaultWCProjectId,
+    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: chainsToRequest,

@@ -6,6 +6,7 @@ import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { TransactionButton, useActiveAccount } from "thirdweb/react";
+import { StyledConnectButton } from "./styled-connect-button";
 
 const contract = getContract({
   address: "0x96B30d36f783c7BC68535De23147e2ce65788e93",
@@ -17,7 +18,7 @@ export function StyledPayTransaction() {
   const account = useActiveAccount();
   const { theme } = useTheme();
 
-  return (
+  return account ? (
     <TransactionButton
       transaction={() => {
         if (!account) throw new Error("No active account");
@@ -34,5 +35,7 @@ export function StyledPayTransaction() {
     >
       Buy for 10 MATIC
     </TransactionButton>
+  ) : (
+    <StyledConnectButton />
   );
 }

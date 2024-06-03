@@ -1,5 +1,179 @@
 # thirdweb
 
+## 5.27.0
+
+### Minor Changes
+
+- [#3181](https://github.com/thirdweb-dev/js/pull/3181) [`a346111`](https://github.com/thirdweb-dev/js/commit/a3461114c5e9adb8d0ea2f36bc9fb3d96366c5b9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds headless functions for creating and managing a WalletConnect session with a connected wallet
+
+  ### `createWalletConnectClient`
+
+  ```ts
+  import { createWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+
+  createWalletConnectClient({
+    client: client,
+    wallet: wallet,
+    onConnect: (session: any) => {
+      alert("Connected");
+    },
+    onDisconnect: (session: any) => {
+      alert("Disconnected");
+    },
+  });
+  ```
+
+  ### `createWalletConnectSession`
+
+  ```ts
+  import { createWalletConnectSession } from "thirdweb/wallets/wallet-connect";
+
+  createWalletConnectSession({
+    walletConnectClient: wcClient,
+    uri: "wc:...",
+  });
+  ```
+
+  ### `getWalletConnectSessions`
+
+  ```ts
+  import {
+    getWalletConnectSession,
+    type WalletConnectSession,
+  } from "thirdweb/wallets/wallet-connect";
+
+  const sessions: WalletConnectSession[] = await getWalletConnectSessions();
+  ```
+
+  ### `disconnectWalletConnectClient`
+
+  ```ts
+  import { disconnectWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+
+  disconnectWalletConnectClient({ session, walletConnectClient: wcClient });
+  ```
+
+- [#3105](https://github.com/thirdweb-dev/js/pull/3105) [`51e7ada`](https://github.com/thirdweb-dev/js/commit/51e7adaeb0fe050eb132510291ecac7a12e4c4ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - First party support for zkSync native account abstraction
+
+  You can now use smart accounts on zkSync and zkSync sepolia without any extra setup.
+
+  ```ts
+  const wallet = smartWallet({
+    chain: zkSync,
+    sponsorGas: true,
+  });
+
+  const smartAccount = await wallet.connect({
+    client,
+    personalAccount,
+  });
+
+  // now your can perform transactions normally, gas will be sponsored
+  sendTransaction({ transaction, account: smartAccount });
+  ```
+
+- [#3105](https://github.com/thirdweb-dev/js/pull/3105) [`51e7ada`](https://github.com/thirdweb-dev/js/commit/51e7adaeb0fe050eb132510291ecac7a12e4c4ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ZkSync transaction support
+
+### Patch Changes
+
+- [#3195](https://github.com/thirdweb-dev/js/pull/3195) [`3f66945`](https://github.com/thirdweb-dev/js/commit/3f669453d086487a217ae9af82745199e26550c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix `estimateGas` type resolution
+
+## 5.26.0
+
+### Minor Changes
+
+- [#3161](https://github.com/thirdweb-dev/js/pull/3161) [`b569eb4`](https://github.com/thirdweb-dev/js/commit/b569eb48ad018619e4589b9efb5aa774c7b77642) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds waitForBundle function to await a sendCalls bundle's complete confirmation.
+
+  ### Usage
+
+  ```ts
+  import { waitForBundle } from "thirdweb/wallets/eip5792";
+  const result = await waitForBundle({
+    client,
+    chain,
+    wallet,
+    bundleId: "0x123...",
+  });
+  ```
+
+- [#3161](https://github.com/thirdweb-dev/js/pull/3161) [`b569eb4`](https://github.com/thirdweb-dev/js/commit/b569eb48ad018619e4589b9efb5aa774c7b77642) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds EIP-5792 react hooks
+
+  ## `useSendCalls`
+
+  `useSendCalls` will automatically revalidate all reads from contracts that are interacted with.
+
+  ```tsx
+  import { useSendCalls } from "thirdweb/react";
+
+  const sendTx1 = approve({
+    contract: USDT_CONTRACT,
+    amount: 100,
+    spender: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+  const sendTx2 = approve({
+    contract: USDT_CONTRACT,
+    amount: 100,
+    spender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  });
+  const { mutate: sendCalls, data: bundleId } = useSendCalls({ client });
+  await sendCalls({
+    wallet,
+    client,
+    calls: [sendTx1, sendTx2],
+  });
+  ```
+
+  Await the bundle's full confirmation:
+
+  ```tsx
+  const { mutate: sendCalls, data: bundleId } = useSendCalls({
+    client,
+    waitForResult: true,
+  });
+  await sendCalls({
+    wallet,
+    client,
+    calls: [sendTx1, sendTx2],
+  });
+  ```
+
+  Sponsor transactions with a paymaster:
+
+  ```ts
+  const { mutate: sendCalls, data: bundleId } = useSendCalls();
+  await sendCalls({
+    client,
+    calls: [sendTx1, sendTx2],
+    capabilities: {
+      paymasterService: {
+        url: `https://${CHAIN.id}.bundler.thirdweb.com/${client.clientId}`,
+      },
+    },
+  });
+  ```
+
+  ## `useCapabilities`
+
+  ```tsx
+  import { useCapabilities } from "thirdweb/react";
+  const { data: capabilities, isLoading } = useCapabilities();
+  ```
+
+  ## `useCallsStatus`
+
+  ```tsx
+  import { useCallsStatus } from "thirdweb/react";
+  const { data: status, isLoading } = useCallsStatus({ bundleId, client });
+  ```
+
+### Patch Changes
+
+- [#3178](https://github.com/thirdweb-dev/js/pull/3178) [`3dca028`](https://github.com/thirdweb-dev/js/commit/3dca028a7eff926ae406eb29cc82016ae6c994b3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimation in transaction button
+
+- [#3187](https://github.com/thirdweb-dev/js/pull/3187) [`874747b`](https://github.com/thirdweb-dev/js/commit/874747b3e00714e9a7336dcfda34e7b92b82e7e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Upgrade to latest coinbase wallet sdk
+
+- [#3186](https://github.com/thirdweb-dev/js/pull/3186) [`123275b`](https://github.com/thirdweb-dev/js/commit/123275bbe275457b0be5205812ba0ef75b1f0e5b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Catch any errors thrown while polling block numbers
+
 ## 5.25.1
 
 ### Patch Changes
