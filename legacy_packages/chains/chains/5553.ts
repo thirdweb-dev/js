@@ -23,7 +23,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://nahmii.io",
-  "name": "Nahmii Testnet",
+  "name": "Nahmii 2 Testnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -45,6 +45,7 @@ export default {
   ],
   "shortName": "NahmiiTestnet",
   "slip44": 1,
-  "slug": "nahmii-testnet",
+  "slug": "nahmii-2-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

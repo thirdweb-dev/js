@@ -4,8 +4,8 @@ export default {
   "chainId": 5551,
   "explorers": [
     {
-      "name": "Nahmii mainnet explorer",
-      "url": "https://explorer.nahmii.io",
+      "name": "Nahmii 2 Mainnet Explorer",
+      "url": "https://explorer.n2.nahmii.io",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
@@ -23,7 +23,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://nahmii.io",
-  "name": "Nahmii Mainnet",
+  "name": "Nahmii 2 Mainnet",
   "nativeCurrency": {
     "name": "Ether",
     "symbol": "ETH",
@@ -35,7 +35,7 @@ export default {
     "chain": "eip155-1",
     "bridges": [
       {
-        "url": "https://bridge.nahmii.io"
+        "url": "https://n2.bridge.nahmii.io"
       }
     ]
   },
@@ -44,6 +44,7 @@ export default {
     "https://l2.nahmii.io"
   ],
   "shortName": "Nahmii",
-  "slug": "nahmii",
+  "slug": "nahmii-2",
+  "status": "active",
   "testnet": false
 } as const satisfies Chain;
