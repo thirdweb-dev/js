@@ -40,6 +40,10 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
     component: <AffectedAreaInput />,
   },
   {
+    label: "In-app wallet",
+    component: <AffectedAreaInput />,
+  },
+  {
     label: "Connect SDKs",
     component: (
       <>
@@ -61,6 +65,36 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
       <>
         <UnitySupportForm />
         <SDKVersionInput />
+        <DescriptionInput />
+        <AttachmentForm />
+      </>
+    ),
+  },
+  {
+    label: ".NET SDK",
+    component: (
+      <>
+        <SDKVersionInput />
+        <SupportForm_SelectInput
+          formLabel="OS"
+          formValue="extraInfo_OS"
+          required={true}
+          promptText="Select an operating system"
+          options={["Windows", "MacOS", "Linux", "Other"]}
+        />
+        <SupportForm_TextInput
+          formLabel="Framework"
+          formValue="extraInfo_dotNET_Framework"
+          required={false}
+          placeholder="MAUI | Blazor | Godot, etc"
+          inputType="text"
+        />
+        <SupportForm_TextInput
+          formLabel="Target OS"
+          formValue="extraInfo_dotNET_Target_OS"
+          required={false}
+          inputType="text"
+        />
         <DescriptionInput />
         <AttachmentForm />
       </>
