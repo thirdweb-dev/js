@@ -93,7 +93,7 @@
     "eslint-plugin-svg-jsx": "^1.2.4",
     "eslint-plugin-tsdoc": "^0.2.17",
     "ethers": "^5.7.2",
-    "react": "18.2.0",
+    "react": "19.0.0-rc.0",
     "react-dom": "^18.2.0",
     "stream": "npm:stream-browserify@^3.0.0",
     "typedoc-gen": "workspace:*",
