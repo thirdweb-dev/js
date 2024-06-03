@@ -1,6 +1,7 @@
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import type { Theme } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 
 export type StatusMeta = {
   status: string;
@@ -10,10 +11,12 @@ export type StatusMeta = {
 
 export function getBuyWithCryptoStatusMeta(
   cryptoStatus: BuyWithCryptoStatus,
+  connectLocale: ConnectLocale,
 ): StatusMeta {
+  const locale = connectLocale.pay;
   if (cryptoStatus.status === "NOT_FOUND") {
     return {
-      status: "Unknown",
+      status: locale.unknown,
       color: "secondaryText",
     };
   }
@@ -23,7 +26,7 @@ export function getBuyWithCryptoStatusMeta(
 
   if (subStatus === "WAITING_BRIDGE") {
     return {
-      status: "Bridging",
+      status: locale.bridging,
       color: "accentText",
       loading: true,
     };
@@ -31,14 +34,14 @@ export function getBuyWithCryptoStatusMeta(
 
   if (subStatus === "PARTIAL_SUCCESS") {
     return {
-      status: "Incomplete",
+      status: locale.incomplete,
       color: "secondaryText",
     };
   }
 
   if (status === "PENDING") {
     return {
-      status: "Pending",
+      status: locale.pending,
       color: "accentText",
       loading: true,
     };
@@ -46,20 +49,20 @@ export function getBuyWithCryptoStatusMeta(
 
   if (status === "FAILED") {
     return {
-      status: "Failed",
+      status: locale.failed,
       color: "danger",
     };
   }
 
   if (status === "COMPLETED") {
     return {
-      status: "Completed",
+      status: locale.completed,
       color: "success",
     };
   }
 
   return {
-    status: "Unknown",
+    status: locale.unknown,
     color: "secondaryText",
   };
 }
@@ -79,13 +82,15 @@ export type FiatStatusMeta = {
 };
 export function getBuyWithFiatStatusMeta(
   fiatStatus: BuyWithFiatStatus,
+  connectLocale: ConnectLocale,
 ): FiatStatusMeta {
   const status = fiatStatus.status;
+  const locale = connectLocale.pay;
 
   switch (status) {
     case "CRYPTO_SWAP_FALLBACK": {
       return {
-        status: "Incomplete",
+        status: locale.incomplete,
         color: "danger",
         step: 2,
         progressStatus: "partialSuccess",
@@ -97,7 +102,7 @@ export function getBuyWithFiatStatusMeta(
     case "ON_RAMP_TRANSFER_IN_PROGRESS":
     case "PENDING_PAYMENT": {
       return {
-        status: "Pending",
+        status: locale.pending,
         color: "accentText",
         loading: true,
         step: status === "CRYPTO_SWAP_IN_PROGRESS" ? 2 : 1,
@@ -108,7 +113,7 @@ export function getBuyWithFiatStatusMeta(
     case "ON_RAMP_TRANSFER_COMPLETED":
     case "CRYPTO_SWAP_COMPLETED": {
       return {
-        status: "Completed", // Is this actually completed though?
+        status: locale.completed,
         color: "success",
         loading: true,
         step: status === "CRYPTO_SWAP_COMPLETED" ? 2 : 1,
@@ -119,7 +124,7 @@ export function getBuyWithFiatStatusMeta(
     case "CRYPTO_SWAP_FAILED":
     case "CRYPTO_SWAP_REQUIRED": {
       return {
-        status: "Action Required",
+        status: locale.actionRequired,
         color: "accentText",
         step: 2,
         progressStatus: "actionRequired",
@@ -129,7 +134,7 @@ export function getBuyWithFiatStatusMeta(
     case "PAYMENT_FAILED":
     case "ON_RAMP_TRANSFER_FAILED": {
       return {
-        status: "Failed",
+        status: locale.failed,
         color: "danger",
         step: 1,
         progressStatus: "failed",

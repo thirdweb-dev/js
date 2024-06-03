@@ -14,6 +14,7 @@ import {
   iconSize,
   spacing,
 } from "../../../../design-system/index.js";
+import type { ConnectLocale } from "../../../locale/types.js";
 import { formatSeconds } from "../swap/formatSeconds.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { type StatusMeta, getBuyWithCryptoStatusMeta } from "./statusMeta.js";
@@ -22,6 +23,7 @@ export function SwapDetailsScreen(props: {
   status: ValidBuyWithCryptoStatus;
   onBack: () => void;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
   const { status: initialStatus, client } = props;
   const statusQuery = useBuyWithCryptoStatus(
@@ -46,7 +48,12 @@ export function SwapDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        <SwapTxDetailsTable type="status" status={status} client={client} />
+        <SwapTxDetailsTable
+          type="status"
+          status={status}
+          client={client}
+          connectLocale={props.connectLocale}
+        />
       </Container>
     </Container>
   );
@@ -84,12 +91,14 @@ export function SwapTxDetailsTable(
         type: "quote";
         quote: BuyWithCryptoQuote;
         client: ThirdwebClient;
+        connectLocale: ConnectLocale;
       }
     | {
         client: ThirdwebClient;
         type: "status";
         status: ValidBuyWithCryptoStatus;
         hideStatusRow?: boolean;
+        connectLocale: ConnectLocale;
       },
 ) {
   let uiData: SwapTxDetailsData;
@@ -124,7 +133,7 @@ export function SwapTxDetailsTable(
             amount: status.destination.amount,
           }
         : undefined,
-      statusMeta: getBuyWithCryptoStatusMeta(status),
+      statusMeta: getBuyWithCryptoStatusMeta(status, props.connectLocale),
       estimatedDuration: status.quote.estimated.durationSeconds || 0,
       isPartialSuccess,
       destinationTxHash: status.destination?.transactionHash,

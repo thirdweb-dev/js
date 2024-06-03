@@ -143,6 +143,9 @@ const connectWalletLocalJa: ConnectLocale = {
     total: "Total",
     txFailedSubtitle: "Your transaction couldn't be processed",
     selectToken: "Select Token",
+    actionRequired: "Action Required",
+    bridging: "Bridging",
+    unknown: "Unknown",
   },
 };
 

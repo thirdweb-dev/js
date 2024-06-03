@@ -21,6 +21,7 @@ export function TxDetailsScreen(props: {
         client={props.client}
         status={statusInfo.status}
         onBack={props.onBack}
+        connectLocale={props.connectLocale}
       />
     );
   }

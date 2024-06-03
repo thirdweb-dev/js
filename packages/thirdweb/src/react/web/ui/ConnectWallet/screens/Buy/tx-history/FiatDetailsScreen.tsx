@@ -37,7 +37,7 @@ export function FiatDetailsScreen(props: {
     initialStatus;
 
   const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
-  const statusMeta = getBuyWithFiatStatusMeta(status);
+  const statusMeta = getBuyWithFiatStatusMeta(status, props.connectLocale);
 
   if (hasTwoSteps) {
     const fiatQuote = status.quote;

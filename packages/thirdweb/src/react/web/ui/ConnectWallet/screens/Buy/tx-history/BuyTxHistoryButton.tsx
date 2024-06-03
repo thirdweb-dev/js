@@ -28,8 +28,8 @@ export function BuyTxHistoryButton(props: {
   const locale = props.connectLocale.pay;
   const statusMeta =
     props.txInfo.type === "swap"
-      ? getBuyWithCryptoStatusMeta(props.txInfo.status)
-      : getBuyWithFiatStatusMeta(props.txInfo.status);
+      ? getBuyWithCryptoStatusMeta(props.txInfo.status, props.connectLocale)
+      : getBuyWithFiatStatusMeta(props.txInfo.status, props.connectLocale);
 
   return (
     <TxButton

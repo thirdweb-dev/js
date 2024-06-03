@@ -68,12 +68,14 @@ export function SwapStatusScreen(props: {
         type="status"
         hideStatusRow={true}
         client={props.client}
+        connectLocale={props.connectLocale}
       />
     ) : (
       <SwapTxDetailsTable
         type="quote"
         quote={props.quote}
         client={props.client}
+        connectLocale={props.connectLocale}
       />
     );
 

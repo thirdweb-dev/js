@@ -127,5 +127,8 @@ export type ConnectLocale = {
     total: string;
     txFailedSubtitle: string;
     selectToken: string;
+    unknown: string;
+    bridging: string;
+    actionRequired: string;
   };
 };

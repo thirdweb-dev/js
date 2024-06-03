@@ -11,13 +11,11 @@ export function CurrencySelection(props: {
   onBack: () => void;
   connectLocale: ConnectLocale;
 }) {
+  const locale = props.connectLocale.pay;
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader
-          title={props.connectLocale.pay.selectCurrency}
-          onBack={props.onBack}
-        />
+        <ModalHeader title={locale.selectCurrency} onBack={props.onBack} />
       </Container>
 
       <Line />

@@ -142,7 +142,7 @@ function OnrampStatusScreenUI(props: {
   const locale = props.connectLocale.pay;
 
   const statusMeta = props.fiatStatus
-    ? getBuyWithFiatStatusMeta(props.fiatStatus)
+    ? getBuyWithFiatStatusMeta(props.fiatStatus, props.connectLocale)
     : undefined;
 
   const fiatStatus: ValidBuyWithFiatStatus | undefined =

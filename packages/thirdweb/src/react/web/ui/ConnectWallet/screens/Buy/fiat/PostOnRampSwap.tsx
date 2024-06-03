@@ -99,7 +99,7 @@ export function PostOnRampSwap(props: {
     return (
       <Container fullHeight>
         <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
+          <ModalHeader title={locale.buy} onBack={props.onBack} />
         </Container>
 
         <Container

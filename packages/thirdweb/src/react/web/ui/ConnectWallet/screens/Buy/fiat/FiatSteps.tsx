@@ -91,7 +91,7 @@ export function FiatSteps(props: {
 }) {
   const locale = props.connectLocale.pay;
   const statusMeta = props.status
-    ? getBuyWithFiatStatusMeta(props.status)
+    ? getBuyWithFiatStatusMeta(props.status, props.connectLocale)
     : undefined;
 
   const {
