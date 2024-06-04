@@ -8,16 +8,25 @@ import type { PreparedTransaction } from "../prepare-transaction.js";
 
 export type EstimateGasOptions = Prettify<
   {
+    /**
+     * The prepared transaction to estimate the gas for.
+     */
     // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
     // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
     transaction: PreparedTransaction<any>;
   } & (
     | {
+        /**
+         * The account the transaction would be sent from.
+         */
         account: Account;
         from?: never;
       }
     | {
         account?: never;
+        /**
+         * The address the transaction would be sent from.
+         */
         from?: string;
       }
   )
