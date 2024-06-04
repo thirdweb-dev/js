@@ -136,8 +136,9 @@ export function useTransactionButtonCore(props: TransactionButtonProps) {
 
       if (onTransactionConfirmed) {
         const receipt = await waitForReceipt(result);
-        if (receipt.status === "reverted")
+        if (receipt.status === "reverted") {
           throw new Error(`Execution reverted: ${stringify(receipt, null, 2)}`);
+        }
         onTransactionConfirmed(receipt);
       }
     } catch (error) {

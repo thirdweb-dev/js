@@ -16,20 +16,8 @@ import { ThemedSpinner } from "../components/spinner.js";
  * ```tsx
  * <TransactionButton
  *   transaction={() => {}}
- *   onSuccess={handleSuccess}
+ *   onTransactionConfirmed={handleSuccess}
  *   onError={handleError}
- * >
- *   Confirm Transaction
- * </TransactionButton>
- * ```
- * Customize the styling by passing the `unstyled` prop and your inline styles and/or classes:
- * ```tsx
- * <TransactionButton
- *   transaction={() => {}}
- *   onSuccess={handleSuccess}
- *   onError={handleError}
- *   unstyled
- *   className="bg-white text-black rounded-md p-4 flex items-center justify-center"
  * >
  *   Confirm Transaction
  * </TransactionButton>
