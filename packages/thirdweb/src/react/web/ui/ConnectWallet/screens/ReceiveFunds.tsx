@@ -1,4 +1,10 @@
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../core/utils/addresses.js";
@@ -8,9 +14,7 @@ import { Spacer } from "../../components/Spacer.js";
 import { WalletImage } from "../../components/WalletImage.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../design-system/elements.js";
-import { iconSize, radius, spacing } from "../../design-system/index.js";
 import { useClipboard } from "../../hooks/useCopyClipboard.js";
 
 /**

@@ -12,6 +12,20 @@ export function CustomThemeProvider(props: {
   theme: "light" | "dark" | Theme;
 }) {
   const { theme, children } = props;
+  const themeObj = parseTheme(theme);
+
+  return (
+    <CustomThemeCtx.Provider value={themeObj}>
+      {children}
+    </CustomThemeCtx.Provider>
+  );
+}
+
+export function parseTheme(theme: "light" | "dark" | Theme | undefined): Theme {
+  if (!theme) {
+    return darkThemeObj;
+  }
+
   let themeObj: Theme;
 
   if (typeof theme === "string") {
@@ -20,11 +34,7 @@ export function CustomThemeProvider(props: {
     themeObj = theme;
   }
 
-  return (
-    <CustomThemeCtx.Provider value={themeObj}>
-      {children}
-    </CustomThemeCtx.Provider>
-  );
+  return themeObj;
 }
 
 /**

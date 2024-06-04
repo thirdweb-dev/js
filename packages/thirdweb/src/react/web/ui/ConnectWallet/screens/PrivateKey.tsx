@@ -2,10 +2,10 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebDomains } from "../../../../../utils/domains.js";
+import type { Theme } from "../../../../core/design-system/index.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
-import type { Theme } from "../../design-system/index.js";
 
 /**
  * @internal

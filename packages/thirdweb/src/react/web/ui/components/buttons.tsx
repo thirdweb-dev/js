@@ -1,12 +1,12 @@
 "use client";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import { StyledButton } from "../design-system/elements.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type Theme,
   fontSize,
   radius,
   spacing,
-} from "../design-system/index.js";
+} from "../../../core/design-system/index.js";
+import { StyledButton } from "../design-system/elements.js";
 
 export type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";

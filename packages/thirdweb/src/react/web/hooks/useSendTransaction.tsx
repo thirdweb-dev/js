@@ -4,6 +4,8 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import type { GaslessOptions } from "../../../transaction/actions/gasless/types.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
+import { type Theme, iconSize } from "../../core/design-system/index.js";
 import { useSendTransactionCore } from "../../core/hooks/contract/useSendTransaction.js";
 import { useActiveWallet } from "../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../core/providers/RootElementContext.js";
@@ -19,8 +21,6 @@ import { Spinner } from "../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../ui/components/basic.js";
 import { Button } from "../ui/components/buttons.js";
 import { Text } from "../ui/components/text.js";
-import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
-import { type Theme, iconSize } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 

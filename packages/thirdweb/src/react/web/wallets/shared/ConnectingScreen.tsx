@@ -1,12 +1,12 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { iconSize, spacing } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletLogoSpinner } from "../../ui/ConnectWallet/screens/WalletLogoSpinner.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { iconSize, spacing } from "../../ui/design-system/index.js";
 
 /**
  * @internal

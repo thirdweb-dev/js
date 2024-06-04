@@ -2,6 +2,11 @@ import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
 import { useMemo, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isAddress } from "../../../../../utils/address.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
@@ -17,7 +22,6 @@ import { Button } from "../../components/buttons.js";
 import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
 import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import { TokenSelector } from "./TokenSelector.js";

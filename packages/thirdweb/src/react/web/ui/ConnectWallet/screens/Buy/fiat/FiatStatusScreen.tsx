@@ -8,6 +8,7 @@ import type {
   ValidBuyWithFiatStatus,
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isMobile } from "../../../../../../../utils/web/isMobile.js";
+import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWithFiatStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -16,7 +17,6 @@ import { StepBar } from "../../../../components/StepBar.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import { getBuyWithFiatStatusMeta } from "../tx-history/statusMeta.js";
 import { OnRampTxDetailsTable } from "./FiatTxDetailsTable.js";

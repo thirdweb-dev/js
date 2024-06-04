@@ -1,6 +1,6 @@
 "use client";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { Container, noScrollBar } from "../../components/basic.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import { compactModalMaxHeight } from "../constants.js";
 

@@ -19,6 +19,15 @@ import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  type Theme,
+  fontSize,
+  iconSize,
+  media,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -45,17 +54,8 @@ import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
-import {
-  type Theme,
-  fontSize,
-  iconSize,
-  media,
-  radius,
-  spacing,
-} from "../design-system/index.js";
 import type {
   ConnectButtonProps,
   ConnectButton_detailsButtonOptions,

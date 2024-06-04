@@ -1,6 +1,6 @@
 import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
-import type { Theme } from "../../../../design-system/index.js";
+import type { Theme } from "../../../../../../core/design-system/index.js";
 
 export type StatusMeta = {
   status: string;

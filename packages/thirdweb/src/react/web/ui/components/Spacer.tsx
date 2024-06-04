@@ -1,4 +1,4 @@
-import { spacing } from "../design-system/index.js";
+import { spacing } from "../../../core/design-system/index.js";
 
 /**
  * @internal
