@@ -27,8 +27,8 @@ function WalletsSection() {
       <div className="my-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <ArticleCardIndex
           href="/connect/sign-in"
-          title="Sign-In"
-          description="Flexible user sign-up flow with wallet and social sign-in methods"
+          title="Sign In"
+          description="Integrate 350+ web3 wallets, in-app wallets, and smart accounts"
           icon={WalletsConnectIcon}
         />
         <ArticleCardIndex
@@ -37,14 +37,12 @@ function WalletsSection() {
           description="Complete toolkit for Account Abstraction"
           icon={WalletsSmartIcon}
         />
-        <ComingSoonWrapper>
-          <ArticleCardIndex
-            title="In-App Wallet"
-            description="Email & social login wallets for your customers"
-            href="/connect/in-app-wallet"
-            icon={WalletsInAppIcon}
-          />
-        </ComingSoonWrapper>
+        <ArticleCardIndex
+          title="In-App Wallet"
+          description="Onboard users with an email, social logins, passkey or your own auth system"
+          href="/connect/in-app-wallet"
+          icon={WalletsInAppIcon}
+        />
         <ComingSoonWrapper>
           <ArticleCardIndex
             href="/connect/auth"
@@ -56,7 +54,7 @@ function WalletsSection() {
         <ArticleCardIndex
           href="/connect/pay"
           title="Pay"
-          description="Easily integrate fiat onramps and cross-chain crypto purchases"
+          description="Add fiat and cross-chain crypto payments in your apps"
           icon={PayIcon}
         />
         <ComingSoonWrapper>
@@ -84,7 +82,7 @@ function ArticleCardIndex(props: {
   return (
     <Link
       href={props.href}
-      className="flex items-center gap-4 rounded-lg border p-4 transition-colors hover:border-ring hover:bg-ring/20 h-full"
+      className="flex items-center gap-4 rounded-lg border p-4 transition-colors hover:border-ring hover:bg-ring/20 min-h-32"
     >
       {props.icon && <props.icon className="size-10 shrink-0" />}
       <div className="flex flex-col gap-1">
