@@ -3,8 +3,9 @@ import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { StyledPayEmbed } from "../../../components/pay/embed";
-import { PayTransactionButton } from "../../../components/pay/transaction-button";
+import { CodeExample } from "../../../components/code/code-example";
+import { StyledPayEmbedPreview } from "../../../components/pay/embed";
+import { PayTransactionButtonPreview } from "../../../components/pay/transaction-button";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -47,9 +48,12 @@ export default function Page() {
           <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
-                src={require("../../../../public/pay.png")}
+                width={600}
+                height={400}
+                src={"/pay.png"}
                 objectFit={"contain"}
                 alt=""
+                priority={true}
               />
             </div>
           </div>
@@ -62,5 +66,83 @@ export default function Page() {
         <PayTransactionButton />
       </section>
     </main>
+  );
+}
+
+function StyledPayEmbed() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Embed component
+        </h2>
+        <p className="max-w-[600px]">
+          Inline component that allows users to buy any currency.
+          <br />
+          Customize theme, currency, amounts, payment methods and more.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<StyledPayEmbedPreview />}
+        code={`
+        import { PayEmbed } from "thirdweb/react";
+
+        function App() {
+          return (
+            <PayEmbed
+              client={client}
+            />
+          );
+        };`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function PayTransactionButton() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Transaction Button
+        </h2>
+        <p className="max-w-[600px]">
+          Transaction Button is a handy component that handles transactions.
+          <br />
+          If your user doesn&apos;t have enough funds for that transaction, a
+          pre-filled pay modal will appear with the exact amount needed.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<PayTransactionButtonPreview />}
+        code={`import { claimTo } from "thirdweb/extensions/erc1155";
+        import { TransactionButton, useActiveAccount } from "thirdweb/react";
+
+
+        function App() {
+          const account = useActiveAccount();
+        
+          return (
+            <TransactionButton
+              transaction={() => {
+                // any transaction works
+                return claimTo({
+                  contract,
+                  quantity: 1n,
+                  tokenId: 0n,
+                  to: account.address,
+                });
+              }}
+            >
+              Buy for 10 MATIC
+            </TransactionButton>
+          );
+        };`}
+        lang="tsx"
+      />
+    </>
   );
 }

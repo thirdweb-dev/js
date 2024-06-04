@@ -3,9 +3,10 @@ import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ButtonComponent } from "../../../components/sign-in/button";
-import { EmbedComponent } from "../../../components/sign-in/embed";
-import { Hooks } from "../../../components/sign-in/hooks";
+import { CodeExample } from "../../../components/code/code-example";
+import { HooksPreview } from "../../../components/sign-in/hooks";
+import { StyledConnectButton } from "../../../components/styled-connect-button";
+import { StyledConnectEmbed } from "../../../components/styled-connect-embed";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -49,9 +50,12 @@ export default function Page() {
           <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
-                src={require("../../../../public/connectors.png")}
+                src={"/connectors.png"}
+                width={600}
+                height={400}
                 objectFit={"contain"}
                 alt=""
+                priority={true}
               />
             </div>
           </div>
@@ -70,5 +74,112 @@ export default function Page() {
         <Hooks />
       </section>
     </main>
+  );
+}
+
+function ButtonComponent() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Button Component
+        </h2>
+        <p className="max-w-[600px]">
+          When clicked opens a modal and allows users to connect to various
+          wallets.
+          <br />
+          Extremely customizable and easy to use.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<StyledConnectButton />}
+        code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+
+const THIRDWEB_CLIENT = createThirdwebClient({
+clientId: "<YOUR_CLIENT_ID>"
+});
+
+function App(){
+return (
+<ConnectButton client={THIRDWEB_CLIENT} />
+);
+};`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function EmbedComponent() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Embed Component
+        </h2>
+        <p className="max-w-[600px]">
+          Inline component to connect to various wallets.
+          <br />
+          Use this to create your own full screen login page.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<StyledConnectEmbed />}
+        code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+
+const THIRDWEB_CLIENT = createThirdwebClient({
+clientId: "<YOUR_CLIENT_ID>"
+});
+
+function App(){
+return (
+<ConnectButton client={THIRDWEB_CLIENT} />
+);
+};`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function Hooks() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Custom UI
+        </h2>
+        <p className="max-w-[600px]">
+          Build your own connect UI using react hooks.
+          <br />
+          Wallet state management is all handled for you.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<HooksPreview />}
+        code={`// Using your own UI
+        import { useConnect } from "thirdweb/react";
+        import { createWallet } from "thirdweb/wallets";
+      
+        function App(){
+          const { connect } = useConnect();
+      
+          return (<>
+      <button onClick={() => connect(async () => {
+        // 350+ wallets supported with id autocomplete
+        const wallet = createWallet("io.metamask");
+        await wallet.connect({ client });
+        return wallet;
+      })}>Connect with Metamask</button>
+      </>);
+      };`}
+        lang="tsx"
+      />
+    </>
   );
 }

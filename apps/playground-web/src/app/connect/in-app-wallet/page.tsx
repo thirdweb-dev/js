@@ -4,8 +4,8 @@ import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { AnyAuth } from "../../../components/in-app-wallet/any-auth";
-import { SponsoredInAppTx } from "../../../components/in-app-wallet/sponsored-tx";
+import { SponsoredInAppTxPreview } from "../../../components/in-app-wallet/sponsored-tx";
+import { StyledConnectEmbed } from "../../../components/styled-connect-embed";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -48,9 +48,12 @@ export default function Page() {
           <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
-                src={require("../../../../public/in-app-wallet.png")}
+                src={"/in-app-wallet.png"}
+                width={600}
+                height={400}
                 objectFit={"contain"}
                 alt=""
+                priority={true}
               />
             </div>
           </div>
@@ -65,5 +68,89 @@ export default function Page() {
         <SponsoredInAppTx />
       </section>
     </main>
+  );
+}
+
+function AnyAuth() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Any Auth Method
+        </h2>
+        <p className="max-w-[600px]">
+          Use any of the built-in auth methods or bring your own.
+          <br />
+          Supports custom auth endpoints to integrate with your existing user
+          base.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<StyledConnectEmbed />}
+        code={`import { inAppWallet } from "thirdweb/wallets";
+        import { ConnectEmbed } from "thirdweb/react";
+
+        
+        const wallets = [
+          inAppWallet(
+            // built-in auth methods
+            { auth: { 
+              options: ["email", "phone", "passkey", "google", "apple", "facebook"] 
+              }
+            }
+            // or bring your own auth endpoint
+          )
+        ];
+
+        function App(){
+          return (
+<ConnectEmbed client={client} wallets={wallets} />);
+};`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function SponsoredInAppTx() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Signless Sponsored Transactions
+        </h2>
+        <p className="max-w-[600px]">
+          With in-app wallets, users don&apos;t need to confirm every
+          transaction.
+          <br />
+          Combine it with smart account flag to cover gas costs for the best UX.
+        </p>
+      </div>
+      <CodeExample
+        preview={<SponsoredInAppTxPreview />}
+        code={`import { inAppWallet } from "thirdweb/wallets";
+  import { claimTo } from "thirdweb/extensions/erc1155";
+  import { ConnectButton, TransactionButton } from "thirdweb/react";
+
+  
+  const wallets = [
+    inAppWallet(
+      // turn on gas sponsorship for in-app wallets
+      { smartAccount: { chain, sponsorGas: true }}
+    )
+  ];
+
+  function App(){
+    return (<>
+<ConnectButton client={client} wallets={wallets} />
+
+{/* signless, sponsored transactions */}
+<TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
+</>);
+};`}
+        lang="tsx"
+      />
+    </>
   );
 }
