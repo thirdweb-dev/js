@@ -138,7 +138,9 @@ function isOpStackChain(chainId: number) {
     chainId === Zora.chainId ||
     chainId === ZoraSepoliaTestnet.chainId ||
     chainId === Celo.chainId ||
-    chainId === CeloAlfajoresTestnet.chainId
+    chainId === CeloAlfajoresTestnet.chainId ||
+    chainId === 204 || // opBNB
+    chainId === 5611 // opBNB testnet
   );
 }
 
