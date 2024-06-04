@@ -1,5 +1,57 @@
 # thirdweb
 
+## 5.28.0
+
+### Minor Changes
+
+- [#3198](https://github.com/thirdweb-dev/js/pull/3198) [`ca31a6c`](https://github.com/thirdweb-dev/js/commit/ca31a6c0d8f2d246d48b8f382fa01377a6a3e2cf) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Exports toSerializableTransaction to convert preparedTransaction into a fully serializable transaction.
+  Exports estimateGasCost to estimate the gas cost of a transaction in ether and wei.
+  Exports getGasPrice to get the currect gas price for a chain.
+
+  ### `toSerializableTransaction`
+
+  ```ts
+  import { prepareTransaction, toSerializableTransaction } from "thirdweb";
+
+  const transaction = await prepareTransaction({
+    transaction: {
+      to: "0x...",
+      value: 100,
+    },
+  });
+  const serializableTransaction = await toSerializableTransaction({
+    transaction,
+  });
+
+  account.sendTransaction(serializableTransaction);
+  ```
+
+  ### `estimateGasCost`
+
+  ```ts
+  import { estimateGasCost } from "thirdweb";
+
+  const gasCost = await estimateGasCost({ transaction });
+  ```
+
+  ### `getGasPrice`
+
+  ```ts
+  import { getGasPrice } from "thirdweb";
+
+  const gasPrice = await getGasPrice({ client, chain });
+  ```
+
+### Patch Changes
+
+- [#3207](https://github.com/thirdweb-dev/js/pull/3207) [`e7443ed`](https://github.com/thirdweb-dev/js/commit/e7443edda77f0a4528f1f9782b2046dcc43a9a12) Thanks [@MananTank](https://github.com/MananTank)! - Fixes #3204 - Account methods not properly updated when account is changed in wallet
+
+- [#3226](https://github.com/thirdweb-dev/js/pull/3226) [`58d14c9`](https://github.com/thirdweb-dev/js/commit/58d14c9eaf964620a44732ee247deb364c3aec09) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add option to choose the contract type for erc1155/generateMintSignature
+
+- [#3227](https://github.com/thirdweb-dev/js/pull/3227) [`043f0da`](https://github.com/thirdweb-dev/js/commit/043f0da708b267336c79f12f6c186beedf3206d7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better gas estimation for opBNB mainnet & testnet
+
+- [#3201](https://github.com/thirdweb-dev/js/pull/3201) [`0328bc8`](https://github.com/thirdweb-dev/js/commit/0328bc894e62d15ce2d457abd5f06d16fbd8c7e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fallback to default metadata on failure to fetch erc20 metadata
+
 ## 5.27.0
 
 ### Minor Changes
