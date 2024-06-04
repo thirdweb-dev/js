@@ -26,7 +26,7 @@ export type ToSerializableTransactionOptions = {
  * @note For easier transaction sending, {@see sendTransaction}
  * @example
  * ```ts
- * import { prepareTransaction, populateTransaction } from "thirdweb";
+ * import { prepareTransaction, toSerializableTransaction } from "thirdweb";
  *
  * const transaction = await prepareTransaction({
  *   transaction: {
