@@ -102,61 +102,6 @@ type WalletDetailsModalScreen =
   | "view-funds"
   | "private-key";
 
-function useWalletInfo(
-  client: ThirdwebClient,
-  detailsButton?: ConnectButton_detailsButtonOptions,
-) {
-  const walletChain = useActiveWalletChain();
-
-  const tokenAddress =
-    walletChain && detailsButton?.displayBalanceToken
-      ? detailsButton.displayBalanceToken[Number(walletChain.id)]
-      : undefined;
-
-  const activeAccount = useActiveAccount();
-  const ensNameQuery = useQuery({
-    queryKey: ["ens-name", activeAccount?.address],
-    enabled: !!activeAccount?.address,
-    queryFn: () =>
-      resolveName({
-        client,
-        address: activeAccount?.address || "",
-        resolverChain: ethereum,
-      }),
-  });
-
-  const ensAvatarQuery = useQuery({
-    queryKey: ["ens-avatar", ensNameQuery.data],
-    enabled: !!ensNameQuery.data,
-    queryFn: async () =>
-      resolveAvatar({
-        client,
-        name: ensNameQuery.data || "",
-      }),
-  });
-
-  const shortAddress = activeAccount?.address
-    ? shortenString(activeAccount.address, false)
-    : "";
-
-  const balanceQuery = useWalletBalance({
-    chain: walletChain ? walletChain : undefined,
-    tokenAddress,
-    address: activeAccount?.address,
-    client,
-  });
-
-  const addressOrENS = ensNameQuery.data || shortAddress;
-
-  return {
-    ensNameQuery,
-    ensAvatarQuery,
-    addressOrENS,
-    shortAddress,
-    balanceQuery,
-  };
-}
-
 /**
  * @internal
  */
@@ -1272,5 +1217,60 @@ export function useWalletDetailsModal() {
 
   return {
     open: openModal,
+  };
+}
+
+function useWalletInfo(
+  client: ThirdwebClient,
+  detailsButton?: ConnectButton_detailsButtonOptions,
+) {
+  const walletChain = useActiveWalletChain();
+
+  const tokenAddress =
+    walletChain && detailsButton?.displayBalanceToken
+      ? detailsButton.displayBalanceToken[Number(walletChain.id)]
+      : undefined;
+
+  const activeAccount = useActiveAccount();
+  const ensNameQuery = useQuery({
+    queryKey: ["ens-name", activeAccount?.address],
+    enabled: !!activeAccount?.address,
+    queryFn: () =>
+      resolveName({
+        client,
+        address: activeAccount?.address || "",
+        resolverChain: ethereum,
+      }),
+  });
+
+  const ensAvatarQuery = useQuery({
+    queryKey: ["ens-avatar", ensNameQuery.data],
+    enabled: !!ensNameQuery.data,
+    queryFn: async () =>
+      resolveAvatar({
+        client,
+        name: ensNameQuery.data || "",
+      }),
+  });
+
+  const shortAddress = activeAccount?.address
+    ? shortenString(activeAccount.address, false)
+    : "";
+
+  const balanceQuery = useWalletBalance({
+    chain: walletChain ? walletChain : undefined,
+    tokenAddress,
+    address: activeAccount?.address,
+    client,
+  });
+
+  const addressOrENS = ensNameQuery.data || shortAddress;
+
+  return {
+    ensNameQuery,
+    ensAvatarQuery,
+    addressOrENS,
+    shortAddress,
+    balanceQuery,
   };
 }
