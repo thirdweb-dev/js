@@ -1,5 +1,11 @@
 # @thirdweb-dev/react-native-adapter
 
+## 1.1.1
+
+### Patch Changes
+
+- [#3162](https://github.com/thirdweb-dev/js/pull/3162) [`b9b185b`](https://github.com/thirdweb-dev/js/commit/b9b185b665e9cc2085f0cc07e3a3cc06a755b42a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for CB wallet in react native
+
 ## 1.1.0
 
 ### Minor Changes

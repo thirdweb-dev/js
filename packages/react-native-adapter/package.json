@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-native-adapter",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -33,13 +33,14 @@
   },
   "peerDependencies": {
     "typescript": ">=5.0.4",
+    "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
     "@react-native-community/netinfo": "^11",
     "amazon-cognito-identity-js": "^6",
     "expo-application": "^5",
     "expo-web-browser": "^13",
     "react-native-aes-gcm-crypto": "^0.2",
-    "react-native-quick-crypto": ">=0.6.1",
+    "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "shamir-secret-sharing": "^0.0.3",
     "react-native": ">=0.70",
     "react-native-get-random-values": "^1"

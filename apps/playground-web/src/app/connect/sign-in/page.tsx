@@ -1,10 +1,12 @@
-import { CodeExample } from "@/components/code/code-example";
-import { StyledConnectButton } from "@/components/styled-connect-button";
-import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { CodeExample } from "../../../components/code/code-example";
+import { HooksPreview } from "../../../components/sign-in/hooks";
+import { StyledConnectButton } from "../../../components/styled-connect-button";
+import { StyledConnectEmbed } from "../../../components/styled-connect-embed";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -15,18 +17,18 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24 lg:space-y-32 xl:space-y-48">
+    <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
       <section className="container px-4 md:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
-                The easiest way for users to sign in to your app
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
+                Sign in
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                Let users sign in with their email, phone number, social media
-                accounts or directly with a wallet. Seemlessly integrate account
-                abstraction and SIWE auth.
+                Create a login experience tailor-made for your app. Add your
+                wallets of choice, enable web2 sign-in options and create a
+                modal that fits your brand.
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
@@ -35,7 +37,7 @@ export default function Page() {
                   target="_blank"
                   href="https://portal.thirdweb.com/connect/sign-in"
                 >
-                  Get Started
+                  View docs
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
@@ -45,78 +47,139 @@ export default function Page() {
               </Button>
             </div>
           </div>
-          <div className="w-full mx-auto my-auto sm:w-full lg:order-last relative flex flex-col space-y-2">
-            <div className="mx-auto">
-              <StyledConnectButton />
+          <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
+            <div className="max-w-full sm:max-w-[600px]">
+              <Image
+                src={"/connectors.png"}
+                width={600}
+                height={400}
+                objectFit={"contain"}
+                alt=""
+                priority={true}
+              />
             </div>
-
-            <p className="md:text-xl text-center text-muted-foreground">
-              <small>👆 This is live, try it out! 👆</small>
-            </p>
           </div>
         </div>
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-semibold tracking-tight">
-            Connect Button
-          </h2>
-          <p className="max-w-[600px]">
-            When clicked opens a modal and allows users to connect to various
-            wallets.
-            <br />
-            It is extremely customizable and very easy to use.
-          </p>
-        </div>
-
-        <CodeExample
-          preview={<StyledConnectButton />}
-          code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
-
-const THIRDWEB_CLIENT = createThirdwebClient({
-  clientId: "<YOUR_CLIENT_ID>"
-});
-
-function App(){
-  return (
-    <ConnectButton client={THIRDWEB_CLIENT} />
-  );
-};`}
-          lang="tsx"
-        />
+        <ButtonComponent />
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-semibold tracking-tight">
-            Connect Embed
-          </h2>
-          <p className="max-w-[600px]">
-            When clicked opens a modal and allows users to connect to various
-            wallets.
-            <br />
-            It is extremely customizable and very easy to use.
-          </p>
-        </div>
-        <CodeExample
-          preview={<StyledConnectEmbed />}
-          code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectEmbed } from "thirdweb/react";
+        <EmbedComponent />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <Hooks />
+      </section>
+    </main>
+  );
+}
+
+function ButtonComponent() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Button Component
+        </h2>
+        <p className="max-w-[600px]">
+          When clicked opens a modal and allows users to connect to various
+          wallets.
+          <br />
+          Extremely customizable and easy to use.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<StyledConnectButton />}
+        code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
 
 const THIRDWEB_CLIENT = createThirdwebClient({
-  clientId: "<YOUR_CLIENT_ID>"
+clientId: "<YOUR_CLIENT_ID>"
 });
 
 function App(){
-  return (
-    <ConnectEmbed client={THIRDWEB_CLIENT} />
-  );
+return (
+<ConnectButton client={THIRDWEB_CLIENT} />
+);
 };`}
-          lang="tsx"
-        />
-      </section>
-    </main>
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function EmbedComponent() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Embed Component
+        </h2>
+        <p className="max-w-[600px]">
+          Inline component to connect to various wallets.
+          <br />
+          Use this to create your own full screen login page.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<StyledConnectEmbed />}
+        code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+
+const THIRDWEB_CLIENT = createThirdwebClient({
+clientId: "<YOUR_CLIENT_ID>"
+});
+
+function App(){
+return (
+<ConnectButton client={THIRDWEB_CLIENT} />
+);
+};`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function Hooks() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Custom UI
+        </h2>
+        <p className="max-w-[600px]">
+          Build your own connect UI using react hooks.
+          <br />
+          Wallet state management is all handled for you.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<HooksPreview />}
+        code={`// Using your own UI
+        import { useConnect } from "thirdweb/react";
+        import { createWallet } from "thirdweb/wallets";
+      
+        function App(){
+          const { connect } = useConnect();
+      
+          return (<>
+      <button onClick={() => connect(async () => {
+        // 350+ wallets supported with id autocomplete
+        const wallet = createWallet("io.metamask");
+        await wallet.connect({ client });
+        return wallet;
+      })}>Connect with Metamask</button>
+      </>);
+      };`}
+        lang="tsx"
+      />
+    </>
   );
 }

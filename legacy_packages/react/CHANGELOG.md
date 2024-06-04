@@ -1,5 +1,57 @@
 # @thirdweb-dev/react
 
+## 4.6.31
+
+### Patch Changes
+
+- Updated dependencies [[`ae9496e`](https://github.com/thirdweb-dev/js/commit/ae9496e9d821553ea488656574b991961468dea9), [`043f0da`](https://github.com/thirdweb-dev/js/commit/043f0da708b267336c79f12f6c186beedf3206d7), [`f13a40b`](https://github.com/thirdweb-dev/js/commit/f13a40ba9905a05d02640aa6672557f53567b087)]:
+  - @thirdweb-dev/sdk@4.0.92
+  - @thirdweb-dev/chains@0.1.116
+  - @thirdweb-dev/react-core@4.6.31
+  - @thirdweb-dev/wallets@2.5.32
+
+## 4.6.30
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.91
+  - @thirdweb-dev/react-core@4.6.30
+  - @thirdweb-dev/wallets@2.5.31
+
+## 4.6.29
+
+### Patch Changes
+
+- [#3183](https://github.com/thirdweb-dev/js/pull/3183) [`7bb241f`](https://github.com/thirdweb-dev/js/commit/7bb241f7db12e97b7eff7583548638b7ab2e5b77) Thanks [@MananTank](https://github.com/MananTank)! - Improved OTP input using input-otp library
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.90
+  - @thirdweb-dev/react-core@4.6.29
+  - @thirdweb-dev/wallets@2.5.30
+
+## 4.6.28
+
+### Patch Changes
+
+- Updated dependencies [[`8d0c985`](https://github.com/thirdweb-dev/js/commit/8d0c985c45fc85b220784f841c1de7533ad8ebf8)]:
+  - @thirdweb-dev/chains@0.1.115
+  - @thirdweb-dev/react-core@4.6.28
+  - @thirdweb-dev/sdk@4.0.89
+  - @thirdweb-dev/wallets@2.5.29
+
+## 4.6.27
+
+### Patch Changes
+
+- [#3153](https://github.com/thirdweb-dev/js/pull/3153) [`3b03cd0`](https://github.com/thirdweb-dev/js/commit/3b03cd098716070821c6b20ecedacec1df47648f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improve the copy on the pending connection QR code screen in the connect modal
+
+- Updated dependencies [[`bd8fb7a`](https://github.com/thirdweb-dev/js/commit/bd8fb7a576ada21381625f1a241b10a6e68ef1f7)]:
+  - @thirdweb-dev/chains@0.1.114
+  - @thirdweb-dev/sdk@4.0.88
+  - @thirdweb-dev/react-core@4.6.27
+  - @thirdweb-dev/wallets@2.5.28
+
 ## 4.6.26
 
 ### Patch Changes
