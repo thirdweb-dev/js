@@ -1,6 +1,3 @@
-import { CodeExample } from "@/components/code/code-example";
-import { StyledConnectButton } from "@/components/styled-connect-button";
-import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
