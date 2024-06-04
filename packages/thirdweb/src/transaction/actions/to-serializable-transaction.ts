@@ -34,7 +34,7 @@ export type ToSerializableTransactionOptions = {
  *     value: 100,
  *   },
  * });
- * const finalTx = await populateTransaction({
+ * const finalTx = await toSerializableTransaction({
  *   transaction,
  * });
  *
