@@ -39,7 +39,7 @@ function WalletsSection() {
         />
         <ArticleCardIndex
           title="In-App Wallet"
-          description="Onboard users with an email, social logins or passkey"
+          description="Onboard users with an email, social logins, passkey or your own auth system"
           href="/connect/in-app-wallet"
           icon={WalletsInAppIcon}
         />

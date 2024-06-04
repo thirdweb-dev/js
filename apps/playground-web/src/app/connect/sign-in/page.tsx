@@ -4,7 +4,11 @@ import { StyledConnectEmbed } from "@/components/styled-connect-embed";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { ButtonComponent } from "../../../components/sign-in/button";
+import { EmbedComponent } from "../../../components/sign-in/embed";
+import { Hooks } from "../../../components/sign-in/hooks";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -15,12 +19,12 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24 lg:space-y-32 xl:space-y-48">
+    <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
       <section className="container px-4 md:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
                 Sign in
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
@@ -45,76 +49,28 @@ export default function Page() {
               </Button>
             </div>
           </div>
-          <div className="w-full mx-auto my-auto sm:w-full lg:order-last relative flex flex-col space-y-2">
-            <div className="mx-auto">
-              <StyledConnectButton />
+          <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
+            <div className="max-w-full sm:max-w-[600px]">
+              <Image
+                src={require("../../../../public/connectors.png")}
+                objectFit={"contain"}
+                alt=""
+              />
             </div>
-
-            <p className="md:text-xl text-center text-muted-foreground">
-              <small>👆 This is live, try it out! 👆</small>
-            </p>
           </div>
         </div>
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-semibold tracking-tight">
-            Button Component
-          </h2>
-          <p className="max-w-[600px]">
-            When clicked opens a modal and allows users to connect to various
-            wallets.
-            <br />
-            Extremely customizable and easy to use.
-          </p>
-        </div>
-
-        <CodeExample
-          preview={<StyledConnectButton />}
-          code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
-
-const THIRDWEB_CLIENT = createThirdwebClient({
-  clientId: "<YOUR_CLIENT_ID>"
-});
-
-function App(){
-  return (
-    <ConnectButton client={THIRDWEB_CLIENT} />
-  );
-};`}
-          lang="tsx"
-        />
+        <ButtonComponent />
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
-        <div className="space-y-2">
-          <h2 className="text-4xl font-semibold tracking-tight">
-            Embed Component
-          </h2>
-          <p className="max-w-[600px]">
-            Inline component to connect to various wallets.
-            <br />
-            Use this to create your own full screen login page.
-          </p>
-        </div>
-        <CodeExample
-          preview={<StyledConnectEmbed />}
-          code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectEmbed } from "thirdweb/react";
+        <EmbedComponent />
+      </section>
 
-const THIRDWEB_CLIENT = createThirdwebClient({
-  clientId: "<YOUR_CLIENT_ID>"
-});
-
-function App(){
-  return (
-    <ConnectEmbed client={THIRDWEB_CLIENT} />
-  );
-};`}
-          lang="tsx"
-        />
+      <section className="container px-4 md:px-6 space-y-8">
+        <Hooks />
       </section>
     </main>
   );

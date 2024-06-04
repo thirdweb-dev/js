@@ -12,9 +12,40 @@ import {
   useReadContract,
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
+import { CodeExample } from "../code/code-example";
 import { editionDropContract, editionDropTokenId } from "./constants";
 
 export function SponsoredTx() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Sponsored transactions
+        </h2>
+        <p className="max-w-[600px]">
+          Set `sponsorGas: true` to enable gas-free transactions for your users.
+          <br />
+          Free on testnets, billed at the end of the month on mainnets.
+        </p>
+      </div>
+      <CodeExample
+        preview={<SponsoredTxPreview />}
+        code={`import { claimTo } from "thirdweb/extensions/erc1155";
+  import { TransactionButton } from "thirdweb/react";
+
+  function App(){
+    return (<>
+{/* transactions will be sponsored */}
+<TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
+</>);
+};`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function SponsoredTxPreview() {
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   useEffect(() => {
