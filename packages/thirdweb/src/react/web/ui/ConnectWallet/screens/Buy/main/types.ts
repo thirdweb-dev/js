@@ -1,10 +1,17 @@
 import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
 
 export type BuyForTx = {
-  cost: bigint;
-  balance: bigint;
-  tx: PreparedTransaction;
+  cost: string;
+  balance: string;
   tokenSymbol: string;
+  token?: {
+    name: string;
+    symbol: string;
+    address: string;
+    icon?: string;
+  };
+  tx: PreparedTransaction;
+  isCostOverridden: boolean;
 };
 
 export type SelectedScreen =

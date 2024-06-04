@@ -18,7 +18,7 @@ export function useBuyTxStates(options: {
   const shouldRefreshTokenAmount = !hasEditedAmount && isMainScreen;
   const stopUpdatingAll = !isMainScreen;
 
-  const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
+  const [amountNeeded, setAmountNeeded] = useState<string | undefined>(
     buyForTx?.cost,
   );
 
@@ -38,7 +38,7 @@ export function useBuyTxStates(options: {
       }
 
       try {
-        const totalCost = await getTotalTxCostForBuy(
+        const totalCostWei = await getTotalTxCostForBuy(
           buyForTx.tx,
           account?.address,
         );
@@ -47,12 +47,16 @@ export function useBuyTxStates(options: {
           return;
         }
 
-        setAmountNeeded(totalCost);
+        const totalCostUnits = toEther(totalCostWei);
+        setAmountNeeded(totalCostUnits);
 
         if (shouldRefreshTokenAmount) {
-          if (totalCost > buyForTx.balance) {
+          if (Number(totalCostUnits) > Number(buyForTx.balance)) {
             const _tokenAmount = String(
-              formatNumber(Number(toEther(totalCost - buyForTx.balance)), 4),
+              formatNumber(
+                Number(totalCostUnits) - Number(buyForTx.balance),
+                4,
+              ),
             );
             setTokenAmount(_tokenAmount);
           }
@@ -65,7 +69,9 @@ export function useBuyTxStates(options: {
       pollTxCost();
     }
 
-    pollTxCost();
+    if (!buyForTx.isCostOverridden) {
+      pollTxCost();
+    }
 
     return () => {
       mounted = false;

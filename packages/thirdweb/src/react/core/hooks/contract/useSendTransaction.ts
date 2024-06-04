@@ -5,10 +5,12 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
+import { toEther } from "../../../../utils/units.js";
 import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
+import type { OverrideTxCost } from "../../../web/hooks/useSendTransaction.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import {
   useActiveAccount,
@@ -20,7 +22,7 @@ type ShowModalData = {
   tx: PreparedTransaction;
   sendTx: () => void;
   rejectTx: () => void;
-  totalCostWei: bigint;
+  cost: string;
   walletBalance: GetWalletBalanceResult;
 };
 
@@ -38,7 +40,10 @@ type ShowModalData = {
  * @internal
  */
 export function useSendTransactionCore(
-  showPayModal?: (data: ShowModalData) => void,
+  payModal?: {
+    overrideTxCost?: OverrideTxCost;
+    showPayModal: (data: ShowModalData) => void;
+  },
   gasless?: GaslessOptions,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
   let _account = useActiveAccount();
@@ -60,7 +65,7 @@ export function useSendTransactionCore(
         throw new Error("No active account");
       }
 
-      if (!showPayModal) {
+      if (!payModal) {
         return sendTransaction({
           transaction: tx,
           account,
@@ -97,34 +102,66 @@ export function useSendTransactionCore(
               return;
             }
 
-            //  buy supported, check if there is enough balance - if not show modal to buy tokens
-            const [walletBalance, totalCostWei] = await Promise.all([
-              getWalletBalance({
+            if (!payModal.overrideTxCost) {
+              //  buy supported, check if there is enough balance - if not show modal to buy tokens
+              const [walletBalance, totalCostWei] = await Promise.all([
+                getWalletBalance({
+                  address: account.address,
+                  chain: tx.chain,
+                  client: tx.client,
+                }),
+                getTotalTxCostForBuy(tx, account?.address),
+              ]);
+
+              const walletBalanceWei = walletBalance.value;
+
+              // if enough balance, send tx
+              if (totalCostWei < walletBalanceWei) {
+                sendTx();
+                return;
+              }
+
+              // if not enough balance - show modal
+              payModal.showPayModal({
+                tx,
+                sendTx,
+                rejectTx: () => {
+                  reject(new Error("Not enough balance"));
+                },
+                cost: toEther(totalCostWei),
+                walletBalance,
+              });
+            }
+
+            // overridden cost
+            else {
+              const walletBalance = await getWalletBalance({
                 address: account.address,
                 chain: tx.chain,
                 client: tx.client,
-              }),
-              getTotalTxCostForBuy(tx, account?.address),
-            ]);
+                tokenAddress: payModal.overrideTxCost.token?.address,
+              });
 
-            const walletBalanceWei = walletBalance.value;
+              // if enough balance, send tx
+              if (
+                Number(payModal.overrideTxCost.value) <
+                Number(walletBalance.displayValue)
+              ) {
+                sendTx();
+                return;
+              }
 
-            // if enough balance, send tx
-            if (totalCostWei < walletBalanceWei) {
-              sendTx();
-              return;
+              // if not enough balance - show modal
+              payModal.showPayModal({
+                tx,
+                sendTx,
+                rejectTx: () => {
+                  reject(new Error("Not enough balance"));
+                },
+                cost: payModal.overrideTxCost.value,
+                walletBalance,
+              });
             }
-
-            // if not enough balance - show modal
-            showPayModal({
-              tx,
-              sendTx,
-              rejectTx: () => {
-                reject(new Error("Not enough balance"));
-              },
-              totalCostWei,
-              walletBalance,
-            });
           } catch (e) {
             console.error("Failed to estimate cost", e);
             // send it anyway?

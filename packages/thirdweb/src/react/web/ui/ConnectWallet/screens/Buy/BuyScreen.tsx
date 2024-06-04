@@ -5,7 +5,6 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
-import { toEther } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import {
   useChainQuery,
@@ -411,9 +410,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           {/* Amount needed for Send Tx */}
           {amountNeeded && props.buyForTx ? (
             <BuyForTxUI
-              amountNeeded={String(
-                formatNumber(Number(toEther(amountNeeded)), 4),
-              )}
+              amountNeeded={String(formatNumber(Number(amountNeeded), 4))}
               buyForTx={props.buyForTx}
               client={client}
             />
@@ -911,23 +908,25 @@ function FiatScreenContent(
       )}
 
       {/* Continue */}
-      <Button
-        variant={disableSubmit ? "outline" : "accent"}
-        data-disabled={disableSubmit}
-        disabled={disableSubmit}
-        fullWidth
-        onClick={handleSubmit}
-        gap="xs"
-      >
-        {fiatQuoteQuery.isLoading ? (
-          <>
-            <Spinner size="sm" color="accentText" />
-            Getting price quote
-          </>
-        ) : (
-          "Continue"
-        )}
-      </Button>
+      {!fiatQuoteQuery.error && (
+        <Button
+          variant={disableSubmit ? "outline" : "accent"}
+          data-disabled={disableSubmit}
+          disabled={disableSubmit}
+          fullWidth
+          onClick={handleSubmit}
+          gap="xs"
+        >
+          {fiatQuoteQuery.isLoading ? (
+            <>
+              <Spinner size="sm" color="accentText" />
+              Getting price quote
+            </>
+          ) : (
+            "Continue"
+          )}
+        </Button>
+      )}
     </Container>
   );
 }
@@ -988,7 +987,7 @@ function BuyForTxUI(props: {
         <Text size="sm">Your Balance</Text>
         <Container flex="row" gap="xs">
           <Text color="primaryText" size="sm">
-            {formatNumber(Number(toEther(props.buyForTx.balance)), 4)}{" "}
+            {formatNumber(Number(props.buyForTx.balance), 4)}{" "}
             {props.buyForTx.tokenSymbol}
           </Text>
           <TokenIcon

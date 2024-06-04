@@ -12,6 +12,7 @@ import type { SupportedTokens } from "../ui/ConnectWallet/defaultTokens.js";
 import { AccentFailIcon } from "../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";
+import type { BuyForTx } from "../ui/ConnectWallet/screens/Buy/main/types.js";
 import { BuyTxHistory } from "../ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { Modal } from "../ui/components/Modal.js";
 import { Spacer } from "../ui/components/Spacer.js";
@@ -23,6 +24,16 @@ import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js"
 import { type Theme, iconSize } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
+
+export type OverrideTxCost = {
+  value: string;
+  token?: {
+    name: string;
+    symbol: string;
+    address: string;
+    icon?: string;
+  };
+};
 
 /**
  * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
@@ -46,6 +57,7 @@ import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
  */
 export type SendTransactionPayModalConfig =
   | {
+      overrideTxCost?: OverrideTxCost;
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";
@@ -117,28 +129,35 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
   return useSendTransactionCore(
     !payModalEnabled || payModal === false
       ? undefined
-      : (data) => {
-          setRootEl(
-            <TxModal
-              tx={data.tx}
-              onComplete={data.sendTx}
-              onClose={() => {
-                setRootEl(null);
-                data.rejectTx();
-              }}
-              client={data.tx.client}
-              localeId={payModal?.locale || "en_US"}
-              supportedTokens={payModal?.supportedTokens}
-              theme={payModal?.theme || "dark"}
-              txCostWei={data.totalCostWei}
-              walletBalanceWei={data.walletBalance.value}
-              nativeTokenSymbol={data.walletBalance.symbol}
-              payOptions={{
-                buyWithCrypto: payModal?.buyWithCrypto,
-                buyWithFiat: payModal?.buyWithFiat,
-              }}
-            />,
-          );
+      : {
+          overrideTxCost: payModal?.overrideTxCost,
+          showPayModal: (data) => {
+            setRootEl(
+              <TxModal
+                onComplete={data.sendTx}
+                onClose={() => {
+                  setRootEl(null);
+                  data.rejectTx();
+                }}
+                client={data.tx.client}
+                localeId={payModal?.locale || "en_US"}
+                supportedTokens={payModal?.supportedTokens}
+                theme={payModal?.theme || "dark"}
+                buyForTx={{
+                  tx: data.tx,
+                  balance: data.walletBalance.displayValue,
+                  cost: data.cost,
+                  token: payModal?.overrideTxCost?.token,
+                  tokenSymbol: data.walletBalance.symbol,
+                  isCostOverridden: !!payModal?.overrideTxCost,
+                }}
+                payOptions={{
+                  buyWithCrypto: payModal?.buyWithCrypto,
+                  buyWithFiat: payModal?.buyWithFiat,
+                }}
+              />,
+            );
+          },
         },
     config.gasless,
   );
@@ -151,11 +170,8 @@ type ModalProps = {
   localeId: LocaleId;
   supportedTokens?: SupportedTokens;
   theme: Theme | "light" | "dark";
-  txCostWei: bigint;
-  walletBalanceWei: bigint;
-  nativeTokenSymbol: string;
-  tx: PreparedTransaction;
   payOptions: PayUIOptions;
+  buyForTx: BuyForTx;
 };
 
 function TxModal(props: ModalProps) {
@@ -187,7 +203,9 @@ function ModalContent(props: ModalProps) {
   }
 
   if (screen === "execute-tx") {
-    return <ExecutingTxScreen tx={props.tx} closeModal={props.onClose} />;
+    return (
+      <ExecutingTxScreen tx={props.buyForTx.tx} closeModal={props.onClose} />
+    );
   }
 
   if (screen === "tx-history") {
@@ -215,12 +233,7 @@ function ModalContent(props: ModalProps) {
       }}
       supportedTokens={props.supportedTokens}
       connectLocale={localeQuery.data}
-      buyForTx={{
-        balance: props.walletBalanceWei,
-        cost: props.txCostWei,
-        tx: props.tx,
-        tokenSymbol: props.nativeTokenSymbol,
-      }}
+      buyForTx={props.buyForTx}
       theme={typeof props.theme === "string" ? props.theme : props.theme.type}
       payOptions={props.payOptions}
       onDone={() => {

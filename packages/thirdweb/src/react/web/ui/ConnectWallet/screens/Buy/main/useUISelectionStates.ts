@@ -2,7 +2,6 @@ import { useState } from "react";
 import { polygon } from "../../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { toEther } from "../../../../../../../utils/units.js";
 import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../../ConnectButtonProps.js";
@@ -26,7 +25,7 @@ export function useUISelectionStates(options: {
     payOptions.prefillBuy?.amount ||
     (buyForTx
       ? String(
-          formatNumber(Number(toEther(buyForTx.cost - buyForTx.balance)), 4),
+          formatNumber(Number(buyForTx.cost) - Number(buyForTx.balance), 4),
         )
       : "");
 
@@ -50,7 +49,7 @@ export function useUISelectionStates(options: {
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    payOptions.prefillBuy?.token || NATIVE_TOKEN,
+    payOptions.prefillBuy?.token || buyForTx?.token || NATIVE_TOKEN,
   );
   // --------------------------------------------------------------------------
 
