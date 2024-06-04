@@ -157,7 +157,7 @@ export async function generateMintSignature(
 
   const signature = await account.signTypedData({
     domain: {
-      name: options.contractType ?? "TokenERC1155",
+      name: options.contractType || "TokenERC1155",
       version: "1",
       chainId: contract.chain.id,
       verifyingContract: contract.address as Hex,
