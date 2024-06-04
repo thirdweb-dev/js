@@ -127,7 +127,7 @@ export const ConnectedWalletDetails: React.FC<{
 
   const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
     client,
-    props.detailsButton,
+    props.detailsButton?.displayBalanceToken,
   );
 
   function closeModal() {
@@ -145,6 +145,7 @@ export const ConnectedWalletDetails: React.FC<{
         closeModal={closeModal}
         onDisconnect={props.onDisconnect}
         chains={props.chains}
+        displayBalanceToken={props.detailsButton?.displayBalanceToken}
       />,
     );
   }
@@ -242,13 +243,17 @@ function DetailsModal(props: {
   closeModal: () => void;
   onDisconnect: () => void;
   chains: Chain[];
+  displayBalanceToken?: Record<number, string>;
 }) {
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const { disconnect } = useDisconnect();
   const [isOpen, setIsOpen] = useState(true);
 
   const { client, locale } = props;
-  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(client);
+  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
+    client,
+    props.displayBalanceToken,
+  );
 
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
@@ -1151,6 +1156,19 @@ export type UseWalletDetailsModalOptions = {
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
   payOptions?: PayUIOptions;
+
+  /**
+   * Display the balance of a token instead of the native token in `ConnectButton` details button.
+   * @example
+   * ```tsx
+   * const displayBalanceToken = {
+   *   // show USDC balance when connected to Ethereum mainnet or Polygon
+   *   [ethereum.id]: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *   [polygon.id]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+   * }
+   * ```
+   */
+  displayBalanceToken?: Record<number, string>;
 };
 
 /**
@@ -1202,6 +1220,7 @@ export function useWalletDetailsModal() {
               payOptions: props.payOptions,
               showTestnetFaucet: props.showTestnetFaucet,
             }}
+            displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}
             supportedTokens={props.supportedTokens}
             closeModal={closeModal}
@@ -1222,13 +1241,13 @@ export function useWalletDetailsModal() {
 
 function useWalletInfo(
   client: ThirdwebClient,
-  detailsButton?: ConnectButton_detailsButtonOptions,
+  displayBalanceToken?: Record<number, string>,
 ) {
   const walletChain = useActiveWalletChain();
 
   const tokenAddress =
-    walletChain && detailsButton?.displayBalanceToken
-      ? detailsButton.displayBalanceToken[Number(walletChain.id)]
+    walletChain && displayBalanceToken
+      ? displayBalanceToken[Number(walletChain.id)]
       : undefined;
 
   const activeAccount = useActiveAccount();
