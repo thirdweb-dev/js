@@ -54,6 +54,7 @@ export type GenerateMintSignatureOptions = {
   account: Account;
   contract: ThirdwebContract;
   mintRequest: GeneratePayloadInput;
+  contractType?: "TokenERC1155" | "SignatureMintERC1155";
 };
 
 /**
@@ -156,7 +157,7 @@ export async function generateMintSignature(
 
   const signature = await account.signTypedData({
     domain: {
-      name: "TokenERC1155",
+      name: options.contractType ?? "TokenERC1155",
       version: "1",
       chainId: contract.chain.id,
       verifyingContract: contract.address as Hex,
