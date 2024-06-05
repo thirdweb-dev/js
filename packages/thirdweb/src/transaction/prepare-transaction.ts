@@ -74,6 +74,11 @@ export type PreparedTransaction<
 > = Readonly<options> & {
   __preparedMethod?: () => Promise<PreparedMethod<abiFn>>;
   __contract?: ThirdwebContract<abi>;
+  // additional
+  valueERC20?: {
+    amount: string; // units of tokens
+    tokenAddress: string;
+  };
 };
 
 /**

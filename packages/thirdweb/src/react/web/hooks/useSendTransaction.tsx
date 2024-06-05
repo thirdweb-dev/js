@@ -25,16 +25,6 @@ import { type Theme, iconSize } from "../ui/design-system/index.js";
 import type { LocaleId } from "../ui/types.js";
 import { LoadingScreen } from "../wallets/shared/LoadingScreen.js";
 
-export type OverrideTxCost = {
-  value: string;
-  token?: {
-    name: string;
-    symbol: string;
-    address: string;
-    icon?: string;
-  };
-};
-
 /**
  * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
  * Set `payModal: false` to disable the "Pay Modal" popup
@@ -57,7 +47,6 @@ export type OverrideTxCost = {
  */
 export type SendTransactionPayModalConfig =
   | {
-      overrideTxCost?: OverrideTxCost;
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";
@@ -129,35 +118,38 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
   return useSendTransactionCore(
     !payModalEnabled || payModal === false
       ? undefined
-      : {
-          overrideTxCost: payModal?.overrideTxCost,
-          showPayModal: (data) => {
-            setRootEl(
-              <TxModal
-                onComplete={data.sendTx}
-                onClose={() => {
-                  setRootEl(null);
-                  data.rejectTx();
-                }}
-                client={data.tx.client}
-                localeId={payModal?.locale || "en_US"}
-                supportedTokens={payModal?.supportedTokens}
-                theme={payModal?.theme || "dark"}
-                buyForTx={{
-                  tx: data.tx,
-                  balance: data.walletBalance.displayValue,
-                  cost: data.cost,
-                  token: payModal?.overrideTxCost?.token,
-                  tokenSymbol: data.walletBalance.symbol,
-                  isCostOverridden: !!payModal?.overrideTxCost,
-                }}
-                payOptions={{
-                  buyWithCrypto: payModal?.buyWithCrypto,
-                  buyWithFiat: payModal?.buyWithFiat,
-                }}
-              />,
-            );
-          },
+      : (data) => {
+          setRootEl(
+            <TxModal
+              onComplete={data.sendTx}
+              onClose={() => {
+                setRootEl(null);
+                data.rejectTx();
+              }}
+              client={data.tx.client}
+              localeId={payModal?.locale || "en_US"}
+              supportedTokens={payModal?.supportedTokens}
+              theme={payModal?.theme || "dark"}
+              buyForTx={{
+                tx: data.tx,
+                balance: data.walletBalance.displayValue,
+                cost: data.cost,
+                token: data.tx.valueERC20?.tokenAddress
+                  ? {
+                      address: data.tx.valueERC20.tokenAddress,
+                      name: data.walletBalance.name,
+                      symbol: data.walletBalance.symbol,
+                    }
+                  : undefined,
+                tokenSymbol: data.walletBalance.symbol,
+                isCostOverridden: !!data.tx.valueERC20,
+              }}
+              payOptions={{
+                buyWithCrypto: payModal?.buyWithCrypto,
+                buyWithFiat: payModal?.buyWithFiat,
+              }}
+            />,
+          );
         },
     config.gasless,
   );

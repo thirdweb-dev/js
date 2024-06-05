@@ -10,7 +10,6 @@ import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import type { OverrideTxCost } from "../../../web/hooks/useSendTransaction.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import {
   useActiveAccount,
@@ -40,10 +39,7 @@ type ShowModalData = {
  * @internal
  */
 export function useSendTransactionCore(
-  payModal?: {
-    overrideTxCost?: OverrideTxCost;
-    showPayModal: (data: ShowModalData) => void;
-  },
+  showPayModal?: (data: ShowModalData) => void,
   gasless?: GaslessOptions,
 ): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
   let _account = useActiveAccount();
@@ -65,7 +61,7 @@ export function useSendTransactionCore(
         throw new Error("No active account");
       }
 
-      if (!payModal) {
+      if (!showPayModal) {
         return sendTransaction({
           transaction: tx,
           account,
@@ -102,7 +98,7 @@ export function useSendTransactionCore(
               return;
             }
 
-            if (!payModal.overrideTxCost) {
+            if (!tx.valueERC20) {
               //  buy supported, check if there is enough balance - if not show modal to buy tokens
               const [walletBalance, totalCostWei] = await Promise.all([
                 getWalletBalance({
@@ -122,7 +118,7 @@ export function useSendTransactionCore(
               }
 
               // if not enough balance - show modal
-              payModal.showPayModal({
+              showPayModal({
                 tx,
                 sendTx,
                 rejectTx: () => {
@@ -139,12 +135,12 @@ export function useSendTransactionCore(
                 address: account.address,
                 chain: tx.chain,
                 client: tx.client,
-                tokenAddress: payModal.overrideTxCost.token?.address,
+                tokenAddress: tx.valueERC20.tokenAddress,
               });
 
               // if enough balance, send tx
               if (
-                Number(payModal.overrideTxCost.value) <
+                Number(tx.valueERC20.amount) <
                 Number(walletBalance.displayValue)
               ) {
                 sendTx();
@@ -152,13 +148,13 @@ export function useSendTransactionCore(
               }
 
               // if not enough balance - show modal
-              payModal.showPayModal({
+              showPayModal({
                 tx,
                 sendTx,
                 rejectTx: () => {
                   reject(new Error("Not enough balance"));
                 },
-                cost: payModal.overrideTxCost.value,
+                cost: tx.valueERC20.amount,
                 walletBalance,
               });
             }
