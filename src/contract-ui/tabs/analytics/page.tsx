@@ -22,8 +22,8 @@ import { BarChart } from "components/analytics/bar-chart";
 import { ChartContainer } from "components/analytics/chart-container";
 import {
   AnalyticsQueryParams,
-  SUPPORTED_ANALYTICS_CHAINS,
   TotalQueryResult,
+  useAnalyticsSupportedChains,
   useEventsAnalytics,
   useFunctionsAnalytics,
   useLogsAnalytics,
@@ -242,6 +242,8 @@ export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
   showXAxis,
   showYAxis,
 }) => {
+  const supportedChainsQuery = useAnalyticsSupportedChains();
+
   const analyticsQuery = useAnalytics({
     contractAddress,
     chainId,
@@ -258,10 +260,12 @@ export const AnalyticsChart: React.FC<AnalyticsChartProps> = ({
   }, [analyticsQuery.data]);
 
   if (data.length <= 1) {
+    const supportedChains = supportedChainsQuery.data ?? [];
+
     return (
       <Alert status="info" borderRadius="md" mb={4}>
         <AlertIcon />
-        {SUPPORTED_ANALYTICS_CHAINS.includes(chainId) ? (
+        {supportedChains.includes(chainId) ? (
           <AlertDescription>No recent activity.</AlertDescription>
         ) : (
           <AlertDescription>

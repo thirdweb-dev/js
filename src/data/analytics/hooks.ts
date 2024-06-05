@@ -1,23 +1,5 @@
-import { THIRDWEB_ANALYTICS_API_HOSTNAME } from "./constants";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Arbitrum,
-  ArbitrumGoerli,
-  Avalanche,
-  AvalancheFuji,
-  Base,
-  BaseGoerli,
-  BinanceTestnet,
-  Ethereum,
-  Fantom,
-  Goerli,
-  Mumbai,
-  Optimism,
-  Polygon,
-  PolygonZkevmTestnet,
-  ScrollAlphaTestnet,
-  Sepolia,
-} from "@thirdweb-dev/chains";
+import { THIRDWEB_ANALYTICS_API_HOSTNAME } from "./constants";
 
 export type AnalyticsQueryParams = {
   chainId: number;
@@ -26,26 +8,6 @@ export type AnalyticsQueryParams = {
   endDate?: Date;
   interval?: "minute" | "hour" | "day" | "week" | "month";
 };
-
-// TODO: Keep updated with actual ClickHouse data
-export const SUPPORTED_ANALYTICS_CHAINS: number[] = [
-  Ethereum.chainId,
-  Goerli.chainId,
-  Optimism.chainId,
-  BinanceTestnet.chainId,
-  Polygon.chainId,
-  Fantom.chainId,
-  PolygonZkevmTestnet.chainId,
-  Base.chainId,
-  Arbitrum.chainId,
-  AvalancheFuji.chainId,
-  Avalanche.chainId,
-  Mumbai.chainId,
-  BaseGoerli.chainId,
-  ArbitrumGoerli.chainId,
-  ScrollAlphaTestnet.chainId,
-  Sepolia.chainId,
-];
 
 async function makeQuery(
   path: string,
@@ -403,4 +365,19 @@ export function useTotalWalletsAnalytics(params: AnalyticsQueryParams) {
     },
     enabled: !!params.contractAddress && !!params.chainId,
   });
+}
+
+export function useAnalyticsSupportedChains() {
+  return useQuery(
+    ["analytics-supported-chains"] as const,
+    async (): Promise<number[]> => {
+      const res = await makeQuery("/api/v1/supported-chains", {});
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}`);
+      }
+
+      const { results } = await res.json();
+      return results;
+    },
+  );
 }
