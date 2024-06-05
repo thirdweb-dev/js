@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { type StyleProp, View, type ViewStyle } from "react-native";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type TransactionButtonProps,
@@ -46,6 +46,7 @@ export function TransactionButton(props: TransactionButtonProps) {
       disabled={!account || disabled || isPending}
       variant={"primary"}
       onPress={handleClick}
+      style={buttonProps.style as StyleProp<ViewStyle>}
       theme={theme}
     >
       <View style={{ opacity: isPending ? 0 : 1 }}>{children}</View>

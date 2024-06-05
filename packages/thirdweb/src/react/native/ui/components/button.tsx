@@ -13,6 +13,7 @@ export type ThemedButtonProps = TouchableOpacityProps & {
 export function ThemedButton(props: ThemedButtonProps) {
   const variant = props.variant ?? "primary";
   const bg = props.theme.colors.primaryButtonBg;
+  const { style: styleOverride, ...restProps } = props;
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -23,8 +24,9 @@ export function ThemedButton(props: ThemedButtonProps) {
           borderWidth: variant === "secondary" ? 1 : 0,
           backgroundColor: variant === "secondary" ? "transparent" : bg,
         },
+        styleOverride,
       ]}
-      {...props}
+      {...restProps}
     >
       {props.children}
     </TouchableOpacity>
