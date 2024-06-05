@@ -22,6 +22,7 @@ import {
  *
  * const { data, isLoading, isError } = useWalletBalance({ chain, address, client, tokenAddress });
  * ```
+ * @wallet
  */
 export function useWalletBalance(options: Partial<GetWalletBalanceOptions>) {
   const { chain, address, tokenAddress, client } = options;

@@ -32,6 +32,7 @@ function createBlockNumberPoller(
   client: ThirdwebClient,
   chain: Chain,
   overPollRatio?: number,
+  onError?: (error: Error) => void,
 ) {
   let subscribers: Array<(blockNumber: bigint) => void> = [];
   let blockTimesWindow: number[] = [];
@@ -51,35 +52,48 @@ function createBlockNumberPoller(
     if (!isActive) {
       return;
     }
-    const blockNumber = await eth_blockNumber(rpcRequest);
 
-    if (!lastBlockNumber || blockNumber > lastBlockNumber) {
-      let newBlockNumbers = [];
-      if (lastBlockNumber) {
-        for (let i = lastBlockNumber + 1n; i <= blockNumber; i++) {
-          newBlockNumbers.push(BigInt(i));
+    try {
+      const blockNumber = await eth_blockNumber(rpcRequest);
+
+      if (!lastBlockNumber || blockNumber > lastBlockNumber) {
+        let newBlockNumbers = [];
+        if (lastBlockNumber) {
+          for (let i = lastBlockNumber + 1n; i <= blockNumber; i++) {
+            newBlockNumbers.push(BigInt(i));
+          }
+        } else {
+          newBlockNumbers = [blockNumber];
         }
+        lastBlockNumber = blockNumber;
+        const currentTime = new Date().getTime();
+        if (lastBlockAt) {
+          // if we skipped a block we need to adjust the block time down to that level
+          const blockTime =
+            (currentTime - lastBlockAt) / newBlockNumbers.length;
+
+          blockTimesWindow.push(blockTime);
+          blockTimesWindow = blockTimesWindow.slice(-SLIDING_WINDOW_SIZE);
+        }
+        lastBlockAt = currentTime;
+        // for all new blockNumbers...
+        for (const b of newBlockNumbers) {
+          // ... call all current subscribers
+          for (const subscriberCallback of subscribers) {
+            subscriberCallback(b);
+          }
+        }
+      }
+    } catch (err: unknown) {
+      if (onError) {
+        onError(err as Error);
       } else {
-        newBlockNumbers = [blockNumber];
-      }
-      lastBlockNumber = blockNumber;
-      const currentTime = new Date().getTime();
-      if (lastBlockAt) {
-        // if we skipped a block we need to adjust the block time down to that level
-        const blockTime = (currentTime - lastBlockAt) / newBlockNumbers.length;
-
-        blockTimesWindow.push(blockTime);
-        blockTimesWindow = blockTimesWindow.slice(-SLIDING_WINDOW_SIZE);
-      }
-      lastBlockAt = currentTime;
-      // for all new blockNumbers...
-      for (const b of newBlockNumbers) {
-        // ... call all current subscribers
-        for (const subscriberCallback of subscribers) {
-          subscriberCallback(b);
-        }
+        console.error(
+          `[watchBlockNumber]: Failed to poll for latest block number: ${err}`,
+        );
       }
     }
+
     const currentApproximateBlockTime = getAverageBlockTime(blockTimesWindow);
 
     // make sure we never poll faster than our minimum poll delay or slower than our maximum poll delay
@@ -141,6 +155,7 @@ export type WatchBlockNumberOptions = {
   client: ThirdwebClient;
   chain: Chain;
   onNewBlockNumber: (blockNumber: bigint) => void;
+  onError?: (error: Error) => void;
   overPollRatio?: number;
   latestBlockNumber?: bigint;
 };
@@ -157,7 +172,10 @@ export type WatchBlockNumberOptions = {
  *  chainId,
  *  onNewBlockNumber: (blockNumber) => {
  *    // do something with the block number
- *    },
+ *  },
+ *  onError: (err) => {
+ *    // do something if getting the block number fails
+ *  },
  * });
  *
  * // later stop watching
@@ -166,14 +184,20 @@ export type WatchBlockNumberOptions = {
  * @rpc
  */
 export function watchBlockNumber(opts: WatchBlockNumberOptions) {
-  const { client, chain, onNewBlockNumber, overPollRatio, latestBlockNumber } =
-    opts;
+  const {
+    client,
+    chain,
+    onNewBlockNumber,
+    overPollRatio,
+    latestBlockNumber,
+    onError,
+  } = opts;
   const chainId = chain.id;
-  // if we already have a poller for this chainId -> use it
+  // if we already have a poller for this chainId -> use it.
   let poller = existingPollers.get(chainId);
   // otherwise create a new poller
   if (!poller) {
-    poller = createBlockNumberPoller(client, chain, overPollRatio);
+    poller = createBlockNumberPoller(client, chain, overPollRatio, onError);
     // and store it for later use
     existingPollers.set(chainId, poller);
   }

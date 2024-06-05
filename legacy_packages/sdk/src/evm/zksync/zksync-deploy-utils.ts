@@ -24,6 +24,9 @@ import {
 } from "./zkDeployContractDeterministic";
 import invariant from "tiny-invariant";
 import { zkVerify } from "./zksync-verification";
+import { zkComputeDeploymentAddress } from "./zkComputeDeploymentAddress";
+import { hashBytecode } from "zksync-ethers/build/utils";
+import { isZkContractDeployed } from "./isZkContractDeployed";
 
 /**
  * Deploy a proxy contract of a given implementation via thirdweb's Clone factory
@@ -97,6 +100,7 @@ export async function zkDeployContractFromUri(
   storage: ThirdwebStorage,
   chainId: number,
   options?: DeployOptions,
+  directDeployDeterministic?: boolean,
   clientId?: string,
   secretKey?: string,
 ): Promise<string> {
@@ -229,22 +233,74 @@ export async function zkDeployContractFromUri(
       constructorParamValues,
     );
 
-    const factory = new ZkContractFactory(
-      compilerMetadata.abi,
-      compilerMetadata.bytecode as BytesLike,
-      signer as ZkSigner,
-      "create",
-    );
-    const contract = await factory.deploy(...paramValues);
+    if (directDeployDeterministic && !deterministicDeployment) {
+      throw new Error(
+        "Deterministic deployment not supported for this contract.",
+      );
+    } else if (directDeployDeterministic && deterministicDeployment) {
+      const create2Factory = await zkDeployCreate2Factory(signer as ZkSigner);
 
-    // register on multichain registry
-    await registerContractOnMultiChainRegistry(
-      contract.address,
-      chainId,
-      compilerMetadata.fetchedMetadataUri,
-    );
+      const encodedArgs = utils.defaultAbiCoder.encode(
+        constructorParamTypes,
+        constructorParamValues,
+      );
 
-    deployedAddress = contract.address;
+      deployedAddress = zkComputeDeploymentAddress(
+        bytecode,
+        encodedArgs,
+        create2Factory,
+        options?.saltForProxyDeploy,
+      );
+
+      if (
+        await isZkContractDeployed(deployedAddress, signer.provider as Provider)
+      ) {
+        throw new Error("Contract already deployed.");
+      }
+
+      const tx = {
+        predictedAddress: deployedAddress,
+        to: create2Factory,
+        constructorCalldata: utils.arrayify(encodedArgs),
+        bytecode,
+        bytecodeHash: utils.hexlify(hashBytecode(bytecode)),
+        abi: compilerMetadata.abi,
+        params: paramValues,
+      };
+
+      try {
+        await zkDeployContractDeterministic(
+          signer as ZkSigner,
+          tx,
+          storage,
+          compilerMetadata.fetchedMetadataUri,
+          options,
+        );
+      } catch (e) {
+        console.debug(
+          `Error deploying contract at ${tx.predictedAddress}`,
+          (e as any)?.message,
+        );
+      }
+    } else {
+      const factory = new ZkContractFactory(
+        compilerMetadata.abi,
+        compilerMetadata.bytecode as BytesLike,
+        signer as ZkSigner,
+        "create",
+      );
+      const contract = await factory.deploy(...paramValues);
+      deployedAddress = contract.address;
+    }
+
+    if (deployedAddress) {
+      // register on multichain registry
+      await registerContractOnMultiChainRegistry(
+        deployedAddress,
+        chainId,
+        compilerMetadata.fetchedMetadataUri,
+      );
+    }
   }
 
   // fire-and-forget verification, don't await

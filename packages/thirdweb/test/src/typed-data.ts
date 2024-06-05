@@ -28,6 +28,7 @@ export const typedData = {
       },
       contents: "Hello, Bob!",
     },
+    primaryType: "Mail",
   },
   complex: {
     domain: {

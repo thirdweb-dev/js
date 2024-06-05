@@ -18,6 +18,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://Qmb6VAhhtaJmdaW1j7PAjxaLju1V24PPDFBdXtebyTSfsZ",
+    "width": 200,
+    "height": 200,
+    "format": "png"
+  },
   "infoURL": "https://hewe.io/",
   "name": "AmChain",
   "nativeCurrency": {

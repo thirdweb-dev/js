@@ -49,6 +49,7 @@ import {
   saveConnectParamsToStorage,
 } from "../storage/walletStorage.js";
 import type { WalletId } from "../wallet-types.js";
+import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
 
 const asyncLocalStorage = getStorage();
 
@@ -60,9 +61,6 @@ type SavedConnectParams = {
   pairingTopic?: string;
 };
 
-const defaultWCProjectId = "08c4b07e3ad25f1a27c14a4e8cecb6f0";
-
-const NAMESPACE = "eip155";
 const ADD_ETH_CHAIN_METHOD = "wallet_addEthereumChain";
 
 const defaultShowQrModal = true;
@@ -242,7 +240,7 @@ async function initProvider(
       : wcOptions?.showQrModal === undefined
         ? defaultShowQrModal
         : wcOptions.showQrModal,
-    projectId: wcOptions?.projectId || defaultWCProjectId,
+    projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: chainsToRequest,
@@ -326,12 +324,7 @@ async function initProvider(
   return provider;
 }
 
-function onConnect(
-  address: string,
-  chain: Chain,
-  provider: WCProvider,
-  emitter: WalletEmitter<WCSupportedWalletIds>,
-): [Account, Chain, DisconnectFn, SwitchChainFn] {
+function createAccount(provider: WCProvider, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -393,6 +386,17 @@ function onConnect(
     },
   };
 
+  return account;
+}
+
+function onConnect(
+  address: string,
+  chain: Chain,
+  provider: WCProvider,
+  emitter: WalletEmitter<WCSupportedWalletIds>,
+): [Account, Chain, DisconnectFn, SwitchChainFn] {
+  const account = createAccount(provider, address);
+
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -409,10 +413,7 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount: Account = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {

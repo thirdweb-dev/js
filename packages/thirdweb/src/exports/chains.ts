@@ -11,6 +11,7 @@ export {
  * PRE_DEFINED CHAINS
  */
 export { anvil } from "../chains/chain-definitions/anvil.js";
+export { hardhat } from "../chains/chain-definitions/hardhat.js";
 export { arbitrumNova } from "../chains/chain-definitions/arbitrum-nova.js";
 export { arbitrumSepolia } from "../chains/chain-definitions/arbitrum-sepolia.js";
 export { arbitrum } from "../chains/chain-definitions/arbitrum.js";
@@ -34,3 +35,5 @@ export { zoraSepolia } from "../chains/chain-definitions/zora-sepolia.js";
 export { zora } from "../chains/chain-definitions/zora.js";
 export { bsc } from "../chains/chain-definitions/bsc.js";
 export { bscTestnet } from "../chains/chain-definitions/bsc-testnet.js";
+export { zkSync } from "../chains/chain-definitions/zksync.js";
+export { zkSyncSepolia } from "../chains/chain-definitions/zksync-sepolia.js";
