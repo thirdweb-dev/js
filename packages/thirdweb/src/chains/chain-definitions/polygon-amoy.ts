@@ -7,7 +7,8 @@ export const polygonAmoy = /*@__PURE__*/ defineChain({
   blockExplorers: [
     {
       name: "PolygonScan",
-      url: "https://www.oklink.com/amoy",
+      url: "https://amoy.polygonscan.com ",
+      apiUrl: "https://api-amoy.polygonscan.com/api",
     },
   ],
   testnet: true,
