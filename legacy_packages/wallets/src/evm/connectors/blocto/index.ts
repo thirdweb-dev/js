@@ -114,7 +114,7 @@ export class BloctoConnector extends WagmiConnector<
   getProvider({ chainId }: { chainId?: number } = {}): Promise<BloctoProvider> {
     if (!this._provider) {
       const _chainId =
-        chainId ?? this.options.chainId ?? this.chains[0]?.chainId ?? 1;
+        chainId ?? this.chains[0]?.chainId ?? 1;
       const _rpc = this.chains.find((x) => x.chainId === _chainId)?.rpc[0];
 
       this._provider = new BloctoSDK({
@@ -145,7 +145,7 @@ export class BloctoConnector extends WagmiConnector<
   }
 
   async isAuthorized(): Promise<boolean> {
-    return !!this._provider?._blocto?.sessionKey ?? false;
+    return !!this._provider?._blocto?.sessionKeyEnv ?? false;
   }
 
   async switchChain(chainId: number): Promise<Chain> {
@@ -157,8 +157,8 @@ export class BloctoConnector extends WagmiConnector<
       throw new SwitchChainError(new Error("chain not found on connector."));
     }
 
-    const isBloctoSupportChain =
-      provider._blocto.supportNetworkList[`${chainId}`];
+    const blocktoSupportedChainList = await provider.supportChainList();
+    const isBloctoSupportChain = blocktoSupportedChainList[`${chainId}`];
     if (!isBloctoSupportChain) {
       throw new SwitchChainError(new Error(`Blocto unsupported chain: ${id}`));
     }

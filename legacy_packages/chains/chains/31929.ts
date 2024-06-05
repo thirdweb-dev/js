@@ -19,7 +19,10 @@ export default {
   },
   "networkId": 31929,
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://31929.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-worlds-hwbmpbzcnh.t.conduit.xyz/"
+  ],
   "shortName": "WorldsOP",
   "slug": "worlds-op",
   "testnet": true

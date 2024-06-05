@@ -6,7 +6,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 
 export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <ThemeProvider attribute="class" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark">
       <ThirdwebProvider>{children}</ThirdwebProvider>
     </ThemeProvider>
   );

@@ -14,7 +14,12 @@ export type GetGasPriceOptions = {
  * @param client - The Thirdweb client.
  * @param chain - The ID of the chain.
  * @returns A promise that resolves to the gas price as a bigint.
- * @internal
+ * @example
+ * ```ts
+ * import { getGasPrice } from "thirdweb";
+ *
+ * const gasPrice = await getGasPrice({ client, chain });
+ * ```
  */
 export async function getGasPrice(
   options: GetGasPriceOptions,

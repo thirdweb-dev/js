@@ -27,6 +27,7 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import { isReactNative } from "../../utils/platform.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { COINBASE } from "../constants.js";
 import type {
@@ -87,6 +88,15 @@ export type CoinbaseWalletCreationOptions =
        * }
        */
       chains?: Chain[];
+
+      mobileConfig?: {
+        /**
+         * The univeral callback URL to redirect the user to after they have completed the wallet connection with the cb wallet app.
+         * This needs to be setup as a Universal link for iOS https://docs.cdp.coinbase.com/wallet-sdk/docs/ios-setup/
+         * and App link on Android https://docs.cdp.coinbase.com/wallet-sdk/docs/android-setup/
+         */
+        callbackURL?: string;
+      };
     }
   | undefined;
 
@@ -123,6 +133,16 @@ async function getCoinbaseProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
+    if (isReactNative()) {
+      const { initMobileProvider } = require("./coinbaseMobileSDK.js");
+      const mobileProvider = initMobileProvider({
+        chain: options?.chains ? options.chains[0] : undefined,
+        ...options?.mobileConfig,
+      });
+      _provider = mobileProvider;
+      return mobileProvider;
+    }
+
     const client = new CoinbaseWalletSDK({
       appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
@@ -254,12 +274,7 @@ export async function coinbaseSDKWalletGetCallsStatus(args: {
   }) as Promise<GetCallsStatusResponse>;
 }
 
-function onConnect(
-  address: string,
-  chain: Chain,
-  provider: ProviderInterface,
-  emitter: WalletEmitter<typeof COINBASE>,
-): [Account, Chain, DisconnectFn, SwitchChainFn] {
+function createAccount(provider: ProviderInterface, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -330,6 +345,17 @@ function onConnect(
     },
   };
 
+  return account;
+}
+
+function onConnect(
+  address: string,
+  chain: Chain,
+  provider: ProviderInterface,
+  emitter: WalletEmitter<typeof COINBASE>,
+): [Account, Chain, DisconnectFn, SwitchChainFn] {
+  const account = createAccount(provider, address);
+
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -344,10 +370,7 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {

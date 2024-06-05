@@ -90,6 +90,10 @@ jobs:
     timeout-minutes: 15
     name: E2E Tests
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package_manager: [npm, yarn, pnpm, bun]
+        bundler: [vite, webpack, esbuild]
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -97,7 +101,58 @@ jobs:
       - name: Setup & Install
         uses: ./.github/composite-actions/install
 
-      # TODO actually run e2e tests
+      - name: Build Packages
+        run: pnpm build:packages
+
+      - name: Install Yarn (if needed)
+        if: matrix.package_manager == 'yarn'
+        run: npm install -g yarn
+
+      - name: Create test project
+        run: |
+          mkdir test-project
+          cd test-project
+          npm init -y
+          ${{ matrix.package_manager }} add react react-dom ../packages/thirdweb
+      - name: Create test file
+        run: |
+          cd test-project
+          echo "import { createThirdwebClient } from 'thirdweb'; console.log(createThirdwebClient({clientId: "foo_bar_baz"}));" > index.js
+      
+      - name: Bundle with vite
+        if: matrix.bundler == 'vite'
+        run: |
+          cd test-project
+          ${{matrix.package_manager}} add vite
+          echo 'import { defineConfig } from "vite"; import {resolve} from "path"; export default defineConfig({ build: { lib: { entry: resolve(__dirname, "index.js"), name: "e2e_test" }, outDir: "dist" }});' > vite.config.js
+          npx vite build
+    
+      - name: Bundle with webpack
+        if: matrix.bundler == 'webpack'
+        run: |
+          cd test-project
+          ${{matrix.package_manager}} add webpack webpack-cli
+          echo 'const path = require("path"); module.exports = { mode: "production", entry: "./index.js", output: { path: path.resolve(__dirname, "dist"), filename: "bundle.js" }};' > webpack.config.js
+          npx webpack
+    
+      - name: Bundle with esbuild
+        if: matrix.bundler == 'esbuild'
+        run: |
+          cd test-project
+          ${{matrix.package_manager}} add esbuild
+          npx esbuild index.js --bundle --outdir=dist
+    
+      - name: Verify bundle
+        run: |
+          cd test-project/dist
+          file_count=$(find . -type f | wc -l)
+          if [ "$file_count" -gt 0 ]; then
+            echo "Bundling successful"
+          else
+            echo "Bundling failed"
+            exit 1
+          fi
+      
 
   benchmark:
     # cannot run benchmarks on merge group

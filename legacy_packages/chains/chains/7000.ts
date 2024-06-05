@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "ZetaChain Mainnet Explorer",
-      "url": "https://explorer.mainnet.zetachain.com",
+      "url": "https://explorer.zetachain.com",
       "standard": "none"
     }
   ],

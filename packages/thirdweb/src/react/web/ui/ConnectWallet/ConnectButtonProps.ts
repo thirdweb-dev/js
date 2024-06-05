@@ -220,8 +220,9 @@ export type ConnectButton_detailsButtonOptions = {
    * ```tsx
    * <ConnectButton detailsButton={{
    *    balanceToken:{
-   *      // show USDC balance when connected to Ethereum mainnet
-   *      1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *      // show USDC balance when connected to Ethereum mainnet or Polygon
+   *      [ethereum.id]: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *      [polygon.id]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
    *    }
    *  })
    * />
@@ -647,8 +648,8 @@ export type ConnectButtonProps = {
   supportedTokens?: SupportedTokens;
 
   /**
-   * Callback to be called on successful connection of wallet - including auto connect.
-   * The callback is called with the connected wallet
+   * Called on connection of a wallet - including auto connect.
+   * The callback is called with the connected wallet as an argument.
    *
    * ```tsx
    * <ConnectButton
@@ -659,6 +660,19 @@ export type ConnectButtonProps = {
    * ```
    */
   onConnect?: (wallet: Wallet) => void;
+
+  /**
+   * Called when a wallet is disconnected.
+   *
+   * ```tsx
+   * <ConnectButton
+   *  onDisconnect={() => {
+   *    console.log("disconnected")
+   *  }}
+   * />
+   * ```
+   */
+  onDisconnect?: () => void;
 
   /**
    * Configure options for WalletConnect
