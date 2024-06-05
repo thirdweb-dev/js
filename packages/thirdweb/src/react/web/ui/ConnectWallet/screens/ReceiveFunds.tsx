@@ -1,3 +1,4 @@
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -5,7 +6,6 @@ import {
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { shortenString } from "../../../../core/utils/addresses.js";
 import { CopyIcon } from "../../components/CopyIcon.js";
@@ -16,6 +16,7 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import { StyledButton } from "../../design-system/elements.js";
 import { useClipboard } from "../../hooks/useCopyClipboard.js";
+import type { ConnectLocale } from "../locale/types.js";
 
 /**
  *
@@ -24,11 +25,13 @@ import { useClipboard } from "../../hooks/useCopyClipboard.js";
 export function ReceiveFunds(props: {
   walletId?: WalletId;
   onBack: () => void;
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 }) {
   const account = useActiveAccount();
   const address = account?.address;
   const { hasCopied, onCopy } = useClipboard(address || "");
-  const { connectLocale, client } = useConnectUI();
+  const { connectLocale, client } = props;
   const locale = connectLocale.receiveFundsScreen;
 
   return (

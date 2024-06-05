@@ -294,6 +294,8 @@ function ConnectButtonInner(
       chains={props?.chains || []}
       chain={props.chain}
       switchButton={props.switchButton}
+      client={props.client}
+      connectLocale={locale}
     />
   );
 }

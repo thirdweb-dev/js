@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { toWei } from "../../../../utils/units.js";
 import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
 
 // Q: Should we expose this hook?
@@ -14,10 +14,9 @@ import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.j
  * Send Native or ERC20 tokens from active wallet to given address.
  * @internal
  */
-export function useSendToken() {
+export function useSendToken(client: ThirdwebClient) {
   const sendTransaction = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
-  const { client } = useConnectUI();
 
   return useMutation({
     async mutationFn(option: {

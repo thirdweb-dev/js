@@ -133,3 +133,8 @@ export {
   useWalletInfo,
   useWalletImage,
 } from "../react/web/ui/hooks/useWalletInfo.js";
+
+export {
+  useWalletDetailsModal,
+  type UseWalletDetailsModalOptions,
+} from "../react/web/ui/ConnectWallet/Details.js";
