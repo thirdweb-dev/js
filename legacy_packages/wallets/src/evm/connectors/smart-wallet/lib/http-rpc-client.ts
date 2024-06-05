@@ -162,6 +162,16 @@ export class HttpRpcClient {
     );
   }
 
+  async zkPaymasterData(transactionInput: any): Promise<any> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send("zk_paymasterData", [transactionInput]);
+  }
+  
+  async zkBroadcastTransaction(transactionInput: any): Promise<any> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send("zk_broadcastTransaction", [transactionInput]);
+  }
+  
   private async printUserOperation(
     method: string,
     [userOp1, entryPointAddress]: [UserOperationStruct, string],
