@@ -138,3 +138,8 @@ export {
   useWalletDetailsModal,
   type UseWalletDetailsModalOptions,
 } from "../react/web/ui/ConnectWallet/Details.js";
+
+// eip5792 hooks
+export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
+export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
+export { useCapabilities } from "../react/core/hooks/wallets/useCapabilities.js";
