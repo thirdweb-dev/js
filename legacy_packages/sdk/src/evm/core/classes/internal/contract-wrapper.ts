@@ -18,7 +18,6 @@ import { computeEOAForwarderAddress } from "../../../common/any-evm-utils/comput
 import { computeForwarderAddress } from "../../../common/any-evm-utils/computeForwarderAddress";
 import { TransactionError, parseRevertReason } from "../../../common/error";
 import { extractFunctionsFromAbi } from "../../../common/feature-detection/extractFunctionsFromAbi";
-import { fetchSourceFilesFromMetadata } from "../../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -32,7 +31,7 @@ import { signTypedDataInternal } from "../../../common/sign";
 import { CONTRACT_ADDRESSES } from "../../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../../constants/addresses/getContractAddressByChainId";
 import { EventType } from "../../../constants/events";
-import { AbiSchema, ContractSource } from "../../../schema/contracts/custom";
+import { AbiSchema } from "../../../schema/contracts/custom";
 import { SDKOptions } from "../../../schema/sdk-options";
 import { Address } from "../../../schema/shared/Address";
 import { CallOverrideSchema } from "../../../schema/shared/CallOverrideSchema";
