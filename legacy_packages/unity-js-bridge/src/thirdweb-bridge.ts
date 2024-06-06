@@ -321,7 +321,6 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async connect(
-    // biome-ignore lint/style/useDefaultParameterLast: would change the order of parameters to fix this
     wallet: string,
     chainId: string,
     password?: string,
@@ -575,7 +574,7 @@ class ThirdwebBridge implements TWBridge {
         try {
           typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
         } catch (e) {
-          throw new Error("Invalid ABI: " + firstArg[1]);
+          typeOrAbi = firstArg[1];
         }
       }
 
