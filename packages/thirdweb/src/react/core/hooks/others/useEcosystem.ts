@@ -1,8 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  getThirdwebDomains,
-  setThirdwebDomains,
-} from "../../../../utils/domains.js";
+import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { InAppWalletEcosystem } from "../../../../wallets/in-app/core/wallet/types.js";
 
 /**
@@ -10,7 +7,6 @@ import type { InAppWalletEcosystem } from "../../../../wallets/in-app/core/walle
  */
 export function useEcosystem(options: { integratorId?: string }) {
   const { integratorId } = options;
-  setThirdwebDomains({ inAppWallet: "embedded-wallet.thirdweb-dev.com" });
   return useQuery({
     queryKey: ["ecosystem", integratorId],
     queryFn: async (): Promise<InAppWalletEcosystem> => {
@@ -18,9 +14,9 @@ export function useEcosystem(options: { integratorId?: string }) {
       const headers = new Headers();
       headers.set("x-integrator-id", integratorId);
       const res = await fetch(
-        `https://${
-          getThirdwebDomains().inAppWallet
-        }/api/2024-05-05/ecosystem-wallet/provider/detail`,
+        `${getThirdwebBaseUrl(
+          "inAppWallet",
+        )}/api/2024-05-05/ecosystem-wallet/provider`,
         {
           headers,
         },
