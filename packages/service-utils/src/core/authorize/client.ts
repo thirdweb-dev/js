@@ -51,7 +51,7 @@ export function authorizeClient(
   // validate domains
   if (origin) {
     if (
-      authorizeDomains({
+      authorizeDomain({
         domains,
         origin,
       })
@@ -70,7 +70,7 @@ export function authorizeClient(
   // validate bundleId
   if (bundleId) {
     if (
-      authorizeBundleIds({
+      authorizeBundleId({
         bundleIds,
         bundleId,
       })
@@ -96,7 +96,7 @@ export function authorizeClient(
 }
 
 // Exposed for use in validating ecosystem partners settings
-export function authorizeDomains({
+export function authorizeDomain({
   domains,
   origin,
 }: { domains: string[]; origin: string }): boolean {
@@ -133,7 +133,7 @@ export function authorizeDomains({
   });
 }
 
-export function authorizeBundleIds({
+export function authorizeBundleId({
   bundleIds,
   bundleId,
 }: { bundleIds: string[]; bundleId: string }): boolean {

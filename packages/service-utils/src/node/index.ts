@@ -11,10 +11,6 @@ import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
 
-export {
-  authorizeBundleIds,
-  authorizeDomains,
-} from "../core/authorize/client";
 export * from "../core/rateLimit";
 export * from "../core/services";
 export * from "../core/usageLimit";
