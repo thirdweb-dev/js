@@ -1,8 +1,8 @@
+import { iconSize } from "../../../../../../core/design-system/index.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { iconSize } from "../../../../design-system/index.js";
 import { type CurrencyMeta, currencies } from "./currencies.js";
 
 export function CurrencySelection(props: {

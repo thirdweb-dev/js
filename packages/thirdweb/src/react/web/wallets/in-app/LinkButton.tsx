@@ -1,7 +1,7 @@
 "use client";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { fontSize } from "../../../core/design-system/index.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
-import { fontSize } from "../../ui/design-system/index.js";
 
 export const LinkButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();

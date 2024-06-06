@@ -1,9 +1,9 @@
 "use client";
 import { keyframes } from "@emotion/react";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { iconSize } from "../../../core/design-system/index.js";
+import type { Theme } from "../../../core/design-system/index.js";
 import { StyledCircle, StyledSvg } from "../design-system/elements.js";
-import { iconSize } from "../design-system/index.js";
-import type { Theme } from "../design-system/index.js";
 
 /**
  * @internal

@@ -6,6 +6,11 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import {
   useActiveAccount,
@@ -16,11 +21,6 @@ import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../design-system/index.js";
 import {
   BuyTxHistoryButton,
   BuyTxHistoryButtonHeight,

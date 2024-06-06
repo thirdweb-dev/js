@@ -3,10 +3,14 @@ import styled from "@emotion/styled";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import { isMobile } from "../../../../utils/web/isMobile.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import type { IconFC } from "../ConnectWallet/icons/types.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { iconSize, radius, spacing } from "../design-system/index.js";
 import { Spacer } from "./Spacer.js";
 import { Container } from "./basic.js";
 import { Text } from "./text.js";

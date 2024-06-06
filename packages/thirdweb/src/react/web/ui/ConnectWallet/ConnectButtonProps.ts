@@ -3,8 +3,8 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
-import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import type { SupportedTokens } from "./defaultTokens.js";
@@ -131,20 +131,6 @@ export type ConnectButton_detailsModalOptions = {
    * customize the Network selector shown in the `ConnectButton` Details Modal
    */
   networkSelector?: NetworkSelectorProps;
-
-  /**
-   * Hide the "Switch to Personal wallet" option in the Connect Wallet details modal which is shown when wallet is connected to either Smart Wallet or Safe.
-   *
-   * By default it is `false`
-   * @example
-   * ```tsx
-   * <ConnectButton detailsModal={{
-   *    hideSwitchToPersonalWallet: true
-   *  }}
-   * />
-   * ```
-   */
-  hideSwitchToPersonalWallet?: boolean;
 
   /**
    * Hide the "Disconnect Wallet" button in the `ConnectButton` Details Modal.
