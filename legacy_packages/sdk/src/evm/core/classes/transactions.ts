@@ -663,7 +663,7 @@ export class Transaction<
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
-    // Get contract sources for stack trace
+    // Get contract metadata for contract name if cached
     let contractName: string | undefined = undefined;
     try {
       const chainId = (await provider.getNetwork()).chainId;
