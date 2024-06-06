@@ -171,7 +171,7 @@ class ThirdwebBridge implements TWBridge {
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
-      (globalThis as any).X_SDK_VERSION = "4.15.0";
+      (globalThis as any).X_SDK_VERSION = "4.15.1";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
@@ -321,7 +321,6 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async connect(
-    // biome-ignore lint/style/useDefaultParameterLast: would change the order of parameters to fix this
     wallet: string,
     chainId: string,
     password?: string,
@@ -528,7 +527,8 @@ class ThirdwebBridge implements TWBridge {
         return arg;
       }
     });
-    // console.debug("thirdwebSDK call:", route, parsedArgs);
+
+    // console.log("thirdwebSDK call:", route, parsedArgs);
 
     // wallet call
     if (addrOrSDK.startsWith("sdk")) {
@@ -570,15 +570,21 @@ class ThirdwebBridge implements TWBridge {
     // contract tx
     if (addrOrSDK.startsWith("0x")) {
       let typeOrAbi: string | ContractInterface | undefined;
+      let isAbi = false;
       if (firstArg.length > 1) {
         try {
           typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
+          isAbi = true;
         } catch (e) {
           typeOrAbi = firstArg[1];
+          isAbi = false;
         }
       }
+
       const contract = typeOrAbi
-        ? await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
+        ? isAbi
+          ? await this.activeSDK.getContractFromAbi(addrOrSDK, typeOrAbi)
+          : await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
         : await this.activeSDK.getContract(addrOrSDK);
 
       // tx

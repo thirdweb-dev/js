@@ -4,14 +4,14 @@ import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { iconSize, radius } from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { WalletImage } from "../../components/WalletImage.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { ButtonLink } from "../../components/buttons.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { iconSize, radius } from "../../design-system/index.js";
 
 /**
  * @internal

@@ -1,7 +1,7 @@
 "use client";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { type Theme, fontSize } from "../../../core/design-system/index.js";
 import { StyledAnchor, StyledSpan } from "../design-system/elements.js";
-import { type Theme, fontSize } from "../design-system/index.js";
 
 type TextProps = {
   theme?: Theme;

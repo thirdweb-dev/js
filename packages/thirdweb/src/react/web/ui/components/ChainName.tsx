@@ -1,7 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { fontSize } from "../../../core/design-system/index.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
-import { fontSize } from "../design-system/index.js";
 import { Skeleton } from "./Skeleton.js";
 import { Text } from "./text.js";
 

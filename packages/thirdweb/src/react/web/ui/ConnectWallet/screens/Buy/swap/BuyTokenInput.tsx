@@ -2,6 +2,12 @@ import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -11,12 +17,6 @@ import { Button } from "../../../../components/buttons.js";
 import { Input } from "../../../../components/formElements.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 
 /**

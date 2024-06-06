@@ -1,4 +1,4 @@
-import { radius } from "../design-system/index.js";
+import { radius } from "../../../core/design-system/index.js";
 import { Container } from "./basic.js";
 
 export function StepBar(props: { steps: number; currentStep: number }) {

@@ -8,6 +8,11 @@ import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import {
+  type Theme,
+  fontSize,
+  spacing,
+} from "../../../../../core/design-system/index.js";
+import {
   useChainQuery,
   useChainsQuery,
 } from "../../../../../core/hooks/others/useChainQuery.js";
@@ -33,7 +38,6 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { type Theme, fontSize, spacing } from "../../../design-system/index.js";
 import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";

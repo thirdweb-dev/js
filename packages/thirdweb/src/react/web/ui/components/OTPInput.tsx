@@ -1,9 +1,13 @@
 "use client";
 import { keyframes } from "@emotion/react";
 import { OTPInput as InputOTP, type SlotProps } from "input-otp";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { fontSize, radius, spacing } from "../design-system/index.js";
 import { Container } from "./basic.js";
 
 /**

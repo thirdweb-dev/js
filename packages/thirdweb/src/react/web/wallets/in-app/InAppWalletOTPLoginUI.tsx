@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { fontSize } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
@@ -11,9 +13,7 @@ import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
-import { fontSize } from "../../ui/design-system/index.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { setLastAuthProvider } from "./storage.js";
 
