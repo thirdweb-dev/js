@@ -26,7 +26,7 @@ import {
   getAndIncrementNonce,
 } from "../../../common/forwarder";
 import { getDefaultGasOverrides } from "../../../common/gas-price";
-import { fetchContractMetadataFromAddress } from "../../../common/metadata-resolver";
+import { fetchContractMetadataFromAddress, getContractMetadataFromCache } from "../../../common/metadata-resolver";
 import { signEIP2612Permit } from "../../../common/permit";
 import { signTypedDataInternal } from "../../../common/sign";
 import { CONTRACT_ADDRESSES } from "../../../constants/addresses/CONTRACT_ADDRESSES";
@@ -396,12 +396,10 @@ export class ContractWrapper<
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
         } catch (staticErr: any) {
-          // don't do extra work
-          throw new Error("Transaction failed: " + staticErr.message);
+          throw await this.formatError(staticErr, fn, args, callOverrides);
         }
 
-        // don't do extra work
-        throw new Error("Transaction failed");
+        throw await this.formatError(err, fn, args, callOverrides);
       }
 
       this.emitTransactionEvent("completed", tx.hash);
@@ -436,12 +434,8 @@ export class ContractWrapper<
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
         } catch (staticErr: any) {
-          // don't do extra work
-          throw new Error("Transaction estimation failed: " + staticErr.message);
+          throw await this.formatError(staticErr, fn, args, callOverrides);
         }
-
-        // don't do extra work
-        throw new Error("Transaction estimation failed");
       }
     }
 
@@ -449,8 +443,7 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (err) {
-      // don't do extra work
-      throw err;
+      throw await this.formatError(err, fn, args, callOverrides);
     }
   }
 
@@ -502,23 +495,17 @@ export class ContractWrapper<
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
-    // Get contract sources for stack trace
-    let sources: ContractSource[] | undefined = undefined;
+    // Get contract metadata for contract name if cached
     let contractName: string | undefined = undefined;
     try {
-      const metadata = await fetchContractMetadataFromAddress(
+      const chainId = (await provider.getNetwork()).chainId;
+      const metadata = getContractMetadataFromCache(
         this.address,
-        this.getProvider(),
-        this.storage,
-        this.options,
+        chainId,
       );
 
-      if (metadata.name) {
+      if (metadata?.name) {
         contractName = metadata.name;
-      }
-
-      if (metadata.metadata.sources) {
-        sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
       // no-op
@@ -536,7 +523,6 @@ export class ContractWrapper<
         value,
         hash,
         contractName,
-        sources,
       },
       error,
     );
