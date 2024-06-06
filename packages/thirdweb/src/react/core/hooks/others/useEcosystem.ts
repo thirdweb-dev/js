@@ -14,9 +14,7 @@ export function useEcosystem(options: { integratorId?: string }) {
       const headers = new Headers();
       headers.set("x-integrator-id", integratorId);
       const res = await fetch(
-        `${getThirdwebBaseUrl(
-          "inAppWallet",
-        )}/api/2024-05-05/ecosystem-wallet/provider`,
+        `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/ecosystem-wallet`,
         {
           headers,
         },
