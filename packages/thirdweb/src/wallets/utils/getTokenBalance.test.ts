@@ -9,7 +9,7 @@ import { deployERC20Contract } from "../../extensions/prebuilts/deploy-erc20.js"
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { getTokenBalance } from "./getTokenBalance.js";
 
-describe("getTokenBalance", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("getTokenBalance", () => {
   it("should work for native token", async () => {
     const result = await getTokenBalance({
       account: TEST_ACCOUNT_A,
