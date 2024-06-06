@@ -396,10 +396,12 @@ export class ContractWrapper<
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
         } catch (staticErr: any) {
-          throw await this.formatError(staticErr, fn, args, callOverrides);
+          // don't do extra work
+          throw new Error("Transaction failed: " + staticErr.message);
         }
 
-        throw await this.formatError(err, fn, args, callOverrides);
+        // don't do extra work
+        throw new Error("Transaction failed");
       }
 
       this.emitTransactionEvent("completed", tx.hash);
@@ -433,9 +435,13 @@ export class ContractWrapper<
             ...args,
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
-        } catch (err: any) {
-          throw await this.formatError(err, fn, args, callOverrides);
+        } catch (staticErr: any) {
+          // don't do extra work
+          throw new Error("Transaction estimation failed: " + staticErr.message);
         }
+
+        // don't do extra work
+        throw new Error("Transaction estimation failed");
       }
     }
 
@@ -443,7 +449,8 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (err) {
-      throw await this.formatError(err, fn, args, callOverrides);
+      // don't do extra work
+      throw err;
     }
   }
 
