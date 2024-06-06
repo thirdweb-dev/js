@@ -15,7 +15,7 @@ npx expo install thirdweb @thirdweb-dev/react-native-adapter
 Since react native requires installing native dependencies directly, you also have to install these required peer dependencies:
 
 ```shell
-npx expo install react-native-get-random-values @react-native-community/netinfo expo-application @react-native-async-storage/async-storage expo-web-browser react-native-aes-gcm-crypto react-native-quick-crypto@0.7.0-rc.6 amazon-cognito-identity-js
+npx expo install react-native-get-random-values @react-native-community/netinfo expo-application @react-native-async-storage/async-storage expo-web-browser expo-linking react-native-aes-gcm-crypto react-native-quick-crypto@0.7.0-rc.6 amazon-cognito-identity-js @coinbase/wallet-mobile-sdk react-native-mmkv react-native-svg
 ```
 
 Here's an explanation of each peer dependency and why its needed:

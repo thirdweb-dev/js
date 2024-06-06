@@ -12,6 +12,10 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import {
+  useActiveWallet,
+  useDisconnect,
+} from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getDefaultWallets } from "../../../web/wallets/defaultWallets.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { ThemedButton } from "../components/button.js";
@@ -23,6 +27,7 @@ import { InAppWalletUI } from "./InAppWalletUI.js";
 export function ConnectButton(props: ConnectButtonProps) {
   const theme = parseTheme(props.theme);
   const [visible, setVisible] = useState(false);
+  const wallet = useActiveWallet();
 
   const fadeAnim = useRef(new Animated.Value(0)).current; // For background opacity
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // For bottom sheet position
@@ -71,7 +76,9 @@ export function ConnectButton(props: ConnectButtonProps) {
     }
   }, [visible, openModal, closeModal]);
 
-  return (
+  return wallet ? (
+    <ConnectedButton {...props} />
+  ) : (
     <View>
       <ThemedButton theme={theme} onPress={() => setVisible(true)}>
         <ThemedText
@@ -101,6 +108,25 @@ export function ConnectButton(props: ConnectButtonProps) {
         </Animated.View>
       </Modal>
     </View>
+  );
+}
+
+function ConnectedButton(props: ConnectButtonProps) {
+  const theme = parseTheme(props.theme);
+  const wallet = useActiveWallet();
+  const { disconnect } = useDisconnect();
+  return (
+    wallet && (
+      <ThemedButton theme={theme} onPress={() => disconnect(wallet)}>
+        <ThemedText
+          theme={theme}
+          type="defaultSemiBold"
+          style={{ color: theme.colors.primaryButtonText }}
+        >
+          Disconnect
+        </ThemedText>
+      </ThemedButton>
+    )
   );
 }
 
