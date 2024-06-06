@@ -1,17 +1,23 @@
 import { createHash } from "node:crypto";
 import { authorize } from "../core/authorize";
 
-import type { ServerResponse } from "node:http";
-import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
+import type {
+  IncomingHttpHeaders,
+  IncomingMessage,
+  ServerResponse,
+} from "node:http";
 import type { CoreServiceConfig } from "../core/api";
 import type { AuthorizationInput } from "../core/authorize";
 import type { AuthorizationResult } from "../core/authorize/types";
 import type { CoreAuthInput } from "../core/types";
 
-export * from "../core/services";
+export {
+  authorizeBundleIds,
+  authorizeDomains,
+} from "../core/authorize/client";
 export * from "../core/rateLimit";
+export * from "../core/services";
 export * from "../core/usageLimit";
-
 type NodeServiceConfig = CoreServiceConfig;
 
 export type AuthInput = CoreAuthInput & {
