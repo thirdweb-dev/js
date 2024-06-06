@@ -1,15 +1,20 @@
 "use client";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledButton } from "../design-system/elements.js";
-import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
 import { useWalletInfo } from "../hooks/useWalletInfo.js";
 import { useScreenContext } from "./Modal/screen.js";
 

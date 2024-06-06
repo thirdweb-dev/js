@@ -2,10 +2,10 @@
 import { keyframes } from "@emotion/react";
 import type React from "react";
 import { Suspense, lazy } from "react";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { radius } from "../../../core/design-system/index.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { radius } from "../design-system/index.js";
 
 const QRCodeRenderer = /* @__PURE__ */ lazy(
   () => import("./QRCode/QRCodeRenderer.js"),

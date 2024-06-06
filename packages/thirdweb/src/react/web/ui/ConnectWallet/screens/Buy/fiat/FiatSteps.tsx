@@ -10,6 +10,13 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.j
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import {
+  type Theme,
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -18,13 +25,6 @@ import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import {
-  type Theme,
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-} from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { StepIcon } from "../Stepper.js";

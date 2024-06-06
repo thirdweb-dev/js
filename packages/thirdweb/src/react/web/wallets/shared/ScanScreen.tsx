@@ -3,6 +3,11 @@ import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -14,7 +19,6 @@ import {
 } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 
 /**
  * @internal

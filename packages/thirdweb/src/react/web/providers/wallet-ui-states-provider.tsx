@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState } from "react";
-import { CustomThemeProvider } from "../ui/design-system/CustomThemeProvider.js";
-import type { Theme } from "../ui/design-system/index.js";
+import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
+import type { Theme } from "../../core/design-system/index.js";
 
 const WalletModalOpen = /* @__PURE__ */ createContext(false);
 const SetWalletModalOpen = /* @__PURE__ */ createContext<
