@@ -528,7 +528,8 @@ class ThirdwebBridge implements TWBridge {
         return arg;
       }
     });
-    // console.debug("thirdwebSDK call:", route, parsedArgs);
+
+    // console.log("thirdwebSDK call:", route, parsedArgs);
 
     // wallet call
     if (addrOrSDK.startsWith("sdk")) {
@@ -574,11 +575,12 @@ class ThirdwebBridge implements TWBridge {
         try {
           typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
         } catch (e) {
-          typeOrAbi = firstArg[1];
+          throw new Error("Invalid ABI: " + firstArg[1]);
         }
       }
+
       const contract = typeOrAbi
-        ? await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
+        ? await this.activeSDK.getContractFromAbi(addrOrSDK, typeOrAbi)
         : await this.activeSDK.getContract(addrOrSDK);
 
       // tx
