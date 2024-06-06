@@ -58,7 +58,7 @@ const DashboardConnectPlayground: ThirdwebNextPage = () => {
           trackingCategory={TRACKING_CATEGORY}
           size="sm"
           platform="React"
-          href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
+          href="https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton"
         />
         <SupportedPlatformLink
           trackingCategory={TRACKING_CATEGORY}
@@ -113,7 +113,7 @@ function ViewDocs() {
           size="md"
           noBorder
           platform="React"
-          href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
+          href="https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton"
         />
 
         <SupportedPlatformLink
@@ -135,7 +135,7 @@ function ViewDocs() {
           noBorder
           size="md"
           platform="TypeScript"
-          href="https://portal.thirdweb.com/wallet-sdk/latest/usage"
+          href="https://portal.thirdweb.com/typescript/v5/connecting-wallets"
         />
       </Grid>
     </Card>
@@ -163,14 +163,14 @@ function RelevantGuides() {
         </GuideLink>
 
         <GuideLink
-          href="https://portal.thirdweb.com/wallet-sdk/latest/usage"
-          label="react-sdk-get-started"
+          href="https://portal.thirdweb.com/typescript/v5"
+          label="sdk-v5-get-started"
         >
-          Get started with React SDK
+          Get started with thirdweb SDK
         </GuideLink>
 
         <GuideLink
-          href="https://blog.thirdweb.com/guides/add-connectwallet-to-your-website/"
+          href="https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton"
           label="add-connect-wallet"
         >
           How to Add a Connect Wallet Button to Your Website
@@ -270,7 +270,7 @@ function BuildCustomBanner() {
               trackingCategory={TRACKING_CATEGORY}
               size="sm"
               platform="React"
-              href="https://portal.thirdweb.com/react/latest/components/ConnectWallet"
+              href="https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton"
             />
             <SupportedPlatformLink
               trackingCategory={TRACKING_CATEGORY}
@@ -300,7 +300,7 @@ function BuildCustomBanner() {
               isExternal
               category={TRACKING_CATEGORY}
               label="custom-ui-cta"
-              href="https://portal.thirdweb.com/react/latest/connecting-wallets"
+              href="https://portal.thirdweb.com/typescript/v5/react/connecting-wallets"
               bg="bgBlack"
               color="bgWhite"
               minW="180px"

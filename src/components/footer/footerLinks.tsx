@@ -31,12 +31,12 @@ export const SDKs: FooterLinkInfo[] = [
   {
     label: "javascript",
     name: "JavaScript",
-    link: "https://portal.thirdweb.com/typescript/latest",
+    link: "https://portal.thirdweb.com/typescript/v5",
   },
   {
     label: "react",
     name: "React",
-    link: "https://portal.thirdweb.com/react/latest",
+    link: "https://portal.thirdweb.com/typescript/v5/react",
   },
   {
     label: "contracts",

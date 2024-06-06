@@ -529,7 +529,7 @@ const Base: ThirdwebNextPage = () => {
                       links: [
                         {
                           text: "Browse docs",
-                          href: "https://portal.thirdweb.com/react/latest",
+                          href: "https://portal.thirdweb.com/typescript/v5/react",
                         },
                         {
                           text: "Browse templates",

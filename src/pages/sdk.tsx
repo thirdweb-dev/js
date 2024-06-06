@@ -136,7 +136,7 @@ const Web3SDK: ThirdwebNextPage = () => {
                 language that you’re familiar with our{" "}
                 <Link
                   color="blue.500"
-                  href="https://portal.thirdweb.com/react/latest"
+                  href="https://portal.thirdweb.com/typescript/v5/react"
                 >
                   React
                 </Link>

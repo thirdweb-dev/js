@@ -84,17 +84,12 @@ const GUIDES = [
   {
     title: "The Quick-Start Guide to thirdweb Connect",
     image: require("/public/assets/product-pages/connect/get-started.png"),
-    link: "https://portal.thirdweb.com/react/latest/components/ConnectWallet",
+    link: "https://portal.thirdweb.com/connect",
   },
   {
     title: "Add a Connect Wallet Button to Your App or Website",
     image: require("/public/assets/product-pages/connect/connect-wallet.png"),
-    link: "https://blog.thirdweb.com/guides/add-connectwallet-to-your-website/",
-  },
-  {
-    title: "Create Your Own Custom Connect Wallet Button",
-    image: require("/public/assets/product-pages/connect/custom-connect.png"),
-    link: "https://blog.thirdweb.com/guides/create-a-custom-connect-wallet-button/",
+    link: "https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton",
   },
 ];
 
@@ -139,7 +134,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
           .slider {
             padding: 12px 0 !important;
           }
-          
+
            .slide:first-child, .slide:nth-child(2) {
             padding-right: 16px !important;
           }
