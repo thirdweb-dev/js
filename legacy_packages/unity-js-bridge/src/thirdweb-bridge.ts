@@ -570,16 +570,21 @@ class ThirdwebBridge implements TWBridge {
     // contract tx
     if (addrOrSDK.startsWith("0x")) {
       let typeOrAbi: string | ContractInterface | undefined;
+      let isAbi: boolean = false;
       if (firstArg.length > 1) {
         try {
           typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
+          isAbi = true;
         } catch (e) {
           typeOrAbi = firstArg[1];
+          isAbi = false;
         }
       }
 
       const contract = typeOrAbi
-        ? await this.activeSDK.getContractFromAbi(addrOrSDK, typeOrAbi)
+        ? isAbi
+          ? await this.activeSDK.getContractFromAbi(addrOrSDK, typeOrAbi)
+          : await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
         : await this.activeSDK.getContract(addrOrSDK);
 
       // tx
