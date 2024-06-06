@@ -4,6 +4,7 @@ import {
   type TouchableOpacityProps,
 } from "react-native";
 import type { Theme } from "../../../core/design-system/index.js";
+import { radius, spacing } from "../../design-system/index.js";
 
 export type ThemedButtonProps = TouchableOpacityProps & {
   theme: Theme;
@@ -12,17 +13,20 @@ export type ThemedButtonProps = TouchableOpacityProps & {
 
 export function ThemedButton(props: ThemedButtonProps) {
   const variant = props.variant ?? "primary";
-  const bg = props.theme.colors.primaryButtonBg;
-  const { style: styleOverride, ...restProps } = props;
+  const { style: styleOverride, theme, ...restProps } = props;
   return (
     <TouchableOpacity
       activeOpacity={0.5}
       style={[
         styles.button,
         {
-          borderColor: variant === "secondary" ? bg : "transparent",
+          borderColor:
+            variant === "secondary" ? theme.colors.borderColor : "transparent",
           borderWidth: variant === "secondary" ? 1 : 0,
-          backgroundColor: variant === "secondary" ? "transparent" : bg,
+          backgroundColor:
+            variant === "secondary"
+              ? "transparent"
+              : props.theme.colors.primaryButtonBg,
         },
         styleOverride,
       ]}
@@ -35,11 +39,9 @@ export function ThemedButton(props: ThemedButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
     flexDirection: "row",
-    gap: 8,
-    padding: 12,
-    borderRadius: 6,
+    padding: spacing.md,
+    borderRadius: radius.lg,
     justifyContent: "center",
     alignItems: "center",
   },

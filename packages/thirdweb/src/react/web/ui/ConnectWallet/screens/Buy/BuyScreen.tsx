@@ -12,6 +12,7 @@ import {
   fontSize,
   spacing,
 } from "../../../../../core/design-system/index.js";
+import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -38,7 +39,6 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
 import type { ConnectLocale } from "../../locale/types.js";

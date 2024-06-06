@@ -3,12 +3,12 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
-import type { Theme } from "../../../core/design-system/index.js";
-import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
-import type { LocaleId } from "../types.js";
-import type { NetworkSelectorProps } from "./NetworkSelector.js";
-import type { SupportedTokens } from "./defaultTokens.js";
-import type { WelcomeScreen } from "./screens/types.js";
+import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/NetworkSelector.js";
+import type { SupportedTokens } from "../../../web/ui/ConnectWallet/defaultTokens.js";
+import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
+import type { LocaleId } from "../../../web/ui/types.js";
+import type { Theme } from "../../design-system/index.js";
+import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
 
 export type PayUIOptions = {
   /**

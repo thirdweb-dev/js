@@ -32,6 +32,12 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import type {
+  ConnectButtonProps,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
+  PayUIOptions,
+} from "../../../core/hooks/connection/ConnectButtonProps.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -61,12 +67,6 @@ import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
-import type {
-  ConnectButtonProps,
-  ConnectButton_detailsButtonOptions,
-  ConnectButton_detailsModalOptions,
-  PayUIOptions,
-} from "./ConnectButtonProps.js";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,

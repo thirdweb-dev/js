@@ -9,11 +9,11 @@ import type { AppMetadata } from "../../../wallets/types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
 import { type Theme, radius } from "../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
-import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
 import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
-} from "./ConnectWallet/ConnectButtonProps.js";
+} from "../../core/hooks/connection/ConnectButtonProps.js";
+import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
 import type { SupportedTokens } from "./ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";

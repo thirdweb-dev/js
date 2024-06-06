@@ -3,7 +3,13 @@ import type { Theme } from "../../../core/design-system/index.js";
 
 export type ThemedTextProps = TextProps & {
   theme: Theme;
-  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
+  type?:
+    | "default"
+    | "title"
+    | "defaultSemiBold"
+    | "subtitle"
+    | "link"
+    | "primaryButton";
 };
 
 export function ThemedText({

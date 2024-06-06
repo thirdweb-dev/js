@@ -88,8 +88,17 @@ export {
 } from "../react/core/hooks/connection/AutoConnect.js";
 export { useAutoConnect } from "../react/core/hooks/connection/useAutoConnect.js";
 
-export { TransactionButton } from "../react/native/ui/TransactionButton/TrabsactionButton.js";
+export { TransactionButton } from "../react/native/ui/transaction/TransactionButton.js";
 export type { TransactionButtonProps } from "../react/core/hooks/transaction/button-core.js";
+
+export type {
+  ConnectButtonProps,
+  ConnectButton_connectButtonOptions,
+  ConnectButton_connectModalOptions,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
+} from "../react/core/hooks/connection/ConnectButtonProps.js";
+export { ConnectButton } from "../react/native/ui/connect/ConnectButton.js";
 
 // wallet info
 export {

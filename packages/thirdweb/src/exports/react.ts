@@ -16,7 +16,7 @@ export type {
   ConnectButton_connectModalOptions,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
-} from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
+} from "../react/core/hooks/connection/ConnectButtonProps.js";
 export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 export type { LocaleId } from "../react/web/ui/types.js";
@@ -121,7 +121,7 @@ export {
   type PayEmbedProps,
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
-export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
+export type { PayUIOptions } from "../react/core/hooks/connection/ConnectButtonProps.js";
 
 export {
   useConnectModal,
