@@ -34,8 +34,8 @@ export default {
     "https://9001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmos.lava.build",
     "wss://evmos.lava.build/websocket",
-    "https://evmos-evm.publicnode.com",
-    "wss://evmos-evm.publicnode.com"
+    "https://evmos-evm-rpc.publicnode.com",
+    "wss://evmos-evm-rpc.publicnode.com"
   ],
   "shortName": "evmos",
   "slug": "evmos",

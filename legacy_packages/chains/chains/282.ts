@@ -5,26 +5,26 @@ export default {
   "explorers": [
     {
       "name": "Cronos zkEVM Testnet Explorer",
-      "url": "https://zkevm-t0.cronos.org/explorer",
+      "url": "https://explorer.zkevm.cronos.org/testnet",
       "standard": "none"
     }
   ],
   "faucets": [
-    "https://zkevm-t0.cronos.org/faucet"
+    "https://zkevm.cronos.org/faucet"
   ],
-  "infoURL": "https://docs.cronos.org/cronos-zkevm-chain/introduction-to-cronos-zkevm-chain-testnet",
+  "infoURL": "https://docs-zkevm.cronos.org",
   "name": "Cronos zkEVM Testnet",
   "nativeCurrency": {
     "name": "Cronos zkEVM Test Coin",
-    "symbol": "TCRO",
+    "symbol": "zkTCRO",
     "decimals": 18
   },
   "networkId": 282,
   "rpc": [
     "https://282.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-zkevm-t0.cronos.org"
+    "https://testnet.zkevm.cronos.org"
   ],
-  "shortName": "zktcro",
+  "shortName": "zkTCRO",
   "slip44": 1,
   "slug": "cronos-zkevm-testnet",
   "testnet": true
