@@ -1,14 +1,9 @@
 import {
-  getDefaultGasOverrides,
-  signTypedDataInternal,
-} from "@thirdweb-dev/sdk";
-import {
   Bytes,
   Signer,
   providers,
   TypedDataDomain,
   TypedDataField,
-  Wallet,
   ethers,
   BigNumber,
   BigNumberish,
@@ -140,7 +135,7 @@ export class ZkWrappedSigner extends Signer {
     }
 
     if (!transaction.maxPriorityFeePerGas) {
-      gasPrice;
+      transaction.maxPriorityFeePerGas = gasPrice;
     } else {
       transaction.maxPriorityFeePerGas = (
         transaction.maxPriorityFeePerGas as ethers.BigNumber
@@ -309,47 +304,5 @@ export class ZkWrappedSigner extends Signer {
     }
 
     return utils.hexConcat([[EIP712_TX_TYPE], utils.RLP.encode(fields)]);
-  }
-
-  getSignedDigest(transaction: providers.TransactionRequest): ethers.BytesLike {
-    if (!transaction.chainId) {
-      throw Error("Transaction chainId isn't set!");
-    }
-    const domain = {
-      name: "zkSync",
-      version: "2",
-      chainId: transaction.chainId,
-    };
-    return ethers.utils._TypedDataEncoder.hash(
-      domain,
-      EIP712_TYPES,
-      this.getSignInput(transaction),
-    );
-  }
-
-  getSignInput(transaction: providers.TransactionRequest) {
-    const maxFeePerGas = transaction.maxFeePerGas ?? transaction.gasPrice ?? 0;
-    const maxPriorityFeePerGas =
-      transaction.maxPriorityFeePerGas || maxFeePerGas;
-    const gasPerPubdataByteLimit =
-      transaction.customData?.gasPerPubdata ?? DEFAULT_GAS_PER_PUBDATA_LIMIT;
-    return {
-      txType: transaction.type || EIP712_TX_TYPE,
-      from: transaction.from,
-      to: transaction.to,
-      gasLimit: transaction.gasLimit || 0,
-      gasPerPubdataByteLimit: gasPerPubdataByteLimit,
-      maxFeePerGas,
-      maxPriorityFeePerGas,
-      paymaster:
-        transaction.customData?.paymasterParams?.paymaster ||
-        ethers.constants.AddressZero,
-      nonce: transaction.nonce || 0,
-      value: transaction.value || 0,
-      data: transaction.data || "0x",
-      factoryDeps: [],
-      paymasterInput:
-        transaction.customData?.paymasterParams?.paymasterInput || "0x",
-    };
   }
 }

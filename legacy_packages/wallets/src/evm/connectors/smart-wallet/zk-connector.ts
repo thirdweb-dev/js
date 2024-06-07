@@ -50,14 +50,16 @@ export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
   }
 
   async getSigner(): Promise<Signer> {
-    if (!this.personalWallet) throw new Error("Wallet not connected");
+    if (!this.personalWallet) {
+      throw new Error("Wallet not connected");
+    }
     return new ZkWrappedSigner(
       await this.personalWallet.getSigner(),
       this.httpRpcClient as HttpRpcClient,
     );
   }
 
-  switchChain(chainId: number): Promise<void> {
+  switchChain(_chainId: number): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
@@ -69,7 +71,7 @@ export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
     throw new Error("Method not implemented.");
   }
 
-  updateChains(chains: Chain[]): void {
+  updateChains(_chains: Chain[]): void {
     throw new Error("Method not implemented.");
   }
 

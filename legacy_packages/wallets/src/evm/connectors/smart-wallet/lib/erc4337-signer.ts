@@ -1,4 +1,4 @@
-import { BigNumber, Contract, ethers, providers, utils } from "ethers";
+import { Contract, ethers, providers, utils } from "ethers";
 import { Bytes, Signer } from "ethers";
 import { BaseAccountAPI } from "./base-api";
 import type { ERC4337EthersProvider } from "./erc4337-provider";
