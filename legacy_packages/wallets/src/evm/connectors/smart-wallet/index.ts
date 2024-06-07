@@ -69,7 +69,8 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             this.config.secretKey,
           ),
       gasless: config.gasless,
-      factoryAddress: config.factoryAddress,
+      factoryAddress:
+        config.factoryAddress || "0x85e23b94e7F5E9cC1fF78BCe78cfb15B81f0DF00",
       accountAddress: params.accountAddress,
       factoryInfo: {
         createAccount:

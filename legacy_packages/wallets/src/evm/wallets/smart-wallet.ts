@@ -14,7 +14,11 @@ import {
   SignerWithPermissions,
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
-import { getValidChainRPCs } from "@thirdweb-dev/chains";
+import {
+  Zksync,
+  ZksyncSepoliaTestnet,
+  getValidChainRPCs,
+} from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
 
@@ -293,14 +297,26 @@ export class SmartWallet extends AbstractClientWallet<
 
   async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
-      const { SmartWalletConnector } = await import(
-        "../connectors/smart-wallet"
-      );
-      this.connector = new SmartWalletConnector(
-        this.options as SmartWalletConfig,
-      );
+      if (
+        this.options?.chain === ZksyncSepoliaTestnet ||
+        this.options?.chain === Zksync
+      ) {
+        const { ZkSyncConnector } = await import(
+          "../connectors/smart-wallet/zk-connector"
+        );
+        this.connector = new ZkSyncConnector(
+          this.options as SmartWalletConfig,
+        ) as any;
+      } else {
+        const { SmartWalletConnector } = await import(
+          "../connectors/smart-wallet"
+        );
+        this.connector = new SmartWalletConnector(
+          this.options as SmartWalletConfig,
+        );
+      }
     }
-    return this.connector;
+    return this.connector as SmartWalletConnectorType;
   }
 
   /**
@@ -560,7 +576,7 @@ export class SmartWallet extends AbstractClientWallet<
    * @returns `true` if the smart wallet contract is deployed
    */
   async isDeployed(): Promise<boolean> {
-    if(this.connector?.chainId === 300 || this.connector?.chainId === 324) {
+    if (this.connector?.chainId === 300 || this.connector?.chainId === 324) {
       return true;
     }
     const connector = await this.getConnector();

@@ -1,0 +1,93 @@
+import { Chain } from "@thirdweb-dev/chains";
+import { BigNumber, Signer, ethers, providers } from "ethers";
+import { ConnectParams, Connector } from "../../interfaces/connector";
+import {
+  SmartWalletConfig,
+  SmartWalletConnectionArgs,
+  UserOpOptions,
+} from "./types";
+import { EVMWallet } from "../../interfaces";
+import { getChainProvider, signTypedDataInternal } from "@thirdweb-dev/sdk";
+import { HttpRpcClient } from "./lib/http-rpc-client";
+import { ENTRYPOINT_ADDRESS } from "./lib/constants";
+import { ZkWrappedSigner } from "./zk-wrapped-signer";
+import { EIP712Signer } from "zksync-ethers";
+
+export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
+  protected config: SmartWalletConfig;
+  protected personalWallet: EVMWallet | undefined;
+  protected httpRpcClient: HttpRpcClient | undefined;
+  protected chainId: number = 1;
+
+  constructor(config: SmartWalletConfig) {
+    super();
+    this.config = config;
+  }
+
+  async connect(
+    args: ConnectParams<SmartWalletConnectionArgs>,
+  ): Promise<string> {
+    console.log("connect zk", args);
+    this.personalWallet = args.personalWallet;
+    this.chainId = await (await this.personalWallet.getSigner()).getChainId();
+    if (this.chainId !== 300 && this.chainId !== 324) {
+      throw new Error("Invalid zksync chain id");
+    }
+    const bundlerUrl =
+      this.config.bundlerUrl || `https://${this.chainId}.bundler.thirdweb.com`;
+    const entryPointAddress =
+      this.config.entryPointAddress || ENTRYPOINT_ADDRESS;
+    this.httpRpcClient = new HttpRpcClient(
+      bundlerUrl,
+      entryPointAddress,
+      this.chainId,
+      this.config.clientId,
+      this.config.secretKey,
+    );
+    return this.getAddress();
+  }
+
+  disconnect(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  async getAddress(): Promise<string> {
+    const signer = await this.getSigner();
+    return signer.getAddress();
+  }
+
+  async getSigner(): Promise<Signer> {
+    if (!this.personalWallet) throw new Error("Wallet not connected");
+    return new ZkWrappedSigner(
+      await this.personalWallet.getSigner(),
+      this.httpRpcClient as HttpRpcClient,
+    );
+  }
+
+  switchChain(chainId: number): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  isConnected(): Promise<boolean> {
+    return Promise.resolve(!!this.personalWallet);
+  }
+
+  setupListeners(): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+
+  updateChains(chains: Chain[]): void {
+    throw new Error("Method not implemented.");
+  }
+
+  async getProvider(): Promise<providers.Provider> {
+    if (!this.getSigner()) {
+      throw new Error("Personal wallet not connected");
+    }
+    const signer = await this.getSigner();
+    if (!signer.provider) {
+      throw new Error("Provider not found");
+    }
+    return signer.provider;
+  }
+}

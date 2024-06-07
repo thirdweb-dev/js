@@ -171,3 +171,18 @@ export type EstimateUserOpGasResult = {
   verificationGasLimit: BigNumber;
   callGasLimit: BigNumber;
 };
+
+export type ZkTransactionInput = {
+  nonce?: string;
+  from: string;
+  to: string;
+  gas: string;
+  gasPrice?: string;
+  value?: string;
+  data?: string;
+  maxFeePerGas: string;
+  maxPriorityFeePerGas: string;
+  chainId?: string;
+  signedTransaction: string;
+  paymaster: string;
+};
