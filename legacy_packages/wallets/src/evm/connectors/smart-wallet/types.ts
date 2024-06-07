@@ -14,7 +14,7 @@ import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
-  factoryAddress: string;
+  factoryAddress?: string;
   clientId?: string;
   secretKey?: string;
   gasless: boolean;

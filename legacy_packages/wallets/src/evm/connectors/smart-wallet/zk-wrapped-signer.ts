@@ -123,8 +123,12 @@ export class ZkWrappedSigner extends Signer {
     }
 
     const address = await this.getAddress();
-    const gasLimit = (await this.provider.estimateGas(transaction)).mul(3);
-    const gasPrice = (await this.provider.getGasPrice()).mul(2);
+    const gasLimit = ethers.BigNumber.from(
+      transaction.gasLimit || (await this.provider.estimateGas(transaction)),
+    ).mul(3);
+    const gasPrice = ethers.BigNumber.from(
+      transaction.gasPrice || (await this.provider.getGasPrice()),
+    ).mul(2);
 
     if (!transaction.maxFeePerGas) {
       transaction.maxFeePerGas = gasPrice;
@@ -181,8 +185,6 @@ export class ZkWrappedSigner extends Signer {
       factoryDeps: [],
       paymasterInput: ethers.utils.arrayify(pmDataResult.paymasterInput),
     };
-
-    console.log("eip712tx", eip712tx);
 
     const signature = await this._signTypedData(
       {

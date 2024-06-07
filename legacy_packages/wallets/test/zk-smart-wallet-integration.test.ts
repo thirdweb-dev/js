@@ -26,7 +26,6 @@ beforeAll(async () => {
   await personalWallet.connect();
   smartWallet = new SmartWallet({
     chain,
-    factoryAddress: "",
     gasless: true,
     secretKey: SECRET_KEY,
   });

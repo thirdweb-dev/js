@@ -15,12 +15,11 @@ import {
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
 import {
-  Zksync,
-  ZksyncSepoliaTestnet,
   getValidChainRPCs,
 } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
+import { isZkSyncChain } from "./smart-wallet";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -31,6 +30,7 @@ export {
   getSmartWalletAddress,
   isSmartWalletDeployed,
   getUserOpReceipt,
+  isZkSyncChain,
 } from "../connectors/smart-wallet/utils";
 
 export type { UserOperationStruct } from "@account-abstraction/contracts";
@@ -297,10 +297,7 @@ export class SmartWallet extends AbstractClientWallet<
 
   async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
-      if (
-        this.options?.chain === ZksyncSepoliaTestnet ||
-        this.options?.chain === Zksync
-      ) {
+      if (this.options && (await isZkSyncChain(this.options.chain))) {
         const { ZkSyncConnector } = await import(
           "../connectors/smart-wallet/zk-connector"
         );
