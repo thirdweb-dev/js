@@ -195,6 +195,8 @@
     "input-otp": "^1.2.4",
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
+    "sshpk": "^1.18.0",
+    "tweetnacl": "^1.0.3",
     "uqr": "0.1.2",
     "viem": "2.10.9"
   },
@@ -295,6 +297,7 @@
     "@testing-library/react": "^15.0.6",
     "@types/cross-spawn": "^6.0.6",
     "@types/react": "18.2.17",
+    "@types/sshpk": "^1.17.4",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "1.5.0",
     "amazon-cognito-identity-js": "6.3.12",

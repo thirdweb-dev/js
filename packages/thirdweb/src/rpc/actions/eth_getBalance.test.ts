@@ -5,7 +5,7 @@ import {
   VITALIK_WALLET,
   ZERO_ADDRESS,
 } from "~test/addresses.js";
-import { FORKED_ETHEREUM_CHAIN } from "~test/chains.js";
+import { FORKED_ETHEREUM_CHAIN, STATELESS_CHAIN } from "~test/chains.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import * as fetchRpc from "../fetch-rpc.js";
 import { getRpcClient } from "../rpc.js";
@@ -125,3 +125,23 @@ describe.runIf(process.env.TW_SECRET_KEY)("eth_getBalance", () => {
     `);
   });
 });
+
+describe.runIf(process.env.STATELESS_URL)("eth_getBalance_stateless", () => {
+  it("should return the correct balance at the given block", async () => {
+    const sRPCClient = getRpcClient({
+      chain: STATELESS_CHAIN,
+      client: TEST_CLIENT,
+      config: {
+        minimumRequiredAttestations: 1,
+        identities: [process.env.STATELESS_IDENTITY as string],
+      }
+    });
+
+    const vitalikBalance = await eth_getBalance(sRPCClient, {
+      address: VITALIK_WALLET,
+    });
+    expect(vitalikBalance).toBeTypeOf("bigint");
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+  });
+});
+

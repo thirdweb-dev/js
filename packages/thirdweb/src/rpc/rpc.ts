@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../client/client.js";
 import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import { type RpcRequest, fetchRpc, fetchSingleRpc } from "./fetch-rpc.js";
+import { handleAndBlockNumberReqs, handleAttestations } from "./stateless.js";
 
 const RPC_CLIENT_MAP = new WeakMap();
 
@@ -37,6 +38,9 @@ type RPCOptions = Readonly<{
     maxBatchSize?: number;
     batchTimeoutMs?: number;
     requestTimeoutMs?: number;
+    /** stateless config */
+    minimumRequiredAttestations?: number | undefined
+	  identities?: string[] | undefined
   };
 }>;
 
@@ -89,6 +93,8 @@ export function getRpcClient(
       // look at the client options
       options.client.config?.rpc?.batchTimeoutMs ??
       DEFAULT_BATCH_TIMEOUT_MS;
+    const minimumRequiredAttestations = options.config?.minimumRequiredAttestations;
+    const identities = options.config?.identities;
 
     // inflight requests
     // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
@@ -113,7 +119,7 @@ export function getRpcClient(
      * Sends the pending batch of requests.
      * @internal
      */
-    function sendPendingBatch() {
+    async function sendPendingBatch() {
       // clear the timeout if any
       if (pendingBatchTimeout) {
         clearTimeout(pendingBatchTimeout);
@@ -134,52 +140,57 @@ export function getRpcClient(
       // reset pendingBatch to empty
       pendingBatch = [];
 
-      fetchRpc(rpcUrl, options.client, {
-        requests,
-        requestTimeoutMs: options.config?.requestTimeoutMs,
-      })
-        .then((responses) => {
-          // for each response, resolve the inflight request
-          activeBatch.forEach((inflight, index) => {
-            const response = responses[index];
-            // if we didn't get a response at all, reject the inflight request
-            if (!response) {
-              inflight.reject(new Error("No response"));
-              return;
-            }
-            // handle errors in the response
-            if (response instanceof Error) {
-              inflight.reject(response);
-              return;
-            }
-
-            // handle strings as responses??
-            if (typeof response === "string") {
-              inflight.reject(new Error(response));
-              return;
-            }
-
-            if ("error" in response) {
-              inflight.reject(response.error);
-              // otherwise, resolve the inflight request
-            } else if (response.method === "eth_subscription") {
-              // TODO: handle subscription responses
-              throw new Error("Subscriptions not supported yet");
-            } else {
-              inflight.resolve(response.result);
-            }
-            // remove the inflight request from the inflightRequests map
-            inflightRequests.delete(inflight.requestKey);
-          });
-        })
-        .catch((err) => {
-          // http call failed, reject all inflight requests
-          for (const inflight of activeBatch) {
-            inflight.reject(err);
-            // remove the inflight request from the inflightRequests map
-            inflightRequests.delete(inflight.requestKey);
-          }
+      try {
+        const responses = await fetchRpc(rpcUrl, options.client, {
+          requests,
+          requestTimeoutMs: options.config?.requestTimeoutMs,
         });
+    
+        
+    
+        // for each response, resolve the inflight request
+        for (const [index, inflight] of activeBatch.entries()) {
+          let response = responses[index];
+          // if we didn't get a response at all, reject the inflight request
+          if (!response) {
+            inflight.reject(new Error("No response"));
+            continue;
+          }
+          // handle errors in the response
+          if (response instanceof Error) {
+            inflight.reject(response);
+            continue;
+          }
+    
+          // handle strings as responses??
+          if (typeof response === "string") {
+            inflight.reject(new Error(response));
+            continue;
+          }
+    
+          if ("error" in response) {
+            inflight.reject(response.error);
+          } else if (response.method === "eth_subscription") {
+            // TODO: handle subscription responses
+            throw new Error("Subscriptions not supported yet");
+          } else {
+            if (minimumRequiredAttestations != undefined) {
+              await handleAttestations(response, minimumRequiredAttestations, identities);
+            }
+            response = await handleAndBlockNumberReqs(response);
+            if (response) inflight.resolve(response.result);
+          }
+          // remove the inflight request from the inflightRequests map
+          inflightRequests.delete(inflight.requestKey);
+        }
+      } catch (err) {
+        // http call failed, reject all inflight requests
+        for (const inflight of activeBatch) {
+          inflight.reject(err);
+          // remove the inflight request from the inflightRequests map
+          inflightRequests.delete(inflight.requestKey);
+        }
+      }
     }
 
     // shortcut everything if we do not need to batch
@@ -191,7 +202,7 @@ export function getRpcClient(
         (request as any).id = 1;
         // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
         (request as any).jsonrpc = "2.0";
-        const rpcResponse = await fetchSingleRpc(rpcUrl, options.client, {
+        let rpcResponse = await fetchSingleRpc(rpcUrl, options.client, {
           request: request,
           requestTimeoutMs: options.config?.requestTimeoutMs,
         });
@@ -202,6 +213,10 @@ export function getRpcClient(
         if ("error" in rpcResponse) {
           throw rpcResponse.error;
         }
+        if (minimumRequiredAttestations != undefined) { 
+          await handleAttestations(rpcResponse, minimumRequiredAttestations, identities)
+        }
+        rpcResponse = await handleAndBlockNumberReqs(rpcResponse)
         return rpcResponse.result;
       };
     }
@@ -233,10 +248,10 @@ export function getRpcClient(
         }
         // if the batch is full, send it
         if (pendingBatch.length >= batchSize) {
-          sendPendingBatch();
+          await sendPendingBatch();
         }
       } else {
-        sendPendingBatch();
+        await sendPendingBatch();
       }
       return promise;
     };
