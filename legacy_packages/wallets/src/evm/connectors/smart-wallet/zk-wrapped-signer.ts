@@ -12,27 +12,60 @@ import {
   ethers,
   BigNumber,
   BigNumberish,
+  utils,
 } from "ethers";
 import { BytesLike, Deferrable, defineReadOnly } from "ethers/lib/utils";
 import { HttpRpcClient } from "./lib/http-rpc-client";
 import { ZkTransactionInput } from "./types";
 
 type Eip712Meta = {
-  /** The maximum amount of gas the user is willing to pay for a single byte of pubdata. */
   gasPerPubdata?: BigNumberish;
-  /** An array of bytes containing the bytecode of the contract being deployed and any related contracts it can deploy. */
   factoryDeps?: BytesLike[];
-  /** Custom signature used for cases where the signer's account is not an EOA. */
   customSignature?: BytesLike;
-  /** Parameters for configuring the custom paymaster for the transaction. */
   paymasterParams?: PaymasterParams;
 };
 
 type PaymasterParams = {
-  /** The address of the paymaster. */
   paymaster: string;
-  /** The bytestream input for the paymaster. */
   paymasterInput: BytesLike;
+};
+
+type EIP712Transaction = {
+  txType: number;
+  from: string;
+  to: string;
+  gasLimit: number;
+  gasPerPubdataByteLimit: number;
+  maxFeePerGas: number;
+  maxPriorityFeePerGas: number;
+  paymaster: string;
+  nonce: number;
+  value: number;
+  data: BytesLike;
+  factoryDeps: BytesLike[];
+  paymasterInput: BytesLike;
+};
+
+const DEFAULT_GAS_PER_PUBDATA_LIMIT = 50000;
+
+const EIP712_TX_TYPE = 0x71;
+
+const EIP712_TYPES = {
+  Transaction: [
+    { name: "txType", type: "uint256" },
+    { name: "from", type: "uint256" },
+    { name: "to", type: "uint256" },
+    { name: "gasLimit", type: "uint256" },
+    { name: "gasPerPubdataByteLimit", type: "uint256" },
+    { name: "maxFeePerGas", type: "uint256" },
+    { name: "maxPriorityFeePerGas", type: "uint256" },
+    { name: "paymaster", type: "uint256" },
+    { name: "nonce", type: "uint256" },
+    { name: "value", type: "uint256" },
+    { name: "data", type: "bytes" },
+    { name: "factoryDeps", type: "bytes32[]" },
+    { name: "paymasterInput", type: "bytes" },
+  ],
 };
 
 export class ZkWrappedSigner extends Signer {
@@ -85,68 +118,50 @@ export class ZkWrappedSigner extends Signer {
   async sendZkSyncTransaction(
     _transaction: ethers.utils.Deferrable<ethers.providers.TransactionRequest>,
   ): Promise<ethers.providers.TransactionResponse> {
-    const transaction = await this.populateTransaction(_transaction);
+    let transaction = await this.populateTransaction(_transaction);
     if (!transaction.chainId) {
       throw new Error("ChainId is required to send a ZkSync transaction");
     }
 
-    console.log("sendZkSyncTransaction", transaction);
+    if (!this.provider) {
+      throw new Error("Provider is required to send a ZkSync transaction");
+    }
+
+    const address = await this.getAddress();
+    const gasLimit = (await this.provider.estimateGas(transaction)).mul(3);
+    const gasPrice = (await this.provider.getGasPrice()).mul(2);
+
+    if (!transaction.maxFeePerGas) {
+      transaction.maxFeePerGas = gasPrice;
+    } else {
+      transaction.maxFeePerGas = (
+        transaction.maxFeePerGas as ethers.BigNumber
+      ).mul(2);
+    }
+
+    if (!transaction.maxPriorityFeePerGas) {
+      gasPrice;
+    } else {
+      transaction.maxPriorityFeePerGas = (
+        transaction.maxPriorityFeePerGas as ethers.BigNumber
+      ).mul(2);
+    }
+
+    transaction = {
+      ...transaction,
+      from: address,
+      gasLimit,
+      gasPrice,
+      chainId: (await this.provider.getNetwork()).chainId,
+      nonce: await this.provider.getTransactionCount(address),
+      type: 113,
+      value: BigInt(0),
+    };
 
     const pmDataResult = await this.httpRpcClient?.zkPaymasterData(transaction);
-    const zkTx = {
-      txType: 0x71,
-      from: BigInt(transaction.from || (await this.getAddress())).toString(),
-      to: BigInt(transaction.to || "0x0").toString(),
-      gasLimit: transaction.gasLimit,
-      gasPerPubdataByteLimit: 50000,
-      maxFeePerGas: transaction.maxFeePerGas,
-      maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-      paymaster: BigInt(pmDataResult.paymaster).toString(),
-      nonce: transaction.nonce,
-      value: transaction.value,
-      data: transaction.data || "0x",
-      factoryDeps: [],
-      paymasterInput: ethers.utils.arrayify(pmDataResult.paymasterInput),
-    };
-
-    console.log("zkTx", zkTx);
-
-    const EIP712_TYPES = {
-      Transaction: [
-        { name: "txType", type: "uint256" },
-        { name: "from", type: "uint256" },
-        { name: "to", type: "uint256" },
-        { name: "gasLimit", type: "uint256" },
-        { name: "gasPerPubdataByteLimit", type: "uint256" },
-        { name: "maxFeePerGas", type: "uint256" },
-        { name: "maxPriorityFeePerGas", type: "uint256" },
-        { name: "paymaster", type: "uint256" },
-        { name: "nonce", type: "uint256" },
-        { name: "value", type: "uint256" },
-        { name: "data", type: "bytes" },
-        { name: "factoryDeps", type: "bytes32[]" },
-        { name: "paymasterInput", type: "bytes" },
-      ],
-    };
-
-    console.log("EIP712_TYPES", EIP712_TYPES);
-
-    const signature = (
-      await signTypedDataInternal(
-        this,
-        {
-          name: "zkSync",
-          version: "2",
-          chainId: transaction.chainId as number,
-        } as any,
-        EIP712_TYPES,
-        zkTx,
-      )
-    ).signature;
-
-    console.log("signature", signature);
 
     transaction.customData = {
+      gasPerPubdata: DEFAULT_GAS_PER_PUBDATA_LIMIT,
       factoryDeps: [],
       paymasterParams: {
         paymaster: pmDataResult.paymaster,
@@ -154,16 +169,37 @@ export class ZkWrappedSigner extends Signer {
       } as Eip712Meta,
     };
 
-    transaction.type = 0x71;
-    transaction.gasLimit = 25000000;
-    transaction.maxFeePerGas = 25000000;
-    transaction.maxPriorityFeePerGas = 25000000;
+    const eip712tx: EIP712Transaction = {
+      txType: EIP712_TX_TYPE,
+      from: BigInt(transaction.from || (await this.getAddress())).toString(),
+      to: BigInt(transaction.to || "0x0").toString(),
+      gasLimit: transaction.gasLimit ? Number(transaction.gasLimit) : 0,
+      gasPerPubdataByteLimit: DEFAULT_GAS_PER_PUBDATA_LIMIT,
+      maxFeePerGas: ethers.BigNumber.from(transaction.maxFeePerGas).toNumber(),
+      maxPriorityFeePerGas: ethers.BigNumber.from(
+        transaction.maxPriorityFeePerGas,
+      ).toNumber(),
+      paymaster: BigInt(pmDataResult.paymaster).toString(),
+      nonce: ethers.BigNumber.from(transaction.nonce).toNumber(),
+      value: ethers.BigNumber.from(transaction.value).toNumber(),
+      data: transaction.data || "0x",
+      factoryDeps: [],
+      paymasterInput: ethers.utils.arrayify(pmDataResult.paymasterInput),
+    };
 
-    console.log("finalTx", transaction);
+    console.log("eip712tx", eip712tx);
+
+    const signature = await this._signTypedData(
+      {
+        name: "zkSync",
+        version: "2",
+        chainId: transaction.chainId as number,
+      },
+      EIP712_TYPES,
+      eip712tx,
+    );
 
     const serializedTx = this.serialize(transaction, signature);
-
-    console.log("serializedTx", serializedTx);
 
     const zkSignedTx: ZkTransactionInput = {
       from: transaction.from?.toString() || (await this.getAddress()),
@@ -190,10 +226,10 @@ export class ZkWrappedSigner extends Signer {
 
   serialize(
     transaction: ethers.providers.TransactionRequest,
-    signature?: any,
+    signature?: string,
   ): string {
-    if (!transaction.customData && transaction.type !== 0x71) {
-      return ethers.utils.serializeTransaction(
+    if (!transaction.customData && transaction.type !== EIP712_TX_TYPE) {
+      return utils.serializeTransaction(
         transaction as ethers.PopulatedTransaction,
         signature,
       );
@@ -203,9 +239,7 @@ export class ZkWrappedSigner extends Signer {
     }
 
     function formatNumber(value: BigNumberish, name: string): Uint8Array {
-      const result = ethers.utils.stripZeros(
-        BigNumber.from(value).toHexString(),
-      );
+      const result = utils.stripZeros(BigNumber.from(value).toHexString());
       if (result.length > 32) {
         throw new Error(`Invalid length for ${name}!`);
       }
@@ -230,33 +264,32 @@ export class ZkWrappedSigner extends Signer {
       formatNumber(maxPriorityFeePerGas, "maxPriorityFeePerGas"),
       formatNumber(maxFeePerGas, "maxFeePerGas"),
       formatNumber(transaction.gasLimit || 0, "gasLimit"),
-      transaction.to ? ethers.utils.getAddress(transaction.to) : "0x",
+      transaction.to ? utils.getAddress(transaction.to) : "0x",
       formatNumber(transaction.value || 0, "value"),
       transaction.data || "0x",
     ];
 
     if (signature) {
-      const sig = ethers.utils.splitSignature(signature);
+      const sig = utils.splitSignature(signature);
       fields.push(formatNumber(sig.recoveryParam, "recoveryParam"));
-      fields.push(ethers.utils.stripZeros(sig.r));
-      fields.push(ethers.utils.stripZeros(sig.s));
+      fields.push(utils.stripZeros(sig.r));
+      fields.push(utils.stripZeros(sig.s));
     } else {
       fields.push(formatNumber(transaction.chainId, "chainId"));
       fields.push("0x");
       fields.push("0x");
     }
     fields.push(formatNumber(transaction.chainId, "chainId"));
-    fields.push(ethers.utils.getAddress(from));
+    fields.push(utils.getAddress(from));
 
     // Add meta
-    fields.push(formatNumber(meta.gasPerPubdata || 50000, "gasPerPubdata"));
     fields.push(
-      (meta.factoryDeps ?? []).map(
-        (
-          dep: number | bigint | ethers.utils.BytesLike | ethers.utils.Hexable,
-        ) => ethers.utils.hexlify(dep),
+      formatNumber(
+        meta.gasPerPubdata || DEFAULT_GAS_PER_PUBDATA_LIMIT,
+        "gasPerPubdata",
       ),
     );
+    fields.push((meta.factoryDeps ?? []).map((dep) => utils.hexlify(dep)));
 
     if (
       meta.customSignature &&
@@ -275,6 +308,48 @@ export class ZkWrappedSigner extends Signer {
       fields.push([]);
     }
 
-    return ethers.utils.hexConcat([[0x71], ethers.utils.RLP.encode(fields)]);
+    return utils.hexConcat([[EIP712_TX_TYPE], utils.RLP.encode(fields)]);
+  }
+
+  getSignedDigest(transaction: providers.TransactionRequest): ethers.BytesLike {
+    if (!transaction.chainId) {
+      throw Error("Transaction chainId isn't set!");
+    }
+    const domain = {
+      name: "zkSync",
+      version: "2",
+      chainId: transaction.chainId,
+    };
+    return ethers.utils._TypedDataEncoder.hash(
+      domain,
+      EIP712_TYPES,
+      this.getSignInput(transaction),
+    );
+  }
+
+  getSignInput(transaction: providers.TransactionRequest) {
+    const maxFeePerGas = transaction.maxFeePerGas ?? transaction.gasPrice ?? 0;
+    const maxPriorityFeePerGas =
+      transaction.maxPriorityFeePerGas || maxFeePerGas;
+    const gasPerPubdataByteLimit =
+      transaction.customData?.gasPerPubdata ?? DEFAULT_GAS_PER_PUBDATA_LIMIT;
+    return {
+      txType: transaction.type || EIP712_TX_TYPE,
+      from: transaction.from,
+      to: transaction.to,
+      gasLimit: transaction.gasLimit || 0,
+      gasPerPubdataByteLimit: gasPerPubdataByteLimit,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+      paymaster:
+        transaction.customData?.paymasterParams?.paymaster ||
+        ethers.constants.AddressZero,
+      nonce: transaction.nonce || 0,
+      value: transaction.value || 0,
+      data: transaction.data || "0x",
+      factoryDeps: [],
+      paymasterInput:
+        transaction.customData?.paymasterParams?.paymasterInput || "0x",
+    };
   }
 }

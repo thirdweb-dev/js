@@ -1,17 +1,11 @@
 import { Chain } from "@thirdweb-dev/chains";
-import { BigNumber, Signer, ethers, providers } from "ethers";
+import { Signer, providers } from "ethers";
 import { ConnectParams, Connector } from "../../interfaces/connector";
-import {
-  SmartWalletConfig,
-  SmartWalletConnectionArgs,
-  UserOpOptions,
-} from "./types";
+import { SmartWalletConfig, SmartWalletConnectionArgs } from "./types";
 import { EVMWallet } from "../../interfaces";
-import { getChainProvider, signTypedDataInternal } from "@thirdweb-dev/sdk";
 import { HttpRpcClient } from "./lib/http-rpc-client";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { ZkWrappedSigner } from "./zk-wrapped-signer";
-import { EIP712Signer } from "zksync-ethers";
 
 export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -27,7 +21,6 @@ export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
   async connect(
     args: ConnectParams<SmartWalletConnectionArgs>,
   ): Promise<string> {
-    console.log("connect zk", args);
     this.personalWallet = args.personalWallet;
     this.chainId = await (await this.personalWallet.getSigner()).getChainId();
     if (this.chainId !== 300 && this.chainId !== 324) {

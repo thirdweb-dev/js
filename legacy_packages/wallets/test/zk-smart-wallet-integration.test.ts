@@ -31,28 +31,46 @@ beforeAll(async () => {
     secretKey: SECRET_KEY,
   });
   smartWalletAddress = await smartWallet.connect({ personalWallet });
-   sdk = await ThirdwebSDK.fromWallet(smartWallet, chain, {
+  sdk = await ThirdwebSDK.fromWallet(smartWallet, chain, {
     secretKey: SECRET_KEY,
   });
 });
 
-describeIf(!!SECRET_KEY)(
-  "SmartWallet core tests",
-  () => {
-    it("can connect", async () => {
-      expect(smartWalletAddress).toHaveLength(42);
-    });
+describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
+  it("can connect", async () => {
+    expect(smartWalletAddress).toHaveLength(42);
+  });
 
-    it("can execute zk sepolia tx via SDK", {
+  it(
+    "can execute zk sepolia tx via SDK",
+    {
       timeout: 120_000,
-    }, async () => {
+    },
+    async () => {
       const tx = await sdk.wallet.transfer(smartWalletAddress, 0);
       expect(tx.receipt.transactionHash).toHaveLength(66);
-        console.log(tx.receipt.transactionHash);
+      console.log(tx.receipt.transactionHash);
       // useless check but I overrode it anyway jic
       const isDeployed = await smartWallet.isDeployed();
       expect(isDeployed).toEqual(true);
-    });
-  },
-);
+    },
+  );
 
+  it(
+    "can interact with contract",
+    {
+      timeout: 120_000,
+    },
+    async () => {
+      const contract = await sdk.getContract(
+        "0xd563ACBeD80e63B257B2524562BdD7Ec666eEE77",
+      );
+      const approveTx = await contract.erc1155.setApprovalForAll(
+        "0xd563ACBeD80e63B257B2524562BdD7Ec666eEE77",
+        false,
+      );
+      console.log(approveTx.receipt.transactionHash);
+      expect(approveTx.receipt.transactionHash).toHaveLength(66);
+    },
+  );
+});
