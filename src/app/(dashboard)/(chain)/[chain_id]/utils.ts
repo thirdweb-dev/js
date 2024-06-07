@@ -1,5 +1,8 @@
+import "server-only";
+
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { ChainMetadataWithServices } from "../types/chain";
+import { redirect } from "next/navigation";
 
 export async function getChain(
   chainIdOrSlug: string,
@@ -10,7 +13,7 @@ export async function getChain(
 
   const result = await res.json();
   if (!result.data) {
-    throw new Error(`Chain not found for : ${chainIdOrSlug}`);
+    redirect("/404");
   }
   return result.data as ChainMetadataWithServices;
 }
