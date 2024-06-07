@@ -151,7 +151,7 @@ function OtpLogin(
     return (
       <ThemedInputWithSubmit
         theme={theme}
-        placeholder={auth === "phone" ? "Enter phone number" : "Enter email"}
+        placeholder={auth === "phone" ? "Phone number" : "Email address"}
         onChangeText={setPhoneNumberOrEmail}
         value={phoneOrEmail}
         keyboardType={auth === "phone" ? "phone-pad" : "email-address"}

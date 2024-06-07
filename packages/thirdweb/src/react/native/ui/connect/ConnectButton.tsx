@@ -3,7 +3,7 @@ import {
   Animated,
   Dimensions,
   Easing,
-  KeyboardAvoidingView,
+  Keyboard,
   Modal,
   Pressable,
   StyleSheet,
@@ -78,7 +78,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   }, [visible, openModal, closeModal]);
 
   return wallet ? (
-    <ConnectedButton {...props} />
+    <ConnectedButton onClose={closeModal} {...props} />
   ) : (
     <View>
       <ThemedButton theme={theme} onPress={() => setVisible(true)}>
@@ -112,13 +112,19 @@ export function ConnectButton(props: ConnectButtonProps) {
   );
 }
 
-function ConnectedButton(props: ConnectButtonProps) {
+function ConnectedButton(props: ConnectButtonProps & { onClose: () => void }) {
   const theme = parseTheme(props.theme);
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   return (
     wallet && (
-      <ThemedButton theme={theme} onPress={() => disconnect(wallet)}>
+      <ThemedButton
+        theme={theme}
+        onPress={() => {
+          props.onClose();
+          disconnect(wallet);
+        }}
+      >
         <ThemedText
           theme={theme}
           type="defaultSemiBold"
@@ -139,42 +145,86 @@ function ConnectModal(
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
     | Wallet<"inApp">
     | undefined;
-  const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+  // const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+
+  // const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const translateY = new Animated.Value(0);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: translateY
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (e) => {
+        const { height } = e.endCoordinates;
+        // setKeyboardHeight(height);
+        Animated.timing(translateY, {
+          toValue: -height,
+          duration: 300,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.exp),
+        }).start();
+      },
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        // setKeyboardHeight(0);
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.exp),
+        }).start();
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
-    <ThemedView theme={theme} style={styles.modalContainer}>
-      <ThemedText theme={theme} type="title">
-        Sign in
-      </ThemedText>
-      <Spacer size={"lg"} />
-      <View style={{ flexDirection: "column", gap: spacing.md }}>
-        {inAppWallet && <InAppWalletUI wallet={inAppWallet} {...props} />}
-        {externalWallets.map((wallet) => (
-          <ThemedButton
-            key={wallet.id}
-            theme={theme}
-            variant="secondary"
-            onPress={() => {
-              props.onClose();
-            }}
-          >
+    <Animated.View
+      style={[{ flex: 1, width: "100%", transform: [{ translateY }] }]}
+    >
+      <ThemedView theme={theme} style={styles.modalContainer}>
+        <ThemedText theme={theme} type="title">
+          Sign in
+        </ThemedText>
+        <Spacer size={"lg"} />
+        <View style={{ flexDirection: "column", gap: spacing.md }}>
+          {inAppWallet && <InAppWalletUI wallet={inAppWallet} {...props} />}
+          {/* {externalWallets.map((wallet) => (
+            <ThemedButton
+              key={wallet.id}
+              theme={theme}
+              variant="secondary"
+              onPress={() => {
+                props.onClose();
+              }}
+            >
+              <ThemedText
+                theme={theme}
+                style={{ color: theme.colors.primaryText }}
+              >
+                {wallet.id}
+              </ThemedText>
+            </ThemedButton>
+          ))} */}
+          <Spacer size={"lg"} />
+          <ThemedButton theme={theme} onPress={props.onClose}>
             <ThemedText
               theme={theme}
-              style={{ color: theme.colors.primaryText }}
+              style={{ color: theme.colors.primaryButtonText }}
             >
-              {wallet.id}
+              Connect a wallet
             </ThemedText>
           </ThemedButton>
-        ))}
-        <ThemedButton theme={theme} onPress={props.onClose}>
-          <ThemedText
-            theme={theme}
-            style={{ color: theme.colors.primaryButtonText }}
-          >
-            Close
-          </ThemedText>
-        </ThemedButton>
-      </View>
-    </ThemedView>
+        </View>
+      </ThemedView>
+    </Animated.View>
   );
 }
 

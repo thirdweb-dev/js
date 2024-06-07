@@ -38,11 +38,11 @@ export function ThemedInputWithSubmit(props: ThemedInputProps) {
           }}
         >
           {props.isSubmitting ? (
-            <ThemedSpinner size={32} />
+            <ThemedSpinner size={28} />
           ) : (
             <Ionicons
-              name="arrow-forward"
-              size={32}
+              name="arrow-forward-outline"
+              size={28}
               color={theme.colors.secondaryIconColor}
             />
           )}

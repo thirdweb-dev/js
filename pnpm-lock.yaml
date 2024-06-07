@@ -1536,6 +1536,9 @@ importers:
       '@coinbase/wallet-mobile-sdk':
         specifier: ^1
         version: 1.0.13(expo@51.0.5)(react-native@0.74.1)(react@18.2.0)
+      '@expo/vector-icons':
+        specifier: 14.0.0
+        version: 14.0.0
       '@react-native-async-storage/async-storage':
         specifier: ^1
         version: 1.23.1(react-native@0.74.1)
@@ -1554,6 +1557,9 @@ importers:
       expo-application:
         specifier: ^5
         version: 5.9.1(expo@51.0.5)
+      expo-linking:
+        specifier: ^6
+        version: 6.3.1(expo@51.0.5)
       expo-web-browser:
         specifier: ^13
         version: 13.0.3(expo@51.0.5)
@@ -1650,7 +1656,7 @@ importers:
         version: 2.13.1(@react-native-async-storage/async-storage@1.23.1)
       abitype:
         specifier: 1.0.0
-        version: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+        version: 1.0.0(typescript@5.4.5)(zod@3.22.4)
       ethers:
         specifier: ^5 || ^6
         version: 5.7.2
@@ -1665,7 +1671,7 @@ importers:
         version: 1.2.4(react-dom@18.3.1)(react@18.3.1)
       mipd:
         specifier: 0.0.7
-        version: 0.0.7
+        version: 0.0.7(typescript@5.4.5)
       node-libs-browser:
         specifier: 2.2.1
         version: 2.2.1
@@ -1680,7 +1686,7 @@ importers:
         version: 0.1.2
       viem:
         specifier: 2.10.9
-        version: 2.10.9(zod@3.22.4)
+        version: 2.10.9(typescript@5.4.5)(zod@3.22.4)
     devDependencies:
       '@aws-sdk/client-lambda':
         specifier: 3.577.0
@@ -1691,6 +1697,9 @@ importers:
       '@coinbase/wallet-mobile-sdk':
         specifier: 1.0.13
         version: 1.0.13(expo@51.0.5)(react-native@0.74.1)(react@18.3.1)
+      '@expo/vector-icons':
+        specifier: ^14.0.0
+        version: 14.0.0
       '@react-native-async-storage/async-storage':
         specifier: ^1.23.1
         version: 1.23.1(react-native@0.74.1)
@@ -7271,10 +7280,8 @@ packages:
     dependencies:
       cross-spawn: 7.0.3
 
-  /@expo/vector-icons@14.0.2:
-    resolution: {integrity: sha512-70LpmXQu4xa8cMxjp1fydgRPsalefnHaXLzIwaHMEzcZhnyjw2acZz8azRrZOslPVAWlxItOa2Dd7WtD/kI+CA==}
-    dependencies:
-      prop-types: 15.8.1
+  /@expo/vector-icons@14.0.0:
+    resolution: {integrity: sha512-5orm59pdnBQlovhU9k4DbjMUZBHNlku7IRgFY56f7pcaaCnXq9yaLJoOQl9sMwNdFzf4gnkTyHmR5uN10mI9rA==}
 
   /@expo/xcpretty@4.3.1:
     resolution: {integrity: sha512-sqXgo1SCv+j4VtYEwl/bukuOIBrVgx6euIoCat3Iyx5oeoXwEA2USCoeL0IPubflMxncA2INkqJ/Wr3NGrSgzw==}
@@ -10815,7 +10822,7 @@ packages:
       react-native: ^0.0.0-0 || >=0.60 <1.0
     dependencies:
       merge-options: 3.0.4
-      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.3.1)
+      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
 
   /@react-native-community/cli-clean@13.6.6:
     resolution: {integrity: sha512-cBwJTwl0NyeA4nyMxbhkWZhxtILYkbU3TW3k8AXLg+iGphe0zikYMGB3T+haTvTc6alTyEFwPbimk9bGIqkjAQ==}
@@ -11178,6 +11185,7 @@ packages:
       nullthrows: 1.1.1
       react: 18.3.1
       react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.3.1)
+    dev: true
 
   /@rnx-kit/chromium-edge-launcher@1.0.0:
     resolution: {integrity: sha512-lzD84av1ZQhYUS+jsGqJiCMaJO2dn9u+RTT9n9q6D3SaKVwWqv+7AoRKqBu19bkwyE+iFRl1ymr40QS90jVFYg==}
@@ -14520,6 +14528,21 @@ packages:
     dependencies:
       typescript: 5.4.4
       zod: 3.22.4
+
+  /abitype@1.0.0(typescript@5.4.5)(zod@3.22.4):
+    resolution: {integrity: sha512-NMeMah//6bJ56H5XRj8QCV4AwuW6hB6zqz2LnhhLdcWVQOsXki6/Pn3APeqxCma62nXIcmZWdu1DlHWS74umVQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.4.5
+      zod: 3.22.4
+    dev: false
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -18194,7 +18217,6 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
-    dev: true
 
   /expo-modules-autolinking@1.11.1:
     resolution: {integrity: sha512-2dy3lTz76adOl7QUvbreMCrXyzUiF8lygI7iFJLjgIQIVH+43KnFWE5zBumpPbkiaq0f0uaFpN9U0RGQbnKiMw==}
@@ -18227,7 +18249,7 @@ packages:
       '@expo/config': 9.0.1
       '@expo/config-plugins': 8.0.4
       '@expo/metro-config': 0.18.3
-      '@expo/vector-icons': 14.0.2
+      '@expo/vector-icons': 14.0.0
       babel-preset-expo: 11.0.6(@babel/core@7.24.5)(@babel/preset-env@7.24.5)
       expo-asset: 10.0.6(expo@51.0.5)
       expo-file-system: 17.0.1(expo@51.0.5)
@@ -21846,13 +21868,15 @@ packages:
       minipass: 3.3.6
       yallist: 4.0.0
 
-  /mipd@0.0.7:
+  /mipd@0.0.7(typescript@5.4.5):
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
+    dependencies:
+      typescript: 5.4.5
     dev: false
 
   /mitata@0.1.11:
@@ -23947,7 +23971,7 @@ packages:
     peerDependencies:
       react-native: '*'
     dependencies:
-      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.3.1)
+      react-native: 0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.5)(@types/react@18.2.17)(react@18.2.0)
       whatwg-url-without-unicode: 8.0.0-3
 
   /react-native-url-polyfill@2.0.0(react-native@0.74.1):
@@ -24074,6 +24098,7 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: true
 
   /react-refresh@0.14.2:
     resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
@@ -24201,6 +24226,7 @@ packages:
       object-assign: 4.1.1
       react: 18.3.1
       react-is: 18.3.1
+    dev: true
 
   /react-style-singleton@2.2.1(@types/react@18.2.17)(react@18.2.0):
     resolution: {integrity: sha512-ZWj0fHEMyWkHzKYUr2Bs/4zU6XLmq9HsgBURm7g5pAVfyn49DgUiNgY2d4lXRlYSiCif9YBGpQleewkcqddc7g==}
@@ -27159,7 +27185,7 @@ packages:
       semver: 7.6.2
     dev: true
 
-  /viem@2.10.9(zod@3.22.4):
+  /viem@2.10.9(typescript@5.4.5)(zod@3.22.4):
     resolution: {integrity: sha512-XsbEXhOcmQOkI80zDLW0EdksimNuYTS61HZ03vQYpHoug7gwVHDQ83nY+nuyT7punuFx0fmRG6+HZg3yVQhptQ==}
     peerDependencies:
       typescript: '>=5.0.4'
@@ -27172,8 +27198,9 @@ packages:
       '@noble/hashes': 1.3.2
       '@scure/bip32': 1.3.2
       '@scure/bip39': 1.2.1
-      abitype: 1.0.0(typescript@5.4.4)(zod@3.22.4)
+      abitype: 1.0.0(typescript@5.4.5)(zod@3.22.4)
       isows: 1.0.4(ws@8.13.0)
+      typescript: 5.4.5
       ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
