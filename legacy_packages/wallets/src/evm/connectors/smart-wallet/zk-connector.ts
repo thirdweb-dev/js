@@ -59,7 +59,8 @@ export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
     );
   }
 
-  switchChain(_chainId: number): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  switchChain(chainId: number): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
@@ -71,7 +72,8 @@ export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
     throw new Error("Method not implemented.");
   }
 
-  updateChains(_chains: Chain[]): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateChains(chains: Chain[]): void {
     throw new Error("Method not implemented.");
   }
 
