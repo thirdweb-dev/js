@@ -70,6 +70,7 @@ const filterOut = [
   "sangster009",
   "Yash094",
   "gregfromstl",
+  "DustinTurska",
 ];
 
 const repositories = [
