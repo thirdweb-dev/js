@@ -539,6 +539,9 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
    * @returns The account factory contract.
    */
   async getFactoryContract(): Promise<SmartContract> {
+    if (!this.config.factoryAddress) {
+      throw new Error("Factory address not set!");
+    }
     const sdk = ThirdwebSDK.fromSigner(
       await this.getSigner(),
       this.config.chain,
