@@ -3,6 +3,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  KeyboardAvoidingView,
   Modal,
   Pressable,
   StyleSheet,
