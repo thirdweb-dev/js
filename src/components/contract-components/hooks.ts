@@ -701,18 +701,45 @@ export function useCustomContractDeployMutation(
             fullPublishMetadata?.data?.compilers?.zksolc ||
             rawPredeployMetadata?.data?.compilers?.zksolc
           ) {
-            contractAddress = await zkDeployContractFromUri(
-              ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
-              Object.values(data.deployParams),
-              zkSigner,
-              StorageSingleton,
-              chainId as number,
-              {
-                compilerOptions: {
-                  compilerType: "zksolc",
+            if (data.deployDeterministic) {
+              const salt = data.signerAsSalt
+                ? (await signer?.getAddress())?.concat(
+                    data.saltForCreate2 || "",
+                  )
+                : data.saltForCreate2;
+
+              contractAddress = await zkDeployContractFromUri(
+                ipfsHash.startsWith("ipfs://")
+                  ? ipfsHash
+                  : `ipfs://${ipfsHash}`,
+                Object.values(data.deployParams),
+                zkSigner,
+                StorageSingleton,
+                chainId as number,
+                {
+                  compilerOptions: {
+                    compilerType: "zksolc",
+                  },
+                  saltForProxyDeploy: salt,
                 },
-              },
-            );
+                true,
+              );
+            } else {
+              contractAddress = await zkDeployContractFromUri(
+                ipfsHash.startsWith("ipfs://")
+                  ? ipfsHash
+                  : `ipfs://${ipfsHash}`,
+                Object.values(data.deployParams),
+                zkSigner,
+                StorageSingleton,
+                chainId as number,
+                {
+                  compilerOptions: {
+                    compilerType: "zksolc",
+                  },
+                },
+              );
+            }
           } else {
             contractAddress = await zkDeployContractFromUri(
               ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
