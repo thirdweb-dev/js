@@ -1,11 +1,10 @@
-import { createThirdwebClient, defineChain } from "thirdweb";
-import {
-  DASHBOARD_THIRDWEB_CLIENT_ID,
-  PROD_OR_DEV_URL,
-} from "../constants/rpc";
-import { IPFS_GATEWAY_URL } from "./sdk";
-import { useSupportedChainsRecord } from "../hooks/chains/configureChains";
-import { Chain } from "@thirdweb-dev/chains";
+import { createThirdwebClient } from "thirdweb";
+import { DASHBOARD_THIRDWEB_CLIENT_ID } from "../constants/rpc";
+
+// use env var to set IPFS gateway or fallback to ipfscdn.io
+const IPFS_GATEWAY_URL =
+  (process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string) ||
+  "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}";
 
 export const thirdwebClient = createThirdwebClient({
   clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
@@ -16,24 +15,6 @@ export const thirdwebClient = createThirdwebClient({
   },
 });
 
-export const defineDashboardChain = (
-  chainId: number,
-  dashboardChain?: Chain,
-) => {
-  return defineChain({
-    id: chainId,
-    rpc:
-      dashboardChain?.rpc?.[0] || `https://${chainId}.rpc.${PROD_OR_DEV_URL}`,
-    slug: dashboardChain?.slug,
-    nativeCurrency: dashboardChain?.nativeCurrency,
-  });
-};
-
-export function useV5DashboardChain(chainId: number) {
-  const configuredChainsRecord = useSupportedChainsRecord();
-  let configuedChain = undefined;
-  if (chainId in configuredChainsRecord) {
-    configuedChain = configuredChainsRecord[chainId as number];
-  }
-  return defineDashboardChain(chainId, configuedChain);
-}
+/**
+ * DO NOT ADD ANYTHING TO THIS FILE IF YOU ARE NOT ABSOLUTELY SURE IT IS OK
+ */

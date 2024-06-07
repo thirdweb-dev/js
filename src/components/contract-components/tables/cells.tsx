@@ -5,10 +5,11 @@ import { useChainSlug } from "hooks/chains/chainSlug";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { usePublishedContractsFromDeploy } from "../hooks";
 import { getContract } from "thirdweb";
-import { thirdwebClient, useV5DashboardChain } from "lib/thirdweb-client";
+import { thirdwebClient } from "lib/thirdweb-client";
 import { BasicContract } from "contract-ui/types/types";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { useReadContract } from "thirdweb/react";
+import { useV5DashboardChain } from "lib/v5-adapter";
 
 interface AsyncContractNameCellProps {
   cell: BasicContract;

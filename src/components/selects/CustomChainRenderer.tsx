@@ -1,22 +1,29 @@
-import { Box, Flex, IconButton, Spinner } from "@chakra-ui/react";
-import { NetworkSelectorProps } from "@thirdweb-dev/react";
+/* eslint-disable react/forbid-dom-props */
+import { NetworkSelectorChainProps } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
   useSetEditChain,
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
-import { OPSponsoredChains } from "pages/chainlist";
-import { RxGear } from "react-icons/rx";
-import { Heading, Text } from "tw-components";
+import { OPSponsoredChains } from "../../constants/chains";
+import { SettingsIcon } from "lucide-react";
+import { cn } from "../../@/lib/utils";
+import { Button } from "../../@/components/ui/button";
+import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 
-export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
+type CustomChainRendererProps = NetworkSelectorChainProps & {
+  disableChainConfig?: boolean;
+};
+
+export const CustomChainRenderer = ({
   chain,
   switchChain,
   switching,
   switchFailed,
   close,
-}) => {
+  disableChainConfig,
+}: CustomChainRendererProps) => {
   const setIsOpenNetworkConfigModal = useSetIsNetworkConfigModalOpen();
   const addRecentlyUsedChain = useAddRecentlyUsedChainId();
   const setEditChain = useSetEditChain();
@@ -25,119 +32,81 @@ export const CustomChainRenderer: NetworkSelectorProps["renderChain"] = ({
   const isSponsored = OPSponsoredChains.includes(chain?.chainId);
 
   return (
-    <Flex
-      w="100%"
-      justifyContent="start"
-      _hover={{
-        bg: "inputBg",
-      }}
-      borderRadius="md"
-      p="4px 12px"
-      cursor="pointer"
-      h="auto"
-    >
-      <Flex role="group" flexGrow={1} alignItems="center">
-        <Flex
+    <div className="flex w-full justify-start hover:bg-[#22232b] rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
+      <div className="flex flex-1 items-center group">
+        <div
+          className={cn(
+            "flex flex-1 gap-4 items-center",
+            isDeprecated ? "cursor-not-allowed" : "cursor-pointer",
+          )}
           onClick={() => {
             if (!isDeprecated) {
               switchChain();
             }
           }}
-          flexGrow={1}
-          gap={4}
-          alignItems="center"
-          cursor={isDeprecated ? "not-allowed" : "pointer"}
         >
           <ChainIcon ipfsSrc={chain.icon?.url} size={32} />
-          <Flex gap={1} flexDir="column" alignItems="start">
-            <Flex gap={2}>
-              <Text fontWeight={500} color={isDeprecated ? "faded" : "bgBlack"}>
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2 items-center">
+              <p
+                className={cn(
+                  "font-semibold text-base",
+                  isDeprecated ? "text-muted-foreground" : "text-foreground",
+                )}
+              >
                 {chain.name}
-              </Text>
+              </p>
               {isDeprecated && (
-                <Flex alignItems="center">
-                  <Flex
-                    borderRadius="full"
-                    align="center"
-                    border="1px solid"
-                    borderColor="borderColor"
-                    overflow="hidden"
-                    flexShrink={0}
-                    py={{ base: 1.5, md: 1 }}
-                    px={{ base: 1.5, md: 2 }}
-                    gap={3}
-                    cursor="not-allowed"
-                  >
-                    <Heading size="label.sm" as="label" cursor="not-allowed">
-                      Deprecated
-                    </Heading>
-                  </Flex>
-                </Flex>
+                <div className="text-xs font-medium cursor-not-allowed flex rounded-xl items-center overflow-hidden shrink-0 py-1 px-2 border">
+                  Deprecated
+                </div>
               )}
               {isSponsored && (
-                <Flex
-                  borderRadius="full"
-                  align="center"
-                  overflow="hidden"
-                  flexShrink={0}
-                  py={{ base: 1.5, md: 1 }}
-                  px={{ base: 1.5, md: 2 }}
-                  gap={3}
-                  bgGradient="linear(to-r, #701953, #5454B2)"
+                <div
+                  style={{
+                    background: "linear-gradient(to right, #701953, #5454B2)",
+                  }}
+                  className="text-xs font-medium cursor-not-allowed flex rounded-xl items-center overflow-hidden shrink-0 py-1 px-2"
                 >
-                  <Heading size="label.sm" as="label" color="#fff">
-                    Sponsored
-                  </Heading>
-                </Flex>
+                  Sponsored
+                </div>
               )}
-            </Flex>
+            </div>
             {switching && (
-              <Flex
-                color="blue.500"
-                fontSize={12}
-                fontWeight={500}
-                alignItems="center"
-                gap={2}
-              >
+              <div className="flex text-primary-foreground text-xs font-medium items-center gap-1">
                 Confirm in your wallet
-                <Spinner size="xs" />
-              </Flex>
+                <Spinner className="size-3" />
+              </div>
             )}
 
             {switchFailed && (
-              <Box color="red.500" fontSize={12} fontWeight={500}>
+              <div className="text-destructive-foreground text-xs font-semibold">
                 Error switching network
-              </Box>
+              </div>
             )}
-          </Flex>
-        </Flex>
+          </div>
+        </div>
 
-        <IconButton
-          aria-label="Configure Network"
-          ml="auto"
-          p={0}
-          variant="ghost"
-          _hover={{
-            bg: "inputBg",
-          }}
-          lineHeight={1}
-          opacity={0}
-          _groupHover={{
-            opacity: 1,
-          }}
-          icon={<RxGear width={4} height={4} />}
-          onClick={() => {
-            setEditChain(chain);
-            addRecentlyUsedChain(chain.chainId);
-            setIsOpenNetworkConfigModal(true);
-            if (close) {
-              close();
-            } else {
-              console.error("close is undefined");
-            }
-          }}
-        />
-      </Flex>
-    </Flex>
+        {!disableChainConfig && (
+          <Button
+            variant="ghost"
+            className="ml-auto p-2 leading-4 opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
+            aria-label="Configure Network"
+            onClick={() => {
+              setEditChain(chain);
+              addRecentlyUsedChain(chain.chainId);
+              setIsOpenNetworkConfigModal(true);
+              if (close) {
+                close();
+              } else {
+                console.error("close is undefined");
+              }
+            }}
+          >
+            <SettingsIcon className="size-4" />
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };

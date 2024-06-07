@@ -7,10 +7,8 @@ import { getContract } from "thirdweb";
 import { useMemo } from "react";
 import { useReadContract } from "thirdweb/react";
 import { getNFTs } from "thirdweb/extensions/erc721";
-import {
-  thirdwebClient,
-  useV5DashboardChain,
-} from "../../../../lib/thirdweb-client";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 
 interface NFTDetailsProps {
   contractAddress: string;

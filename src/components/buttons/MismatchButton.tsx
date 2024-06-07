@@ -31,9 +31,12 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useCallback, useEffect, useMemo, useRef, forwardRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
-import { Button, Card, Heading, Text } from "tw-components";
+import { Button, Card, Heading, Text, type ButtonProps } from "tw-components";
 
-export const MismatchButton = forwardRef<HTMLButtonElement, ConnectWalletProps>(
+export const MismatchButton = forwardRef<
+  HTMLButtonElement,
+  ButtonProps & ConnectWalletProps
+>(
   (
     {
       children,

@@ -24,9 +24,17 @@ import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useEffect, useMemo, useRef, useState, Fragment } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
-import { Button, Card, Heading, LinkButton, Text } from "tw-components";
+import {
+  Button,
+  Card,
+  Heading,
+  LinkButton,
+  Text,
+  type ButtonProps,
+} from "tw-components";
 
-interface TransactionButtonProps extends Omit<ConnectWalletProps, "leftIcon"> {
+interface TransactionButtonProps
+  extends Omit<ConnectWalletProps & ButtonProps, "leftIcon"> {
   transactionCount: number;
   isLoading: boolean;
   isGasless?: boolean;

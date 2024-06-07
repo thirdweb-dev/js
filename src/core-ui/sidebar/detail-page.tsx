@@ -164,11 +164,11 @@ const DetailNavLink: ComponentWithChildren<DetailNavLinkProps> = ({
         : [];
     const [network, address, tab = ""] = [
       ...new Set(
-        ([query.chainSlug, ...combinedPaths] || []).filter((c) => c !== "evm"),
+        ([query.chain_id, ...combinedPaths] || []).filter((c) => c !== "evm"),
       ),
     ];
     return [`/${network}/${address}`, tab] as const;
-  }, [query.chainSlug, query.paths]);
+  }, [query.chain_id, query.paths]);
 
   if (extensionDetectedState === "disabled") {
     return null;

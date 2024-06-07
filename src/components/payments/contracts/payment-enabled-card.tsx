@@ -3,7 +3,8 @@ import { Card, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { getContract } from "thirdweb";
-import { thirdwebClient, useV5DashboardChain } from "lib/thirdweb-client";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useReadContract } from "thirdweb/react";
 import { getContractMetadata } from "thirdweb/extensions/common";
 

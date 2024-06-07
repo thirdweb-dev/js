@@ -19,7 +19,6 @@ import { DeployedContracts } from "components/contract-components/tables/deploye
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { getAllExplorePublishers } from "data/explore";
 import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
@@ -284,10 +283,6 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     fallback: true,
-    paths: getAllExplorePublishers().map((profileAddress) => ({
-      params: {
-        profileAddress,
-      },
-    })),
+    paths: [],
   };
 };

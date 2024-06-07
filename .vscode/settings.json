@@ -1,17 +1,10 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": [
-    "chakra",
-    "dismissable",
-    "hookform",
-    "JWKS",
-    "onboarded",
-    "Posthog",
-    "rdweb",
-    "solana",
-    "tanstack",
-    "Thirdweb",
-    "usedapp"
-  ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "editor.quickSuggestions": {
+    "strings": "on"
+  }
 }

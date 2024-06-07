@@ -160,7 +160,9 @@ const AppHeader: React.FC = () => {
 
           <ColorModeToggle />
 
-          <CustomConnectWallet ml={{ base: 0, md: 2 }} colorScheme="blue" />
+          <div className="md:ml-2">
+            <CustomConnectWallet />
+          </div>
         </Flex>
       </Container>
       <Container

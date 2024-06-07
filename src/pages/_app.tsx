@@ -1,5 +1,5 @@
 import chakraTheme from "../theme";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import type { DehydratedState } from "@tanstack/react-query";
 import { ProgressBar } from "components/shared/ProgressBar";
@@ -20,6 +20,8 @@ import type { ThirdwebNextPage } from "utils/types";
 import "../css/swagger-ui.css";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { useBuildId } from "hooks/useBuildId";
+import "@/styles/globals.css";
+import { ThemeProvider } from "../@/components/theme-provider";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -260,12 +262,26 @@ const ConsoleApp = memo(function ConsoleApp({
 
       <ChakraProvider theme={chakraThemeWithFonts}>
         <AnnouncementBanner />
-        {isFallback && Component.fallback
-          ? Component.fallback
-          : getLayout(<Component {...pageProps} />, pageProps)}
+        <TailwindTheme>
+          {isFallback && Component.fallback
+            ? Component.fallback
+            : getLayout(<Component {...pageProps} />, pageProps)}
+        </TailwindTheme>
       </ChakraProvider>
     </PlausibleProvider>
   );
 });
+
+function TailwindTheme(props: { children: React.ReactNode }) {
+  const { colorMode } = useColorMode();
+  return (
+    <ThemeProvider
+      attribute="class"
+      forcedTheme={colorMode === "light" ? "light" : "dark"}
+    >
+      {props.children}
+    </ThemeProvider>
+  );
+}
 
 export default ConsoleAppWrapper;

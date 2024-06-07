@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable react/forbid-dom-props */
 import styles from "./ClientOnly.module.css";
 import { ReactNode, useEffect, useState } from "react";

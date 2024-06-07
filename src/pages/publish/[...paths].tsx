@@ -14,7 +14,6 @@ import {
   PublishWithVersionPageProps,
 } from "components/pages/publish";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { getAllExplorePublishedContracts } from "data/explore";
 import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
@@ -142,17 +141,6 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     fallback: true,
-    paths: generateBuildTimePaths(),
+    paths: [],
   };
 };
-
-function generateBuildTimePaths() {
-  const paths = getAllExplorePublishedContracts();
-  return paths.map((path) => {
-    return {
-      params: {
-        paths: path.split("/"),
-      },
-    };
-  });
-}

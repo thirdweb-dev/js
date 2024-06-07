@@ -1,49 +1,88 @@
+"use client";
+
+/* eslint-disable react/forbid-dom-props */
 import { popularChains } from "../popularChains";
-import { useColorMode, Flex, Spacer, Box } from "@chakra-ui/react";
-import { ConnectWallet } from "@thirdweb-dev/react";
-import { ChakraNextImage } from "components/Image";
-import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
+import { useTheme } from "next-themes";
+import { ConnectWallet, useSupportedChains } from "@thirdweb-dev/react";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
-import { ComponentProps } from "react";
-import { ButtonProps, Text, Heading, TrackedLink } from "tw-components";
+import { ComponentProps, useCallback, useMemo } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
+import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
+import { useFavouriteChains } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
+import type { Chain } from "@thirdweb-dev/chains";
 
-export interface ConnectWalletProps extends ButtonProps {
+export interface ConnectWalletProps {
   shrinkMobile?: boolean;
   upsellTestnet?: boolean;
   onChainSelect?: (chainId: number) => void;
   auth?: ComponentProps<typeof ConnectWallet>["auth"];
+  disableChainConfig?: boolean;
+  disableAddCustomNetwork?: boolean;
 }
 
-export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({ auth }) => {
-  const { colorMode } = useColorMode();
+export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
+  auth,
+  disableChainConfig,
+  disableAddCustomNetwork,
+}) => {
+  const { theme } = useTheme();
   const recentChains = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
+  const t = theme === "light" ? "light" : "dark";
+  const allChains = useSupportedChains();
+  const favChainsQuery = useFavouriteChains();
+
+  const favChains = useMemo(() => {
+    if (favChainsQuery.data) {
+      const _chains: Chain[] = [];
+      favChainsQuery.data.forEach((chainId) => {
+        const chain = allChains.find((c) => String(c.chainId) === chainId);
+        if (chain) {
+          _chains.push(chain);
+        }
+      });
+
+      return _chains;
+    }
+  }, [favChainsQuery.data, allChains]);
 
   return (
     <ConnectWallet
       auth={auth}
-      theme={colorMode}
+      theme={t}
       welcomeScreen={() => {
-        return <ConnectWalletWelcomeScreen theme={colorMode} />;
+        return <ConnectWalletWelcomeScreen theme={t} />;
       }}
       termsOfServiceUrl="/tos"
       privacyPolicyUrl="/privacy"
       hideTestnetFaucet={false}
       networkSelector={{
-        popularChains,
+        popularChains: favChains ?? popularChains,
         recentChains,
         onSwitch(chain) {
           addRecentlyUsedChainId(chain.chainId);
         },
-        onCustomClick() {
-          setIsNetworkConfigModalOpen(true);
+        onCustomClick: disableAddCustomNetwork
+          ? undefined
+          : () => {
+              setIsNetworkConfigModalOpen(true);
+            },
+
+        renderChain(props) {
+          return (
+            <CustomChainRenderer
+              {...props}
+              disableChainConfig={disableChainConfig}
+            />
+          );
         },
-        renderChain: CustomChainRenderer,
       }}
       showThirdwebBranding={false}
     />
@@ -58,64 +97,99 @@ export function ConnectWalletWelcomeScreen(props: {
   const subtitle = props.subtitle ?? "Connect your wallet to get started";
 
   return (
-    <Flex
-      h="full"
-      backgroundColor={props.theme === "dark" ? "#18132f" : "#c7b5f1"}
-      backgroundImage={`url("/assets/connect-wallet/welcome-gradient-${props.theme}.png")`}
-      backgroundSize="cover"
-      backgroundPosition="center"
-      backgroundRepeat="no-repeat"
-      flexDirection="column"
-      p={6}
+    <div
+      // eslint-disable-next-line react/forbid-dom-props
+      style={{
+        backgroundColor: props.theme === "dark" ? "#18132f" : "#c7b5f1",
+        backgroundImage: `url("/assets/connect-wallet/welcome-gradient-${props.theme}.png")`,
+      }}
+      className="flex flex-col p-6 h-full bg-cover bg-center bg-no-repeat"
     >
-      <Flex flexGrow={1} flexDirection="column" justifyContent="center">
-        <Box>
-          <Flex justifyContent={"center"}>
-            <ChakraNextImage
-              userSelect="none"
+      <div className="flex flex-grow flex-col justify-center">
+        <div>
+          <div className="flex justify-center">
+            <Image
+              className="select-none"
+              style={{
+                mixBlendMode: props.theme === "dark" ? "soft-light" : "initial",
+              }}
               draggable={false}
               width={200}
               height={150}
               alt=""
-              src={require("../../../../../public/assets/connect-wallet/tw-welcome-icon.svg")}
-              mixBlendMode={props.theme === "dark" ? "soft-light" : "initial"}
+              src="/assets/connect-wallet/tw-welcome-icon.svg"
+              loading="eager"
             />
-          </Flex>
+          </div>
 
-          <Spacer h={10} />
-          <Heading size="title.sm" color={fontColor} textAlign="center">
+          <div className="h-10" />
+          <h2
+            className="text-xl text-center font-semibold"
+            style={{
+              color: fontColor,
+            }}
+          >
             Welcome to thirdweb
-          </Heading>
-          <Spacer h={4} />
-          <Text
-            color={fontColor}
-            fontSize={16}
-            opacity={0.8}
-            fontWeight={500}
-            textAlign="center"
+          </h2>
+
+          <div className="h-4" />
+
+          <p
+            className="text-center opacity-80 font-semibold"
+            style={{
+              color: fontColor,
+            }}
           >
             {subtitle}
-          </Text>
-        </Box>
-      </Flex>
+          </p>
+        </div>
+      </div>
 
-      <TrackedLink
-        textAlign="center"
+      <TrackedAnchorLink
+        className="text-center font-semibold opacity-70 hover:opacity-100 hover:no-underline"
+        target="_blank"
         category="custom-connect-wallet"
         label="new-to-wallets"
         href="https://blog.thirdweb.com/web3-wallet/"
-        isExternal
-        fontWeight={500}
-        fontSize={16}
-        color={fontColor}
-        opacity={0.7}
-        _hover={{
-          opacity: 1,
-          textDecoration: "none",
+        style={{
+          color: fontColor,
         }}
       >
         New to Wallets?
-      </TrackedLink>
-    </Flex>
+      </TrackedAnchorLink>
+    </div>
+  );
+}
+
+/**
+ * A link component extends the `Link` component and adds tracking.
+ */
+function TrackedAnchorLink(props: {
+  category: string;
+  label?: string;
+  trackingProps?: Record<string, string>;
+  href: string;
+  target?: string;
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const trackEvent = useTrack();
+  const { category, label, trackingProps } = props;
+
+  const onClick = useCallback(() => {
+    trackEvent({ category, action: "click", label, ...trackingProps });
+  }, [trackEvent, category, label, trackingProps]);
+
+  return (
+    <Link
+      onClick={onClick}
+      target={props.target}
+      href={props.href}
+      className={props.className}
+      style={props.style}
+    >
+      {props.children}
+    </Link>
   );
 }

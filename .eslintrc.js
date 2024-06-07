@@ -39,7 +39,7 @@ module.exports = {
     "import/no-default-export": "off",
     "import/no-useless-path-segments": "error",
     // react
-    "react/forbid-dom-props": ["error", { forbid: ["className", "style"] }],
+    "react/forbid-dom-props": ["error", { forbid: ["style"] }],
     "react/no-children-prop": "off",
     "react/prop-types": "off",
     // react-hooks
