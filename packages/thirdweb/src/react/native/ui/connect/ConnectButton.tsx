@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { Svg, SvgXml } from "react-native-svg";
+import { SvgXml } from "react-native-svg";
 import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -26,6 +26,7 @@ import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
 import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
+import { ExternalWalletsUI } from "./ExternalWalletsUI.js";
 import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
 
 export type ModalState =
@@ -235,36 +236,23 @@ function ConnectModal(
             Sign in
           </ThemedText>
           <Spacer size={"lg"} />
-          <View style={{ flexDirection: "column", gap: spacing.md }}>
-            {externalWallets.map((wallet) => (
-              <ThemedButton
-                key={wallet.id}
-                theme={theme}
-                variant="secondary"
-                onPress={() => {
-                  props.onClose();
-                }}
-              >
-                <ThemedText
-                  theme={theme}
-                  style={{ color: theme.colors.primaryText }}
-                >
-                  {wallet.id}
-                </ThemedText>
-              </ThemedButton>
-            ))}
-            <ThemedButton
+          <ExternalWalletsUI
+            theme={theme}
+            externalWallets={externalWallets}
+            client={client}
+          />
+          <View style={{ flex: 1 }} />
+          <ThemedButton
+            theme={theme}
+            onPress={() => setModalState({ screen: "base" })}
+          >
+            <ThemedText
               theme={theme}
-              onPress={() => setModalState({ screen: "base" })}
+              style={{ color: theme.colors.primaryButtonText }}
             >
-              <ThemedText
-                theme={theme}
-                style={{ color: theme.colors.primaryButtonText }}
-              >
-                Back
-              </ThemedText>
-            </ThemedButton>
-          </View>
+              Back
+            </ThemedText>
+          </ThemedButton>
         </ThemedView>
       </Animated.View>
     );

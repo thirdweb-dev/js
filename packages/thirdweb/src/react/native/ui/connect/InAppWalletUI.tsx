@@ -93,7 +93,7 @@ function SocialLogin(
   props: InAppWalletFormUIProps & { auth: InAppWalletSocialAuth },
 ) {
   const { theme, wallet, auth, client } = props;
-  const { connect, isConnecting } = useConnect();
+  const { connect, isConnecting } = useConnect(); // TODO pass account abstraction flag
   const strategy = props.auth;
   const connectInAppWallet = async () => {
     await connect(async () => {
