@@ -9,6 +9,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { Svg, SvgXml } from "react-native-svg";
 import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -20,10 +21,11 @@ import {
 } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getDefaultWallets } from "../../../web/wallets/defaultWallets.js";
 import { radius, spacing } from "../../design-system/index.js";
-import { ThemedButton } from "../components/button.js";
+import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
+import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
 import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
 
 export type ModalState =
@@ -156,13 +158,11 @@ function ConnectModal(
 
   const translateY = new Animated.Value(0);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: translateY
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       (e) => {
         const { height } = e.endCoordinates;
-        // setKeyboardHeight(height);
         Animated.timing(translateY, {
           toValue: -height,
           duration: 300,
@@ -175,7 +175,6 @@ function ConnectModal(
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
       () => {
-        // setKeyboardHeight(0);
         Animated.timing(translateY, {
           toValue: 0,
           duration: 300,
@@ -189,7 +188,7 @@ function ConnectModal(
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, []);
+  }, [translateY]);
 
   if (modalState.screen === "otp") {
     return (
@@ -279,7 +278,7 @@ function ConnectModal(
         <ThemedText theme={theme} type="title">
           Sign in
         </ThemedText>
-        <Spacer size={"lg"} />
+        <View style={{ flex: 1 }} />
         <View style={{ flexDirection: "column", gap: spacing.md }}>
           {inAppWallet && (
             <InAppWalletUI
@@ -288,26 +287,88 @@ function ConnectModal(
               {...props}
             />
           )}
-          <Spacer size={"lg"} />
-          <ThemedButton
+          <OrDivider theme={theme} />
+          <ThemedButtonWithIcon
             theme={theme}
+            icon={WALLET_ICON}
+            title="Connect a wallet"
             onPress={() => setModalState({ screen: "external_wallets" })}
-          >
-            <ThemedText
-              theme={theme}
-              style={{ color: theme.colors.primaryButtonText }}
-            >
-              Connect a wallet
-            </ThemedText>
-          </ThemedButton>
+          />
         </View>
+        <View style={{ flex: 1 }} />
+        <PoweredByThirdweb theme={theme} />
       </ThemedView>
     </Animated.View>
   );
 }
 
+function OrDivider({ theme }: { theme: Theme }) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: spacing.lg,
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          height: 1,
+          backgroundColor: theme.colors.borderColor,
+        }}
+      />
+      <ThemedText theme={theme} style={{ color: theme.colors.secondaryText }}>
+        OR
+      </ThemedText>
+      <View
+        style={{
+          flex: 1,
+          height: 1,
+          backgroundColor: theme.colors.borderColor,
+        }}
+      />
+    </View>
+  );
+}
+
+function PoweredByThirdweb({ theme }: { theme: Theme }) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: spacing.xs,
+      }}
+    >
+      <ThemedText
+        theme={theme}
+        type="default"
+        style={{ color: theme.colors.secondaryText }}
+      >
+        Powered by
+      </ThemedText>
+      <SvgXml
+        xml={TW_ICON}
+        width={22}
+        height={22}
+        style={{ marginBottom: -2 }}
+      />
+      <ThemedText
+        theme={theme}
+        type="defaultSemiBold"
+        style={{ color: theme.colors.secondaryText }}
+      >
+        thirdweb
+      </ThemedText>
+    </View>
+  );
+}
+
 const screenHeight = Dimensions.get("window").height;
-const modalHeight = screenHeight * 0.6;
+const modalHeight = 480;
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({

@@ -15,9 +15,16 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { radius, spacing } from "../../design-system/index.js";
+import { ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInputWithSubmit } from "../components/input.js";
 import { ThemedSpinner } from "../components/spinner.js";
-import { APPLE_ICON, FACEBOOK_ICON, GOOGLE_ICON } from "../icons/svgs.js";
+import {
+  APPLE_ICON,
+  EMAIL_ICON,
+  FACEBOOK_ICON,
+  GOOGLE_ICON,
+  PHONE_ICON,
+} from "../icons/svgs.js";
 import type { ModalState } from "./ConnectButton.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
@@ -42,12 +49,14 @@ type InAppWalletFormUIProps = {
 };
 
 export function InAppWalletUI(props: InAppWalletFormUIProps) {
-  const { wallet } = props;
+  const { wallet, theme } = props;
   const config = wallet.getConfig();
   const authOptions = config?.auth?.options || defaultAuthOptions;
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
   ) as InAppWalletSocialAuth[];
+
+  const [inputMode, setInputMode] = useState<"email" | "phone">("email");
 
   return (
     <View style={styles.container}>
@@ -56,8 +65,26 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <SocialLogin key={auth} auth={auth} {...props} />
         ))}
       </View>
-      <PreOtpLogin auth="phone" {...props} />
-      <PreOtpLogin auth="email" {...props} />
+      {inputMode === "email" ? (
+        <PreOtpLogin auth="email" {...props} />
+      ) : (
+        <ThemedButtonWithIcon
+          theme={theme}
+          title="Email address"
+          icon={EMAIL_ICON}
+          onPress={() => setInputMode("email")}
+        />
+      )}
+      {inputMode === "phone" ? (
+        <PreOtpLogin auth="phone" {...props} />
+      ) : (
+        <ThemedButtonWithIcon
+          theme={theme}
+          title="Phone number"
+          icon={PHONE_ICON}
+          onPress={() => setInputMode("phone")}
+        />
+      )}
     </View>
   );
 }
@@ -86,7 +113,7 @@ function SocialLogin(
       ]}
     >
       {isConnecting ? (
-        <ThemedSpinner />
+        <ThemedSpinner color={theme.colors.primaryText} />
       ) : (
         <TouchableOpacity
           key={strategy}

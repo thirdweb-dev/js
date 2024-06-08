@@ -2,9 +2,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   type TouchableOpacityProps,
+  View,
 } from "react-native";
+import { SvgXml } from "react-native-svg";
 import type { Theme } from "../../../core/design-system/index.js";
 import { radius, spacing } from "../../design-system/index.js";
+import { ThemedText } from "./text.js";
 
 export type ThemedButtonProps = TouchableOpacityProps & {
   theme: Theme;
@@ -34,6 +37,31 @@ export function ThemedButton(props: ThemedButtonProps) {
     >
       {props.children}
     </TouchableOpacity>
+  );
+}
+
+export function ThemedButtonWithIcon(
+  props: ThemedButtonProps & {
+    title: string;
+    icon: string;
+  },
+) {
+  const { theme, title, icon, onPress } = props;
+  return (
+    <ThemedButton theme={theme} variant="secondary" onPress={onPress}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: spacing.md,
+          paddingLeft: spacing.sm,
+          alignContent: "center",
+          width: "100%",
+        }}
+      >
+        <SvgXml xml={icon} width={24} height={24} />
+        <ThemedText theme={theme}>{title}</ThemedText>
+      </View>
+    </ThemedButton>
   );
 }
 
