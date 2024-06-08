@@ -5,7 +5,10 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
-import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../../core/design-system/CustomThemeProvider.js";
 import { type Theme, radius } from "../../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
@@ -374,9 +377,11 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       return (
         <>
           {autoConnectComp}
-          <EmbedContainer modalSize={modalSize}>
-            <LoadingScreen />
-          </EmbedContainer>
+          <CustomThemeProvider theme={props.theme || "dark"}>
+            <EmbedContainer modalSize={modalSize}>
+              <LoadingScreen />
+            </EmbedContainer>
+          </CustomThemeProvider>
         </>
       );
     }
