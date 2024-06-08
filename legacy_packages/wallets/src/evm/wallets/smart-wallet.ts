@@ -14,9 +14,7 @@ import {
   SignerWithPermissions,
 } from "@thirdweb-dev/sdk";
 import { walletIds } from "../constants/walletIds";
-import {
-  getValidChainRPCs,
-} from "@thirdweb-dev/chains";
+import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
 import { isZkSyncChain } from "./smart-wallet";
@@ -31,6 +29,7 @@ export {
   isSmartWalletDeployed,
   getUserOpReceipt,
   isZkSyncChain,
+  getDefaultFactoryAddress,
 } from "../connectors/smart-wallet/utils";
 
 export type { UserOperationStruct } from "@account-abstraction/contracts";

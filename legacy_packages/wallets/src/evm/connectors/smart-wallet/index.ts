@@ -12,7 +12,11 @@ import {
   TransactionOptions,
   UserOpOptions,
 } from "./types";
-import { ACCOUNT_CORE_ABI, ENTRYPOINT_ADDRESS } from "./lib/constants";
+import {
+  ACCOUNT_CORE_ABI,
+  ENTRYPOINT_ADDRESS,
+  DEFAULT_FACTORY_ADDRESS,
+} from "./lib/constants";
 import { EVMWallet } from "../../interfaces";
 import { ERC4337EthersSigner } from "./lib/erc4337-signer";
 import { BigNumber, constants, ethers, providers, utils } from "ethers";
@@ -69,8 +73,7 @@ export class SmartWalletConnector extends Connector<SmartWalletConnectionArgs> {
             this.config.secretKey,
           ),
       gasless: config.gasless,
-      factoryAddress:
-        config.factoryAddress || "0x85e23b94e7F5E9cC1fF78BCe78cfb15B81f0DF00",
+      factoryAddress: config.factoryAddress || DEFAULT_FACTORY_ADDRESS,
       accountAddress: params.accountAddress,
       factoryInfo: {
         createAccount:

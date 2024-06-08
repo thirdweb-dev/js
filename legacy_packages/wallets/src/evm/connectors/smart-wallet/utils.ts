@@ -4,7 +4,7 @@ import {
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
 import { BytesLike } from "ethers";
-import { ENTRYPOINT_ADDRESS } from "./lib/constants";
+import { DEFAULT_FACTORY_ADDRESS, ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EntryPoint__factory } from "@account-abstraction/contracts";
 import { Zksync, ZksyncSepoliaTestnet } from "@thirdweb-dev/chains";
 
@@ -104,6 +104,10 @@ export async function isZkSyncChain(network: ChainOrRpcUrl) {
   const readOnlySDK = getSDK(network);
   const chainId = (await readOnlySDK.getProvider().getNetwork()).chainId;
   return chainId === Zksync.chainId || chainId === ZksyncSepoliaTestnet.chainId;
+}
+
+export function getDefaultFactoryAddress() {
+  return DEFAULT_FACTORY_ADDRESS;
 }
 
 /**
