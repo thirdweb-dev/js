@@ -11,5 +11,7 @@ export function randomBytesHex(length = 32) {
  * @internal
  */
 export function randomBytesBuffer(length = 32) {
-  return globalThis.crypto.getRandomValues(new Uint8Array(length));
+  return (typeof globalThis.crypto !== 'undefined'
+    ? globalThis.crypto
+    : (await import('crypto')).webcrypto).getRandomValues(new Uint8Array(length));
 }
