@@ -3,7 +3,10 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
-import type { PreAuthArgsType } from "../../../../wallets/in-app/core/authentication/type.js";
+import type {
+  MultiStepAuthProviderType,
+  PreAuthArgsType,
+} from "../../../../wallets/in-app/core/authentication/type.js";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
@@ -15,6 +18,7 @@ import { radius, spacing } from "../../design-system/index.js";
 import { ThemedInputWithSubmit } from "../components/input.js";
 import { ThemedSpinner } from "../components/spinner.js";
 import { APPLE_ICON, FACEBOOK_ICON, GOOGLE_ICON } from "../icons/svgs.js";
+import type { ModalState } from "./ConnectButton.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",
@@ -34,6 +38,7 @@ type InAppWalletFormUIProps = {
   client: ThirdwebClient;
   theme: Theme;
   wallet: Wallet<"inApp">;
+  setScreen: (screen: ModalState) => void;
 };
 
 export function InAppWalletUI(props: InAppWalletFormUIProps) {
@@ -51,8 +56,8 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <SocialLogin key={auth} auth={auth} {...props} />
         ))}
       </View>
-      <OtpLogin auth="phone" {...props} />
-      <OtpLogin auth="email" {...props} />
+      <PreOtpLogin auth="phone" {...props} />
+      <PreOtpLogin auth="email" {...props} />
     </View>
   );
 }
@@ -95,15 +100,14 @@ function SocialLogin(
   );
 }
 
-function OtpLogin(
-  props: InAppWalletFormUIProps & { auth: PreAuthArgsType["strategy"] },
+function PreOtpLogin(
+  props: InAppWalletFormUIProps & {
+    auth: PreAuthArgsType["strategy"];
+  },
 ) {
-  const { theme, auth, wallet, client } = props;
-  const [screen, setScreen] = useState<"phone" | "code">("phone");
+  const { theme, auth, client, setScreen, wallet } = props;
   const [sendingOtp, setSendingOtp] = useState(false);
   const [phoneOrEmail, setPhoneNumberOrEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const { connect, isConnecting } = useConnect();
 
   const sentOtpCode = async () => {
     if (!phoneOrEmail) return;
@@ -114,52 +118,73 @@ function OtpLogin(
         strategy: auth,
         phoneNumber: phoneOrEmail,
       });
+      setSendingOtp(false);
+      setScreen({
+        screen: "otp",
+        auth: {
+          strategy: auth,
+          phoneNumber: phoneOrEmail,
+        },
+        wallet,
+      });
     } else {
       await preAuthenticate({
         client,
         strategy: auth,
         email: phoneOrEmail,
       });
+      setSendingOtp(false);
+      setScreen({
+        screen: "otp",
+        auth: { strategy: auth, email: phoneOrEmail },
+        wallet,
+      });
     }
-    setSendingOtp(false);
-    setScreen("code");
   };
 
+  return (
+    <ThemedInputWithSubmit
+      theme={theme}
+      placeholder={auth === "phone" ? "Phone number" : "Email address"}
+      onChangeText={setPhoneNumberOrEmail}
+      value={phoneOrEmail}
+      keyboardType={auth === "phone" ? "phone-pad" : "email-address"}
+      onSubmit={sentOtpCode}
+      isSubmitting={sendingOtp}
+    />
+  );
+}
+
+export function OtpLogin(
+  props: InAppWalletFormUIProps & {
+    auth: MultiStepAuthProviderType;
+  },
+) {
+  const { theme, auth, wallet, client } = props;
+  const [verificationCode, setVerificationCode] = useState("");
+  const { connect, isConnecting } = useConnect();
+
   const connectInAppWallet = async () => {
-    if (!verificationCode || !phoneOrEmail) return;
+    if (!verificationCode || !verificationCode) return;
     await connect(async () => {
-      if (auth === "phone") {
+      if (auth.strategy === "phone") {
         await wallet.connect({
           client,
-          strategy: auth,
-          phoneNumber: phoneOrEmail,
+          strategy: auth.strategy,
+          phoneNumber: auth.phoneNumber,
           verificationCode,
         });
       } else {
         await wallet.connect({
           client,
-          strategy: auth,
-          email: phoneOrEmail,
+          strategy: auth.strategy,
+          email: auth.email,
           verificationCode,
         });
       }
       return wallet;
     });
   };
-
-  if (screen === "phone") {
-    return (
-      <ThemedInputWithSubmit
-        theme={theme}
-        placeholder={auth === "phone" ? "Phone number" : "Email address"}
-        onChangeText={setPhoneNumberOrEmail}
-        value={phoneOrEmail}
-        keyboardType={auth === "phone" ? "phone-pad" : "email-address"}
-        onSubmit={sentOtpCode}
-        isSubmitting={sendingOtp}
-      />
-    );
-  }
 
   return (
     <>

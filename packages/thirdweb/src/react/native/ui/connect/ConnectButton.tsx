@@ -9,6 +9,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -23,7 +24,12 @@ import { ThemedButton } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
-import { InAppWalletUI } from "./InAppWalletUI.js";
+import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
+
+export type ModalState =
+  | { screen: "base" }
+  | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
+  | { screen: "external_wallets" };
 
 export function ConnectButton(props: ConnectButtonProps) {
   const theme = parseTheme(props.theme);
@@ -140,14 +146,14 @@ function ConnectedButton(props: ConnectButtonProps & { onClose: () => void }) {
 function ConnectModal(
   props: ConnectButtonProps & { theme: Theme; onClose: () => void },
 ) {
-  const theme = props.theme;
+  const { theme, client } = props;
   const wallets = props.wallets || getDefaultWallets(props);
+  const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
     | Wallet<"inApp">
     | undefined;
-  // const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+  const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
 
-  // const [keyboardHeight, setKeyboardHeight] = useState(0);
   const translateY = new Animated.Value(0);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: translateY
@@ -185,6 +191,86 @@ function ConnectModal(
     };
   }, []);
 
+  if (modalState.screen === "otp") {
+    return (
+      <Animated.View
+        style={[{ flex: 1, width: "100%", transform: [{ translateY }] }]}
+      >
+        <ThemedView theme={theme} style={styles.modalContainer}>
+          <ThemedText theme={theme} type="title">
+            Sign in
+          </ThemedText>
+          <Spacer size={"lg"} />
+          <View style={{ flexDirection: "column", gap: spacing.md }}>
+            <OtpLogin
+              auth={modalState.auth}
+              wallet={modalState.wallet}
+              client={client}
+              setScreen={setModalState}
+              theme={theme}
+            />
+            <ThemedButton
+              theme={theme}
+              onPress={() => setModalState({ screen: "base" })}
+            >
+              <ThemedText
+                theme={theme}
+                style={{ color: theme.colors.primaryButtonText }}
+              >
+                Back
+              </ThemedText>
+            </ThemedButton>
+          </View>
+        </ThemedView>
+      </Animated.View>
+    );
+  }
+
+  if (modalState.screen === "external_wallets") {
+    return (
+      <Animated.View
+        style={[{ flex: 1, width: "100%", transform: [{ translateY }] }]}
+      >
+        <ThemedView theme={theme} style={styles.modalContainer}>
+          <ThemedText theme={theme} type="title">
+            Sign in
+          </ThemedText>
+          <Spacer size={"lg"} />
+          <View style={{ flexDirection: "column", gap: spacing.md }}>
+            {externalWallets.map((wallet) => (
+              <ThemedButton
+                key={wallet.id}
+                theme={theme}
+                variant="secondary"
+                onPress={() => {
+                  props.onClose();
+                }}
+              >
+                <ThemedText
+                  theme={theme}
+                  style={{ color: theme.colors.primaryText }}
+                >
+                  {wallet.id}
+                </ThemedText>
+              </ThemedButton>
+            ))}
+            <ThemedButton
+              theme={theme}
+              onPress={() => setModalState({ screen: "base" })}
+            >
+              <ThemedText
+                theme={theme}
+                style={{ color: theme.colors.primaryButtonText }}
+              >
+                Back
+              </ThemedText>
+            </ThemedButton>
+          </View>
+        </ThemedView>
+      </Animated.View>
+    );
+  }
+
   return (
     <Animated.View
       style={[{ flex: 1, width: "100%", transform: [{ translateY }] }]}
@@ -195,26 +281,18 @@ function ConnectModal(
         </ThemedText>
         <Spacer size={"lg"} />
         <View style={{ flexDirection: "column", gap: spacing.md }}>
-          {inAppWallet && <InAppWalletUI wallet={inAppWallet} {...props} />}
-          {/* {externalWallets.map((wallet) => (
-            <ThemedButton
-              key={wallet.id}
-              theme={theme}
-              variant="secondary"
-              onPress={() => {
-                props.onClose();
-              }}
-            >
-              <ThemedText
-                theme={theme}
-                style={{ color: theme.colors.primaryText }}
-              >
-                {wallet.id}
-              </ThemedText>
-            </ThemedButton>
-          ))} */}
+          {inAppWallet && (
+            <InAppWalletUI
+              wallet={inAppWallet}
+              setScreen={setModalState}
+              {...props}
+            />
+          )}
           <Spacer size={"lg"} />
-          <ThemedButton theme={theme} onPress={props.onClose}>
+          <ThemedButton
+            theme={theme}
+            onPress={() => setModalState({ screen: "external_wallets" })}
+          >
             <ThemedText
               theme={theme}
               style={{ color: theme.colors.primaryButtonText }}
