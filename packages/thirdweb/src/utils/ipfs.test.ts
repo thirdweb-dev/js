@@ -12,6 +12,18 @@ describe("resolveScheme", () => {
     expect(url).toMatchInlineSnapshot(`"https://test.ipfscdn.io/ipfs/Qm..."`);
   });
 
+  it("should resolve ipfs scheme", () => {
+    const client = createThirdwebClient({
+      clientId: "test",
+    });
+    const uri =
+      "ipfs://bafkreidi5y7afj5z4xrz7uz5rkg2mcsv2p2n4ui4g7q4k4ecdz65i2agou";
+    const url = resolveScheme({ client, uri });
+    expect(url).toMatchInlineSnapshot(
+      `"https://test.ipfscdn.io/ipfs/bafkreidi5y7afj5z4xrz7uz5rkg2mcsv2p2n4ui4g7q4k4ecdz65i2agou"`,
+    );
+  });
+
   it("should resolve ipfs scheme when passing a gateway override", () => {
     const client = createThirdwebClient({
       clientId: "test",

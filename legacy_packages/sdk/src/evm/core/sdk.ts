@@ -587,7 +587,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           );
         newContract = await this.getContractFromAbi(
           resolvedAddress,
-          metadata.abi,
+          await getCompositeABI(
+            resolvedAddress,
+            AbiSchema.parse(metadata.abi),
+            this.getProvider(),
+            this.options,
+            this.storage,
+          ),
         );
       } catch (e) {
         // fallback to
@@ -601,7 +607,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           ].getAbi(resolvedAddress, this.getProvider(), this.storage);
           newContract = await this.getContractFromAbi(
             resolvedAddress,
-            contractAbi,
+            await getCompositeABI(
+              resolvedAddress,
+              AbiSchema.parse(contractAbi),
+              this.getProvider(),
+              this.options,
+              this.storage,
+            ),
           );
         } else {
           // we cant fetch the ABI, and we don't know the contract type, throw the original error
@@ -843,13 +855,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       resolvedAddress,
-      await getCompositeABI(
-        resolvedAddress,
-        AbiSchema.parse(parsedABI),
-        provider,
-        this.options,
-        this.storage,
-      ),
+      parsedABI,
       this.storageHandler,
       this.options,
       (await provider.getNetwork()).chainId,

@@ -6,6 +6,7 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   getTypesForEIP712Domain,
+  serializeTypedData,
   validateTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
@@ -16,12 +17,10 @@ import {
 } from "../../chains/utils.js";
 import {
   type Hex,
-  isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { stringify } from "../../utils/json.js";
 import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
 import { openWindow } from "../../utils/web/openWindow.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
@@ -374,10 +373,12 @@ function createAccount(provider: WCProvider, address: string) {
       // as we can't statically check this with TypeScript.
       validateTypedData({ domain, message, primaryType, types });
 
-      const typedData = stringify(
-        { domain: domain ?? {}, message, primaryType, types },
-        (_, value) => (isHex(value) ? value.toLowerCase() : value),
-      );
+      const typedData = serializeTypedData({
+        domain: domain ?? {},
+        message,
+        primaryType,
+        types,
+      });
 
       return await provider.request({
         method: "eth_signTypedData_v4",

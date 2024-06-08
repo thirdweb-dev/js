@@ -447,7 +447,11 @@ function alignTxToEthers(
       break;
     }
   }
-  return { ...rest, type };
+  return {
+    ...rest,
+    type,
+    accessList: tx.accessList as ethers6.AccessListish | null | undefined,
+  };
 }
 
 async function alignTxFromEthers(options: {

@@ -1685,8 +1685,8 @@ importers:
         specifier: 0.1.2
         version: 0.1.2
       viem:
-        specifier: 2.10.9
-        version: 2.10.9(typescript@5.4.5)(zod@3.22.4)
+        specifier: 2.13.7
+        version: 2.13.7(typescript@5.4.5)(zod@3.22.4)
     devDependencies:
       '@aws-sdk/client-lambda':
         specifier: 3.577.0
@@ -27185,8 +27185,8 @@ packages:
       semver: 7.6.2
     dev: true
 
-  /viem@2.10.9(typescript@5.4.5)(zod@3.22.4):
-    resolution: {integrity: sha512-XsbEXhOcmQOkI80zDLW0EdksimNuYTS61HZ03vQYpHoug7gwVHDQ83nY+nuyT7punuFx0fmRG6+HZg3yVQhptQ==}
+  /viem@2.13.7(typescript@5.4.5)(zod@3.22.4):
+    resolution: {integrity: sha512-SZWn9LPrz40PHl4PM2iwkPTTtjWPDFsnLr32UwpqC/Z5f0AwxitjLyZdDKcImvbWZ3vLQ0oPggR1aLlqvTcUug==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:

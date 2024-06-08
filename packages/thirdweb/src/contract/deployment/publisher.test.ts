@@ -7,7 +7,7 @@ vi.mock("../../../transaction/read-contract");
 vi.mock("../../../storage/download");
 
 // TODO: Add mocks to these tests instead of using live data
-describe("fetchPublishedContract", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("fetchPublishedContract", () => {
   it("fetches the latest published contract when no version is specified", async () => {
     const result = await fetchPublishedContractMetadata({
       publisher: "0x4a706de5CE9bfe2f9C37BA945805e396d1810824",
