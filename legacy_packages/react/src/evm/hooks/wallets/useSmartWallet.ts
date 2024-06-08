@@ -222,18 +222,17 @@ export function useSmartWallet<W extends WalletInstance>(
   const setWallet = useSetConnectedWallet();
   const context = useWalletContext();
   const supportedWallets = useWallets();
-  const defaultFactory = getDefaultFactoryAddress();
 
   const predictAddress = useCallback(
     async (args: { personalWalletAddress: string; data?: BytesLike }) => {
       return getSmartWalletAddress(
         context.activeChain,
-        options.factoryAddress || defaultFactory,
+        options.factoryAddress || getDefaultFactoryAddress(),
         args.personalWalletAddress,
         args.data,
       );
     },
-    [context.activeChain, options.factoryAddress || defaultFactory],
+    [context.activeChain, options.factoryAddress || getDefaultFactoryAddress()],
   );
 
   const connect = useCallback(
