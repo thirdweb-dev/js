@@ -29,8 +29,9 @@ export {
   isSmartWalletDeployed,
   getUserOpReceipt,
   isZkSyncChain,
-  getDefaultFactoryAddress,
 } from "../connectors/smart-wallet/utils";
+
+export { DEFAULT_FACTORY_ADDRESS } from "../connectors/smart-wallet/lib/constants";
 
 export type { UserOperationStruct } from "@account-abstraction/contracts";
 
@@ -296,7 +297,14 @@ export class SmartWallet extends AbstractClientWallet<
 
   async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
-      if (this.options && (await isZkSyncChain(this.options.chain))) {
+      if (
+        this.options &&
+        (await isZkSyncChain(
+          this.options.chain,
+          this.options.clientId,
+          this.options.secretKey,
+        ))
+      ) {
         const { ZkSyncConnector } = await import(
           "../connectors/smart-wallet/zk-connector"
         );

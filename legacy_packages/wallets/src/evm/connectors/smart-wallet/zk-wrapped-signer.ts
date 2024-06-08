@@ -208,12 +208,8 @@ export class ZkWrappedSigner extends Signer {
       paymaster: pmDataResult.paymaster,
     };
 
-    console.log("zkSignedTx", zkSignedTx);
-
     const broadcastResult =
       await this.httpRpcClient?.zkBroadcastTransaction(zkSignedTx);
-
-    console.log("broadcastResult", broadcastResult);
 
     const hash = broadcastResult.transactionHash;
     return (await this.provider?.getTransaction(
