@@ -7,7 +7,6 @@ import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectB
 import { getDefaultWallets } from "../../../web/wallets/defaultWallets.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
-import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
 import { BACK_ICON, CLOSE_ICON, TW_ICON, WALLET_ICON } from "../icons/svgs.js";
@@ -25,9 +24,10 @@ export function ConnectModal(
     | Wallet<"inApp">
     | undefined;
   const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+  let content: JSX.Element;
   if (modalState.screen === "otp") {
-    return (
-      <ThemedView theme={theme} style={styles.modalContainer}>
+    content = (
+      <>
         <Header
           theme={theme}
           onClose={props.onClose}
@@ -45,19 +45,17 @@ export function ConnectModal(
         </View>
         <View style={{ flex: 1 }} />
         <PoweredByThirdweb theme={theme} />
-      </ThemedView>
+      </>
     );
-  }
-
-  if (modalState.screen === "external_wallets") {
-    return (
-      <ThemedView theme={theme} style={styles.modalContainer}>
+  } else if (modalState.screen === "external_wallets") {
+    content = (
+      <>
         <Header
           theme={theme}
           onClose={props.onClose}
           onBack={() => setModalState({ screen: "base" })}
         />
-        <Spacer size={"lg"} />
+        <View style={{ flex: 1 }} />
         <ExternalWalletsList
           theme={theme}
           externalWallets={externalWallets}
@@ -65,13 +63,11 @@ export function ConnectModal(
         />
         <View style={{ flex: 1 }} />
         <PoweredByThirdweb theme={theme} />
-      </ThemedView>
+      </>
     );
-  }
-
-  return (
-    <ThemedView theme={theme} style={[styles.modalContainer]}>
-      <SafeAreaView style={{ flex: 1 }}>
+  } else {
+    content = (
+      <>
         <Header theme={theme} onClose={props.onClose} />
         <View style={{ flex: 1 }} />
         <View style={{ flexDirection: "column", gap: spacing.md }}>
@@ -92,7 +88,13 @@ export function ConnectModal(
         </View>
         <View style={{ flex: 1 }} />
         <PoweredByThirdweb theme={theme} />
-      </SafeAreaView>
+      </>
+    );
+  }
+
+  return (
+    <ThemedView theme={theme} style={[styles.modalContainer]}>
+      <SafeAreaView style={{ flex: 1 }}>{content}</SafeAreaView>
     </ThemedView>
   );
 }

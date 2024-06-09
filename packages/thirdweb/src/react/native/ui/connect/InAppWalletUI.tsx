@@ -231,7 +231,7 @@ export function OtpLogin(
           {auth.strategy === "phone" ? auth.phoneNumber : auth.email}
         </ThemedText>
       </View>
-      <Spacer size="sm" />
+      <Spacer size="xs" />
       <ThemedInput
         theme={theme}
         placeholder="Verification code"
