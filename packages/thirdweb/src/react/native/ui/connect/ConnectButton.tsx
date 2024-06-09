@@ -5,10 +5,7 @@ import {
   Easing,
   KeyboardAvoidingView,
   Modal,
-  Platform,
   Pressable,
-  SafeAreaView,
-  StatusBar,
   StyleSheet,
   View,
 } from "react-native";
@@ -64,7 +61,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         toValue: screenHeight,
         duration: 300,
         useNativeDriver: true,
-        easing: Easing.out(Easing.exp),
+        easing: Easing.in(Easing.exp),
       }),
     ]).start(() => {
       setVisible(false);
