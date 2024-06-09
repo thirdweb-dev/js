@@ -28,7 +28,7 @@ export function MobileBurgerMenu() {
       <Button
         variant="ghost"
         size="icon"
-        className="lg:hidden"
+        className="md:hidden"
         onClick={() => setShowBurgerMenu(!showBurgerMenu)}
       >
         <Menu strokeWidth={1} />

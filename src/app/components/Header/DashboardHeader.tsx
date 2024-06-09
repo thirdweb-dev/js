@@ -1,15 +1,16 @@
-import { ColorModeToggle } from "../../../@/components/color-mode-toggle";
+import { ColorModeToggle } from "@/components/color-mode-toggle";
 import { ThirdwebMiniLogo } from "../ThirdwebMiniLogo";
 import Link from "next/link";
 import { MobileBurgerMenu } from "./MobileBurgerMenu";
 import { headerLinks } from "./headerLinks";
-import { ClientOnly } from "../../../components/ClientOnly/ClientOnly";
-import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
-import { CustomConnectWallet } from "../../../@3rdweb-sdk/react/components/connect-wallet";
+import { ClientOnly } from "components/ClientOnly/ClientOnly";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
 export function DashboardHeader() {
   return (
-    <header className="border-b bg-card">
+    // the "h-24" avoids layout shift when connecting wallet (connected wallet button is taller than disconnected...)
+    <header className="border-b bg-card h-20 md:h-24 flex-shrink-0 flex items-center">
       <div className="container px-4 gap-5 justify-between flex flex-row items-center py-4">
         {/* Left */}
         <div className="flex gap-5 items-center">
@@ -20,7 +21,7 @@ export function DashboardHeader() {
             </Link>
           </div>
 
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden md:flex items-center gap-5">
             {headerLinks.left.map((link, index) => (
               <Link
                 key={index}

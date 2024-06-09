@@ -21,8 +21,6 @@ import { StarButton } from "../components/client/star-button";
 import { ChainListCard } from "./components/server/chainlist-card";
 import { ChainListView } from "./components/client/view";
 import { Metadata } from "next";
-import { Suspense } from "react";
-import { Spinner } from "../../../../@/components/ui/Spinner/Spinner";
 
 type SearchParams = Partial<{
   type: "mainnet" | "testnet";
@@ -193,15 +191,8 @@ export default function ChainListPage(props: { searchParams: SearchParams }) {
         </div>
       </header>
       <div className="h-10"></div>
-      <Suspense
-        fallback={
-          <div className="flex-1 flex items-center justify-center">
-            <Spinner className="size-10" />
-          </div>
-        }
-      >
-        <ChainsData searchParams={props.searchParams} activeView={activeView} />
-      </Suspense>
+      {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
+      <ChainsData searchParams={props.searchParams} activeView={activeView} />
     </section>
   );
 }
@@ -223,7 +214,6 @@ async function ChainsData(props: {
 
   return (
     <>
-      {" "}
       <main>
         {/* empty state */}
         {paginatedChains.length === 0 ? (
@@ -237,10 +227,10 @@ async function ChainsData(props: {
                 <tr className="rounded-lg border-b">
                   {/* empty space for the icon */}
                   <th />
-                  <TableHeading> Name </TableHeading>
-                  <TableHeading> Chain ID </TableHeading>
-                  <TableHeading> Native Token </TableHeading>
-                  <TableHeading> Enabled Services </TableHeading>
+                  <TableHeading>Name</TableHeading>
+                  <TableHeading>Chain ID</TableHeading>
+                  <TableHeading>Native Token</TableHeading>
+                  <TableHeading>Enabled Services</TableHeading>
                 </tr>
                 {paginatedChains.map((chain) => (
                   <ChainListRow
