@@ -35,10 +35,9 @@ export function generateLoginPayload(options: AuthOptions) {
       // use the user passed nonce generator or fall back to generationg uuid
       nonce: await (
         options.login?.nonce?.generate ||
-        (() =>
-          import("../../utils/random.js").then(({ randomBytesHex }) =>
-            randomBytesHex(),
-          ))
+        (() => import("../../utils/random.js").then(({ randomBytesHex }) =>
+          randomBytesHex()
+        ))
       )(),
       statement: options.login?.statement || DEFAULT_LOGIN_STATEMENT,
       version: options.login?.version || DEFAULT_LOGIN_VERSION,

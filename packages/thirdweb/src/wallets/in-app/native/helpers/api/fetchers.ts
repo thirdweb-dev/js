@@ -26,9 +26,9 @@ const PAPER_CLIENT_ID_HEADER = "x-thirdweb-client-id";
 
 let sessionNonce: Hex | undefined = undefined;
 
-export function getSessionHeaders() {
+export async function getSessionHeaders() {
   if (!sessionNonce) {
-    sessionNonce = randomBytesHex(16);
+    sessionNonce = await randomBytesHex(16);
   }
   return {
     "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export const verifyClientId = async (client: ThirdwebClient) => {
   const resp = await getClientFetch(client)(ROUTE_VERIFY_THIRDWEB_CLIENT_ID, {
     method: "POST",
     headers: {
-      ...getSessionHeaders(),
+      ...await getSessionHeaders(),
     },
     body: JSON.stringify({ clientId: client.clientId, parentDomain: "" }),
   });
@@ -69,14 +69,14 @@ export const authFetchEmbeddedWalletUser = async (
           authTokenClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: client.clientId,
-        ...getSessionHeaders(),
+        ...await getSessionHeaders(),
       }
     : {
         Authorization: `Bearer ${EMBEDDED_WALLET_TOKEN_HEADER}:${
           authTokenClient || ""
         }`,
         [PAPER_CLIENT_ID_HEADER]: client.clientId,
-        ...getSessionHeaders(),
+        ...await getSessionHeaders(),
       };
   return getClientFetch(client)(url, params);
 };
@@ -112,7 +112,7 @@ export async function generateAuthTokenFromCognitoEmailOtp(
   const resp = await fetch(ROUTE_VERIFY_COGNITO_OTP, {
     method: "POST",
     headers: {
-      ...getSessionHeaders(),
+      ...await getSessionHeaders(),
     },
     body: JSON.stringify({
       access_token: session.getAccessToken().getJwtToken(),
@@ -136,7 +136,7 @@ export async function sendUserManagedEmailOtp(email: string, clientId: string) {
   const resp = await fetch(ROUTE_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      ...getSessionHeaders(),
+      ...await getSessionHeaders(),
     },
     body: JSON.stringify({
       email,
@@ -161,7 +161,7 @@ export async function validateUserManagedEmailOtp(options: {
   const resp = await fetch(ROUTE_VALIDATE_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      ...getSessionHeaders(),
+      ...await getSessionHeaders(),
     },
     body: JSON.stringify({
       email: options.email,
@@ -186,7 +186,7 @@ export async function isValidUserManagedEmailOtp(options: {
   const resp = await fetch(ROUTE_IS_VALID_USER_MANAGED_OTP, {
     method: "POST",
     headers: {
-      ...getSessionHeaders(),
+      ...await getSessionHeaders(),
     },
     body: JSON.stringify({
       email: options.email,

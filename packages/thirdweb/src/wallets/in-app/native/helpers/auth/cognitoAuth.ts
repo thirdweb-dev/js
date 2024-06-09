@@ -18,7 +18,7 @@ Amplify.configure({
 export async function cognitoEmailSignUp(email: string, clientId: string) {
   await Auth.signUp({
     username: `${email}:email:${clientId}`,
-    password: randomBytesHex(30),
+    password: await randomBytesHex(30),
     attributes: {
       email,
     },
@@ -47,7 +47,7 @@ export async function cognitoPhoneSignUp(
 ) {
   await Auth.signUp({
     username: `${phoneNumber}:sms:${clientId}`,
-    password: randomBytesHex(30),
+    password: await randomBytesHex(30),
     attributes: {
       // ! This is a placeholder email, it will not be used for anything. We simply need this to satisfy the Cognito API.
       email: "cognito@thirdweb.com",
