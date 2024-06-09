@@ -11,7 +11,7 @@ import { ThemedText } from "./text.js";
 
 export type ThemedButtonProps = TouchableOpacityProps & {
   theme: Theme;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "accent";
 };
 
 export function ThemedButton(props: ThemedButtonProps) {
@@ -29,7 +29,9 @@ export function ThemedButton(props: ThemedButtonProps) {
           backgroundColor:
             variant === "secondary"
               ? "transparent"
-              : props.theme.colors.primaryButtonBg,
+              : variant === "accent"
+                ? props.theme.colors.accentButtonBg
+                : props.theme.colors.primaryButtonBg,
         },
         styleOverride,
       ]}

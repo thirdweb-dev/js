@@ -15,9 +15,11 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { radius, spacing } from "../../design-system/index.js";
-import { ThemedButtonWithIcon } from "../components/button.js";
-import { ThemedInputWithSubmit } from "../components/input.js";
+import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
+import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
+import { Spacer } from "../components/spacer.js";
 import { ThemedSpinner } from "../components/spinner.js";
+import { ThemedText } from "../components/text.js";
 import {
   APPLE_ICON,
   EMAIL_ICON,
@@ -189,7 +191,7 @@ export function OtpLogin(
 ) {
   const { theme, auth, wallet, client } = props;
   const [verificationCode, setVerificationCode] = useState("");
-  const { connect, isConnecting } = useConnect();
+  const { connect, isConnecting, error } = useConnect();
 
   const connectInAppWallet = async () => {
     if (!verificationCode || !verificationCode) return;
@@ -215,15 +217,55 @@ export function OtpLogin(
 
   return (
     <>
-      <ThemedInputWithSubmit
+      <View
+        style={{
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ThemedText theme={theme} style={{ color: theme.colors.secondaryText }}>
+          Enter the verification code sent to
+        </ThemedText>
+        <ThemedText theme={theme} type="defaultSemiBold">
+          {auth.strategy === "phone" ? auth.phoneNumber : auth.email}
+        </ThemedText>
+      </View>
+      <Spacer size="sm" />
+      <ThemedInput
         theme={theme}
-        placeholder="Enter verification code"
+        placeholder="Verification code"
         onChangeText={setVerificationCode}
         value={verificationCode}
-        keyboardType="numeric"
-        onSubmit={connectInAppWallet}
-        isSubmitting={isConnecting}
+        keyboardType="number-pad"
       />
+      <ThemedButton
+        theme={theme}
+        onPress={connectInAppWallet}
+        variant="accent"
+        disabled={isConnecting}
+      >
+        {isConnecting ? (
+          <ThemedSpinner color={theme.colors.accentButtonText} />
+        ) : (
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{ color: theme.colors.accentButtonText }}
+          >
+            Verify
+          </ThemedText>
+        )}
+      </ThemedButton>
+      {error && (
+        <ThemedText
+          theme={theme}
+          type="subtext"
+          style={{ color: theme.colors.danger }}
+        >
+          {error.message}
+        </ThemedText>
+      )}
     </>
   );
 }

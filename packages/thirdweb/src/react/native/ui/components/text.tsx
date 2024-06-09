@@ -9,7 +9,7 @@ export type ThemedTextProps = TextProps & {
     | "defaultSemiBold"
     | "subtitle"
     | "link"
-    | "primaryButton";
+    | "subtext";
 };
 
 export function ThemedText({
@@ -27,6 +27,7 @@ export function ThemedText({
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
         type === "subtitle" ? styles.subtitle : undefined,
         type === "link" ? styles.link : undefined,
+        type === "subtext" ? styles.subtext : undefined,
         style,
       ]}
       {...rest}
@@ -43,6 +44,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontWeight: "600",
+  },
+  subtext: {
+    fontSize: 14,
   },
   title: {
     fontSize: 24,

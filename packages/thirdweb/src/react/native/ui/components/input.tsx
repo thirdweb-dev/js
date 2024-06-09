@@ -19,11 +19,13 @@ export type ThemedInputProps = {
 export function ThemedInput(props: ThemedInputProps) {
   const { theme } = props;
   return (
-    <TextInput
-      placeholderTextColor={theme.colors.secondaryText}
-      style={[styles.input, { color: theme.colors.primaryText }]}
-      {...props}
-    />
+    <View style={[styles.container, { borderColor: theme.colors.borderColor }]}>
+      <TextInput
+        placeholderTextColor={theme.colors.secondaryText}
+        style={[styles.input, { color: theme.colors.primaryText }]}
+        {...props}
+      />
+    </View>
   );
 }
 
@@ -37,7 +39,18 @@ export function ThemedInputWithSubmit(
   const [val, setVal] = useState("");
   return (
     <View style={[styles.container, { borderColor: theme.colors.borderColor }]}>
-      <ThemedInput value={val} onChangeText={setVal} {...props} />
+      <TextInput
+        placeholderTextColor={theme.colors.secondaryText}
+        style={[
+          styles.input,
+          {
+            color: theme.colors.primaryText,
+          },
+        ]}
+        value={val}
+        onChangeText={setVal}
+        {...props}
+      />
       {onSubmit && (
         <TouchableOpacity
           onPress={() => onSubmit(val)}

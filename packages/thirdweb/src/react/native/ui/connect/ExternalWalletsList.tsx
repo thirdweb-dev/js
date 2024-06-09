@@ -16,7 +16,7 @@ export type ExternalWalletsUiProps = {
   externalWallets: Wallet[];
 };
 
-export function ExternalWalletsUI({
+export function ExternalWalletsList({
   theme,
   client,
   externalWallets,
