@@ -3,8 +3,12 @@ import {
   Animated,
   Dimensions,
   Easing,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
+  SafeAreaView,
+  StatusBar,
   StyleSheet,
   View,
 } from "react-native";
@@ -41,7 +45,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
-        toValue: screenHeight - modalHeight,
+        toValue: 0 - navBarHeight, // - statusBarHeight,
         duration: 300,
         useNativeDriver: true,
         easing: Easing.out(Easing.exp),
@@ -96,17 +100,19 @@ export function ConnectButton(props: ConnectButtonProps) {
         transparent={true}
         onRequestClose={closeModal}
       >
-        <Animated.View style={[styles.modalOverlay, { opacity: fadeAnim }]}>
-          <Pressable style={styles.dismissArea} onPress={closeModal} />
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.bottomSheetContainer,
-            { transform: [{ translateY: slideAnim }] },
-          ]}
-        >
-          <ConnectModal {...props} theme={theme} onClose={closeModal} />
-        </Animated.View>
+        <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }}>
+          <Animated.View style={[styles.modalOverlay, { opacity: fadeAnim }]} />
+          <Animated.View
+            style={[{ flex: 1, transform: [{ translateY: slideAnim }] }]}
+          >
+            <SafeAreaView style={{ flex: 1 }}>
+              <Pressable style={styles.dismissArea} onPress={closeModal} />
+              <View style={styles.bottomSheetContainer}>
+                <ConnectModal {...props} theme={theme} onClose={closeModal} />
+              </View>
+            </SafeAreaView>
+          </Animated.View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -137,7 +143,11 @@ function ConnectedButton(props: ConnectButtonProps & { onClose: () => void }) {
   );
 }
 
+const statusBarHeight =
+  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 const screenHeight = Dimensions.get("window").height;
+const displayHeight = Dimensions.get("screen").height;
+const navBarHeight = displayHeight - screenHeight - statusBarHeight;
 const modalHeight = 480;
 const screenWidth = Dimensions.get("window").width;
 
@@ -149,15 +159,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.8)",
   },
   dismissArea: {
-    position: "absolute",
     width: "100%",
-    height: "100%",
+    flex: 1,
   },
   bottomSheetContainer: {
-    position: "absolute",
     height: modalHeight,
     width: screenWidth,
-    top: 0,
     flexDirection: "column",
   },
 });
