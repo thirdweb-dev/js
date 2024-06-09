@@ -60,7 +60,7 @@ export function ThemedInputWithSubmit(
           }}
         >
           {props.isSubmitting ? (
-            <ThemedSpinner size={24} />
+            <ThemedSpinner size={24} color={theme.colors.secondaryIconColor} />
           ) : (
             <SvgXml
               width={24}

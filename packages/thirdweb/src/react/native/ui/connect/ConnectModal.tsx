@@ -7,6 +7,7 @@ import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectB
 import { getDefaultWallets } from "../../../web/wallets/defaultWallets.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
+import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
 import { BACK_ICON, CLOSE_ICON, TW_ICON, WALLET_ICON } from "../icons/svgs.js";
@@ -24,6 +25,7 @@ export function ConnectModal(
     | Wallet<"inApp">
     | undefined;
   const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+  const showBranding = props.connectModal?.showThirdwebBranding !== false;
   let content: JSX.Element;
   if (modalState.screen === "otp") {
     content = (
@@ -34,7 +36,13 @@ export function ConnectModal(
           onBack={() => setModalState({ screen: "base" })}
         />
         <View style={{ flex: 1 }} />
-        <View style={{ flexDirection: "column", gap: spacing.md }}>
+        <View
+          style={{
+            flexDirection: "column",
+            gap: spacing.md,
+            paddingHorizontal: spacing.lg,
+          }}
+        >
           <OtpLogin
             auth={modalState.auth}
             wallet={modalState.wallet}
@@ -44,7 +52,6 @@ export function ConnectModal(
           />
         </View>
         <View style={{ flex: 1 }} />
-        <PoweredByThirdweb theme={theme} />
       </>
     );
   } else if (modalState.screen === "external_wallets") {
@@ -55,14 +62,12 @@ export function ConnectModal(
           onClose={props.onClose}
           onBack={() => setModalState({ screen: "base" })}
         />
-        <View style={{ flex: 1 }} />
+        <Spacer size="xl" />
         <ExternalWalletsList
           theme={theme}
           externalWallets={externalWallets}
           client={client}
         />
-        <View style={{ flex: 1 }} />
-        <PoweredByThirdweb theme={theme} />
       </>
     );
   } else {
@@ -70,7 +75,13 @@ export function ConnectModal(
       <>
         <Header theme={theme} onClose={props.onClose} />
         <View style={{ flex: 1 }} />
-        <View style={{ flexDirection: "column", gap: spacing.md }}>
+        <View
+          style={{
+            flexDirection: "column",
+            gap: spacing.md,
+            paddingHorizontal: spacing.lg,
+          }}
+        >
           {inAppWallet && (
             <InAppWalletUI
               wallet={inAppWallet}
@@ -87,14 +98,16 @@ export function ConnectModal(
           />
         </View>
         <View style={{ flex: 1 }} />
-        <PoweredByThirdweb theme={theme} />
       </>
     );
   }
 
   return (
     <ThemedView theme={theme} style={[styles.modalContainer]}>
-      <SafeAreaView style={{ flex: 1 }}>{content}</SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
+        {content}
+        {showBranding && <PoweredByThirdweb theme={theme} />}
+      </SafeAreaView>
     </ThemedView>
   );
 }
@@ -105,13 +118,7 @@ function Header({
   onBack,
 }: { theme: Theme; onClose: () => void; onBack?: () => void }) {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
+    <View style={styles.header}>
       {onBack && (
         <TouchableOpacity onPress={onBack}>
           <SvgXml
@@ -145,6 +152,7 @@ function OrDivider({ theme }: { theme: Theme }) {
         alignItems: "center",
         justifyContent: "center",
         gap: spacing.lg,
+        paddingHorizontal: spacing.lg,
       }}
     >
       <View
@@ -176,6 +184,7 @@ function PoweredByThirdweb({ theme }: { theme: Theme }) {
         justifyContent: "center",
         alignItems: "center",
         gap: spacing.xs,
+        paddingBottom: spacing.sm,
       }}
     >
       <ThemedText
@@ -210,6 +219,17 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
-    padding: spacing.lg,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+  },
+  contentContainer: {
+    flex: 1,
+    flexDirection: "column",
+    paddingHorizontal: spacing.lg,
   },
 });

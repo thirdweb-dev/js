@@ -27,7 +27,9 @@ export function ThemedText({
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
         type === "subtitle" ? styles.subtitle : undefined,
         type === "link" ? styles.link : undefined,
-        type === "subtext" ? styles.subtext : undefined,
+        type === "subtext"
+          ? { ...styles.subtext, color: theme.colors.secondaryText }
+          : undefined,
         style,
       ]}
       {...rest}
