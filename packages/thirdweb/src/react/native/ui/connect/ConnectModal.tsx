@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -62,7 +68,7 @@ export function ConnectModal(
           onClose={props.onClose}
           onBack={() => setModalState({ screen: "base" })}
         />
-        <Spacer size="xl" />
+        <Spacer size="lg" />
         <ExternalWalletsList
           theme={theme}
           externalWallets={externalWallets}
@@ -184,14 +190,10 @@ function PoweredByThirdweb({ theme }: { theme: Theme }) {
         justifyContent: "center",
         alignItems: "center",
         gap: spacing.xs,
-        paddingBottom: spacing.sm,
+        paddingBottom: Platform.OS === "android" ? spacing.md : 0, // handled already by safe area view on ios
       }}
     >
-      <ThemedText
-        theme={theme}
-        type="default"
-        style={{ color: theme.colors.secondaryText }}
-      >
+      <ThemedText theme={theme} type="subtext">
         Powered by
       </ThemedText>
       <SvgXml
@@ -201,11 +203,7 @@ function PoweredByThirdweb({ theme }: { theme: Theme }) {
         style={{ marginBottom: -2 }}
         color={theme.colors.secondaryText}
       />
-      <ThemedText
-        theme={theme}
-        type="defaultSemiBold"
-        style={{ color: theme.colors.secondaryText }}
-      >
+      <ThemedText theme={theme} type="subtext" style={{ fontWeight: "600" }}>
         thirdweb
       </ThemedText>
     </View>

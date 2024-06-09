@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Linking,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -86,7 +87,7 @@ function NewToWallets({ theme }: { theme: Theme }) {
         {
           borderTopWidth: 1,
           borderColor: theme.colors.borderColor,
-          paddingVertical: spacing.md,
+          paddingVertical: spacing.lg,
           paddingHorizontal: spacing.lg,
         },
       ]}
@@ -95,7 +96,16 @@ function NewToWallets({ theme }: { theme: Theme }) {
         New to wallets?
       </ThemedText>
       <View style={{ flex: 1 }} />
-      <ThemedText theme={theme}>Get started</ThemedText>
+      <ThemedText
+        type="subtext"
+        style={{ color: theme.colors.primaryText }}
+        theme={theme}
+        onPress={() =>
+          Linking.openURL("https://blog.thirdweb.com/web3-wallet/")
+        }
+      >
+        Get started
+      </ThemedText>
     </View>
   );
 }
