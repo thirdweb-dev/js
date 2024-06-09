@@ -45,7 +45,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
-        toValue: 0 - navBarHeight, // - statusBarHeight,
+        toValue: 0,
         duration: 300,
         useNativeDriver: true,
         easing: Easing.out(Easing.exp),
@@ -105,12 +105,10 @@ export function ConnectButton(props: ConnectButtonProps) {
           <Animated.View
             style={[{ flex: 1, transform: [{ translateY: slideAnim }] }]}
           >
-            <SafeAreaView style={{ flex: 1 }}>
-              <Pressable style={styles.dismissArea} onPress={closeModal} />
-              <View style={styles.bottomSheetContainer}>
-                <ConnectModal {...props} theme={theme} onClose={closeModal} />
-              </View>
-            </SafeAreaView>
+            <Pressable style={styles.dismissArea} onPress={closeModal} />
+            <View style={styles.bottomSheetContainer}>
+              <ConnectModal {...props} theme={theme} onClose={closeModal} />
+            </View>
           </Animated.View>
         </KeyboardAvoidingView>
       </Modal>
@@ -143,11 +141,7 @@ function ConnectedButton(props: ConnectButtonProps & { onClose: () => void }) {
   );
 }
 
-const statusBarHeight =
-  Platform.OS === "android" ? StatusBar.currentHeight || 0 : 0;
 const screenHeight = Dimensions.get("window").height;
-const displayHeight = Dimensions.get("screen").height;
-const navBarHeight = displayHeight - screenHeight - statusBarHeight;
 const modalHeight = 480;
 const screenWidth = Dimensions.get("window").width;
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -71,26 +71,28 @@ export function ConnectModal(
 
   return (
     <ThemedView theme={theme} style={[styles.modalContainer]}>
-      <Header theme={theme} onClose={props.onClose} />
-      <View style={{ flex: 1 }} />
-      <View style={{ flexDirection: "column", gap: spacing.md }}>
-        {inAppWallet && (
-          <InAppWalletUI
-            wallet={inAppWallet}
-            setScreen={setModalState}
-            {...props}
+      <SafeAreaView style={{ flex: 1 }}>
+        <Header theme={theme} onClose={props.onClose} />
+        <View style={{ flex: 1 }} />
+        <View style={{ flexDirection: "column", gap: spacing.md }}>
+          {inAppWallet && (
+            <InAppWalletUI
+              wallet={inAppWallet}
+              setScreen={setModalState}
+              {...props}
+            />
+          )}
+          <OrDivider theme={theme} />
+          <ThemedButtonWithIcon
+            theme={theme}
+            icon={WALLET_ICON}
+            title="Connect a wallet"
+            onPress={() => setModalState({ screen: "external_wallets" })}
           />
-        )}
-        <OrDivider theme={theme} />
-        <ThemedButtonWithIcon
-          theme={theme}
-          icon={WALLET_ICON}
-          title="Connect a wallet"
-          onPress={() => setModalState({ screen: "external_wallets" })}
-        />
-      </View>
-      <View style={{ flex: 1 }} />
-      <PoweredByThirdweb theme={theme} />
+        </View>
+        <View style={{ flex: 1 }} />
+        <PoweredByThirdweb theme={theme} />
+      </SafeAreaView>
     </ThemedView>
   );
 }
@@ -201,7 +203,7 @@ function PoweredByThirdweb({ theme }: { theme: Theme }) {
 
 const styles = StyleSheet.create({
   modalContainer: {
-    height: 500,
+    flex: 1,
     width: "100%",
     flexDirection: "column",
     borderTopLeftRadius: radius.lg,
