@@ -2,7 +2,7 @@
 
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
@@ -56,6 +56,7 @@ export function StarButton(props: {
   chainId: number;
   className?: string;
   iconClassName?: string;
+  variant?: ButtonProps["variant"];
 }) {
   const loggedInUser = useLoggedInUser();
   const queryClient = useQueryClient();
@@ -82,8 +83,8 @@ export function StarButton(props: {
 
   return (
     <Button
-      className={cn("!m-0 h-auto w-auto", props.className)}
-      variant="ghost"
+      className={props.className}
+      variant={props.variant ?? "ghost"}
       size="icon"
       aria-label={label}
       onClick={() => {
@@ -100,7 +101,7 @@ export function StarButton(props: {
           className={cn(
             "transition-all",
             props.iconClassName,
-            isPreferred ? "text-warning-foreground" : "text-foreground",
+            isPreferred ? "text-yellow-400" : "text-foreground",
           )}
           fill={isPreferred ? "currentColor" : "none"}
           strokeWidth="1px"

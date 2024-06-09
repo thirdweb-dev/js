@@ -1,10 +1,16 @@
 /* eslint-disable react/forbid-dom-props */
 import { cn } from "@/lib/utils";
-import { ArrowLeftIcon, CircleAlertIcon, ExternalLinkIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  CircleAlertIcon,
+  ExternalLinkIcon,
+  TicketCheckIcon,
+  VerifiedIcon,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { StarButton } from "../components/client/star-button";
-import { getChain } from "./utils";
+import { getChain, getChainMetadata } from "./utils";
 import { Metadata } from "next";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { redirect } from "next/navigation";
@@ -13,6 +19,7 @@ import { PrimaryInfoItem } from "./components/server/primary-info-item";
 import { FaucetsSection } from "./components/server/faucets-section";
 import { ExplorersSection } from "./components/server/explorer-section";
 import { ChainIcon } from "../components/server/chain-icon";
+import { Badge } from "@/components/ui/badge";
 
 export async function generateMetadata(
   { params }: { params: { chain_id: string } },
@@ -57,6 +64,7 @@ export default async function ChainPageLayout({
   if (params.chain_id !== chain.slug) {
     redirect(chain.slug);
   }
+  const chainMetadata = await getChainMetadata(chain.chainId);
   const isDeprecated = chain.status === "deprecated";
 
   return (
@@ -77,22 +85,37 @@ export default async function ChainPageLayout({
       )}
       <section className="flex flex-col h-full gap-8">
         {/* Header */}
-        <header className="py-10 md:pt-10 md:pb-16 border-b relative overflow-hidden bg-secondary">
-          <div className="container px-4">
+        <header className="py-6 md:py-20 border-b relative overflow-hidden">
+          {/* header background image shenanigans */}
+          <div className="absolute top-0 left-0 right-0 bottom-0 -z-10">
+            <div
+              className="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-center bg-no-repeat bg-secondary"
+              style={
+                chainMetadata?.headerImgUrl
+                  ? {
+                      backgroundImage: `url(${chainMetadata.headerImgUrl})`,
+                    }
+                  : undefined
+              }
+            />
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/10 to-secondary/40 backdrop-blur-md lg:backdrop-blur-lg shadow-inner" />
+          </div>
+          {/* end header shaningans */}
+
+          <div className="container px-4 flex flex-col gap-2 md:gap-6">
             <Link
               href="/chainlist"
-              className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+              className="inline-flex items-center gap-1 text-foreground hover:underline mt-4"
             >
               <ArrowLeftIcon className="size-5" />
               Chainlist
             </Link>
-            <div className="h-4" />
 
             <div className="flex gap-3 md:gap-5 items-center">
               {chain.icon?.url && (
                 <ChainIcon
                   iconUrl={chain.icon.url}
-                  className="hidden md:block size-[84px] bg-secondary p-2 border-2 rounded-full"
+                  className="size-16 md:size-20 bg-secondary p-2 border-2 rounded-full"
                 />
               )}
 
@@ -105,37 +128,49 @@ export default async function ChainPageLayout({
               >
                 {chain.name}
               </h1>
-
-              {/* Desktop tags */}
-              <div className="hidden md:flex text-base items-center gap-3">
-                {/* {isVerified && (
-                  <ToolTipLabel label="Verified">
-                    <Verified className="text-primary-foreground size-[36px]" />
-                  </ToolTipLabel>
-                )}
-
-                {isGasSponsored && (
-                  <ToolTipLabel label="Gas Sponsored">
-                    <FuelIcon className="text-primary-foreground size-[36px] " />
-                  </ToolTipLabel>
-                )} */}
-
-                <StarButton
-                  chainId={chain.chainId}
-                  iconClassName="size-[36px]"
-                />
-              </div>
-
-              {/* Mobile star */}
-              <div className="md:hidden flex items-center">
-                <StarButton chainId={chain.chainId} iconClassName="size-6" />
-              </div>
+              <StarButton chainId={chain.chainId} variant="secondary" />
             </div>
 
-            {/* Mobile tags */}
+            <div className="flex flex-row gap-2 md:gap-4 items-center h-8 mb-4 md:mb-6">
+              {chainMetadata?.verified && (
+                <Badge
+                  variant="secondary"
+                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5"
+                >
+                  <VerifiedIcon className="size-5" />
+                  <span className="font-bold text-xs uppercase">verified</span>
+                </Badge>
+              )}
+              {chainMetadata?.gasSponsored && (
+                <Badge
+                  variant="secondary"
+                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5"
+                >
+                  <TicketCheckIcon className="size-5" />
+                  <span className="font-bold text-xs uppercase">
+                    gas sponsored
+                  </span>
+                </Badge>
+              )}
+            </div>
           </div>
         </header>
         <main className="container px-4 pb-20 flex-1">
+          {/* About section */}
+          {chainMetadata?.about && (
+            <>
+              <div className="border rounded-xl px-4 py-4 bg-card relative">
+                <h2 className="text-xl font-semibold tracking-tight mb-4">
+                  About
+                </h2>
+
+                <div className="[&_p]:mb-3 [&_p]:text-card-foreground max-w-[1000px]">
+                  <p>{chainMetadata.about}</p>
+                </div>
+              </div>
+              <div className="h-8" />
+            </>
+          )}
           {/* Chain Overview */}
           <div className="flex flex-col gap-10 pt-2">
             {/* Info Grid */}
@@ -186,7 +221,8 @@ export default async function ChainPageLayout({
               .filter((s) => s.enabled)
               .map((s) => s.service)}
           />
-          <div className="pt-8">{children}</div>
+          <div className="h-8" />
+          <div>{children}</div>
         </main>
       </section>
     </>
