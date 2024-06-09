@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: screenWidth,
     height: screenHeight,
-    backgroundColor: "rgba(0,0,0,0.6)",
+    backgroundColor: "rgba(0,0,0,0.8)",
   },
   dismissArea: {
     position: "absolute",
