@@ -4,7 +4,7 @@ import { ANVIL_PKEY_C } from "../../../test/src/test-wallets.js";
 import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
 import { getContract } from "../../contract/contract.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
-import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { privateKeyToAccount } from "../private-key.js";
@@ -47,7 +47,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     });
 
     it("should send a transactions", async () => {
-      const tx = await sendAndConfirmTransaction({
+      const tx = await sendTransaction({
         transaction: claimTo({
           contract,
           quantity: 1n,
