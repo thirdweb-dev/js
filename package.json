@@ -54,7 +54,7 @@
     "@babel/plugin-transform-private-methods": "^7.24.1",
     "@babel/preset-env": "^7.24.5",
     "@babel/preset-typescript": "^7.24.1",
-    "@biomejs/biome": "1.7.1",
+    "@biomejs/biome": "1.8.1",
     "@codspeed/vitest-plugin": "3.1.0",
     "@size-limit/preset-big-lib": "11.1.2",
     "@types/bun": "1.0.12",
