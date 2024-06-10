@@ -10,6 +10,7 @@ import {
   isNativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
 import { Img } from "./Img.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 
 // Note: Must not use useConnectUI here
 
@@ -30,7 +31,7 @@ export function TokenIcon(props: {
   const chainQuery = useChainQuery(props.chain);
 
   const tokenImage = useMemo(() => {
-    if (isNativeToken(props.token)) {
+    if (isNativeToken(props.token) || props.token.address === NATIVE_TOKEN_ADDRESS) {
       return chainQuery.data?.icon?.url;
     }
     return props.token.icon;
