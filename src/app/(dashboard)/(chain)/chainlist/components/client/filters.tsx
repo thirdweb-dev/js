@@ -315,10 +315,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
 };
 
 function isServiceActive(searchParams: URLSearchParams, service: string) {
-  return (
-    !searchParams.has("service") ||
-    searchParams.getAll("service").includes(service)
-  );
+  return searchParams.getAll("service").includes(service);
 }
 
 function toggleService(searchParams: URLSearchParams, service: string) {

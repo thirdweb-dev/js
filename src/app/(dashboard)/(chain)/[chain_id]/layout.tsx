@@ -10,7 +10,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { StarButton } from "../components/client/star-button";
-import { getChain, getChainMetadata } from "./utils";
 import { Metadata } from "next";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { redirect } from "next/navigation";
@@ -20,6 +19,7 @@ import { FaucetsSection } from "./components/server/faucets-section";
 import { ExplorersSection } from "./components/server/explorer-section";
 import { ChainIcon } from "../components/server/chain-icon";
 import { Badge } from "@/components/ui/badge";
+import { getChain, getChainMetadata } from "../utils";
 
 export async function generateMetadata(
   { params }: { params: { chain_id: string } },
@@ -85,7 +85,12 @@ export default async function ChainPageLayout({
       )}
       <section className="flex flex-col h-full gap-8">
         {/* Header */}
-        <header className="py-6 md:py-20 border-b relative overflow-hidden">
+        <header
+          className={cn(
+            "py-6 md:py-8 md:pb-2 border-b relative overflow-hidden",
+            chainMetadata?.headerImgUrl && "md:py-20",
+          )}
+        >
           {/* header background image shenanigans */}
           <div className="absolute top-0 left-0 right-0 bottom-0 -z-10">
             <div
@@ -100,6 +105,7 @@ export default async function ChainPageLayout({
             />
             <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/10 to-secondary/40 backdrop-blur-md lg:backdrop-blur-lg shadow-inner" />
           </div>
+
           {/* end header shaningans */}
 
           <div className="container px-4 flex flex-col gap-2 md:gap-6">

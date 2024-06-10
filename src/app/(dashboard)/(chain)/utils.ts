@@ -1,12 +1,25 @@
 import "server-only";
 
 import { THIRDWEB_API_HOST } from "constants/urls";
-import { ChainMetadataWithServices } from "../types/chain";
+import { ChainMetadataWithServices } from "./types/chain";
 import { redirect } from "next/navigation";
 // TEMPORARY
 import xaiBanner from "./temp-assets/xai-banner.jpeg";
 import baseBanner from "./temp-assets/base-banner.jpeg";
 // END TEMPORARY
+
+export async function getChains() {
+  const response = await fetch(
+    `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
+    { next: { revalidate: 3600 } },
+  );
+
+  if (!response.ok) {
+    response.body?.cancel();
+    throw new Error("Failed to fetch chains");
+  }
+  return (await response.json()).data as ChainMetadataWithServices[];
+}
 
 export async function getChain(
   chainIdOrSlug: string,

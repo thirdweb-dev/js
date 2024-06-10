@@ -14,13 +14,13 @@ import {
   ChainSupportedService,
 } from "../types/chain";
 import Fuse from "fuse.js";
-import { THIRDWEB_API_HOST } from "constants/urls";
 import { ChainlistPagination } from "./components/client/pagination";
 import { ChainListRow } from "./components/server/chainlist-row";
 import { StarButton } from "../components/client/star-button";
 import { ChainListCard } from "./components/server/chainlist-card";
 import { ChainListView } from "./components/client/view";
 import { Metadata } from "next";
+import { getChains } from "../utils";
 
 type SearchParams = Partial<{
   type: "mainnet" | "testnet";
@@ -38,19 +38,6 @@ type SearchParams = Partial<{
 // 24 because it is cleanly divisible by 2,3 and 4 (for card grid)
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_PAGE = 1;
-
-async function getChains() {
-  const response = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
-    { next: { revalidate: 3600 } },
-  );
-
-  if (!response.ok) {
-    response.body?.cancel();
-    throw new Error("Failed to fetch chains");
-  }
-  return (await response.json()).data as ChainMetadataWithServices[];
-}
 
 async function getChainsToRender(params: SearchParams) {
   const chains = await getChains();

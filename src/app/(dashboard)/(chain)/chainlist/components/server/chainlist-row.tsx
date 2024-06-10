@@ -1,10 +1,11 @@
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, TicketCheckIcon, VerifiedIcon } from "lucide-react";
 import Link from "next/link";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { products } from "../../../components/server/products";
 import { ChainSupportedService } from "../../../types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
+import { getChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {
   favoriteButton: JSX.Element;
@@ -17,7 +18,7 @@ type ChainListRowProps = {
   iconUrl?: string;
 };
 
-export const ChainListRow: React.FC<ChainListRowProps> = ({
+export async function ChainListRow({
   isDeprecated,
   chainId,
   chainName,
@@ -26,7 +27,8 @@ export const ChainListRow: React.FC<ChainListRowProps> = ({
   enabledServices,
   favoriteButton,
   iconUrl,
-}) => {
+}: ChainListRowProps) {
+  const chainMetadata = await getChainMetadata(chainId);
   return (
     <tr className="border-b relative hover:bg-secondary">
       <TableData>{favoriteButton}</TableData>
@@ -42,17 +44,17 @@ export const ChainListRow: React.FC<ChainListRowProps> = ({
               {chainName}
             </Link>
 
-            {/* {isVerified && (
+            {chainMetadata?.verified && (
               <ToolTipLabel label="Verified">
-                <Verified className="text-primary-foreground size-5 z-10 " />
+                <VerifiedIcon className="text-primary-foreground size-5 z-10 " />
               </ToolTipLabel>
             )}
 
-            {isGasSponsored && (
+            {chainMetadata?.gasSponsored && (
               <ToolTipLabel label="Gas Sponsored">
-                <FuelIcon className="text-primary-foreground size-5 z-10 " />
+                <TicketCheckIcon className="text-primary-foreground size-5 z-10 " />
               </ToolTipLabel>
-            )} */}
+            )}
 
             {isDeprecated && (
               <ToolTipLabel label="Deprecated">
@@ -70,24 +72,23 @@ export const ChainListRow: React.FC<ChainListRowProps> = ({
       <TableData>
         <div className="flex flex-row gap-14 items-center w-[520px] ">
           <div className="flex items-center gap-7 z-10">
-            {products
-              .filter((p) => enabledServices.includes(p.id))
-              .map((p) => {
-                return (
-                  <ProductIcon
-                    key={p.name}
-                    icon={p.icon}
-                    label={p.name}
-                    href={`/${chainSlug}/${p.id}`}
-                  />
-                );
-              })}
+            {products.map((p) => {
+              return (
+                <ProductIcon
+                  key={p.name}
+                  icon={p.icon}
+                  label={p.name}
+                  href={`/${chainSlug}/${p.id}`}
+                  isEnabled={enabledServices.includes(p.id)}
+                />
+              );
+            })}
           </div>
         </div>
       </TableData>
     </tr>
   );
-};
+}
 
 function TableData({ children }: { children: React.ReactNode }) {
   return <td className="p-4">{children}</td>;
@@ -97,11 +98,12 @@ function ProductIcon(props: {
   icon: React.FC<{ className?: string }>;
   label: string;
   href: string;
+  isEnabled: boolean;
 }) {
   return (
     <ToolTipLabel label={props.label}>
       <Link href={props.href}>
-        <props.icon className={cn("size-8 grayscale hover:grayscale-0")} />
+        <props.icon className={cn("size-8", !props.isEnabled && "grayscale")} />
       </Link>
     </ToolTipLabel>
   );

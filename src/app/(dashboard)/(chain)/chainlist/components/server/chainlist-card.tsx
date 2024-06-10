@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleAlertIcon } from "lucide-react";
+import { CircleAlertIcon, TicketCheckIcon, VerifiedIcon } from "lucide-react";
 import Link from "next/link";
 import { ChainSupportedService } from "../../../types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
+import { getChainMetadata } from "../../../utils";
 
 type ChainListCardProps = {
   favoriteButton: JSX.Element;
@@ -15,7 +16,7 @@ type ChainListCardProps = {
   iconUrl?: string;
 };
 
-export const ChainListCard: React.FC<ChainListCardProps> = ({
+export async function ChainListCard({
   isDeprecated,
   chainId,
   chainName,
@@ -24,7 +25,8 @@ export const ChainListCard: React.FC<ChainListCardProps> = ({
   enabledServices,
   favoriteButton,
   iconUrl,
-}) => {
+}: ChainListCardProps) {
+  const chainMetadata = await getChainMetadata(chainId);
   return (
     <div className="relative h-full">
       <Card className="h-full w-full hover:bg-muted">
@@ -68,25 +70,27 @@ export const ChainListCard: React.FC<ChainListCardProps> = ({
             </tbody>
           </table>
 
-          {isDeprecated && (
+          {(isDeprecated ||
+            chainMetadata?.gasSponsored ||
+            chainMetadata?.verified) && (
             <div className="mt-5 flex gap-5 border-t pt-4">
-              {/* {!isDeprecated && (
+              {!isDeprecated && (
                 <>
-                  {isVerified && (
+                  {chainMetadata?.verified && (
                     <div className="gap-1.5 flex items-center">
-                      <Verified className="text-primary-foreground size-5" />
+                      <VerifiedIcon className="text-primary-foreground size-5" />
                       <p className="text-sm">Verified</p>
                     </div>
                   )}
 
-                  {isGasSponsored && (
+                  {chainMetadata?.gasSponsored && (
                     <div className="gap-1.5 flex items-center">
-                      <FuelIcon className="text-primary-foreground size-5" />
+                      <TicketCheckIcon className="text-primary-foreground size-5" />
                       <p className="text-sm">Gas Sponsored</p>
                     </div>
                   )}
                 </>
-              )} */}
+              )}
 
               {isDeprecated && (
                 <div className="gap-1.5 flex items-center">
@@ -100,4 +104,4 @@ export const ChainListCard: React.FC<ChainListCardProps> = ({
       </Card>
     </div>
   );
-};
+}

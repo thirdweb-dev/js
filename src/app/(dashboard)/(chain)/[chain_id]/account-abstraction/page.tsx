@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { getChain } from "../utils";
 import { InfoCard } from "../components/server/info-card";
+import { getChain } from "../../utils";
 
 export default async function Page(props: { params: { chain_id: string } }) {
   const chain = await getChain(props.params.chain_id);
