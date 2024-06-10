@@ -34,7 +34,7 @@ export type GetBuyWithFiatQuoteParams = {
    *
    * Currently, only `USD` is supported.
    */
-  fromCurrencySymbol: "USD";
+  fromCurrencySymbol: "USD" | "CAD" | "GBP" | "EUR";
 
   /**
    * The maximum slippage in basis points (bps) allowed for the transaction.
