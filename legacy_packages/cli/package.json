@@ -38,7 +38,7 @@
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "async-retry": "^1.3.3",
-    "commander": "^9.5.0",
+    "commander": "^12.1.0",
     "detect-package-manager": "^2.0.1",
     "enquirer": "^2.4.1",
     "ethers": "^5.7.2",
