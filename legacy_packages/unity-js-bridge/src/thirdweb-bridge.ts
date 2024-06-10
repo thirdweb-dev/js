@@ -27,6 +27,7 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
+import { RabbyWallet } from "@thirdweb-dev/wallets/evm/wallets/rabby";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import {
@@ -68,6 +69,7 @@ const bigNumberReplacer = (_key: string, value: any) => {
 const SUPPORTED_WALLET_IDS = [
   "injected",
   "metamask",
+  "rabby",
   "walletConnect",
   "coinbase",
   "localWallet",
@@ -171,7 +173,7 @@ class ThirdwebBridge implements TWBridge {
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
-      (globalThis as any).X_SDK_VERSION = "4.15.1";
+      (globalThis as any).X_SDK_VERSION = "4.16.1";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
@@ -232,6 +234,14 @@ class ThirdwebBridge implements TWBridge {
           break;
         case "metamask":
           walletInstance = new MetaMaskWallet({
+            dappMetadata,
+            chains: supportedChains,
+            clientId: sdkOptions.clientId,
+          });
+          break;
+        case "rabby":
+          walletInstance = new RabbyWallet({
+            projectId: sdkOptions.wallet?.walletConnectProjectId,
             dappMetadata,
             chains: supportedChains,
             clientId: sdkOptions.clientId,

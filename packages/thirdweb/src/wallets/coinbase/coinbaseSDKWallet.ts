@@ -6,9 +6,9 @@ import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
+  serializeTypedData,
   validateTypedData,
 } from "viem";
-import { stringify } from "../../utils/json.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
@@ -22,7 +22,6 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
-  isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
@@ -333,10 +332,12 @@ function createAccount(provider: ProviderInterface, address: string) {
       // as we can't statically check this with TypeScript.
       validateTypedData({ domain, message, primaryType, types });
 
-      const stringifiedData = stringify(
-        { domain: domain ?? {}, message, primaryType, types },
-        (_, value) => (isHex(value) ? value.toLowerCase() : value),
-      );
+      const stringifiedData = serializeTypedData({
+        domain: domain ?? {},
+        message,
+        primaryType,
+        types,
+      });
 
       return await provider.request({
         method: "eth_signTypedData_v4",

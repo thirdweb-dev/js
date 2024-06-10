@@ -484,7 +484,13 @@ function alignTxToEthers(
     }
   }
 
-  return { ...rest, gasLimit: gas, to, type };
+  return {
+    ...rest,
+    gasLimit: gas,
+    to,
+    type,
+    accessList: tx.accessList as ethers5.utils.AccessListish | undefined,
+  };
 }
 
 async function alignTxFromEthers(

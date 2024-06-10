@@ -4,7 +4,18 @@ export default {
   "chainId": 2340,
   "explorers": [
     {
-      "name": "Atleta Testnet Explorer",
+      "name": "Atleta Olympia Explorer",
+      "url": "https://blockscout.atleta.network",
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmV2JVr4FCcb6aRiUoA3wS5erLoxtLBLonQ1Nvz8fNuEcR",
+        "width": 128,
+        "height": 128,
+        "format": "png"
+      }
+    },
+    {
+      "name": "Atleta Olympia Polka Explorer",
       "url": "https://polkadot-explorer.atleta.network/#/explorer",
       "standard": "none",
       "icon": {
@@ -16,7 +27,7 @@ export default {
     }
   ],
   "faucets": [
-    "https://faucet.atleta.network"
+    "https://app-olympia.atleta.network/faucet"
   ],
   "icon": {
     "url": "ipfs://QmV2JVr4FCcb6aRiUoA3wS5erLoxtLBLonQ1Nvz8fNuEcR",
@@ -35,7 +46,8 @@ export default {
   "rpc": [
     "https://2340.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "wss://testnet-rpc.atleta.network:9944",
-    "https://testnet-rpc.atleta.network:9944"
+    "https://testnet-rpc.atleta.network:9944",
+    "https://testnet-rpc.atleta.network"
   ],
   "shortName": "atla",
   "slip44": 1,
