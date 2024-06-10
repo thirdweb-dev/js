@@ -97,7 +97,9 @@ function SocialLogin(
 ) {
   const { theme, wallet, auth, client, connectMutation } = props;
   const strategy = props.auth;
+  const [selectedAuth, setSelectedAuth] = useState<InAppWalletSocialAuth>();
   const connectInAppWallet = async () => {
+    setSelectedAuth(strategy);
     await connectMutation.connect(async () => {
       await wallet.connect({
         client,
@@ -114,7 +116,7 @@ function SocialLogin(
         { borderColor: theme.colors.borderColor },
       ]}
     >
-      {connectMutation.isConnecting ? (
+      {connectMutation.isConnecting && selectedAuth === auth ? (
         <ThemedSpinner color={theme.colors.primaryText} />
       ) : (
         <TouchableOpacity
