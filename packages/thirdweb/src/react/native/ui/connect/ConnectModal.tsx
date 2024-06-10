@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -74,7 +68,7 @@ export function ConnectModal(
           style={{
             flexDirection: "column",
             gap: spacing.md,
-            paddingHorizontal: spacing.lg,
+            paddingHorizontal: containerType === "modal" ? spacing.lg : 0,
           }}
         >
           <OtpLogin
@@ -108,6 +102,7 @@ export function ConnectModal(
           externalWallets={externalWallets}
           client={client}
           connectMutation={connectMutation}
+          containerType={containerType}
         />
       </>
     );
@@ -124,7 +119,7 @@ export function ConnectModal(
           style={{
             flexDirection: "column",
             gap: spacing.md,
-            paddingHorizontal: spacing.lg,
+            paddingHorizontal: containerType === "modal" ? spacing.lg : 0,
           }}
         >
           {inAppWallet && (
@@ -162,10 +157,8 @@ export function ConnectModal(
           : styles.embedContainer
       }
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        {content}
-        {showBranding && <PoweredByThirdweb theme={theme} />}
-      </SafeAreaView>
+      {content}
+      {showBranding && <PoweredByThirdweb theme={theme} />}
     </ThemedView>
   );
 }
@@ -189,7 +182,6 @@ function Header({
           flexDirection: "row",
           gap: spacing.sm,
           alignItems: "center",
-          paddingHorizontal: spacing.lg,
           paddingTop: spacing.lg,
         }}
       >
@@ -243,7 +235,6 @@ function OrDivider({ theme }: { theme: Theme }) {
         alignItems: "center",
         justifyContent: "center",
         gap: spacing.lg,
-        paddingHorizontal: spacing.lg,
       }}
     >
       <View
@@ -275,7 +266,7 @@ function PoweredByThirdweb({ theme }: { theme: Theme }) {
         justifyContent: "center",
         alignItems: "center",
         gap: spacing.xs,
-        paddingBottom: Platform.OS === "android" ? spacing.md : 0, // handled already by safe area view on ios
+        paddingBottom: Platform.OS === "android" ? spacing.md : spacing.lg,
       }}
     >
       <ThemedText theme={theme} type="subtext">
@@ -315,10 +306,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg,
-  },
-  contentContainer: {
-    flex: 1,
-    flexDirection: "column",
-    paddingHorizontal: spacing.lg,
   },
 });

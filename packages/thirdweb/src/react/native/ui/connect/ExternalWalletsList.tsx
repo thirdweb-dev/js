@@ -21,6 +21,7 @@ export type ExternalWalletsUiProps = {
   theme: Theme;
   client: ThirdwebClient;
   connectMutation: ReturnType<typeof useConnect>;
+  containerType: "modal" | "embed";
 };
 
 export function ExternalWalletsList(
@@ -28,7 +29,12 @@ export function ExternalWalletsList(
 ) {
   return (
     <View style={styles.container}>
-      <ScrollView style={{ flex: 1, paddingHorizontal: spacing.lg }}>
+      <ScrollView
+        style={{
+          flex: 1,
+          paddingHorizontal: props.containerType === "modal" ? spacing.lg : 0,
+        }}
+      >
         <View style={{ flexDirection: "column", gap: spacing.md }}>
           {props.externalWallets.map((wallet) => (
             <ExternalWalletRow key={wallet.id} wallet={wallet} {...props} />
