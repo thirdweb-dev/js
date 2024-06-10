@@ -114,6 +114,9 @@ export function createConnectionManager(storage: AsyncStorage) {
 
     handleSetActiveWallet(activeWallet);
 
+    // add personal wallet to connected wallets list
+    addConnectedWallet(personalWallet);
+
     if (personalWallet.id !== "smart") {
       await storage.setItem(LAST_ACTIVE_EOA_ID, personalWallet.id);
     }
