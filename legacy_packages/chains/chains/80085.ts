@@ -6,25 +6,13 @@ export default {
     {
       "name": "Beratrail",
       "url": "https://artio.beratrail.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmW2xrDkSqBB7qgftp5PUecEGg4zwUBJgSN45CaR7CKJMr",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://artio.faucet.berachain.com"
   ],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmW2xrDkSqBB7qgftp5PUecEGg4zwUBJgSN45CaR7CKJMr",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://www.berachain.com/",
   "name": "Berachain Artio",
   "nativeCurrency": {

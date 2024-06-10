@@ -1,41 +1,55 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Superseed",
+  "chain": "Superseed Sepolia Testnet",
   "chainId": 53302,
   "explorers": [
     {
-      "name": "Sepolia Superseed explorer",
+      "name": "blockscout",
       "url": "https://sepolia-explorer.superseed.xyz",
-      "standard": "EIP155",
+      "standard": "EIP3091",
       "icon": {
-        "url": "ipfs://QmQcN2z3QZzG4tUD4k5Pg1otHpKhU4s3oeCpZKLwj8iWfo",
+        "url": "ipfs://QmSyw4AhwGALxb17qWLZgzpHJksqdqNvWuNrhuoMPfb61C",
         "width": 512,
         "height": 512,
         "format": "svg"
       }
     }
   ],
-  "faucets": [],
+  "faucets": [
+    "https://sepoliafaucet.com"
+  ],
   "features": [],
   "icon": {
-    "url": "ipfs://QmQcN2z3QZzG4tUD4k5Pg1otHpKhU4s3oeCpZKLwj8iWfo",
+    "url": "ipfs://QmSyw4AhwGALxb17qWLZgzpHJksqdqNvWuNrhuoMPfb61C",
     "width": 512,
     "height": 512,
     "format": "svg"
   },
-  "name": "Superseed",
+  "infoURL": "https://www.superseed.xyz",
+  "name": "Superseed Sepolia Testnet",
   "nativeCurrency": {
     "name": "ETH",
     "symbol": "ETH",
     "decimals": 18
   },
   "networkId": 53302,
+  "parent": {
+    "type": "L2",
+    "chain": "eip155-11155111",
+    "bridges": [
+      {
+        "url": "https://sepolia-bridge.superseed.xyz/"
+      }
+    ]
+  },
   "redFlags": [],
   "rpc": [
     "https://53302.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia.superseed.xyz"
+    "https://sepolia.superseed.xyz",
+    "wss://sepolia.superseed.xyz"
   ],
-  "shortName": "Superseed",
-  "slug": "superseed",
+  "shortName": "superseed-sepolia-testnet",
+  "slip44": 1,
+  "slug": "superseed-sepolia-testnet",
   "testnet": true
 } as const satisfies Chain;
