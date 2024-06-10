@@ -1,14 +1,8 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 9981,
-  "explorers": [
-    {
-      "name": "Volley Mainnet Explorer",
-      "url": "https://volleyscan.io",
-      "standard": "EIP3091"
-    }
-  ],
+  "chainId": 53654,
+  "explorers": [],
   "faucets": [],
   "features": [],
   "icon": {
@@ -18,20 +12,19 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://avacloud.io",
-  "name": "QaUser4131",
+  "name": "QI0610S1TS",
   "nativeCurrency": {
-    "name": "QaUser4131 Token",
-    "symbol": "SGT",
+    "name": "QI0610S1TS Token",
+    "symbol": "TQA",
     "decimals": 18
   },
-  "networkId": 9981,
+  "networkId": 53654,
   "redFlags": [],
   "rpc": [
-    "https://9981.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc",
-    "https://main-rpc.volleychain.com"
+    "https://53654.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
   ],
-  "shortName": "QaUser4131",
-  "slug": "qauser4131",
+  "shortName": "QI0610S1TS",
+  "slug": "qi0610s1ts",
   "testnet": true
 } as const satisfies Chain;

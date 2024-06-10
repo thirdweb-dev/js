@@ -6,22 +6,10 @@ export default {
     {
       "name": "Ultron Testnet Explorer",
       "url": "https://explorer.ultron-dev.io",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://ultron.foundation",
   "name": "Ultron Testnet",
   "nativeCurrency": {
