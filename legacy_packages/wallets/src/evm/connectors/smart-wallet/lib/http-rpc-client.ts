@@ -3,7 +3,11 @@ import { UserOperationStruct } from "@account-abstraction/contracts";
 import { isTwUrl } from "../../../utils/url";
 import { hexlifyUserOp } from "./utils";
 import { setAnalyticsHeaders } from "../../../utils/headers";
-import { EstimateUserOpGasRawResult, EstimateUserOpGasResult } from "../types";
+import {
+  EstimateUserOpGasRawResult,
+  EstimateUserOpGasResult,
+  ZkTransactionInput,
+} from "../types";
 import { MANAGED_ACCOUNT_GAS_BUFFER } from "./constants";
 
 export const DEBUG = false; // TODO set as public flag
@@ -85,6 +89,9 @@ export class HttpRpcClient {
   }
 
   async validateChainId(): Promise<void> {
+    if (this.chainId === 300 || this.chainId === 324) {
+      return;
+    }
     // validate chainId is in sync with expected chainid
     const chain = await this.userOpJsonRpcProvider.send("eth_chainId", []);
     const bundlerChain = parseInt(chain);
@@ -160,6 +167,27 @@ export class HttpRpcClient {
       "eth_getUserOperationReceipt",
       [userOpHash],
     );
+  }
+
+  async zkPaymasterData(
+    transactionInput: providers.TransactionRequest,
+  ): Promise<any> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send("zk_paymasterData", [
+      await hexlifyUserOp({
+        ...transactionInput,
+        gas: transactionInput.gasLimit,
+      }),
+    ]);
+  }
+
+  async zkBroadcastTransaction(
+    transactionInput: ZkTransactionInput,
+  ): Promise<any> {
+    await this.initializing;
+    return await this.userOpJsonRpcProvider.send("zk_broadcastTransaction", [
+      transactionInput,
+    ]);
   }
 
   private async printUserOperation(

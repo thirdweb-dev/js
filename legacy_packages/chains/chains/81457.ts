@@ -53,7 +53,8 @@ export default {
     "https://rpc.ankr.com/blast",
     "https://blast.din.dev/rpc",
     "https://blast.blockpi.network/v1/rpc/public",
-    "https://blastl2-mainnet.public.blastapi.io"
+    "https://blastl2-mainnet.public.blastapi.io",
+    "https://blast-rpc.publicnode.com"
   ],
   "shortName": "blastmainnet",
   "slug": "blast-blastmainnet",

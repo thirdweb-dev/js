@@ -35,7 +35,9 @@ export default {
   "rpc": [
     "https://9000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmos-testnet.lava.build",
-    "https://eth.bd.evmos.dev:8545"
+    "https://eth.bd.evmos.dev:8545",
+    "https://evmos-testnet-evm-rpc.publicnode.com",
+    "wss://evmos-testnet-evm-rpc.publicnode.com"
   ],
   "shortName": "evmos-testnet",
   "slip44": 1,

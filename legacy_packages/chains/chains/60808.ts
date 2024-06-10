@@ -42,7 +42,9 @@ export default {
   "rpc": [
     "https://60808.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gobob.xyz",
-    "wss://rpc.gobob.xyz"
+    "wss://rpc.gobob.xyz",
+    "https://bob-mainnet.public.blastapi.io",
+    "wss://bob-mainnet.public.blastapi.io"
   ],
   "shortName": "bob",
   "slug": "bob",
