@@ -6,10 +6,22 @@ export default {
     {
       "name": "Ultron Explorer",
       "url": "https://ulxscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmPC6odFVyAQrXJQaZJVFpEQfRNbzZ5BjDZ7KBKmXPaYDw",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://ultron.foundation",
   "name": "Ultron Mainnet",
   "nativeCurrency": {

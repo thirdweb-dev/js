@@ -4,12 +4,6 @@ export default {
   "chainId": 1971,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreigcquvoalec3ll2m26v4wsx5enlxwyn6nk2mgfqwncyqrgwivla5u",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://1971.network/",
   "name": "Atelier",
   "nativeCurrency": {
