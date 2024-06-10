@@ -31,8 +31,6 @@ export type GetBuyWithFiatQuoteParams = {
 
   /**
    * Symbol of the fiat currency to buy the token with.
-   *
-   * Currently, only `USD` is supported.
    */
   fromCurrencySymbol: "USD" | "CAD" | "GBP" | "EUR";
 
