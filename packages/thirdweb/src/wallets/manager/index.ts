@@ -22,6 +22,7 @@ export type ConnectionManager = ReturnType<typeof createConnectionManager>;
 export type ConnectManagerOptions = {
   client: ThirdwebClient;
   accountAbstraction?: SmartWalletOptions;
+  onConnect?: (wallet: Wallet) => void;
 };
 
 /**
@@ -134,6 +135,7 @@ export function createConnectionManager(storage: AsyncStorage) {
   const connect = async (wallet: Wallet, options?: ConnectManagerOptions) => {
     // connectedWallet can be either wallet or smartWallet based on
     const connectedWallet = await handleConnection(wallet, options);
+    options?.onConnect?.(connectedWallet);
     handleSetActiveWallet(connectedWallet);
     return connectedWallet;
   };

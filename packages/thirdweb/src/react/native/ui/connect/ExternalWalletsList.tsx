@@ -9,7 +9,7 @@ import {
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
+import type { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
 import {
   useWalletImage,
   useWalletInfo,
@@ -20,44 +20,33 @@ import { ThemedText } from "../components/text.js";
 export type ExternalWalletsUiProps = {
   theme: Theme;
   client: ThirdwebClient;
-  externalWallets: Wallet[];
+  connectMutation: ReturnType<typeof useConnect>;
 };
 
-export function ExternalWalletsList({
-  theme,
-  client,
-  externalWallets,
-}: ExternalWalletsUiProps) {
+export function ExternalWalletsList(
+  props: ExternalWalletsUiProps & { externalWallets: Wallet[] },
+) {
   return (
     <View style={styles.container}>
       <ScrollView style={{ flex: 1, paddingHorizontal: spacing.lg }}>
         <View style={{ flexDirection: "column", gap: spacing.md }}>
-          {externalWallets.map((wallet) => (
-            <ExternalWalletRow
-              key={wallet.id}
-              wallet={wallet}
-              theme={theme}
-              client={client}
-            />
+          {props.externalWallets.map((wallet) => (
+            <ExternalWalletRow key={wallet.id} wallet={wallet} {...props} />
           ))}
         </View>
       </ScrollView>
-      <NewToWallets theme={theme} />
+      <NewToWallets theme={props.theme} />
     </View>
   );
 }
 
-function ExternalWalletRow({
-  wallet,
-  theme,
-  client,
-}: { client: ThirdwebClient; theme: Theme; wallet: Wallet }) {
+function ExternalWalletRow(props: ExternalWalletsUiProps & { wallet: Wallet }) {
+  const { wallet, theme, client, connectMutation } = props;
   const imageQuery = useWalletImage(wallet.id);
   const infoQuery = useWalletInfo(wallet.id);
-  const { connect } = useConnect(); // TODO pass account abstraction flag
 
   const connectWallet = () => {
-    connect(async () => {
+    connectMutation.connect(async () => {
       await wallet.connect({
         client,
       });

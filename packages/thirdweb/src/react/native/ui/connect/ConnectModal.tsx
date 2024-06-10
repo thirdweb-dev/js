@@ -12,6 +12,10 @@ import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
+import {
+  useActiveWallet,
+  useConnect,
+} from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getDefaultWallets } from "../../../web/wallets/defaultWallets.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
@@ -25,11 +29,14 @@ import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
 
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const theme = parseTheme(props.theme);
+  const wallet = useActiveWallet();
   const adaptedProps = {
     ...props,
     connectModal: { ...props },
   } as ConnectButtonProps;
-  return <ConnectModal {...adaptedProps} theme={theme} containerType="embed" />;
+  return wallet ? null : (
+    <ConnectModal {...adaptedProps} theme={theme} containerType="embed" />
+  );
 }
 
 export function ConnectModal(
@@ -39,7 +46,12 @@ export function ConnectModal(
     containerType: "modal" | "embed";
   },
 ) {
-  const { theme, client, containerType } = props;
+  const { theme, client, containerType, accountAbstraction, onConnect } = props;
+  const connectMutation = useConnect({
+    client,
+    accountAbstraction,
+    onConnect,
+  });
   const wallets = props.wallets || getDefaultWallets(props);
   const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
@@ -71,6 +83,7 @@ export function ConnectModal(
             client={client}
             setScreen={setModalState}
             theme={theme}
+            connectMutation={connectMutation}
           />
         </View>
         {containerType === "modal" ? (
@@ -94,6 +107,7 @@ export function ConnectModal(
           theme={theme}
           externalWallets={externalWallets}
           client={client}
+          connectMutation={connectMutation}
         />
       </>
     );
@@ -117,7 +131,9 @@ export function ConnectModal(
             <InAppWalletUI
               wallet={inAppWallet}
               setScreen={setModalState}
-              {...props}
+              client={client}
+              theme={theme}
+              connectMutation={connectMutation}
             />
           )}
           <OrDivider theme={theme} />

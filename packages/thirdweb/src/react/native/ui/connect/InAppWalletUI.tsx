@@ -13,7 +13,7 @@ import type {
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
+import type { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
@@ -48,6 +48,7 @@ type InAppWalletFormUIProps = {
   theme: Theme;
   wallet: Wallet<"inApp">;
   setScreen: (screen: ModalState) => void;
+  connectMutation: ReturnType<typeof useConnect>;
 };
 
 export function InAppWalletUI(props: InAppWalletFormUIProps) {
@@ -94,11 +95,10 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
 function SocialLogin(
   props: InAppWalletFormUIProps & { auth: InAppWalletSocialAuth },
 ) {
-  const { theme, wallet, auth, client } = props;
-  const { connect, isConnecting } = useConnect(); // TODO pass account abstraction flag
+  const { theme, wallet, auth, client, connectMutation } = props;
   const strategy = props.auth;
   const connectInAppWallet = async () => {
-    await connect(async () => {
+    await connectMutation.connect(async () => {
       await wallet.connect({
         client,
         strategy: auth,
@@ -114,13 +114,13 @@ function SocialLogin(
         { borderColor: theme.colors.borderColor },
       ]}
     >
-      {isConnecting ? (
+      {connectMutation.isConnecting ? (
         <ThemedSpinner color={theme.colors.primaryText} />
       ) : (
         <TouchableOpacity
           key={strategy}
           onPress={connectInAppWallet}
-          disabled={isConnecting}
+          disabled={connectMutation.isConnecting}
         >
           <SvgXml width={38} height={38} xml={authOptionIcons[auth]} />
         </TouchableOpacity>
@@ -189,13 +189,12 @@ export function OtpLogin(
     auth: MultiStepAuthProviderType;
   },
 ) {
-  const { theme, auth, wallet, client } = props;
+  const { theme, auth, wallet, client, connectMutation } = props;
   const [verificationCode, setVerificationCode] = useState("");
-  const { connect, isConnecting, error } = useConnect();
 
   const connectInAppWallet = async () => {
     if (!verificationCode || !verificationCode) return;
-    await connect(async () => {
+    await connectMutation.connect(async () => {
       if (auth.strategy === "phone") {
         await wallet.connect({
           client,
@@ -243,9 +242,9 @@ export function OtpLogin(
         theme={theme}
         onPress={connectInAppWallet}
         variant="accent"
-        disabled={isConnecting}
+        disabled={connectMutation.isConnecting}
       >
-        {isConnecting ? (
+        {connectMutation.isConnecting ? (
           <ThemedSpinner color={theme.colors.accentButtonText} />
         ) : (
           <ThemedText
@@ -257,13 +256,13 @@ export function OtpLogin(
           </ThemedText>
         )}
       </ThemedButton>
-      {error && (
+      {connectMutation.error && (
         <ThemedText
           theme={theme}
           type="subtext"
           style={{ color: theme.colors.danger }}
         >
-          {error.message}
+          {connectMutation.error.message}
         </ThemedText>
       )}
     </>
