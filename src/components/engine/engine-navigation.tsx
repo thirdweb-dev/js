@@ -63,7 +63,7 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
     },
     {
       title: "Configuration",
-      children: <EngineConfiguration instanceUrl={instance.url} />,
+      children: <EngineConfiguration instance={instance} />,
     },
   ];
 

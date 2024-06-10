@@ -34,14 +34,23 @@ export type EngineInstance = {
 };
 
 // Not checking for null token because the token is required the tanstack useQuery hook
-const getEngineRequestHeaders = (token: string | null): HeadersInit => ({
-  "Content-Type": "application/json",
-  // This is required to skip the browser warning when using ngrok
-  // else, Engine -> Explorer doesn't work
-  // more info: https://ngrok.com/abuse
-  "ngrok-skip-browser-warning": "true",
-  Authorization: `Bearer ${token}`,
-});
+const getEngineRequestHeaders = (token: string | null): HeadersInit => {
+  const basicHeaders = {
+    "Content-Type": "application/json",
+    // This is required to skip the browser warning when using ngrok
+    // else, Engine -> Explorer doesn't work
+    // more info: https://ngrok.com/abuse
+    "ngrok-skip-browser-warning": "true",
+  };
+  if (!token) {
+    return basicHeaders;
+  }
+
+  return {
+    ...basicHeaders,
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 export function useEngineInstances() {
   const { user, isLoggedIn } = useLoggedInUser();
@@ -52,9 +61,6 @@ export function useEngineInstances() {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "GET",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}`);
@@ -121,7 +127,9 @@ export function useEngineSystemHealth(instanceUrl: string) {
   return useQuery(
     engineKeys.health(instanceUrl),
     async () => {
-      const res = await fetch(`${instanceUrl}system/health`);
+      const res = await fetch(`${instanceUrl}system/health`, {
+        headers: getEngineRequestHeaders(null),
+      });
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}`);
       }
@@ -1267,6 +1275,42 @@ export function useEngineSubscriptionsLastBlock(
     {
       enabled: !!instanceUrl && !!token,
       refetchInterval: autoUpdate ? 5_000 : false,
+    },
+  );
+}
+
+export interface EngineResourceMetrics {
+  error: string;
+  data: {
+    cpu: number;
+    memory: number;
+  };
+}
+
+export function useEngineResourceMetrics(engineId: string) {
+  const [enabled, setEnabled] = useState(true);
+
+  return useQuery(
+    engineKeys.metrics(engineId),
+    async () => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+      if (!res.ok) {
+        setEnabled(false);
+        throw new Error(`Unexpected status ${res.status}`);
+      }
+      const json = (await res.json()) as EngineResourceMetrics;
+      return json;
+    },
+    {
+      // Poll every 5s unless disabled.
+      enabled,
+      refetchInterval: 5_000,
     },
   );
 }
