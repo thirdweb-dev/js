@@ -15,12 +15,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://Qma6cGPCDcJPFxy5KQaMBrLtuVQiqeLncXVybcBoQuhai5",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "infoURL": "https://uptn.io",
   "name": "UPTN Testnet",
   "nativeCurrency": {
