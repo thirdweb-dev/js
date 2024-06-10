@@ -29,8 +29,8 @@ export default {
   "infoURL": "https://maxi.network",
   "name": "MAXI Chain Testnet",
   "nativeCurrency": {
-    "name": "MAXICOIN",
-    "symbol": "MAXI",
+    "name": "MAXI GAS",
+    "symbol": "MGAS",
     "decimals": 18
   },
   "networkId": 898,

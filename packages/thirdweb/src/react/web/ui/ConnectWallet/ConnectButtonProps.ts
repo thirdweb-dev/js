@@ -3,8 +3,8 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { Theme } from "../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../core/hooks/auth/useSiweAuth.js";
-import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
 import type { NetworkSelectorProps } from "./NetworkSelector.js";
 import type { SupportedTokens } from "./defaultTokens.js";
@@ -133,20 +133,6 @@ export type ConnectButton_detailsModalOptions = {
   networkSelector?: NetworkSelectorProps;
 
   /**
-   * Hide the "Switch to Personal wallet" option in the Connect Wallet details modal which is shown when wallet is connected to either Smart Wallet or Safe.
-   *
-   * By default it is `false`
-   * @example
-   * ```tsx
-   * <ConnectButton detailsModal={{
-   *    hideSwitchToPersonalWallet: true
-   *  }}
-   * />
-   * ```
-   */
-  hideSwitchToPersonalWallet?: boolean;
-
-  /**
    * Hide the "Disconnect Wallet" button in the `ConnectButton` Details Modal.
    *
    * By default it is `false`
@@ -220,8 +206,9 @@ export type ConnectButton_detailsButtonOptions = {
    * ```tsx
    * <ConnectButton detailsButton={{
    *    balanceToken:{
-   *      // show USDC balance when connected to Ethereum mainnet
-   *      1: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *      // show USDC balance when connected to Ethereum mainnet or Polygon
+   *      [ethereum.id]: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *      [polygon.id]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
    *    }
    *  })
    * />
@@ -647,8 +634,8 @@ export type ConnectButtonProps = {
   supportedTokens?: SupportedTokens;
 
   /**
-   * Callback to be called on successful connection of wallet - including auto connect.
-   * The callback is called with the connected wallet
+   * Called on connection of a wallet - including auto connect.
+   * The callback is called with the connected wallet as an argument.
    *
    * ```tsx
    * <ConnectButton
@@ -659,6 +646,19 @@ export type ConnectButtonProps = {
    * ```
    */
   onConnect?: (wallet: Wallet) => void;
+
+  /**
+   * Called when a wallet is disconnected.
+   *
+   * ```tsx
+   * <ConnectButton
+   *  onDisconnect={() => {
+   *    console.log("disconnected")
+   *  }}
+   * />
+   * ```
+   */
+  onDisconnect?: () => void;
 
   /**
    * Configure options for WalletConnect

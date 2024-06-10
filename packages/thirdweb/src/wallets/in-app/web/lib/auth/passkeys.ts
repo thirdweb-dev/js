@@ -147,6 +147,7 @@ export async function loginWithPasskey(options: {
  * Returns whether this device has a stored passkey ready to be used for sign-in
  * @param client - the thirdweb client
  * @returns whether the device has a stored passkey
+ * @wallet
  */
 export async function hasStoredPasskey(client: ThirdwebClient) {
   const storage = new LocalStorage({ clientId: client.clientId });

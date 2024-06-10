@@ -2,6 +2,7 @@ import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
+  serializeTypedData,
   validateTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
@@ -9,12 +10,10 @@ import { getCachedChain, getChainMetadata } from "../../chains/utils.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
-  isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { stringify } from "../../utils/json.js";
 import type { Ethereum } from "../interfaces/ethereum.js";
 import type {
   Account,
@@ -125,16 +124,7 @@ export async function autoConnectInjectedWallet(
   return onConnect(provider, address, connectedChain, emitter);
 }
 
-/**
- * Call this method when the wallet provider is connected or auto connected
- * @internal
- */
-async function onConnect(
-  provider: Ethereum,
-  address: string,
-  chain: Chain,
-  emitter: WalletEmitter<InjectedSupportedWalletIds>,
-): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
+function createAccount(provider: Ethereum, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -194,10 +184,12 @@ async function onConnect(
       // as we can't statically check this with TypeScript.
       validateTypedData({ domain, message, primaryType, types });
 
-      const stringifiedData = stringify(
-        { domain: domain ?? {}, message, primaryType, types },
-        (_, value) => (isHex(value) ? value.toLowerCase() : value),
-      );
+      const stringifiedData = serializeTypedData({
+        domain: domain ?? {},
+        message,
+        primaryType,
+        types,
+      });
 
       return await provider.request({
         method: "eth_signTypedData_v4",
@@ -206,6 +198,20 @@ async function onConnect(
     },
   };
 
+  return account;
+}
+
+/**
+ * Call this method when the wallet provider is connected or auto connected
+ * @internal
+ */
+async function onConnect(
+  provider: Ethereum,
+  address: string,
+  chain: Chain,
+  emitter: WalletEmitter<InjectedSupportedWalletIds>,
+): Promise<[Account, Chain, DisconnectFn, SwitchChainFn]> {
+  const account = createAccount(provider, address);
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
     provider.removeListener("chainChanged", onChainChanged);
@@ -219,10 +225,7 @@ async function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
 
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);

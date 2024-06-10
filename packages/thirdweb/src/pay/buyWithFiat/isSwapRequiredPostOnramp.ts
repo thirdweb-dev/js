@@ -11,7 +11,7 @@ import type { BuyWithFiatQuote } from "./getQuote.js";
  *
  * @param buyWithFiatQuote - The quote of type [`BuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatQuote) returned
  * by the [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function.
- * @buyFiat
+ * @buyCrypto
  */
 export function isSwapRequiredPostOnramp(
   buyWithFiatQuote: Pick<BuyWithFiatQuote, "toToken" | "onRampToken">,

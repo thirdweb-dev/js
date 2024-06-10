@@ -73,15 +73,17 @@ export function createConnectionManager(storage: AsyncStorage) {
   };
 
   const onWalletDisconnect = (wallet: Wallet) => {
-    const currentMap = walletIdToConnectedWalletMap.getValue();
     deleteConnectParamsFromStorage(storage, wallet.id);
+    removeConnectedWallet(wallet);
 
-    const newMap = new Map(currentMap);
-    newMap.delete(wallet.id);
+    // there are still connected wallets, switch to the next one
+    if (connectedWallets.getValue().length > 0) {
+      const nextWallet = connectedWallets.getValue()[0] as Wallet;
+      setActiveWallet(nextWallet);
+      return;
+    }
 
-    walletIdToConnectedWalletMap.setValue(newMap);
-
-    // if disconnecting the active wallet
+    // if disconnecting the last wallet
     if (activeWalletStore.getValue() === wallet) {
       storage.removeItem(LAST_ACTIVE_EOA_ID);
       activeAccountStore.setValue(undefined);

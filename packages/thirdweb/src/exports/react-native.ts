@@ -87,3 +87,12 @@ export {
   type AutoConnectProps,
 } from "../react/core/hooks/connection/AutoConnect.js";
 export { useAutoConnect } from "../react/core/hooks/connection/useAutoConnect.js";
+
+export { TransactionButton } from "../react/native/ui/TransactionButton/TrabsactionButton.js";
+export type { TransactionButtonProps } from "../react/core/hooks/transaction/button-core.js";
+
+// wallet info
+export {
+  useWalletInfo,
+  useWalletImage,
+} from "../react/web/ui/hooks/useWalletInfo.js";

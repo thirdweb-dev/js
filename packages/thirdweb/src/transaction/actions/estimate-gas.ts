@@ -8,14 +8,25 @@ import type { PreparedTransaction } from "../prepare-transaction.js";
 
 export type EstimateGasOptions = Prettify<
   {
-    transaction: PreparedTransaction;
+    /**
+     * The prepared transaction to estimate the gas for.
+     */
+    // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
+    // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
+    transaction: PreparedTransaction<any>;
   } & (
     | {
+        /**
+         * The account the transaction would be sent from.
+         */
         account: Account;
         from?: never;
       }
     | {
         account?: never;
+        /**
+         * The address the transaction would be sent from.
+         */
         from?: string;
       }
   )
@@ -23,7 +34,10 @@ export type EstimateGasOptions = Prettify<
 
 export type EstimateGasResult = bigint;
 
-const cache = new WeakMap<PreparedTransaction, Promise<EstimateGasResult>>();
+const cache = new WeakMap<
+  PreparedTransaction & { from: string | undefined },
+  Promise<EstimateGasResult>
+>();
 
 /**
  * Estimates the gas required to execute a transaction. The gas is returned as a `bigint` and in gwei units.
@@ -41,9 +55,15 @@ const cache = new WeakMap<PreparedTransaction, Promise<EstimateGasResult>>();
 export async function estimateGas(
   options: EstimateGasOptions,
 ): Promise<EstimateGasResult> {
-  if (cache.has(options.transaction)) {
+  // from is:
+  // 1. the user specified from address
+  // 2. the passed in account address
+  // 3. the passed in wallet's account address
+  const from = options.from ?? options.account?.address ?? undefined;
+  const txWithFrom = { ...options.transaction, from };
+  if (cache.has(txWithFrom)) {
     // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
-    return cache.get(options.transaction)!;
+    return cache.get(txWithFrom)!;
   }
   const { account } = options;
   const promise = (async () => {
@@ -84,11 +104,6 @@ export async function estimateGas(
     ]);
 
     const rpcRequest = getRpcClient(options.transaction);
-    // from is:
-    // 1. the user specified from address
-    // 2. the passed in account address
-    // 3. the passed in wallet's account address
-    const from = options.from ?? options.account?.address ?? undefined;
     try {
       let gas = await eth_estimateGas(
         rpcRequest,
@@ -110,6 +125,6 @@ export async function estimateGas(
       });
     }
   })();
-  cache.set(options.transaction, promise);
+  cache.set(txWithFrom, promise);
   return promise;
 }

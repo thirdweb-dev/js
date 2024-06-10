@@ -33,7 +33,7 @@ export type BuyWithFiatHistoryParams = {
 
 /**
  * The results for [`getBuyWithFiatHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatHistory) function
- * @buyFiat
+ * @buyCrypto
  */
 export type BuyWithFiatHistoryData = {
   page: BuyWithFiatStatus[];
@@ -60,7 +60,7 @@ export type BuyWithFiatHistoryData = {
  * })
  * ```
  * @returns Object of type [`BuyWithFiatHistoryData`](https://portal.thirdweb.com/references/typescript/v5/BuyWithFiatHistoryData)
- * @buyFiat
+ * @buyCrypto
  */
 export async function getBuyWithFiatHistory(
   params: BuyWithFiatHistoryParams,

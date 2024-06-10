@@ -4,12 +4,12 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { Theme } from "../../../core/design-system/index.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
-import type { Theme } from "../design-system/index.js";
 import type { LocaleId } from "../types.js";
 import ConnectModal from "./Modal/ConnectModal.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
@@ -42,7 +42,7 @@ import type { WelcomeScreen } from "./screens/types.js";
  * The returned `connect` method takes an object of type [UseConnectModalOptions](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps)
  * as an argument to customize the Connect Modal UI. Refer to [UseConnectModalOptions](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available options.
  *
- * @connectWallet
+ * @walletConnection
  */
 export function useConnectModal() {
   const setRootEl = useContext(SetRootElementContext);

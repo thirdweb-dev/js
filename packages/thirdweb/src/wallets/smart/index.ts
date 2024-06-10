@@ -6,8 +6,13 @@ import {
   hashTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
+import { getCachedChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
+import {
+  populateEip712Transaction,
+  signEip712Transaction,
+} from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
@@ -22,7 +27,12 @@ import type {
   WalletConnectionOption,
   WalletId,
 } from "../wallet-types.js";
-import { bundleUserOp, getUserOpReceipt } from "./lib/bundler.js";
+import {
+  broadcastZkTransaction,
+  bundleUserOp,
+  getUserOpReceipt,
+  getZkPaymasterData,
+} from "./lib/bundler.js";
 import {
   predictAddress,
   prepareBatchExecute,
@@ -30,7 +40,12 @@ import {
 } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
-import type { SmartAccountOptions } from "./types.js";
+import { isNativeAAChain } from "./lib/utils.js";
+import type {
+  SmartAccountOptions,
+  SmartWalletConnectionOptions,
+  SmartWalletOptions,
+} from "./types.js";
 
 /**
  * Checks if the provided wallet is a smart wallet.
@@ -72,6 +87,20 @@ export async function connectSmartWallet(
   const options = creationOptions;
   const factoryAddress = options.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY;
   const chain = connectChain ?? options.chain;
+  const sponsorGas =
+    "gasless" in options ? options.gasless : options.sponsorGas;
+
+  if (isNativeAAChain(chain)) {
+    return [
+      createZkSyncAccount({
+        creationOptions,
+        connectionOptions,
+        chain,
+        sponsorGas,
+      }),
+      chain,
+    ];
+  }
 
   const factoryContract = getContract({
     client: client,
@@ -85,9 +114,10 @@ export async function connectSmartWallet(
     ...options,
   })
     .then((address) => address)
-    .catch(() => {
+    .catch((err) => {
       throw new Error(
         `Failed to get account address with factory contract ${factoryContract.address} on chain ID ${chain.id}. Are you on the right chain?`,
+        { cause: err },
       );
     });
 
@@ -96,9 +126,6 @@ export async function connectSmartWallet(
     address: accountAddress,
     chain,
   });
-
-  const sponsorGas =
-    "gasless" in options ? options.gasless : options.sponsorGas;
 
   const account = await createSmartAccount({
     ...options,
@@ -330,6 +357,83 @@ async function createSmartAccount(
   return account;
 }
 
+function createZkSyncAccount(args: {
+  creationOptions: SmartWalletOptions;
+  connectionOptions: SmartWalletConnectionOptions;
+  chain: Chain;
+  sponsorGas: boolean;
+}): Account {
+  const { creationOptions, connectionOptions, chain } = args;
+  const account = {
+    address: connectionOptions.personalAccount.address,
+    async sendTransaction(transaction: SendTransactionOption) {
+      // override passed tx, we have to refetch gas and fees always
+      const prepTx = {
+        data: transaction.data,
+        to: transaction.to ?? undefined,
+        value: transaction.value ?? 0n,
+        chain: getCachedChain(transaction.chainId),
+        client: connectionOptions.client,
+      };
+
+      let serializableTransaction = await populateEip712Transaction({
+        account,
+        transaction: prepTx,
+      });
+
+      if (args.sponsorGas) {
+        // get paymaster input
+        const pmData = await getZkPaymasterData({
+          options: {
+            client: connectionOptions.client,
+            overrides: creationOptions.overrides,
+            chain,
+          },
+          transaction: serializableTransaction,
+        });
+        serializableTransaction = {
+          ...serializableTransaction,
+          ...pmData,
+        };
+      }
+
+      // sign
+      const signedTransaction = await signEip712Transaction({
+        account,
+        chainId: chain.id,
+        eip712Transaction: serializableTransaction,
+      });
+
+      // broadcast via bundler
+      const txHash = await broadcastZkTransaction({
+        options: {
+          client: connectionOptions.client,
+          overrides: creationOptions.overrides,
+          chain,
+        },
+        transaction: serializableTransaction,
+        signedTransaction,
+      });
+      return {
+        transactionHash: txHash.transactionHash,
+        client: connectionOptions.client,
+        chain: chain,
+      };
+    },
+    async signMessage({ message }: { message: SignableMessage }) {
+      return connectionOptions.personalAccount.signMessage({ message });
+    },
+    async signTypedData<
+      const typedData extends TypedData | Record<string, unknown>,
+      primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+      const typedData = parseTypedData(_typedData);
+      return connectionOptions.personalAccount.signTypedData(typedData);
+    },
+  };
+  return account;
+}
+
 async function _deployAccount(args: {
   options: SmartAccountOptions;
   account: Account;
@@ -345,6 +449,7 @@ async function _deployAccount(args: {
     chain: options.chain,
     to: accountContract.address,
     value: 0n,
+    gas: 50000n, // force gas to avoid simulation error
   });
   const deployResult = await sendTransaction({
     transaction: dummyTx,

@@ -5,8 +5,8 @@ export default {
   "explorers": [
     {
       "name": "bitlayer testnet scan",
-      "url": "https://testnet-scan.bitlayer.org",
-      "standard": "none"
+      "url": "https://testnet.btrscan.com",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [

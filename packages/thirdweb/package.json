@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.24.0",
+  "version": "5.28.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -176,7 +176,7 @@
     "!tsconfig.build.json"
   ],
   "dependencies": {
-    "@coinbase/wallet-sdk": "4.0.0-rc.2",
+    "@coinbase/wallet-sdk": "4.0.3",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
     "@google/model-viewer": "2.1.1",
@@ -189,6 +189,7 @@
     "@radix-ui/react-tooltip": "1.0.7",
     "@tanstack/react-query": "5.29.2",
     "@walletconnect/ethereum-provider": "2.12.2",
+    "@walletconnect/sign-client": "^2.13.1",
     "abitype": "1.0.0",
     "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
@@ -196,11 +197,12 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.10.9"
+    "viem": "2.13.7"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
     "@aws-sdk/credential-providers": "^3",
+    "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
     "amazon-cognito-identity-js": "^6",
     "aws-amplify": "^5",
@@ -209,12 +211,15 @@
     "react": ">=18",
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
-    "react-native-quick-crypto": ">=0.6.1",
+    "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "react-native": {
       "optional": true
     },
     "ethers": {
@@ -249,6 +254,9 @@
     },
     "@react-native-async-storage/async-storage": {
       "optional": true
+    },
+    "@coinbase/wallet-mobile-sdk": {
+      "optional": true
     }
   },
   "scripts": {
@@ -282,9 +290,11 @@
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
     "@aws-sdk/credential-providers": "3.577.0",
+    "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/cross-spawn": "^6.0.6",
     "@types/react": "18.2.17",
     "@vitejs/plugin-react": "^4.2.1",

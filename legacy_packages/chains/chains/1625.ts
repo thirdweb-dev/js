@@ -22,9 +22,9 @@ export default {
     }
   ],
   "icon": {
-    "url": "ipfs://QmZR15YFtH3EyQp3V7vPkm8PFyevXs2w3y2Trf2k6ikVQL",
-    "width": 480,
-    "height": 480,
+    "url": "ipfs://QmU5XU4S5oaGM5fj8oU1ovhWoXCzGWspwRj2zWRTuJrU4k",
+    "width": 512,
+    "height": 512,
     "format": "png"
   },
   "infoURL": "https://gravity.xyz",

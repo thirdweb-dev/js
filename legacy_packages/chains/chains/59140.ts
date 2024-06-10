@@ -29,6 +29,7 @@ export default {
   "faucets": [
     "https://faucetlink.to/goerli"
   ],
+  "features": [],
   "icon": {
     "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
     "width": 97,
@@ -52,17 +53,18 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://59140.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.goerli.linea.build",
-    "wss://rpc.goerli.linea.build",
     "https://linea-goerli.infura.io/v3/${INFURA_API_KEY}",
-    "wss://linea-goerli.infura.io/ws/v3/${INFURA_API_KEY}"
+    "wss://linea-goerli.infura.io/ws/v3/${INFURA_API_KEY}",
+    "https://rpc.goerli.linea.build",
+    "wss://rpc.goerli.linea.build"
   ],
   "shortName": "linea-goerli",
   "slip44": 1,
   "slug": "linea-goerli",
-  "status": "active",
+  "status": "deprecated",
   "testnet": true,
   "title": "Linea Goerli Testnet"
 } as const satisfies Chain;

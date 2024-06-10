@@ -2,10 +2,14 @@
 import { keyframes } from "@emotion/react";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { forwardRef, useRef } from "react";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { iconSize, radius, spacing } from "../design-system/index.js";
 import { CrossContainer } from "./Modal.js";
 import { IconButton } from "./buttons.js";
 

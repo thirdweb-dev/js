@@ -3,7 +3,7 @@ import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
-import { isWalletConnect } from "../wallet-connect/index.js";
+import { isWalletConnect } from "../wallet-connect/controller.js";
 import type { WalletSendCallsId } from "./types.js";
 
 export type ShowCallsStatusOptions = {
@@ -32,7 +32,7 @@ export type ShowCallsStatusOptions = {
  *  const bundleId = await sendCalls({ wallet, client, calls });
  *  await showCallsStatus({ wallet, bundleId });
  * ```
- * @wallets
+ * @extension EIP5792
  * @internal
  */
 export async function showCallsStatus({

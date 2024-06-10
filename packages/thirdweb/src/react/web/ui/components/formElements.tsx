@@ -1,16 +1,16 @@
 "use client";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
-import {
-  StyledDiv,
-  StyledInput,
-  StyledLabel,
-} from "../design-system/elements.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type Theme,
   fontSize,
   radius,
   spacing,
-} from "../design-system/index.js";
+} from "../../../core/design-system/index.js";
+import {
+  StyledDiv,
+  StyledInput,
+  StyledLabel,
+} from "../design-system/elements.js";
 
 type LabelProps = {
   color?: keyof Theme["colors"];

@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -10,7 +11,6 @@ import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { iconSize } from "../../../../design-system/index.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 

@@ -6,6 +6,12 @@ import type {
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
@@ -22,8 +28,6 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
-import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";

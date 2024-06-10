@@ -55,6 +55,13 @@ export type SmartAccountOptions = Prettify<
   }
 >;
 
+export type BundlerOptions = Prettify<
+  Omit<SmartWalletOptions, "chain" | "gasless" | "sponsorGas"> & {
+    chain: Chain;
+    client: ThirdwebClient;
+  }
+>;
+
 export type SmartWalletConnectionOptions = {
   personalAccount: Account;
   client: ThirdwebClient;
@@ -106,4 +113,9 @@ export type EstimationResult = {
 export type GasPriceResult = {
   maxFeePerGas: bigint;
   maxPriorityFeePerGas: bigint;
+};
+
+export type PmTransactionData = {
+  paymaster: Address;
+  paymasterInput: Hex;
 };

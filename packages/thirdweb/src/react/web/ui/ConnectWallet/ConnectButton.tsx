@@ -2,6 +2,7 @@
 
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
+import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import { AutoConnect } from "../../../core/hooks/connection/AutoConnect.js";
 import {
@@ -20,7 +21,6 @@ import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import { iconSize } from "../design-system/index.js";
 import type { ConnectButtonProps } from "./ConnectButtonProps.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
@@ -117,6 +117,7 @@ export function ConnectButton(props: ConnectButtonProps) {
               : props.connectModal?.size || "wide",
         },
         onConnect: props.onConnect,
+        onDisconnect: props.onDisconnect,
         auth: props.auth,
       }}
     >
@@ -286,10 +287,15 @@ function ConnectButtonInner(
         if (siweAuth.requiresAuth) {
           siweAuth.doLogout();
         }
+        if (props.onDisconnect) {
+          props.onDisconnect();
+        }
       }}
       chains={props?.chains || []}
       chain={props.chain}
       switchButton={props.switchButton}
+      client={props.client}
+      connectLocale={locale}
     />
   );
 }

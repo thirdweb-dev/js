@@ -6,6 +6,13 @@ import { createWallet } from "../../../../wallets/create-wallet.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { sortWallets } from "../../utils/sortWallets.js";
@@ -24,9 +31,7 @@ import { Button, IconButton } from "../components/buttons.js";
 import { ModalTitle } from "../components/modalElements.js";
 import { Link } from "../components/text.js";
 import { Text } from "../components/text.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv, StyledUl } from "../design-system/elements.js";
-import { fontSize, iconSize, radius, spacing } from "../design-system/index.js";
 import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";

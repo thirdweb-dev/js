@@ -1,8 +1,8 @@
 "use client";
 import { keyframes } from "@emotion/react";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { type Theme, radius } from "../../../core/design-system/index.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { type Theme, radius } from "../design-system/index.js";
 
 /**
  * @internal

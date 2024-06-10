@@ -25,6 +25,7 @@ export const ConnectUIContext = /* @__PURE__ */ createContext<{
   accountAbstraction?: SmartWalletOptions;
   showAllWallets?: boolean;
   onConnect?: (wallet: Wallet) => void;
+  onDisconnect?: () => void;
   isEmbed: boolean;
   connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
     size: "compact" | "wide";

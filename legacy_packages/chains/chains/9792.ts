@@ -4,12 +4,6 @@ export default {
   "chainId": 9792,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQUHqi1gyuTuKmJQHqt9EyhN1FPmmmLNUK8u93nMGrxAy",
-    "width": 1600,
-    "height": 1600,
-    "format": "png"
-  },
   "infoURL": "https://carbon.network/",
   "name": "Carbon EVM Testnet",
   "nativeCurrency": {
