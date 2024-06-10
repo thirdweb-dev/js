@@ -18,6 +18,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmamkxtxT1uFWQGxswmzBRkoTcZuU5biM1QvdsU6SD36K6",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://www.dchain.foundation/",
   "name": "DCHAIN",
   "nativeCurrency": {
