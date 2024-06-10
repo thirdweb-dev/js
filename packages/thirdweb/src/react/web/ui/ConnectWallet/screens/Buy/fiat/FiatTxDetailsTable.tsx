@@ -11,9 +11,9 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
 import type { FiatStatusMeta } from "../tx-history/statusMeta.js";
+import { getCurrencyMeta } from "./currencies.js";
 
 /**
  * Show a table with the details of a "OnRamp" transaction step in the "Buy with Fiat" flow.
@@ -40,6 +40,7 @@ export function OnRampTxDetailsTable(props: {
 }) {
   const onRampChainQuery = useChainQuery(getCachedChain(props.token.chainId));
   const onrampTxHash = props.statusMeta?.txHash;
+  const currencyMeta = getCurrencyMeta(props.fiat.currencySymbol);
 
   const lineSpacer = (
     <>
@@ -79,9 +80,7 @@ export function OnRampTxDetailsTable(props: {
           }}
         >
           <Container flex="row" gap="xs" center="y">
-            {props.fiat.currencySymbol === "USD" && (
-              <USDIcon size={iconSize.sm} />
-            )}
+            <currencyMeta.icon size={iconSize.sm} />
             <Text color="primaryText">
               {formatNumber(Number(props.fiat.amount), 4)}{" "}
               {props.fiat.currencySymbol}
