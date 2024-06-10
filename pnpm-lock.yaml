@@ -1543,8 +1543,8 @@ importers:
         specifier: ^11
         version: 11.3.2(react-native@0.74.1)
       '@walletconnect/react-native-compat':
-        specifier: 2.13.0
-        version: 2.13.0(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1)
+        specifier: 2.13.2
+        version: 2.13.2(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1)
       amazon-cognito-identity-js:
         specifier: ^6
         version: 6.3.12
@@ -13342,8 +13342,8 @@ packages:
       - react
     dev: false
 
-  /@walletconnect/react-native-compat@2.13.0(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1):
-    resolution: {integrity: sha512-yOUUxQ1P3gpeifUu1bIo2seYYXF+B77npqO27EnvD7A3v4kG+nu4VIJdIvHiZjn/rPWDwqZI6oa0kaR4+DLgTA==}
+  /@walletconnect/react-native-compat@2.13.2(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1):
+    resolution: {integrity: sha512-5y/RDbFD92Clrk28oYNrPgk5p7LJKdP1UUoq/tJnjTbl2oxQYg9ECy8P7AHkZrwm0JWa1PvxDv4sasmKFMNerw==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
       '@react-native-community/netinfo': '*'
