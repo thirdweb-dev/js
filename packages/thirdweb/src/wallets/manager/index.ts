@@ -75,11 +75,15 @@ export function createConnectionManager(storage: AsyncStorage) {
   const onWalletDisconnect = (wallet: Wallet) => {
     deleteConnectParamsFromStorage(storage, wallet.id);
     removeConnectedWallet(wallet);
-    storage.removeItem(LAST_ACTIVE_EOA_ID);
-    activeAccountStore.setValue(undefined);
-    activeWalletChainStore.setValue(undefined);
-    activeWalletStore.setValue(undefined);
-    activeWalletConnectionStatusStore.setValue("disconnected");
+
+    // if disconnecting the active wallet
+    if (activeWalletStore.getValue() === wallet) {
+      storage.removeItem(LAST_ACTIVE_EOA_ID);
+      activeAccountStore.setValue(undefined);
+      activeWalletChainStore.setValue(undefined);
+      activeWalletStore.setValue(undefined);
+      activeWalletConnectionStatusStore.setValue("disconnected");
+    }
   };
 
   const disconnectWallet = (wallet: Wallet) => {
