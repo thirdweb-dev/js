@@ -99,6 +99,7 @@ export type {
   ConnectButton_detailsModalOptions,
 } from "../react/core/hooks/connection/ConnectButtonProps.js";
 export { ConnectButton } from "../react/native/ui/connect/ConnectButton.js";
+export { ConnectEmbed } from "../react/native/ui/connect/ConnectModal.js";
 
 // wallet info
 export {

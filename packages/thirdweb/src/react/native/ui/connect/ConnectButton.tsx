@@ -20,6 +20,7 @@ import {
 import { ThemedButton } from "../components/button.js";
 import { ThemedText } from "../components/text.js";
 import { ConnectModal } from "./ConnectModal.js";
+import { ConnectedButton } from "./ConnectedButton.js";
 
 export type ModalState =
   | { screen: "base" }
@@ -104,37 +105,17 @@ export function ConnectButton(props: ConnectButtonProps) {
           >
             <Pressable style={styles.dismissArea} onPress={closeModal} />
             <View style={styles.bottomSheetContainer}>
-              <ConnectModal {...props} theme={theme} onClose={closeModal} />
+              <ConnectModal
+                {...props}
+                theme={theme}
+                onClose={closeModal}
+                containerType="modal"
+              />
             </View>
           </Animated.View>
         </KeyboardAvoidingView>
       </Modal>
     </View>
-  );
-}
-
-function ConnectedButton(props: ConnectButtonProps & { onClose: () => void }) {
-  const theme = parseTheme(props.theme);
-  const wallet = useActiveWallet();
-  const { disconnect } = useDisconnect();
-  return (
-    wallet && (
-      <ThemedButton
-        theme={theme}
-        onPress={() => {
-          props.onClose();
-          disconnect(wallet);
-        }}
-      >
-        <ThemedText
-          theme={theme}
-          type="defaultSemiBold"
-          style={{ color: theme.colors.primaryButtonText }}
-        >
-          Disconnect
-        </ThemedText>
-      </ThemedButton>
-    )
   );
 }
 

@@ -1,7 +1,7 @@
 import {
-  FlatList,
   Image,
   Linking,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -15,7 +15,6 @@ import {
   useWalletInfo,
 } from "../../../web/ui/hooks/useWalletInfo.js";
 import { spacing } from "../../design-system/index.js";
-import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 
 export type ExternalWalletsUiProps = {
@@ -31,15 +30,18 @@ export function ExternalWalletsList({
 }: ExternalWalletsUiProps) {
   return (
     <View style={styles.container}>
-      <FlatList
-        style={{ flex: 1, paddingHorizontal: spacing.lg }}
-        data={externalWallets}
-        renderItem={(x) => (
-          <ExternalWalletRow wallet={x.item} theme={theme} client={client} />
-        )}
-        keyExtractor={(x) => x.id}
-        ItemSeparatorComponent={() => <Spacer size="md" />}
-      />
+      <ScrollView style={{ flex: 1, paddingHorizontal: spacing.lg }}>
+        <View style={{ flexDirection: "column", gap: spacing.md }}>
+          {externalWallets.map((wallet) => (
+            <ExternalWalletRow
+              key={wallet.id}
+              wallet={wallet}
+              theme={theme}
+              client={client}
+            />
+          ))}
+        </View>
+      </ScrollView>
       <NewToWallets theme={theme} />
     </View>
   );

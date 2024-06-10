@@ -8,8 +8,10 @@ import {
 } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
 import { getDefaultWallets } from "../../../web/wallets/defaultWallets.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
@@ -21,10 +23,23 @@ import type { ModalState } from "./ConnectButton.js";
 import { ExternalWalletsList } from "./ExternalWalletsList.js";
 import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
 
+export function ConnectEmbed(props: ConnectEmbedProps) {
+  const theme = parseTheme(props.theme);
+  const adaptedProps = {
+    ...props,
+    connectModal: { ...props },
+  } as ConnectButtonProps;
+  return <ConnectModal {...adaptedProps} theme={theme} containerType="embed" />;
+}
+
 export function ConnectModal(
-  props: ConnectButtonProps & { theme: Theme; onClose: () => void },
+  props: ConnectButtonProps & {
+    theme: Theme;
+    onClose?: () => void;
+    containerType: "modal" | "embed";
+  },
 ) {
-  const { theme, client } = props;
+  const { theme, client, containerType } = props;
   const wallets = props.wallets || getDefaultWallets(props);
   const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
@@ -39,9 +54,10 @@ export function ConnectModal(
         <Header
           theme={theme}
           onClose={props.onClose}
+          containerType={containerType}
           onBack={() => setModalState({ screen: "base" })}
         />
-        <View style={{ flex: 1 }} />
+        <Spacer size="xl" />
         <View
           style={{
             flexDirection: "column",
@@ -57,7 +73,11 @@ export function ConnectModal(
             theme={theme}
           />
         </View>
-        <View style={{ flex: 1 }} />
+        {containerType === "modal" ? (
+          <View style={{ flex: 1 }} />
+        ) : (
+          <Spacer size="lg" />
+        )}
       </>
     );
   } else if (modalState.screen === "external_wallets") {
@@ -66,6 +86,7 @@ export function ConnectModal(
         <Header
           theme={theme}
           onClose={props.onClose}
+          containerType={containerType}
           onBack={() => setModalState({ screen: "base" })}
         />
         <Spacer size="lg" />
@@ -79,8 +100,12 @@ export function ConnectModal(
   } else {
     content = (
       <>
-        <Header theme={theme} onClose={props.onClose} />
-        <View style={{ flex: 1 }} />
+        <Header
+          theme={theme}
+          onClose={props.onClose}
+          containerType={containerType}
+        />
+        <Spacer size="lg" />
         <View
           style={{
             flexDirection: "column",
@@ -103,13 +128,24 @@ export function ConnectModal(
             onPress={() => setModalState({ screen: "external_wallets" })}
           />
         </View>
-        <View style={{ flex: 1 }} />
+        {containerType === "modal" ? (
+          <View style={{ flex: 1 }} />
+        ) : (
+          <Spacer size="lg" />
+        )}
       </>
     );
   }
 
   return (
-    <ThemedView theme={theme} style={[styles.modalContainer]}>
+    <ThemedView
+      theme={theme}
+      style={
+        containerType === "modal"
+          ? styles.modalContainer
+          : styles.embedContainer
+      }
+    >
       <SafeAreaView style={{ flex: 1 }}>
         {content}
         {showBranding && <PoweredByThirdweb theme={theme} />}
@@ -122,9 +158,40 @@ function Header({
   theme,
   onClose,
   onBack,
-}: { theme: Theme; onClose: () => void; onBack?: () => void }) {
+  containerType,
+}: {
+  theme: Theme;
+  onClose?: () => void;
+  onBack?: () => void;
+  containerType: "modal" | "embed";
+}) {
+  if (containerType === "embed") {
+    return onBack ? (
+      <TouchableOpacity
+        onPress={onBack}
+        style={{
+          flexDirection: "row",
+          gap: spacing.sm,
+          alignItems: "center",
+          paddingHorizontal: spacing.lg,
+          paddingTop: spacing.lg,
+        }}
+      >
+        <SvgXml
+          xml={BACK_ICON}
+          width={14}
+          height={14}
+          color={theme.colors.secondaryIconColor}
+        />
+        <ThemedText theme={theme} type="subtext">
+          Back
+        </ThemedText>
+      </TouchableOpacity>
+    ) : null;
+  }
+
   return (
-    <View style={styles.header}>
+    <View style={styles.headerModal}>
       {onBack && (
         <TouchableOpacity onPress={onBack}>
           <SvgXml
@@ -138,14 +205,16 @@ function Header({
       <ThemedText theme={theme} type="title">
         Sign in
       </ThemedText>
-      <TouchableOpacity onPress={onClose}>
-        <SvgXml
-          xml={CLOSE_ICON}
-          width={24}
-          height={24}
-          color={theme.colors.secondaryIconColor}
-        />
-      </TouchableOpacity>
+      {onClose && (
+        <TouchableOpacity onPress={onClose}>
+          <SvgXml
+            xml={CLOSE_ICON}
+            width={24}
+            height={24}
+            color={theme.colors.secondaryIconColor}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -218,7 +287,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: radius.lg,
     borderTopRightRadius: radius.lg,
   },
-  header: {
+  embedContainer: {
+    flex: 1,
+    width: "100%",
+    flexDirection: "column",
+    backgroundColor: "transparent",
+  },
+  headerModal: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

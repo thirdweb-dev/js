@@ -5,10 +5,8 @@ export type {
 } from "../react/core/design-system/index.js";
 
 export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
-export {
-  ConnectEmbed,
-  type ConnectEmbedProps,
-} from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
+export { ConnectEmbed } from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
+export { type ConnectEmbedProps } from "../react/core/hooks/connection/ConnectEmbedProps.js";
 
 export type {
   ConnectButtonProps,
