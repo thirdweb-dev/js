@@ -52,6 +52,8 @@ export abstract class AbstractLogin<
   ) => Promise<AuthLoginReturnType>;
   protected client: ThirdwebClient;
   protected baseUrl: string;
+  protected integratorId?: string;
+
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
    * Call {@link InAppWalletSDK.auth} instead.
@@ -63,18 +65,21 @@ export abstract class AbstractLogin<
     preLogin,
     postLogin,
     client,
+    integratorId,
   }: ClientIdWithQuerierType & {
     baseUrl: string;
     preLogin: () => Promise<void>;
     postLogin: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
+    integratorId?: string;
   }) {
     this.baseUrl = baseUrl;
     this.LoginQuerier = querier;
     this.preLogin = preLogin;
     this.postLogin = postLogin;
     this.client = client;
+    this.integratorId = integratorId;
   }
 
   abstract loginWithCustomJwt(args: {

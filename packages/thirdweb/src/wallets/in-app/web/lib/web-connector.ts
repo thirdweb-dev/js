@@ -43,7 +43,11 @@ export class InAppWebConnector implements InAppConnector {
    * `const thirdwebInAppWallet = new InAppWalletSdk({ clientId: "", chain: "Goerli" });`
    * @internal
    */
-  constructor({ client, onAuthSuccess }: InAppWalletConstructorType) {
+  constructor({
+    client,
+    onAuthSuccess,
+    integratorId,
+  }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
@@ -53,10 +57,12 @@ export class InAppWebConnector implements InAppConnector {
     this.client = client;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
+      integratorId,
       baseUrl,
     });
     this.wallet = new IFrameWallet({
       client,
+      integratorId,
       querier: this.querier,
     });
 
@@ -64,6 +70,7 @@ export class InAppWebConnector implements InAppConnector {
       client,
       querier: this.querier,
       baseUrl,
+      integratorId,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({
@@ -73,6 +80,7 @@ export class InAppWebConnector implements InAppConnector {
         await this.querier.call({
           procedureName: "initIframe",
           params: {
+            integratorId,
             deviceShareStored: authResult.walletDetails.deviceShareStored,
             clientId: this.client.clientId,
             walletUserId: authResult.storedToken.authDetails.userWalletId,
@@ -190,6 +198,7 @@ export class InAppWebConnector implements InAppConnector {
         if (args.type === "sign-up") {
           const authToken = await registerPasskey({
             client: args.client,
+            integratorId: args.integratorId,
             authenticatorType: args.authenticatorType,
             username: args.passkeyName,
           });
@@ -197,6 +206,7 @@ export class InAppWebConnector implements InAppConnector {
         }
         const authToken = await loginWithPasskey({
           client: args.client,
+          integratorId: args.integratorId,
           authenticatorType: args.authenticatorType,
         });
         return this.auth.loginWithAuthToken(authToken);

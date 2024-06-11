@@ -2,7 +2,7 @@ import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
-import type { WalletId } from "../../../wallet-types.js";
+import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
@@ -25,12 +25,22 @@ export function isInAppWallet(
  * @internal
  */
 export async function connectInAppWallet(
-  options: WalletConnectionOption<"inApp">,
-  createOptions: CreateWalletArgs<"inApp">[1],
+  options:
+    | WalletConnectionOption<"inApp">
+    | WalletConnectionOption<EcosystemWalletId>,
+  createOptions:
+    | CreateWalletArgs<"inApp">[1]
+    | CreateWalletArgs<EcosystemWalletId>[1],
 ): Promise<[Account, Chain]> {
   const { authenticate } = await import("../authentication/index.js");
 
-  const authResult = await authenticate(options);
+  const authResult = await authenticate({
+    ...options,
+    integratorId:
+      createOptions && "integratorId" in createOptions
+        ? createOptions.integratorId
+        : undefined,
+  });
   const authAccount = authResult.user.account;
 
   if (createOptions?.smartAccount) {
@@ -52,13 +62,23 @@ export async function connectInAppWallet(
  * @internal
  */
 export async function autoConnectInAppWallet(
-  options: WalletAutoConnectionOption<"inApp">,
-  createOptions: CreateWalletArgs<"inApp">[1],
+  options:
+    | WalletAutoConnectionOption<"inApp">
+    | WalletAutoConnectionOption<EcosystemWalletId>,
+  createOptions:
+    | CreateWalletArgs<"inApp">[1]
+    | CreateWalletArgs<EcosystemWalletId>[1],
 ): Promise<[Account, Chain]> {
   const { getAuthenticatedUser } = await import("../authentication/index.js");
-  const user = await getAuthenticatedUser({ client: options.client });
+  const user = await getAuthenticatedUser({
+    client: options.client,
+    integratorId:
+      createOptions && "integratorId" in createOptions
+        ? createOptions.integratorId
+        : undefined,
+  });
   if (!user) {
-    throw new Error("not authenticated");
+    throw new Error("Failed to authenticate user.");
   }
 
   const authAccount = user.account;

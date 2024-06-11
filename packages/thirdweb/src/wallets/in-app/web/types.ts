@@ -18,11 +18,16 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
    * @returns
    */
   onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
+  /*
+   * An optional integrator ID to connect to an ecosystem wallet.
+   */
+  integratorId?: string;
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   querier: InAppWalletIframeCommunicator<any>;
+  integratorId?: string | undefined;
 };
 
 /**

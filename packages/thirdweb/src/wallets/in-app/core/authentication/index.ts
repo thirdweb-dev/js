@@ -11,6 +11,7 @@ import {
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
+  integratorId?: string;
 };
 
 const ewsSDKCache = new WeakMap<ThirdwebClient, InAppConnector>();
@@ -18,7 +19,10 @@ const ewsSDKCache = new WeakMap<ThirdwebClient, InAppConnector>();
 /**
  * @internal
  */
-async function getInAppWalletConnector(client: ThirdwebClient) {
+async function getInAppWalletConnector(
+  client: ThirdwebClient,
+  integratorId?: string,
+) {
   if (ewsSDKCache.has(client)) {
     return ewsSDKCache.get(client) as InAppConnector;
   }
@@ -30,6 +34,7 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
     );
     ewSDK = new InAppWebConnector({
       client: client,
+      integratorId,
     });
   } else if (isReactNative()) {
     const {
@@ -37,6 +42,7 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
     } = require("../../native/native-connector.js");
     ewSDK = new InAppNativeConnector({
       client,
+      integratorId,
     });
   } else {
     throw new Error("Unsupported platform");
@@ -52,7 +58,10 @@ async function getInAppWalletConnector(client: ThirdwebClient) {
 export async function logoutAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
-  const ewSDK = await getInAppWalletConnector(options.client);
+  const ewSDK = await getInAppWalletConnector(
+    options.client,
+    options.integratorId,
+  );
   return ewSDK.logout();
 }
 
@@ -145,7 +154,7 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  * @wallet
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const ewSDK = await getInAppWalletConnector(args.client);
+  const ewSDK = await getInAppWalletConnector(args.client, args.integratorId);
   return ewSDK.preAuthenticate(args);
 }
 
@@ -169,7 +178,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-  const ewSDK = await getInAppWalletConnector(args.client);
+  const ewSDK = await getInAppWalletConnector(args.client, args.integratorId);
   return ewSDK.authenticate(args);
 }
 

@@ -10,21 +10,28 @@ export class InAppWalletIframeCommunicator<
   T extends { [key: string]: any },
 > extends IframeCommunicator<T> {
   clientId: string;
+  integratorId?: string;
   /**
    * @internal
    */
-  constructor({ clientId, baseUrl }: { clientId: string; baseUrl: string }) {
+  constructor({
+    clientId,
+    baseUrl,
+    integratorId,
+  }: { clientId: string; baseUrl: string; integratorId?: string }) {
     super({
       iframeId: IN_APP_WALLET_IFRAME_ID,
       link: createInAppWalletIframeLink({
         clientId,
         path: IN_APP_WALLET_PATH,
+        integratorId,
         baseUrl,
       }).href,
       baseUrl,
       container: document.body,
     });
     this.clientId = clientId;
+    this.integratorId = integratorId;
   }
 
   /**
@@ -40,6 +47,7 @@ export class InAppWalletIframeCommunicator<
       deviceShareStored: await localStorage.getDeviceShare(),
       walletUserId: await localStorage.getWalletUserId(),
       clientId: this.clientId,
+      integratorId: this.integratorId,
     };
   }
 }
@@ -52,11 +60,13 @@ export function createInAppWalletIframeLink({
   clientId,
   baseUrl,
   path,
+  integratorId,
   queryParams,
 }: {
   clientId: string;
   baseUrl: string;
   path: string;
+  integratorId?: string;
   queryParams?: { [key: string]: string | number };
 }) {
   const inAppWalletUrl = new URL(`${path}`, baseUrl);
@@ -69,6 +79,9 @@ export function createInAppWalletIframeLink({
     }
   }
   inAppWalletUrl.searchParams.set("clientId", clientId);
+  if (integratorId !== undefined) {
+    inAppWalletUrl.searchParams.set("integratorId", integratorId);
+  }
   return inAppWalletUrl;
 }
 export const IN_APP_WALLET_IFRAME_ID = "thirdweb-in-app-wallet-iframe";

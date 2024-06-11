@@ -13,6 +13,7 @@ export type MultiStepAuthProviderType =
     };
 export type PreAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
+  integratorId?: string;
 };
 
 export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
@@ -51,6 +52,7 @@ export type SingleStepAuthArgsType =
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   client: ThirdwebClient;
+  integratorId?: string;
 };
 
 // TODO: remove usage of enums, instead use object with as const
