@@ -117,13 +117,30 @@ export const getAllExtensionsAbi = [
 ];
 
 export const coreContractAbi = [
+  { type: "fallback", stateMutability: "payable" },
+  {
+    type: "function",
+    name: "cancelOwnershipHandover",
+    inputs: [],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "completeOwnershipHandover",
+    inputs: [
+      { name: "pendingOwner", type: "address", internalType: "address" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
   {
     type: "function",
     name: "getInstalledExtensions",
     inputs: [],
     outputs: [
       {
-        name: "",
+        name: "_installedExtensions",
         type: "tuple[]",
         internalType: "struct IModularCore.InstalledExtension[]",
         components: [
@@ -138,14 +155,14 @@ export const coreContractAbi = [
             internalType: "struct IExtensionConfig.ExtensionConfig",
             components: [
               {
-                name: "requiredInterfaceId",
-                type: "bytes4",
-                internalType: "bytes4",
-              },
-              {
                 name: "registerInstallationCallback",
                 type: "bool",
                 internalType: "bool",
+              },
+              {
+                name: "requiredInterfaces",
+                type: "bytes4[]",
+                internalType: "bytes4[]",
               },
               {
                 name: "supportedInterfaces",
@@ -211,39 +228,274 @@ export const coreContractAbi = [
   },
   {
     type: "function",
-    name: "installExtension",
+    name: "grantRoles",
     inputs: [
-      {
-        name: "extensionContract",
-        type: "address",
-        internalType: "address",
-      },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      { name: "user", type: "address", internalType: "address" },
+      { name: "roles", type: "uint256", internalType: "uint256" },
     ],
     outputs: [],
     stateMutability: "payable",
   },
   {
     type: "function",
-    name: "supportsInterface",
-    inputs: [{ name: "interfaceID", type: "bytes4", internalType: "bytes4" }],
+    name: "hasAllRoles",
+    inputs: [
+      { name: "user", type: "address", internalType: "address" },
+      { name: "roles", type: "uint256", internalType: "uint256" },
+    ],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
   },
   {
     type: "function",
-    name: "uninstallExtension",
+    name: "hasAnyRole",
     inputs: [
-      {
-        name: "extensionContract",
-        type: "address",
-        internalType: "address",
-      },
-      { name: "data", type: "bytes", internalType: "bytes" },
+      { name: "user", type: "address", internalType: "address" },
+      { name: "roles", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "installExtension",
+    inputs: [
+      { name: "_extension", type: "address", internalType: "address" },
+      { name: "_data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
     stateMutability: "payable",
   },
+  {
+    type: "function",
+    name: "owner",
+    inputs: [],
+    outputs: [{ name: "result", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "ownershipHandoverExpiresAt",
+    inputs: [
+      { name: "pendingOwner", type: "address", internalType: "address" },
+    ],
+    outputs: [{ name: "result", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "renounceOwnership",
+    inputs: [],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "renounceRoles",
+    inputs: [{ name: "roles", type: "uint256", internalType: "uint256" }],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "requestOwnershipHandover",
+    inputs: [],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "revokeRoles",
+    inputs: [
+      { name: "user", type: "address", internalType: "address" },
+      { name: "roles", type: "uint256", internalType: "uint256" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "rolesOf",
+    inputs: [{ name: "user", type: "address", internalType: "address" }],
+    outputs: [{ name: "roles", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "supportsInterface",
+    inputs: [{ name: "interfaceId", type: "bytes4", internalType: "bytes4" }],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "transferOwnership",
+    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "function",
+    name: "uninstallExtension",
+    inputs: [
+      { name: "_extension", type: "address", internalType: "address" },
+      { name: "_data", type: "bytes", internalType: "bytes" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  {
+    type: "event",
+    name: "ExtensionInstalled",
+    inputs: [
+      {
+        name: "caller",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "implementation",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "installedExtension",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "ExtensionUninstalled",
+    inputs: [
+      {
+        name: "caller",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "implementation",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+      {
+        name: "installedExtension",
+        type: "address",
+        indexed: false,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipHandoverCanceled",
+    inputs: [
+      {
+        name: "pendingOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipHandoverRequested",
+    inputs: [
+      {
+        name: "pendingOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "OwnershipTransferred",
+    inputs: [
+      {
+        name: "oldOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "newOwner",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "RolesUpdated",
+    inputs: [
+      {
+        name: "user",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "roles",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  { type: "error", name: "AlreadyInitialized", inputs: [] },
+  { type: "error", name: "CallbackExecutionReverted", inputs: [] },
+  {
+    type: "error",
+    name: "CallbackFunctionAlreadyInstalled",
+    inputs: [],
+  },
+  { type: "error", name: "CallbackFunctionNotSupported", inputs: [] },
+  { type: "error", name: "CallbackFunctionRequired", inputs: [] },
+  {
+    type: "error",
+    name: "CallbackFunctionUnauthorizedCall",
+    inputs: [],
+  },
+  { type: "error", name: "ExtensionAlreadyInstalled", inputs: [] },
+  {
+    type: "error",
+    name: "ExtensionInterfaceNotCompatible",
+    inputs: [
+      {
+        name: "requiredInterfaceId",
+        type: "bytes4",
+        internalType: "bytes4",
+      },
+    ],
+  },
+  { type: "error", name: "ExtensionNotInstalled", inputs: [] },
+  { type: "error", name: "ExtensionOutOfSync", inputs: [] },
+  {
+    type: "error",
+    name: "FallbackFunctionAlreadyInstalled",
+    inputs: [],
+  },
+  { type: "error", name: "FallbackFunctionNotInstalled", inputs: [] },
+  { type: "error", name: "IndexOutOfBounds", inputs: [] },
+  { type: "error", name: "NewOwnerIsZeroAddress", inputs: [] },
+  { type: "error", name: "NoHandoverRequest", inputs: [] },
+  { type: "error", name: "Unauthorized", inputs: [] },
 ];
 
 export const extensionContractAbi = [
@@ -258,17 +510,12 @@ export const extensionContractAbi = [
         internalType: "struct IExtensionConfig.ExtensionConfig",
         components: [
           {
-            name: "requiredInterfaceId",
-            type: "bytes4",
-            internalType: "bytes4",
-          },
-          {
             name: "registerInstallationCallback",
             type: "bool",
             internalType: "bool",
           },
           {
-            name: "callbackFunctions",
+            name: "requiredInterfaces",
             type: "bytes4[]",
             internalType: "bytes4[]",
           },
@@ -278,19 +525,26 @@ export const extensionContractAbi = [
             internalType: "bytes4[]",
           },
           {
-            name: "extensionFunctions",
+            name: "callbackFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionConfig.ExtensionFunction[]",
+            internalType: "struct IExtensionConfig.CallbackFunction[]",
             components: [
               {
                 name: "selector",
                 type: "bytes4",
                 internalType: "bytes4",
               },
+            ],
+          },
+          {
+            name: "fallbackFunctions",
+            type: "tuple[]",
+            internalType: "struct IExtensionConfig.FallbackFunction[]",
+            components: [
               {
-                name: "callType",
-                type: "uint8",
-                internalType: "enum IExtensionConfig.CallType",
+                name: "selector",
+                type: "bytes4",
+                internalType: "bytes4",
               },
               {
                 name: "permissionBits",

@@ -20,6 +20,6 @@ import { prepareEvent } from "../../../../../event/prepare-event.js";
 export function extensionInstalledEvent() {
   return prepareEvent({
     signature:
-      "event ExtensionInstalled(address sender, address implementation, address installedExtension)",
+      "event ExtensionInstalled(address caller, address implementation, address installedExtension)",
   });
 }

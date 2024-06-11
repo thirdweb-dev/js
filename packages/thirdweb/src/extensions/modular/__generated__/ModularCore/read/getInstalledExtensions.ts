@@ -25,14 +25,14 @@ const FN_OUTPUTS = [
         internalType: "struct IExtensionConfig.ExtensionConfig",
         components: [
           {
-            name: "requiredInterfaceId",
-            type: "bytes4",
-            internalType: "bytes4",
-          },
-          {
             name: "registerInstallationCallback",
             type: "bool",
             internalType: "bool",
+          },
+          {
+            name: "requiredInterfaces",
+            type: "bytes4[]",
+            internalType: "bytes4[]",
           },
           {
             name: "supportedInterfaces",

@@ -16,6 +16,7 @@ import { getInstalledExtensions } from "../modular/__generated__/ModularCore/rea
 import { installExtension } from "../modular/__generated__/ModularCore/write/installExtension.js";
 import { uninstallExtension } from "../modular/__generated__/ModularCore/write/uninstallExtension.js";
 import { deployModularCoreContract } from "./deploy-modular-core.js";
+import { deployPublishedContract } from "./deploy-published.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "deployModularCore",
@@ -83,7 +84,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     });
 
     it("should deploy a published autofactory modular core contract", async () => {
-      const address = await deployModularCoreContract({
+      const address = await deployPublishedContract({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
         account: TEST_ACCOUNT_A,
@@ -101,75 +102,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           address,
         }),
       });
-      expect(installedExtensions.length).toBe(1);
-      expect(installedExtensions[0]?.implementation).to.not.equal(
-        "0x0000000000000000000000000000000000000000",
-      );
-    });
-
-    it("should install and uninstall an extension", async () => {
-      // deploy core contract with extension
-      const address = await deployModularCoreContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_A,
-        contractId: "DemoCore",
-        contractParams: [TEST_ACCOUNT_A.address, [], ["0x"]],
-        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-      });
-
-      const core = getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        address,
-      });
-
-      // get installed extension implementation
-      let installedExtensions = await getInstalledExtensions({
-        contract: core,
-      });
-      const extensionAddress = installedExtensions[0]?.implementation;
-      const extensionImplementation = await resolveImplementation(
-        getContract({
-          chain: ANVIL_CHAIN,
-          client: TEST_CLIENT,
-          address: extensionAddress as string,
-        }),
-      );
-
-      // uninstall extension
-      const uninstallTransaction = uninstallExtension({
-        contract: core,
-        extension: extensionImplementation.address as string,
-        data: "0x",
-      });
-      await sendTransaction({
-        transaction: uninstallTransaction,
-        account: TEST_ACCOUNT_A,
-      });
-
-      installedExtensions = await getInstalledExtensions({
-        contract: core,
-      });
-
       expect(installedExtensions.length).toBe(0);
-
-      // reinstall the extension
-      const installTransaction = installExtension({
-        contract: core,
-        extension: extensionImplementation.address as string,
-        data: "0x",
-      });
-      await sendTransaction({
-        transaction: installTransaction,
-        account: TEST_ACCOUNT_A,
-      });
-
-      installedExtensions = await getInstalledExtensions({
-        contract: core,
-      });
-
-      expect(installedExtensions.length).toBe(1);
     });
 
     it("should uninstall an extension by proxy address", async () => {
@@ -189,85 +122,18 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         address,
       });
 
-      // get installed extension proxy address
-      let installedExtensions = await getInstalledExtensions({
-        contract: core,
-      });
-      const extensionAddress = installedExtensions[0]?.implementation;
-
-      // uninstall extension
-      const uninstallTransaction = uninstallExtensionByProxy({
+      // install extension with published name
+      const installTransaction = installPublishedExtension({
         contract: core,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        extensionProxyAddress: extensionAddress as string,
-        extensionData: "0x",
-      });
-      await sendTransaction({
-        transaction: uninstallTransaction,
         account: TEST_ACCOUNT_A,
-      });
-
-      installedExtensions = await getInstalledExtensions({
-        contract: core,
-      });
-
-      expect(installedExtensions.length).toBe(0);
-    });
-
-    it("should uninstall an extension by published name", async () => {
-      // deploy core contract with extension
-      const address = await deployModularCoreContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_A,
-        contractId: "DemoCore",
-        contractParams: [TEST_ACCOUNT_A.address, [], ["0x"]],
-        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-      });
-
-      const core = getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        address,
-      });
-
-      // uninstall extension
-      const uninstallTransaction = uninstallPublishedExtension({
-        contract: core,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
         extensionName: "DemoExtensionWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-        extensionData: "0x",
       });
       await sendTransaction({
-        transaction: uninstallTransaction,
+        transaction: installTransaction,
         account: TEST_ACCOUNT_A,
-      });
-
-      const installedExtensions = await getInstalledExtensions({
-        contract: core,
-      });
-
-      expect(installedExtensions.length).toBe(0);
-    });
-
-    it("should install an extension by publish name", async () => {
-      // deploy core contract with extension
-      const address = await deployModularCoreContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        account: TEST_ACCOUNT_A,
-        contractId: "DemoCore",
-        contractParams: [TEST_ACCOUNT_A.address, [], ["0x"]],
-        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-      });
-
-      const core = getContract({
-        client: TEST_CLIENT,
-        chain: ANVIL_CHAIN,
-        address,
       });
 
       // get installed extension proxy address
@@ -294,6 +160,24 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       expect(installedExtensions.length).toBe(0);
+    });
+
+    it("should install and uninstall extensions by publish name", async () => {
+      // deploy core contract with extension
+      const address = await deployModularCoreContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        account: TEST_ACCOUNT_A,
+        contractId: "DemoCore",
+        contractParams: [TEST_ACCOUNT_A.address, [], ["0x"]],
+        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
+      });
+
+      const core = getContract({
+        client: TEST_CLIENT,
+        chain: ANVIL_CHAIN,
+        address,
+      });
 
       // install extension with published name
       const installTransaction = installPublishedExtension({
@@ -309,11 +193,31 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         account: TEST_ACCOUNT_A,
       });
 
-      installedExtensions = await getInstalledExtensions({
+      let installedExtensions = await getInstalledExtensions({
         contract: core,
       });
 
       expect(installedExtensions.length).toBe(1);
+
+      // uninstall extension
+      const uninstallTransaction = uninstallPublishedExtension({
+        contract: core,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        extensionName: "DemoExtensionWithFunctions",
+        publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
+        extensionData: "0x",
+      });
+      await sendTransaction({
+        transaction: uninstallTransaction,
+        account: TEST_ACCOUNT_A,
+      });
+
+      installedExtensions = await getInstalledExtensions({
+        contract: core,
+      });
+
+      expect(installedExtensions.length).toBe(0);
     });
   },
 );

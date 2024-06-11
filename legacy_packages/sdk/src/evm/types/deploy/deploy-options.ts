@@ -2,7 +2,7 @@ import {
   FullPublishMetadata,
   PreDeployMetadataFetched,
 } from "../../schema/contracts/custom";
-import { DeployedContractType, HookOptions } from "../any-evm/deploy-data";
+import { DeployedContractType } from "../any-evm/deploy-data";
 import { CompilerOptions } from "../compiler/compiler-options";
 
 export type DeployOptions = {

@@ -1,6 +1,5 @@
 [
   { "type": "fallback", "stateMutability": "payable" },
-  { "type": "receive", "stateMutability": "payable" },
   {
     "type": "function",
     "name": "cancelOwnershipHandover",
@@ -38,14 +37,14 @@
             "internalType": "struct IExtensionConfig.ExtensionConfig",
             "components": [
               {
-                "name": "requiredInterfaceId",
-                "type": "bytes4",
-                "internalType": "bytes4"
-              },
-              {
                 "name": "registerInstallationCallback",
                 "type": "bool",
                 "internalType": "bool"
+              },
+              {
+                "name": "requiredInterfaces",
+                "type": "bytes4[]",
+                "internalType": "bytes4[]"
               },
               {
                 "name": "supportedInterfaces",
@@ -246,7 +245,7 @@
     "name": "ExtensionInstalled",
     "inputs": [
       {
-        "name": "sender",
+        "name": "caller",
         "type": "address",
         "indexed": false,
         "internalType": "address"
@@ -271,7 +270,7 @@
     "name": "ExtensionUninstalled",
     "inputs": [
       {
-        "name": "sender",
+        "name": "caller",
         "type": "address",
         "indexed": false,
         "internalType": "address"

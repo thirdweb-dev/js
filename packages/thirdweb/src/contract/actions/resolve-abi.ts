@@ -233,7 +233,7 @@ const CORE_CONTRACT_ABI = {
   inputs: [],
   outputs: [
     {
-      name: "",
+      name: "_installedExtensions",
       type: "tuple[]",
       internalType: "struct IModularCore.InstalledExtension[]",
       components: [
@@ -248,14 +248,14 @@ const CORE_CONTRACT_ABI = {
           internalType: "struct IExtensionConfig.ExtensionConfig",
           components: [
             {
-              name: "requiredInterfaceId",
-              type: "bytes4",
-              internalType: "bytes4",
-            },
-            {
               name: "registerInstallationCallback",
               type: "bool",
               internalType: "bool",
+            },
+            {
+              name: "requiredInterfaces",
+              type: "bytes4[]",
+              internalType: "bytes4[]",
             },
             {
               name: "supportedInterfaces",
