@@ -21,13 +21,13 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
   /*
    * An optional integrator ID to connect to an ecosystem wallet.
    */
-  integratorId?: string;
+  partnerId?: string;
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
   querier: InAppWalletIframeCommunicator<any>;
-  integratorId?: string | undefined;
+  partnerId?: string | undefined;
 };
 
 /**

@@ -147,7 +147,7 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
         : T extends DeepLinkSupportedWalletIds
           ? DeepLinkSupportedWalletCreationOptions
           : T extends EcosystemWalletId
-            ? EcosystemWalletCreationOptions
+            ? EcosystemWalletCreationOptions | undefined
             : undefined;
 
 /**

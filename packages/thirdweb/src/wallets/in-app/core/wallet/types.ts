@@ -40,7 +40,7 @@ export type InAppWalletCreationOptions =
           alt?: string;
         };
       };
-      integratorId?: string;
+      partnerId?: string;
       smartAccount?: SmartWalletOptions;
       hidePrivateKeyExport?: boolean;
     }

@@ -36,9 +36,9 @@ export async function connectInAppWallet(
 
   const authResult = await authenticate({
     ...options,
-    integratorId:
-      createOptions && "integratorId" in createOptions
-        ? createOptions.integratorId
+    partnerId:
+      createOptions && "partnerId" in createOptions
+        ? createOptions.partnerId
         : undefined,
   });
   const authAccount = authResult.user.account;
@@ -72,9 +72,9 @@ export async function autoConnectInAppWallet(
   const { getAuthenticatedUser } = await import("../authentication/index.js");
   const user = await getAuthenticatedUser({
     client: options.client,
-    integratorId:
-      createOptions && "integratorId" in createOptions
-        ? createOptions.integratorId
+    partnerId:
+      createOptions && "partnerId" in createOptions
+        ? createOptions.partnerId
         : undefined,
   });
   if (!user) {

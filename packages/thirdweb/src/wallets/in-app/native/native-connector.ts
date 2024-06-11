@@ -28,7 +28,7 @@ import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
 export type NativeConnectorOptions = {
   client: ThirdwebClient;
-  integratorId?: string | undefined;
+  partnerId?: string | undefined;
 };
 
 export class InAppNativeConnector implements InAppConnector {

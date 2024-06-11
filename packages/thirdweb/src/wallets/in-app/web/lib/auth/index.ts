@@ -18,7 +18,7 @@ export type AuthQuerierTypes = {
     authCookie: string;
     walletUserId: string;
     deviceShareStored: string;
-    integratorId?: string;
+    partnerId?: string;
   };
   loginWithStoredTokenDetails: {
     storedToken: AuthStoredTokenWithCookieReturnType["storedToken"];
@@ -46,7 +46,7 @@ export class Auth {
   constructor({
     client,
     querier,
-    integratorId,
+    partnerId,
     onAuthSuccess,
     baseUrl,
   }: ClientIdWithQuerierType & {
@@ -54,7 +54,7 @@ export class Auth {
     onAuthSuccess: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
-    integratorId?: string;
+    partnerId?: string;
   }) {
     this.client = client;
 
@@ -62,7 +62,7 @@ export class Auth {
     this.localStorage = new LocalStorage({ clientId: client.clientId });
     this.onAuthSuccess = onAuthSuccess;
     this.BaseLogin = new BaseLogin({
-      integratorId,
+      partnerId,
       postLogin: async (result) => {
         return this.postLogin(result);
       },

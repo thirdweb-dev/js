@@ -580,12 +580,12 @@ export function inAppWallet(
  * });
  * ```
  *
- * Connect to a restricted ecosystem wallet with your designated integrator ID
- * @note The integrator ID will be provided to you by the ecosystem with which you're integrating.
+ * Connect to a restricted ecosystem wallet with your designated partner ID
+ * @note The partner ID will be provided to you by the ecosystem with which you're integrating.
  * ```ts
  * import { ecosystemWallet } from "thirdweb/wallets";
  * const wallet = ecosystemWallet("ecosystem.hooli", {
- *  integratorId: "..."
+ *  partnerId: "..."
  * });
  * ```
  * @wallet

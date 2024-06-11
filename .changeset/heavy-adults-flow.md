@@ -10,6 +10,6 @@ Adds ecosystemWallet to TS SDK
 import { ecosystemWallet } from "thirdweb/wallets";
 
 const wallet = ecosystemWallet("ecosystem.hooli", {
-  integratorId: "pied-piper",
+  partnerId: "pied-piper",
 });
 ```

@@ -5,7 +5,7 @@ import type {
 import type { SmartWalletOptions } from "../smart/types.js";
 
 export type EcosystemWalletCreationOptions = {
-  integratorId?: string;
+  partnerId?: string;
   smartAccount?: SmartWalletOptions;
 };
 

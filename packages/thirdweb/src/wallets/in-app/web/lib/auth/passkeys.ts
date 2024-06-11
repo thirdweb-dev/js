@@ -21,7 +21,7 @@ function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
-  integratorId?: string;
+  partnerId?: string;
   authenticatorType?: AuthType;
   username?: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
@@ -50,8 +50,8 @@ export async function registerPasskey(options: {
   await storage.savePasskeyCredentialId(registration.credential.id);
 
   const customHeaders: Record<string, string> = {};
-  if (options.integratorId) {
-    customHeaders["x-integrator-id"] = options.integratorId;
+  if (options.partnerId) {
+    customHeaders["x-ecosystem-partner-id"] = options.partnerId;
   }
 
   // 4. send the registration object to the server
@@ -85,7 +85,7 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
-  integratorId?: string;
+  partnerId?: string;
   authenticatorType?: AuthType;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
@@ -111,8 +111,8 @@ export async function loginWithPasskey(options: {
   });
 
   const customHeaders: Record<string, string> = {};
-  if (options.integratorId) {
-    customHeaders["x-integrator-id"] = options.integratorId;
+  if (options.partnerId) {
+    customHeaders["x-ecosystem-partner-id"] = options.partnerId;
   }
 
   // 3. send the authentication object to the server/iframe

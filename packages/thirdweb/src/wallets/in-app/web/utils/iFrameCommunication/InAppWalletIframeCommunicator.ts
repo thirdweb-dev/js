@@ -10,28 +10,28 @@ export class InAppWalletIframeCommunicator<
   T extends { [key: string]: any },
 > extends IframeCommunicator<T> {
   clientId: string;
-  integratorId?: string;
+  partnerId?: string;
   /**
    * @internal
    */
   constructor({
     clientId,
     baseUrl,
-    integratorId,
-  }: { clientId: string; baseUrl: string; integratorId?: string }) {
+    partnerId,
+  }: { clientId: string; baseUrl: string; partnerId?: string }) {
     super({
       iframeId: IN_APP_WALLET_IFRAME_ID,
       link: createInAppWalletIframeLink({
         clientId,
         path: IN_APP_WALLET_PATH,
-        integratorId,
+        partnerId,
         baseUrl,
       }).href,
       baseUrl,
       container: document.body,
     });
     this.clientId = clientId;
-    this.integratorId = integratorId;
+    this.partnerId = partnerId;
   }
 
   /**
@@ -47,7 +47,7 @@ export class InAppWalletIframeCommunicator<
       deviceShareStored: await localStorage.getDeviceShare(),
       walletUserId: await localStorage.getWalletUserId(),
       clientId: this.clientId,
-      integratorId: this.integratorId,
+      partnerId: this.partnerId,
     };
   }
 }
@@ -60,13 +60,13 @@ export function createInAppWalletIframeLink({
   clientId,
   baseUrl,
   path,
-  integratorId,
+  partnerId,
   queryParams,
 }: {
   clientId: string;
   baseUrl: string;
   path: string;
-  integratorId?: string;
+  partnerId?: string;
   queryParams?: { [key: string]: string | number };
 }) {
   const inAppWalletUrl = new URL(`${path}`, baseUrl);
@@ -79,8 +79,8 @@ export function createInAppWalletIframeLink({
     }
   }
   inAppWalletUrl.searchParams.set("clientId", clientId);
-  if (integratorId !== undefined) {
-    inAppWalletUrl.searchParams.set("integratorId", integratorId);
+  if (partnerId !== undefined) {
+    inAppWalletUrl.searchParams.set("partnerId", partnerId);
   }
   return inAppWalletUrl;
 }
