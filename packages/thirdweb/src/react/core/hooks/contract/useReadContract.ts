@@ -18,8 +18,14 @@ import type {
 import type { PreparedMethod } from "../../../../utils/abi/prepare-method.js";
 import { getFunctionId } from "../../../../utils/function-id.js";
 import { stringify } from "../../../../utils/json.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 
-type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
+type PickedQueryOptions = Prettify<
+  Pick<UseQueryOptions, "enabled"> & {
+    refetchInterval?: number;
+    retry?: number;
+  }
+>;
 
 /**
  * A hook to read from a contract.
