@@ -26,12 +26,12 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://25.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://cronos.blockpi.network/v1/rpc/public",
-    "https://evm.cronos.org",
+    "https://cronos.drpc.org",
+    "wss://cronos.drpc.org",
     "https://cronos-evm-rpc.publicnode.com",
     "wss://cronos-evm-rpc.publicnode.com",
-    "https://cronos.drpc.org",
-    "wss://cronos.drpc.org"
+    "https://cronos.blockpi.network/v1/rpc/public",
+    "https://evm.cronos.org"
   ],
   "shortName": "cro",
   "slug": "cronos",
