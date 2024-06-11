@@ -339,6 +339,11 @@ export class WalletConnectConnector extends WagmiConnector<
       this._provider = await EthereumProvider.init({
         showQrModal: this.showWalletConnectModal,
         projectId: this.options.projectId,
+        methods: [
+          "eth_sendTransaction",
+          "personal_sign",
+          "eth_signTypedData_v4",
+        ],
         optionalMethods: OPTIONAL_METHODS,
         optionalEvents: OPTIONAL_EVENTS,
         chains: [defaultChain],
