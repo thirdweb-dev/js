@@ -317,7 +317,7 @@ export function NetworkSelectorContent(
         return undefined;
       }
 
-      const value: ChainSection[] = [];
+      const filteredChainSectionsValue: ChainSection[] = [];
 
       const filteredAllChains = fuse
         .search(deferredSearchTerm)
@@ -326,22 +326,23 @@ export function NetworkSelectorContent(
       filteredAllChains.forEach((c) => {
         const label = allChainsToSectionMap.get(c.chainId);
         if (!label) {
-          throw new Error("Chain without a label found");
+          return; // just a type guard, this never happens
         }
-        const section = value.find((s) => s.label === label);
+
+        const section = filteredChainSectionsValue.find((s) => s.label === label);
         if (section) {
           section.chains.push(c);
         } else {
-          value.push({
+          filteredChainSectionsValue.push({
             label,
             chains: [c],
           });
         }
 
-        return value;
+        return filteredChainSectionsValue;
       });
 
-      return value;
+      return filteredChainSectionsValue;
     }, [deferredSearchTerm, fuse, allChainsToSectionMap]) || chainSections;
 
   const { onClose, onSwitch, onCustomClick } = props;
