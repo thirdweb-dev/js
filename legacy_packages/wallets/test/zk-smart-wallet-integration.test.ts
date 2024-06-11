@@ -1,7 +1,10 @@
 /* eslint-disable better-tree-shaking/no-top-level-side-effects */
 import { SmartWallet } from "../src/evm/wallets/smart-wallet";
 import { LocalWallet } from "../src/evm/wallets/local-wallet";
-import { ZksyncSepoliaTestnet } from "@thirdweb-dev/chains";
+import {
+  ZkcandySepoliaTestnet,
+  ZksyncSepoliaTestnet,
+} from "@thirdweb-dev/chains";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { describe, it, expect, beforeAll } from "vitest";
 
@@ -70,6 +73,35 @@ describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
       );
       console.log(approveTx.receipt.transactionHash);
       expect(approveTx.receipt.transactionHash).toHaveLength(66);
+    },
+  );
+
+  it(
+    "can execute zkcandy tx via SDK",
+    {
+      timeout: 120_000,
+    },
+    async () => {
+      const zkCandysmartWallet = new SmartWallet({
+        chain: 302,
+        gasless: true,
+        secretKey: SECRET_KEY,
+      });
+      const zkCandyPersonalWallet = new LocalWallet({
+        chain: ZkcandySepoliaTestnet,
+        secretKey: SECRET_KEY,
+      });
+      await zkCandyPersonalWallet.generate();
+      await zkCandyPersonalWallet.connect();
+      const zkCandyWalletAddress = await zkCandysmartWallet.connect({
+        personalWallet: zkCandyPersonalWallet,
+      });
+      const zkCandySdk = await ThirdwebSDK.fromWallet(zkCandysmartWallet, 302, {
+        secretKey: SECRET_KEY,
+      });
+      const tx = await zkCandySdk.wallet.transfer(zkCandyWalletAddress, 0);
+      expect(tx.receipt.transactionHash).toHaveLength(66);
+      console.log(tx.receipt.transactionHash);
     },
   );
 });
