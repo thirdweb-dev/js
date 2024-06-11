@@ -27,7 +27,7 @@ export const WalletConnectConnection: React.FC<{
   const { onBack, onGetStarted, wallet, walletInfo, locale, done } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client, walletConnect } = useConnectUI();
+  const { chain, chains, client, walletConnect, connectModal } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
@@ -130,6 +130,8 @@ export const WalletConnectConnection: React.FC<{
       getStartedLink={locale.getStartedLink}
       error={errorConnecting}
       onRetry={connect}
+      client={client}
+      connectModalSize={connectModal.size}
     />
   );
 };
@@ -151,7 +153,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
     props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client, walletConnect } = useConnectUI();
+  const { chain, chains, client, walletConnect, connectModal } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
@@ -277,6 +279,8 @@ export const WalletConnectStandaloneConnection: React.FC<{
       getStartedLink={locale.getStartedLink}
       error={errorConnecting}
       onRetry={connect}
+      client={client}
+      connectModalSize={connectModal.size}
     />
   );
 };

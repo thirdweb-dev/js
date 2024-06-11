@@ -1,9 +1,13 @@
 import { ClockIcon } from "@radix-ui/react-icons";
+import {
+  fontSize,
+  iconSize,
+  radius,
+} from "../../../../../core/design-system/index.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { fontSize, iconSize, radius } from "../../../design-system/index.js";
 import type { IconFC } from "../../icons/types.js";
 import { formatSeconds } from "./swap/formatSeconds.js";
 

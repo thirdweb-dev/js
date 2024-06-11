@@ -145,7 +145,6 @@ export async function createWalletConnectClient(
     "session_request",
     async (event: WalletConnectSessionRequestEvent) => {
       const { fulfillRequest } = await import("./session-request.js");
-      console.log("Received session request", event);
       fulfillRequest({
         wallet,
         walletConnectClient,

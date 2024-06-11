@@ -1,12 +1,12 @@
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { iconSize } from "../../../../../../core/design-system/index.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import { iconSize } from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 
 /**

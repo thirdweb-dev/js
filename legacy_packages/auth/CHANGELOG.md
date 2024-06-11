@@ -1,5 +1,12 @@
 # @thirdweb-dev/auth
 
+## 4.1.90
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/wallets@2.5.32
+
 ## 4.1.89
 
 ### Patch Changes

@@ -25,6 +25,6 @@ export default {
     "https://testnet.flagscan.io"
   ],
   "shortName": "Flag",
-  "slug": "flag-testnet",
+  "slug": "flag-testnet-flag",
   "testnet": true
 } as const satisfies Chain;

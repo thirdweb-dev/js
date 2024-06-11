@@ -6,10 +6,22 @@ export default {
     {
       "name": "Lite Explorer",
       "url": "https://ethereum-pocr.github.io/explorer/pocrnet",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
+        "width": 334,
+        "height": 360,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmRLwpq47tyEd3rfK4tKRhbTvyb3fc7PCutExnL1XAb37A",
+    "width": 334,
+    "height": 360,
+    "format": "png"
+  },
   "infoURL": "https://github.com/ethereum-pocr/pocrnet",
   "name": "PoCRNet",
   "nativeCurrency": {

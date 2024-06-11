@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 4.0.92
+
+### Patch Changes
+
+- [#3196](https://github.com/thirdweb-dev/js/pull/3196) [`ae9496e`](https://github.com/thirdweb-dev/js/commit/ae9496e9d821553ea488656574b991961468dea9) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Deterministic deployment for zksync direct deploys
+
+- [#3227](https://github.com/thirdweb-dev/js/pull/3227) [`043f0da`](https://github.com/thirdweb-dev/js/commit/043f0da708b267336c79f12f6c186beedf3206d7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better gas estimation for opBNB mainnet & testnet
+
+- Updated dependencies [[`e7443ed`](https://github.com/thirdweb-dev/js/commit/e7443edda77f0a4528f1f9782b2046dcc43a9a12), [`ca31a6c`](https://github.com/thirdweb-dev/js/commit/ca31a6c0d8f2d246d48b8f382fa01377a6a3e2cf), [`58d14c9`](https://github.com/thirdweb-dev/js/commit/58d14c9eaf964620a44732ee247deb364c3aec09), [`043f0da`](https://github.com/thirdweb-dev/js/commit/043f0da708b267336c79f12f6c186beedf3206d7), [`f13a40b`](https://github.com/thirdweb-dev/js/commit/f13a40ba9905a05d02640aa6672557f53567b087), [`0328bc8`](https://github.com/thirdweb-dev/js/commit/0328bc894e62d15ce2d457abd5f06d16fbd8c7e1)]:
+  - thirdweb@5.28.0
+  - @thirdweb-dev/chains@0.1.116
+
 ## 4.0.91
 
 ### Patch Changes

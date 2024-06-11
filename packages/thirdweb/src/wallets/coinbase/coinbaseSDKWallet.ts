@@ -6,9 +6,9 @@ import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
   getTypesForEIP712Domain,
+  serializeTypedData,
   validateTypedData,
 } from "viem";
-import { stringify } from "../../utils/json.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import type { SendTransactionOption } from "../interfaces/wallet.js";
 import type { AppMetadata, DisconnectFn, SwitchChainFn } from "../types.js";
@@ -22,7 +22,6 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
-  isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
@@ -274,12 +273,7 @@ export async function coinbaseSDKWalletGetCallsStatus(args: {
   }) as Promise<GetCallsStatusResponse>;
 }
 
-function onConnect(
-  address: string,
-  chain: Chain,
-  provider: ProviderInterface,
-  emitter: WalletEmitter<typeof COINBASE>,
-): [Account, Chain, DisconnectFn, SwitchChainFn] {
+function createAccount(provider: ProviderInterface, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -338,10 +332,12 @@ function onConnect(
       // as we can't statically check this with TypeScript.
       validateTypedData({ domain, message, primaryType, types });
 
-      const stringifiedData = stringify(
-        { domain: domain ?? {}, message, primaryType, types },
-        (_, value) => (isHex(value) ? value.toLowerCase() : value),
-      );
+      const stringifiedData = serializeTypedData({
+        domain: domain ?? {},
+        message,
+        primaryType,
+        types,
+      });
 
       return await provider.request({
         method: "eth_signTypedData_v4",
@@ -349,6 +345,17 @@ function onConnect(
       });
     },
   };
+
+  return account;
+}
+
+function onConnect(
+  address: string,
+  chain: Chain,
+  provider: ProviderInterface,
+  emitter: WalletEmitter<typeof COINBASE>,
+): [Account, Chain, DisconnectFn, SwitchChainFn] {
+  const account = createAccount(provider, address);
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -364,10 +371,7 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {

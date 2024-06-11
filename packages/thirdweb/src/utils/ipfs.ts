@@ -63,7 +63,7 @@ export function findIPFSCidFromUri(uri: string) {
   }
 
   // first index of `/Qm` or `/bafy` in the uri (case insensitive)
-  const firstIndex = uri.search(/\/(Qm|bafy)/i);
+  const firstIndex = uri.search(/\/(Qm|baf)/i);
   // we start one character after the first `/` to avoid including it in the CID
   return uri.slice(firstIndex + 1);
 }

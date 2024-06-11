@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmXry4fg4n371PCokLGKUMwmws1SoJb5giZM3EedeEQaZz",
+    "width": 192,
+    "height": 192,
+    "format": "png"
+  },
   "infoURL": "https://bouncebit.io",
   "name": "BounceBit Mainnet",
   "nativeCurrency": {
