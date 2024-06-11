@@ -20,6 +20,7 @@ import { ExplorersSection } from "./components/server/explorer-section";
 import { ChainIcon } from "../components/server/chain-icon";
 import { Badge } from "@/components/ui/badge";
 import { getChain, getChainMetadata } from "../utils";
+import { ChainCTA } from "./components/server/cta-card";
 
 export async function generateMetadata(
   { params }: { params: { chain_id: string } },
@@ -88,7 +89,7 @@ export default async function ChainPageLayout({
         <header
           className={cn(
             "py-6 md:py-8 md:pb-2 border-b relative overflow-hidden",
-            chainMetadata?.headerImgUrl && "md:py-20",
+            chainMetadata?.headerImgUrl && "md:py-10",
           )}
         >
           {/* header background image shenanigans */}
@@ -103,7 +104,7 @@ export default async function ChainPageLayout({
                   : undefined
               }
             />
-            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/10 to-secondary/40 backdrop-blur-md lg:backdrop-blur-lg shadow-inner" />
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/0 to-secondary/30 shadow-inner" />
           </div>
 
           {/* end header shaningans */}
@@ -141,7 +142,7 @@ export default async function ChainPageLayout({
               {chainMetadata?.verified && (
                 <Badge
                   variant="secondary"
-                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5"
+                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
                 >
                   <VerifiedIcon className="size-5" />
                   <span className="font-bold text-xs uppercase">verified</span>
@@ -150,7 +151,7 @@ export default async function ChainPageLayout({
               {chainMetadata?.gasSponsored && (
                 <Badge
                   variant="secondary"
-                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5"
+                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
                 >
                   <TicketCheckIcon className="size-5" />
                   <span className="font-bold text-xs uppercase">
@@ -161,6 +162,9 @@ export default async function ChainPageLayout({
             </div>
           </div>
         </header>
+
+        {chainMetadata?.cta && <ChainCTA {...chainMetadata.cta} />}
+
         <main className="container px-4 pb-20 flex-1">
           {/* About section */}
           {chainMetadata?.about && (
