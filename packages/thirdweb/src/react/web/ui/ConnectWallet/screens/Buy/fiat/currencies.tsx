@@ -6,7 +6,7 @@ import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import type { IconFC } from "../../../icons/types.js";
 
 export type CurrencyMeta = {
-  shorthand: string;
+  shorthand: "USD" | "CAD" | "GBP" | "EUR";
   name: string;
   icon: IconFC;
 };
@@ -17,7 +17,7 @@ export const defaultSelectedCurrency: CurrencyMeta = {
   icon: USDIcon,
 };
 
-export const currencies = [
+export const currencies: CurrencyMeta[] = [
   defaultSelectedCurrency,
   {
     shorthand: "CAD",
@@ -45,7 +45,7 @@ export function getCurrencyMeta(shorthand: string): CurrencyMeta {
       // This should never happen
       icon: UnknownCurrencyIcon,
       name: shorthand,
-      shorthand,
+      shorthand: shorthand as CurrencyMeta["shorthand"],
     }
   );
 }
