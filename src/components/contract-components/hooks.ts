@@ -18,6 +18,7 @@ import {
 } from "@tanstack/react-query";
 import {
   Polygon,
+  ZkcandySepoliaTestnet,
   Zksync,
   ZksyncEraGoerliTestnetDeprecated,
   ZksyncSepoliaTestnet,
@@ -688,6 +689,7 @@ export function useCustomContractDeployMutation(
         const isZkSync =
           chainId === Zksync.chainId ||
           chainId === ZksyncSepoliaTestnet.chainId ||
+          chainId === ZkcandySepoliaTestnet.chainId ||
           chainId === ZksyncEraGoerliTestnetDeprecated.chainId;
 
         // deploy contract
