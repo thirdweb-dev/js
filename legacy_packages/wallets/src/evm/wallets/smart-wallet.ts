@@ -580,10 +580,10 @@ export class SmartWallet extends AbstractClientWallet<
    * @returns `true` if the smart wallet contract is deployed
    */
   async isDeployed(): Promise<boolean> {
-    if (this.connector?.chainId === 300 || this.connector?.chainId === 324) {
+    const connector = await this.getConnector();
+    if (connector.chainId && (await isZkSyncChain(connector.chainId))) {
       return true;
     }
-    const connector = await this.getConnector();
     return connector.isDeployed();
   }
 
