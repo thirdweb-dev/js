@@ -6,10 +6,22 @@ export default {
     {
       "name": "Siberium Testnet Explorer - blockscout",
       "url": "https://explorer.test.siberium.net",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+        "width": 512,
+        "height": 512,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmYeMdWDZ1iaBFeSPorRyPi7RuSXTdDKTgW3rfnUf3W5ne",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
+  },
   "infoURL": "https://siberium.net",
   "name": "Siberium Test Network",
   "nativeCurrency": {
