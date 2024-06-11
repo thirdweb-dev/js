@@ -55,15 +55,19 @@ export async function signTypedDataInternal(
   // an indirect way for accessing walletconnect's underlying provider
   if ((provider as any)?.provider?.isWalletConnect) {
     try {
-      signature = await provider.send("eth_signTypedData", [
-        signerAddress,
-        JSON.stringify(payload),
-      ]);
-    } catch (err: any) {
       signature = await provider.send("eth_signTypedData_v4", [
         signerAddress,
         JSON.stringify(payload),
       ]);
+    } catch (err: any) {
+      if (err?.message?.includes("eth_signTypedData_v4")) {
+        signature = await provider.send("eth_signTypedData", [
+          signerAddress,
+          JSON.stringify(payload),
+        ]);
+      } else {
+        throw err;
+      }
     }
   } else {
     try {
