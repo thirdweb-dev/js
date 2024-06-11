@@ -13,7 +13,6 @@ export type DeploymentPreset = {
   type: DeployedContractType;
   transaction: PrecomputedDeploymentTransaction;
   encodedArgs?: BytesLike;
-  hooks?: { impl: string; proxy: string; admin: AddressOrEns };
 };
 
 export type KeylessTransaction = {
@@ -35,15 +34,7 @@ export type DeployedContractType =
   | "create2Factory"
   | "plugin"
   | "extension"
-  | "custom"
-  | "hookImpl"
-  | "hookProxy";
-
-export type HookOptions = {
-  extensionName: string;
-  extensionVersion: string;
-  publisherAddress: AddressOrEns;
-};
+  | "custom";
 
 export type DeploymentTransaction = {
   contractType: DeployedContractType | string;

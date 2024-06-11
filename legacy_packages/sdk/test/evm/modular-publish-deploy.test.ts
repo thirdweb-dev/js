@@ -1,4 +1,3 @@
-import { SmartContract } from "../../src/evm/contracts/smart-contract";
 import {
   extendedMetadataMock,
   jsonProvider,
@@ -17,7 +16,6 @@ import {
   mockExtensionWithFunctionsBytecode,
   mockExtensionWithFunctionsCompilerMetadata,
 } from "./mock/mockExtensionWithFunctionsMetadata";
-import { AddressZero } from "../../src/evm/constants/addresses/AddressZero";
 
 describe("Modular contract deployment", async () => {
   let adminWallet: SignerWithAddress;
@@ -93,13 +91,6 @@ describe("Modular contract deployment", async () => {
       [walletAddress, [], ["0x"]],
       {
         forceDirectDeploy: false,
-        hooks: [
-          {
-            extensionName: "DemoExtensionWithFunctions",
-            extensionVersion: "",
-            publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-          },
-        ],
       },
     );
 
@@ -119,15 +110,14 @@ describe("Modular contract deployment", async () => {
     await jsonProvider.send("hardhat_reset", []);
   });
 
-  it("should deploy core and install hooks", async () => {
+  it("should deploy core but not install hooks", async () => {
     // await mockPublishModularFactory();
     await mockPublishExtension();
     const mockCore = await mockPublishAndDeployMockCore();
 
     const extensions = await mockCore.call("getInstalledExtensions");
 
-    expect(extensions.length).to.equal(1);
-    expect(extensions[0].implementation).to.not.equal(AddressZero);
+    expect(extensions.length).to.equal(0);
   });
 
   // it("should check extension compatibility", async () => {

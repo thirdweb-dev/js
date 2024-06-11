@@ -9,7 +9,6 @@ export type DeployOptions = {
   forceDirectDeploy?: boolean;
   saltForProxyDeploy?: string;
   compilerOptions?: CompilerOptions;
-  hooks?: HookOptions[];
   notifier?: (
     status: "deploying" | "deployed",
     contractType: DeployedContractType | string,
