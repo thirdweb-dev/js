@@ -284,11 +284,11 @@ describe("session_request", () => {
     });
   });
 
-  describe("eth_signTypedData", () => {
+  describe("eth_signTypedData_v4", () => {
     let ethSignTypedDataRequest: WalletConnectSessionRequestEvent;
     beforeEach(() => {
       ethSignTypedDataRequest = cloneObject(REQUEST_EVENT_MOCK);
-      ethSignTypedDataRequest.params.request.method = "eth_signTypedData";
+      ethSignTypedDataRequest.params.request.method = "eth_signTypedData_v4";
       ethSignTypedDataRequest.params.request.params = [
         TEST_ACCOUNT_A.address,
         typedData.basic,
