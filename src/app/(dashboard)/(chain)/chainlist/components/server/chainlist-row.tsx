@@ -1,4 +1,10 @@
-import { CircleAlertIcon, TicketCheckIcon, VerifiedIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CircleAlertIcon,
+  TicketCheckIcon,
+  VerifiedIcon,
+  XIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -101,7 +107,16 @@ function ProductIcon(props: {
   isEnabled: boolean;
 }) {
   return (
-    <ToolTipLabel label={props.label}>
+    <ToolTipLabel
+      label={props.label}
+      leftIcon={
+        props.isEnabled ? (
+          <CheckIcon className="text-success-foreground size-4" />
+        ) : (
+          <XIcon className="text-destructive-foreground size-4" />
+        )
+      }
+    >
       <Link href={props.href}>
         <props.icon className={cn("size-8", !props.isEnabled && "grayscale")} />
       </Link>
