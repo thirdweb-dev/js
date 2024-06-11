@@ -29,7 +29,13 @@ export function ChainCTA(props: ChainCTAProps) {
             )}
           </div>
           <Button asChild size="lg">
-            <Link href={props.buttonLink} prefetch={false} target="_blank">
+            <Link
+              href={props.buttonLink}
+              prefetch={false}
+              target={
+                props.buttonLink.startsWith("http") ? "_blank" : undefined
+              }
+            >
               {props.buttonText}
             </Link>
           </Button>

@@ -7,6 +7,7 @@ import type { ChainCTAProps } from "./[chain_id]/components/server/cta-card";
 // TEMPORARY
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import baseBanner from "./temp-assets/base-banner.jpeg";
+import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 // END TEMPORARY
 
@@ -47,6 +48,15 @@ type ChainMetadata = Partial<{
 
 // TEMPORARY
 
+const OP_CTA = {
+  backgroundImageUrl: superchainCTABG.src,
+  title: "Optimism Superchain App Accelerator",
+  description:
+    "Successful applicants receive gas grants for use across all supported Optimism Superchain networks. These grants can sponsor gas fees for any onchain activity using our Account Abstraction tools.",
+  buttonText: "Apply now",
+  buttonLink: "/dashboard/settings/gas-credits",
+} satisfies ChainCTAProps;
+
 const chainMetaRecord = {
   // XAI
   660279: {
@@ -68,6 +78,37 @@ const chainMetaRecord = {
       "Base is a secure, low-cost, builder-friendly Ethereum L2 built to bring the next billion users onchain.",
     gasSponsored: true,
     verified: true,
+    cta: OP_CTA,
+  },
+  // optimism
+  10: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // fraxtal
+  252: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // zora
+  7777777: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // mode
+  34443: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // cyber
+  7560: {
+    cta: OP_CTA,
+    gasSponsored: true,
+  },
+  // redstone
+  690: {
+    cta: OP_CTA,
+    gasSponsored: true,
   },
 } satisfies Record<number, ChainMetadata>;
 // END TEMPORARY

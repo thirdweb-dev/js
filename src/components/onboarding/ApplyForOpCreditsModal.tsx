@@ -81,11 +81,13 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
 interface ApplyForOpCreditsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  noModal?: boolean;
 }
 
 export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
   isOpen,
   onClose,
+  noModal,
 }) => {
   const {
     isOpen: isPaymentMethodOpen,
@@ -122,146 +124,120 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
   const creditsRecord =
     PlanToCreditsRecord[account.data?.plan || AccountPlan.Free];
 
-  return (
+  const content = (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        onOverlayClick={() => setPage("eligible")}
-        size="lg"
-      >
-        <ModalOverlay />
-        {page === "eligible" ? (
-          <ModalContent>
-            <ModalHeader textAlign="center">Apply for Gas Credits</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Flex flexDir="column" gap={4}>
-                <Card position="relative">
-                  <Box position="absolute">
-                    <Badge
-                      borderRadius="full"
-                      size="label.sm"
-                      px={3}
-                      bgColor={creditsRecord.color}
-                    >
-                      <Text
-                        color="#fff"
-                        textTransform="capitalize"
-                        fontWeight="bold"
-                      >
-                        {creditsRecord.title}
-                      </Text>
-                    </Badge>
-                  </Box>
-                  <Flex alignItems="center" gap={2} flexDir="column">
-                    <Text textAlign="center" color="faded">
-                      {creditsRecord.upTo && "Up to"}
-                    </Text>
-                    <Heading
-                      color="bgBlack"
-                      size="title.lg"
-                      fontWeight="extrabold"
-                    >
-                      {creditsRecord.credits}
-                    </Heading>
-                    <Text letterSpacing="wider" fontWeight="bold" color="faded">
-                      GAS CREDITS
-                    </Text>
-                  </Flex>
-                </Card>
-                <Flex gap={4} flexDir="column">
-                  {!hasValidPayment && (
-                    <Alert
-                      status="info"
-                      borderRadius="lg"
-                      backgroundColor="backgroundBody"
-                      borderLeftColor="blue.500"
-                      borderLeftWidth={4}
-                      as={Flex}
-                      gap={1}
-                    >
-                      <AlertIcon />
-                      <Flex flexDir="column">
-                        <AlertDescription as={Text}>
-                          You need to add a payment method to be able to claim
-                          credits. This is to prevent abuse, you will not be
-                          charged.{" "}
-                          <Text
-                            as="span"
-                            onClick={() => {
-                              onPaymentMethodOpen();
-                              trackEvent({
-                                category: "op-sponsorship",
-                                action: "add-payment-method",
-                                label: "open",
-                              });
-                            }}
-                            color="blue.500"
-                            cursor="pointer"
-                          >
-                            Add a payment method
-                          </Text>
-                          .
-                        </AlertDescription>
-                      </Flex>
-                    </Alert>
-                  )}
-                  <Button
-                    colorScheme="primary"
-                    onClick={() => setPage("form")}
-                    w="full"
-                    isDisabled={!hasValidPayment || hasAppliedForOpGrant}
+      {page === "eligible" ? (
+        <>
+          <Flex flexDir="column" gap={4}>
+            <Card position="relative">
+              <Box position="absolute">
+                <Badge
+                  borderRadius="full"
+                  size="label.sm"
+                  px={3}
+                  bgColor={creditsRecord.color}
+                >
+                  <Text
+                    color="#fff"
+                    textTransform="capitalize"
+                    fontWeight="bold"
                   >
-                    {hasAppliedForOpGrant ? "Already applied" : "Apply Now"}
-                  </Button>
-                </Flex>
-                {!isProPlan && (
-                  <>
-                    <Text
-                      textAlign="center"
-                      fontWeight="bold"
-                      letterSpacing="wide"
-                    >
-                      Or upgrade and get access to more credits:
-                    </Text>
-                    <SimpleGrid
-                      columns={{ base: 1, md: isFreePlan ? 2 : 1 }}
-                      gap={4}
-                    >
-                      {isFreePlan && (
-                        <PlanCard
-                          creditsRecord={
-                            PlanToCreditsRecord[AccountPlan.Growth]
-                          }
-                        />
-                      )}
-                      <PlanCard
-                        creditsRecord={PlanToCreditsRecord[AccountPlan.Pro]}
-                      />
-                    </SimpleGrid>
-                  </>
-                )}
+                    {creditsRecord.title}
+                  </Text>
+                </Badge>
+              </Box>
+              <Flex alignItems="center" gap={2} flexDir="column">
+                <Text textAlign="center" color="faded">
+                  {creditsRecord.upTo && "Up to"}
+                </Text>
+                <Heading color="bgBlack" size="title.lg" fontWeight="extrabold">
+                  {creditsRecord.credits}
+                </Heading>
+                <Text letterSpacing="wider" fontWeight="bold" color="faded">
+                  GAS CREDITS
+                </Text>
               </Flex>
-              <Text mt={6} textAlign="center" color="faded">
-                We are open to distributing more than the upper limit for each
-                tier if you make a strong case about how it will be utilized.
-              </Text>
-            </ModalBody>
-
-            <ModalFooter />
-          </ModalContent>
-        ) : (
-          <ApplyForOpCreditsForm
-            onClose={() => {
-              setPage("eligible");
-              onClose();
-            }}
-          />
-        )}
-      </Modal>
-
+            </Card>
+            <Flex gap={4} flexDir="column">
+              {!hasValidPayment && (
+                <Alert
+                  status="info"
+                  borderRadius="lg"
+                  backgroundColor="backgroundBody"
+                  borderLeftColor="blue.500"
+                  borderLeftWidth={4}
+                  as={Flex}
+                  gap={1}
+                >
+                  <AlertIcon />
+                  <Flex flexDir="column">
+                    <AlertDescription as={Text}>
+                      You need to add a payment method to be able to claim
+                      credits. This is to prevent abuse, you will not be
+                      charged.{" "}
+                      <Text
+                        as="span"
+                        onClick={() => {
+                          onPaymentMethodOpen();
+                          trackEvent({
+                            category: "op-sponsorship",
+                            action: "add-payment-method",
+                            label: "open",
+                          });
+                        }}
+                        color="blue.500"
+                        cursor="pointer"
+                      >
+                        Add a payment method
+                      </Text>
+                      .
+                    </AlertDescription>
+                  </Flex>
+                </Alert>
+              )}
+              <Button
+                colorScheme="primary"
+                onClick={() => setPage("form")}
+                w="full"
+                isDisabled={!hasValidPayment || hasAppliedForOpGrant}
+              >
+                {hasAppliedForOpGrant ? "Already applied" : "Apply Now"}
+              </Button>
+            </Flex>
+            {!isProPlan && (
+              <>
+                <Text textAlign="center" fontWeight="bold" letterSpacing="wide">
+                  Or upgrade and get access to more credits:
+                </Text>
+                <SimpleGrid
+                  columns={{ base: 1, md: isFreePlan ? 2 : 1 }}
+                  gap={4}
+                >
+                  {isFreePlan && (
+                    <PlanCard
+                      creditsRecord={PlanToCreditsRecord[AccountPlan.Growth]}
+                    />
+                  )}
+                  <PlanCard
+                    creditsRecord={PlanToCreditsRecord[AccountPlan.Pro]}
+                  />
+                </SimpleGrid>
+              </>
+            )}
+          </Flex>
+          <Text mt={6} textAlign="center" color="faded">
+            We are open to distributing more than the upper limit for each tier
+            if you make a strong case about how it will be utilized.
+          </Text>
+        </>
+      ) : (
+        <ApplyForOpCreditsForm
+          onClose={() => {
+            setPage("eligible");
+            onClose();
+          }}
+        />
+      )}
       {/* // Add Payment Method Modal */}
       <OnboardingModal
         isOpen={isPaymentMethodOpen}
@@ -287,6 +263,31 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
           }}
         />
       </OnboardingModal>
+    </>
+  );
+
+  if (noModal) {
+    return content;
+  }
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+        onOverlayClick={() => setPage("eligible")}
+        size="lg"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader textAlign="center">Apply for Gas Credits</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>{content}</ModalBody>
+
+          <ModalFooter />
+        </ModalContent>
+      </Modal>
     </>
   );
 };

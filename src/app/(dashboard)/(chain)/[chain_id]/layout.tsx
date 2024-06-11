@@ -88,7 +88,10 @@ export default async function ChainPageLayout({
         {/* Header */}
         <header
           className={cn(
-            "py-6 md:py-8 md:pb-2 border-b relative overflow-hidden",
+            "py-6 md:py-8 border-b relative overflow-hidden",
+            !chainMetadata?.gasSponsored &&
+              !chainMetadata?.verified &&
+              "md:pb-2",
             chainMetadata?.headerImgUrl && "md:py-10",
           )}
         >

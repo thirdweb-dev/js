@@ -9,7 +9,8 @@ type SettingsSidebarProps = {
     | "usage"
     | "storage"
     | "billing"
-    | "notifications";
+    | "notifications"
+    | "gas-credits";
 };
 
 const links: Route[] = [
@@ -24,6 +25,11 @@ const links: Route[] = [
     path: "/dashboard/settings/billing",
     title: "Billing",
     name: "billing",
+  },
+  {
+    path: "/dashboard/settings/gas-credits",
+    title: "Gas Credits",
+    name: "gas-credits",
   },
   { path: "/dashboard/settings/usage", title: "Usage", name: "usage" },
   {
