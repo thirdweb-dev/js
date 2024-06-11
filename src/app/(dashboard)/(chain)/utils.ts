@@ -14,7 +14,8 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 export async function getChains() {
   const response = await fetch(
     `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
-    { next: { revalidate: 3600 } },
+    // revalidate every hour
+    { next: { revalidate: 60 * 60 } },
   );
 
   if (!response.ok) {
@@ -29,6 +30,8 @@ export async function getChain(
 ): Promise<ChainMetadataWithServices> {
   const res = await fetch(
     `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}?includeServices=true`,
+    // revalidate every 15 minutes
+    { next: { revalidate: 15 * 60 } },
   );
 
   const result = await res.json();

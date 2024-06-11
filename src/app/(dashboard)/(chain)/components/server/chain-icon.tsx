@@ -20,6 +20,8 @@ export async function ChainIcon(props: {
       // hack to fix this bug: https://github.com/thirdweb-dev/js/pull/3241
       .replace("ipfs://", "");
     const res = await fetch(resolved, {
+      // revalidate every hour
+      next: { revalidate: 60 * 60 },
       method: "HEAD",
       cache: "force-cache",
       headers: DASHBOARD_THIRDWEB_SECRET_KEY
