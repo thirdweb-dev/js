@@ -180,7 +180,6 @@
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
     "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
-    "secrets.js-34r7h": "^2.0.2",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
@@ -221,9 +220,6 @@
       "optional": true
     },
     "@coinbase/wallet-mobile-sdk": {
-      "optional": true
-    },
-    "secrets.js-34r7h": {
       "optional": true
     }
   },
@@ -275,7 +271,6 @@
     "react-native": "0.74.1",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
-    "secrets.js-34r7h": "^2.0.2",
     "vitest": "1.5.0"
   }
 }

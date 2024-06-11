@@ -257,15 +257,19 @@ export class IFrameWallet {
         if (parsedTypedData.types?.EIP712Domain) {
           parsedTypedData.types.EIP712Domain = undefined;
         }
-        // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-        const chainId = Number((parsedTypedData.domain as any)?.chainId || 1);
+        const domain = parsedTypedData.domain as TypedDataDefinition["domain"];
+        const chainId = domain?.chainId || 1;
 
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
             params: {
-              // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-              domain: parsedTypedData.domain as any,
+              domain: {
+                chainId: chainId,
+                verifyingContract: domain?.verifyingContract,
+                name: domain?.name,
+                version: domain?.version,
+              },
               types:
                 parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:

@@ -73,6 +73,7 @@ const ERROR_SUBSTRINGS = [
   "chainid no support",
   "chainid (0)",
   "chainid(0)",
+  "invalid sender",
 ];
 
 function matchError(error: string): boolean {

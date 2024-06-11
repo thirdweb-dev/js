@@ -1543,8 +1543,8 @@ importers:
         specifier: ^11
         version: 11.3.2(react-native@0.74.1)
       '@walletconnect/react-native-compat':
-        specifier: 2.13.0
-        version: 2.13.0(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1)
+        specifier: 2.13.2
+        version: 2.13.2(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1)
       amazon-cognito-identity-js:
         specifier: ^6
         version: 6.3.12
@@ -1569,9 +1569,6 @@ importers:
       react-native-quick-crypto:
         specifier: '>=0.7.0-rc.6 || >=0.7'
         version: 0.7.0-rc.6(react-native@0.74.1)(react@18.2.0)
-      secrets.js-34r7h:
-        specifier: 2.0.2
-        version: 2.0.2
       shamir-secret-sharing:
         specifier: ^0.0.3
         version: 0.0.3
@@ -1739,9 +1736,6 @@ importers:
       react-native-quick-crypto:
         specifier: 0.7.0-rc.6
         version: 0.7.0-rc.6(react-native@0.74.1)(react@18.3.1)
-      secrets.js-34r7h:
-        specifier: ^2.0.2
-        version: 2.0.2
       vitest:
         specifier: 1.5.0
         version: 1.5.0(@types/node@20.12.7)(@vitest/ui@1.5.0)(happy-dom@14.11.0)
@@ -13926,8 +13920,8 @@ packages:
       - react
     dev: false
 
-  /@walletconnect/react-native-compat@2.13.0(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1):
-    resolution: {integrity: sha512-yOUUxQ1P3gpeifUu1bIo2seYYXF+B77npqO27EnvD7A3v4kG+nu4VIJdIvHiZjn/rPWDwqZI6oa0kaR4+DLgTA==}
+  /@walletconnect/react-native-compat@2.13.2(@react-native-async-storage/async-storage@1.23.1)(@react-native-community/netinfo@11.3.2)(expo-application@5.9.1)(react-native-get-random-values@1.11.0)(react-native@0.74.1):
+    resolution: {integrity: sha512-5y/RDbFD92Clrk28oYNrPgk5p7LJKdP1UUoq/tJnjTbl2oxQYg9ECy8P7AHkZrwm0JWa1PvxDv4sasmKFMNerw==}
     peerDependencies:
       '@react-native-async-storage/async-storage': '*'
       '@react-native-community/netinfo': '*'
@@ -24754,9 +24748,6 @@ packages:
       elliptic: 6.5.5
       node-addon-api: 2.0.2
       node-gyp-build: 4.8.1
-
-  /secrets.js-34r7h@2.0.2:
-    resolution: {integrity: sha512-NwB4tLBs7soL6lYgGslTVllvMVEnSOjw79xI/yy4DAg86FXkVe1cLLMfhqreLgwY/zmGryqn5njYOGRjKuZzUg==}
 
   /secure-json-parse@2.7.0:
     resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}

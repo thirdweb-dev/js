@@ -17,7 +17,7 @@
       "src/crypto/aes/lib/md5.ts",
       "src/utils/promise/p-limit.ts",
       "src/utils/bytecode/cbor-decode.ts",
-      "packages/thirdweb/src/wallets/in-app/native/helpers/wallet/sss.ts",
+      "src/wallets/in-app/native/helpers/wallet/sss.ts",
       "src/**/__generated__/**"
     ]
   }
