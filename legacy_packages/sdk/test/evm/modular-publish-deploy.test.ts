@@ -124,8 +124,8 @@ describe("Modular contract deployment", async () => {
 
   it("should check extension compatibility", async () => {
     const isCompatible = await compatibleExtensions(
-      mockCoreDeployedBytecode,
-      [mockExtensionWithFunctionsDeployedBytecode, mockExtensionWithFunctionsDeployedBytecode],
+      mockCoreBytecode,
+      [mockExtensionWithFunctionsBytecode, mockExtensionWithFunctionsBytecode],
       11155111,
     );
 

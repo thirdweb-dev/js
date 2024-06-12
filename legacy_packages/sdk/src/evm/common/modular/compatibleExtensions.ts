@@ -21,8 +21,11 @@ export async function compatibleExtensions(
     "getSupportedCallbackFunctions",
     [],
   );
-  if (coreBytecode.startsWith("0x6080604052")) {
+  if (!coreBytecode.startsWith("0x6080604052")) {
     const index = coreBytecode.indexOf("6080604052");
+    coreBytecode = `0x${coreBytecode.substring(index)}`;
+  } else if(coreBytecode.lastIndexOf("6080604052") > 0) {
+    const index = coreBytecode.lastIndexOf("6080604052");
     coreBytecode = `0x${coreBytecode.substring(index)}`;
   }
   const core = await jsonRpcProvider.send("eth_call", [
@@ -42,6 +45,9 @@ export async function compatibleExtensions(
 
       if (!b.startsWith("0x6080604052")) {
         const index = b.indexOf("6080604052");
+        b = `0x${b.substring(index)}`;
+      } else if(b.lastIndexOf("6080604052") > 0) {
+        const index = b.lastIndexOf("6080604052");
         b = `0x${b.substring(index)}`;
       }
 
