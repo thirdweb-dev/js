@@ -3,19 +3,18 @@
 /* eslint-disable react/forbid-dom-props */
 import { popularChains } from "../popularChains";
 import { useTheme } from "next-themes";
-import { ConnectWallet, useSupportedChains } from "@thirdweb-dev/react";
+import { ConnectWallet } from "@thirdweb-dev/react";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
-import { ComponentProps, useCallback, useMemo } from "react";
+import { ComponentProps, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
-import { useFavouriteChains } from "../../../../app/(dashboard)/(chain)/components/client/star-button";
-import type { Chain } from "@thirdweb-dev/chains";
+import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 
 export interface ConnectWalletProps {
   shrinkMobile?: boolean;
@@ -36,22 +35,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const t = theme === "light" ? "light" : "dark";
-  const allChains = useSupportedChains();
-  const favChainsQuery = useFavouriteChains();
-
-  const favChains = useMemo(() => {
-    if (favChainsQuery.data) {
-      const _chains: Chain[] = [];
-      favChainsQuery.data.forEach((chainId) => {
-        const chain = allChains.find((c) => String(c.chainId) === chainId);
-        if (chain) {
-          _chains.push(chain);
-        }
-      });
-
-      return _chains;
-    }
-  }, [favChainsQuery.data, allChains]);
+  const favChainsQuery = useFavoriteChains();
 
   return (
     <ConnectWallet
@@ -64,8 +48,20 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
       privacyPolicyUrl="/privacy"
       hideTestnetFaucet={false}
       networkSelector={{
-        popularChains: favChains ?? popularChains,
-        recentChains,
+        sections: [
+          {
+            label: "Recently used",
+            chains: recentChains,
+          },
+          {
+            label: "Favorites",
+            chains: favChainsQuery.data ?? [],
+          },
+          {
+            label: "Popular",
+            chains: popularChains,
+          },
+        ],
         onSwitch(chain) {
           addRecentlyUsedChainId(chain.chainId);
         },

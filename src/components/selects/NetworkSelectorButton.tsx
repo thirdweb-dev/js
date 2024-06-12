@@ -13,6 +13,7 @@ import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { Button } from "tw-components";
+import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
 
 interface NetworkSelectorButtonProps {
   disabledChainIds?: number[];
@@ -33,6 +34,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const { colorMode } = useColorMode();
   const supportedChains = useSupportedChains();
+  const favoriteChainsQuery = useFavoriteChains();
 
   const chains = useMemo(() => {
     if (disabledChainIds && disabledChainIds.length > 0) {
@@ -123,8 +125,20 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           open={showNetworkSelector}
           theme={colorMode}
           chains={chains}
-          recentChains={filteredRecentlyUsedChains}
-          popularChains={networksEnabled ? undefined : popularChains}
+          sections={[
+            {
+              label: "Recently Used",
+              chains: filteredRecentlyUsedChains ?? [],
+            },
+            {
+              label: "Favorites",
+              chains: favoriteChainsQuery.data ?? [],
+            },
+            {
+              label: "Popular",
+              chains: networksEnabled ? [] : popularChains,
+            },
+          ]}
           renderChain={CustomChainRenderer}
           onCustomClick={
             networksEnabled

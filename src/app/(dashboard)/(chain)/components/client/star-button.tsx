@@ -43,7 +43,7 @@ async function removeChainFromFavorites(chainId: number) {
   return result?.data?.favorite;
 }
 
-export function useFavouriteChains() {
+export function useFavouriteChainIds() {
   const loggedInUser = useLoggedInUser();
   return useQuery({
     queryKey: ["favoriteChains", loggedInUser.user?.address],
@@ -60,7 +60,7 @@ export function StarButton(props: {
 }) {
   const loggedInUser = useLoggedInUser();
   const queryClient = useQueryClient();
-  const favChainsQuery = useFavouriteChains();
+  const favChainsQuery = useFavouriteChainIds();
 
   const mutation = useMutation({
     mutationFn: (preferred: boolean) => {
