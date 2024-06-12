@@ -16,7 +16,6 @@ import {
 import {
   type DropContract,
   type TokenContract,
-  useAddress,
   useClaimConditions,
   useSetClaimConditions,
   useTokenDecimals,
@@ -47,6 +46,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { Button, Heading, MenuItem, Text } from "tw-components";
 import * as z from "zod";
@@ -200,7 +200,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     };
   }, [contract]);
 
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);
   const isAdmin = useIsAdmin(contract);

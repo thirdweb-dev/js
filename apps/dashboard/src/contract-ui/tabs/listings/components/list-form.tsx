@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import {
   type UseContractResult,
-  useAddress,
   useContract,
   useContractType,
   type useCreateAuctionListing,
@@ -41,6 +40,7 @@ import type { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -123,7 +123,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
   });
 
   const { contract } = useContract(form.watch("contractAddress"));
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } = useOwnedNFTs(
     contract,
     address,

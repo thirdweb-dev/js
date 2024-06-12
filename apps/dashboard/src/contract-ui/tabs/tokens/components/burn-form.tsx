@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import {
   type TokenContract,
-  useAddress,
   useBurnToken,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
@@ -17,6 +16,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -32,7 +32,7 @@ interface TokenBurnFormProps {
 
 export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const burn = useBurnToken(contract);
   const {
     register,

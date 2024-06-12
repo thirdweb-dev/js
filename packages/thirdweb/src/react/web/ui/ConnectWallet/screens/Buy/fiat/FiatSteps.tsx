@@ -17,7 +17,10 @@ import {
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainExplorers,
+  useChainName,
+} from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
@@ -151,10 +154,11 @@ export function FiatSteps(props: {
     return tokenInfo;
   }, [onRampTokenMeta]);
 
-  const onRampChainMetaQuery = useChainQuery(onRampChain);
-  const toChainMetaQuery = useChainQuery(toChain);
-
-  const destinationChainMetaQuery = useChainQuery(destinationChain);
+  const onRampName = useChainName(onRampChain);
+  const onRampExplorers = useChainExplorers(onRampChain);
+  const toChainName = useChainName(toChain);
+  const toChainExplorers = useChainExplorers(toChain);
+  const destinationName = useChainName(destinationChain);
 
   const onRampTokenInfo = (
     <div>
@@ -185,9 +189,7 @@ export function FiatSteps(props: {
     />
   );
 
-  const onRampChainInfo = (
-    <Text size="xs">{onRampChainMetaQuery.data?.name}</Text>
-  );
+  const onRampChainInfo = <Text size="xs">{onRampName.name}</Text>;
 
   const partialSuccessToTokenInfo =
     props.status?.status === "CRYPTO_SWAP_FALLBACK" &&
@@ -247,16 +249,16 @@ export function FiatSteps(props: {
             textDecoration: "line-through",
           }}
         >
-          {toChainMetaQuery.data?.name}
+          {toChainName.name}
         </Text>{" "}
         <Text size="xs" inline>
-          {destinationChainMetaQuery.data?.name}
+          {destinationName.name}
         </Text>
       </div>
     ) : null;
 
   const toTokehChainInfo = partialSuccessToChainInfo || (
-    <Text size="xs">{toChainMetaQuery.data?.name}</Text>
+    <Text size="xs">{toChainName.name}</Text>
   );
 
   const onRampTxHash =
@@ -339,10 +341,10 @@ export function FiatSteps(props: {
         }}
         state={getStep1State()}
         explorer={
-          onRampChainMetaQuery.data?.explorers?.[0]?.url && onRampTxHash
+          onRampExplorers.explorers[0]?.url && onRampTxHash
             ? {
                 label: "View on Explorer",
-                url: `${onRampChainMetaQuery.data.explorers[0].url}/tx/${onRampTxHash}`,
+                url: `${onRampExplorers.explorers[0]?.url}/tx/${onRampTxHash}`,
               }
             : undefined
         }
@@ -376,10 +378,10 @@ export function FiatSteps(props: {
         }}
         state={getStep2State()}
         explorer={
-          toChainMetaQuery.data?.explorers?.[0]?.url && toTokenTxHash
+          toChainExplorers.explorers[0]?.url && toTokenTxHash
             ? {
                 label: "View on Explorer",
-                url: `${toChainMetaQuery.data.explorers[0].url}/tx/${toTokenTxHash}`,
+                url: `${toChainExplorers.explorers[0].url}/tx/${toTokenTxHash}`,
               }
             : undefined
         }

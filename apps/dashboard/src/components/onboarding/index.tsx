@@ -5,11 +5,10 @@ import {
   useConfirmEmbeddedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useWallet } from "@thirdweb-dev/react";
-import { walletIds } from "@thirdweb-dev/wallets";
 import { getLatestEWSToken } from "constants/app";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useCallback, useEffect, useState } from "react";
+import { useActiveWallet } from "thirdweb/react";
+import { useTrack } from "../../hooks/analytics/useTrack";
 import { OnboardingBilling } from "./Billing";
 import { OnboardingChoosePlan } from "./ChoosePlan";
 import { OnboardingConfirmEmail } from "./ConfirmEmail";
@@ -40,14 +39,14 @@ export const Onboarding: React.FC = () => {
 
   const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
-  const wallet = useWallet();
+  const wallet = useActiveWallet();
   const ewsConfirmMutation = useConfirmEmbeddedWallet();
 
   const [state, setState] = useState<OnboardingState>();
   const [account, setAccount] = useState<Account>();
   const [updatedEmail, setUpdatedEmail] = useState<string | undefined>();
 
-  const isEmbeddedWallet = wallet?.walletId === walletIds.embeddedWallet;
+  const isInAppWallet = wallet?.id === "inApp";
 
   const handleSave = (email?: string) => {
     // if account is not ready yet we cannot do anything here
@@ -161,7 +160,7 @@ export const Onboarding: React.FC = () => {
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       // if its an embedded wallet, try to auto-confirm it
-      if (isEmbeddedWallet) {
+      if (isInAppWallet) {
         handleEmbeddedWalletConfirmation();
       } else {
         setState("onboarding");
@@ -183,13 +182,7 @@ export const Onboarding: React.FC = () => {
     else if (!skipBilling(account)) {
       setState("plan");
     }
-  }, [
-    account,
-    state,
-    wallet,
-    isEmbeddedWallet,
-    handleEmbeddedWalletConfirmation,
-  ]);
+  }, [account, state, wallet, handleEmbeddedWalletConfirmation, isInAppWallet]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
     return null;
