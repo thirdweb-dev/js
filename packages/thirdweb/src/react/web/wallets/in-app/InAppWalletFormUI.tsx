@@ -28,6 +28,7 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
+import { ModalTitle } from "../../ui/components/modalElements.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
@@ -336,7 +337,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
  */
 export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const locale = props.locale.emailLoginScreen;
-  const { connectModal } = useConnectUI();
+  const { connectModal, client } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
@@ -357,7 +358,22 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
     >
       {isCompact ? (
         <>
-          <ModalHeader onBack={onBack} title={locale.title} />
+          <ModalHeader
+            onBack={onBack}
+            title={
+              <>
+                {!connectModal.titleIcon ? null : (
+                  <Img
+                    src={connectModal.titleIcon}
+                    width={iconSize.md}
+                    height={iconSize.md}
+                    client={client}
+                  />
+                )}
+                <ModalTitle>{connectModal.title ?? locale.title}</ModalTitle>
+              </>
+            }
+          />
           <Spacer y="sm" />
         </>
       ) : null}
