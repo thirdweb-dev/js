@@ -7,7 +7,6 @@ import {
 import { BytesLike } from "ethers";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { EntryPoint__factory } from "@account-abstraction/contracts";
-import { Zksync, ZksyncSepoliaTestnet } from "@thirdweb-dev/chains";
 
 export type AccessibleSmartWallets = {
   owned: string;
@@ -111,7 +110,7 @@ export async function isZkSyncChain(
     secretKey,
   });
   const chainId = (await provider.getNetwork()).chainId;
-  return chainId === Zksync.chainId || chainId === ZksyncSepoliaTestnet.chainId;
+  return chainId === 324 || chainId === 300 || chainId === 302;
 }
 
 /**

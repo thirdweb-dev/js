@@ -1,5 +1,6 @@
 "use client";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, lazy, useState } from "react";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
 import type {
   DeepLinkSupportedWalletIds,
@@ -11,7 +12,6 @@ import { getInstalledWalletProviders } from "../../../../../wallets/injected/mip
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
-import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import {
@@ -42,18 +42,22 @@ export function AnyWalletConnectUI(props: {
   const { wallet } = props;
   const walletInfo = useWalletInfo(props.wallet.id);
   const localeId = useConnectUI().locale;
-  const [locale, setLocale] = useState<InjectedWalletLocale | null>(null);
 
-  useEffect(() => {
-    if (!walletInfo.data) {
-      return;
-    }
-    getInjectedWalletLocale(localeId).then((w) => {
-      setLocale(w(walletInfo.data.name));
-    });
-  }, [localeId, walletInfo.data]);
+  const localeQuery = useQuery({
+    queryKey: ["injectedWalletLocale", localeId],
+    queryFn: async () => {
+      if (!walletInfo.data) {
+        throw new Error("Wallet info not available");
+      }
+      const w = await getInjectedWalletLocale(localeId);
+      return w(walletInfo.data.name);
+    },
+    enabled: !!walletInfo.data,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-  if (!walletInfo.data || !locale) {
+  if (!walletInfo.data || !localeQuery.data) {
     return <LoadingScreen />;
   }
 
@@ -65,7 +69,7 @@ export function AnyWalletConnectUI(props: {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
-        locale={locale}
+        locale={localeQuery.data}
         wallet={props.wallet}
         walletInfo={walletInfo.data}
         onBack={() => {
@@ -87,7 +91,7 @@ export function AnyWalletConnectUI(props: {
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
         walletInfo={walletInfo.data}
         deepLinkPrefix={walletInfo.data.deepLink.mobile}
-        locale={locale}
+        locale={localeQuery.data}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -102,7 +106,7 @@ export function AnyWalletConnectUI(props: {
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
         walletInfo={walletInfo.data}
         done={props.done}
-        locale={locale}
+        locale={localeQuery.data}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -116,7 +120,7 @@ export function AnyWalletConnectUI(props: {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <CoinbaseSDKWalletConnectUI
-          locale={locale}
+          locale={localeQuery.data}
           onGetStarted={() => {
             setScreen("get-started");
           }}
@@ -133,7 +137,7 @@ export function AnyWalletConnectUI(props: {
   if (walletInfo.data.mobile.native || walletInfo.data.mobile.universal) {
     return (
       <WalletConnectConnection
-        locale={locale}
+        locale={localeQuery.data}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -149,7 +153,7 @@ export function AnyWalletConnectUI(props: {
   if (props.wallet.id === "walletConnect") {
     return (
       <WalletConnectStandaloneConnection
-        locale={locale}
+        locale={localeQuery.data}
         onBack={props.onBack}
         done={props.done}
         wallet={props.wallet as Wallet<"walletConnect">}
@@ -174,7 +178,7 @@ export function AnyWalletConnectUI(props: {
   // if can't connect in any way - show get started screen
   return (
     <GetStartedScreen
-      locale={locale}
+      locale={localeQuery.data}
       wallet={props.wallet}
       walletInfo={walletInfo.data}
       onBack={() => {

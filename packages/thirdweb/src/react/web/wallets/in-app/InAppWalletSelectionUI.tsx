@@ -22,7 +22,7 @@ function InAppWalletSelectionUI(props: {
   const { screen } = useScreenContext();
   const { connectModal } = useConnectUI();
   const setData = useSetSelectionData();
-  const locale = useInAppWalletLocale();
+  const localeQuery = useInAppWalletLocale();
 
   // do not show the "selectUI" if
   // modal is compact or
@@ -42,13 +42,13 @@ function InAppWalletSelectionUI(props: {
     );
   }
 
-  if (!locale) {
+  if (!localeQuery.data) {
     return <LoadingScreen height="195px" />;
   }
 
   return (
     <InAppWalletFormUI
-      locale={locale}
+      locale={localeQuery.data}
       wallet={props.wallet}
       done={props.done}
       select={props.select}

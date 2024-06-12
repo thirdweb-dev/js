@@ -74,7 +74,9 @@ export function useUISelectionStates(options: {
   // --------------------------------------------------------------------------
 
   // stripe only supports USD, so not using a state right now
-  const selectedCurrency = defaultSelectedCurrency;
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    defaultSelectedCurrency,
+  );
 
   return {
     tokenAmount,
@@ -91,5 +93,6 @@ export function useUISelectionStates(options: {
     setFromToken,
     selectedCurrency,
     setHasEditedAmount,
+    setSelectedCurrency,
   };
 }

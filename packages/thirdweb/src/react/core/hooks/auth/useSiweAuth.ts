@@ -64,6 +64,7 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
       }
       return authOptions.isLoggedIn(activeAccount.address);
     },
+    refetchOnWindowFocus: false,
   });
 
   const loginMutation = useMutation({

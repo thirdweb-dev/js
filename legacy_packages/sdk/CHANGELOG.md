@@ -1,5 +1,21 @@
 # @thirdweb-dev/sdk
 
+## 4.0.93
+
+### Patch Changes
+
+- [#3278](https://github.com/thirdweb-dev/js/pull/3278) [`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [v4 & v5] zkCandy Sepolia AA Support
+
+- [#3269](https://github.com/thirdweb-dev/js/pull/3269) [`d2cbb1e`](https://github.com/thirdweb-dev/js/commit/d2cbb1ee7ebe5aea9021d5be57cd80abd1df7a1c) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [TSv4] Force eth_signTypedData_v4 session proposal
+
+- [#3239](https://github.com/thirdweb-dev/js/pull/3239) [`21ca67d`](https://github.com/thirdweb-dev/js/commit/21ca67dc1342c898baa1ddc564467b39df57d530) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [TSv4] Avoid unnecessary fetching for error formatting
+
+- [#3236](https://github.com/thirdweb-dev/js/pull/3236) [`8acf564`](https://github.com/thirdweb-dev/js/commit/8acf5643d56a9e65c1f6bad20e8b87271aa115e1) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Fix caching logic for getContract/getContractFromAbi
+
+- Updated dependencies [[`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254), [`f2004b5`](https://github.com/thirdweb-dev/js/commit/f2004b54eaf3137297fd8a4d29c85b4aa5c78dcb), [`e763ace`](https://github.com/thirdweb-dev/js/commit/e763ace602639f08f95b600ba1532708f2569eb9), [`7afd2da`](https://github.com/thirdweb-dev/js/commit/7afd2dac0ace82fd7ba14766acd73555f4fa10ce), [`dbf74aa`](https://github.com/thirdweb-dev/js/commit/dbf74aad3ffaeaa3e3967801549f6ec26f721dea), [`3948f43`](https://github.com/thirdweb-dev/js/commit/3948f4320cdf9546975955414aa756bc5e57c08a), [`923a5ec`](https://github.com/thirdweb-dev/js/commit/923a5ec556b5a857e855377c90ad339485ac828f), [`7dec4d0`](https://github.com/thirdweb-dev/js/commit/7dec4d049d9433782ef3b9de0738d6bce29fa6a8), [`3a1fd98`](https://github.com/thirdweb-dev/js/commit/3a1fd985fc4b2720f4d46d54b562c00b2edf21ce), [`824a631`](https://github.com/thirdweb-dev/js/commit/824a631b55bb4b8d4a0290d19dde081dd90a8647), [`37ec4ca`](https://github.com/thirdweb-dev/js/commit/37ec4ca28d7d0290d4cc8b838d888f67c70e172f), [`d488223`](https://github.com/thirdweb-dev/js/commit/d4882236b786660efd1f60c181d37351109949ff), [`efae2f3`](https://github.com/thirdweb-dev/js/commit/efae2f36b60e0bcade159608903c9b756843151c), [`e7b9b9f`](https://github.com/thirdweb-dev/js/commit/e7b9b9f438ad303fdc79aaca1ca674acd8c7a7ba), [`ce45a79`](https://github.com/thirdweb-dev/js/commit/ce45a793b54ab656dac01f2f99d9db8df52f4e23)]:
+  - thirdweb@5.29.0
+  - @thirdweb-dev/chains@0.1.117
+
 ## 4.0.92
 
 ### Patch Changes
