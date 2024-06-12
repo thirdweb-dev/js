@@ -5,7 +5,6 @@ import {
   useSetWalletModalConfig,
 } from "@thirdweb-dev/react";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import {} from "hooks/chains/recentlyUsedChains";
 import { useEffect, useRef } from "react";
 
 export const BillingConnectWalletPrompt = () => {
