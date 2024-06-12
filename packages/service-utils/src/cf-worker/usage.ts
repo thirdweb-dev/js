@@ -84,6 +84,9 @@ const usageEventSchema = z.object({
       "TRACE",
     ])
     .optional(),
+  // Used to identify the ecosystem that the an ecosystem wallet belongs too
+  ecosystemId: z.string().optional(),
+  ecosystemPartnerId: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
