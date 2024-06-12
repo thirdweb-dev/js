@@ -23,7 +23,6 @@ export async function ChainIcon(props: {
       // revalidate every hour
       next: { revalidate: 60 * 60 },
       method: "HEAD",
-      cache: "force-cache",
       headers: DASHBOARD_THIRDWEB_SECRET_KEY
         ? {
             "x-secret-key": DASHBOARD_THIRDWEB_SECRET_KEY,
