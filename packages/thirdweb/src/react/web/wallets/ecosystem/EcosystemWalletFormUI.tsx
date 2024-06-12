@@ -1,31 +1,29 @@
 "use client";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { iconSize } from "../../../core/design-system/index.js";
+import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
-import { Img } from "../../ui/components/Img.js";
 import { Spacer } from "../../ui/components/Spacer.js";
-import { Container, ModalHeader } from "../../ui/components/basic.js";
-import { ModalTitle } from "../../ui/components/modalElements.js";
+import { Container } from "../../ui/components/basic.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import type { ConnectLocale } from "../shared/locale/types.js";
+import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
 
-export type InAppWalletFormUIProps = {
+export type EcosystemWalletFormUIProps = {
   select: () => void;
-  locale: ConnectLocale;
   done: () => void;
-  wallet: Wallet<"inApp">;
+  locale: ConnectLocale;
+  wallet: Wallet<EcosystemWalletId>;
   goBack?: () => void;
 };
 
 /**
  * @internal
  */
-export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
-  const locale = props.locale.emailLoginScreen;
-  const { connectModal, client } = useConnectUI();
+export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
+  const { connectModal } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
@@ -46,22 +44,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
     >
       {isCompact ? (
         <>
-          <ModalHeader
-            onBack={onBack}
-            title={
-              <>
-                {!connectModal.titleIcon ? null : (
-                  <Img
-                    src={connectModal.titleIcon}
-                    width={iconSize.md}
-                    height={iconSize.md}
-                    client={client}
-                  />
-                )}
-                <ModalTitle>{connectModal.title ?? locale.title}</ModalTitle>
-              </>
-            }
-          />
+          <EcosystemWalletHeader onBack={onBack} wallet={props.wallet} />
           <Spacer y="lg" />
         </>
       ) : null}

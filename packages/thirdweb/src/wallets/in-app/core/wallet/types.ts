@@ -1,6 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
+import type { AuthOptions, SocialAuthOptions } from "../../../types.js";
 import type {
   MultiStepAuthArgsType,
   SingleStepAuthArgsType,
@@ -19,13 +20,8 @@ export type InAppWalletAutoConnectOptions = {
   chain?: Chain;
 };
 
-export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
-
-export type InAppWalletAuth =
-  | "email"
-  | "phone"
-  | "passkey"
-  | InAppWalletSocialAuth;
+export type InAppWalletSocialAuth = SocialAuthOptions;
+export type InAppWalletAuth = AuthOptions;
 
 export type InAppWalletCreationOptions =
   | {

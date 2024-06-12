@@ -14,7 +14,7 @@ import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
-import type { InAppWalletLocale } from "./locale/types.js";
+import type { ConnectLocale } from "./locale/types.js";
 import { setLastAuthProvider } from "./storage.js";
 
 type VerificationStatus =
@@ -29,10 +29,10 @@ type ScreenToShow = "base" | "enter-password-or-recovery-code";
 /**
  * @internal
  */
-export function InAppWalletOTPLoginUI(props: {
+export function OTPLoginUI(props: {
   userInfo: { email: string } | { phone: string };
-  wallet: Wallet<"inApp">;
-  locale: InAppWalletLocale;
+  wallet: Wallet;
+  locale: ConnectLocale;
   done: () => void;
   goBack?: () => void;
 }) {

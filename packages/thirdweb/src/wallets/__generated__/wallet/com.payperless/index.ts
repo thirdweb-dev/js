@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.safemoon",
-  name: "SafeMoon",
-  homepage: "https://safemoon.com/",
-  image_id: "ea0140c7-787c-43a4-838f-d5ab6a342000",
+  id: "com.payperless",
+  name: "Payperless",
+  homepage: "https://payperless.com",
+  image_id: "4a867e30-44c9-4627-6281-33457b8e2100",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/us/app/safemoon/id1579735495",
+    browser: "https://payperless.com",
+    ios: "https://apps.apple.com/us/app/payperless-wallet/id1552741313",
     android:
-      "https://play.google.com/store/apps/details?id=net.safemoon.androidwallet",
+      "https://play.google.com/store/apps/details?id=com.payperless.wallet",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +22,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "safemoon://",
-    universal: "https://safemoon.com/wc",
+    native: " payperless.com://",
+    universal: null,
   },
   desktop: {
     native: null,

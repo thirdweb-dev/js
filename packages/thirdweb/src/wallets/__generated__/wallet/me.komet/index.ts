@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.bonuz",
-  name: "Bonuz - Social ID",
-  homepage: "https://bonuz.xyz",
-  image_id: "eb376138-c5b9-4d82-c610-c98c9c218a00",
+  id: "me.komet",
+  name: "Komet",
+  homepage: "https://komet.me",
+  image_id: "a2e9aaed-20f6-4da9-3ca3-448a1fc00b00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/eg/app/bonuz-social-smart-wallet/id1637687439",
-    android: "https://play.google.com/store/apps/details?id=market.bonuz.app",
+    ios: "https://apps.apple.com/in/app/komet/id6448238558",
+    android: null,
     mac: null,
     windows: null,
     linux: null,
@@ -21,7 +21,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "bonuzapp://",
+    native: "komet://",
     universal: null,
   },
   desktop: {

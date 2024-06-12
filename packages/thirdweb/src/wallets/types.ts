@@ -19,5 +19,9 @@ export type AppMetadata = {
   logoUrl?: string;
 };
 
+export type SocialAuthOptions = "google" | "apple" | "facebook";
+
+export type AuthOptions = "email" | "phone" | "passkey" | SocialAuthOptions;
+
 export type DisconnectFn = () => Promise<void>;
 export type SwitchChainFn = (chain: Chain) => Promise<void>;

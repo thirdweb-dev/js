@@ -8,9 +8,12 @@ import type {
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
 import { COINBASE } from "../../../../../wallets/constants.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
@@ -168,6 +171,18 @@ export function AnyWalletConnectUI(props: {
       <Suspense fallback={<LoadingScreen />}>
         <InAppWalletConnectUI
           wallet={props.wallet as Wallet<"inApp">}
+          done={props.done}
+          goBack={props.onBack}
+        />
+      </Suspense>
+    );
+  }
+
+  if (isEcosystemWallet(props.wallet.id)) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <EcosystemWalletConnectUI
+          wallet={props.wallet as Wallet<EcosystemWalletId>}
           done={props.done}
           goBack={props.onBack}
         />

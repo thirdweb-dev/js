@@ -1,24 +1,25 @@
 "use client";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useSelectionData,
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
+import { useConnectLocale } from "../in-app/useInAppWalletLocale.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { OTPLoginUI } from "../shared/OTPLoginUI.js";
 import { PassKeyLogin } from "../shared/PassKeyLogin.js";
 import { SocialLogin } from "../shared/SocialLogin.js";
-import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
-import { useConnectLocale } from "./useInAppWalletLocale.js";
+import { EcosystemWalletFormUIScreen } from "./EcosystemWalletFormUI.js";
 
 /**
  *
  * @internal
  */
-function InAppWalletConnectUI(props: {
-  wallet: Wallet<"inApp">;
+function EcosystemWalletConnectUI(props: {
+  wallet: Wallet<EcosystemWalletId>;
   done: () => void;
   goBack?: () => void;
 }) {
@@ -81,7 +82,7 @@ function InAppWalletConnectUI(props: {
   }
 
   return (
-    <InAppWalletFormUIScreen
+    <EcosystemWalletFormUIScreen
       select={() => {}}
       locale={locale}
       done={props.done}
@@ -91,4 +92,4 @@ function InAppWalletConnectUI(props: {
   );
 }
 
-export default InAppWalletConnectUI;
+export default EcosystemWalletConnectUI;

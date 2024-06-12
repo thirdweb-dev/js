@@ -1,3 +1,5 @@
+import type { EcosystemWalletId } from "../wallet-types.js";
+
 /**
  * Checks if the given wallet is an ecosystem wallet.
  *
@@ -5,6 +7,8 @@
  * @returns {boolean} True if the wallet is an ecosystem wallet, false otherwise.
  * @internal
  */
-export function isEcosystemWallet(walletId: string): boolean {
+export function isEcosystemWallet(
+  walletId: string,
+): walletId is EcosystemWalletId {
   return walletId.startsWith("ecosystem.");
 }

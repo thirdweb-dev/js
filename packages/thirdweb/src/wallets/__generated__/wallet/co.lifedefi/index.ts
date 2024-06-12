@@ -2,14 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.bonuz",
-  name: "Bonuz - Social ID",
-  homepage: "https://bonuz.xyz",
-  image_id: "eb376138-c5b9-4d82-c610-c98c9c218a00",
+  id: "co.lifedefi",
+  name: "Life DeFi",
+  homepage: "https://lifedefi.co",
+  image_id: "d249af4f-e9b8-498d-cbc3-9eab04568700",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/eg/app/bonuz-social-smart-wallet/id1637687439",
-    android: "https://play.google.com/store/apps/details?id=market.bonuz.app",
+    ios: "https://apps.apple.com/ca/app/life-the-defi-wallet/id1591427970",
+    android:
+      "https://play.google.com/store/apps/details?id=life.lifecrypto.app&hl=en_US&gl=US",
     mac: null,
     windows: null,
     linux: null,
@@ -21,11 +22,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "bonuzapp://",
+    native: "w3akvrn:/",
     universal: null,
   },
   desktop: {
-    native: null,
+    native: "w3akvrn:/",
     universal: null,
   },
 } as const;

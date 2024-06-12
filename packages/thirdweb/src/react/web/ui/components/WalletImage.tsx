@@ -7,7 +7,7 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { getStorage } from "../../../core/storage.js";
-import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
+import { getLastAuthProvider } from "../../wallets/shared/storage.js";
 import {
   emailIcon,
   genericWalletIcon,

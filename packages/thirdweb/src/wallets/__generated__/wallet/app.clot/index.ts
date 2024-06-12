@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "xyz.bonuz",
-  name: "Bonuz - Social ID",
-  homepage: "https://bonuz.xyz",
-  image_id: "eb376138-c5b9-4d82-c610-c98c9c218a00",
+  id: "app.clot",
+  name: "Clot",
+  homepage: "https://clot.app",
+  image_id: "a7d2716d-69b8-4422-9797-ed63b1f9c000",
   app: {
-    browser: null,
-    ios: "https://apps.apple.com/eg/app/bonuz-social-smart-wallet/id1637687439",
-    android: "https://play.google.com/store/apps/details?id=market.bonuz.app",
+    browser: "https://clot.app",
+    ios: "https://apps.apple.com/app/clot-wallet/id1584113315",
+    android: null,
     mac: null,
     windows: null,
     linux: null,
@@ -21,7 +21,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "bonuzapp://",
+    native: "clot://",
     universal: null,
   },
   desktop: {
