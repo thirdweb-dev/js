@@ -1,45 +1,83 @@
 import { providers, utils } from "ethers";
-import { extensionContractAbi } from "../../constants/thirdweb-features";
+import {
+  coreContractAbi,
+  extensionContractAbi,
+} from "../../constants/thirdweb-features";
 import { hasDuplicates } from "../utils";
 import { getChainByChainIdAsync, getChainRPC } from "@thirdweb-dev/chains";
 
 export async function compatibleExtensions(
-  bytecodes: string[],
+  coreBytecode: string,
+  extensionBytecodes: string[],
   chainId: number,
 ): Promise<boolean> {
   const chain = await getChainByChainIdAsync(chainId);
   const rpcUrl = getChainRPC(chain);
-  const iface = new utils.Interface(extensionContractAbi);
-  const calldata = iface.encodeFunctionData("getExtensionConfig", []);
+  const jsonRpcProvider = new providers.JsonRpcProvider(rpcUrl);
+  const addr = "0x0000000000000000000000000000000000000124";
 
-  const configs = await Promise.all(
-    bytecodes.map((b: string) => {
-        // TODO: Upload deployed bytecode on publish metadata
-        
+  const coreIface = new utils.Interface(coreContractAbi);
+  const coreCalldata = coreIface.encodeFunctionData(
+    "getSupportedCallbackFunctions",
+    [],
+  );
+  if (coreBytecode.startsWith("0x6080604052")) {
+    const index = coreBytecode.indexOf("6080604052");
+    coreBytecode = `0x${coreBytecode.substring(index)}`;
+  }
+  const core = await jsonRpcProvider.send("eth_call", [
+    { to: addr, data: coreCalldata },
+    "latest",
+    { [addr]: { code: coreBytecode } },
+  ]);
+
+  const extensionIface = new utils.Interface(extensionContractAbi);
+  const extensionCalldata = extensionIface.encodeFunctionData(
+    "getExtensionConfig",
+    [],
+  );
+  const extensions = await Promise.all(
+    extensionBytecodes.map((b: string) => {
+      // TODO: Upload deployed bytecode on publish metadata
+
       if (!b.startsWith("0x6080604052")) {
         const index = b.indexOf("6080604052");
         b = `0x${b.substring(index)}`;
       }
-      const addr = "0x0000000000000000000000000000000000000124";
-      const jsonRpcProvider = new providers.JsonRpcProvider(rpcUrl);
+
       return jsonRpcProvider.send("eth_call", [
-        { to: addr, data: calldata },
+        { to: addr, data: extensionCalldata },
         "latest",
         { [addr]: { code: b } },
       ]);
     }),
   );
 
-  const selectors = configs.map((c: any) => {
-    const decoded = iface.decodeFunctionResult("getExtensionConfig", c);
-    const extensionFunctionSelectors = decoded[0].extensionABI.map(
-      (a: any) => a.selector,
-    );
+  const decodedCore = coreIface.decodeFunctionResult(
+    "getSupportedCallbackFunctions",
+    core,
+  );
+  const coreCallbackSelectors = decodedCore.map((c: any) => c.selector);
 
-    return [...decoded[0].callbackFunctions, ...extensionFunctionSelectors];
+  const selectors = extensions.map((e: any) => {
+    const decodedExtensionConfig = extensionIface.decodeFunctionResult(
+      "getExtensionConfig",
+      e,
+    );
+    const extensionFallbackSelectors =
+      decodedExtensionConfig[0].fallbackFunctions.map((a: any) => a.selector);
+    const extensionCallbackSelectors =
+      decodedExtensionConfig[0].callbackFunctions.map((a: any) => a.selector);
+
+    return [
+      ...extensionFallbackSelectors,
+      ...extensionCallbackSelectors,
+    ];
   });
 
-  return hasDuplicates(
+  selectors.push([coreCallbackSelectors]);
+
+  return !hasDuplicates(
     selectors.flat(),
     (a: string, b: string): boolean => a === b,
   );

@@ -14,8 +14,10 @@ import {
 } from "./mock/mockCoreMetadata";
 import {
   mockExtensionWithFunctionsBytecode,
+  mockExtensionWithFunctionsDeployedBytecode,
   mockExtensionWithFunctionsCompilerMetadata,
 } from "./mock/mockExtensionWithFunctionsMetadata";
+import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";
 
 describe("Modular contract deployment", async () => {
   let adminWallet: SignerWithAddress;
@@ -39,7 +41,7 @@ describe("Modular contract deployment", async () => {
         },
         publisher: await adminWallet.getAddress(),
       },
-      "ipfs://QmdpoVTJZC6J6pNErAbXwRBkwHzeQzq9CfAHJL71bFs3Ca/0",
+      "ipfs://QmbAYkPwB2V8E8Phs62TFAoAa9fuP74DZFD2uCiSNAHpVb/0",
     );
 
     process.env.contractPublisherAddress = mockPublisher;
@@ -81,7 +83,7 @@ describe("Modular contract deployment", async () => {
         },
         publisher: await adminWallet.getAddress(),
       },
-      "ipfs://QmRFYf8HQmowSPJAWWcqmqua9Wt37NCeEfKyJucGYThrTX/0",
+      "ipfs://QmbQLyXkhkF2tF6nSbB9TaXUShaLbEWMi11zuR5U5mfz2X/0",
     );
 
     const walletAddress = await sdk.wallet.getAddress();
@@ -120,12 +122,13 @@ describe("Modular contract deployment", async () => {
     expect(extensions.length).to.equal(0);
   });
 
-  // it("should check extension compatibility", async () => {
-  //   const isCompatible = await compatibleExtensions(
-  //     [mockExtensionERC20Bytecode, mockExtensionERC20Bytecode],
-  //     11155111,
-  //   );
+  it("should check extension compatibility", async () => {
+    const isCompatible = await compatibleExtensions(
+      mockCoreDeployedBytecode,
+      [mockExtensionWithFunctionsDeployedBytecode, mockExtensionWithFunctionsDeployedBytecode],
+      11155111,
+    );
 
-  //   expect(isCompatible).to.be.true;
-  // });
+    expect(isCompatible).to.be.false;
+  });
 });
