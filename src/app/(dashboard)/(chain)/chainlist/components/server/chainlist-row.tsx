@@ -84,7 +84,7 @@ export async function ChainListRow({
                   key={p.name}
                   icon={p.icon}
                   label={p.name}
-                  href={`/${chainSlug}/${p.id}`}
+                  href={`/${chainSlug}/${p.id === "contracts" ? "" : p.id}`}
                   isEnabled={enabledServices.includes(p.id)}
                 />
               );
