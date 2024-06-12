@@ -14,6 +14,8 @@ export function useWalletInfo(id: WalletId) {
       return getWalletInfo(id, false);
     },
     retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }
 
@@ -28,5 +30,7 @@ export function useWalletImage(id: WalletId) {
       return getWalletInfo(id, true);
     },
     retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }

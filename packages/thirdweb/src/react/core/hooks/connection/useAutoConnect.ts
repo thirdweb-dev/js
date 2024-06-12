@@ -134,6 +134,7 @@ export function useAutoConnect(props: AutoConnectProps) {
     queryKey: ["autoConnect", props.client.clientId],
     queryFn: autoConnect,
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return query;
