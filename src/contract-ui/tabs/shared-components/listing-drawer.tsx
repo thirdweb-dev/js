@@ -57,6 +57,16 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             <Card as={Flex} flexDir="column" gap={3}>
               <SimpleGrid rowGap={3} columns={12} placeItems="center left">
                 <GridItem colSpan={3}>
+                  <Heading size="label.md">Asset contract address</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <AddressCopyButton
+                    size="xs"
+                    address={renderData.assetContractAddress}
+                    title="contract address"
+                  />
+                </GridItem>
+                <GridItem colSpan={3}>
                   <Heading size="label.md">Token ID</Heading>
                 </GridItem>
                 <GridItem colSpan={9}>
