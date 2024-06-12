@@ -1,4 +1,5 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy, useState } from "react";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
 import type {
@@ -20,7 +21,6 @@ import {
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
-import { useQuery } from "@tanstack/react-query";
 
 const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
   () => import("../../../wallets/shared/CoinbaseSDKConnection.js"),
@@ -49,14 +49,13 @@ export function AnyWalletConnectUI(props: {
       if (!walletInfo.data) {
         throw new Error("Wallet info not available");
       }
-      const w = await getInjectedWalletLocale(localeId)
+      const w = await getInjectedWalletLocale(localeId);
       return w(walletInfo.data.name);
     },
     enabled: !!walletInfo.data,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-  })
-
+  });
 
   if (!walletInfo.data || !localeQuery.data) {
     return <LoadingScreen />;

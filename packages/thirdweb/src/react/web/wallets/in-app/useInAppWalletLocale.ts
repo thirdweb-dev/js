@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getInAppWalletLocale } from "./locale/getInAppWalletLocale.js";
-import { useQuery } from "@tanstack/react-query";
 
 /**
  * @internal
