@@ -15,6 +15,7 @@ function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
  */
 const usageEventSchema = z.object({
   source: z.enum([
+    "ecosystemWallets",
     "embeddedWallets",
     "rpc",
     "storage",
