@@ -1,4 +1,4 @@
-export { smartWallet } from "../../wallets/create-wallet.js";
+export { smartWallet } from "../../wallets/smart/smart-wallet.js";
 
 export type {
   SmartWalletConnectionOptions,

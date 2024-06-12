@@ -7,9 +7,9 @@ import { getContract } from "../../contract/contract.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
-import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { privateKeyToAccount } from "../private-key.js";
+import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
 let smartAccount: Account;

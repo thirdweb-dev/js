@@ -26,7 +26,6 @@ import {
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { isReactNative } from "../../utils/platform.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import { COINBASE } from "../constants.js";
 import type {
@@ -128,20 +127,13 @@ export type CoinbaseSDKWalletConnectionOptions = {
 // this should be ok since all the creation options are provided at build time
 let _provider: ProviderInterface | undefined;
 
-async function getCoinbaseProvider(
+/**
+ * @internal
+ */
+export async function getCoinbaseWebProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
-    if (isReactNative()) {
-      const { initMobileProvider } = require("./coinbaseMobileSDK.js");
-      const mobileProvider = initMobileProvider({
-        chain: options?.chains ? options.chains[0] : undefined,
-        ...options?.mobileConfig,
-      });
-      _provider = mobileProvider;
-      return mobileProvider;
-    }
-
     const client = new CoinbaseWalletSDK({
       appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
@@ -186,7 +178,7 @@ export async function coinbaseSDKWalletGetCapabilities(args: {
   }
 
   const config = wallet.getConfig();
-  const provider = await getCoinbaseProvider(config);
+  const provider = await getCoinbaseWebProvider(config);
   try {
     return (await provider.request({
       method: "wallet_getCapabilities",
@@ -212,7 +204,7 @@ export async function coinbaseSDKWalletSendCalls(args: {
   const { wallet, params } = args;
 
   const config = wallet.getConfig();
-  const provider = await getCoinbaseProvider(config);
+  const provider = await getCoinbaseWebProvider(config);
 
   try {
     return (await provider.request({
@@ -238,7 +230,7 @@ export async function coinbaseSDKWalletShowCallsStatus(args: {
 }) {
   const { wallet, bundleId } = args;
 
-  const provider = await getCoinbaseProvider(wallet.getConfig());
+  const provider = await getCoinbaseWebProvider(wallet.getConfig());
 
   try {
     return await provider.request({
@@ -265,7 +257,7 @@ export async function coinbaseSDKWalletGetCallsStatus(args: {
   const { wallet, bundleId } = args;
 
   const config = wallet.getConfig();
-  const provider = await getCoinbaseProvider(config);
+  const provider = await getCoinbaseWebProvider(config);
 
   return provider.request({
     method: "wallet_getCallsStatus",
@@ -402,10 +394,9 @@ function onConnect(
  */
 export async function connectCoinbaseWalletSDK(
   options: WalletConnectionOption<typeof COINBASE>,
-  createOptions: CreateWalletArgs<typeof COINBASE>[1],
   emitter: WalletEmitter<typeof COINBASE>,
+  provider: ProviderInterface,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await getCoinbaseProvider(createOptions);
   const accounts = (await provider.request({
     method: "eth_requestAccounts",
   })) as string[];
@@ -443,11 +434,9 @@ export async function connectCoinbaseWalletSDK(
  */
 export async function autoConnectCoinbaseWalletSDK(
   options: WalletConnectionOption<typeof COINBASE>,
-  createOptions: CreateWalletArgs<typeof COINBASE>[1],
   emitter: WalletEmitter<typeof COINBASE>,
+  provider: ProviderInterface,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await getCoinbaseProvider(createOptions);
-
   // connected accounts
   const addresses = (await provider.request({
     method: "eth_accounts",
