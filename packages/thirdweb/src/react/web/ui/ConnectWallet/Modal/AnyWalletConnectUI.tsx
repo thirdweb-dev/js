@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
 import type {
   DeepLinkSupportedWalletIds,
