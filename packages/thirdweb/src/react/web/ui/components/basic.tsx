@@ -42,7 +42,7 @@ export function ModalHeader(props: {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: onBack ? "center" : "flex-start",
         position: "relative",
       }}
     >
@@ -56,7 +56,7 @@ export function ModalHeader(props: {
           }}
         />
       )}
-      <Container flex="row" gap="xs" center="both">
+      <Container flex="row" gap="xs" center={"both"}>
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>

@@ -374,7 +374,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
               </>
             }
           />
-          <Spacer y="sm" />
+          <Spacer y="lg" />
         </>
       ) : null}
 
