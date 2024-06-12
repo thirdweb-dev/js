@@ -31,6 +31,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
@@ -67,16 +68,11 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
     EngineInstance | undefined
   >();
 
-  const onClickConnect = async (engineInstanceId: string) => {
-    const instance = instances.find((i) => engineInstanceId === i.id);
-    if (!instance) {
-      return;
-    }
-
-    // Make an authed request.
-    // If it fails to fetch, the server is unreachable.
-    // If it returns a 401, the user is not a valid admin.
-    try {
+  const { mutate: connectToInstance } = useMutation({
+    mutationFn: async (instance: EngineInstance) => {
+      // Make an authed request.
+      // If it fails to fetch, the server is unreachable.
+      // If it returns a 401, the user is not a valid admin.
       const res = await fetch(`${instance.url}auth/permissions/get-all`, {
         method: "GET",
         headers: {
@@ -85,13 +81,36 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
         },
       });
       if (res.ok) {
+        return instance;
+      } else if (res.status === 401) {
+        throw new Error("Unauthorized");
+      } else {
+        throw new Error(`Unexpected status code ${res.status}`);
+      }
+    },
+    onSuccess: (instance) => {
+      trackEvent({
+        category: "engine",
+        action: "connect",
+        label: "success",
+      });
+      setConnectedInstance(instance);
+    },
+    onError: (error, instance) => {
+      const e = error as Error;
+      if (e?.message === "Failed to fetch") {
         trackEvent({
           category: "engine",
           action: "connect",
-          label: "success",
+          label: "unreachable",
         });
-        setConnectedInstance(instance);
-      } else if (res.status === 401) {
+        toast({
+          status: "error",
+          description: `Unable to connect to ${instance.url}. Ensure that your Engine is publicly accessible.`,
+          duration: null,
+          isClosable: true,
+        });
+      } else if (e?.message.indexOf("Unauthorized") > -1) {
         trackEvent({
           category: "engine",
           action: "connect",
@@ -105,22 +124,6 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
           isClosable: true,
         });
       } else {
-        throw new Error(`Unexpected status code ${res.status}`);
-      }
-    } catch (e: any) {
-      if (e?.message === "Failed to fetch") {
-        trackEvent({
-          category: "engine",
-          action: "connect",
-          label: "unreachable",
-        });
-        toast({
-          status: "error",
-          description: `Unable to connect to ${instance.url}. Ensure that your Engine is publicly accessible.`,
-          duration: null,
-          isClosable: true,
-        });
-      } else {
         toast({
           status: "error",
           description:
@@ -129,8 +132,8 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
           isClosable: true,
         });
       }
-    }
-  };
+    },
+  });
 
   const columnHelper = createColumnHelper<EngineInstance>();
   const columns = [
@@ -199,7 +202,12 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
             ) : (
               <>
                 <Button
-                  onClick={() => onClickConnect(id)}
+                  onClick={() => {
+                    const instance = instances.find((i) => i.id === id);
+                    if (instance) {
+                      connectToInstance(instance);
+                    }
+                  }}
                   variant="link"
                   colorScheme="blue"
                   w="fit-content"
@@ -297,31 +305,31 @@ const EditModal = ({
     },
   });
 
-  const onSubmit = async (data: EditEngineInstanceInput) => {
-    await editInstance(data, {
-      onSuccess: () => {
-        toast({
-          status: "success",
-          description: "Successfully updated this Engine.",
-        });
-        refetch();
-        onClose();
-      },
-      onError: () => {
-        toast({
-          status: "error",
-          description: "Error updating this Engine.",
-        });
-      },
-    });
-  };
-
   return (
     <Modal isOpen onClose={onClose} isCentered size="lg">
       <ModalOverlay />
 
       <ModalContent>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          onSubmit={form.handleSubmit((data) =>
+            editInstance(data, {
+              onSuccess: () => {
+                toast({
+                  status: "success",
+                  description: "Successfully updated this Engine.",
+                });
+                refetch();
+                onClose();
+              },
+              onError: () => {
+                toast({
+                  status: "error",
+                  description: "Error updating this Engine.",
+                });
+              },
+            }),
+          )}
+        >
           <ModalHeader>Edit Engine Instance</ModalHeader>
 
           <ModalBody>
@@ -380,51 +388,33 @@ const RemoveModal = ({
     },
   });
 
-  const onClickRemove = async () => {
-    await removeFromDashboard(instance.id, {
-      onSuccess: () => {
-        toast({
-          status: "success",
-          description: "Removed an Engine instance from your dashboard.",
-        });
-        refetch();
-        onClose();
-      },
-      onError: () => {
-        toast({
-          status: "error",
-          description: "Error removing an Engine instance from your dashboard.",
-        });
-      },
-    });
-  };
-
-  const onClickRequestToCancel = async () => {
-    await removeCloudHosted(form.getValues(), {
-      onSuccess: () => {
-        toast({
-          status: "success",
-          description:
-            "Submitted a request to cancel your Engine subscription. This may take up to 2 business days.",
-        });
-        refetch();
-        onClose();
-      },
-      onError: () => {
-        toast({
-          status: "error",
-          description: "Error requesting to cancel your Engine subscription.",
-        });
-      },
-    });
-  };
-
   return (
     <Modal isOpen onClose={onClose} isCentered size="lg">
       <ModalOverlay />
       <ModalContent>
         {instance.cloudDeployedAt ? (
-          <>
+          <form
+            onSubmit={form.handleSubmit((data) =>
+              removeCloudHosted(data, {
+                onSuccess: () => {
+                  toast({
+                    status: "success",
+                    description:
+                      "Submitted a request to cancel your Engine subscription. This may take up to 2 business days.",
+                  });
+                  refetch();
+                  onClose();
+                },
+                onError: () => {
+                  toast({
+                    status: "error",
+                    description:
+                      "Error requesting to cancel your Engine subscription.",
+                  });
+                },
+              }),
+            )}
+          >
             <ModalHeader>Cancel Engine Subscription</ModalHeader>
 
             <ModalBody as={Stack} gap={4}>
@@ -492,14 +482,14 @@ const RemoveModal = ({
                 Close
               </Button>
               <Button
-                onClick={onClickRequestToCancel}
+                type="submit"
                 colorScheme="primary"
                 isDisabled={!form.formState.isValid}
               >
                 Request to cancel
               </Button>
             </ModalFooter>
-          </>
+          </form>
         ) : (
           <>
             <ModalHeader>Remove Engine Instance</ModalHeader>
@@ -519,7 +509,29 @@ const RemoveModal = ({
               <Button onClick={onClose} variant="ghost">
                 Close
               </Button>
-              <Button onClick={onClickRemove} colorScheme="red">
+              <Button
+                onClick={() => {
+                  removeFromDashboard(instance.id, {
+                    onSuccess: () => {
+                      toast({
+                        status: "success",
+                        description:
+                          "Removed an Engine instance from your dashboard.",
+                      });
+                      refetch();
+                      onClose();
+                    },
+                    onError: () => {
+                      toast({
+                        status: "error",
+                        description:
+                          "Error removing an Engine instance from your dashboard.",
+                      });
+                    },
+                  });
+                }}
+                colorScheme="red"
+              >
                 Remove
               </Button>
             </ModalFooter>

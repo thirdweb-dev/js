@@ -172,11 +172,11 @@ export function useEngineUpdateVersion() {
         engineId: input.engineId,
       }),
     });
+    // we never use the response body
+    res.body?.cancel();
     if (!res.ok) {
       throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
     }
-    // The response body is unused if 2xx.
-    res.body?.cancel();
   });
 }
 
@@ -192,10 +192,11 @@ export function useEngineRemoveFromDashboard() {
         method: "DELETE",
         credentials: "include",
       });
+      // we never use the response body
+      res.body?.cancel();
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
-      res.body?.cancel();
     },
     {
       onSuccess: () => {
@@ -230,10 +231,11 @@ export function useEngineRemoveCloudHosted() {
           body: JSON.stringify({ reason, feedback }),
         },
       );
+      // we never use the response body
+      res.body?.cancel();
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
-      res.body?.cancel();
     },
     {
       onSuccess: () => {
@@ -265,10 +267,11 @@ export function useEngineEditInstance() {
         },
         body: JSON.stringify({ name, url }),
       });
+      // we never use the response body
+      res.body?.cancel();
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
-      res.body?.cancel();
     },
     {
       onSuccess: () => {
