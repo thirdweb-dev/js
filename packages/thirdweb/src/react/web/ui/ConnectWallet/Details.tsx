@@ -922,9 +922,11 @@ function InAppWalletUserInfo(props: {
       const [email, phone] = await Promise.all([
         getUserEmail({
           client: client,
+          walletId: "inApp",
         }),
         getUserPhoneNumber({
           client: client,
+          walletId: "inApp",
         }),
       ]);
 

@@ -11,11 +11,13 @@ export type InAppWalletConnectionOptions = (
   | MultiStepAuthArgsType
   | SingleStepAuthArgsType
 ) & {
+  walletId: string;
   client: ThirdwebClient;
   chain?: Chain;
 };
 
 export type InAppWalletAutoConnectOptions = {
+  walletId: string;
   client: ThirdwebClient;
   chain?: Chain;
 };

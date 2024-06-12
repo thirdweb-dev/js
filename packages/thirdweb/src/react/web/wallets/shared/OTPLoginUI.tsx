@@ -54,6 +54,7 @@ export function OTPLoginUI(props: {
     try {
       if ("email" in userInfo) {
         const status = await preAuthenticate({
+          walletId: wallet.id,
           email: userInfo.email,
           strategy: "email",
           client,
@@ -61,6 +62,7 @@ export function OTPLoginUI(props: {
         setAccountStatus(status);
       } else if ("phone" in userInfo) {
         const status = await preAuthenticate({
+          walletId: wallet.id,
           phoneNumber: userInfo.phone,
           strategy: "phone",
           client,
@@ -74,7 +76,7 @@ export function OTPLoginUI(props: {
       setVerifyStatus("idle");
       setAccountStatus("error");
     }
-  }, [client, userInfo]);
+  }, [client, userInfo, wallet.id]);
 
   async function connect(otp: string) {
     if ("email" in userInfo) {

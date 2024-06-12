@@ -11,6 +11,7 @@ import {
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
+  walletId: string;
   partnerId?: string;
 };
 
@@ -21,6 +22,7 @@ const ewsSDKCache = new WeakMap<ThirdwebClient, InAppConnector>();
  */
 async function getInAppWalletConnector(
   client: ThirdwebClient,
+  walletId: string,
   partnerId?: string,
 ) {
   if (ewsSDKCache.has(client)) {
@@ -34,6 +36,7 @@ async function getInAppWalletConnector(
     );
     ewSDK = new InAppWebConnector({
       client: client,
+      walletId,
       partnerId,
     });
   } else if (isReactNative()) {
@@ -60,6 +63,7 @@ export async function logoutAuthenticatedUser(
 ) {
   const ewSDK = await getInAppWalletConnector(
     options.client,
+    options.walletId,
     options.partnerId,
   );
   return ewSDK.logout();
@@ -83,8 +87,8 @@ export async function logoutAuthenticatedUser(
 export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
-  const { client } = options;
-  const ewSDK = await getInAppWalletConnector(client);
+  const { client, walletId, partnerId } = options;
+  const ewSDK = await getInAppWalletConnector(client, walletId, partnerId);
   const user = await ewSDK.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -154,7 +158,11 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  * @wallet
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const ewSDK = await getInAppWalletConnector(args.client, args.partnerId);
+  const ewSDK = await getInAppWalletConnector(
+    args.client,
+    args.walletId,
+    args.partnerId,
+  );
   return ewSDK.preAuthenticate(args);
 }
 
@@ -178,7 +186,11 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-  const ewSDK = await getInAppWalletConnector(args.client, args.partnerId);
+  const ewSDK = await getInAppWalletConnector(
+    args.client,
+    args.walletId,
+    args.partnerId,
+  );
   return ewSDK.authenticate(args);
 }
 

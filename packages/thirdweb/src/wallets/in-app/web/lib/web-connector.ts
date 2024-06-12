@@ -46,6 +46,7 @@ export class InAppWebConnector implements InAppConnector {
   constructor({
     client,
     onAuthSuccess,
+    walletId,
     partnerId,
   }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
@@ -63,6 +64,7 @@ export class InAppWebConnector implements InAppConnector {
     this.wallet = new IFrameWallet({
       client,
       partnerId,
+      walletId,
       querier: this.querier,
     });
 

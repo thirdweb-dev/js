@@ -13,6 +13,7 @@ export type MultiStepAuthProviderType =
     };
 export type PreAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
+  walletId: string;
   partnerId?: string;
 };
 
@@ -52,6 +53,7 @@ export type SingleStepAuthArgsType =
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   client: ThirdwebClient;
+  walletId: string;
   partnerId?: string;
 };
 

@@ -72,6 +72,7 @@ export async function autoConnectInAppWallet(
   const { getAuthenticatedUser } = await import("../authentication/index.js");
   const user = await getAuthenticatedUser({
     client: options.client,
+    walletId: options.walletId,
     partnerId:
       createOptions && "partnerId" in createOptions
         ? createOptions.partnerId

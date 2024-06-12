@@ -132,6 +132,7 @@ export const ConnectWalletSocialOptions = (
       const connectPromise = wallet.connect({
         chain,
         client,
+        walletId: wallet.id,
         strategy: strategy,
         openedWindow: socialLoginWindow,
         closeOpenedWindow: (openedWindow) => {

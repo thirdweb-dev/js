@@ -519,7 +519,10 @@ export function inAppWallet(
     disconnect: async () => {
       // If no client is assigned, we should be fine just unsetting the states
       if (client) {
-        const result = await logoutAuthenticatedUser({ client });
+        const result = await logoutAuthenticatedUser({
+          client,
+          walletId: "inApp",
+        });
         if (!result.success) {
           throw new Error("Failed to logout");
         }
@@ -538,6 +541,7 @@ export function inAppWallet(
           {
             chain: newChain,
             client,
+            walletId: "inApp",
           },
           createOptions,
         );
@@ -651,7 +655,7 @@ export function ecosystemWallet(
     disconnect: async () => {
       // If no client is assigned, we should be fine just unsetting the states
       if (client) {
-        const result = await logoutAuthenticatedUser({ client });
+        const result = await logoutAuthenticatedUser({ client, walletId: id });
         if (!result.success) {
           throw new Error("Failed to logout");
         }
@@ -670,6 +674,7 @@ export function ecosystemWallet(
           {
             chain: newChain,
             client,
+            walletId: id,
           },
           createOptions,
         );
