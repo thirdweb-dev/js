@@ -15,11 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  MediaRenderer,
-  useAddress,
-  useStorageUpload,
-} from "@thirdweb-dev/react";
+import { MediaRenderer, useStorageUpload } from "@thirdweb-dev/react";
 import type { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
@@ -29,6 +25,7 @@ import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Button,
   Card,
@@ -46,8 +43,9 @@ const TRACKING_CATEGORY = "ipfs_uploader";
 const UNACCEPTED_FILE_TYPES = ["text/html"];
 
 export const IpfsUploadDropzone: React.FC = () => {
-  const address = useAddress();
   const toast = useToast();
+  const address = useActiveAccount()?.address;
+
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -158,7 +156,7 @@ const filesPerPage = 20;
 
 const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
     total: 100,

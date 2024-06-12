@@ -23,7 +23,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlus, FiTrash } from "react-icons/fi";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import { setContractMetadata } from "thirdweb/extensions/common";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import {
@@ -37,6 +37,7 @@ import {
 import { z } from "zod";
 import { useInvalidatev4Contract } from "../../../../hooks/invalidate-v4-contract";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
+import { defineDashboardChain } from "../../../../lib/v5-adapter";
 import { SettingDetectedState } from "./detected-state";
 
 const DashboardCommonContractSchema = CommonContractSchema.extend({
@@ -154,7 +155,7 @@ export const SettingsMetadata = <
 
           const contractV5 = getContract({
             address: contract.getAddress(),
-            chain: defineChain(contract.chainId),
+            chain: defineDashboardChain(contract.chainId),
             client: thirdwebClient,
           });
           const tx = setContractMetadata({

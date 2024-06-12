@@ -1,13 +1,13 @@
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
   type TokenContract,
-  useAddress,
   type useContract,
   useTokenBalance,
 } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
 import { FiDroplet } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { TokenAirdropForm } from "./airdrop-form";
 
@@ -20,7 +20,7 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const tokenBalance = useTokenBalance(contractQuery.contract, address);
   const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
 

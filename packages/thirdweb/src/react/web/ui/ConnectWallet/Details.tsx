@@ -34,8 +34,9 @@ import type {
   PayUIOptions,
 } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import {
-  useChainQuery,
-  useChainsQuery,
+  useChainFaucets,
+  useChainIconUrl,
+  useChainName,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
@@ -111,8 +112,6 @@ export const ConnectedWalletDetails: React.FC<{
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-
-  useChainsQuery(props.chains, 5);
 
   const { ensAvatarQuery, addressOrENS, balanceQuery } =
     useConnectedWalletDetails(
@@ -256,7 +255,9 @@ function DetailsModal(props: {
     );
 
   const activeWallet = useActiveWallet();
-  const chainQuery = useChainQuery(walletChain);
+  const chainIconQuery = useChainIconUrl(walletChain);
+  const chainNameQuery = useChainName(walletChain);
+  const chainFaucetsQuery = useChainFaucets(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
 
@@ -289,9 +290,9 @@ function DetailsModal(props: {
           position: "relative",
         }}
       >
-        {chainQuery.data ? (
+        {!chainIconQuery.isLoading ? (
           <ChainIcon
-            chainIcon={chainQuery.data?.icon}
+            chainIconUrl={chainIconQuery.url}
             size={iconSize.md}
             active
             client={client}
@@ -301,11 +302,11 @@ function DetailsModal(props: {
         )}
       </div>
 
-      {chainQuery.isLoading ? (
+      {chainNameQuery.isLoading ? (
         <Skeleton height={"16px"} width={"200px"} />
       ) : (
         <Text color="primaryText" multiline>
-          {chainQuery.data?.name || `Unknown chain #${walletChain?.id}`}
+          {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
         </Text>
       )}
 
@@ -535,11 +536,11 @@ function DetailsModal(props: {
 
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
-            ((chainQuery.data?.faucets && chainQuery.data.faucets.length > 0) ||
-              chainQuery.data?.chainId === LocalhostChainId) && (
+            (chainFaucetsQuery.faucets.length > 0 ||
+              walletChain?.id === LocalhostChainId) && (
               <MenuLink
                 href={
-                  chainQuery.data?.faucets ? chainQuery.data.faucets[0] : "#"
+                  chainFaucetsQuery.faucets ? chainFaucetsQuery.faucets[0] : "#"
                 }
                 target="_blank"
                 as="a"

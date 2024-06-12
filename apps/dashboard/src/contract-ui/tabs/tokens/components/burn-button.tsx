@@ -1,13 +1,13 @@
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
   type TokenContract,
-  useAddress,
   type useContract,
   useTokenBalance,
 } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
 import { FaBurn } from "react-icons/fa";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { TokenBurnForm } from "./burn-form";
 
@@ -20,7 +20,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const tokenBalance = useTokenBalance(contractQuery.contract, address);
 

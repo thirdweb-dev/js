@@ -11,7 +11,6 @@ import {
   type TokenContract,
   type TokenParams,
   type WalletAddress,
-  useAddress,
   useTransferBatchToken,
 } from "@thirdweb-dev/react";
 import type { Amount } from "@thirdweb-dev/sdk";
@@ -25,6 +24,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Heading, Text } from "tw-components";
 
 interface TokenAirdropFormProps {
@@ -34,7 +34,7 @@ interface TokenAirdropFormProps {
 export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
   contract,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { handleSubmit, setValue, watch, formState } = useForm<{
     addresses: AirdropAddressInput[];
   }>({
