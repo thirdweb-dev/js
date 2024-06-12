@@ -89,7 +89,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         }}
       >
         {autoConnectComp}
-        <Spinner size="sm" color="primaryButtonText" />
+        <Spinner size="sm" color="currentColor" />
       </AnimatedButton>
     );
   }
@@ -201,7 +201,7 @@ function ConnectButtonInner(
         data-test="connect-wallet-button"
       >
         {isLoading ? (
-          <Spinner size="sm" color="primaryButtonText" />
+          <Spinner size="sm" color="currentColor" />
         ) : (
           connectButtonLabel
         )}
@@ -226,7 +226,7 @@ function ConnectButtonInner(
             ...props.connectButton?.style,
           }}
         >
-          <Spinner size="sm" color="primaryButtonText" />
+          <Spinner size="sm" color="currentColor" />
         </AnimatedButton>
       );
     }
@@ -247,7 +247,7 @@ function ConnectButtonInner(
             }}
           >
             {siweAuth.isLoggingIn ? (
-              <Spinner size="sm" color="primaryButtonText" />
+              <Spinner size="sm" color="currentColor" />
             ) : (
               <Container flex="row" center="y" gap="sm">
                 <LockIcon size={iconSize.sm} />
