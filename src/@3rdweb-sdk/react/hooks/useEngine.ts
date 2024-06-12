@@ -63,7 +63,7 @@ export function useEngineInstances() {
         credentials: "include",
       });
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
 
       const json = await res.json();
@@ -131,7 +131,7 @@ export function useEngineSystemHealth(instanceUrl: string) {
         headers: getEngineRequestHeaders(null),
       });
       if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
       const json = (await res.json()) as EngineSystemHealth;
       return json;
@@ -147,7 +147,7 @@ export function useEngineLatestVersion() {
       credentials: "include",
     });
     if (!res.ok) {
-      throw new Error(`Unexpected status ${res.status}`);
+      throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
     }
     const json = await res.json();
     return json.data.version as string;
@@ -173,11 +173,111 @@ export function useEngineUpdateVersion() {
       }),
     });
     if (!res.ok) {
-      throw new Error(`Unexpected status ${res.status}`);
+      throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
     }
     // The response body is unused if 2xx.
     res.body?.cancel();
   });
+}
+
+export function useEngineRemoveFromDashboard() {
+  const { user } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (instanceId: string) => {
+      invariant(instanceId, "instance is required");
+
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      res.body?.cancel();
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          engineKeys.instances(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+export interface RemoveCloudHostedInput {
+  instanceId: string;
+  reason: "USING_SELF_HOSTED" | "TOO_EXPENSIVE" | "MISSING_FEATURES" | "OTHER";
+  feedback: string;
+}
+
+export function useEngineRemoveCloudHosted() {
+  const { user } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async ({ instanceId, reason, feedback }: RemoveCloudHostedInput) => {
+      const res = await fetch(
+        `${THIRDWEB_API_HOST}/v1/engine/${instanceId}/remove-cloud-hosted`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ reason, feedback }),
+        },
+      );
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      res.body?.cancel();
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          engineKeys.instances(user?.address as string),
+        );
+      },
+    },
+  );
+}
+
+export interface EditEngineInstanceInput {
+  instanceId: string;
+  name: string;
+  url: string;
+}
+
+export function useEngineEditInstance() {
+  const { user } = useLoggedInUser();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async ({ instanceId, name, url }: EditEngineInstanceInput) => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, url }),
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      res.body?.cancel();
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(
+          engineKeys.instances(user?.address as string),
+        );
+      },
+    },
+  );
 }
 
 export type Transaction = {
@@ -1155,6 +1255,10 @@ export interface EngineContractSubscription {
   contractAddress: string;
   webhook?: EngineWebhook;
   createdAt: Date;
+  processEventLogs: boolean;
+  filterEvents?: string[];
+  processTransactionReceipts: boolean;
+  filterFunctions?: string[];
 
   // Dummy field for the table.
   lastIndexedBlock: string;
@@ -1302,7 +1406,7 @@ export function useEngineResourceMetrics(engineId: string) {
       );
       if (!res.ok) {
         setEnabled(false);
-        throw new Error(`Unexpected status ${res.status}`);
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
       const json = (await res.json()) as EngineResourceMetrics;
       return json;

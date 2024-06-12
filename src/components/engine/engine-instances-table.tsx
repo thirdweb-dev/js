@@ -1,9 +1,17 @@
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import {
+  EditEngineInstanceInput,
   EngineInstance,
+  RemoveCloudHostedInput,
+  useEngineEditInstance,
   useEngineInstances,
+  useEngineRemoveCloudHosted,
+  useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
   Flex,
   FormControl,
   HStack,
@@ -14,7 +22,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Radio,
+  RadioGroup,
   Stack,
+  Textarea,
   Tooltip,
   UseDisclosureReturn,
   useDisclosure,
@@ -23,13 +34,12 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
-import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
-import { Badge, Button, FormLabel, Link, Text } from "tw-components";
+import { Badge, Button, FormLabel, Heading, Text } from "tw-components";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
@@ -276,46 +286,34 @@ const EditModal = ({
   refetch: () => void;
 }) => {
   const toast = useToast();
+  const { mutate: editInstance } = useEngineEditInstance();
   const { onClose } = disclosure;
 
-  const form = useForm({
+  const form = useForm<EditEngineInstanceInput>({
     defaultValues: {
-      name: instance?.name,
-      url: instance?.url,
+      instanceId: instance.id,
+      name: instance.name,
+      url: instance.url,
     },
   });
 
-  const onSubmit = async (data: { name: string; url: string }) => {
-    // Instance URLs should end with a /.
-    const url = data.url.endsWith("/") ? data.url : `${data.url}/`;
-
-    try {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instance.id}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          url,
-        }),
-      });
-      if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
-      }
-      toast({
-        status: "success",
-        description: "Updated an Engine instance.",
-      });
-      refetch();
-      onClose();
-    } catch (e) {
-      toast({
-        status: "error",
-        description: "Error updating an Engine instance.",
-      });
-    }
+  const onSubmit = async (data: EditEngineInstanceInput) => {
+    await editInstance(data, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description: "Successfully updated this Engine.",
+        });
+        refetch();
+        onClose();
+      },
+      onError: () => {
+        toast({
+          status: "error",
+          description: "Error updating this Engine.",
+        });
+      },
+    });
   };
 
   return (
@@ -372,61 +370,140 @@ const RemoveModal = ({
   refetch: () => void;
 }) => {
   const toast = useToast();
+  const { mutate: removeFromDashboard } = useEngineRemoveFromDashboard();
+  const { mutate: removeCloudHosted } = useEngineRemoveCloudHosted();
   const { onClose } = disclosure;
 
+  const form = useForm<RemoveCloudHostedInput>({
+    defaultValues: {
+      instanceId: instance.id,
+    },
+  });
+
   const onClickRemove = async () => {
-    try {
-      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instance.id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
-      }
-      toast({
-        status: "success",
-        description: "Removed an Engine instance from your dashboard.",
-      });
-      refetch();
-      onClose();
-    } catch (e) {
-      toast({
-        status: "error",
-        description: "Error removing an Engine instance from your dashboard.",
-      });
-    }
+    await removeFromDashboard(instance.id, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description: "Removed an Engine instance from your dashboard.",
+        });
+        refetch();
+        onClose();
+      },
+      onError: () => {
+        toast({
+          status: "error",
+          description: "Error removing an Engine instance from your dashboard.",
+        });
+      },
+    });
+  };
+
+  const onClickRequestToCancel = async () => {
+    await removeCloudHosted(form.getValues(), {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description:
+            "Submitted a request to cancel your Engine subscription. This may take up to 2 business days.",
+        });
+        refetch();
+        onClose();
+      },
+      onError: () => {
+        toast({
+          status: "error",
+          description: "Error requesting to cancel your Engine subscription.",
+        });
+      },
+    });
   };
 
   return (
     <Modal isOpen onClose={onClose} isCentered size="lg">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Remove Engine Instance</ModalHeader>
-
         {instance.cloudDeployedAt ? (
           <>
-            <ModalBody>
+            <ModalHeader>Cancel Engine Subscription</ModalHeader>
+
+            <ModalBody as={Stack} gap={4}>
               <Text>
-                To cancel your Engine subscription, please contact{" "}
-                <Link
-                  href="mailto:support@thirdweb.com"
-                  isExternal
-                  color="primary.500"
-                >
-                  support@thirdweb.com
-                </Link>
-                .
+                Complete this form to request to cancel your Engine
+                subscription. This may take up to 2 business days.
               </Text>
+
+              {/* Form */}
+              <FormControl>
+                <FormLabel>
+                  Please share any feedback to help us improve
+                </FormLabel>
+                <RadioGroup>
+                  <Stack>
+                    <Radio
+                      value="USING_SELF_HOSTED"
+                      {...form.register("reason", { required: true })}
+                    >
+                      <Text>Migrating to self-hosted</Text>
+                    </Radio>
+                    <Radio
+                      value="TOO_EXPENSIVE"
+                      {...form.register("reason", { required: true })}
+                    >
+                      <Text>Too expensive</Text>
+                    </Radio>
+                    <Radio
+                      value="MISSING_FEATURES"
+                      {...form.register("reason", { required: true })}
+                    >
+                      <Text>Missing features</Text>
+                    </Radio>
+                    <Radio
+                      value="OTHER"
+                      {...form.register("reason", { required: true })}
+                    >
+                      <Text>Other</Text>
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
+                <Textarea
+                  placeholder="Provide additional feedback"
+                  mt={2}
+                  {...form.register("feedback")}
+                />
+              </FormControl>
+
+              <Alert status="warning" variant="left-accent">
+                <Flex direction="column" gap={2}>
+                  <Heading as={AlertTitle} size="label.md">
+                    This action is irreversible!
+                  </Heading>
+                  <Text as={AlertDescription} size="body.md">
+                    You will no longer be able to access this Engine&apos;s
+                    local backend wallets.{" "}
+                    <strong>Any remaining mainnet funds will be lost.</strong>
+                  </Text>
+                </Flex>
+              </Alert>
             </ModalBody>
 
-            <ModalFooter>
+            <ModalFooter as={Flex} gap={3}>
               <Button onClick={onClose} variant="ghost">
                 Close
+              </Button>
+              <Button
+                onClick={onClickRequestToCancel}
+                colorScheme="primary"
+                isDisabled={!form.formState.isValid}
+              >
+                Request to cancel
               </Button>
             </ModalFooter>
           </>
         ) : (
           <>
+            <ModalHeader>Remove Engine Instance</ModalHeader>
+
             <ModalBody as={Flex} flexDir="column" gap={2}>
               <Text>
                 Are you sure you want to remove{" "}
@@ -440,7 +517,7 @@ const RemoveModal = ({
 
             <ModalFooter as={Flex} gap={3}>
               <Button onClick={onClose} variant="ghost">
-                Cancel
+                Close
               </Button>
               <Button onClick={onClickRemove} colorScheme="red">
                 Remove
