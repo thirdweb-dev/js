@@ -1,6 +1,7 @@
 import { anvil } from "../../src/chains/chain-definitions/anvil.js";
 import { ethereum } from "../../src/chains/chain-definitions/ethereum.js";
 import { optimism } from "../../src/chains/chain-definitions/optimism.js";
+import type { Chain } from "../../src/chains/types.js";
 import { defineChain } from "../../src/chains/utils.js";
 
 export const poolId = Number(process.env.VITEST_POOL_ID ?? 1);
@@ -36,3 +37,13 @@ export const ANVIL_CHAIN = defineChain({
 
 export const FORK_BLOCK_NUMBER = 19139495n;
 export const OPTIMISM_FORK_BLOCK_NUMBER = 117525204n;
+
+export let STATELESS_CHAIN:Chain
+
+if (process.env.STATELESS_URL) {
+  STATELESS_CHAIN = defineChain({
+    ...ethereum,
+    // override the rpc url
+    rpc: process.env.STATELESS_URL,
+  });
+}
