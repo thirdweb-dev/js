@@ -193,7 +193,9 @@ function ConnectButtonInner(
         aria-label={
           connectionStatus === "connecting"
             ? locale.connecting
-            : connectButtonLabel
+            : typeof connectButtonLabel === "string"
+              ? connectButtonLabel
+              : locale.defaultButtonTitle
         }
         onClick={() => {
           setIsWalletModalOpen(true);
