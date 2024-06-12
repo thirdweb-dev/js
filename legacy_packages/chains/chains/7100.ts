@@ -6,22 +6,10 @@ export default {
     {
       "name": "numeexplorer",
       "url": "https://explorer.numecrypto.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmNbp1K6vKKFYh7bWeWtjBqKgdH88suDVbztP5CYU3pYNG",
-        "width": 1280,
-        "height": 1280,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNbp1K6vKKFYh7bWeWtjBqKgdH88suDVbztP5CYU3pYNG",
-    "width": 1280,
-    "height": 1280,
-    "format": "png"
-  },
   "infoURL": "https://numecrypto.com",
   "name": "Nume",
   "nativeCurrency": {

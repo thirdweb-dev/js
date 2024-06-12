@@ -22,6 +22,7 @@ export const COGNITO_IDENTITY_POOL_ID =
 export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
 
+// TODO allow overriding domain
 export const DOMAIN_URL_2023 = "https://embedded-wallet.thirdweb.com";
 const BASE_URL_2023 = `${DOMAIN_URL_2023}/`;
 const ROUTE_2023_10_20_API_BASE_PATH = `${BASE_URL_2023}api/2023-10-20`;

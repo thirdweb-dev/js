@@ -15,6 +15,7 @@ function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
  */
 const usageEventSchema = z.object({
   source: z.enum([
+    "ecosystemWallets",
     "embeddedWallets",
     "rpc",
     "storage",
@@ -84,6 +85,9 @@ const usageEventSchema = z.object({
       "TRACE",
     ])
     .optional(),
+  // Used to identify the ecosystem that the an ecosystem wallet belongs too
+  ecosystemId: z.string().optional(),
+  ecosystemPartnerId: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 

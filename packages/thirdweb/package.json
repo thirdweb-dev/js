@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.28.0",
+  "version": "5.29.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -212,7 +212,6 @@
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
     "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
-    "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
@@ -235,9 +234,6 @@
       "optional": true
     },
     "react-native-quick-crypto": {
-      "optional": true
-    },
-    "shamir-secret-sharing": {
       "optional": true
     },
     "aws-amplify": {
@@ -307,7 +303,6 @@
     "react-native": "0.74.1",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
-    "shamir-secret-sharing": "0.0.3",
     "vitest": "1.5.0"
   }
 }

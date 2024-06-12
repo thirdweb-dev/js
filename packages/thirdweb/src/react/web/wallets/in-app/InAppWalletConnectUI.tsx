@@ -25,10 +25,10 @@ function InAppWalletConnectUI(props: {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
   const state = data as InAppWalletSelectUIState;
-  const locale = useInAppWalletLocale();
+  const localeQuery = useInAppWalletLocale();
   const { connectModal } = useConnectUI();
 
-  if (!locale) {
+  if (!localeQuery.data) {
     return <LoadingScreen />;
   }
 
@@ -49,7 +49,7 @@ function InAppWalletConnectUI(props: {
     return (
       <InAppWalletOTPLoginUI
         userInfo={otpUserInfo}
-        locale={locale}
+        locale={localeQuery.data}
         done={props.done}
         goBack={goBackToMain}
         wallet={props.wallet}
@@ -71,7 +71,7 @@ function InAppWalletConnectUI(props: {
     return (
       <InAppWalletSocialLogin
         socialAuth={state.socialLogin.type}
-        locale={locale}
+        locale={localeQuery.data}
         done={props.done}
         goBack={goBackToMain}
         wallet={props.wallet}
@@ -83,7 +83,7 @@ function InAppWalletConnectUI(props: {
   return (
     <InAppWalletFormUIScreen
       select={() => {}}
-      locale={locale}
+      locale={localeQuery.data}
       done={props.done}
       goBack={props.goBack}
       wallet={props.wallet}

@@ -3,7 +3,6 @@ import { expect, test } from "vitest";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 
-import type { Address } from "../address.js";
 import { signTypedData } from "./sign-typed-data.js";
 
 test("default", async () => {
