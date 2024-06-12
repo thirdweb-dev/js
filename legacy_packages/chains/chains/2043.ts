@@ -1,14 +1,14 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "OTP",
+  "chain": "NEUROWEB",
   "chainId": 2043,
   "explorers": [],
   "faucets": [],
-  "infoURL": "https://parachain.origintrail.io",
-  "name": "OriginTrail Parachain",
+  "infoURL": "https://neuroweb.ai",
+  "name": "NeuroWeb",
   "nativeCurrency": {
-    "name": "OriginTrail Parachain Token",
-    "symbol": "OTP",
+    "name": "NeuroWeb Token",
+    "symbol": "NEURO",
     "decimals": 12
   },
   "networkId": 2043,
@@ -17,7 +17,7 @@ export default {
     "https://astrosat.origintrail.network",
     "wss://parachain-rpc.origin-trail.network"
   ],
-  "shortName": "otp",
-  "slug": "origintrail-parachain",
+  "shortName": "NEURO",
+  "slug": "neuroweb",
   "testnet": false
 } as const satisfies Chain;

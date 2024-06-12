@@ -1,8 +1,13 @@
 "use client";
 import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { QRCode } from "../../ui/components/QRCode.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -14,7 +19,6 @@ import {
 } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
 
 /**
  * @internal
@@ -29,8 +33,10 @@ export const ScanScreen: React.FC<{
   getStartedLink: string;
   error: boolean;
   onRetry: () => void;
+  connectModalSize: "compact" | "wide";
+  client: ThirdwebClient;
 }> = (props) => {
-  const { connectModal, client } = useConnectUI();
+  const { connectModalSize, client } = props;
   const [linkCopied, setLinkCopied] = useState(false);
 
   return (
@@ -133,7 +139,7 @@ export const ScanScreen: React.FC<{
       {props.onGetStarted && (
         <ScreenBottomContainer
           style={{
-            border: connectModal.size === "compact" ? undefined : "none",
+            border: connectModalSize === "compact" ? undefined : "none",
           }}
         >
           <Button

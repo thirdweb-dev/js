@@ -1,8 +1,8 @@
-export { darkTheme, lightTheme } from "../react/web/ui/design-system/index.js";
+export { darkTheme, lightTheme } from "../react/core/design-system/index.js";
 export type {
   Theme,
   ThemeOverrides,
-} from "../react/web/ui/design-system/index.js";
+} from "../react/core/design-system/index.js";
 
 export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
 export {
@@ -21,10 +21,8 @@ export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/Network
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 export type { LocaleId } from "../react/web/ui/types.js";
 
-export {
-  TransactionButton,
-  type TransactionButtonProps,
-} from "../react/web/ui/TransactionButton/index.js";
+export { TransactionButton } from "../react/web/ui/TransactionButton/index.js";
+export type { TransactionButtonProps } from "../react/core/hooks/transaction/button-core.js";
 
 export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
@@ -135,3 +133,13 @@ export {
   useWalletInfo,
   useWalletImage,
 } from "../react/web/ui/hooks/useWalletInfo.js";
+
+export {
+  useWalletDetailsModal,
+  type UseWalletDetailsModalOptions,
+} from "../react/web/ui/ConnectWallet/Details.js";
+
+// eip5792 hooks
+export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
+export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
+export { useCapabilities } from "../react/core/hooks/wallets/useCapabilities.js";

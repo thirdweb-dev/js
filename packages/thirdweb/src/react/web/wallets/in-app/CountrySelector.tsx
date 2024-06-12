@@ -1,9 +1,13 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { StyledOption, StyledSelect } from "../../ui/design-system/elements.js";
-import { fontSize, radius, spacing } from "../../ui/design-system/index.js";
 
 export function CountrySelector({
   countryCode,

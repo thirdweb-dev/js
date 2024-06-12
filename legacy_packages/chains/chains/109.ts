@@ -4,16 +4,23 @@ export default {
   "chainId": 109,
   "explorers": [
     {
-      "name": "shibariumscan",
+      "name": "Shibariumscan",
       "url": "https://www.shibariumscan.io",
-      "standard": "none"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "https://www.shibariumscan.io/assets/configs/network_icon_dark.png",
+        "width": 360,
+        "height": 360,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
-    "url": "ipfs://QmYNVkoZgRjDBQzJz6kog9mA2yPzQFW2oSKvhnkwuBhLQE",
-    "width": 2000,
-    "height": 2000,
+    "url": "https://chewyswap.dog/images/chains/109.png",
+    "width": 200,
+    "height": 200,
     "format": "png"
   },
   "infoURL": "https://shibariumecosystem.com",
@@ -24,8 +31,10 @@ export default {
     "decimals": 18
   },
   "networkId": 109,
+  "redFlags": [],
   "rpc": [
     "https://109.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.shibrpc.com",
     "https://www.shibrpc.com"
   ],
   "shortName": "shibariumecosystem",

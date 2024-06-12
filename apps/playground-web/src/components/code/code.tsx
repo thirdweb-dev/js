@@ -1,8 +1,3 @@
-// enforces this only gets rendered on the server
-import "server-only";
-
-import { transformerTwoslash } from "@shikijs/twoslash";
-import "@shikijs/twoslash/style-rich.css";
 import * as parserBabel from "prettier/plugins/babel";
 import * as estree from "prettier/plugins/estree";
 import { format } from "prettier/standalone";

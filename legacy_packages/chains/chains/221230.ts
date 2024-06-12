@@ -6,11 +6,23 @@ export default {
     {
       "name": "Reapchain Dashboard",
       "url": "https://dashboard.reapchain.org",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "infoURL": "https://reapchain.com",
   "name": "Reapchain Mainnet",
   "nativeCurrency": {

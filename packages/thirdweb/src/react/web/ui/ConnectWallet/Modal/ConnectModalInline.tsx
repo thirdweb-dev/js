@@ -1,19 +1,19 @@
 "use client";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import {
+  type Theme,
+  iconSize,
+  radius,
+  shadow,
+} from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { CrossContainer } from "../../components/Modal.js";
 import { IconButton } from "../../components/buttons.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import {
-  type Theme,
-  iconSize,
-  radius,
-  shadow,
-} from "../../design-system/index.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,

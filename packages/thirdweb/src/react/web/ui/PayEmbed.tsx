@@ -6,6 +6,8 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
+import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
+import { type Theme, radius } from "../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
 import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
 import type {
@@ -19,8 +21,6 @@ import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistor
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import { Container } from "./components/basic.js";
-import { CustomThemeProvider } from "./design-system/CustomThemeProvider.js";
-import { type Theme, radius } from "./design-system/index.js";
 import type { LocaleId } from "./types.js";
 
 /**

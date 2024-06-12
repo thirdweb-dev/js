@@ -7,6 +7,14 @@ import type React from "react";
 import type { Chain, ChainMetadata } from "../../../../chains/types.js";
 import { convertApiChainToChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  media,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import {
   useChainQuery,
   useChainsQuery,
@@ -24,15 +32,7 @@ import { Button } from "../components/buttons.js";
 import { Input } from "../components/formElements.js";
 import { ModalTitle } from "../components/modalElements.js";
 import { Text } from "../components/text.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledButton, StyledP, StyledUl } from "../design-system/elements.js";
-import {
-  fontSize,
-  iconSize,
-  media,
-  radius,
-  spacing,
-} from "../design-system/index.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
 import type { ConnectLocale } from "./locale/types.js";

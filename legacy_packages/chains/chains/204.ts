@@ -10,8 +10,9 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
-    "url": "ipfs://bafybeib75gwytvblyvjpfminitr3i6mpat3a624udfsqsl5nysf5vuuvie",
+    "url": "ipfs://QmXxTwwfYzagtJqvWreUDoq4pKz3A22YmAi7c3hcgZp5Rt/bnb-bnb-logo.png",
     "width": 96,
     "height": 96,
     "format": "png"
@@ -24,6 +25,7 @@ export default {
     "decimals": 18
   },
   "networkId": 204,
+  "redFlags": [],
   "rpc": [
     "https://204.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://opbnb-mainnet-rpc.bnbchain.org",

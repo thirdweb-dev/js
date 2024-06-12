@@ -23,7 +23,7 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-1">
-          <ThemeSelector />
+          {/* <ThemeSelector /> */}
           <Button asChild size="icon" variant="ghost">
             <Link href="https://github.com/thirdweb-dev" target="_blank">
               <GithubIcon strokeWidth={1} />

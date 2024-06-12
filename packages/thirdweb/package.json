@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.27.0",
+  "version": "5.28.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -197,7 +197,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.10.9"
+    "viem": "2.13.7"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",

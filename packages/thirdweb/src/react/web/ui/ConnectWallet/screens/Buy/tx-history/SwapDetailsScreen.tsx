@@ -3,17 +3,17 @@ import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../design-system/index.js";
 import { formatSeconds } from "../swap/formatSeconds.js";
 import { TokenInfoRow } from "./TokenInfoRow.js";
 import { type StatusMeta, getBuyWithCryptoStatusMeta } from "./statusMeta.js";

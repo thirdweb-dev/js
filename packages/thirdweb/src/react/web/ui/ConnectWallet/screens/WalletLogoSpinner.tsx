@@ -1,11 +1,11 @@
 import { keyframes } from "@emotion/react";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { radius, spacing } from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../../components/WalletImage.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { radius, spacing } from "../../design-system/index.js";
 
 /**
  *

@@ -10,9 +10,10 @@ import {
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
@@ -20,11 +21,22 @@ import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deplo
 import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
 import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  type Theme,
+  fontSize,
+  iconSize,
+  media,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
+import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -32,6 +44,7 @@ import {
   useDisconnect,
   useSwitchActiveWalletChain,
 } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { shortenString } from "../../../core/utils/addresses.js";
 import { hasSmartAccount } from "../../utils/isSmartWallet.js";
 import { ChainIcon } from "../components/ChainIcon.js";
@@ -45,23 +58,19 @@ import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
-import {
-  type Theme,
-  fontSize,
-  iconSize,
-  media,
-  radius,
-  spacing,
-} from "../design-system/index.js";
+import type { LocaleId } from "../types.js";
 import type {
   ConnectButtonProps,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
+  PayUIOptions,
 } from "./ConnectButtonProps.js";
-import { NetworkSelectorContent } from "./NetworkSelector.js";
+import {
+  NetworkSelectorContent,
+  type NetworkSelectorProps,
+} from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
@@ -69,6 +78,8 @@ import { KeyIcon } from "./icons/KeyIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
+import { getConnectLocale } from "./locale/getConnectLocale.js";
+import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
@@ -103,102 +114,67 @@ export const ConnectedWalletDetails: React.FC<{
   chains: Chain[];
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
 }> = (props) => {
-  const { connectLocale: locale, client } = useConnectUI();
+  const { connectLocale: locale, client } = props;
 
+  const setRootEl = useContext(SetRootElementContext);
   const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(walletChain);
-  const { disconnect } = useDisconnect();
-  // prefetch chains metadata with low concurrency
+
   useChainsQuery(props.chains, 5);
 
-  const tokenAddress =
-    walletChain && props.detailsButton?.displayBalanceToken
-      ? props.detailsButton.displayBalanceToken[Number(walletChain.id)]
-      : undefined;
-
-  const balanceQuery = useWalletBalance({
-    chain: walletChain ? walletChain : undefined,
-    tokenAddress,
-    address: activeAccount?.address,
+  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
     client,
-  });
+    props.detailsButton?.displayBalanceToken,
+  );
 
-  const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
-  const [isOpen, setIsOpen] = useState(false);
+  function closeModal() {
+    setRootEl(null);
+  }
 
-  const ensNameQuery = useQuery({
-    queryKey: ["ens-name", activeAccount?.address],
-    enabled: !!activeAccount?.address,
-    queryFn: () =>
-      resolveName({
-        client,
-        address: activeAccount?.address || "",
-        resolverChain: ethereum,
-      }),
-  });
-
-  const ensAvatarQuery = useQuery({
-    queryKey: ["ens-avatar", ensNameQuery.data],
-    enabled: !!ensNameQuery.data,
-    queryFn: async () =>
-      resolveAvatar({
-        client,
-        name: ensNameQuery.data || "",
-      }),
-  });
-
-  // const personalAccount = (activeWallet as WalletWithPersonalAccount)
-  //   ?.personalAccount;
-
-  // const smartWallet = activeWallet
-  //   ? personalAccountToSmartAccountMap.get(activeWallet.getAccount())
-  //   : undefined;
-
-  const disableSwitchChain = !activeWallet?.switchChain;
-
-  // const isActuallyMetaMask =
-  //   activeWallet && activeWallet instanceof MetaMaskWallet;
-
-  const shortAddress = activeAccount?.address
-    ? shortenString(activeAccount.address, false)
-    : "";
-
-  const addressOrENS = ensNameQuery.data || shortAddress;
-
-  useEffect(() => {
-    if (!isOpen) {
-      onModalUnmount(() => {
-        setScreen("main");
-      });
-    }
-  }, [isOpen]);
-
-  // if (activeWallet && "isSmartWallet" in activeWallet) {
-  //   avatarOrWalletIconUrl = smartWalletMetadata.iconUrl;
-  // }
+  function openModal() {
+    setRootEl(
+      <DetailsModal
+        client={client}
+        locale={locale}
+        detailsModal={props.detailsModal}
+        theme={props.theme}
+        supportedTokens={props.supportedTokens}
+        closeModal={closeModal}
+        onDisconnect={props.onDisconnect}
+        chains={props.chains}
+        displayBalanceToken={props.detailsButton?.displayBalanceToken}
+      />,
+    );
+  }
 
   const isNetworkMismatch =
     props.chain && walletChain && walletChain.id !== props.chain.id;
 
-  // Note: Must wrap the `SwitchNetworkButton` in a fragment to avoid warning from radix-ui
-  // Note: Must wrap the `detailsButton.render` in an container element
-  const trigger = props.detailsButton?.render ? (
-    <div>
-      <props.detailsButton.render />
-    </div>
-  ) : props.chain && isNetworkMismatch ? (
-    <>
+  if (props.detailsButton?.render) {
+    return (
+      // biome-ignore lint/a11y/useKeyWithClickEvents: ok
+      <div onClick={openModal}>
+        <props.detailsButton.render />
+      </div>
+    );
+  }
+
+  if (props.chain && isNetworkMismatch) {
+    return (
       <SwitchNetworkButton
         style={props.switchButton?.style}
         className={props.switchButton?.className}
         switchNetworkBtnTitle={props.switchButton?.label}
         targetChain={props.chain}
+        connectLocale={locale}
       />
-    </>
-  ) : (
+    );
+  }
+
+  return (
     <WalletInfoButton
       type="button"
       className={`${TW_CONNECTED_WALLET} ${
@@ -206,6 +182,7 @@ export const ConnectedWalletDetails: React.FC<{
       }`}
       style={props.detailsButton?.style}
       data-test="connected-wallet-details"
+      onClick={openModal}
     >
       {ensAvatarQuery.data ? (
         <Img
@@ -226,17 +203,6 @@ export const ConnectedWalletDetails: React.FC<{
       <Container flex="column" gap="xxs">
         {/* Address */}
 
-        {/* activeWallet?.id === "local" ? (
-          <Text
-            color="danger"
-            size="xs"
-            style={{
-              minWidth: "70px",
-            }}
-          >
-            {locale.guest}
-          </Text>
-        ) :  */}
         {addressOrENS ? (
           <Text
             size="sm"
@@ -266,6 +232,48 @@ export const ConnectedWalletDetails: React.FC<{
       </Container>
     </WalletInfoButton>
   );
+};
+
+function DetailsModal(props: {
+  client: ThirdwebClient;
+  locale: ConnectLocale;
+  detailsModal?: ConnectButton_detailsModalOptions;
+  theme: "light" | "dark" | Theme;
+  supportedTokens?: SupportedTokens;
+  closeModal: () => void;
+  onDisconnect: () => void;
+  chains: Chain[];
+  displayBalanceToken?: Record<number, string>;
+}) {
+  const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
+  const { disconnect } = useDisconnect();
+  const [isOpen, setIsOpen] = useState(true);
+
+  const { client, locale } = props;
+  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
+    client,
+    props.displayBalanceToken,
+  );
+
+  const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
+  const walletChain = useActiveWalletChain();
+  const chainQuery = useChainQuery(walletChain);
+
+  const disableSwitchChain = !activeWallet?.switchChain;
+
+  function closeModal() {
+    setIsOpen(false);
+    onModalUnmount(() => {
+      props.closeModal();
+    });
+  }
+
+  function handleDisconnect() {
+    setIsOpen(false);
+    props.closeModal();
+    props.onDisconnect();
+  }
 
   const networkSwitcherButton = (
     <MenuButton
@@ -339,10 +347,10 @@ export const ConnectedWalletDetails: React.FC<{
         )}
 
         <Spacer y="md" />
-        <ConnectedToSmartWallet />
+        <ConnectedToSmartWallet client={props.client} connectLocale={locale} />
 
         {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
-          <InAppWalletUserInfo />
+          <InAppWalletUserInfo client={props.client} />
         )}
 
         {/* Address */}
@@ -535,7 +543,10 @@ export const ConnectedWalletDetails: React.FC<{
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )} */}
 
-          <SwitchMetamaskAccount closeModal={() => setIsOpen(false)} />
+          <SwitchMetamaskAccount
+            closeModal={closeModal}
+            connectLocale={locale}
+          />
 
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
@@ -577,7 +588,7 @@ export const ConnectedWalletDetails: React.FC<{
           )} */}
 
           {props.detailsModal?.footer && (
-            <props.detailsModal.footer close={() => setIsOpen(false)} />
+            <props.detailsModal.footer close={closeModal} />
           )}
         </Container>
 
@@ -594,7 +605,7 @@ export const ConnectedWalletDetails: React.FC<{
               onClick={() => {
                 if (activeWallet) {
                   disconnect(activeWallet);
-                  props.onDisconnect();
+                  handleDisconnect();
                 }
               }}
             >
@@ -625,9 +636,7 @@ export const ConnectedWalletDetails: React.FC<{
         isEmbed={false}
         onBack={() => setScreen("main")}
         client={client}
-        onDone={() => {
-          setIsOpen(false);
-        }}
+        onDone={closeModal}
       />
     );
   }
@@ -642,9 +651,7 @@ export const ConnectedWalletDetails: React.FC<{
             ? [walletChain, ...props.chains]
             : props.chains
         }
-        closeModal={() => {
-          setIsOpen(false);
-        }}
+        closeModal={closeModal}
         networkSelector={props.detailsModal?.networkSelector}
         onBack={() => {
           setScreen("main");
@@ -683,6 +690,8 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => {
           setScreen("main");
         }}
+        client={client}
+        connectLocale={locale}
       />
     );
   }
@@ -695,6 +704,8 @@ export const ConnectedWalletDetails: React.FC<{
         onBack={() => {
           setScreen("main");
         }}
+        client={client}
+        connectLocale={locale}
       />
     );
   }
@@ -711,19 +722,27 @@ export const ConnectedWalletDetails: React.FC<{
         connectLocale={locale}
         payOptions={props.detailsModal?.payOptions || {}}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        onDone={() => {
-          setIsOpen(false);
-        }}
+        onDone={closeModal}
       />
     );
   }
 
   return (
-    <Modal size={"compact"} trigger={trigger} open={isOpen} setOpen={setIsOpen}>
-      {content}
-    </Modal>
+    <CustomThemeProvider theme={props.theme}>
+      <Modal
+        size={"compact"}
+        open={isOpen}
+        setOpen={(_open) => {
+          if (!_open) {
+            closeModal();
+          }
+        }}
+      >
+        {content}
+      </Modal>
+    </CustomThemeProvider>
   );
-};
+}
 
 const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
   const theme = useCustomTheme();
@@ -814,40 +833,15 @@ const StyledChevronRightIcon = /* @__PURE__ */ styled(
   };
 });
 
-// function AccountSwitcher(props: { wallet: Wallet; name: string }) {
-//   const { connect } = useConnect();
-//   const locale = useTWLocale().connectWallet;
-//   const activeWallet = useActiveWallet();
-
-//   return (
-//     <MenuButton
-//       type="button"
-//       onClick={() => {
-//         // remove the current active account as "connected"
-//         if (activeWallet) {
-//           connectionManager.removeConnectedWallet(activeWallet);
-//         }
-//         // set as connected and active
-//         connect(props.wallet);
-//       }}
-//       style={{
-//         fontSize: fontSize.sm,
-//       }}
-//     >
-//       <EnterIcon width={iconSize.md} height={iconSize.md} />
-//       <Text color="primaryText">
-//         {locale.switchTo} {props.name}
-//       </Text>
-//     </MenuButton>
-//   );
-// }
-
-function ConnectedToSmartWallet() {
+function ConnectedToSmartWallet(props: {
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+}) {
   const activeAccount = useActiveAccount();
   const activeWallet = useActiveWallet();
   const isSmartWallet = hasSmartAccount(activeWallet);
   const chain = useActiveWalletChain();
-  const { client, connectLocale: locale } = useConnectUI();
+  const { client, connectLocale: locale } = props;
 
   const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
 
@@ -912,8 +906,10 @@ function ConnectedToSmartWallet() {
   return null;
 }
 
-function InAppWalletUserInfo() {
-  const { client } = useConnectUI();
+function InAppWalletUserInfo(props: {
+  client: ThirdwebClient;
+}) {
+  const { client } = props;
   const account = useActiveAccount();
 
   const userInfoQuery = useQuery({
@@ -961,10 +957,11 @@ function SwitchNetworkButton(props: {
   className?: string;
   switchNetworkBtnTitle?: string;
   targetChain: Chain;
+  connectLocale: ConnectLocale;
 }) {
   const switchChain = useSwitchActiveWalletChain();
   const [switching, setSwitching] = useState(false);
-  const locale = useConnectUI().connectLocale;
+  const locale = props.connectLocale;
 
   const switchNetworkBtnTitle =
     props.switchNetworkBtnTitle ?? locale.switchNetwork;
@@ -1003,9 +1000,10 @@ function SwitchNetworkButton(props: {
 
 function SwitchMetamaskAccount(props: {
   closeModal: () => void;
+  connectLocale: ConnectLocale;
 }) {
   const wallet = useActiveWallet();
-  const connectLocale = useConnectUI().connectLocale;
+  const connectLocale = props.connectLocale;
 
   if (wallet?.id !== "io.metamask") {
     return null;
@@ -1032,4 +1030,266 @@ function SwitchMetamaskAccount(props: {
       <Text color="primaryText">{connectLocale.switchAccount}</Text>
     </MenuButton>
   );
+}
+
+export type UseWalletDetailsModalOptions = {
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+  /**
+   * Set the theme for the Wallet Details Modal. By default it is set to `"dark"`
+   *
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * @example
+   * ```ts
+   * import { lightTheme } from "thirdweb/react";
+   *
+   * const customTheme = lightTheme({
+   *  colors: {
+   *    modalBg: 'red'
+   *  }
+   * })
+   *
+   * ```
+   */
+  theme?: "light" | "dark" | Theme;
+  /**
+   * Customize the tokens shown in the "Send Funds" screen in Details Modal for various networks.
+   *
+   * By default, The "Send Funds" screen shows a few popular tokens for default chains and the native token. For other chains it only shows the native token.
+   * @example
+   *
+   * supportedTokens prop allows you to customize this list as shown below which shows  "Dai Stablecoin" when users wallet is connected to the "Base" mainnet.
+   *
+   * ```tsx
+   * import { ConnectButton } from 'thirdweb/react';
+   *
+   * function Example() {
+   *   return (
+   * 		<ConnectButton
+   * 			supportedTokens={{
+   *        // when connected to "Base" mainnet - show balance of DAI stablecoin
+   * 				84532: [
+   * 					{
+   * 						address: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // token contract address
+   * 						name: 'Dai Stablecoin',
+   * 						symbol: 'DAI',
+   * 						icon: 'https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508',
+   * 					},
+   * 				],
+   * 			}}
+   * 		/>
+   * 	);
+   * }
+   * ```
+   */
+  supportedTokens?: SupportedTokens;
+  /**
+   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   *
+   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   *
+   * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
+   */
+  locale?: LocaleId;
+  /**
+   * Array of chains that your app supports. They will be displayed in the network selector in the screen.
+   *
+   * This is only relevant if your app is a multi-chain app and works across multiple blockchains.
+   * If your app only works on a single blockchain, you should only specify the `chain` prop.
+   *
+   * You can create a `Chain` object using the [`defineChain`](https://portal.thirdweb.com/references/typescript/v5/defineChain) function.
+   * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
+   *
+   * ```tsx
+   * import { defineChain } from "thirdweb/react";
+   *
+   * const polygon = defineChain({
+   *   id: 137,
+   * });
+   * ```
+   */
+  chains?: Chain[];
+  /**
+   * Show a "Request Testnet funds" link in Wallet Details Modal when user is connected to a testnet.
+   *
+   * By default it is `false`, If you want to show the "Request Testnet funds" link when user is connected to a testnet, set this prop to `true`
+   */
+  showTestnetFaucet?: boolean;
+
+  /**
+   * customize the Network selector shown in the Wallet Details Modal
+   */
+  networkSelector?: NetworkSelectorProps;
+
+  /**
+   * Hide the "Disconnect Wallet" button in the Wallet Details Modal.
+   *
+   * By default it is `false`
+   */
+  hideDisconnect?: boolean;
+
+  /**
+   * Render custom UI at the bottom of the Details Modal
+   */
+  footer?: (props: { close: () => void }) => JSX.Element;
+
+  /**
+   * Configure options for thirdweb Pay.
+   *
+   * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
+   */
+  payOptions?: PayUIOptions;
+
+  /**
+   * Display the balance of a token instead of the native token in `ConnectButton` details button.
+   * @example
+   * ```tsx
+   * const displayBalanceToken = {
+   *   // show USDC balance when connected to Ethereum mainnet or Polygon
+   *   [ethereum.id]: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+   *   [polygon.id]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+   * }
+   * ```
+   */
+  displayBalanceToken?: Record<number, string>;
+};
+
+/**
+ * Hook to open the Wallet Details Modal that shows various information about the connected wallet and allows users to perform various actions like sending funds, receiving funds, switching networks, Buying tokens, etc.
+ *
+ * @example
+ * ```tsx
+ * import { createThirdwebClient } from "thirdweb";
+ * import { useWalletDetailsModal } from "thirdweb/react";
+ *
+ * const client = createThirdwebClient({
+ *  clientId: "<your_client_id>",
+ * });
+ *
+ * function Example() {
+ *   const { open } = useWalletDetailsModal();
+ *
+ *   function handleClick() {
+ *      open({ client, theme: 'light' });
+ *   }
+ *
+ *   return <button onClick={handleClick}> Show Wallet Details </button>
+ * }
+ * ```
+ */
+export function useWalletDetailsModal() {
+  const account = useActiveAccount();
+  const setRootEl = useContext(SetRootElementContext);
+
+  function closeModal() {
+    setRootEl(null);
+  }
+
+  function openModal(props: UseWalletDetailsModalOptions) {
+    if (!account) {
+      throw new Error("Wallet is not connected.");
+    }
+
+    getConnectLocale(props.locale || "en_US")
+      .then((locale) => {
+        setRootEl(
+          <DetailsModal
+            client={props.client}
+            locale={locale}
+            detailsModal={{
+              footer: props.footer,
+              hideDisconnect: props.hideDisconnect,
+              networkSelector: props.networkSelector,
+              payOptions: props.payOptions,
+              showTestnetFaucet: props.showTestnetFaucet,
+            }}
+            displayBalanceToken={props.displayBalanceToken}
+            theme={props.theme || "dark"}
+            supportedTokens={props.supportedTokens}
+            closeModal={closeModal}
+            onDisconnect={closeModal}
+            chains={props.chains || []}
+          />,
+        );
+      })
+      .catch(() => {
+        closeModal();
+      });
+  }
+
+  return {
+    open: openModal,
+  };
+}
+
+function useWalletInfo(
+  client: ThirdwebClient,
+  displayBalanceToken?: Record<number, string>,
+) {
+  const walletChain = useActiveWalletChain();
+
+  const tokenAddress =
+    walletChain && displayBalanceToken
+      ? displayBalanceToken[Number(walletChain.id)]
+      : undefined;
+
+  const activeAccount = useActiveAccount();
+  const ensNameQuery = useQuery({
+    queryKey: ["ens-name", activeAccount?.address],
+    enabled: !!activeAccount?.address,
+    queryFn: () =>
+      resolveName({
+        client,
+        address: activeAccount?.address || "",
+        resolverChain: ethereum,
+      }),
+  });
+
+  const ensAvatarQuery = useQuery({
+    queryKey: ["ens-avatar", ensNameQuery.data],
+    enabled: !!ensNameQuery.data,
+    queryFn: async () =>
+      resolveAvatar({
+        client,
+        name: ensNameQuery.data || "",
+      }),
+  });
+
+  const shortAddress = activeAccount?.address
+    ? shortenString(activeAccount.address, false)
+    : "";
+
+  const balanceQuery = useWalletBalance({
+    chain: walletChain ? walletChain : undefined,
+    tokenAddress,
+    address: activeAccount?.address,
+    client,
+  });
+
+  const addressOrENS = ensNameQuery.data || shortAddress;
+
+  return {
+    ensNameQuery,
+    ensAvatarQuery,
+    addressOrENS,
+    shortAddress,
+    balanceQuery,
+  };
 }

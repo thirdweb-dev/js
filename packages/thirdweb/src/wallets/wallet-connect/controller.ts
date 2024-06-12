@@ -6,6 +6,7 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   getTypesForEIP712Domain,
+  serializeTypedData,
   validateTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
@@ -16,12 +17,10 @@ import {
 } from "../../chains/utils.js";
 import {
   type Hex,
-  isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { stringify } from "../../utils/json.js";
 import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
 import { openWindow } from "../../utils/web/openWindow.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
@@ -324,12 +323,7 @@ async function initProvider(
   return provider;
 }
 
-function onConnect(
-  address: string,
-  chain: Chain,
-  provider: WCProvider,
-  emitter: WalletEmitter<WCSupportedWalletIds>,
-): [Account, Chain, DisconnectFn, SwitchChainFn] {
+function createAccount(provider: WCProvider, address: string) {
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {
@@ -379,10 +373,12 @@ function onConnect(
       // as we can't statically check this with TypeScript.
       validateTypedData({ domain, message, primaryType, types });
 
-      const typedData = stringify(
-        { domain: domain ?? {}, message, primaryType, types },
-        (_, value) => (isHex(value) ? value.toLowerCase() : value),
-      );
+      const typedData = serializeTypedData({
+        domain: domain ?? {},
+        message,
+        primaryType,
+        types,
+      });
 
       return await provider.request({
         method: "eth_signTypedData_v4",
@@ -390,6 +386,17 @@ function onConnect(
       });
     },
   };
+
+  return account;
+}
+
+function onConnect(
+  address: string,
+  chain: Chain,
+  provider: WCProvider,
+  emitter: WalletEmitter<WCSupportedWalletIds>,
+): [Account, Chain, DisconnectFn, SwitchChainFn] {
+  const account = createAccount(provider, address);
 
   async function disconnect() {
     provider.removeListener("accountsChanged", onAccountsChanged);
@@ -407,10 +414,7 @@ function onConnect(
 
   function onAccountsChanged(accounts: string[]) {
     if (accounts[0]) {
-      const newAccount: Account = {
-        ...account,
-        address: getAddress(accounts[0]),
-      };
+      const newAccount = createAccount(provider, getAddress(accounts[0]));
       emitter.emit("accountChanged", newAccount);
       emitter.emit("accountsChanged", accounts);
     } else {

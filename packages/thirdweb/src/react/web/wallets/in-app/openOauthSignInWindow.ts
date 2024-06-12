@@ -1,5 +1,5 @@
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
-import type { Theme } from "../../ui/design-system/index.js";
+import type { Theme } from "../../../core/design-system/index.js";
 
 function getBodyTitle(authOption: InAppWalletSocialAuth) {
   switch (authOption) {
