@@ -6,6 +6,12 @@ export type SetSharedMetadataParams = {
   nft: NFTInput;
 };
 
+/**
+ * Sets the shared metadata for a OpenEdition contract.
+ * @param options - The options for the transaction.
+ * @returns The prepared transaction.
+ * @extension ERC721
+ */
 export function setSharedMetadata(
   options: BaseTransactionOptions<SetSharedMetadataParams>,
 ) {

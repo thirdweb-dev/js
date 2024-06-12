@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { ANVIL_PKEY_A } from "~test/test-wallets.js";
+import { ANVIL_PKEY_A, TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { typedData } from "~test/typed-data.js";
 
 import { signTypedData } from "./sign-typed-data.js";
@@ -141,4 +141,43 @@ test("domain: salt", async () => {
   ).toMatchInlineSnapshot(
     '"0x4b193383278fd3dcaa084952ea282cb9c8889c26c6caaa3f48aca7bde78c6e72028bd98c0328e40d067dbbab53733f99f241d8cf91a32580883f65264c2b72581b"',
   );
+});
+
+test("mixed-case strings and addresses", async () => {
+  const typedData = (name: string, addr: string) =>
+    ({
+      types: {
+        WalletData: [
+          { name: "name", type: "string" },
+          { name: "addr", type: "address" },
+        ],
+      },
+      message: {
+        name,
+        addr,
+      },
+      primaryType: "WalletData",
+    }) as const;
+
+  const name = "0xDEADBEEF";
+
+  const signature = signTypedData({
+    ...typedData(name, TEST_ACCOUNT_A.address),
+    privateKey: ANVIL_PKEY_A,
+  });
+
+  // lowercase string
+  const signature_2 = signTypedData({
+    ...typedData(name.toLowerCase(), TEST_ACCOUNT_A.address),
+    privateKey: ANVIL_PKEY_A,
+  });
+
+  // lowercase address
+  const signature_3 = signTypedData({
+    ...typedData(name, TEST_ACCOUNT_A.address.toLowerCase()),
+    privateKey: ANVIL_PKEY_A,
+  });
+
+  expect(signature === signature_2).toBeFalsy();
+  expect(signature === signature_3).toBeTruthy();
 });

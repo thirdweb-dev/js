@@ -3,6 +3,12 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import {
   useActiveWallet,
@@ -16,9 +22,7 @@ import { WalletImage } from "../../components/WalletImage.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { iconSize, radius, spacing } from "../../design-system/index.js";
 import type { ConnectButtonProps } from "../ConnectButtonProps.js";
 import { TOS } from "../Modal/TOS.js";
 import type { ConnectLocale } from "../locale/types.js";

@@ -1,5 +1,290 @@
 # thirdweb
 
+## 5.29.0
+
+### Minor Changes
+
+- [#3273](https://github.com/thirdweb-dev/js/pull/3273) [`7afd2da`](https://github.com/thirdweb-dev/js/commit/7afd2dac0ace82fd7ba14766acd73555f4fa10ce) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds options refetchInterval and retry params to useReadContract
+
+- [#3231](https://github.com/thirdweb-dev/js/pull/3231) [`dbf74aa`](https://github.com/thirdweb-dev/js/commit/dbf74aad3ffaeaa3e3967801549f6ec26f721dea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - TransactionButton react native implementation
+
+- [#3271](https://github.com/thirdweb-dev/js/pull/3271) [`3a1fd98`](https://github.com/thirdweb-dev/js/commit/3a1fd985fc4b2720f4d46d54b562c00b2edf21ce) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Align inAppWallet secret sharing implementation with web and previous RN SDK
+
+- [#3229](https://github.com/thirdweb-dev/js/pull/3229) [`e7b9b9f`](https://github.com/thirdweb-dev/js/commit/e7b9b9f438ad303fdc79aaca1ca674acd8c7a7ba) Thanks [@MananTank](https://github.com/MananTank)! - Add `useWalletDetailsModal` hook to open Wallet Details Modal without using `<ConnectButton />` component
+
+  ```tsx
+  import { createThirdwebClient } from "thirdweb";
+  import { useWalletDetailsModal } from "thirdweb/react";
+
+  const client = createThirdwebClient({
+    clientId: "<your_client_id>",
+  });
+
+  function Example() {
+    const { open } = useWalletDetailsModal();
+
+    function handleClick() {
+      open({ client, theme: "light" });
+    }
+
+    return <button onClick={handleClick}> Show Wallet Details </button>;
+  }
+  ```
+
+### Patch Changes
+
+- [#3278](https://github.com/thirdweb-dev/js/pull/3278) [`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [v4 & v5] zkCandy Sepolia AA Support
+
+- [#3263](https://github.com/thirdweb-dev/js/pull/3263) [`f2004b5`](https://github.com/thirdweb-dev/js/commit/f2004b54eaf3137297fd8a4d29c85b4aa5c78dcb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Add potential error message for eip155 failure
+
+- [#3266](https://github.com/thirdweb-dev/js/pull/3266) [`e763ace`](https://github.com/thirdweb-dev/js/commit/e763ace602639f08f95b600ba1532708f2569eb9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign typed data with inAppWallet when the domain contains a salt param
+
+- [#3264](https://github.com/thirdweb-dev/js/pull/3264) [`3948f43`](https://github.com/thirdweb-dev/js/commit/3948f4320cdf9546975955414aa756bc5e57c08a) Thanks [@MananTank](https://github.com/MananTank)! - - Remove the feature that sets another connected wallet as active when disconnecting the current active wallet.
+
+  - Do not save personal wallet as a separate wallet in connected wallets list.
+
+- [#3256](https://github.com/thirdweb-dev/js/pull/3256) [`923a5ec`](https://github.com/thirdweb-dev/js/commit/923a5ec556b5a857e855377c90ad339485ac828f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Automatic retries on watchContractEvents
+
+- [#3280](https://github.com/thirdweb-dev/js/pull/3280) [`7dec4d0`](https://github.com/thirdweb-dev/js/commit/7dec4d049d9433782ef3b9de0738d6bce29fa6a8) Thanks [@MananTank](https://github.com/MananTank)! - Fix in-app wallet sending another verification code on window focus when using ConnectEmbed.
+
+  Fix the underlying issue of `useAutoConnect` running again on window focus.
+
+  Add `refetchOnWindowFocus: false` on few more `useQuery` instances to avoid unnecessary refetches
+
+- [#3235](https://github.com/thirdweb-dev/js/pull/3235) [`824a631`](https://github.com/thirdweb-dev/js/commit/824a631b55bb4b8d4a0290d19dde081dd90a8647) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds EIP-5792 hook exports to thirdweb/react
+
+- [#3241](https://github.com/thirdweb-dev/js/pull/3241) [`37ec4ca`](https://github.com/thirdweb-dev/js/commit/37ec4ca28d7d0290d4cc8b838d888f67c70e172f) Thanks [@jnsdls](https://github.com/jnsdls)! - fix ipfs `resolveScheme` bug for v1 ipfs schemes
+
+- [#3240](https://github.com/thirdweb-dev/js/pull/3240) [`d488223`](https://github.com/thirdweb-dev/js/commit/d4882236b786660efd1f60c181d37351109949ff) Thanks [@MananTank](https://github.com/MananTank)! - Fix custom theme not used in ConnectEmbed loading screen
+
+- [#3251](https://github.com/thirdweb-dev/js/pull/3251) [`ce45a79`](https://github.com/thirdweb-dev/js/commit/ce45a793b54ab656dac01f2f99d9db8df52f4e23) Thanks [@MananTank](https://github.com/MananTank)! - Allow selecting fiat currency in Pay UI
+
+## 5.28.0
+
+### Minor Changes
+
+- [#3198](https://github.com/thirdweb-dev/js/pull/3198) [`ca31a6c`](https://github.com/thirdweb-dev/js/commit/ca31a6c0d8f2d246d48b8f382fa01377a6a3e2cf) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Exports toSerializableTransaction to convert preparedTransaction into a fully serializable transaction.
+  Exports estimateGasCost to estimate the gas cost of a transaction in ether and wei.
+  Exports getGasPrice to get the currect gas price for a chain.
+
+  ### `toSerializableTransaction`
+
+  ```ts
+  import { prepareTransaction, toSerializableTransaction } from "thirdweb";
+
+  const transaction = await prepareTransaction({
+    transaction: {
+      to: "0x...",
+      value: 100,
+    },
+  });
+  const serializableTransaction = await toSerializableTransaction({
+    transaction,
+  });
+
+  account.sendTransaction(serializableTransaction);
+  ```
+
+  ### `estimateGasCost`
+
+  ```ts
+  import { estimateGasCost } from "thirdweb";
+
+  const gasCost = await estimateGasCost({ transaction });
+  ```
+
+  ### `getGasPrice`
+
+  ```ts
+  import { getGasPrice } from "thirdweb";
+
+  const gasPrice = await getGasPrice({ client, chain });
+  ```
+
+### Patch Changes
+
+- [#3207](https://github.com/thirdweb-dev/js/pull/3207) [`e7443ed`](https://github.com/thirdweb-dev/js/commit/e7443edda77f0a4528f1f9782b2046dcc43a9a12) Thanks [@MananTank](https://github.com/MananTank)! - Fixes #3204 - Account methods not properly updated when account is changed in wallet
+
+- [#3226](https://github.com/thirdweb-dev/js/pull/3226) [`58d14c9`](https://github.com/thirdweb-dev/js/commit/58d14c9eaf964620a44732ee247deb364c3aec09) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add option to choose the contract type for erc1155/generateMintSignature
+
+- [#3227](https://github.com/thirdweb-dev/js/pull/3227) [`043f0da`](https://github.com/thirdweb-dev/js/commit/043f0da708b267336c79f12f6c186beedf3206d7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better gas estimation for opBNB mainnet & testnet
+
+- [#3201](https://github.com/thirdweb-dev/js/pull/3201) [`0328bc8`](https://github.com/thirdweb-dev/js/commit/0328bc894e62d15ce2d457abd5f06d16fbd8c7e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fallback to default metadata on failure to fetch erc20 metadata
+
+## 5.27.0
+
+### Minor Changes
+
+- [#3181](https://github.com/thirdweb-dev/js/pull/3181) [`a346111`](https://github.com/thirdweb-dev/js/commit/a3461114c5e9adb8d0ea2f36bc9fb3d96366c5b9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds headless functions for creating and managing a WalletConnect session with a connected wallet
+
+  ### `createWalletConnectClient`
+
+  ```ts
+  import { createWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+
+  createWalletConnectClient({
+    client: client,
+    wallet: wallet,
+    onConnect: (session: any) => {
+      alert("Connected");
+    },
+    onDisconnect: (session: any) => {
+      alert("Disconnected");
+    },
+  });
+  ```
+
+  ### `createWalletConnectSession`
+
+  ```ts
+  import { createWalletConnectSession } from "thirdweb/wallets/wallet-connect";
+
+  createWalletConnectSession({
+    walletConnectClient: wcClient,
+    uri: "wc:...",
+  });
+  ```
+
+  ### `getWalletConnectSessions`
+
+  ```ts
+  import {
+    getWalletConnectSession,
+    type WalletConnectSession,
+  } from "thirdweb/wallets/wallet-connect";
+
+  const sessions: WalletConnectSession[] = await getWalletConnectSessions();
+  ```
+
+  ### `disconnectWalletConnectClient`
+
+  ```ts
+  import { disconnectWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+
+  disconnectWalletConnectClient({ session, walletConnectClient: wcClient });
+  ```
+
+- [#3105](https://github.com/thirdweb-dev/js/pull/3105) [`51e7ada`](https://github.com/thirdweb-dev/js/commit/51e7adaeb0fe050eb132510291ecac7a12e4c4ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - First party support for zkSync native account abstraction
+
+  You can now use smart accounts on zkSync and zkSync sepolia without any extra setup.
+
+  ```ts
+  const wallet = smartWallet({
+    chain: zkSync,
+    sponsorGas: true,
+  });
+
+  const smartAccount = await wallet.connect({
+    client,
+    personalAccount,
+  });
+
+  // now your can perform transactions normally, gas will be sponsored
+  sendTransaction({ transaction, account: smartAccount });
+  ```
+
+- [#3105](https://github.com/thirdweb-dev/js/pull/3105) [`51e7ada`](https://github.com/thirdweb-dev/js/commit/51e7adaeb0fe050eb132510291ecac7a12e4c4ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ZkSync transaction support
+
+### Patch Changes
+
+- [#3195](https://github.com/thirdweb-dev/js/pull/3195) [`3f66945`](https://github.com/thirdweb-dev/js/commit/3f669453d086487a217ae9af82745199e26550c6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix `estimateGas` type resolution
+
+## 5.26.0
+
+### Minor Changes
+
+- [#3161](https://github.com/thirdweb-dev/js/pull/3161) [`b569eb4`](https://github.com/thirdweb-dev/js/commit/b569eb48ad018619e4589b9efb5aa774c7b77642) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds waitForBundle function to await a sendCalls bundle's complete confirmation.
+
+  ### Usage
+
+  ```ts
+  import { waitForBundle } from "thirdweb/wallets/eip5792";
+  const result = await waitForBundle({
+    client,
+    chain,
+    wallet,
+    bundleId: "0x123...",
+  });
+  ```
+
+- [#3161](https://github.com/thirdweb-dev/js/pull/3161) [`b569eb4`](https://github.com/thirdweb-dev/js/commit/b569eb48ad018619e4589b9efb5aa774c7b77642) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds EIP-5792 react hooks
+
+  ## `useSendCalls`
+
+  `useSendCalls` will automatically revalidate all reads from contracts that are interacted with.
+
+  ```tsx
+  import { useSendCalls } from "thirdweb/react";
+
+  const sendTx1 = approve({
+    contract: USDT_CONTRACT,
+    amount: 100,
+    spender: "0x33d9B8BEfE81027E2C859EDc84F5636cbb202Ed6",
+  });
+  const sendTx2 = approve({
+    contract: USDT_CONTRACT,
+    amount: 100,
+    spender: "0x2a4f24F935Eb178e3e7BA9B53A5Ee6d8407C0709",
+  });
+  const { mutate: sendCalls, data: bundleId } = useSendCalls({ client });
+  await sendCalls({
+    wallet,
+    client,
+    calls: [sendTx1, sendTx2],
+  });
+  ```
+
+  Await the bundle's full confirmation:
+
+  ```tsx
+  const { mutate: sendCalls, data: bundleId } = useSendCalls({
+    client,
+    waitForResult: true,
+  });
+  await sendCalls({
+    wallet,
+    client,
+    calls: [sendTx1, sendTx2],
+  });
+  ```
+
+  Sponsor transactions with a paymaster:
+
+  ```ts
+  const { mutate: sendCalls, data: bundleId } = useSendCalls();
+  await sendCalls({
+    client,
+    calls: [sendTx1, sendTx2],
+    capabilities: {
+      paymasterService: {
+        url: `https://${CHAIN.id}.bundler.thirdweb.com/${client.clientId}`,
+      },
+    },
+  });
+  ```
+
+  ## `useCapabilities`
+
+  ```tsx
+  import { useCapabilities } from "thirdweb/react";
+  const { data: capabilities, isLoading } = useCapabilities();
+  ```
+
+  ## `useCallsStatus`
+
+  ```tsx
+  import { useCallsStatus } from "thirdweb/react";
+  const { data: status, isLoading } = useCallsStatus({ bundleId, client });
+  ```
+
+### Patch Changes
+
+- [#3178](https://github.com/thirdweb-dev/js/pull/3178) [`3dca028`](https://github.com/thirdweb-dev/js/commit/3dca028a7eff926ae406eb29cc82016ae6c994b3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimation in transaction button
+
+- [#3187](https://github.com/thirdweb-dev/js/pull/3187) [`874747b`](https://github.com/thirdweb-dev/js/commit/874747b3e00714e9a7336dcfda34e7b92b82e7e1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Upgrade to latest coinbase wallet sdk
+
+- [#3186](https://github.com/thirdweb-dev/js/pull/3186) [`123275b`](https://github.com/thirdweb-dev/js/commit/123275bbe275457b0be5205812ba0ef75b1f0e5b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Catch any errors thrown while polling block numbers
+
 ## 5.25.1
 
 ### Patch Changes

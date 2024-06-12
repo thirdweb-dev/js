@@ -4,6 +4,14 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { FocusScope } from "@radix-ui/react-focus-scope";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useEffect, useRef, useState } from "react";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  iconSize,
+  media,
+  radius,
+  shadow,
+  spacing,
+} from "../../../core/design-system/index.js";
 import {
   compactModalMaxHeight,
   modalCloseFadeOutDuration,
@@ -11,15 +19,7 @@ import {
   modalMaxWidthWide,
   wideModalMaxHeight,
 } from "../ConnectWallet/constants.js";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../design-system/elements.js";
-import {
-  iconSize,
-  media,
-  radius,
-  shadow,
-  spacing,
-} from "../design-system/index.js";
 import { DynamicHeight } from "./DynamicHeight.js";
 import { Overlay } from "./Overlay.js";
 import { noScrollBar } from "./basic.js";

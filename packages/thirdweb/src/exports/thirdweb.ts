@@ -98,6 +98,11 @@ export {
   estimateGas,
   type EstimateGasOptions,
 } from "../transaction/actions/estimate-gas.js";
+export { estimateGasCost } from "../transaction/actions/estimate-gas-cost.js";
+export {
+  getGasPrice,
+  type GetGasPriceOptions,
+} from "../gas/get-gas-price.js";
 export {
   sendTransaction,
   type SendTransactionOptions,
@@ -114,6 +119,10 @@ export {
 export { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 export { signTransaction } from "../transaction/actions/sign-transaction.js";
 export { serializeTransaction } from "../transaction/serialize-transaction.js";
+export {
+  toSerializableTransaction,
+  type ToSerializableTransactionOptions,
+} from "../transaction/actions/to-serializable-transaction.js";
 
 /**
  * EVENTS
@@ -210,6 +219,7 @@ export {
   type StringToHexOpts,
   type ToHexParameters,
   type Uint8ArrayToHexOpts,
+  type Hex,
 } from "../utils/encoding/hex.js";
 export { concatHex } from "../utils/encoding/helpers/concat-hex.js";
 

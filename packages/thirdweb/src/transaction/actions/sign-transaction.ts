@@ -26,6 +26,7 @@ export type SignTransactionOptions = {
  *   privateKey: "0x...",
  * });
  * ```
+ * @transaction
  */
 export function signTransaction({
   transaction,

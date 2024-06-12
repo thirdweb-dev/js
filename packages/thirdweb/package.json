@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.25.1",
+  "version": "5.29.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -176,7 +176,7 @@
     "!tsconfig.build.json"
   ],
   "dependencies": {
-    "@coinbase/wallet-sdk": "4.0.0-rc.2",
+    "@coinbase/wallet-sdk": "4.0.3",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
     "@google/model-viewer": "2.1.1",
@@ -189,6 +189,7 @@
     "@radix-ui/react-tooltip": "1.0.7",
     "@tanstack/react-query": "5.29.2",
     "@walletconnect/ethereum-provider": "2.12.2",
+    "@walletconnect/sign-client": "^2.13.1",
     "abitype": "1.0.0",
     "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
@@ -198,7 +199,7 @@
     "sshpk": "^1.18.0",
     "tweetnacl": "^1.0.3",
     "uqr": "0.1.2",
-    "viem": "2.10.9"
+    "viem": "2.13.7"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -212,8 +213,7 @@
     "react": ">=18",
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
-    "react-native-quick-crypto": ">=0.6.1",
-    "shamir-secret-sharing": "^0.0.3",
+    "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
@@ -236,9 +236,6 @@
       "optional": true
     },
     "react-native-quick-crypto": {
-      "optional": true
-    },
-    "shamir-secret-sharing": {
       "optional": true
     },
     "aws-amplify": {
@@ -295,6 +292,7 @@
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/cross-spawn": "^6.0.6",
     "@types/react": "18.2.17",
     "@types/sshpk": "^1.17.4",
@@ -308,7 +306,6 @@
     "react-native": "0.74.1",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
-    "shamir-secret-sharing": "0.0.3",
     "vitest": "1.5.0"
   }
 }

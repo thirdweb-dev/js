@@ -1,4 +1,4 @@
-import { radius } from "./index.js";
+import { radius } from "../../../core/design-system/index.js";
 
 /**
  * @internal

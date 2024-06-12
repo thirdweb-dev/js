@@ -38,7 +38,7 @@ export type WaitForBundleOptions = Prettify<{
  *   bundleId: "0x123...",
  * });
  * ```
- * @wallets
+ * @extension EIP5792
  */
 export function waitForBundle(
   options: WaitForBundleOptions,

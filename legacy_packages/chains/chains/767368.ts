@@ -2,9 +2,19 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
   "chainId": 767368,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Lamina1 Identity Testnet Explorer",
+      "url": "https://subnets-test.avax.network/lamina1id",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
-  "features": [],
+  "features": [
+    {
+      "name": "EIP1559"
+    }
+  ],
   "icon": {
     "url": "https://images.ctfassets.net/9bazykntljf6/62CceHSYsRS4D9fgDSkLRB/877cb8f26954e1743ff535fd7fdaf78f/avacloud-placeholder.svg",
     "width": 256,
@@ -25,6 +35,7 @@ export default {
     "https://subnets.avax.network/lamina1id/testnet/rpc"
   ],
   "shortName": "Lamina1 Identity Testnet",
+  "slip44": 1,
   "slug": "lamina1-identity-testnet",
   "testnet": true
 } as const satisfies Chain;

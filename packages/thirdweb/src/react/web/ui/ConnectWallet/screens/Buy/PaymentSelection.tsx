@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
+import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
+import { fontSize, spacing } from "../../../../../core/design-system/index.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { useCustomTheme } from "../../../design-system/CustomThemeProvider.js";
-import { fontSize, spacing } from "../../../design-system/index.js";
 
 /**
  * @internal

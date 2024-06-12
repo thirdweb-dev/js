@@ -28,13 +28,13 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://167008.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://taiko-katla.drpc.org",
-    "wss://taiko-katla.drpc.org",
     "https://rpc.katla.taiko.xyz",
-    "wss://ws.katla.taiko.xyz"
+    "wss://ws.katla.taiko.xyz",
+    "https://taiko-katla.drpc.org",
+    "wss://taiko-katla.drpc.org"
   ],
   "shortName": "tko-katla",
   "slug": "taiko-katla-l2",
-  "status": "active",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

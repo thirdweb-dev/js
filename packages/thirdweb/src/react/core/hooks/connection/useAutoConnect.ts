@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { createWallet } from "../../../../wallets/create-wallet.js";
+import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   getLastConnectedChain,
@@ -68,8 +70,13 @@ export function useAutoConnect(props: AutoConnectProps) {
       });
     }
 
+    const availableWallets = [
+      ...wallets,
+      ...getInstalledWalletProviders().map((p) => createWallet(p.info.rdns)),
+    ];
     const activeWallet =
-      lastActiveWalletId && wallets.find((w) => w.id === lastActiveWalletId);
+      lastActiveWalletId &&
+      availableWallets.find((w) => w.id === lastActiveWalletId);
 
     if (activeWallet) {
       try {
@@ -127,6 +134,7 @@ export function useAutoConnect(props: AutoConnectProps) {
     queryKey: ["autoConnect", props.client.clientId],
     queryFn: autoConnect,
     refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return query;

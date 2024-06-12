@@ -1,11 +1,11 @@
 "use client";
 import type { Chain } from "../../../../../chains/types.js";
+import { type Theme, fontSize } from "../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import {
   type ERC20OrNativeToken,
   isNativeToken,
 } from "../../ConnectWallet/screens/nativeToken.js";
-import { type Theme, fontSize } from "../../design-system/index.js";
 import { Skeleton } from "../Skeleton.js";
 import { Text } from "../text.js";
 

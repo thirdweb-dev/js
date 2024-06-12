@@ -1,8 +1,8 @@
 import { keyframes } from "@emotion/react";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { fontSize, iconSize } from "../../../../../core/design-system/index.js";
 import { Container } from "../../../components/basic.js";
 import { StyledDiv } from "../../../design-system/elements.js";
-import { fontSize, iconSize } from "../../../design-system/index.js";
 
 export function StepIcon(props: {
   isDone: boolean;

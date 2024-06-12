@@ -4,6 +4,12 @@ import { openWindow } from "../../../../utils/web/openWindow.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  iconSize,
+  radius,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
 import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
@@ -13,9 +19,7 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { WalletImage } from "../../ui/components/WalletImage.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Text } from "../../ui/components/text.js";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
-import { iconSize, radius, spacing } from "../../ui/design-system/index.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 
 /**

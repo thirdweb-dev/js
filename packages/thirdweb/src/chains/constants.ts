@@ -17,6 +17,8 @@ const opChains = [
   919, // mode testnet
   42220, // celo
   44787, // celo testnet
+  204, // opBNB
+  5611, // opBNB testnet
 ];
 
 /**

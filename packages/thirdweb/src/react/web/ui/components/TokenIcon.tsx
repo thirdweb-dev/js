@@ -2,13 +2,14 @@
 import { useMemo } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
+import { iconSize } from "../../../core/design-system/index.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
 import { genericTokenIcon } from "../ConnectWallet/icons/dataUris.js";
 import {
   type NativeToken,
   isNativeToken,
 } from "../ConnectWallet/screens/nativeToken.js";
-import { iconSize } from "../design-system/index.js";
 import { Img } from "./Img.js";
 
 // Note: Must not use useConnectUI here
@@ -30,7 +31,10 @@ export function TokenIcon(props: {
   const chainQuery = useChainQuery(props.chain);
 
   const tokenImage = useMemo(() => {
-    if (isNativeToken(props.token)) {
+    if (
+      isNativeToken(props.token) ||
+      props.token.address === NATIVE_TOKEN_ADDRESS
+    ) {
       return chainQuery.data?.icon?.url;
     }
     return props.token.icon;

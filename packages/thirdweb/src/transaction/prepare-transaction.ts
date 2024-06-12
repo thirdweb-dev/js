@@ -18,9 +18,40 @@ export type StaticPrepareTransactionOptions = {
   maxFeePerBlobGas?: bigint | undefined;
   nonce?: number | undefined;
   extraGas?: bigint | undefined;
+  // zksync specific
+  eip712?: EIP721TransactionOptions | undefined;
   // tw specific
   chain: Chain;
   client: ThirdwebClient;
+};
+
+export type EIP721TransactionOptions = {
+  // constant or user input
+  gasPerPubdata?: bigint | undefined;
+  // optional signature, generated
+  customSignature?: Hex | undefined;
+  // optional, used to deploy contracts with the transaction
+  factoryDeps?: Hex[] | undefined;
+  // optional, paymaster contract address to invoke
+  paymaster?: Address | undefined;
+  // optional, paymaster contract input
+  paymasterInput?: Hex | undefined;
+};
+
+export type EIP721SerializedTransaction = {
+  txType: bigint;
+  from: bigint;
+  to: bigint;
+  gasLimit: bigint;
+  gasPerPubdataByteLimit: bigint;
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+  nonce: bigint;
+  value: bigint;
+  data: Hex;
+  factoryDeps: Hex[];
+  paymaster: bigint;
+  paymasterInput: Hex;
 };
 
 export type PrepareTransactionOptions = {

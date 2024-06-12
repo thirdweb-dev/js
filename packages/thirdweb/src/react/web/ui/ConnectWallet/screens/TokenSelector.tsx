@@ -6,6 +6,12 @@ import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Account } from "../../../../../wallets/interfaces/wallet.js";
 import { getTokenBalance } from "../../../../../wallets/utils/getTokenBalance.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
@@ -18,8 +24,6 @@ import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
-import { fontSize, iconSize, spacing } from "../../design-system/index.js";
 import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
 import type { TokenInfo } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";

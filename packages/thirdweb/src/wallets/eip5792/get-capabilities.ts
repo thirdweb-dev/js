@@ -4,7 +4,7 @@ import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
 import { isSmartWallet } from "../smart/index.js";
-import { isWalletConnect } from "../wallet-connect/index.js";
+import { isWalletConnect } from "../wallet-connect/controller.js";
 import type { WalletId } from "../wallet-types.js";
 import type { WalletCapabilities, WalletCapabilitiesRecord } from "./types.js";
 
@@ -34,7 +34,7 @@ export type GetCapabilitiesResult = Prettify<
  * const capabilities = await getCapabilities({ wallet });
  * ```
  *
- * @wallets
+ * @extension EIP5792
  */
 export async function getCapabilities<const ID extends WalletId = WalletId>({
   wallet,

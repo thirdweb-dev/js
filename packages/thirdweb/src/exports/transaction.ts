@@ -51,6 +51,10 @@ export {
   serializeTransaction,
   type SerializeTransactionOptions,
 } from "../transaction/serialize-transaction.js";
+export {
+  toSerializableTransaction,
+  type ToSerializableTransactionOptions,
+} from "../transaction/actions/to-serializable-transaction.js";
 
 //types & utils
 export {

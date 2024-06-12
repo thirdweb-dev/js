@@ -14,7 +14,7 @@ import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export type SmartWalletConfig = {
   chain: ChainOrRpcUrl;
-  factoryAddress: string;
+  factoryAddress?: string;
   clientId?: string;
   secretKey?: string;
   gasless: boolean;
@@ -170,4 +170,19 @@ export type EstimateUserOpGasResult = {
   verificationGas: BigNumber;
   verificationGasLimit: BigNumber;
   callGasLimit: BigNumber;
+};
+
+export type ZkTransactionInput = {
+  nonce?: string;
+  from: string;
+  to: string;
+  gas: string;
+  gasPrice?: string;
+  value?: string;
+  data?: string;
+  maxFeePerGas: string;
+  maxPriorityFeePerGas: string;
+  chainId?: string;
+  signedTransaction: string;
+  paymaster: string;
 };

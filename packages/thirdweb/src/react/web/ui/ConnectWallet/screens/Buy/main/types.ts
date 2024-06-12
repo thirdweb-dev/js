@@ -18,4 +18,7 @@ export type SelectedScreen =
     }
   | {
       type: "main";
+    }
+  | {
+      type: "select-currency";
     };

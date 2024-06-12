@@ -1,5 +1,17 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.31
+
+### Patch Changes
+
+- [#3238](https://github.com/thirdweb-dev/js/pull/3238) [`73af67a`](https://github.com/thirdweb-dev/js/commit/73af67aad1f0b3f8d93ad6b38975770e8aed6208) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - expose domain and bundle Id validation logic
+
+  ```typescript
+  import { authorizeDomain, authorizeBundleId } from "@thirdweb-dev/service-utils
+  const isValidDomain = authorizeDomain({ domains, origin });
+  const isValidBundleId = authorizeBundleId({ bundleId, bundleIds });
+  ```
+
 ## 0.4.30
 
 ### Patch Changes

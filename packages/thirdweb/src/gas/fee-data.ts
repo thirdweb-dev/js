@@ -41,14 +41,14 @@ export async function getGasOverridesForTransaction(
   ]);
 
   // Exit early if the user explicitly provided enough options
-  if (gasPrice) {
-    return { gasPrice };
-  }
-  if (maxFeePerGas && maxPriorityFeePerGas) {
+  if (maxFeePerGas !== undefined && maxPriorityFeePerGas !== undefined) {
     return {
       maxFeePerGas,
       maxPriorityFeePerGas,
     };
+  }
+  if (gasPrice) {
+    return { gasPrice };
   }
 
   // If we don't have enough explicit values, get defaults

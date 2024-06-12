@@ -1,5 +1,73 @@
 # @thirdweb-dev/react
 
+## 4.7.0
+
+### Minor Changes
+
+- [#3274](https://github.com/thirdweb-dev/js/pull/3274) [`7a7b491`](https://github.com/thirdweb-dev/js/commit/7a7b491e15e6cf7d2717a989b46c7928e2d516d6) Thanks [@MananTank](https://github.com/MananTank)! - Add `sections` prop and deprecate `popularChains` and `recentChains` for showing chains in sections in Network Selector screen in `ConnectWallet` component
+
+  ```tsx
+  <ConnectWallet
+    modalSize="wide"
+    networkSelector={{
+      sections: [
+        {
+          label: "Recently used",
+          chains: [Optimism, Arbitrum],
+        },
+        {
+          label: "Favorites",
+          chains: [Polygon, Sepolia],
+        },
+        {
+          label: "Popular",
+          chains: [Ethereum, Base],
+        },
+      ],
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#3232](https://github.com/thirdweb-dev/js/pull/3232) [`913f99a`](https://github.com/thirdweb-dev/js/commit/913f99a9a4d002b82fcd9e55db41c64aab99cf83) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Default account factory support
+
+- Updated dependencies [[`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254), [`913f99a`](https://github.com/thirdweb-dev/js/commit/913f99a9a4d002b82fcd9e55db41c64aab99cf83), [`d2cbb1e`](https://github.com/thirdweb-dev/js/commit/d2cbb1ee7ebe5aea9021d5be57cd80abd1df7a1c), [`21ca67d`](https://github.com/thirdweb-dev/js/commit/21ca67dc1342c898baa1ddc564467b39df57d530), [`8acf564`](https://github.com/thirdweb-dev/js/commit/8acf5643d56a9e65c1f6bad20e8b87271aa115e1), [`efae2f3`](https://github.com/thirdweb-dev/js/commit/efae2f36b60e0bcade159608903c9b756843151c)]:
+  - @thirdweb-dev/wallets@2.5.33
+  - @thirdweb-dev/sdk@4.0.93
+  - @thirdweb-dev/chains@0.1.117
+  - @thirdweb-dev/react-core@4.7.0
+
+## 4.6.31
+
+### Patch Changes
+
+- Updated dependencies [[`ae9496e`](https://github.com/thirdweb-dev/js/commit/ae9496e9d821553ea488656574b991961468dea9), [`043f0da`](https://github.com/thirdweb-dev/js/commit/043f0da708b267336c79f12f6c186beedf3206d7), [`f13a40b`](https://github.com/thirdweb-dev/js/commit/f13a40ba9905a05d02640aa6672557f53567b087)]:
+  - @thirdweb-dev/sdk@4.0.92
+  - @thirdweb-dev/chains@0.1.116
+  - @thirdweb-dev/react-core@4.6.31
+  - @thirdweb-dev/wallets@2.5.32
+
+## 4.6.30
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.91
+  - @thirdweb-dev/react-core@4.6.30
+  - @thirdweb-dev/wallets@2.5.31
+
+## 4.6.29
+
+### Patch Changes
+
+- [#3183](https://github.com/thirdweb-dev/js/pull/3183) [`7bb241f`](https://github.com/thirdweb-dev/js/commit/7bb241f7db12e97b7eff7583548638b7ab2e5b77) Thanks [@MananTank](https://github.com/MananTank)! - Improved OTP input using input-otp library
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.90
+  - @thirdweb-dev/react-core@4.6.29
+  - @thirdweb-dev/wallets@2.5.30
+
 ## 4.6.28
 
 ### Patch Changes

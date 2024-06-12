@@ -76,14 +76,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     deleteConnectParamsFromStorage(storage, wallet.id);
     removeConnectedWallet(wallet);
 
-    // there are still connected wallets, switch to the next one
-    if (connectedWallets.getValue().length > 0) {
-      const nextWallet = connectedWallets.getValue()[0] as Wallet;
-      setActiveWallet(nextWallet);
-      return;
-    }
-
-    // if disconnecting the last wallet
+    // if disconnecting the active wallet
     if (activeWalletStore.getValue() === wallet) {
       storage.removeItem(LAST_ACTIVE_EOA_ID);
       activeAccountStore.setValue(undefined);

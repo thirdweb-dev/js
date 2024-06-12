@@ -15,3 +15,7 @@ export async function mineBlock(chain = FORKED_ETHEREUM_CHAIN) {
   await wait(500); // wait for block to be fully mined
   return res;
 }
+
+export function cloneObject<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}

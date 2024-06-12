@@ -31,10 +31,8 @@ export type GetBuyWithFiatQuoteParams = {
 
   /**
    * Symbol of the fiat currency to buy the token with.
-   *
-   * Currently, only `USD` is supported.
    */
-  fromCurrencySymbol: "USD";
+  fromCurrencySymbol: "USD" | "CAD" | "GBP" | "EUR";
 
   /**
    * The maximum slippage in basis points (bps) allowed for the transaction.
@@ -232,7 +230,7 @@ export type BuyWithFiatQuote = {
  *
  * window.open(quote.onRampLink, "_blank");
  * ```
- * @buyFiat
+ * @buyCrypto
  */
 export async function getBuyWithFiatQuote(
   params: GetBuyWithFiatQuoteParams,

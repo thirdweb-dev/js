@@ -2,14 +2,14 @@ import styled from "@emotion/styled";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
+import { spacing } from "../../../../../../core/design-system/index.js";
 import { ChainName } from "../../../../components/ChainName.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
-import { spacing } from "../../../../design-system/index.js";
 import {
   getBuyWithCryptoStatusMeta,
   getBuyWithFiatStatusMeta,

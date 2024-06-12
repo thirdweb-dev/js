@@ -14,12 +14,12 @@ export default {
   ],
   "features": [],
   "icon": {
-    "url": "https://images.ctfassets.net/9bazykntljf6/62CceHSYsRS4D9fgDSkLRB/877cb8f26954e1743ff535fd7fdaf78f/avacloud-placeholder.svg",
+    "url": "https://plyr.network/plyr_logo.png",
     "width": 256,
     "height": 256,
-    "format": "svg"
+    "format": "png"
   },
-  "infoURL": "https://avacloud.io",
+  "infoURL": "https://plyr.network",
   "name": "PLYR TAU TESTNET",
   "nativeCurrency": {
     "name": "PLYR TAU TESTNET Token",

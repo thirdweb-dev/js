@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "4.0.89",
+  "version": "4.0.93",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/sdk",
   "license": "Apache-2.0",
@@ -83,7 +83,7 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@preconstruct/cli": "2.7.0",
     "@swc-node/register": "^1.9.0",
-    "@swc/core": "^1.4.12",
+    "@swc/core": "^1.5.24",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.5",
     "@types/chai": "^4.3.14",
