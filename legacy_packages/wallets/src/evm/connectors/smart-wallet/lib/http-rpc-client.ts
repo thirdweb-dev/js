@@ -9,6 +9,7 @@ import {
   ZkTransactionInput,
 } from "../types";
 import { MANAGED_ACCOUNT_GAS_BUFFER } from "./constants";
+import { isZkSyncChain } from "../utils";
 
 export const DEBUG = false; // TODO set as public flag
 
@@ -89,7 +90,7 @@ export class HttpRpcClient {
   }
 
   async validateChainId(): Promise<void> {
-    if (this.chainId === 300 || this.chainId === 324) {
+    if (await isZkSyncChain(this.chainId)) {
       return;
     }
     // validate chainId is in sync with expected chainid

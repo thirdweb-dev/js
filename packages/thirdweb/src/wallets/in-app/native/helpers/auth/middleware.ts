@@ -145,13 +145,22 @@ async function getRecoveryCode(
         );
       }
       return recoveryCode;
+    } else {
+      try {
+        const code = await getCognitoRecoveryPassword(client);
+        return code;
+      } catch (e) {
+        throw new Error("Something went wrong getting cognito recovery code");
+      }
     }
-    try {
-      const code = await getCognitoRecoveryPassword(client);
-      return code;
-    } catch (e) {
-      throw new Error("Something went wrong getting cognito recovery code");
+  } else if (
+    storedToken.authDetails.recoveryShareManagement ===
+    RecoveryShareManagement.USER_MANAGED
+  ) {
+    if (recoveryCode) {
+      return recoveryCode;
     }
+    throw new Error(ErrorMessages.missingRecoveryCode);
   } else {
     throw new Error("Invalid recovery share management option");
   }

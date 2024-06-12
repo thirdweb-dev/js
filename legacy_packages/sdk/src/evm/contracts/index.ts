@@ -230,7 +230,8 @@ export const MarketplaceV3Initializer = {
     options?: SDKOptions,
   ) => {
     const chainId = (await provider.getNetwork()).chainId;
-    const isZkSync = chainId === 280 || chainId === 324;
+    const isZkSync =
+      chainId === 280 || chainId === 300 || chainId === 324 || chainId === 302;
 
     // Can't resolve IPFS hash from plugin bytecode on ZkSync
     // Thus, pull the composite ABI from the release page

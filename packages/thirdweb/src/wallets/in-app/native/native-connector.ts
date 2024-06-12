@@ -136,10 +136,10 @@ export class InAppNativeConnector implements InAppConnector {
         throw new Error("Passkey authentication is not implemented yet");
       }
       case "iframe": {
-        throw new Error("iframe_email_verification is not supported in iframe");
+        throw new Error("iframe_email_verification is not supported in native");
       }
       case "iframe_email_verification": {
-        throw new Error("iframe_email_verification is not supported in iframe");
+        throw new Error("iframe_email_verification is not supported in native");
       }
       default:
         assertUnreachable(strategy);
