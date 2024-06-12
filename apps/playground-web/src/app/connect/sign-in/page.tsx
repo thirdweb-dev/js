@@ -129,7 +129,7 @@ function EmbedComponent() {
       <CodeExample
         preview={<StyledConnectEmbed />}
         code={`import { createThirdwebClient } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
+import { ConnectEmbed } from "thirdweb/react";
 
 const THIRDWEB_CLIENT = createThirdwebClient({
 clientId: "<YOUR_CLIENT_ID>"
@@ -137,7 +137,7 @@ clientId: "<YOUR_CLIENT_ID>"
 
 function App(){
 return (
-<ConnectButton client={THIRDWEB_CLIENT} />
+<ConnectEmbed client={THIRDWEB_CLIENT} />
 );
 };`}
         lang="tsx"
