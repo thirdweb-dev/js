@@ -9,6 +9,7 @@ import { uninstallExtensionByProxy } from "../modular/ModularCore/write/uninstal
 import { uninstallPublishedExtension } from "../modular/ModularCore/write/uninstallPublishedExtension.js";
 import { getInstalledExtensions } from "../modular/__generated__/ModularCore/read/getInstalledExtensions.js";
 import { deployPublishedContract } from "./deploy-published.js";
+import { ADDRESS_ZERO } from "../../constants/addresses.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "deployModularCore",
@@ -74,6 +75,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contract: core,
       });
       const extensionAddress = installedExtensions[0]?.implementation;
+      expect(extensionAddress).to.not.equal(ADDRESS_ZERO);
 
       // uninstall extension
       const uninstallTransaction = uninstallExtensionByProxy({
