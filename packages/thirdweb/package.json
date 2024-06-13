@@ -68,7 +68,7 @@
     "./react": {
       "types": "./dist/types/exports/react.d.ts",
       "import": "./dist/esm/exports/react.js",
-      "react-native": "./dist/esm/exports/react-native.js",
+      "react-native": "./dist/esm/exports/react.native.js",
       "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
@@ -99,13 +99,18 @@
     "./wallets": {
       "types": "./dist/types/exports/wallets.d.ts",
       "import": "./dist/esm/exports/wallets.js",
-      "react-native": "./dist/esm/exports/react-native/wallets.js",
+      "react-native": "./dist/esm/exports/wallets.native.js",
       "default": "./dist/cjs/exports/wallets.js"
+    },
+    "./wallets/in-app": {
+      "types": "./dist/types/exports/wallets/in-app.d.ts",
+      "import": "./dist/esm/exports/wallets/in-app.js",
+      "react-native": "./dist/esm/exports/wallets/in-app.native.js",
+      "default": "./dist/cjs/exports/wallets/in-app.js"
     },
     "./wallets/*": {
       "types": "./dist/types/exports/wallets/*.d.ts",
       "import": "./dist/esm/exports/wallets/*.js",
-      "react-native": "./dist/esm/exports/react-native/wallets/*.js",
       "default": "./dist/cjs/exports/wallets/*.js"
     },
     "./package.json": "./package.json"

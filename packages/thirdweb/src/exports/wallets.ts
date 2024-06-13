@@ -1,4 +1,4 @@
-// --- KEEEP IN SYNC with exports/react-native/wallets.ts ---
+// --- KEEEP IN SYNC with exports/wallets.native.ts ---
 
 export {
   createWallet,
@@ -41,9 +41,6 @@ export {
    */
   type PrivateKeyToAccountOptions as PrivateKeyAccountOptions,
 } from "../wallets/private-key.js";
-
-// injected
-export { injectedProvider } from "../wallets/injected/mipdStore.js";
 
 export type {
   WalletId,
@@ -103,3 +100,8 @@ export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
 export { type WalletInfo } from "../wallets/wallet-info.js";
 
 export { createWalletAdapter } from "../adapters/wallet-adapter.js";
+
+// WEB ONLY EXPORTS
+
+// injected
+export { injectedProvider } from "../wallets/injected/mipdStore.js";
