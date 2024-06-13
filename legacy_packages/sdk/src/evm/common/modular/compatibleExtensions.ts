@@ -6,6 +6,20 @@ import {
 import { hasDuplicates } from "../utils";
 import { getChainByChainIdAsync, getChainRPC } from "@thirdweb-dev/chains";
 
+type CallbackFunction = {
+  selector: string;
+}
+
+type FallbackFunction = {
+  selector: string;
+  permissionBits: string;
+}
+
+type SupportedCallbackFunction = {
+  selector: string;
+  mode: number;
+}
+
 export async function compatibleExtensions(
   coreBytecode: string,
   extensionBytecodes: string[],
@@ -63,17 +77,17 @@ export async function compatibleExtensions(
     "getSupportedCallbackFunctions",
     core,
   );
-  const coreCallbackSelectors = decodedCore.map((c: any) => c.selector);
+  const coreCallbackSelectors = decodedCore.map((c: SupportedCallbackFunction) => c.selector);
 
-  const selectors = extensions.map((e: any) => {
+  const selectors = extensions.map((e: string) => {
     const decodedExtensionConfig = extensionIface.decodeFunctionResult(
       "getExtensionConfig",
       e,
     );
     const extensionFallbackSelectors =
-      decodedExtensionConfig[0].fallbackFunctions.map((a: any) => a.selector);
+      decodedExtensionConfig[0].fallbackFunctions.map((a: FallbackFunction) => a.selector);
     const extensionCallbackSelectors =
-      decodedExtensionConfig[0].callbackFunctions.map((a: any) => a.selector);
+      decodedExtensionConfig[0].callbackFunctions.map((a: CallbackFunction) => a.selector);
 
     return [
       ...extensionFallbackSelectors,
