@@ -1,4 +1,5 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
+import { getInstalledExtensions } from "../../extensions/modular/__generated__/ModularCore/read/getInstalledExtensions.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -227,78 +228,6 @@ const BASE_ROUTER_ABI = {
   type: "function",
 } as const;
 
-const CORE_CONTRACT_ABI = {
-  type: "function",
-  name: "getInstalledExtensions",
-  inputs: [],
-  outputs: [
-    {
-      name: "_installedExtensions",
-      type: "tuple[]",
-      internalType: "struct IModularCore.InstalledExtension[]",
-      components: [
-        {
-          name: "implementation",
-          type: "address",
-          internalType: "address",
-        },
-        {
-          name: "config",
-          type: "tuple",
-          internalType: "struct IExtensionConfig.ExtensionConfig",
-          components: [
-            {
-              name: "registerInstallationCallback",
-              type: "bool",
-              internalType: "bool",
-            },
-            {
-              name: "requiredInterfaces",
-              type: "bytes4[]",
-              internalType: "bytes4[]",
-            },
-            {
-              name: "supportedInterfaces",
-              type: "bytes4[]",
-              internalType: "bytes4[]",
-            },
-            {
-              name: "callbackFunctions",
-              type: "tuple[]",
-              internalType: "struct IExtensionConfig.CallbackFunction[]",
-              components: [
-                {
-                  name: "selector",
-                  type: "bytes4",
-                  internalType: "bytes4",
-                },
-              ],
-            },
-            {
-              name: "fallbackFunctions",
-              type: "tuple[]",
-              internalType: "struct IExtensionConfig.FallbackFunction[]",
-              components: [
-                {
-                  name: "selector",
-                  type: "bytes4",
-                  internalType: "bytes4",
-                },
-                {
-                  name: "permissionBits",
-                  type: "uint256",
-                  internalType: "uint256",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-  stateMutability: "view",
-} as const;
-
 const DIAMOND_ABI = {
   inputs: [],
   name: "facets",
@@ -437,17 +366,13 @@ async function resolveModularExtensionAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const { readContract } = await import("../../transaction/read-contract.js");
-    const pluginMap = await readContract({
-      contract,
-      method: CORE_CONTRACT_ABI,
-    });
+    const extensions = await getInstalledExtensions({ contract });
     // if there are no plugins, return the root ABI
-    if (!pluginMap.length) {
+    if (!extensions.length) {
       return [];
     }
     // get all the plugin addresses
-    return [...new Set(pluginMap.map((item) => item.implementation))];
+    return [...new Set(extensions.map((item) => item.implementation))];
   } catch {
     // no-op, expected because not everything supports this
   }
