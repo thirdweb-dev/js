@@ -25,7 +25,7 @@ export {
 export {
   fetchPublishedContract,
   fetchPublishedContractMetadata,
-  fetchDeployBytecodeFromPublishedContractMetadata
+  fetchDeployBytecodeFromPublishedContractMetadata,
 } from "../contract/deployment/publisher.js";
 
 // deployment - TODO: these end up looking more like extensions -> should they be?
