@@ -1,12 +1,16 @@
+// --- KEEEP IN SYNC with exports/react-native/wallets.ts ---
+
 export {
   createWallet,
+  walletConnect,
+} from "../wallets/create-wallet.js";
+export {
   inAppWallet,
   /**
    * @deprecated use inAppWallet instead
    */
   inAppWallet as embeddedWallet,
-  walletConnect,
-} from "../wallets/create-wallet.js";
+} from "../wallets/in-app/web/in-app.js";
 export { smartWallet } from "../wallets/smart/smart-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";

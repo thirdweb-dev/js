@@ -1,8 +1,10 @@
+// --- KEEEP IN SYNC with exports/wallets.ts ---
+
 export {
   createWallet,
-  // TODO (rn) inAppWallet,
   walletConnect,
 } from "../../wallets/native/create-wallet.js";
+export { inAppWallet } from "../../wallets/in-app/native/in-app.js";
 export { smartWallet } from "../../wallets/smart/smart-wallet.js";
 
 export type { Wallet, Account } from "../../wallets/interfaces/wallet.js";

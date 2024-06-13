@@ -1,7 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { Account } from "../../../interfaces/wallet.js";
-import { oauthStrategyToAuthProvider } from "../../core/authentication/index.js";
 import {
   type AuthArgsType,
   type AuthLoginReturnType,
@@ -10,11 +9,12 @@ import {
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
   UserWalletStatus,
+  oauthStrategyToAuthProvider,
 } from "../../core/authentication/type.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
-import { Auth, type AuthQuerierTypes } from "./auth/index.js";
+import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithPasskey, registerPasskey } from "./auth/passkeys.js";
 import { IFrameWallet } from "./in-app-account.js";
 

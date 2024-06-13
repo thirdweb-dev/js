@@ -105,6 +105,7 @@
     "./wallets/*": {
       "types": "./dist/types/exports/wallets/*.d.ts",
       "import": "./dist/esm/exports/wallets/*.js",
+      "react-native": "./dist/esm/exports/react-native/*.js",
       "default": "./dist/cjs/exports/wallets/*.js"
     },
     "./package.json": "./package.json"

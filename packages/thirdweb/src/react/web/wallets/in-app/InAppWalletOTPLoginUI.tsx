@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
+import { preAuthenticate } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize } from "../../../core/design-system/index.js";
