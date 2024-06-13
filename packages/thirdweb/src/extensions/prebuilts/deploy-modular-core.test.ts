@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
+import { ADDRESS_ZERO } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { installPublishedExtension } from "../modular/ModularCore/write/installPublishedExtension.js";
@@ -9,7 +10,6 @@ import { uninstallExtensionByProxy } from "../modular/ModularCore/write/uninstal
 import { uninstallPublishedExtension } from "../modular/ModularCore/write/uninstallPublishedExtension.js";
 import { getInstalledExtensions } from "../modular/__generated__/ModularCore/read/getInstalledExtensions.js";
 import { deployPublishedContract } from "./deploy-published.js";
-import { ADDRESS_ZERO } from "../../constants/addresses.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "deployModularCore",
