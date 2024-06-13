@@ -39,7 +39,10 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
     registry.data?.find(
       (c) =>
         contractAddress &&
-        c.address.toLowerCase() === contractAddress.toLowerCase(),
+        // compare address...
+        c.address.toLowerCase() === contractAddress.toLowerCase() &&
+        // ... and chainId
+        c.chainId === chain?.chainId,
     ) &&
     registry.isSuccess;
 

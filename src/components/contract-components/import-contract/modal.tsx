@@ -94,7 +94,11 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
               registry.isFetched &&
               registry.data?.find(
                 (c) =>
-                  c.address.toLowerCase() === contractAddress.toLowerCase(),
+                  contractAddress &&
+                  // compare address...
+                  c.address.toLowerCase() === contractAddress.toLowerCase() &&
+                  // ... and chainId
+                  c.chainId === chainId,
               ) &&
               registry.isSuccess;
 
