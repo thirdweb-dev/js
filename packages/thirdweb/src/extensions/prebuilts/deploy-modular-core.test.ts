@@ -38,7 +38,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(installedExtensions.length).toBe(0);
     });
 
-    it("should uninstall an extension by proxy address", async () => {
+    it("should install and uninstall an extension by proxy address", async () => {
       // deploy core contract with extension
       const address = await deployPublishedContract({
         client: TEST_CLIENT,
