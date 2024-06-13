@@ -141,7 +141,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
     </Text>
   );
 
-  const explorer = chain.explorers?.[0];
+  const explorer = chain?.explorers?.[0];
   if (!explorer) {
     return balanceComponent;
   }

@@ -290,7 +290,7 @@ const RemoveModal = ({
               <FormControl>
                 <FormLabel>Chain</FormLabel>
                 <Flex align="center" gap={2}>
-                  <ChainIcon size={12} ipfsSrc={chain.icon?.url} />
+                  <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
                   <Text>{chain.name}</Text>
                 </Flex>
               </FormControl>

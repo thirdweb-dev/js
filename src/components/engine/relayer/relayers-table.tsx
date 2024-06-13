@@ -71,7 +71,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         const chain = chainIdToChainRecord[parseInt(cell.getValue())];
         return (
           <Flex align="center" gap={2}>
-            <ChainIcon size={12} ipfsSrc={chain.icon?.url} />
+            <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
             <Text>{chain.name}</Text>
           </Flex>
         );
@@ -83,7 +83,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         const { chainId, backendWalletAddress } = cell.row.original;
         const chain = chainIdToChainRecord[parseInt(chainId)];
 
-        const explorer = chain.explorers?.[0];
+        const explorer = chain?.explorers?.[0];
         if (!explorer) {
           return backendWalletAddress;
         }
