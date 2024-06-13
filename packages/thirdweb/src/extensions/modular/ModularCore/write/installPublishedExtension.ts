@@ -43,8 +43,7 @@ export function installPublishedExtension(
         publisher: publisherAddress,
       });
       return {
-        extension: deployedExtension.implementationContract
-          .address as string,
+        extension: deployedExtension.implementationContract.address as string,
         data: extensionData || "0x",
       };
     },

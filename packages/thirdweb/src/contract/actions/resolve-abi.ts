@@ -297,7 +297,7 @@ const CORE_CONTRACT_ABI = {
     },
   ],
   stateMutability: "view",
-} as const; 
+} as const;
 
 const DIAMOND_ABI = {
   inputs: [],
