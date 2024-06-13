@@ -36,10 +36,7 @@ export async function connectInAppWallet(
 
   const authResult = await authenticate({
     ...options,
-    partnerId:
-      createOptions && "partnerId" in createOptions
-        ? createOptions.partnerId
-        : undefined,
+    ecosystem: "ecosystem" in options ? options.ecosystem : undefined,
   });
   const authAccount = authResult.user.account;
 
@@ -72,11 +69,7 @@ export async function autoConnectInAppWallet(
   const { getAuthenticatedUser } = await import("../authentication/index.js");
   const user = await getAuthenticatedUser({
     client: options.client,
-    walletId: options.walletId,
-    partnerId:
-      createOptions && "partnerId" in createOptions
-        ? createOptions.partnerId
-        : undefined,
+    ecosystem: "ecosystem" in options ? options.ecosystem : undefined,
   });
   if (!user) {
     throw new Error("Failed to authenticate user.");

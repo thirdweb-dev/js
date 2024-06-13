@@ -24,6 +24,9 @@ export async function getEcosystemWalletInfo(
   );
 
   const data = await res.json();
+  if (!data) {
+    throw new Error(`Could not find ecosystem wallet with id ${walletId}`);
+  }
   return {
     id: walletId,
     name: data.name as string,

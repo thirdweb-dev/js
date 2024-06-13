@@ -1,4 +1,5 @@
 import { IN_APP_WALLET_PATH } from "../../../core/constants/settings.js";
+import type { Ecosystem } from "../../types.js";
 import { LocalStorage } from "../Storage/LocalStorage.js";
 import { IframeCommunicator } from "./IframeCommunicator.js";
 
@@ -10,28 +11,32 @@ export class InAppWalletIframeCommunicator<
   T extends { [key: string]: any },
 > extends IframeCommunicator<T> {
   clientId: string;
-  partnerId?: string;
+  ecosystem?: Ecosystem;
   /**
    * @internal
    */
   constructor({
     clientId,
     baseUrl,
-    partnerId,
-  }: { clientId: string; baseUrl: string; partnerId?: string }) {
+    ecosystem,
+  }: {
+    clientId: string;
+    baseUrl: string;
+    ecosystem?: Ecosystem;
+  }) {
     super({
       iframeId: IN_APP_WALLET_IFRAME_ID,
       link: createInAppWalletIframeLink({
         clientId,
         path: IN_APP_WALLET_PATH,
-        partnerId,
+        ecosystem,
         baseUrl,
       }).href,
       baseUrl,
       container: document.body,
     });
     this.clientId = clientId;
-    this.partnerId = partnerId;
+    this.ecosystem = ecosystem;
   }
 
   /**
@@ -47,7 +52,8 @@ export class InAppWalletIframeCommunicator<
       deviceShareStored: await localStorage.getDeviceShare(),
       walletUserId: await localStorage.getWalletUserId(),
       clientId: this.clientId,
-      partnerId: this.partnerId,
+      partnerId: this.ecosystem?.partnerId,
+      ecosystemId: this.ecosystem?.walletId,
     };
   }
 }
@@ -60,13 +66,13 @@ export function createInAppWalletIframeLink({
   clientId,
   baseUrl,
   path,
-  partnerId,
+  ecosystem,
   queryParams,
 }: {
   clientId: string;
   baseUrl: string;
   path: string;
-  partnerId?: string;
+  ecosystem?: Ecosystem;
   queryParams?: { [key: string]: string | number };
 }) {
   const inAppWalletUrl = new URL(`${path}`, baseUrl);
@@ -79,8 +85,11 @@ export function createInAppWalletIframeLink({
     }
   }
   inAppWalletUrl.searchParams.set("clientId", clientId);
-  if (partnerId !== undefined) {
-    inAppWalletUrl.searchParams.set("partnerId", partnerId);
+  if (ecosystem?.partnerId !== undefined) {
+    inAppWalletUrl.searchParams.set("partnerId", ecosystem.partnerId);
+  }
+  if (ecosystem?.walletId !== undefined) {
+    inAppWalletUrl.searchParams.set("ecosystemId", ecosystem.walletId);
   }
   return inAppWalletUrl;
 }

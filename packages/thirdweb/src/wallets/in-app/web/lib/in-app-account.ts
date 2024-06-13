@@ -7,7 +7,6 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import type { Hex } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
-import { isEcosystemWallet } from "../../../ecosystem/is-ecosystem-wallet.js";
 import type {
   Account,
   SendTransactionOption,
@@ -21,6 +20,7 @@ import {
 } from "../../core/authentication/type.js";
 import type {
   ClientIdWithQuerierType,
+  Ecosystem,
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
@@ -75,8 +75,7 @@ type PostWalletSetup = SetUpWalletRpcReturnType & {
  */
 export class IFrameWallet {
   protected client: ThirdwebClient;
-  protected walletId: string;
-  protected partnerId?: string | undefined;
+  protected ecosystem?: Ecosystem;
   protected walletManagerQuerier: InAppWalletIframeCommunicator<
     WalletManagementTypes & WalletManagementUiTypes
   >;
@@ -88,18 +87,15 @@ export class IFrameWallet {
    */
   constructor({
     client,
-    walletId,
-    partnerId,
+    ecosystem,
     querier,
   }: Prettify<
     ClientIdWithQuerierType & {
-      walletId: string;
-      partnerId?: string | undefined;
+      ecosystem?: Ecosystem;
     }
   >) {
     this.client = client;
-    this.walletId = walletId;
-    this.partnerId = partnerId;
+    this.ecosystem = ecosystem;
     this.walletManagerQuerier = querier;
 
     this.localStorage = new LocalStorage({ clientId: client.clientId });
@@ -195,8 +191,8 @@ export class IFrameWallet {
     const querier = this
       .walletManagerQuerier as unknown as InAppWalletIframeCommunicator<SignerProcedureTypes>;
     const client = this.client;
-    const walletId = this.walletId;
-    const partnerId = this.partnerId;
+    const partnerId = this.ecosystem?.partnerId;
+    const isEcosystem = !!this.ecosystem;
     const { address } = await querier.call<GetAddressReturnType>({
       procedureName: "getAddress",
       params: undefined,
@@ -231,7 +227,7 @@ export class IFrameWallet {
             partnerId,
             rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
           },
-          showIframe: isEcosystemWallet(walletId),
+          showIframe: isEcosystem,
         });
       return signedTransaction as Hex;
     };
@@ -271,7 +267,7 @@ export class IFrameWallet {
             partnerId,
             chainId: 1, // TODO check if we need this
           },
-          showIframe: isEcosystemWallet(walletId),
+          showIframe: isEcosystem,
         });
         return signedMessage as Hex;
       },
@@ -303,7 +299,7 @@ export class IFrameWallet {
               partnerId,
               rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
             },
-            showIframe: isEcosystemWallet(walletId),
+            showIframe: isEcosystem,
           });
         return signedTypedData as Hex;
       },

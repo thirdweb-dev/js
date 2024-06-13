@@ -521,7 +521,6 @@ export function inAppWallet(
       if (client) {
         const result = await logoutAuthenticatedUser({
           client,
-          walletId: "inApp",
         });
         if (!result.success) {
           throw new Error("Failed to logout");
@@ -541,7 +540,6 @@ export function inAppWallet(
           {
             chain: newChain,
             client,
-            walletId: "inApp",
           },
           createOptions,
         );
@@ -616,7 +614,13 @@ export function ecosystemWallet(
       );
 
       const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
-        options,
+        {
+          ...options,
+          ecosystem: {
+            walletId: id,
+            partnerId: createOptions?.partnerId,
+          },
+        },
         createOptions,
       );
       // set the states
@@ -637,7 +641,13 @@ export function ecosystemWallet(
       );
 
       const [connectedAccount, connectedChain] = await connectInAppWallet(
-        options,
+        {
+          ...options,
+          ecosystem: {
+            walletId: id,
+            partnerId: createOptions?.partnerId,
+          },
+        },
         createOptions,
       );
       // set the states
@@ -646,7 +656,7 @@ export function ecosystemWallet(
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "inApp",
+        walletType: id,
         walletAddress: account.address,
       });
       // return only the account
@@ -655,7 +665,7 @@ export function ecosystemWallet(
     disconnect: async () => {
       // If no client is assigned, we should be fine just unsetting the states
       if (client) {
-        const result = await logoutAuthenticatedUser({ client, walletId: id });
+        const result = await logoutAuthenticatedUser({ client });
         if (!result.success) {
           throw new Error("Failed to logout");
         }
@@ -674,7 +684,10 @@ export function ecosystemWallet(
           {
             chain: newChain,
             client,
-            walletId: id,
+            ecosystem: {
+              walletId: id,
+              partnerId: createOptions?.partnerId,
+            },
           },
           createOptions,
         );

@@ -102,8 +102,6 @@ export function useAutoConnect(props: AutoConnectProps) {
           setConnectionStatus("disconnected");
         }
       } catch (e) {
-        console.error("Failed to auto connect last active wallet");
-        console.error(e);
         setConnectionStatus("disconnected");
       }
     } else {

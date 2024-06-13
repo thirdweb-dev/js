@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { isBrowser, isReactNative } from "../../../../utils/platform.js";
+import type { Ecosystem } from "../../web/types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 import {
   type AuthArgsType,
@@ -11,22 +12,22 @@ import {
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
-  walletId: string;
-  partnerId?: string;
+  ecosystem?: Ecosystem;
 };
 
-const ewsSDKCache = new WeakMap<ThirdwebClient, InAppConnector>();
+const ewsSDKCache = new WeakMap<GetAuthenticatedUserParams, InAppConnector>();
 
 /**
  * @internal
  */
 async function getInAppWalletConnector(
   client: ThirdwebClient,
-  walletId: string,
-  partnerId?: string,
+  ecosystem?: Ecosystem,
 ) {
-  if (ewsSDKCache.has(client)) {
-    return ewsSDKCache.get(client) as InAppConnector;
+  const cacheKey = { client, ecosystem };
+  if (ewsSDKCache.has(cacheKey)) {
+    console.log("Getting ewsSDK from cache", ecosystem);
+    return ewsSDKCache.get(cacheKey) as InAppConnector;
   }
 
   let ewSDK: InAppConnector;
@@ -36,8 +37,7 @@ async function getInAppWalletConnector(
     );
     ewSDK = new InAppWebConnector({
       client: client,
-      walletId,
-      partnerId,
+      ecosystem,
     });
   } else if (isReactNative()) {
     const {
@@ -45,13 +45,13 @@ async function getInAppWalletConnector(
     } = require("../../native/native-connector.js");
     ewSDK = new InAppNativeConnector({
       client,
-      partnerId,
+      ecosystem,
     });
   } else {
     throw new Error("Unsupported platform");
   }
 
-  ewsSDKCache.set(client, ewSDK);
+  ewsSDKCache.set(cacheKey, ewSDK);
   return ewSDK;
 }
 
@@ -63,8 +63,7 @@ export async function logoutAuthenticatedUser(
 ) {
   const ewSDK = await getInAppWalletConnector(
     options.client,
-    options.walletId,
-    options.partnerId,
+    options.ecosystem,
   );
   return ewSDK.logout();
 }
@@ -87,8 +86,8 @@ export async function logoutAuthenticatedUser(
 export async function getAuthenticatedUser(
   options: GetAuthenticatedUserParams,
 ) {
-  const { client, walletId, partnerId } = options;
-  const ewSDK = await getInAppWalletConnector(client, walletId, partnerId);
+  const { client, ecosystem } = options;
+  const ewSDK = await getInAppWalletConnector(client, ecosystem);
   const user = await ewSDK.getUser();
   switch (user.status) {
     case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
@@ -158,11 +157,7 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  * @wallet
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const ewSDK = await getInAppWalletConnector(
-    args.client,
-    args.walletId,
-    args.partnerId,
-  );
+  const ewSDK = await getInAppWalletConnector(args.client, args.ecosystem);
   return ewSDK.preAuthenticate(args);
 }
 
@@ -186,11 +181,7 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-  const ewSDK = await getInAppWalletConnector(
-    args.client,
-    args.walletId,
-    args.partnerId,
-  );
+  const ewSDK = await getInAppWalletConnector(args.client, args.ecosystem);
   return ewSDK.authenticate(args);
 }
 

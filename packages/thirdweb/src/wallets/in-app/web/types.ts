@@ -5,6 +5,11 @@ import type { ThirdwebClient } from "../../../client/client.js";
 import type { AuthAndWalletRpcReturnType } from "../core/authentication/type.js";
 import type { InAppWalletIframeCommunicator } from "./utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
+export type Ecosystem = {
+  walletId: string;
+  partnerId?: string;
+};
+
 // Open to PRs from whoever sees this and knows of a cleaner way to handle things
 export type ClientIdConstructorType = {
   /**
@@ -18,14 +23,11 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
    * @returns
    */
   onAuthSuccess?: (authResult: AuthAndWalletRpcReturnType) => void;
+
   /**
-   * @param walletId - The walletId of the wallet being connected
+   * @param ecosystem - An optional set of options to connect to an ecosystem wallet.
    */
-  walletId: string;
-  /**
-   * @param partnerId - An optional integrator ID to connect to an ecosystem wallet.
-   */
-  partnerId?: string;
+  ecosystem?: Ecosystem;
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {
