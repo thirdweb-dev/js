@@ -45,6 +45,7 @@ export {
   type InstallExtensionParams,
 } from "../../extensions/modular/__generated__/ModularCore/write/installExtension.js";
 export { renounceOwnership } from "../../extensions/modular/__generated__/ModularCore/write/renounceOwnership.js";
+export { requestOwnershipHandover } from "../../extensions/modular/__generated__/ModularCore/write/requestOwnershipHandover.js";
 export {
   renounceRoles,
   type RenounceRolesParams,
@@ -62,6 +63,7 @@ export {
   isUninstallExtensionSupported,
   type UninstallExtensionParams,
 } from "../../extensions/modular/__generated__/ModularCore/write/uninstallExtension.js";
+export { getExtensionConfig } from "../../extensions/modular/__generated__/ModularExtension/read/getExtensionConfig.js";
 export {
   installPublishedExtension,
   type InstallPublishedExtensionOptions,
