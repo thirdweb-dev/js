@@ -1,4 +1,5 @@
 import {
+  coreContractAbi,
   getAllExtensionsAbi,
   getAllPluginsAbi,
 } from "../../constants/thirdweb-features";
@@ -38,6 +39,7 @@ export async function getCompositeABI(
       "DynamicContract",
       features,
     );
+    const isModular: boolean = isExtensionEnabled(abi, "ModularCore", features);
     // check if the contract has fallback function - we'll further check for diamond pattern if needed
     const isFallback: boolean = isExtensionEnabled(abi, "Fallback", features);
 
@@ -59,6 +61,24 @@ export async function getCompositeABI(
 
       // get ABIs of extension contracts --
       pluginABIs = await getPluginABI(pluginAddresses, provider, storage);
+    } else if (isModular) {
+      const contract = new ContractWrapper(
+        provider,
+        address,
+        coreContractAbi,
+        options,
+        storage,
+      );
+
+      const extensions = await contract.call("getInstalledExtensions");
+
+      // get extension addresses
+      const extensionAddresses = extensions.map(
+        (item: any) => item.implementation,
+      );
+
+      // get ABIs of extension contracts --
+      pluginABIs = await getPluginABI(extensionAddresses, provider, storage);
     } else if (isPluginRouter) {
       const contract = new ContractWrapper(
         provider,

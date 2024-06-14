@@ -1,4 +1,5 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
+import { getInstalledExtensions } from "../../extensions/modular/__generated__/ModularCore/read/getInstalledExtensions.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -284,12 +285,14 @@ export async function resolveCompositeAbi(
     rootAbi_,
     pluginPatternAddresses,
     baseRouterAddresses,
+    modularExtensionAddresses,
     diamondFacetAddresses,
   ] = await Promise.all([
     rootAbi ? rootAbi : resolveAbiFromBytecode(contract),
     // check these all at the same time
     resolvePluginPatternAddresses(contract),
     resolveBaseRouterAddresses(contract),
+    resolveModularExtensionAddresses(contract),
     resolveDiamondFacetAddresses(contract),
   ]);
 
@@ -297,6 +300,7 @@ export async function resolveCompositeAbi(
     ...new Set([
       ...pluginPatternAddresses,
       ...baseRouterAddresses,
+      ...modularExtensionAddresses,
       ...diamondFacetAddresses,
     ]),
   ];
@@ -352,6 +356,23 @@ async function resolveBaseRouterAddresses(
     }
     // get all the plugin addresses
     return [...new Set(pluginMap.map((item) => item.metadata.implementation))];
+  } catch {
+    // no-op, expected because not everything supports this
+  }
+  return [];
+}
+
+async function resolveModularExtensionAddresses(
+  contract: ThirdwebContract,
+): Promise<string[]> {
+  try {
+    const extensions = await getInstalledExtensions({ contract });
+    // if there are no plugins, return the root ABI
+    if (!extensions.length) {
+      return [];
+    }
+    // get all the plugin addresses
+    return [...new Set(extensions.map((item) => item.implementation))];
   } catch {
     // no-op, expected because not everything supports this
   }
