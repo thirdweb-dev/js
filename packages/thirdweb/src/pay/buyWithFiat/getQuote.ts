@@ -258,7 +258,7 @@ export async function getBuyWithFiatQuote(
         toAmount: params.toAmount,
         maxSlippageBPS: params.maxSlippageBPS,
         isTestMode: params.isTestMode,
-        purcaseData: params.purchaseData,
+        purchaseData: params.purchaseData,
       }),
     });
 
