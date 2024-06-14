@@ -14,7 +14,6 @@ import {
 } from "./mock/mockCoreMetadata";
 import {
   mockExtensionWithFunctionsBytecode,
-  mockExtensionWithFunctionsDeployedBytecode,
   mockExtensionWithFunctionsCompilerMetadata,
 } from "./mock/mockExtensionWithFunctionsMetadata";
 import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";

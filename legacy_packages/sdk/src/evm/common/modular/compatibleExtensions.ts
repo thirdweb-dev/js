@@ -15,14 +15,6 @@ type FallbackFunction = {
   permissionBits: string;
 };
 
-type ExtensionConfig = {
-  registerInstallationCallback: string;
-  requiredInterfaces: string[];
-  supportedInterfaces: string[];
-  callbackFunctions: CallbackFunction[];
-  fallbackFunctions: FallbackFunction[];
-};
-
 type SupportedCallbackFunction = {
   selector: string;
   mode: number;
@@ -99,7 +91,7 @@ export async function compatibleExtensions(
   );
 
   // extract callback/fallback selectors and required interfaces from extension config
-  let requiredInterfaces: string[] = [];
+  const requiredInterfaces: string[] = [];
   const selectors = extensions.map((e: string) => {
     const decodedExtensionConfig = extensionIface.decodeFunctionResult(
       "getExtensionConfig",
