@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
-import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { getStorage } from "../../../core/storage.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
 import {
   emailIcon,
@@ -39,7 +39,7 @@ export function WalletImage(props: {
       // show EOA icon for external wallets
       // show auth provider icon for in-app wallets
       // show the admin EOA icon for smart
-      const storage = getStorage();
+      const storage = webLocalStorage;
       let activeEOAId = props.id;
       if (props.id === "smart") {
         const storedId = await getStoredActiveWalletId(storage);

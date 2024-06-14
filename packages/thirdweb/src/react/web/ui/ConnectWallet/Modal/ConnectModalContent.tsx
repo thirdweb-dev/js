@@ -3,7 +3,8 @@ import { Suspense, lazy, useCallback } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { useSetActiveWallet } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
+import { useSetActiveWallet } from "../../../hooks/wallets/useSetActiveWallet.js";
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { WalletSelector } from "../WalletSelector.js";
@@ -44,7 +45,8 @@ export const ConnectModalContent = (props: {
   const setActiveWallet = useSetActiveWallet();
   const setSelectionData = useSetSelectionData();
 
-  const siweAuth = useSiweAuth(auth);
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(activeWallet, auth);
   const showSignatureScreen = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
 
   const handleConnected = useCallback(

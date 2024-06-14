@@ -37,15 +37,13 @@ import {
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useActiveWalletChain,
-  useDisconnect,
-  useSwitchActiveWalletChain,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { shortenString } from "../../../core/utils/addresses.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
+import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
+import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { hasSmartAccount } from "../../utils/isSmartWallet.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";

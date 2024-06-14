@@ -1,6 +1,14 @@
-import { createConnectionManager } from "../../wallets/manager/index.js";
-import { getStorage } from "./storage.js";
+import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
+import {
+  type ConnectionManager,
+  createConnectionManager,
+} from "../../wallets/manager/index.js";
 
-export const connectionManager = /* @__PURE__ */ createConnectionManager(
-  /* @__PURE__ */ getStorage(),
-);
+let _connectManager: ConnectionManager;
+
+export function connectionManagerSingleton(storage: AsyncStorage) {
+  if (_connectManager) {
+    return _connectManager;
+  }
+  return createConnectionManager(storage);
+}

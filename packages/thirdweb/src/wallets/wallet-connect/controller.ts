@@ -38,19 +38,20 @@ import type { WalletEmitter } from "../wallet-emitter.js";
 import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 import type { ThirdwebClient } from "../../client/client.js";
-import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
 import { isReactNative } from "../../utils/platform.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
-import { formatWalletConnectUrl } from "../../utils/url.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
-} from "../storage/walletStorage.js";
+} from "../../utils/storage/walletStorage.js";
+import { webLocalStorage } from "../../utils/storage/webStorage.js";
+import { formatWalletConnectUrl } from "../../utils/url.js";
 import type { WalletId } from "../wallet-types.js";
 import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
 
-const asyncLocalStorage = getStorage();
+// TODO (rn) inject this
+const asyncLocalStorage = webLocalStorage;
 
 type WCProvider = InstanceType<typeof EthereumProvider>;
 

@@ -5,8 +5,8 @@ import { transfer } from "../../../../extensions/erc20/write/transfer.js";
 import { waitForReceipt } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { toWei } from "../../../../utils/units.js";
-import { useSendTransactionCore } from "../../../core/hooks/contract/useSendTransaction.js";
-import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
+import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 
 // Q: Should we expose this hook?
 
@@ -15,7 +15,9 @@ import { useActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.j
  * @internal
  */
 export function useSendToken(client: ThirdwebClient) {
-  const sendTransaction = useSendTransactionCore();
+  const sendTransaction = useSendTransaction({
+    payModal: false,
+  });
   const activeChain = useActiveWalletChain();
 
   return useMutation({

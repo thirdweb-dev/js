@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
 import { preAuthenticate } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -85,7 +86,7 @@ export function InAppWalletOTPLoginUI(props: {
         verificationCode: otp,
         client,
       });
-      await setLastAuthProvider("email");
+      await setLastAuthProvider("email", webLocalStorage);
     } else if ("phone" in userInfo) {
       await wallet.connect({
         chain,
@@ -94,7 +95,7 @@ export function InAppWalletOTPLoginUI(props: {
         verificationCode: otp,
         client,
       });
-      await setLastAuthProvider("phone");
+      await setLastAuthProvider("phone", webLocalStorage);
     } else {
       throw new Error("Invalid userInfo");
     }

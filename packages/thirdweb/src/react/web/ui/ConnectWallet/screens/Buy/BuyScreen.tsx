@@ -19,10 +19,8 @@ import {
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import {
   Drawer,

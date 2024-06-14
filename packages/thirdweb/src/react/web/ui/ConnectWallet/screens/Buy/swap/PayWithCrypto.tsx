@@ -10,7 +10,7 @@ import {
 } from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";

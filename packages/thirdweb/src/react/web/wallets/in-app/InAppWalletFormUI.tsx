@@ -1,6 +1,7 @@
 "use client";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
@@ -131,7 +132,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         },
       });
 
-      await setLastAuthProvider(strategy);
+      await setLastAuthProvider(strategy, webLocalStorage);
 
       setData({
         socialLogin: {
