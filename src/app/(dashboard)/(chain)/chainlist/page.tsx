@@ -107,6 +107,9 @@ async function getChainsToRender(params: SearchParams) {
     filteredChains.push(chain);
   }
 
+  const totalCount = chains.length;
+  const filteredCount = filteredChains.length;
+
   if (params.query) {
     const fuse = new Fuse(filteredChains, {
       keys: [
@@ -121,13 +124,21 @@ async function getChainsToRender(params: SearchParams) {
       ],
       threshold: 0.2,
     });
-    return fuse
-      .search(params.query, {
-        limit: DEFAULT_PAGE_SIZE,
-      })
-      .map((e) => e.item);
+    return {
+      chainsToRender: fuse
+        .search(params.query, {
+          limit: DEFAULT_PAGE_SIZE,
+        })
+        .map((e) => e.item),
+      totalCount,
+      filteredCount,
+    };
   }
-  return filteredChains;
+  return {
+    chainsToRender: filteredChains,
+    totalCount,
+    filteredCount,
+  };
 }
 
 export const metadata: Metadata = {
@@ -188,7 +199,9 @@ async function ChainsData(props: {
   searchParams: SearchParams;
   activeView: "table" | "grid";
 }) {
-  const chainsToRender = await getChainsToRender(props.searchParams);
+  const { chainsToRender, totalCount, filteredCount } = await getChainsToRender(
+    props.searchParams,
+  );
 
   // pagination
   const totalPages = Math.ceil(chainsToRender.length / DEFAULT_PAGE_SIZE);
@@ -277,6 +290,23 @@ async function ChainsData(props: {
       {totalPages > 1 && (
         <ChainlistPagination totalPages={totalPages} activePage={activePage} />
       )}
+      <div className="h-4" />
+      <p className="text-sm text-center text-secondary-foreground text-balance">
+        Showing{" "}
+        <span className="text-accent-foreground">{paginatedChains.length}</span>{" "}
+        out of{" "}
+        {filteredCount !== totalCount ? (
+          <>
+            <span className="text-accent-foreground">{filteredCount}</span>{" "}
+            chains that match filters. (Total:{" "}
+            <span className="text-accent-foreground">{totalCount}</span>)
+          </>
+        ) : (
+          <>
+            <span className="text-accent-foreground">{totalCount}</span> chains.
+          </>
+        )}
+      </p>
     </>
   );
 }
