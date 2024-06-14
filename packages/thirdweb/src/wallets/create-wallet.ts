@@ -12,6 +12,9 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import { webLocalStorage } from "../utils/storage/webStorage.js";
+import { isMobile } from "../utils/web/isMobile.js";
+import { openWindow } from "../utils/web/openWindow.js";
 import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
 import { getCoinbaseWebProvider } from "./coinbase/coinbaseSDKWallet.js";
 import { COINBASE } from "./constants.js";
@@ -107,6 +110,11 @@ export function createWallet<const ID extends WalletId>(
         throw new Error("Not implemented yet");
       };
 
+      // on mobile, deeplink to the wallet app for session handling
+      const sessionHandler = isMobile()
+        ? (uri: string) => openWindow(uri)
+        : undefined;
+
       const wallet: Wallet<ID> = {
         id,
         subscribe: emitter.subscribe,
@@ -163,6 +171,8 @@ export function createWallet<const ID extends WalletId>(
               options,
               emitter,
               wallet.id as WCSupportedWalletIds,
+              webLocalStorage,
+              sessionHandler,
             );
             // set the states
             account = connectedAccount;
@@ -194,6 +204,8 @@ export function createWallet<const ID extends WalletId>(
               wcOptions,
               emitter,
               wallet.id as WCSupportedWalletIds | "walletConnect",
+              webLocalStorage,
+              sessionHandler,
             );
             // set the states
             account = connectedAccount;
