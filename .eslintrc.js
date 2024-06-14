@@ -99,6 +99,14 @@ module.exports = {
     "inclusive-language/use-inclusive-words": "error",
     // turn off deprecated things?
     "react/react-in-jsx-scope": "off",
+    "no-restricted-syntax": [
+      "warn",
+      {
+        selector: "CallExpression[callee.name='useEffect']",
+        message:
+          'Are you *sure* you need to use "useEffect" here? If you loading any async function prefer using "useQuery".',
+      },
+    ],
     "no-restricted-imports": [
       "error",
       {
