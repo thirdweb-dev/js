@@ -130,7 +130,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
             <Flex align="center" gap={2}>
               <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
               <Text maxW={150} isTruncated>
-                {chain.name}
+                {chain?.name ?? "N/A"}
               </Text>
             </Flex>
           );

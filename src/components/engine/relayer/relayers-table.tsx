@@ -72,7 +72,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
         return (
           <Flex align="center" gap={2}>
             <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
-            <Text>{chain.name}</Text>
+            <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
       },
@@ -227,7 +227,7 @@ const EditModal = ({
   const onSubmit = (data: AddModalInput) => {
     const updateRelayerData: UpdateRelayerInput = {
       id: relayer.id,
-      chain: chainIdToChainRecord[data.chainId].slug,
+      chain: chainIdToChainRecord[data.chainId]?.slug ?? "unknown",
       backendWalletAddress: data.backendWalletAddress,
       name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
@@ -388,11 +388,11 @@ const RemoveModal = ({
                 <ChainIcon
                   size={12}
                   ipfsSrc={
-                    chainIdToChainRecord[parseInt(relayer.chainId)].icon?.url
+                    chainIdToChainRecord[parseInt(relayer.chainId)]?.icon?.url
                   }
                 />
                 <Text>
-                  {chainIdToChainRecord[parseInt(relayer.chainId)].name}
+                  {chainIdToChainRecord[parseInt(relayer.chainId)]?.name}
                 </Text>
               </Flex>
             </FormControl>

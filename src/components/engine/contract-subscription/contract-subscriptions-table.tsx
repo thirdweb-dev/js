@@ -32,6 +32,7 @@ import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
 import { defineChain, eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
+import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
 
 interface ContractSubscriptionTableProps {
   instanceUrl: string;
@@ -65,7 +66,7 @@ export const ContractSubscriptionTable: React.FC<
         return (
           <Flex align="center" gap={2}>
             <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
-            <Text>{chain.name}</Text>
+            <Text>{chain?.name ?? "N/A"}</Text>
           </Flex>
         );
       },
@@ -76,7 +77,14 @@ export const ContractSubscriptionTable: React.FC<
         const { chainId } = cell.row.original;
         const chain = chainIdToChainRecord[chainId];
         const explorer = chain?.explorers?.[0];
-
+        if (!explorer) {
+          return (
+            <AddressCopyButton
+              address={cell.getValue()}
+              title="Contract address"
+            />
+          );
+        }
         return (
           <LinkButton
             variant="ghost"
@@ -287,7 +295,7 @@ const RemoveModal = ({
                 <FormLabel>Chain</FormLabel>
                 <Flex align="center" gap={2}>
                   <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
-                  <Text>{chain.name}</Text>
+                  <Text>{chain?.name ?? "N/A"}</Text>
                 </Flex>
               </FormControl>
 

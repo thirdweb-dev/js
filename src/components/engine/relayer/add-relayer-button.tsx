@@ -91,7 +91,7 @@ const AddModal = ({
 
   const onSubmit = (data: AddModalInput) => {
     const createRelayerData: CreateRelayerInput = {
-      chain: chainIdToChainRecord[data.chainId].slug,
+      chain: chainIdToChainRecord[data.chainId]?.slug ?? "unknown",
       backendWalletAddress: data.backendWalletAddress,
       name: data.name,
       allowedContracts: parseAddressListRaw(data.allowedContractsRaw),
