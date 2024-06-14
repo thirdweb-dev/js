@@ -319,20 +319,10 @@ function isServiceActive(searchParams: URLSearchParams, service: string) {
 }
 
 function toggleService(searchParams: URLSearchParams, service: string) {
-  if (!searchParams.has("service")) {
-    // default case is that all services are selected so we have to now add all *other* services except for ours
-    const allServices = products.map((product) => product.id);
-    const otherServices = allServices.filter((s) => s !== service);
-    for (const otherService of otherServices) {
-      searchParams.append("service", otherService);
-    }
+  if (searchParams.getAll("service").includes(service)) {
+    searchParams.delete("service", service);
   } else {
-    // we have services selected, so we need to toggle our service
-    if (searchParams.getAll("service").includes(service)) {
-      searchParams.delete("service", service);
-    } else {
-      searchParams.append("service", service);
-    }
+    searchParams.append("service", service);
   }
 }
 
