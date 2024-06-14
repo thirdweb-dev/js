@@ -1,5 +1,18 @@
 # @thirdweb-dev/react
 
+## 4.9.0
+
+### Minor Changes
+
+- [#3315](https://github.com/thirdweb-dev/js/pull/3315) [`eff7107`](https://github.com/thirdweb-dev/js/commit/eff710738ce3d4341257e5912311c95b28a34b5d) Thanks [@MananTank](https://github.com/MananTank)! - Allow configuring WalletConnect `qrcode` and `qrModalOptions` from wallet configurator functions like `metamaskWallet`, `coreWallet`, `zerionWallet` etc
+
+### Patch Changes
+
+- Updated dependencies [[`7768067`](https://github.com/thirdweb-dev/js/commit/7768067bf4f571a8c8ee6b646a58e2fc5f6bd052)]:
+  - @thirdweb-dev/sdk@4.0.95
+  - @thirdweb-dev/react-core@4.9.0
+  - @thirdweb-dev/wallets@2.5.35
+
 ## 4.8.0
 
 ### Minor Changes
