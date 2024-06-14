@@ -4,11 +4,11 @@ import { hasSmartAccount } from "../../react/web/utils/isSmartWallet.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
+import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
+import { deleteConnectParamsFromStorage } from "../../utils/storage/walletStorage.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { smartWallet } from "../smart/smart-wallet.js";
 import type { SmartWalletOptions } from "../smart/types.js";
-import type { AsyncStorage } from "../storage/AsyncStorage.js";
-import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
 import type { WalletId } from "../wallet-types.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;

@@ -2,10 +2,8 @@ import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { fontSize } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { TokenIcon } from "../../components/TokenIcon.js";

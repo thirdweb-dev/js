@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
-import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { Spinner } from "./Spinner.js";
 import { Button, type ButtonProps } from "./buttons.js";
 

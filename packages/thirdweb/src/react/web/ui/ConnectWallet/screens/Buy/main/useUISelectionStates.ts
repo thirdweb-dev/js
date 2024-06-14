@@ -3,7 +3,7 @@ import { polygon } from "../../../../../../../chains/chain-definitions/polygon.j
 import type { Chain } from "../../../../../../../chains/types.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
-import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../../ConnectButtonProps.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";

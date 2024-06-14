@@ -2,8 +2,10 @@ import { type StyleProp, View, type ViewStyle } from "react-native";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type TransactionButtonProps,
-  useTransactionButtonCore,
-} from "../../../core/hooks/transaction/button-core.js";
+  useTransactionButtonMutation,
+} from "../../../core/hooks/transaction/transaction-button-utils.js";
+import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedSpinner } from "../components/spinner.js";
 
@@ -38,14 +40,19 @@ export function TransactionButton(props: TransactionButtonProps) {
     unstyled,
     ...buttonProps
   } = props;
-  const { account, handleClick, isPending } = useTransactionButtonCore(props);
+  const account = useActiveAccount();
+  const sendTransaction = useSendTransaction({ gasless, payModal });
+  const { mutate: handleClick, isPending } = useTransactionButtonMutation(
+    props,
+    sendTransaction.mutateAsync,
+  );
   const theme = parseTheme(buttonProps.theme);
 
   return (
     <ThemedButton
       disabled={!account || disabled || isPending}
       variant={"primary"}
-      onPress={handleClick}
+      onPress={() => handleClick()}
       style={buttonProps.style as StyleProp<ViewStyle>}
       theme={theme}
     >

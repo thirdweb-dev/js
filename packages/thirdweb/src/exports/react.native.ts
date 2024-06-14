@@ -1,27 +1,39 @@
 export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
-// react/core
-export {
-  useSetActiveWallet,
-  useActiveWalletChain,
-  useConnect,
-  useDisconnect,
-  useActiveAccount,
-  useActiveWallet,
-  useConnectedWallets,
-  useSwitchActiveWalletChain,
-  useActiveWalletConnectionStatus,
-  useSetActiveWalletConnectionStatus,
-  useIsAutoConnecting,
-} from "../react/core/hooks/wallets/wallet-hooks.js";
+// wallet hooks
+export { useActiveWallet } from "../react/native/hooks/wallets/useActiveWallet.js";
+export { useActiveWalletChain } from "../react/native/hooks/wallets/useActiveWalletChain.js";
+export { useActiveWalletConnectionStatus } from "../react/native/hooks/wallets/useActiveWalletConnectionStatus.js";
+export { useActiveAccount } from "../react/native/hooks/wallets/useActiveAccount.js";
+export { useAutoConnect } from "../react/native/hooks/wallets/useAutoConnect.js";
+export { useCapabilities } from "../react/native/hooks/wallets/useCapabilities.js";
+export { useConnect } from "../react/native/hooks/wallets/useConnect.js";
+export { useConnectedWallets } from "../react/native/hooks/wallets/useConnectedWallets.js";
+export { useDisconnect } from "../react/native/hooks/wallets/useDisconnect.js";
+export { useIsAutoConnecting } from "../react/native/hooks/wallets/useIsAutoConnecting.js";
+export { useSetActiveWallet } from "../react/native/hooks/wallets/useSetActiveWallet.js";
+export { useSetActiveWalletConnectionStatus } from "../react/native/hooks/wallets/useSetActiveWalletConnectionStatus.js";
+export { useSendCalls } from "../react/native/hooks/wallets/useSendCalls.js";
+export { useSwitchActiveWalletChain } from "../react/native/hooks/wallets/useSwitchActiveWalletChain.js";
+export { useCallsStatus } from "../react/native/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
-// contract related
+// contract
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
-
-export { useEstimateGas } from "../react/core/hooks/contract/useEstimateGas.js";
 export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceipt.js";
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
+
+// transaction
+export {
+  type SendTransactionConfig,
+  type SendTransactionPayModalConfig,
+} from "../react/core/hooks/transaction/useSendTransaction.js";
+export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
+export { useSendTransaction } from "../react/native/hooks/transaction/useSendTransaction.js";
+export { useSendBatchTransaction } from "../react/native/hooks/transaction/useSendBatchTransaction.js";
+export { useSendAndConfirmTransaction } from "../react/native/hooks/transaction/useSendAndConfirmTransaction.js";
+export { useEstimateGas } from "../react/native/hooks/transaction/useEstimateGas.js";
+export { useEstimateGasCost } from "../react/native/hooks/transaction/useEstimateGasCost.js";
 
 // rpc related
 export {
@@ -61,35 +73,12 @@ export {
   type PostOnRampQuoteQueryOptions,
 } from "../react/core/hooks/pay/usePostOnrampQuote.js";
 
-import { useSendTransactionCore } from "../react/core/hooks/contract/useSendTransaction.js";
-
-/**
- * A hook to send a transaction.
- * @returns A mutation object to send a transaction.
- * @example
- * ```jsx
- * import { useSendTransaction } from "thirdweb/react-native";
- * const { mutate: sendTx, data: transactionResult } = useSendTransaction();
- *
- * // later
- * sendTx(tx);
- * ```
- * @transaction
- */
-export const useSendTransaction = useSendTransactionCore;
-export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
-export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
-export { useEstimateGasCost } from "../react/core/hooks/contract/useEstimateGasCost.js";
-
 // Components
-export {
-  AutoConnect,
-  type AutoConnectProps,
-} from "../react/core/hooks/connection/AutoConnect.js";
-export { useAutoConnect } from "../react/core/hooks/connection/useAutoConnect.js";
+export { AutoConnect } from "../react/native/ui/AutoConnect/AutoConnect.js";
+export type { AutoConnectProps } from "../react/core/hooks/connection/types.js";
 
 export { TransactionButton } from "../react/native/ui/TransactionButton/TrabsactionButton.js";
-export type { TransactionButtonProps } from "../react/core/hooks/transaction/button-core.js";
+export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";
 
 // wallet info
 export {

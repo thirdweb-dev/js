@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { reservedScreens } from "../constants.js";
 
 type Screen = string | Wallet;

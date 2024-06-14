@@ -4,18 +4,17 @@ import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
-import { AutoConnect } from "../../../core/hooks/connection/AutoConnect.js";
-import {
-  useActiveAccount,
-  useActiveWalletConnectionStatus,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
 import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";
 import {
   WalletUIStatesProvider,
   useSetIsWalletModalOpen,
 } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
+import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import { Modal } from "../components/Modal.js";
 import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
@@ -135,8 +134,9 @@ function ConnectButtonInner(
     connectLocale: ConnectLocale;
   },
 ) {
+  const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(props.auth);
+  const siweAuth = useSiweAuth(activeWallet, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   // if wallet gets disconnected suddently, close the signature modal if it's open

@@ -10,12 +10,11 @@ import {
   fontSize,
   iconSize,
 } from "../../../../../../core/design-system/index.js";
-import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveWallet,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useSendTransactionCore } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
+import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { useSwitchActiveWalletChain } from "../../../../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -51,9 +50,13 @@ export function SwapConfirmationScreen(props: {
   fromTokenSymbol: string;
   isFiatFlow: boolean;
 }) {
-  const sendTransactionMutation = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
+  const switchChain = useSwitchActiveWalletChain();
+  const sendTransactionMutation = useSendTransactionCore({
+    wallet: activeWallet,
+    switchChain,
+  });
 
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";
