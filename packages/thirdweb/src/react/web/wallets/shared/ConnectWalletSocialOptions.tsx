@@ -1,10 +1,11 @@
 "use client";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type {
-  AuthOptions,
-  SocialAuthOptions,
+  AuthOption,
+  SocialAuthOption,
 } from "../../../../wallets/types.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -38,13 +39,13 @@ export type ConnectWalletSelectUIState =
       emailLogin?: string;
       phoneLogin?: string;
       socialLogin?: {
-        type: SocialAuthOptions;
+        type: SocialAuthOption;
         connectionPromise: Promise<Account>;
       };
       passkeyLogin?: boolean;
     };
 
-const defaultAuthOptions: AuthOptions[] = [
+const defaultAuthOptions: AuthOption[] = [
   "email",
   "phone",
   "google",
@@ -117,27 +118,36 @@ export const ConnectWalletSocialOptions = (
 
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
-  ) as SocialAuthOptions[];
+  ) as SocialAuthOption[];
 
   const hasSocialLogins = socialLogins.length > 0;
 
   // Need to trigger login on button click to avoid popup from being blocked
-  const handleSocialLogin = async (strategy: SocialAuthOptions) => {
+  const handleSocialLogin = async (strategy: SocialAuthOption) => {
     try {
       const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
       if (!socialLoginWindow) {
         throw new Error("Failed to open login window");
       }
-
-      const connectPromise = wallet.connect({
+      const connectOptions = {
         chain,
         client,
-        strategy: strategy,
+        strategy,
         openedWindow: socialLoginWindow,
-        closeOpenedWindow: (openedWindow) => {
+        closeOpenedWindow: (openedWindow: Window) => {
           openedWindow.close();
         },
-      });
+      };
+
+      const connectPromise = isEcosystemWallet(wallet)
+        ? wallet.connect({
+            ...connectOptions,
+            ecosystem: {
+              walletId: wallet.id,
+              partnerId: wallet.getConfig()?.partnerId,
+            },
+          })
+        : wallet.connect(connectOptions);
 
       await setLastAuthProvider(strategy);
 

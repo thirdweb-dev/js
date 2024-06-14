@@ -46,7 +46,7 @@ export class InAppWebConnector implements InAppConnector {
   constructor({
     client,
     onAuthSuccess,
-    partnerId,
+    ecosystem,
   }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
@@ -57,12 +57,12 @@ export class InAppWebConnector implements InAppConnector {
     this.client = client;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
-      partnerId,
+      ecosystem,
       baseUrl,
     });
     this.wallet = new IFrameWallet({
       client,
-      partnerId,
+      ecosystem,
       querier: this.querier,
     });
 
@@ -70,7 +70,7 @@ export class InAppWebConnector implements InAppConnector {
       client,
       querier: this.querier,
       baseUrl,
-      partnerId,
+      ecosystem,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({
@@ -80,7 +80,8 @@ export class InAppWebConnector implements InAppConnector {
         await this.querier.call({
           procedureName: "initIframe",
           params: {
-            partnerId,
+            partnerId: ecosystem?.partnerId,
+            ecosystemId: ecosystem?.walletId,
             deviceShareStored: authResult.walletDetails.deviceShareStored,
             clientId: this.client.clientId,
             walletUserId: authResult.storedToken.authDetails.userWalletId,
@@ -198,7 +199,7 @@ export class InAppWebConnector implements InAppConnector {
         if (args.type === "sign-up") {
           const authToken = await registerPasskey({
             client: args.client,
-            partnerId: args.partnerId,
+            ecosystem: args.ecosystem,
             authenticatorType: args.authenticatorType,
             username: args.passkeyName,
           });
@@ -206,7 +207,7 @@ export class InAppWebConnector implements InAppConnector {
         }
         const authToken = await loginWithPasskey({
           client: args.client,
-          partnerId: args.partnerId,
+          ecosystem: args.ecosystem,
           authenticatorType: args.authenticatorType,
         });
         return this.auth.loginWithAuthToken(authToken);

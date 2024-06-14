@@ -519,7 +519,9 @@ export function inAppWallet(
     disconnect: async () => {
       // If no client is assigned, we should be fine just unsetting the states
       if (client) {
-        const result = await logoutAuthenticatedUser({ client });
+        const result = await logoutAuthenticatedUser({
+          client,
+        });
         if (!result.success) {
           throw new Error("Failed to logout");
         }
@@ -612,7 +614,13 @@ export function ecosystemWallet(
       );
 
       const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
-        options,
+        {
+          ...options,
+          ecosystem: {
+            walletId: id,
+            partnerId: createOptions?.partnerId,
+          },
+        },
         createOptions,
       );
       // set the states
@@ -633,7 +641,13 @@ export function ecosystemWallet(
       );
 
       const [connectedAccount, connectedChain] = await connectInAppWallet(
-        options,
+        {
+          ...options,
+          ecosystem: {
+            walletId: id,
+            partnerId: createOptions?.partnerId,
+          },
+        },
         createOptions,
       );
       // set the states
@@ -642,7 +656,7 @@ export function ecosystemWallet(
       chain = connectedChain;
       trackConnect({
         client: options.client,
-        walletType: "inApp",
+        walletType: id,
         walletAddress: account.address,
       });
       // return only the account
@@ -670,6 +684,10 @@ export function ecosystemWallet(
           {
             chain: newChain,
             client,
+            ecosystem: {
+              walletId: id,
+              partnerId: createOptions?.partnerId,
+            },
           },
           createOptions,
         );

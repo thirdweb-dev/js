@@ -23,7 +23,7 @@ export type EcosystemWalletFormUIProps = {
  * @internal
  */
 export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
-  const { connectModal } = useConnectUI();
+  const { client, connectModal } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
@@ -44,7 +44,11 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
     >
       {isCompact ? (
         <>
-          <EcosystemWalletHeader onBack={onBack} wallet={props.wallet} />
+          <EcosystemWalletHeader
+            client={client}
+            onBack={onBack}
+            wallet={props.wallet}
+          />
           <Spacer y="lg" />
         </>
       ) : null}
