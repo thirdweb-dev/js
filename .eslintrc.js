@@ -100,7 +100,7 @@ module.exports = {
     // turn off deprecated things?
     "react/react-in-jsx-scope": "off",
     "no-restricted-syntax": [
-      "warn",
+      "error",
       {
         selector: "CallExpression[callee.name='useEffect']",
         message:
