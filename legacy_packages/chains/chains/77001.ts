@@ -19,8 +19,8 @@ export default {
   "infoURL": "https://www.boraportal.com",
   "name": "BORAchain mainnet",
   "nativeCurrency": {
-    "name": "BGAS",
-    "symbol": "BGAS",
+    "name": "BORA",
+    "symbol": "BORA",
     "decimals": 18
   },
   "networkId": 77001,
