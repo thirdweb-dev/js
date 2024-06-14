@@ -21,6 +21,8 @@ import { ChainIcon } from "../components/server/chain-icon";
 import { Badge } from "@/components/ui/badge";
 import { getChain, getChainMetadata } from "../utils";
 import { ChainCTA } from "./components/server/cta-card";
+import { Button } from "@/components/ui/button";
+import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 
 export async function generateMetadata(
   { params }: { params: { chain_id: string } },
@@ -66,6 +68,8 @@ export default async function ChainPageLayout({
     redirect(chain.slug);
   }
   const chainMetadata = await getChainMetadata(chain.chainId);
+  // true if we *have* chainMetadata for the chain
+  const isVerified = !!chainMetadata;
   const isDeprecated = chain.status === "deprecated";
 
   return (
@@ -89,9 +93,7 @@ export default async function ChainPageLayout({
         <header
           className={cn(
             "py-6 md:py-8 border-b relative overflow-hidden",
-            !chainMetadata?.gasSponsored &&
-              !chainMetadata?.verified &&
-              "md:pb-2",
+            !chainMetadata?.gasSponsored && !isVerified && "md:pb-2",
             chainMetadata?.headerImgUrl && "md:py-10",
           )}
         >
@@ -111,56 +113,78 @@ export default async function ChainPageLayout({
           </div>
 
           {/* end header shaningans */}
-
-          <div className="container px-4 flex flex-col gap-2 md:gap-6">
-            <Link
-              href="/chainlist"
-              className="inline-flex items-center gap-1 text-foreground hover:underline mt-4"
-            >
-              <ArrowLeftIcon className="size-5" />
-              Chainlist
-            </Link>
-
-            <div className="flex gap-3 md:gap-5 items-center">
-              {chain.icon?.url && (
-                <ChainIcon
-                  iconUrl={chain.icon.url}
-                  className="size-16 md:size-20 bg-secondary p-2 border-2 rounded-full"
-                />
-              )}
-
-              {/* Chain Name */}
-
-              <h1
-                className={cn(
-                  "font-semibold tracking-tighter text-4xl md:text-6xl",
-                )}
+          <div className="container px-4 flex flex-col md:flex-row justify-between md:items-center">
+            <div className="flex flex-col gap-2 md:gap-6">
+              <Link
+                href="/chainlist"
+                className="inline-flex items-center gap-1 text-foreground hover:underline mt-4"
               >
-                {chain.name}
-              </h1>
-              <StarButton chainId={chain.chainId} variant="secondary" />
-            </div>
+                <ArrowLeftIcon className="size-5" />
+                Chainlist
+              </Link>
 
-            <div className="flex flex-row gap-2 md:gap-4 items-center h-8 mb-4 md:mb-6">
-              {chainMetadata?.verified && (
-                <Badge
-                  variant="secondary"
-                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
+              <div className="flex gap-3 md:gap-5 items-center">
+                {chain.icon?.url && (
+                  <ChainIcon
+                    iconUrl={chain.icon.url}
+                    className="size-16 md:size-20 bg-secondary p-2 border-2 rounded-full"
+                  />
+                )}
+
+                {/* Chain Name */}
+
+                <h1
+                  className={cn(
+                    "font-semibold tracking-tighter text-4xl md:text-6xl",
+                  )}
                 >
-                  <VerifiedIcon className="size-5" />
-                  <span className="font-bold text-xs uppercase">verified</span>
-                </Badge>
-              )}
-              {chainMetadata?.gasSponsored && (
-                <Badge
-                  variant="secondary"
-                  className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
+                  {chain.name}
+                </h1>
+                <StarButton chainId={chain.chainId} variant="secondary" />
+              </div>
+
+              <div className="flex flex-row gap-2 md:gap-4 items-center h-8 mb-4 md:mb-6">
+                {isVerified && (
+                  <Badge
+                    variant="secondary"
+                    className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
+                  >
+                    <VerifiedIcon className="size-5" />
+                    <span className="font-bold text-xs uppercase">
+                      verified
+                    </span>
+                  </Badge>
+                )}
+                {chainMetadata?.gasSponsored && (
+                  <Badge
+                    variant="secondary"
+                    className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
+                  >
+                    <TicketCheckIcon className="size-5" />
+                    <span className="font-bold text-xs uppercase">
+                      gas sponsored
+                    </span>
+                  </Badge>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-row md:flex-col gap-4">
+              <AddChainToWallet chainId={chain.chainId} />
+              {isVerified ? null : (
+                <Button
+                  className="w-full md:min-w-40"
+                  variant="outline"
+                  asChild
                 >
-                  <TicketCheckIcon className="size-5" />
-                  <span className="font-bold text-xs uppercase">
-                    gas sponsored
-                  </span>
-                </Badge>
+                  <Link
+                    className="gap-2"
+                    href="https://share.hsforms.com/1o01TyfsZRAao2eCrzuXSVgea58c"
+                    target="_blank"
+                  >
+                    <span>Claim this chain</span>
+                    <ExternalLinkIcon className="size-3" />
+                  </Link>
+                </Button>
               )}
             </div>
           </div>

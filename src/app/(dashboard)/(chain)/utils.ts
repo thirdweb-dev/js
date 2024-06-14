@@ -45,7 +45,6 @@ type ChainMetadata = Partial<{
   headerImgUrl: string;
   about: string;
   gasSponsored: boolean;
-  verified: boolean;
   cta: ChainCTAProps;
 }>;
 
@@ -66,7 +65,7 @@ const chainMetaRecord = {
     headerImgUrl: xaiBanner.src,
     about:
       "Xai was developed to enable real economies and open trade in the next generation of video games. With Xai, potentially billions of traditional gamers can own and trade valuable in-game items in their favorite games for the first time, without the need to use crypto-wallets.",
-    verified: true,
+
     cta: {
       title: "Unlock ultimate possibility with Xai Connect",
       backgroundImageUrl: xaiCTABg.src,
@@ -80,7 +79,7 @@ const chainMetaRecord = {
     about:
       "Base is a secure, low-cost, builder-friendly Ethereum L2 built to bring the next billion users onchain.",
     gasSponsored: true,
-    verified: true,
+
     cta: OP_CTA,
   },
   // optimism

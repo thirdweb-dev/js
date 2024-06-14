@@ -27,6 +27,7 @@ export async function ChainListCard({
   iconUrl,
 }: ChainListCardProps) {
   const chainMetadata = await getChainMetadata(chainId);
+  const isVerified = !!chainMetadata;
   return (
     <div className="relative h-full">
       <Card className="h-full w-full hover:bg-muted">
@@ -70,13 +71,11 @@ export async function ChainListCard({
             </tbody>
           </table>
 
-          {(isDeprecated ||
-            chainMetadata?.gasSponsored ||
-            chainMetadata?.verified) && (
+          {(isDeprecated || chainMetadata?.gasSponsored || isVerified) && (
             <div className="mt-5 flex gap-5 border-t pt-4">
               {!isDeprecated && (
                 <>
-                  {chainMetadata?.verified && (
+                  {isVerified && (
                     <div className="gap-1.5 flex items-center">
                       <VerifiedIcon className="text-primary-foreground size-5" />
                       <p className="text-sm">Verified</p>

@@ -35,6 +35,7 @@ export async function ChainListRow({
   iconUrl,
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
+  const isVerified = !!chainMetadata;
   return (
     <tr className="border-b relative hover:bg-secondary">
       <TableData>{favoriteButton}</TableData>
@@ -50,7 +51,7 @@ export async function ChainListRow({
               {chainName}
             </Link>
 
-            {chainMetadata?.verified && (
+            {isVerified && (
               <ToolTipLabel label="Verified">
                 <VerifiedIcon className="text-primary-foreground size-5 z-10 " />
               </ToolTipLabel>
