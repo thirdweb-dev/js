@@ -235,7 +235,7 @@
     "bench": "vitest -c ./test/vitest.config.ts bench",
     "format": "biome format src/ --write",
     "lint": "biome check src/",
-    "fix": "biome check src/ --apply",
+    "fix": "biome check src/ --write",
     "knip": "knip",
     "build:generate": "bun scripts/generate/generate.ts",
     "build:generate-wallets": "bun scripts/wallets/generate.ts",

@@ -24,17 +24,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/",
-    "node/",
-    "cf-worker/"
-  ],
+  "files": ["dist/", "node/", "cf-worker/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "cf-worker/index.ts",
-      "node/index.ts"
-    ],
+    "entrypoints": ["index.ts", "cf-worker/index.ts", "node/index.ts"],
     "exports": true
   },
   "sideEffects": false,
@@ -52,7 +44,7 @@
   "scripts": {
     "format": "biome format --write 'src/**/*'",
     "lint": "biome check src/",
-    "fix": "biome check src/ --apply",
+    "fix": "biome check src/ --write",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",
