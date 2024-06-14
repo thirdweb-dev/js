@@ -11,13 +11,13 @@ export default {
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmWm9biSavZ4ixNNSe8KhxiYgYaejY6Y4xRaqmz9fXimo5",
-    "width": 1136,
-    "height": 1112,
+    "url": "ipfs://QmYV6beVVg3iS9RGPno7GAASpgjyBDoKmWGUcvAKe2nXWK",
+    "width": 50,
+    "height": 50,
     "format": "png"
   },
   "infoURL": "https://explorer.coinsec.network/",
-  "name": "COINSEC",
+  "name": "COINSEC Network",
   "nativeCurrency": {
     "name": "COINSEC",
     "symbol": "SEC",
@@ -29,7 +29,7 @@ export default {
     "https://mainnet-rpc.coinsec.network"
   ],
   "shortName": "coinsecnetwork",
-  "slug": "coinsec",
+  "slug": "coinsec-network",
   "testnet": false,
   "title": "COINSEC Network"
 } as const satisfies Chain;

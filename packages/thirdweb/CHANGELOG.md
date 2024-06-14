@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.29.1
+
+### Patch Changes
+
+- [#3290](https://github.com/thirdweb-dev/js/pull/3290) [`b248afc`](https://github.com/thirdweb-dev/js/commit/b248afc16062f8fe0967e42535ae119642897003) Thanks [@alecananian](https://github.com/alecananian)! - Fixed Connect modal title not using custom title and icon in compact mode
+
+- [#3292](https://github.com/thirdweb-dev/js/pull/3292) [`132b3cb`](https://github.com/thirdweb-dev/js/commit/132b3cb45ae1d56f8de240a361b31c76d5b9b4a7) Thanks [@alecananian](https://github.com/alecananian)! - Updated the `ConnectButton` `label` prop to be of type `ReactNode`
+
+- [#3305](https://github.com/thirdweb-dev/js/pull/3305) [`e7ba698`](https://github.com/thirdweb-dev/js/commit/e7ba698f3e60e0749f8739ad1aec76a8ab2c2fb3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix default sale and royalty recipients for signature mints
+
 ## 5.29.0
 
 ### Minor Changes

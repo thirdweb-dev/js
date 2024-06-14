@@ -17,9 +17,15 @@ const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
  * @param options The options for the chain.
  * @returns The defined chain.
  * @example
+ * Just pass the chain ID to connect to:
+ * ```ts
+ * const chain = defineChain(1);
+ * ```
+ * Or pass your own RPC or custom values:
  * ```ts
  * const chain = defineChain({
  *  id: 1,
+ *  rpc: "https://my-rpc.com",
  *  nativeCurrency: {
  *    name: "Ether",
  *    symbol: "ETH",

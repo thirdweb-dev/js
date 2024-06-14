@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-import { ANVIL_PKEY_C } from "../../../test/src/test-wallets.js";
+import { ANVIL_PKEY_B } from "../../../test/src/test-wallets.js";
 import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
 import { defineChain } from "../../chains/utils.js";
 import { getContract } from "../../contract/contract.js";
@@ -25,7 +25,7 @@ const contract = getContract({
   client,
 });
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY).skip(
   "SmartWallet zksync tests",
   {
     retry: 0,
@@ -35,7 +35,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
     beforeAll(async () => {
       personalAccount = privateKeyToAccount({
         client,
-        privateKey: ANVIL_PKEY_C,
+        privateKey: ANVIL_PKEY_B,
       });
       wallet = smartWallet({
         chain,

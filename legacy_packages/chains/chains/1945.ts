@@ -6,7 +6,13 @@ export default {
     {
       "name": "Onus explorer testnet",
       "url": "https://explorer-testnet.onuschain.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://bafkreiec34ik3glrm5jrzafdytvu4kxdsrxhqmagbe27fytdcuzkhoooay",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
