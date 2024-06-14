@@ -36,6 +36,8 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
   const trackEvent = useTrack();
 
   // We close the modal when the user is on the Growth plan successfully
+  // FIXME: this needs to be re-worked
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (account.data?.plan === AccountPlan.Growth) {
       onClose();

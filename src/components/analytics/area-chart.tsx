@@ -208,6 +208,9 @@ function generateFakeData() {
 
 export const AreaChartLoadingState: React.FC = () => {
   const [loadingData, setLoadingData] = useState(generateFakeData());
+
+  // legitimate use case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingData(generateFakeData());

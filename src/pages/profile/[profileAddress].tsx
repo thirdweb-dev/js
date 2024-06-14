@@ -43,6 +43,9 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
 
   const router = useRouter();
   // We do this so it doesn't break for users that haven't updated their CLI
+
+  // TODO: re-visit, do we still need to do this?
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const previousPath = router.asPath.split("/")[2];
     if (

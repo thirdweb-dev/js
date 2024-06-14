@@ -13,31 +13,35 @@ interface TimerProps {
   date: string;
 }
 
+function calculateTimeLeft(date: string) {
+  const difference = Number(new Date(date)) - Number(new Date());
+  let timeLeft = {};
+
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  }
+
+  return timeLeft as ITimeLeft;
+}
+
 const Timer: React.FC<TimerProps> = ({ date }) => {
-  const calculateTimeLeft = () => {
-    const difference = Number(new Date(date)) - Number(new Date());
-    let timeLeft = {};
-
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-
-    return timeLeft as ITimeLeft;
-  };
-
-  const [timeLeft, setTimeLeft] = useState<ITimeLeft>(calculateTimeLeft());
+  const [timeLeft, setTimeLeft] = useState<ITimeLeft>(calculateTimeLeft(date));
   const { days, hours, minutes, seconds } = timeLeft;
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+    const interval = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(date));
     }, 1000);
-  });
+
+    return () => clearInterval(interval);
+  }, [date]);
 
   const items = [
     { label: "Day", value: days },

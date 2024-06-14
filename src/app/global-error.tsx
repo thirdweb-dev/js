@@ -10,6 +10,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  // legitimate usecase
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     Sentry.captureException(error);
   }, [error]);

@@ -16,7 +16,7 @@ import { SmartContract } from "@thirdweb-dev/sdk";
 import { useTabHref } from "contract-ui/utils";
 import { constants } from "ethers";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -125,13 +125,7 @@ interface PermissionsItemProps {
 
 const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
   const toast = useToast();
-  const { onCopy, setValue } = useClipboard(data.member);
-
-  useEffect(() => {
-    if (data.member) {
-      setValue(data.member);
-    }
-  }, [data.member, setValue]);
+  const { onCopy } = useClipboard(data.member);
 
   return (
     <Box>

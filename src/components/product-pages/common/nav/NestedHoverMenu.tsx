@@ -63,6 +63,8 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
     }, 100);
   };
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const updateOffset = () => {
       const el = triggerRef.current;

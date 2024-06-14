@@ -22,6 +22,8 @@ export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
 }) => {
   const [hasMounted, setHasMounted] = useState(false);
 
+  // FIXME: legitimate usecase - however ideally we wouldn't need this entire file
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     setHasMounted(true);
   }, []);

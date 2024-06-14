@@ -13,39 +13,42 @@ interface TimerProps {
   dateStr: string;
 }
 
-const Timer = ({ dateStr }: TimerProps) => {
-  const calculateTimeLeft = () => {
-    const difference = Number(new Date(dateStr)) - Number(new Date());
-    let timeLeft = {
-      days: 0,
-      hours: 0,
-      minutes: 0,
-      seconds: 0,
-    };
-
-    if (difference > 0) {
-      timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-      };
-    }
-
-    return timeLeft as ITimeLeft;
+function calculateTimeLeft(dateStr: string) {
+  const difference = Number(new Date(dateStr)) - Number(new Date());
+  let timeLeft = {
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   };
 
-  const [timeLeft, setTimeLeft] = useState<ITimeLeft>(calculateTimeLeft());
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+    };
+  }
+
+  return timeLeft as ITimeLeft;
+}
+
+const Timer = ({ dateStr }: TimerProps) => {
+  const [timeLeft, setTimeLeft] = useState<ITimeLeft>(
+    calculateTimeLeft(dateStr),
+  );
   const { days, hours, minutes, seconds } = timeLeft;
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(calculateTimeLeft(dateStr));
     }, 1000);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dateStr]);
 
   const items = [
     { label: "Day", value: days },

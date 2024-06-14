@@ -11,6 +11,8 @@ export const ProgressBox: React.FC<ProgressBoxProps> = ({ progress }) => {
   const isFinished = progress.progress >= progress.total;
   const [takingLong, setTakingLong] = useState(false);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (isFinished) {
       const t = setTimeout(() => {

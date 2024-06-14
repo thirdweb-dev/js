@@ -60,6 +60,8 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   const router = useRouter();
   const { shouldReload } = useBuildId();
 
+  // legit use-case, will go away as part of app router rewrite (once finished)
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const handleRouteChange = async () => {
       if (shouldReload()) {
@@ -74,6 +76,8 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     };
   }, [router, shouldReload]);
 
+  // legit use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // Taken from StackOverflow. Trying to detect both Safari desktop and mobile.
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
@@ -89,6 +93,8 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
     }
   }, []);
 
+  // legit use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // Init PostHog Cloud (Used for surveys)
     posthogCloud.init(
@@ -135,6 +141,8 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
 
   // starts out with "none" page id
   const prevPageId = useRef<PageId>(PageId.None);
+  // legit use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // this catches the case where the the hook is called twice on the same page
     if (pageId === prevPageId.current) {

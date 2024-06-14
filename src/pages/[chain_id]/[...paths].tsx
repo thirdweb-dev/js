@@ -72,6 +72,8 @@ const ContractPage: ThirdwebNextPage = () => {
   const supportedChainsSlugRecord = useSupportedChainsSlugRecord();
   const configuredChainsRecord = useSupportedChainsRecord();
 
+  // this will go away as part of the RSC rewrite!
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isSupportedChainsReady || !chainSlug) {
       return;

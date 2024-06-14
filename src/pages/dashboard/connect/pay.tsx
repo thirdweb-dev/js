@@ -17,7 +17,7 @@ import {
 import { AppLayout } from "components/app-layouts/app";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Heading, Text, TrackedLink } from "tw-components";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
@@ -94,20 +94,26 @@ function RadioCard(props: UseRadioProps & BoxProps) {
   );
 }
 
-const usePayConfig = () => {
+function usePayConfig() {
   const router = useRouter();
   const defaultClientId = router.query.clientId?.toString();
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
-  const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
+  const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
 
   const keysQuery = useApiKeys();
-  const apiKeysData = (keysQuery?.data ?? []).filter((key) => {
-    return !!(key.services ?? []).find((srv) => srv.name === "pay");
-  });
+  const apiKeysData = useMemo(
+    () =>
+      (keysQuery?.data ?? []).filter((key) => {
+        return !!(key.services ?? []).find((srv) => srv.name === "pay");
+      }),
+    [keysQuery?.data],
+  );
   const hasPayApiKeys = apiKeysData.length > 0;
 
+  // FIXME: this seems like a deeper problem, solve later
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // query rehydrates from cache leading to stale results if user refreshes shortly after updating their dashboard.
     // Invalidate the query to force a refetch
@@ -116,20 +122,19 @@ const usePayConfig = () => {
     }
   }, [queryClient, user?.address]);
 
-  useEffect(() => {
-    if (defaultClientId) {
-      const key = apiKeysData.find((k) => k.key === defaultClientId);
-      if (key) {
-        setSelectedKey(key);
-        return;
-      }
+  //  compute the actual selected key based on if there is a state, if there is a query param, or otherwise the first one
+  const selectedKey = useMemo(() => {
+    if (selectedKey_) {
+      return selectedKey_;
     }
-    setSelectedKey(
-      selectedKey
-        ? apiKeysData.find((apiKey) => apiKey.id === selectedKey.id)
-        : apiKeysData[0],
-    );
-  }, [selectedKey, defaultClientId, apiKeysData]);
+    if (apiKeysData.length) {
+      if (defaultClientId) {
+        return apiKeysData.find((k) => k.key === defaultClientId);
+      }
+      return apiKeysData[0];
+    }
+    return undefined;
+  }, [apiKeysData, defaultClientId, selectedKey_]);
 
   return {
     hasPayApiKeys,
@@ -138,17 +143,13 @@ const usePayConfig = () => {
     apiKeysData,
     hasApiKeys: !!keysQuery.data?.length,
   };
-};
+}
 
-const useTabConfig = () => {
-  const [tabOption, setTabOption] = useState<"pay" | "checkouts">("pay");
+function useTabConfig() {
   const router = useRouter();
-
-  useEffect(() => {
-    if (router.query.tab === "checkouts") {
-      setTabOption("checkouts");
-    }
-  }, [router.query.tab]);
+  const [tabOption, setTabOption] = useState<"pay" | "checkouts">(
+    router.query.tab === "checkouts" ? "checkouts" : "pay",
+  );
 
   const { data: paymentEnabledContracts } = usePaymentsEnabledContracts();
   const radioOptions = ["pay", "checkouts"].filter((option) => {
@@ -158,7 +159,7 @@ const useTabConfig = () => {
     );
   });
   return { tabOption, setTabOption, radioOptions };
-};
+}
 
 const DashboardConnectPay: ThirdwebNextPage = () => {
   const { tabOption, setTabOption, radioOptions } = useTabConfig();

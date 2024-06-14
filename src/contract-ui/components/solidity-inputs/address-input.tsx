@@ -42,6 +42,8 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
     }
   };
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (ensQuery.isError) {
       form.setError(inputName, {
@@ -51,6 +53,8 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
     }
   }, [ensQuery.isError, form, inputName]);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (ensQuery?.data?.address && ensQuery?.data?.address !== inputNameWatch) {
       setValue(inputName, ensQuery.data.address, {
@@ -86,6 +90,8 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
     [ensQuery?.data?.ensName, hasError, localInput],
   );
 
+  // legitimate use-case (but can probably be done in form)
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // Check if the default value has changed and update localInput
     if (inputNameWatch !== localInput && inputNameWatch === address) {

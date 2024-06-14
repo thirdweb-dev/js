@@ -48,6 +48,8 @@ export function EVMContractInfoProvider(props: {
     });
   }, []);
 
+  // no better way right now - this whole file is going away with RSC migration
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     _setValue(props.value);
   }, [_setValue, props.value]);

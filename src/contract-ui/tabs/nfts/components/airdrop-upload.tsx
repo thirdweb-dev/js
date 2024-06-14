@@ -110,6 +110,8 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     [],
   );
 
+  // FIXME: this can be a mutation or query insead!
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (validAirdrop.length === 0) {
       return setAirdropData([]);

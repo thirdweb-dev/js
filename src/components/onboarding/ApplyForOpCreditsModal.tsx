@@ -103,6 +103,8 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
   );
   const trackEvent = useTrack();
 
+  // TODO: find better way to track impressions
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     trackEvent({
       category: "op-sponsorship",

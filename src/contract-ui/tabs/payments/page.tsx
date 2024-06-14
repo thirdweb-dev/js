@@ -4,7 +4,7 @@ import {
   usePaymentsEnabledContracts,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import { Center, Flex, Spinner, Stack } from "@chakra-ui/react";
-import { useEffect, useMemo } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { PaymentsAnalytics } from "./components/payments-analytics";
 import { PaymentCheckouts } from "./components/payments-checkouts";
 import { Card, Heading, Text } from "tw-components";
@@ -31,7 +31,7 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
     isError,
   } = usePaymentsEnabledContracts();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

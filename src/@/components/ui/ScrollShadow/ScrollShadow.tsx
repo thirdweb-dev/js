@@ -2,7 +2,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import styles from "./ScrollShadow.module.css";
 
 export function ScrollShadow(props: {
@@ -17,7 +17,7 @@ export function ScrollShadow(props: {
   const shadowRightEl = useRef<HTMLDivElement>(null);
   const wrapperEl = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const content = scrollableEl.current;
     const shadowTop = shadowTopEl.current;
     const shadowBottom = shadowBottomEl.current;

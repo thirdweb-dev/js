@@ -31,6 +31,8 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
         : undefined,
   );
 
+  // FIXME: all of this logic needs to be reworked
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // If the user has not selected a chain, and the connected chain is configured, select it
     if (

@@ -33,7 +33,10 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
   const _max = useMemo(() => {
     return utils.formatUnits(max, decimals).toString();
   }, [decimals, max]);
+
   // update current value
+  // FIXME: there must be a better way...
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (value === undefined || value === null || value === "") {
       setInputvalue("");

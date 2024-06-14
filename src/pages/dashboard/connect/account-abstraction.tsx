@@ -26,7 +26,7 @@ import {
   useAccount,
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { NextSeo } from "next-seo";
 import { getAbsoluteUrl } from "lib/vercel-utils";
@@ -50,7 +50,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const defaultClientId = router.query.clientId?.toString();
   const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
-  const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
+  const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
   const meQuery = useAccount();
   const account = meQuery?.data;
 
@@ -62,25 +62,19 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
 
   const hasApiKeys = apiKeys.length > 0;
 
-  useEffect(() => {
-    if (selectedKey) {
-      return;
+  // compute the actual selected key based on if there is a state, if there is a query param, or otherwise the first one
+  const selectedKey = useMemo(() => {
+    if (selectedKey_) {
+      return selectedKey_;
     }
-    if (apiKeys.length > 0) {
+    if (apiKeys.length) {
       if (defaultClientId) {
-        const key = apiKeys.find((k) => k.key === defaultClientId);
-        if (key) {
-          setSelectedKey(key);
-        } else {
-          setSelectedKey(apiKeys[0]);
-        }
-      } else {
-        setSelectedKey(apiKeys[0]);
+        return apiKeys.find((k) => k.key === defaultClientId);
       }
-    } else {
-      setSelectedKey(undefined);
+      return apiKeys[0];
     }
-  }, [apiKeys, selectedKey, defaultClientId]);
+    return undefined;
+  }, [apiKeys, defaultClientId, selectedKey_]);
 
   const hasSmartWalletsWithoutBilling = useMemo(() => {
     if (!account || !apiKeys) {

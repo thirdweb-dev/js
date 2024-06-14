@@ -31,6 +31,8 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
     form.watch("customFactoryAddresses[0].key"),
   );
 
+  // FIXME: all of this logic needs to be reworked
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (customFactoryAbi?.data) {
       setCustomFactoryAbi(customFactoryAbi.data);
@@ -42,6 +44,8 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
     control: form.control,
   });
 
+  // FIXME: all of this logic needs to be reworked
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (fields.length === 0) {
       append({ key: 1, value: "" }, { shouldFocus: false });

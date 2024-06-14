@@ -211,28 +211,30 @@ function GuideLink(props: {
   );
 }
 
+const bannerPosters = [
+  {
+    img: require("../../../../public/assets/connect/pixels-cw.png"),
+    position: "flex-end",
+    padding: 0,
+  },
+  {
+    img: require("../../../../public/assets/connect/w3w-cw.png"),
+    position: "center",
+    padding: 4,
+  },
+  {
+    img: require("../../../../public/assets/connect/lv-cw.png"),
+    position: "flex-end",
+    padding: 0,
+  },
+];
+
 function BuildCustomBanner() {
   const [bannerImageIndex, setBannerImageIndex] = useState(1);
 
-  const bannerPosters = [
-    {
-      img: require("../../../../public/assets/connect/pixels-cw.png"),
-      position: "flex-end",
-      padding: 0,
-    },
-    {
-      img: require("../../../../public/assets/connect/w3w-cw.png"),
-      position: "center",
-      padding: 4,
-    },
-    {
-      img: require("../../../../public/assets/connect/lv-cw.png"),
-      position: "flex-end",
-      padding: 0,
-    },
-  ];
-
   // update banner image every 3 seconds
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const interval = setInterval(() => {
       setBannerImageIndex((prev) => {
@@ -244,7 +246,7 @@ function BuildCustomBanner() {
       });
     }, 3000);
     return () => clearInterval(interval);
-  }, [bannerPosters.length]);
+  }, []);
 
   return (
     <Box

@@ -1,9 +1,9 @@
 import { useColorModeValue } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 export function useNativeColorMode() {
   const activeColorMode = useColorModeValue("light", "dark");
-  useEffect(() => {
+  useLayoutEffect(() => {
     document
       .getElementById("tw-body-root")
       ?.style.setProperty("color-scheme", activeColorMode);

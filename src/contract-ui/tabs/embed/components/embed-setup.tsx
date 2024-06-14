@@ -14,7 +14,7 @@ import { configureChain, minimizeChain } from "@thirdweb-dev/chains";
 import { DropContract } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
 import {
@@ -256,13 +256,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     [iframeSrc],
   );
 
-  const { hasCopied, onCopy, setValue } = useClipboard(embedCode, 3000);
-
-  useEffect(() => {
-    if (embedCode) {
-      setValue(embedCode);
-    }
-  }, [embedCode, setValue]);
+  const { hasCopied, onCopy } = useClipboard(embedCode, 3000);
 
   return (
     <Flex gap={8} direction="column">

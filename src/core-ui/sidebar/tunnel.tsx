@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -21,7 +21,7 @@ const ClientOnlyPortal: ComponentWithChildren<ClientOnlyPortalProps> = ({
   const ref = useRef<Element | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     ref.current = document.getElementById(selector);
     setMounted(true);
   }, [selector]);

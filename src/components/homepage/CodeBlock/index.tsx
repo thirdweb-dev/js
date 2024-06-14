@@ -67,7 +67,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
     lightTheme || lightThemeDefault,
     darkTheme || darkThemeDefault,
   );
-  const { onCopy, hasCopied, setValue } = useClipboard(code);
+  const { onCopy, hasCopied } = useClipboard(code);
   const [speedUpEnabled, setSpeedUpEnabled] = useState(false);
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0);
   const [currentTypingSpeed] = useState(typingSpeed);
@@ -75,6 +75,8 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
 
   const chakraTheme = useTheme();
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!inView) {
       return;
@@ -91,17 +93,13 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
     return () => clearInterval(interval);
   }, [currentCodeIndex, currentTypingSpeed, code, inView]);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [currentCodeIndex]);
-
-  useEffect(() => {
-    if (code) {
-      setValue(code);
-    }
-  }, [code, setValue]);
 
   return (
     <Box ref={ref}>

@@ -226,6 +226,9 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   const chainId = useChainId() || -1;
 
   const [showHint, setShowHint] = useState(false);
+
+  // legitimate usecase!
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const t = setTimeout(() => {
       setShowHint(true);

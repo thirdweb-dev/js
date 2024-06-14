@@ -30,6 +30,8 @@ export const QuantityInputWithUnlimited: React.FC<
     isNaN(Number(value)) ? "0" : value.toString(),
   );
 
+  // FIXME: this needs a re-work
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (value !== undefined) {
       setStringValue(value.toString());

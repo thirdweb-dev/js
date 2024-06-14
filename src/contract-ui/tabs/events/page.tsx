@@ -1,6 +1,6 @@
 import { EventsFeed } from "./components/events-feed";
 import { Flex } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 interface ContractEventsPageProps {
   contractAddress?: string;
@@ -9,7 +9,7 @@ interface ContractEventsPageProps {
 export const ContractEventsPage: React.FC<ContractEventsPageProps> = ({
   contractAddress,
 }) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

@@ -88,6 +88,9 @@ export const Configure: React.FC<ConfigureProps> = ({
     control: form.control,
     name: "customAuthEndpoint.customHeaders",
   });
+
+  // FIXME: jesus do we need this? - there has to be a better way
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     form.reset({
       customAuthEndpoint: config.customAuthEndpoint,

@@ -3,7 +3,7 @@ import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { useTabHref } from "contract-ui/utils";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 
 interface ContractPermissionsPageProps {
@@ -13,7 +13,7 @@ interface ContractPermissionsPageProps {
 export const ContractPermissionsPage: React.FC<
   ContractPermissionsPageProps
 > = ({ contractAddress }) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

@@ -36,6 +36,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
     opacity: isVisible ? 1 : 0,
     zIndex: 9999999999,
   } as React.CSSProperties;
+
+  // somewhat legitimate use-case
+  // TODO: do we really need this?
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // Declare timeout
     let status: "in-progress" | "idle" = "idle";

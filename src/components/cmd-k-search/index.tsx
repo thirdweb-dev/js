@@ -21,7 +21,6 @@ import { useAddress } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { useDebounce } from "hooks/common/useDebounce";
 import { SearchMode, getSearchQuery } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -29,6 +28,7 @@ import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
 import invariant from "tiny-invariant";
 import { Button, Card, Heading, Link, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { useDebounce } from "use-debounce";
 
 type ContractSearchResult = {
   address: string;
@@ -124,6 +124,8 @@ export const CmdKSearch: React.FC = () => {
   const trackEvent = useTrack();
   const queryClient = useQueryClient();
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && e.metaKey) {
@@ -140,7 +142,7 @@ export const CmdKSearch: React.FC = () => {
   const walletAddress = useAddress();
 
   // debounce 500ms
-  const debouncedSearchValue = useDebounce(searchValue, 500);
+  const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
   const typesenseSearchQuery = useQuery<ContractSearchResult[]>(
     contractTypesenseSearchQuery(
@@ -182,6 +184,8 @@ export const CmdKSearch: React.FC = () => {
     setActiveIndex(0);
   }, []);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // re-set the active index if we are fetching
     if (isFetching && !data.length) {
@@ -189,6 +193,8 @@ export const CmdKSearch: React.FC = () => {
     }
   }, [data.length, isFetching]);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // only if the modal is open
     if (!open) {

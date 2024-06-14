@@ -26,7 +26,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
 import { Button, Text } from "tw-components";
@@ -167,6 +167,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   });
 
   const hasTrackedImpression = useRef<boolean>(false);
+  // TODO: figure out a better way to track impressions
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (publishMetadata.data && !hasTrackedImpression.current) {
       hasTrackedImpression.current = true;
@@ -266,7 +268,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window?.scrollTo({
       top: 0,
       behavior: "smooth",

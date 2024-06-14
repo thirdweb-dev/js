@@ -2,7 +2,7 @@
 
 import { SearchIcon, XCircleIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,16 +21,14 @@ export const SearchInput: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // sync the input state back with the searchParams on updates
-  useEffect(() => {
-    if (
-      inputRef.current &&
-      inputRef.current.value &&
-      !searchParams?.get("query")
-    ) {
-      inputRef.current.value = "";
-    }
-  }, [searchParams]);
+  // hah, no need for useEffect here this just works!
+  if (
+    inputRef.current &&
+    inputRef.current.value &&
+    !searchParams?.get("query")
+  ) {
+    inputRef.current.value = "";
+  }
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams ?? undefined);

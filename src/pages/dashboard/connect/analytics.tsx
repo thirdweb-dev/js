@@ -12,7 +12,7 @@ import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { Card, Heading, LinkButton, Text } from "tw-components";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ApiKey,
   useApiKeys,
@@ -36,28 +36,40 @@ import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
+import { useRouter } from "next/router";
 
 const RADIAN = Math.PI / 180;
 
 const DashboardConnectAnalytics: ThirdwebNextPage = () => {
+  const router = useRouter();
+  const defaultClientId = router.query.clientId?.toString();
   const { colorMode } = useColorMode();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
-  const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
-  const statsQuery = useWalletStats(selectedKey?.key);
+  const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
+
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    if (selectedKey) {
-      return;
+  const apiKeys = useMemo(() => {
+    return keysQuery?.data || [];
+  }, [keysQuery]);
+
+  // compute the actual selected key based on if there is a state, if there is a query param, or otherwise the first one
+  const selectedKey = useMemo(() => {
+    if (selectedKey_) {
+      return selectedKey_;
     }
-    if (keysQuery.data && keysQuery.data?.length > 0) {
-      setSelectedKey(keysQuery.data?.[0]);
-    } else {
-      setSelectedKey(undefined);
+    if (apiKeys.length) {
+      if (defaultClientId) {
+        return apiKeys.find((k) => k.key === defaultClientId);
+      }
+      return apiKeys[0];
     }
-  }, [keysQuery.data, selectedKey]);
+    return undefined;
+  }, [apiKeys, defaultClientId, selectedKey_]);
+
+  const statsQuery = useWalletStats(selectedKey?.key);
 
   const barColors = useMemo(
     () => (colorMode === "light" ? BAR_COLORS_LIGHT : BAR_COLORS_DARK),

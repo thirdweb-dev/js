@@ -49,6 +49,8 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
     setSelectedShowCaseIdx((idx) => (idx === 2 ? 0 : idx + 1));
   };
 
+  // FIXME: this can likely be achieved fully via CSS
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!hoveredCard) {
       const timer = setInterval(increment, 3500);
@@ -57,6 +59,8 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
     }
   }, [hoveredCard]);
 
+  // FIXME: this can likely be achieved fully via CSS
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (selectedShowCaseIdx > 0 && !canAnimate) {
       setCanAnimate(true);

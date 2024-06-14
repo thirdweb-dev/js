@@ -16,12 +16,13 @@ import {
   Switch,
   VStack,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { PiWarningFill } from "react-icons/pi";
 import { Button, Card, FormLabel, Heading, Link, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -34,7 +35,7 @@ const LoginPage: ThirdwebNextPage = () => {
   const [deviceName, setDeviceName] = useState<string>("");
   const [rejected, setRejected] = useState<boolean>(false);
   const trackEvent = useTrack();
-  const [isBrave, setIsBrave] = useState<boolean>(false);
+
   const [hasRemovedShield, setHasRemovedShield] = useState<boolean>(false);
 
   const { isLoggedIn } = useLoggedInUser();
@@ -46,14 +47,14 @@ const LoginPage: ThirdwebNextPage = () => {
   );
   const [success, setSuccess] = useState<boolean>(false);
 
-  useEffect(() => {
-    (async () => {
-      const isBraveInNavigator =
-        // @ts-expect-error - brave is not in the types
-        navigator?.brave && (await navigator?.brave.isBrave());
-      setIsBrave(!!isBraveInNavigator);
-    })();
-  }, []);
+  const isBrave = useQuery({
+    queryKey: ["is-brave-browser"],
+    initialData: false,
+    queryFn: async () => {
+      // @ts-expect-error - brave is not in the types
+      return navigator?.brave && (await navigator?.brave.isBrave());
+    },
+  });
 
   const generateToken = async () => {
     if (!payload) {

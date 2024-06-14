@@ -13,6 +13,8 @@ export const BillingConnectWalletPrompt = () => {
   const setIsWalletModalOpen = useSetIsWalletModalOpen();
   const setModalConfig = useSetWalletModalConfig();
 
+  // will be removed as part of: https://github.com/thirdweb-dev/dashboard/pull/2648 - we then can just make a specific button with its own props for it
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     // trigger button
     if (!modalOpened.current) {

@@ -22,6 +22,8 @@ export const PosthogIdentifier: React.FC = () => {
   const balance = useBalance();
   const wallet = useWallet();
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (wallet) {
       const connector = walletIdToPHName[wallet.walletId] || wallet.walletId;
@@ -30,12 +32,16 @@ export const PosthogIdentifier: React.FC = () => {
     }
   }, [wallet]);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (address) {
       posthog.identify(address);
     }
   }, [address]);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (chainId) {
       posthog.unregister("network");
@@ -43,6 +49,8 @@ export const PosthogIdentifier: React.FC = () => {
     }
   }, [chainId]);
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (balance?.data?.displayValue) {
       posthog.register({ balance: balance.data.displayValue });

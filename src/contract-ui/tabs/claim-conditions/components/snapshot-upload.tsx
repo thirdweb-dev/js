@@ -126,6 +126,8 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     [],
   );
 
+  // FIXME: this can be a mutation or query insead!
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (validSnapshot.length === 0) {
       return setSnapshotData([]);

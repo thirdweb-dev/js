@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Button } from "../../../@/components/ui/button";
 import { headerLinks } from "./headerLinks";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import Link from "next/link";
 export function MobileBurgerMenu() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (showBurgerMenu) {
       document.body.style.overflow = "hidden";
     } else {
@@ -17,7 +17,7 @@ export function MobileBurgerMenu() {
     }
   }, [showBurgerMenu]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
       document.body.style.overflow = "auto";
     };

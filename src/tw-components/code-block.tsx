@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { Highlight, Prism, themes } from "prism-react-renderer";
-import { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";
 
 const darkThemeDefault = themes.vsDark;
@@ -56,13 +55,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
     lightTheme || lightThemeDefault,
     darkTheme || darkThemeDefault,
   );
-  const { onCopy, hasCopied, setValue } = useClipboard(codeValue || code);
-
-  useEffect(() => {
-    if (code) {
-      setValue(codeValue || code);
-    }
-  }, [code, codeValue, setValue]);
+  const { onCopy, hasCopied } = useClipboard(codeValue || code);
 
   return (
     <Highlight

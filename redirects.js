@@ -130,6 +130,16 @@ function redirects() {
       permanent: false,
     },
     {
+      source: "/dashboard/settings",
+      destination: "/dashboard/settings/api-keys",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/connect",
+      destination: "/dashboard/connect/playground",
+      permanent: false,
+    },
+    {
       source: "/dashboard/wallet",
       destination: "/dashboard/connect/playground",
       permanent: false,

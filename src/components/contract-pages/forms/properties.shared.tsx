@@ -57,6 +57,8 @@ export const PropertiesFormControl = <
     name: "attributes" as ArrayPath<TFieldValues>,
   });
 
+  // TODO: do we need this?
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (fields.length === 0) {
       append({ trait_type: "", value: "" } as any, { shouldFocus: false });

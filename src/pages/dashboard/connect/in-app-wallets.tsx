@@ -5,7 +5,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { EmbeddedWallets } from "components/embedded-wallets";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { PageId } from "page-id";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
@@ -25,8 +25,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
   const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
 
-  const [selectedKey, setSelectedKey] = useState<undefined | ApiKey>();
-  const walletsQuery = useEmbeddedWallets(selectedKey?.key as string);
+  const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
 
   const apiKeys = useMemo(() => {
     return (keysQuery?.data || []).filter((key) => {
@@ -36,28 +35,25 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
     });
   }, [keysQuery]);
 
-  const wallets = walletsQuery?.data || [];
   const hasApiKeys = apiKeys.length > 0;
 
-  useEffect(() => {
-    if (selectedKey) {
-      return;
+  // compute the actual selected key based on if there is a state, if there is a query param, or otherwise the first one
+  const selectedKey = useMemo(() => {
+    if (selectedKey_) {
+      return selectedKey_;
     }
-    if (apiKeys.length > 0) {
+    if (apiKeys.length) {
       if (defaultClientId) {
-        const key = apiKeys.find((k) => k.key === defaultClientId);
-        if (key) {
-          setSelectedKey(key);
-        } else {
-          setSelectedKey(apiKeys[0]);
-        }
-      } else {
-        setSelectedKey(apiKeys[0]);
+        return apiKeys.find((k) => k.key === defaultClientId);
       }
-    } else {
-      setSelectedKey(undefined);
+      return apiKeys[0];
     }
-  }, [apiKeys, selectedKey, defaultClientId]);
+    return undefined;
+  }, [apiKeys, defaultClientId, selectedKey_]);
+
+  const walletsQuery = useEmbeddedWallets(selectedKey?.key as string);
+
+  const wallets = walletsQuery?.data || [];
 
   if (!isLoggedIn) {
     return <ConnectWalletPrompt description="manage in-app wallets" />;

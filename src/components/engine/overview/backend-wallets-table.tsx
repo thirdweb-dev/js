@@ -31,7 +31,7 @@ import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import QRCode from "qrcode";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiExport, BiImport, BiPencil } from "react-icons/bi";
 import {
@@ -45,6 +45,7 @@ import {
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { prettyPrintCurrency } from "../utils";
 import { utils } from "ethers";
+import { useQuery } from "@tanstack/react-query";
 
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
@@ -326,14 +327,27 @@ const ReceiveFundsModal = ({
   backendWallet: BackendWallet;
   disclosure: UseDisclosureReturn;
 }) => {
-  const [dataBase64, setDataBase64] = useState("");
-
-  useEffect(() => {
-    QRCode.toDataURL(backendWallet.address, (error: any, dataUrl: string) => {
-      console.error("error", error);
-      setDataBase64(dataUrl);
-    });
-  }, [backendWallet]);
+  const qrCodeBase64Query = useQuery({
+    queryKey: ["engine", "receive-funds-qr-code", backendWallet.address],
+    // only run this if we have a backendWallet address
+    enabled: !!backendWallet.address,
+    // start out with empty string
+    initialData: "",
+    queryFn: async () => {
+      return new Promise<string>((resolve, reject) => {
+        QRCode.toDataURL(
+          backendWallet.address,
+          (error: any, dataUrl: string) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(dataUrl);
+            }
+          },
+        );
+      });
+    },
+  });
 
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
@@ -352,7 +366,7 @@ const ReceiveFundsModal = ({
               size="sm"
             />
             <Image
-              src={dataBase64}
+              src={qrCodeBase64Query.data}
               alt="Receive funds to your backend wallet"
               rounded="lg"
               w={200}

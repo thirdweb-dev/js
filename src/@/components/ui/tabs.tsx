@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useLayoutEffect } from "react";
 import { cn } from "../../lib/utils";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
@@ -23,7 +23,7 @@ export function TabLinks(props: {
     setActiveTabEl(el);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (activeTabEl && containerRef.current && lineRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const lineEl = lineRef.current;

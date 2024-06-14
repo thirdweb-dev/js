@@ -5,31 +5,28 @@ import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEffect, useState } from "react";
+import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { useEffect, useMemo, useState } from "react";
 import { ApiKeyDetails } from "components/settings/ApiKeys/Details";
 import { EditApiKey } from "components/settings/ApiKeys/Edit";
 
 const SettingsApiKeyPage: ThirdwebNextPage = () => {
-  const [apiKey, setApiKey] = useState<ApiKey | null>(null);
   const [editing, setEditing] = useState(false);
   const keysQuery = useApiKeys();
   const router = useRouter();
   const { user } = useLoggedInUser();
 
-  useEffect(() => {
-    if (keysQuery?.data) {
-      const activeKey = keysQuery?.data.find(
-        (key) => key.id === router.query.id,
-      );
+  const apiKey = useMemo(() => {
+    return keysQuery.data?.find((key) => key.id === router.query.id);
+  }, [keysQuery?.data, router.query.id]);
 
-      if (!activeKey) {
-        router.push("/dashboard/settings/api-keys");
-        return;
-      }
-      setApiKey(activeKey);
+  // legitimate use-case, however with move to RSCs this will happen in the RSC logic later
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (keysQuery.isSuccess && !apiKey) {
+      router.push("/dashboard/settings/api-keys");
     }
-  }, [keysQuery?.data, router]);
+  }, [apiKey, keysQuery.isSuccess, router]);
 
   if (!user) {
     return <ConnectWalletPrompt />;

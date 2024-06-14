@@ -29,6 +29,8 @@ export const HoverMenu: React.FC<HoverMenuProps> = ({
   const triggerRef = useRef<HTMLDivElement | null>(null);
   const width = columns === 2 ? 660 : 336;
 
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     const updateOffset = () => {
       const el = triggerRef.current;

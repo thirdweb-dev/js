@@ -8,7 +8,6 @@ import { Card } from "./card";
 import { Text } from "./text";
 import { Icon, Tooltip, useClipboard, useToast } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";
 
 interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
@@ -45,13 +44,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   title = "address",
   ...restButtonProps
 }) => {
-  const { onCopy, setValue } = useClipboard(address || "");
-
-  useEffect(() => {
-    if (address) {
-      setValue(address);
-    }
-  }, [address, setValue]);
+  const { onCopy } = useClipboard(address || "");
 
   const trackEvent = useTrack();
   const toast = useToast();

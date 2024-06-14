@@ -37,6 +37,8 @@ const ContractDeployDetailPage: ThirdwebNextPage = () => {
   );
 
   const hasTrackedImpression = useRef<boolean>(false);
+  // TODO: find better way to do impression tracking
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (publishMetadataQuery.data && !hasTrackedImpression.current) {
       hasTrackedImpression.current = true;

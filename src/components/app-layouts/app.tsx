@@ -123,6 +123,8 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
       }),
   );
 
+  // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isProd) {
       localStorage.setItem("IS_THIRDWEB_DEV", "true");

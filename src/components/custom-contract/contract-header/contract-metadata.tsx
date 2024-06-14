@@ -24,6 +24,8 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
   );
   const latestPublished = publishedContractsFromDeploy.data?.slice(-1)[0];
 
+  // legitimate, we use this to keep the state around and *only* flip it if the status changes explicitly from error to success etc
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (contractMetadataQuery.isError) {
       setWasError(true);

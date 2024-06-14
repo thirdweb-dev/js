@@ -318,6 +318,8 @@ const UpsellTestnetNotice: React.FC<{
 
   const chain = useSupportedChain(connectedChainId || -1);
 
+  // FIXME: find a better way to track the "show" state of a component
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     trackEvent({
       category: "no-funds",

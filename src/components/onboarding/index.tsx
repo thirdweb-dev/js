@@ -135,6 +135,8 @@ export const Onboarding: React.FC = () => {
     }
   };
 
+  // FIXME: this entire flow needs reworked - re-vist as part of FTUX imrpovements
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isLoggedIn || meQuery.isLoading) {
       return;
@@ -152,6 +154,8 @@ export const Onboarding: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, meQuery]);
 
+  // FIXME: this entire flow needs reworked - re-vist as part of FTUX imrpovements
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!account || state || !wallet) {
       return;

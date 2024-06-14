@@ -13,7 +13,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useEffect, forwardRef as reactForwardRef } from "react";
+import { forwardRef as reactForwardRef } from "react";
 import { FiCheck, FiCopy, FiExternalLink } from "react-icons/fi";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
 
@@ -183,19 +183,13 @@ interface TrackedCopyButtonProps extends TrackedIconButtonProps {
 
 export const TrackedCopyButton = forwardRef<TrackedCopyButtonProps, "button">(
   ({ value, ...restButtonProps }, ref) => {
-    const { onCopy, hasCopied, setValue } = useClipboard(value);
+    const { onCopy, hasCopied } = useClipboard(value);
 
     const copy = (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
       onCopy();
     };
-
-    useEffect(() => {
-      if (value) {
-        setValue(value);
-      }
-    }, [value, setValue]);
 
     return (
       <TrackedIconButton

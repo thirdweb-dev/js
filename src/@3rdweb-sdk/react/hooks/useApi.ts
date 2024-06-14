@@ -1085,8 +1085,9 @@ export function useApiAuthToken() {
   const [paymentsSellerId, setPaymentsSellerId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  // not using a query because we don't want to store this in any cache
 
+  // not using a query because we don't want to store this in any cache
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     let mounted = true;
     setError(null);

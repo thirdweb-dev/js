@@ -150,6 +150,8 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
     usePagination,
   );
 
+  // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     setQueryParams({ start: pageIndex * pageSize, count: pageSize });
   }, [pageIndex, pageSize]);

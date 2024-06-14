@@ -129,6 +129,8 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
   }, []);
 
   // save recently used chains to storage
+  // FIXME: probably want to move this to backend (similar to favorites)
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     try {
       localStorage.setItem(
@@ -148,6 +150,8 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
     useAllChainsData();
 
   // get recently used chains from stroage
+  // FIXME: probably want to move this to backend (similar to favorites)
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isSupportedChainsReady) {
       return;
@@ -203,6 +207,8 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
   );
 
   // create supported chains and modified chains on mount
+  // FIXME: this should be computed not via setState
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (allChains.length === 0) {
       return;

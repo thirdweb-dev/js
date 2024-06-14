@@ -70,6 +70,8 @@ const V4ToV5SignerAdapter = () => {
 
   const currentWallet = useRef<any>(null);
 
+  // will removes as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     let active = true;
 

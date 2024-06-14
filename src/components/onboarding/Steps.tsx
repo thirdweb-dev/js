@@ -178,6 +178,8 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     });
   };
 
+  // TODO: find better way to track impressions
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (currentStep) {
       trackEvent({

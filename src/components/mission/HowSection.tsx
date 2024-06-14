@@ -51,27 +51,29 @@ const HowSection = ({ TRACKING_CATEGORY }: HowSectionProps) => {
   const [offsetY, setOffsetY] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
-  const handleScroll = () => {
-    if (ref.current) {
-      const elementTop =
-        ref.current.getBoundingClientRect().top + window.pageYOffset;
+  // somewhat legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    function handleScroll() {
+      if (ref.current) {
+        const elementTop =
+          ref.current.getBoundingClientRect().top + window.pageYOffset;
 
-      const startOffset = window.innerHeight / 2;
-      const scrollPosition = window.pageYOffset;
+        const startOffset = window.innerHeight / 2;
+        const scrollPosition = window.pageYOffset;
 
-      if (scrollPosition > elementTop - startOffset) {
-        const newOffset = Math.min(
-          (scrollPosition - elementTop + startOffset) * 0.2,
-          150,
-        );
-        setOffsetY(newOffset);
-      } else {
-        setOffsetY(0);
+        if (scrollPosition > elementTop - startOffset) {
+          const newOffset = Math.min(
+            (scrollPosition - elementTop + startOffset) * 0.2,
+            150,
+          );
+          setOffsetY(newOffset);
+        } else {
+          setOffsetY(0);
+        }
       }
     }
-  };
 
-  useEffect(() => {
     window.addEventListener("scroll", handleScroll);
 
     return () => window.removeEventListener("scroll", handleScroll);

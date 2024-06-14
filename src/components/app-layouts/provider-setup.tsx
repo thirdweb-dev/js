@@ -138,6 +138,8 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
 const GlobalAuthTokenProvider = () => {
   const { token, isLoading } = useApiAuthToken();
 
+  // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (token && !isLoading) {
       (window as any)[GLOBAL_AUTH_TOKEN_KEY] = token;

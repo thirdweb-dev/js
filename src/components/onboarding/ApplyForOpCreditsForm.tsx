@@ -75,6 +75,8 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
     "Something went wrong, please try again.",
   );
 
+  // TODO: find better way to track impressions
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     trackEvent({
       category: "op-sponsorship",

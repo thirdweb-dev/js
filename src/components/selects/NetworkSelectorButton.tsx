@@ -74,6 +74,8 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   const prevChain = useRef(chain);
 
   // handle switch network done from wallet app/extension
+  // TODO: legitimate use-case, but maybe theres a better way to hook into this?
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!chain) {
       return;

@@ -13,6 +13,8 @@ export const ExternalLinksFieldset = () => {
     control: form.control,
   });
 
+  // FIXME: all of this logic needs to be reworked
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (fields.length === 0) {
       append(

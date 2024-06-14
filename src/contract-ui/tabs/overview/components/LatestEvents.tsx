@@ -16,7 +16,7 @@ import {
 import type { ContractEvent } from "@thirdweb-dev/sdk";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -118,13 +118,7 @@ interface EventsFeedItemProps {
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
   const toast = useToast();
-  const { onCopy, setValue } = useClipboard(transaction.transactionHash);
-
-  useEffect(() => {
-    if (transaction.transactionHash) {
-      setValue(transaction.transactionHash);
-    }
-  }, [transaction.transactionHash, setValue]);
+  const { onCopy } = useClipboard(transaction.transactionHash);
 
   const href = useTabHref("events");
 

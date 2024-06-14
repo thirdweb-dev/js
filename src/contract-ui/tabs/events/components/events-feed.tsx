@@ -28,7 +28,7 @@ import type { ContractEvent } from "@thirdweb-dev/sdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState, Fragment } from "react";
+import { useMemo, useState, Fragment } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -199,13 +199,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   chainSlug,
 }) => {
   const toast = useToast();
-  const { onCopy, setValue } = useClipboard(transaction.transactionHash);
-
-  useEffect(() => {
-    if (transaction.transactionHash) {
-      setValue(transaction.transactionHash);
-    }
-  }, [transaction.transactionHash, setValue]);
+  const { onCopy } = useClipboard(transaction.transactionHash);
 
   const router = useRouter();
 

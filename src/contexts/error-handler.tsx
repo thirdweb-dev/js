@@ -7,13 +7,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import type { TransactionError } from "@thirdweb-dev/sdk";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiCopy, FiHelpCircle } from "react-icons/fi";
 import { Button, Drawer, Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
@@ -56,15 +50,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { onCopy, hasCopied, setValue } = useClipboard(
-    currentError?.message || "",
-  );
-
-  useEffect(() => {
-    if (currentError?.message) {
-      setValue(currentError?.message);
-    }
-  }, [currentError?.message, setValue]);
+  const { onCopy, hasCopied } = useClipboard(currentError?.message || "");
 
   return (
     <>

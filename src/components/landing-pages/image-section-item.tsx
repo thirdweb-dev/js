@@ -1,6 +1,5 @@
 import { Flex, FlexProps } from "@chakra-ui/react";
 import { StaticImageData } from "next/image";
-import React from "react";
 import { Text } from "tw-components";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 

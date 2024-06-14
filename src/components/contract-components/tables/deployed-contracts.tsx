@@ -396,6 +396,9 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   // the ShowMoreButton component callback sets this state variable
   const [numRowsOnPage, setNumRowsOnPage] = useState(limit);
   // when the state variable is updated, update the page size
+
+  // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     setPageSize(numRowsOnPage);
   }, [numRowsOnPage, pageSize, setPageSize]);

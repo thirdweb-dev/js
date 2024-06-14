@@ -2,7 +2,7 @@ import { CodeOverview } from "./components/code-overview";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 interface ContractCodePageProps {
   contractAddress?: string;
@@ -13,7 +13,7 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
 }) => {
   const contractQuery = useContract(contractAddress);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

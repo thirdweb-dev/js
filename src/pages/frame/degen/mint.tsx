@@ -12,6 +12,8 @@ const ogImageUrl = `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`
 const BaseFramePage = () => {
   const router = useRouter();
 
+  // this can move to RSC logic (depending on user agent likely)
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     router.push("https://frames.thirdweb.com/degen");
   }, [router]);

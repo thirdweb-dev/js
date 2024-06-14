@@ -21,7 +21,6 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
 import { useRemoveChainModification } from "hooks/chains/useModifyChain";
 import { getDashboardChainRpc } from "lib/rpc";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 
@@ -78,6 +77,9 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       slug: editingChain?.slug || "",
       status: editingChain?.status === "deprecated" ? "deprecated" : "active",
     },
+    defaultValues: {
+      slug: prefillSlug,
+    },
     mode: "onChange",
   });
 
@@ -92,16 +94,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
     editingChain?.isModified || editingChain?.isOverwritten
       ? chainIdToChainRecord[editingChain.chainId]
       : undefined;
-
-  // setup prefills
-  useEffect(() => {
-    if (prefillSlug) {
-      form.setValue("slug", prefillSlug, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-    }
-  }, [prefillSlug, form]);
 
   const { ref } = form.register("name", {
     required: true,

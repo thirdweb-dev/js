@@ -171,6 +171,8 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
   const connectedWalletAddress = useAddress() || constants.AddressZero;
 
+  // legitimate(?) use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (
       form.watch("params").length === 0 &&

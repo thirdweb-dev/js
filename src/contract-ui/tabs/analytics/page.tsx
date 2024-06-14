@@ -33,7 +33,7 @@ import {
   useTransactionAnalytics,
   useUniqueWalletsAnalytics,
 } from "data/analytics/hooks";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useLayoutEffect, useMemo, useState } from "react";
 import { Card, Heading, Text } from "tw-components";
 
 interface ContractAnalyticsPageProps {
@@ -52,7 +52,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
   );
   const [endDate] = useState(new Date());
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

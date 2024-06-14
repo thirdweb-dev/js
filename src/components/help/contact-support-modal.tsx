@@ -75,6 +75,8 @@ export const ContactSupportModal = () => {
   const { mutate: createTicket } = useCreateTicket();
 
   // On changing product -> reset all fields (but keep the `product` field)
+  // legitimate use-case
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!productLabel) {
       return;

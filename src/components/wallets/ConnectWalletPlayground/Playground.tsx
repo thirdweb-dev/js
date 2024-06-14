@@ -55,6 +55,7 @@ import { usePlaygroundWallets } from "./usePlaygroundWallets";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiChevronRight } from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
 
 type LocaleId = "en-US" | "ja-JP" | "es-ES";
 
@@ -96,6 +97,8 @@ export const ConnectWalletPlayground: React.FC<{
     undefined,
   );
 
+  // FIXME: instead of states we should use a form and then that can handle this
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (welcomeScreen) {
       if (
@@ -111,7 +114,6 @@ export const ConnectWalletPlayground: React.FC<{
   const { colorMode, toggleColorMode } = useColorMode();
   const selectedTheme = colorMode === "light" ? "light" : "dark";
   const [locale, setLocale] = useState<LocaleId>("en-US");
-  const [code, setCode] = useState("");
 
   const { colorOverrides, themeObj, setColorOverrides } =
     usePlaygroundTheme(selectedTheme);
@@ -136,110 +138,119 @@ export const ConnectWalletPlayground: React.FC<{
     Phantom: false,
   });
 
-  useEffect(() => {
-    const getSupportedWalletsCode = (
-      walletIds: WalletId[],
-    ): string | undefined => {
-      if (!walletIds.length) {
-        return undefined;
-      }
-
-      return `[${walletIds
-        .map((walletId) => {
-          let walletCode = walletInfoRecord[walletId].code;
-
-          if (walletId === "Email Wallet") {
-            if (!socialOptions.length) {
-              walletCode = "inAppWallet()";
-            } else {
-              const options: Record<string, any> = {};
-              if (socialOptions.length) {
-                options.auth = {
-                  options: socialOptions,
-                };
-              }
-
-              walletCode = `inAppWallet(${JSON.stringify(options, null, 2)})`;
-            }
-          }
-
-          return walletCode;
-        })
-        .join(",")}]`;
-    };
-
-    const _code = getCode({
-      baseTheme: selectedTheme,
-
-      colorOverrides,
-      imports: enabledWallets.map(
-        (walletId) => walletInfoRecord[walletId].import,
-      ),
-      wallets: getSupportedWalletsCode(enabledWallets),
-      smartWalletOptions: smartWalletOptions.enabled
-        ? {
-            gasless: smartWalletOptions.gasless,
-          }
-        : undefined,
-      connectWallet: {
-        locale: locale !== "en-US" ? `"${locale}"` : undefined,
-        theme: `"${selectedTheme}"`,
-        connectButton: btnTitle ? `{ label: "${btnTitle}" }` : undefined,
-        connectModal: JSON.stringify({
-          size: modalSize,
-          title: modalTitle ? modalTitle : undefined,
-          titleIcon: modalTitleIconUrl.enabled
-            ? modalTitleIconUrl.url
-            : undefined,
-          welcomeScreen: welcomeScreen
-            ? Object.keys(welcomeScreen).length > 0
-              ? welcomeScreen
-              : undefined
-            : undefined,
-          termsOfServiceUrl: tosUrl.enabled ? tosUrl.url : undefined,
-          privacyPolicyUrl: privacyPolicyUrl.enabled
-            ? privacyPolicyUrl.url
-            : undefined,
-          showThirdwebBranding:
-            showThirdwebBranding === false ? false : undefined,
-        }),
-        chain: undefined,
+  const codeQuery = useQuery({
+    queryKey: [
+      "playground-code",
+      {
+        btnTitle,
+        enabledWallets,
+        modalTitle,
+        selectedTheme,
+        modalSize,
+        smartWalletOptions,
+        modalTitleIconUrl,
+        welcomeScreen: !!welcomeScreen,
+        colorOverrides,
+        tosUrl,
+        privacyPolicyUrl,
+        locale,
+        socialOptions,
+        showThirdwebBranding,
       },
-    });
+    ],
+    queryFn: async () => {
+      const getSupportedWalletsCode = (
+        walletIds: WalletId[],
+      ): string | undefined => {
+        if (!walletIds.length) {
+          return undefined;
+        }
 
-    async function formatCodeAndSetState(
-      unformattedCode: string,
-    ): Promise<string> {
-      try {
-        const formattedCode = await format(unformattedCode, {
-          parser: "babel",
-          plugins: [parserBabel, estree],
-          printWidth: 50,
-        });
-        setCode(formattedCode);
-        return formattedCode;
-      } catch (error) {
-        throw new Error(`Error formatting the code: ${error}`);
+        return `[${walletIds
+          .map((walletId) => {
+            let walletCode = walletInfoRecord[walletId].code;
+
+            if (walletId === "Email Wallet") {
+              if (!socialOptions.length) {
+                walletCode = "inAppWallet()";
+              } else {
+                const options: Record<string, any> = {};
+                if (socialOptions.length) {
+                  options.auth = {
+                    options: socialOptions,
+                  };
+                }
+
+                walletCode = `inAppWallet(${JSON.stringify(options, null, 2)})`;
+              }
+            }
+
+            return walletCode;
+          })
+          .join(",")}]`;
+      };
+
+      const _code = getCode({
+        baseTheme: selectedTheme,
+
+        colorOverrides,
+        imports: enabledWallets.map(
+          (walletId) => walletInfoRecord[walletId].import,
+        ),
+        wallets: getSupportedWalletsCode(enabledWallets),
+        smartWalletOptions: smartWalletOptions.enabled
+          ? {
+              gasless: smartWalletOptions.gasless,
+            }
+          : undefined,
+        connectWallet: {
+          locale: locale !== "en-US" ? `"${locale}"` : undefined,
+          theme: `"${selectedTheme}"`,
+          connectButton: btnTitle ? `{ label: "${btnTitle}" }` : undefined,
+          connectModal: JSON.stringify({
+            size: modalSize,
+            title: modalTitle ? modalTitle : undefined,
+            titleIcon: modalTitleIconUrl.enabled
+              ? modalTitleIconUrl.url
+              : undefined,
+            welcomeScreen: welcomeScreen
+              ? Object.keys(welcomeScreen).length > 0
+                ? welcomeScreen
+                : undefined
+              : undefined,
+            termsOfServiceUrl: tosUrl.enabled ? tosUrl.url : undefined,
+            privacyPolicyUrl: privacyPolicyUrl.enabled
+              ? privacyPolicyUrl.url
+              : undefined,
+            showThirdwebBranding:
+              showThirdwebBranding === false ? false : undefined,
+          }),
+          chain: undefined,
+        },
+      });
+
+      async function formatCodeAndSetState(
+        unformattedCode: string,
+      ): Promise<string> {
+        try {
+          const formattedCode = await format(unformattedCode, {
+            parser: "babel",
+            plugins: [parserBabel, estree],
+            printWidth: 50,
+          });
+
+          return formattedCode;
+        } catch (error) {
+          throw new Error(`Error formatting the code: ${error}`);
+        }
       }
-    }
 
-    formatCodeAndSetState(_code);
-  }, [
-    btnTitle,
-    enabledWallets,
-    modalTitle,
-    selectedTheme,
-    modalSize,
-    smartWalletOptions,
-    modalTitleIconUrl,
-    welcomeScreen,
-    colorOverrides,
-    tosUrl,
-    privacyPolicyUrl,
-    locale,
-    socialOptions,
-    showThirdwebBranding,
-  ]);
+      return formatCodeAndSetState(_code);
+    },
+    keepPreviousData: true,
+  });
+
+  const code = codeQuery.data || "";
 
   const welcomeScreenContent = (
     <Flex direction="column" gap={5}>

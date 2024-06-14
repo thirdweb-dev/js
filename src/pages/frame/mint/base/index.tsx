@@ -13,6 +13,8 @@ const ogImageUrl = `${getAbsoluteUrl()}/assets/og-image/tx-frame-og-image.png`;
 const BaseFramePage = () => {
   const router = useRouter();
 
+  // this can move to RSC logic (depending on user agent likely)
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     router.push("https://blog.thirdweb.com/guides/farcaster-transaction-frame");
   }, [router]);
