@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.29.2
+
+### Patch Changes
+
+- [#2880](https://github.com/thirdweb-dev/js/pull/2880) [`7768067`](https://github.com/thirdweb-dev/js/commit/7768067bf4f571a8c8ee6b646a58e2fc5f6bd052) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Modular contract publish and deploy setup
+
+- [#3318](https://github.com/thirdweb-dev/js/pull/3318) [`fb6a07d`](https://github.com/thirdweb-dev/js/commit/fb6a07d4b84ba8ea6389ca04c73625f670a0d9c4) Thanks [@jnsdls](https://github.com/jnsdls)! - add missing erc4337 extensions
+
 ## 5.29.1
 
 ### Patch Changes
