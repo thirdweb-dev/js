@@ -32,7 +32,10 @@ import {
   useSigner,
   useWalletConfig,
 } from "@thirdweb-dev/react";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
+import {
+  FeatureName,
+  FeatureWithEnabled,
+} from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import { DeploymentTransaction } from "@thirdweb-dev/sdk/dist/declarations/src/evm/types/any-evm/deploy-data";
 import {
   Abi,
@@ -46,9 +49,11 @@ import {
   extractEventsFromAbi,
   extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
+  fetchContractMetadata,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   getTrustedForwarders,
+  isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
 import {
   getZkTransactionsForDeploy,
@@ -889,18 +894,57 @@ export async function fetchPublishedContracts(
   );
 }
 
+export async function fetchPublishedContractsWithFeature(
+  sdk: ThirdwebSDK,
+  queryClient: QueryClient,
+  feature: FeatureName,
+  address?: string | null,
+) {
+  invariant(sdk, "sdk not provided");
+  invariant(address, "address is not defined");
+  const tempResult = ((await sdk.getPublisher().getAll(address)) || []).filter(
+    (c) => c.id,
+  );
+  const tempResultWithMetadata = await Promise.all(
+    tempResult.map(async (c) => ({
+      ...c,
+      metadata: await fetchFullPublishMetadata(sdk, c.metadataUri, queryClient),
+    })),
+  );
+
+  const resultWithFeature = await Promise.all(
+    tempResultWithMetadata.map(async (c) => ({
+      ...c,
+      deployMetadata: await fetchContractMetadata(
+        c.metadata.metadataUri,
+        StorageSingleton,
+      ),
+    })),
+  );
+
+  return resultWithFeature.filter((c) => {
+    const extensions = detectFeatures(c.deployMetadata.abi as Abi);
+    return isExtensionEnabled(c.deployMetadata.abi as Abi, feature, extensions);
+  });
+}
+
 export type PublishedContractDetails = Awaited<
   ReturnType<typeof fetchPublishedContracts>
 >[number];
 
-export function usePublishedContractsQuery(address?: string) {
+export function usePublishedContractsQuery(
+  address?: string,
+  feature?: FeatureName,
+) {
   const sdk = getThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   const queryClient = useQueryClient();
   return useQuery<PublishedContractDetails[]>(
-    ["published-contracts", address],
+    ["published-contracts", address, feature],
     () => {
       invariant(sdk, "sdk not provided");
-      return fetchPublishedContracts(sdk, queryClient, address);
+      return feature && feature.length > 0
+        ? fetchPublishedContractsWithFeature(sdk, queryClient, feature, address)
+        : fetchPublishedContracts(sdk, queryClient, address);
     },
     {
       enabled: !!address && !!sdk,

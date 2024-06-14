@@ -15,8 +15,8 @@ export const DynamicContractsFieldset = () => {
   return (
     <Flex gap={8} direction="column" as="fieldset">
       <Flex gap={2} direction="column">
-        <Heading size="title.md">Dynamic Contract settings</Heading>
-        <Text>You can set default extensions for your dynamic contract.</Text>
+        <Heading size="title.md">Contract extension settings</Heading>
+        <Text>You can set default extensions for your contract.</Text>
       </Flex>
       <Flex flexDir="column" gap={4}>
         {fields.map((item, index) => (

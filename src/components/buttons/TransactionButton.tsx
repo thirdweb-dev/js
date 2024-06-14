@@ -126,7 +126,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
                   size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4
                 }))`
           }
-          isDisabled={isChainDeprecated}
+          isDisabled={isChainDeprecated || restButtonProps.isDisabled}
         >
           {children}
           <Tooltip

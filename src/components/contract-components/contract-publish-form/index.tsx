@@ -333,6 +333,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                         data.factoryDeploymentData?.customFactoryInput
                           ?.customFactoryAddresses,
                     },
+                    modularFactoryInput: {
+                      hooksParamName: "",
+                    },
                   },
                 },
                 contractName: publishMetadata.data?.name,

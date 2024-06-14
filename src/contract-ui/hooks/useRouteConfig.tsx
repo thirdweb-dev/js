@@ -97,6 +97,11 @@ const LazyContractSourcesPage = dynamic(() =>
     ({ ContractSourcesPage }) => ContractSourcesPage,
   ),
 );
+const LazyContractEditExtensionsPage = dynamic(() =>
+  import("../tabs/edit-extensions/page").then(
+    ({ ContractEditExtensionsPage }) => ContractEditExtensionsPage,
+  ),
+);
 
 export function useContractRouteConfig(
   contractAddress: string,
@@ -128,6 +133,15 @@ export function useContractRouteConfig(
       // not lazy because this is typically the landing spot so we want it to always be there immediately
       component: ContractOverviewPage,
       isDefault: true,
+    },
+    {
+      title: "Edit extensions",
+      path: "edit-extensions",
+      isEnabled: extensionDetectedState({
+        contractQuery,
+        feature: ["ModularCore"],
+      }),
+      component: LazyContractEditExtensionsPage,
     },
     {
       title: "Code Snippets",
