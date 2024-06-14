@@ -62,6 +62,11 @@ export type GetBuyWithFiatQuoteParams = {
    * Defaults to `false`
    */
   isTestMode?: boolean;
+
+  /**
+   * Arbitrary data to store with the purchase.
+   */
+  purchaseData?: object;
 };
 
 /**
@@ -236,33 +241,26 @@ export async function getBuyWithFiatQuote(
   params: GetBuyWithFiatQuoteParams,
 ): Promise<BuyWithFiatQuote> {
   try {
-    const queryParams = new URLSearchParams({
-      toAddress: params.toAddress,
-      fromCurrencySymbol: params.fromCurrencySymbol,
-      toChainId: params.toChainId.toString(),
-      toTokenAddress: params.toTokenAddress.toLowerCase(),
+    const clientFetch = getClientFetch(params.client);
+
+    const response = await clientFetch(getPayBuyWithFiatQuoteEndpoint(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        toAddress: params.toAddress,
+        fromCurrencySymbol: params.fromCurrencySymbol,
+        toChainId: params.toChainId.toString(),
+        toTokenAddress: params.toTokenAddress.toLowerCase(),
+        fromAmount: params.fromAmount,
+        toAmount: params.toAmount,
+        maxSlippageBPS: params.maxSlippageBPS,
+        isTestMode: params.isTestMode,
+        purcaseData: params.purchaseData,
+      }),
     });
-
-    if (params.fromAmount) {
-      queryParams.append("fromAmount", params.fromAmount);
-    }
-
-    if (params.toAmount) {
-      queryParams.append("toAmount", params.toAmount);
-    }
-
-    if (params.maxSlippageBPS) {
-      queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
-    }
-
-    if (params.isTestMode) {
-      queryParams.append("isTestMode", params.isTestMode.toString());
-    }
-
-    const queryString = queryParams.toString();
-    const url = `${getPayBuyWithFiatQuoteEndpoint()}?${queryString}`;
-
-    const response = await getClientFetch(params.client)(url);
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {

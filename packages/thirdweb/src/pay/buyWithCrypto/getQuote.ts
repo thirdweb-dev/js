@@ -66,6 +66,11 @@ export type GetBuyWithCryptoQuoteParams = {
   toTokenAddress: string;
 
   /**
+   * Arbitrary data to store with the purchase.
+   */
+  purchaseData?: object;
+
+  /**
    * The maximum slippage in basis points (bps) allowed for the swap.
    * For example, if you want to allow a maximum slippage of 0.5%, you should specify `50` bps.
    */
@@ -229,34 +234,27 @@ export async function getBuyWithCryptoQuote(
   params: GetBuyWithCryptoQuoteParams,
 ): Promise<BuyWithCryptoQuote> {
   try {
-    const queryParams = new URLSearchParams({
-      fromAddress: params.fromAddress,
-      fromChainId: params.fromChainId.toString(),
-      fromTokenAddress: params.fromTokenAddress.toLowerCase(),
-      toChainId: params.toChainId.toString(),
-      toTokenAddress: params.toTokenAddress.toLowerCase(),
+    const clientFetch = getClientFetch(params.client);
+
+    const response = await clientFetch(getPayBuyWithCryptoQuoteEndpoint(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fromAddress: params.fromAddress,
+        fromChainId: params.fromChainId.toString(),
+        fromTokenAddress: params.fromTokenAddress.toLowerCase(),
+        toChainId: params.toChainId.toString(),
+        toTokenAddress: params.toTokenAddress.toLowerCase(),
+        fromAmount: params.fromAmount,
+        toAmount: params.toAmount,
+        maxSlippageBPS: params.maxSlippageBPS,
+        intentId: params.intentId,
+        purchaseData: params.purchaseData,
+      }),
     });
-
-    if ("fromAmount" in params && params.fromAmount) {
-      queryParams.append("fromAmount", params.fromAmount);
-    }
-
-    if ("toAmount" in params && params.toAmount) {
-      queryParams.append("toAmount", params.toAmount);
-    }
-
-    if (params.maxSlippageBPS) {
-      queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
-    }
-
-    if (params.intentId) {
-      queryParams.append("intentId", params.intentId);
-    }
-
-    const queryString = queryParams.toString();
-    const url = `${getPayBuyWithCryptoQuoteEndpoint()}?${queryString}`;
-
-    const response = await getClientFetch(params.client)(url);
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
