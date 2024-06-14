@@ -135,15 +135,46 @@ export async function generateMintSignature(
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
+  let saleRecipient: Address;
+  if (
+    mintRequest.primarySaleRecipient?.length === 0 ||
+    !mintRequest.primarySaleRecipient
+  ) {
+    const { primarySaleRecipient } = await import(
+      "../../common/__generated__/IPrimarySale/read/primarySaleRecipient.js"
+    );
+    saleRecipient = await primarySaleRecipient({
+      contract,
+    });
+  } else {
+    saleRecipient = mintRequest.primarySaleRecipient;
+  }
+
+  let royaltyRecipient: Address;
+  if (
+    mintRequest.royaltyRecipient?.length === 0 ||
+    !mintRequest.royaltyRecipient
+  ) {
+    const { getDefaultRoyaltyInfo } = await import(
+      "../../common/__generated__/IRoyalty/read/getDefaultRoyaltyInfo.js"
+    );
+    const royaltyInfo = await getDefaultRoyaltyInfo({
+      contract,
+    });
+    royaltyRecipient = royaltyInfo[0];
+  } else {
+    royaltyRecipient = mintRequest.royaltyRecipient;
+  }
+
   const payload: PayloadType = {
     uri,
     currency,
     uid,
     price,
     to: mintRequest.to,
-    royaltyRecipient: mintRequest.royaltyRecipient || account.address,
+    royaltyRecipient: royaltyRecipient,
     royaltyBps: toBigInt(mintRequest.royaltyBps || 0),
-    primarySaleRecipient: mintRequest.primarySaleRecipient || account.address,
+    primarySaleRecipient: saleRecipient,
     validityStartTimestamp: dateToSeconds(startTime),
     validityEndTimestamp: dateToSeconds(endTime),
   };
