@@ -1,7 +1,7 @@
 import { AccountsTable } from "./components/accounts-table";
 import { CreateAccountButton } from "./components/create-account-button";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import { useAccounts, useContract } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import {
   Card,
@@ -11,6 +11,10 @@ import {
   TrackedLinkButton,
 } from "tw-components";
 import { AccountsCount } from "./components/accounts-count";
+import { useMemo } from "react";
+import { getContract } from "thirdweb";
+import { defineDashboardChain } from "lib/v5-adapter";
+import { thirdwebClient } from "@/constants/client";
 
 interface AccountsPageProps {
   contractAddress?: string;
@@ -20,14 +24,24 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
   contractAddress,
 }) => {
   const contractQuery = useContract(contractAddress);
-  const accountsQuery = useAccounts(contractQuery?.contract);
+
+  const v5Contract = useMemo(() => {
+    if (!contractQuery.contract) {
+      return null;
+    }
+    return getContract({
+      address: contractQuery.contract.getAddress(),
+      chain: defineDashboardChain(contractQuery.contract.chainId),
+      client: thirdwebClient,
+    });
+  }, [contractQuery.contract]);
 
   const detectedFeature = extensionDetectedState({
     contractQuery,
     feature: ["AccountFactory"],
   });
 
-  if (contractQuery.isLoading) {
+  if (contractQuery.isLoading || !v5Contract) {
     return null;
   }
 
@@ -79,8 +93,8 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           <CreateAccountButton contractQuery={contractQuery} />
         </ButtonGroup>
       </Flex>
-      <AccountsCount accountsQuery={accountsQuery} />
-      <AccountsTable accountsQuery={accountsQuery} />
+      <AccountsCount contract={v5Contract} />
+      <AccountsTable contract={v5Contract} />
     </Flex>
   );
 };

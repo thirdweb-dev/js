@@ -1,9 +1,25 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import { Flex } from "@chakra-ui/react";
+import {
+  Center,
+  Flex,
+  Icon,
+  IconButton,
+  Select,
+  Skeleton,
+} from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useAccounts } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import {
+  MdFirstPage,
+  MdLastPage,
+  MdNavigateBefore,
+  MdNavigateNext,
+} from "react-icons/md";
+import { ThirdwebContract } from "thirdweb";
+import { totalAccounts, getAccounts } from "thirdweb/extensions/erc4337";
+import { useReadContract } from "thirdweb/react";
 import { Text, TrackedCopyButton } from "tw-components";
 
 const columnHelper = createColumnHelper<{ account: string }>();
@@ -25,31 +41,121 @@ const columns = [
   }),
 ];
 
-interface AccountsTableProps {
-  accountsQuery: ReturnType<typeof useAccounts>;
-}
+type AccountsTableProps = {
+  contract: ThirdwebContract;
+};
 
-export const AccountsTable: React.FC<AccountsTableProps> = ({
-  accountsQuery,
-}) => {
+export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
   const router = useRouter();
   const network = useDashboardEVMChainId();
+
+  const [currentPage, setCurrentPage] = useState(0);
+  // default page size of 25
+  const [pageSize, setPageSize] = useState(25);
+
+  const totalAccountsQuery = useReadContract(totalAccounts, { contract });
+  const accountsQuery = useReadContract(getAccounts, {
+    contract,
+    start: BigInt(currentPage * pageSize),
+    end: BigInt(currentPage * pageSize + pageSize),
+  });
+
+  // the total size should never be more than max int size (that would be hella wallets!)
+  // so converting the totalAccounts to a nunber should be safe here
+  const totalPages = Math.ceil(Number(totalAccountsQuery.data || 0) / pageSize);
+
+  const canNextPage = currentPage < totalPages - 1;
+  const canPreviousPage = currentPage > 0;
 
   const data = accountsQuery.data || [];
 
   return (
-    <TWTable
-      title="account"
-      columns={columns}
-      data={data.map((account) => ({ account }))}
-      showMore={{
-        pageSize: 50,
-      }}
-      isLoading={accountsQuery.isLoading}
-      isFetched={accountsQuery.isFetched}
-      onRowClick={(row) => {
-        router.push(`/${network}/${row.account}`);
-      }}
-    />
+    <Flex direction="column" gap={4}>
+      {/* TODO add a skeleton when loading*/}
+      <TWTable
+        title="account"
+        columns={columns}
+        data={data.map((account) => ({ account }))}
+        isLoading={accountsQuery.isLoading}
+        isFetched={accountsQuery.isFetched}
+        onRowClick={(row) => {
+          router.push(`/${network}/${row.account}`);
+        }}
+      />
+      {/* pagination */}
+      <Center w="100%">
+        <Flex gap={2} direction="row" align="center">
+          <IconButton
+            isDisabled={totalAccountsQuery.isLoading}
+            aria-label="first page"
+            icon={<Icon as={MdFirstPage} />}
+            onClick={() => setCurrentPage(0)}
+          />
+          <IconButton
+            isDisabled={totalAccountsQuery.isLoading || !canPreviousPage}
+            aria-label="previous page"
+            icon={<Icon as={MdNavigateBefore} />}
+            onClick={() => {
+              setCurrentPage((curr) => {
+                if (curr > 0) {
+                  return curr - 1;
+                }
+                return curr;
+              });
+            }}
+          />
+          <Text whiteSpace="nowrap">
+            Page <strong>{currentPage + 1}</strong> of{" "}
+            <Skeleton
+              as="span"
+              display="inline"
+              isLoaded={totalAccountsQuery.isSuccess}
+            >
+              <strong>{totalPages}</strong>
+            </Skeleton>
+          </Text>
+          <IconButton
+            isDisabled={totalAccountsQuery.isLoading || !canNextPage}
+            aria-label="next page"
+            icon={<Icon as={MdNavigateNext} />}
+            onClick={() =>
+              setCurrentPage((curr) => {
+                if (curr < totalPages - 1) {
+                  return curr + 1;
+                }
+                return curr;
+              })
+            }
+          />
+          <IconButton
+            isDisabled={totalAccountsQuery.isLoading || !canNextPage}
+            aria-label="last page"
+            icon={<Icon as={MdLastPage} />}
+            onClick={() => setCurrentPage(totalPages - 1)}
+          />
+
+          <Select
+            onChange={(e) => {
+              const newPageSize = parseInt(e.target.value as string, 10);
+              // compute the new page number based on the new page size
+              const newPage = Math.floor(
+                (currentPage * pageSize) / newPageSize,
+              );
+              setCurrentPage(newPage);
+              setPageSize(newPageSize);
+            }}
+            value={pageSize}
+            isDisabled={totalAccountsQuery.isLoading}
+          >
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+          </Select>
+        </Flex>
+      </Center>
+    </Flex>
   );
 };
+//
