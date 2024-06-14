@@ -6,6 +6,7 @@ import {
 import { MetamaskConnectUI } from "./MetamaskConnectUI";
 import { metamaskUris } from "./metamaskUris";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import type { QRModalOptions } from "@thirdweb-dev/wallets/src/evm/connectors/wallet-connect/qrModalOptions";
 
 /**
  * @wallet
@@ -35,6 +36,22 @@ export type MetamaskWalletConfigOptions = {
    * Default is `"walletconnect"`
    */
   connectionMethod?: "walletConnect" | "metamaskBrowser";
+
+  /**
+   * Specify whether to open the official Wallet Connect  Modal when connecting the wallet if no injected MetaMask provider is found when connecting the wallet.
+   *
+   * This should not be set if you are using ConnectWallet component and only when manually connecting the wallet using a hook like `useConnect`.
+   *
+   * You can set it to `true` or a configuration object to enable the Wallet Connect Modal.
+   */
+  wcModal?:
+    | {
+        /**
+         * Configure the style of Wallet Connect Modal.
+         */
+        qrModalOptions?: QRModalOptions;
+      }
+    | boolean;
 };
 
 /**
@@ -89,7 +106,11 @@ export const metamaskWallet = (
       const wallet = new MetaMaskWallet({
         ...walletOptions,
         projectId: options?.projectId,
-        qrcode: false,
+        qrcode: options?.wcModal ? true : false,
+        qrModalOptions:
+          typeof options?.wcModal === "object"
+            ? options?.wcModal?.qrModalOptions
+            : undefined,
       });
 
       if (connectionMethod === "walletConnect") {
