@@ -1,4 +1,4 @@
-import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { AutoConnectProps } from "../../../core/hooks/connection/types.js";
 import { useAutoConnectCore } from "../../../core/hooks/wallets/useAutoConnect.js";
 import { connectionManager } from "../../index.js";
@@ -23,5 +23,5 @@ import { connectionManager } from "../../index.js";
  * @returns whether the auto connect was successful.
  */
 export function useAutoConnect(props: AutoConnectProps) {
-  return useAutoConnectCore(connectionManager, nativeLocalStorage, props);
+  return useAutoConnectCore(connectionManager, webLocalStorage, props);
 }

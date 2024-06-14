@@ -1,7 +1,9 @@
 // TODO: figure out how to define the type without tuple args type and using function overloads
 
+import { Linking } from "react-native";
 import { trackConnect } from "../../analytics/track.js";
 import type { Chain } from "../../chains/types.js";
+import { nativeLocalStorage } from "../../utils/storage/nativeStorage.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import { coinbaseWalletSDK } from "../coinbase/coinbase-wallet.js";
 import { getCoinbaseMobileProvider } from "../coinbase/coinbaseMobileSDK.js";
@@ -72,8 +74,7 @@ export function createWallet<const ID extends WalletId>(
     }
 
     /**
-     * WALLET CONNECT AND INJECTED WALLETS + walletConnect standalone
-     * TODO extract into a core + inject storage and link open callback
+     * WALLET CONNECT only in react native for everything else
      */
     default: {
       const emitter = createWalletEmitter<ID>();
@@ -105,6 +106,8 @@ export function createWallet<const ID extends WalletId>(
         throw new Error("Not implemented yet");
       };
 
+      const sessionHandler = (uri: string) => Linking.openURL(uri);
+
       const wallet: Wallet<ID> = {
         id,
         subscribe: emitter.subscribe,
@@ -118,7 +121,6 @@ export function createWallet<const ID extends WalletId>(
             const { autoConnectWC } = await import(
               "../wallet-connect/controller.js"
             );
-
             const [
               connectedAccount,
               connectedChain,
@@ -128,6 +130,8 @@ export function createWallet<const ID extends WalletId>(
               options,
               emitter,
               wallet.id as WCSupportedWalletIds,
+              nativeLocalStorage,
+              sessionHandler,
             );
             // set the states
             account = connectedAccount;
@@ -159,6 +163,8 @@ export function createWallet<const ID extends WalletId>(
               wcOptions,
               emitter,
               wallet.id as WCSupportedWalletIds | "walletConnect",
+              nativeLocalStorage,
+              sessionHandler,
             );
             // set the states
             account = connectedAccount;
@@ -220,5 +226,3 @@ export function createWallet<const ID extends WalletId>(
 export function walletConnect() {
   return createWallet("walletConnect");
 }
-
-// TODO in-app wallet
