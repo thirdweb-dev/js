@@ -173,7 +173,7 @@ class ThirdwebBridge implements TWBridge {
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
-      (globalThis as any).X_SDK_VERSION = "4.16.3";
+      (globalThis as any).X_SDK_VERSION = "4.16.4";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
@@ -610,7 +610,9 @@ class ThirdwebBridge implements TWBridge {
           maxFeePerGas: txInput?.maxFeePerGas,
           maxPriorityFeePerGas: txInput?.maxPriorityFeePerGas,
           nonce: txInput?.nonce,
-          type: txInput?.type?.toNumber(),
+          type: txInput?.type
+            ? BigNumber.from(txInput.type).toNumber()
+            : undefined,
           accessList: txInput?.accessList,
           // customData: txInput.data,
           // ccipReadEnabled: txInput.ccipReadEnabled,
