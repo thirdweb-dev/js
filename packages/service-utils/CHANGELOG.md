@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.32
+
+### Patch Changes
+
+- [#3286](https://github.com/thirdweb-dev/js/pull/3286) [`901427c`](https://github.com/thirdweb-dev/js/commit/901427c33c5daf330887b501ec8f9f42aa20ff85) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add ecosystemId and ecosystemPartnerId to usage tracking schema for cf worker
+
 ## 0.4.31
 
 ### Patch Changes
