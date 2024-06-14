@@ -2,42 +2,42 @@ import type { CognitoUser } from "amazon-cognito-identity-js";
 
 import { Auth } from "aws-amplify";
 import * as WebBrowser from "expo-web-browser";
-import type { ThirdwebClient } from "../../../client/client.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   AuthProvider,
   type AuthStoredTokenWithCookieReturnType,
   type OauthOption,
   RecoveryShareManagement,
   type SendEmailOtpReturnType,
-} from "../core/authentication/type.js";
+} from "../../core/authentication/type.js";
 import {
   deleteAccount,
   fetchUserDetails,
   generateAuthTokenFromCognitoEmailOtp,
   getSessionHeaders,
   verifyClientId,
-} from "./helpers/api/fetchers.js";
+} from "../helpers/api/fetchers.js";
 import {
   cognitoEmailSignIn,
   cognitoEmailSignUp,
   cognitoPhoneSignIn,
   cognitoPhoneSignUp,
-} from "./helpers/auth/cognitoAuth.js";
+} from "../helpers/auth/cognitoAuth.js";
 import {
   postAuth,
   postAuthUserManaged,
   preAuth,
-} from "./helpers/auth/middleware.js";
+} from "../helpers/auth/middleware.js";
 import {
   DOMAIN_URL_2023,
   ROUTE_AUTH_ENDPOINT_CALLBACK,
   ROUTE_AUTH_JWT_CALLBACK,
   ROUTE_HEADLESS_OAUTH_LOGIN,
-} from "./helpers/constants.js";
-import { createErrorMessage } from "./helpers/errors.js";
-import { isDeviceSharePresentForUser } from "./helpers/storage/local.js";
-import { getCognitoUser, setCognitoUser } from "./helpers/storage/state.js";
-import type { VerifiedTokenResponse } from "./helpers/types.js";
+} from "../helpers/constants.js";
+import { createErrorMessage } from "../helpers/errors.js";
+import { isDeviceSharePresentForUser } from "../helpers/storage/local.js";
+import { getCognitoUser, setCognitoUser } from "../helpers/storage/state.js";
+import type { VerifiedTokenResponse } from "../helpers/types.js";
 
 export async function sendVerificationEmail(options: {
   email: string;

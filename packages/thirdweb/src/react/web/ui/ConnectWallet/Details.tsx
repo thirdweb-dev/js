@@ -916,7 +916,7 @@ function InAppWalletUserInfo(props: {
     queryKey: ["in-app-wallet-user", client, account?.address],
     queryFn: async () => {
       const { getUserEmail, getUserPhoneNumber } = await import(
-        "../../../../wallets/in-app/core/authentication/index.js"
+        "../../../../wallets/in-app/web/lib/auth/index.js"
       );
 
       const [email, phone] = await Promise.all([

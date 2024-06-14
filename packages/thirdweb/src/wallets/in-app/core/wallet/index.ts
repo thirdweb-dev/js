@@ -8,6 +8,8 @@ import type {
   WalletAutoConnectionOption,
   WalletConnectionOption,
 } from "../../../wallet-types.js";
+import { UserWalletStatus } from "../authentication/type.js";
+import type { InAppConnector } from "../interfaces/connector.js";
 
 /**
  * Checks if the provided wallet is an in-app wallet.
@@ -27,10 +29,9 @@ export function isInAppWallet(
 export async function connectInAppWallet(
   options: WalletConnectionOption<"inApp">,
   createOptions: CreateWalletArgs<"inApp">[1],
+  connector: InAppConnector,
 ): Promise<[Account, Chain]> {
-  const { authenticate } = await import("../authentication/index.js");
-
-  const authResult = await authenticate(options);
+  const authResult = await connector.authenticate(options);
   const authAccount = authResult.user.account;
 
   if (createOptions?.smartAccount) {
@@ -54,9 +55,9 @@ export async function connectInAppWallet(
 export async function autoConnectInAppWallet(
   options: WalletAutoConnectionOption<"inApp">,
   createOptions: CreateWalletArgs<"inApp">[1],
+  connector: InAppConnector,
 ): Promise<[Account, Chain]> {
-  const { getAuthenticatedUser } = await import("../authentication/index.js");
-  const user = await getAuthenticatedUser({ client: options.client });
+  const user = await getAuthenticatedUser(connector);
   if (!user) {
     throw new Error("not authenticated");
   }
@@ -99,4 +100,14 @@ async function convertToSmartAccount(options: {
     },
     options.smartAccountOptions,
   );
+}
+
+async function getAuthenticatedUser(connector: InAppConnector) {
+  const user = await connector.getUser();
+  switch (user.status) {
+    case UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED: {
+      return user;
+    }
+  }
+  return undefined;
 }
