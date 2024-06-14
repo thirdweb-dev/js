@@ -1,4 +1,4 @@
-// --- KEEEP IN SYNC with exports/react-native/wallets/in-app ---
+// --- KEEEP IN SYNC with exports/wallets/in-app.native.ts ---
 
 export { inAppWallet } from "../../wallets/in-app/web/in-app.js";
 
