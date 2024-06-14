@@ -8,17 +8,16 @@ import type {
   CreateWalletArgs,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
-  WalletConnectionOption,
   WalletId,
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { getContract } from "../contract/contract.js";
-import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
+import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
+import { getCoinbaseWebProvider } from "./coinbase/coinbaseSDKWallet.js";
 import { COINBASE } from "./constants.js";
 import { logoutAuthenticatedUser } from "./in-app/core/authentication/index.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
+import { smartWallet } from "./smart/smart-wallet.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
 
@@ -69,9 +68,11 @@ export function createWallet<const ID extends WalletId>(
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
     case COINBASE: {
-      return coinbaseWalletSDK(
-        creationOptions as CreateWalletArgs<typeof COINBASE>[1],
-      ) as Wallet<ID>;
+      const options = creationOptions as CreateWalletArgs<typeof COINBASE>[1];
+      return coinbaseWalletSDK({
+        createOptions: options,
+        providerFactory: () => getCoinbaseWebProvider(options),
+      }) as Wallet<ID>;
     }
 
     /**
@@ -291,118 +292,6 @@ export function walletConnect() {
 }
 
 /**
- * Creates a smart wallet.
- * @param createOptions - The options for creating the wallet.
- * @returns The created smart wallet.
- * @example
- * ```ts
- * import { smartWallet } from "thirdweb/wallets";
- *
- * const wallet = smartWallet({
- *  chain: sepolia,
- *  gasless: true,
- * });
- *
- * const account = await wallet.connect({
- *   client,
- *   personalAccount: account,
- * });
- * ```
- * @wallet
- */
-export function smartWallet(
-  createOptions: CreateWalletArgs<"smart">[1],
-): Wallet<"smart"> {
-  const emitter = createWalletEmitter<"smart">();
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
-  let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
-
-  const _smartWallet: Wallet<"smart"> = {
-    id: "smart",
-    subscribe: emitter.subscribe,
-    getChain: () => chain,
-    getConfig: () => createOptions,
-    getAccount: () => account,
-    autoConnect: async (options) => {
-      const { connectSmartWallet } = await import("./smart/index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
-        options,
-        createOptions,
-      );
-      // set the states
-      lastConnectOptions = options;
-      account = connectedAccount;
-      chain = connectedChain;
-      trackConnect({
-        client: options.client,
-        walletType: "smart",
-        walletAddress: account.address,
-      });
-      // return account
-      return account;
-    },
-    connect: async (options) => {
-      const { connectSmartWallet } = await import("./smart/index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
-        options,
-        createOptions,
-      );
-      // set the states
-      lastConnectOptions = options;
-      account = connectedAccount;
-      chain = connectedChain;
-      trackConnect({
-        client: options.client,
-        walletType: "smart",
-        walletAddress: account.address,
-      });
-      // return account
-      emitter.emit("accountChanged", account);
-      return account;
-    },
-    disconnect: async () => {
-      account = undefined;
-      chain = undefined;
-      const { disconnectSmartWallet } = await import("./smart/index.js");
-      await disconnectSmartWallet(_smartWallet);
-      emitter.emit("disconnect", undefined);
-    },
-    switchChain: async (newChain: Chain) => {
-      if (!lastConnectOptions) {
-        throw new Error("Cannot switch chain without a previous connection");
-      }
-      // check if factory is deployed
-      const factory = getContract({
-        address: createOptions.factoryAddress || DEFAULT_ACCOUNT_FACTORY,
-        chain: newChain,
-        client: lastConnectOptions.client,
-      });
-      const isDeployed = await isContractDeployed(factory);
-      if (!isDeployed) {
-        throw new Error(
-          `Factory contract not deployed on chain: ${newChain.id}`,
-        );
-      }
-      const { connectSmartWallet } = await import("./smart/index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
-        { ...lastConnectOptions, chain: newChain },
-        createOptions,
-      );
-      // set the states
-      account = connectedAccount;
-      chain = connectedChain;
-      emitter.emit("chainChanged", newChain);
-    },
-  };
-
-  return _smartWallet;
-}
-
-/**
  * Creates an in-app wallet.
  * @param createOptions - configuration options
  * @returns The created in-app wallet.
@@ -542,100 +431,6 @@ export function inAppWallet(
         chain = newChain;
       }
       emitter.emit("chainChanged", newChain);
-    },
-  };
-}
-
-/**
- * internal helper functions
- */
-
-function coinbaseWalletSDK(
-  createOptions?: CreateWalletArgs<typeof COINBASE>[1],
-): Wallet<typeof COINBASE> {
-  const emitter = createWalletEmitter<typeof COINBASE>();
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
-
-  function reset() {
-    account = undefined;
-    chain = undefined;
-  }
-
-  let handleDisconnect = async () => {};
-
-  let handleSwitchChain = async (newChain: Chain) => {
-    chain = newChain;
-  };
-
-  const unsubscribeChainChanged = emitter.subscribe(
-    "chainChanged",
-    (newChain) => {
-      chain = newChain;
-    },
-  );
-
-  const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
-    reset();
-    unsubscribeChainChanged();
-    unsubscribeDisconnect();
-  });
-
-  emitter.subscribe("accountChanged", (_account) => {
-    account = _account;
-  });
-
-  return {
-    id: COINBASE,
-    subscribe: emitter.subscribe,
-    getChain: () => chain,
-    getConfig: () => createOptions,
-    getAccount: () => account,
-    autoConnect: async (options) => {
-      const { autoConnectCoinbaseWalletSDK } = await import(
-        "./coinbase/coinbaseSDKWallet.js"
-      );
-      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await autoConnectCoinbaseWalletSDK(options, createOptions, emitter);
-      // set the states
-      account = connectedAccount;
-      chain = connectedChain;
-      handleDisconnect = doDisconnect;
-      handleSwitchChain = doSwitchChain;
-      trackConnect({
-        client: options.client,
-        walletType: COINBASE,
-        walletAddress: account.address,
-      });
-      // return account
-      return account;
-    },
-    connect: async (options) => {
-      const { connectCoinbaseWalletSDK } = await import(
-        "./coinbase/coinbaseSDKWallet.js"
-      );
-      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await connectCoinbaseWalletSDK(options, createOptions, emitter);
-
-      // set the states
-      account = connectedAccount;
-      chain = connectedChain;
-      handleDisconnect = doDisconnect;
-      handleSwitchChain = doSwitchChain;
-      trackConnect({
-        client: options.client,
-        walletType: COINBASE,
-        walletAddress: account.address,
-      });
-      // return account
-      return account;
-    },
-    disconnect: async () => {
-      reset();
-      await handleDisconnect();
-    },
-    switchChain: async (newChain) => {
-      await handleSwitchChain(newChain);
     },
   };
 }

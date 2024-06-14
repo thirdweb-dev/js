@@ -85,7 +85,7 @@ async function convertToSmartAccount(options: {
   chain?: Chain;
 }) {
   const [{ smartWallet }, { connectSmartWallet }] = await Promise.all([
-    import("../../../create-wallet.js"),
+    import("../../../smart/smart-wallet.js"),
     import("../../../smart/index.js"),
   ]);
 
