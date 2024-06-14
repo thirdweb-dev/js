@@ -8,17 +8,25 @@ import { getChainByChainIdAsync, getChainRPC } from "@thirdweb-dev/chains";
 
 type CallbackFunction = {
   selector: string;
-}
+};
 
 type FallbackFunction = {
   selector: string;
   permissionBits: string;
-}
+};
+
+type ExtensionConfig = {
+  registerInstallationCallback: string;
+  requiredInterfaces: string[];
+  supportedInterfaces: string[];
+  callbackFunctions: CallbackFunction[];
+  fallbackFunctions: FallbackFunction[];
+};
 
 type SupportedCallbackFunction = {
   selector: string;
   mode: number;
-}
+};
 
 export async function compatibleExtensions(
   coreBytecode: string,
@@ -28,7 +36,16 @@ export async function compatibleExtensions(
   const chain = await getChainByChainIdAsync(chainId);
   const rpcUrl = getChainRPC(chain);
   const jsonRpcProvider = new providers.JsonRpcProvider(rpcUrl);
-  const addr = "0x0000000000000000000000000000000000000124";
+  const addr = "0x0000000000000000000000000000000000000124"; // arbitrary address
+
+  /**
+   *  Here we use state override with eth_call.
+   *
+   *  This lets us call functions on a non-deployed contract, by using its deployed bytecode
+   *  to override code of an arbitrary address in eth_call.
+   *
+   *  Encode function calldata, and perform eth_call with bytecode override.
+   */
 
   const coreIface = new utils.Interface(coreContractAbi);
   const coreCalldata = coreIface.encodeFunctionData(
@@ -38,14 +55,14 @@ export async function compatibleExtensions(
   if (!coreBytecode.startsWith("0x6080604052")) {
     const index = coreBytecode.indexOf("6080604052");
     coreBytecode = `0x${coreBytecode.substring(index)}`;
-  } else if(coreBytecode.lastIndexOf("6080604052") > 0) {
+  } else if (coreBytecode.lastIndexOf("6080604052") > 0) {
     const index = coreBytecode.lastIndexOf("6080604052");
     coreBytecode = `0x${coreBytecode.substring(index)}`;
   }
   const core = await jsonRpcProvider.send("eth_call", [
     { to: addr, data: coreCalldata },
     "latest",
-    { [addr]: { code: coreBytecode } },
+    { [addr]: { code: coreBytecode } }, // eth_call with bytecode override
   ]);
 
   const extensionIface = new utils.Interface(extensionContractAbi);
@@ -60,7 +77,7 @@ export async function compatibleExtensions(
       if (!b.startsWith("0x6080604052")) {
         const index = b.indexOf("6080604052");
         b = `0x${b.substring(index)}`;
-      } else if(b.lastIndexOf("6080604052") > 0) {
+      } else if (b.lastIndexOf("6080604052") > 0) {
         const index = b.lastIndexOf("6080604052");
         b = `0x${b.substring(index)}`;
       }
@@ -68,7 +85,7 @@ export async function compatibleExtensions(
       return jsonRpcProvider.send("eth_call", [
         { to: addr, data: extensionCalldata },
         "latest",
-        { [addr]: { code: b } },
+        { [addr]: { code: b } }, // eth_call with bytecode override
       ]);
     }),
   );
@@ -77,26 +94,57 @@ export async function compatibleExtensions(
     "getSupportedCallbackFunctions",
     core,
   );
-  const coreCallbackSelectors = decodedCore.map((c: SupportedCallbackFunction) => c.selector);
+  const coreCallbackSelectors = decodedCore.map(
+    (c: SupportedCallbackFunction) => c.selector,
+  );
 
+  // extract callback/fallback selectors and required interfaces from extension config
+  let requiredInterfaces: string[] = [];
   const selectors = extensions.map((e: string) => {
     const decodedExtensionConfig = extensionIface.decodeFunctionResult(
       "getExtensionConfig",
       e,
     );
+
+    requiredInterfaces.push(...decodedExtensionConfig[0].requiredInterfaces);
     const extensionFallbackSelectors =
-      decodedExtensionConfig[0].fallbackFunctions.map((a: FallbackFunction) => a.selector);
+      decodedExtensionConfig[0].fallbackFunctions.map(
+        (a: FallbackFunction) => a.selector,
+      );
     const extensionCallbackSelectors =
-      decodedExtensionConfig[0].callbackFunctions.map((a: CallbackFunction) => a.selector);
+      decodedExtensionConfig[0].callbackFunctions.map(
+        (a: CallbackFunction) => a.selector,
+      );
 
-    return [
-      ...extensionFallbackSelectors,
-      ...extensionCallbackSelectors,
-    ];
+    return [...extensionFallbackSelectors, ...extensionCallbackSelectors];
   });
-
   selectors.push([coreCallbackSelectors]);
 
+  // check if the core contract supports required interfaces by extensions above
+  const supportsInterfaceResult = await Promise.all(
+    requiredInterfaces.map((r) => {
+      const supportsInterfaceCalldata = coreIface.encodeFunctionData(
+        "supportsInterface",
+        [r],
+      );
+      return jsonRpcProvider.send("eth_call", [
+        { to: addr, data: supportsInterfaceCalldata },
+        "latest",
+        { [addr]: { code: coreBytecode } },
+      ]);
+    }),
+  );
+  const supportsInterfaceDecoded = supportsInterfaceResult.map(r => {
+    return coreIface.decodeFunctionResult(
+      "supportsInterface",
+      r,
+    );
+  })
+  if (supportsInterfaceDecoded.flat().some((element) => element === false)) {
+    return false;
+  }
+
+  // check duplicate callback/fallback signatures
   return !hasDuplicates(
     selectors.flat(),
     (a: string, b: string): boolean => a === b,

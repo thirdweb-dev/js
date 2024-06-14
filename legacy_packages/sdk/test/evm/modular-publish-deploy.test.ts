@@ -18,6 +18,7 @@ import {
   mockExtensionWithFunctionsCompilerMetadata,
 } from "./mock/mockExtensionWithFunctionsMetadata";
 import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";
+import { mockExtensionWithInterfaceBytecode } from "./mock/mockExtensionWithInterface";
 
 describe("Modular contract deployment", async () => {
   let adminWallet: SignerWithAddress;
@@ -123,9 +124,19 @@ describe("Modular contract deployment", async () => {
   });
 
   it("should check extension compatibility", async () => {
-    const isCompatible = await compatibleExtensions(
+    // duplicate callback/fallback
+    let isCompatible = await compatibleExtensions(
       mockCoreBytecode,
       [mockExtensionWithFunctionsBytecode, mockExtensionWithFunctionsBytecode],
+      11155111,
+    );
+
+    expect(isCompatible).to.be.false;
+
+    // required interface not supported
+    isCompatible = await compatibleExtensions(
+      mockCoreBytecode,
+      [mockExtensionWithInterfaceBytecode],
       11155111,
     );
 
