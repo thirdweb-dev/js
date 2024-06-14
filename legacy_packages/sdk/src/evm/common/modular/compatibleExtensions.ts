@@ -86,57 +86,71 @@ export async function compatibleExtensions(
     "getSupportedCallbackFunctions",
     core,
   );
-  const coreCallbackSelectors = decodedCore.map(
+  const coreCallbackSelectors = decodedCore.flat().map(
     (c: SupportedCallbackFunction) => c.selector,
   );
 
   // extract callback/fallback selectors and required interfaces from extension config
   const requiredInterfaces: string[] = [];
-  const selectors = extensions.map((e: string) => {
+  const extensionFallbackSelectors: string[] = [];
+  const extensionCallbackSelectors: string[] = [];
+  const selectors: string[] = [];
+
+  extensions.forEach((e: string) => {
     const decodedExtensionConfig = extensionIface.decodeFunctionResult(
       "getExtensionConfig",
       e,
     );
 
     requiredInterfaces.push(...decodedExtensionConfig[0].requiredInterfaces);
-    const extensionFallbackSelectors =
+    const fallbackSelectors =
       decodedExtensionConfig[0].fallbackFunctions.map(
         (a: FallbackFunction) => a.selector,
       );
-    const extensionCallbackSelectors =
+    const callbackSelectors =
       decodedExtensionConfig[0].callbackFunctions.map(
         (a: CallbackFunction) => a.selector,
       );
 
-    return [...extensionFallbackSelectors, ...extensionCallbackSelectors];
+      extensionFallbackSelectors.push(...fallbackSelectors);
+      extensionCallbackSelectors.push(...callbackSelectors);
   });
-  selectors.push([coreCallbackSelectors]);
+  
+  // check if callback selectors are supported
+  for(const callback of extensionCallbackSelectors) {
+    if(!coreCallbackSelectors.includes(callback)) {
+      return false;
+    }
+  }
 
   // check if the core contract supports required interfaces by extensions above
-  const supportsInterfaceResult = await Promise.all(
-    requiredInterfaces.map((r) => {
-      const supportsInterfaceCalldata = coreIface.encodeFunctionData(
-        "supportsInterface",
-        [r],
-      );
-      return jsonRpcProvider.send("eth_call", [
-        { to: addr, data: supportsInterfaceCalldata },
-        "latest",
-        { [addr]: { code: coreBytecode } },
-      ]);
-    }),
-  );
-  const supportsInterfaceDecoded = supportsInterfaceResult.map(r => {
-    return coreIface.decodeFunctionResult(
-      "supportsInterface",
-      r,
+  if(requiredInterfaces.length > 0) {
+    const supportsInterfaceResult = await Promise.all(
+      requiredInterfaces.map((r) => {
+        const supportsInterfaceCalldata = coreIface.encodeFunctionData(
+          "supportsInterface",
+          [r],
+        );
+        return jsonRpcProvider.send("eth_call", [
+          { to: addr, data: supportsInterfaceCalldata },
+          "latest",
+          { [addr]: { code: coreBytecode } },
+        ]);
+      }),
     );
-  })
-  if (supportsInterfaceDecoded.flat().some((element) => element === false)) {
-    return false;
+    const supportsInterfaceDecoded = supportsInterfaceResult.map(r => {
+      return coreIface.decodeFunctionResult(
+        "supportsInterface",
+        r,
+      );
+    })
+    if (supportsInterfaceDecoded.flat().some((element) => element === false)) {
+      return false;
+    }
   }
 
   // check duplicate callback/fallback signatures
+  selectors.push(...extensionFallbackSelectors, ...extensionCallbackSelectors);
   return !hasDuplicates(
     selectors.flat(),
     (a: string, b: string): boolean => a === b,
