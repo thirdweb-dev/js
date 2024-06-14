@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-core
 
+## 4.8.0
+
+### Patch Changes
+
+- Updated dependencies [[`9f42e4d`](https://github.com/thirdweb-dev/js/commit/9f42e4d2412df536d1b5f03a4e2a8b516911facb)]:
+  - @thirdweb-dev/chains@0.1.118
+  - @thirdweb-dev/sdk@4.0.94
+  - @thirdweb-dev/wallets@2.5.34
+  - @thirdweb-dev/auth@4.1.92
+
 ## 4.7.0
 
 ### Patch Changes

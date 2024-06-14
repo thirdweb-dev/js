@@ -1,5 +1,19 @@
 # @thirdweb-dev/react
 
+## 4.8.0
+
+### Minor Changes
+
+- [#3296](https://github.com/thirdweb-dev/js/pull/3296) [`841c86a`](https://github.com/thirdweb-dev/js/commit/841c86aa125c5965f43472e5e6f54267eda65726) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds private key export
+
+### Patch Changes
+
+- Updated dependencies [[`9f42e4d`](https://github.com/thirdweb-dev/js/commit/9f42e4d2412df536d1b5f03a4e2a8b516911facb)]:
+  - @thirdweb-dev/chains@0.1.118
+  - @thirdweb-dev/sdk@4.0.94
+  - @thirdweb-dev/react-core@4.8.0
+  - @thirdweb-dev/wallets@2.5.34
+
 ## 4.7.0
 
 ### Minor Changes
