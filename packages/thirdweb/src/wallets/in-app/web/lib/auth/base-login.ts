@@ -174,7 +174,8 @@ export class BaseLogin extends AbstractLogin<
                   eventType: "injectDeveloperClientIdResult",
                   developerClientId: this.client.clientId,
                   authOption: args.oauthProvider,
-                  partnerId: this.partnerId,
+                  partnerId: this.ecosystem?.partnerId,
+                  ecosystemId: this.ecosystem?.walletId,
                 },
                 this.baseUrl,
               );

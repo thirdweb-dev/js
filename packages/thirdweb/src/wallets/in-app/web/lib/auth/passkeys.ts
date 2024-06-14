@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/type.js";
+import type { Ecosystem } from "../../types.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 
 function getVerificationPath() {
@@ -21,7 +22,7 @@ function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
-  partnerId?: string;
+  ecosystem?: Ecosystem;
   authenticatorType?: AuthType;
   username?: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
@@ -50,8 +51,11 @@ export async function registerPasskey(options: {
   await storage.savePasskeyCredentialId(registration.credential.id);
 
   const customHeaders: Record<string, string> = {};
-  if (options.partnerId) {
-    customHeaders["x-ecosystem-partner-id"] = options.partnerId;
+  if (options.ecosystem?.partnerId) {
+    customHeaders["x-ecosystem-partner-id"] = options.ecosystem.partnerId;
+  }
+  if (options.ecosystem?.walletId) {
+    customHeaders["x-ecosystem-id"] = options.ecosystem.walletId;
   }
 
   // 4. send the registration object to the server
@@ -85,7 +89,7 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
-  partnerId?: string;
+  ecosystem?: Ecosystem;
   authenticatorType?: AuthType;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
@@ -111,8 +115,11 @@ export async function loginWithPasskey(options: {
   });
 
   const customHeaders: Record<string, string> = {};
-  if (options.partnerId) {
-    customHeaders["x-ecosystem-partner-id"] = options.partnerId;
+  if (options.ecosystem?.partnerId) {
+    customHeaders["x-ecosystem-partner-id"] = options.ecosystem.partnerId;
+  }
+  if (options.ecosystem?.walletId) {
+    customHeaders["x-ecosystem-id"] = options.ecosystem.walletId;
   }
 
   // 3. send the authentication object to the server/iframe

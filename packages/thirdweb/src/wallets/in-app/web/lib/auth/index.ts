@@ -6,7 +6,7 @@ import type {
   LogoutReturnType,
   SendEmailOtpReturnType,
 } from "../../../core/authentication/type.js";
-import type { ClientIdWithQuerierType } from "../../types.js";
+import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { BaseLogin } from "./base-login.js";
@@ -18,6 +18,7 @@ export type AuthQuerierTypes = {
     authCookie: string;
     walletUserId: string;
     deviceShareStored: string;
+    ecosystemId?: string;
     partnerId?: string;
   };
   loginWithStoredTokenDetails: {
@@ -46,7 +47,7 @@ export class Auth {
   constructor({
     client,
     querier,
-    partnerId,
+    ecosystem,
     onAuthSuccess,
     baseUrl,
   }: ClientIdWithQuerierType & {
@@ -54,7 +55,7 @@ export class Auth {
     onAuthSuccess: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
-    partnerId?: string;
+    ecosystem?: Ecosystem;
   }) {
     this.client = client;
 
@@ -62,7 +63,7 @@ export class Auth {
     this.localStorage = new LocalStorage({ clientId: client.clientId });
     this.onAuthSuccess = onAuthSuccess;
     this.BaseLogin = new BaseLogin({
-      partnerId,
+      ecosystem,
       postLogin: async (result) => {
         return this.postLogin(result);
       },

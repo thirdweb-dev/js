@@ -1,5 +1,6 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -43,6 +44,7 @@ export function OTPLoginUI(props: {
   const [otpInput, setOtpInput] = useState("");
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
+  const isEcosystem = useMemo(() => isEcosystemWallet(wallet.id), [wallet.id]);
 
   const [screen] = useState<ScreenToShow>("base");
 
@@ -54,7 +56,11 @@ export function OTPLoginUI(props: {
     try {
       if ("email" in userInfo) {
         const status = await preAuthenticate({
-          walletId: wallet.id,
+          ecosystem: isEcosystem
+            ? {
+                walletId: wallet.id,
+              }
+            : undefined,
           email: userInfo.email,
           strategy: "email",
           client,
@@ -62,7 +68,11 @@ export function OTPLoginUI(props: {
         setAccountStatus(status);
       } else if ("phone" in userInfo) {
         const status = await preAuthenticate({
-          walletId: wallet.id,
+          ecosystem: isEcosystem
+            ? {
+                walletId: wallet.id,
+              }
+            : undefined,
           phoneNumber: userInfo.phone,
           strategy: "phone",
           client,
@@ -76,7 +86,7 @@ export function OTPLoginUI(props: {
       setVerifyStatus("idle");
       setAccountStatus("error");
     }
-  }, [client, userInfo, wallet.id]);
+  }, [client, userInfo, wallet.id, isEcosystem]);
 
   async function connect(otp: string) {
     if ("email" in userInfo) {
