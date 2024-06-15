@@ -177,35 +177,35 @@ const transaction = await prepareContractCall({
 const { transactionHash } = await sendTransaction({ 
   transaction, 
   account 
-})`,
+});`,
     react: `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
 
 export default function Component() {
-  const { mutate: sendTransaction, isLoading, isError } = useSendTransaction();
+  const { mutate: sendTransaction } = useSendTransaction();
 
-  const call = async () => {
-    const transaction = await prepareContractCall({ 
+  const onClick = () => {
+    const transaction = prepareContractCall({ 
       contract, 
       method: "{{function}}", 
       params: [{{args}}] 
     });
-    const { transactionHash } = await sendTransaction(transaction);
+    sendTransaction(transaction);
   }
 }`,
     "react-native": `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
     
 export default function Component() {
-  const { mutate: sendTransaction, isLoading, isError } = useSendTransaction();
+  const { mutate: sendTransaction } = useSendTransaction();
     
-  const call = async () => {
-    const transaction = await prepareContractCall({ 
+  const onClick = () => {
+    const transaction = prepareContractCall({ 
       contract, 
       method: "{{function}}", 
       params: [{{args}}] 
     });
-    const { transactionHash } = await sendTransaction(transaction);
+    sendTransaction(transaction);
   }
 }`,
   },
