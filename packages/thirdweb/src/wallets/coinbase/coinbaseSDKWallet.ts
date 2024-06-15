@@ -1,7 +1,4 @@
-import {
-  CoinbaseWalletSDK,
-  type ProviderInterface,
-} from "@coinbase/wallet-sdk";
+import type { ProviderInterface } from "@coinbase/wallet-sdk";
 import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
@@ -134,6 +131,7 @@ export async function getCoinbaseWebProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
+    const { CoinbaseWalletSDK } = await import("@coinbase/wallet-sdk");
     const client = new CoinbaseWalletSDK({
       appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
