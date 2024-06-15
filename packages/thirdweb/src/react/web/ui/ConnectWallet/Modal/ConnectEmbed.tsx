@@ -18,6 +18,7 @@ import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useIsAutoConnecting } from "../../../hooks/wallets/useIsAutoConnecting.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
+import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
 import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { AutoConnect } from "../../AutoConnect/AutoConnect.js";
@@ -351,6 +352,11 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   );
   const localeId = props.locale || "en_US";
   const localeQuery = useConnectLocale(localeId);
+
+  usePreloadWalletProviders({
+    wallets,
+    client: props.client,
+  });
 
   const modalSize =
     !canFitWideModal() || wallets.length === 1
