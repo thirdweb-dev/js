@@ -51,6 +51,21 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
 }) => {
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 
+  const enabledExtensions = useContractEnabledExtensions(contract?.abi);
+
+  const extensionNamespace = useMemo(() => {
+    if (enabledExtensions.some((e) => e.name === "ERC20")) {
+      return "erc20";
+    }
+    if (enabledExtensions.some((e) => e.name === "ERC721")) {
+      return "erc721";
+    }
+    if (enabledExtensions.some((e) => e.name === "ERC1155")) {
+      return "erc1155";
+    }
+    return undefined;
+  }, [enabledExtensions]);
+
   if (!fn) {
     return null;
   }
@@ -171,6 +186,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
             fn,
             args: fn.inputs?.map((i) => i.name),
             chainId: contract?.chainId,
+            extensionNamespace,
           },
         )}
       />

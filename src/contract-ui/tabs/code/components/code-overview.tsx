@@ -304,6 +304,127 @@ public async void ConnectWallet()
   },
 ];
 
+function buildJavascriptSnippet(args: {
+  extensionName: string;
+  extensionNamespace: string;
+  type: "read" | "write" | "event";
+  fnArgs: string[];
+}) {
+  const importStatement = `import { ${args.type === "read" ? "readContract" : args.type === "write" ? "sendTransaction" : "getContractEvents"} } from "thirdweb";
+import { ${args.extensionName} } from "thirdweb/extensions/${args.extensionNamespace}";`;
+
+  switch (args.type) {
+    case "read": {
+      return `${importStatement}
+
+const data = await readContract(${args.extensionName}, {
+  contract,${args.fnArgs.map((arg) => `\n  ${arg}`).join(",")}
+});`;
+    }
+    case "write": {
+      return `${importStatement}
+
+const transaction = ${args.extensionName}({
+  contract,${args.fnArgs.map((arg) => `\n  ${arg}`).join(",")}
+});
+
+const { transactionHash } = await sendTransaction({
+  transaction,
+  account
+});`;
+    }
+    case "event": {
+      return `${importStatement}
+
+const preparedEvent = ${args.extensionName}({
+  contract
+});
+
+const events = await getContractEvents({
+  contract,
+  events: [preparedEvent]
+});`;
+    }
+  }
+}
+
+function buildReactSnippet(args: {
+  extensionName: string;
+  extensionNamespace: string;
+  type: "read" | "write" | "event";
+  fnArgs: string[];
+}) {
+  const importStatement = `import { use${args.type === "read" ? "ReadContract" : args.type === "write" ? "SendTransaction" : "ContractEvents"} } from "thirdweb/react";
+import { ${args.extensionName} } from "thirdweb/extensions/${args.extensionNamespace}";`;
+
+  switch (args.type) {
+    case "read": {
+      return `${importStatement}
+
+const { data, isLoading } = useReadContract(${args.extensionName}, {
+  contract,${args.fnArgs.map((arg) => `\n  ${arg}`).join(",")}
+});`;
+    }
+    case "write": {
+      return `${importStatement}
+
+const { mutate: sendTransaction } = useSendTransaction();
+
+const onClick = () => {
+  const transaction = ${args.extensionName}({
+    contract,${args.fnArgs.map((arg) => `\n    ${arg}`).join(",")}
+  });
+  sendTransaction(transaction);
+};`;
+    }
+    case "event": {
+      return `${importStatement}
+
+const preparedEvent = ${args.extensionName}({
+  contract
+});
+
+const { data: event } = useContractEvents({
+  contract,
+  events: [preparedEvent]
+});`;
+    }
+  }
+}
+
+/**
+ * This is a temporary solution to provide code snippets for the different extensions.
+ */
+const EXTENSION_NAMESPACE_FUNCTION_MAPPING = {
+  erc20: {
+    claim: {
+      name: "claimTo",
+      args: ["to", "amount"],
+    },
+  },
+  erc721: {
+    claim: {
+      name: "claimTo",
+      args: ["to", "amount"],
+    },
+  },
+  erc1155: {
+    claim: {
+      name: "claimTo",
+      args: ["to", "amount", "tokenId"],
+    },
+  },
+} as Record<
+  string,
+  Record<
+    string,
+    {
+      name: string;
+      args: string[];
+    }
+  >
+>;
+
 interface SnippetOptions {
   contractAddress?: string;
   fn?: AbiFunction | AbiEvent;
@@ -311,11 +432,20 @@ interface SnippetOptions {
   address?: string;
   clientId?: string;
   chainId?: number;
+  extensionNamespace?: string;
 }
 
 export function formatSnippet(
   snippet: Record<CodeEnvironment, any>,
-  { contractAddress, fn, args, chainId, address, clientId }: SnippetOptions,
+  {
+    contractAddress,
+    fn,
+    args,
+    chainId,
+    address,
+    clientId,
+    extensionNamespace,
+  }: SnippetOptions,
 ) {
   const code = { ...snippet };
 
@@ -329,13 +459,56 @@ export function formatSnippet(
   for (const key of Object.keys(code)) {
     const env = key as CodeEnvironment;
 
-    code[env] = code[env]
+    let codeForEnv = code[env];
+
+    // hacks on hacks on hacks
+    if (
+      fn?.name &&
+      extensionNamespace &&
+      extensionNamespace in EXTENSION_NAMESPACE_FUNCTION_MAPPING &&
+      fn.name in EXTENSION_NAMESPACE_FUNCTION_MAPPING[extensionNamespace]
+    ) {
+      const extensionConfig =
+        EXTENSION_NAMESPACE_FUNCTION_MAPPING[extensionNamespace][fn.name];
+      switch (env) {
+        case "javascript":
+          codeForEnv = buildJavascriptSnippet({
+            extensionName: extensionConfig.name,
+            extensionNamespace,
+            type:
+              "stateMutability" in fn
+                ? fn.stateMutability === "view" || fn.stateMutability === "pure"
+                  ? "read"
+                  : "write"
+                : "event",
+            fnArgs: extensionConfig.args,
+          });
+          break;
+        case "react":
+        case "react-native":
+          codeForEnv = buildReactSnippet({
+            extensionName: extensionConfig.name,
+            extensionNamespace,
+            type:
+              "stateMutability" in fn
+                ? fn.stateMutability === "view" || fn.stateMutability === "pure"
+                  ? "read"
+                  : "write"
+                : "event",
+            fnArgs: extensionConfig.args,
+          });
+          break;
+      }
+    }
+    // end hacks on hacks on hacks -- now just hacks on hacks from here on out
+
+    code[env] = codeForEnv
       ?.replace(/{{contract_address}}/gm, contractAddress || "0x...")
       ?.replace(/{{factory_address}}/gm, contractAddress || "0x...")
-      ?.replace(/{{wallet_address}}/gm, address)
+      ?.replace(/{{wallet_address}}/gm, address || "walletAddress")
       ?.replace("YOUR_CLIENT_ID", clientId || "YOUR_CLIENT_ID")
       ?.replace(/{{function}}/gm, formattedAbi || "")
-      ?.replace(/{{chainId}}/gm, chainId || 1);
+      ?.replace(/{{chainId}}/gm, chainId?.toString() || "1");
 
     if (args && args?.some((arg) => arg)) {
       code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
@@ -370,6 +543,19 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const isAccountFactory = enabledExtensions.some(
     (extension) => extension.name === "AccountFactory",
   );
+
+  const extensionNamespace = useMemo(() => {
+    if (enabledExtensions.some((e) => e.name === "ERC20")) {
+      return "erc20";
+    }
+    if (enabledExtensions.some((e) => e.name === "ERC721")) {
+      return "erc721";
+    }
+    if (enabledExtensions.some((e) => e.name === "ERC1155")) {
+      return "erc1155";
+    }
+    return undefined;
+  }, [enabledExtensions]);
 
   const chainId = useDashboardEVMChainId() || chainIdProp || 1;
   const chainInfo = useSupportedChain(chainId || -1);
@@ -725,6 +911,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                         ?.inputs?.map((i) => i.name),
 
                       chainId,
+                      extensionNamespace,
                     },
                   )}
                 />
