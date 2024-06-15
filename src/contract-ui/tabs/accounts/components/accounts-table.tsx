@@ -10,7 +10,7 @@ import {
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   MdFirstPage,
   MdLastPage,
@@ -54,15 +54,33 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
   const [pageSize, setPageSize] = useState(25);
 
   const totalAccountsQuery = useReadContract(totalAccounts, { contract });
-  const accountsQuery = useReadContract(getAccounts, {
-    contract,
-    start: BigInt(currentPage * pageSize),
-    end: BigInt(currentPage * pageSize + pageSize),
-  });
 
   // the total size should never be more than max int size (that would be hella wallets!)
   // so converting the totalAccounts to a nunber should be safe here
-  const totalPages = Math.ceil(Number(totalAccountsQuery.data || 0) / pageSize);
+  const totalAccountsNum = useMemo(
+    () => Number(totalAccountsQuery.data || 0),
+    [totalAccountsQuery.data],
+  );
+
+  // we need to limit the end value to the total accounts (if we know the total accounts)
+  const maxQueryEndValue = useMemo(() => {
+    if (totalAccountsQuery.data) {
+      return Math.min(
+        currentPage * pageSize + pageSize,
+        Number(totalAccountsQuery.data),
+      );
+    }
+    return currentPage * pageSize + pageSize;
+  }, [currentPage, pageSize, totalAccountsQuery.data]);
+
+  const accountsQuery = useReadContract(getAccounts, {
+    contract,
+    start: BigInt(currentPage * pageSize),
+    // of we have the total accounts, limit the end to the total accounts
+    end: BigInt(maxQueryEndValue),
+  });
+
+  const totalPages = Math.ceil(totalAccountsNum / pageSize);
 
   const canNextPage = currentPage < totalPages - 1;
   const canPreviousPage = currentPage > 0;
