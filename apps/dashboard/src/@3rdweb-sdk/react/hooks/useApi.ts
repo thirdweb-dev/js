@@ -582,6 +582,10 @@ export function useCreateTicket() {
   const { user } = useLoggedInUser();
   const account = useAccount();
   return useMutationWithInvalidate(async (input: CreateTicketInput) => {
+    // for the testjam - NEED TO REMOVE ON PROD RELEASE
+    if (input.markdown === "testjam") {
+      throw new Error("error for testing");
+    }
     invariant(user?.address, "walletAddress is required");
     invariant(account?.data, "Account not found");
     const { name, email, plan } = account.data;
