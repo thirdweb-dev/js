@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import type { TransactionReceipt } from "viem";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import {
@@ -8,6 +9,7 @@ import {
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { stringify } from "../../../../utils/json.js";
 import type { Theme } from "../../design-system/index.js";
+import { usePrepareTransaction } from "./usePrepareTransaction.js";
 import type {
   SendTransactionPayModalConfig,
   useSendTransactionCore,
@@ -102,6 +104,8 @@ export type TransactionButtonProps = {
   theme?: "dark" | "light" | Theme;
 };
 
+const TX_RESOLVE_WEAK_SET = new WeakSet();
+
 export const useTransactionButtonMutation = (
   props: TransactionButtonProps,
   sendTransactionFn: ReturnType<typeof useSendTransactionCore>["mutateAsync"],
@@ -113,14 +117,66 @@ export const useTransactionButtonMutation = (
     onError,
     onClick,
   } = props;
+
+  // yep, a state.
+  const [resolvedTransaction, setResolvedTransaction] =
+    useState<PreparedTransaction>();
+
+  // yep, a useEffect
+  useEffect(() => {
+    // if we are already resolving this transaction, don't do it again
+    if (TX_RESOLVE_WEAK_SET.has(transaction)) {
+      return;
+    }
+    let active = true;
+    TX_RESOLVE_WEAK_SET.add(transaction);
+    async function run() {
+      try {
+        const resolvedTx = await transaction();
+        // only set it if this was the last version of it
+        if (active) {
+          setResolvedTransaction(resolvedTx);
+        }
+      } catch {
+        // remove from set so we can retry later
+        TX_RESOLVE_WEAK_SET.delete(transaction);
+      }
+    }
+    // actually run the async thing
+    run();
+    // cleanup the active state if tx changes
+    return () => {
+      active = false;
+    };
+  }, [transaction]);
+
+  // pass the resolved transaction to the prepare transaction hook
+  const preparedTransactionMutation = usePrepareTransaction(
+    resolvedTransaction,
+    {
+      queryOptions: {
+        // we only want to run the query if we have a resolved transaction
+        enabled: !!resolvedTransaction,
+      },
+    },
+  );
+
   return useMutation({
     mutationFn: async () => {
       if (onClick) {
         onClick();
       }
+
+      // if we have not resolved the transaction yet, don't do anything
+      if (!preparedTransactionMutation.data) {
+        // not ready yet
+        return;
+      }
       try {
-        const resolvedTx = await transaction();
-        const result = await sendTransactionFn(resolvedTx);
+        // send the transaction with the pre-resolved data
+        const result = await sendTransactionFn(
+          preparedTransactionMutation.data,
+        );
 
         if (onTransactionSent) {
           onTransactionSent(result);

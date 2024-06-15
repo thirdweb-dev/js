@@ -48,10 +48,10 @@ export function usePrepareTransaction<
   const abi extends Abi,
   const params extends object,
 >(
-  extension: (
+  extension?: (
     options: BaseTransactionOptions<params, abi>,
   ) => PreparedTransaction<abi>,
-  options: BaseTransactionOptions<params, abi> & {
+  options?: BaseTransactionOptions<params, abi> & {
     from?: Address;
     queryOptions?: PickedQueryOptions;
   },
@@ -80,7 +80,7 @@ export function usePrepareTransaction<
  */
 export function usePrepareTransaction<const abi extends Abi>(
   // biome-ignore lint/suspicious/noExplicitAny: too complicated to type sorry
-  contractCallOptions: PrepareContractCallOptions<abi, any>,
+  contractCallOptions?: PrepareContractCallOptions<abi, any>,
   options?: {
     from?: Address;
     queryOptions?: PickedQueryOptions;
@@ -111,7 +111,7 @@ export function usePrepareTransaction<const abi extends Abi>(
  * ```
  */
 export function usePrepareTransaction(
-  txOptions: PrepareTransactionOptions,
+  txOptions?: PrepareTransactionOptions,
   options?: {
     from?: Address;
     queryOptions?: PickedQueryOptions;
@@ -122,7 +122,7 @@ export function usePrepareTransaction<
   const abi extends Abi,
   const params extends object,
 >(
-  extensionOrTxOptions:
+  extensionOrTxOptions?:
     | ((
         options: BaseTransactionOptions<params, abi>,
       ) => PreparedTransaction<abi>)
@@ -157,11 +157,14 @@ export function usePrepareTransaction<
           from: options.from,
         });
       },
+      enabled: !!extensionOrTxOptions && options?.queryOptions?.enabled,
+      refetchInterval: options?.queryOptions?.refetchInterval,
+      retry: options?.queryOptions?.retry,
     });
   }
 
   // "prepareContractCall" case
-  if ("contract" in extensionOrTxOptions) {
+  if (extensionOrTxOptions && "contract" in extensionOrTxOptions) {
     return useQuery({
       queryKey: [
         "prepare-transaction",
@@ -177,6 +180,9 @@ export function usePrepareTransaction<
           from: options?.from,
         });
       },
+      enabled: !!extensionOrTxOptions && options?.queryOptions?.enabled,
+      refetchInterval: options?.queryOptions?.refetchInterval,
+      retry: options?.queryOptions?.retry,
     });
   }
 
@@ -185,17 +191,21 @@ export function usePrepareTransaction<
   return useQuery({
     queryKey: [
       "prepare-transaction",
-      extensionOrTxOptions.chain.id,
-      extensionOrTxOptions.to,
-      extensionOrTxOptions.data,
-      extensionOrTxOptions.value,
+      extensionOrTxOptions?.chain.id,
+      extensionOrTxOptions?.to,
+      extensionOrTxOptions?.data,
+      extensionOrTxOptions?.value,
     ],
     queryFn: async () => {
+      if (!extensionOrTxOptions) throw new Error("Missing transaction options");
       const preparedTx = prepareTransaction(extensionOrTxOptions);
       return await toSerializableTransaction({
         transaction: preparedTx,
         from: options?.from,
       });
     },
+    enabled: !!extensionOrTxOptions && options?.queryOptions?.enabled,
+    refetchInterval: options?.queryOptions?.refetchInterval,
+    retry: options?.queryOptions?.retry,
   });
 }
