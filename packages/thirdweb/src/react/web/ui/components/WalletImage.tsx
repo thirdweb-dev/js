@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
@@ -32,10 +33,11 @@ export function WalletImage(props: {
   size: string;
   client: ThirdwebClient;
 }) {
-  const [image, setImage] = useState<string | undefined>(undefined);
   const activeWallet = useActiveWallet();
-  useEffect(() => {
-    async function fetchImage() {
+
+  const { data: image } = useQuery({
+    queryKey: ["walletImage", props.id, activeWallet?.id],
+    queryFn: async () => {
       // show EOA icon for external wallets
       // show auth provider icon for in-app wallets
       // show the admin EOA icon for smart
@@ -51,7 +53,12 @@ export function WalletImage(props: {
         (provider) => provider.info.rdns === activeEOAId,
       )?.info.icon;
 
-      if (
+      if (activeEOAId === "com.coinbase.wallet") {
+        mipdImage = (await getWalletInfo(
+          "com.coinbase.wallet",
+          true,
+        )) as `data:image/${string}`;
+      } else if (
         activeEOAId === "inApp" &&
         activeWallet &&
         (activeWallet.id === "inApp" || activeWallet.id === "smart")
@@ -79,11 +86,9 @@ export function WalletImage(props: {
             break;
         }
       }
-
-      setImage(mipdImage);
-    }
-    fetchImage();
-  }, [props.id, activeWallet]);
+      return mipdImage;
+    },
+  });
 
   if (image) {
     return (

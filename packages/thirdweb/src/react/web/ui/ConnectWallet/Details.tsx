@@ -10,7 +10,7 @@ import {
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
@@ -841,23 +841,23 @@ function ConnectedToSmartWallet(props: {
   const chain = useActiveWalletChain();
   const { client, connectLocale: locale } = props;
 
-  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
+  const { data: isSmartWalletDeployed } = useQuery({
+    queryKey: ["isSmartWalletDeployed", activeAccount?.address, chain?.rpc],
+    initialData: false,
+    queryFn: async () => {
+      if (activeAccount && isSmartWallet && activeAccount.address && chain) {
+        const contract = getContract({
+          address: activeAccount.address,
+          chain,
+          client,
+        });
 
-  useEffect(() => {
-    if (activeAccount && isSmartWallet && activeAccount.address && chain) {
-      const contract = getContract({
-        address: activeAccount.address,
-        chain,
-        client,
-      });
-
-      isContractDeployed(contract).then((isDeployed) => {
-        setIsSmartWalletDeployed(isDeployed);
-      });
-    } else {
-      setIsSmartWalletDeployed(false);
-    }
-  }, [activeAccount, chain, client, isSmartWallet]);
+        return await isContractDeployed(contract);
+      }
+      return false;
+    },
+    enabled: !!(chain?.rpc && activeAccount?.address),
+  });
 
   const content = (
     <Container
