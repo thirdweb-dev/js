@@ -17,7 +17,7 @@ export type ChainOptions = {
     url: string;
     apiUrl?: string;
   }>;
-  testnet?: true;
+  testnet?: boolean;
   experimental?: {
     increaseZeroByteCount?: boolean;
   };
