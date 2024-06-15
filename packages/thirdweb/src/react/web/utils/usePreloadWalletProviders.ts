@@ -1,48 +1,49 @@
-import { useEffect } from "react";
+import { useQueries } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { COINBASE } from "../../../wallets/constants.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 
-export const usePreloadWalletProviders = ({
+export function usePreloadWalletProviders({
   client,
   wallets,
-}: { client: ThirdwebClient; wallets: Wallet[] }) => {
-  useEffect(() => {
-    let active = true;
-
-    async function run() {
-      if (!active) {
-        return;
-      }
-      // preload coinbase wallet provider
-      // this is to avoid any delay on click when opening the popup window
-      // which can cause the popup to be blocked by the browser
-      if (wallets.map((w) => w.id).includes(COINBASE)) {
-        const { getCoinbaseWebProvider } = await import(
-          "../../../wallets/coinbase/coinbaseSDKWallet.js"
-        );
-        getCoinbaseWebProvider();
-      }
-
-      // preload inApp wallet iframe connector
-      if (wallets.map((w) => w.id).includes("inApp")) {
-        const [{ InAppWebConnector }, { getOrCreateInAppWalletConnector }] =
-          await Promise.all([
-            import("../../../wallets/in-app/web/lib/web-connector.js"),
-            import("../../../wallets/in-app/core/wallet/in-app-core.js"),
-          ]);
-        getOrCreateInAppWalletConnector(client, async (client) => {
-          return new InAppWebConnector({
-            client,
-          });
-        });
-      }
-    }
-    run().catch((error) => {
-      console.error("failed to preload wallet provider", error);
-    });
-    return () => {
-      active = false;
-    };
-  }, [wallets, client]);
-};
+}: { client: ThirdwebClient; wallets: Wallet[] }) {
+  useQueries({
+    queries: wallets
+      .filter((w) => w.id === COINBASE || w.id === "inApp")
+      .map((w) => ({
+        queryKey: ["preload-wallet", w.id],
+        queryFn: async () => {
+          switch (w.id) {
+            case COINBASE: {
+              const { getCoinbaseWebProvider } = await import(
+                "../../../wallets/coinbase/coinbaseSDKWallet.js"
+              );
+              await getCoinbaseWebProvider();
+              // return _something_
+              return true;
+            }
+            case "inApp": {
+              const [
+                { InAppWebConnector },
+                { getOrCreateInAppWalletConnector },
+              ] = await Promise.all([
+                import("../../../wallets/in-app/web/lib/web-connector.js"),
+                import("../../../wallets/in-app/core/wallet/in-app-core.js"),
+              ]);
+              await getOrCreateInAppWalletConnector(client, async (client) => {
+                return new InAppWebConnector({
+                  client,
+                });
+              });
+              // return _something_
+              return true;
+            }
+            // potentially add more wallets here
+            default: {
+              return false;
+            }
+          }
+        },
+      })),
+  });
+}
