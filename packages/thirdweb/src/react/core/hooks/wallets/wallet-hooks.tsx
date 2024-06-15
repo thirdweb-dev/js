@@ -62,7 +62,7 @@ export function useSwitchActiveWalletChain() {
  * ```jsx
  * import { useActiveWalletChain } from "thirdweb/react";
  *
- * const chainId = useActiveWalletChain();
+ * const activeChain = useActiveWalletChain();
  * ```
  * @walletConnection
  */

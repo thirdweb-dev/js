@@ -85,7 +85,7 @@ export type ConnectButton_connectButtonOptions = {
    * Set a custom label for the button. The default is `"Connect"`
    * @example
    * ```tsx
-   * <ConnectButton button={{
+   * <ConnectButton connectButton={{
    *    label: "Sign in"
    * }} />
    * ```
@@ -98,7 +98,7 @@ export type ConnectButton_connectButtonOptions = {
    * For some CSS properties, you may need to use the `!important` to override the default styles
    *
    * ```tsx
-   * <ConnectButton button={{
+   * <ConnectButton connectButton={{
    *  className="my-custom-class"
    * }} />
    * ```
