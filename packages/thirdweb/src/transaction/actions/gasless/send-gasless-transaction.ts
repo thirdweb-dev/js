@@ -1,14 +1,16 @@
 import type { TransactionSerializable } from "viem";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../prepare-transaction.js";
+import type { toSerializableTransaction } from "../to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "../wait-for-tx-receipt.js";
 import type { GaslessOptions } from "./types.js";
 
 export type SendGaslessTransactionOptions = {
   account: Account;
   // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
-  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
-  transaction: PreparedTransaction<any>;
+  transaction: // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
+    | PreparedTransaction<any>
+    | Awaited<ReturnType<typeof toSerializableTransaction>>;
   serializableTransaction: TransactionSerializable;
   gasless: GaslessOptions;
 };

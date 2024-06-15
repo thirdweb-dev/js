@@ -1,14 +1,17 @@
 import type { Account } from "../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../prepare-transaction.js";
 import type { GaslessOptions } from "./gasless/types.js";
-import { toSerializableTransaction } from "./to-serializable-transaction.js";
+import {
+  type ToSerializableTransactionResult,
+  toSerializableTransaction,
+} from "./to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 
 export type SendTransactionOptions = {
   account: Account;
   // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
-  // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
-  transaction: PreparedTransaction<any>;
+  transaction: // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
+  PreparedTransaction<any> | ToSerializableTransactionResult;
   gasless?: GaslessOptions;
 };
 
@@ -33,10 +36,13 @@ export async function sendTransaction(
 ): Promise<WaitForReceiptOptions> {
   const { account, transaction, gasless } = options;
 
-  const serializableTransaction = await toSerializableTransaction({
-    transaction: transaction,
-    from: account.address,
-  });
+  const serializableTransaction =
+    "_isSerializableTransaction" in transaction
+      ? transaction
+      : await toSerializableTransaction({
+          transaction: transaction,
+          from: account.address,
+        });
 
   // branch for gasless transactions
   if (gasless) {

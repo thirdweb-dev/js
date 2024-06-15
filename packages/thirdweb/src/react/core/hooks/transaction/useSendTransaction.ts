@@ -3,6 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
+import type { ToSerializableTransactionResult } from "../../../../transaction/actions/to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
@@ -67,7 +68,7 @@ export type SendTransactionConfig = {
 };
 
 type ShowModalData = {
-  tx: PreparedTransaction;
+  tx: PreparedTransaction | ToSerializableTransactionResult;
   sendTx: () => void;
   rejectTx: () => void;
   totalCostWei: bigint;
@@ -92,7 +93,11 @@ export function useSendTransactionCore(args: {
   gasless?: GaslessOptions;
   wallet: Wallet | undefined;
   switchChain: (chain: Chain) => Promise<void>;
-}): UseMutationResult<WaitForReceiptOptions, Error, PreparedTransaction> {
+}): UseMutationResult<
+  WaitForReceiptOptions,
+  Error,
+  PreparedTransaction | ToSerializableTransactionResult
+> {
   const { showPayModal, gasless, wallet, switchChain } = args;
   let _account = wallet?.getAccount();
 

@@ -59,7 +59,7 @@ export type { ConnectManagerOptions } from "../wallets/manager/index.js";
 
 // contract
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
-export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceipt.js";
+
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
 
 // transaction
@@ -69,6 +69,8 @@ export {
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
 export { useSendTransaction } from "../react/web/hooks/transaction/useSendTransaction.js";
+export { useWaitForReceipt } from "../react/core/hooks/transaction/useWaitForReceipt.js";
+export { usePrepareTransaction } from "../react/core/hooks/transaction/usePrepareTransaction.js";
 export { useSendBatchTransaction } from "../react/web/hooks/transaction/useSendBatchTransaction.js";
 export { useSendAndConfirmTransaction } from "../react/web/hooks/transaction/useSendAndConfirmTransaction.js";
 export { useEstimateGas } from "../react/web/hooks/transaction/useEstimateGas.js";

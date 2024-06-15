@@ -1,4 +1,6 @@
 import type { TransactionSerializable } from "viem";
+import type { Chain } from "../../chains/types.js";
+import type { ThirdwebClient } from "../../client/client.js";
 import { getGasOverridesForTransaction } from "../../gas/fee-data.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
@@ -17,6 +19,10 @@ export type ToSerializableTransactionOptions = {
    */
   from?: string;
 };
+
+export type ToSerializableTransactionResult = Awaited<
+  ReturnType<typeof toSerializableTransaction>
+>;
 
 /**
  * Converts a prepared transaction to a transaction with populated options.
@@ -91,5 +97,13 @@ export async function toSerializableTransaction(
     accessList,
     value,
     ...feeData,
-  } satisfies TransactionSerializable;
+    // jank starts here
+    client: options.transaction.client,
+    chain: options.transaction.chain,
+    _isSerializableTransaction: true,
+  } satisfies TransactionSerializable & {
+    chain: Chain;
+    client: ThirdwebClient;
+    _isSerializableTransaction: true;
+  };
 }
