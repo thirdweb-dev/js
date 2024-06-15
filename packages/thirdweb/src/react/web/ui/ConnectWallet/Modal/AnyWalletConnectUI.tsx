@@ -37,6 +37,7 @@ export function AnyWalletConnectUI(props: {
   done: () => void;
   onBack?: () => void;
   setModalVisibility: (value: boolean) => void;
+  connectError: boolean;
 }) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const { wallet } = props;
@@ -128,6 +129,7 @@ export function AnyWalletConnectUI(props: {
           done={props.done}
           wallet={props.wallet as Wallet<typeof COINBASE>}
           walletInfo={walletInfo.data}
+          connectError={props.connectError}
         />
       </Suspense>
     );

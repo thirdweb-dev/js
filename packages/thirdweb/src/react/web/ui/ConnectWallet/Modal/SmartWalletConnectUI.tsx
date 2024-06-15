@@ -21,7 +21,6 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
-import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 
 /**
  * @internal
@@ -34,24 +33,9 @@ export function SmartConnectUI(props: {
   setModalVisibility: (value: boolean) => void;
 }) {
   const personalWalletInfo = useWalletInfo(props.personalWallet.id);
-  const [keyConnected, setKeyConnected] = useState(false);
 
   if (!personalWalletInfo.data) {
     return <LoadingScreen />;
-  }
-
-  // connect personal wallet
-  if (!keyConnected) {
-    return (
-      <AnyWalletConnectUI
-        wallet={props.personalWallet}
-        done={() => {
-          setKeyConnected(true);
-        }}
-        onBack={props.onBack}
-        setModalVisibility={props.setModalVisibility}
-      />
-    );
   }
 
   return (

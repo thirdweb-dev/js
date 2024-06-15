@@ -18,10 +18,21 @@ function CoinbaseSDKWalletConnectUI(props: {
   locale: InjectedWalletLocale;
   wallet: Wallet<typeof COINBASE>;
   walletInfo: WalletInfo;
+  connectError: boolean;
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
   const { client, chain } = useConnectUI();
+
+  // handle initial connection error that is passed down (optionally from the parent)
+  // the ref keeps track of if we have internally to this component re-set the state, in which case we ignore the passed down error
+  const hasInternalError = useRef(false);
+  useEffect(() => {
+    if (!props.connectError || hasInternalError.current) {
+      return;
+    }
+    setErrorConnecting(true);
+  }, [props.connectError]);
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
@@ -33,20 +44,11 @@ function CoinbaseSDKWalletConnectUI(props: {
       .then(() => {
         done();
       })
-      .catch((e) => {
-        console.error(e);
+      .catch(() => {
+        hasInternalError.current = true;
         setErrorConnecting(true);
       });
   }, [client, wallet, chain, done]);
-
-  const scanStarted = useRef(false);
-  useEffect(() => {
-    if (scanStarted.current) {
-      return;
-    }
-    scanStarted.current = true;
-    connect();
-  }, [connect]);
 
   return (
     <ConnectingScreen

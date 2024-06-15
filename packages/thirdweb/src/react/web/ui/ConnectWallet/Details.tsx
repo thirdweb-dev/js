@@ -893,7 +893,7 @@ function ConnectedToSmartWallet(props: {
             {content}
           </Link>
         ) : (
-          <Text size="sm"> {content}</Text>
+          <Text size="sm">{content}</Text>
         )}
 
         <Spacer y="xs" />

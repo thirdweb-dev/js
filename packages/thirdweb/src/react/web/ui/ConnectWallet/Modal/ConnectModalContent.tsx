@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, lazy, useCallback } from "react";
+import { Suspense, lazy, useCallback, useState } from "react";
 import { COINBASE } from "../../../../../wallets/constants.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
@@ -51,6 +51,9 @@ export const ConnectModalContent = (props: {
   const siweAuth = useSiweAuth(activeWallet, auth);
   const showSignatureScreen = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
 
+  const [connectError, setConnectError] = useState(false);
+  const [personalWalletConnected, setPersonalWalletConnected] = useState(false);
+
   const handleConnected = useCallback(
     (wallet: Wallet) => {
       if (shouldSetActive) {
@@ -96,8 +99,10 @@ export const ConnectModalContent = (props: {
       onGetStarted={() => {
         setScreen(reservedScreens.getStarted);
       }}
-      selectWallet={(newWallet) => {
+      selectWallet={async (newWallet) => {
         setScreen(newWallet);
+        // re-set the connect error so that it doesn't show up on the next connection
+        setConnectError(false);
 
         // When selecting Coinbase, fire off the connection immediately
         // this fixes an issue on safari where the CB popup window would get blocked
@@ -110,10 +115,21 @@ export const ConnectModalContent = (props: {
         // and handle the completion / error handling there
         // this connection flow structure needs to be refactored to properly handle this
         if (newWallet.id === COINBASE) {
-          newWallet.connect({
-            client,
-            chain,
-          });
+          try {
+            await newWallet.connect({
+              client,
+              chain,
+            });
+            // if AA -> only set the personal wallet connected state, don not close the modal!
+            if (accountAbstraction) {
+              setPersonalWalletConnected(true);
+            } else {
+              handleConnected(newWallet);
+            }
+          } catch {
+            // set the connect error so the child componenet can know if connection failed
+            setConnectError(true);
+          }
         }
       }}
       onShowAll={() => {
@@ -136,7 +152,7 @@ export const ConnectModalContent = (props: {
   const goBack = wallets.length > 1 ? handleBack : undefined;
 
   const getWalletUI = (wallet: Wallet) => {
-    if (accountAbstraction) {
+    if (accountAbstraction && personalWalletConnected) {
       return (
         <SmartConnectUI
           key={wallet.id}
@@ -157,8 +173,14 @@ export const ConnectModalContent = (props: {
         wallet={wallet}
         onBack={goBack}
         done={() => {
-          handleConnected(wallet);
+          // if AA -> only set the personal wallet connected state, don not close the modal!
+          if (accountAbstraction) {
+            setPersonalWalletConnected(true);
+          } else {
+            handleConnected(wallet);
+          }
         }}
+        connectError={connectError}
         setModalVisibility={props.setModalVisibility}
       />
     );
