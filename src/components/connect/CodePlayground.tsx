@@ -44,8 +44,7 @@ const CodePlayground = ({
 
   const snippet = formatSnippet(COMMANDS[tab as keyof typeof COMMANDS] as any, {
     contractAddress: "0x6fb2A6C41B44076bc491cC285BA629c0715a6a1b",
-    fn:
-      tab === "read" ? read?.name : tab === "write" ? write?.name : event?.name,
+    fn: (tab === "read" ? read : tab === "write" ? write : event) as any,
     args: (tab === "read"
       ? readFunctions
       : tab === "write"

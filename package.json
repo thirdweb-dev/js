@@ -54,6 +54,7 @@
     "@thirdweb-dev/storage": "2.0.15",
     "@thirdweb-dev/wallets": "2.5.35",
     "@vercel/og": "^0.6.2",
+    "abitype": "1.0.0",
     "airtable": "^0.12.2",
     "chakra-react-select": "^4.7.6",
     "class-variance-authority": "^0.7.0",

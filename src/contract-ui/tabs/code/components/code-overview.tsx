@@ -32,6 +32,7 @@ import {
   AbiFunction,
   FeatureWithEnabled,
 } from "@thirdweb-dev/sdk";
+import { formatAbiItem } from "abitype";
 import {
   useContractEnabledExtensions,
   useContractEvents,
@@ -139,20 +140,19 @@ var sdk = ThirdwebManager.Instance.SDK;
 var contract = sdk.GetContract("{{contract_address}}");`,
   },
   read: {
-    javascript: `import { readContract, resolveMethod } from "thirdweb";
+    javascript: `import { readContract } from "thirdweb";
 
 const data = await readContract({ 
   contract, 
-  method: resolveMethod("{{function}}"), 
+  method: "{{function}}", 
   params: [{{args}}] 
 })`,
-    react: `import { resolveMethod } from "thirdweb";
-    import { useReadContract } from "thirdweb/react";
+    react: `import { useReadContract } from "thirdweb/react";
 
 export default function Component() {
   const { data, isLoading } = useReadContract({ 
     contract, 
-    method: resolveMethod("{{function}}"), 
+    method: "{{function}}", 
     params: [{{args}}] 
   });
 }`,
@@ -161,24 +161,24 @@ export default function Component() {
 export default function Component() {
   const { data, isLoading } = useReadContract({ 
     contract, 
-    method: resolveMethod("{{function}}"), 
+    method: "{{function}}", 
     params: [{{args}}] 
   });
 }`,
   },
   write: {
-    javascript: `import { prepareContractCall, sendTransaction, resolveMethod } from "thirdweb";
+    javascript: `import { prepareContractCall, sendTransaction } from "thirdweb";
 
 const transaction = await prepareContractCall({ 
   contract, 
-  method: resolveMethod("{{function}}"), 
+  method: "{{function}}", 
   params: [{{args}}] 
 });
 const { transactionHash } = await sendTransaction({ 
   transaction, 
   account 
 })`,
-    react: `import { prepareContractCall, resolveMethod } from "thirdweb"
+    react: `import { prepareContractCall } from "thirdweb"
 import { useSendTransaction } from "thirdweb/react";
 
 export default function Component() {
@@ -187,7 +187,7 @@ export default function Component() {
   const call = async () => {
     const transaction = await prepareContractCall({ 
       contract, 
-      method: resolveMethod("{{function}}"), 
+      method: "{{function}}", 
       params: [{{args}}] 
     });
     const { transactionHash } = await sendTransaction(transaction);
@@ -202,27 +202,12 @@ export default function Component() {
   const call = async () => {
     const transaction = await prepareContractCall({ 
       contract, 
-      method: resolveMethod("{{function}}"), 
+      method: "{{function}}", 
       params: [{{args}}] 
     });
     const { transactionHash } = await sendTransaction(transaction);
   }
 }`,
-    //     web3button: `import { TransactionButton } from "thirdweb/react";
-
-    // export default function Component() {
-    //   return (
-    //     <TransactionButton
-    //       transaction={() => prepareContractCall({
-    //         contract,
-    //         method: resolveMethod("{{function}}"),
-    //         params: [{{args}}]
-    //       })}
-    //     >
-    //       {{function}}
-    //     </TransactionButton>
-    //   )
-    // }`,
   },
   events: {
     javascript: `import { prepareEvent, getContractEvents } from "thirdweb";
@@ -250,19 +235,19 @@ export default function Component() {
   });
 }`,
     "react-native": `import { prepareEvent } from "thirdweb";
-    import { useContractEvents } from "thirdweb/react";
+import { useContractEvents } from "thirdweb/react";
     
-    const preparedEvent = prepareEvent({ 
-      contract, 
-      signature: "{{function}}" 
-    });
+const preparedEvent = prepareEvent({ 
+  contract, 
+  signature: "{{function}}" 
+});
     
-    export default function Component() {
-      const { data: event } = useContractEvents({ 
-        contract, 
-        events: [preparedEvent] 
-      });
-    }`,
+export default function Component() {
+  const { data: event } = useContractEvents({ 
+    contract, 
+    events: [preparedEvent] 
+  });
+}`,
   },
 };
 
@@ -340,7 +325,7 @@ public async void ConnectWallet()
 
 interface SnippetOptions {
   contractAddress?: string;
-  fn?: string;
+  fn?: AbiFunction | AbiEvent;
   args?: string[];
   address?: string;
   clientId?: string;
@@ -353,6 +338,13 @@ export function formatSnippet(
 ) {
   const code = { ...snippet };
 
+  const formattedAbi = fn
+    ? formatAbiItem({
+        ...fn,
+        type: "stateMutability" in fn ? "function" : "event",
+      } as any)
+    : "";
+
   for (const key of Object.keys(code)) {
     const env = key as CodeEnvironment;
 
@@ -361,7 +353,7 @@ export function formatSnippet(
       ?.replace(/{{factory_address}}/gm, contractAddress || "0x...")
       ?.replace(/{{wallet_address}}/gm, address)
       ?.replace("YOUR_CLIENT_ID", clientId || "YOUR_CLIENT_ID")
-      ?.replace(/{{function}}/gm, fn || "")
+      ?.replace(/{{function}}/gm, formattedAbi || "")
       ?.replace(/{{chainId}}/gm, chainId || 1);
 
     if (args && args?.some((arg) => arg)) {
@@ -826,10 +818,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                         contractAddress,
                         fn:
                           tab === "read"
-                            ? read?.name
+                            ? read
                             : tab === "write"
-                              ? write?.name
-                              : event?.name,
+                              ? write
+                              : event,
                         args: (tab === "read"
                           ? readFunctions
                           : tab === "write"
