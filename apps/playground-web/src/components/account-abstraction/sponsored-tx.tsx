@@ -50,7 +50,7 @@ export function SponsoredTxPreview() {
             />
           ) : null}
           {smartAccount ? (
-            <>
+            <div className="flex flex-col justify-center p-8">
               <p className="font-semibold text-center mb-2">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
@@ -73,7 +73,7 @@ export function SponsoredTxPreview() {
               >
                 Mint
               </TransactionButton>
-            </>
+            </div>
           ) : (
             <p
               style={{

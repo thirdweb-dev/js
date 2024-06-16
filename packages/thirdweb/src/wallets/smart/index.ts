@@ -162,7 +162,7 @@ async function createSmartAccount(
   options: SmartAccountOptions,
 ): Promise<Account> {
   const { accountContract } = options;
-  const account = {
+  const account: Account = {
     address: accountContract.address,
     async sendTransaction(transaction: SendTransactionOption) {
       const executeTx = prepareExecute({
@@ -353,6 +353,9 @@ async function createSmartAccount(
         "Unable to verify signature on smart account, please make sure the smart account is deployed and the signature is valid.",
       );
     },
+    async onTransactionRequested(transaction) {
+      return options.personalAccount.onTransactionRequested?.(transaction);
+    },
   };
   return account;
 }
@@ -364,7 +367,7 @@ function createZkSyncAccount(args: {
   sponsorGas: boolean;
 }): Account {
   const { creationOptions, connectionOptions, chain } = args;
-  const account = {
+  const account: Account = {
     address: connectionOptions.personalAccount.address,
     async sendTransaction(transaction: SendTransactionOption) {
       // override passed tx, we have to refetch gas and fees always
@@ -429,6 +432,11 @@ function createZkSyncAccount(args: {
     >(_typedData: TypedDataDefinition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
       return connectionOptions.personalAccount.signTypedData(typedData);
+    },
+    async onTransactionRequested(transaction) {
+      return connectionOptions.personalAccount.onTransactionRequested?.(
+        transaction,
+      );
     },
   };
   return account;

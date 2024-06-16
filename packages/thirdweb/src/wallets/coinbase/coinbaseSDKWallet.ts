@@ -334,9 +334,19 @@ function createAccount(provider: ProviderInterface, address: string) {
         params: [account.address, stringifiedData],
       });
     },
+    onTransactionRequested: async () => {
+      // make sure to show the coinbase popup BEFORE doing any transaction preprocessing
+      // otherwise the popup might get blocked in safari
+      await showCoinbasePopup(provider);
+    },
   };
 
   return account;
+}
+
+export async function showCoinbasePopup(provider: ProviderInterface) {
+  // biome-ignore lint/suspicious/noExplicitAny: based on the latest CB SDK - scary but works
+  await (provider as any).communicator?.waitForPopupLoaded();
 }
 
 function onConnect(

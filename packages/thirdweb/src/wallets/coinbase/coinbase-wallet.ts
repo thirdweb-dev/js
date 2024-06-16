@@ -104,5 +104,16 @@ export function coinbaseWalletSDK(args: {
     switchChain: async (newChain) => {
       await handleSwitchChain(newChain);
     },
+    onConnectRequested: async () => {
+      // make sure to show the coinbase popup IMMEDIATELY on connection requested
+      // otherwise the popup might get blocked in safari
+      // TODO these 2 awaits are fast only thanks to preloading that happens in our components
+      // these probably need to actually imported / created synchronously to be used headless properly
+      const { getCoinbaseWebProvider, showCoinbasePopup } = await import(
+        "./coinbaseSDKWallet.js"
+      );
+      const provider = await getCoinbaseWebProvider(createOptions);
+      await showCoinbasePopup(provider);
+    },
   };
 }

@@ -1,6 +1,5 @@
 "use client";
 import { Suspense, lazy, useCallback } from "react";
-import { COINBASE } from "../../../../../wallets/constants.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -42,7 +41,6 @@ export const ConnectModalContent = (props: {
     connectModal,
     connectLocale,
     client,
-    chain,
   } = useConnectUI();
   const setActiveWallet = useSetActiveWallet();
   const setSelectionData = useSetSelectionData();
@@ -97,23 +95,13 @@ export const ConnectModalContent = (props: {
         setScreen(reservedScreens.getStarted);
       }}
       selectWallet={(newWallet) => {
-        setScreen(newWallet);
-
-        // When selecting Coinbase, fire off the connection immediately
-        // this fixes an issue on safari where the CB popup window would get blocked
-        // because of the delay between this click and the actual connection
-        // that happens within 'CoinbaseSDKConnection' component 2 layers down
-        // when the cb extension is installed -> pops the extension
-        // when the extension is not installed -> pops a new window
-        // then in 'CoinbaseSDKConnection' the connection is requested again
-        // which just "links" to the extension / popup window a few ms later
-        // and handle the completion / error handling there
-        // this connection flow structure needs to be refactored to properly handle this
-        if (newWallet.id === COINBASE) {
-          newWallet.connect({
-            client,
-            chain,
-          });
+        if (newWallet.onConnectRequested) {
+          newWallet
+            .onConnectRequested()
+            .then(() => setScreen(newWallet))
+            .catch(console.error); // TODO propagate error down
+        } else {
+          setScreen(newWallet);
         }
       }}
       onShowAll={() => {
