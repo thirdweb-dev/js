@@ -44,7 +44,7 @@ export function AnyWalletConnectUI(props: {
   const localeId = useConnectUI().locale;
 
   const localeQuery = useQuery({
-    queryKey: ["injectedWalletLocale", localeId],
+    queryKey: ["injectedWalletLocale", localeId, walletInfo.data?.name],
     queryFn: async () => {
       if (!walletInfo.data) {
         throw new Error("Wallet info not available");
