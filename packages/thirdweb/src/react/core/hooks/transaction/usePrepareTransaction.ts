@@ -37,7 +37,7 @@ type PickedQueryOptions = Prettify<
  * import { usePrepareTransaction, useSendTransaction } from "thirdweb/react";
  * import { mintTo } form "thirdweb/extensions/erc20";
  *
- * const { data: preparedTransaction, isLoading } = usePrepareTransaction(mintTo, { contract, to: address amount: "100" });
+ * const { data: preparedTransaction, isLoading } = usePrepareTransaction(mintTo, { contract, to: address, amount: "100" });
  * const { mutate: sendTx, data: transactionResult } = useSendTransaction();
  *
  * // later send the transaction
@@ -181,14 +181,13 @@ export function usePrepareTransaction<
   }
 
   // "prepareTransaction" case
-
   return useQuery({
     queryKey: [
       "prepare-transaction",
       extensionOrTxOptions.chain.id,
       extensionOrTxOptions.to,
       extensionOrTxOptions.data,
-      extensionOrTxOptions.value,
+      extensionOrTxOptions.value?.toString(),
     ],
     queryFn: async () => {
       const preparedTx = prepareTransaction(extensionOrTxOptions);

@@ -90,6 +90,7 @@ async function getInitializeTransaction(options: {
 }) {
   const { client, implementationContract, type, params, accountAddress } =
     options;
+
   const contractURI =
     options.params.contractURI ||
     (await upload({
@@ -106,6 +107,7 @@ async function getInitializeTransaction(options: {
       ],
     })) ||
     "";
+
   switch (type) {
     case "DropERC20":
       return initDropERC20({

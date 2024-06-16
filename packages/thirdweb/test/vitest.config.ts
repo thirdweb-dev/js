@@ -33,7 +33,7 @@ export default defineConfig({
       include: ["src/**"],
     },
     environmentMatchGlobs: [
-      ["src/react/**/*.test.tsx", "happy-dom"],
+      ["src/react/**/*.test.{ts,tsx}", "happy-dom"],
       ["src/**/*.test.ts", "node"],
       ["src/**/*", "node"], // all other files use node
     ],
