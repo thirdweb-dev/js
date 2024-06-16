@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmdoUtvHDybu5ppYBZT8BMRp6AqByVSoQs8nFwKbaS55jd",
+    "width": 367,
+    "height": 367,
+    "format": "svg"
+  },
   "infoURL": "https://milkomeda.com",
   "name": "Milkomeda A1 Testnet",
   "nativeCurrency": {

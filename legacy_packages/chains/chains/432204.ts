@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmfVxdrWjtUKiGzqFDzAxHH2FqwP2aRuZTGcYWdWg519Xy",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://dexalot.com",
   "name": "Dexalot Subnet",
   "nativeCurrency": {

@@ -6,12 +6,6 @@ export default {
   "faucets": [
     "https://faucet.nervos.org/"
   ],
-  "icon": {
-    "url": "ipfs://QmZ5gFWUxLFqqT3DkefYfRsVksMwMTc5VvBjkbHpeFMsNe",
-    "width": 1001,
-    "height": 1629,
-    "format": "png"
-  },
   "infoURL": "https://github.com/nervosnetwork/godwoken",
   "name": "Polyjuice Testnet",
   "nativeCurrency": {

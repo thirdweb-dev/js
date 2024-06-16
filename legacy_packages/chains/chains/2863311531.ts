@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreievnqg3xjokaty4kfbxxbrzm5v5y7exbaaia2txrh4sfgrqsalfym",
-    "width": 128,
-    "height": 128,
-    "format": "png"
-  },
   "infoURL": "https://ancient8.gg/",
   "name": "Ancient8 Testnet (deprecated)",
   "nativeCurrency": {

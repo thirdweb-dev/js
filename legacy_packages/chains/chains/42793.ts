@@ -15,12 +15,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmVqE4wq3fd3RKZwo7GxmW333ywHgYBZGvqwh3TUBM5DUi",
-    "width": 584,
-    "height": 545,
-    "format": "png"
-  },
   "infoURL": "https://etherlink.com",
   "name": "Etherlink Mainnet",
   "nativeCurrency": {

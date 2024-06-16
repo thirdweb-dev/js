@@ -6,13 +6,7 @@ export default {
     {
       "name": "LumozTestnetInfo",
       "url": "https://lumoz.info",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
-        "width": 401,
-        "height": 400,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmZnE2ygPL2ZGuzHGvFCHmrqxwdurrhz3K1yPnwLzKbgay",
-    "width": 401,
-    "height": 400,
-    "format": "png"
-  },
   "infoURL": "https://lumoz.org",
   "name": "Lumoz Testnet Alpha",
   "nativeCurrency": {

@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmaX5iqQTrJD8TBuvoT97xPMG6LYamjPCPnZUUMh12jc99",
-    "width": 297,
-    "height": 378,
-    "format": "png"
-  },
   "infoURL": "https://gobob.xyz",
   "name": "BOB",
   "nativeCurrency": {

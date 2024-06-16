@@ -6,22 +6,10 @@ export default {
     {
       "name": "DODOchain Testnet (Sepolia) Explorer",
       "url": "https://testnet-scan.dodochain.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmQDdZQjpKhrVM62479RTzppUG8QHhHd8Bq4RFYAjN1yf4",
-        "width": 160,
-        "height": 160,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQDdZQjpKhrVM62479RTzppUG8QHhHd8Bq4RFYAjN1yf4",
-    "width": 160,
-    "height": 160,
-    "format": "png"
-  },
   "infoURL": "https://www.dodochain.com",
   "name": "DODOchain testnet",
   "nativeCurrency": {

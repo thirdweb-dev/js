@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.evm.dusk-3.devnet.astria.org/"
   ],
-  "icon": {
-    "url": "ipfs://QmVbzZYXdVFY3uFaWQd7iSRtdM2UKWohj9fVqqEwxcw2RV",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://docs.astria.org",
   "name": "Astria EVM Dusknet",
   "nativeCurrency": {

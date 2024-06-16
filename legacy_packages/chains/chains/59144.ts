@@ -11,34 +11,16 @@ export default {
     {
       "name": "Blockscout",
       "url": "https://explorer.linea.build",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-        "width": 97,
-        "height": 102,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "L2scan",
       "url": "https://linea.l2scan.co",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-        "width": 97,
-        "height": 102,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-    "width": 97,
-    "height": 102,
-    "format": "svg"
-  },
   "infoURL": "https://linea.build",
   "name": "Linea",
   "nativeCurrency": {

@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmNx8FRacfNeawhkjk5p57EKzDHkLGMaBBmK2VRL5CB2P2",
-    "width": 40,
-    "height": 40,
-    "format": "svg"
-  },
   "infoURL": "https://www.axel.org",
   "name": "AxelChain Dev-Net",
   "nativeCurrency": {

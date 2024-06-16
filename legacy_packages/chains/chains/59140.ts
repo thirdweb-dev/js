@@ -6,36 +6,18 @@ export default {
     {
       "name": "Etherscan",
       "url": "https://goerli.lineascan.build",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-        "width": 97,
-        "height": 102,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "Blockscout",
       "url": "https://explorer.goerli.linea.build",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-        "width": 97,
-        "height": 102,
-        "format": "svg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [
     "https://faucetlink.to/goerli"
   ],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-    "width": 97,
-    "height": 102,
-    "format": "svg"
-  },
   "infoURL": "https://linea.build",
   "name": "Linea Goerli",
   "nativeCurrency": {

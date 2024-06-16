@@ -6,22 +6,10 @@ export default {
     {
       "name": "poolsscan",
       "url": "https://scan.poolsmobility.com",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmV18PRFPkp9pwKKJp4ksVDhMEiqNZ8A5DhQapdNCckeeQ",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmV18PRFPkp9pwKKJp4ksVDhMEiqNZ8A5DhQapdNCckeeQ",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://www.poolschain.org",
   "name": "Pools Mainnet",
   "nativeCurrency": {

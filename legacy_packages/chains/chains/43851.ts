@@ -6,13 +6,7 @@ export default {
     {
       "name": "ZKFair Testnet Info",
       "url": "https://testnet-scan.zkfair.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmVb682D4mUXkKNP28xxJDNgSYbDLvEc3kVYx7TQxEa6Cw",
-        "width": 400,
-        "height": 400,
-        "format": "jpg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmVb682D4mUXkKNP28xxJDNgSYbDLvEc3kVYx7TQxEa6Cw",
-    "width": 400,
-    "height": 400,
-    "format": "jpg"
-  },
   "infoURL": "https://zkfair.io",
   "name": "ZKFair Testnet",
   "nativeCurrency": {
