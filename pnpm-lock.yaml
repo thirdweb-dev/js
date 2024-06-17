@@ -83,8 +83,8 @@ dependencies:
     specifier: ^8.17.3
     version: 8.17.3(react-dom@18.3.1)(react@18.3.1)
   '@thirdweb-dev/chains':
-    specifier: 0.1.118
-    version: 0.1.118
+    specifier: 0.1.119
+    version: 0.1.119
   '@thirdweb-dev/react':
     specifier: 4.9.0
     version: 4.9.0(@babel/core@7.24.4)(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/properties@5.7.0)(@thirdweb-dev/sdk@4.0.95)(@types/react-dom@18.3.0)(@types/react@18.3.3)(ethers@5.7.2)(fastify@4.28.0)(localforage@1.10.0)(next@14.2.4)(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.5)(zksync-ethers@5.8.0)
@@ -7149,6 +7149,11 @@ packages:
 
   /@thirdweb-dev/chains@0.1.118:
     resolution: {integrity: sha512-5U8O8LZUmkGuol0s9X8ysjghm/JhwyDBEIgchsJ6GmA00OYEX4h1zlYgNVeNdwr+g+mSjmU4QDMI6b/IQAnZ7g==}
+    engines: {node: '>=18'}
+    dev: false
+
+  /@thirdweb-dev/chains@0.1.119:
+    resolution: {integrity: sha512-mTcuF4OTTtqliphq0jWKUUtfnHTD+1qjcZqWz8JP3VwbTASodzWOSjXSBv4g9s3CB8ExpekkUOCpCZa6BK+dDA==}
     engines: {node: '>=18'}
     dev: false
 

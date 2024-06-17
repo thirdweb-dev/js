@@ -46,7 +46,7 @@
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-query-persist-client": "^4.36.1",
     "@tanstack/react-table": "^8.17.3",
-    "@thirdweb-dev/chains": "0.1.118",
+    "@thirdweb-dev/chains": "0.1.119",
     "@thirdweb-dev/react": "4.9.0",
     "@thirdweb-dev/react-core": "4.9.0",
     "@thirdweb-dev/sdk": "4.0.95",
