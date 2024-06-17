@@ -6,10 +6,22 @@ export default {
     {
       "name": "Shidoblock Mainnet Explorer",
       "url": "https://shidoscan.com",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://bafkreiatrf5pp7ywvrwvsv4otrex73u6v6bvhorqkxiop2hy2i572zjrba",
+        "width": 1080,
+        "height": 1080,
+        "format": "png"
+      }
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://bafkreiatrf5pp7ywvrwvsv4otrex73u6v6bvhorqkxiop2hy2i572zjrba",
+    "width": 1080,
+    "height": 1080,
+    "format": "png"
+  },
   "infoURL": "https://shido.io",
   "name": "Shido Mainnet Block",
   "nativeCurrency": {

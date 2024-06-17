@@ -4,9 +4,15 @@ export default {
   "chainId": 59144,
   "explorers": [
     {
-      "name": "lineascan",
+      "name": "Etherscan",
       "url": "https://lineascan.build",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
+        "width": 97,
+        "height": 102,
+        "format": "svg"
+      }
     },
     {
       "name": "Blockscout",
@@ -34,10 +40,10 @@ export default {
   "faucets": [],
   "features": [],
   "icon": {
-    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-    "width": 97,
-    "height": 102,
-    "format": "svg"
+    "url": "ipfs://QmS3wZEQTRMZBySqaCnKsGWuohRYh598JL8AntKh3URv6R",
+    "width": 798,
+    "height": 831,
+    "format": "png"
   },
   "infoURL": "https://linea.build",
   "name": "Linea",

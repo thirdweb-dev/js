@@ -11,12 +11,6 @@ export default {
   ],
   "faucets": [],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmcHdmVr5VRUJq13jnM6tgah5Ge7hn3Dm14eY6vwivJ5ui",
-    "width": 288,
-    "height": 258,
-    "format": "png"
-  },
   "infoURL": "https://taiko.xyz",
   "name": "Taiko Mainnet",
   "nativeCurrency": {
