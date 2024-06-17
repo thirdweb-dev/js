@@ -31,12 +31,14 @@ import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
 import {
   Button,
   Card,
+  Checkbox,
   Heading,
   Text,
   TrackedCopyButton,
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
+import { Label } from "../../@/components/ui/label";
 
 const TRACKING_CATEGORY = "ipfs_uploader";
 
@@ -142,7 +144,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
     progress: 0,
     total: 100,
   });
+  const [uploadWithoutDirectory, setUploadWithoutDirectory] = useState(
+    files.length === 1,
+  );
+  const uploadToAFolder = !uploadWithoutDirectory;
   const storageUpload = useStorageUpload({
+    uploadWithoutDirectory,
     onProgress: setProgress,
     metadata: {
       address,
@@ -369,62 +376,85 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
           align="center"
           gap={{ base: 2, md: 8 }}
           flexShrink={0}
-          p={{ base: 0, md: 2 }}
+          p={{ base: 2, md: 2 }}
           pt={2}
           bg="bgWhite"
+          justifyContent={"space-between"}
         >
-          <Flex
-            w="100%"
-            direction="column"
-            opacity={storageUpload.isLoading ? 1 : 0}
-            align="center"
-            gap={1}
-            position="relative"
-          >
-            <Progress
-              colorScheme="green"
-              value={progress.progress ? progressPercent : undefined}
-              size={{ base: "xs", md: "lg" }}
+          {/* If user is uploading just one file,
+          we allow them to choose if they want to upload without a folder */}
+          {files.length === 1 &&
+            !storageUpload.isLoading &&
+            ipfsHashes.length === 0 && (
+              <Flex direction={"row"} gap={"2"}>
+                <Checkbox
+                  id="dropzone_uploadWithoutDirectory"
+                  defaultChecked={uploadToAFolder}
+                  onChange={(e) => setUploadWithoutDirectory(!e.target.checked)}
+                />
+                <Label
+                  htmlFor="dropzone_uploadWithoutDirectory"
+                  className="my-auto"
+                >
+                  Upload file to a folder
+                </Label>
+              </Flex>
+            )}
+          {storageUpload.isLoading && (
+            <Flex
               w="100%"
-              borderRadius="full"
-              isIndeterminate={progress.progress === progress.total}
+              direction="column"
+              align="center"
+              gap={1}
               position="relative"
-            />
-            <Center
-              display={{ base: "none", md: "block" }}
-              position="absolute"
-              left={0}
-              right={0}
-              top={0}
-              bottom={0}
             >
-              <Text
-                mt={0.5}
-                size="label.xs"
-                fontSize={11}
-                lineHeight={1}
-                fontFamily="mono"
-                textAlign="center"
-                _dark={{
-                  color:
-                    progressPercent > 50 && progress.progress !== progress.total
-                      ? "black"
-                      : "white",
-                }}
-                _light={{
-                  color:
-                    progressPercent > 50 && progress.progress !== progress.total
-                      ? "white"
-                      : "black",
-                }}
-                willChange="color"
-                transition="color 0.2s"
+              <Progress
+                colorScheme="green"
+                value={progress.progress ? progressPercent : undefined}
+                size={{ base: "xs", md: "lg" }}
+                w="100%"
+                borderRadius="full"
+                isIndeterminate={progress.progress === progress.total}
+                position="relative"
+              />
+              <Center
+                display={{ base: "none", md: "block" }}
+                position="absolute"
+                left={0}
+                right={0}
+                top={0}
+                bottom={0}
               >
-                {Math.round(progressPercent)}%
-              </Text>
-            </Center>
-          </Flex>
-          <ButtonGroup>
+                <Text
+                  mt={0.5}
+                  size="label.xs"
+                  fontSize={11}
+                  lineHeight={1}
+                  fontFamily="mono"
+                  textAlign="center"
+                  _dark={{
+                    color:
+                      progressPercent > 50 &&
+                      progress.progress !== progress.total
+                        ? "black"
+                        : "white",
+                  }}
+                  _light={{
+                    color:
+                      progressPercent > 50 &&
+                      progress.progress !== progress.total
+                        ? "white"
+                        : "black",
+                  }}
+                  willChange="color"
+                  transition="color 0.2s"
+                >
+                  {Math.round(progressPercent)}%
+                </Text>
+              </Center>
+            </Flex>
+          )}
+          <ButtonGroup ml={{ base: "0", md: "auto" }}>
             <Button
               isDisabled={storageUpload.isLoading}
               onClick={() => {
