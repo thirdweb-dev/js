@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.29.4
+
+### Patch Changes
+
+- [#3345](https://github.com/thirdweb-dev/js/pull/3345) [`79e6a04`](https://github.com/thirdweb-dev/js/commit/79e6a047d6ae6cb341fdad22137bd83ad6e611d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix react native inAppWallet creation
+
 ## 5.29.3
 
 ### Patch Changes
