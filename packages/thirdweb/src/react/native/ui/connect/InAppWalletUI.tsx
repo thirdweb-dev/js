@@ -2,7 +2,6 @@ import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { preAuthenticate } from "../../../../wallets/in-app/core/authentication/index.js";
 import type {
   MultiStepAuthProviderType,
   PreAuthArgsType,
@@ -11,10 +10,11 @@ import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/types.js";
+import { preAuthenticate } from "../../../../wallets/in-app/native/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import type { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
 import { radius, spacing } from "../../design-system/index.js";
+import type { useConnect } from "../../hooks/wallets/useConnect.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
 import { Spacer } from "../components/spacer.js";

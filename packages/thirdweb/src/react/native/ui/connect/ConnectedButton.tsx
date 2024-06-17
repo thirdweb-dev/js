@@ -1,9 +1,7 @@
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
-import {
-  useActiveWallet,
-  useDisconnect,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedText } from "../components/text.js";
 

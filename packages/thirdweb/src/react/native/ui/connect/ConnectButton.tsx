@@ -13,7 +13,7 @@ import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
-import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedText } from "../components/text.js";
 import { ConnectModal } from "./ConnectModal.js";

@@ -9,12 +9,12 @@ import {
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import type { useConnect } from "../../../core/hooks/wallets/wallet-hooks.js";
 import {
   useWalletImage,
   useWalletInfo,
 } from "../../../web/ui/hooks/useWalletInfo.js";
 import { spacing } from "../../design-system/index.js";
+import type { useConnect } from "../../hooks/wallets/useConnect.js";
 import { ThemedText } from "../components/text.js";
 
 export type ExternalWalletsUiProps = {
