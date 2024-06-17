@@ -24,6 +24,7 @@ export default {
     "https://570.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rollux.com",
     "wss://rpc.rollux.com/wss",
+    "https://rpc.ankr.com/rollux",
     "https://rollux.rpc.syscoin.org",
     "wss://rollux.rpc.syscoin.org/wss"
   ],

@@ -4,8 +4,8 @@ export default {
   "chainId": 44,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://crab.subscan.io",
+      "name": "blockscout",
+      "url": "https://crab-scan.darwinia.network",
       "standard": "EIP3091"
     }
   ],

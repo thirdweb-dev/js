@@ -8,16 +8,19 @@ import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import {
+  type Theme,
+  fontSize,
+  spacing,
+} from "../../../../../core/design-system/index.js";
+import {
   useChainQuery,
   useChainsQuery,
 } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import {
   Drawer,
@@ -33,7 +36,6 @@ import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { type Theme, fontSize, spacing } from "../../../design-system/index.js";
 import type { PayUIOptions } from "../../ConnectButtonProps.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import type { SupportedTokens } from "../../defaultTokens.js";
@@ -47,6 +49,7 @@ import {
 import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { PaymentSelection } from "./PaymentSelection.js";
+import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
 import type { BuyForTx, SelectedScreen } from "./main/types.js";
@@ -116,9 +119,7 @@ type BuyScreenContentProps = {
   isEmbed: boolean;
 };
 
-function useBuyScreenStates(options: {
-  payOptions: PayUIOptions;
-}) {
+function useBuyScreenStates(options: { payOptions: PayUIOptions }) {
   const { payOptions } = options;
 
   const [method, setMethod] = useState<"crypto" | "creditCard">(
@@ -205,6 +206,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     fromToken,
     setFromToken,
     selectedCurrency,
+    setSelectedCurrency,
   } = useUISelectionStates({
     payOptions,
     buyForTx,
@@ -265,6 +267,18 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   if (screen.type === "node") {
     return screen.node;
+  }
+
+  if (screen.type === "select-currency") {
+    return (
+      <CurrencySelection
+        onSelect={(currency) => {
+          showMainScreen();
+          setSelectedCurrency(currency);
+        }}
+        onBack={showMainScreen}
+      />
+    );
   }
 
   if (screen.type === "screen-id" && screen.name === "select-to-token") {
@@ -487,7 +501,9 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 closeDrawer={closeDrawer}
                 selectedCurrency={selectedCurrency}
                 showCurrencySelector={() => {
-                  // currently disabled because we are only using Stripe
+                  setScreen({
+                    type: "select-currency",
+                  });
                 }}
                 account={account}
               />
@@ -774,7 +790,7 @@ function FiatScreenContent(
   const fiatQuoteQuery = useBuyWithFiatQuote(
     buyWithFiatOptions !== false && tokenAmount
       ? {
-          fromCurrencySymbol: "USD", // STRIPE only supports USD
+          fromCurrencySymbol: selectedCurrency.shorthand,
           toChainId: toChain.id,
           toAddress: account.address,
           toTokenAddress: isNativeToken(toToken)
@@ -889,7 +905,6 @@ function FiatScreenContent(
           client={client}
           currency={selectedCurrency}
           onSelectCurrency={showCurrencySelector}
-          disableCurrencySelection={true}
         />
         {/* Estimated time + View fees button */}
         <EstimatedTimeAndFees

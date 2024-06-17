@@ -41,7 +41,7 @@ export function resolveScheme(options: ResolveSchemeOptions) {
       bundleId = (globalThis as any).Application.applicationId;
     }
 
-    // purposefully using SPLIT here and and not replace for CID to avoid cases where users don't know the schema
+    // purposefully using SPLIT here and not replace for CID to avoid cases where users don't know the schema
     // also only splitting on `/ipfs` to avoid cases where people pass non `/` terminated gateway urls
     return `${
       gateway.replace("{clientId}", clientId).split("/ipfs")[0]
@@ -63,7 +63,7 @@ export function findIPFSCidFromUri(uri: string) {
   }
 
   // first index of `/Qm` or `/bafy` in the uri (case insensitive)
-  const firstIndex = uri.search(/\/(Qm|bafy)/i);
+  const firstIndex = uri.search(/\/(Qm|baf)/i);
   // we start one character after the first `/` to avoid including it in the CID
   return uri.slice(firstIndex + 1);
 }

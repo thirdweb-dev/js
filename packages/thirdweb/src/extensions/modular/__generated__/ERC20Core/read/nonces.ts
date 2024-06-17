@@ -12,8 +12,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type NoncesParams = {
   owner: AbiParameterToPrimitiveType<{
-    name: "owner";
     type: "address";
+    name: "owner";
     internalType: "address";
   }>;
 };
@@ -21,15 +21,15 @@ export type NoncesParams = {
 export const FN_SELECTOR = "0x7ecebe00" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
     internalType: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "uint256",
+    name: "result",
     internalType: "uint256",
   },
 ] as const;

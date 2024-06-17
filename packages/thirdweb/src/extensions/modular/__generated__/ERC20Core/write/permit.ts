@@ -14,38 +14,38 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type PermitParams = WithOverrides<{
   owner: AbiParameterToPrimitiveType<{
-    name: "owner";
     type: "address";
+    name: "owner";
     internalType: "address";
   }>;
   spender: AbiParameterToPrimitiveType<{
-    name: "spender";
     type: "address";
+    name: "spender";
     internalType: "address";
   }>;
   value: AbiParameterToPrimitiveType<{
-    name: "value";
     type: "uint256";
+    name: "value";
     internalType: "uint256";
   }>;
   deadline: AbiParameterToPrimitiveType<{
-    name: "deadline";
     type: "uint256";
+    name: "deadline";
     internalType: "uint256";
   }>;
   v: AbiParameterToPrimitiveType<{
-    name: "v";
     type: "uint8";
+    name: "v";
     internalType: "uint8";
   }>;
   r: AbiParameterToPrimitiveType<{
-    name: "r";
     type: "bytes32";
+    name: "r";
     internalType: "bytes32";
   }>;
   s: AbiParameterToPrimitiveType<{
-    name: "s";
     type: "bytes32";
+    name: "s";
     internalType: "bytes32";
   }>;
 }>;
@@ -53,38 +53,38 @@ export type PermitParams = WithOverrides<{
 export const FN_SELECTOR = "0xd505accf" as const;
 const FN_INPUTS = [
   {
+    type: "address",
     name: "owner",
-    type: "address",
     internalType: "address",
   },
   {
+    type: "address",
     name: "spender",
-    type: "address",
     internalType: "address",
   },
   {
+    type: "uint256",
     name: "value",
-    type: "uint256",
     internalType: "uint256",
   },
   {
+    type: "uint256",
     name: "deadline",
-    type: "uint256",
     internalType: "uint256",
   },
   {
-    name: "v",
     type: "uint8",
+    name: "v",
     internalType: "uint8",
   },
   {
-    name: "r",
     type: "bytes32",
+    name: "r",
     internalType: "bytes32",
   },
   {
-    name: "s",
     type: "bytes32",
+    name: "s",
     internalType: "bytes32",
   },
 ] as const;

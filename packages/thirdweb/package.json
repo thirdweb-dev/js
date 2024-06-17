@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.28.0",
+  "version": "5.29.5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -68,7 +68,7 @@
     "./react": {
       "types": "./dist/types/exports/react.d.ts",
       "import": "./dist/esm/exports/react.js",
-      "react-native": "./dist/esm/exports/react-native.js",
+      "react-native": "./dist/esm/exports/react.native.js",
       "default": "./dist/cjs/exports/react.js"
     },
     "./react-native": {
@@ -99,7 +99,14 @@
     "./wallets": {
       "types": "./dist/types/exports/wallets.d.ts",
       "import": "./dist/esm/exports/wallets.js",
+      "react-native": "./dist/esm/exports/wallets.native.js",
       "default": "./dist/cjs/exports/wallets.js"
+    },
+    "./wallets/in-app": {
+      "types": "./dist/types/exports/wallets/in-app.d.ts",
+      "import": "./dist/esm/exports/wallets/in-app.js",
+      "react-native": "./dist/esm/exports/wallets/in-app.native.js",
+      "default": "./dist/cjs/exports/wallets/in-app.js"
     },
     "./wallets/*": {
       "types": "./dist/types/exports/wallets/*.d.ts",
@@ -205,7 +212,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.10.9"
+    "viem": "2.13.7"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -220,7 +227,6 @@
     "react-native": ">=0.70",
     "react-native-aes-gcm-crypto": "^0.2",
     "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
-    "shamir-secret-sharing": "^0.0.3",
     "typescript": ">=5.0.4"
   },
   "peerDependenciesMeta": {
@@ -245,9 +251,6 @@
     "react-native-quick-crypto": {
       "optional": true
     },
-    "shamir-secret-sharing": {
-      "optional": true
-    },
     "aws-amplify": {
       "optional": true
     },
@@ -270,7 +273,7 @@
   "scripts": {
     "bench:compare": "bun run ./benchmarks/run.ts",
     "bench": "vitest -c ./test/vitest.config.ts bench",
-    "format": "biome format 'src/**/*' --write",
+    "format": "biome format src/ --write",
     "lint": "biome check src/",
     "fix": "biome check src/ --apply",
     "knip": "knip",
@@ -315,7 +318,6 @@
     "react-native": "0.74.1",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
-    "shamir-secret-sharing": "0.0.3",
     "vitest": "1.5.0"
   }
 }

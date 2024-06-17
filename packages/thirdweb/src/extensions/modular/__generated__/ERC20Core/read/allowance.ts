@@ -12,13 +12,13 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type AllowanceParams = {
   owner: AbiParameterToPrimitiveType<{
-    name: "owner";
     type: "address";
+    name: "owner";
     internalType: "address";
   }>;
   spender: AbiParameterToPrimitiveType<{
-    name: "spender";
     type: "address";
+    name: "spender";
     internalType: "address";
   }>;
 };
@@ -26,20 +26,20 @@ export type AllowanceParams = {
 export const FN_SELECTOR = "0xdd62ed3e" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
+    name: "owner",
     internalType: "address",
   },
   {
-    name: "spender",
     type: "address",
+    name: "spender",
     internalType: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "uint256",
+    name: "result",
     internalType: "uint256",
   },
 ] as const;

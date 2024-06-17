@@ -1,8 +1,8 @@
-export { darkTheme, lightTheme } from "../react/web/ui/design-system/index.js";
+export { darkTheme, lightTheme } from "../react/core/design-system/index.js";
 export type {
   Theme,
   ThemeOverrides,
-} from "../react/web/ui/design-system/index.js";
+} from "../react/core/design-system/index.js";
 
 export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
 export {
@@ -21,10 +21,8 @@ export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/Network
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 export type { LocaleId } from "../react/web/ui/types.js";
 
-export {
-  TransactionButton,
-  type TransactionButtonProps,
-} from "../react/web/ui/TransactionButton/index.js";
+export { TransactionButton } from "../react/web/ui/TransactionButton/index.js";
+export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";
 
 export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
@@ -39,37 +37,42 @@ export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
 export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js";
 
-// react/core
-export {
-  useSetActiveWallet,
-  useActiveWalletChain,
-  useConnect,
-  useDisconnect,
-  useActiveAccount,
-  useActiveWallet,
-  useConnectedWallets,
-  useSwitchActiveWalletChain,
-  useActiveWalletConnectionStatus,
-  useSetActiveWalletConnectionStatus,
-  useIsAutoConnecting,
-} from "../react/core/hooks/wallets/wallet-hooks.js";
+// wallet hooks
+export { useActiveWallet } from "../react/web/hooks/wallets/useActiveWallet.js";
+export { useActiveWalletChain } from "../react/web/hooks/wallets/useActiveWalletChain.js";
+export { useActiveWalletConnectionStatus } from "../react/web/hooks/wallets/useActiveWalletConnectionStatus.js";
+export { useActiveAccount } from "../react/web/hooks/wallets/useActiveAccount.js";
+export { useAutoConnect } from "../react/web/hooks/wallets/useAutoConnect.js";
+export { useCapabilities } from "../react/web/hooks/wallets/useCapabilities.js";
+export { useConnect } from "../react/web/hooks/wallets/useConnect.js";
+export { useConnectedWallets } from "../react/web/hooks/wallets/useConnectedWallets.js";
+export { useDisconnect } from "../react/web/hooks/wallets/useDisconnect.js";
+export { useIsAutoConnecting } from "../react/web/hooks/wallets/useIsAutoConnecting.js";
+export { useSetActiveWallet } from "../react/web/hooks/wallets/useSetActiveWallet.js";
+export { useSetActiveWalletConnectionStatus } from "../react/web/hooks/wallets/useSetActiveWalletConnectionStatus.js";
+export { useSendCalls } from "../react/web/hooks/wallets/useSendCalls.js";
+export { useSwitchActiveWalletChain } from "../react/web/hooks/wallets/useSwitchActiveWalletChain.js";
+export { useCallsStatus } from "../react/web/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
 export type { ConnectManagerOptions } from "../wallets/manager/index.js";
 
-// contract related
+// contract
 export { useReadContract } from "../react/core/hooks/contract/useReadContract.js";
-export {
-  useSendTransaction,
-  type SendTransactionConfig,
-  type SendTransactionPayModalConfig,
-} from "../react/web/hooks/useSendTransaction.js";
-export { useSendBatchTransaction } from "../react/core/hooks/contract/useSendBatchTransaction.js";
-export { useSendAndConfirmTransaction } from "../react/core/hooks/contract/useSendAndConfirmTransaction.js";
-export { useEstimateGas } from "../react/core/hooks/contract/useEstimateGas.js";
-export { useEstimateGasCost } from "../react/core/hooks/contract/useEstimateGasCost.js";
 export { useWaitForReceipt } from "../react/core/hooks/contract/useWaitForReceipt.js";
 export { useContractEvents } from "../react/core/hooks/contract/useContractEvents.js";
+
+// transaction
+export {
+  type SendTransactionConfig,
+  type SendTransactionPayModalConfig,
+} from "../react/core/hooks/transaction/useSendTransaction.js";
+export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
+export { useSendTransaction } from "../react/web/hooks/transaction/useSendTransaction.js";
+export { useSendBatchTransaction } from "../react/web/hooks/transaction/useSendBatchTransaction.js";
+export { useSendAndConfirmTransaction } from "../react/web/hooks/transaction/useSendAndConfirmTransaction.js";
+export { useEstimateGas } from "../react/web/hooks/transaction/useEstimateGas.js";
+export { useEstimateGasCost } from "../react/web/hooks/transaction/useEstimateGasCost.js";
 
 // rpc related
 export {
@@ -109,11 +112,8 @@ export {
   type PostOnRampQuoteQueryOptions,
 } from "../react/core/hooks/pay/usePostOnrampQuote.js";
 
-export {
-  AutoConnect,
-  type AutoConnectProps,
-} from "../react/core/hooks/connection/AutoConnect.js";
-export { useAutoConnect } from "../react/core/hooks/connection/useAutoConnect.js";
+export { AutoConnect } from "../react/web/ui/AutoConnect/AutoConnect.js";
+export type { AutoConnectProps } from "../react/core/hooks/connection/types.js";
 
 // auth
 export { type SiweAuthOptions } from "../react/core/hooks/auth/useSiweAuth.js";
@@ -135,3 +135,8 @@ export {
   useWalletInfo,
   useWalletImage,
 } from "../react/web/ui/hooks/useWalletInfo.js";
+
+export {
+  useWalletDetailsModal,
+  type UseWalletDetailsModalOptions,
+} from "../react/web/ui/ConnectWallet/Details.js";

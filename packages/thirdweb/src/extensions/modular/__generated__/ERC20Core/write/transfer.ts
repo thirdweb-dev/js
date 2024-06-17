@@ -14,13 +14,13 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type TransferParams = WithOverrides<{
   to: AbiParameterToPrimitiveType<{
-    name: "to";
     type: "address";
+    name: "to";
     internalType: "address";
   }>;
   amount: AbiParameterToPrimitiveType<{
-    name: "amount";
     type: "uint256";
+    name: "amount";
     internalType: "uint256";
   }>;
 }>;
@@ -28,20 +28,20 @@ export type TransferParams = WithOverrides<{
 export const FN_SELECTOR = "0xa9059cbb" as const;
 const FN_INPUTS = [
   {
-    name: "to",
     type: "address",
+    name: "to",
     internalType: "address",
   },
   {
-    name: "amount",
     type: "uint256",
+    name: "amount",
     internalType: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bool",
+    name: "",
     internalType: "bool",
   },
 ] as const;

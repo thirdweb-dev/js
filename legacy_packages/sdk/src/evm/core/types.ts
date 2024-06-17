@@ -9,7 +9,7 @@ import type {
 } from "ethers";
 import { ChainInfo } from "../schema/shared/ChainInfo";
 
-// --- utility types extracted from from ts-toolbelt --- //
+// --- utility types extracted from ts-toolbelt --- //
 
 // if
 type TBoolean = 0 | 1;

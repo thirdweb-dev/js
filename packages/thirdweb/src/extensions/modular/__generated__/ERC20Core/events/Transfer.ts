@@ -6,14 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type TransferEventFilters = Partial<{
   from: AbiParameterToPrimitiveType<{
-    name: "from";
     type: "address";
+    name: "from";
     indexed: true;
     internalType: "address";
   }>;
   to: AbiParameterToPrimitiveType<{
-    name: "to";
     type: "address";
+    name: "to";
     indexed: true;
     internalType: "address";
   }>;

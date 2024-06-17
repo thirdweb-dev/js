@@ -10,67 +10,67 @@ export const FN_SELECTOR = "0x5357aa5e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "_installedExtensions",
     type: "tuple[]",
-    internalType: "struct IModularCore.InstalledExtension[]",
+    name: "_installedExtensions",
     components: [
       {
-        name: "implementation",
         type: "address",
+        name: "implementation",
         internalType: "address",
       },
       {
-        name: "config",
         type: "tuple",
-        internalType: "struct IExtensionConfig.ExtensionConfig",
+        name: "config",
         components: [
           {
-            name: "requiredInterfaceId",
-            type: "bytes4",
-            internalType: "bytes4",
-          },
-          {
+            internalType: "bool",
             name: "registerInstallationCallback",
             type: "bool",
-            internalType: "bool",
           },
           {
+            internalType: "bytes4[]",
+            name: "requiredInterfaces",
+            type: "bytes4[]",
+          },
+          {
+            internalType: "bytes4[]",
             name: "supportedInterfaces",
             type: "bytes4[]",
-            internalType: "bytes4[]",
           },
           {
+            components: [
+              {
+                internalType: "bytes4",
+                name: "selector",
+                type: "bytes4",
+              },
+            ],
+            internalType: "struct IExtensionConfig.CallbackFunction[]",
             name: "callbackFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionConfig.CallbackFunction[]",
-            components: [
-              {
-                name: "selector",
-                type: "bytes4",
-                internalType: "bytes4",
-              },
-            ],
           },
           {
-            name: "fallbackFunctions",
-            type: "tuple[]",
-            internalType: "struct IExtensionConfig.FallbackFunction[]",
             components: [
               {
+                internalType: "bytes4",
                 name: "selector",
                 type: "bytes4",
-                internalType: "bytes4",
               },
               {
+                internalType: "uint256",
                 name: "permissionBits",
                 type: "uint256",
-                internalType: "uint256",
               },
             ],
+            internalType: "struct IExtensionConfig.FallbackFunction[]",
+            name: "fallbackFunctions",
+            type: "tuple[]",
           },
         ],
+        internalType: "struct IExtensionConfig.ExtensionConfig",
       },
     ],
+    internalType: "struct IModularCore.InstalledExtension[]",
   },
 ] as const;
 

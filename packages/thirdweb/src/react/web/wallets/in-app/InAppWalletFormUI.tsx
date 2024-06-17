@@ -1,11 +1,18 @@
 "use client";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
@@ -22,8 +29,7 @@ import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
-import { useCustomTheme } from "../../ui/design-system/CustomThemeProvider.js";
-import { fontSize, iconSize, spacing } from "../../ui/design-system/index.js";
+import { ModalTitle } from "../../ui/components/modalElements.js";
 import { InputSelectionUI } from "./InputSelectionUI.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
@@ -126,7 +132,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
         },
       });
 
-      await setLastAuthProvider(strategy);
+      await setLastAuthProvider(strategy, webLocalStorage);
 
       setData({
         socialLogin: {
@@ -332,7 +338,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
  */
 export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const locale = props.locale.emailLoginScreen;
-  const { connectModal } = useConnectUI();
+  const { connectModal, client } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
@@ -353,8 +359,23 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
     >
       {isCompact ? (
         <>
-          <ModalHeader onBack={onBack} title={locale.title} />
-          <Spacer y="sm" />
+          <ModalHeader
+            onBack={onBack}
+            title={
+              <>
+                {!connectModal.titleIcon ? null : (
+                  <Img
+                    src={connectModal.titleIcon}
+                    width={iconSize.md}
+                    height={iconSize.md}
+                    client={client}
+                  />
+                )}
+                <ModalTitle>{connectModal.title ?? locale.title}</ModalTitle>
+              </>
+            }
+          />
+          <Spacer y="lg" />
         </>
       ) : null}
 

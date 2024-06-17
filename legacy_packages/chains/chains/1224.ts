@@ -17,7 +17,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://buildonhybrid.com",
-  "name": "Hybrid Testnet",
+  "name": "Hybrid Testnet (Deprecated)",
   "nativeCurrency": {
     "name": "Hybrid",
     "symbol": "HYB",
@@ -28,7 +28,8 @@ export default {
     "https://1224.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.buildonhybrid.com"
   ],
-  "shortName": "hyb",
-  "slug": "hybrid-testnet",
+  "shortName": "hyb_deprecated",
+  "slug": "hybrid-testnet-deprecated",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

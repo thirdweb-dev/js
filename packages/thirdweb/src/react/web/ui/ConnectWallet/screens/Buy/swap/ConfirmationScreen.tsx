@@ -5,12 +5,16 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
-  useActiveWallet,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+  fontSize,
+  iconSize,
+} from "../../../../../../core/design-system/index.js";
+import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useSendTransactionCore } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
+import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { useSwitchActiveWalletChain } from "../../../../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -20,9 +24,7 @@ import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { useCustomTheme } from "../../../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
-import { fontSize, iconSize } from "../../../../design-system/index.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
@@ -48,9 +50,13 @@ export function SwapConfirmationScreen(props: {
   fromTokenSymbol: string;
   isFiatFlow: boolean;
 }) {
-  const sendTransactionMutation = useSendTransactionCore();
   const activeChain = useActiveWalletChain();
   const activeWallet = useActiveWallet();
+  const switchChain = useSwitchActiveWalletChain();
+  const sendTransactionMutation = useSendTransactionCore({
+    wallet: activeWallet,
+    switchChain,
+  });
 
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";

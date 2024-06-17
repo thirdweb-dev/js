@@ -10,8 +10,8 @@ export const FN_SELECTOR = "0x06fdde03" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "string",
+    name: "",
     internalType: "string",
   },
 ] as const;

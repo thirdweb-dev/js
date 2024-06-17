@@ -3,12 +3,16 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
-  useActiveWallet,
-  useDisconnect,
-} from "../../../../core/hooks/wallets/wallet-hooks.js";
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../core/design-system/index.js";
+import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { wait } from "../../../../core/utils/wait.js";
+import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
+import { useDisconnect } from "../../../hooks/wallets/useDisconnect.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -16,9 +20,7 @@ import { WalletImage } from "../../components/WalletImage.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { iconSize, radius, spacing } from "../../design-system/index.js";
 import type { ConnectButtonProps } from "../ConnectButtonProps.js";
 import { TOS } from "../Modal/TOS.js";
 import type { ConnectLocale } from "../locale/types.js";
@@ -43,7 +45,8 @@ export const SignatureScreen: React.FC<{
     connectLocale,
   } = props;
 
-  const siweAuth = useSiweAuth(props.auth);
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(activeWallet, props.auth);
   const [status, setStatus] = useState<Status>("idle");
   const { disconnect } = useDisconnect();
   const wallet = useActiveWallet();

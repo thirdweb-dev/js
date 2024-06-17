@@ -2,21 +2,21 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import {
+  fontSize,
+  iconSize,
+  radius,
+  spacing,
+} from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import {
-  fontSize,
-  iconSize,
-  radius,
-  spacing,
-} from "../../../../design-system/index.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { WalletIcon } from "../../../icons/WalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";

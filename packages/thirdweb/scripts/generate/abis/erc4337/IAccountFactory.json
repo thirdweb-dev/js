@@ -7,6 +7,9 @@
   "function getAccountsOfSigner(address signer) view returns (address[] accounts)",
   "function getAddress(address adminSigner, bytes data) view returns (address)",
   "function getAllAccounts() view returns (address[])",
+  "function getAccounts(uint256 start, uint256 end) view returns (address[])",
   "function onSignerAdded(address signer, address creatorAdmin, bytes data)",
-  "function onSignerRemoved(address signer, address creatorAdmin, bytes data)"
+  "function onSignerRemoved(address signer, address creatorAdmin, bytes data)",
+  "function totalAccounts() view returns (uint256)",
+  "function isRegistered(address account) view returns (bool)"
 ]

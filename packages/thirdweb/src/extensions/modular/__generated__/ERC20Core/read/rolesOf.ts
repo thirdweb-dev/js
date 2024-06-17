@@ -12,8 +12,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type RolesOfParams = {
   user: AbiParameterToPrimitiveType<{
-    name: "user";
     type: "address";
+    name: "user";
     internalType: "address";
   }>;
 };
@@ -21,15 +21,15 @@ export type RolesOfParams = {
 export const FN_SELECTOR = "0x2de94807" as const;
 const FN_INPUTS = [
   {
-    name: "user",
     type: "address",
+    name: "user",
     internalType: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "roles",
     type: "uint256",
+    name: "roles",
     internalType: "uint256",
   },
 ] as const;

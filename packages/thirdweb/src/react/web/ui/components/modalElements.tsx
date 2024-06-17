@@ -1,8 +1,8 @@
 "use client";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { fontSize, iconSize } from "../../../core/design-system/index.js";
 import { StyledH2 } from "../design-system/elements.js";
-import { fontSize, iconSize } from "../design-system/index.js";
 import { IconButton } from "./buttons.js";
 
 export const ModalTitle = /* @__PURE__ */ StyledH2(() => {

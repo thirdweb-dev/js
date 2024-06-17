@@ -10,7 +10,7 @@ import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
-import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import { toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 
 type Ethers5 = typeof ethers5;
@@ -306,8 +306,7 @@ export async function toEthersSigner(
         throw new Error("Account not found");
       }
       return account.signMessage({
-        message:
-          typeof message === "string" ? message : uint8ArrayToHex(message),
+        message: typeof message === "string" ? message : { raw: message },
       });
     }
     /**
@@ -484,7 +483,13 @@ function alignTxToEthers(
     }
   }
 
-  return { ...rest, gasLimit: gas, to, type };
+  return {
+    ...rest,
+    gasLimit: gas,
+    to,
+    type,
+    accessList: tx.accessList as ethers5.utils.AccessListish | undefined,
+  };
 }
 
 async function alignTxFromEthers(

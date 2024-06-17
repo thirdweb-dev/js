@@ -1,13 +1,13 @@
 "use client";
 import type { CSSObject } from "@emotion/react";
-import { useCustomTheme } from "../design-system/CustomThemeProvider.js";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { type Theme, spacing } from "../../../core/design-system/index.js";
 import {
   fadeInAnimation,
   floatDownAnimation,
   floatUpAnimation,
 } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
-import { type Theme, spacing } from "../design-system/index.js";
 import { BackButton, ModalTitle } from "./modalElements.js";
 
 export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
@@ -42,7 +42,7 @@ export function ModalHeader(props: {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: onBack ? "center" : "flex-start",
         position: "relative",
       }}
     >
@@ -56,7 +56,7 @@ export function ModalHeader(props: {
           }}
         />
       )}
-      <Container flex="row" gap="xs" center="both">
+      <Container flex="row" gap="xs" center={"both"}>
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>

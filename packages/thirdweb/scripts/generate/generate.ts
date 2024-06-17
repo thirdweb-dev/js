@@ -57,6 +57,7 @@ export async function generateFromAbi(
           join(outFolder, extensionFileName, "./events", `${e.name}.ts`),
           await format(generateEvent(e, extensionName), {
             parser: "babel-ts",
+            trailingComma: "all",
           }),
           "utf-8",
         );
@@ -75,6 +76,7 @@ export async function generateFromAbi(
           join(outFolder, extensionFileName, "./read", `${f.name}.ts`),
           await format(generateReadFunction(f, extensionName), {
             parser: "babel-ts",
+            trailingComma: "all",
           }),
           "utf-8",
         );
@@ -93,6 +95,7 @@ export async function generateFromAbi(
           join(outFolder, extensionFileName, "./write", `${f.name}.ts`),
           await format(generateWriteFunction(f, extensionName), {
             parser: "babel-ts",
+            trailingComma: "all",
           }),
           "utf-8",
         );

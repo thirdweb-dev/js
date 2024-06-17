@@ -1,5 +1,6 @@
 import {
   ChainOrRpcUrl,
+  getChainProvider,
   isContractDeployed,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
@@ -97,6 +98,19 @@ export async function isSmartWalletDeployed(
     readOnlySDK.getProvider(),
   );
   return isDeployed;
+}
+
+export async function isZkSyncChain(
+  network: ChainOrRpcUrl,
+  clientId?: string,
+  secretKey?: string,
+) {
+  const provider = getChainProvider(network, {
+    clientId,
+    secretKey,
+  });
+  const chainId = (await provider.getNetwork()).chainId;
+  return chainId === 324 || chainId === 300 || chainId === 302;
 }
 
 /**

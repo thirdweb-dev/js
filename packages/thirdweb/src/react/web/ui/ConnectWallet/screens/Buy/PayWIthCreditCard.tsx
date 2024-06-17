@@ -2,16 +2,16 @@ import styled from "@emotion/styled";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
-import { Skeleton } from "../../../components/Skeleton.js";
-import { Container } from "../../../components/basic.js";
-import { Button } from "../../../components/buttons.js";
-import { Text } from "../../../components/text.js";
 import {
   fontSize,
   iconSize,
   radius,
   spacing,
-} from "../../../design-system/index.js";
+} from "../../../../../core/design-system/index.js";
+import { Skeleton } from "../../../components/Skeleton.js";
+import { Container } from "../../../components/basic.js";
+import { Button } from "../../../components/buttons.js";
+import { Text } from "../../../components/text.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
 
 /**
@@ -26,7 +26,6 @@ export function PayWithCreditCard(props: {
   client: ThirdwebClient;
   currency: CurrencyMeta;
   onSelectCurrency: () => void;
-  disableCurrencySelection?: boolean;
 }) {
   return (
     <Container
@@ -47,7 +46,6 @@ export function PayWithCreditCard(props: {
     >
       {/* Left */}
       <CurrencyButton
-        disabled={props.disableCurrencySelection}
         variant="ghost"
         onClick={props.onSelectCurrency}
         style={{
@@ -58,11 +56,9 @@ export function PayWithCreditCard(props: {
         gap="sm"
       >
         <props.currency.icon size={iconSize.md} />
-        <Container flex="row" center="y" gap="xxs">
+        <Container flex="row" center="y" gap="xxs" color="secondaryText">
           <Text color="primaryText">{props.currency.shorthand}</Text>
-          {!props.disableCurrencySelection && (
-            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-          )}
+          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
         </Container>
       </CurrencyButton>
 

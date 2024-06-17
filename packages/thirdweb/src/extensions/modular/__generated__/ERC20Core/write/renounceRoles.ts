@@ -14,8 +14,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type RenounceRolesParams = WithOverrides<{
   roles: AbiParameterToPrimitiveType<{
-    name: "roles";
     type: "uint256";
+    name: "roles";
     internalType: "uint256";
   }>;
 }>;
@@ -23,8 +23,8 @@ export type RenounceRolesParams = WithOverrides<{
 export const FN_SELECTOR = "0x183a4f6e" as const;
 const FN_INPUTS = [
   {
-    name: "roles",
     type: "uint256",
+    name: "roles",
     internalType: "uint256",
   },
 ] as const;

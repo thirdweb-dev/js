@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
-import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
-import { getStorage } from "../../../core/storage.js";
+import { radius } from "../../../core/design-system/index.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
 import {
   emailIcon,
@@ -18,7 +19,6 @@ import {
   facebookIconUri,
   googleIconUri,
 } from "../ConnectWallet/icons/socialLogins.js";
-import { radius } from "../design-system/index.js";
 import { useWalletImage } from "../hooks/useWalletInfo.js";
 import { Img } from "./Img.js";
 
@@ -39,7 +39,7 @@ export function WalletImage(props: {
       // show EOA icon for external wallets
       // show auth provider icon for in-app wallets
       // show the admin EOA icon for smart
-      const storage = getStorage();
+      const storage = webLocalStorage;
       let activeEOAId = props.id;
       if (props.id === "smart") {
         const storedId = await getStoredActiveWalletId(storage);
@@ -47,9 +47,7 @@ export function WalletImage(props: {
           activeEOAId = storedId;
         }
       }
-      let mipdImage = getInstalledWalletProviders().find(
-        (provider) => provider.info.rdns === activeEOAId,
-      )?.info.icon;
+      let mipdImage: string | undefined;
 
       if (
         activeEOAId === "inApp" &&
@@ -78,6 +76,8 @@ export function WalletImage(props: {
             mipdImage = passkeyIcon;
             break;
         }
+      } else {
+        mipdImage = await getWalletInfo(activeEOAId, true);
       }
 
       setImage(mipdImage);

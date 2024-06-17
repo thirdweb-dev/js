@@ -210,3 +210,16 @@ export type GetUser =
       walletAddress: string;
     }
   | InitializedUser;
+
+export type GetAuthenticatedUserParams = {
+  client: ThirdwebClient;
+};
+
+export const oauthStrategyToAuthProvider: Record<
+  "google" | "facebook" | "apple",
+  AuthProvider
+> = {
+  google: AuthProvider.GOOGLE,
+  facebook: AuthProvider.FACEBOOK,
+  apple: AuthProvider.APPLE,
+};

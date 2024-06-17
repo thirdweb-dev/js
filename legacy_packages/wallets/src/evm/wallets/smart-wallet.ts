@@ -17,6 +17,7 @@ import { walletIds } from "../constants/walletIds";
 import { getValidChainRPCs } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { checkContractWalletSignature } from "../connectors/smart-wallet/lib/check-contract-wallet-signature";
+import { isZkSyncChain } from "./smart-wallet";
 
 // export types and utils for convenience
 export type * from "../connectors/smart-wallet/types";
@@ -27,7 +28,10 @@ export {
   getSmartWalletAddress,
   isSmartWalletDeployed,
   getUserOpReceipt,
+  isZkSyncChain,
 } from "../connectors/smart-wallet/utils";
+
+export { DEFAULT_FACTORY_ADDRESS } from "../connectors/smart-wallet/lib/constants";
 
 export type { UserOperationStruct } from "@account-abstraction/contracts";
 
@@ -293,14 +297,30 @@ export class SmartWallet extends AbstractClientWallet<
 
   async getConnector(): Promise<SmartWalletConnectorType> {
     if (!this.connector) {
-      const { SmartWalletConnector } = await import(
-        "../connectors/smart-wallet"
-      );
-      this.connector = new SmartWalletConnector(
-        this.options as SmartWalletConfig,
-      );
+      if (
+        this.options &&
+        (await isZkSyncChain(
+          this.options.chain,
+          this.options.clientId,
+          this.options.secretKey,
+        ))
+      ) {
+        const { ZkSyncConnector } = await import(
+          "../connectors/smart-wallet/zk-connector"
+        );
+        this.connector = new ZkSyncConnector(
+          this.options as SmartWalletConfig,
+        ) as any;
+      } else {
+        const { SmartWalletConnector } = await import(
+          "../connectors/smart-wallet"
+        );
+        this.connector = new SmartWalletConnector(
+          this.options as SmartWalletConfig,
+        );
+      }
     }
-    return this.connector;
+    return this.connector as SmartWalletConnectorType;
   }
 
   /**
@@ -561,6 +581,9 @@ export class SmartWallet extends AbstractClientWallet<
    */
   async isDeployed(): Promise<boolean> {
     const connector = await this.getConnector();
+    if (connector.chainId && (await isZkSyncChain(connector.chainId))) {
+      return true;
+    }
     return connector.isDeployed();
   }
 

@@ -27,5 +27,7 @@ export function useConnectLocale(localeId: LocaleId) {
     queryFn: async () => {
       return getConnectLocale(localeId);
     },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }

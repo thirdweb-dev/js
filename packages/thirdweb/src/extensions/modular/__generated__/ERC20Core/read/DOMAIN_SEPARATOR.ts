@@ -10,8 +10,8 @@ export const FN_SELECTOR = "0x3644e515" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "bytes32",
+    name: "result",
     internalType: "bytes32",
   },
 ] as const;

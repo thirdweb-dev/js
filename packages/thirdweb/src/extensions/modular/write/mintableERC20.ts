@@ -1,9 +1,8 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import type { Address } from "../../../utils/address.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { randomBytesHex } from "../../../utils/random.js";
@@ -12,7 +11,7 @@ import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js"
 import { encodeMintParams } from "../__generated__/MintableERC20/read/mint.js";
 
 export type TokenMintParams = {
-  to: Address;
+  to: string;
 } & ({ quantity: string } | { quantityWei: bigint });
 
 export function mintWithPermissions(
@@ -43,8 +42,8 @@ export function mintWithPermissions(
         pricePerUnit: 0n,
         quantity: 0n,
         uid: randomBytesHex(),
-        currency: ADDRESS_ZERO,
-        recipient: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
+        recipient: ZERO_ADDRESS,
         startTimestamp: 0,
         endTimestamp: 0,
       };
@@ -64,13 +63,14 @@ export function mintWithPermissions(
 }
 
 export function mintWithSignature(
-  options: BaseTransactionOptions<GenerateMintSignatureOptions>,
+  options: BaseTransactionOptions<
+    Awaited<ReturnType<typeof generateMintSignature>>
+  >,
 ) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature } = await generateMintSignature(options);
-
+      const { payload, signature } = options;
       return {
         to: payload.recipient,
         amount: BigInt(payload.quantity),
@@ -151,7 +151,7 @@ export async function generateMintSignature(
       });
     })(),
     // uid computation
-    mintRequest.uid || (await randomBytesHex()),
+    mintRequest.uid || randomBytesHex(),
   ]);
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
@@ -190,8 +190,8 @@ type PayloadType = AbiParameterToPrimitiveType<{
 type GeneratePayloadInput = {
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;
-  recipient: Address;
-  currency?: Address;
+  recipient: string;
+  currency?: string;
   priceInWei?: bigint;
   uid?: Hex;
 } & ({ quantity: string } | { quantityWei: bigint });

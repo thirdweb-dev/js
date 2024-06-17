@@ -2,25 +2,25 @@
 
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
+import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
-import { AutoConnect } from "../../../core/hooks/connection/AutoConnect.js";
-import {
-  useActiveAccount,
-  useActiveWalletConnectionStatus,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
 import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";
 import {
   WalletUIStatesProvider,
   useSetIsWalletModalOpen,
 } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
+import { usePreloadWalletProviders } from "../../utils/usePreloadWalletProviders.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
+import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import { Modal } from "../components/Modal.js";
 import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import { iconSize } from "../design-system/index.js";
 import type { ConnectButtonProps } from "./ConnectButtonProps.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
@@ -58,6 +58,11 @@ export function ConnectButton(props: ConnectButtonProps) {
     [props.wallets, props.appMetadata, props.chains],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
+
+  usePreloadWalletProviders({
+    wallets,
+    client: props.client,
+  });
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
@@ -135,8 +140,9 @@ function ConnectButtonInner(
     connectLocale: ConnectLocale;
   },
 ) {
+  const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(props.auth);
+  const siweAuth = useSiweAuth(activeWallet, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   // if wallet gets disconnected suddently, close the signature modal if it's open
@@ -193,7 +199,9 @@ function ConnectButtonInner(
         aria-label={
           connectionStatus === "connecting"
             ? locale.connecting
-            : connectButtonLabel
+            : typeof connectButtonLabel === "string"
+              ? connectButtonLabel
+              : locale.defaultButtonTitle
         }
         onClick={() => {
           setIsWalletModalOpen(true);
@@ -294,6 +302,8 @@ function ConnectButtonInner(
       chains={props?.chains || []}
       chain={props.chain}
       switchButton={props.switchButton}
+      client={props.client}
+      connectLocale={locale}
     />
   );
 }

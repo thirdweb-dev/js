@@ -1,645 +1,1093 @@
 [
-    {
-      "type": "constructor",
-      "inputs": [
-        { "name": "name", "type": "string", "internalType": "string" },
-        { "name": "symbol", "type": "string", "internalType": "string" },
-        { "name": "contractURI", "type": "string", "internalType": "string" },
-        { "name": "owner", "type": "address", "internalType": "address" },
-        {
-          "name": "extensions",
-          "type": "address[]",
-          "internalType": "address[]"
-        },
-        {
-          "name": "extensionInstallData",
-          "type": "bytes[]",
-          "internalType": "bytes[]"
-        }
-      ],
-      "stateMutability": "payable"
-    },
-    { "type": "fallback", "stateMutability": "payable" },
-    { "type": "receive", "stateMutability": "payable" },
-    {
-      "type": "function",
-      "name": "DOMAIN_SEPARATOR",
-      "inputs": [],
-      "outputs": [
-        { "name": "result", "type": "bytes32", "internalType": "bytes32" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "allowance",
-      "inputs": [
-        { "name": "owner", "type": "address", "internalType": "address" },
-        { "name": "spender", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [
-        { "name": "result", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "approve",
-      "inputs": [
-        { "name": "spender", "type": "address", "internalType": "address" },
-        { "name": "amount", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "balanceOf",
-      "inputs": [
-        { "name": "owner", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [
-        { "name": "result", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "burn",
-      "inputs": [
-        { "name": "from", "type": "address", "internalType": "address" },
-        { "name": "amount", "type": "uint256", "internalType": "uint256" },
-        { "name": "data", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "cancelOwnershipHandover",
-      "inputs": [],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "completeOwnershipHandover",
-      "inputs": [
-        { "name": "pendingOwner", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "contractURI",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "decimals",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "uint8", "internalType": "uint8" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getInstalledExtensions",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "_installedExtensions",
-          "type": "tuple[]",
-          "internalType": "struct IModularCore.InstalledExtension[]",
-          "components": [
-            {
-              "name": "implementation",
-              "type": "address",
-              "internalType": "address"
-            },
-            {
-              "name": "config",
-              "type": "tuple",
-              "internalType": "struct IExtensionConfig.ExtensionConfig",
-              "components": [
-                {
-                  "name": "requiredInterfaceId",
-                  "type": "bytes4",
-                  "internalType": "bytes4"
-                },
-                {
-                  "name": "registerInstallationCallback",
-                  "type": "bool",
-                  "internalType": "bool"
-                },
-                {
-                  "name": "supportedInterfaces",
-                  "type": "bytes4[]",
-                  "internalType": "bytes4[]"
-                },
-                {
-                  "name": "callbackFunctions",
-                  "type": "tuple[]",
-                  "internalType": "struct IExtensionConfig.CallbackFunction[]",
-                  "components": [
-                    {
-                      "name": "selector",
-                      "type": "bytes4",
-                      "internalType": "bytes4"
-                    }
-                  ]
-                },
-                {
-                  "name": "fallbackFunctions",
-                  "type": "tuple[]",
-                  "internalType": "struct IExtensionConfig.FallbackFunction[]",
-                  "components": [
-                    {
-                      "name": "selector",
-                      "type": "bytes4",
-                      "internalType": "bytes4"
-                    },
-                    {
-                      "name": "permissionBits",
-                      "type": "uint256",
-                      "internalType": "uint256"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getSupportedCallbackFunctions",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "supportedCallbackFunctions",
-          "type": "tuple[]",
-          "internalType": "struct IModularCore.SupportedCallbackFunction[]",
-          "components": [
-            { "name": "selector", "type": "bytes4", "internalType": "bytes4" },
-            {
-              "name": "mode",
-              "type": "uint8",
-              "internalType": "enum IModularCore.CallbackMode"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "grantRoles",
-      "inputs": [
-        { "name": "user", "type": "address", "internalType": "address" },
-        { "name": "roles", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "hasAllRoles",
-      "inputs": [
-        { "name": "user", "type": "address", "internalType": "address" },
-        { "name": "roles", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "hasAnyRole",
-      "inputs": [
-        { "name": "user", "type": "address", "internalType": "address" },
-        { "name": "roles", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "installExtension",
-      "inputs": [
-        { "name": "_extension", "type": "address", "internalType": "address" },
-        { "name": "_data", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "mint",
-      "inputs": [
-        { "name": "to", "type": "address", "internalType": "address" },
-        { "name": "amount", "type": "uint256", "internalType": "uint256" },
-        { "name": "data", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "multicall",
-      "inputs": [
-        { "name": "data", "type": "bytes[]", "internalType": "bytes[]" }
-      ],
-      "outputs": [{ "name": "", "type": "bytes[]", "internalType": "bytes[]" }],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "name",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "nonces",
-      "inputs": [
-        { "name": "owner", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [
-        { "name": "result", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "owner",
-      "inputs": [],
-      "outputs": [
-        { "name": "result", "type": "address", "internalType": "address" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "ownershipHandoverExpiresAt",
-      "inputs": [
-        { "name": "pendingOwner", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [
-        { "name": "result", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "permit",
-      "inputs": [
-        { "name": "owner", "type": "address", "internalType": "address" },
-        { "name": "spender", "type": "address", "internalType": "address" },
-        { "name": "value", "type": "uint256", "internalType": "uint256" },
-        { "name": "deadline", "type": "uint256", "internalType": "uint256" },
-        { "name": "v", "type": "uint8", "internalType": "uint8" },
-        { "name": "r", "type": "bytes32", "internalType": "bytes32" },
-        { "name": "s", "type": "bytes32", "internalType": "bytes32" }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "renounceOwnership",
-      "inputs": [],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "renounceRoles",
-      "inputs": [
-        { "name": "roles", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "requestOwnershipHandover",
-      "inputs": [],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "revokeRoles",
-      "inputs": [
-        { "name": "user", "type": "address", "internalType": "address" },
-        { "name": "roles", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "rolesOf",
-      "inputs": [
-        { "name": "user", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [
-        { "name": "roles", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "setContractURI",
-      "inputs": [
-        { "name": "contractURI", "type": "string", "internalType": "string" }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "supportsInterface",
-      "inputs": [
-        { "name": "interfaceId", "type": "bytes4", "internalType": "bytes4" }
-      ],
-      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "symbol",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "totalSupply",
-      "inputs": [],
-      "outputs": [
-        { "name": "result", "type": "uint256", "internalType": "uint256" }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "transfer",
-      "inputs": [
-        { "name": "to", "type": "address", "internalType": "address" },
-        { "name": "amount", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "transferFrom",
-      "inputs": [
-        { "name": "from", "type": "address", "internalType": "address" },
-        { "name": "to", "type": "address", "internalType": "address" },
-        { "name": "amount", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "transferOwnership",
-      "inputs": [
-        { "name": "newOwner", "type": "address", "internalType": "address" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "uninstallExtension",
-      "inputs": [
-        { "name": "_extension", "type": "address", "internalType": "address" },
-        { "name": "_data", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "event",
-      "name": "Approval",
-      "inputs": [
-        {
-          "name": "owner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "spender",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "ContractURIUpdated",
-      "inputs": [],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "ExtensionInstalled",
-      "inputs": [
-        {
-          "name": "sender",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "implementation",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "installedExtension",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "ExtensionUninstalled",
-      "inputs": [
-        {
-          "name": "sender",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "implementation",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        },
-        {
-          "name": "installedExtension",
-          "type": "address",
-          "indexed": false,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "OwnershipHandoverCanceled",
-      "inputs": [
-        {
-          "name": "pendingOwner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "OwnershipHandoverRequested",
-      "inputs": [
-        {
-          "name": "pendingOwner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "OwnershipTransferred",
-      "inputs": [
-        {
-          "name": "oldOwner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "newOwner",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "RolesUpdated",
-      "inputs": [
-        {
-          "name": "user",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "roles",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "Transfer",
-      "inputs": [
-        {
-          "name": "from",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "to",
-          "type": "address",
-          "indexed": true,
-          "internalType": "address"
-        },
-        {
-          "name": "amount",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    { "type": "error", "name": "AllowanceOverflow", "inputs": [] },
-    { "type": "error", "name": "AllowanceUnderflow", "inputs": [] },
-    { "type": "error", "name": "AlreadyInitialized", "inputs": [] },
-    { "type": "error", "name": "CallbackExecutionReverted", "inputs": [] },
-    {
-      "type": "error",
-      "name": "CallbackFunctionAlreadyInstalled",
-      "inputs": []
-    },
-    { "type": "error", "name": "CallbackFunctionNotSupported", "inputs": [] },
-    { "type": "error", "name": "CallbackFunctionRequired", "inputs": [] },
-    {
-      "type": "error",
-      "name": "CallbackFunctionUnauthorizedCall",
-      "inputs": []
-    },
-    { "type": "error", "name": "ExtensionAlreadyInstalled", "inputs": [] },
-    {
-      "type": "error",
-      "name": "ExtensionInterfaceNotCompatible",
-      "inputs": [
-        {
-          "name": "requiredInterfaceId",
-          "type": "bytes4",
-          "internalType": "bytes4"
-        }
-      ]
-    },
-    { "type": "error", "name": "ExtensionNotInstalled", "inputs": [] },
-    { "type": "error", "name": "ExtensionOutOfSync", "inputs": [] },
-    {
-      "type": "error",
-      "name": "FallbackFunctionAlreadyInstalled",
-      "inputs": []
-    },
-    { "type": "error", "name": "FallbackFunctionNotInstalled", "inputs": [] },
-    { "type": "error", "name": "IndexOutOfBounds", "inputs": [] },
-    { "type": "error", "name": "InsufficientAllowance", "inputs": [] },
-    { "type": "error", "name": "InsufficientBalance", "inputs": [] },
-    { "type": "error", "name": "InvalidPermit", "inputs": [] },
-    { "type": "error", "name": "NewOwnerIsZeroAddress", "inputs": [] },
-    { "type": "error", "name": "NoHandoverRequest", "inputs": [] },
-    { "type": "error", "name": "PermitExpired", "inputs": [] },
-    { "type": "error", "name": "TotalSupplyOverflow", "inputs": [] },
-    { "type": "error", "name": "Unauthorized", "inputs": [] }
+  {
+    "type": "constructor",
+    "name": "",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "error",
+    "name": "AllowanceOverflow",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "AllowanceUnderflow",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "AlreadyInitialized",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallbackExecutionReverted",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallbackFunctionAlreadyInstalled",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallbackFunctionNotSupported",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallbackFunctionRequired",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallbackFunctionUnauthorizedCall",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "ExtensionAlreadyInstalled",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "ExtensionInterfaceNotCompatible",
+    "inputs": [
+      {
+        "type": "bytes4",
+        "name": "requiredInterfaceId",
+        "internalType": "bytes4"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "ExtensionNotInstalled",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "ExtensionOutOfSync",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "FallbackFunctionAlreadyInstalled",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "FallbackFunctionNotInstalled",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "IndexOutOfBounds",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "InsufficientAllowance",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "InsufficientBalance",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidInitialization",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidPermit",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "NewOwnerIsZeroAddress",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "NoHandoverRequest",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotInitializing",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "PermitExpired",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "Reentrancy",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "TotalSupplyOverflow",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "error",
+    "name": "Unauthorized",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "event",
+    "name": "Approval",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "spender",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ContractURIUpdated",
+    "inputs": [],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ExtensionInstalled",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "caller",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "implementation",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "installedExtension",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ExtensionUninstalled",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "caller",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "implementation",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "installedExtension",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Initialized",
+    "inputs": [
+      {
+        "type": "uint64",
+        "name": "version",
+        "indexed": false,
+        "internalType": "uint64"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipHandoverCanceled",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "pendingOwner",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipHandoverRequested",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "pendingOwner",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "oldOwner",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "newOwner",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RolesUpdated",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "roles",
+        "indexed": true,
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Transfer",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "from",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "to",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "anonymous": false
+  },
+  {
+    "type": "fallback",
+    "name": "",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "DOMAIN_SEPARATOR",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "bytes32",
+        "name": "result",
+        "internalType": "bytes32"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "allowance",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "spender",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "result",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "approve",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "spender",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "balanceOf",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "result",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "burn",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "from",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes",
+        "name": "data",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "cancelOwnershipHandover",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "completeOwnershipHandover",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "pendingOwner",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "contractURI",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "decimals",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint8",
+        "name": "",
+        "internalType": "uint8"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getInstalledExtensions",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "_installedExtensions",
+        "components": [
+          {
+            "type": "address",
+            "name": "implementation",
+            "internalType": "address"
+          },
+          {
+            "type": "tuple",
+            "name": "config",
+            "components": [
+              {
+                "internalType": "bool",
+                "name": "registerInstallationCallback",
+                "type": "bool"
+              },
+              {
+                "internalType": "bytes4[]",
+                "name": "requiredInterfaces",
+                "type": "bytes4[]"
+              },
+              {
+                "internalType": "bytes4[]",
+                "name": "supportedInterfaces",
+                "type": "bytes4[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes4",
+                    "name": "selector",
+                    "type": "bytes4"
+                  }
+                ],
+                "internalType": "struct IExtensionConfig.CallbackFunction[]",
+                "name": "callbackFunctions",
+                "type": "tuple[]"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "bytes4",
+                    "name": "selector",
+                    "type": "bytes4"
+                  },
+                  {
+                    "internalType": "uint256",
+                    "name": "permissionBits",
+                    "type": "uint256"
+                  }
+                ],
+                "internalType": "struct IExtensionConfig.FallbackFunction[]",
+                "name": "fallbackFunctions",
+                "type": "tuple[]"
+              }
+            ],
+            "internalType": "struct IExtensionConfig.ExtensionConfig"
+          }
+        ],
+        "internalType": "struct IModularCore.InstalledExtension[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getSupportedCallbackFunctions",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "supportedCallbackFunctions",
+        "components": [
+          {
+            "type": "bytes4",
+            "name": "selector",
+            "internalType": "bytes4"
+          },
+          {
+            "type": "uint8",
+            "name": "mode",
+            "internalType": "enum IModularCore.CallbackMode"
+          }
+        ],
+        "internalType": "struct IModularCore.SupportedCallbackFunction[]"
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "grantRoles",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "roles",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "hasAllRoles",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "roles",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "hasAnyRole",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "roles",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "initialize",
+    "inputs": [
+      {
+        "type": "string",
+        "name": "_name",
+        "internalType": "string"
+      },
+      {
+        "type": "string",
+        "name": "_symbol",
+        "internalType": "string"
+      },
+      {
+        "type": "string",
+        "name": "_contractURI",
+        "internalType": "string"
+      },
+      {
+        "type": "address",
+        "name": "_owner",
+        "internalType": "address"
+      },
+      {
+        "type": "address[]",
+        "name": "_extensions",
+        "internalType": "address[]"
+      },
+      {
+        "type": "bytes[]",
+        "name": "_extensionInstallData",
+        "internalType": "bytes[]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "installExtension",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_extension",
+        "internalType": "address"
+      },
+      {
+        "type": "bytes",
+        "name": "_data",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "mint",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "to",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      },
+      {
+        "type": "bytes",
+        "name": "data",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "multicall",
+    "inputs": [
+      {
+        "type": "bytes[]",
+        "name": "data",
+        "internalType": "bytes[]"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bytes[]",
+        "name": "",
+        "internalType": "bytes[]"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "name",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "nonces",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "result",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "address",
+        "name": "result",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "ownershipHandoverExpiresAt",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "pendingOwner",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "result",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "permit",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "owner",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "spender",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "value",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "deadline",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint8",
+        "name": "v",
+        "internalType": "uint8"
+      },
+      {
+        "type": "bytes32",
+        "name": "r",
+        "internalType": "bytes32"
+      },
+      {
+        "type": "bytes32",
+        "name": "s",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "renounceOwnership",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "renounceRoles",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "roles",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "requestOwnershipHandover",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "revokeRoles",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "roles",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "rolesOf",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "roles",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "setContractURI",
+    "inputs": [
+      {
+        "type": "string",
+        "name": "contractURI",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "supportsInterface",
+    "inputs": [
+      {
+        "type": "bytes4",
+        "name": "interfaceId",
+        "internalType": "bytes4"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "symbol",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "string",
+        "name": "",
+        "internalType": "string"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "totalSupply",
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "result",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "transfer",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "to",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "transferFrom",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "from",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "to",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "amount",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": "",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "transferOwnership",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "newOwner",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "uninstallExtension",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_extension",
+        "internalType": "address"
+      },
+      {
+        "type": "bytes",
+        "name": "_data",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  }
 ]

@@ -14,18 +14,18 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type MintParams = WithOverrides<{
   to: AbiParameterToPrimitiveType<{
-    name: "to";
     type: "address";
+    name: "to";
     internalType: "address";
   }>;
   amount: AbiParameterToPrimitiveType<{
-    name: "amount";
     type: "uint256";
+    name: "amount";
     internalType: "uint256";
   }>;
   data: AbiParameterToPrimitiveType<{
-    name: "data";
     type: "bytes";
+    name: "data";
     internalType: "bytes";
   }>;
 }>;
@@ -33,18 +33,18 @@ export type MintParams = WithOverrides<{
 export const FN_SELECTOR = "0x94d008ef" as const;
 const FN_INPUTS = [
   {
-    name: "to",
     type: "address",
+    name: "to",
     internalType: "address",
   },
   {
-    name: "amount",
     type: "uint256",
+    name: "amount",
     internalType: "uint256",
   },
   {
-    name: "data",
     type: "bytes",
+    name: "data",
     internalType: "bytes",
   },
 ] as const;

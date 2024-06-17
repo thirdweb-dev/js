@@ -14,13 +14,13 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type InstallExtensionParams = WithOverrides<{
   extension: AbiParameterToPrimitiveType<{
-    name: "_extension";
     type: "address";
+    name: "_extension";
     internalType: "address";
   }>;
   data: AbiParameterToPrimitiveType<{
-    name: "_data";
     type: "bytes";
+    name: "_data";
     internalType: "bytes";
   }>;
 }>;
@@ -28,13 +28,13 @@ export type InstallExtensionParams = WithOverrides<{
 export const FN_SELECTOR = "0xaca696f5" as const;
 const FN_INPUTS = [
   {
-    name: "_extension",
     type: "address",
+    name: "_extension",
     internalType: "address",
   },
   {
-    name: "_data",
     type: "bytes",
+    name: "_data",
     internalType: "bytes",
   },
 ] as const;

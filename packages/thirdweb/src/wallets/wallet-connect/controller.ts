@@ -6,6 +6,7 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   getTypesForEIP712Domain,
+  serializeTypedData,
   validateTypedData,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
@@ -16,14 +17,10 @@ import {
 } from "../../chains/utils.js";
 import {
   type Hex,
-  isHex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
-import { stringify } from "../../utils/json.js";
-import { isAndroid, isIOS, isMobile } from "../../utils/web/isMobile.js";
-import { openWindow } from "../../utils/web/openWindow.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type {
@@ -39,19 +36,16 @@ import type { WalletEmitter } from "../wallet-emitter.js";
 import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 import type { ThirdwebClient } from "../../client/client.js";
-import { getStorage } from "../../react/core/storage.js";
 import { getAddress } from "../../utils/address.js";
-import { isReactNative } from "../../utils/platform.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
-import { formatWalletConnectUrl } from "../../utils/url.js";
+import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import {
   getSavedConnectParamsFromStorage,
   saveConnectParamsToStorage,
-} from "../storage/walletStorage.js";
+} from "../../utils/storage/walletStorage.js";
+import { formatWalletConnectUrl } from "../../utils/url.js";
 import type { WalletId } from "../wallet-types.js";
 import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
-
-const asyncLocalStorage = getStorage();
 
 type WCProvider = InstanceType<typeof EthereumProvider>;
 
@@ -89,24 +83,26 @@ export async function connectWC(
   options: WCConnectOptions,
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
+  storage: AsyncStorage,
+  sessionHandler?: (uri: string) => void,
 ): Promise<ReturnType<typeof onConnect>> {
-  const provider = await initProvider(options, walletId);
+  const provider = await initProvider(options, walletId, sessionHandler);
   const wcOptions = options.walletConnect;
 
   let { onDisplayUri } = wcOptions || {};
 
-  if (isReactNative() && !onDisplayUri) {
+  // use default sessionHandler unless onDisplayUri is explicitly provided
+  if (!onDisplayUri && sessionHandler) {
     const walletInfo = await getWalletInfo(walletId);
-    const nativeCallaback = (uri: string) => {
-      const { Linking } = require("react-native");
+    const deeplinkHandler = (uri: string) => {
       const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
       if (!appUrl) {
         throw new Error("No app url found for wallet connect to redirect to.");
       }
       const fullUrl = formatWalletConnectUrl(appUrl, uri).redirect;
-      Linking.openURL(fullUrl);
+      sessionHandler(fullUrl);
     };
-    onDisplayUri = nativeCallaback;
+    onDisplayUri = deeplinkHandler;
   }
 
   if (onDisplayUri) {
@@ -134,7 +130,7 @@ export async function connectWC(
     });
   }
 
-  setRequestedChainsIds(chainsToRequest);
+  setRequestedChainsIds(chainsToRequest, storage);
   // If session exists and chains are authorized, enable provider for required chain
   const addresses = await provider.enable();
   const address = addresses[0];
@@ -156,8 +152,8 @@ export async function connectWC(
       pairingTopic: options.walletConnect?.pairingTopic,
     };
 
-    if (asyncLocalStorage) {
-      saveConnectParamsToStorage(asyncLocalStorage, walletId, savedParams);
+    if (storage) {
+      saveConnectParamsToStorage(storage, walletId, savedParams);
     }
   }
 
@@ -165,7 +161,7 @@ export async function connectWC(
     provider.events.removeListener("display_uri", wcOptions.onDisplayUri);
   }
 
-  return onConnect(address, chain, provider, emitter);
+  return onConnect(address, chain, provider, emitter, storage);
 }
 
 /**
@@ -176,9 +172,11 @@ export async function autoConnectWC(
   options: WCAutoConnectOptions,
   emitter: WalletEmitter<WCSupportedWalletIds>,
   walletId: WCSupportedWalletIds | "walletConnect",
+  storage: AsyncStorage,
+  sessionHandler?: (uri: string) => void,
 ): Promise<ReturnType<typeof onConnect>> {
-  const savedConnectParams: SavedConnectParams | null = asyncLocalStorage
-    ? await getSavedConnectParamsFromStorage(asyncLocalStorage, walletId)
+  const savedConnectParams: SavedConnectParams | null = storage
+    ? await getSavedConnectParamsFromStorage(storage, walletId)
     : null;
 
   const provider = await initProvider(
@@ -196,6 +194,7 @@ export async function autoConnectWC(
           walletConnect: {},
         },
     walletId,
+    sessionHandler,
     true, // is auto connect
   );
 
@@ -212,7 +211,7 @@ export async function autoConnectWC(
       ? options.chain
       : getCachedChain(providerChainId);
 
-  return onConnect(address, chain, provider, emitter);
+  return onConnect(address, chain, provider, emitter, storage);
 }
 
 // Connection utils -----------------------------------------------------------------------------------------------
@@ -220,6 +219,7 @@ export async function autoConnectWC(
 async function initProvider(
   options: WCConnectOptions,
   walletId: WCSupportedWalletIds | "walletConnect",
+  sessionRequestHandler?: (uri: string) => void,
   isAutoConnect = false,
 ) {
   const walletInfo = await getWalletInfo(walletId);
@@ -235,7 +235,7 @@ async function initProvider(
   });
 
   const provider = await EthereumProvider.init({
-    showQrModal: isReactNative()
+    showQrModal: sessionRequestHandler
       ? false
       : wcOptions?.showQrModal === undefined
         ? defaultShowQrModal
@@ -277,41 +277,13 @@ async function initProvider(
 
   if (walletId !== "walletConnect") {
     function handleSessionRequest() {
-      const preferNative =
+      const walletLinkToOpen =
         provider.session?.peer?.metadata?.redirect?.native ||
         walletInfo.mobile.native ||
         walletInfo.mobile.universal;
 
-      if (isReactNative()) {
-        const { Linking } = require("react-native");
-        if (!preferNative) {
-          throw new Error(
-            "No app url found for wallet connect to redirect to.",
-          );
-        }
-        Linking.openURL(preferNative);
-        return;
-      }
-
-      if (!isMobile()) {
-        return;
-      }
-
-      if (isAndroid()) {
-        if (preferNative) {
-          openWindow(preferNative);
-        }
-      } else if (isIOS()) {
-        if (preferNative) {
-          openWindow(preferNative);
-        }
-      } else {
-        const preferUniversal =
-          walletInfo.mobile.universal || walletInfo.mobile.native;
-
-        if (preferUniversal) {
-          openWindow(preferUniversal);
-        }
+      if (sessionRequestHandler && walletLinkToOpen) {
+        sessionRequestHandler(walletLinkToOpen);
       }
     }
 
@@ -374,10 +346,12 @@ function createAccount(provider: WCProvider, address: string) {
       // as we can't statically check this with TypeScript.
       validateTypedData({ domain, message, primaryType, types });
 
-      const typedData = stringify(
-        { domain: domain ?? {}, message, primaryType, types },
-        (_, value) => (isHex(value) ? value.toLowerCase() : value),
-      );
+      const typedData = serializeTypedData({
+        domain: domain ?? {},
+        message,
+        primaryType,
+        types,
+      });
 
       return await provider.request({
         method: "eth_signTypedData_v4",
@@ -394,6 +368,7 @@ function onConnect(
   chain: Chain,
   provider: WCProvider,
   emitter: WalletEmitter<WCSupportedWalletIds>,
+  storage: AsyncStorage,
 ): [Account, Chain, DisconnectFn, SwitchChainFn] {
   const account = createAccount(provider, address);
 
@@ -405,8 +380,8 @@ function onConnect(
   }
 
   function onDisconnect() {
-    setRequestedChainsIds([]);
-    asyncLocalStorage?.removeItem(storageKeys.lastUsedChainId);
+    setRequestedChainsIds([], storage);
+    storage?.removeItem(storageKeys.lastUsedChainId);
     disconnect();
     emitter.emit("disconnect", undefined);
   }
@@ -424,7 +399,7 @@ function onConnect(
   function onChainChanged(newChainId: string) {
     const newChain = getCachedChain(normalizeChainId(newChainId));
     emitter.emit("chainChanged", newChain);
-    asyncLocalStorage?.setItem(storageKeys.lastUsedChainId, String(newChainId));
+    storage?.setItem(storageKeys.lastUsedChainId, String(newChainId));
   }
 
   provider.on("accountsChanged", onAccountsChanged);
@@ -436,7 +411,7 @@ function onConnect(
     account,
     chain,
     disconnect,
-    (newChain) => switchChainWC(provider, newChain),
+    (newChain) => switchChainWC(provider, newChain, storage),
   ];
 }
 
@@ -454,7 +429,11 @@ function getNamespaceChainsIds(provider: WCProvider): number[] {
   return chainIds ?? [];
 }
 
-async function switchChainWC(provider: WCProvider, chain: Chain) {
+async function switchChainWC(
+  provider: WCProvider,
+  chain: Chain,
+  storage: AsyncStorage,
+) {
   const chainId = chain.id;
   try {
     const namespaceChains = getNamespaceChainsIds(provider);
@@ -479,9 +458,9 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
           },
         ],
       });
-      const requestedChains = await getRequestedChainsIds();
+      const requestedChains = await getRequestedChainsIds(storage);
       requestedChains.push(chainId);
-      setRequestedChainsIds(requestedChains);
+      setRequestedChainsIds(requestedChains, storage);
     }
     await provider.request({
       method: "wallet_switchEthereumChain",
@@ -502,19 +481,16 @@ async function switchChainWC(provider: WCProvider, chain: Chain) {
  * Set the requested chains to the storage.
  * @internal
  */
-function setRequestedChainsIds(chains: number[]) {
-  asyncLocalStorage?.setItem(
-    storageKeys.requestedChains,
-    JSON.stringify(chains),
-  );
+function setRequestedChainsIds(chains: number[], storage: AsyncStorage) {
+  storage?.setItem(storageKeys.requestedChains, JSON.stringify(chains));
 }
 
 /**
  * Get the last requested chains from the storage.
  * @internal
  */
-async function getRequestedChainsIds(): Promise<number[]> {
-  const data = await asyncLocalStorage?.getItem(storageKeys.requestedChains);
+async function getRequestedChainsIds(storage: AsyncStorage): Promise<number[]> {
+  const data = await storage.getItem(storageKeys.requestedChains);
   return data ? JSON.parse(data) : [];
 }
 

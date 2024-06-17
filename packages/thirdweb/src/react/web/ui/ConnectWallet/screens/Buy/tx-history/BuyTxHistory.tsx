@@ -6,21 +6,19 @@ import {
 } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+  fontSize,
+  iconSize,
+  spacing,
+} from "../../../../../../core/design-system/index.js";
+import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import {
-  fontSize,
-  iconSize,
-  spacing,
-} from "../../../../design-system/index.js";
 import {
   BuyTxHistoryButton,
   BuyTxHistoryButtonHeight,

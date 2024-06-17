@@ -12,8 +12,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type SupportsInterfaceParams = {
   interfaceId: AbiParameterToPrimitiveType<{
-    name: "interfaceId";
     type: "bytes4";
+    name: "interfaceId";
     internalType: "bytes4";
   }>;
 };
@@ -21,15 +21,15 @@ export type SupportsInterfaceParams = {
 export const FN_SELECTOR = "0x01ffc9a7" as const;
 const FN_INPUTS = [
   {
-    name: "interfaceId",
     type: "bytes4",
+    name: "interfaceId",
     internalType: "bytes4",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bool",
+    name: "",
     internalType: "bool",
   },
 ] as const;

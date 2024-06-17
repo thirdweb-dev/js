@@ -10,21 +10,21 @@ export const FN_SELECTOR = "0xf147db8a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "supportedCallbackFunctions",
     type: "tuple[]",
-    internalType: "struct IModularCore.SupportedCallbackFunction[]",
+    name: "supportedCallbackFunctions",
     components: [
       {
-        name: "selector",
         type: "bytes4",
+        name: "selector",
         internalType: "bytes4",
       },
       {
-        name: "mode",
         type: "uint8",
+        name: "mode",
         internalType: "enum IModularCore.CallbackMode",
       },
     ],
+    internalType: "struct IModularCore.SupportedCallbackFunction[]",
   },
 ] as const;
 

@@ -14,8 +14,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type SetContractURIParams = WithOverrides<{
   contractURI: AbiParameterToPrimitiveType<{
-    name: "contractURI";
     type: "string";
+    name: "contractURI";
     internalType: "string";
   }>;
 }>;
@@ -23,8 +23,8 @@ export type SetContractURIParams = WithOverrides<{
 export const FN_SELECTOR = "0x938e3d7b" as const;
 const FN_INPUTS = [
   {
-    name: "contractURI",
     type: "string",
+    name: "contractURI",
     internalType: "string",
   },
 ] as const;

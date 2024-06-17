@@ -24,26 +24,15 @@ export default {
         "height": 102,
         "format": "svg"
       }
-    },
-    {
-      "name": "blockscout",
-      "url": "https://explorer.sepolia.linea.build/",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-        "width": 30,
-        "height": 30,
-        "format": "svg"
-      }
     }
   ],
   "faucets": [],
   "features": [],
   "icon": {
-    "url": "ipfs://QmURjritnHL7a8TwZgsFwp3f272DJmG5paaPtWDZ98QZwH",
-    "width": 30,
-    "height": 30,
-    "format": "svg"
+    "url": "ipfs://QmS3wZEQTRMZBySqaCnKsGWuohRYh598JL8AntKh3URv6R",
+    "width": 798,
+    "height": 831,
+    "format": "png"
   },
   "infoURL": "https://linea.build",
   "name": "Linea Sepolia",

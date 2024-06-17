@@ -1,13 +1,13 @@
 import { keyframes } from "@emotion/react";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { spacing } from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";
 import { Text } from "../../components/text.js";
-import { useCustomTheme } from "../../design-system/CustomThemeProvider.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { spacing } from "../../design-system/index.js";
 import { TOS } from "../Modal/TOS.js";
 import { PoweredByThirdweb } from "../PoweredByTW.js";
 import { GlobeIcon } from "../icons/GlobalIcon.js";

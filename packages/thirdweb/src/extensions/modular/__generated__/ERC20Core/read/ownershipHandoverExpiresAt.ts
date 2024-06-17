@@ -12,8 +12,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type OwnershipHandoverExpiresAtParams = {
   pendingOwner: AbiParameterToPrimitiveType<{
-    name: "pendingOwner";
     type: "address";
+    name: "pendingOwner";
     internalType: "address";
   }>;
 };
@@ -21,15 +21,15 @@ export type OwnershipHandoverExpiresAtParams = {
 export const FN_SELECTOR = "0xfee81cf4" as const;
 const FN_INPUTS = [
   {
-    name: "pendingOwner",
     type: "address",
+    name: "pendingOwner",
     internalType: "address",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "result",
     type: "uint256",
+    name: "result",
     internalType: "uint256",
   },
 ] as const;

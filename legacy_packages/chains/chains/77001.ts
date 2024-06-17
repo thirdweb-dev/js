@@ -19,14 +19,15 @@ export default {
   "infoURL": "https://www.boraportal.com",
   "name": "BORAchain mainnet",
   "nativeCurrency": {
-    "name": "BGAS",
-    "symbol": "BGAS",
+    "name": "BORA",
+    "symbol": "BORA",
     "decimals": 18
   },
   "networkId": 77001,
   "rpc": [
     "https://77001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://public-node.api.boraportal.com/bora/mainnet"
+    "https://public-node.api.boraportal.com/bora/mainnet",
+    "https://public-node.api.boraportal.io/bora/mainnet"
   ],
   "shortName": "BORAchain",
   "slip44": 8217,

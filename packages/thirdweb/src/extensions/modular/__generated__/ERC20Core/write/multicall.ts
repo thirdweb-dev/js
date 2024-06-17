@@ -14,8 +14,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type MulticallParams = WithOverrides<{
   data: AbiParameterToPrimitiveType<{
-    name: "data";
     type: "bytes[]";
+    name: "data";
     internalType: "bytes[]";
   }>;
 }>;
@@ -23,15 +23,15 @@ export type MulticallParams = WithOverrides<{
 export const FN_SELECTOR = "0xac9650d8" as const;
 const FN_INPUTS = [
   {
-    name: "data",
     type: "bytes[]",
+    name: "data",
     internalType: "bytes[]",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bytes[]",
+    name: "",
     internalType: "bytes[]",
   },
 ] as const;

@@ -14,18 +14,18 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type BurnParams = WithOverrides<{
   from: AbiParameterToPrimitiveType<{
-    name: "from";
     type: "address";
+    name: "from";
     internalType: "address";
   }>;
   amount: AbiParameterToPrimitiveType<{
-    name: "amount";
     type: "uint256";
+    name: "amount";
     internalType: "uint256";
   }>;
   data: AbiParameterToPrimitiveType<{
-    name: "data";
     type: "bytes";
+    name: "data";
     internalType: "bytes";
   }>;
 }>;
@@ -33,18 +33,18 @@ export type BurnParams = WithOverrides<{
 export const FN_SELECTOR = "0x44d17187" as const;
 const FN_INPUTS = [
   {
-    name: "from",
     type: "address",
+    name: "from",
     internalType: "address",
   },
   {
-    name: "amount",
     type: "uint256",
+    name: "amount",
     internalType: "uint256",
   },
   {
-    name: "data",
     type: "bytes",
+    name: "data",
     internalType: "bytes",
   },
 ] as const;

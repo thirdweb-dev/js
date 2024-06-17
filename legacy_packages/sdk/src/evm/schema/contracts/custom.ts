@@ -169,11 +169,20 @@ export const CustomFactoryInput = /* @__PURE__ */ (() =>
 /**
  * @internal
  */
+export const ModularFactoryInput = /* @__PURE__ */ (() =>
+  z.object({
+    hooksParamName: z.string(),
+  }))();
+
+/**
+ * @internal
+ */
 export const FactoryDeploymentSchema = /* @__PURE__ */ (() =>
   z.object({
     implementationAddresses: ChainIdToAddressSchema,
     implementationInitializerFunction: z.string().default("initialize"),
     customFactoryInput: CustomFactoryInput.optional(),
+    modularFactoryInput: ModularFactoryInput.optional(),
     factoryAddresses: ChainIdToAddressSchema.optional(),
   }))();
 
@@ -191,7 +200,12 @@ export const DeployTypeInput = /* @__PURE__ */ (() =>
  * @internal
  */
 export const RouterTypeInput = /* @__PURE__ */ (() =>
-  z.union([z.literal("none"), z.literal("plugin"), z.literal("dynamic")]))();
+  z.union([
+    z.literal("none"),
+    z.literal("plugin"),
+    z.literal("dynamic"),
+    z.literal("modular"),
+  ]))();
 
 /**
  * @internal

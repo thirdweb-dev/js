@@ -14,8 +14,8 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type TransferOwnershipParams = WithOverrides<{
   newOwner: AbiParameterToPrimitiveType<{
-    name: "newOwner";
     type: "address";
+    name: "newOwner";
     internalType: "address";
   }>;
 }>;
@@ -23,8 +23,8 @@ export type TransferOwnershipParams = WithOverrides<{
 export const FN_SELECTOR = "0xf2fde38b" as const;
 const FN_INPUTS = [
   {
-    name: "newOwner",
     type: "address",
+    name: "newOwner",
     internalType: "address",
   },
 ] as const;

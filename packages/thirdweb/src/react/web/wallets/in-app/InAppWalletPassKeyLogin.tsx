@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../exports/wallets.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
+import { iconSize } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
@@ -11,7 +13,6 @@ import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { iconSize } from "../../ui/design-system/index.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { setLastAuthProvider } from "./storage.js";
 
@@ -127,7 +128,7 @@ function LoginScreen(props: {
         type: "sign-in",
         chain,
       });
-      await setLastAuthProvider("passkey");
+      await setLastAuthProvider("passkey", webLocalStorage);
       done();
     } catch {
       setStatus("error");
@@ -187,7 +188,7 @@ function SignupScreen(props: {
         type: "sign-up",
         chain,
       });
-      await setLastAuthProvider("passkey");
+      await setLastAuthProvider("passkey", webLocalStorage);
       done();
     } catch {
       setStatus("error");
