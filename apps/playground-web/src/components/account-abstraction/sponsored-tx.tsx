@@ -12,7 +12,6 @@ import {
   useReadContract,
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { CodeExample } from "../code/code-example";
 import { editionDropContract, editionDropTokenId } from "./constants";
 
 export function SponsoredTxPreview() {
