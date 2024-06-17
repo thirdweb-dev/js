@@ -2,6 +2,7 @@ import { useQueries } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { COINBASE } from "../../../wallets/constants.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { CreateWalletArgs } from "../../../wallets/wallet-types.js";
 
 export function usePreloadWalletProviders({
   client,
@@ -18,7 +19,9 @@ export function usePreloadWalletProviders({
               const { getCoinbaseWebProvider } = await import(
                 "../../../wallets/coinbase/coinbaseWebSDK.js"
               );
-              await getCoinbaseWebProvider();
+              await getCoinbaseWebProvider(
+                w.getConfig() as CreateWalletArgs<typeof COINBASE>[1],
+              );
               // return _something_
               return true;
             }
