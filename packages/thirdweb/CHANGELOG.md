@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.29.5
+
+### Patch Changes
+
+- [#3356](https://github.com/thirdweb-dev/js/pull/3356) [`2d7ebe2`](https://github.com/thirdweb-dev/js/commit/2d7ebe2111d24448dd85ace25fc9fdbef987a57d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ConnectButton theming prop
+
+- [#3364](https://github.com/thirdweb-dev/js/pull/3364) [`7304c5b`](https://github.com/thirdweb-dev/js/commit/7304c5b0c7060080f302160dc9b24b2becc17524) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect coinbase wallet create settings when preloading the provider
+
+- [#3347](https://github.com/thirdweb-dev/js/pull/3347) [`a9ce10f`](https://github.com/thirdweb-dev/js/commit/a9ce10f39ad47f386e8086e230679093aab08754) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ERC721 extension: updateMetadata
+
 ## 5.29.4
 
 ### Patch Changes
