@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [
+    "https://bartio.faucet.berachain.com",
     "https://bartio.faucet.berachain.com/"
   ],
   "features": [],
@@ -19,6 +20,7 @@ export default {
     "height": 360,
     "format": "png"
   },
+  "infoURL": "https://www.berachain.com",
   "name": "Berachain bArtio",
   "nativeCurrency": {
     "name": "BERA",
@@ -31,7 +33,8 @@ export default {
     "https://80084.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://quicknode-rpc.berachain.com",
     "https://bartio.rpc.berachain.com",
-    "https://rpc.ankr.com/berachain_testnet"
+    "https://rpc.ankr.com/berachain_testnet",
+    "https://bera-testnet.nodeinfra.com"
   ],
   "shortName": "Berachain",
   "slug": "berachain-bartio",

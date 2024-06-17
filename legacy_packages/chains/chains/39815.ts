@@ -16,12 +16,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZt75xixnEtFzqHTrJa8kJkV4cTXmUZqeMeHM8BcvomQc",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://oho.ai",
   "name": "OHO Mainnet",
   "nativeCurrency": {

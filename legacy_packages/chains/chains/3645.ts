@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "iChain",
-  "chainId": 3639,
+  "chain": "iChain Testnet",
+  "chainId": 3645,
   "explorers": [
     {
       "name": "iChainscan",
-      "url": "https://ichainscan.com",
+      "url": "https://test.ichainscan.com",
       "standard": "EIP3091"
     }
   ],
@@ -17,18 +17,18 @@ export default {
     "format": "png"
   },
   "infoURL": "https://islamicoin.finance",
-  "name": "iChain Network",
+  "name": "iChain Testnet",
   "nativeCurrency": {
     "name": "ISLAMICOIN",
     "symbol": "ISLAMI",
     "decimals": 18
   },
-  "networkId": 3639,
+  "networkId": 3645,
   "rpc": [
-    "https://3639.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc.ichainscan.com"
+    "https://3645.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://istanbul.ichainscan.com"
   ],
-  "shortName": "ISLAMI",
-  "slug": "ichain-network",
-  "testnet": false
+  "shortName": "ISLAMIT",
+  "slug": "ichain-testnet",
+  "testnet": true
 } as const satisfies Chain;

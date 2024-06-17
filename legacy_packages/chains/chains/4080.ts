@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmXARMjJGkXEVEdjUyxkeG4ffsWvEo9vSJpVon3JwRxckS",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://tobechain.net",
   "name": "Tobe Chain",
   "nativeCurrency": {

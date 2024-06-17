@@ -4,17 +4,17 @@ export default {
   "chainId": 57451,
   "explorers": [
     {
-      "name": "coinsec network",
+      "name": "coinsecnetwork",
       "url": "https://explorer.coinsec.network",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
   "icon": {
-    "url": "ipfs://QmYV6beVVg3iS9RGPno7GAASpgjyBDoKmWGUcvAKe2nXWK",
-    "width": 50,
-    "height": 50,
-    "format": "png"
+    "url": "ipfs://QmeUyBe58BPndt6SpH9Tn1a8AYpNtHbMVhVyZt8Ppc4HTB",
+    "width": 200,
+    "height": 200,
+    "format": "svg"
   },
   "infoURL": "https://explorer.coinsec.network/",
   "name": "COINSEC Network",
