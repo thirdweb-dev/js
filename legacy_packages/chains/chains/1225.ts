@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "HYB",
-  "chainId": 1224,
+  "chainId": 1225,
   "explorers": [
     {
       "name": "Hybrid Testnet",
@@ -17,19 +17,20 @@ export default {
     "format": "png"
   },
   "infoURL": "https://buildonhybrid.com",
-  "name": "Hybrid Testnet (Deprecated)",
+  "name": "Hybrid Testnet",
   "nativeCurrency": {
     "name": "Hybrid",
     "symbol": "HYB",
     "decimals": 18
   },
-  "networkId": 1224,
+  "networkId": 1225,
   "rpc": [
-    "https://1224.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet-rpc.buildonhybrid.com"
+    "https://1225.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://hybrid-testnet.rpc.caldera.xyz/http",
+    "wss://hybrid-testnet.rpc.caldera.xyz/ws"
   ],
-  "shortName": "hyb_deprecated",
-  "slug": "hybrid-testnet-deprecated",
-  "status": "deprecated",
+  "shortName": "hyb",
+  "slug": "hybrid-testnet",
+  "status": "active",
   "testnet": true
 } as const satisfies Chain;
