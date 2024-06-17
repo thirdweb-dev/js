@@ -6,6 +6,7 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -14,7 +15,6 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
-import { setLastAuthProvider } from "./storage.js";
 
 // is passkey stored?
 // - login

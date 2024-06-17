@@ -13,6 +13,7 @@ import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedText } from "../components/text.js";
@@ -28,6 +29,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   const theme = parseTheme(props.theme);
   const [visible, setVisible] = useState(false);
   const wallet = useActiveWallet();
+  const account = useActiveAccount();
 
   const fadeAnim = useRef(new Animated.Value(0)).current; // For background opacity
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // For bottom sheet position
@@ -76,8 +78,13 @@ export function ConnectButton(props: ConnectButtonProps) {
     }
   }, [visible, openModal, closeModal]);
 
-  return wallet ? (
-    <ConnectedButton onClose={closeModal} {...props} />
+  return wallet && account ? (
+    <ConnectedButton
+      onClose={closeModal}
+      wallet={wallet}
+      account={account}
+      {...props}
+    />
   ) : (
     <View>
       <ThemedButton theme={theme} onPress={() => setVisible(true)}>

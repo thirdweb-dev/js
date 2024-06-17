@@ -5,6 +5,7 @@ import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wall
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -12,7 +13,6 @@ import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import { setLastAuthProvider } from "./storage.js";
 import type { InAppWalletSelectUIState } from "./types.js";
 
 /**

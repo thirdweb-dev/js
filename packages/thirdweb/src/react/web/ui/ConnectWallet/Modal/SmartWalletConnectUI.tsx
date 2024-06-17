@@ -12,6 +12,7 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
@@ -20,7 +21,6 @@ import { Spinner } from "../../components/Spinner.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
-import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 
 /**

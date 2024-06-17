@@ -10,12 +10,12 @@ import {
 } from "../../../core/design-system/index.js";
 // import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
 import { StyledButton } from "../design-system/elements.js";
-import { useWalletInfo } from "../hooks/useWalletInfo.js";
 import { useScreenContext } from "./Modal/screen.js";
 
 /**

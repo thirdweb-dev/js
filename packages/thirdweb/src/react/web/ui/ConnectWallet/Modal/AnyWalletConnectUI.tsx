@@ -11,6 +11,7 @@ import { COINBASE } from "../../../../../wallets/constants.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
@@ -18,7 +19,6 @@ import {
   WalletConnectConnection,
   WalletConnectStandaloneConnection,
 } from "../../../wallets/shared/WalletConnectConnection.js";
-import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
 

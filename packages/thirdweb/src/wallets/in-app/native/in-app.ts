@@ -58,7 +58,6 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
 export function inAppWallet(
   createOptions?: CreateWalletArgs<"inApp">[1],
 ): Wallet<"inApp"> {
-  console.log("inAppWallet NATIVE");
   return createInAppWallet({
     createOptions,
     connectorFactory: async (client: ThirdwebClient) => {

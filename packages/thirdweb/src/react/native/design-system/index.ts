@@ -2,6 +2,7 @@ export const spacing = {
   xxs: 2,
   xs: 4,
   sm: 8,
+  smd: 12,
   md: 16,
   lg: 24,
   xl: 32,
@@ -17,4 +18,14 @@ export const radius = {
   xl: 24,
   xxl: 32,
   full: 9999,
+};
+
+export const fontSize = {
+  xxs: 10,
+  xs: 12,
+  sm: 14,
+  md: 16,
+  lg: 20,
+  xl: 24,
+  xxl: 32,
 };

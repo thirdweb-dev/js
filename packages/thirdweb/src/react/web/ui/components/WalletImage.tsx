@@ -6,8 +6,9 @@ import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.j
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
+import { getLastAuthProvider } from "../../../core/utils/storage.js";
+import { useWalletImage } from "../../../core/utils/wallet.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
 import {
   emailIcon,
   genericWalletIcon,
@@ -19,7 +20,6 @@ import {
   facebookIconUri,
   googleIconUri,
 } from "../ConnectWallet/icons/socialLogins.js";
-import { useWalletImage } from "../hooks/useWalletInfo.js";
 import { Img } from "./Img.js";
 
 // Note: Must not use useConnectUI here

@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.29.4
+
+### Patch Changes
+
+- [#3345](https://github.com/thirdweb-dev/js/pull/3345) [`79e6a04`](https://github.com/thirdweb-dev/js/commit/79e6a047d6ae6cb341fdad22137bd83ad6e611d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix react native inAppWallet creation
+
+## 5.29.3
+
+### Patch Changes
+
+- [#3329](https://github.com/thirdweb-dev/js/pull/3329) [`c94bcd5`](https://github.com/thirdweb-dev/js/commit/c94bcd574aa4eaf2bd76ab8b6379302de4731ed4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dynamically import coinbase sdk to avoid cloudflare bundler issues
+
+- [#3341](https://github.com/thirdweb-dev/js/pull/3341) [`1c533ef`](https://github.com/thirdweb-dev/js/commit/1c533efcd5fbc8a72fd03c98510fa601ee5f34b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix transaction button not respecting theme prop
+
+- [#3298](https://github.com/thirdweb-dev/js/pull/3298) [`ffaff74`](https://github.com/thirdweb-dev/js/commit/ffaff744f72d2cb22896e7501677b48f76ea857a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - refactor exports to handle native vs non-native dependencies
+
+- [#3330](https://github.com/thirdweb-dev/js/pull/3330) [`9cf3a1d`](https://github.com/thirdweb-dev/js/commit/9cf3a1d6636fcd56559e889ab2bfe3249d51162a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix coinbase wallet popup sometimes not opening on safari + improve inAppWallet web performance
+
 ## 5.29.2
 
 ### Patch Changes

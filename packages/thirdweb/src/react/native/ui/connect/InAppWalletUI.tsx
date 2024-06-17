@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type {
   MultiStepAuthProviderType,
   PreAuthArgsType,
@@ -13,6 +14,7 @@ import type {
 import { preAuthenticate } from "../../../../wallets/in-app/native/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { radius, spacing } from "../../design-system/index.js";
 import type { useConnect } from "../../hooks/wallets/useConnect.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
@@ -105,6 +107,7 @@ function SocialLogin(
         client,
         strategy: auth,
       });
+      await setLastAuthProvider(auth, nativeLocalStorage);
       return wallet;
     });
   };
@@ -212,6 +215,7 @@ export function OtpLogin(
           verificationCode,
         });
       }
+      await setLastAuthProvider(auth.strategy, nativeLocalStorage);
       return wallet;
     });
   };

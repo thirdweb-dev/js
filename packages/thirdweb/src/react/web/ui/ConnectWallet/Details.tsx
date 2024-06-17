@@ -45,6 +45,7 @@ import {
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { shortenString } from "../../../core/utils/addresses.js";
+import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
@@ -123,10 +124,8 @@ export const ConnectedWalletDetails: React.FC<{
 
   useChainsQuery(props.chains, 5);
 
-  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
-    client,
-    props.detailsButton?.displayBalanceToken,
-  );
+  const { ensAvatarQuery, addressOrENS, balanceQuery } =
+    useConnectedWalletDetails(client, props.detailsButton?.displayBalanceToken);
 
   function closeModal() {
     setRootEl(null);
@@ -248,14 +247,17 @@ function DetailsModal(props: {
   const [isOpen, setIsOpen] = useState(true);
 
   const { client, locale } = props;
-  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
-    client,
-    props.displayBalanceToken,
-  );
+  const walletChain = useActiveWalletChain();
+  const activeAccount = useActiveAccount();
+  const { ensAvatarQuery, addressOrENS, balanceQuery } =
+    useConnectedWalletDetails(
+      client,
+      walletChain,
+      activeAccount,
+      props.displayBalanceToken,
+    );
 
   const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
-  const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
@@ -1234,60 +1236,5 @@ export function useWalletDetailsModal() {
 
   return {
     open: openModal,
-  };
-}
-
-function useWalletInfo(
-  client: ThirdwebClient,
-  displayBalanceToken?: Record<number, string>,
-) {
-  const walletChain = useActiveWalletChain();
-
-  const tokenAddress =
-    walletChain && displayBalanceToken
-      ? displayBalanceToken[Number(walletChain.id)]
-      : undefined;
-
-  const activeAccount = useActiveAccount();
-  const ensNameQuery = useQuery({
-    queryKey: ["ens-name", activeAccount?.address],
-    enabled: !!activeAccount?.address,
-    queryFn: () =>
-      resolveName({
-        client,
-        address: activeAccount?.address || "",
-        resolverChain: ethereum,
-      }),
-  });
-
-  const ensAvatarQuery = useQuery({
-    queryKey: ["ens-avatar", ensNameQuery.data],
-    enabled: !!ensNameQuery.data,
-    queryFn: async () =>
-      resolveAvatar({
-        client,
-        name: ensNameQuery.data || "",
-      }),
-  });
-
-  const shortAddress = activeAccount?.address
-    ? shortenString(activeAccount.address, false)
-    : "";
-
-  const balanceQuery = useWalletBalance({
-    chain: walletChain ? walletChain : undefined,
-    tokenAddress,
-    address: activeAccount?.address,
-    client,
-  });
-
-  const addressOrENS = ensNameQuery.data || shortAddress;
-
-  return {
-    ensNameQuery,
-    ensAvatarQuery,
-    addressOrENS,
-    shortAddress,
-    balanceQuery,
   };
 }

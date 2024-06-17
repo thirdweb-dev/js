@@ -7,6 +7,7 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -16,7 +17,6 @@ import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
 import type { InAppWalletLocale } from "./locale/types.js";
-import { setLastAuthProvider } from "./storage.js";
 
 type VerificationStatus =
   | "verifying"
