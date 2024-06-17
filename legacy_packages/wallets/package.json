@@ -536,7 +536,7 @@
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@walletconnect/core": "^2.13.2",
+    "@walletconnect/core": "^2.13.3",
     "@walletconnect/ethereum-provider": "2.12.2",
     "@walletconnect/jsonrpc-utils": "^1.0.8",
     "@walletconnect/modal": "^2.6.2",
