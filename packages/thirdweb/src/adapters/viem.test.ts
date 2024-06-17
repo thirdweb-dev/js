@@ -11,6 +11,7 @@ import { typedData } from "~test/typed-data.js";
 
 import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
+import { randomBytesBuffer } from "../utils/random.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import { toViemContract, viemAdapter } from "./viem.js";
 
@@ -33,6 +34,31 @@ describe("walletClient.toViem", () => {
   test("should return an viem wallet client", async () => {
     expect(walletClient).toBeDefined();
     expect(walletClient.signMessage).toBeDefined();
+  });
+
+  test("should sign message", async () => {
+    if (!walletClient.account) {
+      throw new Error("Account not found");
+    }
+    const expectedSig = await account.signMessage({ message: "hello world" });
+    const sig = await walletClient.signMessage({
+      account: walletClient.account,
+      message: "hello world",
+    });
+    expect(sig).toBe(expectedSig);
+  });
+
+  test("should sign raw message", async () => {
+    if (!walletClient.account) {
+      throw new Error("Account not found");
+    }
+    const bytes = randomBytesBuffer(32);
+    const expectedSig = await account.signMessage({ message: { raw: bytes } });
+    const sig = await walletClient.signMessage({
+      account: walletClient.account,
+      message: { raw: bytes },
+    });
+    expect(sig).toBe(expectedSig);
   });
 
   test("should sign typed data", async () => {
