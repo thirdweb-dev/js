@@ -2,8 +2,10 @@
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type TransactionButtonProps,
-  useTransactionButtonCore,
-} from "../../../core/hooks/transaction/button-core.js";
+  useTransactionButtonMutation,
+} from "../../../core/hooks/transaction/transaction-button-utils.js";
+import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { Spinner } from "../components/Spinner.js";
 import { Button } from "../components/buttons.js";
 
@@ -50,7 +52,12 @@ export function TransactionButton(props: TransactionButtonProps) {
     unstyled,
     ...buttonProps
   } = props;
-  const { account, handleClick, isPending } = useTransactionButtonCore(props);
+  const account = useActiveAccount();
+  const sendTransaction = useSendTransaction({ gasless, payModal });
+  const { mutate: handleClick, isPending } = useTransactionButtonMutation(
+    props,
+    sendTransaction.mutateAsync,
+  );
 
   return (
     <Button
@@ -59,7 +66,7 @@ export function TransactionButton(props: TransactionButtonProps) {
       variant={"primary"}
       unstyled={unstyled}
       data-is-loading={isPending}
-      onClick={handleClick}
+      onClick={() => handleClick()}
       {...buttonProps}
       style={
         !unstyled

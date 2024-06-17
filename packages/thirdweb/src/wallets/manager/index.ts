@@ -4,11 +4,11 @@ import { hasSmartAccount } from "../../react/web/utils/isSmartWallet.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";
-import { smartWallet } from "../create-wallet.js";
+import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
+import { deleteConnectParamsFromStorage } from "../../utils/storage/walletStorage.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
+import { smartWallet } from "../smart/smart-wallet.js";
 import type { SmartWalletOptions } from "../smart/types.js";
-import type { AsyncStorage } from "../storage/AsyncStorage.js";
-import { deleteConnectParamsFromStorage } from "../storage/walletStorage.js";
 import type { WalletId } from "../wallet-types.js";
 
 type WalletIdToConnectedWalletMap = Map<string, Wallet>;
@@ -77,14 +77,7 @@ export function createConnectionManager(storage: AsyncStorage) {
     deleteConnectParamsFromStorage(storage, wallet.id);
     removeConnectedWallet(wallet);
 
-    // there are still connected wallets, switch to the next one
-    if (connectedWallets.getValue().length > 0) {
-      const nextWallet = connectedWallets.getValue()[0] as Wallet;
-      setActiveWallet(nextWallet);
-      return;
-    }
-
-    // if disconnecting the last wallet
+    // if disconnecting the active wallet
     if (activeWalletStore.getValue() === wallet) {
       storage.removeItem(LAST_ACTIVE_EOA_ID);
       activeAccountStore.setValue(undefined);

@@ -6,6 +6,7 @@ import { EVMWallet } from "../../interfaces";
 import { HttpRpcClient } from "./lib/http-rpc-client";
 import { ENTRYPOINT_ADDRESS } from "./lib/constants";
 import { ZkWrappedSigner } from "./zk-wrapped-signer";
+import { isZkSyncChain } from "./utils";
 
 export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
   protected config: SmartWalletConfig;
@@ -23,7 +24,7 @@ export class ZkSyncConnector extends Connector<SmartWalletConnectionArgs> {
   ): Promise<string> {
     this.personalWallet = args.personalWallet;
     this.chainId = await (await this.personalWallet.getSigner()).getChainId();
-    if (this.chainId !== 300 && this.chainId !== 324) {
+    if (!(await isZkSyncChain(this.chainId))) {
       throw new Error("Invalid zksync chain id");
     }
     const bundlerUrl =

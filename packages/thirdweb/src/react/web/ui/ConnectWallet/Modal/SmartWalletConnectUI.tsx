@@ -1,10 +1,11 @@
 "use client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { connectionManager } from "../../../../core/connectionManager.js";
+import { connectionManagerSingleton } from "../../../../core/connectionManager.js";
 import {
   fontSize,
   iconSize,
@@ -114,13 +115,12 @@ function SmartWalletConnecting(props: {
     setSmartWalletConnectionStatus("connecting");
 
     try {
-      const connected = await connectionManager.handleConnection(
-        personalWallet,
-        {
-          accountAbstraction: props.accountAbstraction,
-          client,
-        },
-      );
+      const connected = await connectionManagerSingleton(
+        webLocalStorage,
+      ).handleConnection(personalWallet, {
+        accountAbstraction: props.accountAbstraction,
+        client,
+      });
       done(connected);
       setSmartWalletConnectionStatus("idle");
     } catch (e) {

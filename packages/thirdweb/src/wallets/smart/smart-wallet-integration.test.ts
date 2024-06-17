@@ -18,9 +18,9 @@ import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js"
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
-import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
 let smartAccount: Account;

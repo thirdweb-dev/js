@@ -1,5 +1,23 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.32
+
+### Patch Changes
+
+- [#3286](https://github.com/thirdweb-dev/js/pull/3286) [`901427c`](https://github.com/thirdweb-dev/js/commit/901427c33c5daf330887b501ec8f9f42aa20ff85) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add ecosystemId and ecosystemPartnerId to usage tracking schema for cf worker
+
+## 0.4.31
+
+### Patch Changes
+
+- [#3238](https://github.com/thirdweb-dev/js/pull/3238) [`73af67a`](https://github.com/thirdweb-dev/js/commit/73af67aad1f0b3f8d93ad6b38975770e8aed6208) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - expose domain and bundle Id validation logic
+
+  ```typescript
+  import { authorizeDomain, authorizeBundleId } from "@thirdweb-dev/service-utils
+  const isValidDomain = authorizeDomain({ domains, origin });
+  const isValidBundleId = authorizeBundleId({ bundleId, bundleIds });
+  ```
+
 ## 0.4.30
 
 ### Patch Changes

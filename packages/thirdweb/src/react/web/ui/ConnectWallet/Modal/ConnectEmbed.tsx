@@ -6,17 +6,17 @@ import {
 } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
-import { AutoConnect } from "../../../../core/hooks/connection/AutoConnect.js";
 import type { ConnectEmbedProps } from "../../../../core/hooks/connection/ConnectEmbedProps.js";
-import {
-  useActiveAccount,
-  useIsAutoConnecting,
-} from "../../../../core/hooks/wallets/wallet-hooks.js";
 import { ConnectUIContext } from "../../../../core/providers/wallet-connection.js";
+import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
+import { useIsAutoConnecting } from "../../../hooks/wallets/useIsAutoConnecting.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
+import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
 import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
+import { AutoConnect } from "../../AutoConnect/AutoConnect.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import {
@@ -52,8 +52,9 @@ import { useSetupScreen } from "./screen.js";
  * @component
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {
+  const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(props.auth);
+  const siweAuth = useSiweAuth(activeWallet, props.auth);
   const show =
     !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
 
@@ -68,6 +69,11 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   );
   const localeId = props.locale || "en_US";
   const localeQuery = useConnectLocale(localeId);
+
+  usePreloadWalletProviders({
+    wallets,
+    client: props.client,
+  });
 
   const modalSize =
     !canFitWideModal() || wallets.length === 1
@@ -150,7 +156,8 @@ const ConnectEmbedContent = (
   // const requiresSignIn = false;
   const screenSetup = useSetupScreen();
   const { setScreen, initialScreen } = screenSetup;
-  const siweAuth = useSiweAuth(props.auth);
+  const activeWallet = useActiveWallet();
+  const siweAuth = useSiweAuth(activeWallet, props.auth);
   const activeAccount = useActiveAccount();
 
   const isAutoConnecting = useIsAutoConnecting();

@@ -12,7 +12,6 @@ import {
   useReadContract,
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { CodeExample } from "../code/code-example";
 import { editionDropContract, editionDropTokenId } from "./constants";
 
 export function SponsoredTxPreview() {
@@ -50,7 +49,7 @@ export function SponsoredTxPreview() {
             />
           ) : null}
           {smartAccount ? (
-            <>
+            <div className="flex flex-col justify-center p-8">
               <p className="font-semibold text-center mb-2">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
@@ -73,7 +72,7 @@ export function SponsoredTxPreview() {
               >
                 Mint
               </TransactionButton>
-            </>
+            </div>
           ) : (
             <p
               style={{

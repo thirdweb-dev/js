@@ -8,7 +8,11 @@ declare module "abitype" {
 /**
  * CONSTANTS
  */
-export { ADDRESS_ZERO, NATIVE_TOKEN_ADDRESS } from "../constants/addresses.js";
+export {
+  ADDRESS_ZERO,
+  ZERO_ADDRESS,
+  NATIVE_TOKEN_ADDRESS,
+} from "../constants/addresses.js";
 
 /**
  * CLIENT

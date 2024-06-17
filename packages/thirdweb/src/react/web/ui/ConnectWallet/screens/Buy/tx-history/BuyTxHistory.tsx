@@ -12,10 +12,8 @@ import {
   spacing,
 } from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";

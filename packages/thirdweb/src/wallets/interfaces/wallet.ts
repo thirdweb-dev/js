@@ -123,6 +123,13 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
    * ```
    */
   getConfig: () => CreateWalletArgs<TWalletId>[1];
+
+  // OPTIONAL
+
+  /**
+   * Can be used to execute any pre-connection actions like showing a modal, etc.
+   */
+  onConnectRequested?: () => Promise<void>;
 };
 
 /**
@@ -223,4 +230,12 @@ export type Account = {
   sendRawTransaction?: (
     tx: SendRawTransactionOptions,
   ) => Promise<SendTransactionResult>;
+  /**
+   * Used to do any pre-transaction actions like showing a confirmation modal, etc.
+   * @returns
+   */
+  onTransactionRequested?: (
+    // biome-ignore lint/suspicious/noExplicitAny: any transaction type is allowed here
+    transaction: PreparedTransaction<any>,
+  ) => Promise<void>;
 };

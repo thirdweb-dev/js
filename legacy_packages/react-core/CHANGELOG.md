@@ -1,5 +1,34 @@
 # @thirdweb-dev/react-core
 
+## 4.9.0
+
+### Patch Changes
+
+- Updated dependencies [[`7768067`](https://github.com/thirdweb-dev/js/commit/7768067bf4f571a8c8ee6b646a58e2fc5f6bd052)]:
+  - @thirdweb-dev/sdk@4.0.95
+  - @thirdweb-dev/wallets@2.5.35
+  - @thirdweb-dev/auth@4.1.93
+
+## 4.8.0
+
+### Patch Changes
+
+- Updated dependencies [[`9f42e4d`](https://github.com/thirdweb-dev/js/commit/9f42e4d2412df536d1b5f03a4e2a8b516911facb)]:
+  - @thirdweb-dev/chains@0.1.118
+  - @thirdweb-dev/sdk@4.0.94
+  - @thirdweb-dev/wallets@2.5.34
+  - @thirdweb-dev/auth@4.1.92
+
+## 4.7.0
+
+### Patch Changes
+
+- Updated dependencies [[`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254), [`913f99a`](https://github.com/thirdweb-dev/js/commit/913f99a9a4d002b82fcd9e55db41c64aab99cf83), [`d2cbb1e`](https://github.com/thirdweb-dev/js/commit/d2cbb1ee7ebe5aea9021d5be57cd80abd1df7a1c), [`21ca67d`](https://github.com/thirdweb-dev/js/commit/21ca67dc1342c898baa1ddc564467b39df57d530), [`8acf564`](https://github.com/thirdweb-dev/js/commit/8acf5643d56a9e65c1f6bad20e8b87271aa115e1), [`efae2f3`](https://github.com/thirdweb-dev/js/commit/efae2f36b60e0bcade159608903c9b756843151c)]:
+  - @thirdweb-dev/wallets@2.5.33
+  - @thirdweb-dev/sdk@4.0.93
+  - @thirdweb-dev/chains@0.1.117
+  - @thirdweb-dev/auth@4.1.91
+
 ## 4.6.31
 
 ### Patch Changes

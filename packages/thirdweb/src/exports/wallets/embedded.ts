@@ -4,11 +4,12 @@ export {
    * @deprecated use inAppWallet instead
    */
   inAppWallet as embeddedWallet,
-} from "../../wallets/create-wallet.js";
+} from "../../wallets/in-app/web/in-app.js";
 
 export {
   preAuthenticate,
   authenticate,
   getUserEmail,
-  type GetAuthenticatedUserParams,
-} from "../../wallets/in-app/core/authentication/index.js";
+} from "../../wallets/in-app/web/lib/auth/index.js";
+
+export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/type.js";

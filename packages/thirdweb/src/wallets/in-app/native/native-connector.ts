@@ -1,6 +1,5 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../interfaces/wallet.js";
-import { oauthStrategyToAuthProvider } from "../core/authentication/index.js";
 import {
   type AuthArgsType,
   type AuthLoginReturnType,
@@ -10,6 +9,7 @@ import {
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
   UserWalletStatus,
+  oauthStrategyToAuthProvider,
 } from "../core/authentication/type.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
 import {
@@ -20,7 +20,7 @@ import {
   sendVerificationSms,
   socialLogin,
   validateEmailOTP,
-} from "./auth.js";
+} from "./auth/native-auth.js";
 import { fetchUserDetails } from "./helpers/api/fetchers.js";
 import { logoutUser } from "./helpers/auth/logout.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
@@ -134,10 +134,10 @@ export class InAppNativeConnector implements InAppConnector {
         throw new Error("Passkey authentication is not implemented yet");
       }
       case "iframe": {
-        throw new Error("iframe_email_verification is not supported in iframe");
+        throw new Error("iframe_email_verification is not supported in native");
       }
       case "iframe_email_verification": {
-        throw new Error("iframe_email_verification is not supported in iframe");
+        throw new Error("iframe_email_verification is not supported in native");
       }
       default:
         assertUnreachable(strategy);

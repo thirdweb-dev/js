@@ -90,7 +90,7 @@ export type ConnectButton_connectButtonOptions = {
    * }} />
    * ```
    */
-  label?: string;
+  label?: React.ReactNode;
 
   /**
    * CSS class to apply to the button element

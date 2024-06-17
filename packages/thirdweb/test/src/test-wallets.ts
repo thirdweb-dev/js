@@ -1,4 +1,4 @@
-import { inAppWallet } from "../../src/wallets/create-wallet.js";
+import { inAppWallet } from "../../src/wallets/in-app/web/in-app.js";
 import { privateKeyToAccount } from "../../src/wallets/private-key.js";
 import { TEST_CLIENT } from "./test-clients.js";
 
@@ -16,9 +16,9 @@ export const TEST_ACCOUNT_A = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,
 });
 export const TEST_IN_APP_WALLET_A = (() => {
-  const w = inAppWallet()
-  w.getAccount = () => TEST_ACCOUNT_A
-  return w
+  const w = inAppWallet();
+  w.getAccount = () => TEST_ACCOUNT_A;
+  return w;
 })();
 
 export const TEST_ACCOUNT_B = privateKeyToAccount({

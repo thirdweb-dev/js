@@ -1,5 +1,44 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.6.44
+
+### Patch Changes
+
+- Updated dependencies [[`7768067`](https://github.com/thirdweb-dev/js/commit/7768067bf4f571a8c8ee6b646a58e2fc5f6bd052)]:
+  - @thirdweb-dev/sdk@4.0.95
+  - @thirdweb-dev/wallets@2.5.35
+  - @thirdweb-dev/auth@4.1.93
+
+## 0.6.43
+
+### Patch Changes
+
+- Updated dependencies [[`9f42e4d`](https://github.com/thirdweb-dev/js/commit/9f42e4d2412df536d1b5f03a4e2a8b516911facb)]:
+  - @thirdweb-dev/chains@0.1.118
+  - @thirdweb-dev/sdk@4.0.94
+  - @thirdweb-dev/wallets@2.5.34
+  - @thirdweb-dev/auth@4.1.92
+
+## 0.6.42
+
+### Patch Changes
+
+- [#3278](https://github.com/thirdweb-dev/js/pull/3278) [`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [v4 & v5] zkCandy Sepolia AA Support
+
+- [#3232](https://github.com/thirdweb-dev/js/pull/3232) [`913f99a`](https://github.com/thirdweb-dev/js/commit/913f99a9a4d002b82fcd9e55db41c64aab99cf83) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Default account factory support
+
+- [#3269](https://github.com/thirdweb-dev/js/pull/3269) [`d2cbb1e`](https://github.com/thirdweb-dev/js/commit/d2cbb1ee7ebe5aea9021d5be57cd80abd1df7a1c) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [TSv4] Force eth_signTypedData_v4 session proposal
+
+- [#3239](https://github.com/thirdweb-dev/js/pull/3239) [`21ca67d`](https://github.com/thirdweb-dev/js/commit/21ca67dc1342c898baa1ddc564467b39df57d530) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [TSv4] Avoid unnecessary fetching for error formatting
+
+- [#3236](https://github.com/thirdweb-dev/js/pull/3236) [`8acf564`](https://github.com/thirdweb-dev/js/commit/8acf5643d56a9e65c1f6bad20e8b87271aa115e1) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - Fix caching logic for getContract/getContractFromAbi
+
+- Updated dependencies [[`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254), [`913f99a`](https://github.com/thirdweb-dev/js/commit/913f99a9a4d002b82fcd9e55db41c64aab99cf83), [`d2cbb1e`](https://github.com/thirdweb-dev/js/commit/d2cbb1ee7ebe5aea9021d5be57cd80abd1df7a1c), [`21ca67d`](https://github.com/thirdweb-dev/js/commit/21ca67dc1342c898baa1ddc564467b39df57d530), [`8acf564`](https://github.com/thirdweb-dev/js/commit/8acf5643d56a9e65c1f6bad20e8b87271aa115e1), [`efae2f3`](https://github.com/thirdweb-dev/js/commit/efae2f36b60e0bcade159608903c9b756843151c)]:
+  - @thirdweb-dev/wallets@2.5.33
+  - @thirdweb-dev/sdk@4.0.93
+  - @thirdweb-dev/chains@0.1.117
+  - @thirdweb-dev/auth@4.1.91
+
 ## 0.6.41
 
 ### Patch Changes

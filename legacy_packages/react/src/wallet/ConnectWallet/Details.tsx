@@ -79,6 +79,7 @@ import { useChainQuery } from "../hooks/useChainQuery";
 import { SwapScreen } from "./screens/Buy/swap/SwapScreen";
 import { SwapTransactionsScreen } from "./screens/SwapTransactionsScreen";
 import { swapTransactionsStore } from "./screens/Buy/swap/pendingSwapTx";
+import { ExportPrivateKey } from "../wallets/embeddedWallet/ExportPrivateKey";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -89,7 +90,8 @@ type WalletDetailsModalScreen =
   | "buy"
   | "receive"
   | "network-switcher"
-  | "pending-tx";
+  | "pending-tx"
+  | "private-key";
 
 export const ConnectedWalletDetails: React.FC<{
   onDisconnect: () => void;
@@ -573,6 +575,23 @@ export const ConnectedWalletDetails: React.FC<{
             </div>
           )}
 
+          {/* Export Embedded Wallet */}
+          {activeWallet?.walletId === walletIds.embeddedWallet && (
+            <div>
+              <MenuButton
+                onClick={() => {
+                  setScreen("private-key");
+                }}
+                style={{
+                  fontSize: fontSize.sm,
+                }}
+              >
+                <PinBottomIcon width={iconSize.md} height={iconSize.md} />
+                <Text color="primaryText">{"Export Private Key"}</Text>
+              </MenuButton>
+            </div>
+          )}
+
           {props.detailsModalFooter && (
             <props.detailsModalFooter close={() => setIsOpen(false)} />
           )}
@@ -639,6 +658,16 @@ export const ConnectedWalletDetails: React.FC<{
           setIsOpen(false);
         }}
         walletAddress={address}
+        walletInstance={activeWallet}
+        onBack={() => {
+          setScreen("main");
+        }}
+      />
+    );
+  } else if (screen === "private-key") {
+    content = (
+      <ExportPrivateKey
+        theme={props.theme}
         walletInstance={activeWallet}
         onBack={() => {
           setScreen("main");

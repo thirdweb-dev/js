@@ -1,5 +1,82 @@
 # thirdweb
 
+## 5.29.2
+
+### Patch Changes
+
+- [#2880](https://github.com/thirdweb-dev/js/pull/2880) [`7768067`](https://github.com/thirdweb-dev/js/commit/7768067bf4f571a8c8ee6b646a58e2fc5f6bd052) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Modular contract publish and deploy setup
+
+- [#3318](https://github.com/thirdweb-dev/js/pull/3318) [`fb6a07d`](https://github.com/thirdweb-dev/js/commit/fb6a07d4b84ba8ea6389ca04c73625f670a0d9c4) Thanks [@jnsdls](https://github.com/jnsdls)! - add missing erc4337 extensions
+
+## 5.29.1
+
+### Patch Changes
+
+- [#3290](https://github.com/thirdweb-dev/js/pull/3290) [`b248afc`](https://github.com/thirdweb-dev/js/commit/b248afc16062f8fe0967e42535ae119642897003) Thanks [@alecananian](https://github.com/alecananian)! - Fixed Connect modal title not using custom title and icon in compact mode
+
+- [#3292](https://github.com/thirdweb-dev/js/pull/3292) [`132b3cb`](https://github.com/thirdweb-dev/js/commit/132b3cb45ae1d56f8de240a361b31c76d5b9b4a7) Thanks [@alecananian](https://github.com/alecananian)! - Updated the `ConnectButton` `label` prop to be of type `ReactNode`
+
+- [#3305](https://github.com/thirdweb-dev/js/pull/3305) [`e7ba698`](https://github.com/thirdweb-dev/js/commit/e7ba698f3e60e0749f8739ad1aec76a8ab2c2fb3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix default sale and royalty recipients for signature mints
+
+## 5.29.0
+
+### Minor Changes
+
+- [#3273](https://github.com/thirdweb-dev/js/pull/3273) [`7afd2da`](https://github.com/thirdweb-dev/js/commit/7afd2dac0ace82fd7ba14766acd73555f4fa10ce) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds options refetchInterval and retry params to useReadContract
+
+- [#3231](https://github.com/thirdweb-dev/js/pull/3231) [`dbf74aa`](https://github.com/thirdweb-dev/js/commit/dbf74aad3ffaeaa3e3967801549f6ec26f721dea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - TransactionButton react native implementation
+
+- [#3271](https://github.com/thirdweb-dev/js/pull/3271) [`3a1fd98`](https://github.com/thirdweb-dev/js/commit/3a1fd985fc4b2720f4d46d54b562c00b2edf21ce) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Align inAppWallet secret sharing implementation with web and previous RN SDK
+
+- [#3229](https://github.com/thirdweb-dev/js/pull/3229) [`e7b9b9f`](https://github.com/thirdweb-dev/js/commit/e7b9b9f438ad303fdc79aaca1ca674acd8c7a7ba) Thanks [@MananTank](https://github.com/MananTank)! - Add `useWalletDetailsModal` hook to open Wallet Details Modal without using `<ConnectButton />` component
+
+  ```tsx
+  import { createThirdwebClient } from "thirdweb";
+  import { useWalletDetailsModal } from "thirdweb/react";
+
+  const client = createThirdwebClient({
+    clientId: "<your_client_id>",
+  });
+
+  function Example() {
+    const { open } = useWalletDetailsModal();
+
+    function handleClick() {
+      open({ client, theme: "light" });
+    }
+
+    return <button onClick={handleClick}> Show Wallet Details </button>;
+  }
+  ```
+
+### Patch Changes
+
+- [#3278](https://github.com/thirdweb-dev/js/pull/3278) [`5698b0c`](https://github.com/thirdweb-dev/js/commit/5698b0c5a9779830fa2d2582e551d050427c6254) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [v4 & v5] zkCandy Sepolia AA Support
+
+- [#3263](https://github.com/thirdweb-dev/js/pull/3263) [`f2004b5`](https://github.com/thirdweb-dev/js/commit/f2004b54eaf3137297fd8a4d29c85b4aa5c78dcb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Add potential error message for eip155 failure
+
+- [#3266](https://github.com/thirdweb-dev/js/pull/3266) [`e763ace`](https://github.com/thirdweb-dev/js/commit/e763ace602639f08f95b600ba1532708f2569eb9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign typed data with inAppWallet when the domain contains a salt param
+
+- [#3264](https://github.com/thirdweb-dev/js/pull/3264) [`3948f43`](https://github.com/thirdweb-dev/js/commit/3948f4320cdf9546975955414aa756bc5e57c08a) Thanks [@MananTank](https://github.com/MananTank)! - - Remove the feature that sets another connected wallet as active when disconnecting the current active wallet.
+
+  - Do not save personal wallet as a separate wallet in connected wallets list.
+
+- [#3256](https://github.com/thirdweb-dev/js/pull/3256) [`923a5ec`](https://github.com/thirdweb-dev/js/commit/923a5ec556b5a857e855377c90ad339485ac828f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Automatic retries on watchContractEvents
+
+- [#3280](https://github.com/thirdweb-dev/js/pull/3280) [`7dec4d0`](https://github.com/thirdweb-dev/js/commit/7dec4d049d9433782ef3b9de0738d6bce29fa6a8) Thanks [@MananTank](https://github.com/MananTank)! - Fix in-app wallet sending another verification code on window focus when using ConnectEmbed.
+
+  Fix the underlying issue of `useAutoConnect` running again on window focus.
+
+  Add `refetchOnWindowFocus: false` on few more `useQuery` instances to avoid unnecessary refetches
+
+- [#3235](https://github.com/thirdweb-dev/js/pull/3235) [`824a631`](https://github.com/thirdweb-dev/js/commit/824a631b55bb4b8d4a0290d19dde081dd90a8647) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds EIP-5792 hook exports to thirdweb/react
+
+- [#3241](https://github.com/thirdweb-dev/js/pull/3241) [`37ec4ca`](https://github.com/thirdweb-dev/js/commit/37ec4ca28d7d0290d4cc8b838d888f67c70e172f) Thanks [@jnsdls](https://github.com/jnsdls)! - fix ipfs `resolveScheme` bug for v1 ipfs schemes
+
+- [#3240](https://github.com/thirdweb-dev/js/pull/3240) [`d488223`](https://github.com/thirdweb-dev/js/commit/d4882236b786660efd1f60c181d37351109949ff) Thanks [@MananTank](https://github.com/MananTank)! - Fix custom theme not used in ConnectEmbed loading screen
+
+- [#3251](https://github.com/thirdweb-dev/js/pull/3251) [`ce45a79`](https://github.com/thirdweb-dev/js/commit/ce45a793b54ab656dac01f2f99d9db8df52f4e23) Thanks [@MananTank](https://github.com/MananTank)! - Allow selecting fiat currency in Pay UI
+
 ## 5.28.0
 
 ### Minor Changes

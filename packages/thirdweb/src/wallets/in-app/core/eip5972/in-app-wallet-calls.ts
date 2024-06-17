@@ -37,7 +37,7 @@ export async function inAppWalletSendCalls(args: {
   const { account, calls } = args;
 
   const hashes: Hex[] = [];
-  const bundleId = await randomBytesHex(65);
+  const bundleId = randomBytesHex(65);
   bundlesToTransactions.set(bundleId, hashes);
   if (account.sendBatchTransaction) {
     const receipt = await sendBatchTransaction({

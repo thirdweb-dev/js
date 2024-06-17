@@ -19,10 +19,8 @@ import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveWalletChain,
-  useSwitchActiveWalletChain,
-} from "../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
+import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";

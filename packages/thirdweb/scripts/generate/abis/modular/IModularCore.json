@@ -1,0 +1,131 @@
+[
+  {
+    "type": "function",
+    "name": "getInstalledExtensions",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct IModularCore.InstalledExtension[]",
+        "components": [
+          {
+            "name": "implementation",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "config",
+            "type": "tuple",
+            "internalType": "struct IExtensionConfig.ExtensionConfig",
+            "components": [
+              {
+                "name": "registerInstallationCallback",
+                "type": "bool",
+                "internalType": "bool"
+              },
+              {
+                "name": "requiredInterfaces",
+                "type": "bytes4[]",
+                "internalType": "bytes4[]"
+              },
+              {
+                "name": "supportedInterfaces",
+                "type": "bytes4[]",
+                "internalType": "bytes4[]"
+              },
+              {
+                "name": "callbackFunctions",
+                "type": "tuple[]",
+                "internalType": "struct IExtensionConfig.CallbackFunction[]",
+                "components": [
+                  {
+                    "name": "selector",
+                    "type": "bytes4",
+                    "internalType": "bytes4"
+                  }
+                ]
+              },
+              {
+                "name": "fallbackFunctions",
+                "type": "tuple[]",
+                "internalType": "struct IExtensionConfig.FallbackFunction[]",
+                "components": [
+                  {
+                    "name": "selector",
+                    "type": "bytes4",
+                    "internalType": "bytes4"
+                  },
+                  {
+                    "name": "permissionBits",
+                    "type": "uint256",
+                    "internalType": "uint256"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getSupportedCallbackFunctions",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct IModularCore.SupportedCallbackFunction[]",
+        "components": [
+          { "name": "selector", "type": "bytes4", "internalType": "bytes4" },
+          {
+            "name": "mode",
+            "type": "uint8",
+            "internalType": "enum IModularCore.CallbackMode"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "installExtension",
+    "inputs": [
+      {
+        "name": "extensionContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      { "name": "data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "supportsInterface",
+    "inputs": [
+      { "name": "interfaceID", "type": "bytes4", "internalType": "bytes4" }
+    ],
+    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "uninstallExtension",
+    "inputs": [
+      {
+        "name": "extensionContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      { "name": "data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  }
+]

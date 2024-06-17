@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
-import { getTotalTxCostForBuy } from "../../../../../../core/hooks/contract/useSendTransaction.js";
+import { getTotalTxCostForBuy } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
 import { wait } from "../../../../../../core/utils/wait.js";
 import type { BuyForTx } from "./types.js";
 

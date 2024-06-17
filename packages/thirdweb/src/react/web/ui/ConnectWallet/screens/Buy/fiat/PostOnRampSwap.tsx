@@ -5,7 +5,7 @@ import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/
 import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
