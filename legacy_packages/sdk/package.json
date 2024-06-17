@@ -129,7 +129,7 @@
     }
   },
   "dependencies": {
-    "@eth-optimism/sdk": "3.3.0",
+    "@eth-optimism/sdk": "3.3.2",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/contracts-js": "workspace:*",
     "@thirdweb-dev/crypto": "workspace:*",

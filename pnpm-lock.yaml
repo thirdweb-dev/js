@@ -1091,8 +1091,8 @@ importers:
   legacy_packages/sdk:
     dependencies:
       '@eth-optimism/sdk':
-        specifier: 3.3.0
-        version: 3.3.0(ethers@5.7.2)
+        specifier: 3.3.2
+        version: 3.3.2(ethers@5.7.2)
       '@thirdweb-dev/chains':
         specifier: workspace:*
         version: link:../chains
@@ -6553,10 +6553,6 @@ packages:
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  /@eth-optimism/contracts-bedrock@0.17.2:
-    resolution: {integrity: sha512-YVwPHpBZgFwFX9qY8+iToVAAH7mSnVIVmih+YfHhqjAhlLvLZfYjvj+hRNgcB9eRyl1SOOB0jevp4JOOV1v2BA==}
-    dev: false
-
   /@eth-optimism/contracts@0.6.0(ethers@5.7.2):
     resolution: {integrity: sha512-vQ04wfG9kMf1Fwy3FEMqH2QZbgS0gldKhcBeBUPfO8zu68L61VI97UDXmsMQXzTsEAxK8HnokW3/gosl4/NW3w==}
     peerDependencies:
@@ -6618,13 +6614,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@eth-optimism/sdk@3.3.0(ethers@5.7.2):
-    resolution: {integrity: sha512-0Wt9roWe3itdzp08caCQLoFqhmT47ssquKAzBe7yXI6saVL+f2vWl6VgEaq0aYe2FsWvD9L0tSAJHLx1FiquNw==}
+  /@eth-optimism/sdk@3.3.2(ethers@5.7.2):
+    resolution: {integrity: sha512-+zhxT0YkBIEzHsuIayQGjr8g9NawZo6/HYfzg1NSEFsE2Yt0NyCWqVDFTuuak0T6AvIa2kNcl3r0Z8drdb2QmQ==}
     peerDependencies:
       ethers: ^5
     dependencies:
       '@eth-optimism/contracts': 0.6.0(ethers@5.7.2)
-      '@eth-optimism/contracts-bedrock': 0.17.2
       '@eth-optimism/core-utils': 0.13.2
       ethers: 5.7.2
       lodash: 4.17.21
