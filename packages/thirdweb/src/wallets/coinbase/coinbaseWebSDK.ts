@@ -38,6 +38,7 @@ import type {
   CreateWalletArgs,
   WalletConnectionOption,
 } from "../wallet-types.js";
+import { showCoinbasePopup } from "./utils.js";
 
 export type CoinbaseWalletCreationOptions =
   | {
@@ -342,11 +343,6 @@ function createAccount(provider: ProviderInterface, address: string) {
   };
 
   return account;
-}
-
-export async function showCoinbasePopup(provider: ProviderInterface) {
-  // biome-ignore lint/suspicious/noExplicitAny: based on the latest CB SDK - scary but works
-  await (provider as any).communicator?.waitForPopupLoaded();
 }
 
 function onConnect(

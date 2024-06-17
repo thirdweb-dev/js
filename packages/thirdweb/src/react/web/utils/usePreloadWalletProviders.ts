@@ -16,7 +16,7 @@ export function usePreloadWalletProviders({
           switch (w.id) {
             case COINBASE: {
               const { getCoinbaseWebProvider } = await import(
-                "../../../wallets/coinbase/coinbaseSDKWallet.js"
+                "../../../wallets/coinbase/coinbaseWebSDK.js"
               );
               await getCoinbaseWebProvider();
               // return _something_

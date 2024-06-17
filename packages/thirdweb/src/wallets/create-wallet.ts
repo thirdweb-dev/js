@@ -16,7 +16,7 @@ import { webLocalStorage } from "../utils/storage/webStorage.js";
 import { isMobile } from "../utils/web/isMobile.js";
 import { openWindow } from "../utils/web/openWindow.js";
 import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
-import { getCoinbaseWebProvider } from "./coinbase/coinbaseSDKWallet.js";
+import { getCoinbaseWebProvider } from "./coinbase/coinbaseWebSDK.js";
 import { COINBASE } from "./constants.js";
 import { inAppWallet } from "./in-app/web/in-app.js";
 import { smartWallet } from "./smart/smart-wallet.js";
@@ -74,6 +74,14 @@ export function createWallet<const ID extends WalletId>(
       return coinbaseWalletSDK({
         createOptions: options,
         providerFactory: () => getCoinbaseWebProvider(options),
+        onConnectRequested: async (provider) => {
+          // on the web, make sure to show the coinbase popup IMMEDIATELY on connection requested
+          // otherwise the popup might get blocked in safari
+          // TODO awaiting the provider is fast only thanks to preloading that happens in our components
+          // these probably need to actually imported / created synchronously to be used headless properly
+          const { showCoinbasePopup } = await import("./coinbase/utils.js");
+          return showCoinbasePopup(provider);
+        },
       }) as Wallet<ID>;
     }
 
