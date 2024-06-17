@@ -17,12 +17,6 @@ export default {
   ],
   "faucets": [],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmWhHvjbjTiNNsHKpbEz9rxSt4CCL2Q5xVZjk8eQkp82B9",
-    "width": 600,
-    "height": 600,
-    "format": "png"
-  },
   "infoURL": "https://redstone.xyz",
   "name": "Garnet Holesky",
   "nativeCurrency": {

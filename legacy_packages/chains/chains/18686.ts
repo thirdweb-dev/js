@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmdGCthKA11K9kCZJdbTP5WPAyq1wiRZ3REn6KG58MrWaE",
-    "width": 159,
-    "height": 159,
-    "format": "png"
-  },
   "infoURL": "https://doc.mxc.com/docs/intro",
   "name": "MXC zkEVM Moonchain",
   "nativeCurrency": {

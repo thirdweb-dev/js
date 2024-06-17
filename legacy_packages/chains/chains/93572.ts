@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://claim.liquidlayer.network"
   ],
-  "icon": {
-    "url": "ipfs://bafkreiayuuzfpcgwjll4us4hquvpqa5gwq3lbiedv4qftmlwcxhcyjzzpq",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://testnet-scan.liquidlayer.network",
   "name": "LiquidLayer Testnet",
   "nativeCurrency": {

@@ -16,6 +16,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmVhezQHkqSZ5Tvtsw18giA1yBjV1URSsBQ7HenUh6p6oC",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://octa.space",
   "name": "OctaSpace",
   "nativeCurrency": {

@@ -6,22 +6,10 @@ export default {
     {
       "name": "mvmscan",
       "url": "https://scan.mvm.dev",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
-        "width": 471,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmeuDgSprukzfV7fi9XYHYcfmT4aZZZU7idgShtRS8Vf6V",
-    "width": 471,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://mvm.dev",
   "name": "Mixin Virtual Machine",
   "nativeCurrency": {

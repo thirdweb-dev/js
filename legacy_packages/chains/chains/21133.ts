@@ -6,13 +6,7 @@ export default {
     {
       "name": "AAH Blockscout",
       "url": "https://exp.c4ex.net",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmY7HDEj3vnTZzCmenotr48nYyD13R2Fyd5t12R9ARu4wJ",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [

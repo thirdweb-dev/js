@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreiayxzdbu3e5ahri3ooieg6k6pjxrwkrkc2x5cnyadqeu5zbmaummq",
-    "width": 639,
-    "height": 639,
-    "format": "png"
-  },
   "infoURL": "https://aurora.dev",
   "name": "Near Testnet",
   "nativeCurrency": {

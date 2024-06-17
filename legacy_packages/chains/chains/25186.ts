@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreiayuuzfpcgwjll4us4hquvpqa5gwq3lbiedv4qftmlwcxhcyjzzpq",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://scan.liquidlayer.network",
   "name": "LiquidLayer Mainnet",
   "nativeCurrency": {

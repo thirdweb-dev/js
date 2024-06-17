@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreigfxcyvnx2r46a3unljb2auxeez5olbg56lbu4gkpa4me7wqoajjy",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://aiw3.io/",
   "name": "AIW3 Testnet",
   "nativeCurrency": {

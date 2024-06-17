@@ -18,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://bafkreidyrvphfojaf7iev57trxk3sxbo6qikg26pdy66ke4n22dgm52wwa",
-    "width": 320,
-    "height": 320,
-    "format": "png"
-  },
   "infoURL": "https://www.verylabs.io/",
   "name": "VERY Mainnet",
   "nativeCurrency": {

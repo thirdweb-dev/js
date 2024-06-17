@@ -6,7 +6,13 @@ export default {
     {
       "name": "Pentagon Testnet Explorer",
       "url": "https://explorer-testnet.pentagon.games",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmfU7W3Tm3tGWgnHBTG9vjB4PXGMvcL7Cq8R6MaSaC33DC",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -20,6 +26,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmfU7W3Tm3tGWgnHBTG9vjB4PXGMvcL7Cq8R6MaSaC33DC",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://pentagon.games",
   "name": "Pentagon Testnet",
   "nativeCurrency": {

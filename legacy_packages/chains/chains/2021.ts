@@ -11,13 +11,7 @@ export default {
     {
       "name": "Edgscan EdgeWASM explorer by Bharathcoorg",
       "url": "https://edgscan.ink",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmVV7ibcq8pS44Nt77jWSLNY2RkfQooHBCZMBPSMdAfZ3d",
-        "width": 88,
-        "height": 88,
-        "format": "svg"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [],

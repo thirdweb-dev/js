@@ -21,12 +21,6 @@ export default {
       "name": "EIP1108"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmU5XU4S5oaGM5fj8oU1ovhWoXCzGWspwRj2zWRTuJrU4k",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://gravity.xyz",
   "name": "Gravity Alpha Mainnet",
   "nativeCurrency": {
