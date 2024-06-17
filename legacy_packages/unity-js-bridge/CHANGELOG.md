@@ -1,5 +1,17 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.6.45
+
+### Patch Changes
+
+- [#3317](https://github.com/thirdweb-dev/js/pull/3317) [`198f72c`](https://github.com/thirdweb-dev/js/commit/198f72c4933633d44185ff7b1d7e995e90c4d618) Thanks [@0xFirekeeper](https://github.com/0xFirekeeper)! - [Unity] fix tx builder type parsing
+
+- Updated dependencies [[`8b74602`](https://github.com/thirdweb-dev/js/commit/8b74602e3b7fbe011bf886b9d5ee0e2ea62f7447)]:
+  - @thirdweb-dev/chains@0.1.119
+  - @thirdweb-dev/sdk@4.0.96
+  - @thirdweb-dev/wallets@2.5.36
+  - @thirdweb-dev/auth@4.1.94
+
 ## 0.6.44
 
 ### Patch Changes
