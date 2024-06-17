@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
-  "chainId": 82529,
+  "chainId": 51290,
   "explorers": [],
   "faucets": [],
   "features": [],
@@ -18,13 +18,13 @@ export default {
     "symbol": "JMH",
     "decimals": 18
   },
-  "networkId": 82529,
+  "networkId": 51290,
   "redFlags": [],
   "rpc": [
-    "https://82529.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/testsize/testnet/rpc"
+    "https://51290.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://subnets.avax.network/testsize2/testnet/rpc"
   ],
   "shortName": "Test Using Resources",
-  "slug": "test-using-resources-test using resources",
+  "slug": "test-using-resources",
   "testnet": true
 } as const satisfies Chain;

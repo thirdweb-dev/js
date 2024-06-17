@@ -6,25 +6,13 @@ export default {
     {
       "name": "Reapchain Testnet Dashboard",
       "url": "https://test-dashboard.reapchain.org",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
-        "width": 256,
-        "height": 256,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "http://faucet.reapchain.com"
   ],
   "features": [],
-  "icon": {
-    "url": "ipfs://QmevQ8jmDWHmdnUQg6BpoMwVB3NhpzS75adbMnKL78Ls2h",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://reapchain.com",
   "name": "Reapchain Testnet",
   "nativeCurrency": {

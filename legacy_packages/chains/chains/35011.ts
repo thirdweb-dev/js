@@ -6,13 +6,7 @@ export default {
     {
       "name": "J2O Taro Explorer",
       "url": "https://exp.j2o.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmdUYi8fjnvdM9iFQ7dwE2YvmhDtavSB3bKhCD2GhPxPks",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],

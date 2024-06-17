@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmWLjmfbjx2qZC39GCFXDzt72NXVTtDBVzVSq6rwaquyp3",
-    "width": 1200,
-    "height": 410,
-    "format": "png"
-  },
   "infoURL": "https://funkichain.com",
   "name": "Funki",
   "nativeCurrency": {

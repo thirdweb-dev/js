@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZbmGYdfbMRrWJore3c7hyD6q7B5pXHJqTSNjbZZUK6V8",
-    "width": 200,
-    "height": 200,
-    "format": "png"
-  },
   "infoURL": "https://evanesco.org/",
   "name": "Evanesco Mainnet",
   "nativeCurrency": {

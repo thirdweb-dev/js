@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.testnet.nahmii.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
-        "width": 384,
-        "height": 384,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
-    "width": 384,
-    "height": 384,
-    "format": "png"
-  },
   "infoURL": "https://nahmii.io",
   "name": "Nahmii 2 Testnet",
   "nativeCurrency": {

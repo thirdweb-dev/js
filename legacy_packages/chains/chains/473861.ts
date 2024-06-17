@@ -6,13 +6,7 @@ export default {
     {
       "name": "ultraproscan",
       "url": "https://ultraproscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmT11iJMLe9sAk5NiRQbe2wv1jtLFCs2sF2w9vFwDLkkgE",
-        "width": 500,
-        "height": 500,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
@@ -24,12 +18,6 @@ export default {
       "name": "EIP1559"
     }
   ],
-  "icon": {
-    "url": "ipfs://QmT11iJMLe9sAk5NiRQbe2wv1jtLFCs2sF2w9vFwDLkkgE",
-    "width": 500,
-    "height": 500,
-    "format": "png"
-  },
   "infoURL": "https://ultrapro.info",
   "name": "Ultra Pro Mainnet",
   "nativeCurrency": {

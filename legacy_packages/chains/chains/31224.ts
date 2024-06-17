@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://faucet.cloudtx.finance"
   ],
-  "icon": {
-    "url": "ipfs://QmSEsi71AdA5HYH6VNC5QUQezFg1C7BiVQJdx1VVfGz3g3",
-    "width": 713,
-    "height": 830,
-    "format": "png"
-  },
   "infoURL": "https://cloudtx.finance/",
   "name": "CloudTx Testnet",
   "nativeCurrency": {

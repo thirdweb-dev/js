@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://blockscout.klaosnova.laosfoundation.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmW26eoxJeyUfikZ4DUT1Gfk78sBkvydEo8QzHa1BXjUUL",
-        "width": 580,
-        "height": 580,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmW26eoxJeyUfikZ4DUT1Gfk78sBkvydEo8QzHa1BXjUUL",
-    "width": 580,
-    "height": 580,
-    "format": "png"
-  },
   "infoURL": "https://www.laosfoundation.io/",
   "name": "KLAOS Nova",
   "nativeCurrency": {

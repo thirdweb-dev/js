@@ -6,24 +6,12 @@ export default {
     {
       "name": "Shidoblock Testnet Explorer",
       "url": "https://testnet.shidoscan.com",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://bafkreiatrf5pp7ywvrwvsv4otrex73u6v6bvhorqkxiop2hy2i572zjrba",
-        "width": 1080,
-        "height": 1080,
-        "format": "png"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://testnet.shidoscan.com/faucet"
   ],
-  "icon": {
-    "url": "ipfs://bafkreiatrf5pp7ywvrwvsv4otrex73u6v6bvhorqkxiop2hy2i572zjrba",
-    "width": 1080,
-    "height": 1080,
-    "format": "png"
-  },
   "infoURL": "https://www.nexablock.io",
   "name": "Shido Testnet Block",
   "nativeCurrency": {

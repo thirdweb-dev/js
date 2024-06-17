@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [
+    "https://bartio.faucet.berachain.com",
     "https://bartio.faucet.berachain.com/"
   ],
   "features": [],
@@ -19,6 +20,7 @@ export default {
     "height": 360,
     "format": "png"
   },
+  "infoURL": "https://www.berachain.com",
   "name": "Berachain bArtio",
   "nativeCurrency": {
     "name": "BERA",

@@ -23,12 +23,6 @@ export default {
   "faucets": [
     "https://neonfaucet.org"
   ],
-  "icon": {
-    "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://neon-labs.org",
   "name": "Neon EVM Devnet",
   "nativeCurrency": {

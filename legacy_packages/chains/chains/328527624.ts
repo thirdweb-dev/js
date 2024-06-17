@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZLZHX18YUswejxo1JFNPx5EwMsVhUwBeBWEcd1JUHAK5",
-    "width": 640,
-    "height": 640,
-    "format": "png"
-  },
   "infoURL": "https://www.nal.network",
   "name": "Nal Sepolia Testnet",
   "nativeCurrency": {

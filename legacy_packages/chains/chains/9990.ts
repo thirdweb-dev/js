@@ -15,12 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreibkqdof3ztkdhgukwvkacwgrjb27e23hgz5c6mmudzu5hipyvgisa",
-    "width": 256,
-    "height": 256,
-    "format": "png"
-  },
   "infoURL": "https://www.peaq.network",
   "name": "Agung Network",
   "nativeCurrency": {

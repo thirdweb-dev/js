@@ -15,12 +15,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://Qmcxevb3v8PEvnvfYgcG3bCBuPhe5YAdsHeaufDChSSR3Q",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://neonevm.org",
   "name": "Neon EVM Mainnet",
   "nativeCurrency": {

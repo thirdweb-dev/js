@@ -4,12 +4,6 @@ export default {
   "chainId": 4653,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmbvuHpn8Np5uTTbVNgv4JHCj2zfHBfmSoRcVNdWbcV5Vq",
-    "width": 226,
-    "height": 104,
-    "format": "png"
-  },
   "infoURL": "https://gold.dev",
   "name": "Gold Chain",
   "nativeCurrency": {

@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://scan.zkfair.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmVb682D4mUXkKNP28xxJDNgSYbDLvEc3kVYx7TQxEa6Cw",
-        "width": 400,
-        "height": 400,
-        "format": "jpg"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmVb682D4mUXkKNP28xxJDNgSYbDLvEc3kVYx7TQxEa6Cw",
-    "width": 400,
-    "height": 400,
-    "format": "jpg"
-  },
   "infoURL": "https://zkfair.io",
   "name": "ZKFair Mainnet",
   "nativeCurrency": {
