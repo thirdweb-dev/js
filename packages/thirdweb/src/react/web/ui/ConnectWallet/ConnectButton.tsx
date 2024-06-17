@@ -13,6 +13,7 @@ import {
   useSetIsWalletModalOpen,
 } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
+import { usePreloadWalletProviders } from "../../utils/usePreloadWalletProviders.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { AutoConnect } from "../AutoConnect/AutoConnect.js";
 import { Modal } from "../components/Modal.js";
@@ -57,6 +58,11 @@ export function ConnectButton(props: ConnectButtonProps) {
     [props.wallets, props.appMetadata, props.chains],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
+
+  usePreloadWalletProviders({
+    wallets,
+    client: props.client,
+  });
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect

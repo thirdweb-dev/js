@@ -16,6 +16,7 @@ import type { CreateWalletArgs } from "../wallet-types.js";
 export function coinbaseWalletSDK(args: {
   createOptions?: CreateWalletArgs<typeof COINBASE>[1];
   providerFactory: () => Promise<ProviderInterface>;
+  onConnectRequested?: (provider: ProviderInterface) => Promise<void>;
 }): Wallet<typeof COINBASE> {
   const { createOptions } = args;
   const emitter = createWalletEmitter<typeof COINBASE>();
@@ -58,7 +59,7 @@ export function coinbaseWalletSDK(args: {
     getAccount: () => account,
     autoConnect: async (options) => {
       const { autoConnectCoinbaseWalletSDK } = await import(
-        "./coinbaseSDKWallet.js"
+        "./coinbaseWebSDK.js"
       );
       const provider = await args.providerFactory();
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
@@ -77,9 +78,7 @@ export function coinbaseWalletSDK(args: {
       return account;
     },
     connect: async (options) => {
-      const { connectCoinbaseWalletSDK } = await import(
-        "./coinbaseSDKWallet.js"
-      );
+      const { connectCoinbaseWalletSDK } = await import("./coinbaseWebSDK.js");
       const provider = await args.providerFactory();
       const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
         await connectCoinbaseWalletSDK(options, emitter, provider);
@@ -103,6 +102,12 @@ export function coinbaseWalletSDK(args: {
     },
     switchChain: async (newChain) => {
       await handleSwitchChain(newChain);
+    },
+    onConnectRequested: async () => {
+      if (args.onConnectRequested) {
+        const provider = await args.providerFactory();
+        return args.onConnectRequested?.(provider);
+      }
     },
   };
 }

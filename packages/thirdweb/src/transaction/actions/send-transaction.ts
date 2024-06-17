@@ -33,6 +33,10 @@ export async function sendTransaction(
 ): Promise<WaitForReceiptOptions> {
   const { account, transaction, gasless } = options;
 
+  if (account.onTransactionRequested) {
+    await account.onTransactionRequested(transaction);
+  }
+
   const serializableTransaction = await toSerializableTransaction({
     transaction: transaction,
     from: account.address,

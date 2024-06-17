@@ -38,6 +38,7 @@ import type {
   CreateWalletArgs,
   WalletConnectionOption,
 } from "../wallet-types.js";
+import { showCoinbasePopup } from "./utils.js";
 
 export type CoinbaseWalletCreationOptions =
   | {
@@ -333,6 +334,11 @@ function createAccount(provider: ProviderInterface, address: string) {
         method: "eth_signTypedData_v4",
         params: [account.address, stringifiedData],
       });
+    },
+    onTransactionRequested: async () => {
+      // make sure to show the coinbase popup BEFORE doing any transaction preprocessing
+      // otherwise the popup might get blocked in safari
+      await showCoinbasePopup(provider);
     },
   };
 

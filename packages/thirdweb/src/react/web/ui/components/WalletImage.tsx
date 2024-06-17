@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
-import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
@@ -47,9 +47,7 @@ export function WalletImage(props: {
           activeEOAId = storedId;
         }
       }
-      let mipdImage = getInstalledWalletProviders().find(
-        (provider) => provider.info.rdns === activeEOAId,
-      )?.info.icon;
+      let mipdImage: string | undefined;
 
       if (
         activeEOAId === "inApp" &&
@@ -78,6 +76,8 @@ export function WalletImage(props: {
             mipdImage = passkeyIcon;
             break;
         }
+      } else {
+        mipdImage = await getWalletInfo(activeEOAId, true);
       }
 
       setImage(mipdImage);
