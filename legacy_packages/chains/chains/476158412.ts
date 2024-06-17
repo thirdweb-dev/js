@@ -12,12 +12,6 @@ export default {
   "faucets": [
     "https://sfuel.dirtroad.dev/staging"
   ],
-  "icon": {
-    "url": "ipfs://bafkreiezcwowhm6xjrkt44cmiu6ml36rhrxx3amcg3cfkcntv2vgcvgbre",
-    "width": 600,
-    "height": 600,
-    "format": "png"
-  },
   "infoURL": "https://europahub.network/",
   "name": "Deprecated SKALE Europa Hub Testnet",
   "nativeCurrency": {

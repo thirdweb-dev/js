@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmT7DTqT1V2y42pRpt3sj9ifijfmbtkHN7D2vTfAUAS622",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://etm.network",
   "name": "Ennothem Testnet Pioneer",
   "nativeCurrency": {

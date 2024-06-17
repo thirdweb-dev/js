@@ -4,12 +4,6 @@ export default {
   "chainId": 1688,
   "explorers": [],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreigzeanzqgxrzzep45t776ovbwi242poqxbryuu2go5eedeuwwcsay",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://www.ludan.org/",
   "name": "LUDAN Mainnet",
   "nativeCurrency": {

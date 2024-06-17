@@ -13,12 +13,6 @@ export default {
     "https://ruby.exchange/faucet.html",
     "https://sfuel.mylilius.com/"
   ],
-  "icon": {
-    "url": "ipfs://bafkreiezcwowhm6xjrkt44cmiu6ml36rhrxx3amcg3cfkcntv2vgcvgbre",
-    "width": 600,
-    "height": 600,
-    "format": "png"
-  },
   "infoURL": "https://europahub.network/",
   "name": "SKALE Europa Hub",
   "nativeCurrency": {
