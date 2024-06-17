@@ -8,6 +8,7 @@ import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import { coinbaseWalletSDK } from "../coinbase/coinbase-wallet.js";
 import { getCoinbaseMobileProvider } from "../coinbase/coinbaseMobileSDK.js";
 import { COINBASE } from "../constants.js";
+import { inAppWallet } from "../in-app/native/in-app.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { smartWallet } from "../smart/smart-wallet.js";
 import type { WCConnectOptions } from "../wallet-connect/types.js";
@@ -54,11 +55,9 @@ export function createWallet<const ID extends WalletId>(
      */
     case "embedded":
     case "inApp": {
-      // TODO pass RN connector
-      throw new Error("TODO");
-      // return inAppWallet(
-      //   creationOptions as CreateWalletArgs<"inApp">[1],
-      // ) as Wallet<ID>;
+      return inAppWallet(
+        creationOptions as CreateWalletArgs<"inApp">[1],
+      ) as Wallet<ID>;
     }
 
     /**
