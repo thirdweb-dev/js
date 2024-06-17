@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CodeExample } from "../../../components/code/code-example";
+import { CustomizedConnect } from "../../../components/sign-in/custom";
 import { HooksPreview } from "../../../components/sign-in/hooks";
 import { StyledConnectButton } from "../../../components/styled-connect-button";
 import { StyledConnectEmbed } from "../../../components/styled-connect-embed";
@@ -68,6 +69,10 @@ export default function Page() {
 
       <section className="container px-4 md:px-6 space-y-8">
         <EmbedComponent />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <CustomizedComponent />
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
@@ -138,6 +143,65 @@ clientId: "<YOUR_CLIENT_ID>"
 function App(){
 return (
 <ConnectEmbed client={THIRDWEB_CLIENT} />
+);
+};`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function CustomizedComponent() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Customized Component
+        </h2>
+        <p className="max-w-[600px]">
+          Change the look and feel of the connect button without rewriting your
+          own.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<CustomizedConnect />}
+        code={`import { createThirdwebClient } from "thirdweb";
+import { ConnectEmbed } from "thirdweb/react";
+
+const THIRDWEB_CLIENT = createThirdwebClient({
+clientId: "<YOUR_CLIENT_ID>"
+});
+
+function App(){
+return (
+<ConnectButton
+      client={THIRDWEB_CLIENT}
+      connectButton={{
+        label: "Custom Connect Button",
+      }}
+      showAllWallets={false}
+      connectModal={{
+        title: "Custom Connect Modal",
+        size: "compact",
+      }}
+      theme={darkTheme({
+        colors: {
+          modalBg: "#281866",
+          accentButtonBg: "#281866",
+          connectedButtonBgHover: "#281866",
+          borderColor: "rgba(256, 256,256, 0.1)",
+          accentText: "rgba(256, 256,256, 0.1)",
+          connectedButtonBg: "#281866",
+          tertiaryBg: "rgba(256, 256,256, 0.1)",
+          primaryButtonBg: "#281866",
+          secondaryButtonBg: "rgba(256, 256,256, 0.1)",
+          primaryButtonText: "#E7E8E9",
+          primaryText: "#E7E8E9",
+          separatorLine: "rgba(256, 256,256, 0.1)",
+        },
+      })}
+    />
 );
 };`}
         lang="tsx"

@@ -41,12 +41,7 @@ export function isValidTheme(theme: unknown): theme is Theme {
   return (
     theme === "dark" ||
     theme === "light" ||
-    (typeof theme === "object" &&
-      theme !== null &&
-      "colors" in theme &&
-      "fontSizes" in theme &&
-      "radii" in theme &&
-      "space" in theme)
+    (typeof theme === "object" && theme !== null && "colors" in theme)
   );
 }
 
