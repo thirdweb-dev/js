@@ -92,7 +92,7 @@ export async function connectWC(
   let { onDisplayUri } = wcOptions || {};
 
   // use default sessionHandler unless onDisplayUri is explicitly provided
-  if (!onDisplayUri && sessionHandler) {
+  if (!onDisplayUri && sessionHandler && walletId !== "walletConnect") {
     const walletInfo = await getWalletInfo(walletId);
     const deeplinkHandler = (uri: string) => {
       const appUrl = walletInfo.mobile.native || walletInfo.mobile.universal;
@@ -235,10 +235,11 @@ async function initProvider(
   });
 
   const provider = await EthereumProvider.init({
-    showQrModal: sessionRequestHandler
-      ? false
-      : wcOptions?.showQrModal === undefined
-        ? defaultShowQrModal
+    showQrModal:
+      wcOptions?.showQrModal === undefined
+        ? sessionRequestHandler
+          ? false
+          : defaultShowQrModal
         : wcOptions.showQrModal,
     projectId: wcOptions?.projectId || DEFAULT_PROJECT_ID,
     optionalMethods: OPTIONAL_METHODS,
