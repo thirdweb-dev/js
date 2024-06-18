@@ -53,7 +53,6 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       gap={10}
       flexDir="column"
       p={{ base: 6, md: 10 }}
-      h="full"
       zIndex={999}
       background={highlighted ? "black" : "transparent"}
       borderColor={current ? "blue.500" : "gray.900"}
