@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.14.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.99
+  - @thirdweb-dev/wallets@2.5.39
+  - @thirdweb-dev/auth@4.1.97
+
 ## 0.14.11
 
 ### Patch Changes
