@@ -50,7 +50,11 @@ export const IpfsUploadDropzone: React.FC<IpfsUploadDropzoneProps> = () => {
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (files) => setDroppedFiles((prev) => [...prev, ...files]),
+    onDrop: (files) =>
+      setDroppedFiles((prev) => [
+        ...prev,
+        ...files.filter((f) => f.type !== "text/html"),
+      ]),
   });
   return (
     <Flex flexDir="column" gap={4}>
