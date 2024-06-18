@@ -39,8 +39,6 @@ interface CodeOverviewProps {
   noSidebar?: boolean;
 }
 
-// TODO replace `resolveMethod` with the fn actual signatures
-
 export const COMMANDS = {
   install: {
     javascript: "npm i thirdweb",

@@ -3,11 +3,19 @@ import {
   PaperChainToChainId,
   usePaymentsEnabledContracts,
 } from "@3rdweb-sdk/react/hooks/usePayments";
-import { Center, Flex, Spinner, Stack } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Center,
+  Flex,
+  Spinner,
+  Stack,
+} from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
 import { PaymentsAnalytics } from "./components/payments-analytics";
 import { PaymentCheckouts } from "./components/payments-checkouts";
-import { Card, Heading, Text } from "tw-components";
+import { Card, Heading, Link, Text } from "tw-components";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { NoWalletConnectedPayments } from "./components/no-wallet-connected-payments";
 import { NoPaymentsEnabled } from "./components/no-payments-enabled";
@@ -17,6 +25,24 @@ import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 interface ContractPaymentsPageProps {
   contractAddress?: string;
 }
+
+const DeprecatedTab: React.FC = () => {
+  return (
+    <Alert status="warning" borderRadius="lg">
+      <AlertIcon />
+      <AlertDescription>
+        Contract payments are deprecated.{" "}
+        <Link
+          fontWeight={600}
+          isExternal
+          href="https://blog.thirdweb.com/guides/how-to-migrate-from-papers-nft-checkout-to-thirdweb-pay/"
+        >
+          Learn how to migrate to thirdweb pay.
+        </Link>
+      </AlertDescription>
+    </Alert>
+  );
+};
 
 export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
   contractAddress,
@@ -56,6 +82,7 @@ export const ContractPaymentsPage: React.FC<ContractPaymentsPageProps> = ({
   }
   return (
     <Flex direction="column" gap={6}>
+      <DeprecatedTab />
       {isLoading ? (
         <Center pb={16}>
           <Spinner size="sm" />

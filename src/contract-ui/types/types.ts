@@ -6,6 +6,7 @@ export type EnhancedRoute<T = any> = {
   path: string;
   isDefault?: true;
   isBeta?: true;
+  isDeprecated?: true;
   isEnabled?: ExtensionDetectedState;
   component: ComponentType<T>;
 };

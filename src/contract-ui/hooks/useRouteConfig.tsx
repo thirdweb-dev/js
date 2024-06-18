@@ -173,6 +173,7 @@ export function useContractRouteConfig(
       path: "payments",
       component: LazyContractPaymentsPage,
       isDefault: true,
+      isDeprecated: true,
     },
     {
       title: "NFTs",

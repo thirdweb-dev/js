@@ -61,6 +61,7 @@ export const ContractSidebar: React.FC<ContractSidebarProps> = ({
                 title: r.title,
                 href: `/${r.path.replace("overview", "")}`,
                 isBeta: r.isBeta,
+                isDeprecated: r.isDeprecated,
                 onClick: () => {
                   openState.onClose();
                 },
@@ -81,6 +82,7 @@ export const ContractSidebar: React.FC<ContractSidebarProps> = ({
                 title: r.title,
                 href: `/${r.path}`,
                 isBeta: r.isBeta,
+                isDeprecated: r.isDeprecated,
                 extensionDetectedState: r.isEnabled,
                 onClick: () => {
                   openState.onClose();
@@ -100,6 +102,7 @@ type NavLinkSectionProps = {
     href: string;
     title: string;
     isBeta?: true;
+    isDeprecated?: true;
     extensionDetectedState?: ExtensionDetectedState;
     onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   }>;
@@ -133,6 +136,13 @@ const NavLinkSection: React.FC<NavLinkSectionProps> = ({
             <Box>
               <Badge colorScheme="green" variant="subtle">
                 Beta
+              </Badge>
+            </Box>
+          )}
+          {link.isDeprecated && (
+            <Box>
+              <Badge colorScheme="orange" variant="subtle">
+                Deprecated
               </Badge>
             </Box>
           )}
