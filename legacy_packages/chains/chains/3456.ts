@@ -6,12 +6,24 @@ export default {
     {
       "name": "LayerEdge Testnet Explorer",
       "url": "https://testnet-explorer.layeredge.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmT2RotFAn8edji6FqBiP1TpTb1EFqHr28qbQGoRaJ9nTN",
+        "width": 218,
+        "height": 211,
+        "format": "svg"
+      }
     }
   ],
   "faucets": [
     "https://testnet-faucet.layeredge.io"
   ],
+  "icon": {
+    "url": "ipfs://QmT2RotFAn8edji6FqBiP1TpTb1EFqHr28qbQGoRaJ9nTN",
+    "width": 218,
+    "height": 211,
+    "format": "svg"
+  },
   "infoURL": "https://www.layeredge.io",
   "name": "LayerEdge testnet",
   "nativeCurrency": {
