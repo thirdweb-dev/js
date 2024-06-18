@@ -1144,6 +1144,20 @@ export type UseWalletDetailsModalOptions = {
   hideDisconnect?: boolean;
 
   /**
+   * Called on disconnection of a wallet.
+   *
+   * ```tsx
+   * open({
+   *   client,
+   *   onDisconnect: () => {
+   *     console.log("disconnected from wallet");
+   *   },
+   * });
+   * ```
+   */
+  onDisconnect?: () => void;
+
+  /**
    * Render custom UI at the bottom of the Details Modal
    */
   footer?: (props: { close: () => void }) => JSX.Element;
@@ -1222,7 +1236,10 @@ export function useWalletDetailsModal() {
             theme={props.theme || "dark"}
             supportedTokens={props.supportedTokens}
             closeModal={closeModal}
-            onDisconnect={closeModal}
+            onDisconnect={() => {
+              props.onDisconnect?.();
+              closeModal();
+            }}
             chains={props.chains || []}
           />,
         );
