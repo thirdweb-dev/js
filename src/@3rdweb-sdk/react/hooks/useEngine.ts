@@ -1259,9 +1259,9 @@ export interface EngineContractSubscription {
   webhook?: EngineWebhook;
   createdAt: Date;
   processEventLogs: boolean;
-  filterEvents?: string[];
+  filterEvents: string[];
   processTransactionReceipts: boolean;
-  filterFunctions?: string[];
+  filterFunctions: string[];
 
   // Dummy field for the table.
   lastIndexedBlock: string;
@@ -1289,7 +1289,11 @@ export function useEngineContractSubscription(instance: string) {
 export interface AddContractSubscriptionInput {
   chain: string;
   contractAddress: string;
-  webhookUrl?: string;
+  webhookUrl: string;
+  processEventLogs: boolean;
+  filterEvents: string[];
+  processTransactionReceipts: boolean;
+  filterFunctions: string[];
 }
 
 export function useEngineAddContractSubscription(instance: string) {

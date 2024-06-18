@@ -99,10 +99,87 @@ export const ContractSubscriptionTable: React.FC<
       },
     }),
     columnHelper.accessor("webhook", {
-      header: "Webhook",
+      header: "Webhook URL",
       cell: (cell) => {
         const webhook = cell.getValue();
-        return <Text>{webhook?.url}</Text>;
+        const url = webhook?.url ?? "";
+
+        return (
+          <Text maxW={200} whiteSpace="normal" noOfLines={3}>
+            {url}
+          </Text>
+        );
+      },
+    }),
+    columnHelper.accessor("processEventLogs", {
+      header: "Filters",
+      cell: (cell) => {
+        const {
+          processEventLogs,
+          filterEvents,
+          processTransactionReceipts,
+          filterFunctions,
+        } = cell.row.original;
+
+        return (
+          <Flex flexDirection="column">
+            {/* Show logs + events */}
+            {processEventLogs && (
+              <Flex gap={1}>
+                <Text>Logs:</Text>
+                {filterEvents.length === 0 ? (
+                  <Text>All</Text>
+                ) : (
+                  <Tooltip
+                    p={0}
+                    label={
+                      <Stack p={2} fontSize="small" color="white">
+                        {filterEvents.map((name) => (
+                          <Text key={name}>{name}</Text>
+                        ))}
+                      </Stack>
+                    }
+                    bgColor="backgroundCardHighlight"
+                    borderRadius="lg"
+                    shouldWrapChildren
+                  >
+                    <Text textDecoration="underline dotted">
+                      {filterEvents.length} events
+                    </Text>
+                  </Tooltip>
+                )}
+              </Flex>
+            )}
+
+            {/* Show receipts + functions */}
+            {processTransactionReceipts && (
+              <Flex gap={1}>
+                <Text>Receipts:</Text>
+                {filterFunctions.length === 0 ? (
+                  <Text>All</Text>
+                ) : (
+                  <Tooltip
+                    p={0}
+                    label={
+                      <Stack p={2} fontSize="small" color="white">
+                        {filterFunctions.map((name) => (
+                          <Text key={name}>{name}</Text>
+                        ))}
+                      </Stack>
+                    }
+                    bgColor="backgroundCardHighlight"
+                    borderRadius="lg"
+                    shouldWrapChildren
+                  >
+                    <Text textDecoration="underline dotted">
+                      {filterFunctions.length} functions
+                    </Text>
+                  </Tooltip>
+                )}
+              </Flex>
+            )}
+          </Flex>
+        );
       },
     }),
     columnHelper.accessor("lastIndexedBlock", {
@@ -312,6 +389,26 @@ const RemoveModal = ({
                   <Text>{contractSubscription.webhook.url}</Text>
                 ) : (
                   <Text fontStyle="italic">N/A</Text>
+                )}
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Filters</FormLabel>
+                {contractSubscription.processEventLogs && (
+                  <Text>
+                    Logs:{" "}
+                    {contractSubscription.filterEvents.length === 0
+                      ? "All"
+                      : contractSubscription.filterEvents.join(", ")}
+                  </Text>
+                )}
+                {contractSubscription.processTransactionReceipts && (
+                  <Text>
+                    Receipts:{" "}
+                    {contractSubscription.filterFunctions.length === 0
+                      ? "All"
+                      : contractSubscription.filterFunctions.join(", ")}
+                  </Text>
                 )}
               </FormControl>
             </Card>
