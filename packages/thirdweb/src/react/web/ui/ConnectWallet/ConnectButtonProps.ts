@@ -92,7 +92,7 @@ export type ConnectButton_connectButtonOptions = {
    * Set a custom label for the button. The default is `"Connect"`
    * @example
    * ```tsx
-   * <ConnectButton button={{
+   * <ConnectButton connectButton={{
    *    label: "Sign in"
    * }} />
    * ```
@@ -105,8 +105,8 @@ export type ConnectButton_connectButtonOptions = {
    * For some CSS properties, you may need to use the `!important` to override the default styles
    *
    * ```tsx
-   * <ConnectButton button={{
-   *  className="my-custom-class"
+   * <ConnectButton connectButton={{
+   *   className: "my-custom-class",
    * }} />
    * ```
    */
@@ -114,6 +114,14 @@ export type ConnectButton_connectButtonOptions = {
 
   /**
    * CSS styles to apply to the connectButton element
+   * @example
+   * ```tsx
+   * <ConnectButton connectButton={{
+   *   style: {
+   *     color: "red",
+   *   },
+   * }} />
+   * ```
    */
   style?: React.CSSProperties;
 };
@@ -212,7 +220,7 @@ export type ConnectButton_detailsButtonOptions = {
    * @example
    * ```tsx
    * <ConnectButton detailsButton={{
-   *    balanceToken:{
+   *    displayBalanceToken:{
    *      // show USDC balance when connected to Ethereum mainnet or Polygon
    *      [ethereum.id]: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
    *      [polygon.id]: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
@@ -566,16 +574,42 @@ export type ConnectButtonProps = {
   signInButton?: {
     /**
      * Set a custom label for the sign-in button
+     * @example
+     * ```tsx
+     * <ConnectButton
+     *   signInButton={{
+     *     label: "Sign in now!"
+     *   }}
+     * />
+     * ```
      */
     label?: string;
 
     /**
      * CSS styles to apply to the sign-in button element
+     * @example
+     * ```tsx
+     * <ConnectButton
+     *   signInButton={{
+     *     style: {
+     *       color: "purple",
+     *     }
+     *   }}
+     * />
+     * ```
      */
     style?: React.CSSProperties;
 
     /**
      * CSS class to apply to the sign-in button element
+     * @example
+     * ```tsx
+     * <ConnectButton
+     *   signInButton={{
+     *     className: "my-class-name"
+     *   }}
+     * />
+     * ```
      */
     className?: string;
   };
