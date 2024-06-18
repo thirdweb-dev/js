@@ -47,6 +47,7 @@ export type SendTransactionPayModalConfig =
         | {
             testMode?: boolean;
           };
+      purchaseData?: object;
     }
   | false;
 

@@ -604,6 +604,7 @@ function SwapScreenContent(
             : toToken.address,
           toAmount: tokenAmount,
           client,
+          purchaseData: payOptions.purchaseData,
         }
       : undefined;
 
@@ -799,6 +800,7 @@ function FiatScreenContent(
           toAmount: tokenAmount,
           client,
           isTestMode: buyWithFiatOptions?.testMode,
+          purchaseData: props.payOptions.purchaseData,
         }
       : undefined,
   );

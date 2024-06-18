@@ -74,6 +74,12 @@ export type PayUIOptions = {
         testMode?: boolean;
       }
     | false;
+
+  /**
+   * Arbitrary data to send to the "Buy with Crypto" and "Buy with Fiat" quote APIs to save extra information with the purchase.
+   * This data will be returned by the "Buy with Crypto" / "Buy with Fiat" status APIs as well
+   */
+  purchaseData?: object;
 };
 
 /**
