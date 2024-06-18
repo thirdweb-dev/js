@@ -99,9 +99,18 @@ export function isThirdwebUrl(url: string): boolean {
   }
   try {
     const { hostname } = new URL(url);
-    const is =
-      THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain)) ||
-      hostname === "localhost";
+
+    try {
+      // special case for localhost in development only
+      if (process.env.NODE_ENV === "development") {
+        if (hostname === "localhost") {
+          IS_THIRDWEB_URL_CACHE.set(url, true);
+          return true;
+        }
+      }
+    } catch {}
+
+    const is = THIRDWEB_DOMAINS.some((domain) => hostname.endsWith(domain));
     IS_THIRDWEB_URL_CACHE.set(url, is);
     return is;
   } catch {
