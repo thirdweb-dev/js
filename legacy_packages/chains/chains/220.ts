@@ -2,13 +2,7 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Flag",
   "chainId": 220,
-  "explorers": [
-    {
-      "name": "flagscan",
-      "url": "https://scan.flagscan.io",
-      "standard": "EIP3091"
-    }
-  ],
+  "explorers": [],
   "faucets": [],
   "features": [],
   "icon": {
@@ -26,11 +20,9 @@ export default {
   },
   "networkId": 220,
   "redFlags": [],
-  "rpc": [
-    "https://220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.flagscan.io/"
-  ],
+  "rpc": [],
   "shortName": "Flag",
   "slug": "flag-flag",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

@@ -6,33 +6,15 @@ export default {
     {
       "name": "meerscan",
       "url": "https://qng.qitmeer.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     },
     {
       "name": "meerscan",
       "url": "https://qng.meerscan.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-        "width": 512,
-        "height": 512,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://github.com/Qitmeer",
   "name": "Qitmeer Network Mainnet",
   "nativeCurrency": {

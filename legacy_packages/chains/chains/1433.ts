@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmfJ1Qxpzi6CSLeFeWY1Bwe435CpT5za5WfrLUE7vNzZfy",
-    "width": 512,
-    "height": 512,
-    "format": "png"
-  },
   "infoURL": "https://rikeza.io",
   "name": "Rikeza Network Mainnet",
   "nativeCurrency": {

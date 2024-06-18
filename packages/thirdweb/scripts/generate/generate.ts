@@ -55,7 +55,7 @@ export async function generateFromAbi(
       events.map(async (e) => {
         await writeFile(
           join(outFolder, extensionFileName, "./events", `${e.name}.ts`),
-          format(generateEvent(e, extensionName), {
+          await format(generateEvent(e, extensionName), {
             parser: "babel-ts",
             trailingComma: "all",
           }),
@@ -74,7 +74,7 @@ export async function generateFromAbi(
       readFunctions.map(async (f) => {
         await writeFile(
           join(outFolder, extensionFileName, "./read", `${f.name}.ts`),
-          format(generateReadFunction(f, extensionName), {
+          await format(generateReadFunction(f, extensionName), {
             parser: "babel-ts",
             trailingComma: "all",
           }),
@@ -93,7 +93,7 @@ export async function generateFromAbi(
       writeFunctions.map(async (f) => {
         await writeFile(
           join(outFolder, extensionFileName, "./write", `${f.name}.ts`),
-          format(generateWriteFunction(f, extensionName), {
+          await format(generateWriteFunction(f, extensionName), {
             parser: "babel-ts",
             trailingComma: "all",
           }),

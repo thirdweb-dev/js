@@ -94,7 +94,16 @@ export const ConnectModalContent = (props: {
       onGetStarted={() => {
         setScreen(reservedScreens.getStarted);
       }}
-      selectWallet={setScreen}
+      selectWallet={(newWallet) => {
+        if (newWallet.onConnectRequested) {
+          newWallet
+            .onConnectRequested()
+            .then(() => setScreen(newWallet))
+            .catch(console.error); // TODO propagate error down
+        } else {
+          setScreen(newWallet);
+        }
+      }}
       onShowAll={() => {
         setScreen(reservedScreens.showAll);
       }}

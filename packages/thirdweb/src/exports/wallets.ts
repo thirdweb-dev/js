@@ -88,7 +88,7 @@ export type {
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
 } from "../wallets/in-app/core/wallet/types.js";
 
-export type { CoinbaseSDKWalletConnectionOptions } from "../wallets/coinbase/coinbaseSDKWallet.js";
+export type { CoinbaseSDKWalletConnectionOptions } from "../wallets/coinbase/coinbaseWebSDK.js";
 
 export type {
   WalletEmitter,

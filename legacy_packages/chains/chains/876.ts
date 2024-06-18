@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://bafkreifhetalm3vpvjrg5u5d2momkcgvkz6rhltur5co3rslltbxzpr6yq",
-    "width": 2048,
-    "height": 2048,
-    "format": "png"
-  },
   "infoURL": "https://www.bandainamco-mirai.com/en/",
   "name": "Bandai Namco Research Verse Mainnet",
   "nativeCurrency": {

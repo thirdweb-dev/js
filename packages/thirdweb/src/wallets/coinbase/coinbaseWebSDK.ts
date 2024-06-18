@@ -1,7 +1,4 @@
-import {
-  CoinbaseWalletSDK,
-  type ProviderInterface,
-} from "@coinbase/wallet-sdk";
+import type { ProviderInterface } from "@coinbase/wallet-sdk";
 import type { Address } from "abitype";
 import {
   type SignTypedDataParameters,
@@ -41,6 +38,7 @@ import type {
   CreateWalletArgs,
   WalletConnectionOption,
 } from "../wallet-types.js";
+import { showCoinbasePopup } from "./utils.js";
 
 export type CoinbaseWalletCreationOptions =
   | {
@@ -134,6 +132,7 @@ export async function getCoinbaseWebProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
+    const { CoinbaseWalletSDK } = await import("@coinbase/wallet-sdk");
     const client = new CoinbaseWalletSDK({
       appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
@@ -335,6 +334,11 @@ function createAccount(provider: ProviderInterface, address: string) {
         method: "eth_signTypedData_v4",
         params: [account.address, stringifiedData],
       });
+    },
+    onTransactionRequested: async () => {
+      // make sure to show the coinbase popup BEFORE doing any transaction preprocessing
+      // otherwise the popup might get blocked in safari
+      await showCoinbasePopup(provider);
     },
   };
 

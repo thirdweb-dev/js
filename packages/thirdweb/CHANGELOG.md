@@ -1,5 +1,41 @@
 # thirdweb
 
+## 5.29.6
+
+### Patch Changes
+
+- [#3366](https://github.com/thirdweb-dev/js/pull/3366) [`9dd1b5a`](https://github.com/thirdweb-dev/js/commit/9dd1b5a5ebaeaecafdcacbb4f4b81c3006d5074c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign raw message through ethers 5/6 adapters
+
+- [#3369](https://github.com/thirdweb-dev/js/pull/3369) [`b808652`](https://github.com/thirdweb-dev/js/commit/b80865280585548615e4741634ea6b884a16e2cf) Thanks [@jnsdls](https://github.com/jnsdls)! - do not consider localhost a thirdweb url (except for dev mode)
+
+## 5.29.5
+
+### Patch Changes
+
+- [#3356](https://github.com/thirdweb-dev/js/pull/3356) [`2d7ebe2`](https://github.com/thirdweb-dev/js/commit/2d7ebe2111d24448dd85ace25fc9fdbef987a57d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ConnectButton theming prop
+
+- [#3364](https://github.com/thirdweb-dev/js/pull/3364) [`7304c5b`](https://github.com/thirdweb-dev/js/commit/7304c5b0c7060080f302160dc9b24b2becc17524) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect coinbase wallet create settings when preloading the provider
+
+- [#3347](https://github.com/thirdweb-dev/js/pull/3347) [`a9ce10f`](https://github.com/thirdweb-dev/js/commit/a9ce10f39ad47f386e8086e230679093aab08754) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ERC721 extension: updateMetadata
+
+## 5.29.4
+
+### Patch Changes
+
+- [#3345](https://github.com/thirdweb-dev/js/pull/3345) [`79e6a04`](https://github.com/thirdweb-dev/js/commit/79e6a047d6ae6cb341fdad22137bd83ad6e611d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix react native inAppWallet creation
+
+## 5.29.3
+
+### Patch Changes
+
+- [#3329](https://github.com/thirdweb-dev/js/pull/3329) [`c94bcd5`](https://github.com/thirdweb-dev/js/commit/c94bcd574aa4eaf2bd76ab8b6379302de4731ed4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Dynamically import coinbase sdk to avoid cloudflare bundler issues
+
+- [#3341](https://github.com/thirdweb-dev/js/pull/3341) [`1c533ef`](https://github.com/thirdweb-dev/js/commit/1c533efcd5fbc8a72fd03c98510fa601ee5f34b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix transaction button not respecting theme prop
+
+- [#3298](https://github.com/thirdweb-dev/js/pull/3298) [`ffaff74`](https://github.com/thirdweb-dev/js/commit/ffaff744f72d2cb22896e7501677b48f76ea857a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - refactor exports to handle native vs non-native dependencies
+
+- [#3330](https://github.com/thirdweb-dev/js/pull/3330) [`9cf3a1d`](https://github.com/thirdweb-dev/js/commit/9cf3a1d6636fcd56559e889ab2bfe3249d51162a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix coinbase wallet popup sometimes not opening on safari + improve inAppWallet web performance
+
 ## 5.29.2
 
 ### Patch Changes

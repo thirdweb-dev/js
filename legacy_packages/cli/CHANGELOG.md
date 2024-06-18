@@ -1,5 +1,43 @@
 # thirdweb
 
+## 0.14.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.99
+  - @thirdweb-dev/wallets@2.5.39
+  - @thirdweb-dev/auth@4.1.97
+
+## 0.14.11
+
+### Patch Changes
+
+- Updated dependencies [[`321cf26`](https://github.com/thirdweb-dev/js/commit/321cf26342d0755204aa465bc2390e052d5ed071)]:
+  - @thirdweb-dev/chains@0.1.120
+  - @thirdweb-dev/sdk@4.0.98
+  - @thirdweb-dev/wallets@2.5.38
+  - @thirdweb-dev/auth@4.1.96
+
+## 0.14.10
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@4.0.97
+  - @thirdweb-dev/wallets@2.5.37
+  - @thirdweb-dev/auth@4.1.95
+
+## 0.14.9
+
+### Patch Changes
+
+- Updated dependencies [[`8b74602`](https://github.com/thirdweb-dev/js/commit/8b74602e3b7fbe011bf886b9d5ee0e2ea62f7447)]:
+  - @thirdweb-dev/chains@0.1.119
+  - @thirdweb-dev/sdk@4.0.96
+  - @thirdweb-dev/wallets@2.5.36
+  - @thirdweb-dev/auth@4.1.94
+
 ## 0.14.8
 
 ### Patch Changes
