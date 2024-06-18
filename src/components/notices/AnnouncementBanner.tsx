@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-thirdweb-pay", false, true);
+    useLocalStorage("dismissed-blocktorch-announcement", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,9 +27,10 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="https://pay-demo.thirdweb.com/"
+          href="https://blog.thirdweb.com/welcoming-blocktorch/"
           category="announcement"
-          label="thirdweb-pay"
+          label="blocktorch"
+          isExternal
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Introducing thirdweb Pay: Onramp users to your app with credit
-                card & cross-chain crypto. Integrate for free
+                thirdweb acquires Blocktorch, a leading web3 observability
+                platform.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
