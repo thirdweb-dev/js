@@ -6,12 +6,24 @@ export default {
     {
       "name": "meerscan testnet",
       "url": "https://testnet-qng.qitmeer.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+        "width": 512,
+        "height": 512,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
     "https://faucet.qitmeer.io"
   ],
+  "icon": {
+    "url": "ipfs://QmWSbMuCwQzhBB6GRLYqZ87n5cnpzpYCehCAMMQmUXj4mm",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://github.com/Qitmeer",
   "name": "Qitmeer Network Testnet",
   "nativeCurrency": {
