@@ -74,6 +74,13 @@ export type PayUIOptions = {
         testMode?: boolean;
       }
     | false;
+
+  /**
+   * Extra details to store with the purchase.
+   *
+   * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
+   */
+  purchaseData?: object;
 };
 
 /**
