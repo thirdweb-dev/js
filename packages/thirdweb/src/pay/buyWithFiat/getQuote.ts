@@ -260,13 +260,13 @@ export async function getBuyWithFiatQuote(
         toAddress: params.toAddress,
         fromCurrencySymbol: params.fromCurrencySymbol,
         toChainId: params.toChainId.toString(),
-        toTokenAddress: params.toTokenAddress.toLowerCase(),
+        toTokenAddress: params.toTokenAddress,
         fromAmount: params.fromAmount,
         toAmount: params.toAmount,
         maxSlippageBPS: params.maxSlippageBPS,
         isTestMode: params.isTestMode,
         purchaseData: params.purchaseData,
-        fromAddress: params.fromAddress.toLowerCase(),
+        fromAddress: params.fromAddress,
       }),
     });
 

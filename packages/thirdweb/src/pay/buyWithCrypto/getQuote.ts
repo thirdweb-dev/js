@@ -247,9 +247,9 @@ export async function getBuyWithCryptoQuote(
       body: JSON.stringify({
         fromAddress: params.fromAddress,
         fromChainId: params.fromChainId.toString(),
-        fromTokenAddress: params.fromTokenAddress.toLowerCase(),
+        fromTokenAddress: params.fromTokenAddress,
         toChainId: params.toChainId.toString(),
-        toTokenAddress: params.toTokenAddress.toLowerCase(),
+        toTokenAddress: params.toTokenAddress,
         fromAmount: params.fromAmount,
         toAmount: params.toAmount,
         maxSlippageBPS: params.maxSlippageBPS,
