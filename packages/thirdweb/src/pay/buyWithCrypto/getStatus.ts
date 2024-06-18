@@ -70,9 +70,6 @@ export type BuyWithCryptoStatus =
       toAddress: string;
       failureMessage?: string;
       bridge?: string;
-      /**
-       * Arbitrary data sent at the time of fetching the quote
-       */
       purchaseData?: object;
     };
 

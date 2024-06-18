@@ -64,7 +64,9 @@ export type GetBuyWithFiatQuoteParams = {
   isTestMode?: boolean;
 
   /**
-   * Arbitrary data to store with the purchase.
+   * Extra details to store with the purchase.
+   *
+   * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
   purchaseData?: object;
 };
