@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CircleAlertIcon, TicketCheckIcon, VerifiedIcon } from "lucide-react";
+import { CircleAlertIcon, TicketCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { ChainSupportedService } from "../../../types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
@@ -27,7 +27,7 @@ export async function ChainListCard({
   iconUrl,
 }: ChainListCardProps) {
   const chainMetadata = await getChainMetadata(chainId);
-  const isVerified = !!chainMetadata;
+
   return (
     <div className="relative h-full">
       <Card className="h-full w-full hover:bg-muted">
@@ -71,24 +71,13 @@ export async function ChainListCard({
             </tbody>
           </table>
 
-          {(isDeprecated || chainMetadata?.gasSponsored || isVerified) && (
+          {(isDeprecated || chainMetadata?.gasSponsored) && (
             <div className="mt-5 flex gap-5 border-t pt-4">
-              {!isDeprecated && (
-                <>
-                  {isVerified && (
-                    <div className="gap-1.5 flex items-center">
-                      <VerifiedIcon className="text-primary-foreground size-5" />
-                      <p className="text-sm">Verified</p>
-                    </div>
-                  )}
-
-                  {chainMetadata?.gasSponsored && (
-                    <div className="gap-1.5 flex items-center">
-                      <TicketCheckIcon className="text-primary-foreground size-5" />
-                      <p className="text-sm">Gas Sponsored</p>
-                    </div>
-                  )}
-                </>
+              {!isDeprecated && chainMetadata?.gasSponsored && (
+                <div className="gap-1.5 flex items-center">
+                  <TicketCheckIcon className="text-primary-foreground size-5" />
+                  <p className="text-sm">Gas Sponsored</p>
+                </div>
               )}
 
               {isDeprecated && (

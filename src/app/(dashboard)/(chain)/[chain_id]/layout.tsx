@@ -5,7 +5,6 @@ import {
   CircleAlertIcon,
   ExternalLinkIcon,
   TicketCheckIcon,
-  VerifiedIcon,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
@@ -132,7 +131,6 @@ export default async function ChainPageLayout({
                 )}
 
                 {/* Chain Name */}
-
                 <h1
                   className={cn(
                     "font-semibold tracking-tighter text-4xl md:text-6xl",
@@ -144,17 +142,6 @@ export default async function ChainPageLayout({
               </div>
 
               <div className="flex flex-row gap-2 md:gap-4 items-center h-8 mb-4 md:mb-6">
-                {isVerified && (
-                  <Badge
-                    variant="secondary"
-                    className="text-accent-foreground pointer-events-none flex flex-row items-center h-full gap-1.5 border border-border"
-                  >
-                    <VerifiedIcon className="size-5" />
-                    <span className="font-bold text-xs uppercase">
-                      verified
-                    </span>
-                  </Badge>
-                )}
                 {chainMetadata?.gasSponsored && (
                   <Badge
                     variant="secondary"

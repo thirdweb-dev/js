@@ -2,7 +2,6 @@ import {
   CheckIcon,
   CircleAlertIcon,
   TicketCheckIcon,
-  VerifiedIcon,
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -35,7 +34,6 @@ export async function ChainListRow({
   iconUrl,
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
-  const isVerified = !!chainMetadata;
   return (
     <tr className="border-b relative hover:bg-secondary">
       <TableData>{favoriteButton}</TableData>
@@ -51,13 +49,7 @@ export async function ChainListRow({
               {chainName}
             </Link>
 
-            {isVerified && (
-              <ToolTipLabel label="Verified">
-                <VerifiedIcon className="text-primary-foreground size-5 z-10 " />
-              </ToolTipLabel>
-            )}
-
-            {chainMetadata?.gasSponsored && (
+            {!isDeprecated && chainMetadata?.gasSponsored && (
               <ToolTipLabel label="Gas Sponsored">
                 <TicketCheckIcon className="text-primary-foreground size-5 z-10 " />
               </ToolTipLabel>
