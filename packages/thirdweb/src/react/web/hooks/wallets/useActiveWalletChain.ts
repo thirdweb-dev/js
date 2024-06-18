@@ -8,7 +8,7 @@ import { connectionManager } from "../../index.js";
  * ```jsx
  * import { useActiveWalletChain } from "thirdweb/react";
  *
- * const chainId = useActiveWalletChain();
+ * const activeChain = useActiveWalletChain();
  * ```
  * @walletConnection
  */
