@@ -94,6 +94,11 @@ export {
   type SetClaimConditionsParams,
 } from "../../extensions/erc1155/drops/write/setClaimConditions.js";
 
+export {
+  updateMetadata,
+  type UpdateMetadataParams,
+} from "../../extensions/erc1155/drops/write/updateMetadata.js";
+
 /**
  * SIGNATURE extension for ERC1155
  */
