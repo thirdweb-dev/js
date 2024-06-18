@@ -801,6 +801,7 @@ function FiatScreenContent(
           client,
           isTestMode: buyWithFiatOptions?.testMode,
           purchaseData: props.payOptions.purchaseData,
+          fromAddress: account.address,
         }
       : undefined,
   );

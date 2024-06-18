@@ -15,9 +15,14 @@ export type GetBuyWithFiatQuoteParams = {
   client: ThirdwebClient;
 
   /**
-   * The address of the wallet to which the tokens will be sent.
+   * The address of the wallet where the tokens will be sent.
    */
   toAddress: string;
+
+  /**
+   * The address of the wallet which will be used to buy the token.
+   */
+  fromAddress: string;
 
   /**
    * Chain id of the token to buy.
@@ -261,6 +266,7 @@ export async function getBuyWithFiatQuote(
         maxSlippageBPS: params.maxSlippageBPS,
         isTestMode: params.isTestMode,
         purchaseData: params.purchaseData,
+        fromAddress: params.fromAddress.toLowerCase(),
       }),
     });
 
