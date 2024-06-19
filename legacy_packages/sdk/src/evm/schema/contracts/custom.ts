@@ -247,6 +247,7 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
           }),
         )
         .optional(),
+      contractId: z.string().regex(/^[\w-]+$/).optional(),
       readme: z.string().optional(),
       license: z.string().optional(),
       changelog: z.string().optional(),

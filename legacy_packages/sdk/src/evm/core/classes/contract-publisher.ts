@@ -486,7 +486,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         : `0x${fetchedBytecode}`;
 
       const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
-      const contractId = predeployMetadata.name;
+      const contractId = extraMetadata.contractId || predeployMetadata.name;
 
       const fullMetadata = await FullPublishMetadataSchemaInput.parseAsync({
         ...extraMetadataCleaned,
