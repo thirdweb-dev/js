@@ -147,6 +147,11 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       defaultExtensions:
         prePublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata?.defaultExtensions || [],
+      contractId:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata.displayName ||
+        prePublishMetadata.data?.preDeployMetadata.info.title ||
+        publishMetadata.data?.name,
     };
   }, [
     configuredChainsIds,
