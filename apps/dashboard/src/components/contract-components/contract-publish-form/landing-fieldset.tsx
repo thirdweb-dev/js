@@ -143,7 +143,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               {...form.register("contractId", {
                 required: false,
                 validate: (value: string | undefined) => {
-                  const regex = /^[\w-]+$/; // example regex: only letters, numbers, underscore, hyphen
+                  // example regex: only letters, numbers, underscore, hyphen
+                  const regex = /^[\w-]+$/;
 
                   if (value) {
                     return (
