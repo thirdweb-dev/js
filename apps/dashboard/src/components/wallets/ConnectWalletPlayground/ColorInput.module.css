@@ -1,0 +1,31 @@
+.ColorInput {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  display: block;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ColorInput::-webkit-color-swatch {
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+}
+
+.ColorInput::-webkit-color-swatch-wrapper {
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+}
+
+.ColorInput::-moz-color-swatch {
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+}

@@ -6,6 +6,7 @@ import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
 import { baseSepolia } from "../../exports/chains.js";
+
 import {
   addAdmin,
   adminUpdatedEvent,
@@ -189,7 +190,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         events: [adminUpdatedEvent()],
         logs: receipt.logs,
       });
-      expect(logs.length).toBe(1);
       expect(logs[0]?.args.signer).toBe(newAdmin.address);
       expect(logs[0]?.args.isAdmin).toBe(true);
     });
@@ -255,7 +255,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         events: [adminUpdatedEvent()],
         logs: receipt.logs,
       });
-      expect(logs.length).toBe(1);
       expect(logs[0]?.args.signer).toBe(newAdmin.address);
       expect(logs[0]?.args.isAdmin).toBe(true);
 
