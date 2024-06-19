@@ -65,6 +65,18 @@ export type CreateWalletConnectSessionOptions = {
   onConnect?: (session: WalletConnectSession) => void;
 };
 
+let walletConnectClientCache = new WeakMap<
+  ThirdwebClient,
+  WalletConnectClient
+>();
+
+/*
+ * @internal
+ */
+export const clearWalletConnectClientCache = () => {
+  walletConnectClientCache = new WeakMap<ThirdwebClient, WalletConnectClient>();
+};
+
 /**
  * Creates a new WalletConnect client for interacting with another application.
  * @param options - The options to use to create the WalletConnect client.
@@ -114,6 +126,10 @@ export async function createWalletConnectClient(
   options: CreateWalletConnectClientOptions,
 ): Promise<WalletConnectClient> {
   const { wallet, requestHandlers, onConnect, onDisconnect } = options;
+
+  if (walletConnectClientCache.has(options.client)) {
+    return walletConnectClientCache.get(options.client) as WalletConnectClient;
+  }
 
   initializeSessionStore({ clientId: options.client.clientId });
 
@@ -188,6 +204,8 @@ export async function createWalletConnectClient(
     return result;
   };
 
+  walletConnectClientCache.set(options.client, walletConnectClient);
+
   return walletConnectClient;
 }
 
@@ -258,7 +276,7 @@ export async function disconnectWalletConnectSession(options: {
       topic: options.session.topic,
       reason: {
         code: 6000,
-        message: "Replaced by new session",
+        message: "Disconnected",
       },
     });
   } catch {

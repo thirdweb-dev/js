@@ -45,7 +45,6 @@ export function WalletConnectReceiverScreen(props: {
         setWalletConnectClient(wcClient);
       })
       .catch(() => {
-        console.log("Failed to establish WalletConnect connection");
         setErrorConnecting("Failed to establish WalletConnect connection");
       });
   }, [activeWallet, props.client, props.closeModal, errorConnecting]);

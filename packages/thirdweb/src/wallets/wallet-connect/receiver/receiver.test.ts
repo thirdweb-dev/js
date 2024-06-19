@@ -5,6 +5,7 @@ import { TEST_IN_APP_WALLET_A } from "../../../../test/src/test-wallets.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
 import {
+  clearWalletConnectClientCache,
   createWalletConnectClient,
   createWalletConnectSession,
   disconnectWalletConnectSession,
@@ -64,6 +65,10 @@ beforeEach(() => {
 });
 
 describe("createWalletConnectClient", () => {
+  beforeEach(() => {
+    clearWalletConnectClientCache();
+  });
+
   it("creates a client with provided metadata", async () => {
     const client = await createWalletConnectClient({
       projectId: "test",
