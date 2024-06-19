@@ -59,6 +59,10 @@ export function useCreateTicket() {
 
   return useMutationWithInvalidate(
     async (input: CreateTicketInput) => {
+      // for the testjam - NEED TO REMOVE ON PROD RELEASE
+      if (input.markdown === "testjam") {
+        throw new Error("error for testing");
+      }
       setData(input);
       invariant(user?.address, "walletAddress is required");
       invariant(account?.data, "Account not found");
