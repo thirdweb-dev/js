@@ -8,9 +8,8 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "Sign In, Account Abstraction and SIWE Auth | thirdweb Connect",
-  description:
-    "Let users sign up with their email, phone number, social media accounts or directly with a wallet. Seemlessly integrate account abstraction and SIWE auth.",
+  title: "lorem ipsum",
+  description: "lorem ipsum",
 };
 
 export default function Page() {
@@ -49,7 +48,7 @@ export default function Page() {
           <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
-                src={"/in-app-wallet.png"}
+                src={"/blockchain-api.png"}
                 width={600}
                 height={400}
                 objectFit={"contain"}
@@ -104,7 +103,7 @@ function App() {
 
   (contractEvents.data || []).forEach((item) => {
     const { from, to, value } = item.args;
-    console.log("...");
+    console.log("{from}...{value} USDC...{to}");
   });
 }
 `}

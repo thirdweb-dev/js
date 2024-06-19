@@ -1,62 +1,58 @@
 "use client";
 
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useEffect, useState } from "react";
+import { getContract, toTokens } from "thirdweb";
+import { base } from "thirdweb/chains";
+import { useContractEvents } from "thirdweb/react";
+import { transferEvent } from "thirdweb/extensions/erc20";
 
 type Item = {
-  addr1: string;
-  addr2: string;
+  from: string;
+  to: string;
   value: string;
 };
 
+const shortenAddress = (address: string, length = 2) => {
+  return `${address.slice(0, length + 2)}...${address.slice(-length)}`;
+};
+
+const usdcContractOnBase = getContract({
+  address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  chain: base,
+  client: THIRDWEB_CLIENT,
+});
+
 export function WatchEventPreview() {
-  const generateFakeEthereumAddress = (): string => {
-    const characters = "0123456789abcdef";
-    const start = "0x";
-    let firstPart = "";
-    let lastPart = "";
-    for (let i = 0; i < 2; i++) {
-      firstPart += characters[Math.floor(Math.random() * characters.length)];
-    }
-    for (let i = 0; i < 4; i++) {
-      lastPart += characters[Math.floor(Math.random() * characters.length)];
-    }
-    return `${start}${firstPart}...${lastPart}`;
-  };
-  const generateFakeNumber = () => {
-    const number = Math.floor(Math.random() * 10000) + 1;
-    return number.toLocaleString();
-  };
   const [items, setItems] = useState<Item[]>([]);
+  const contractEvents = useContractEvents({
+    contract: usdcContractOnBase,
+    events: [transferEvent()],
+    blockRange: 5,
+  });
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const fakeEthereumAddress1 = generateFakeEthereumAddress();
-      const fakeEthereumAddress2 = generateFakeEthereumAddress();
-      const fakeNumber = generateFakeNumber();
-      const _item: Item = {
-        addr1: fakeEthereumAddress1,
-        addr2: fakeEthereumAddress2,
-        value: fakeNumber,
-      };
-      setItems((prevItems) => {
-        const updatedNotifications = [_item, ...prevItems];
-        if (updatedNotifications.length > 5) {
-          updatedNotifications.pop();
-        }
-        return updatedNotifications;
-      });
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
-
+    if (!contractEvents.data?.length) return;
+    const _items: Item[] = contractEvents.data
+      .map((item) => {
+        const { from, to, value } = item.args;
+        return {
+          from: shortenAddress(from),
+          to: shortenAddress(to),
+          value: Number(toTokens(value, 6)).toFixed(1),
+        };
+      })
+      .slice(-5);
+    setItems(_items);
+  }, [contractEvents.data]);
   return (
     <>
-      <ul>
+      <ul className="text-center text-sm lg:text-base">
         {items.map((item, index) => (
           <li key={index}>
-            <span className="font-bold">{item.addr1}</span> transferred{" "}
+            <span className="font-bold">{item.from}</span> transferred{" "}
             <span className="font-bold text-green-500">{item.value} USDC</span>{" "}
-            to <span className="font-bold">{item.addr2}</span>
+            to <span className="font-bold">{item.to}</span>
           </li>
         ))}
       </ul>
