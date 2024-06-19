@@ -433,15 +433,13 @@ OSS.pageId = PageId.OSS;
 export default OSS;
 
 export const getStaticProps: GetStaticProps = async () => {
-  if (!process.env.GITHUB_API_TOKEN) {
-    throw new Error("Missing GITHUB_API_TOKEN");
-  }
-
-  const authHeader = {
-    headers: {
-      Authorization: `token ${process.env.GITHUB_API_TOKEN}`,
-    },
-  };
+  const authHeader = process.env.GITHUB_API_TOKEN
+    ? {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_API_TOKEN}`,
+        },
+      }
+    : {};
 
   // Fetch the list of all repositories belonging to the organization
   const reposData = (
