@@ -132,6 +132,33 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               {form.formState.errors?.displayName?.message}
             </FormErrorMessage>
           </FormControl>
+          <FormControl
+            isInvalid={!!form.formState.errors.displayName}
+            isRequired
+          >
+            <FormLabel>Contract ID</FormLabel>
+            <Input
+              placeholder="Unique ID for your contract."
+              value={form.watch("contractId")}
+              {...form.register("contractId", {
+                required: false,
+                validate: (value: string | undefined) => {
+                  const regex = /^[\w-]+$/; // example regex: only letters, numbers, underscore, hyphen
+
+                  if (value) {
+                    return (
+                      regex.test(value) ||
+                      "only letters, numbers, underscore, hyphen are allowed"
+                    );
+                  }
+                },
+              })}
+              onChange={(e) => form.setValue("contractId", e.target.value)}
+            />
+            <FormErrorMessage>
+              {form.formState.errors?.contractId?.message}
+            </FormErrorMessage>
+          </FormControl>
           <FormControl isInvalid={!!form.formState.errors.description}>
             <FormLabel>Description</FormLabel>
             <Textarea

@@ -37,7 +37,7 @@ const ExtraPublishMetadataSchema = ExtraPublishMetadataSchemaInput.extend({
     z.object({
       key: z.number(),
       value: z.string(),
-    }),
+    })
   ),
 });
 
@@ -60,7 +60,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully published contract",
-    "Failed to publish contract",
+    "Failed to publish contract"
   );
   const address = useAddress();
   const publishMutation = usePublishMutation();
@@ -109,12 +109,12 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     CONTRACT_ADDRESSES[id as keyof typeof CONTRACT_ADDRESSES]
                       .twFactory,
                   ]
-                : null,
+                : null
             )
-            .filter(Boolean) as [number, string][],
+            .filter(Boolean) as [number, string][]
         ),
         implementationAddresses: Object.fromEntries(
-          configuredChainsIds.map((id) => [id, ""]),
+          configuredChainsIds.map((id) => [id, ""])
         ),
         implementationInitializerFunction: "initialize",
         customFactoryInput: {
@@ -142,7 +142,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       customFactoryAddresses: Object.entries(
         prePublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata?.factoryDeploymentData?.customFactoryInput
-          ?.customFactoryAddresses || {},
+          ?.customFactoryAddresses || {}
       ).map(([key, value]) => ({ key: Number(key), value })),
       defaultExtensions:
         prePublishMetadata.data?.latestPublishedContractMetadata
@@ -200,12 +200,12 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
 
   const isDisabled = useMemo(
     () => !successRedirectUrl || !address,
-    [successRedirectUrl, address],
+    [successRedirectUrl, address]
   );
 
   const fullPublishMetadata = useContractFullPublishMetadata(contractId);
   const constructorParams = useConstructorParamsFromABI(
-    publishMetadata.data?.abi,
+    publishMetadata.data?.abi
   );
 
   const initializerParams = useFunctionParamsFromABI(
@@ -214,7 +214,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       : publishMetadata.data?.abi,
     form.watch("deployType") === "customFactory"
       ? form.watch(
-          `factoryDeploymentData.customFactoryInput.factoryFunction`,
+          `factoryDeploymentData.customFactoryInput.factoryFunction`
         ) ||
           fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
             ?.factoryFunction ||
@@ -222,7 +222,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       : form.watch("factoryDeploymentData.implementationInitializerFunction") ||
           fullPublishMetadata.data?.factoryDeploymentData
             ?.implementationInitializerFunction ||
-          "initialize",
+          "initialize"
   );
 
   const deployParams =
@@ -237,9 +237,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       isExtensionEnabled(
         publishMetadata.data?.abi as Abi,
         "PluginRouter",
-        extensions,
+        extensions
       ),
-    [publishMetadata.data?.abi, extensions],
+    [publishMetadata.data?.abi, extensions]
   );
 
   const isDynamicContract = useMemo(
@@ -247,22 +247,22 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       isExtensionEnabled(
         publishMetadata.data?.abi as Abi,
         "DynamicContract",
-        extensions,
+        extensions
       ),
-    [publishMetadata.data?.abi, extensions],
+    [publishMetadata.data?.abi, extensions]
   );
 
   const hasExtensionsParam = useMemo(
     () =>
       constructorParams.some(
-        (param) => param.name === "_extensions" || "_marketplaceV3Params",
+        (param) => param.name === "_extensions" || "_marketplaceV3Params"
       ),
-    [constructorParams],
+    [constructorParams]
   );
 
   const shouldShowDynamicFactoryInput = useMemo(
     () => isPluginRouter || (isDynamicContract && hasExtensionsParam),
-    [isPluginRouter, isDynamicContract, hasExtensionsParam],
+    [isPluginRouter, isDynamicContract, hasExtensionsParam]
   );
 
   // during loading and after success we should stay in loading state
@@ -295,7 +295,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                 obj[item.key] = item.value;
                 return obj;
               },
-              {},
+              {}
             );
 
             trackEvent({
@@ -357,7 +357,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                       successRedirectUrl,
                       undefined,
                       // reset scroll after redirect
-                      { scroll: true },
+                      { scroll: true }
                     );
                   }
                 },
@@ -372,7 +372,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                     is_factory: data.isDeployableViaFactory,
                   });
                 },
-              },
+              }
             );
           })}
           direction="column"
