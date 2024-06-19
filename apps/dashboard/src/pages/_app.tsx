@@ -145,7 +145,7 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   // legit use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    // this catches the case where the the hook is called twice on the same page
+    // this catches the case where the hook is called twice on the same page
     if (pageId === prevPageId.current) {
       return;
     }
