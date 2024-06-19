@@ -20,6 +20,7 @@ import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
+import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -104,7 +105,10 @@ type WalletDetailsModalScreen =
  * @internal
  */
 export const ConnectedWalletDetails: React.FC<{
-  onDisconnect: () => void;
+  onDisconnect: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
   detailsButton?: ConnectButton_detailsButtonOptions;
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
@@ -239,7 +243,10 @@ function DetailsModal(props: {
   theme: "light" | "dark" | Theme;
   supportedTokens?: SupportedTokens;
   closeModal: () => void;
-  onDisconnect: () => void;
+  onDisconnect: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
 }) {
@@ -267,10 +274,10 @@ function DetailsModal(props: {
     });
   }
 
-  function handleDisconnect() {
+  function handleDisconnect(info: { wallet: Wallet; account: Account }) {
     setIsOpen(false);
     props.closeModal();
-    props.onDisconnect();
+    props.onDisconnect(info);
   }
 
   const networkSwitcherButton = (
@@ -601,9 +608,12 @@ function DetailsModal(props: {
               data-variant="danger"
               type="button"
               onClick={() => {
-                if (activeWallet) {
+                if (activeWallet && activeAccount) {
                   disconnect(activeWallet);
-                  handleDisconnect();
+                  handleDisconnect({
+                    account: activeAccount,
+                    wallet: activeWallet,
+                  });
                 }
               }}
             >
@@ -1076,32 +1086,38 @@ export type UseWalletDetailsModalOptions = {
    * supportedTokens prop allows you to customize this list as shown below which shows  "Dai Stablecoin" when users wallet is connected to the "Base" mainnet.
    *
    * ```tsx
-   * import { ConnectButton } from 'thirdweb/react';
+   * import { useWalletDetailsModal } from 'thirdweb/react';
    *
    * function Example() {
+   *   const detailsModal = useWalletDetailsModal();
+   *
+   *   function handleClick() {
+   *      detailsModal.open({
+   *        client,
+   *        supportedTokens:{
+   * 				  84532: [
+   * 					  {
+   * 						  address: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // token contract address
+   * 						  name: 'Dai Stablecoin',
+   * 						  symbol: 'DAI',
+   * 						  icon: 'https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508',
+   * 					  },
+   * 				  ],
+   * 			  }
+   *      });
+   *   }
+   *
    *   return (
-   * 		<ConnectButton
-   * 			supportedTokens={{
-   *        // when connected to "Base" mainnet - show balance of DAI stablecoin
-   * 				84532: [
-   * 					{
-   * 						address: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // token contract address
-   * 						name: 'Dai Stablecoin',
-   * 						symbol: 'DAI',
-   * 						icon: 'https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508',
-   * 					},
-   * 				],
-   * 			}}
-   * 		/>
+   * 		<button onClick={handleClick}> show wallet details </button>
    * 	);
    * }
    * ```
    */
   supportedTokens?: SupportedTokens;
   /**
-   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   * By default - Details Modal UI uses the `en-US` locale for english language users.
    *
-   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   * You can customize the language used in the Details Modal UI by setting the `locale` prop.
    *
    * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
    */
@@ -1144,18 +1160,33 @@ export type UseWalletDetailsModalOptions = {
   hideDisconnect?: boolean;
 
   /**
-   * Called on disconnection of a wallet.
+   * Callback to be called when a wallet is disconnected by clicking the "Disconnect Wallet" button in the Wallet Details Modal.
    *
    * ```tsx
-   * open({
-   *   client,
-   *   onDisconnect: () => {
-   *     console.log("disconnected from wallet");
-   *   },
-   * });
+   * import { useWalletDetailsModal } from 'thirdweb/react';
+   *
+   * function Example() {
+   *   const detailsModal = useWalletDetailsModal();
+   *
+   *   function handleClick() {
+   *      detailsModal.open({
+   *        client,
+   *        onDisconnect: ({ wallet, account }) => {
+   *           console.log('disconnected', wallet, account);
+   *        }
+   *      });
+   *   }
+   *
+   *   return (
+   * 		<button onClick={handleClick}> wallet details </button>
+   * 	);
+   * }
    * ```
    */
-  onDisconnect?: () => void;
+  onDisconnect?: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
 
   /**
    * Render custom UI at the bottom of the Details Modal
@@ -1170,7 +1201,7 @@ export type UseWalletDetailsModalOptions = {
   payOptions?: PayUIOptions;
 
   /**
-   * Display the balance of a token instead of the native token in `ConnectButton` details button.
+   * Display the balance of a token instead of the native token
    * @example
    * ```tsx
    * const displayBalanceToken = {
@@ -1196,10 +1227,10 @@ export type UseWalletDetailsModalOptions = {
  * });
  *
  * function Example() {
- *   const { open } = useWalletDetailsModal();
+ *   const detailsModal = useWalletDetailsModal();
  *
  *   function handleClick() {
- *      open({ client, theme: 'light' });
+ *      detailsModal.open({ client, theme: 'light' });
  *   }
  *
  *   return <button onClick={handleClick}> Show Wallet Details </button>
@@ -1236,8 +1267,8 @@ export function useWalletDetailsModal() {
             theme={props.theme || "dark"}
             supportedTokens={props.supportedTokens}
             closeModal={closeModal}
-            onDisconnect={() => {
-              props.onDisconnect?.();
+            onDisconnect={(info) => {
+              props.onDisconnect?.(info);
               closeModal();
             }}
             chains={props.chains || []}

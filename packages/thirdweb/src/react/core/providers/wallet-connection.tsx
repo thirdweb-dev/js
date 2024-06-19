@@ -2,7 +2,7 @@
 import { createContext } from "react";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
 import type { ConnectButton_connectModalOptions } from "../../web/ui/ConnectWallet/ConnectButtonProps.js";
@@ -25,7 +25,10 @@ export const ConnectUIContext = /* @__PURE__ */ createContext<{
   accountAbstraction?: SmartWalletOptions;
   showAllWallets?: boolean;
   onConnect?: (wallet: Wallet) => void;
-  onDisconnect?: () => void;
+  onDisconnect?: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
   isEmbed: boolean;
   connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
     size: "compact" | "wide";
