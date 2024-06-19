@@ -17,8 +17,6 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
-import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   CustomThemeProvider,
