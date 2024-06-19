@@ -130,7 +130,7 @@ export async function generate(options: GenerateOptions, secretKey: string) {
     }),
   );
 
-  // Store the ABIs in the the SDKs ABI cache files
+  // Store the ABIs in the SDKs ABI cache files
   const packagePath = `${projectPath}/node_modules/@thirdweb-dev/generated-abis/dist`;
   if (!fs.existsSync(packagePath)) {
     ora(
