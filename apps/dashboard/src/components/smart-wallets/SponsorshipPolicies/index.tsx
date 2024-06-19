@@ -1,4 +1,11 @@
 import {
+  ApiKey,
+  ApiKeyServicePolicy,
+  ApiKeyServicePolicyLimits,
+  usePolicies,
+  useUpdatePolicies,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import {
   Box,
   Divider,
   Flex,
@@ -12,33 +19,26 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
+import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
+import { isAddress } from "ethers/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useMemo } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { LuTrash2 } from "react-icons/lu";
 import {
-  Heading,
-  Text,
-  FormLabel,
   Button,
   FormErrorMessage,
+  FormLabel,
+  Heading,
+  Text,
   TrackedLink,
 } from "tw-components";
-import {
-  ApiKey,
-  ApiKeyServicePolicy,
-  ApiKeyServicePolicyLimits,
-  usePolicies,
-  useUpdatePolicies,
-} from "@3rdweb-sdk/react/hooks/useApi";
-import { z } from "zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
-import { LuTrash2 } from "react-icons/lu";
 import { fromArrayToList, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
-import { isAddress } from "ethers/lib/utils";
-import { useMemo } from "react";
-import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
-import { useTrack } from "hooks/analytics/useTrack";
+import { z } from "zod";
 
 interface SponsorshipPoliciesProps {
   apiKey: ApiKey;
@@ -147,10 +147,6 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
     resolver: zodResolver(sponsorshipPoliciesValidationSchema),
     defaultValues: transformedQueryData,
     values: transformedQueryData,
-    resetOptions: {
-      keepDirty: true,
-      keepValues: true,
-    },
   });
 
   const customHeaderFields = useFieldArray({
