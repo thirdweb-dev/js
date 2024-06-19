@@ -13,10 +13,6 @@ on:
       - "legacy_packages/**"
       - "legacy_e2e/**"
       - "package.json"
-  # trigger on merge group as well (merge queue)
-  merge_group:
-    types: [checks_requested]
-    branches: ["main"]
   workflow_dispatch:
 
 concurrency:

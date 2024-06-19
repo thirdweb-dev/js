@@ -212,7 +212,7 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
     for (let i = startPage; i <= endPage; i++) {
       pages[i - startPage] = { type: "page", page: i };
     }
-    // if the the second index is bigger than 2 then we need to show the first page and an ellipsis
+    // if the second index is bigger than 2 then we need to show the first page and an ellipsis
     if (pages[1].page > 2) {
       pages[0] = { type: "page", page: 0 };
       pages[1] = { type: "ellipsis", key: "ellipsis_pre" };
