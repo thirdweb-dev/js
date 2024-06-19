@@ -13,5 +13,5 @@ export async function handleSignRequest(options: {
   const { account, params } = options;
 
   validateAccountAddress(account, params[1]);
-  return account.signMessage({ message: params[0] });
+  return account.signMessage({ message: { raw: params[0] as Hex } });
 }

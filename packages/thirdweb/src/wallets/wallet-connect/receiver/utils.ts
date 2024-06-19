@@ -1,11 +1,11 @@
-import type { Address } from "../../../utils/address.js";
+import { type Address, checksumAddress } from "../../../utils/address.js";
 import type { Account } from "../../interfaces/wallet.js";
 
 /**
  * @internal
  */
 export function validateAccountAddress(account: Account, address: Address) {
-  if (account.address !== address) {
+  if (checksumAddress(account.address) !== checksumAddress(address)) {
     throw new Error(
       `[WalletConnect] Failed to validate account address (${account.address}), differs from ${address}`,
     );

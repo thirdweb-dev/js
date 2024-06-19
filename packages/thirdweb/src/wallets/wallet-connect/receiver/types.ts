@@ -3,7 +3,7 @@ import type { TypedDataDefinition } from "viem";
 import type { Address } from "../../../utils/address.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-import type { Account } from "../../interfaces/wallet.js";
+import type { Account, Wallet } from "../../interfaces/wallet.js";
 
 export type { WalletConnectConfig } from "../types.js"; // re-exporting for use in this module
 export type WalletConnectSession = {
@@ -96,6 +96,14 @@ export type WalletConnectRequestHandlers = Prettify<
       chainId: number;
       params: WalletConnectTransactionRequestParams;
     }) => Promise<Hex | WalletConnectRequestError>;
+    wallet_addEthereumChain?: (_: {
+      wallet: Wallet;
+      params: WalletConnectAddEthereumChainRequestParams;
+    }) => Promise<Hex>;
+    wallet_switchEthereumChain?: (_: {
+      wallet: Wallet;
+      params: WalletConnectSwitchEthereumChainRequestParams;
+    }) => Promise<Hex>;
   } & {
     [code: string]: (_: {
       account: Account;
@@ -114,7 +122,9 @@ type WalletConnectRequestParams =
   | WalletConnectSignRequestPrams
   | WalletConnectSignTypedDataRequestParams
   | WalletConnectTransactionRequestParams
-  | WalletConnectRawTransactionRequestParams;
+  | WalletConnectRawTransactionRequestParams
+  | WalletConnectAddEthereumChainRequestParams
+  | WalletConnectSwitchEthereumChainRequestParams;
 
 export type WalletConnectSessionRequestEvent = {
   id: number;
@@ -146,3 +156,17 @@ export type WalletConnectTransactionRequestParams = [
   },
 ];
 export type WalletConnectRawTransactionRequestParams = [Hex];
+
+export type WalletConnectAddEthereumChainRequestParams = {
+  chainId: string;
+  blockExplorerUrls: string[];
+  chainName: string;
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  rpcUrls: string[];
+}[];
+
+export type WalletConnectSwitchEthereumChainRequestParams = [{ chainId: Hex }];

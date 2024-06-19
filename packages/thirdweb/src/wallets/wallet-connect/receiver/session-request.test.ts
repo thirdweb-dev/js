@@ -6,13 +6,16 @@ import {
 } from "../../../../test/src/test-wallets.js";
 import { typedData } from "../../../../test/src/typed-data.js";
 import { cloneObject } from "../../../../test/src/utils.js";
+import { defineChain } from "../../../chains/utils.js";
 import { fulfillRequest } from "./session-request.js";
 import type {
+  WalletConnectAddEthereumChainRequestParams,
   WalletConnectClient,
   WalletConnectRawTransactionRequestParams,
   WalletConnectSessionRequestEvent,
   WalletConnectSignRequestPrams,
   WalletConnectSignTypedDataRequestParams,
+  WalletConnectSwitchEthereumChainRequestParams,
   WalletConnectTransactionRequestParams,
 } from "./types.js";
 
@@ -40,6 +43,8 @@ const REQUEST_EVENT_MOCK: WalletConnectSessionRequestEvent = {
 const walletMock = {
   ...TEST_IN_APP_WALLET_A,
   getAccount: vi.fn().mockReturnValue(TEST_IN_APP_WALLET_A.getAccount()),
+  switchChain: vi.fn(),
+  getChain: vi.fn(),
 };
 
 const mocks = vi.hoisted(() => ({
@@ -709,6 +714,86 @@ describe("session_request", () => {
           result: "0xRESULT",
         },
       });
+    });
+  });
+
+  describe("wallet_addEthereumChain", () => {
+    let addEthereumChainRequest: WalletConnectSessionRequestEvent;
+    beforeEach(() => {
+      addEthereumChainRequest = cloneObject(REQUEST_EVENT_MOCK);
+      addEthereumChainRequest.params.request.method = "wallet_addEthereumChain";
+      addEthereumChainRequest.params.request.params = [
+        {
+          chainId: "0x1",
+          blockExplorerUrls: ["https://etherscan.io"],
+          chainName: "Ethereum",
+          nativeCurrency: {
+            name: "Ether",
+            symbol: "ETH",
+            decimals: 18,
+          },
+          rpcUrls: ["https://rpc.ethereum.org"],
+        },
+      ] as WalletConnectAddEthereumChainRequestParams;
+    });
+
+    it("is not supported", async () => {
+      await fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: addEthereumChainRequest,
+      });
+
+      expect(signClientMock.respond).toHaveBeenCalledWith({
+        topic: REQUEST_EVENT_MOCK.topic,
+        response: {
+          id: REQUEST_EVENT_MOCK.id,
+          jsonrpc: "2.0",
+          result: {
+            code: 500,
+            message: "[WalletConnect] wallet_addEthereumChain is not supported",
+          },
+        },
+      });
+    });
+  });
+
+  describe("wallet_switchEthereumChain", () => {
+    let switchEthereumChainRequest: WalletConnectSessionRequestEvent;
+    beforeEach(() => {
+      switchEthereumChainRequest = cloneObject(REQUEST_EVENT_MOCK);
+      switchEthereumChainRequest.params.request.method =
+        "wallet_switchEthereumChain";
+      switchEthereumChainRequest.params.request.params = [
+        {
+          chainId: "0x1",
+        },
+      ] as WalletConnectSwitchEthereumChainRequestParams;
+    });
+
+    it("switches the chain", async () => {
+      await fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: switchEthereumChainRequest,
+      });
+
+      expect(walletMock.switchChain).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 1,
+        }),
+      );
+    });
+
+    it("does not switch the chain if already set", async () => {
+      walletMock.getChain.mockReturnValue(defineChain(1));
+      await fulfillRequest({
+        walletConnectClient: signClientMock,
+        wallet: walletMock,
+        event: switchEthereumChainRequest,
+      });
+
+      expect(walletMock.switchChain).not.toHaveBeenCalled();
     });
   });
 });

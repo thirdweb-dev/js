@@ -1,6 +1,10 @@
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Wallet } from "../../interfaces/wallet.js";
-import type { WalletConnectClient } from "./types.js";
+import type {
+  WalletConnectAddEthereumChainRequestParams,
+  WalletConnectClient,
+  WalletConnectSwitchEthereumChainRequestParams,
+} from "./types.js";
 import type {
   WalletConnectRawTransactionRequestParams,
   WalletConnectRequestError,
@@ -147,6 +151,40 @@ export async function fulfillRequest(options: {
             account,
             chainId,
             params: request.params as WalletConnectRawTransactionRequestParams,
+          });
+        }
+        break;
+      }
+      case "wallet_addEthereumChain": {
+        if (handlers?.wallet_addEthereumChain) {
+          result = await handlers.wallet_addEthereumChain({
+            wallet,
+            params:
+              request.params as WalletConnectAddEthereumChainRequestParams,
+          });
+        } else {
+          throw new Error(
+            "[WalletConnect] wallet_addEthereumChain is not supported",
+          );
+        }
+        break;
+      }
+      case "wallet_switchEthereumChain": {
+        if (handlers?.wallet_switchEthereumChain) {
+          result = await handlers.wallet_switchEthereumChain({
+            wallet,
+            params:
+              request.params as WalletConnectSwitchEthereumChainRequestParams,
+          });
+        } else {
+          const { handleSwitchChain } = await import(
+            "./request-handlers/switch-chain.js"
+          );
+
+          result = await handleSwitchChain({
+            wallet,
+            params:
+              request.params as WalletConnectSwitchEthereumChainRequestParams,
           });
         }
         break;
