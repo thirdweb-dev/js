@@ -1,0 +1,5 @@
+mutation UpdateWebhook($id: uuid!, $webhookValue: webhook_set_input!) {
+  update_webhook_by_pk(pk_columns: { id: $id }, _set: $webhookValue) {
+    ...Webhook
+  }
+}

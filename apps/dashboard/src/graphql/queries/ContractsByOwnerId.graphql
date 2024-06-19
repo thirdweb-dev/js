@@ -1,0 +1,15 @@
+query ContractsByOwnerId($ownerId: String!) {
+  contract(
+    where: {
+      owner_id: {_eq: $ownerId},
+      _and: {
+        deleted_at: {_is_null: false}
+      }
+    }
+    order_by: {
+      created_at: desc
+    }
+  ) {
+    ...Contract
+  }
+}

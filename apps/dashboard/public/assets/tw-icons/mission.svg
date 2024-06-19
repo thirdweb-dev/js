@@ -1,0 +1,22 @@
+<svg width="87" height="50" viewBox="0 0 87 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_4501_1898)">
+<circle cx="43.1803" cy="24.5" r="23.5" fill="url(#paint0_linear_4501_1898)"/>
+<g style="mix-blend-mode:multiply">
+<ellipse cx="43.6805" cy="26.5839" rx="42.3752" ry="7.58293" transform="rotate(-12.8554 43.6805 26.5839)" fill="url(#paint1_linear_4501_1898)"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_4501_1898" x1="31.0774" y1="6.78679" x2="63.0554" y2="18.194" gradientUnits="userSpaceOnUse">
+<stop stop-color="#F213A4"/>
+<stop offset="1" stop-color="#5204BF"/>
+</linearGradient>
+<linearGradient id="paint1_linear_4501_1898" x1="18.6628" y1="58.2571" x2="21.3725" y2="17.6215" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF8D5C"/>
+<stop offset="0.532466" stop-color="#CD00EE"/>
+<stop offset="1" stop-color="#00C3EE"/>
+</linearGradient>
+<clipPath id="clip0_4501_1898">
+<rect width="86" height="50" fill="white" transform="translate(0.680298)"/>
+</clipPath>
+</defs>
+</svg>
