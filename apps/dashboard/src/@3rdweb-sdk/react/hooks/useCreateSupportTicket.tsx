@@ -1,10 +1,10 @@
 import { useToast } from "@chakra-ui/react";
+import { useState } from "react";
+import invariant from "tiny-invariant";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
+import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useAccount } from "./useApi";
 import { useLoggedInUser } from "./useLoggedInUser";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
-import invariant from "tiny-invariant";
-import { useState } from "react";
 
 const SUPPORT_EMAIL = "support@thirdweb.com";
 
@@ -17,7 +17,7 @@ export type CreateTicketInput = {
 function prepareEmailTitle(
   input: CreateTicketInput,
   email: string,
-  name: string
+  name: string,
 ) {
   const title =
     input.product && input["extraInfo_Problem_Area"]
@@ -29,13 +29,15 @@ function prepareEmailTitle(
 function prepareEmailBody(
   input: CreateTicketInput,
   email: string,
-  address: string
+  address: string,
 ) {
   // Update `markdown` to include the infos from the form
   const extraInfo = Object.keys(input)
     .filter((key) => key.startsWith("extraInfo_"))
     .map((key) => {
-      const prettifiedKey = `# ${key.replace("extraInfo_", "").replaceAll("_", " ")}`;
+      const prettifiedKey = `# ${key
+        .replace("extraInfo_", "")
+        .replaceAll("_", " ")}`;
       return `${prettifiedKey}: ${input[key] ?? "N/A"}\n`;
     })
     .join("");
@@ -94,7 +96,7 @@ export function useCreateTicket() {
           method: "POST",
           credentials: "include",
           body: formData,
-        }
+        },
       );
       const json = await res.json();
       if (json.error) {
@@ -135,11 +137,15 @@ export function useCreateTicket() {
         const emailSubject = prepareEmailTitle(
           data,
           account.data?.email ?? "",
-          account.data?.name ?? ""
+          account.data?.name ?? "",
         );
 
         const emailBody = encodeURIComponent(
-          prepareEmailBody(data, account.data?.email ?? "", user?.address ?? "")
+          prepareEmailBody(
+            data,
+            account.data?.email ?? "",
+            user?.address ?? "",
+          ),
         ).replace(/%0A/g, "%0D%0A");
 
         toast({
@@ -177,6 +183,6 @@ export function useCreateTicket() {
           isClosable: true,
         });
       },
-    }
+    },
   );
 }
