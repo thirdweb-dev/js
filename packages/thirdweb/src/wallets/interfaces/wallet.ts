@@ -26,6 +26,16 @@ export type SendRawTransactionOptions = {
   chainId: number;
 };
 
+export type WatchAssetParams = {
+  type: "ERC20";
+  options: {
+    address: Address;
+    symbol: string;
+    decimals: number;
+    image?: string | undefined;
+  };
+};
+
 /**
  * Wallet interface
  */
@@ -238,4 +248,16 @@ export type Account = {
     // biome-ignore lint/suspicious/noExplicitAny: any transaction type is allowed here
     transaction: PreparedTransaction<any>,
   ) => Promise<void>;
+  /**
+   * Add an asset to the wallet's watchlist.
+   * @param asset - The asset to watch.
+   *
+   * @example
+   * ```ts
+   * if (account.watchAsset) {
+   *  const success = await account.watchAsset({ type: "ERC20", options: { address: "0x...", symbol: "...", decimals: 18 } });
+   * }
+   * ```
+   */
+  watchAsset?: (asset: WatchAssetParams) => Promise<boolean>;
 };
