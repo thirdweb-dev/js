@@ -1,11 +1,11 @@
 import { Polygon } from "@thirdweb-dev/chains";
-import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
   Abi,
   AddContractInput,
+  FeatureName,
   ValidContractInstance,
-  isExtensionEnabled,
   detectFeatures as detectFeaturesFromSdk,
+  isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
