@@ -43,7 +43,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
   useEffect(() => {
     // Declare timeout
     let status: "in-progress" | "idle" = "idle";
-    let intervalId: NodeJS.Timeout;
+    let intervalId: ReturnType<typeof setInterval>;
 
     // Route change start function
     const onRouteChangeStart = async () => {

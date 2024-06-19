@@ -1,4 +1,3 @@
-import { NavCard } from "./NavCard";
 import {
   Box,
   Fade,
@@ -7,9 +6,10 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Card, Text } from "tw-components";
-import { ProductNavCard } from "./ProductNavCard";
 import { useEffect, useRef, useState } from "react";
+import { Card, Text } from "tw-components";
+import { NavCard } from "./NavCard";
+import { ProductNavCard } from "./ProductNavCard";
 import { SectionItemProps, SectionProps } from "./types";
 
 interface NestedHoverMenuProps {
@@ -32,8 +32,8 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
   const [offset, setOffset] = useState(DEFAULT_OFFSET);
   const [hoveredSection, setHoveredSection] = useState<string>(initialSection);
   const triggerRef = useRef<HTMLDivElement | null>(null);
-  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
-  const closeTimeout = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleMouseEnter = (label: string) => {
     // Clear any pending close actions

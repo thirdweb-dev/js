@@ -1,13 +1,3 @@
-import {
-  getStepAddToRegistry,
-  getStepDeploy,
-  getStepSetNFTMetadata,
-  useDeployContextModal,
-} from "./contract-deploy-form/deploy-context-modal";
-import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
-import { Recipient } from "./contract-deploy-form/split-fieldset";
-import { ContractId } from "./types";
-import { addContractToMultiChainRegistry } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import {
@@ -33,14 +23,23 @@ import {
   useWalletConfig,
 } from "@thirdweb-dev/react";
 import {
-  FeatureName,
-  FeatureWithEnabled,
-} from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
-import { DeploymentTransaction } from "@thirdweb-dev/sdk/dist/declarations/src/evm/types/any-evm/deploy-data";
+  getStepAddToRegistry,
+  getStepDeploy,
+  getStepSetNFTMetadata,
+  useDeployContextModal,
+} from "./contract-deploy-form/deploy-context-modal";
+import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
+import { Recipient } from "./contract-deploy-form/split-fieldset";
+import { ContractId } from "./types";
+import { addContractToMultiChainRegistry } from "./utils";
+
 import {
   Abi,
   ContractInfoSchema,
+  DeploymentTransaction,
   ExtraPublishMetadata,
+  FeatureName,
+  FeatureWithEnabled,
   ProfileMetadata,
   PublishedContract,
   ThirdwebSDK,
@@ -55,6 +54,7 @@ import {
   getTrustedForwarders,
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
+
 import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
