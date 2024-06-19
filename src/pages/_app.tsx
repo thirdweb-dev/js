@@ -22,6 +22,7 @@ import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { useBuildId } from "hooks/useBuildId";
 import "@/styles/globals.css";
 import { ThemeProvider } from "../@/components/theme-provider";
+import { useTheme } from "next-themes";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -282,14 +283,28 @@ const ConsoleApp = memo(function ConsoleApp({
 
 function TailwindTheme(props: { children: React.ReactNode }) {
   const { colorMode } = useColorMode();
+
   return (
     <ThemeProvider
       attribute="class"
+      // this sets the initial theme
       forcedTheme={colorMode === "light" ? "light" : "dark"}
     >
+      {/* this keeps the theme in sync! */}
+      <SyncTheme currentTheme={colorMode === "light" ? "light" : "dark"} />
       {props.children}
     </ThemeProvider>
   );
 }
+const SyncTheme: React.FC<{ currentTheme: "light" | "dark" }> = ({
+  currentTheme,
+}) => {
+  const { setTheme } = useTheme();
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    setTheme(currentTheme);
+  }, [currentTheme, setTheme]);
+  return null;
+};
 
 export default ConsoleAppWrapper;
