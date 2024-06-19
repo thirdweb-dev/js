@@ -1,0 +1,10 @@
+query CheckoutsByContractAddress($contractAddressQuery: String!) {
+  checkout(
+    where: {
+      contract_address: { _ilike: $contractAddressQuery }
+      deleted_at: { _gt: "now()" }
+    }
+  ) {
+    ...Checkout
+  }
+}

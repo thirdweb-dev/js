@@ -1,0 +1,11 @@
+query DetailedAnalytics($checkoutId: uuid!, $period: String = "day") {
+  get_detailed_analytics(
+    args: { period: $period, checkout_id_to_fetch: $checkoutId }
+    order_by: { transaction_created_at: asc }
+  ) {
+    ...DetailedAnalytics
+  }
+  analytics_overview_2(where: { checkout_id: { _eq: $checkoutId } }) {
+    ...AnalyticOverview
+  }
+}
