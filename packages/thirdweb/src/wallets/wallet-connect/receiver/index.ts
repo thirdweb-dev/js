@@ -1,7 +1,7 @@
 import { SignClient } from "@walletconnect/sign-client";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Prettify } from "../../../utils/type-utils.js";
-import type { Wallet } from "../../../wallets/interfaces/wallet.js";
+import type { Wallet } from "../../interfaces/wallet.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
 import {

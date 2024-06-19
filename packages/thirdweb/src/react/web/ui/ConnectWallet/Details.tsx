@@ -6,7 +6,6 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
-  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -18,8 +17,6 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
-import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -65,6 +62,7 @@ import type {
   ConnectButton_detailsModalOptions,
   PayUIOptions,
 } from "./ConnectButtonProps.js";
+import { MenuButton, MenuLink } from "./MenuButton.js";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
@@ -72,7 +70,6 @@ import {
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
-import { KeyIcon } from "./icons/KeyIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { WalletIcon } from "./icons/WalletIcon.js";
 import { genericTokenIcon } from "./icons/dataUris.js";
@@ -80,25 +77,17 @@ import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
+import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ViewFunds } from "./screens/ViewFunds.js";
+import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
+import type { WalletDetailsModalScreen } from "./screens/types.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
 const LocalhostChainId = 1337;
-
-type WalletDetailsModalScreen =
-  | "main"
-  | "export"
-  | "send"
-  | "receive"
-  | "buy"
-  | "network-switcher"
-  | "pending-tx"
-  | "view-funds"
-  | "private-key";
 
 /**
  * @internal
@@ -345,6 +334,7 @@ function DetailsModal(props: {
         )}
 
         <Spacer y="md" />
+
         <ConnectedToSmartWallet client={props.client} connectLocale={locale} />
 
         {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
@@ -510,22 +500,23 @@ function DetailsModal(props: {
             <Text color="primaryText">View Funds</Text>
           </MenuButton>
 
-          {/* Private Key Export (if enabled) */}
-          {activeWallet &&
-            isInAppWallet(activeWallet) &&
-            !activeWallet.getConfig()?.hidePrivateKeyExport && (
-              <MenuButton
-                onClick={() => {
-                  setScreen("private-key");
-                }}
-                style={{
-                  fontSize: fontSize.sm,
-                }}
-              >
-                <KeyIcon size={iconSize.md} />
-                <Text color="primaryText">Export Private Key</Text>
-              </MenuButton>
-            )}
+          {/* Manage Wallet */}
+          <MenuButton
+            onClick={() => {
+              setScreen("manage-wallet");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <Img
+              width={iconSize.md}
+              height={iconSize.md}
+              src={genericTokenIcon}
+              client={client}
+            />
+            <Text color="primaryText">Manage Wallet</Text>
+          </MenuButton>
 
           {/* Switch to Personal Wallet  */}
           {/* {personalWallet &&
@@ -540,11 +531,6 @@ function DetailsModal(props: {
           {/* {smartWallet && (
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )} */}
-
-          <SwitchMetamaskAccount
-            closeModal={closeModal}
-            connectLocale={locale}
-          />
 
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
@@ -567,23 +553,6 @@ function DetailsModal(props: {
                 {locale.requestTestnetFunds}
               </MenuLink>
             )}
-
-          {/* Export  Wallet */}
-          {/* {activeWallet?.id === "local" && (
-            <div>
-              <MenuButton
-                onClick={() => {
-                  setScreen("export");
-                }}
-                style={{
-                  fontSize: fontSize.sm,
-                }}
-              >
-                <PinBottomIcon width={iconSize.md} height={iconSize.md} />
-                <Text color="primaryText">{locale.backupWallet}</Text>
-              </MenuButton>
-            </div>
-          )} */}
 
           {props.detailsModal?.footer && (
             <props.detailsModal.footer close={closeModal} />
@@ -673,8 +642,30 @@ function DetailsModal(props: {
       <PrivateKey
         theme={props.theme} // do not use the useCustomTheme hook to get this, it's not valid here
         onBack={() => {
+          setScreen("manage-wallet");
+        }}
+        client={client}
+      />
+    );
+  } else if (screen === "manage-wallet") {
+    content = (
+      <ManageWalletScreen
+        onBack={() => {
           setScreen("main");
         }}
+        locale={locale}
+        closeModal={closeModal}
+        client={client}
+        setScreen={setScreen}
+      />
+    );
+  } else if (screen === "wallet-connect-receiver") {
+    content = (
+      <WalletConnectReceiverScreen
+        onBack={() => {
+          setScreen("manage-wallet");
+        }}
+        closeModal={closeModal}
         client={client}
       />
     );
@@ -773,54 +764,6 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
     },
   };
 });
-
-const MenuButton = /* @__PURE__ */ StyledButton(() => {
-  const theme = useCustomTheme();
-  return {
-    all: "unset",
-    padding: `${spacing.sm} ${spacing.sm}`,
-    borderRadius: radius.md,
-    backgroundColor: "transparent",
-    // border: `1px solid ${theme.colors.borderColor}`,
-    boxSizing: "border-box",
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
-    cursor: "pointer",
-    fontSize: fontSize.md,
-    fontWeight: 500,
-    color: theme.colors.secondaryText,
-    gap: spacing.sm,
-    WebkitTapHighlightColor: "transparent",
-    lineHeight: 1.3,
-    transition: "background-color 200ms ease, transform 200ms ease",
-    "&:hover": {
-      backgroundColor: theme.colors.tertiaryBg,
-      transform: "scale(1.01)",
-      svg: {
-        color: theme.colors.accentText,
-      },
-    },
-    "&[disabled]": {
-      cursor: "not-allowed",
-      svg: {
-        display: "none",
-      },
-    },
-    svg: {
-      color: theme.colors.secondaryText,
-      transition: "color 200ms ease",
-    },
-    "&[data-variant='danger']:hover svg": {
-      color: `${theme.colors.danger}!important`,
-    },
-    "&[data-variant='primary']:hover svg": {
-      color: `${theme.colors.primaryText}!important`,
-    },
-  };
-});
-
-const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
 const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
@@ -993,40 +936,6 @@ function SwitchNetworkButton(props: {
         switchNetworkBtnTitle
       )}
     </Button>
-  );
-}
-
-function SwitchMetamaskAccount(props: {
-  closeModal: () => void;
-  connectLocale: ConnectLocale;
-}) {
-  const wallet = useActiveWallet();
-  const connectLocale = props.connectLocale;
-
-  if (wallet?.id !== "io.metamask") {
-    return null;
-  }
-
-  const injectedMetamaskProvider = injectedProvider("io.metamask");
-
-  if (!injectedMetamaskProvider) {
-    return null;
-  }
-
-  return (
-    <MenuButton
-      type="button"
-      onClick={async () => {
-        await injectedMetamaskProvider.request({
-          method: "wallet_requestPermissions",
-          params: [{ eth_accounts: {} }],
-        });
-        props.closeModal();
-      }}
-    >
-      <ShuffleIcon width={iconSize.md} height={iconSize.md} />
-      <Text color="primaryText">{connectLocale.switchAccount}</Text>
-    </MenuButton>
   );
 }
 
