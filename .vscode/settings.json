@@ -14,6 +14,7 @@
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "typescript.preferences.autoImportFileExcludePatterns": ["/exports"],
-  "typescript.preferences.importModuleSpecifier": "relative"
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "./packages/thirdweb/src/exports"
+  ]
 }
