@@ -1,6 +1,7 @@
 "use client";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
+import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   createWalletConnectClient,
@@ -23,6 +24,7 @@ export function WalletConnectReceiverScreen(props: {
   onBack: () => void;
   closeModal: () => void;
   client: ThirdwebClient;
+  chains?: Chain[];
 }) {
   const [walletConnectClient, setWalletConnectClient] = useState<
     WalletConnectClient | undefined
@@ -36,6 +38,7 @@ export function WalletConnectReceiverScreen(props: {
     createWalletConnectClient({
       wallet: activeWallet,
       client: props.client,
+      chains: props.chains,
       onConnect: () => {
         props.closeModal();
         setLoading(false);
@@ -47,7 +50,13 @@ export function WalletConnectReceiverScreen(props: {
       .catch(() => {
         setErrorConnecting("Failed to establish WalletConnect connection");
       });
-  }, [activeWallet, props.client, props.closeModal, errorConnecting]);
+  }, [
+    activeWallet,
+    props.client,
+    props.closeModal,
+    errorConnecting,
+    props.chains,
+  ]);
 
   return (
     <Container

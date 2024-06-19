@@ -1,5 +1,6 @@
 import { beforeEach } from "node:test";
 import { afterAll, describe, expect, it, vi } from "vitest";
+import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import {
   TEST_ACCOUNT_A,
   TEST_IN_APP_WALLET_A,
@@ -125,6 +126,39 @@ describe("session_proposal", () => {
     });
   });
 
+  it("should connect new session with custom chains", async () => {
+    await onSessionProposal({
+      walletConnectClient: signClientMock,
+      wallet: walletMock,
+      event: PROPOSAL_EVENT_MOCK,
+      chains: [ANVIL_CHAIN],
+    });
+
+    expect(signClientMock.approve).toHaveBeenCalledWith({
+      id: PROPOSAL_EVENT_MOCK.id,
+      namespaces: {
+        eip155: {
+          accounts: [
+            `eip155:1:${TEST_ACCOUNT_A.address}`,
+            `eip155:31337:${TEST_ACCOUNT_A.address}`,
+          ],
+          methods: [
+            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155
+              ?.methods ?? []),
+            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155
+              ?.methods ?? []),
+          ],
+          events: [
+            ...(PROPOSAL_EVENT_MOCK.params.requiredNamespaces?.eip155?.events ??
+              []),
+            ...(PROPOSAL_EVENT_MOCK.params.optionalNamespaces?.eip155?.events ??
+              []),
+          ],
+        },
+      },
+    });
+  });
+
   it("should disconnect existing session", async () => {
     vi.spyOn(SessionStore, "getSessions").mockResolvedValueOnce([
       {
@@ -153,25 +187,10 @@ describe("session_proposal", () => {
   it("should throw if no eip155 namespace provided", async () => {
     const proposal = {
       ...PROPOSAL_EVENT_MOCK,
-      params: { ...PROPOSAL_EVENT_MOCK.params, requiredNamespaces: {} },
-    };
-
-    const promise = onSessionProposal({
-      walletConnectClient: signClientMock,
-      wallet: walletMock,
-      event: proposal,
-    });
-    await expect(promise).rejects.toThrow(
-      "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
-    );
-  });
-
-  it("should throw if no eip155 chains provided", async () => {
-    const proposal = {
-      ...PROPOSAL_EVENT_MOCK,
       params: {
         ...PROPOSAL_EVENT_MOCK.params,
-        requiredNamespaces: { eip155: { methods: [], events: [] } },
+        requiredNamespaces: {},
+        optionalNamespaces: {},
       },
     };
 
@@ -181,7 +200,7 @@ describe("session_proposal", () => {
       event: proposal,
     });
     await expect(promise).rejects.toThrow(
-      "[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace",
+      "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
     );
   });
 

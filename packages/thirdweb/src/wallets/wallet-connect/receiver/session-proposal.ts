@@ -1,3 +1,4 @@
+import type { Chain } from "../../../chains/types.js";
 import type { Account, Wallet } from "../../interfaces/wallet.js";
 import { disconnectWalletConnectSession } from "./index.js";
 import { getSessions, saveSession } from "./session-store.js";
@@ -14,9 +15,10 @@ export async function onSessionProposal(options: {
   wallet: Wallet;
   walletConnectClient: WalletConnectClient;
   event: WalletConnectSessionProposalEvent;
+  chains?: Chain[];
   onConnect?: (session: WalletConnectSession) => void;
 }) {
-  const { wallet, walletConnectClient, event, onConnect } = options;
+  const { wallet, walletConnectClient, event, chains, onConnect } = options;
 
   const account = wallet.getAccount();
   if (!account) {
@@ -31,6 +33,7 @@ export async function onSessionProposal(options: {
     account,
     walletConnectClient,
     sessionProposal: event,
+    chains,
   });
 
   await saveSession(session);
@@ -64,38 +67,43 @@ export async function acceptSessionProposal({
   account,
   walletConnectClient,
   sessionProposal,
+  chains,
 }: {
   account: Account;
   walletConnectClient: WalletConnectClient;
   sessionProposal: WalletConnectSessionProposalEvent;
+  chains?: Chain[];
 }): Promise<WalletConnectSession> {
-  if (!sessionProposal.params.requiredNamespaces.eip155) {
+  if (
+    !sessionProposal.params.requiredNamespaces?.eip155 &&
+    !sessionProposal.params.optionalNamespaces?.eip155
+  ) {
     throw new Error(
       "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
     );
   }
 
-  if (!sessionProposal.params.requiredNamespaces.eip155.chains) {
-    throw new Error(
-      "[WalletConnect] No chains found in EIP155 Wallet Connect session proposal namespace",
-    );
-  }
-
   const namespaces = {
     chains: [
-      ...sessionProposal.params.requiredNamespaces.eip155.chains.map(
-        (chain: string) => `${chain}:${account.address}`,
+      ...Array.from(
+        new Set([
+          ...(sessionProposal.params.requiredNamespaces?.eip155?.chains?.map(
+            (chain: string) => `${chain}:${account.address}`,
+          ) ?? []),
+          ...(sessionProposal.params.optionalNamespaces?.eip155?.chains?.map(
+            (chain: string) => `${chain}:${account.address}`,
+          ) ?? []),
+          ...(chains?.map((chain) => `eip155:${chain.id}:${account.address}`) ??
+            []),
+        ]),
       ),
-      ...(sessionProposal.params.optionalNamespaces?.eip155?.chains?.map(
-        (chain: string) => `${chain}:${account.address}`,
-      ) ?? []),
     ],
     methods: [
-      ...sessionProposal.params.requiredNamespaces.eip155.methods,
+      ...(sessionProposal.params.requiredNamespaces?.eip155?.methods ?? []),
       ...(sessionProposal.params.optionalNamespaces?.eip155?.methods ?? []),
     ],
     events: [
-      ...sessionProposal.params.requiredNamespaces.eip155.events,
+      ...(sessionProposal.params.requiredNamespaces?.eip155?.events ?? []),
       ...(sessionProposal.params.optionalNamespaces?.eip155?.events ?? []),
     ],
   };

@@ -31,7 +31,7 @@ export type WalletConnectSessionProposalEvent = {
         icons: string[];
       };
     };
-    requiredNamespaces: Record<
+    requiredNamespaces?: Record<
       string,
       {
         chains?: string[];

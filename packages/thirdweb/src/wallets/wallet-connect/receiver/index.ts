@@ -1,4 +1,5 @@
 import { SignClient } from "@walletconnect/sign-client";
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import type { Wallet } from "../../interfaces/wallet.js";
@@ -30,6 +31,11 @@ export type CreateWalletConnectClientOptions = Prettify<
      * The wallet to connect to the WalletConnect URI.
      */
     wallet: Wallet;
+
+    /**
+     * Any chains to enable for the wallet. Apps can request access to specific chains, but this list will always be available for use with the wallet.
+     */
+    chains?: Chain[];
 
     /**
      * Custom RPC handlers to override the defaults. Useful when creating a custom approval UI.
@@ -125,7 +131,7 @@ export const clearWalletConnectClientCache = () => {
 export async function createWalletConnectClient(
   options: CreateWalletConnectClientOptions,
 ): Promise<WalletConnectClient> {
-  const { wallet, requestHandlers, onConnect, onDisconnect } = options;
+  const { wallet, requestHandlers, chains, onConnect, onDisconnect } = options;
 
   if (walletConnectClientCache.has(options.client)) {
     return walletConnectClientCache.get(options.client) as WalletConnectClient;
@@ -152,6 +158,7 @@ export async function createWalletConnectClient(
         wallet,
         walletConnectClient,
         event,
+        chains,
         onConnect,
       });
     },
@@ -173,7 +180,7 @@ export async function createWalletConnectClient(
   walletConnectClient.on(
     "session_event",
     async (_event: WalletConnectSessionEvent) => {
-      // TODO
+      // TODO (accountsChanged, chainChanged)
     },
   );
 
