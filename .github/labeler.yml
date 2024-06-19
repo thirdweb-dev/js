@@ -1,0 +1,9 @@
+# PRs with these paths will be labeled with the following labels
+dashboard:
+  - "apps/dashboard/**/*"
+playground:
+  - "apps/playground-web/**/*"
+legacy_packages:
+  - "legacy-packages/**/*"
+packages:
+  - "packages/**/*"
