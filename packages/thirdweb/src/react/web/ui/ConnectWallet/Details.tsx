@@ -69,10 +69,11 @@ import {
 } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
+import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
+import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
+import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
-import { WalletIcon } from "./icons/WalletIcon.js";
-import { genericTokenIcon } from "./icons/dataUris.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
@@ -184,7 +185,7 @@ export const ConnectedWalletDetails: React.FC<{
       ) : activeWallet?.id ? (
         <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
       ) : (
-        <WalletIcon size={iconSize.lg} />
+        <GenericWalletIcon size={iconSize.lg} />
       )}
 
       <Container flex="column" gap="xxs">
@@ -330,7 +331,7 @@ function DetailsModal(props: {
             client={client}
           />
         ) : (
-          <WalletIcon size={iconSize.xxl} />
+          <GenericWalletIcon size={iconSize.xxl} />
         )}
 
         <Spacer y="md" />
@@ -491,12 +492,7 @@ function DetailsModal(props: {
               fontSize: fontSize.sm,
             }}
           >
-            <Img
-              width={iconSize.md}
-              height={iconSize.md}
-              src={genericTokenIcon}
-              client={client}
-            />
+            <CoinsIcon size={iconSize.md} />
             <Text color="primaryText">View Funds</Text>
           </MenuButton>
 
@@ -509,12 +505,7 @@ function DetailsModal(props: {
               fontSize: fontSize.sm,
             }}
           >
-            <Img
-              width={iconSize.md}
-              height={iconSize.md}
-              src={genericTokenIcon}
-              client={client}
-            />
+            <OutlineWalletIcon size={iconSize.md} />
             <Text color="primaryText">Manage Wallet</Text>
           </MenuButton>
 

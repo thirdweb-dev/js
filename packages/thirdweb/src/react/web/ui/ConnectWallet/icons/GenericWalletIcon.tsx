@@ -3,7 +3,7 @@ import type { IconFC } from "./types.js";
 /**
  * @internal
  */
-export const WalletIcon: IconFC = (props) => {
+export const GenericWalletIcon: IconFC = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
