@@ -1,4 +1,4 @@
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
 import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
 import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
 import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";

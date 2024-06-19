@@ -1,4 +1,4 @@
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
 import { AffectedAreaInput } from "./AffectedAreaInput";
 import { ReactElement } from "react";
 import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";

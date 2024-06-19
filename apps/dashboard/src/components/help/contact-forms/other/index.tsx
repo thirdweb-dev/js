@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
 import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
 import { useWatch } from "react-hook-form";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
