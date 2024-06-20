@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmT7PSXBiVBma6E15hNkivmstqLu3JSnG1jXN5pTmcCGRC",
-    "width": 180,
-    "height": 180,
-    "format": "png"
-  },
   "infoURL": "https://www.platon.network",
   "name": "PlatON Mainnet",
   "nativeCurrency": {
