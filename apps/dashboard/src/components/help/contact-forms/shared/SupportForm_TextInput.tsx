@@ -1,5 +1,5 @@
 import { FormControl, Input } from "@chakra-ui/react";
-import { HTMLInputTypeAttribute } from "react";
+import type { HTMLInputTypeAttribute } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormLabel } from "tw-components";
 
@@ -23,7 +23,7 @@ export const SupportForm_TextInput = (props: Props) => {
         })}
         placeholder={placeholder || ""}
         type={inputType}
-      ></Input>
+      />
     </FormControl>
   );
 };

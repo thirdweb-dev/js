@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/forbid-dom-props */
-/* eslint-disable react/no-unknown-property */
 import { ImageResponse } from "@vercel/og";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { fetchChain } from "utils/fetchChain";
 
 // Make sure the font exists in the specified path:
@@ -20,13 +18,13 @@ const bgNoIcon = fetch(
 ).then((res) => res.arrayBuffer());
 
 const inter400_ = fetch(
-  new URL(`og-lib/fonts/inter/400.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/400.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const inter500_ = fetch(
-  new URL(`og-lib/fonts/inter/500.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/500.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const inter700_ = fetch(
-  new URL(`og-lib/fonts/inter/700.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/700.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 const TWLogo: React.FC = () => (
@@ -37,6 +35,7 @@ const TWLogo: React.FC = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>thirdweb</title>
     <g clip-path="url(#clip0_4_1228)">
       <path
         fill-rule="evenodd"
@@ -117,50 +116,48 @@ export default async function handler(req: NextRequest) {
   ]);
 
   return new ImageResponse(
-    (
-      <div
-        tw="w-full h-full flex justify-center py-20 px-16"
-        style={{
-          background: "#0D0D12",
-          fontFamily: "Inter",
-        }}
-      >
+    <div
+      tw="w-full h-full flex justify-center py-20 px-16"
+      style={{
+        background: "#0D0D12",
+        fontFamily: "Inter",
+      }}
+    >
+      <img
+        // @ts-expect-error - this works fine
+        src={imageData}
+        width="1200px"
+        height="630px"
+        tw="absolute"
+        alt=""
+      />
+      {/* the actual component starts here */}
+
+      {optimizedIconUrl && (
         <img
-          // @ts-expect-error - this works fine
-          src={imageData}
-          width="1200px"
-          height="630px"
-          tw="absolute"
           alt=""
+          src={optimizedIconUrl}
+          tw="absolute rounded-full"
+          style={{
+            top: 240,
+            right: -2,
+            height: 150,
+            width: 150,
+          }}
         />
-        {/* the actual component starts here */}
+      )}
 
-        {optimizedIconUrl && (
-          <img
-            alt=""
-            src={optimizedIconUrl}
-            tw="absolute rounded-full"
-            style={{
-              top: 240,
-              right: -2,
-              height: 150,
-              width: 150,
-            }}
-          />
-        )}
-
-        <div tw="w-full h-full flex flex-col items-center">
-          <div tw="flex flex-col my-auto">
-            <h1 tw="text-6xl font-bold text-white text-center max-w-2xl mx-auto">
-              {chain.name}
-            </h1>
-            <div tw="flex mx-auto mt-14">
-              <TWLogo />
-            </div>
+      <div tw="w-full h-full flex flex-col items-center">
+        <div tw="flex flex-col my-auto">
+          <h1 tw="text-6xl font-bold text-white text-center max-w-2xl mx-auto">
+            {chain.name}
+          </h1>
+          <div tw="flex mx-auto mt-14">
+            <TWLogo />
           </div>
         </div>
       </div>
-    ),
+    </div>,
     {
       width: 1200,
       height: 630,

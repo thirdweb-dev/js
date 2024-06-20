@@ -1,10 +1,10 @@
 import {
   Input,
   InputGroup,
-  InputProps,
+  type InputProps,
   InputRightElement,
 } from "@chakra-ui/react";
-import { BigNumber, constants, utils } from "ethers";
+import { constants, type BigNumber, utils } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "tw-components";
 
@@ -41,7 +41,7 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
     if (value === undefined || value === null || value === "") {
       setInputvalue("");
     } else {
-      let parseInputValue;
+      let parseInputValue: BigNumber | null = null;
 
       try {
         parseInputValue = utils.parseUnits(inputValue || "0", decimals);
@@ -53,7 +53,7 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
         setInputvalue(utils.formatUnits(value, decimals));
       }
     }
-  }, [value, decimals, inputValue, _max]);
+  }, [value, decimals, inputValue]);
 
   const updateValue = (_value: string) => {
     if (_value === "") {

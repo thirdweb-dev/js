@@ -1,7 +1,7 @@
-import { SolidityInputWithTypeProps } from ".";
-import { formatHint } from "./helpers";
-import { Flex, Textarea, TextareaProps } from "@chakra-ui/react";
+import { Flex, Textarea, type TextareaProps } from "@chakra-ui/react";
 import { FormHelperText } from "tw-components";
+import type { SolidityInputWithTypeProps } from ".";
+import { formatHint } from "./helpers";
 
 export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,
@@ -19,7 +19,8 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
 
     const invalidInputError = {
       type: "pattern",
-      message: `Invalid input. Input must be in JSON format and all the keys on the object should be present.`,
+      message:
+        "Invalid input. Input must be in JSON format and all the keys on the object should be present.",
     };
 
     const trimmedValue = value.trim();

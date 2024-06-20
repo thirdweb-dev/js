@@ -1,5 +1,5 @@
 import {
-  AccessToken,
+  type AccessToken,
   useEngineRevokeAccessToken,
   useEngineUpdateAccessToken,
 } from "@3rdweb-sdk/react/hooks/useEngine";
@@ -15,7 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";

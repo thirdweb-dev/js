@@ -3,15 +3,15 @@ import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
-import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
+import { Changelog, type ChangelogItem } from "components/dashboard/Changelog";
 import { HomeProductCard } from "components/dashboard/HomeProductCard";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { OnboardingSteps } from "components/onboarding/Steps";
 import { PRODUCTS } from "components/product-pages/common/nav/data";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "dashboard";
 

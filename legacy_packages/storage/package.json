@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",

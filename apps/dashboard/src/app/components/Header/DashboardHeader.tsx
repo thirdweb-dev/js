@@ -1,11 +1,11 @@
 import { ColorModeToggle } from "@/components/color-mode-toggle";
-import { ThirdwebMiniLogo } from "../ThirdwebMiniLogo";
-import Link from "next/link";
-import { MobileBurgerMenu } from "./MobileBurgerMenu";
-import { headerLinks } from "./headerLinks";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { ClientOnly } from "components/ClientOnly/ClientOnly";
+import Link from "next/link";
+import { ThirdwebMiniLogo } from "../ThirdwebMiniLogo";
+import { MobileBurgerMenu } from "./MobileBurgerMenu";
+import { headerLinks } from "./headerLinks";
 
 export function DashboardHeader() {
   return (
@@ -22,9 +22,9 @@ export function DashboardHeader() {
           </div>
 
           <div className="hidden md:flex items-center gap-5">
-            {headerLinks.left.map((link, index) => (
+            {headerLinks.left.map((link) => (
               <Link
-                key={index}
+                key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
                 className="text-secondary-foreground hover:text-foreground"
@@ -38,9 +38,9 @@ export function DashboardHeader() {
         {/* Right */}
         <div className="flex gap-5 items-center">
           <div className="hidden lg:flex items-center gap-5">
-            {headerLinks.right.map((link, index) => (
+            {headerLinks.right.map((link) => (
               <Link
-                key={index}
+                key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
                 className="text-secondary-foreground hover:text-foreground"

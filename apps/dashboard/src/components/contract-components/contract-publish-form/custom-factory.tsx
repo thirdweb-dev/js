@@ -1,6 +1,3 @@
-import { useCustomFactoryAbi } from "../hooks";
-import { NetworkDropdown } from "./NetworkDropdown";
-import { AbiSelector } from "./abi-selector";
 import {
   Box,
   Flex,
@@ -11,11 +8,14 @@ import {
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
-import { Abi } from "@thirdweb-dev/sdk";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import type { Abi } from "@thirdweb-dev/sdk";
+import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
+import { useCustomFactoryAbi } from "../hooks";
+import { NetworkDropdown } from "./NetworkDropdown";
+import { AbiSelector } from "./abi-selector";
 
 interface CustomFactoryProps {
   setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
@@ -50,7 +50,7 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
     if (fields.length === 0) {
       append({ key: 1, value: "" }, { shouldFocus: false });
     }
-  }, [fields, append, form]);
+  }, [fields, append]);
 
   return (
     <Flex px={0} pb={0} flexDir="column" gap={12}>
@@ -130,11 +130,11 @@ export const CustomFactory: React.FC<CustomFactoryProps> = ({
               defaultValue="deployProxyByImplementation"
               abi={customFactoryAbi.data}
               value={form.watch(
-                `factoryDeploymentData.customFactoryInput.factoryFunction`,
+                "factoryDeploymentData.customFactoryInput.factoryFunction",
               )}
               onChange={(selectedFn) =>
                 form.setValue(
-                  `factoryDeploymentData.customFactoryInput.factoryFunction`,
+                  "factoryDeploymentData.customFactoryInput.factoryFunction",
                   selectedFn,
                 )
               }

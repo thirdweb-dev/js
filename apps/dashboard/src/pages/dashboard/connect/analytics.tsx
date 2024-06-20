@@ -1,4 +1,10 @@
 import {
+  type ApiKey,
+  useApiKeys,
+  useWalletStats,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import {
   Flex,
   Stack,
   Stat,
@@ -7,18 +13,20 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { AppLayout } from "components/app-layouts/app";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
-import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { Card, Heading, LinkButton, Text } from "tw-components";
-import { useMemo, useState } from "react";
 import {
-  ApiKey,
-  useApiKeys,
-  useWalletStats,
-} from "@3rdweb-sdk/react/hooks/useApi";
+  AutoBarChart,
+  BAR_COLORS_DARK,
+  BAR_COLORS_LIGHT,
+} from "components/analytics/auto-bar-chart";
 import { ChartContainer } from "components/analytics/chart-container";
+import { AppLayout } from "components/app-layouts/app";
+import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
+import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { useMemo, useState } from "react";
 import {
   Cell,
   Legend,
@@ -27,16 +35,8 @@ import {
   ResponsiveContainer,
   Sector,
 } from "recharts";
-import {
-  AutoBarChart,
-  BAR_COLORS_DARK,
-  BAR_COLORS_LIGHT,
-} from "components/analytics/auto-bar-chart";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
-import { useRouter } from "next/router";
+import { Card, Heading, LinkButton, Text } from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 
 const RADIAN = Math.PI / 180;
 
@@ -138,6 +138,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
               }
               return acc;
             },
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             {} as Record<string, any>,
           ),
         )
@@ -157,6 +158,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
       : { uniqueWallets: 0, totalWallets: 0 };
   }, [statsQuery.data]);
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const renderActiveShape = (props: any) => {
     const {
       cx,
@@ -227,6 +229,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
     );
   };
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
@@ -351,6 +354,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
                       >
                         {pieChartData.map((entry, index) => (
                           <Cell
+                            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                             key={index}
                             fill={barColors[index % barColors.length]}
                           />

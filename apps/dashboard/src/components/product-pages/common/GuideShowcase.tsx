@@ -1,8 +1,8 @@
-import { GuideCard } from "./GuideCard";
-import { ProductSection } from "./ProductSection";
 import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { FiArrowRight } from "react-icons/fi";
-import { Heading, TrackedLink, TrackedLinkProps } from "tw-components";
+import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
+import { GuideCard } from "./GuideCard";
+import { ProductSection } from "./ProductSection";
 
 type BlogPost = {
   title: string;

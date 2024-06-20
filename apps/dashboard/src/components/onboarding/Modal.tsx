@@ -8,7 +8,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { IconLogo } from "components/logo";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface OnboardingModalProps {
   isOpen: boolean;

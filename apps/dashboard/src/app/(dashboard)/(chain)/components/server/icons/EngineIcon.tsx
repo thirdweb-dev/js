@@ -8,6 +8,7 @@ export function EngineIcon(props: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
     >
+      <title>Engine</title>
       <path
         fillRule="evenodd"
         clipRule="evenodd"

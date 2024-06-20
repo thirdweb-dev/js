@@ -1,6 +1,6 @@
-import { Base, BaseGoerli, Chain, Sepolia } from "@thirdweb-dev/chains";
+import { Base, BaseGoerli, type Chain, Sepolia } from "@thirdweb-dev/chains";
 import {
-  ChainId,
+  type ChainId,
   fetchContractMetadataFromAddress,
   getEncodedConstructorParamsForThirdwebContract,
   verify,
@@ -9,7 +9,7 @@ import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { apiKeyMap, apiMap } from "lib/maps";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchAllChains } from "utils/fetchChain";
 
 interface VerifyPayload {
@@ -100,7 +100,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const sdk = getThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
 
-    let encodedArgs;
+    let encodedArgs:
+      | Awaited<
+          ReturnType<typeof getEncodedConstructorParamsForThirdwebContract>
+        >
+      | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
         contractAddress,
@@ -128,7 +132,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(200).json({ guid });
   } catch (e) {
     console.error(e);
-    return res.status(400).json({ error: (e as any).toString() });
+    return res.status(400).json({ error: (e as Error).toString() });
   }
 };
 

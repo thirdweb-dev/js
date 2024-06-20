@@ -1,12 +1,12 @@
-import { textAnimation, titleAnimation } from "../animations";
-import { SlideStateProps, TRACK_CATEGORY } from "../shared";
-import { lastSlideIndex, slides } from "../slides";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, ButtonGroup, Center, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, Heading } from "tw-components";
+import { textAnimation, titleAnimation } from "../animations";
+import { type SlideStateProps, TRACK_CATEGORY } from "../shared";
+import { lastSlideIndex, slides } from "../slides";
 
 interface SlideContentProps {
   slideIndex: number;

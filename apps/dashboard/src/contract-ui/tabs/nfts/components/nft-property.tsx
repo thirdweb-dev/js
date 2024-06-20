@@ -2,6 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import { Card, Text } from "tw-components";
 
 interface NftPropertyProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   property: any;
 }
 

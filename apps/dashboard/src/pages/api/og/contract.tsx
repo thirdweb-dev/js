@@ -1,8 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/forbid-dom-props */
-/* eslint-disable react/no-unknown-property */
 import { ImageResponse } from "@vercel/og";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { ContractOG } from "og-lib/url-utils";
 
 export function shortenString(str: string) {
@@ -15,13 +13,13 @@ export const config = {
 };
 
 const inter400_ = fetch(
-  new URL(`og-lib/fonts/inter/400.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/400.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const inter500_ = fetch(
-  new URL(`og-lib/fonts/inter/500.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/500.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const inter700_ = fetch(
-  new URL(`og-lib/fonts/inter/700.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/700.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 const OgBrandIcon: React.FC = () => (
@@ -32,6 +30,7 @@ const OgBrandIcon: React.FC = () => (
     viewBox="0 0 147 21"
     fill="none"
   >
+    <title>OgBrandIcon</title>
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"
@@ -122,52 +121,49 @@ export default async function handler(req: NextRequest) {
   ]);
 
   return new ImageResponse(
-    (
-      <div
-        tw="w-full h-full flex justify-center py-8 px-8 "
-        // eslint-disable-next-line react/forbid-dom-props
-        style={{
-          background: "#000",
-          fontFamily: "Inter",
-        }}
-      >
-        {/* the actual component starts here */}
+    <div
+      tw="w-full h-full flex justify-center py-8 px-8 "
+      style={{
+        background: "#000",
+        fontFamily: "Inter",
+      }}
+    >
+      {/* the actual component starts here */}
 
-        <div tw="flex flex-col my-auto w-full">
-          {/* if we have a logo render it */}
-          {contractData.logo && (
-            <img
-              alt=""
-              tw="w-50 h-50 rounded-lg mb-8 flex mx-auto"
-              src={replaceAnyIpfsUrlWithGateway(contractData.logo)}
-            />
-          )}
+      <div tw="flex flex-col my-auto w-full">
+        {/* if we have a logo render it */}
+        {contractData.logo && (
+          <img
+            alt=""
+            tw="w-50 h-50 rounded-lg mb-8 flex mx-auto"
+            src={replaceAnyIpfsUrlWithGateway(contractData.logo)}
+          />
+        )}
 
-          {contractData.displayName &&
-          contractData.displayName !== contractData.contractAddress ? (
-            <h3
-              tw="text-2xl font-bold flex text-center my-0 mb-4 mx-auto"
-              style={{
-                color: "#626262",
-              }}
-            >
-              {shortenString(contractData.contractAddress)}
-            </h3>
-          ) : null}
-          <h1 tw="text-6xl text-white font-bold flex text-center my-0 mx-auto">
-            {textShortener(contractData.displayName) ||
-              shortenString(contractData.contractAddress)}
-          </h1>
-          <h2 tw="text-4xl text-white opacity-80 font-medium flex text-center my-0 mt-10 mx-auto">
-            {contractData.chainName}
-          </h2>
-        </div>
-
-        <div tw="flex flex-shrink-0 absolute bottom-8 right-8">
-          <OgBrandIcon />
-        </div>
+        {contractData.displayName &&
+        contractData.displayName !== contractData.contractAddress ? (
+          <h3
+            tw="text-2xl font-bold flex text-center my-0 mb-4 mx-auto"
+            style={{
+              color: "#626262",
+            }}
+          >
+            {shortenString(contractData.contractAddress)}
+          </h3>
+        ) : null}
+        <h1 tw="text-6xl text-white font-bold flex text-center my-0 mx-auto">
+          {textShortener(contractData.displayName) ||
+            shortenString(contractData.contractAddress)}
+        </h1>
+        <h2 tw="text-4xl text-white opacity-80 font-medium flex text-center my-0 mt-10 mx-auto">
+          {contractData.chainName}
+        </h2>
       </div>
-    ),
+
+      <div tw="flex flex-shrink-0 absolute bottom-8 right-8">
+        <OgBrandIcon />
+      </div>
+    </div>,
     {
       width: 1200,
       height: 630,

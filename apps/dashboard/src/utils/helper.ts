@@ -1,2 +1,1 @@
-const STR_UNDEFINED = "undefined";
-export const hasWindow = typeof window !== STR_UNDEFINED;
+export const hasWindow = typeof window !== "undefined";

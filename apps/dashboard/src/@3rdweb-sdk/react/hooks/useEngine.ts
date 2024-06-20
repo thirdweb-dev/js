@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { engineKeys } from "../cache-keys";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
-import invariant from "tiny-invariant";
-import { useApiAuthToken } from "./useApi";
 import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { THIRDWEB_API_HOST } from "constants/urls";
-import { useLoggedInUser } from "./useLoggedInUser";
 import { useState } from "react";
+import invariant from "tiny-invariant";
+import { engineKeys } from "../cache-keys";
+import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
+import { useApiAuthToken } from "./useApi";
+import { useLoggedInUser } from "./useLoggedInUser";
 
 export function useEngineConnectedInstance() {
   const [instance, setInstance] = useState<EngineInstance | null>(null);
@@ -322,7 +322,7 @@ export type Transaction = {
   callGasLimit?: string | null;
   verificationGasLimit?: string | null;
   preVerificationGas?: string | null;
-  // eslint-disable-next-line inclusive-language/use-inclusive-words
+
   paymasterAndData?: string | null;
   userOpHash?: string | null;
   functionName?: string | null;

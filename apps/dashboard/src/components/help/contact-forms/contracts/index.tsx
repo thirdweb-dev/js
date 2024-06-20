@@ -1,10 +1,10 @@
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
-import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
-import { ReactElement } from "react";
-import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
-import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ReactElement } from "react";
 import { useWatch } from "react-hook-form";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
+import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
+import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
+import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
 
 type ProblemAreaItem = {
   label: string;
@@ -122,12 +122,7 @@ export default function ContractSupportForm() {
     useWatch<CreateTicketInput>({
       name: "extraInfo_Problem_Area",
     }) || "";
-  const SubFormComponent = () => {
-    return (
-      CONTRACT_PROBLEM_AREAS.find((o) => o.label === problemArea)
-        ?.component || <></>
-    );
-  };
+
   return (
     <>
       <SupportForm_SelectInput
@@ -137,7 +132,7 @@ export default function ContractSupportForm() {
         options={CONTRACT_PROBLEM_AREAS.map((o) => o.label)}
         required={true}
       />
-      <SubFormComponent />
+      {CONTRACT_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>
   );
 }

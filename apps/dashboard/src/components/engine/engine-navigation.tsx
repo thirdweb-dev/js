@@ -1,4 +1,4 @@
-import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   Stack,
@@ -10,7 +10,7 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
 import { EngineVersionBadge } from "./badges/version";

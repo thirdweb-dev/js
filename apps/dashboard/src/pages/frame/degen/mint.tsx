@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import Head from "next/head";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { NextSeo } from "next-seo";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const title = "Certified Degen NFT";
 const description = "Mint Certified Degen NFT using thirdweb engine";

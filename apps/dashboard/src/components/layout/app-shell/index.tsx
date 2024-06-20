@@ -10,9 +10,9 @@ import {
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
-import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { CreditsButton } from "components/settings/Account/Billing/CreditsButton";
 import { UpgradeButton } from "components/settings/Account/Billing/UpgradeButton";
+import { BillingAlerts } from "components/settings/Account/Billing/alerts/Alert";
 import { SIDEBAR_TUNNEL_ID, SIDEBAR_WIDTH } from "core-ui/sidebar/tunnel";
 import { useRouter } from "next/router";
 import { FiHelpCircle } from "react-icons/fi";
@@ -24,7 +24,7 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 export interface AppShellProps {
   layout?: "custom-contract";
@@ -42,7 +42,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   return (
     <Grid
       minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-      templateColumns={`auto 1fr`}
+      templateColumns={"auto 1fr"}
       templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
       backgroundColor="backgroundBody"
     >

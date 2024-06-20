@@ -15,13 +15,13 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
-import { GetStaticProps } from "next";
+import type { GetStaticProps } from "next";
 import { PageId } from "page-id";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { BsGithub } from "react-icons/bs";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const filterOut = [
   "0xFirekeeper",
@@ -472,6 +472,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const contributors: Record<string, GithubContributor> = {};
 
+  // biome-ignore lint/complexity/noForEach: FIXME
   contributorData.forEach((contributor) => {
     const login = contributor.login;
     const contributions = contributor.contributions;

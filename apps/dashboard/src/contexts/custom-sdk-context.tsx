@@ -11,7 +11,7 @@ import {
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 export const CustomSDKContext: ComponentWithChildren<{
   desiredChainId?: number;

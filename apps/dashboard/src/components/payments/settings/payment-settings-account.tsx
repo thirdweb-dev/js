@@ -1,4 +1,10 @@
+import {
+  type SellerValueInput,
+  usePaymentsSellerById,
+  usePaymentsUpdateSellerById,
+} from "@3rdweb-sdk/react/hooks/usePayments";
 import { Box, Flex, FormControl, Input, SimpleGrid } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import {
@@ -9,12 +15,6 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import {
-  SellerValueInput,
-  usePaymentsSellerById,
-  usePaymentsUpdateSellerById,
-} from "@3rdweb-sdk/react/hooks/usePayments";
-import { useTrack } from "hooks/analytics/useTrack";
 import { PaymentsSettingsFileUploader } from "./payment-settings-file-uploader";
 
 interface PaymentsSettingsAccountProps {

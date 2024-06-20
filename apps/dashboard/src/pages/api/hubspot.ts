@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import invariant from "tiny-invariant";
 
 export const config = {
@@ -6,6 +6,7 @@ export const config = {
 };
 
 interface ContactFormPayload {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   fields: any;
 }
 

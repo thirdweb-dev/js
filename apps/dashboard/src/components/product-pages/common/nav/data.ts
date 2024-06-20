@@ -1,4 +1,4 @@
-import { SectionItemProps, SectionProps } from "./types";
+import type { SectionItemProps, SectionProps } from "./types";
 
 export const PRODUCT_SECTIONS: SectionProps[] = [
   {

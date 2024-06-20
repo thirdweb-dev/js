@@ -80,7 +80,9 @@ export async function zkDeployContractDeterministic(
       signer,
     );
 
-    const salt = options?.saltForProxyDeploy ? utils.id(options.saltForProxyDeploy) : utils.id("thirdweb");
+    const salt = options?.saltForProxyDeploy
+      ? utils.id(options.saltForProxyDeploy)
+      : utils.id("thirdweb");
 
     options?.notifier?.("deploying", "preset");
     try {

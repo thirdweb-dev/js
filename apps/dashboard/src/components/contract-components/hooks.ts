@@ -1,7 +1,7 @@
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import {
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -29,20 +29,20 @@ import {
   useDeployContextModal,
 } from "./contract-deploy-form/deploy-context-modal";
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
-import { Recipient } from "./contract-deploy-form/split-fieldset";
-import { ContractId } from "./types";
+import type { Recipient } from "./contract-deploy-form/split-fieldset";
+import type { ContractId } from "./types";
 import { addContractToMultiChainRegistry } from "./utils";
 
 import {
-  Abi,
-  ContractInfoSchema,
-  DeploymentTransaction,
-  ExtraPublishMetadata,
-  FeatureName,
-  FeatureWithEnabled,
-  ProfileMetadata,
-  PublishedContract,
-  ThirdwebSDK,
+  type Abi,
+  type ContractInfoSchema,
+  type DeploymentTransaction,
+  type ExtraPublishMetadata,
+  type FeatureName,
+  type FeatureWithEnabled,
+  type ProfileMetadata,
+  type PublishedContract,
+  type ThirdwebSDK,
   detectFeatures,
   extractConstructorParamsFromAbi,
   extractEventsFromAbi,
@@ -60,17 +60,17 @@ import {
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import { walletIds } from "@thirdweb-dev/wallets";
-import { SnippetApiResponse } from "components/contract-tabs/code/types";
-import { providers, utils } from "ethers";
+import type { SnippetApiResponse } from "components/contract-tabs/code/types";
+import { type providers, utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-ethers";
-import { z } from "zod";
+import type { z } from "zod";
 
 const HEADLESS_WALLET_IDS: string[] = [
   walletIds.localWallet,
@@ -87,7 +87,9 @@ interface ContractPublishMetadata {
   deployDisabled?: boolean;
   info?: z.infer<typeof ContractInfoSchema>;
   licenses?: string[];
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   compilerMetadata?: Record<string, any>;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   analytics?: Record<string, any>;
 }
 
@@ -95,7 +97,9 @@ interface RawPredeployMetadata {
   name: string;
   metadataUri: string;
   bytecodeUri: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   analytics?: Record<string, any>;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   compilers?: Record<string, any>;
 }
 
@@ -104,7 +108,9 @@ export async function fetchRawPredeployMetadataFromURI(contractId: ContractId) {
   const contractIdIpfsHash = toContractIdIpfsHash(contractId);
 
   invariant(contractId !== "ipfs://undefined", "uri can't be undefined");
-  let resolved;
+  let resolved:
+    | Awaited<ReturnType<typeof fetchRawPredeployMetadata>>
+    | undefined = undefined;
   try {
     resolved = await fetchRawPredeployMetadata(
       contractIdIpfsHash,
@@ -141,7 +147,9 @@ export function useContractRawPredeployMetadataFromURI(contractId: ContractId) {
   );
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 function removeUndefinedFromObject(obj: Record<string, any>) {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const newObj: Record<string, any> = {};
   for (const key in obj) {
     if (obj[key] !== undefined) {
@@ -158,7 +166,8 @@ export async function fetchContractPublishMetadataFromURI(
   const contractIdIpfsHash = toContractIdIpfsHash(contractId);
 
   invariant(contractId !== "ipfs://undefined", "uri can't be undefined");
-  let resolved;
+  let resolved: Awaited<ReturnType<typeof fetchPreDeployMetadata>> | undefined =
+    undefined;
   try {
     resolved = await fetchPreDeployMetadata(
       contractIdIpfsHash,
@@ -176,6 +185,7 @@ export async function fetchContractPublishMetadataFromURI(
   }
 
   return {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     image: (resolved as any)?.image || "custom",
     name: resolved.name,
     description: resolved.info?.title || "",
@@ -488,6 +498,7 @@ export function useConstructorParamsFromABI(abi?: Abi) {
   }, [abi]);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 export function useFunctionParamsFromABI(abi?: any, functionName?: string) {
   return useMemo(() => {
     return abi && functionName
@@ -645,7 +656,7 @@ export function useCustomContractDeployMutation(
             ...(hasRoyalty && {
               seller_fee_basis_points:
                 typeof data.deployParams._royaltyBps === "string"
-                  ? parseInt(data.deployParams._royaltyBps, 10)
+                  ? Number.parseInt(data.deployParams._royaltyBps, 10)
                   : data.deployParams?._royaltyBps || 0,
             }),
             ...(hasRoyalty && {
@@ -994,6 +1005,7 @@ function extractExtensions(
   };
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 function useContractDetectedExtensions(abi?: any) {
   const features = useMemo(() => {
     if (abi) {
@@ -1004,6 +1016,7 @@ function useContractDetectedExtensions(abi?: any) {
   return features;
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 export function useContractEnabledExtensions(abi?: any) {
   const extensions = useContractDetectedExtensions(abi);
   return extensions ? extensions.enabledExtensions : [];
@@ -1012,6 +1025,7 @@ export function useContractEnabledExtensions(abi?: any) {
 export function ensQuery(addressOrEnsName?: string) {
   // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
   if (addressOrEnsName === "thirdweb.eth") {
+    // biome-ignore lint/style/noParameterAssign: FIXME
     addressOrEnsName = "deployer.thirdweb.eth";
   }
   const placeholderData = {
@@ -1077,10 +1091,12 @@ export function useContractEvents(abi: Abi) {
 // TODO: this points to very old snippets, we need to update this!
 export function useFeatureContractCodeSnippetQuery(language: string) {
   if (language === "javascript") {
+    // biome-ignore lint/style/noParameterAssign: FIXME
     language = "sdk";
   }
 
   if (language === "react-native") {
+    // biome-ignore lint/style/noParameterAssign: FIXME
     language = "react";
   }
 

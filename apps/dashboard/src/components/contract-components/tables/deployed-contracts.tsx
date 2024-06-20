@@ -1,8 +1,6 @@
-import { ImportModal } from "../import-contract/modal";
-import { ShowMoreButton } from "./show-more-button";
 import {
+  type useAllContractList,
   useRemoveContractMutation,
-  useAllContractList,
 } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Box,
@@ -26,6 +24,7 @@ import { GettingStartedBox } from "components/getting-started/box";
 import { GettingStartedCard } from "components/getting-started/card";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { NetworkSelectDropdown } from "components/selects/NetworkSelectDropdown";
+import type { BasicContract } from "contract-ui/types/types";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
@@ -39,9 +38,9 @@ import {
   FiX,
 } from "react-icons/fi";
 import {
-  Column,
-  ColumnInstance,
-  Row,
+  type Column,
+  type ColumnInstance,
+  type Row,
   useFilters,
   usePagination,
   useTable,
@@ -58,9 +57,10 @@ import {
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { TableContainer } from "tw-components/table-container";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { ImportModal } from "../import-contract/modal";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
-import { BasicContract } from "contract-ui/types/types";
+import { ShowMoreButton } from "./show-more-button";
 
 interface DeployedContractsProps {
   noHeader?: boolean;
@@ -79,6 +79,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
 
   const chainIdsWithDeployments = useMemo(() => {
     const set = new Set<number>();
+    // biome-ignore lint/complexity/noForEach: FIXME
     contractListQuery.data.forEach((contract) => {
       set.add(contract.chainId);
     });
@@ -293,6 +294,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       {
         Header: "Name",
         accessor: (row) => row.address,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
           return <AsyncContractNameCell cell={cell.row.original} />;
         },
@@ -300,6 +302,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       {
         Header: "Type",
         accessor: (row) => row.address,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => <AsyncContractTypeCell cell={cell.row.original} />,
       },
       {
@@ -314,6 +317,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
           />
         ),
         filter: "equals",
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
           const data =
             configuredChains[cell.row.original.chainId] ||
@@ -337,12 +341,14 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       {
         Header: "Contract Address",
         accessor: (row) => row.address,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
           return <AddressCopyButton address={cell.row.original.address} />;
         },
       },
       {
         id: "actions",
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
           return (
             <Menu isLazy>
@@ -363,8 +369,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         },
       },
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [configuredChains, chainIdsWithDeployments],
+    [configuredChains, chainIdsWithDeployments, chainIdToChainRecord],
   );
 
   const defaultColumn = useMemo(
@@ -389,7 +394,10 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       data: combinedList,
       defaultColumn,
     },
+    // these will be removed with the @tanstack/react-table v8 version
+    // eslint-disable-next-line react-compiler/react-compiler
     useFilters,
+    // eslint-disable-next-line react-compiler/react-compiler
     usePagination,
   );
 
@@ -401,7 +409,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     setPageSize(numRowsOnPage);
-  }, [numRowsOnPage, pageSize, setPageSize]);
+  }, [numRowsOnPage, setPageSize]);
 
   return (
     <TableContainer
@@ -421,8 +429,10 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       <Table {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
               {headerGroup.headers.map((column, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 <Th {...column.getHeaderProps()} border="none" key={i}>
                   <Text as="label" size="label.sm" color="faded">
                     {column.render("Header")}
@@ -483,6 +493,7 @@ const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
             borderBottomWidth="inherit"
             borderBottomColor="borderColor"
             {...cell.getCellProps()}
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             key={cellIndex}
           >
             {cell.render("Cell")}

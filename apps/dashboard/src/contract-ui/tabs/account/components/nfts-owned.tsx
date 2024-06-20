@@ -1,6 +1,6 @@
 import { useWalletNFTs } from "@3rdweb-sdk/react";
-import { Text } from "tw-components";
 import { NFTCards } from "contract-ui/tabs/overview/components/NFTCards";
+import { Text } from "tw-components";
 
 interface NftsOwnedProps {
   address: string;

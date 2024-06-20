@@ -1,12 +1,12 @@
+import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
+import { useContract } from "@thirdweb-dev/react";
+import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
 import { TokenBurnButton } from "./components/burn-button";
 import { TokenClaimButton } from "./components/claim-button";
 import { TokenMintButton } from "./components/mint-button";
 import { TokenSupply } from "./components/supply";
 import { TokenTransferButton } from "./components/transfer-button";
-import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface ContractTokenPageProps {
   contractAddress?: string;

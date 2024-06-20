@@ -1,9 +1,9 @@
 import { Flex, GridItem, LinkBox, LinkOverlay } from "@chakra-ui/react";
-import { StaticImageData } from "next/image";
-import { ReactNode } from "react";
-import { Card, CardProps, Text, TrackedLink } from "tw-components";
-import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 import { ChakraNextImage } from "components/Image";
+import type { StaticImageData } from "next/image";
+import type { ReactNode } from "react";
+import { Card, type CardProps, Text, TrackedLink } from "tw-components";
+import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 
 interface LandingCardWithImageProps {
   title: string;
@@ -118,6 +118,7 @@ export const LandingImages: React.FC<LandingImageProps> = ({
                   flexDir="column"
                   alignItems="center"
                   justifyContent="center"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={idx}
                 >
                   <ChakraNextImage

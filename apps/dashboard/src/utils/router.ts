@@ -1,8 +1,8 @@
-import type { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "node:querystring";
 
 export function getSingleQueryValue(
-  query: ParsedUrlQuery = {},
-  key: string,
+  query: ParsedUrlQuery,
+  key: string
 ): string | undefined {
   const _val = query[key];
 

@@ -1,4 +1,3 @@
-import { CancelTab } from "./cancel-tab";
 import {
   Flex,
   GridItem,
@@ -21,6 +20,7 @@ import { useMemo } from "react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { CancelTab } from "./cancel-tab";
 
 interface NFTDrawerProps {
   contract: Marketplace;

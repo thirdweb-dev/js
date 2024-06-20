@@ -44,7 +44,7 @@
     "viem": "2.15.1"
   },
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",

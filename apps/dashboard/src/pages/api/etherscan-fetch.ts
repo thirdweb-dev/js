@@ -1,6 +1,6 @@
-import { ChainId } from "@thirdweb-dev/sdk";
+import type { ChainId } from "@thirdweb-dev/sdk";
 import { apiKeyMap, apiMap } from "lib/maps";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export type EtherscanResult = {
   SourceCode: string;
@@ -23,8 +23,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "invalid method" });
   }
 
-  const contractAddress = req.query["contractAddress"];
-  const chainId = Number(req.query["chainId"]) as ChainId;
+  const contractAddress = req.query.contractAddress;
+  const chainId = Number(req.query.chainId) as ChainId;
 
   if (!contractAddress) {
     return res.status(400).json({ error: "invalid contract address" });

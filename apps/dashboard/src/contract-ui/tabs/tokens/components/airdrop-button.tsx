@@ -1,15 +1,15 @@
-import { TokenAirdropForm } from "./airdrop-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
-  TokenContract,
+  type TokenContract,
   useAddress,
-  useContract,
+  type useContract,
   useTokenBalance,
 } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
 import { FiDroplet } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
+import { TokenAirdropForm } from "./airdrop-form";
 
 interface TokenAirdropButtonProps {
   contractQuery: ReturnType<typeof useContract>;

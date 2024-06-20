@@ -27,30 +27,30 @@ import {
   ZoraTestnet,
 } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
-import { Abi, FeatureName, SmartContract } from "@thirdweb-dev/sdk";
+import type { Abi, FeatureName, SmartContract } from "@thirdweb-dev/sdk";
 import { detectFeatures } from "components/contract-components/utils";
-import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
+import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
 import { PROD_OR_DEV_URL } from "constants/rpc";
 import { THIRDWEB_PAYMENTS_API_HOST } from "constants/urls";
-import { BaseContract } from "ethers";
+import type { BaseContract } from "ethers";
 import {
-  InsertWebhookMutationVariables,
-  useInsertWebhookMutation,
-  useUpdateSellerMutation,
-  UpdateWebhookMutationVariables,
-  useUpdateWebhookMutation,
-  ApiSecretKeysByOwnerIdQuery,
-  CheckoutsByContractAddressQueryVariables,
-  useCheckoutsByContractAddressLazyQuery,
-  ContractsByOwnerIdQueryVariables,
-  useContractsByOwnerIdLazyQuery,
-  DetailedAnalyticsQueryVariables,
-  useDetailedAnalyticsLazyQuery,
+  type ApiSecretKeysByOwnerIdQuery,
+  type CheckoutsByContractAddressQueryVariables,
+  type ContractsByOwnerIdQueryVariables,
+  type DetailedAnalyticsQueryVariables,
+  type InsertWebhookMutationVariables,
   SellerDocument,
-  SellerQueryVariables,
-  useSellerLazyQuery,
+  type SellerQueryVariables,
+  type UpdateWebhookMutationVariables,
   WebhooksBySellerIdDocument,
-  WebhooksBySellerIdQueryVariables,
+  type WebhooksBySellerIdQueryVariables,
+  useCheckoutsByContractAddressLazyQuery,
+  useContractsByOwnerIdLazyQuery,
+  useDetailedAnalyticsLazyQuery,
+  useInsertWebhookMutation,
+  useSellerLazyQuery,
+  useUpdateSellerMutation,
+  useUpdateWebhookMutation,
   useWebhooksBySellerIdLazyQuery,
 } from "graphql/generated";
 import { getThirdwebSDK } from "lib/sdk";
@@ -212,9 +212,9 @@ export const ChainIdToSupportedCurrencies: Record<number, CurrencyMetadata[]> =
   Object.keys(supportedCurrenciesMap).reduce<
     Record<number, CurrencyMetadata[]>
   >((acc, chainIdStr) => {
-    const chainId = parseInt(chainIdStr, 10);
+    const chainId = Number.parseInt(chainIdStr, 10);
 
-    if (!isNaN(chainId)) {
+    if (!Number.isNaN(chainId)) {
       const chainCurrencies = CURRENCIES[chainId] || [];
       const supportedCurrencies = supportedCurrenciesMap[chainId] || [];
 
@@ -336,7 +336,7 @@ export function usePaymentsRegisterContract() {
       invariant(address, "No wallet address found");
       invariant(input.chain, "No chain found");
       const sdk = getThirdwebSDK(
-        parseInt(input.chain),
+        Number.parseInt(input.chain),
         `https://${input.chain}.rpc.${PROD_OR_DEV_URL}`,
       );
       invariant(sdk, "No SDK found");
@@ -349,19 +349,19 @@ export function usePaymentsRegisterContract() {
         ? "THIRDWEB"
         : "CUSTOM_CONTRACT";
 
-      let displayName;
+      let displayName: string | undefined = undefined;
       try {
         const metadata = await contract.metadata.get();
         displayName = metadata.name;
       } catch (e) {
-        console.error(`Failed to get contract metadata`);
+        console.error("Failed to get contract metadata");
       }
 
       const body: RegisterContractInput = {
         ...input,
         contractDefinition: contract.abi,
         contractAddress: input.contractAddress,
-        chain: ChainIdToPaperChain[parseInt(input.chain)],
+        chain: ChainIdToPaperChain[Number.parseInt(input.chain)],
         contractType,
         displayName,
       };
@@ -515,7 +515,9 @@ interface UploadImageResponse {
     variants: string[];
   };
   success: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   errors: any;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   messages: any;
 }
 
@@ -712,7 +714,9 @@ enum FiatCurrency {
 
 const WALLET_TYPE = "wallet_type";
 const PAYMENT_METHOD = "payment_method";
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 function parseAnalyticOverviewData(data: any[]): any[] {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const result: { [checkout_id: string]: any } = {};
 
   for (const item of data) {

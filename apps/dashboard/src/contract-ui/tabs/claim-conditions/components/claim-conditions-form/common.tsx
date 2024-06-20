@@ -1,13 +1,13 @@
-import { useClaimConditionsFormContext } from ".";
 import { Flex, FormControl } from "@chakra-ui/react";
-import { FieldError } from "react-hook-form";
+import type { FieldError } from "react-hook-form";
 import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
 } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { useClaimConditionsFormContext } from ".";
 
 interface CustomFormControlProps {
   disabled: boolean;

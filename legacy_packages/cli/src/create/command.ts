@@ -390,8 +390,8 @@ export async function twCreate(
   const packageManager = !!options.useNpm
     ? "npm"
     : !!options.usePnpm
-    ? "pnpm"
-    : getPkgManager();
+      ? "pnpm"
+      : getPkgManager();
 
   const template =
     typeof options.template === "string" ? options.template.trim() : undefined;

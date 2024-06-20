@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 
 type DefaultedBoxProps = Pick<
   BoxProps,
@@ -35,6 +35,7 @@ function getBorderRadius(
   borderRadius: BoxProps["borderRadius"],
 ): BoxProps["borderRadius"] {
   try {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return (borderRadiusMap as any)[borderRadius as any];
   } catch (e) {
     return borderRadius;

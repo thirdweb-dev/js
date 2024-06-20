@@ -1,10 +1,10 @@
-import { NFTMintForm } from "./mint-form";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { useContract, useMintNFT } from "@thirdweb-dev/react";
+import { type useContract, useMintNFT } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
+import { NFTMintForm } from "./mint-form";
 
 interface NFTMintButtonProps {
   contractQuery: ReturnType<typeof useContract>;

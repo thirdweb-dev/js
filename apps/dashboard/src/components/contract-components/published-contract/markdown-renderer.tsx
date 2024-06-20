@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
-  BoxProps,
+  type BoxProps,
   Link,
   ListItem,
   OrderedList,
@@ -34,6 +35,7 @@ export const MarkdownRenderer: React.FC<
       {...restProps}
       remarkPlugins={[remarkGfm]}
       components={{
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         h1: (props: any) => (
           <Heading
             as="h2"
@@ -45,6 +47,7 @@ export const MarkdownRenderer: React.FC<
             {...props}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         h2: (props: any) => (
           <Heading
             as="h3"
@@ -57,6 +60,7 @@ export const MarkdownRenderer: React.FC<
             {...props}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         h3: (props: any) => (
           <Heading
             as="h4"
@@ -66,6 +70,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         h4: (props: any) => (
           <Heading
             as="h5"
@@ -75,6 +80,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         h5: (props: any) => (
           <Heading
             as="h6"
@@ -84,6 +90,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         h6: (props: any) => (
           <Heading
             as="p"
@@ -93,6 +100,7 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         a: (props: any) => (
           <Link
             _dark={{
@@ -112,7 +120,8 @@ export const MarkdownRenderer: React.FC<
             mt={4}
           />
         ),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         code: ({ inline, ...props }: any) => {
           if (props?.className) {
             const language = props.className.replace("language-", "");
@@ -140,9 +149,11 @@ export const MarkdownRenderer: React.FC<
             />
           );
         },
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         p: (props: any) => (
           <Text size="body.md" mb={4} {...props} lineHeight={1.5} />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         table: (props: any) => (
           <Box
             maxW="100%"
@@ -156,8 +167,10 @@ export const MarkdownRenderer: React.FC<
             <Table {...props} />
           </Box>
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         th: ({ children: c, ...props }: any) => (
           <Th
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             {...(props as unknown as any)}
             textAlign="left!important"
             border="none"
@@ -167,16 +180,21 @@ export const MarkdownRenderer: React.FC<
             </Text>
           </Th>
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         td: (props: any) => (
           <Td
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             {...(props as unknown as any)}
             borderColor="borderColor"
             textAlign="left!important"
             borderBottomWidth={"inherit"}
           />
         ),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         thead: (props: any) => <Thead {...props} />,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         tbody: (props: any) => <Tbody {...props} />,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         tr: (props: any) => (
           <Tr
             {...props}
@@ -185,11 +203,11 @@ export const MarkdownRenderer: React.FC<
             _last={{ borderBottomWidth: 0 }}
           />
         ),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         ul: ({ ordered, ...props }: any) => <UnorderedList {...props} mb={4} />,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         ol: ({ ordered, ...props }: any) => <OrderedList {...props} mb={4} />,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         li: ({ children: c, ordered, ...props }: any) => (
           <ListItem {...props}>
             <Text>{c}</Text>

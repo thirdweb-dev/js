@@ -13,8 +13,8 @@ import {
   isSimpleHashSupported,
   transformSimpleHashResponseToNFT,
 } from "lib/wallet/nfts/simpleHash";
-import { WalletNFT } from "lib/wallet/nfts/types";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { WalletNFT } from "lib/wallet/nfts/types";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { getSingleQueryValue } from "utils/router";
 
 export type WalletNFTApiReturn =
@@ -36,7 +36,7 @@ const handler = async (
   if (!owner) {
     return res.status(400).json({ error: "missing owner" });
   }
-  const chainId = parseInt(queryChainId);
+  const chainId = Number.parseInt(queryChainId);
 
   if (isSimpleHashSupported(chainId) && process.env.SIMPLEHASH_API_KEY) {
     const url = generateSimpleHashUrl({ chainId, owner });

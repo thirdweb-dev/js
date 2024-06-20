@@ -1,6 +1,6 @@
 import {
   Checkbox as ChakraCheckbox,
-  CheckboxProps,
+  type CheckboxProps,
   LightMode,
   forwardRef,
 } from "@chakra-ui/react";

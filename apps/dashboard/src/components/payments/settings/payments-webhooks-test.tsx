@@ -1,20 +1,18 @@
 import {
-  usePaymentsTestWebhook,
-  PaymentsWebhooksTestInput,
+  type PaymentsWebhooksTestInput,
+  type PaymentsWebhooksType,
   WebhookEvent,
-  PaymentsWebhooksType,
+  usePaymentsTestWebhook,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import {
   Flex,
+  FormControl,
   Icon,
-  Tooltip,
-  useDisclosure,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  FormControl,
   ModalOverlay,
   Select,
   Skeleton,
@@ -22,21 +20,23 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { AiOutlineExperiment } from "@react-icons/all-files/ai/AiOutlineExperiment";
+import { MdBlock } from "@react-icons/all-files/md/MdBlock";
+import { MdCheck } from "@react-icons/all-files/md/MdCheck";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
+  Card,
   CodeBlock,
   FormLabel,
   Heading,
-  Card,
   Text,
 } from "tw-components";
-import { AiOutlineExperiment } from "@react-icons/all-files/ai/AiOutlineExperiment";
-import { MdBlock } from "@react-icons/all-files/md/MdBlock";
-import { MdCheck } from "@react-icons/all-files/md/MdCheck";
 
 interface PaymentsWebhooksTestButtonProps {
   paymentsSellerId: string;

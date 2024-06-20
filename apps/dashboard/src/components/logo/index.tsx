@@ -1,6 +1,6 @@
 import {
   AspectRatio,
-  AspectRatioProps,
+  type AspectRatioProps,
   Stack,
   VisuallyHidden,
 } from "@chakra-ui/react";
@@ -12,6 +12,7 @@ export const IconLogo: React.FC<Omit<AspectRatioProps, "ratio">> = ({
   return (
     <AspectRatio ratio={516 / 321} {...props}>
       <svg viewBox="0 0 516 321" fill="none">
+        <title>thirdweb</title>
         <g clipPath="url(#clip0_3:35)">
           <path
             d="M1.40497 27.0011C-3.73633 14.022 5.84519 0 19.8669 0H106.919C115.098 0 122.342 4.86715 125.381 12.3996L194.671 185.299C196.541 189.935 196.541 195.149 194.671 199.901L151.087 308.484C144.427 325.056 120.823 325.056 114.163 308.484L1.40497 27.0011Z"
@@ -91,6 +92,7 @@ const Wordmark: React.FC<Omit<AspectRatioProps, "ratio">> = ({
   return (
     <AspectRatio ratio={1377 / 267} {...props}>
       <svg viewBox="0 0 1377 267" fill="none">
+        <title>thirdweb</title>
         <path
           fillRule="evenodd"
           clipRule="evenodd"

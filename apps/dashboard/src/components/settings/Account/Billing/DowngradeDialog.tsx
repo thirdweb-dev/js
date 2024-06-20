@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { FiChevronDown, FiX } from "react-icons/fi";
-import { Button, Text, MenuItem } from "tw-components";
+import { Button, MenuItem, Text } from "tw-components";
 
 const DOWNGRADE_OPTIONS = {
   customer_service: "Not happy with customer service",
@@ -31,7 +31,7 @@ const DOWNGRADE_OPTIONS = {
 interface BillingDowngradeDialogProps {
   oldPlan: string;
   newPlan: string;
-  oldPlanFeatures: string[];
+  oldPlanFeatures: Array<string | string[]>;
   loading: boolean;
   onClose: () => void;
   onConfirm: (feedback: string) => void;
@@ -65,7 +65,7 @@ export const BillingDowngradeDialog: React.FC<BillingDowngradeDialogProps> = ({
                 </Text>
                 <Flex flexDir="column" gap={2}>
                   {oldPlanFeatures.map((feat) => (
-                    <HStack key={feat}>
+                    <HStack key={Array.isArray(feat) ? feat[0] : feat}>
                       <Icon as={FiX} boxSize={4} color="red.500" />
                       <Text>{Array.isArray(feat) ? feat[0] : feat}</Text>
                     </HStack>

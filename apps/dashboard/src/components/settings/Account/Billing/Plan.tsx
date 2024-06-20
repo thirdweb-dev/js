@@ -1,6 +1,6 @@
-import { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { Badge, Text, TrackedLink } from "tw-components";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, HStack } from "@chakra-ui/react";
+import { Badge, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
 
 interface BillingPlanProps {

@@ -1,9 +1,9 @@
 import {
   Alert,
-  Flex,
-  AlertIcon,
   AlertDescription,
+  AlertIcon,
   AlertTitle,
+  Flex,
 } from "@chakra-ui/react";
 import { getBillingPaymentMethodVerificationFailureResponse } from "lib/billing";
 import { Heading, Text, TrackedLinkButton } from "tw-components";

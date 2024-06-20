@@ -1,9 +1,9 @@
-import { Flex, FlexProps, Icon } from "@chakra-ui/react";
-import { Text, TrackedLink } from "tw-components";
-import { IconType } from "react-icons/lib";
+import { Flex, type FlexProps, Icon } from "@chakra-ui/react";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
+import { SiUnity } from "@react-icons/all-files/si/SiUnity";
+import type { IconType } from "react-icons/lib";
+import { Text, TrackedLink } from "tw-components";
 
 export function SupportedPlatformLink(props: {
   platform: "React" | "React Native" | "Unity" | "TypeScript";

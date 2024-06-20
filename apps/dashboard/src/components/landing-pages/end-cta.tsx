@@ -1,7 +1,7 @@
+import { Box, Container, type ContainerProps, Flex } from "@chakra-ui/react";
+import type { ReactNode } from "react";
+import { Heading, Text, type TrackedLinkProps } from "tw-components";
 import { LandingCTAButtons } from "./cta-buttons";
-import { Box, Container, ContainerProps, Flex } from "@chakra-ui/react";
-import { ReactNode } from "react";
-import { Heading, Text, TrackedLinkProps } from "tw-components";
 
 interface LandingEndCTAProps {
   title: string;

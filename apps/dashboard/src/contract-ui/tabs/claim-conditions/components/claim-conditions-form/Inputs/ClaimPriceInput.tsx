@@ -1,9 +1,9 @@
-import { useClaimConditionsFormContext } from "..";
-import { PriceInput } from "../../price-input";
-import { CustomFormControl } from "../common";
 import { Box, Flex } from "@chakra-ui/react";
 import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
+import { useClaimConditionsFormContext } from "..";
+import { PriceInput } from "../../price-input";
+import { CustomFormControl } from "../common";
 
 /**
  * Allows the user to select how much they want to charge to claim each NFT

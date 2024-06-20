@@ -1,6 +1,6 @@
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import {
-  StoredChain,
+  type StoredChain,
   SupportedChainsContext,
 } from "contexts/configured-chains";
 import { useContext, useMemo } from "react";
@@ -29,6 +29,7 @@ export function useSupportedChainsRecord() {
   const chains = useSupportedChains();
   return useMemo(() => {
     const record: ConfiguredChainRecord = {};
+    // biome-ignore lint/complexity/noForEach: FIXME
     chains.forEach((network) => {
       record[network.chainId] = network;
     });
@@ -44,6 +45,7 @@ export function useSupportedChainsNameRecord() {
   const chains = useSupportedChains();
   return useMemo(() => {
     const record: Record<string, StoredChain | undefined> = {};
+    // biome-ignore lint/complexity/noForEach: FIXME
     chains.forEach((network) => {
       record[network.name] = network;
     });
@@ -59,6 +61,7 @@ export function useSupportedChainsSlugRecord() {
   const chains = useSupportedChains();
   return useMemo(() => {
     const record: Record<string, Chain> = {};
+    // biome-ignore lint/complexity/noForEach: FIXME
     chains.forEach((network) => {
       record[network.slug] = network;
     });

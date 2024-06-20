@@ -1,17 +1,17 @@
-import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   Heading as ChakraHeading,
-  HeadingProps as ChakraHeadingProps,
+  type HeadingProps as ChakraHeadingProps,
 } from "@chakra-ui/react";
 import {
-  HeadingBase,
-  HeadingSizes,
-  TypographySize,
+  type HeadingBase,
+  type HeadingSizes,
+  type TypographySize,
   fontWeights,
   letterSpacings,
   lineHeights,
 } from "theme/typography";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { convertFontSizeToCSSVar } from "./utils/typography";
 
 export interface HeadingProps extends Omit<ChakraHeadingProps, "size"> {
   size?: HeadingSizes;

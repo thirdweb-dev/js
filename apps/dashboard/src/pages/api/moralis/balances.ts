@@ -1,6 +1,6 @@
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import type { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { constants, utils } from "ethers";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { createThirdwebClient, defineChain } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "../../../constants/rpc";
@@ -72,6 +72,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return [];
     }
     const json = await resp.json();
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return json.map((balance: any) => ({
       ...balance,
       display_balance: utils

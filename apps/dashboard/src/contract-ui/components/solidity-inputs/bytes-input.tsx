@@ -1,6 +1,6 @@
-import { SolidityInputWithTypeProps } from ".";
-import { validateBytes } from "./helpers";
 import { Input } from "@chakra-ui/react";
+import type { SolidityInputWithTypeProps } from ".";
+import { validateBytes } from "./helpers";
 
 export const SolidityBytesInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,

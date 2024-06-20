@@ -6,6 +6,7 @@ import { useInvalidateContractQuery } from "thirdweb/react";
 export function useTxNotifications(
   successMessage: string,
   errorMessage: string,
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   contract?: any,
 ) {
   const toast = useToast();
@@ -28,8 +29,7 @@ export function useTxNotifications(
         contractAddress: contract.getAddress(),
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [successMessage]);
+  }, [successMessage, contract, invalidateContractQuery, toast]);
 
   const _onError = useCallback(
     (error: unknown) => {

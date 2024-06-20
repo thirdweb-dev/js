@@ -11,7 +11,9 @@ import {
 
 interface ParamProps {
   paramKey: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   extraMetadataParam: any;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   deployParam: any;
 }
 

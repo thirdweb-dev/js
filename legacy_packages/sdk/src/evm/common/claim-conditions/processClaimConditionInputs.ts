@@ -144,9 +144,8 @@ export async function processClaimConditionInputs(
     storage,
     snapshotFormatVersion,
   );
-  const parsedInputs = await ClaimConditionInputArray.parseAsync(
-    inputsWithSnapshots,
-  );
+  const parsedInputs =
+    await ClaimConditionInputArray.parseAsync(inputsWithSnapshots);
   // Convert processed inputs to the format the contract expects, and sort by timestamp
   const sortedConditions: AbstractClaimConditionContractStruct[] = (
     await Promise.all(

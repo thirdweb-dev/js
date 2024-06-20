@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { Card, Text } from "tw-components";
 import { NavCard } from "./NavCard";
 import { ProductNavCard } from "./ProductNavCard";
-import { SectionItemProps, SectionProps } from "./types";
+import type { SectionItemProps, SectionProps } from "./types";
 
 interface NestedHoverMenuProps {
   title: string;
@@ -87,7 +87,7 @@ export const NestedHoverMenu: React.FC<NestedHoverMenuProps> = ({
         window.removeEventListener("resize", updateOffset);
       };
     }
-  }, [isOpen, triggerRef, setOffset]);
+  }, [isOpen]);
 
   return (
     <Box onMouseLeave={handleBoxLeave}>

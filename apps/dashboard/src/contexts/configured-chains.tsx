@@ -1,4 +1,4 @@
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { type Chain, defaultChains } from "@thirdweb-dev/chains";
 import { isProd } from "constants/rpc";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { createContext, useCallback, useEffect, useState } from "react";
@@ -146,8 +146,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
     }
   }, [recentlyUsedChainIds]);
 
-  const { allChains, chainIdToIndexRecord, chainIdToChainRecord } =
-    useAllChainsData();
+  const { allChains, chainIdToIndexRecord } = useAllChainsData();
 
   // get recently used chains from stroage
   // FIXME: probably want to move this to backend (similar to favorites)
@@ -172,12 +171,13 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
     } catch (e) {
       localStorage.removeItem(RECENTLY_USED_CHAIN_IDS_KEY);
     }
-  }, [chainIdToChainRecord, isSupportedChainsReady]);
+  }, [isSupportedChainsReady]);
 
   const applyOverrides = useCallback(
     (target: StoredChain[], overrides: StoredChain[]) => {
       const result = [...target];
 
+      // biome-ignore lint/complexity/noForEach: FIXME
       overrides.forEach((modifiedChain) => {
         // if this chain is already in the supported chains, update it
         if (modifiedChain.chainId in chainIdToIndexRecord) {
@@ -235,14 +235,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
     setSupportedChains(newSupportedChains);
     setModifiedChains(_modifiedChains);
     setIsSupportedChainsReady(true);
-  }, [
-    allChains,
-    chainIdToIndexRecord,
-    isSupportedChainsReady,
-    applyModificationsToSupportedChains,
-    applyOverrides,
-    supportedChains,
-  ]);
+  }, [allChains, isSupportedChainsReady, applyOverrides]);
 
   const modifyChain = useCallback(
     (chain: StoredChain) => {
@@ -284,7 +277,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
         return newModifiedChains;
       });
     },
-    [applyModificationsToSupportedChains, setRecentlyUsedChainIds],
+    [applyModificationsToSupportedChains],
   );
 
   return (

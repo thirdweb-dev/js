@@ -18,11 +18,11 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import WhiteLogo from "../../../public/assets/landingpage/white-logo.png";
-import HeroImage from "../../../public/assets/learn/hero.png";
 import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
+import WhiteLogo from "../../../public/assets/landingpage/white-logo.png";
+import HeroImage from "../../../public/assets/learn/hero.png";
 
 const TRACKING_CATEGORY = "learn";
 
@@ -73,7 +73,7 @@ const Learn: ThirdwebNextPage = () => {
             buttonLink="https://forms.gle/7WfLNoFJ7dp67HeKA"
             gradient="linear-gradient(145.96deg, rgb(142 14 255) 5.07%, #16bdf0 100%)"
             image={HeroImage}
-          ></Hero>
+          />
           <ProductSection py={{ base: 12, md: 24 }}>
             <Heading size="title.2xl" as="h2" textAlign="center">
               Program Benefits

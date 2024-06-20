@@ -28,7 +28,8 @@ export default async function handler(
     .select({
       filterByFormula: `{Email} = "${email}"`,
     })
-    .firstPage(function (err: any, records: any) {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    .firstPage((err: any, records: any) => {
       if (err) {
         console.error(err);
         return;
@@ -48,7 +49,8 @@ export default async function handler(
               },
             },
           ],
-          function (_err: any) {
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
+          (_err: any) => {
             if (_err) {
               console.error(_err);
               res.status(500).json({ message: "Error registering email" });

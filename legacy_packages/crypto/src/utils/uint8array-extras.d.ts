@@ -1,15 +1,15 @@
 export type TypedArray =
-	| Int8Array
-	| Uint8Array
-	| Uint8ClampedArray
-	| Int16Array
-	| Uint16Array
-	| Int32Array
-	| Uint32Array
-	| Float32Array
-	| Float64Array
-	| BigInt64Array
-	| BigUint64Array;
+  | Int8Array
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int16Array
+  | Uint16Array
+  | Int32Array
+  | Uint32Array
+  | Float32Array
+  | Float64Array
+  | BigInt64Array
+  | BigUint64Array;
 
 /**
 Check if the given value is an instance of `Uint8Array`.
@@ -55,7 +55,9 @@ This can be useful for converting a `Buffer` to a pure `Uint8Array`. `Buffer` is
 
 Tip: If you want a copy, just call `.slice()` on the return value.
 */
-export function toUint8Array(value: TypedArray | ArrayBuffer | DataView): Uint8Array;
+export function toUint8Array(
+  value: TypedArray | ArrayBuffer | DataView,
+): Uint8Array;
 
 /**
 Concatenate the given arrays into a new array.
@@ -77,7 +79,10 @@ console.log(concatUint8Arrays([a, b]));
 //=> Uint8Array [1, 2, 3, 4, 5, 6]
 ```
 */
-export function concatUint8Arrays(arrays: Uint8Array[], totalLength?: number): Uint8Array;
+export function concatUint8Arrays(
+  arrays: Uint8Array[],
+  totalLength?: number,
+): Uint8Array;
 
 /**
 Check if two arrays are identical by verifying that they contain the same bytes in the same sequence.
@@ -169,7 +174,10 @@ console.log(uint8ArrayToBase64(byteArray));
 //=> 'SGVsbG8='
 ```
 */
-export function uint8ArrayToBase64(array: Uint8Array, options?: {urlSafe: boolean}): string;
+export function uint8ArrayToBase64(
+  array: Uint8Array,
+  options?: { urlSafe: boolean },
+): string;
 
 /**
 Convert a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a `Uint8Array`.
@@ -201,7 +209,10 @@ console.log(stringToBase64('Hello'));
 //=> 'SGVsbG8='
 ```
 */
-export function stringToBase64(string: string, options?: {urlSafe: boolean}): string;
+export function stringToBase64(
+  string: string,
+  options?: { urlSafe: boolean },
+): string;
 
 /**
 Decode a Base64-encoded or [Base64URL](https://base64.guru/standards/base64url)-encoded string to a string.

@@ -138,13 +138,13 @@ export type PaperCreateCheckoutLinkIntentParams<
         contractArgs: { tokenId: string };
       }
     : TContract extends SignatureDrop
-    ? {
-        contractArgs: SignedPayload721WithQuantitySignature;
-      }
-    : TContract extends PrebuiltNFTDrop
-    ? // eslint-disable-next-line @typescript-eslint/ban-types
-      {}
-    : never);
+      ? {
+          contractArgs: SignedPayload721WithQuantitySignature;
+        }
+      : TContract extends PrebuiltNFTDrop
+        ? // eslint-disable-next-line @typescript-eslint/ban-types
+          {}
+        : never);
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
+import { type Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
 import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
 import { hostnameEndsWith } from "../utils/url";
 

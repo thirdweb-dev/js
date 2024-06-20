@@ -1,4 +1,3 @@
-import { Aurora } from "../Aurora";
 import {
   Box,
   Flex,
@@ -9,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { Heading, Text, TrackedLink } from "tw-components";
+import { Aurora } from "../Aurora";
 
 interface SolutionCardProps {
   title: string;
@@ -138,8 +138,8 @@ export const SolutionsSection: React.FC = () => {
         Solutions for every web3 app
       </Heading>
       <SimpleGrid columns={{ lg: 3, base: 1 }} gap={6} margin="0 auto">
-        {solutions.map((feature, idx) => (
-          <SolutionCard key={feature.title + idx} {...feature} />
+        {solutions.map((feature) => (
+          <SolutionCard key={feature.title} {...feature} />
         ))}
       </SimpleGrid>
     </HomepageSection>

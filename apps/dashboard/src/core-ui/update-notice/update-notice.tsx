@@ -8,7 +8,7 @@ import { SiReact } from "@react-icons/all-files/si/SiReact";
 import type { IconType } from "react-icons";
 import { SiUnity } from "react-icons/si";
 import { Badge, Card, Heading, Text, TrackedLink } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 type SDKTypes = "react" | "typescript" | "unity";
 

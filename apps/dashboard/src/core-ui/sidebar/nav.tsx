@@ -1,6 +1,3 @@
-import { NavLink } from "./nav-link";
-import { SIDEBAR_WIDTH, SideBarTunnel } from "./tunnel";
-import { Route } from "./types";
 import {
   Box,
   Divider,
@@ -12,6 +9,9 @@ import {
 import { useMemo } from "react";
 import { FiMenu } from "react-icons/fi";
 import { Text } from "tw-components";
+import { NavLink } from "./nav-link";
+import { SIDEBAR_WIDTH, SideBarTunnel } from "./tunnel";
+import type { Route } from "./types";
 
 type SidebarNavProps = {
   title?: string;

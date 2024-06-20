@@ -1,23 +1,23 @@
-import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   FormErrorMessage as ChakraFormErrorMessage,
-  FormErrorMessageProps as ChakraFormErrorMessageProps,
+  type FormErrorMessageProps as ChakraFormErrorMessageProps,
   FormHelperText as ChakraFormHelperText,
-  FormLabelProps as ChakraFormLabelprops,
-  TextProps as ChakraHelperTextProps,
+  type FormLabelProps as ChakraFormLabelprops,
+  type TextProps as ChakraHelperTextProps,
   FormLabel as FormLabelText,
 } from "@chakra-ui/react";
 import {
-  BodyBase,
-  BodySizes,
-  LabelBase,
-  LabelSizes,
-  TypographySize,
+  type BodyBase,
+  type BodySizes,
+  type LabelBase,
+  type LabelSizes,
+  type TypographySize,
   fontWeights,
   letterSpacings,
   lineHeights,
 } from "theme/typography";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { convertFontSizeToCSSVar } from "./utils/typography";
 
 interface FormLabelProps extends Omit<ChakraFormLabelprops, "size"> {
   size?: LabelSizes;

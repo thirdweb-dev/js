@@ -9,7 +9,7 @@ import { LandingSectionHeading } from "components/landing-pages/section-heading"
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Card } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "deploy-landing";
 

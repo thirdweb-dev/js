@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { isBrowser } from "utils/isBrowser";
 
 export function useLocalStorage<TType>(
-  key = "",
+  key: string,
   initialValue: TType,
-  serverSideFallback: TType = initialValue,
+  serverSideFallback: TType = initialValue
 ) {
   const [value, _setValue] = useState<TType>(serverSideFallback);
 

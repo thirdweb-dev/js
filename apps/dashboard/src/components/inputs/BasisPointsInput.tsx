@@ -1,7 +1,7 @@
 import {
   Input,
   InputGroup,
-  InputProps,
+  type InputProps,
   InputRightAddon,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
 }) => {
   const initValue = value / 100;
   const [stringValue, setStringValue] = useState(
-    isNaN(initValue) ? "0.00" : initValue.toFixed(2),
+    Number.isNaN(initValue) ? "0.00" : initValue.toFixed(2),
   );
 
   // This useEffect is necessary so the BasisPoints are
@@ -38,12 +38,10 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
     const validValue = stringValue.match(
       /^100$|^100.00$|^\d{0,2}(\.\d{1,2})? *%?$/g,
     );
-    if (validValue && validValue.length) {
-      onChange(Math.floor(parseFloat(validValue[0] || "0") * 100));
+    if (validValue?.length) {
+      onChange(Math.floor(Number.parseFloat(validValue[0] || "0") * 100));
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stringValue]);
+  }, [stringValue, onChange]);
 
   return (
     <InputGroup {...restInputProps}>
@@ -55,7 +53,7 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
           const validValue = val.match(
             /^100$|^100.00$|^\d{0,2}(\.\d{1,2})? *%?$/g,
           );
-          if (validValue && validValue.length) {
+          if (validValue?.length) {
             setStringValue(validValue[0]);
           } else {
             setStringValue("0.00");
@@ -63,7 +61,7 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
         }}
         maxLength={5}
       />
-      <InputRightAddon children="%" />
+      <InputRightAddon>%</InputRightAddon>
     </InputGroup>
   );
 };

@@ -1,15 +1,15 @@
-import { TokenBurnForm } from "./burn-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
-  TokenContract,
+  type TokenContract,
   useAddress,
-  useContract,
+  type useContract,
   useTokenBalance,
 } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
 import { FaBurn } from "react-icons/fa";
 import { Button, Drawer } from "tw-components";
+import { TokenBurnForm } from "./burn-form";
 
 interface TokenBurnButtonProps {
   contractQuery: ReturnType<typeof useContract>;

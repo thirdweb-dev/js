@@ -3,7 +3,7 @@ import { useAddress, useAirdropNFT } from "@thirdweb-dev/react";
 import type { Erc1155 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
-  AirdropAddressInput,
+  type AirdropAddressInput,
   AirdropUpload,
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -93,7 +93,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
               isOpen={isOpen}
               onClose={onClose}
               setAirdrop={(value) =>
-                setValue(`addresses`, value, { shouldDirty: true })
+                setValue("addresses", value, { shouldDirty: true })
               }
             />
             <Flex direction={{ base: "column", md: "row" }} gap={4}>

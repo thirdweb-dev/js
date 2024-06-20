@@ -1,4 +1,6 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react/hooks/useActiveChainId";
+import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   PaperChainToChainId,
   usePaymentsEnabledContracts,
@@ -13,14 +15,12 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useLayoutEffect, useMemo } from "react";
+import { Card, Heading, Link, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { NoPaymentsEnabled } from "./components/no-payments-enabled";
+import { NoWalletConnectedPayments } from "./components/no-wallet-connected-payments";
 import { PaymentsAnalytics } from "./components/payments-analytics";
 import { PaymentCheckouts } from "./components/payments-checkouts";
-import { Card, Heading, Link, Text } from "tw-components";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { NoWalletConnectedPayments } from "./components/no-wallet-connected-payments";
-import { NoPaymentsEnabled } from "./components/no-payments-enabled";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 
 interface ContractPaymentsPageProps {
   contractAddress?: string;

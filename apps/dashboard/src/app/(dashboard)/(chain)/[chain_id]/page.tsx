@@ -1,9 +1,8 @@
-/* eslint-disable react/forbid-dom-props */
 import { ChevronRight, ShieldCheckIcon } from "lucide-react";
-import Link from "next/link";
-import twPublisherImage from "./tw-publisher.png";
 import Image from "next/image";
+import Link from "next/link";
 import { InfoCard } from "./components/server/info-card";
+import twPublisherImage from "./tw-publisher.png";
 
 type ContractCardInfo = {
   name: string;
@@ -60,7 +59,7 @@ export default async function Page() {
         </p>
       </InfoCard>
 
-      <div className="h-10"></div>
+      <div className="h-10" />
 
       <div className="flex items-center justify-between">
         <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
@@ -75,7 +74,7 @@ export default async function Page() {
         </Link>
       </div>
 
-      <div className="h-3"></div>
+      <div className="h-3" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         {popularContracts.map((c) => {
