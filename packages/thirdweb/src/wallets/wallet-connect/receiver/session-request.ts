@@ -38,7 +38,7 @@ export async function fulfillRequest(options: {
 
   const account = wallet.getAccount();
   if (!account) {
-    throw new Error("[WalletConnect] No account connected to provided wallet");
+    throw new Error("No account connected to provided wallet");
   }
 
   let result: WalletConnectRequestError | Hex;
@@ -78,10 +78,26 @@ export async function fulfillRequest(options: {
         }
         break;
       }
-      case "eth_signTypedData":
-      case "eth_signTypedData_v4": {
+      case "eth_signTypedData": {
         if (handlers?.eth_signTypedData) {
           result = await handlers.eth_signTypedData({
+            account,
+            params: request.params as WalletConnectSignTypedDataRequestParams,
+          });
+        } else {
+          const { handleSignTypedDataRequest } = await import(
+            "./request-handlers/sign-typed-data.js"
+          );
+          result = await handleSignTypedDataRequest({
+            account,
+            params: request.params as WalletConnectSignTypedDataRequestParams,
+          });
+        }
+        break;
+      }
+      case "eth_signTypedData_v4": {
+        if (handlers?.eth_signTypedData_v4) {
+          result = await handlers.eth_signTypedData_v4({
             account,
             params: request.params as WalletConnectSignTypedDataRequestParams,
           });
@@ -164,7 +180,7 @@ export async function fulfillRequest(options: {
           });
         } else {
           throw new Error(
-            "[WalletConnect] wallet_addEthereumChain is not supported",
+            "Unsupported request method: wallet_addEthereumChain",
           );
         }
         break;
@@ -198,9 +214,7 @@ export async function fulfillRequest(options: {
             params: request.params,
           });
         } else {
-          throw new Error(
-            `[WalletConnect] Unsupported request method: ${request.method}`,
-          );
+          throw new Error(`Unsupported request method: ${request.method}`);
         }
       }
     }

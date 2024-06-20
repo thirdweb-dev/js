@@ -101,6 +101,19 @@ export { type WalletInfo } from "../wallets/wallet-info.js";
 
 export { createWalletAdapter } from "../adapters/wallet-adapter.js";
 
+// wallet connect
+export {
+  createWalletConnectClient,
+  createWalletConnectSession,
+  disconnectWalletConnectSession,
+  getActiveWalletConnectSessions,
+  DefaultWalletConnectRequestHandlers,
+} from "../wallets/wallet-connect/receiver/index.js";
+export type {
+  WalletConnectClient,
+  WalletConnectSession,
+} from "../wallets/wallet-connect/receiver/types.js";
+
 // WEB ONLY EXPORTS
 
 // injected
