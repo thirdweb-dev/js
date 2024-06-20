@@ -10,6 +10,7 @@ import type {
 import { COINBASE } from "../../../../../wallets/constants.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import { iconSize } from "../../../../core/design-system/index.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
@@ -18,7 +19,11 @@ import {
   WalletConnectConnection,
   WalletConnectStandaloneConnection,
 } from "../../../wallets/shared/WalletConnectConnection.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Text } from "../../components/text.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
+import { AccentFailIcon } from "../icons/AccentFailIcon.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
 
@@ -43,23 +48,67 @@ export function AnyWalletConnectUI(props: {
   const walletInfo = useWalletInfo(props.wallet.id);
   const localeId = useConnectUI().locale;
 
-  const localeQuery = useQuery({
-    queryKey: ["injectedWalletLocale", localeId, walletInfo.data?.name],
+  const localeFnQuery = useQuery({
+    queryKey: ["injectedWalletLocale", localeId],
     queryFn: async () => {
-      if (!walletInfo.data) {
-        throw new Error("Wallet info not available");
-      }
-      const w = await getInjectedWalletLocale(localeId);
-      return w(walletInfo.data.name);
+      return getInjectedWalletLocale(localeId);
     },
-    enabled: !!walletInfo.data,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });
 
-  if (!walletInfo.data || !localeQuery.data) {
+  if (walletInfo.isLoading || !localeFnQuery.data) {
     return <LoadingScreen />;
   }
+
+  const localeFn = localeFnQuery.data;
+
+  if (!walletInfo.data) {
+    const injectedProvider = getInstalledWalletProviders().find(
+      (w) => w.info.rdns === wallet.id,
+    );
+
+    // Unknown wallet id but it's injected
+    if (injectedProvider) {
+      return (
+        <InjectedConnectUI
+          wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
+          walletName={injectedProvider.info.name}
+          done={props.done}
+          locale={localeFn(injectedProvider.info.name)}
+          onBack={props.onBack}
+        />
+      );
+    }
+
+    // This will only happen if developer passes a wallet with unknown id and it's not injected
+    // Adding a fallback UI just in case
+    return (
+      <Container animate="fadein" fullHeight flex="column">
+        <Container p="lg">
+          <ModalHeader title="Not Supported" onBack={props.onBack} />
+        </Container>
+        <Container
+          flex="column"
+          expand
+          center="both"
+          p="lg"
+          style={{
+            minHeight: "300px",
+          }}
+        >
+          <AccentFailIcon size={iconSize["3xl"]} />
+          <Spacer y="lg" />
+          <Text color="primaryText" center>
+            Wallet is not supported
+          </Text>
+          <Spacer y="xxl" />
+        </Container>
+      </Container>
+    );
+  }
+
+  const locale = localeFn(walletInfo.data.name);
 
   // if wallet can connect to injected wallet + wallet is injected
   const isInstalled = getInstalledWalletProviders().find(
@@ -69,7 +118,7 @@ export function AnyWalletConnectUI(props: {
   if (screen === "get-started") {
     return (
       <GetStartedScreen
-        locale={localeQuery.data}
+        locale={locale}
         wallet={props.wallet}
         walletInfo={walletInfo.data}
         onBack={() => {
@@ -91,7 +140,7 @@ export function AnyWalletConnectUI(props: {
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
         walletInfo={walletInfo.data}
         deepLinkPrefix={walletInfo.data.deepLink.mobile}
-        locale={localeQuery.data}
+        locale={locale}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -104,9 +153,9 @@ export function AnyWalletConnectUI(props: {
     return (
       <InjectedConnectUI
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
-        walletInfo={walletInfo.data}
+        walletName={walletInfo.data.name}
         done={props.done}
-        locale={localeQuery.data}
+        locale={locale}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -120,7 +169,7 @@ export function AnyWalletConnectUI(props: {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <CoinbaseSDKWalletConnectUI
-          locale={localeQuery.data}
+          locale={locale}
           onGetStarted={() => {
             setScreen("get-started");
           }}
@@ -137,7 +186,7 @@ export function AnyWalletConnectUI(props: {
   if (walletInfo.data.mobile.native || walletInfo.data.mobile.universal) {
     return (
       <WalletConnectConnection
-        locale={localeQuery.data}
+        locale={locale}
         onGetStarted={() => {
           setScreen("get-started");
         }}
@@ -153,7 +202,7 @@ export function AnyWalletConnectUI(props: {
   if (props.wallet.id === "walletConnect") {
     return (
       <WalletConnectStandaloneConnection
-        locale={localeQuery.data}
+        locale={locale}
         onBack={props.onBack}
         done={props.done}
         wallet={props.wallet as Wallet<"walletConnect">}
@@ -178,7 +227,7 @@ export function AnyWalletConnectUI(props: {
   // if can't connect in any way - show get started screen
   return (
     <GetStartedScreen
-      locale={localeQuery.data}
+      locale={locale}
       wallet={props.wallet}
       walletInfo={walletInfo.data}
       onBack={() => {
