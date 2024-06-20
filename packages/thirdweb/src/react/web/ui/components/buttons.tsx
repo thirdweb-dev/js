@@ -95,6 +95,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           "&:hover": {
             borderColor: theme.colors.accentText,
           },
+          '&[aria-selected="true"]': {
+            borderColor: theme.colors.accentText,
+          },
         };
       }
 

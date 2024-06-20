@@ -124,6 +124,8 @@ export type PayEmbedProps = {
    * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  style?: React.CSSProperties;
 };
 
 /**
@@ -229,6 +231,7 @@ export function PayEmbed(props: PayEmbedProps) {
           borderStyle: "solid",
           position: "relative",
           overflow: "hidden",
+          ...props.style,
         }}
         borderColor="borderColor"
       >

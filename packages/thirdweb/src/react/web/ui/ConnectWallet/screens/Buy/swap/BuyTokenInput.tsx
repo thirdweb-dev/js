@@ -18,6 +18,7 @@ import { Input } from "../../../../components/formElements.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { getBuyTokenAmountFontSize } from "../utils.js";
 
 /**
  * @internal
@@ -66,6 +67,7 @@ export function BuyTokenInput(props: {
             variant="outline"
             pattern="^[0-9]*[.,]?[0-9]*$"
             inputMode="decimal"
+            tabIndex={-1}
             placeholder="0"
             type="text"
             data-placeholder={props.value === ""}
@@ -100,13 +102,9 @@ export function BuyTokenInput(props: {
             }}
             style={{
               border: "none",
-              fontSize:
-                props.value.length > 10
-                  ? "26px"
-                  : props.value.length > 6
-                    ? "34px"
-                    : "50px",
+              fontSize: getBuyTokenAmountFontSize(props.value),
               boxShadow: "none",
+              borderRadius: "0",
               padding: "0",
               paddingBlock: "2px",
               fontWeight: 600,

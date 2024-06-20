@@ -338,7 +338,7 @@ export const InAppWalletFormUI = (props: InAppWalletFormUIProps) => {
  */
 export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const locale = props.locale.emailLoginScreen;
-  const { connectModal, client } = useConnectUI();
+  const { connectModal, client, wallets } = useConnectUI();
   const isCompact = connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
@@ -357,10 +357,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {isCompact ? (
+      {isCompact && wallets.length === 1 ? (
         <>
           <ModalHeader
             onBack={onBack}
+            leftAligned={true}
             title={
               <>
                 {!connectModal.titleIcon ? null : (
@@ -377,7 +378,9 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
           />
           <Spacer y="lg" />
         </>
-      ) : null}
+      ) : (
+        <ModalHeader onBack={onBack} title={locale.title} />
+      )}
 
       <Container
         expand
