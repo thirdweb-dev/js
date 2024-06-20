@@ -9,6 +9,7 @@ export const SetConnectedWallet = () => {
   const connectStarted = useRef(false);
   const { connect } = useConnect();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: legit use case
   useEffect(() => {
     if (connectStarted.current) {
       return;
@@ -23,8 +24,6 @@ export const SetConnectedWallet = () => {
       onDisconnect: () => {},
       switchChain: () => {},
     });
-
-    console.log("connecting wallet");
 
     connect(wallet);
   }, []);

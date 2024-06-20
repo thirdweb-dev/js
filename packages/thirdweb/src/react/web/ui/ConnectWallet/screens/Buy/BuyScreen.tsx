@@ -402,21 +402,13 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                 screen.id === "buy-with-fiat"
               ) {
                 setScreen({ id: "select-payment-method" });
-              } else {
+              } else if (screen.id === "select-payment-method") {
                 setScreen({ id: "main" });
               }
             }}
           >
             {screen.id === "select-payment-method" && (
-              <PaymentMethodSelection
-                onContinue={(_method) => {
-                  if (_method === "crypto") {
-                    setScreen({ id: "buy-with-crypto" });
-                  } else {
-                    setScreen({ id: "buy-with-fiat" });
-                  }
-                }}
-              />
+              <PaymentMethodSelection setScreen={(id) => setScreen({ id })} />
             )}
 
             {screen.id === "buy-with-crypto" && account && activeChain && (
@@ -707,7 +699,7 @@ function TokenSelectedLayout(props: {
 }
 
 function PaymentMethodSelection(props: {
-  onContinue: (method: "crypto" | "creditCard") => void;
+  setScreen: (screenId: "buy-with-crypto" | "buy-with-fiat") => void;
 }) {
   return (
     <Container animate="fadein">
@@ -715,7 +707,7 @@ function PaymentMethodSelection(props: {
       <Container flex="column" gap="sm">
         <Button
           variant="outline"
-          onClick={() => props.onContinue("creditCard")}
+          onClick={() => props.setScreen("buy-with-crypto")}
           gap="sm"
           style={{
             justifyContent: "flex-start",
@@ -742,7 +734,7 @@ function PaymentMethodSelection(props: {
         {/* Crypto */}
         <Button
           variant="outline"
-          onClick={() => props.onContinue("crypto")}
+          onClick={() => props.setScreen("buy-with-fiat")}
           style={{
             justifyContent: "flex-start",
           }}

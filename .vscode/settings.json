@@ -11,5 +11,8 @@
   },
   "typescript.preferences.autoImportFileExcludePatterns": [
     "./packages/thirdweb/src/exports"
-  ]
+  ],
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }
