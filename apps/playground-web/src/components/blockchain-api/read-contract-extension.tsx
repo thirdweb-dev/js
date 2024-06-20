@@ -15,7 +15,7 @@ const azukiContract = getContract({
 export function ReadContractExtensionPreview() {
   const { data } = useReadContract(getNFT, {
     contract: azukiContract,
-    tokenId: 1n,
+    tokenId: 2n,
   });
 
   return (
@@ -23,7 +23,7 @@ export function ReadContractExtensionPreview() {
       <MediaRenderer
         client={THIRDWEB_CLIENT}
         src={data?.metadata.image}
-        className="shadow-gray-100"
+        className="shadow-gray-100 rounded-2xl"
       />
     </div>
   );
