@@ -346,7 +346,7 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
 
 const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
-const IconBox = /* @__PURE__ */ StyledDiv(() => {
+const IconBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.secondaryText,
@@ -360,7 +360,7 @@ const IconBox = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
+const TxHashLink = /* @__PURE__ */ StyledAnchor((_) => {
   const theme = useCustomTheme();
   return {
     unset: "all",

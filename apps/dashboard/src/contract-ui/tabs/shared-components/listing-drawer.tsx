@@ -109,7 +109,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             </Card>
             {data?.asset.metadata.properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
-                <Heading size="label.md">Properties</Heading>
+                <Heading size="label.md">Attributes</Heading>
                 <CodeBlock
                   code={
                     JSON.stringify(data.asset.metadata.properties, null, 2) ||

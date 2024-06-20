@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
+import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
+import { getLastAuthProvider } from "../../wallets/shared/storage.js";
 import {
   emailIcon,
   genericWalletIcon,
@@ -47,7 +48,7 @@ export function WalletImage(props: {
           activeEOAId = storedId;
         }
       }
-      let mipdImage: string | undefined;
+      let image: string | undefined;
 
       if (
         activeEOAId === "inApp" &&
@@ -58,29 +59,37 @@ export function WalletImage(props: {
         const lastAuthProvider = await getLastAuthProvider(storage);
         switch (lastAuthProvider) {
           case "google":
-            mipdImage = googleIconUri;
+            image = googleIconUri;
             break;
           case "apple":
-            mipdImage = appleIconUri;
+            image = appleIconUri;
             break;
           case "facebook":
-            mipdImage = facebookIconUri;
+            image = facebookIconUri;
             break;
           case "phone":
-            mipdImage = phoneIcon;
+            image = phoneIcon;
             break;
           case "email":
-            mipdImage = emailIcon;
+            image = emailIcon;
             break;
           case "passkey":
-            mipdImage = passkeyIcon;
+            image = passkeyIcon;
             break;
         }
       } else {
-        mipdImage = await getWalletInfo(activeEOAId, true);
+        const mipdImage = getInstalledWalletProviders().find(
+          (x) => x.info.rdns === activeEOAId,
+        )?.info.icon;
+
+        if (mipdImage) {
+          image = mipdImage;
+        } else {
+          image = await getWalletInfo(activeEOAId, true);
+        }
       }
 
-      setImage(mipdImage);
+      setImage(image);
     }
     fetchImage();
   }, [props.id, activeWallet]);
@@ -112,10 +121,21 @@ function WalletImageQuery(props: {
 }) {
   const walletImage = useWalletImage(props.id);
 
+  if (walletImage.isFetched && !walletImage.data) {
+    return (
+      <Img
+        client={props.client}
+        src={genericWalletIcon}
+        width={props.size}
+        height={props.size}
+      />
+    );
+  }
+
   return (
     <Img
       client={props.client}
-      src={walletImage.isLoading ? undefined : walletImage.data || ""}
+      src={walletImage.isLoading ? undefined : walletImage.data}
       fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}

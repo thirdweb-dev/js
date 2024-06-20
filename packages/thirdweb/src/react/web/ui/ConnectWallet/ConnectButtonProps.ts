@@ -1,6 +1,6 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -525,13 +525,11 @@ export type ConnectButtonProps = {
    * ```tsx
    * <ConnectButton
    *   connectButton={{
-   *     connectButton: {
    *       label: "Connect",
    *       className: "my-custom-class",
    *       style: {
    *         borderRadius: "10px",
    *       },
-   *     },
    *   }}
    * />;
    * ```
@@ -691,17 +689,20 @@ export type ConnectButtonProps = {
   onConnect?: (wallet: Wallet) => void;
 
   /**
-   * Called when a wallet is disconnected.
+   * Called when the user disconnects the wallet by clicking on the "Disconnect Wallet" button in the `ConnectButton`'s Details Modal.
    *
    * ```tsx
    * <ConnectButton
-   *  onDisconnect={() => {
-   *    console.log("disconnected")
+   *  onDisconnect={({ wallet, account }) => {
+   *    console.log("disconnected", wallet, account)
    *  }}
    * />
    * ```
    */
-  onDisconnect?: () => void;
+  onDisconnect?: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
 
   /**
    * Configure options for WalletConnect

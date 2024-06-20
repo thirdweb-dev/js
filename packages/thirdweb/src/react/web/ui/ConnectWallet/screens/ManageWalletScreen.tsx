@@ -1,6 +1,7 @@
 "use client";
 import { ShuffleIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
@@ -66,8 +67,9 @@ export function ManageWalletScreen(props: {
 
           {/* Private Key Export (if enabled) */}
           {activeWallet &&
-            isInAppWallet(activeWallet) &&
-            !activeWallet.getConfig()?.hidePrivateKeyExport && (
+            ((isInAppWallet(activeWallet) &&
+              !activeWallet.getConfig()?.hidePrivateKeyExport) ||
+              isEcosystemWallet(activeWallet)) && (
               <MenuButton
                 onClick={() => {
                   props.setScreen("private-key");

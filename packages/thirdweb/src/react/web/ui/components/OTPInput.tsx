@@ -68,7 +68,7 @@ const caretBlink = keyframes`
   }
   `;
 
-const FakeCaret = StyledDiv(() => {
+const FakeCaret = StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "absolute",
@@ -88,7 +88,7 @@ const FakeCaret = StyledDiv(() => {
   };
 });
 
-const OTPInputBox = /* @__PURE__ */ StyledDiv(() => {
+const OTPInputBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "relative",

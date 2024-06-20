@@ -41,7 +41,7 @@ export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
   },
 );
 
-export const DrawerContainer = /* @__PURE__ */ StyledDiv(() => {
+export const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     zIndex: 10000,
@@ -69,7 +69,7 @@ export const drawerOpenAnimation = keyframes`
   }
 `;
 
-export const DrawerOverlay = /* @__PURE__ */ StyledDiv(() => {
+export const DrawerOverlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     backgroundColor: theme.colors.modalOverlayBg,

@@ -206,7 +206,7 @@ const InstallScanScreen: React.FC<{
   );
 };
 
-const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+const ButtonLink = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

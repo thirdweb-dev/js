@@ -1,13 +1,13 @@
 "use client";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   createWalletConnectClient,
   createWalletConnectSession,
 } from "../../../../../wallets/wallet-connect/receiver/index.js";
-import type { WalletConnectClient } from "../../../../../wallets/wallet-connect/receiver/types.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { InputSelectionUI } from "../../../wallets/in-app/InputSelectionUI.js";
@@ -26,37 +26,37 @@ export function WalletConnectReceiverScreen(props: {
   client: ThirdwebClient;
   chains?: Chain[];
 }) {
-  const [walletConnectClient, setWalletConnectClient] = useState<
-    WalletConnectClient | undefined
-  >();
   const activeWallet = useActiveWallet();
   const [loading, setLoading] = useState(false);
   const [errorConnecting, setErrorConnecting] = useState<false | string>(false);
 
-  useEffect(() => {
-    if (!activeWallet || !!errorConnecting) return;
-    createWalletConnectClient({
-      wallet: activeWallet,
-      client: props.client,
-      chains: props.chains,
-      onConnect: () => {
-        props.closeModal();
-        setLoading(false);
-      },
-    })
-      .then((wcClient) => {
-        setWalletConnectClient(wcClient);
-      })
-      .catch(() => {
+  const { data: walletConnectClient } = useQuery({
+    queryKey: ["walletConnectClient"],
+    queryFn: async () => {
+      if (!activeWallet) return;
+      try {
+        const client = await createWalletConnectClient({
+          wallet: activeWallet,
+          client: props.client,
+          chains: props.chains,
+          onConnect: () => {
+            props.closeModal();
+            setLoading(false);
+          },
+          onError: (error) => {
+            setErrorConnecting(error.message);
+            setLoading(false);
+          },
+        });
+        return client;
+      } catch (e) {
         setErrorConnecting("Failed to establish WalletConnect connection");
-      });
-  }, [
-    activeWallet,
-    props.client,
-    props.closeModal,
-    errorConnecting,
-    props.chains,
-  ]);
+        return;
+      }
+    },
+    retry: false,
+    enabled: !!activeWallet,
+  });
 
   return (
     <Container
@@ -79,7 +79,7 @@ export function WalletConnectReceiverScreen(props: {
           <Container py="md">
             <WalletLogoSpinner
               client={props.client}
-              error={false}
+              error={!!errorConnecting}
               id={"walletConnect"}
               hideSpinner={!loading}
             />
@@ -153,7 +153,7 @@ export function WalletConnectReceiverScreen(props: {
         <Spacer y="lg" />
         <Line />
         <Container flex="row" center="x" p="lg">
-          <a href="https://google.com">
+          <a href="https://blog.thirdweb.com/p/a62c0ef4-1d8f-424d-95b9-a006e5239849/">
             <Button variant="link" onClick={() => {}}>
               Where do I find the URI?
             </Button>

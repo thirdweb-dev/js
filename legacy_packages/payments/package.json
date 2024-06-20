@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/payments",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/thirdweb-dev-payments.cjs.js",
   "module": "dist/thirdweb-dev-payments.esm.js",
   "types": "dist/thirdweb-dev-payments.cjs.d.ts",
@@ -41,9 +41,9 @@
     "ethers": "^5.7.2"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "typescript": "5.4.4"
   },

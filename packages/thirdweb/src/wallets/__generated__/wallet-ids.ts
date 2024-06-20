@@ -139,7 +139,7 @@ export type WCSupportedWalletIds =
   | "com.holdstation"
   | "com.saakuru.app"
   | "com.3swallet"
-  | "io.simplehold"
+  | "com.payperless"
   | "digital.minerva"
   | "finance.voltage"
   | "com.lif3"
@@ -165,7 +165,6 @@ export type WCSupportedWalletIds =
   | "org.bitizen"
   | "io.blocto"
   | "com.humbl"
-  | "com.safemoon"
   | "io.passpay"
   | "app.ultimate"
   | "me.astrox"
@@ -251,7 +250,6 @@ export type WCSupportedWalletIds =
   | "app.gamic"
   | "baby.smart"
   | "network.gridlock"
-  | "net.newmoney"
   | "app.zeal"
   | "com.ivirse"
   | "network.trustkeys"
@@ -297,7 +295,6 @@ export type WCSupportedWalletIds =
   | "network.blackfort"
   | "io.armana.portal"
   | "io.bharatbox"
-  | "com.blanqlabs.wallet"
   | "foundation.klaytn"
   | "com.greengloryglobal"
   | "com.x9wallet"
@@ -352,11 +349,14 @@ export type WCSupportedWalletIds =
   | "app.wombat"
   | "fi.dropmate"
   | "pub.dg"
-  | "xyz.bonuz"
   | "com.icewal"
   | "one.metapro.wallet"
   | "xyz.bonuz"
-  | "io.shido";
+  | "io.shido"
+  | "co.lifedefi"
+  | "fun.tobi"
+  | "app.clot"
+  | "me.komet";
 
 // 40 wallets
 export type InjectedSupportedWalletIds =

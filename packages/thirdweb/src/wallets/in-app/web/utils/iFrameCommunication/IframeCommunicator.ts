@@ -52,6 +52,7 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     // Creating the IFrame element for communication
     let iframe = document.getElementById(iframeId) as HTMLIFrameElement | null;
     const hrefLink = new URL(link);
+
     // TODO (ew) - bring back version tracking
     // const sdkVersion = process.env.THIRDWEB_EWS_SDK_VERSION;
     // if (!sdkVersion) {
@@ -60,24 +61,25 @@ export class IframeCommunicator<T extends { [key: string]: any }> {
     // hrefLink.searchParams.set("sdkVersion", sdkVersion);
     if (!iframe || iframe.src !== hrefLink.href) {
       // ! Do not update the hrefLink here or it'll cause multiple re-renders
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        const mergedIframeStyles = {
-          ...iframeBaseStyle,
-        };
-        Object.assign(iframe.style, mergedIframeStyles);
-        iframe.setAttribute("id", iframeId);
-        iframe.setAttribute("fetchpriority", "high");
-        container.appendChild(iframe);
-      }
+
+      iframe = document.createElement("iframe");
+      const mergedIframeStyles = {
+        ...iframeBaseStyle,
+      };
+      Object.assign(iframe.style, mergedIframeStyles);
+      iframe.setAttribute("id", iframeId);
+      iframe.setAttribute("fetchpriority", "high");
+      container.appendChild(iframe);
+
       iframe.src = hrefLink.href;
+
       // iframe.setAttribute("data-version", sdkVersion);
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
       const onIframeLoaded = (event: MessageEvent<any>) => {
         if (event.data.eventType === "ewsIframeLoaded") {
           window.removeEventListener("message", onIframeLoaded);
           if (!iframe) {
-            console.warn("thirdweb Iframe not found");
+            console.warn("thirdweb iFrame not found");
             return;
           }
           this.onIframeLoadHandler(iframe, onIframeInitialize)();

@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
 import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { wait } from "../../../../core/utils/wait.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
@@ -12,10 +11,10 @@ import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
  * @internal
  */
 export const InjectedConnectUI = (props: {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
   locale: InjectedWalletLocale;
   wallet: Wallet<InjectedSupportedWalletIds>;
-  walletInfo: WalletInfo;
+  walletName: string;
   onBack?: () => void;
   done: () => void;
 }) => {
@@ -60,7 +59,7 @@ export const InjectedConnectUI = (props: {
         failed: locale.connectionScreen.failed,
       }}
       onBack={props.onBack}
-      walletName={props.walletInfo.name}
+      walletName={props.walletName}
       onGetStarted={props.onGetStarted}
       walletId={props.wallet.id}
       onRetry={() => {

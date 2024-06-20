@@ -559,7 +559,7 @@ const WalletList = /* @__PURE__ */ StyledUl({
   paddingBottom: spacing.lg,
 });
 
-const WalletButton = /* @__PURE__ */ StyledButton(() => {
+const WalletButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

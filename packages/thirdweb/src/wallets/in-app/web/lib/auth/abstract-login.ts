@@ -5,7 +5,7 @@ import type {
   AuthProvider,
   SendEmailOtpReturnType,
 } from "../../../core/authentication/type.js";
-import type { ClientIdWithQuerierType } from "../../types.js";
+import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type LoginQuerierTypes = {
@@ -52,9 +52,10 @@ export abstract class AbstractLogin<
   ) => Promise<AuthLoginReturnType>;
   protected client: ThirdwebClient;
   protected baseUrl: string;
+  protected ecosystem?: Ecosystem;
+
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link InAppWalletSDK.auth} instead.
    * @internal
    */
   constructor({
@@ -63,18 +64,21 @@ export abstract class AbstractLogin<
     preLogin,
     postLogin,
     client,
+    ecosystem,
   }: ClientIdWithQuerierType & {
     baseUrl: string;
     preLogin: () => Promise<void>;
     postLogin: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
+    ecosystem?: Ecosystem;
   }) {
     this.baseUrl = baseUrl;
     this.LoginQuerier = querier;
     this.preLogin = preLogin;
     this.postLogin = postLogin;
     this.client = client;
+    this.ecosystem = ecosystem;
   }
 
   abstract loginWithCustomJwt(args: {

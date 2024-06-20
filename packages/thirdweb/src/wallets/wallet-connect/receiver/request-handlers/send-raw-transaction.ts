@@ -18,7 +18,7 @@ export async function handleSendRawTransactionRequest(options: {
 
   if (!account.sendRawTransaction) {
     throw new Error(
-      "[WalletConnect] The current account does not support sending raw transactions",
+      "The current account does not support sending raw transactions",
     );
   }
 

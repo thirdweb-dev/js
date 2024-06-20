@@ -1,5 +1,26 @@
 # @thirdweb-dev/sdk
 
+## 4.0.101
+
+### Patch Changes
+
+- Updated dependencies [[`de35430`](https://github.com/thirdweb-dev/js/commit/de354305eed5e87717710f798236d176843b9429)]:
+  - thirdweb@5.30.1
+
+## 4.0.100
+
+### Patch Changes
+
+- [#3414](https://github.com/thirdweb-dev/js/pull/3414) [`5ca9094`](https://github.com/thirdweb-dev/js/commit/5ca9094e260e9758f2e8964617e172ae542306fc) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- Updated dependencies [[`48569fb`](https://github.com/thirdweb-dev/js/commit/48569fb15ed0347cec57f8efdc4273face8780e0), [`4484fd0`](https://github.com/thirdweb-dev/js/commit/4484fd02bb3d32c058641c5e175ba25e80202af4), [`29a643d`](https://github.com/thirdweb-dev/js/commit/29a643df2cc318dacae8a3623b4700f01b002d34), [`ff75450`](https://github.com/thirdweb-dev/js/commit/ff75450c11d645ed55dfd7c95c018b6385706933), [`5ca9094`](https://github.com/thirdweb-dev/js/commit/5ca9094e260e9758f2e8964617e172ae542306fc), [`6818c11`](https://github.com/thirdweb-dev/js/commit/6818c1194b1f9149f09408d6324072041328bcff), [`4cfb492`](https://github.com/thirdweb-dev/js/commit/4cfb492bfc8dd8c229ad9652da7371a1ea3b4476), [`ac5bb56`](https://github.com/thirdweb-dev/js/commit/ac5bb56a2dc61c8b788a660df1b7eb4e5c128230), [`d88203a`](https://github.com/thirdweb-dev/js/commit/d88203a9819103f98cf7fd12bbeb9fbc1f7456e0), [`85b12c7`](https://github.com/thirdweb-dev/js/commit/85b12c7a697de69927f73662bbb6f89e846c6826), [`e441adf`](https://github.com/thirdweb-dev/js/commit/e441adf4f300a28d693afad47451a39b1e3c1b6a), [`8d7f8db`](https://github.com/thirdweb-dev/js/commit/8d7f8db39a5fa70aa48c6284d1e41a2d9b05d93c)]:
+  - thirdweb@5.30.0
+  - @thirdweb-dev/merkletree@0.2.7
+  - @thirdweb-dev/storage@2.0.16
+  - @thirdweb-dev/chains@0.1.121
+  - @thirdweb-dev/crypto@0.2.7
+  - @thirdweb-dev/contracts-js@1.3.23
+
 ## 4.0.99
 
 ### Patch Changes
