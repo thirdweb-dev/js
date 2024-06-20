@@ -1,11 +1,6 @@
 "use client";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
-  isValidTheme,
-  parseTheme,
-  useCustomTheme,
-} from "../../../core/design-system/CustomThemeProvider.js";
-import {
-  type Theme,
   fontSize,
   radius,
   spacing,
@@ -14,15 +9,13 @@ import { StyledButton } from "../design-system/elements.js";
 
 export type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
-  theme?: Theme;
   unstyled?: boolean;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
 };
 
 export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
-  const _theme = useCustomTheme();
-  const theme = isValidTheme(props.theme) ? parseTheme(props.theme) : _theme;
+  const theme = useCustomTheme();
   if (props.unstyled) {
     return {};
   }

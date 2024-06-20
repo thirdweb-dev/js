@@ -383,7 +383,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       return (
         <>
           {autoConnectComp}
-          <CustomThemeProvider theme={props.theme || "dark"}>
+          <CustomThemeProvider theme={props.theme}>
             <EmbedContainer modalSize={modalSize}>
               <LoadingScreen />
             </EmbedContainer>

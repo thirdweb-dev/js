@@ -23,7 +23,7 @@
     "generate-snippets": "node ./scripts/generate-snippets/index.mjs",
     "build:release": "pnpm run build --force",
     "dev:playground": "turbo run dev --no-cache --parallel --continue --filter=!./apps/dashboard",
-    "dev:dashboard": "turbo run dev --filter=./apps/dashboard",
+    "dev:dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb",
     "build:dashboard": "turbo run build --filter=./apps/dashboard",
     "fix:repo": "manypkg fix",
     "lint": "turbo run lint --filter=./packages/*",
