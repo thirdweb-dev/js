@@ -2,7 +2,7 @@ import { fontSize } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { StyledButton } from "../../../design-system/elements";
 
-export const LinkButton = /* @__PURE__ */ StyledButton(() => {
+export const LinkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

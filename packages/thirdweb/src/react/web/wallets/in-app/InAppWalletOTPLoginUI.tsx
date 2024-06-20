@@ -301,7 +301,7 @@ export function InAppWalletOTPLoginUI(props: {
   return null;
 }
 
-const LinkButton = /* @__PURE__ */ StyledButton(() => {
+const LinkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

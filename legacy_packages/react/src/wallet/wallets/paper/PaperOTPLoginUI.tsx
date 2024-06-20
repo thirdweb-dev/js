@@ -270,7 +270,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   );
 };
 
-const LinkButton = /* @__PURE__ */ StyledButton(() => {
+const LinkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

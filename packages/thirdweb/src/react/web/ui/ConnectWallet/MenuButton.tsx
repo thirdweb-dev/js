@@ -6,7 +6,7 @@ import {
 } from "../../../core/design-system/index.js";
 import { StyledButton } from "../design-system/elements.js";
 
-export const MenuButton = /* @__PURE__ */ StyledButton(() => {
+export const MenuButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

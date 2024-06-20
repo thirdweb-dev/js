@@ -752,7 +752,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
 });
 
 const TabButton = /* @__PURE__ */ (() =>
-  styled.button(() => {
+  styled.button((_) => {
     const theme = useCustomTheme();
     return {
       all: "unset",
@@ -793,7 +793,7 @@ const NetworkListUl = /* @__PURE__ */ StyledUl({
   boxSizing: "border-box",
 });
 
-const NetworkButton = /* @__PURE__ */ StyledButton(() => {
+const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -820,7 +820,7 @@ const NetworkButton = /* @__PURE__ */ StyledButton(() => {
 });
 
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
-  () => {
+  (_) => {
     const theme = useCustomTheme();
     return {
       color: theme.colors.secondaryText,

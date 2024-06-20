@@ -9,7 +9,7 @@ type ButtonProps = {
   gap?: keyof typeof spacing;
 };
 
-export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
+export const Button = /* @__PURE__ */ StyledButton<ButtonProps>((props) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -105,7 +105,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
   };
 });
 
-export const IconButton = /* @__PURE__ */ StyledButton(() => {
+export const IconButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -125,7 +125,7 @@ export const IconButton = /* @__PURE__ */ StyledButton(() => {
   };
 });
 
-export const InputButton = /* @__PURE__ */ StyledButton(() => {
+export const InputButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
