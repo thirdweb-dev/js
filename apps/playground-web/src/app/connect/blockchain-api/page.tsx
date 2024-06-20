@@ -12,8 +12,9 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   metadataBase,
-  title: "lorem ipsum",
-  description: "lorem ipsum",
+  title: "Blockchain API | thirdweb Connect",
+  description:
+    "Interact with EVM blockchains using thirdweb SDK. Create seamless NFT minting experience. Airdrop tokens to millions of users",
 };
 
 export default function Page() {
@@ -27,17 +28,15 @@ export default function Page() {
                 Blockchain API
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem
-                libero illo odit id impedit veniam quae hic, blanditiis magni
-                architecto nobis fugiat eligendi provident? Dolorum optio nobis
-                numquam ex impedit!
+                Interact with thousands of EVM blockchains. Create seamless NFT
+                minting experience. Airdrop tokens to millions of users
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
               <Button asChild size="lg">
                 <Link
                   target="_blank"
-                  href="https://portal.thirdweb.com/connect/in-app-wallet/overview"
+                  href="https://portal.thirdweb.com/typescript/v5"
                 >
                   View docs
                 </Link>
@@ -286,9 +285,8 @@ function WatchEvent() {
           Listen to blockchain events
         </h2>
         <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
-          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
-          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
+          From Telegram bots that follow trade events to sophisticate webhook
+          systems. The applications are endless with our SDKs.
         </p>
       </div>
 

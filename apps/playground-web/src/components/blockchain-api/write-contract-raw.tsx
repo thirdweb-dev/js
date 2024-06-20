@@ -72,14 +72,14 @@ export function WriteContractRawPreview() {
       )}
 
       {error ? (
-        <div className="text-red-500 text-sm mt-4 text-center">{error}</div>
+        <div className="text-red-600 mt-4 text-center">{error}</div>
       ) : (
         <>
           {txHash && (
             <a
               target="_blank"
               href={`${sepolia.blockExplorers![0].url}/tx/${txHash}`}
-              className="text-center text-green-600 mt-3"
+              className="text-center text-green-400 mt-3"
             >
               Tx sent:{" "}
               <span className="underline">{shortenAddress(txHash, 6)}</span>
