@@ -1,4 +1,5 @@
-import { WatchEventPreview } from "@/components/blockchain-api/WatchEventPreview";
+import { ReadContractRawPreview } from "@/components/blockchain-api/read-contract-raw";
+import { WatchEventPreview } from "@/components/blockchain-api/watch-event-preview";
 import { CodeExample } from "@/components/code/code-example";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
@@ -61,9 +62,58 @@ export default function Page() {
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
+        <ReadContractRaw />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
         <WatchEvent />
       </section>
     </main>
+  );
+}
+
+function ReadContractRaw() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Query blockchain data
+        </h2>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
+          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
+          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<ReadContractRawPreview />}
+        code={`import { getContract } from "thirdweb";
+import { ethereum } from "thirdweb/chains";
+import { MediaRenderer, useReadContract } from "thirdweb/react";
+
+const OnChainCryptoPunks = getContract({
+  address: "0x16F5A3...03aF3B2",
+  chain: ethereum,
+  client: THIRDWEB_CLIENT,
+});
+
+function App() {
+  // Read the image of the tokenId #1
+  const { data } = useReadContract({
+    contract: OnChainCryptoPunks,
+    method: "function punkImageSvg(uint16 index) view returns (string svg)",
+    params: [1],
+  });
+
+  return (
+    <MediaRenderer client={"..."} src={data} />
+  );
+}
+`}
+        lang="tsx"
+      />
+    </>
   );
 }
 
