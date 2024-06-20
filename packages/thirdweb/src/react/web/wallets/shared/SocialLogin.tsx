@@ -10,21 +10,21 @@ import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import type { InAppWalletLocale } from "./locale/types.js";
+import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
+import type { ConnectLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { setLastAuthProvider } from "./storage.js";
-import type { InAppWalletSelectUIState } from "./types.js";
 
 /**
  * @internal
  */
-export function InAppWalletSocialLogin(props: {
+export function SocialLogin(props: {
   socialAuth: InAppWalletSocialAuth;
-  locale: InAppWalletLocale;
-  wallet: Wallet<"inApp">;
+  locale: ConnectLocale;
+  wallet: Wallet;
   done: () => void;
   goBack?: () => void;
-  state: InAppWalletSelectUIState;
+  state: ConnectWalletSelectUIState;
 }) {
   const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;

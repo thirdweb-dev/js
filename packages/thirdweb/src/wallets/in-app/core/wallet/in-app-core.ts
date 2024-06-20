@@ -4,9 +4,13 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import { createWalletEmitter } from "../../../wallet-emitter.js";
 import type { CreateWalletArgs } from "../../../wallet-types.js";
+import type { Ecosystem } from "../../web/types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 
-const connectorCache = new WeakMap<ThirdwebClient, InAppConnector>();
+const connectorCache = new WeakMap<
+  { client: ThirdwebClient; ecosystem?: Ecosystem },
+  InAppConnector
+>();
 
 /**
  * @internal
@@ -14,12 +18,14 @@ const connectorCache = new WeakMap<ThirdwebClient, InAppConnector>();
 export async function getOrCreateInAppWalletConnector(
   client: ThirdwebClient,
   connectorFactory: (client: ThirdwebClient) => Promise<InAppConnector>,
+  ecosystem?: Ecosystem,
 ) {
-  if (connectorCache.has(client)) {
-    return connectorCache.get(client) as InAppConnector;
+  const key = { client, ecosystem };
+  if (connectorCache.has(key)) {
+    return connectorCache.get(key) as InAppConnector;
   }
   const connector = await connectorFactory(client);
-  connectorCache.set(client, connector);
+  connectorCache.set(key, connector);
   return connector;
 }
 

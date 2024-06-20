@@ -645,6 +645,7 @@ function DetailsModal(props: {
         onBack={() => {
           setScreen("manage-wallet");
         }}
+        wallet={activeWallet}
         client={client}
       />
     );
@@ -849,9 +850,7 @@ function ConnectedToSmartWallet(props: {
   return null;
 }
 
-function InAppWalletUserInfo(props: {
-  client: ThirdwebClient;
-}) {
+function InAppWalletUserInfo(props: { client: ThirdwebClient }) {
   const { client } = props;
   const account = useActiveAccount();
 

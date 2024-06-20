@@ -8,7 +8,7 @@ import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { getLastAuthProvider } from "../../wallets/in-app/storage.js";
+import { getLastAuthProvider } from "../../wallets/shared/storage.js";
 import {
   emailIcon,
   genericWalletIcon,
@@ -121,10 +121,21 @@ function WalletImageQuery(props: {
 }) {
   const walletImage = useWalletImage(props.id);
 
+  if (walletImage.isFetched && !walletImage.data) {
+    return (
+      <Img
+        client={props.client}
+        src={genericWalletIcon}
+        width={props.size}
+        height={props.size}
+      />
+    );
+  }
+
   return (
     <Img
       client={props.client}
-      src={walletImage.isLoading ? undefined : walletImage.data || ""}
+      src={walletImage.isLoading ? undefined : walletImage.data}
       fallbackImage={genericWalletIcon}
       width={props.size}
       height={props.size}

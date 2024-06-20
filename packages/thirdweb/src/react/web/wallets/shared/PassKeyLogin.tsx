@@ -3,6 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../exports/wallets.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -13,7 +14,7 @@ import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
-import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { LoadingScreen } from "./LoadingScreen.js";
 import { setLastAuthProvider } from "./storage.js";
 
 // is passkey stored?
@@ -21,8 +22,8 @@ import { setLastAuthProvider } from "./storage.js";
 // else
 // - show login or signup options
 
-export function InAppWalletPassKeyLogin(props: {
-  wallet: Wallet<"inApp">;
+export function PassKeyLogin(props: {
+  wallet: Wallet;
   done: () => void;
   onBack?: () => void;
 }) {
@@ -39,7 +40,10 @@ export function InAppWalletPassKeyLogin(props: {
     }
 
     triggered.current = true;
-    hasStoredPasskey(client)
+    hasStoredPasskey(
+      client,
+      isEcosystemWallet(wallet.id) ? wallet.id : undefined,
+    )
       .then((isStored) => {
         if (isStored) {
           setScreen("login");
@@ -50,7 +54,7 @@ export function InAppWalletPassKeyLogin(props: {
       .catch(() => {
         setScreen("select");
       });
-  }, [client]);
+  }, [client, wallet.id]);
 
   return (
     <Container animate="fadein" fullHeight flex="column">
@@ -110,7 +114,7 @@ export function InAppWalletPassKeyLogin(props: {
 }
 
 function LoginScreen(props: {
-  wallet: Wallet<"inApp">;
+  wallet: Wallet;
   done: () => void;
   client: ThirdwebClient;
   onCreate: () => void;
@@ -171,7 +175,7 @@ function LoginScreen(props: {
 }
 
 function SignupScreen(props: {
-  wallet: Wallet<"inApp">;
+  wallet: Wallet;
   done: () => void;
   client: ThirdwebClient;
   chain?: Chain;

@@ -1,9 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
 import { preAuthenticate } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
@@ -15,7 +17,7 @@ import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
-import type { InAppWalletLocale } from "./locale/types.js";
+import type { ConnectLocale } from "./locale/types.js";
 import { setLastAuthProvider } from "./storage.js";
 
 type VerificationStatus =
@@ -30,10 +32,10 @@ type ScreenToShow = "base" | "enter-password-or-recovery-code";
 /**
  * @internal
  */
-export function InAppWalletOTPLoginUI(props: {
+export function OTPLoginUI(props: {
   userInfo: { email: string } | { phone: string };
-  wallet: Wallet<"inApp">;
-  locale: InAppWalletLocale;
+  wallet: Wallet;
+  locale: ConnectLocale;
   done: () => void;
   goBack?: () => void;
 }) {
@@ -44,6 +46,7 @@ export function InAppWalletOTPLoginUI(props: {
   const [otpInput, setOtpInput] = useState("");
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
+  const isEcosystem = useMemo(() => isEcosystemWallet(wallet.id), [wallet.id]);
 
   const [screen] = useState<ScreenToShow>("base");
 
@@ -55,6 +58,13 @@ export function InAppWalletOTPLoginUI(props: {
     try {
       if ("email" in userInfo) {
         const status = await preAuthenticate({
+          ecosystem: isEcosystem
+            ? {
+                id: wallet.id as EcosystemWalletId,
+                partnerId: (wallet as Wallet<EcosystemWalletId>).getConfig()
+                  ?.partnerId,
+              }
+            : undefined,
           email: userInfo.email,
           strategy: "email",
           client,
@@ -62,6 +72,13 @@ export function InAppWalletOTPLoginUI(props: {
         setAccountStatus(status);
       } else if ("phone" in userInfo) {
         const status = await preAuthenticate({
+          ecosystem: isEcosystem
+            ? {
+                id: wallet.id as EcosystemWalletId,
+                partnerId: (wallet as Wallet<EcosystemWalletId>).getConfig()
+                  ?.partnerId,
+              }
+            : undefined,
           phoneNumber: userInfo.phone,
           strategy: "phone",
           client,
@@ -75,7 +92,7 @@ export function InAppWalletOTPLoginUI(props: {
       setVerifyStatus("idle");
       setAccountStatus("error");
     }
-  }, [client, userInfo]);
+  }, [client, userInfo, wallet, isEcosystem]);
 
   async function connect(otp: string) {
     if ("email" in userInfo) {

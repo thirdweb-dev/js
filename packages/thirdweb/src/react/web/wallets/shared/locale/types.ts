@@ -1,4 +1,4 @@
-export type InAppWalletLocale = {
+export type ConnectLocale = {
   createPassword: {
     confirmation: string;
     failedToSetPassword: string;
