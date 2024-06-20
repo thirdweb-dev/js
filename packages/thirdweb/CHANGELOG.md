@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.30.1
+
+### Patch Changes
+
+- [#3422](https://github.com/thirdweb-dev/js/pull/3422) [`de35430`](https://github.com/thirdweb-dev/js/commit/de354305eed5e87717710f798236d176843b9429) Thanks [@MananTank](https://github.com/MananTank)! - - Fix ConnectButton not able to connect Unknown injected wallet provider + Fix Wallet Icon + Fix AutoConnect
+
 ## 5.30.0
 
 ### Minor Changes
