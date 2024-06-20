@@ -29,7 +29,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "format": "biome format --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "biome check src/",
     "fix": "biome check src/ --fix",
     "clean": "rm -rf dist/",

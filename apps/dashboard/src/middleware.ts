@@ -1,5 +1,5 @@
 // middleware.ts
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 // ignore assets, api - only intercept page routes
 export const config = {

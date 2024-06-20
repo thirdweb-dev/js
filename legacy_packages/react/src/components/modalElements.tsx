@@ -5,22 +5,22 @@ import { StyledAnchor, StyledH2, StyledP } from "../design-system/elements";
 import { IconButton } from "./buttons";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = /* @__PURE__ */ StyledH2<{ centerOnMobile?: boolean }>(
-  (props) => {
-    const theme = useCustomTheme();
-    return {
-      margin: 0,
-      fontWeight: 600,
-      fontSize: fontSize.lg,
-      color: theme.colors.primaryText,
-      lineHeight: 1.3,
-      textAlign: "left",
-      [media.mobile]: {
-        textAlign: props.centerOnMobile ? "center" : "left",
-      },
-    };
-  },
-);
+export const ModalTitle = /* @__PURE__ */ StyledH2<{
+  centerOnMobile?: boolean;
+}>((props) => {
+  const theme = useCustomTheme();
+  return {
+    margin: 0,
+    fontWeight: 600,
+    fontSize: fontSize.lg,
+    color: theme.colors.primaryText,
+    lineHeight: 1.3,
+    textAlign: "left",
+    [media.mobile]: {
+      textAlign: props.centerOnMobile ? "center" : "left",
+    },
+  };
+});
 
 type ModalDescriptionProps = {
   centerOnMobile?: boolean;

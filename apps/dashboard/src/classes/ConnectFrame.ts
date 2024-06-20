@@ -18,12 +18,13 @@ export type Step = z.infer<typeof validSteps>;
 
 const nftContractAddress = "0x9D96603334B1e97554b846CA916a6b72161a5323";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: FIXME: refactor to standalone functions
 export class ConnectFrame {
-  static getParsedButtonIndex = (buttonIndex: any) => {
+  static getParsedButtonIndex = (buttonIndex: unknown) => {
     return z.number().min(1).max(3).parse(buttonIndex);
   };
 
-  static getParsedStep = (step: any) => {
+  static getParsedStep = (step: unknown) => {
     return validSteps.parse(step);
   };
 
@@ -32,7 +33,8 @@ export class ConnectFrame {
 
     if (step === "1") {
       return buttonIdx === 1;
-    } else if (step === "7") {
+    }
+    if (step === "7") {
       return false;
     }
 
@@ -59,15 +61,15 @@ export class ConnectFrame {
       buttons: [
         {
           label: "← Back",
-          action: `post`,
+          action: "post",
         },
         {
           label: "NFT Minted",
-          action: `post`,
+          action: "post",
         },
         {
           label: "Start building",
-          action: `post_redirect`,
+          action: "post_redirect",
         },
       ],
       image: connectFrames["7"].imageUrl,
@@ -91,15 +93,15 @@ export class ConnectFrame {
             buttons: [
               {
                 label: "← Back",
-                action: `post`,
+                action: "post",
               },
               {
                 label: "Mint NFT",
-                action: `post`,
+                action: "post",
               },
               {
                 label: "Start building",
-                action: `post_redirect`,
+                action: "post_redirect",
               },
             ],
             image: frameImg,
@@ -111,11 +113,11 @@ export class ConnectFrame {
               buttons: [
                 {
                   label: "Features →",
-                  action: `post`,
+                  action: "post",
                 },
                 {
                   label: "Start building",
-                  action: `post_redirect`,
+                  action: "post_redirect",
                 },
               ],
               image: frameImg,
@@ -126,15 +128,15 @@ export class ConnectFrame {
               buttons: [
                 {
                   label: "← Back",
-                  action: `post`,
+                  action: "post",
                 },
                 {
                   label: "Start building",
-                  action: `post_redirect`,
+                  action: "post_redirect",
                 },
                 {
                   label: "Next →",
-                  action: `post`,
+                  action: "post",
                 },
               ],
               image: frameImg,

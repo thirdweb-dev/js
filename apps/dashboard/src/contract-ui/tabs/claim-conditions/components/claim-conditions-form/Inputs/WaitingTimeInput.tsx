@@ -1,6 +1,6 @@
+import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
-import { BigNumberInput } from "components/shared/BigNumberInput";
 
 /**
  * Allows users to edit the waiting time between claim phases.

@@ -1,12 +1,12 @@
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { Card, Heading, LinkButton, Text } from "tw-components";
-import { NftsOwned } from "./components/nfts-owned";
 import { AccountBalance } from "./components/account-balance";
 import { DepositNative } from "./components/deposit-native";
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { NftsOwned } from "./components/nfts-owned";
 
 interface AccountPageProps {
   contractAddress?: string;

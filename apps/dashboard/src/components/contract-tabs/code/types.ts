@@ -20,6 +20,7 @@ export interface SnippetSchema {
   remarks?: string | null;
   examples: CodeSnippet;
   reference: {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     [key: string]: any;
   };
   methods?: SnippetSchema[];

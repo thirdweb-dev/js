@@ -1,5 +1,5 @@
 import {
-  BackendWallet,
+  type BackendWallet,
   useEngineBackendWalletBalance,
   useEngineSendTokens,
   useEngineUpdateBackendWallet,
@@ -20,14 +20,16 @@ import {
   ModalOverlay,
   Select,
   Stack,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
+import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { shortenString, useChain } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
+import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import QRCode from "qrcode";
@@ -44,8 +46,6 @@ import {
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { prettyPrintCurrency } from "../utils";
-import { utils } from "ethers";
-import { useQuery } from "@tanstack/react-query";
 
 interface BackendWalletsTableProps {
   wallets: BackendWallet[];
@@ -337,6 +337,7 @@ const ReceiveFundsModal = ({
       return new Promise<string>((resolve, reject) => {
         QRCode.toDataURL(
           backendWallet.address,
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           (error: any, dataUrl: string) => {
             if (error) {
               reject(error);
@@ -489,7 +490,9 @@ const SendFundsModal = ({
                   max={backendWalletBalance.displayValue}
                   {...form.register("amount", { required: true })}
                 />
-                <InputRightAddon children={chain?.nativeCurrency.symbol} />
+                <InputRightAddon>
+                  {chain?.nativeCurrency.symbol}
+                </InputRightAddon>
               </InputGroup>
               <FormHelperText textAlign="right">
                 Current amount:{" "}

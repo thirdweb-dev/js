@@ -63,7 +63,7 @@ const caretBlink = keyframes`
   }
   `;
 
-const FakeCaret = /* @__PURE__ */StyledDiv((_) => {
+const FakeCaret = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "absolute",

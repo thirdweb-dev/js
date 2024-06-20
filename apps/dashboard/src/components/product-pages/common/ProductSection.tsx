@@ -1,5 +1,5 @@
-import { Box, BoxProps, Container } from "@chakra-ui/react";
-import { ComponentWithChildren } from "types/component-with-children";
+import { Box, type BoxProps, Container } from "@chakra-ui/react";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface IProductSection extends BoxProps {
   id?: string;

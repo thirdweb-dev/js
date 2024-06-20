@@ -1,6 +1,6 @@
-import { Flex, UnorderedList, ListItem, Box } from "@chakra-ui/react";
-import { LinkButton, Text, Card, Badge, Heading } from "tw-components";
-import { CreditsRecord } from "./ApplyForOpCreditsModal";
+import { Box, Flex, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Badge, Card, Heading, LinkButton, Text } from "tw-components";
+import type { CreditsRecord } from "./ApplyForOpCreditsModal";
 
 interface PlanCardProps {
   creditsRecord: CreditsRecord;

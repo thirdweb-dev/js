@@ -1,8 +1,8 @@
 import { Container, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobile-image";
-import { StaticImageData } from "next/image";
-import { ReactNode } from "react";
+import type { StaticImageData } from "next/image";
+import type { ReactNode } from "react";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 

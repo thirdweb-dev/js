@@ -16,7 +16,6 @@
     "react-native"
   ],
   "scripts": {
-    "prettier": "prettier --check './**/*.{js,ts,jsx,tsx}'",
     "build": "tsc",
     "push": "yalc push"
   },

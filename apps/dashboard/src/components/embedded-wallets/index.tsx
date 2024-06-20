@@ -1,8 +1,8 @@
-import { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
-import { TabList, Tabs, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
-import { Users } from "./Users";
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { Configure } from "./Configure";
+import { Users } from "./Users";
 
 interface EmbeddedWalletsProps {
   apiKey: ApiKey;

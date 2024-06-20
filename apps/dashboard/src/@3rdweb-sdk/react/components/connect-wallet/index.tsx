@@ -1,20 +1,19 @@
 "use client";
 
-/* eslint-disable react/forbid-dom-props */
-import { popularChains } from "../popularChains";
-import { useTheme } from "next-themes";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
-import { ComponentProps, useCallback } from "react";
-import Link from "next/link";
+import { useTheme } from "next-themes";
 import Image from "next/image";
-import { useTrack } from "../../../../hooks/analytics/useTrack";
+import Link from "next/link";
+import { type ComponentProps, useCallback } from "react";
 import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
+import { useTrack } from "../../../../hooks/analytics/useTrack";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
+import { popularChains } from "../popularChains";
 
 export interface ConnectWalletProps {
   shrinkMobile?: boolean;
@@ -94,7 +93,6 @@ export function ConnectWalletWelcomeScreen(props: {
 
   return (
     <div
-      // eslint-disable-next-line react/forbid-dom-props
       style={{
         backgroundColor: props.theme === "dark" ? "#18132f" : "#c7b5f1",
         backgroundImage: `url("/assets/connect-wallet/welcome-gradient-${props.theme}.png")`,

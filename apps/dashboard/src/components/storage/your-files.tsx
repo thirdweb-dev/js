@@ -1,14 +1,14 @@
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Center, Flex, Tooltip } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { DASHBOARD_STORAGE_URL } from "lib/sdk";
-import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
-import { formatDistance } from "date-fns/formatDistance";
-import { useCallback, useState } from "react";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { toSize } from "utils/number";
 import { TWQueryTable } from "components/shared/TWQueryTable";
+import { formatDistance } from "date-fns/formatDistance";
+import { DASHBOARD_STORAGE_URL } from "lib/sdk";
+import { useCallback, useState } from "react";
+import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
+import { toSize } from "utils/number";
 
 interface PinnedFilesResponse {
   result: PinnedFilesResult;
@@ -59,7 +59,7 @@ function usePinnedFilesQuery({
       }
       const res = await fetch(
         `${DASHBOARD_STORAGE_URL}/ipfs/pinned?limit=${pageSize}${
-          offset ? `&offset=${offset}` : ``
+          offset ? `&offset=${offset}` : ""
         }`,
         {
           headers: {

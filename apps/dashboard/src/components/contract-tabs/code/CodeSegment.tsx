@@ -1,12 +1,16 @@
-import { CodeEnvironment, CodeSnippet, SupportedEnvironment } from "./types";
 import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
 import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
 import { SiUnity } from "@react-icons/all-files/si/SiUnity";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { type Dispatch, type SetStateAction, useMemo } from "react";
 import { Button, CodeBlock } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import type {
+  CodeEnvironment,
+  CodeSnippet,
+  SupportedEnvironment,
+} from "./types";
 
 const Environments: SupportedEnvironment[] = [
   {

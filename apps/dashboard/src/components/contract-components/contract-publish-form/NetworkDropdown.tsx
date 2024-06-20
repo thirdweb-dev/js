@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
-import { SizeProp } from "chakra-react-select/dist/types/types";
+import type { SizeProp } from "chakra-react-select/dist/types/types";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
@@ -10,6 +10,7 @@ interface NetworkDropdownProps {
   isDisabled?: boolean;
   onMultiChange?: (networksEnabled: number[]) => void;
   onSingleChange?: (networksEnabled: number) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   value: any;
   size?: SizeProp;
 }
@@ -48,9 +49,8 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
       return options.filter(({ value: val }) =>
         form.watch("networksForDeployment.networksEnabled")?.includes(val),
       );
-    } else {
-      return options;
     }
+    return options;
   }, [form, options]);
 
   return (
@@ -69,6 +69,7 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
           if (selectedNetworks) {
             if (onMultiChange) {
               onMultiChange(
+                // biome-ignore lint/suspicious/noExplicitAny: FIXME
                 (selectedNetworks as any).map(
                   ({ value: val }: { value: string }) => val,
                 ),

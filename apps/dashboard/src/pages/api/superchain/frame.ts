@@ -1,19 +1,19 @@
-import { NextRequest } from "next/server";
-import { FrameRequest } from "@coinbase/onchainkit";
+import type { FrameRequest } from "@coinbase/onchainkit";
+import * as Sentry from "@sentry/nextjs";
 import { CoinbaseKit } from "classes/CoinbaseKit";
+import { SuperChainFormFrame } from "classes/SuperchainFormFrame";
+import type { NextRequest } from "next/server";
 import {
   errorResponse,
   redirectResponse,
   successHtmlResponse,
 } from "utils/api";
-import { SuperChainFormFrame } from "classes/SuperchainFormFrame";
 import {
   getApplyFrameMetaData,
   getEmailMetaData,
   getSuccessMetaData,
   getWebsiteMetaData,
 } from "utils/superchain-embed-frame";
-import * as Sentry from "@sentry/nextjs";
 
 export const config = {
   runtime: "edge",
@@ -105,7 +105,7 @@ export default async function handler(req: NextRequest) {
 
     return errorResponse("Type not valid", 400);
   } catch (err) {
-    const errMessage = `Superchain frame embedded form failed`;
+    const errMessage = "Superchain frame embedded form failed";
     Sentry.captureException(new Error(errMessage, { cause: err }));
     return errorResponse("Something went wrong!", 500);
   }

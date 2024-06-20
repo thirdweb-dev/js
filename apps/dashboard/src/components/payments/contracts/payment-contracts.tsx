@@ -1,11 +1,11 @@
+import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
+import { validPaymentsChainIds } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import { PaymentContractsTable } from "./payment-contracts-table";
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { NoWalletConnectedPayments } from "contract-ui/tabs/payments/components/no-wallet-connected-payments";
-import { validPaymentsChainIds } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useMemo } from "react";
+import { PaymentContractsTable } from "./payment-contracts-table";
 
 export const PaymentContracts = () => {
   const address = useAddress();

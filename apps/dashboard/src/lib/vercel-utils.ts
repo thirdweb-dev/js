@@ -1,5 +1,5 @@
-import { isBrowser } from "utils/isBrowser";
 import { setThirdwebDomains } from "thirdweb/utils";
+import { isBrowser } from "utils/isBrowser";
 
 function getVercelEnv() {
   const onVercel = process.env.vercel || process.env.NEXT_PUBLIC_VERCEL_ENV;

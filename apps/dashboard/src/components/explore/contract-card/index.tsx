@@ -1,4 +1,3 @@
-import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 import {
   Flex,
   Icon,
@@ -8,9 +7,9 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import {
+  type QueryClient,
   useQuery,
   useQueryClient,
-  type QueryClient,
 } from "@tanstack/react-query";
 import { Polygon } from "@thirdweb-dev/chains";
 import { ensQuery } from "components/contract-components/hooks";
@@ -19,7 +18,8 @@ import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
 import invariant from "tiny-invariant";
-import { Card, Heading, Link, Text, TrackedLink, Badge } from "tw-components";
+import { Badge, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
   publisher: string;
@@ -38,7 +38,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   tracking,
 }) => {
   const publishedContractResult = usePublishedContract(
-    `${publisher}/${contractId}/${version}`,
+    `${publisher}/${contractId}/${version}`
   );
 
   const isNewContract = useMemo(() => {
@@ -208,12 +208,12 @@ type PublishedContractId =
 async function publishedContractQueryFn(
   publisher: string,
   contractId: string,
-  version = "latest",
-  queryClient: QueryClient,
+  version: string,
+  queryClient: QueryClient
 ) {
   const polygonSdk = getThirdwebSDK(
     Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    getDashboardChainRpc(Polygon)
   );
 
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
@@ -221,13 +221,13 @@ async function publishedContractQueryFn(
   if (publisherEns.address) {
     queryClient.setQueryData(
       ensQuery(publisherEns.address).queryKey,
-      publisherEns,
+      publisherEns
     );
   }
   if (publisherEns.ensName) {
     queryClient.setQueryData(
       ensQuery(publisherEns.ensName).queryKey,
-      publisherEns,
+      publisherEns
     );
   }
   // END prefill both publisher ens variations
@@ -249,7 +249,7 @@ async function publishedContractQueryFn(
 
 export function publishedContractQuery(
   publishedContractId: PublishedContractId,
-  queryClient: QueryClient,
+  queryClient: QueryClient
 ) {
   const [publisher, contractId, version] = publishedContractId.split("/");
   return {

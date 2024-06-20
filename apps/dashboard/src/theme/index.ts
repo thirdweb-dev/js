@@ -1,8 +1,8 @@
+import { type Theme, extendTheme } from "@chakra-ui/react";
+import { getColor, mode } from "@chakra-ui/theme-tools";
 import { skeletonTheme } from "./chakra-componens/skeleton";
 import { colors } from "./colors";
 import { fontWeights, letterSpacings, lineHeights } from "./typography";
-import { Theme, extendTheme } from "@chakra-ui/react";
-import { getColor, mode } from "@chakra-ui/theme-tools";
 
 const chakraTheme: Theme = extendTheme({
   config: {
@@ -63,6 +63,7 @@ const chakraTheme: Theme = extendTheme({
         borderRadius: "md",
       },
       variants: {
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         gradient: (props: any) => {
           const { theme, fromcolor, tocolor } = props;
           const lgFrom = getColor(theme, fromcolor);
@@ -96,6 +97,7 @@ const chakraTheme: Theme = extendTheme({
             },
           };
         },
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         highlighted: (props: any) => ({
           bg: "#151515",
           _hover: {

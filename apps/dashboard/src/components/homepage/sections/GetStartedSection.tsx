@@ -2,8 +2,8 @@ import { Box, Center, Flex, LightMode } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { GeneralCta } from "components/shared/GeneralCta";
-import WhiteLogo from "../../../../public/assets/landingpage/white-logo.png";
 import { Heading } from "tw-components";
+import WhiteLogo from "../../../../public/assets/landingpage/white-logo.png";
 
 /**
  * Highlights Call To Action for Start Building with ThirdWeb

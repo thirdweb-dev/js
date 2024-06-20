@@ -150,9 +150,9 @@ export class StandardErc1155<
 
   /**
    * Transfer multiple NFTs
-   * 
+   *
    * @remarks Transfer multiple NFTs from the connected wallet to another wallet.
-   * 
+   *
    * @example
    * ```javascript
    * // Address of the wallet you want to send the NFTs to
@@ -172,7 +172,13 @@ export class StandardErc1155<
       fromAddress?: AddressOrEns,
       data: BytesLike = [0],
     ) => {
-      return this.erc1155.transferBatch.prepare(to, tokenIds, amounts, fromAddress, data);
+      return this.erc1155.transferBatch.prepare(
+        to,
+        tokenIds,
+        amounts,
+        fromAddress,
+        data,
+      );
     },
   );
 

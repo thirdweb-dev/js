@@ -1,9 +1,9 @@
-import { SolidityInputWithTypeProps } from ".";
 import { Box, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useStorageUpload } from "@thirdweb-dev/react";
 import { IpfsUploadButton } from "components/ipfs-upload/button";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
+import type { SolidityInputWithTypeProps } from ".";
 
 export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,
@@ -50,6 +50,7 @@ export const SolidityStringInput: React.FC<SolidityInputWithTypeProps> = ({
                   // 2. Make sure there's a trailing slash at the end
                   // Otherwise the token URI will become `${uri}${tokenId}` when it should be `${uri}/${tokenId}`
                   if (!uri.endsWith("/")) {
+                    // biome-ignore lint/style/noParameterAssign: FIXME
                     uri += "/";
                   }
                 }

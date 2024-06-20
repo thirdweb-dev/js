@@ -13,7 +13,7 @@ import {
   Heading,
   Text,
   TrackedLink,
-  TrackedLinkProps,
+  type TrackedLinkProps,
 } from "tw-components";
 
 const RENDERED_PRODUCTS = ["sdk", "storage", "ui-components", "auth"];
@@ -56,8 +56,7 @@ export const BuildYourApp: React.FC<BuildYourAppProps> = ({
           {RENDERED_PRODUCTS.map((p) => {
             const product = PRODUCTS.find((item) => item.label === p);
             return (
-              product &&
-              product.icon && (
+              product?.icon && (
                 <Flex
                   key={product.name}
                   rounded="full"

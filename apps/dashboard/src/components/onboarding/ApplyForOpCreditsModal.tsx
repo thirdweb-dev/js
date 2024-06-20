@@ -1,4 +1,13 @@
 import {
+  AccountPlan,
+  AccountStatus,
+  useAccount,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Box,
   Flex,
   Modal,
   ModalBody,
@@ -7,26 +16,17 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Box,
   SimpleGrid,
-  Alert,
-  AlertDescription,
-  AlertIcon,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Button, Card, Heading, Text, Badge } from "tw-components";
-import {
-  useAccount,
-  AccountPlan,
-  AccountStatus,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
 import { useEffect, useMemo, useState } from "react";
+import { Badge, Button, Card, Heading, Text } from "tw-components";
+import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
 import { OnboardingBilling } from "./Billing";
 import { OnboardingModal } from "./Modal";
 import { PlanCard } from "./PlanCard";
-import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { useTrack } from "hooks/analytics/useTrack";
 
 export type CreditsRecord = {
   title: string;
@@ -98,7 +98,7 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
   const [hasAddedPaymentMethod, setHasAddedPaymentMethod] = useState(false);
   const account = useAccount();
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${(account?.data && account.data.id) || ""}`,
+    `appliedForOpGrant-${account?.data?.id || ""}`,
     false,
   );
   const trackEvent = useTrack();

@@ -1,10 +1,10 @@
 "use client";
 
 import { Menu, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useLayoutEffect, useState } from "react";
 import { Button } from "../../../@/components/ui/button";
 import { headerLinks } from "./headerLinks";
-import Link from "next/link";
 
 export function MobileBurgerMenu() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
@@ -50,9 +50,9 @@ export function MobileBurgerMenu() {
           </Button>
 
           <div className="flex flex-col gap-7">
-            {[...headerLinks.left, ...headerLinks.right].map((link, index) => (
+            {[...headerLinks.left, ...headerLinks.right].map((link) => (
               <Link
-                key={index}
+                key={link.href}
                 href={link.href}
                 className="text-lg "
                 target={link.href.startsWith("https") ? "_blank" : undefined}

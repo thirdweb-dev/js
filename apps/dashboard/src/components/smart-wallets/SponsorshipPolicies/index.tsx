@@ -1,7 +1,7 @@
 import {
-  ApiKey,
-  ApiKeyServicePolicy,
-  ApiKeyServicePolicyLimits,
+  type ApiKey,
+  type ApiKeyServicePolicy,
+  type ApiKeyServicePolicyLimits,
   usePolicies,
   useUpdatePolicies,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -86,7 +86,7 @@ const sponsorshipPoliciesValidationSchema = z.object({
     .nullable(),
   globalLimit: z
     .object({
-      maxSpend: z.string().refine((n) => parseFloat(n) > 0, {
+      maxSpend: z.string().refine((n) => Number.parseFloat(n) > 0, {
         message: "Must be a positive number",
       }),
       maxSpendUnit: z.enum(["usd", "native"]),
@@ -576,6 +576,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   <Stack gap={3} alignItems={"end"}>
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                         <Flex key={customHeaderIdx} gap={2} w="full">
                           <Input
                             placeholder="Key"

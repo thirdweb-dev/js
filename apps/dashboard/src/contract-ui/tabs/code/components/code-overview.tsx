@@ -25,7 +25,7 @@ import {
   useContractFunctions,
 } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
-import { CodeEnvironment } from "components/contract-tabs/code/types";
+import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useMemo, useState } from "react";
@@ -434,6 +434,7 @@ interface SnippetOptions {
 }
 
 export function formatSnippet(
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   snippet: Record<CodeEnvironment, any>,
   {
     contractAddress,
@@ -451,6 +452,7 @@ export function formatSnippet(
     ? formatAbiItem({
         ...fn,
         type: "stateMutability" in fn ? "function" : "event",
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
       } as any)
     : "";
 
@@ -508,7 +510,7 @@ export function formatSnippet(
       ?.replace(/{{function}}/gm, formattedAbi || "")
       ?.replace(/{{chainId}}/gm, chainId?.toString() || "1");
 
-    if (args && args?.some((arg) => arg)) {
+    if (args?.some((arg) => arg)) {
       code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
     } else {
       code[env] = code[env]?.replace(/{{args}}/gm, "");
@@ -629,7 +631,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   setEnvironment={setEnvironment}
                   snippet={formatSnippet(
                     (WALLETS_SNIPPETS.find((w) => w.id === "smart-wallet")
-                      ?.supportedLanguages || {}) as any,
+                      ?.supportedLanguages || {}) as Record<
+                      CodeEnvironment,
+                      string
+                    >,
                     {
                       contractAddress,
                       address,
@@ -698,6 +703,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <CodeSegment
               environment={environment}
               setEnvironment={setEnvironment}
+              // biome-ignore lint/suspicious/noExplicitAny: FIXME
               snippet={formatSnippet(COMMANDS.setup as any, {
                 contractAddress,
 
@@ -886,6 +892,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   environment={environment}
                   setEnvironment={setEnvironment}
                   snippet={formatSnippet(
+                    // biome-ignore lint/suspicious/noExplicitAny: FIXME
                     COMMANDS[tab as keyof typeof COMMANDS] as any,
                     {
                       contractAddress,

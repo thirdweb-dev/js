@@ -1,11 +1,12 @@
-import { useContractPublishMetadataFromURI } from "../hooks";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
+import type { useContractPublishMetadataFromURI } from "../hooks";
 
 interface ContractMetadataFieldsetProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<any, any>;
   metadata: ReturnType<typeof useContractPublishMetadataFromURI>;
 }

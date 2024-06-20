@@ -1,12 +1,12 @@
 import {
   AspectRatio,
   Box,
-  BoxProps,
+  type BoxProps,
   Center,
   Flex,
   Icon,
   Image,
-  LayoutProps,
+  type LayoutProps,
   Link,
   Stack,
 } from "@chakra-ui/react";
@@ -14,7 +14,12 @@ import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { AiOutlineFileAdd } from "@react-icons/all-files/ai/AiOutlineFileAdd";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useCallback } from "react";
-import { Accept, DropEvent, FileRejection, useDropzone } from "react-dropzone";
+import {
+  type Accept,
+  type DropEvent,
+  type FileRejection,
+  useDropzone,
+} from "react-dropzone";
 import { FiImage, FiUpload } from "react-icons/fi";
 import { Button, Text } from "tw-components";
 
@@ -55,7 +60,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
     ) => void
   >(
     (droppedFiles) => {
-      if (droppedFiles && droppedFiles[0]) {
+      if (droppedFiles?.[0]) {
         setValue(droppedFiles[0]);
       }
     },

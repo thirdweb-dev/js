@@ -8,6 +8,7 @@ export function RPCIcon(props: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
     >
+      <title>RPC</title>
       <rect
         x="12.0015"
         y="12.5007"

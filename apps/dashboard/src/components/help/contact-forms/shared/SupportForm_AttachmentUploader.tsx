@@ -1,4 +1,4 @@
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   AspectRatio,
   Box,
@@ -13,7 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { TWMediaRenderer } from "components/ipfs-upload/dropzone";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { BsFillCloudUploadFill } from "react-icons/bs";

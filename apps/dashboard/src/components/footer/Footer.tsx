@@ -1,12 +1,4 @@
 import {
-  COMMUNITY,
-  COMPANY,
-  FooterLinkInfo,
-  NETWORKS,
-  SDKs,
-} from "./footerLinks";
-import { SOCIALS } from "./socialLinks";
-import {
   Box,
   ButtonGroup,
   Container,
@@ -25,6 +17,14 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
+import {
+  COMMUNITY,
+  COMPANY,
+  type FooterLinkInfo,
+  NETWORKS,
+  SDKs,
+} from "./footerLinks";
+import { SOCIALS } from "./socialLinks";
 
 interface FooterLinkGroupProps {
   heading: string;

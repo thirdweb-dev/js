@@ -1,12 +1,12 @@
 import "@/styles/globals.css";
-import { Inter as interFont } from "next/font/google";
-import PlausibleProvider from "next-plausible";
 import { cn } from "@/lib/utils";
-import { AppRouterProviders } from "./(dashboard)/providers";
-import { Metadata } from "next";
-import { PostHogProvider } from "./components/root-providers";
+import type { Metadata } from "next";
+import PlausibleProvider from "next-plausible";
 import dynamic from "next/dynamic";
+import { Inter as interFont } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { AppRouterProviders } from "./(dashboard)/providers";
+import { PostHogProvider } from "./components/root-providers";
 
 const fontSans = interFont({
   subsets: ["latin"],

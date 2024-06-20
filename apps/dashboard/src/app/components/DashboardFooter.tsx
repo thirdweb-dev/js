@@ -43,9 +43,7 @@ export function DashboardFooter() {
       >
         Chain List
       </Link>
-      <p className="text-muted-foreground text-sm">
-        Copyright © 2024 thirdweb
-      </p>
+      <p className="text-muted-foreground text-sm">Copyright © 2024 thirdweb</p>
     </footer>
   );
 }

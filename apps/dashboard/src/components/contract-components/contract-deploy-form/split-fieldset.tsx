@@ -13,10 +13,11 @@ import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants } from "ethers";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
+import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 
 interface SplitFieldsetProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<any, any>;
 }
 

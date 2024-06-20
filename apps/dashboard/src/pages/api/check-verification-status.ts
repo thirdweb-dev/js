@@ -1,5 +1,5 @@
 import { apiKeyMap, apiMap } from "lib/maps";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export const config = {
   runtime: "edge",
@@ -36,9 +36,8 @@ const handler = async (req: NextRequest) => {
           ],
         },
       );
-    } else {
-      return NextResponse.json({ result: data.result }, { status: 200 });
     }
+    return NextResponse.json({ result: data.result }, { status: 200 });
   } catch (e) {
     return NextResponse.json({ error: e }, { status: 400 });
   }

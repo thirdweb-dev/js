@@ -1,22 +1,21 @@
 import {
-  Account,
+  type Account,
   AccountStatus,
   useAccount,
   useConfirmEmbeddedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEffect, useState } from "react";
-import { OnboardingModal } from "./Modal";
-import { OnboardingGeneral } from "./General";
-import { OnboardingConfirmEmail } from "./ConfirmEmail";
-import { useRouter } from "next/router";
-import { OnboardingBilling } from "./Billing";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useWallet } from "@thirdweb-dev/react";
-import { getLatestEWSToken } from "constants/app";
 import { walletIds } from "@thirdweb-dev/wallets";
+import { getLatestEWSToken } from "constants/app";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useCallback, useEffect, useState } from "react";
+import { OnboardingBilling } from "./Billing";
 import { OnboardingChoosePlan } from "./ChoosePlan";
+import { OnboardingConfirmEmail } from "./ConfirmEmail";
+import { OnboardingGeneral } from "./General";
 import { OnboardingLinkWallet } from "./LinkWallet";
+import { OnboardingModal } from "./Modal";
 
 const skipBilling = (account: Account) => {
   return (
@@ -38,7 +37,7 @@ type OnboardingState =
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
-  const router = useRouter();
+
   const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
   const wallet = useWallet();
@@ -118,7 +117,7 @@ export const Onboarding: React.FC = () => {
     setState("linking");
   };
 
-  const handleEmbeddedWalletConfirmation = () => {
+  const handleEmbeddedWalletConfirmation = useCallback(() => {
     const ewsJwt = getLatestEWSToken();
 
     if (ewsJwt) {
@@ -133,9 +132,9 @@ export const Onboarding: React.FC = () => {
         },
       );
     }
-  };
+  }, [ewsConfirmMutation.mutate]);
 
-  // FIXME: this entire flow needs reworked - re-vist as part of FTUX imrpovements
+  // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isLoggedIn || meQuery.isLoading) {
@@ -151,10 +150,9 @@ export const Onboarding: React.FC = () => {
       setState(undefined);
     }
     setAccount(loadedAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, meQuery]);
+  }, [isLoggedIn, meQuery, account?.id, state]);
 
-  // FIXME: this entire flow needs reworked - re-vist as part of FTUX imrpovements
+  // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!account || state || !wallet) {
@@ -185,8 +183,13 @@ export const Onboarding: React.FC = () => {
     else if (!skipBilling(account)) {
       setState("plan");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, router, state, wallet]);
+  }, [
+    account,
+    state,
+    wallet,
+    isEmbeddedWallet,
+    handleEmbeddedWalletConfirmation,
+  ]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
     return null;

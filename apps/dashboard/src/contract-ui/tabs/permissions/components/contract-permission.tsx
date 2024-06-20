@@ -1,11 +1,11 @@
-import { PermissionEditor } from "./permissions-editor";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 import { useFormContext } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
 import { Card, Heading, Text } from "tw-components";
+import { PermissionEditor } from "./permissions-editor";
 
 interface ContractPermissionProps {
   role: string;
@@ -28,7 +28,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
     formState: { isSubmitting },
   } = useFormContext();
 
-  const roleMembers: string[] = (watch() || {})[role] || [];
+  const roleMembers: string[] = watch()?.[role] || [];
   const isRestricted =
     !roleMembers.includes(constants.AddressZero) ||
     (role !== "transfer" && role !== "lister" && role !== "asset");

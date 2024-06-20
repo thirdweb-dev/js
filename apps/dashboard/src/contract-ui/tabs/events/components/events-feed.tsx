@@ -28,7 +28,7 @@ import type { ContractEvent } from "@thirdweb-dev/sdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { useMemo, useState, Fragment } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -166,17 +166,15 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
               allowMultiple
               defaultIndex={[]}
             >
-              {filteredEvents
-                ?.slice(0, 10)
-                .map((e) => (
-                  <EventsFeedItem
-                    key={e.transactionHash}
-                    transaction={e}
-                    setSelectedEvent={setSelectedEvent}
-                    contractAddress={contractAddress}
-                    chainSlug={chainSlug}
-                  />
-                ))}
+              {filteredEvents?.slice(0, 10).map((e) => (
+                <EventsFeedItem
+                  key={e.transactionHash}
+                  transaction={e}
+                  setSelectedEvent={setSelectedEvent}
+                  contractAddress={contractAddress}
+                  chainSlug={chainSlug}
+                />
+              ))}
             </Accordion>
           </List>
         </Card>
@@ -296,6 +294,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
             {transaction.events.slice(0, 2).map((e, idx) => (
               <Button
                 as="span"
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={idx}
                 onClick={(ev) => {
                   ev.stopPropagation();

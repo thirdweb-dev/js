@@ -1,7 +1,7 @@
-import { useContract } from "@thirdweb-dev/react";
+import type { useContract } from "@thirdweb-dev/react";
 import {
-  ContractWrapper,
-  FeatureName,
+  type ContractWrapper,
+  type FeatureName,
   detectContractFeature,
 } from "@thirdweb-dev/sdk";
 
@@ -44,8 +44,9 @@ export function extensionDetectedState({
     return "disabled";
   }
 
-  const contractWrapper = (actualContract as any)
-    .contractWrapper as ContractWrapper<any>;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  const contractWrapper = // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    (actualContract as any).contractWrapper as ContractWrapper<any>;
 
   if (!Array.isArray(feature)) {
     return detectContractFeature(contractWrapper, feature)

@@ -1,11 +1,11 @@
-import { AppLayout } from "components/app-layouts/app";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex } from "@chakra-ui/react";
+import { AppLayout } from "components/app-layouts/app";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { Heading } from "tw-components";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import type { ThirdwebNextPage } from "utils/types";
 import { ApplyForOpCreditsModal } from "../../../components/onboarding/ApplyForOpCreditsModal";
 
 const SettingsGasCreditsPage: ThirdwebNextPage = () => {

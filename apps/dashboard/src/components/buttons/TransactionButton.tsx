@@ -1,4 +1,3 @@
-import { MismatchButton } from "./MismatchButton";
 import type { ConnectWalletProps } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Center,
@@ -21,17 +20,18 @@ import {
   useWallet,
 } from "@thirdweb-dev/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
-import { useEffect, useMemo, useRef, useState, Fragment } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
 import {
   Button,
+  type ButtonProps,
   Card,
   Heading,
   LinkButton,
   Text,
-  type ButtonProps,
 } from "tw-components";
+import { MismatchButton } from "./MismatchButton";
 
 interface TransactionButtonProps
   extends Omit<ConnectWalletProps & ButtonProps, "leftIcon"> {
@@ -271,7 +271,8 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
         </LinkButton>
       </Flex>
     );
-  } else if (walletId === "walletConnect" || walletId === "walletConnectV1") {
+  }
+  if (walletId === "walletConnect" || walletId === "walletConnectV1") {
     return (
       <Flex direction="column" gap={4}>
         <Heading size="label.lg">

@@ -1,11 +1,11 @@
-import chakraTheme from "../../theme";
 import {
-  TypographyBase,
-  TypographyFontSize,
-  TypographySize,
+  type TypographyBase,
+  type TypographyFontSize,
+  type TypographySize,
   baseFontSizes,
   mdFontSizes,
 } from "theme/typography";
+import chakraTheme from "../../theme";
 
 const FONT_SIZE_CSS_VAR_PREFIX = "--tw-font-size-" as const;
 

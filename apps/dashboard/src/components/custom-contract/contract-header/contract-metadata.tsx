@@ -1,8 +1,8 @@
-import { MetadataHeader } from "./metadata-header";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import { useContract, useContractMetadata } from "@thirdweb-dev/react";
 import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { useEffect, useState } from "react";
+import { MetadataHeader } from "./metadata-header";
 
 interface ContractMetadataProps {
   contractAddress: string;

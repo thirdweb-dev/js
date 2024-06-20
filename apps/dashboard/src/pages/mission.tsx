@@ -1,19 +1,19 @@
 import { Box, Container, Flex } from "@chakra-ui/react";
-import { LandingLayout } from "components/landing-pages/layout";
-import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import HeroSection from "components/mission/HeroSection";
-import MissionSection from "components/mission/MissionSection";
+import { ChakraNextImage } from "components/Image";
 import { Aurora } from "components/homepage/Aurora";
+import { LandingLayout } from "components/landing-pages/layout";
+import DesireSection from "components/mission/DesireSection";
+import HeroSection from "components/mission/HeroSection";
+import HowSection from "components/mission/HowSection";
+import MajorSection from "components/mission/MajorSection";
+import MissionSection from "components/mission/MissionSection";
 import OverviewSection from "components/mission/OverviewSection";
 import ReasonSection from "components/mission/ReasonSection";
 import ReasonWeb3Section from "components/mission/ReasonWeb3Section";
-import HowSection from "components/mission/HowSection";
-import MajorSection from "components/mission/MajorSection";
-import DesireSection from "components/mission/DesireSection";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { PageId } from "page-id";
 import { Text } from "tw-components";
-import { ChakraNextImage } from "components/Image";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "mission";
 

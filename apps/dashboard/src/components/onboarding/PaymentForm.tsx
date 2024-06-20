@@ -8,14 +8,14 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import {
+  PaymentElement,
   useElements,
   useStripe,
-  PaymentElement,
 } from "@stripe/react-stripe-js";
 import { PaymentVerificationFailureAlert } from "components/settings/Account/Billing/alerts/PaymentVerificationFailureAlert";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
-import { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { Button, Text } from "tw-components";
 
 interface OnboardingPaymentForm {
@@ -52,9 +52,8 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
       setSaving(false);
       if (submitError.code) {
         return setPaymentFailureCode(submitError.code);
-      } else {
-        return onError(submitError);
       }
+      return onError(submitError);
     }
 
     const { error: createError, paymentMethod } =
@@ -85,6 +84,7 @@ export const OnboardingPaymentForm: React.FC<OnboardingPaymentForm> = ({
           label: "success",
         });
       },
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       onError: (error: any) => {
         const failureCode = error?.message;
         setPaymentFailureCode(failureCode || "generic_decline");

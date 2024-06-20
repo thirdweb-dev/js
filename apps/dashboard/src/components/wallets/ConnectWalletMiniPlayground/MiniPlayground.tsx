@@ -3,38 +3,38 @@ import {
   Flex,
   Grid,
   Icon,
-  Spacer,
-  useBreakpointValue,
   Image,
+  Spacer,
   Tooltip,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { FormItem } from "../ConnectWalletPlayground/FormItem";
-import { ThemeButton } from "../ConnectWalletPlayground/ThemeButton";
-import { useState } from "react";
-import { ModalSizeButton } from "../ConnectWalletPlayground/ModalSizeButton";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
-import {
-  ConnectModalInlinePreview,
-  useCanShowInlineModal,
-} from "../ConnectWalletPlayground/ConnectModalInlinePreview";
-import { PreviewThirdwebProvider } from "../ConnectWalletPlayground/PreviewThirdwebProvider";
-import { usePlaygroundWallets } from "../ConnectWalletPlayground/usePlaygroundWallets";
-import { usePlaygroundTheme } from "../ConnectWalletPlayground/usePlaygroundTheme";
-import { Text, Button, Link, Heading, TrackedLink } from "tw-components";
-import { MdOutlineElectricBolt } from "react-icons/md";
-import {
-  walletInfoRecord,
-  type WalletId,
-} from "../ConnectWalletPlayground/walletInfoRecord";
+import { ChakraNextImage } from "components/Image";
+import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import {
   Londrina_Solid as londrinaSolidConstructor,
   Source_Serif_4 as sourceSerif4Constructor,
 } from "next/font/google";
-import { ChakraNextImage } from "components/Image";
+import { useState } from "react";
 import { FiChevronRight } from "react-icons/fi";
-import { useTrack } from "hooks/analytics/useTrack";
+import { MdOutlineElectricBolt } from "react-icons/md";
+import { Button, Heading, Link, Text, TrackedLink } from "tw-components";
+import {
+  ConnectModalInlinePreview,
+  useCanShowInlineModal,
+} from "../ConnectWalletPlayground/ConnectModalInlinePreview";
+import { FormItem } from "../ConnectWalletPlayground/FormItem";
+import { ModalSizeButton } from "../ConnectWalletPlayground/ModalSizeButton";
+import { PreviewThirdwebProvider } from "../ConnectWalletPlayground/PreviewThirdwebProvider";
+import { ThemeButton } from "../ConnectWalletPlayground/ThemeButton";
 import { socialIconMapV2 } from "../ConnectWalletPlayground/WalletButton";
+import { usePlaygroundTheme } from "../ConnectWalletPlayground/usePlaygroundTheme";
+import { usePlaygroundWallets } from "../ConnectWalletPlayground/usePlaygroundWallets";
+import {
+  type WalletId,
+  walletInfoRecord,
+} from "../ConnectWalletPlayground/walletInfoRecord";
 
 // If loading a variable font, you don't need to specify the font weight
 const nounsDaoFont = londrinaSolidConstructor({

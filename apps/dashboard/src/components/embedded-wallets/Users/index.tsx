@@ -1,14 +1,14 @@
-import { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
+import type { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { Flex, Switch } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
+import Papa from "papaparse";
 import { useCallback, useMemo, useState } from "react";
 import { Button, Text } from "tw-components";
-import { withinDays } from "utils/date-utils";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { withinDays } from "utils/date-utils";
 import { Analytics } from "./Analytics";
-import Papa from "papaparse";
 
 const ACTIVE_THRESHOLD_DAYS = 30;
 

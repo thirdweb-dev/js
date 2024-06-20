@@ -1,7 +1,11 @@
 import { Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { BsFillLightningChargeFill } from "react-icons/bs";
-import { ButtonProps, LinkButton, LinkButtonProps } from "tw-components";
+import {
+  type ButtonProps,
+  LinkButton,
+  type LinkButtonProps,
+} from "tw-components";
 
 interface GeneralCtaProps extends Omit<LinkButtonProps, "href"> {
   title: string;

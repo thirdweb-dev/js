@@ -8,7 +8,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#standalonechains-optional
    */
-    standaloneChains?: string[];
+  standaloneChains?: string[];
   /**
    * You can define an array of custom mobile wallets.
    *
@@ -20,7 +20,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#mobilewallets-optional
    */
-  mobileWallets?: WalletConnectModalConfig['mobileWallets']
+  mobileWallets?: WalletConnectModalConfig["mobileWallets"];
   /**
    * You can define an array of custom desktop or web based wallets.
    *
@@ -32,7 +32,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#desktopwallets-optional
    */
-  desktopWallets?: WalletConnectModalConfig['desktopWallets'];
+  desktopWallets?: WalletConnectModalConfig["desktopWallets"];
   /**
    * Array of wallet id's and their logo mappings.
    *
@@ -151,7 +151,7 @@ export type QRModalOptions = {
    *
    * https://docs.walletconnect.com/2.0/web3modal/options#themevariables-optional
    */
-  themeVariables?: WalletConnectModalConfig['themeVariables']
+  themeVariables?: WalletConnectModalConfig["themeVariables"];
   /**
    * Puts Web3Modal into dark or light mode. Defaults to user's system preference.
    *
@@ -159,4 +159,3 @@ export type QRModalOptions = {
    */
   themeMode?: "dark" | "light";
 };
-

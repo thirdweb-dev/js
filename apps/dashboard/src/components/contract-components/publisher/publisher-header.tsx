@@ -1,7 +1,3 @@
-import { useEns, usePublisherProfile } from "../hooks";
-import { PublisherSocials } from "./PublisherSocials";
-import { EditProfile } from "./edit-profile";
-import { PublisherAvatar } from "./masked-avatar";
 import { Flex, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import {
@@ -10,6 +6,10 @@ import {
 } from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Heading, Link, LinkButton } from "tw-components";
+import { useEns, usePublisherProfile } from "../hooks";
+import { PublisherSocials } from "./PublisherSocials";
+import { EditProfile } from "./edit-profile";
+import { PublisherAvatar } from "./masked-avatar";
 
 const TRACKING_CATEGORY = "releaser-header";
 

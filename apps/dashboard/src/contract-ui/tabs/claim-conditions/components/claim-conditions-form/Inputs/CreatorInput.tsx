@@ -1,7 +1,7 @@
-import { CustomFormControl } from "../common";
-import { useClaimConditionsFormContext } from "../index";
 import { Input } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
+import { CustomFormControl } from "../common";
+import { useClaimConditionsFormContext } from "../index";
 
 /**
  * Display the creator address

@@ -16,19 +16,20 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { UseQueryResult } from "@tanstack/react-query";
+import type { UseQueryResult } from "@tanstack/react-query";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import pluralize from "pluralize";
-import { SetStateAction, useMemo } from "react";
+import { type SetStateAction, useMemo } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, TableContainer, Text } from "tw-components";
 
 type TWQueryTableProps<TRowData, TInputData> = {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   columns: ColumnDef<TRowData, any>[];
   query: UseQueryResult<TInputData, unknown>;
   selectData: (data?: TInputData) => TRowData[];
@@ -240,7 +241,12 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
             {paginationProps.isLoading
               ? new Array(MAX_PAGE_BUTTONS).fill("0").map((val, i) => {
                   return (
-                    <Skeleton key={`placeholder_${i}`}>
+                    <Skeleton
+                      key={`placeholder_${
+                        // biome-ignore lint/suspicious/noArrayIndexKey: on purpose
+                        i
+                      }`}
+                    >
                       <Button position="relative" isDisabled>
                         {val}
                       </Button>
@@ -291,7 +297,7 @@ function Pagination<TInputData>(paginationProps: PaginationProps<TInputData>) {
             onChange={(e) => {
               // reset the page to 0
               paginationProps.setPage(0);
-              const value = parseInt(e.target.value as string, 10);
+              const value = Number.parseInt(e.target.value as string, 10);
               paginationProps.setPageSize?.(value);
             }}
             value={paginationProps.pageSize}

@@ -47,9 +47,11 @@ function toUrl<TOgType extends keyof OgProps>(
   props: OgProps[TOgType],
 ): URL {
   const url = new URL(`${getAbsoluteUrl()}/api/og/${type}`);
+  // biome-ignore lint/complexity/noForEach: FIXME
   Object.entries(props).forEach(([key, value]) => {
     if (value !== undefined) {
       if (Array.isArray(value)) {
+        // biome-ignore lint/complexity/noForEach: FIXME
         value.forEach((item) =>
           url.searchParams.append(key.toLowerCase(), item),
         );

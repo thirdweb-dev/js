@@ -1,3 +1,4 @@
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Box,
   Flex,
@@ -7,17 +8,20 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
 import {
-  FieldArrayWithId,
-  UseFormReturn,
+  type ServiceName,
+  getServiceByName,
+} from "@thirdweb-dev/service-utils";
+import {
+  type FieldArrayWithId,
+  type UseFormReturn,
   useFieldArray,
 } from "react-hook-form";
 import { Card, Checkbox, Heading, LinkButton, Text } from "tw-components";
-import { ApiKeyValidationSchema, HIDDEN_SERVICES } from "../validations";
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { type ApiKeyValidationSchema, HIDDEN_SERVICES } from "../validations";
 
 interface EditServicesProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<ApiKeyValidationSchema, any>;
   apiKey: ApiKey;
 }

@@ -1,12 +1,12 @@
 import { Flex, LinkBox, LinkOverlay, Skeleton } from "@chakra-ui/react";
-import { Card, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { getContract } from "thirdweb";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
-import { useReadContract } from "thirdweb/react";
+import { getContract } from "thirdweb";
 import { getContractMetadata } from "thirdweb/extensions/common";
+import { useReadContract } from "thirdweb/react";
+import { Card, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface PaymentEnabledCardProps {
   contract: {

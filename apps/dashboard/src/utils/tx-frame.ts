@@ -1,7 +1,7 @@
-import { FrameValidationData } from "@coinbase/onchainkit";
+import type { FrameValidationData } from "@coinbase/onchainkit";
 import { Base } from "@thirdweb-dev/chains";
-import { SmartContract } from "@thirdweb-dev/sdk";
-import { BaseContract, Wallet } from "ethers";
+import type { SmartContract } from "@thirdweb-dev/sdk";
+import { type BaseContract, Wallet } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 

@@ -78,7 +78,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
             }
 
             const hasUnknownContractName =
-              !!json.settings?.compilationTarget?.["UnknownContract"];
+              !!json.settings?.compilationTarget?.UnknownContract;
 
             const hasPartialAbi = json.metadata?.isPartialAbi;
 

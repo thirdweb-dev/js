@@ -1,6 +1,6 @@
 import {
-  ApiKey,
-  ApiKeyService,
+  type ApiKey,
+  type ApiKeyService,
   useUpdateApiKey,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import {
@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import {
-  ApiKeyEmbeddedWalletsValidationSchema,
+  type ApiKeyEmbeddedWalletsValidationSchema,
   apiKeyEmbeddedWalletsValidationSchema,
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -247,7 +247,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                   <FormControl
                     isInvalid={
                       !!form.getFieldState(
-                        `branding.applicationName`,
+                        "branding.applicationName",
                         form.formState,
                       ).error
                     }
@@ -256,10 +256,10 @@ export const Configure: React.FC<ConfigureProps> = ({
                     <Input
                       placeholder="Application Name"
                       type="text"
-                      {...form.register(`branding.applicationName`)}
+                      {...form.register("branding.applicationName")}
                     />
                     {!form.getFieldState(
-                      `branding.applicationName`,
+                      "branding.applicationName",
                       form.formState,
                     ).error ? (
                       <FormHelperText>
@@ -270,7 +270,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                       <FormErrorMessage>
                         {
                           form.getFieldState(
-                            `branding.applicationName`,
+                            "branding.applicationName",
                             form.formState,
                           ).error?.message
                         }
@@ -281,7 +281,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                   <FormControl
                     isInvalid={
                       !!form.getFieldState(
-                        `branding.applicationImageUrl`,
+                        "branding.applicationImageUrl",
                         form.formState,
                       ).error
                     }
@@ -290,10 +290,10 @@ export const Configure: React.FC<ConfigureProps> = ({
                     <Input
                       placeholder="https://"
                       type="text"
-                      {...form.register(`branding.applicationImageUrl`)}
+                      {...form.register("branding.applicationImageUrl")}
                     />
                     {!form.getFieldState(
-                      `branding.applicationImageUrl`,
+                      "branding.applicationImageUrl",
                       form.formState,
                     ).error ? (
                       <FormHelperText>
@@ -304,7 +304,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                       <FormErrorMessage>
                         {
                           form.getFieldState(
-                            `branding.applicationImageUrl`,
+                            "branding.applicationImageUrl",
                             form.formState,
                           ).error?.message
                         }
@@ -398,7 +398,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                     <FormControl
                       isInvalid={
                         !!form.getFieldState(
-                          `customAuthentication.aud`,
+                          "customAuthentication.aud",
                           form.formState,
                         ).error
                       }
@@ -407,10 +407,10 @@ export const Configure: React.FC<ConfigureProps> = ({
                       <Input
                         placeholder="AUD"
                         type="text"
-                        {...form.register(`customAuthentication.aud`)}
+                        {...form.register("customAuthentication.aud")}
                       />
                       {!form.getFieldState(
-                        `customAuthentication.aud`,
+                        "customAuthentication.aud",
                         form.formState,
                       ).error ? (
                         <FormHelperText>
@@ -420,7 +420,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                         <FormErrorMessage>
                           {
                             form.getFieldState(
-                              `customAuthentication.aud`,
+                              "customAuthentication.aud",
                               form.formState,
                             ).error?.message
                           }
@@ -513,7 +513,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                     <FormControl
                       isInvalid={
                         !!form.getFieldState(
-                          `customAuthEndpoint.customHeaders`,
+                          "customAuthEndpoint.customHeaders",
                           form.formState,
                         ).error
                       }
@@ -522,6 +522,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                       <Stack gap={3} alignItems={"end"}>
                         {customHeaderFields.fields.map((_, customHeaderIdx) => {
                           return (
+                            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                             <Flex key={customHeaderIdx} gap={2} w="full">
                               <Input
                                 placeholder="Key"
@@ -565,7 +566,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                       </Stack>
 
                       {!form.getFieldState(
-                        `customAuthEndpoint.customHeaders`,
+                        "customAuthEndpoint.customHeaders",
                         form.formState,
                       ).error && (
                         <FormHelperText>
@@ -577,7 +578,7 @@ export const Configure: React.FC<ConfigureProps> = ({
                       <FormErrorMessage>
                         {
                           form.getFieldState(
-                            `customAuthEndpoint.customHeaders`,
+                            "customAuthEndpoint.customHeaders",
                             form.formState,
                           ).error?.message
                         }
@@ -595,7 +596,7 @@ export const Configure: React.FC<ConfigureProps> = ({
           <Flex flexDir="column" gap={8}>
             <FormControl
               isInvalid={
-                !!form.getFieldState(`redirectUrls`, form.formState).error
+                !!form.getFieldState("redirectUrls", form.formState).error
               }
             >
               <Box my={3}>
@@ -608,9 +609,9 @@ export const Configure: React.FC<ConfigureProps> = ({
 
               <Textarea
                 placeholder="thirdweb://"
-                {...form.register(`redirectUrls`)}
+                {...form.register("redirectUrls")}
               />
-              {!form.getFieldState(`redirectUrls`, form.formState).error ? (
+              {!form.getFieldState("redirectUrls", form.formState).error ? (
                 <FormHelperText>
                   Currently only used in Unity and React Native platform when
                   users authenticate through social logins.
@@ -618,7 +619,7 @@ export const Configure: React.FC<ConfigureProps> = ({
               ) : (
                 <FormErrorMessage>
                   {
-                    form.getFieldState(`redirectUrls`, form.formState).error
+                    form.getFieldState("redirectUrls", form.formState).error
                       ?.message
                   }
                 </FormErrorMessage>

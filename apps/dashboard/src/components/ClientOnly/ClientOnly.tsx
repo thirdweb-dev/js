@@ -1,9 +1,8 @@
 "use client";
 
-/* eslint-disable react/forbid-dom-props */
+import { type ReactNode, useEffect, useState } from "react";
+import type { ComponentWithChildren } from "types/component-with-children";
 import styles from "./ClientOnly.module.css";
-import { ReactNode, useEffect, useState } from "react";
-import { ComponentWithChildren } from "types/component-with-children";
 
 interface ClientOnlyProps {
   /**

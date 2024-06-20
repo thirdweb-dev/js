@@ -1,22 +1,22 @@
 import {
   Alert,
-  AlertIcon,
-  Flex,
-  AlertTitle,
   AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Flex,
 } from "@chakra-ui/react";
 import {
-  Goerli,
-  Sepolia,
-  Mumbai,
-  PolygonAmoyTestnet,
-  OptimismGoerli,
-  OpSepoliaTestnet,
-  BaseGoerli,
-  BaseSepoliaTestnet,
   ArbitrumGoerli,
   ArbitrumSepolia,
-  Chain,
+  BaseGoerli,
+  BaseSepoliaTestnet,
+  type Chain,
+  Goerli,
+  Mumbai,
+  OpSepoliaTestnet,
+  OptimismGoerli,
+  PolygonAmoyTestnet,
+  Sepolia,
 } from "@thirdweb-dev/chains";
 import { Link, Text } from "tw-components";
 

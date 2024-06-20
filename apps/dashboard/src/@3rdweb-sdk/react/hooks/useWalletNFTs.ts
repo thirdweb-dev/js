@@ -1,7 +1,7 @@
+import { useAddress } from "@thirdweb-dev/react";
+import type { WalletNFTApiReturn } from "pages/api/wallet/nfts/[chainId]";
 import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 import { useDashboardEVMChainId } from "./useActiveChainId";
-import { useAddress } from "@thirdweb-dev/react";
-import { WalletNFTApiReturn } from "pages/api/wallet/nfts/[chainId]";
 
 export function useWalletNFTs(walletAddress?: string) {
   const activeChainId = useDashboardEVMChainId();

@@ -1,6 +1,6 @@
-import { EventsFeed } from "./components/events-feed";
 import { Flex } from "@chakra-ui/react";
 import { useLayoutEffect } from "react";
+import { EventsFeed } from "./components/events-feed";
 
 interface ContractEventsPageProps {
   contractAddress?: string;

@@ -1,10 +1,10 @@
-import { Account } from "@3rdweb-sdk/react/hooks/useApi";
-import { AccountForm } from "components/settings/Account/AccountForm";
-import { OnboardingTitle } from "./Title";
+import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FocusLock, VStack } from "@chakra-ui/react";
-import { Button } from "tw-components";
 import { useDisconnect, useLogout } from "@thirdweb-dev/react";
+import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
+import { Button } from "tw-components";
+import { OnboardingTitle } from "./Title";
 
 type OnboardingGeneralProps = {
   account: Account;

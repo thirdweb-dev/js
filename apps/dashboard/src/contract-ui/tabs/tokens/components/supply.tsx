@@ -1,10 +1,10 @@
-import { TokenSupplyLayout } from "./supply-layout";
 import {
   useAddress,
-  useContract,
+  type useContract,
   useTokenBalance,
   useTokenSupply,
 } from "@thirdweb-dev/react";
+import { TokenSupplyLayout } from "./supply-layout";
 
 interface TokenBalancesProps {
   contractQuery: ReturnType<typeof useContract>;

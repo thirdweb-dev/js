@@ -1,30 +1,30 @@
 import {
-  PaymentsWebhooksType,
+  type PaymentsWebhooksType,
   usePaymentsUpdateWebhook,
 } from "@3rdweb-sdk/react/hooks/usePayments";
 import {
+  Flex,
   FormControl,
   Input,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
-  Flex,
-  useDisclosure,
+  ModalHeader,
+  ModalOverlay,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { format } from "date-fns/format";
-import { Button, FormLabel, Text, FormErrorMessage } from "tw-components";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
-import { useTxNotifications } from "hooks/useTxNotifications";
+import { format } from "date-fns/format";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { FiTrash } from "react-icons/fi";
 import { BiPencil } from "react-icons/bi";
+import { FiTrash } from "react-icons/fi";
+import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
 
 interface PaymentsWebhooksTableProps {
   paymentsSellerId: string;
@@ -176,7 +176,7 @@ export const PaymentsWebhooksTable: React.FC<PaymentsWebhooksTableProps> = ({
                   validate: {
                     validUrl: (value) =>
                       isValidUrl(value) ||
-                      `Invalid URL, make sure you include https://`,
+                      "Invalid URL, make sure you include https://",
                   },
                 })}
               />

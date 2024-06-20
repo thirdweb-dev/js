@@ -1,9 +1,9 @@
-import { NFTClaimForm } from "./claim-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { GiDiamondHard } from "@react-icons/all-files/gi/GiDiamondHard";
-import { useContract } from "@thirdweb-dev/react";
+import type { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { Button, Drawer } from "tw-components";
+import { NFTClaimForm } from "./claim-form";
 
 interface NFTClaimButtonProps {
   contractQuery: ReturnType<typeof useContract>;

@@ -1,4 +1,8 @@
 import {
+  PaperChainToChainId,
+  usePaymentsEnabledContracts,
+} from "@3rdweb-sdk/react/hooks/usePayments";
+import {
   Alert,
   AlertIcon,
   AlertTitle,
@@ -6,11 +10,7 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { Card, Text, Heading } from "tw-components";
-import {
-  PaperChainToChainId,
-  usePaymentsEnabledContracts,
-} from "@3rdweb-sdk/react/hooks/usePayments";
+import { Card, Heading, Text } from "tw-components";
 import { PaymentEnabledCard } from "./payment-enabled-card";
 
 export const EnabledContracts = () => {

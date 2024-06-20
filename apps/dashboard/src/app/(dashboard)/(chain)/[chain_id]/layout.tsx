@@ -1,27 +1,26 @@
-/* eslint-disable react/forbid-dom-props */
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import {
   ArrowLeftIcon,
   CircleAlertIcon,
   ExternalLinkIcon,
   TicketCheckIcon,
 } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { StarButton } from "../components/client/star-button";
-import { Metadata } from "next";
-import { getAbsoluteUrl } from "lib/vercel-utils";
 import { redirect } from "next/navigation";
-import { ChainPageTabs } from "./components/client/tabs";
-import { PrimaryInfoItem } from "./components/server/primary-info-item";
-import { FaucetsSection } from "./components/server/faucets-section";
-import { ExplorersSection } from "./components/server/explorer-section";
+import { StarButton } from "../components/client/star-button";
 import { ChainIcon } from "../components/server/chain-icon";
-import { Badge } from "@/components/ui/badge";
 import { getChain, getChainMetadata } from "../utils";
-import { ChainCTA } from "./components/server/cta-card";
-import { Button } from "@/components/ui/button";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
+import { ChainPageTabs } from "./components/client/tabs";
+import { ChainCTA } from "./components/server/cta-card";
+import { ExplorersSection } from "./components/server/explorer-section";
+import { FaucetsSection } from "./components/server/faucets-section";
+import { PrimaryInfoItem } from "./components/server/primary-info-item";
 
 export async function generateMetadata(
   { params }: { params: { chain_id: string } },

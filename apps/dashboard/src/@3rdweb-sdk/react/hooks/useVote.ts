@@ -1,10 +1,5 @@
-import { voteKeys } from "../cache-keys";
 import {
-  useMutationWithInvalidate,
-  useQueryWithNetwork,
-} from "./query/useQueryWithNetwork";
-import {
-  RequiredParam,
+  type RequiredParam,
   useAddress,
   useContract,
   useContractMetadata,
@@ -12,6 +7,11 @@ import {
 } from "@thirdweb-dev/react";
 import type { Vote, VoteType } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
+import { voteKeys } from "../cache-keys";
+import {
+  useMutationWithInvalidate,
+  useQueryWithNetwork,
+} from "./query/useQueryWithNetwork";
 
 export function useVoteProposalList(contract?: Vote) {
   return useQueryWithNetwork(

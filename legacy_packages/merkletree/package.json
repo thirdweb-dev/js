@@ -41,7 +41,7 @@
     "typescript": "5.4.4"
   },
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",

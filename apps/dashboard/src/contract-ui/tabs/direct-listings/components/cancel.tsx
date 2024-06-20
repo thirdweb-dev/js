@@ -1,5 +1,5 @@
 import { useCancelDirectListing } from "@thirdweb-dev/react";
-import { MarketplaceV3 } from "@thirdweb-dev/sdk";
+import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { CancelTab } from "contract-ui/tabs/shared-components/cancel-tab";
 
 interface CancelDirectListingProps {

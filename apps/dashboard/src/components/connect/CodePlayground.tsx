@@ -7,21 +7,21 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { CodeEnvironment } from "components/contract-tabs/code/types";
+import { ChakraNextImage } from "components/Image";
+import type { CodeEnvironment } from "components/contract-tabs/code/types";
+import { Aurora } from "components/homepage/Aurora";
+import { connectPlaygroundData } from "components/product-pages/common/connect/data";
 import { themes } from "prism-react-renderer";
 import { useState } from "react";
 import { Button, Card, CodeBlock } from "tw-components";
-import ConnectPlaygroundButton, {
-  CodeOptions,
-} from "./ConnectPlaygroundButton";
-import { connectPlaygroundData } from "components/product-pages/common/connect/data";
-import ConnectPlaygroundTab from "./ConnectPlaygroundTab";
-import { ChakraNextImage } from "components/Image";
-import { Aurora } from "components/homepage/Aurora";
 import {
   COMMANDS,
   formatSnippet,
 } from "../../contract-ui/tabs/code/components/code-overview";
+import ConnectPlaygroundButton, {
+  type CodeOptions,
+} from "./ConnectPlaygroundButton";
+import ConnectPlaygroundTab from "./ConnectPlaygroundTab";
 
 const CodePlayground = ({
   TRACKING_CATEGORY,
@@ -42,8 +42,10 @@ const CodePlayground = ({
 
   const [environment, setEnvironment] = useState<CodeOptions>("javascript");
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const snippet = formatSnippet(COMMANDS[tab as keyof typeof COMMANDS] as any, {
     contractAddress: "0x6fb2A6C41B44076bc491cC285BA629c0715a6a1b",
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     fn: (tab === "read" ? read : tab === "write" ? write : event) as any,
     args: (tab === "read"
       ? readFunctions
@@ -304,9 +306,9 @@ const CodePlayground = ({
           flexWrap="wrap"
           maxW={{ base: "calc(100% - 40px)", sm: "calc(100% - 60px)" }}
         >
-          {languages.map((language, idx) => (
+          {languages.map((language) => (
             <ConnectPlaygroundButton
-              key={`${language}-${idx}`}
+              key={language}
               language={language}
               activeLanguage={activeEnvironment}
               setActiveLanguage={setEnvironment}

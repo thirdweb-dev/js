@@ -1,5 +1,5 @@
-import { GasEstimate } from "@3rdweb-sdk/react/hooks/useGas";
-import { Box, BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
+import type { GasEstimate } from "@3rdweb-sdk/react/hooks/useGas";
+import { Box, type BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
 import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -36,7 +36,8 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
           "gwei",
         ),
       ).toFixed(4)} ETH`;
-    } else if (price && ethOrUsd === "usd") {
+    }
+    if (price && ethOrUsd === "usd") {
       return `~$${(
         Number(
           utils.formatUnits(

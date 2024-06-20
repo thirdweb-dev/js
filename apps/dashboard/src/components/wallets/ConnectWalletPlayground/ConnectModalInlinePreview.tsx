@@ -1,8 +1,8 @@
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
-import { ConnectModalInline, Theme } from "@thirdweb-dev/react";
+import { ConnectModalInline, type Theme } from "@thirdweb-dev/react";
 import styles from "./ConnectModalInline.module.css";
 import {
-  WalletId,
+  type WalletId,
   hideUIForWalletIds,
   hideUIForWalletIdsMobile,
 } from "./walletInfoRecord";
