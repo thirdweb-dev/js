@@ -1158,6 +1158,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "BharatBox App",
   },
   {
+    id: "com.blanqlabs.wallet",
+    name: "Blanq",
+  },
+  {
     id: "foundation.klaytn",
     name: "Kaikas",
   },
@@ -1232,6 +1236,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.dextrade",
     name: "DexTrade",
+  },
+  {
+    id: "app.hashpack",
+    name: "HashPack",
   },
   {
     id: "org.thepulsewallet",
@@ -1386,8 +1394,12 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Clot",
   },
   {
-    id: "me.komet",
+    id: "me.komet.app",
     name: "Komet",
+  },
+  {
+    id: "io.guardiianwallet",
+    name: "GUARDIIAN Wallet",
   },
   {
     id: "io.rabby",
@@ -1408,10 +1420,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.moongate.one",
     name: "MG",
-  },
-  {
-    id: "com.blanqlabs.wallet",
-    name: "Blanq",
   },
   {
     id: "tech.levain",
@@ -1440,6 +1448,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "app.core.extension",
     name: "Core",
+  },
+  {
+    id: "xyz.dawnwallet",
+    name: "Dawn Wallet",
   },
   {
     id: "smart",

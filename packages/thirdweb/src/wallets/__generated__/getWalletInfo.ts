@@ -2274,6 +2274,17 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/io.bharatbox/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
+    case "com.blanqlabs.wallet": {
+      return (
+        image
+          ? import("./wallet/com.blanqlabs.wallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/com.blanqlabs.wallet/index.js").then(
+              (w) => w.wallet,
+            )
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
     case "foundation.klaytn": {
       return (
         image
@@ -2425,6 +2436,13 @@ export async function getWalletInfo<TImage extends boolean>(
         image
           ? import("./wallet/com.dextrade/image.js").then((img) => img.default)
           : import("./wallet/com.dextrade/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "app.hashpack": {
+      return (
+        image
+          ? import("./wallet/app.hashpack/image.js").then((img) => img.default)
+          : import("./wallet/app.hashpack/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "org.thepulsewallet": {
@@ -2725,11 +2743,20 @@ export async function getWalletInfo<TImage extends boolean>(
           : import("./wallet/app.clot/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
-    case "me.komet": {
+    case "me.komet.app": {
       return (
         image
-          ? import("./wallet/me.komet/image.js").then((img) => img.default)
-          : import("./wallet/me.komet/index.js").then((w) => w.wallet)
+          ? import("./wallet/me.komet.app/image.js").then((img) => img.default)
+          : import("./wallet/me.komet.app/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "io.guardiianwallet": {
+      return (
+        image
+          ? import("./wallet/io.guardiianwallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/io.guardiianwallet/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "io.rabby": {
@@ -2771,17 +2798,6 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("./wallet/com.moongate.one/index.js").then((w) => w.wallet)
-      ) as Promise<[TImage] extends [true] ? string : any>;
-    }
-    case "com.blanqlabs.wallet": {
-      return (
-        image
-          ? import("./wallet/com.blanqlabs.wallet/image.js").then(
-              (img) => img.default,
-            )
-          : import("./wallet/com.blanqlabs.wallet/index.js").then(
-              (w) => w.wallet,
-            )
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     case "tech.levain": {
@@ -2833,6 +2849,15 @@ export async function getWalletInfo<TImage extends boolean>(
               (img) => img.default,
             )
           : import("./wallet/app.core.extension/index.js").then((w) => w.wallet)
+      ) as Promise<[TImage] extends [true] ? string : any>;
+    }
+    case "xyz.dawnwallet": {
+      return (
+        image
+          ? import("./wallet/xyz.dawnwallet/image.js").then(
+              (img) => img.default,
+            )
+          : import("./wallet/xyz.dawnwallet/index.js").then((w) => w.wallet)
       ) as Promise<[TImage] extends [true] ? string : any>;
     }
     default: {
