@@ -1,0 +1,4 @@
+fragment Contract on contract {
+  ...BaseContract
+  definition
+}

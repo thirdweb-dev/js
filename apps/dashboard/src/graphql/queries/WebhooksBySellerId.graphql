@@ -1,0 +1,8 @@
+query WebhooksBySellerId($sellerId: String!) {
+  webhook(
+    where: { seller_id: { _eq: $sellerId }, deleted_at: { _is_null: true } }
+    order_by: { created_at: asc }
+  ) {
+    ...Webhook
+  }
+}

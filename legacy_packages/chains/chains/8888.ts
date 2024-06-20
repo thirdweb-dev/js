@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmWGNfwJ9o2vmKD3E6fjrxpbFP8W5q45zmYzHHoXwqqAoj",
+    "width": 512,
+    "height": 512,
+    "format": "png"
+  },
   "infoURL": "https://xanachain.xana.net/",
   "name": "XANAChain",
   "nativeCurrency": {

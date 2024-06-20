@@ -196,6 +196,16 @@ function createAccount(provider: Ethereum, address: string) {
         params: [account.address, stringifiedData],
       });
     },
+    async watchAsset(asset) {
+      const result = await provider.request(
+        {
+          method: "wallet_watchAsset",
+          params: asset,
+        },
+        { retryCount: 0 },
+      );
+      return result;
+    },
   };
 
   return account;

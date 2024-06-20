@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.29.5",
+  "version": "5.29.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -212,7 +212,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.13.7"
+    "viem": "2.15.1"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -307,7 +307,7 @@
     "@testing-library/react": "^15.0.6",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/cross-spawn": "^6.0.6",
-    "@types/react": "18.2.17",
+    "@types/react": "^18",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitest/ui": "1.5.0",
     "amazon-cognito-identity-js": "6.3.12",

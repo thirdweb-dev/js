@@ -40,7 +40,6 @@ describe("MintableERC20", () => {
       chain: ANVIL_CHAIN,
       address,
     });
-    console.log("core", contract.address);
     // add mintERC20 extension
     const transaction = installPublishedExtension({
       account: TEST_ACCOUNT_A,

@@ -116,6 +116,11 @@ export type BuyWithFiatStatus =
        * Message indicating the reason for failure
        */
       failureMessage?: string;
+
+      /**
+       * Arbitrary data sent at the time of fetching the quote
+       */
+      purchaseData?: object;
     };
 
 /**

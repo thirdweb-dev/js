@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.29.6
+
+### Patch Changes
+
+- [#3366](https://github.com/thirdweb-dev/js/pull/3366) [`9dd1b5a`](https://github.com/thirdweb-dev/js/commit/9dd1b5a5ebaeaecafdcacbb4f4b81c3006d5074c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix sign raw message through ethers 5/6 adapters
+
+- [#3369](https://github.com/thirdweb-dev/js/pull/3369) [`b808652`](https://github.com/thirdweb-dev/js/commit/b80865280585548615e4741634ea6b884a16e2cf) Thanks [@jnsdls](https://github.com/jnsdls)! - do not consider localhost a thirdweb url (except for dev mode)
+
 ## 5.29.5
 
 ### Patch Changes

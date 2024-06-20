@@ -15,9 +15,14 @@ export type GetBuyWithFiatQuoteParams = {
   client: ThirdwebClient;
 
   /**
-   * The address of the wallet to which the tokens will be sent.
+   * The address of the wallet where the tokens will be sent.
    */
   toAddress: string;
+
+  /**
+   * The address of the wallet which will be used to buy the token.
+   */
+  fromAddress: string;
 
   /**
    * Chain id of the token to buy.
@@ -62,6 +67,13 @@ export type GetBuyWithFiatQuoteParams = {
    * Defaults to `false`
    */
   isTestMode?: boolean;
+
+  /**
+   * Extra details to store with the purchase.
+   *
+   * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
+   */
+  purchaseData?: object;
 };
 
 /**
@@ -236,33 +248,27 @@ export async function getBuyWithFiatQuote(
   params: GetBuyWithFiatQuoteParams,
 ): Promise<BuyWithFiatQuote> {
   try {
-    const queryParams = new URLSearchParams({
-      toAddress: params.toAddress,
-      fromCurrencySymbol: params.fromCurrencySymbol,
-      toChainId: params.toChainId.toString(),
-      toTokenAddress: params.toTokenAddress.toLowerCase(),
+    const clientFetch = getClientFetch(params.client);
+
+    const response = await clientFetch(getPayBuyWithFiatQuoteEndpoint(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        toAddress: params.toAddress,
+        fromCurrencySymbol: params.fromCurrencySymbol,
+        toChainId: params.toChainId.toString(),
+        toTokenAddress: params.toTokenAddress,
+        fromAmount: params.fromAmount,
+        toAmount: params.toAmount,
+        maxSlippageBPS: params.maxSlippageBPS,
+        isTestMode: params.isTestMode,
+        purchaseData: params.purchaseData,
+        fromAddress: params.fromAddress,
+      }),
     });
-
-    if (params.fromAmount) {
-      queryParams.append("fromAmount", params.fromAmount);
-    }
-
-    if (params.toAmount) {
-      queryParams.append("toAmount", params.toAmount);
-    }
-
-    if (params.maxSlippageBPS) {
-      queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
-    }
-
-    if (params.isTestMode) {
-      queryParams.append("isTestMode", params.isTestMode.toString());
-    }
-
-    const queryString = queryParams.toString();
-    const url = `${getPayBuyWithFiatQuoteEndpoint()}?${queryString}`;
-
-    const response = await getClientFetch(params.client)(url);
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {

@@ -18,7 +18,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
-import { WalletIcon } from "../../../icons/WalletIcon.js";
+import { GenericWalletIcon } from "../../../icons/GenericWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
 
@@ -126,7 +126,7 @@ export function PayWithCrypto(props: {
         )}
 
         <Container flex="row" gap="xxs" center="y" color="secondaryText">
-          <WalletIcon size={fontSize.xs} />
+          <GenericWalletIcon size={fontSize.xs} />
           {balanceQuery.data ? (
             <Text size="xs" color="secondaryText" weight={500}>
               {formatTokenBalance(balanceQuery.data, true)}

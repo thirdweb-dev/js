@@ -20,7 +20,7 @@ const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
-describe("erc721: updateMetadata", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("erc721: updateMetadata", () => {
   beforeEach(async () => {
     const address = await deployERC721Contract({
       client,
