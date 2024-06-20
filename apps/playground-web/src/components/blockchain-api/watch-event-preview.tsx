@@ -1,11 +1,11 @@
 "use client";
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { getContract, toTokens } from "thirdweb";
 import { base } from "thirdweb/chains";
-import { useContractEvents } from "thirdweb/react";
 import { transferEvent } from "thirdweb/extensions/erc20";
+import { useContractEvents } from "thirdweb/react";
 
 type Item = {
   from: string;
@@ -24,16 +24,15 @@ const usdcContractOnBase = getContract({
 });
 
 export function WatchEventPreview() {
-  const [items, setItems] = useState<Item[]>([]);
   const contractEvents = useContractEvents({
     contract: usdcContractOnBase,
     events: [transferEvent()],
-    blockRange: 5,
+    blockRange: 10,
   });
 
-  useEffect(() => {
-    if (!contractEvents.data?.length) return;
-    const _items: Item[] = contractEvents.data
+  const items: Item[] = useMemo(() => {
+    if (!contractEvents.data?.length) return [];
+    return contractEvents.data
       .map((item) => {
         const { from, to, value } = item.args;
         return {
@@ -43,19 +42,17 @@ export function WatchEventPreview() {
         };
       })
       .slice(-5);
-    setItems(_items);
   }, [contractEvents.data]);
+
   return (
-    <>
-      <ul className="text-center text-sm lg:text-base">
-        {items.map((item, index) => (
-          <li key={index}>
-            <span className="font-bold">{item.from}</span> transferred{" "}
-            <span className="font-bold text-green-500">{item.value} USDC</span>{" "}
-            to <span className="font-bold">{item.to}</span>
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul className="text-center text-sm lg:text-base">
+      {items.map((item, index) => (
+        <li key={index}>
+          <span className="font-bold">{item.from}</span> transferred{" "}
+          <span className="font-bold text-green-500">{item.value} USDC</span> to{" "}
+          <span className="font-bold">{item.to}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
