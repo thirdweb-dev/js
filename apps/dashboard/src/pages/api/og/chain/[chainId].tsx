@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
-import { getAbsoluteUrl } from "lib/vercel-utils";
+// import { getAbsoluteUrl } from "lib/vercel-utils";
 import type { NextRequest } from "next/server";
 import { fetchChain } from "utils/fetchChain";
+import { isProd } from "../../../../constants/rpc";
 
 // Make sure the font exists in the specified path:
 export const config = {
@@ -28,14 +29,14 @@ const inter700_ = fetch(
 ).then((res) => res.arrayBuffer());
 
 const TWLogo: React.FC = () => (
-  <svg
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
+<svg
     width="255"
     height="37"
     viewBox="0 0 255 37"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>thirdweb</title>
     <g clip-path="url(#clip0_4_1228)">
       <path
         fill-rule="evenodd"
@@ -69,7 +70,7 @@ const TWLogo: React.FC = () => (
   </svg>
 );
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/": "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {
@@ -102,11 +103,11 @@ export default async function handler(req: NextRequest) {
     ? replaceAnyIpfsUrlWithGateway(chain.icon.url)
     : undefined;
 
-  const optimizedIconUrl = iconUrl
-    ? `${getAbsoluteUrl()}/_next/image?url=${encodeURIComponent(
-        iconUrl,
-      )}&w=256&q=75`
-    : undefined;
+  // const optimizedIconUrl = iconUrl
+  //   ? `${getAbsoluteUrl()}/_next/image?url=${encodeURIComponent(
+  //       iconUrl,
+  //     )}&w=256&q=75`
+  //   : undefined;
 
   const [inter400, inter500, inter700, imageData] = await Promise.all([
     inter400_,
@@ -133,10 +134,10 @@ export default async function handler(req: NextRequest) {
       />
       {/* the actual component starts here */}
 
-      {optimizedIconUrl && (
+      {iconUrl && (
         <img
           alt=""
-          src={optimizedIconUrl}
+          src={iconUrl}
           tw="absolute rounded-full"
           style={{
             top: 240,
