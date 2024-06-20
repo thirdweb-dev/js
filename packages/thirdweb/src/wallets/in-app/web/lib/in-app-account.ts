@@ -4,8 +4,9 @@ import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
-import type { Hex } from "../../../../utils/encoding/hex.js";
+import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import { uint8ArrayToString } from "../../../../utils/uint8-array.js";
 import type {
   Account,
   SendTransactionOption,
@@ -238,13 +239,22 @@ export class IFrameWallet {
         };
       },
       async signMessage({ message }) {
-        const messageDecoded =
-          typeof message === "string" ? message : message.raw;
+        // in-app wallets use ethers to sign messages, which always expects a string (or bytes maybe but string is safest)
+        const messageDecoded = (() => {
+          if (typeof message === "string") {
+            return message;
+          }
+          if (message.raw instanceof Uint8Array) {
+            return uint8ArrayToString(message.raw);
+          }
+          return hexToString(message.raw);
+        })();
+
         const { signedMessage } = await querier.call<SignMessageReturnType>({
           procedureName: "signMessage",
           params: {
             // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-            message: messageDecoded as any, // wants Bytes or string
+            message: messageDecoded, // always a string
             chainId: 1, // TODO check if we need this
           },
         });
