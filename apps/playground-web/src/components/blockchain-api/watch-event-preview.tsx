@@ -6,15 +6,12 @@ import { getContract, toTokens } from "thirdweb";
 import { base } from "thirdweb/chains";
 import { transferEvent } from "thirdweb/extensions/erc20";
 import { useContractEvents } from "thirdweb/react";
+import { shortenAddress } from "./shortenAddress";
 
 type Item = {
   from: string;
   to: string;
   value: string;
-};
-
-const shortenAddress = (address: string, length = 2) => {
-  return `${address.slice(0, length + 2)}...${address.slice(-length)}`;
 };
 
 const usdcContractOnBase = getContract({

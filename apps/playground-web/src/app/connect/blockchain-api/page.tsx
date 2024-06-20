@@ -1,6 +1,7 @@
 import { ReadContractExtensionPreview } from "@/components/blockchain-api/read-contract-extension";
 import { ReadContractRawPreview } from "@/components/blockchain-api/read-contract-raw";
 import { WatchEventPreview } from "@/components/blockchain-api/watch-event-preview";
+import { WriteContractExtensionPreview } from "@/components/blockchain-api/write-contract-extension";
 import { CodeExample } from "@/components/code/code-example";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
@@ -68,6 +69,10 @@ export default function Page() {
 
       <section className="container px-4 md:px-6 space-y-8">
         <ReadContractExtension />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <WriteContractExtension />
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
@@ -151,7 +156,7 @@ const azukiContract = getContract({
 function App() {
   const { data } = useReadContract(getNFT, {
     contract: azukiContract,
-    tokenId: 1n,
+    tokenId: 2n,
   });
 
   return (
@@ -162,6 +167,53 @@ function App() {
       />
     </div>
   );
+}
+`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function WriteContractExtension() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Write data to blockchain with prebuilt extension
+        </h2>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
+          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
+          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<WriteContractExtensionPreview />}
+        code={`import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { claimTo } from "thirdweb/extensions/erc20";
+
+const tw_coin = getContract({
+  address: "0xACf072b...3813b60a6",
+  chain: sepolia,
+  client: THIRDWEB_CLIENT,
+});
+
+function App() {
+  return <TransactionButton
+    transaction={() => {
+      const tx = claimTo({
+        contract: tw_coin,
+        to: "0x...",
+        quantity: "10",
+      });
+      return tx;
+    }}
+  >
+    Claim free tokens
+  </TransactionButton>
 }
 `}
         lang="tsx"
