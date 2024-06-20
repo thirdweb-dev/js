@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import {
   Input,
   InputGroup,
@@ -26,22 +27,24 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
   // updated on the settings tab, when the value gets
   // changed from the default 0, but only then, and not
   // every time the value changes on user input
-  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (value !== 0 && stringValue === "0.00") {
       setStringValue((value / 100).toFixed(2));
     }
   }, [value, stringValue]);
 
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
+  
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we *cannot* add onChange to the dependencies here
+    useEffect(() => {
     const validValue = stringValue.match(
       /^100$|^100.00$|^\d{0,2}(\.\d{1,2})? *%?$/g,
     );
     if (validValue?.length) {
       onChange(Math.floor(Number.parseFloat(validValue[0] || "0") * 100));
     }
-  }, [stringValue, onChange]);
+
+    
+  }, [stringValue]);
 
   return (
     <InputGroup {...restInputProps}>
