@@ -241,9 +241,6 @@ importers:
       abitype:
         specifier: 1.0.0
         version: 1.0.0(typescript@5.4.5)(zod@3.23.8)
-      airtable:
-        specifier: ^0.12.2
-        version: 0.12.2
       chakra-react-select:
         specifier: ^4.7.6
         version: 4.8.0(@chakra-ui/form-control@2.2.0)(@chakra-ui/icon@3.2.0)(@chakra-ui/layout@2.3.1)(@chakra-ui/media-query@3.3.0)(@chakra-ui/menu@2.2.1)(@chakra-ui/spinner@2.1.0)(@chakra-ui/system@2.6.2)(@emotion/react@11.11.4)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -20296,19 +20293,6 @@ packages:
     dependencies:
       clean-stack: 2.2.0
       indent-string: 4.0.0
-
-  /airtable@0.12.2:
-    resolution: {integrity: sha512-HS3VytUBTKj8A0vPl7DDr5p/w3IOGv6RXL0fv7eczOWAtj9Xe8ri4TAiZRXoOyo+Z/COADCj+oARFenbxhmkIg==}
-    engines: {node: '>=8.0.0'}
-    dependencies:
-      '@types/node': 12.20.55
-      abort-controller: 3.0.0
-      abortcontroller-polyfill: 1.7.5
-      lodash: 4.17.21
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
 
   /ajv-draft-04@1.0.0(ajv@8.13.0):
     resolution: {integrity: sha512-mv00Te6nmYbRp5DCwclxtt7yV/joXJPGS7nM+97GdxvuttCOfgI3K4U25zboyeX0O+myI8ERluxQe5wljMmVIw==}

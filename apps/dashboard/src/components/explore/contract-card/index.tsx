@@ -38,7 +38,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   tracking,
 }) => {
   const publishedContractResult = usePublishedContract(
-    `${publisher}/${contractId}/${version}`
+    `${publisher}/${contractId}/${version}`,
   );
 
   const isNewContract = useMemo(() => {
@@ -209,11 +209,11 @@ async function publishedContractQueryFn(
   publisher: string,
   contractId: string,
   version: string,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) {
   const polygonSdk = getThirdwebSDK(
     Polygon.chainId,
-    getDashboardChainRpc(Polygon)
+    getDashboardChainRpc(Polygon),
   );
 
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
@@ -221,13 +221,13 @@ async function publishedContractQueryFn(
   if (publisherEns.address) {
     queryClient.setQueryData(
       ensQuery(publisherEns.address).queryKey,
-      publisherEns
+      publisherEns,
     );
   }
   if (publisherEns.ensName) {
     queryClient.setQueryData(
       ensQuery(publisherEns.ensName).queryKey,
-      publisherEns
+      publisherEns,
     );
   }
   // END prefill both publisher ens variations
@@ -249,7 +249,7 @@ async function publishedContractQueryFn(
 
 export function publishedContractQuery(
   publishedContractId: PublishedContractId,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ) {
   const [publisher, contractId, version] = publishedContractId.split("/");
   return {

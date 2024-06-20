@@ -2,7 +2,7 @@ import type { ParsedUrlQuery } from "node:querystring";
 
 export function getSingleQueryValue(
   query: ParsedUrlQuery,
-  key: string
+  key: string,
 ): string | undefined {
   const _val = query[key];
 

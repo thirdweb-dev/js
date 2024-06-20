@@ -23,7 +23,7 @@ export function useQueryWithNetwork<
   options?: Omit<
     UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
     "queryKey" | "queryFn"
-  >
+  >,
 ): UseQueryResult<TData, TError> {
   const activeChainId = useDashboardEVMChainId();
 
@@ -58,11 +58,11 @@ export function useMutationWithInvalidate<
       variables: TVariables,
       context: TContext | undefined,
       wrapCacheKeys: (
-        cacheKeysToInvalidate: TQueryKey[]
+        cacheKeysToInvalidate: TQueryKey[],
         // biome-ignore lint/suspicious/noConfusingVoidType: FIX ME
-      ) => Promise<void[]>
+      ) => Promise<void[]>,
     ) => Promise<unknown> | undefined;
-  }
+  },
 ) {
   const activeChainId = useDashboardEVMChainId();
   const queryClient = useQueryClient();
@@ -73,13 +73,13 @@ export function useMutationWithInvalidate<
         cacheKeysToInvalidate.map((cacheKey) => {
           return queryClient.invalidateQueries(
             (networkKeys.chain(activeChainId) as readonly unknown[]).concat(
-              cacheKey
-            ) as unknown[]
+              cacheKey,
+            ) as unknown[],
           );
-        })
+        }),
       );
     },
-    [queryClient, activeChainId]
+    [queryClient, activeChainId],
   );
 
   return useMutation(mutationFn, {
