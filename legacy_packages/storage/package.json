@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -31,18 +31,18 @@
     "exports": true
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.24.5",
-    "@microsoft/api-extractor": "^7.43.0",
-    "@microsoft/tsdoc": "^0.14.2",
+    "@microsoft/api-documenter": "^7.25.3",
+    "@microsoft/api-extractor": "^7.47.0",
+    "@microsoft/tsdoc": "^0.15.0",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.9.0",
+    "@swc-node/register": "^1.9.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/uuid": "^9.0.8",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.3.0",
     "esm": "^3.2.25",
-    "rimraf": "5.0.5",
+    "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
     "typescript": "5.4.4"
   },

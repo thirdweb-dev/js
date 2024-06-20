@@ -68,7 +68,7 @@ export function WalletEntryButton(props: {
   );
 }
 
-export const WalletButton = /* @__PURE__ */ StyledButton(() => {
+export const WalletButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

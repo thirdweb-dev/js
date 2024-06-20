@@ -93,7 +93,7 @@ describe("session_proposal", () => {
     });
 
     await expect(promise).rejects.toThrow(
-      "[WalletConnect] No account connected to provided wallet",
+      "No account connected to provided wallet",
     );
   });
 
@@ -200,7 +200,7 @@ describe("session_proposal", () => {
       event: proposal,
     });
     await expect(promise).rejects.toThrow(
-      "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
+      "No EIP155 namespace found in Wallet Connect session proposal",
     );
   });
 

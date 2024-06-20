@@ -68,7 +68,7 @@ export const PropertiesFormControl = <
   return (
     <Stack spacing={4}>
       <Flex justify="space-between" align="center" direction="row">
-        <FormLabel m={0}>Properties</FormLabel>
+        <FormLabel m={0}>Attributes</FormLabel>
         <Button
           rightIcon={<Icon as={FiSlash} />}
           variant="outline"

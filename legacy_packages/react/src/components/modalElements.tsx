@@ -5,8 +5,8 @@ import { StyledAnchor, StyledH2, StyledP } from "../design-system/elements";
 import { IconButton } from "./buttons";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = /* @__PURE__ */ StyledH2(
-  (props: { centerOnMobile?: boolean }) => {
+export const ModalTitle = /* @__PURE__ */ StyledH2<{ centerOnMobile?: boolean }>(
+  (props) => {
     const theme = useCustomTheme();
     return {
       margin: 0,
@@ -27,8 +27,8 @@ type ModalDescriptionProps = {
   sm?: boolean;
 };
 
-export const ModalDescription = /* @__PURE__ */ StyledP(
-  (props: ModalDescriptionProps) => {
+export const ModalDescription = /* @__PURE__ */ StyledP<ModalDescriptionProps>(
+  (props) => {
     const theme = useCustomTheme();
     return {
       all: "unset",
@@ -58,8 +58,8 @@ export const BackButton: React.FC<{
   );
 };
 
-export const HelperLink = /* @__PURE__ */ StyledAnchor(
-  (props: { md?: boolean }) => {
+export const HelperLink = /* @__PURE__ */ StyledAnchor<{ md?: boolean }>(
+  (props) => {
     const theme = useCustomTheme();
     return {
       all: "unset",

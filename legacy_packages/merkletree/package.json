@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/merkletree",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "main": "dist/thirdweb-dev-merkletree.cjs.js",
   "module": "dist/thirdweb-dev-merkletree.esm.js",
   "exports": {
@@ -32,11 +32,11 @@
     "treeify": "^1.1.0"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/crypto": "workspace:*",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/treeify": "^1.0.3",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "typescript": "5.4.4"
   },

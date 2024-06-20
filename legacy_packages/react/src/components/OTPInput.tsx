@@ -63,7 +63,7 @@ const caretBlink = keyframes`
   }
   `;
 
-const FakeCaret = /* @__PURE__ */StyledDiv(() => {
+const FakeCaret = /* @__PURE__ */StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "absolute",
@@ -83,7 +83,7 @@ const FakeCaret = /* @__PURE__ */StyledDiv(() => {
   };
 });
 
-const OTPInputBox = /* @__PURE__ */ StyledDiv(() => {
+const OTPInputBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "relative",

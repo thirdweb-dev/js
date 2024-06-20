@@ -309,7 +309,7 @@ const pulseAnimation = keyframes`
 }
 `;
 
-const PulsatingContainer = /* @__PURE__ */ StyledDiv(() => {
+const PulsatingContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "relative",

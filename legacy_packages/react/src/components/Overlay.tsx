@@ -11,7 +11,7 @@ const overlayEnter = keyframes`
   }
 `;
 
-export const Overlay = /* @__PURE__ */ StyledDiv(() => {
+export const Overlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     backgroundColor: theme.colors.modalOverlayBg,

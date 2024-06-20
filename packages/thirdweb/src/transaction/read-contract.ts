@@ -78,7 +78,7 @@ export type ReadContractOptions<
  * import { readContract } from "thirdweb";
  * const result = await readContract({
  *  contract,
- *  method: "totalSupply",
+ *  method: "function totalSupply() view returns (uint256)",
  * });
  * ```
  */
