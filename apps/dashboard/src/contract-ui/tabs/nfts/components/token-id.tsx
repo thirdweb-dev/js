@@ -238,7 +238,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
             </Card>
             {properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
-                <Heading size="label.md">Properties</Heading>
+                <Heading size="label.md">Attributes</Heading>
                 {Array.isArray(properties) &&
                 String(properties[0]?.value) !== "undefined" ? (
                   <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
