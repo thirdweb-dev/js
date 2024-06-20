@@ -107,7 +107,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         accessor: (row) => parseDescription(row.description),
       },
       {
-        Header: "Properties",
+        Header: "Attributes",
         accessor: (row) => row.attributes || row.properties,
         Cell: ({ cell }: { cell: any }) =>
           cell.value ? (

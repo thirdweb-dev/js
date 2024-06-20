@@ -573,7 +573,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"
-          isDisabled={!isDirty}
+          isDisabled={!isDirty && imageUrl === nft?.metadata.image}
         >
           {sharedMetadataMutation
             ? "Set NFT Metadata"

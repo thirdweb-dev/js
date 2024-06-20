@@ -66,7 +66,7 @@ const CheckButton = /* @__PURE__ */ styled(Button)((props: {
   };
 });
 
-const FloatingBadge = /* @__PURE__ */ StyledDiv(() => {
+const FloatingBadge = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "absolute",

@@ -22,7 +22,7 @@ export async function onSessionProposal(options: {
 
   const account = wallet.getAccount();
   if (!account) {
-    throw new Error("[WalletConnect] No account connected to provided wallet");
+    throw new Error("No account connected to provided wallet");
   }
 
   const origin = event.verifyContext?.verified?.origin;
@@ -79,7 +79,7 @@ export async function acceptSessionProposal({
     !sessionProposal.params.optionalNamespaces?.eip155
   ) {
     throw new Error(
-      "[WalletConnect] No EIP155 namespace found in Wallet Connect session proposal",
+      "No EIP155 namespace found in Wallet Connect session proposal",
     );
   }
 

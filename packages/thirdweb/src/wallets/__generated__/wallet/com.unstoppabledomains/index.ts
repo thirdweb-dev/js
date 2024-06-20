@@ -27,6 +27,6 @@ export const wallet = {
   },
   desktop: {
     native: null,
-    universal: "https://unstoppabledomains.com/mobile",
+    universal: null,
   },
 } as const;

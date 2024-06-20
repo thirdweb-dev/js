@@ -170,7 +170,7 @@ function AllWalletsUI(props: {
 }
 
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
-  () => {
+  (_) => {
     const theme = useCustomTheme();
     return {
       color: theme.colors.secondaryText,

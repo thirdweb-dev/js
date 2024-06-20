@@ -1,5 +1,74 @@
 # thirdweb
 
+## 5.30.1
+
+### Patch Changes
+
+- [#3422](https://github.com/thirdweb-dev/js/pull/3422) [`de35430`](https://github.com/thirdweb-dev/js/commit/de354305eed5e87717710f798236d176843b9429) Thanks [@MananTank](https://github.com/MananTank)! - - Fix ConnectButton not able to connect Unknown injected wallet provider + Fix Wallet Icon + Fix AutoConnect
+
+## 5.30.0
+
+### Minor Changes
+
+- [#3388](https://github.com/thirdweb-dev/js/pull/3388) [`ff75450`](https://github.com/thirdweb-dev/js/commit/ff75450c11d645ed55dfd7c95c018b6385706933) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds watchAsset support in injected wallet accounts
+
+- [#3326](https://github.com/thirdweb-dev/js/pull/3326) [`4cfb492`](https://github.com/thirdweb-dev/js/commit/4cfb492bfc8dd8c229ad9652da7371a1ea3b4476) Thanks [@MananTank](https://github.com/MananTank)! - - Add `purchaseData` parameter in `getBuyWithFiatQuote` and `getBuyWithCryptoQuote` functions and UI components to store Extra details for the purchase which can be retrieved later via the status API or Webhook
+
+  - Add a required `fromAddress` parameter in `getBuyWithFiatQuote`
+
+- [#3387](https://github.com/thirdweb-dev/js/pull/3387) [`d88203a`](https://github.com/thirdweb-dev/js/commit/d88203a9819103f98cf7fd12bbeb9fbc1f7456e0) Thanks [@alecananian](https://github.com/alecananian)! - Added `onDisconnect` option in `useWalletDetailsModal`'s `open` method to add a callback when the user disconnects the wallet by clicking the disconnect button in the wallet details modal.
+
+  ```tsx
+  import { useWalletDetailsModal } from "thirdweb/react";
+
+  function Example() {
+    const detailsModal = useWalletDetailsModal();
+
+    return (
+      <button
+        onClick={() => {
+          detailsModal.open({
+            client,
+            onDisconnect: ({ wallet, account }) => {
+              console.log("disconnected", wallet, account);
+            },
+          });
+        }}
+      >
+        Show wallet details
+      </button>
+    );
+  }
+  ```
+
+  `onDisconnect` prop of `ConnectButton` now gets called with the disconnected `wallet` and `account` as arguments
+
+  ```tsx
+  <ConnectButton
+    onDisconnect={({ wallet, account }) => {
+      console.log("disconnected", wallet, account);
+    }}
+  />
+  ```
+
+### Patch Changes
+
+- [#3386](https://github.com/thirdweb-dev/js/pull/3386) [`48569fb`](https://github.com/thirdweb-dev/js/commit/48569fb15ed0347cec57f8efdc4273face8780e0) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix mobile Wallet Connect connection flow
+
+- [#3376](https://github.com/thirdweb-dev/js/pull/3376) [`4484fd0`](https://github.com/thirdweb-dev/js/commit/4484fd02bb3d32c058641c5e175ba25e80202af4) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add updateMetadata extension for Edition Drop (DropERC1155)
+
+- [#3411](https://github.com/thirdweb-dev/js/pull/3411) [`29a643d`](https://github.com/thirdweb-dev/js/commit/29a643df2cc318dacae8a3623b4700f01b002d34) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix hex-based signatures for in-app wallets
+
+- [#3414](https://github.com/thirdweb-dev/js/pull/3414) [`5ca9094`](https://github.com/thirdweb-dev/js/commit/5ca9094e260e9758f2e8964617e172ae542306fc) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#3417](https://github.com/thirdweb-dev/js/pull/3417) [`6818c11`](https://github.com/thirdweb-dev/js/commit/6818c1194b1f9149f09408d6324072041328bcff) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix uploadMobile function not respecting bundleId
+
+- [#3309](https://github.com/thirdweb-dev/js/pull/3309) [`ac5bb56`](https://github.com/thirdweb-dev/js/commit/ac5bb56a2dc61c8b788a660df1b7eb4e5c128230) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update Connect Modal icons
+
+- [#3384](https://github.com/thirdweb-dev/js/pull/3384) [`85b12c7`](https://github.com/thirdweb-dev/js/commit/85b12c7a697de69927f73662bbb6f89e846c6826) Thanks [@MananTank](https://github.com/MananTank)! - Fix React warning when clicking copy address button and layout shift
+
+- [#3385](https://github.com/thirdweb-dev/js/pull/3385) [`8d7f8db`](https://github.com/thirdweb-dev/js/commit/8d7f8db39a5fa70aa48c6284d1e41a2d9b05d93c) Thanks [@alecananian](https://github.com/alecananian)! - Fixed return type for useConnectModal.connect
+
 ## 5.29.6
 
 ### Patch Changes

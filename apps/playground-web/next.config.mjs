@@ -5,9 +5,6 @@ const nextConfig = {
     return config;
   },
   serverExternalPackages: ["@shikijs/twoslash", "prettier", "shiki"],
-  experimental: {
-    reactCompiler: true,
-  },
 };
 
 export default nextConfig;

@@ -4,12 +4,9 @@
     "enabled": true
   },
   "linter": {
-    "enabled": false,
+    "enabled": true,
     "rules": {
-      "recommended": true,
-      "style": {
-        "noUselessElse": "off"
-      }
+      "recommended": true
     }
   },
   "formatter": {

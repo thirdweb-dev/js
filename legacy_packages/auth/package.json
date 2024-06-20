@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.97",
+  "version": "4.1.99",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -80,11 +80,11 @@
     }
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.24.5",
-    "@microsoft/api-extractor": "^7.43.0",
-    "@microsoft/tsdoc": "^0.14.2",
+    "@microsoft/api-documenter": "^7.25.3",
+    "@microsoft/api-extractor": "^7.47.0",
+    "@microsoft/tsdoc": "^0.15.0",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.9.0",
+    "@swc-node/register": "^1.9.2",
     "@swc/core": "^1.5.24",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/cookie": "^0.6.0",
@@ -139,7 +139,7 @@
     "cookie": "^0.6.0",
     "fastify-type-provider-zod": "^1.1.9",
     "uuid": "^9.0.1",
-    "zod": "3.22.4"
+    "zod": "3.23.8"
   },
   "engines": {
     "node": ">=18"

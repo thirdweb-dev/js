@@ -1,0 +1,188 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+  # To use Remote Caching, uncomment the next lines and follow the steps below.
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TW_SECRET_KEY: ${{ secrets.TW_SECRET_KEY }}
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Packages
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Build Packages
+        run: pnpm build:packages
+
+  lint:
+    timeout-minutes: 15
+    name: Lint Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest  
+
+      - run: pnpm lint
+
+  test:
+    timeout-minutes: 15
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          cache: false
+
+      - run: pnpm test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: packages/
+          flags: packages
+          verbose: true
+
+  e2e:
+    timeout-minutes: 15
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package_manager: [npm, yarn, pnpm, bun]
+        bundler: [vite, webpack, esbuild]
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Build Packages
+        run: pnpm build:packages
+
+      - name: Install Yarn (if needed)
+        if: matrix.package_manager == 'yarn'
+        run: npm install -g yarn@1.22.19
+
+      - name: Create test project
+        run: |
+          mkdir test-project
+          cd test-project
+          npm init -y
+          ${{ matrix.package_manager }} add react react-dom ../packages/thirdweb
+      - name: Create test file
+        run: |
+          cd test-project
+          echo "import { createThirdwebClient } from 'thirdweb'; console.log(createThirdwebClient({clientId: "foo_bar_baz"}));" > index.js
+      
+      - name: Bundle with vite
+        if: matrix.bundler == 'vite'
+        run: |
+          cd test-project
+          ${{matrix.package_manager}} add vite
+          echo 'import { defineConfig } from "vite"; import {resolve} from "path"; export default defineConfig({ build: { lib: { entry: resolve(__dirname, "index.js"), name: "e2e_test" }, outDir: "dist" }});' > vite.config.js
+          npx vite build
+    
+      - name: Bundle with webpack
+        if: matrix.bundler == 'webpack'
+        run: |
+          cd test-project
+          ${{matrix.package_manager}} add webpack webpack-cli
+          echo 'const path = require("path"); module.exports = { mode: "production", entry: "./index.js", output: { path: path.resolve(__dirname, "dist"), filename: "bundle.js" }};' > webpack.config.js
+          npx webpack
+    
+      - name: Bundle with esbuild
+        if: matrix.bundler == 'esbuild'
+        run: |
+          cd test-project
+          ${{matrix.package_manager}} add esbuild
+          npx esbuild index.js --bundle --outdir=dist
+    
+      - name: Verify bundle
+        run: |
+          cd test-project/dist
+          file_count=$(find . -type f | wc -l)
+          if [ "$file_count" -gt 0 ]; then
+            echo "Bundling successful"
+          else
+            echo "Bundling failed"
+            exit 1
+          fi
+      
+
+  benchmark:
+    # cannot run benchmarks on merge group
+    if: github.event_name != 'merge_group'
+    timeout-minutes: 15
+    name: "Benchmarks"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          cache: false
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v2
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: "pnpm bench"
+
+  size:
+    # only run on pull requests
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 15
+    name: "Size"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Report bundle size
+        uses: andresz1/size-limit-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          package_manager: pnpm
+          directory: packages/thirdweb

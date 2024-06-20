@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/crypto",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "main": "dist/thirdweb-dev-crypto.cjs.js",
   "module": "dist/thirdweb-dev-crypto.esm.js",
   "exports": {
@@ -31,11 +31,11 @@
     "js-sha3": "^0.9.3"
   },
   "devDependencies": {
-    "eslint": "8.57.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/crypto-js": "^4.2.2",
     "crypto-js": "^4.2.0",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "js-awe": "^1.0.65",
