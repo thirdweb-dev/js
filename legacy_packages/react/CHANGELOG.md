@@ -1,27 +1,5 @@
 # @thirdweb-dev/react
 
-## 4.9.6
-
-### Patch Changes
-
-- Updated dependencies []:
-  - @thirdweb-dev/sdk@4.0.101
-  - @thirdweb-dev/react-core@4.9.6
-  - @thirdweb-dev/wallets@2.5.41
-
-## 4.9.5
-
-### Patch Changes
-
-- [#3414](https://github.com/thirdweb-dev/js/pull/3414) [`5ca9094`](https://github.com/thirdweb-dev/js/commit/5ca9094e260e9758f2e8964617e172ae542306fc) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
-
-- Updated dependencies [[`5ca9094`](https://github.com/thirdweb-dev/js/commit/5ca9094e260e9758f2e8964617e172ae542306fc), [`e441adf`](https://github.com/thirdweb-dev/js/commit/e441adf4f300a28d693afad47451a39b1e3c1b6a)]:
-  - @thirdweb-dev/react-core@4.9.5
-  - @thirdweb-dev/payments@1.0.6
-  - @thirdweb-dev/wallets@2.5.40
-  - @thirdweb-dev/chains@0.1.121
-  - @thirdweb-dev/sdk@4.0.100
-
 ## 4.9.4
 
 ### Patch Changes
