@@ -1,11 +1,5 @@
 # @thirdweb-dev/merkletree
 
-## 0.2.7
-
-### Patch Changes
-
-- [#3414](https://github.com/thirdweb-dev/js/pull/3414) [`5ca9094`](https://github.com/thirdweb-dev/js/commit/5ca9094e260e9758f2e8964617e172ae542306fc) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
-
 ## 0.2.6
 
 ### Patch Changes
