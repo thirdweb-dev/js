@@ -2,6 +2,7 @@ import { ReadContractExtensionPreview } from "@/components/blockchain-api/read-c
 import { ReadContractRawPreview } from "@/components/blockchain-api/read-contract-raw";
 import { WatchEventPreview } from "@/components/blockchain-api/watch-event-preview";
 import { WriteContractExtensionPreview } from "@/components/blockchain-api/write-contract-extension";
+import { WriteContractRawPreview } from "@/components/blockchain-api/write-contract-raw";
 import { CodeExample } from "@/components/code/code-example";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
@@ -73,6 +74,10 @@ export default function Page() {
 
       <section className="container px-4 md:px-6 space-y-8">
         <WriteContractExtension />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <WriteContractRaw />
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
@@ -212,7 +217,59 @@ function App() {
       return tx;
     }}
   >
-    Claim free tokens
+    Claim
+  </TransactionButton>
+}
+`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function WriteContractRaw() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Write data to blockchain
+        </h2>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
+          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
+          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<WriteContractRawPreview />}
+        code={`import { getContract, prepareContractCall, toUnits } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+
+const tw_coin = getContract({
+  address: "0xACf072b...3813b60a6",
+  chain: sepolia,
+  client: THIRDWEB_CLIENT,
+});
+
+// Claim some test tokens from the above example!
+
+function App() {
+  return <TransactionButton
+    transaction={() => {
+      const tx = prepareContractCall({
+        contract: tw_coin,
+        method:
+          "function transfer(address to, uint256 value) returns (bool)",
+        params: [
+          "0xd8dA6BF...7aA96045",
+          toUnits("5", 18),
+        ],
+      });
+      return tx;
+    }}
+  >
+    Send
   </TransactionButton>
 }
 `}

@@ -2,9 +2,8 @@
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useState } from "react";
-import { getContract } from "thirdweb";
+import { getContract, prepareContractCall, toUnits } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
-import { claimTo } from "thirdweb/extensions/erc20";
 import {
   ConnectButton,
   TransactionButton,
@@ -18,7 +17,7 @@ const twCoinContract = getContract({
   client: THIRDWEB_CLIENT,
 });
 
-export function WriteContractExtensionPreview() {
+export function WriteContractRawPreview() {
   const [txHash, setTxHash] = useState<string>("");
   const account = useActiveAccount();
   return (
@@ -29,14 +28,18 @@ export function WriteContractExtensionPreview() {
         height={"120px"}
         className="mx-auto rounded-2xl"
       />
-      <div className="my-3 text-center">Claim free testnet tokens</div>
+      <div className="my-3 text-center">Send ERC20 tokens</div>
       {account ? (
         <TransactionButton
           transaction={() => {
-            const tx = claimTo({
+            const tx = prepareContractCall({
               contract: twCoinContract,
-              to: account.address,
-              quantity: "10",
+              method:
+                "function transfer(address to, uint256 value) returns (bool)",
+              params: [
+                "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+                toUnits("5", 18),
+              ],
             });
             return tx;
           }}
@@ -51,7 +54,7 @@ export function WriteContractExtensionPreview() {
             console.error("Transaction error", error);
           }}
         >
-          Claim {txHash ? "more" : ""}
+          Send {txHash ? "more" : ""}
         </TransactionButton>
       ) : (
         <ConnectButton client={THIRDWEB_CLIENT} />
