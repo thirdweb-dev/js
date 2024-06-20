@@ -1,7 +1,7 @@
 {
   "name": "@thirdweb-dev/cli",
   "main": "dist/cli/index.js",
-  "version": "0.14.12",
+  "version": "0.14.13",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
