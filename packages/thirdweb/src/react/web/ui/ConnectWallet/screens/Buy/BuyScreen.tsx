@@ -707,7 +707,7 @@ function PaymentMethodSelection(props: {
       <Container flex="column" gap="sm">
         <Button
           variant="outline"
-          onClick={() => props.setScreen("buy-with-crypto")}
+          onClick={() => props.setScreen("buy-with-fiat")}
           gap="sm"
           style={{
             justifyContent: "flex-start",
@@ -734,7 +734,7 @@ function PaymentMethodSelection(props: {
         {/* Crypto */}
         <Button
           variant="outline"
-          onClick={() => props.setScreen("buy-with-fiat")}
+          onClick={() => props.setScreen("buy-with-crypto")}
           style={{
             justifyContent: "flex-start",
           }}
