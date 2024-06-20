@@ -24,7 +24,7 @@ export function WatchEventPreview() {
   const contractEvents = useContractEvents({
     contract: usdcContractOnBase,
     events: [transferEvent()],
-    blockRange: 10,
+    blockRange: 1000,
   });
 
   const items: Item[] = useMemo(() => {
@@ -42,7 +42,7 @@ export function WatchEventPreview() {
   }, [contractEvents.data]);
 
   return (
-    <ul className="text-center text-sm lg:text-base">
+    <ul className="m-auto text-sm lg:text-base">
       {items.map((item, index) => (
         <li key={index}>
           <span className="font-bold">{item.from}</span> transferred{" "}

@@ -21,6 +21,7 @@ const twCoinContract = getContract({
 export function WriteContractExtensionPreview() {
   const [txHash, setTxHash] = useState<string>("");
   const account = useActiveAccount();
+  const [error, setError] = useState<string>("");
   return (
     <div className="flex flex-col">
       <img
@@ -32,14 +33,13 @@ export function WriteContractExtensionPreview() {
       <div className="my-3 text-center">Claim free testnet tokens</div>
       {account ? (
         <TransactionButton
-          transaction={() => {
-            const tx = claimTo({
+          transaction={() =>
+            claimTo({
               contract: twCoinContract,
               to: account.address,
               quantity: "10",
-            });
-            return tx;
-          }}
+            })
+          }
           onTransactionSent={(result) => {
             console.log("Transaction submitted", result.transactionHash);
             setTxHash(result.transactionHash);
@@ -48,7 +48,11 @@ export function WriteContractExtensionPreview() {
             console.log("Transaction confirmed", receipt.transactionHash);
           }}
           onError={(error) => {
-            console.error("Transaction error", error);
+            setError(error.message);
+          }}
+          onClick={() => {
+            setError("");
+            setTxHash("");
           }}
         >
           Claim {txHash ? "more" : ""}
@@ -57,15 +61,21 @@ export function WriteContractExtensionPreview() {
         <ConnectButton client={THIRDWEB_CLIENT} />
       )}
 
-      {txHash && (
-        <a
-          target="_blank"
-          href={`${sepolia.blockExplorers![0].url}/tx/${txHash}`}
-          className="text-center text-green-600 mt-3"
-        >
-          Tx sent:{" "}
-          <span className="underline">{shortenAddress(txHash, 6)}</span>
-        </a>
+      {error ? (
+        <div className="text-red-500 text-sm mt-4 text-center">{error}</div>
+      ) : (
+        <>
+          {txHash && (
+            <a
+              target="_blank"
+              href={`${sepolia.blockExplorers![0].url}/tx/${txHash}`}
+              className="text-center text-green-600 mt-3"
+            >
+              Tx sent:{" "}
+              <span className="underline">{shortenAddress(txHash, 6)}</span>
+            </a>
+          )}
+        </>
       )}
     </div>
   );

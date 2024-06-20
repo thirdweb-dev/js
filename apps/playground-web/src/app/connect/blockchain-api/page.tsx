@@ -107,7 +107,7 @@ function ReadContractRaw() {
 import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
-const OnChainCryptoPunks = getContract({
+const onChainCryptoPunks = getContract({
   address: "0x16F5A3...03aF3B2",
   chain: ethereum,
   client: THIRDWEB_CLIENT,
@@ -116,13 +116,16 @@ const OnChainCryptoPunks = getContract({
 function App() {
   // Read the image of the tokenId #1
   const { data } = useReadContract({
-    contract: OnChainCryptoPunks,
+    contract: onChainCryptoPunks,
     method: "function punkImageSvg(uint16 index) view returns (string svg)",
     params: [1],
   });
 
   return (
-    <MediaRenderer client={"..."} src={data} />
+    <MediaRenderer 
+      client={THIRDWEB_CLIENT} 
+      src={data}
+    />
   );
 }
 `}
@@ -153,7 +156,7 @@ import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
 const azukiContract = getContract({
-  address: "0xed5...c544",
+  address: "0xed5a...1c544",
   chain: ethereum,
   client: THIRDWEB_CLIENT,
 });
@@ -165,12 +168,10 @@ function App() {
   });
 
   return (
-    <div className="rounded-2xl backdrop-blur">
-      <MediaRenderer
-        client={THIRDWEB_CLIENT}
-        src={data?.metadata.image}
-      />
-    </div>
+    <MediaRenderer
+      client={THIRDWEB_CLIENT}
+      src={data?.metadata.image}
+    />
   );
 }
 `}
@@ -208,14 +209,13 @@ const tw_coin = getContract({
 
 function App() {
   return <TransactionButton
-    transaction={() => {
-      const tx = claimTo({
-        contract: tw_coin,
-        to: "0x...",
+    transaction={() => 
+      claimTo({
+        contract: twCoinContract,
+        to: account.address,
         quantity: "10",
-      });
-      return tx;
-    }}
+      })
+    }
   >
     Claim
   </TransactionButton>
@@ -256,8 +256,8 @@ const tw_coin = getContract({
 
 function App() {
   return <TransactionButton
-    transaction={() => {
-      const tx = prepareContractCall({
+    transaction={() => 
+      prepareContractCall({
         contract: tw_coin,
         method:
           "function transfer(address to, uint256 value) returns (bool)",
@@ -265,9 +265,8 @@ function App() {
           "0xd8dA6BF...7aA96045",
           toUnits("5", 18),
         ],
-      });
-      return tx;
-    }}
+      })
+    }
   >
     Send
   </TransactionButton>
@@ -311,6 +310,7 @@ function App() {
   const contractEvents = useContractEvents({
     contract: usdcContractOnBase,
     events: [transferEvent()],
+    blockRange: 1000,
   });
 
   (contractEvents.data || []).forEach((item) => {

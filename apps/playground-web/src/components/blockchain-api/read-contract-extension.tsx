@@ -24,6 +24,7 @@ export function ReadContractExtensionPreview() {
         client={THIRDWEB_CLIENT}
         src={data?.metadata.image}
         className="shadow-gray-100 rounded-2xl"
+        gatewayUrl="https://ipfs.io/ipfs/"
       />
     </div>
   );
