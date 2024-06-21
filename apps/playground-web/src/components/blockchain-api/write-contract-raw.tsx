@@ -1,18 +1,18 @@
 "use client";
 
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useState } from "react";
 import { getContract, prepareContractCall, toTokens, toUnits } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
+import { balanceOf } from "thirdweb/extensions/erc20";
 import {
   ConnectButton,
   TransactionButton,
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import type { Hex } from "../../../../../packages/thirdweb/dist/types/utils/encoding/hex";
 import { shortenAddress } from "./shortenAddress";
-import { balanceOf } from "thirdweb/extensions/erc20";
-import { Hex } from "../../../../../packages/thirdweb/dist/types/utils/encoding/hex";
 
 const twCoinContract = getContract({
   address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
@@ -88,7 +88,7 @@ export function WriteContractRawPreview() {
             // Probably the most common error for this use case
             // we don't want a long error message to mess up the UI
             const _message = error.message.includes(
-              "ERC20: transfer amount exceeds balance"
+              "ERC20: transfer amount exceeds balance",
             )
               ? "Don't have enough token"
               : error.message;
