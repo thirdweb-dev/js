@@ -1,13 +1,13 @@
 import type { Json, ThirdwebAuth, User } from "../../../core";
 import type { GetServerSidePropsContext, NextApiRequest } from "next";
 import type { NextRequest } from "next/server";
-import type { ThirdwebAuthConfigShared } from '../../common/types'
+import type { ThirdwebAuthConfigShared } from "../../common/types";
 
 export {
   ActiveBodySchema,
   LoginPayloadBodySchema,
-  PayloadBodySchema
-} from '../../common/types'
+  PayloadBodySchema,
+} from "../../common/types";
 
 type RequestType =
   | GetServerSidePropsContext["req"]

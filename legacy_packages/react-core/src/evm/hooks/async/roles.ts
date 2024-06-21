@@ -284,9 +284,11 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
   const queryClient = useQueryClient();
 
   return useMutation(
-    async (rolesWithAddresses: {
-      [role in RolesForContract<TContract>]: string[];
-    }) => {
+    async (
+      rolesWithAddresses: {
+        [role in RolesForContract<TContract>]: string[];
+      },
+    ) => {
       requiredParamInvariant(contract, "No contract provided");
       invariant(contract.roles, "Contract does not support roles");
       await contract.roles.setAll(rolesWithAddresses);

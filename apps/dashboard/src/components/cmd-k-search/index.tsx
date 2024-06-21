@@ -16,19 +16,23 @@ import {
   ModalOverlay,
   Spinner,
 } from "@chakra-ui/react";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  type QueryClient,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { SearchMode, getSearchQuery } from "lib/search";
+import { type SearchMode, getSearchQuery } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
 import invariant from "tiny-invariant";
 import { Button, Card, Heading, Link, Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
 import { useDebounce } from "use-debounce";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 type ContractSearchResult = {
   address: string;
@@ -44,7 +48,7 @@ const typesenseApiKey =
 
 function contractTypesenseSearchQuery(
   searchQuery: string,
-  walletAddress = "",
+  walletAddress: string | undefined,
   searchMode: SearchMode,
   queryClient: QueryClient,
   trackEvent: ReturnType<typeof useTrack>,
@@ -84,6 +88,7 @@ function contractTypesenseSearchQuery(
         label: "attempt",
         searchQuery,
       });
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       return result.hits.map((hit: any) => {
         const document = hit.document;
         return {

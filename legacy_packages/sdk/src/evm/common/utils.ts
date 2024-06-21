@@ -33,7 +33,10 @@ export function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
 /**
  * @internal
  */
-export function hasDuplicates<T>(arr: T[], fn: (a: T, b: T) => boolean): boolean {
+export function hasDuplicates<T>(
+  arr: T[],
+  fn: (a: T, b: T) => boolean,
+): boolean {
   if (arr.length === 0 || arr.length === 1) {
     return false;
   }

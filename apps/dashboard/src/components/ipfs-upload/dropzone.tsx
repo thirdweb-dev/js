@@ -24,7 +24,7 @@ import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
@@ -42,9 +42,7 @@ import { Label } from "../../@/components/ui/label";
 
 const TRACKING_CATEGORY = "ipfs_uploader";
 
-interface IpfsUploadDropzoneProps {}
-
-export const IpfsUploadDropzone: React.FC<IpfsUploadDropzoneProps> = () => {
+export const IpfsUploadDropzone: React.FC = () => {
   const address = useAddress();
 
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
@@ -129,7 +127,7 @@ export const IpfsUploadDropzone: React.FC<IpfsUploadDropzoneProps> = () => {
           </Center>
         )}
       </AspectRatio>
-      <Flex flexDir="column" gap={{ base: 6, md: 3 }}></Flex>
+      <Flex flexDir="column" gap={{ base: 6, md: 3 }} />
     </Flex>
   );
 };

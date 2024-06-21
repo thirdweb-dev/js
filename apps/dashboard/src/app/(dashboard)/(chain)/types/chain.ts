@@ -1,4 +1,4 @@
-import { ChainMetadata } from "thirdweb/chains";
+import type { ChainMetadata } from "thirdweb/chains";
 
 export type ChainSupportedService =
   | "contracts"

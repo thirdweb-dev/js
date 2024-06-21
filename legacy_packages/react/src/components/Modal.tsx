@@ -156,7 +156,7 @@ const modalAnimationMobile = keyframes`
   }
 `;
 
-const DialogContent = /* @__PURE__ */ StyledDiv(() => {
+const DialogContent = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
 
   return {

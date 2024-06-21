@@ -10,7 +10,7 @@ import { StyledDiv } from "../design-system/elements";
 import { useCustomTheme } from "../design-system/CustomThemeProvider";
 import type { CSSObject } from "@emotion/react";
 
-export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
+export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     borderTop: `1px solid ${theme.colors.separatorLine}`,
@@ -181,7 +181,7 @@ type BoxProps = {
   borderColor?: keyof Theme["colors"] | undefined;
 };
 
-const Box = /* @__PURE__ */ StyledDiv((props: BoxProps) => {
+const Box = /* @__PURE__ */ StyledDiv<BoxProps>((props) => {
   const theme = useCustomTheme();
   return {
     color: props.color ? theme.colors[props.color] : "inherit",

@@ -8,7 +8,6 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-// import { localWalletMetadata } from "../../../../wallets/local/index._ts";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
@@ -68,7 +67,7 @@ export function WalletEntryButton(props: {
   );
 }
 
-export const WalletButton = /* @__PURE__ */ StyledButton(() => {
+export const WalletButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

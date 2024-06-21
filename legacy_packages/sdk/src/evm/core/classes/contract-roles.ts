@@ -314,9 +314,8 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
         `this contract does not support the "${role}" role`,
       );
       const resolvedAddress = await resolveAddress(address);
-      const revokeFunctionName = await this.getRevokeRoleFunctionName(
-        resolvedAddress,
-      );
+      const revokeFunctionName =
+        await this.getRevokeRoleFunctionName(resolvedAddress);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

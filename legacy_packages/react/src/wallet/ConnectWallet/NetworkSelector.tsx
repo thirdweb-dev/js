@@ -329,7 +329,9 @@ export function NetworkSelectorContent(
           return; // just a type guard, this never happens
         }
 
-        const section = filteredChainSectionsValue.find((s) => s.label === label);
+        const section = filteredChainSectionsValue.find(
+          (s) => s.label === label,
+        );
         if (section) {
           section.chains.push(c);
         } else {
@@ -754,7 +756,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
 });
 
 const TabButton = /* @__PURE__ */ (() =>
-  styled(Tabs.Trigger)(() => {
+  styled(Tabs.Trigger)((_) => {
     const theme = useCustomTheme();
     return {
       all: "unset",
@@ -795,7 +797,7 @@ const NetworkListUl = /* @__PURE__ */ StyledUl({
   boxSizing: "border-box",
 });
 
-const NetworkButton = /* @__PURE__ */ StyledButton(() => {
+const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -822,7 +824,7 @@ const NetworkButton = /* @__PURE__ */ StyledButton(() => {
 });
 
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
-  () => {
+  (_) => {
     const theme = useCustomTheme();
     return {
       color: theme.colors.secondaryText,

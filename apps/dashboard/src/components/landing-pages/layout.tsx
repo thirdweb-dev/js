@@ -1,9 +1,9 @@
-import { Box, BoxProps, DarkMode, Flex } from "@chakra-ui/react";
+import { Box, type BoxProps, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
-import { NextSeo, NextSeoProps } from "next-seo";
-import { ComponentWithChildren } from "types/component-with-children";
+import { NextSeo, type NextSeoProps } from "next-seo";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface LandingLayoutProps {
   seo: NextSeoProps;

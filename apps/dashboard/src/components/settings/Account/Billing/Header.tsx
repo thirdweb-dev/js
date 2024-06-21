@@ -1,6 +1,6 @@
 import { Flex, HStack, Icon } from "@chakra-ui/react";
-import { Heading, Text, Badge } from "tw-components";
-import { FiCheckCircle, FiAlertCircle, FiInfo } from "react-icons/fi";
+import { FiAlertCircle, FiCheckCircle, FiInfo } from "react-icons/fi";
+import { Badge, Heading, Text } from "tw-components";
 
 interface BillingHeaderProps {
   validPayment: boolean;

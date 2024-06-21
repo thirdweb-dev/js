@@ -7,7 +7,7 @@ import type { Account } from "../../interfaces/wallet.js";
 export function validateAccountAddress(account: Account, address: Address) {
   if (checksumAddress(account.address) !== checksumAddress(address)) {
     throw new Error(
-      `[WalletConnect] Failed to validate account address (${account.address}), differs from ${address}`,
+      `Failed to validate account address (${account.address}), differs from ${address}`,
     );
   }
 }
@@ -25,7 +25,7 @@ export function parseEip155ChainId(chainId: string): number {
     !chainIdAsNumber
   ) {
     throw new Error(
-      `[WalletConnect] Invalid chainId ${chainId}, should have the format 'eip155:1'`,
+      `Invalid chainId ${chainId}, should have the format 'eip155:1'`,
     );
   }
   return chainIdAsNumber;

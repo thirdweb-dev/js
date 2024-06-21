@@ -12,8 +12,8 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { UseQueryResult } from "@tanstack/react-query";
-import {
+import type { UseQueryResult } from "@tanstack/react-query";
+import type {
   AreaChartProps,
   GenericDataType,
 } from "components/analytics/area-chart";
@@ -21,8 +21,8 @@ import { AutoBarChart } from "components/analytics/auto-bar-chart";
 import { BarChart } from "components/analytics/bar-chart";
 import { ChartContainer } from "components/analytics/chart-container";
 import {
-  AnalyticsQueryParams,
-  TotalQueryResult,
+  type AnalyticsQueryParams,
+  type TotalQueryResult,
   useAnalyticsSupportedChains,
   useEventsAnalytics,
   useFunctionsAnalytics,
@@ -83,18 +83,24 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                 <AnalyticsStat
                   chainId={evmContractInfo.chain.chainId}
                   contractAddress={contractAddress}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useTotal={useTotalWalletsAnalytics}
                   label="Unique Wallets"
                 />
                 <AnalyticsStat
                   chainId={evmContractInfo.chain.chainId}
                   contractAddress={contractAddress}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useTotal={useTotalTransactionAnalytics}
                   label="Total Transactions"
                 />
                 <AnalyticsStat
                   chainId={evmContractInfo.chain.chainId}
                   contractAddress={contractAddress}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useTotal={useTotalLogsAnalytics}
                   label="Total Events"
                 />
@@ -120,6 +126,8 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   endDate={endDate}
                   index={"time"}
                   categories={[{ id: "wallets", label: "Unique Wallets" }]}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useAnalytics={useUniqueWalletsAnalytics}
                 />
               </ChartContainer>
@@ -142,6 +150,8 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   endDate={endDate}
                   index={"time"}
                   categories={[{ id: "count", label: "Transactions" }]}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useAnalytics={useTransactionAnalytics}
                 />
               </ChartContainer>
@@ -165,6 +175,8 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   endDate={endDate}
                   index={"time"}
                   categories={[{ id: "count", label: "Events" }]}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useAnalytics={useLogsAnalytics}
                 />
               </ChartContainer>
@@ -187,6 +199,8 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   endDate={endDate}
                   index={"time"}
                   categories={"auto"}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useAnalytics={useFunctionsAnalytics}
                 />
               </ChartContainer>
@@ -206,6 +220,8 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   endDate={endDate}
                   index={"time"}
                   categories={"auto"}
+                  // FIXME
+                  // eslint-disable-next-line react-compiler/react-compiler
                   useAnalytics={useEventsAnalytics}
                 />
               </ChartContainer>

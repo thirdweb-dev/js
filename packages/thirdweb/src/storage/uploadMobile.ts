@@ -20,7 +20,7 @@ export type UploadMobileOptions = InternalUploadMobileOptions & {
  *      if (!uri) {
  *        throw new Error('No uri');
  *      }
- *      const resp = await storage.upload({
+ *      const resp = await uploadMobile({
  *        uri,
  *        type,
  *        name: fileName,
@@ -33,20 +33,20 @@ export type UploadMobileOptions = InternalUploadMobileOptions & {
  *  { name: "JSON 1", text: "Hello World" },
  *  { name: "JSON 2", trait: "Awesome" },
  * ];
- * const jsonUris = await storage.uploadBatch(objects);
+ * const jsonUris = await uploadMobile(objects);
  * ```
  * @storage
  */
-export async function uploadMobile(options?: UploadMobileOptions) {
+export async function uploadMobile(options: UploadMobileOptions) {
   if (!options) {
     return [];
   }
 
-  const data = options?.files.filter((item) => item !== undefined);
+  const data = options.files.filter((item) => item !== undefined);
 
   if (!data?.length) {
     return [];
   }
 
-  return await uploadBatchMobile(options?.client, data, options);
+  return await uploadBatchMobile(options.client, data, options);
 }

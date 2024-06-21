@@ -1,13 +1,13 @@
 import {
   Box,
-  BoxProps,
+  type BoxProps,
   Center,
   Flex,
   HStack,
   Icon,
   IconButton,
   Image,
-  ImageProps,
+  type ImageProps,
   Portal,
   Select,
   Table,
@@ -28,7 +28,7 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import { Column, usePagination, useTable } from "react-table";
+import { type Column, usePagination, useTable } from "react-table";
 import { CodeBlock, Text } from "tw-components";
 import { parseDescription } from "utils/parseDescription";
 
@@ -107,8 +107,9 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         accessor: (row) => parseDescription(row.description),
       },
       {
-        Header: "Properties",
+        Header: "Attributes",
         accessor: (row) => row.attributes || row.properties,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: ({ cell }: { cell: any }) =>
           cell.value ? (
             <CodeBlock
@@ -153,6 +154,8 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         pageIndex: 0,
       },
     },
+    // will be fixed with @tanstack/react-table v8
+    // eslint-disable-next-line react-compiler/react-compiler
     usePagination,
   );
 
@@ -163,8 +166,10 @@ export const BatchTable: React.FC<BatchTableProps> = ({
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                 {headerGroup.headers.map((column, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   <Th {...column.getHeaderProps()} border="none" key={i}>
                     <Text as="label" size="label.sm" color="faded">
                       {column.render("Header")}
@@ -182,6 +187,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
                   {...row.getRowProps()}
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
                 >
                   {row.cells.map((cell, cellIndex) => {
@@ -190,6 +196,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
                         {...cell.getCellProps()}
                         borderBottomWidth="inherit"
                         borderColor="borderColor"
+                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                         key={cellIndex}
                       >
                         {cell.render("Cell")}
@@ -237,7 +244,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
 
             <Select
               onChange={(e) => {
-                setPageSize(parseInt(e.target.value as string, 10));
+                setPageSize(Number.parseInt(e.target.value as string, 10));
               }}
               value={pageSize}
             >

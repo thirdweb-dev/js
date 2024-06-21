@@ -2,6 +2,8 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebDomains } from "../../../../../utils/domains.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../../core/design-system/index.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -12,10 +14,20 @@ import { Container, Line, ModalHeader } from "../../components/basic.js";
  */
 export function PrivateKey(props: {
   onBack: () => void;
+  wallet?: Wallet;
   theme: "light" | "dark" | Theme;
   client: ThirdwebClient;
 }) {
   const [isLoading, setLoading] = useState(true);
+  if (!props.wallet) {
+    throw new Error("[PrivateKey] No wallet found");
+  }
+
+  const baseDomain = getThirdwebDomains().inAppWallet;
+  const ecosystem = isEcosystemWallet(props.wallet)
+    ? { id: props.wallet.id, partnerId: props.wallet.getConfig()?.partnerId }
+    : undefined;
+
   return (
     <Container
       style={{
@@ -66,12 +78,14 @@ export function PrivateKey(props: {
                 setLoading(false);
               }}
               allow="clipboard-read; clipboard-write"
-              src={`https://${
-                getThirdwebDomains().inAppWallet
-              }/sdk/2022-08-12/embedded-wallet/export-private-key?clientId=${
+              src={`${
+                baseDomain.includes("localhost") ? "http" : "https"
+              }://${baseDomain}/sdk/2022-08-12/embedded-wallet/export-private-key?clientId=${
                 props.client.clientId
               }&theme=${
                 typeof props.theme === "string" ? props.theme : props.theme.type
+              }${ecosystem ? `&ecosystemId=${ecosystem.id}` : ""}${
+                ecosystem?.partnerId ? `&partnerId=${ecosystem.partnerId}` : ""
               }`}
             />
           </Container>

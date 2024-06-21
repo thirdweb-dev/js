@@ -1,14 +1,14 @@
+import { Icon, Tooltip, useClipboard, useToast } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
+import { FiCopy } from "react-icons/fi";
 import {
   Button,
-  ButtonProps,
-  PossibleButtonSize,
+  type ButtonProps,
+  type PossibleButtonSize,
   buttonSizesMap,
 } from "./button";
 import { Card } from "./card";
 import { Text } from "./text";
-import { Icon, Tooltip, useClipboard, useToast } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { FiCopy } from "react-icons/fi";
 
 interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
   address?: string;
@@ -28,9 +28,8 @@ interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
 const shorten = (str: string) => {
   if (str.length > 13) {
     return `${str.substring(0, 6)}...${str.substring(str.length - 4)}`;
-  } else {
-    return str;
   }
+  return str;
 };
 
 export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({

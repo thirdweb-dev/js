@@ -8,5 +8,6 @@ module.exports = {
     "better-tree-shaking/no-top-level-side-effects": "error",
     "i18next/no-literal-string": 2,
     "svg-jsx/camel-case-dash": "error",
-  },
+    "@typescript-eslint/no-unused-vars": "warn",
+  }
 };

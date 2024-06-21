@@ -10,7 +10,7 @@ import { ContractsSidebar } from "core-ui/sidebar/contracts";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "published_contracts";
 

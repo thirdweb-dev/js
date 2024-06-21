@@ -1,7 +1,7 @@
-import { defineChain } from "thirdweb";
-import { useSupportedChainsRecord } from "../hooks/chains/configureChains";
 import type { Chain } from "@thirdweb-dev/chains";
+import { defineChain } from "thirdweb";
 import { PROD_OR_DEV_URL } from "../constants/rpc";
+import { useSupportedChainsRecord } from "../hooks/chains/configureChains";
 
 export function defineDashboardChain(chainId: number, dashboardChain?: Chain) {
   return defineChain({

@@ -50,6 +50,7 @@ const Arrow = () => {
         viewBox="0 0 93 14"
         fill="none"
       >
+        <title>arrow</title>
         <path
           d="M92.5865 7.66776C92.9399 7.31434 92.9399 6.74132 92.5865 6.3879L86.8271 0.628516C86.4737 0.275091 85.9006 0.275091 85.5472 0.628516C85.1938 0.98194 85.1938 1.55495 85.5472 1.90838L90.6667 7.02783L85.5472 12.1473C85.1938 12.5007 85.1938 13.0737 85.5472 13.4271C85.9006 13.7806 86.4737 13.7806 86.8271 13.4271L92.5865 7.66776ZM0 7.93283H91.9465V6.12283H0V7.93283Z"
           fill="white"
@@ -80,10 +81,12 @@ const ReasonWeb3Section = () => {
         {reasons.map((reason, idx) => {
           // if is arrow
           if (typeof reason === "boolean") {
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             return <Arrow key={idx} />;
           }
 
           return (
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             <Flex key={idx} flexDir="column">
               <ChakraNextImage
                 w="full"
@@ -98,6 +101,7 @@ const ReasonWeb3Section = () => {
 
               <List marginTop={6} listStyleType="initial">
                 {reason.list.map((list, _idx) => {
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   return <ListItem key={_idx}>{list}</ListItem>;
                 })}
               </List>

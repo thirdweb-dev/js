@@ -14,20 +14,20 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
-  UseContractResult,
+  type UseContractResult,
   useAddress,
   useContract,
   useContractType,
-  useCreateAuctionListing,
-  useCreateDirectListing,
+  type useCreateAuctionListing,
+  type useCreateDirectListing,
   useOwnedNFTs,
 } from "@thirdweb-dev/react";
 import {
-  Marketplace,
-  MarketplaceV3,
+  type Marketplace,
+  type MarketplaceV3,
   NATIVE_TOKEN_ADDRESS,
-  NewAuctionListing,
-  NewDirectListing,
+  type NewAuctionListing,
+  type NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -36,7 +36,8 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
 import { isMoralisSupported } from "lib/wallet/nfts/moralis";
-import { WalletNFT } from "lib/wallet/nfts/types";
+import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
+import type { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
@@ -50,7 +51,6 @@ import {
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { ListLabel } from "./list-label";
-import { isSimpleHashSupported } from "lib/wallet/nfts/simpleHash";
 
 interface ListForm
   extends Omit<NewDirectListing, "type">,
@@ -208,7 +208,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
               // Create endTimestamp with the current date + listingDurationInSeconds
               endTimestamp: new Date(
                 new Date().getTime() +
-                  parseInt(formData.listingDurationInSeconds) * 1000,
+                  Number.parseInt(formData.listingDurationInSeconds) * 1000,
               ),
 
               // Marketplace v1 only params
@@ -304,14 +304,14 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
           </Center>
         ) : nfts && nfts.length !== 0 ? (
           <Flex gap={2} flexWrap="wrap">
-            {nfts?.map((nft, id) => {
+            {nfts?.map((nft) => {
               return (
                 <Tooltip
                   bg="transparent"
                   boxShadow="none"
                   shouldWrapChildren
                   placement="left-end"
-                  key={id}
+                  key={nft.contractAddress + nft.tokenId}
                   label={<ListLabel nft={nft} />}
                 >
                   <Box

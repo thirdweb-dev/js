@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-dom-props */
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -80,28 +79,28 @@ export function ScrollShadow(props: {
         style={{
           opacity: "0",
         }}
-      ></div>
+      />
       <div
         className={`${styles.scrollShadowBottom} ${styles.scrollShadowY}`}
         ref={shadowBottomEl}
         style={{
           opacity: "0",
         }}
-      ></div>
+      />
       <div
         className={`${styles.scrollShadowLeft} ${styles.scrollShadowX}`}
         ref={shadowLeftEl}
         style={{
           opacity: "0",
         }}
-      ></div>
+      />
       <div
         className={`${styles.scrollShadowRight} ${styles.scrollShadowX}`}
         ref={shadowRightEl}
         style={{
           opacity: "0",
         }}
-      ></div>
+      />
       <div
         className={cn("overflow-auto", props.scrollableClassName)}
         style={{

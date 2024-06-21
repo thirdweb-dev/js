@@ -12,16 +12,16 @@ import {
 } from "@thirdweb-dev/react";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
-import { useEffect, useRef } from "react";
-import type { ComponentWithChildren } from "types/component-with-children";
-import {
-  useSetActiveWallet,
-  useDisconnect as useDisconnectV5,
-} from "thirdweb/react";
-import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-import { createWalletAdapter } from "thirdweb/wallets";
 import { useRouter } from "next/router";
+import { useEffect, useRef } from "react";
 import { defineChain } from "thirdweb";
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import {
+  useDisconnect as useDisconnectV5,
+  useSetActiveWallet,
+} from "thirdweb/react";
+import { createWalletAdapter } from "thirdweb/wallets";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { thirdwebClient } from "../../lib/thirdweb-client";
 import { DashboardThirdwebProviderSetup } from "./provider-setup";
 
@@ -68,6 +68,7 @@ const V4ToV5SignerAdapter = () => {
 
   const { disconnect: disconnectv5 } = useDisconnectV5();
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const currentWallet = useRef<any>(null);
 
   // will removes as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
@@ -109,9 +110,7 @@ const V4ToV5SignerAdapter = () => {
     return () => {
       active = false;
     };
-    // purposefully omit switchChain and disconnect from hooks
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signer, chain]);
+  }, [signer, chain, disconnect, setActiveWallet, disconnectv5, switchChain]);
 
   return null;
 };

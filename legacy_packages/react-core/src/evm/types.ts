@@ -152,8 +152,8 @@ export type MintNFTParams = {
 export type MintNFTReturnType<TContract> = TContract extends Erc721
   ? Awaited<ReturnType<Erc721["mintTo"]>>
   : TContract extends Erc1155
-  ? Awaited<ReturnType<Erc1155["mintTo"]>>
-  : never;
+    ? Awaited<ReturnType<Erc1155["mintTo"]>>
+    : never;
 
 /**
  * The params for the `useBurnNFT` hook mutation.

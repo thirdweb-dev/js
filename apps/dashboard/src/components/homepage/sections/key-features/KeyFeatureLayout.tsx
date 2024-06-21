@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import { Heading, HeadingProps, Text } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import { Heading, type HeadingProps, Text } from "tw-components";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 type LayoutProps = {
   title: string;

@@ -1,4 +1,4 @@
-import { ContractType, FeatureName } from "@thirdweb-dev/sdk";
+import type { ContractType, FeatureName } from "@thirdweb-dev/sdk";
 
 type Item = {
   title: string;

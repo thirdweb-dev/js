@@ -1,7 +1,10 @@
-import { ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { apiKeys } from "@3rdweb-sdk/react";
+import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { usePaymentsEnabledContracts } from "@3rdweb-sdk/react/hooks/usePayments";
 import {
   Box,
-  BoxProps,
+  type BoxProps,
   Flex,
   FormControl,
   HStack,
@@ -10,28 +13,25 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  UseRadioProps,
+  type UseRadioProps,
   useRadio,
   useRadioGroup,
 } from "@chakra-ui/react";
-import { AppLayout } from "components/app-layouts/app";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
-import { PageId } from "page-id";
-import { useEffect, useMemo, useState } from "react";
-import { Heading, Text, TrackedLink } from "tw-components";
-import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { ThirdwebNextPage } from "utils/types";
-import { apiKeys } from "@3rdweb-sdk/react";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { usePaymentsEnabledContracts } from "@3rdweb-sdk/react/hooks/usePayments";
 import { useQueryClient } from "@tanstack/react-query";
+import { AppLayout } from "components/app-layouts/app";
 import { OldPaySetting } from "components/pay/OldPaySetting";
 import { PayConfig } from "components/pay/PayConfig";
 import { EnabledContracts } from "components/payments/contracts/enabled-contracts";
 import { PaymentContracts } from "components/payments/contracts/payment-contracts";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { useEffect, useMemo, useState } from "react";
+import { Heading, Text, TrackedLink } from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "pay";
 

@@ -13,21 +13,21 @@ import type { OptionalPropertiesInput } from "@thirdweb-dev/sdk";
 import { FileInput } from "components/shared/FileInput";
 import { useEffect } from "react";
 import {
-  ArrayPath,
-  Control,
-  FieldErrors,
-  FieldValues,
-  Path,
-  PathValue,
-  UseFormRegister,
-  UseFormSetValue,
-  UseFormWatch,
-  WatchObserver,
+  type ArrayPath,
+  type Control,
+  type FieldErrors,
+  type FieldValues,
+  type Path,
+  type PathValue,
+  type UseFormRegister,
+  type UseFormSetValue,
+  type UseFormWatch,
+  type WatchObserver,
   useFieldArray,
 } from "react-hook-form";
 import { FiPlus, FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
-import { z } from "zod";
+import type { z } from "zod";
 
 interface IPropertyFieldValues extends FieldValues {
   attributes?: z.input<typeof OptionalPropertiesInput>;
@@ -61,6 +61,7 @@ export const PropertiesFormControl = <
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (fields.length === 0) {
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       append({ trait_type: "", value: "" } as any, { shouldFocus: false });
     }
   }, [fields, append]);
@@ -68,20 +69,23 @@ export const PropertiesFormControl = <
   return (
     <Stack spacing={4}>
       <Flex justify="space-between" align="center" direction="row">
-        <FormLabel m={0}>Properties</FormLabel>
+        <FormLabel m={0}>Attributes</FormLabel>
         <Button
           rightIcon={<Icon as={FiSlash} />}
           variant="outline"
           colorScheme="red"
           size="xs"
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           onClick={() => replace([{ trait_type: "", value: "" } as any])}
         >
           Reset
         </Button>
       </Flex>
       {fields.map((field, index) => {
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         const keyError = (errors as any)?.attributes?.[index]?.trait_type
           ?.message as string | undefined;
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         const valueError = (errors as any)?.attributes?.[index]?.value
           ?.message as string | undefined;
         const isInvalid = !!(keyError || valueError);
@@ -100,7 +104,7 @@ export const PropertiesFormControl = <
                     `attributes.${index}.trait_type` as Path<TFieldValues>,
                   )}
                   placeholder="trait_type"
-                ></Input>
+                />
                 <FormErrorMessage>{keyError}</FormErrorMessage>
               </FormControl>
               <FormControl isInvalid={!!valueError}>
@@ -181,6 +185,7 @@ export const PropertiesFormControl = <
           colorScheme="purple"
           size="sm"
           onClick={() =>
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             append({ trait_type: undefined, value: undefined } as any)
           }
         >

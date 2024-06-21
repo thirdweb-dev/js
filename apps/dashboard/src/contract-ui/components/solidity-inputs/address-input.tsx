@@ -1,5 +1,3 @@
-import { SolidityInputProps } from ".";
-import { validateAddress } from "./helpers";
 import { Box, Flex, Icon, Input, Spinner } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { useEns } from "components/contract-components/hooks";
@@ -7,6 +5,8 @@ import { utils } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { FormHelperText } from "tw-components";
+import type { SolidityInputProps } from ".";
+import { validateAddress } from "./helpers";
 
 export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   formContext: form,

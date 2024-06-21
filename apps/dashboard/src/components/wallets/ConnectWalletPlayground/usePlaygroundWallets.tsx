@@ -3,9 +3,9 @@ import {
   embeddedWallet,
   smartWallet,
 } from "@thirdweb-dev/react";
-import { useState } from "react";
-import { walletInfoRecord, type WalletId } from "./walletInfoRecord";
 import { isProd } from "constants/rpc";
+import { useState } from "react";
+import { type WalletId, walletInfoRecord } from "./walletInfoRecord";
 
 type WalletSelection = Record<WalletId, boolean | "recommended">;
 
@@ -34,9 +34,12 @@ export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
     .filter((x) => x[1])
     .map((x) => x[0] as WalletId);
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const supportedWallets: WalletConfig<any>[] = enabledWallets.map(
     (walletId) => {
       if (walletId === "Email Wallet") {
+        // FIXME
+        // eslint-disable-next-line react-compiler/react-compiler
         walletInfoRecord[walletId].component = embeddedWallet({
           recommended: !!walletSelection[walletId],
           auth: {
@@ -59,7 +62,6 @@ export function usePlaygroundWallets(defaultWalletSelection: WalletSelection) {
             bundlerUrl: isProd
               ? "https://11155111.bundler.thirdweb.com"
               : "https://11155111.bundler.thirdweb-dev.com",
-            // eslint-disable-next-line inclusive-language/use-inclusive-words
             paymasterUrl: isProd
               ? "https://11155111.bundler.thirdweb.com"
               : "https://11155111.bundler.thirdweb-dev.com",

@@ -1,11 +1,11 @@
 import { ListItem, UnorderedList } from "@chakra-ui/react";
+import { Text, TrackedLink } from "tw-components";
 import {
   ConnectWalletImage,
   DashboardImage,
   Titles,
 } from "./components/Graphics";
-import { SlideStateProps, TRACK_CATEGORY } from "./shared";
-import { Text, TrackedLink } from "tw-components";
+import { type SlideStateProps, TRACK_CATEGORY } from "./shared";
 
 interface Slide {
   title: React.ReactNode;

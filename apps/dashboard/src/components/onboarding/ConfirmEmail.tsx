@@ -2,22 +2,22 @@ import {
   useConfirmEmail,
   useResendEmailConfirmation,
 } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  EmailConfirmationValidationSchema,
+  type EmailConfirmationValidationSchema,
   emailConfirmationValidationSchema,
 } from "components/settings/Account/validations";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { ClipboardEvent, useState } from "react";
+import { type ClipboardEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import OtpInput from "react-otp-input";
 import { Button, Text } from "tw-components";
-import { OnboardingTitle } from "./Title";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { shortenString } from "utils/usedapp-external";
+import { OnboardingTitle } from "./Title";
 
 interface OnboardingConfirmEmailProps {
   email: string;
@@ -90,6 +90,7 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
           label: "success",
         });
       },
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       onError: (error: any) => {
         const message =
           "message" in error

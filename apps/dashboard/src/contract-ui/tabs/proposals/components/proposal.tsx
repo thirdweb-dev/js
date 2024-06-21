@@ -8,9 +8,9 @@ import {
 import { Flex, Icon } from "@chakra-ui/react";
 import {
   ProposalState,
-  Proposal as ProposalType,
-  VoteType,
+  type Proposal as ProposalType,
   type Vote,
+  VoteType,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { utils } from "ethers";
@@ -91,21 +91,21 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
   } = useCastVoteMutation(contract, proposal.proposalId.toString());
   const votes = useMemo(() => {
     return {
-      for: parseFloat(
+      for: Number.parseFloat(
         utils.formatUnits(
           proposal.votes.find((voteData) => voteData.type === VoteType.For)
             ?.count || 0,
           18,
         ),
       ),
-      against: parseFloat(
+      against: Number.parseFloat(
         utils.formatUnits(
           proposal.votes.find((voteData) => voteData.type === VoteType.Against)
             ?.count || 0,
           18,
         ),
       ),
-      abstain: parseFloat(
+      abstain: Number.parseFloat(
         utils.formatUnits(
           proposal.votes.find((voteData) => voteData.type === VoteType.Abstain)
             ?.count || 0,

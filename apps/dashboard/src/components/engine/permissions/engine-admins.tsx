@@ -1,7 +1,7 @@
 import { useEnginePermissions } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
-import { AddAdminButton } from "./add-admin-button";
 import { Heading, Link, Text } from "tw-components";
+import { AddAdminButton } from "./add-admin-button";
 import { AdminsTable } from "./admins-table";
 
 interface EngineAdminsProps {

@@ -1,9 +1,9 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { Button } from "./button";
 import { useState } from "react";
 import { cn } from "../../lib/utils";
+import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";
 
 export function CopyButton(props: {

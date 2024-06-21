@@ -77,7 +77,7 @@ export function ReceiveFunds(props: {
   );
 }
 
-const WalletAddressContainer = /* @__PURE__ */ StyledButton(() => {
+const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

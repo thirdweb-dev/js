@@ -1,15 +1,15 @@
 import { Skeleton } from "@chakra-ui/react";
-import { memo } from "react";
-import { ChakraNextLink, Text } from "tw-components";
+import type { BasicContract } from "contract-ui/types/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { shortenIfAddress } from "utils/usedapp-external";
-import { usePublishedContractsFromDeploy } from "../hooks";
-import { getContract } from "thirdweb";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { BasicContract } from "contract-ui/types/types";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { memo } from "react";
+import { getContract } from "thirdweb";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { useReadContract } from "thirdweb/react";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import { ChakraNextLink, Text } from "tw-components";
+import { shortenIfAddress } from "utils/usedapp-external";
+import { usePublishedContractsFromDeploy } from "../hooks";
 
 interface AsyncContractNameCellProps {
   cell: BasicContract;

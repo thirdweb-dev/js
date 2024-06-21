@@ -33,7 +33,9 @@ export default async function handler(
 
   let cookieExpiration: Date;
 
-  const cookie = getCookie(`${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${parsedPayload.data.address}`);
+  const cookie = getCookie(
+    `${THIRDWEB_AUTH_TOKEN_COOKIE_PREFIX}_${parsedPayload.data.address}`,
+  );
   if (cookie) {
     // If the new account is already logged in, get the expiration time from the cookie
     const {
@@ -52,7 +54,7 @@ export default async function handler(
     );
   }
 
-  const response = NextResponse.json('', { status: 200 });
+  const response = NextResponse.json("", { status: 200 });
   response.cookies.set({
     name: THIRDWEB_AUTH_ACTIVE_ACCOUNT_COOKIE,
     value: parsedPayload.data.address,

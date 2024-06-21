@@ -1,6 +1,6 @@
-import { Flex, BoxProps } from "@chakra-ui/react";
+import { type BoxProps, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { Card, Text } from "tw-components";
 
@@ -80,7 +80,7 @@ export const PlaygroundMenu: React.FC<PlaygroundMenuProps> = ({
           maxW="fit-content"
           textAlign="left"
         >
-          Learn more {`→`}
+          Learn more {"→"}
         </Text>
       </Flex>
     </Card>

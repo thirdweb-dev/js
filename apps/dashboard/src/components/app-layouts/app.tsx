@@ -1,22 +1,25 @@
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import {
-  DashboardThirdwebProvider,
-  DashboardThirdwebProviderProps,
-} from "./providers";
 import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
+import {
+  type DehydratedState,
+  Hydrate,
+  QueryClient,
+} from "@tanstack/react-query";
 import {
   PersistQueryClientProvider,
-  Persister,
+  type Persister,
 } from "@tanstack/react-query-persist-client";
 import { shouldNeverPersistQuery, useAddress } from "@thirdweb-dev/react";
 import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
-import { AppShell, AppShellProps } from "components/layout/app-shell";
+import { AppShell, type AppShellProps } from "components/layout/app-shell";
 import { Onboarding as OnboardingModal } from "components/onboarding";
+import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
 import { PosthogIdentifier } from "components/wallets/PosthogIdentifier";
+import { isProd } from "constants/rpc";
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
@@ -29,12 +32,13 @@ import {
 import { del, get, set } from "idb-keyval";
 import { useEffect, useMemo, useState } from "react";
 import { Heading } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { isProd } from "constants/rpc";
-import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
+import {
+  DashboardThirdwebProvider,
+  type DashboardThirdwebProviderProps,
+} from "./providers";
 
 const apolloClient = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_PAYMENTS_API,
@@ -100,7 +104,7 @@ const persister: Persister = createAsyncStoragePersister({
       bigNumberReplacer,
     );
   },
-  key: `tw-query-cache`,
+  key: "tw-query-cache",
 });
 
 interface AppLayoutProps extends AppShellProps, DashboardThirdwebProviderProps {

@@ -1,9 +1,10 @@
-import { NetworkConfigFormData } from "../ConfigureNetworkForm";
 import { FormControl, Input } from "@chakra-ui/react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { FormLabel } from "tw-components";
+import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const ChainIdInput: React.FC<{
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<NetworkConfigFormData, any>;
   disabled: boolean;
 }> = ({ form, disabled }) => {

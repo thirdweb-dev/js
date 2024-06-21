@@ -30,7 +30,9 @@ export type UploadOptions<TFiles extends UploadableFile[]> = {
   files: TFiles;
 } & BuildFormDataOptions;
 
-export type UploadFile = { name?: string; type?: string; uri: string };
+export type UploadFile =
+  | { name?: string; type?: string; uri: string }
+  | Record<string, unknown>;
 
 export type InternalUploadMobileOptions = {
   files: UploadFile[];

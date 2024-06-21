@@ -25,7 +25,7 @@ import { PageId } from "page-id";
 import { useEffect, useRef } from "react";
 import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const ContractDeployDetailPage: ThirdwebNextPage = () => {
   const router = useRouter();

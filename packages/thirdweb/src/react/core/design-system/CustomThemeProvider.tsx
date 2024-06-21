@@ -9,7 +9,7 @@ const CustomThemeCtx = /* @__PURE__ */ createContext(darkThemeObj);
  */
 export function CustomThemeProvider(props: {
   children: React.ReactNode;
-  theme: "light" | "dark" | Theme;
+  theme: "light" | "dark" | Theme | undefined;
 }) {
   const { theme, children } = props;
   const themeObj = parseTheme(theme);

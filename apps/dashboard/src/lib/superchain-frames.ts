@@ -1,4 +1,4 @@
-import { FrameMetadataType } from "@coinbase/onchainkit";
+import type { FrameMetadataType } from "@coinbase/onchainkit";
 import { getAbsoluteUrl } from "./vercel-utils";
 
 export const superchainFrameChains = {
@@ -27,15 +27,15 @@ export const growthPlanFrameMetaData = (
     buttons: [
       {
         label: "$250",
-        action: `post`,
+        action: "post",
       },
       {
         label: "$2,500",
-        action: `post`,
+        action: "post",
       },
       {
         label: "$3,000",
-        action: `post`,
+        action: "post",
       },
     ],
     image: `${getAbsoluteUrl()}/assets/dashboard/growth.png`,
@@ -50,7 +50,7 @@ export const finalGrowthPlanFrameMetaData = (
     buttons: [
       {
         label: "Apply for Superchain credits",
-        action: `post_redirect`,
+        action: "post_redirect",
       },
     ],
     image: imgUrl,

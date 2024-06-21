@@ -1,10 +1,10 @@
 "use client";
 
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { useAddress, useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useMutation } from "@tanstack/react-query";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useAddress, useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { useDebounce } from "use-debounce";
 
 type AddChainToWalletProps = {

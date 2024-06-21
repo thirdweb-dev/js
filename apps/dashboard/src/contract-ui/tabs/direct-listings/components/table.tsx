@@ -1,13 +1,13 @@
-import { MarketplaceV3 } from "@thirdweb-dev/sdk";
+import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
-import { useReadContract } from "thirdweb/react";
+import { defineChain, getContract } from "thirdweb";
 import {
   getAllListings,
   getAllValidListings,
   totalListings,
 } from "thirdweb/extensions/marketplace";
-import { defineChain, getContract } from "thirdweb";
+import { useReadContract } from "thirdweb/react";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
 
 interface DirectListingsTableProps {

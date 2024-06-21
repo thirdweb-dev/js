@@ -1,14 +1,15 @@
-import { useRef, useState } from "react";
 import { Flex, Icon, useBreakpointValue } from "@chakra-ui/react";
-import CaseStudyStatic, { CaseStudyStaticProps } from "./CaseStudyStatic";
+import { useRef, useState } from "react";
 import { Heading } from "tw-components";
+import CaseStudyStatic, { type CaseStudyStaticProps } from "./CaseStudyStatic";
 
 const ArrowRight = ({
   isFocused,
   ...rest
 }: {
   isFocused: boolean;
-  onClick: () => {};
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  onClick: () => any;
 }) => {
   return (
     <svg
@@ -19,6 +20,7 @@ const ArrowRight = ({
       xmlns="http://www.w3.org/2000/svg"
       {...rest}
     >
+      <title>right</title>
       <circle
         cx="24"
         cy="24"
@@ -48,7 +50,8 @@ const ArrowLeft = ({
   ...rest
 }: {
   isFocused: boolean;
-  onClick: () => {};
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  onClick: () => any;
 }) => {
   return (
     <svg
@@ -59,6 +62,7 @@ const ArrowLeft = ({
       xmlns="http://www.w3.org/2000/svg"
       {...rest}
     >
+      <title>left</title>
       <circle
         cx="24"
         cy="24.0869"
@@ -173,6 +177,7 @@ const LandingCaseStudyStaticSection = ({
       >
         {studies.map(({ title, description, image, href, label }, idx) => (
           <CaseStudyStatic
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             key={idx}
             title={title}
             description={description}

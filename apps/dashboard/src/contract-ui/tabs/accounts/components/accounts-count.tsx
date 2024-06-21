@@ -5,10 +5,10 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { Card } from "tw-components";
-import { totalAccounts } from "thirdweb/extensions/erc4337";
 import type { ThirdwebContract } from "thirdweb";
+import { totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
+import { Card } from "tw-components";
 
 type AccountsCountProps = {
   contract: ThirdwebContract;

@@ -1,7 +1,7 @@
-import { AreaChartLoadingState } from "./area-chart";
-import { AspectRatio, AspectRatioProps, Flex } from "@chakra-ui/react";
+import { AspectRatio, type AspectRatioProps, Flex } from "@chakra-ui/react";
 import { Suspense } from "react";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { AreaChartLoadingState } from "./area-chart";
 
 type SupportedChartType = "area";
 

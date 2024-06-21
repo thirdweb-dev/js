@@ -66,7 +66,7 @@ function BgColorPreview(props: { className: string }) {
           "w-full md:w-[200px] h-[100px] rounded-xl shadow-md border",
           props.className,
         )}
-      ></div>
+      />
     </div>
   );
 }

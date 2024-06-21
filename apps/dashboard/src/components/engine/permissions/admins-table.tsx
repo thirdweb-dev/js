@@ -1,22 +1,22 @@
 import {
-  EngineAdmin,
+  type EngineAdmin,
   useEngineGrantPermissions,
   useEngineRevokePermissions,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Flex,
-  useDisclosure,
-  Stack,
   FormControl,
   Input,
+  Modal,
+  ModalBody,
   ModalCloseButton,
-  UseDisclosureReturn,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  type UseDisclosureReturn,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";

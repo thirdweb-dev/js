@@ -1,7 +1,7 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Children } from "react";
 import { Heading } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface GettingStartedBoxProps {
   title: string;

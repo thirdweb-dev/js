@@ -1,5 +1,5 @@
 import {
-  Account,
+  type Account,
   useUpdateNotifications,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { Divider, Flex, HStack, Switch, VStack } from "@chakra-ui/react";

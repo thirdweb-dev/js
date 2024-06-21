@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export type ChainCTAProps = {
   backgroundImageUrl: string;
@@ -14,7 +14,6 @@ export function ChainCTA(props: ChainCTAProps) {
     <div className="container px-4">
       <div
         className="w-full overflow-hidden rounded-xl shadow-lg bg-cover bg-center bg-no-repeat"
-        // eslint-disable-next-line react/forbid-dom-props
         style={{
           backgroundImage: `url(${props.backgroundImageUrl})`,
         }}

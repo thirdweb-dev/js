@@ -1,13 +1,13 @@
-import { AppLayout } from "components/app-layouts/app";
-import { SettingsSidebar } from "core-ui/sidebar/settings";
-import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { AppLayout } from "components/app-layouts/app";
 import { Billing } from "components/settings/Account/Billing";
 import { BillingConnectWalletPrompt } from "components/settings/Account/Billing/ConnectWallet";
+import { SettingsSidebar } from "core-ui/sidebar/settings";
+import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { useEffect } from "react";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsBillingPage: ThirdwebNextPage = () => {
   const { isLoggedIn, isLoading } = useLoggedInUser();

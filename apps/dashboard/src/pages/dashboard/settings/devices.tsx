@@ -7,7 +7,7 @@ import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsDevicesPage: ThirdwebNextPage = () => {
   const { isLoggedIn } = useLoggedInUser();

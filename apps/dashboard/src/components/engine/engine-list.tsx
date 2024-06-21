@@ -1,5 +1,5 @@
 import {
-  EngineInstance,
+  type EngineInstance,
   useEngineInstances,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -12,7 +12,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { VscBook } from "react-icons/vsc";
 import { Card, Heading, Link, Text } from "tw-components";
 import { CreateEngineInstanceButton } from "./create-engine-instance";

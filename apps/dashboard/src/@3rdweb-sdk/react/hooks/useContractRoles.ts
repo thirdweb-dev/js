@@ -1,12 +1,12 @@
 import {
-  ContractWithRoles,
-  RequiredParam,
-  RolesForContract,
+  type ContractWithRoles,
+  type RequiredParam,
+  type RolesForContract,
   useAddress,
   useContractType,
   useRoleMembers,
 } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 
 function isContractWithRoles(

@@ -86,7 +86,7 @@ const Option = /* @__PURE__ */ StyledOption(() => {
   };
 });
 
-const Select = /* @__PURE__ */ StyledSelect(() => {
+const Select = /* @__PURE__ */ StyledSelect((_) => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize.sm,

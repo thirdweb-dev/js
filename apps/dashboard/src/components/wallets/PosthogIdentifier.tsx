@@ -1,10 +1,10 @@
-import posthog from "posthog-js-opensource";
 import {
   useAddress,
   useBalance,
   useChainId,
   useWallet,
 } from "@thirdweb-dev/react";
+import posthog from "posthog-js-opensource";
 import { useEffect } from "react";
 
 const walletIdToPHName: Record<string, string> = {

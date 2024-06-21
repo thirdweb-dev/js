@@ -5,7 +5,7 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const ContractsPublishPage: ThirdwebNextPage = () => {
   const contractId = useSingleQueryParam("contractId");

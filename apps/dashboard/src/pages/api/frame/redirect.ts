@@ -1,6 +1,6 @@
 import { Warpcast, untrustedMetaDataSchema } from "classes/Warpcast";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { NextRequest, NextResponse } from "next/server";
 
 interface RequestBody {
   trustedData: {

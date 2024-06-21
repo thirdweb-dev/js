@@ -1,6 +1,6 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { ReactNode } from "react";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ReactNode } from "react";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface LandingGridSectionProps {
   title?: ReactNode;

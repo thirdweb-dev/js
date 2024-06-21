@@ -1,15 +1,15 @@
 import {
-  Query,
+  type Query,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import type { Chain } from "@thirdweb-dev/chains";
 import { useEffect, useState } from "react";
+import invariant from "tiny-invariant";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
-import type { Chain } from "@thirdweb-dev/chains";
-import invariant from "tiny-invariant";
 import { useLoggedInUser } from "./useLoggedInUser";
 
 // FIXME: We keep repeating types, API server should provide them
@@ -502,7 +502,7 @@ export function useUpdateNotifications() {
   );
 }
 
-export function useCreateBillingSession(enabled: boolean = false) {
+export function useCreateBillingSession(enabled = false) {
   const { user } = useLoggedInUser();
 
   return useQuery(
@@ -593,10 +593,11 @@ export function useCreateTicket() {
     };
     const customerId = planToCustomerId[plan] || undefined;
     if (input.files?.length) {
+      // biome-ignore lint/complexity/noForEach: FIXME
       input.files.forEach((file) => formData.append("attachments", file));
     }
     const title =
-      input.product && input["extraInfo_Problem_Area"]
+      input.product && input.extraInfo_Problem_Area
         ? `${input.product}: ${input.extraInfo_Problem_Area} (${email})`
         : `New ticket from ${name} (${email})`;
 
@@ -1144,7 +1145,7 @@ export function useApiAuthToken() {
 export async function fetchChainsFromApi() {
   // always fetch from prod for chains for now
   // TODO: re-visit this
-  const res = await fetch(`https://api.thirdweb.com/v1/chains`, {
+  const res = await fetch("https://api.thirdweb.com/v1/chains", {
     method: "GET",
     // do not inclue credentials for chains endpoint
     // credentials: "include",

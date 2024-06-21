@@ -1,6 +1,3 @@
-import { PublishedContractTable } from "../contract-table-v2";
-import { usePublishedContractsQuery } from "../hooks";
-import { ShowMoreButton } from "./show-more-button";
 import {
   Alert,
   AlertIcon,
@@ -13,6 +10,9 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useMemo, useState } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Button, Heading, LinkButton, Text } from "tw-components";
+import { PublishedContractTable } from "../contract-table-v2";
+import { usePublishedContractsQuery } from "../hooks";
+import { ShowMoreButton } from "./show-more-button";
 
 interface PublishedContractsProps {
   address?: string;

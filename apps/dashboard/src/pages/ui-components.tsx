@@ -1,7 +1,3 @@
-import { GuidesShowcase } from "../components/product-pages/common/GuideShowcase";
-import { ProductLearnMoreCard } from "../components/product-pages/common/ProductLearnMoreCard";
-import { ProductSection } from "../components/product-pages/common/ProductSection";
-import { YoutubeEmbed } from "../components/video-embed/YoutubeEmbed";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
@@ -9,7 +5,11 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
+import { GuidesShowcase } from "../components/product-pages/common/GuideShowcase";
+import { ProductLearnMoreCard } from "../components/product-pages/common/ProductLearnMoreCard";
+import { ProductSection } from "../components/product-pages/common/ProductSection";
+import { YoutubeEmbed } from "../components/video-embed/YoutubeEmbed";
 
 const TRACKING_CATEGORY = "ui_components";
 

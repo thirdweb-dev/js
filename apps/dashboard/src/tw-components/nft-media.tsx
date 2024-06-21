@@ -1,7 +1,17 @@
-import { Text } from "./text";
-import { Box, Center, Flex, Icon, PropsOf, chakra } from "@chakra-ui/react";
-import { ThirdwebNftMedia, ThirdwebNftMediaProps } from "@thirdweb-dev/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Icon,
+  type PropsOf,
+  chakra,
+} from "@chakra-ui/react";
+import {
+  ThirdwebNftMedia,
+  type ThirdwebNftMediaProps,
+} from "@thirdweb-dev/react";
 import { FiImage } from "react-icons/fi";
+import { Text } from "./text";
 
 const NFTMedia = chakra(ThirdwebNftMedia, {
   shouldForwardProp: (prop) =>

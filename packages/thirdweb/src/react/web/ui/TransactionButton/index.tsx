@@ -1,5 +1,5 @@
 "use client";
-import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type TransactionButtonProps,
   useTransactionButtonMutation,
@@ -60,47 +60,48 @@ export function TransactionButton(props: TransactionButtonProps) {
   );
 
   return (
-    <Button
-      gap="xs"
-      disabled={!account || disabled || isPending}
-      variant={"primary"}
-      unstyled={unstyled}
-      data-is-loading={isPending}
-      onClick={() => handleClick()}
-      {...buttonProps}
-      style={
-        !unstyled
-          ? {
-              opacity: !account || disabled ? 0.5 : 1,
-              minWidth: "150px",
-              position: "relative",
-              ...buttonProps.style,
-            }
-          : {
-              position: "relative",
-              ...buttonProps.style,
-            }
-      }
-      theme={parseTheme(props.theme)}
-    >
-      <span style={{ visibility: isPending ? "hidden" : "visible" }}>
-        {children}
-      </span>
-      {isPending && (
-        <div
-          style={{
-            position: "absolute",
-            display: "flex",
-            alignItems: "center",
-            height: "100%",
-            top: 0,
-            bottom: 0,
-            margin: "auto",
-          }}
-        >
-          <Spinner size="md" color="primaryButtonText" />
-        </div>
-      )}
-    </Button>
+    <CustomThemeProvider theme={props.theme}>
+      <Button
+        gap="xs"
+        disabled={!account || disabled || isPending}
+        variant={"primary"}
+        unstyled={unstyled}
+        data-is-loading={isPending}
+        onClick={() => handleClick()}
+        {...buttonProps}
+        style={
+          !unstyled
+            ? {
+                opacity: !account || disabled ? 0.5 : 1,
+                minWidth: "150px",
+                position: "relative",
+                ...buttonProps.style,
+              }
+            : {
+                position: "relative",
+                ...buttonProps.style,
+              }
+        }
+      >
+        <span style={{ visibility: isPending ? "hidden" : "visible" }}>
+          {children}
+        </span>
+        {isPending && (
+          <div
+            style={{
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+              top: 0,
+              bottom: 0,
+              margin: "auto",
+            }}
+          >
+            <Spinner size="md" color="primaryButtonText" />
+          </div>
+        )}
+      </Button>
+    </CustomThemeProvider>
   );
 }

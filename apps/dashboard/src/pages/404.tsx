@@ -3,9 +3,9 @@ import { ChakraNextImage } from "components/Image";
 import { Aurora } from "components/homepage/Aurora";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
-import NotFound from "../../public/assets/landingpage/not-found.png";
 import { Heading, Text, TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
+import NotFound from "../../public/assets/landingpage/not-found.png";
 
 const PageNotFound: ThirdwebNextPage = () => {
   return (

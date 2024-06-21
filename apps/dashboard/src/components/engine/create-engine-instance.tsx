@@ -1,5 +1,5 @@
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
   Modal,
@@ -10,7 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";

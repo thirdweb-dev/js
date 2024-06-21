@@ -1,11 +1,11 @@
 import { networkKeys, useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
-  MutationFunction,
-  QueryFunction,
-  QueryKey,
-  UseMutationOptions,
-  UseQueryOptions,
-  UseQueryResult,
+  type MutationFunction,
+  type QueryFunction,
+  type QueryKey,
+  type UseMutationOptions,
+  type UseQueryOptions,
+  type UseQueryResult,
   useMutation,
   useQuery,
   useQueryClient,
@@ -57,8 +57,11 @@ export function useMutationWithInvalidate<
       data: TData,
       variables: TVariables,
       context: TContext | undefined,
-      wrapCacheKeys: (cacheKeysToInvalidate: TQueryKey[]) => Promise<void[]>,
-    ) => Promise<unknown> | void;
+      wrapCacheKeys: (
+        cacheKeysToInvalidate: TQueryKey[],
+        // biome-ignore lint/suspicious/noConfusingVoidType: FIX ME
+      ) => Promise<void[]>,
+    ) => Promise<unknown> | undefined;
   },
 ) {
   const activeChainId = useDashboardEVMChainId();

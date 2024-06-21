@@ -1,6 +1,6 @@
 import { Flex, Icon } from "@chakra-ui/react";
 import { BsFillLightningChargeFill } from "react-icons/bs";
-import { TrackedLinkButton, TrackedLinkProps } from "tw-components";
+import { TrackedLinkButton, type TrackedLinkProps } from "tw-components";
 
 interface LandingCTAButtonsProps {
   ctaLink?: string;

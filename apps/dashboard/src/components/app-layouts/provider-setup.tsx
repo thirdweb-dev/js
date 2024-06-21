@@ -1,11 +1,12 @@
 "use client";
 
 import {
-  EVMContractInfo,
+  type EVMContractInfo,
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useQueryClient } from "@tanstack/react-query";
+import type { Chain } from "@thirdweb-dev/chains";
 import {
   ThirdwebProvider as ThirdwebProviderOld,
   coin98Wallet,
@@ -35,10 +36,9 @@ import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
 import { useEffect, useMemo } from "react";
-import { ComponentWithChildren } from "types/component-with-children";
-import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
 import { ThirdwebProvider } from "thirdweb/react";
-import type { Chain } from "@thirdweb-dev/chains";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
 
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
@@ -142,8 +142,10 @@ const GlobalAuthTokenProvider = () => {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (token && !isLoading) {
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       (window as any)[GLOBAL_AUTH_TOKEN_KEY] = token;
     } else {
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
     }
   }, [token, isLoading]);
