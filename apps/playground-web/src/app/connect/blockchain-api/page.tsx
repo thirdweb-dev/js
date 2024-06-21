@@ -28,8 +28,8 @@ export default function Page() {
                 Blockchain API
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                Interact with thousands of EVM blockchains. Create seamless NFT
-                minting experience. Airdrop tokens to millions of users
+                Performant, reliable and type safe API to read write to any
+                contract on any EVM chain through our RPC Edge endpoints.
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">
@@ -94,8 +94,8 @@ function ReadContractRaw() {
           Query blockchain data
         </h2>
         <p className="max-w-[600px]">
-          Read any contract&apos;s states in a type-safe manner using the
-          Solidity method signature you define.
+          Read data from any contract or wallet. Type safe functions and hooks
+          without needing full ABIs.
         </p>
       </div>
 
@@ -138,20 +138,11 @@ function ReadContractExtension() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Query data with prebuilt extensions
+          Prebuilt read extensions
         </h2>
         <p className="max-w-[600px]">
-          Query contract states using our pre-compiled extensions. These
-          extensions are designed to make it easy to interact with popular
-          contracts and protocols.
-          <br />
-          <a
-            href="https://portal.thirdweb.com/typescript/v5/extensions/built-in"
-            target="_blank"
-            className="underline underline-offset-2"
-          >
-            Explore built-in extension
-          </a>
+          Extensions let you do more with less code. High level functions with
+          simple API that do pre and post processing for all common standards.
         </p>
       </div>
 
@@ -192,9 +183,12 @@ function WriteContractExtension() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Write data to blockchain with prebuilt extension
+          Prebuilt write extensions
         </h2>
-        <p className="max-w-[600px]">{/* ... */}</p>
+        <p className="max-w-[600px]">
+          Extensions let you do more with less code. High level functions with
+          simple API that do pre and post processing for all common standards.
+        </p>
       </div>
 
       <CodeExample
@@ -236,7 +230,10 @@ function WriteContractRaw() {
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Write data to blockchain
         </h2>
-        <p className="max-w-[600px]">{/* ... */}</p>
+        <p className="max-w-[600px]">
+          Send transactions with the connected wallet. Type safe functions and
+          hooks to send contracts call or raw transaction.
+        </p>
       </div>
 
       <CodeExample
@@ -284,8 +281,8 @@ function WatchEvent() {
           Listen to blockchain events
         </h2>
         <p className="max-w-[600px]">
-          From Telegram bots that follow trade events to sophisticate webhook
-          systems. The applications are endless with our SDKs.
+          Subscribe to any contract event. Auto polling hooks and functions with
+          type safe event extensions for all common standards.
         </p>
       </div>
 
