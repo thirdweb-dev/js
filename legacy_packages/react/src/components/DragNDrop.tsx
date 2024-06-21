@@ -142,7 +142,7 @@ const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)(() => {
   };
 });
 
-const DropContainer = /* @__PURE__ */ StyledDiv(() => {
+const DropContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     border: `2px solid ${theme.colors.borderColor}`,

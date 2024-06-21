@@ -45,8 +45,7 @@ export class NodeInfo
 }
 
 export class SearchBotDeviceInfo
-  implements
-    DetectedInfo<"bot-device", Browser, OperatingSystem | null, string>
+  implements DetectedInfo<"bot-device", Browser, OperatingSystem | null, string>
 {
   public readonly type = "bot-device";
   constructor(

@@ -90,8 +90,8 @@ export const walletConnect = (
   const showOfficialModal = isMobile()
     ? true
     : config?.qrModal === "walletConnect"
-    ? true
-    : false;
+      ? true
+      : false;
 
   return {
     recommended: config?.recommended,

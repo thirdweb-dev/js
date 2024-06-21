@@ -1,0 +1,8 @@
+fragment Webhook on webhook {
+  id
+  seller_id
+  url
+  is_production
+  created_at
+  deleted_at
+}

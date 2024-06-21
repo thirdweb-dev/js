@@ -11,6 +11,7 @@ export {
    */
   inAppWallet as embeddedWallet,
 } from "../wallets/in-app/web/in-app.js";
+export { ecosystemWallet } from "../wallets/in-app/web/ecosystem.js";
 export { smartWallet } from "../wallets/smart/smart-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
@@ -100,6 +101,19 @@ export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
 export { type WalletInfo } from "../wallets/wallet-info.js";
 
 export { createWalletAdapter } from "../adapters/wallet-adapter.js";
+
+// wallet connect
+export {
+  createWalletConnectClient,
+  createWalletConnectSession,
+  disconnectWalletConnectSession,
+  getActiveWalletConnectSessions,
+  DefaultWalletConnectRequestHandlers,
+} from "../wallets/wallet-connect/receiver/index.js";
+export type {
+  WalletConnectClient,
+  WalletConnectSession,
+} from "../wallets/wallet-connect/receiver/types.js";
 
 // WEB ONLY EXPORTS
 

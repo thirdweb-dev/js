@@ -89,7 +89,7 @@ const PlaceholderKeyframes = keyframes`
   100%{ background-position: -100% 0; }
 `;
 
-const QRPlaceholder = /* @__PURE__ */ StyledDiv(() => {
+const QRPlaceholder = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     "--color": theme.colors.skeletonBg,

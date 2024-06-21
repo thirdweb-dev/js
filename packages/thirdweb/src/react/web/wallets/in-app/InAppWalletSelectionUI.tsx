@@ -5,9 +5,9 @@ import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.j
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
 import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
+import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
-import { InAppWalletFormUI } from "./InAppWalletFormUI.js";
-import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
+import { useConnectLocale } from "./useInAppWalletLocale.js";
 
 /**
  *
@@ -22,7 +22,7 @@ function InAppWalletSelectionUI(props: {
   const { screen } = useScreenContext();
   const { connectModal } = useConnectUI();
   const setData = useSetSelectionData();
-  const localeQuery = useInAppWalletLocale();
+  const locale = useConnectLocale();
 
   // do not show the "selectUI" if
   // modal is compact or
@@ -42,13 +42,13 @@ function InAppWalletSelectionUI(props: {
     );
   }
 
-  if (!localeQuery.data) {
+  if (!locale) {
     return <LoadingScreen height="195px" />;
   }
 
   return (
-    <InAppWalletFormUI
-      locale={localeQuery.data}
+    <ConnectWalletSocialOptions
+      locale={locale}
       wallet={props.wallet}
       done={props.done}
       select={props.select}

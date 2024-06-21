@@ -290,14 +290,12 @@ function ConnectButtonInner(
       detailsButton={props.detailsButton}
       detailsModal={props.detailsModal}
       supportedTokens={supportedTokens}
-      onDisconnect={() => {
+      onDisconnect={(info) => {
         // logout on explicit disconnect!
         if (siweAuth.requiresAuth) {
           siweAuth.doLogout();
         }
-        if (props.onDisconnect) {
-          props.onDisconnect();
-        }
+        props.onDisconnect?.(info);
       }}
       chains={props?.chains || []}
       chain={props.chain}

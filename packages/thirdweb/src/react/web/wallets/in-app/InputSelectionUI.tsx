@@ -21,6 +21,7 @@ export function InputSelectionUI(props: {
   emptyErrorMessage?: string;
   submitButtonText: string;
   format?: "phone";
+  disabled?: boolean;
 }) {
   const [countryCodeInfo, setCountryCodeInfo] = useState("US +1");
   const [input, setInput] = useState("");
@@ -77,6 +78,7 @@ export function InputSelectionUI(props: {
           type={props.type}
           name={props.name}
           value={input}
+          disabled={props.disabled}
           onChange={(e) => {
             setInput(e.target.value);
             if (props.errorMessage) {
@@ -93,6 +95,7 @@ export function InputSelectionUI(props: {
         />
         <IconButton
           onClick={handleSelect}
+          disabled={props.disabled}
           style={{
             padding: spacing.md,
             borderRadius: `0 ${radius.lg} ${radius.lg} 0`,

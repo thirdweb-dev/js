@@ -67,9 +67,8 @@ export async function getContract<TContractType extends PrebuiltContractType>(
       );
 
       try {
-        const metadata = await publisher.fetchCompilerMetadataFromAddress(
-          resolvedAddress,
-        );
+        const metadata =
+          await publisher.fetchCompilerMetadataFromAddress(resolvedAddress);
         return getContractFromAbi({
           ...params,
           address: resolvedAddress,

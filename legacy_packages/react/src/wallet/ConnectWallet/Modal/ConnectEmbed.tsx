@@ -431,7 +431,7 @@ export function SyncedWalletUIStates(
   return <WalletUIStatesProvider {...props} />;
 }
 
-const EmbedContainer = /* @__PURE__ */ StyledDiv(() => {
+const EmbedContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.primaryText,

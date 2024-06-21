@@ -1,8 +1,8 @@
 import { keyframes } from "@emotion/react";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { WalletId } from "../../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { WalletImage } from "../../components/WalletImage.js";
 import { fadeInAnimation } from "../../design-system/animations.js";
 import { StyledDiv } from "../../design-system/elements.js";
@@ -11,8 +11,12 @@ import { StyledDiv } from "../../design-system/elements.js";
  *
  * @internal
  */
-export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
-  const { client } = useConnectUI();
+export function WalletLogoSpinner(props: {
+  client: ThirdwebClient;
+  error: boolean;
+  id: WalletId;
+  hideSpinner?: boolean;
+}) {
   const loaderRadius = 20;
   const radiusFactor = 36 - loaderRadius;
   const dashArrayStart = 116 + radiusFactor;
@@ -31,29 +35,31 @@ export function WalletLogoSpinner(props: { error: boolean; id: WalletId }) {
         }}
       >
         <div data-img-container>
-          <svg
-            viewBox="0 0 110 110"
-            style={{
-              display: props.error ? "none" : "block",
-            }}
-            role="presentation"
-          >
-            <rect
-              x="2"
-              y="2"
-              width="106"
-              height="106"
-              rx={loaderRadius}
-              strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
-              strokeDashoffset={dashOffset}
-              strokeLinecap="round"
-              fill="none"
-              strokeWidth={4}
-            />
-          </svg>
+          {!props.hideSpinner && (
+            <svg
+              viewBox="0 0 110 110"
+              style={{
+                display: props.error ? "none" : "block",
+              }}
+              role="presentation"
+            >
+              <rect
+                x="2"
+                y="2"
+                width="106"
+                height="106"
+                rx={loaderRadius}
+                strokeDasharray={`${dashArrayStart} ${dashArrayEnd}`}
+                strokeDashoffset={dashOffset}
+                strokeLinecap="round"
+                fill="none"
+                strokeWidth={4}
+              />
+            </svg>
+          )}
 
           <WalletBg>
-            <WalletImage id={props.id} size={"68"} client={client} />
+            <WalletImage id={props.id} size={"68"} client={props.client} />
           </WalletBg>
         </div>
       </div>
@@ -108,7 +114,7 @@ const pulseAnimation = keyframes`
 }
 `;
 
-const LogoContainer = /* @__PURE__ */ StyledDiv(() => {
+const LogoContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     display: "flex",

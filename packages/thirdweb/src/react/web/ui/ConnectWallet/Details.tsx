@@ -6,7 +6,6 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
-  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -18,8 +17,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
-import { isInAppWallet } from "../../../../wallets/in-app/core/wallet/index.js";
-import { injectedProvider } from "../../../../wallets/injected/mipdStore.js";
+import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -66,46 +64,42 @@ import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
+import { MenuButton, MenuLink } from "./MenuButton.js";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
 import type { SupportedTokens } from "./defaultTokens.js";
+import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
-import { KeyIcon } from "./icons/KeyIcon.js";
+import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
+import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
-import { WalletIcon } from "./icons/WalletIcon.js";
-import { genericTokenIcon } from "./icons/dataUris.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
+import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ViewFunds } from "./screens/ViewFunds.js";
+import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
+import type { WalletDetailsModalScreen } from "./screens/types.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
 const LocalhostChainId = 1337;
 
-type WalletDetailsModalScreen =
-  | "main"
-  | "export"
-  | "send"
-  | "receive"
-  | "buy"
-  | "network-switcher"
-  | "pending-tx"
-  | "view-funds"
-  | "private-key";
-
 /**
  * @internal
  */
 export const ConnectedWalletDetails: React.FC<{
-  onDisconnect: () => void;
+  onDisconnect: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
   detailsButton?: ConnectButton_detailsButtonOptions;
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
@@ -194,7 +188,7 @@ export const ConnectedWalletDetails: React.FC<{
       ) : activeWallet?.id ? (
         <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
       ) : (
-        <WalletIcon size={iconSize.lg} />
+        <GenericWalletIcon size={iconSize.lg} />
       )}
 
       <Container flex="column" gap="xxs">
@@ -238,7 +232,10 @@ function DetailsModal(props: {
   theme: "light" | "dark" | Theme;
   supportedTokens?: SupportedTokens;
   closeModal: () => void;
-  onDisconnect: () => void;
+  onDisconnect: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
 }) {
@@ -269,10 +266,10 @@ function DetailsModal(props: {
     });
   }
 
-  function handleDisconnect() {
+  function handleDisconnect(info: { wallet: Wallet; account: Account }) {
     setIsOpen(false);
     props.closeModal();
-    props.onDisconnect();
+    props.onDisconnect(info);
   }
 
   const networkSwitcherButton = (
@@ -343,10 +340,11 @@ function DetailsModal(props: {
             client={client}
           />
         ) : (
-          <WalletIcon size={iconSize.xxl} />
+          <GenericWalletIcon size={iconSize.xxl} />
         )}
 
         <Spacer y="md" />
+
         <ConnectedToSmartWallet client={props.client} connectLocale={locale} />
 
         {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
@@ -503,31 +501,22 @@ function DetailsModal(props: {
               fontSize: fontSize.sm,
             }}
           >
-            <Img
-              width={iconSize.md}
-              height={iconSize.md}
-              src={genericTokenIcon}
-              client={client}
-            />
+            <CoinsIcon size={iconSize.md} />
             <Text color="primaryText">View Funds</Text>
           </MenuButton>
 
-          {/* Private Key Export (if enabled) */}
-          {activeWallet &&
-            isInAppWallet(activeWallet) &&
-            !activeWallet.getConfig()?.hidePrivateKeyExport && (
-              <MenuButton
-                onClick={() => {
-                  setScreen("private-key");
-                }}
-                style={{
-                  fontSize: fontSize.sm,
-                }}
-              >
-                <KeyIcon size={iconSize.md} />
-                <Text color="primaryText">Export Private Key</Text>
-              </MenuButton>
-            )}
+          {/* Manage Wallet */}
+          <MenuButton
+            onClick={() => {
+              setScreen("manage-wallet");
+            }}
+            style={{
+              fontSize: fontSize.sm,
+            }}
+          >
+            <OutlineWalletIcon size={iconSize.md} />
+            <Text color="primaryText">Manage Wallet</Text>
+          </MenuButton>
 
           {/* Switch to Personal Wallet  */}
           {/* {personalWallet &&
@@ -542,11 +531,6 @@ function DetailsModal(props: {
           {/* {smartWallet && (
             <AccountSwitcher name={locale.smartWallet} wallet={smartWallet} />
           )} */}
-
-          <SwitchMetamaskAccount
-            closeModal={closeModal}
-            connectLocale={locale}
-          />
 
           {/* Request Testnet funds */}
           {(props.detailsModal?.showTestnetFaucet ?? false) &&
@@ -570,23 +554,6 @@ function DetailsModal(props: {
               </MenuLink>
             )}
 
-          {/* Export  Wallet */}
-          {/* {activeWallet?.id === "local" && (
-            <div>
-              <MenuButton
-                onClick={() => {
-                  setScreen("export");
-                }}
-                style={{
-                  fontSize: fontSize.sm,
-                }}
-              >
-                <PinBottomIcon width={iconSize.md} height={iconSize.md} />
-                <Text color="primaryText">{locale.backupWallet}</Text>
-              </MenuButton>
-            </div>
-          )} */}
-
           {props.detailsModal?.footer && (
             <props.detailsModal.footer close={closeModal} />
           )}
@@ -603,9 +570,12 @@ function DetailsModal(props: {
               data-variant="danger"
               type="button"
               onClick={() => {
-                if (activeWallet) {
+                if (activeWallet && activeAccount) {
                   disconnect(activeWallet);
-                  handleDisconnect();
+                  handleDisconnect({
+                    account: activeAccount,
+                    wallet: activeWallet,
+                  });
                 }
               }}
             >
@@ -675,8 +645,32 @@ function DetailsModal(props: {
       <PrivateKey
         theme={props.theme} // do not use the useCustomTheme hook to get this, it's not valid here
         onBack={() => {
+          setScreen("manage-wallet");
+        }}
+        wallet={activeWallet}
+        client={client}
+      />
+    );
+  } else if (screen === "manage-wallet") {
+    content = (
+      <ManageWalletScreen
+        onBack={() => {
           setScreen("main");
         }}
+        locale={locale}
+        closeModal={closeModal}
+        client={client}
+        setScreen={setScreen}
+      />
+    );
+  } else if (screen === "wallet-connect-receiver") {
+    content = (
+      <WalletConnectReceiverScreen
+        onBack={() => {
+          setScreen("manage-wallet");
+        }}
+        chains={props.chains}
+        closeModal={closeModal}
         client={client}
       />
     );
@@ -744,7 +738,7 @@ function DetailsModal(props: {
   );
 }
 
-const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
+const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -775,54 +769,6 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
     },
   };
 });
-
-const MenuButton = /* @__PURE__ */ StyledButton(() => {
-  const theme = useCustomTheme();
-  return {
-    all: "unset",
-    padding: `${spacing.sm} ${spacing.sm}`,
-    borderRadius: radius.md,
-    backgroundColor: "transparent",
-    // border: `1px solid ${theme.colors.borderColor}`,
-    boxSizing: "border-box",
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
-    cursor: "pointer",
-    fontSize: fontSize.md,
-    fontWeight: 500,
-    color: theme.colors.secondaryText,
-    gap: spacing.sm,
-    WebkitTapHighlightColor: "transparent",
-    lineHeight: 1.3,
-    transition: "background-color 200ms ease, transform 200ms ease",
-    "&:hover": {
-      backgroundColor: theme.colors.tertiaryBg,
-      transform: "scale(1.01)",
-      svg: {
-        color: theme.colors.accentText,
-      },
-    },
-    "&[disabled]": {
-      cursor: "not-allowed",
-      svg: {
-        display: "none",
-      },
-    },
-    svg: {
-      color: theme.colors.secondaryText,
-      transition: "color 200ms ease",
-    },
-    "&[data-variant='danger']:hover svg": {
-      color: `${theme.colors.danger}!important`,
-    },
-    "&[data-variant='primary']:hover svg": {
-      color: `${theme.colors.primaryText}!important`,
-    },
-  };
-});
-
-const MenuLink = /* @__PURE__ */ (() => MenuButton.withComponent("a"))();
 
 const StyledChevronRightIcon = /* @__PURE__ */ styled(
   /* @__PURE__ */ ChevronRightIcon,
@@ -906,9 +852,7 @@ function ConnectedToSmartWallet(props: {
   return null;
 }
 
-function InAppWalletUserInfo(props: {
-  client: ThirdwebClient;
-}) {
+function InAppWalletUserInfo(props: { client: ThirdwebClient }) {
   const { client } = props;
   const account = useActiveAccount();
 
@@ -998,40 +942,6 @@ function SwitchNetworkButton(props: {
   );
 }
 
-function SwitchMetamaskAccount(props: {
-  closeModal: () => void;
-  connectLocale: ConnectLocale;
-}) {
-  const wallet = useActiveWallet();
-  const connectLocale = props.connectLocale;
-
-  if (wallet?.id !== "io.metamask") {
-    return null;
-  }
-
-  const injectedMetamaskProvider = injectedProvider("io.metamask");
-
-  if (!injectedMetamaskProvider) {
-    return null;
-  }
-
-  return (
-    <MenuButton
-      type="button"
-      onClick={async () => {
-        await injectedMetamaskProvider.request({
-          method: "wallet_requestPermissions",
-          params: [{ eth_accounts: {} }],
-        });
-        props.closeModal();
-      }}
-    >
-      <ShuffleIcon width={iconSize.md} height={iconSize.md} />
-      <Text color="primaryText">{connectLocale.switchAccount}</Text>
-    </MenuButton>
-  );
-}
-
 export type UseWalletDetailsModalOptions = {
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -1078,32 +988,38 @@ export type UseWalletDetailsModalOptions = {
    * supportedTokens prop allows you to customize this list as shown below which shows  "Dai Stablecoin" when users wallet is connected to the "Base" mainnet.
    *
    * ```tsx
-   * import { ConnectButton } from 'thirdweb/react';
+   * import { useWalletDetailsModal } from 'thirdweb/react';
    *
    * function Example() {
+   *   const detailsModal = useWalletDetailsModal();
+   *
+   *   function handleClick() {
+   *      detailsModal.open({
+   *        client,
+   *        supportedTokens:{
+   * 				  84532: [
+   * 					  {
+   * 						  address: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // token contract address
+   * 						  name: 'Dai Stablecoin',
+   * 						  symbol: 'DAI',
+   * 						  icon: 'https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508',
+   * 					  },
+   * 				  ],
+   * 			  }
+   *      });
+   *   }
+   *
    *   return (
-   * 		<ConnectButton
-   * 			supportedTokens={{
-   *        // when connected to "Base" mainnet - show balance of DAI stablecoin
-   * 				84532: [
-   * 					{
-   * 						address: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // token contract address
-   * 						name: 'Dai Stablecoin',
-   * 						symbol: 'DAI',
-   * 						icon: 'https://assets.coingecko.com/coins/images/9956/small/Badge_Dai.png?1687143508',
-   * 					},
-   * 				],
-   * 			}}
-   * 		/>
+   * 		<button onClick={handleClick}> show wallet details </button>
    * 	);
    * }
    * ```
    */
   supportedTokens?: SupportedTokens;
   /**
-   * By default - ConnectButton UI uses the `en-US` locale for english language users.
+   * By default - Details Modal UI uses the `en-US` locale for english language users.
    *
-   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   * You can customize the language used in the Details Modal UI by setting the `locale` prop.
    *
    * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
    */
@@ -1146,6 +1062,35 @@ export type UseWalletDetailsModalOptions = {
   hideDisconnect?: boolean;
 
   /**
+   * Callback to be called when a wallet is disconnected by clicking the "Disconnect Wallet" button in the Wallet Details Modal.
+   *
+   * ```tsx
+   * import { useWalletDetailsModal } from 'thirdweb/react';
+   *
+   * function Example() {
+   *   const detailsModal = useWalletDetailsModal();
+   *
+   *   function handleClick() {
+   *      detailsModal.open({
+   *        client,
+   *        onDisconnect: ({ wallet, account }) => {
+   *           console.log('disconnected', wallet, account);
+   *        }
+   *      });
+   *   }
+   *
+   *   return (
+   * 		<button onClick={handleClick}> wallet details </button>
+   * 	);
+   * }
+   * ```
+   */
+  onDisconnect?: (info: {
+    wallet: Wallet;
+    account: Account;
+  }) => void;
+
+  /**
    * Render custom UI at the bottom of the Details Modal
    */
   footer?: (props: { close: () => void }) => JSX.Element;
@@ -1158,7 +1103,7 @@ export type UseWalletDetailsModalOptions = {
   payOptions?: PayUIOptions;
 
   /**
-   * Display the balance of a token instead of the native token in `ConnectButton` details button.
+   * Display the balance of a token instead of the native token
    * @example
    * ```tsx
    * const displayBalanceToken = {
@@ -1184,10 +1129,10 @@ export type UseWalletDetailsModalOptions = {
  * });
  *
  * function Example() {
- *   const { open } = useWalletDetailsModal();
+ *   const detailsModal = useWalletDetailsModal();
  *
  *   function handleClick() {
- *      open({ client, theme: 'light' });
+ *      detailsModal.open({ client, theme: 'light' });
  *   }
  *
  *   return <button onClick={handleClick}> Show Wallet Details </button>
@@ -1224,7 +1169,10 @@ export function useWalletDetailsModal() {
             theme={props.theme || "dark"}
             supportedTokens={props.supportedTokens}
             closeModal={closeModal}
-            onDisconnect={closeModal}
+            onDisconnect={(info) => {
+              props.onDisconnect?.(info);
+              closeModal();
+            }}
             chains={props.chains || []}
           />,
         );

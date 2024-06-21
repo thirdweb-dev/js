@@ -7,25 +7,14 @@ export default {
       "name": "Seitrace",
       "url": "https://seitrace.com",
       "standard": "EIP3091"
-    },
-    {
-      "name": "Sei Explorer",
-      "url": "https://github.com/sei-protocol/sei-chain/blob/main/assets/SeiLogo.png",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "https://github.com/sei-protocol/sei-chain/blob/main/assets/SeiLogo.png",
-        "width": 231,
-        "height": 231,
-        "format": "png"
-      }
     }
   ],
   "faucets": [],
   "features": [],
   "icon": {
-    "url": "https://github.com/sei-protocol/sei-chain/blob/main/assets/SeiLogo.png",
-    "width": 231,
-    "height": 231,
+    "url": "ipfs://QmTWt4P7guuSSK5GhpHpzsFh1ccB6PD9Vsk5sVhJYgjKFM",
+    "width": 360,
+    "height": 360,
     "format": "png"
   },
   "infoURL": "https://www.sei.io",

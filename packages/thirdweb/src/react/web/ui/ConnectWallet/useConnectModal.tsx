@@ -55,7 +55,7 @@ export function useConnectModal() {
         setRootEl(undefined);
       }
 
-      return new Promise((resolve, reject) => {
+      return new Promise<Wallet>((resolve, reject) => {
         setIsConnecting(true);
         getConnectLocale(props.locale || "en_US")
           .then((locale) => {

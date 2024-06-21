@@ -84,11 +84,10 @@ import { Erc1155Mintable } from "./internal/erc1155/erc-1155-mintable";
  * @public
  */
 export class Erc1155<
-    T extends DropERC1155 | TokenERC1155 | BaseERC1155 =
-      | BaseERC1155
-      | BaseSignatureMintERC1155,
-  >
-  implements UpdateableNetwork, DetectableFeature
+  T extends DropERC1155 | TokenERC1155 | BaseERC1155 =
+    | BaseERC1155
+    | BaseSignatureMintERC1155,
+> implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_EDITION.name;
   private query: Erc1155Enumerable | undefined;

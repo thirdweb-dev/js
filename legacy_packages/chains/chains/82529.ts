@@ -25,6 +25,6 @@ export default {
     "https://subnets.avax.network/testsize/testnet/rpc"
   ],
   "shortName": "Test Using Resources",
-  "slug": "test-using-resources",
+  "slug": "test-using-resources-test using resources",
   "testnet": true
 } as const satisfies Chain;

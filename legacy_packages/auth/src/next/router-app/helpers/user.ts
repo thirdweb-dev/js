@@ -44,7 +44,7 @@ export async function getUser<
   TData extends Json = Json,
   TSession extends Json = Json,
 >(
-  ctx: ThirdwebAuthContext<TData, TSession>
+  ctx: ThirdwebAuthContext<TData, TSession>,
 ): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken();
   if (!token) {

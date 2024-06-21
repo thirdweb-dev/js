@@ -614,7 +614,7 @@ const WalletList = /* @__PURE__ */ StyledUl({
   paddingBottom: spacing.lg,
 });
 
-const GradientDiv = /* @__PURE__ */ StyledDiv(() => {
+const GradientDiv = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   theme.colors.modalBg;
   return {

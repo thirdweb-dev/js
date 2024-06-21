@@ -27,7 +27,7 @@ export const ConnectingScreen: React.FC<{
   };
 }> = (props) => {
   const { locale } = props;
-  const { connectModal } = useConnectUI();
+  const { client, connectModal } = useConnectUI();
   return (
     <Container animate="fadein" fullHeight flex="column">
       <Container
@@ -51,6 +51,7 @@ export const ConnectingScreen: React.FC<{
       >
         <Container py="3xl">
           <WalletLogoSpinner
+            client={client}
             error={props.errorConnecting}
             id={props.walletId}
           />
@@ -91,7 +92,7 @@ export const ConnectingScreen: React.FC<{
         </Container>
       </Container>
 
-      {props.onGetStarted && (
+      {props.onGetStarted ? (
         <>
           <Spacer y="xl" />
           <Line />
@@ -101,6 +102,8 @@ export const ConnectingScreen: React.FC<{
             </Button>
           </Container>
         </>
+      ) : (
+        <Spacer y={connectModal.size === "compact" ? "lg" : "xxl"} />
       )}
     </Container>
   );

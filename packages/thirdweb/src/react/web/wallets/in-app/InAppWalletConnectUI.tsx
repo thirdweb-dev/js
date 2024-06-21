@@ -5,13 +5,13 @@ import {
   useSelectionData,
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
+import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
+import { OTPLoginUI } from "../shared/OTPLoginUI.js";
+import { PassKeyLogin } from "../shared/PassKeyLogin.js";
+import { SocialLogin } from "../shared/SocialLogin.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
-import { InAppWalletOTPLoginUI } from "./InAppWalletOTPLoginUI.js";
-import { InAppWalletPassKeyLogin } from "./InAppWalletPassKeyLogin.js";
-import { InAppWalletSocialLogin } from "./InAppWalletSocialLogin.js";
-import type { InAppWalletSelectUIState } from "./types.js";
-import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
+import { useConnectLocale } from "./useInAppWalletLocale.js";
 
 /**
  *
@@ -24,11 +24,11 @@ function InAppWalletConnectUI(props: {
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
-  const state = data as InAppWalletSelectUIState;
-  const localeQuery = useInAppWalletLocale();
+  const state = data as ConnectWalletSelectUIState;
+  const locale = useConnectLocale();
   const { connectModal } = useConnectUI();
 
-  if (!localeQuery.data) {
+  if (!locale) {
     return <LoadingScreen />;
   }
 
@@ -47,9 +47,9 @@ function InAppWalletConnectUI(props: {
 
   if (otpUserInfo) {
     return (
-      <InAppWalletOTPLoginUI
+      <OTPLoginUI
         userInfo={otpUserInfo}
-        locale={localeQuery.data}
+        locale={locale}
         done={props.done}
         goBack={goBackToMain}
         wallet={props.wallet}
@@ -59,7 +59,7 @@ function InAppWalletConnectUI(props: {
 
   if (state?.passkeyLogin) {
     return (
-      <InAppWalletPassKeyLogin
+      <PassKeyLogin
         wallet={props.wallet}
         done={props.done}
         onBack={goBackToMain}
@@ -69,9 +69,9 @@ function InAppWalletConnectUI(props: {
 
   if (state?.socialLogin) {
     return (
-      <InAppWalletSocialLogin
+      <SocialLogin
         socialAuth={state.socialLogin.type}
-        locale={localeQuery.data}
+        locale={locale}
         done={props.done}
         goBack={goBackToMain}
         wallet={props.wallet}
@@ -83,7 +83,7 @@ function InAppWalletConnectUI(props: {
   return (
     <InAppWalletFormUIScreen
       select={() => {}}
-      locale={localeQuery.data}
+      locale={locale}
       done={props.done}
       goBack={props.goBack}
       wallet={props.wallet}

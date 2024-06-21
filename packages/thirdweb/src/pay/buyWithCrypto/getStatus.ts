@@ -70,6 +70,7 @@ export type BuyWithCryptoStatus =
       toAddress: string;
       failureMessage?: string;
       bridge?: string;
+      purchaseData?: object;
     };
 
 export type ValidBuyWithCryptoStatus = Exclude<

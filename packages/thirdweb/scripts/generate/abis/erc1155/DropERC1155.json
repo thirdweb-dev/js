@@ -1,0 +1,6 @@
+[
+  "function setMaxTotalSupply(uint256 _tokenId, uint256 _maxTotalSupply)",
+  "function setSaleRecipientForToken(uint256 _tokenId, address _saleRecipient)",
+  "function updateBatchBaseURI(uint256 _index, string calldata _uri)",
+  "function freezeBatchBaseURI(uint256 _index)"
+]

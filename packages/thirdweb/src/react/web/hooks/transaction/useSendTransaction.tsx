@@ -92,6 +92,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
                 payOptions={{
                   buyWithCrypto: payModal?.buyWithCrypto,
                   buyWithFiat: payModal?.buyWithFiat,
+                  purchaseData: payModal?.purchaseData,
                 }}
               />,
             );
