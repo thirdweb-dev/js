@@ -271,7 +271,7 @@ export function darkTheme(overrides?: ThemeOverrides): Theme {
  */
 function applyThemeOverrides(
   baseTheme: Theme,
-  themeOverrides: ThemeOverrides
+  themeOverrides: ThemeOverrides,
 ): Theme {
   const theme = { ...baseTheme };
 

@@ -12,7 +12,6 @@ import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";

@@ -12,7 +12,6 @@ import {
   type Theme,
   fontSize,
   iconSize,
-  radius,
   spacing,
 } from "../../../../../core/design-system/index.js";
 import {
@@ -25,7 +24,6 @@ import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFia
 import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
-import { ChainIcon } from "../../../components/ChainIcon.js";
 import { ChainName } from "../../../components/ChainName.js";
 import {
   Drawer,
@@ -74,7 +72,6 @@ import {
   useBuySupportedDestinations,
   useBuySupportedSources,
 } from "./swap/useSwapSupportedChains.js";
-import { getBuyTokenAmountFontSize } from "./utils.js";
 
 // NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
 
