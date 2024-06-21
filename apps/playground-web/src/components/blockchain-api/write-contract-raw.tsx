@@ -1,5 +1,6 @@
 "use client";
 
+import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useState } from "react";
 import { getContract, prepareContractCall, toTokens, toUnits } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
@@ -10,7 +11,6 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
-import { THIRDWEB_CLIENT } from "@/lib/client";
 import type { Hex } from "../../../../../packages/thirdweb/dist/types/utils/encoding/hex";
 import { shortenAddress } from "./shortenAddress";
 
@@ -44,6 +44,7 @@ export function WriteContractRawPreview() {
                 width={"20px"}
                 height={"20px"}
                 className="rounded-2xl"
+                alt=""
               />
               <div>
                 <span className="text-green-600">
@@ -115,10 +116,11 @@ export function WriteContractRawPreview() {
         <div className="text-red-600 mt-4 text-center">{error}</div>
       ) : (
         <>
-          {txHash && (
+          {txHash && sepolia.blockExplorers && (
             <a
               target="_blank"
-              href={`${sepolia.blockExplorers![0].url}/tx/${txHash}`}
+              rel="noreferrer"
+              href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
               className="text-center text-green-400 mt-3"
             >
               Tx sent:{" "}

@@ -29,6 +29,7 @@ export function WriteContractExtensionPreview() {
         width={"120px"}
         height={"120px"}
         className="mx-auto rounded-2xl animate-bounce"
+        alt=""
       />
       <div className="my-3 text-center">Claim free testnet tokens</div>
       {account ? (
@@ -65,10 +66,11 @@ export function WriteContractExtensionPreview() {
         <div className="text-red-600 text-sm mt-4 text-center">{error}</div>
       ) : (
         <>
-          {txHash && (
+          {txHash && sepolia.blockExplorers && (
             <a
               target="_blank"
-              href={`${sepolia.blockExplorers![0].url}/tx/${txHash}`}
+              rel="noreferrer"
+              href={`${sepolia.blockExplorers[0].url}/tx/${txHash}`}
               className="text-center text-green-400 mt-3"
             >
               Tx sent:{" "}
