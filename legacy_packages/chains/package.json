@@ -17,12 +17,10 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ],
+    "entrypoints": ["index.ts"],
     "exports": true
   },
   "sideEffects": false,

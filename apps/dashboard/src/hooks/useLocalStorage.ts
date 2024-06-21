@@ -4,7 +4,7 @@ import { isBrowser } from "utils/isBrowser";
 export function useLocalStorage<TType>(
   key: string,
   initialValue: TType,
-  serverSideFallback: TType = initialValue
+  serverSideFallback: TType = initialValue,
 ) {
   const [value, _setValue] = useState<TType>(serverSideFallback);
 

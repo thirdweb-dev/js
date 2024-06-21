@@ -2,6 +2,7 @@
 import { ImageResponse } from "@vercel/og";
 import type { NextRequest } from "next/server";
 import { PublishedContractOG } from "og-lib/url-utils";
+import { isProd } from "../../../constants/rpc";
 
 // Make sure the font exists in the specified path:
 export const config = {
@@ -33,6 +34,7 @@ const ibmPlexMono700_ = fetch(
 ).then((res) => res.arrayBuffer());
 
 const OgBrandIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="59"
@@ -40,7 +42,6 @@ const OgBrandIcon: React.FC = () => (
     viewBox="0 0 59 36"
     fill="none"
   >
-    <title>OgBrandIcon</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -52,6 +53,7 @@ const OgBrandIcon: React.FC = () => (
 );
 
 const PackageIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -63,7 +65,6 @@ const PackageIcon: React.FC = () => (
     stroke-linecap="round"
     stroke-linejoin="round"
   >
-    <title>PackageIcon</title>
     <line x1="16.5" y1="9.4" x2="7.5" y2="4.21" />
     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
     <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
@@ -72,6 +73,7 @@ const PackageIcon: React.FC = () => (
 );
 
 const FileTextIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -83,7 +85,6 @@ const FileTextIcon: React.FC = () => (
     stroke-linecap="round"
     stroke-linejoin="round"
   >
-    <title>FileTextIcon</title>
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
     <polyline points="14 2 14 8 20 8" />
     <line x1="16" y1="13" x2="8" y2="13" />
@@ -93,6 +94,7 @@ const FileTextIcon: React.FC = () => (
 );
 
 const CalendarIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -104,7 +106,6 @@ const CalendarIcon: React.FC = () => (
     stroke-linecap="round"
     stroke-linejoin="round"
   >
-    <title>CalendarIcon</title>
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
@@ -113,6 +114,7 @@ const CalendarIcon: React.FC = () => (
 );
 
 const VersionIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -124,7 +126,6 @@ const VersionIcon: React.FC = () => (
     stroke-linecap="round"
     stroke-linejoin="round"
   >
-    <title>VersionIcon</title>
     <line x1="6" y1="3" x2="6" y2="15" />
     <circle cx="18" cy="6" r="3" />
     <circle cx="6" cy="18" r="3" />
@@ -160,7 +161,7 @@ function descriptionShortener(description: string) {
 }
 
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {

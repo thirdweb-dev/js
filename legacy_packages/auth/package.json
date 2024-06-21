@@ -74,9 +74,7 @@
       "evm/index.ts"
     ],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "devDependencies": {
@@ -103,7 +101,7 @@
     "fastify": "^4.26.2",
     "next": "^14.1.1",
     "next-auth": "^4.24.7",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "peerDependencies": {
     "cookie-parser": "^1.4.6",

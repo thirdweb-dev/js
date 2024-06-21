@@ -6,9 +6,6 @@
     "quickfix.biome": "explicit"
   },
   "editor.defaultFormatter": "biomejs.biome",
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "typescript.preferences.autoImportFileExcludePatterns": [
     "./packages/thirdweb/src/exports"
   ],

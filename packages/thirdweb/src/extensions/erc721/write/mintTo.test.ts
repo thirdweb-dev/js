@@ -18,7 +18,7 @@ const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
-describe("erc721 mintTo extension", () => {
+describe.runIf(!!process.env.TW_SECRET_KEY)("erc721 mintTo extension", () => {
   beforeEach(async () => {
     const address = await deployERC721Contract({
       client,

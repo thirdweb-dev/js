@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "me.komet",
-  name: "Komet",
-  homepage: "https://komet.me",
-  image_id: "a2e9aaed-20f6-4da9-3ca3-448a1fc00b00",
+  id: "io.guardiianwallet",
+  name: "GUARDIIAN Wallet",
+  homepage: "https://guardiianwallet.io/",
+  image_id: "4f095c1d-8a31-4af8-ab58-57e82a398e00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/in/app/komet/id6448238558",
-    android: null,
+    ios: "https://apps.apple.com/pk/app/guardiian-wallet/id6478384338",
+    android: "https://play.google.com/store/apps/details?id=com.gardianwallet",
     mac: null,
     windows: null,
     linux: null,
@@ -21,7 +21,7 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "komet://",
+    native: "guardiianwallet://",
     universal: null,
   },
   desktop: {

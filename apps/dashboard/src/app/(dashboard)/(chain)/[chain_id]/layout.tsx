@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { getAbsoluteUrl } from "lib/vercel-utils";
 import {
   ArrowLeftIcon,
   CircleAlertIcon,
@@ -40,16 +39,6 @@ export async function generateMetadata(
   return {
     title,
     description,
-    openGraph: {
-      images: [
-        {
-          url: `${getAbsoluteUrl()}/api/og/chain/${chain.chainId}`,
-          width: 1200,
-          height: 630,
-          alt: `${sanitizedChainName} (${chain.nativeCurrency.symbol}) on thirdweb`,
-        },
-      ],
-    },
   };
 }
 

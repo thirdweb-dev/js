@@ -31,7 +31,7 @@ import { getSingleQueryValue } from "utils/router";
 import type { ThirdwebNextPage } from "utils/types";
 
 const ExploreCategoryPage: ThirdwebNextPage = (
-  props: InferGetStaticPropsType<typeof getStaticProps>
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
   return (
     <>
@@ -135,7 +135,7 @@ export const getStaticProps: GetStaticProps<ExplorePageProps> = async (ctx) => {
   const categoryId = getSingleQueryValue(
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     ctx.params as any,
-    "category"
+    "category",
   ) as string;
 
   const category = getCategory(categoryId);

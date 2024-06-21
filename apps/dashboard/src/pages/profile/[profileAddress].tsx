@@ -64,21 +64,21 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
   const publisherProfile = usePublisherProfile(ens.data?.address || undefined);
 
   const displayName = shortenIfAddress(
-    ens?.data?.ensName || props.profileAddress
+    ens?.data?.ensName || props.profileAddress,
   ).replace("deployer.thirdweb.eth", "thirdweb.eth");
 
   const currentRoute = `${THIRDWEB_DOMAIN}${router.asPath}`.replace(
     "deployer.thirdweb.eth",
-    "thirdweb.eth"
+    "thirdweb.eth",
   );
 
   const publishedContracts = usePublishedContractsQuery(
-    ens.data?.address || undefined
+    ens.data?.address || undefined,
   );
 
   const mainnetsContractList = useAllContractList(
     ens.data?.address || props.profileAddress,
-    { onlyMainnet: true }
+    { onlyMainnet: true },
   );
 
   const address = useAddress();
@@ -224,13 +224,13 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
 
   const polygonSdk = getThirdwebSDK(
     Polygon.chainId,
-    getDashboardChainRpc(Polygon)
+    getDashboardChainRpc(Polygon),
   );
 
   const profileAddress = getSingleQueryValue(
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     ctx.params as any,
-    "profileAddress"
+    "profileAddress",
   );
 
   if (!profileAddress) {
@@ -280,7 +280,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     ...ensQueries,
     queryClient.prefetchQuery(publisherProfileQuery(address)),
     queryClient.prefetchQuery(["published-contracts", address], () =>
-      fetchPublishedContracts(polygonSdk, queryClient, address)
+      fetchPublishedContracts(polygonSdk, queryClient, address),
     ),
   ]);
 
