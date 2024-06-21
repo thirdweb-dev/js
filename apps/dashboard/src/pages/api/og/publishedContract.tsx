@@ -161,7 +161,7 @@ function descriptionShortener(description: string) {
 }
 
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/": "thirdwebstorage-dev.com/ipfs/"}`
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {

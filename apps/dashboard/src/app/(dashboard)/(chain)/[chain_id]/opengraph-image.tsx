@@ -1,36 +1,28 @@
 /* eslint-disable @next/next/no-img-element */
-import { ImageResponse } from "@vercel/og";
-// import { getAbsoluteUrl } from "lib/vercel-utils";
-import type { NextRequest } from "next/server";
+import {
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+  IPFS_GATEWAY_URL,
+} from "@/constants/env";
+import { ImageResponse } from "next/og";
+import { createThirdwebClient } from "thirdweb";
+import { download } from "thirdweb/storage";
 import { fetchChain } from "utils/fetchChain";
-import { isProd } from "../../../../constants/rpc";
 
-// Make sure the font exists in the specified path:
-export const config = {
-  runtime: "edge",
+// Route segment config
+export const runtime = "edge";
+
+// Image metadata
+export const alt = "thirdweb chain og image";
+export const size = {
+  width: 1200,
+  height: 630,
 };
 
-const bgWithIcon = fetch(
-  new URL("og-lib/assets/chain/bg-with-icon.png", import.meta.url),
-).then((res) => res.arrayBuffer());
-
-const bgNoIcon = fetch(
-  new URL("og-lib/assets/chain/bg-no-icon.png", import.meta.url),
-).then((res) => res.arrayBuffer());
-
-const inter400_ = fetch(
-  new URL("og-lib/fonts/inter/400.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const inter500_ = fetch(
-  new URL("og-lib/fonts/inter/500.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-const inter700_ = fetch(
-  new URL("og-lib/fonts/inter/700.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
+export const contentType = "image/png";
 
 const TWLogo: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-<svg
+  <svg
     width="255"
     height="37"
     viewBox="0 0 255 37"
@@ -69,51 +61,48 @@ const TWLogo: React.FC = () => (
     </defs>
   </svg>
 );
-const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/": "thirdwebstorage-dev.com/ipfs/"}`
-  : "https://ipfs.io/ipfs/";
 
-function replaceAnyIpfsUrlWithGateway(url: string) {
-  if (url.startsWith("ipfs://")) {
-    return `${IPFS_GATEWAY}${url.slice(7)}`;
-  }
-  if (url.includes("/ipfs/")) {
-    const [, after] = url.split("/ipfs/");
-    return `${IPFS_GATEWAY}${after}`;
-  }
-  return url;
-}
 
-export default async function handler(req: NextRequest) {
-  if (req.method !== "GET") {
-    return new Response("Method not allowed", { status: 405 });
-  }
 
-  const url = new URL(req.url);
-  const chainId = url.pathname.split("/").at(-1);
-  if (!chainId) {
-    return new Response("ChainId not found", { status: 400 });
-  }
-  const chain = await fetchChain(chainId);
+// Image generation
+export default async function Image({
+  params,
+}: { params: { chain_id: string } }) {
+  const thirdwebClient = createThirdwebClient({
+    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+    config: {
+      storage: {
+        gatewayUrl: IPFS_GATEWAY_URL,
+      },
+    },
+  });
+
+  const chain = await fetchChain(params.chain_id);
   if (!chain) {
     return new Response("Chain not found", { status: 400 });
   }
 
-  const iconUrl = chain.icon?.url
-    ? replaceAnyIpfsUrlWithGateway(chain.icon.url)
-    : undefined;
-
-  // const optimizedIconUrl = iconUrl
-  //   ? `${getAbsoluteUrl()}/_next/image?url=${encodeURIComponent(
-  //       iconUrl,
-  //     )}&w=256&q=75`
-  //   : undefined;
-
-  const [inter400, inter500, inter700, imageData] = await Promise.all([
-    inter400_,
-    inter500_,
-    inter700_,
-    iconUrl ? bgWithIcon : bgNoIcon,
+  const [interBold, chainIcon, imageData] = await Promise.all([
+    // fetch the font we use
+    fetch(new URL("og-lib/fonts/inter/700.ttf", import.meta.url)).then((res) =>
+      res.arrayBuffer(),
+    ),
+    // download the chain icon if there is one
+    chain.icon?.url
+      ? download({ uri: chain.icon.url, client: thirdwebClient }).then((res) =>
+          res.arrayBuffer(),
+        )
+      : undefined,
+    // download the background image (based on chain)
+    fetch(
+      chain.icon?.url ? new URL(
+        
+          "og-lib/assets/chain/bg-with-icon.png",
+          
+        import.meta.url,
+      ): new URL(
+        "og-lib/assets/chain/bg-no-icon.png", import.meta.url),
+    ).then((res) => res.arrayBuffer()),
   ]);
 
   return new ImageResponse(
@@ -125,7 +114,7 @@ export default async function handler(req: NextRequest) {
       }}
     >
       <img
-        // @ts-expect-error - this works fine
+        // @ts-expect-error - TS doesn't know about the ImageResponse component
         src={imageData}
         width="1200px"
         height="630px"
@@ -134,10 +123,11 @@ export default async function handler(req: NextRequest) {
       />
       {/* the actual component starts here */}
 
-      {iconUrl && (
+      {chainIcon && (
         <img
           alt=""
-          src={iconUrl}
+          // @ts-expect-error - TS doesn't know about the ImageResponse component
+          src={chainIcon}
           tw="absolute rounded-full"
           style={{
             top: 240,
@@ -159,23 +149,16 @@ export default async function handler(req: NextRequest) {
         </div>
       </div>
     </div>,
+    // ImageResponse options
     {
-      width: 1200,
-      height: 630,
+      // For convenience, we can re-use the exported opengraph-image
+      // size config to also set the ImageResponse's width and height.
+      ...size,
       fonts: [
         {
-          data: inter400,
           name: "Inter",
-          weight: 400,
-        },
-        {
-          data: inter500,
-          name: "Inter",
-          weight: 500,
-        },
-        {
-          data: inter700,
-          name: "Inter",
+          data: interBold,
+          style: "normal",
           weight: 700,
         },
       ],

@@ -25,7 +25,7 @@ const inter700_ = fetch(
 
 const OgBrandIcon: React.FC = () => (
   // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
-<svg
+  <svg
     xmlns="http://www.w3.org/2000/svg"
     width="147"
     height="21"
@@ -94,7 +94,7 @@ function textShortener(text: string) {
 }
 
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/": "thirdwebstorage-dev.com/ipfs/"}`
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {

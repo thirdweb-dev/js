@@ -33,17 +33,14 @@ export const BasisPointsInput: React.FC<BasisPointsInputProps> = ({
     }
   }, [value, stringValue]);
 
-  
   // biome-ignore lint/correctness/useExhaustiveDependencies: we *cannot* add onChange to the dependencies here
-    useEffect(() => {
+  useEffect(() => {
     const validValue = stringValue.match(
       /^100$|^100.00$|^\d{0,2}(\.\d{1,2})? *%?$/g,
     );
     if (validValue?.length) {
       onChange(Math.floor(Number.parseFloat(validValue[0] || "0") * 100));
     }
-
-    
   }, [stringValue]);
 
   return (
