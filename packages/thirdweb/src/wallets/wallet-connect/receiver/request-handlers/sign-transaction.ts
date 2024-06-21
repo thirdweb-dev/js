@@ -21,7 +21,7 @@ export async function handleSignTransactionRequest(options: {
 
   if (!account.signTransaction) {
     throw new Error(
-      "[WalletConnect] The current account does not support signing transactions",
+      "The current account does not support signing transactions",
     );
   }
 

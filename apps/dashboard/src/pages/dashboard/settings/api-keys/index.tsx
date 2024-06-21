@@ -3,18 +3,18 @@ import {
   useAccount,
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeys } from "components/settings/ApiKeys";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
   const { isLoggedIn } = useLoggedInUser();
@@ -57,7 +57,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 
         <Text>
           An API key is required to use thirdweb&apos;s services through the SDK
-          and CLI. {` `}
+          and CLI.{" "}
           <Link
             target="_blank"
             color="blue.500"

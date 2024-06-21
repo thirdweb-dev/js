@@ -1,5 +1,4 @@
-import { CustomToolTip } from "./custom-tooltip";
-import { Box, BoxProps, useColorMode } from "@chakra-ui/react";
+import { Box, type BoxProps, useColorMode } from "@chakra-ui/react";
 import { useId, useMemo } from "react";
 import {
   Bar,
@@ -9,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CustomToolTip } from "./custom-tooltip";
 
 type GenericDataType = Record<string, string | number>;
 
@@ -63,9 +63,7 @@ export const BarChart = <
     return null;
   }
 
-  if (!index.type) {
-    index.type = "date";
-  }
+  const indexType = index.type || "date";
 
   return (
     <Box {...boxProps}>
@@ -135,7 +133,7 @@ export const BarChart = <
             tickFormatter={(payload) =>
               index.format
                 ? index.format(payload)
-                : index.type === "date"
+                : indexType === "date"
                   ? new Date(payload).toLocaleDateString(undefined, {
                       day: "2-digit",
                       month: "2-digit",

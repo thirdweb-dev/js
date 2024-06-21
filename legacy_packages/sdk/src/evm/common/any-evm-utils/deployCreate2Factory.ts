@@ -24,7 +24,9 @@ export async function deployCreate2Factory(
   if (deploymentInfo.transaction.length > 0) {
     // send balance to the keyless signer
     if (
-      (await signer.provider.getBalance(deploymentInfo.signer)).lt(deploymentInfo.valueToSend)
+      (await signer.provider.getBalance(deploymentInfo.signer)).lt(
+        deploymentInfo.valueToSend,
+      )
     ) {
       await (
         await signer.sendTransaction({

@@ -1,13 +1,13 @@
+import type { FrameRequest } from "@coinbase/onchainkit";
+import { CoinbaseKit } from "classes/CoinbaseKit";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { errorResponse } from "utils/api";
 import {
   getContractForErc721OpenEdition,
   getErc721PreparedEncodedData,
   getFarcasterAccountAddress,
 } from "utils/tx-frame";
-import { CoinbaseKit } from "classes/CoinbaseKit";
-import { errorResponse } from "utils/api";
 import { abi } from "./abi";
-import { FrameRequest } from "@coinbase/onchainkit";
-import { NextApiRequest, NextApiResponse } from "next";
 
 // https://thirdweb.com/base/0x352810fF1c51a42B568662D46570A30B590a715a
 const contractAddress = "0x352810fF1c51a42B568662D46570A30B590a715a";

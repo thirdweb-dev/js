@@ -26,16 +26,21 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import { CellProps, Column, usePagination, useTable } from "react-table";
+import {
+  type CellProps,
+  type Column,
+  usePagination,
+  useTable,
+} from "react-table";
 import type { NFT, ThirdwebContract } from "thirdweb";
 import {
-  getNFTs as getErc721NFTs,
   nextTokenIdToMint as erc721NextTokenIdToMint,
   totalSupply as erc721TotalSupply,
+  getNFTs as getErc721NFTs,
 } from "thirdweb/extensions/erc721";
 import {
-  getNFTs as getErc1155NFTs,
   nextTokenIdToMint as erc1155NextTokenIdToMint,
+  getNFTs as getErc1155NFTs,
 } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
@@ -223,11 +228,13 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
                     border="none"
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
                     <Text as="label" size="label.sm" color="faded">
@@ -269,6 +276,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   opacity={failedToLoad ? 0.3 : 1}
                   cursor={failedToLoad ? "not-allowed" : "pointer"}
                   borderColor="borderColor"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
                 >
                   {row.cells.map((cell, cellIndex) => (
@@ -277,6 +285,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                       borderBottomWidth="inherit"
                       borderColor="borderColor"
                       maxW="sm"
+                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                       key={cellIndex}
                     >
                       {cell.render("Cell")}
@@ -348,7 +357,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
 
           <Select
             onChange={(e) => {
-              setPageSize(parseInt(e.target.value as string, 10));
+              setPageSize(Number.parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
             isDisabled={queryLoading}

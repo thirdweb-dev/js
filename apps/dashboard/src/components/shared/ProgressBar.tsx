@@ -113,6 +113,5 @@ export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
     router.events,
   ]);
 
-  // eslint-disable-next-line react/forbid-dom-props
-  return <div style={styling}></div>;
+  return <div style={styling} />;
 };

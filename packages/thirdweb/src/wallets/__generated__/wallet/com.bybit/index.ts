@@ -23,7 +23,7 @@ export const wallet = {
   },
   rdns: "com.bybit",
   mobile: {
-    native: "bybitapp://open/route?targetUrl=by://web3/walletconnect",
+    native: "bybitapp://open/route?targetUrl=by://web3/walletconnect/",
     universal: null,
   },
   desktop: {

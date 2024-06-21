@@ -1,4 +1,14 @@
+import { type ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  type ApiKeyPayConfigValidationSchema,
+  apiKeyPayConfigValidationSchema,
+} from "components/settings/ApiKeys/validations";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
 import {
   Button,
   Card,
@@ -9,16 +19,6 @@ import {
   Link,
   Text,
 } from "tw-components";
-import { ApiKey, useUpdateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ApiKeyPayConfigValidationSchema,
-  apiKeyPayConfigValidationSchema,
-} from "components/settings/ApiKeys/validations";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
 
 interface PayConfigProps {
   apiKey: ApiKey;
@@ -126,7 +126,7 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
             <Flex flexDir={{ base: "column", lg: "row" }} gap={6} w="full">
               <FormControl
                 isInvalid={
-                  !!form.getFieldState(`payoutAddress`, form.formState).error
+                  !!form.getFieldState("payoutAddress", form.formState).error
                 }
                 as={Flex}
                 flexDir="column"
@@ -137,11 +137,11 @@ export const PayConfig: React.FC<PayConfigProps> = ({ apiKey }) => {
                 <Input
                   placeholder="0x..."
                   type="text"
-                  {...form.register(`payoutAddress`)}
+                  {...form.register("payoutAddress")}
                 />
                 <FormErrorMessage>
                   {
-                    form.getFieldState(`payoutAddress`, form.formState).error
+                    form.getFieldState("payoutAddress", form.formState).error
                       ?.message
                   }
                 </FormErrorMessage>

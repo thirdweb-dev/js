@@ -1,12 +1,12 @@
-import { HoverMenu } from "./HoverMenu";
 import { Flex, Stack } from "@chakra-ui/react";
 import { TrackedLink, TrackedLinkButton } from "tw-components";
+import { HoverMenu } from "./HoverMenu";
 import { NestedHoverMenu } from "./NestedHoverMenu";
 import {
+  COMPANY,
   DEVELOPER_RESOURCES,
   DEVELOPER_SECTIONS,
   PRODUCT_SECTIONS,
-  COMPANY,
   SOLUTIONS,
 } from "./data";
 

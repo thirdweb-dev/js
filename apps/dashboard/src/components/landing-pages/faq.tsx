@@ -1,14 +1,14 @@
 import {
   Accordion,
-  AccordionItem,
   AccordionButton,
   AccordionIcon,
+  AccordionItem,
   AccordionPanel,
-  Flex,
   Box,
+  Flex,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { HeadingSizes } from "theme/typography";
+import type { HeadingSizes } from "theme/typography";
 import { Heading, Text } from "tw-components";
 
 interface LandingFAQProps {

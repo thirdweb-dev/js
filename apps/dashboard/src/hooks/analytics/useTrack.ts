@@ -6,6 +6,7 @@ type TExtendedTrackParams = {
   category: string;
   action: string;
   label?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   [key: string]: any;
 };
 

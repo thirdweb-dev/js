@@ -7,10 +7,10 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { UseMutationResult } from "@tanstack/react-query";
+import type { UseMutationResult } from "@tanstack/react-query";
 import {
-  TokenContract,
-  TokenParams,
+  type TokenContract,
+  type TokenParams,
   useAddress,
   useMintToken,
   useTokenDecimals,

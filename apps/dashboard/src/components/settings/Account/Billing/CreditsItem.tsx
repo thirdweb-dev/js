@@ -1,4 +1,4 @@
-import { BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Alert,
   AlertDescription,
@@ -7,14 +7,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Optimism } from "@thirdweb-dev/chains";
+import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
 import { formatDistance } from "date-fns";
-import { Text, Button, Card } from "tw-components";
-import { formatToDollars } from "./CreditsButton";
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ChakraNextImage } from "components/Image";
+import { useLocalStorage } from "hooks/useLocalStorage";
+import { Button, Card, Text } from "tw-components";
+import { formatToDollars } from "./CreditsButton";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
@@ -37,7 +37,7 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   const account = useAccount();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${(account?.data && account.data.id) || ""}`,
+    `appliedForOpGrant-${account?.data?.id || ""}`,
     false,
   );
 

@@ -19,7 +19,8 @@
     "bundlers-swc",
     "runtimes-node-commonjs",
     "runtimes-node-module",
-    "playground-web"
+    "playground-web",
+    "thirdweb-dashboard"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",

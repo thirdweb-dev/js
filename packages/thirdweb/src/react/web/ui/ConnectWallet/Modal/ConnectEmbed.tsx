@@ -383,7 +383,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       return (
         <>
           {autoConnectComp}
-          <CustomThemeProvider theme={props.theme || "dark"}>
+          <CustomThemeProvider theme={props.theme}>
             <EmbedContainer modalSize={modalSize}>
               <LoadingScreen />
             </EmbedContainer>
@@ -491,29 +491,29 @@ const ConnectEmbedContent = (
   );
 };
 
-const EmbedContainer = /* @__PURE__ */ StyledDiv(
-  (props: { modalSize: "compact" | "wide" }) => {
-    const { modalSize } = props;
-    const theme = useCustomTheme();
-    return {
-      color: theme.colors.primaryText,
-      background: theme.colors.modalBg,
-      height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
-      width: modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
+const EmbedContainer = /* @__PURE__ */ StyledDiv<{
+  modalSize: "compact" | "wide";
+}>((props) => {
+  const { modalSize } = props;
+  const theme = useCustomTheme();
+  return {
+    color: theme.colors.primaryText,
+    background: theme.colors.modalBg,
+    height: modalSize === "compact" ? "auto" : wideModalMaxHeight,
+    width: modalSize === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
+    boxSizing: "border-box",
+    position: "relative",
+    lineHeight: "normal",
+    borderRadius: radius.xl,
+    border: `1px solid ${theme.colors.borderColor}`,
+    overflow: "hidden",
+    fontFamily: theme.fontFamily,
+    "& *::selection": {
+      backgroundColor: theme.colors.primaryText,
+      color: theme.colors.modalBg,
+    },
+    "& *": {
       boxSizing: "border-box",
-      position: "relative",
-      lineHeight: "normal",
-      borderRadius: radius.xl,
-      border: `1px solid ${theme.colors.borderColor}`,
-      overflow: "hidden",
-      fontFamily: theme.fontFamily,
-      "& *::selection": {
-        backgroundColor: theme.colors.primaryText,
-        color: theme.colors.modalBg,
-      },
-      "& *": {
-        boxSizing: "border-box",
-      },
-    };
-  },
-);
+    },
+  };
+});

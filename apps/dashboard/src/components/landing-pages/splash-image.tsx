@@ -1,8 +1,8 @@
+import { Box, Container, Flex } from "@chakra-ui/react";
+import type { StaticImageData } from "next/image";
+import { Heading, Text } from "tw-components";
 import { LandingCTAButtons } from "./cta-buttons";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
-import { Box, Container, Flex } from "@chakra-ui/react";
-import { StaticImageData } from "next/image";
-import { Heading, Text } from "tw-components";
 
 interface SplashImageProps {
   title: string;
@@ -11,6 +11,7 @@ interface SplashImageProps {
   trackingCategory: string;
   ctaText?: string;
   ctaLink?: string;
+  // biome-ignore lint/complexity/noBannedTypes: FIXME
   lottie?: {};
   gradient: string;
   image?: StaticImageData;

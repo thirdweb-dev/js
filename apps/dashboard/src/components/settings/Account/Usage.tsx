@@ -1,9 +1,9 @@
-import { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
+import type { UsageBillableByService } from "@3rdweb-sdk/react/hooks/useApi";
 import { SimpleGrid, Spinner, VStack } from "@chakra-ui/react";
-import { UsageCard } from "./UsageCard";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { toNumber, toPercent, toSize } from "utils/number";
+import { UsageCard } from "./UsageCard";
 
 interface UsageProps {
   usage: UsageBillableByService | undefined;

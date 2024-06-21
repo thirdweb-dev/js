@@ -1,7 +1,7 @@
 import {
   Input,
   InputGroup,
-  InputProps,
+  type InputProps,
   InputRightElement,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -27,7 +27,7 @@ export const QuantityInputWithUnlimited: React.FC<
   ...restInputProps
 }) => {
   const [stringValue, setStringValue] = useState<string>(
-    isNaN(Number(value)) ? "0" : value.toString(),
+    Number.isNaN(Number(value)) ? "0" : value.toString(),
   );
 
   // FIXME: this needs a re-work
@@ -59,7 +59,7 @@ export const QuantityInputWithUnlimited: React.FC<
         onBlur={() => {
           if (value === "unlimited") {
             setStringValue("unlimited");
-          } else if (!isNaN(Number(value))) {
+          } else if (!Number.isNaN(Number(value))) {
             setStringValue(Number(Number(value).toFixed(decimals)).toString());
           } else {
             setStringValue("0");

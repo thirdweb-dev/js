@@ -8,6 +8,7 @@ export function ConnectSDKIcon(props: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
     >
+      <title>Connect SDK</title>
       <rect
         x="3"
         y="17.9988"

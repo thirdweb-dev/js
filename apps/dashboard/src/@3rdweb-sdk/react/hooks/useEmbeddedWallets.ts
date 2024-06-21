@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { embeddedWalletsKeys } from "../cache-keys";
 import { THIRDWEB_EWS_API_HOST } from "constants/urls";
+import { embeddedWalletsKeys } from "../cache-keys";
 import { useLoggedInUser } from "./useLoggedInUser";
 
 // FIXME: Make API to return camelCase or transform

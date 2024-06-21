@@ -1,22 +1,28 @@
 import { AbstractWallet } from "./abstract";
 import { ethers, TypedDataDomain, type Signer, TypedDataField } from "ethers";
-import { AwsKmsSigner, type AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
+import {
+  AwsKmsSigner,
+  type AwsKmsSignerCredentials,
+} from "ethers-aws-kms-signer";
 
 export class AwsSigner extends AwsKmsSigner {
   private _options: AwsKmsSignerCredentials;
-  constructor(options: AwsKmsSignerCredentials, provider?: ethers.providers.Provider) {
+  constructor(
+    options: AwsKmsSignerCredentials,
+    provider?: ethers.providers.Provider,
+  ) {
     super(options);
     // @ts-expect-error Allow passing null
     ethers.utils.defineReadOnly(this, "provider", provider || null);
     this._options = options;
   }
 
-  async _signTypedData(domain: TypedDataDomain, types: Record<string, Array<TypedDataField>>, value: Record<string, any>) {
-    const hash = ethers.utils._TypedDataEncoder.hash(
-      domain,
-      types,
-      value,
-    );
+  async _signTypedData(
+    domain: TypedDataDomain,
+    types: Record<string, Array<TypedDataField>>,
+    value: Record<string, any>,
+  ) {
+    const hash = ethers.utils._TypedDataEncoder.hash(domain, types, value);
     return this._signDigest(hash);
   }
 

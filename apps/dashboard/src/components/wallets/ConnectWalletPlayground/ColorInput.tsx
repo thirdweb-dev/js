@@ -1,9 +1,9 @@
-/* eslint-disable react/forbid-dom-props */
 import { Box, Flex, Input, Spacer } from "@chakra-ui/react";
 import { FormLabel } from "tw-components";
 import styles from "./ColorInput.module.css";
 
 function hslToHex(h: number, s: number, l: number) {
+  // biome-ignore lint/style/noParameterAssign: FIXME
   l /= 100;
   const a = (s * Math.min(l, 1 - l)) / 100;
   const f = (n: number) => {
@@ -31,7 +31,7 @@ export function ColorInput(props: {
       .map(Number);
 
     // if all three are numbers
-    if (!isNaN(h) && !isNaN(s) && !isNaN(l)) {
+    if (!Number.isNaN(h) && !Number.isNaN(s) && !Number.isNaN(l)) {
       hexColor = hslToHex(h, s, l);
     } else {
       // give up

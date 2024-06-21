@@ -1,7 +1,7 @@
-import { HomePageCodeBlock } from "../CodeBlock";
-import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
 import { AspectRatio, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { themes } from "prism-react-renderer";
+import { HomePageCodeBlock } from "../CodeBlock";
+import { KeyFeatureLayout } from "./key-features/KeyFeatureLayout";
 
 const darkTheme = themes.vsDark;
 

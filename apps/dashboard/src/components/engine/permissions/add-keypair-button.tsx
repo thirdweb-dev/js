@@ -1,5 +1,5 @@
 import {
-  KeypairAlgorithm,
+  type KeypairAlgorithm,
   useEngineAddKeypair,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -176,7 +176,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
                 <Text>Print the public key.</Text>
                 <CodeBlock
                   fontSize="small"
-                  code={`cat public.key`}
+                  code={"cat public.key"}
                   language="solidity"
                 />
               </Stack>

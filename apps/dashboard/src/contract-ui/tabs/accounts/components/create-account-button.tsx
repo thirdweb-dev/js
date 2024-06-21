@@ -2,7 +2,7 @@ import { Tooltip } from "@chakra-ui/react";
 import {
   useAccountsForAddress,
   useAddress,
-  useContract,
+  type useContract,
   useCreateAccount,
   useIsAccountDeployed,
 } from "@thirdweb-dev/react";

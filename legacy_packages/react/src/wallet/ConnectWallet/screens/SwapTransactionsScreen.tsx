@@ -24,8 +24,10 @@ import { BuyIcon } from "../icons/BuyIcon";
 import { Text } from "../../../components/text";
 import { CryptoIcon } from "../icons/CryptoIcon";
 
-type ValidBuyWithCryptoStatus = Exclude<BuyWithCryptoStatus, { status: 'NOT_FOUND'}>
-
+type ValidBuyWithCryptoStatus = Exclude<
+  BuyWithCryptoStatus,
+  { status: "NOT_FOUND" }
+>;
 
 type TxStatusInfo = {
   boughChainId: number;
@@ -54,7 +56,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
 
   const txHashSet = new Set<string>();
   _historyQuery.data?.page.forEach((tx) => {
-    if (tx.status !== "NOT_FOUND" && tx.status !== 'NONE') {
+    if (tx.status !== "NOT_FOUND" && tx.status !== "NONE") {
       if (tx.source?.transactionHash) {
         txHashSet.add(tx.source?.transactionHash);
       }
@@ -83,7 +85,7 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
 
   // Add data from endpoint
   _historyQuery.data?.page.forEach((tx) => {
-    if (tx.status !== "NOT_FOUND" && tx.status !== 'NONE') {
+    if (tx.status !== "NOT_FOUND" && tx.status !== "NONE") {
       if (tx.source?.transactionHash) {
         txInfosToShow.push({
           boughChainId:
@@ -346,7 +348,7 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
 
 const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
-const IconBox = /* @__PURE__ */ StyledDiv(() => {
+const IconBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.secondaryText,
@@ -360,7 +362,7 @@ const IconBox = /* @__PURE__ */ StyledDiv(() => {
   };
 });
 
-const TxHashLink = /* @__PURE__ */ StyledAnchor(() => {
+const TxHashLink = /* @__PURE__ */ StyledAnchor((_) => {
   const theme = useCustomTheme();
   return {
     unset: "all",

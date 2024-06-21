@@ -1,5 +1,13 @@
 import {
+  type CreateWebhookInput,
+  type PaymentsWebhooksType,
+  usePaymentsCreateWebhook,
+} from "@3rdweb-sdk/react/hooks/usePayments";
+import {
   Flex,
+  FormControl,
+  Icon,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -7,23 +15,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  Icon,
-  FormControl,
-  Input,
   Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useForm } from "react-hook-form";
-import { Button, FormLabel, FormErrorMessage, Card, Text } from "tw-components";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import {
-  CreateWebhookInput,
-  PaymentsWebhooksType,
-  usePaymentsCreateWebhook,
-} from "@3rdweb-sdk/react/hooks/usePayments";
 import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Button, Card, FormErrorMessage, FormLabel, Text } from "tw-components";
 
 interface PaymentsWebhooksCreateButtonProps {
   paymentsSellerId: string;
@@ -144,10 +144,10 @@ export const PaymentsWebhooksCreateButton: React.FC<
                     validate: {
                       checkUrl: (value) =>
                         isValidUrl(value) ||
-                        `Invalid URL, make sure you include https://`,
+                        "Invalid URL, make sure you include https://",
                       checkDuplicate: (value) =>
                         !existingUrls.includes(value) ||
-                        `Invalid URL, webhook already exists`,
+                        "Invalid URL, webhook already exists",
                     },
                   })}
                 />

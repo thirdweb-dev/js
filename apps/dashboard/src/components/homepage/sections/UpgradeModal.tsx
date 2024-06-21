@@ -9,11 +9,16 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Button, Heading, TrackedLinkButtonProps, Text } from "tw-components";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useEffect } from "react";
+import {
+  Button,
+  Heading,
+  Text,
+  type TrackedLinkButtonProps,
+} from "tw-components";
 import { PLANS } from "utils/pricing";
 import { FeatureItem } from "./FeatureItem";
-import { useEffect } from "react";
-import { useTrack } from "hooks/analytics/useTrack";
 
 interface UpgradeModalProps {
   name: AccountPlan;
@@ -95,7 +100,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
               </Text>
 
               {plan.features.map((f) => (
-                <FeatureItem key={f} text={f} />
+                <FeatureItem key={Array.isArray(f) ? f[0] : f} text={f} />
               ))}
 
               <Text fontWeight="medium" size="body.md" color="faded" mt={2}>

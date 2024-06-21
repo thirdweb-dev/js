@@ -1,14 +1,14 @@
-import { Flex, Divider, Skeleton } from "@chakra-ui/react";
-import { Card, Heading, CodeBlock, Text } from "tw-components";
-import { PaymentsWebhooksTable } from "./payments-webhooks-table";
-import { DetailsRow } from "components/settings/ApiKeys/DetailsRow";
-import { useMemo } from "react";
-import { PaymentsWebhooksCreateButton } from "./payments-webhooks-create-webhook-button";
-import { PaymentsWebhooksTestButton } from "./payments-webhooks-test";
 import {
   usePaymentsWebhooksById,
   usePaymentsWebhooksSecretKeyById,
 } from "@3rdweb-sdk/react/hooks/usePayments";
+import { Divider, Flex, Skeleton } from "@chakra-ui/react";
+import { DetailsRow } from "components/settings/ApiKeys/DetailsRow";
+import { useMemo } from "react";
+import { Card, CodeBlock, Heading, Text } from "tw-components";
+import { PaymentsWebhooksCreateButton } from "./payments-webhooks-create-webhook-button";
+import { PaymentsWebhooksTable } from "./payments-webhooks-table";
+import { PaymentsWebhooksTestButton } from "./payments-webhooks-test";
 
 const WEBHOOK_LIMIT = 3;
 
@@ -52,7 +52,7 @@ export const PaymentsWebhooks: React.FC<PaymentsWebhooksProps> = ({
         </Flex>
         <DetailsRow
           title="Secret Key"
-          tooltip={`Used for authenticating the webhook request`}
+          tooltip={"Used for authenticating the webhook request"}
           content={
             <Skeleton isLoaded={isSecretKeyFetched} w="full" borderRadius="md">
               <CodeBlock code={webhookApiKey?.data?.decrypted_key ?? ""} />

@@ -1,16 +1,15 @@
-/* eslint-disable react/forbid-dom-props */
-import { NetworkSelectorChainProps } from "@thirdweb-dev/react";
+import type { NetworkSelectorChainProps } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
   useSetEditChain,
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
-import { OPSponsoredChains } from "../../constants/chains";
 import { SettingsIcon } from "lucide-react";
-import { cn } from "../../@/lib/utils";
-import { Button } from "../../@/components/ui/button";
 import { Spinner } from "../../@/components/ui/Spinner/Spinner";
+import { Button } from "../../@/components/ui/button";
+import { cn } from "../../@/lib/utils";
+import { OPSponsoredChains } from "../../constants/chains";
 
 type CustomChainRendererProps = NetworkSelectorChainProps & {
   disableChainConfig?: boolean;
@@ -34,6 +33,7 @@ export const CustomChainRenderer = ({
   return (
     <div className="flex w-full justify-start hover:bg-[#22232b] rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
       <div className="flex flex-1 items-center group">
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: FIXME */}
         <div
           className={cn(
             "flex flex-1 gap-4 items-center",

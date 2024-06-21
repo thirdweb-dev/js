@@ -715,7 +715,7 @@ export const ConnectedWalletDetails: React.FC<{
   );
 };
 
-const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
+const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -747,7 +747,7 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton(() => {
   };
 });
 
-const MenuButton = /* @__PURE__ */ StyledButton(() => {
+const MenuButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

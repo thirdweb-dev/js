@@ -197,7 +197,6 @@ export const SelectAccount: React.FC<{
               id="safeNetwork"
               value={safeChainId}
               disabled={disableNetworkSelection}
-              placeholder={locale.selectNetworkPlaceholder}
               onChange={(e) => {
                 setSafeConnectError(false);
                 setSwitchError(false);
@@ -370,7 +369,7 @@ export const SelectAccount: React.FC<{
   );
 };
 
-const NetworkSelect = /* @__PURE__ */ StyledSelect(() => {
+const NetworkSelect = /* @__PURE__ */ StyledSelect((_) => {
   const theme = useCustomTheme();
   return {
     width: "100%",

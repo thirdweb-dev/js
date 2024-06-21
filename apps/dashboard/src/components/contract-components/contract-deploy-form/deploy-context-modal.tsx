@@ -12,7 +12,7 @@ import { createContext, useContext, useState } from "react";
 import { FiActivity, FiCheck } from "react-icons/fi";
 import invariant from "tiny-invariant";
 import { Card, Heading, Text } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface DeployModalStep {
   title: string;

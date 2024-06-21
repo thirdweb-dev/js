@@ -3,9 +3,9 @@ import {
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
-import { Button, Card, Text } from "tw-components";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { Button, Card, Text } from "tw-components";
 
 interface LocalConfigProps {
   instanceUrl: string;

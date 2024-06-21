@@ -643,7 +643,7 @@ function DrawerContent(props: {
   );
 }
 
-const StyledInput = /* @__PURE__ */ styled(Input)(() => {
+const StyledInput = /* @__PURE__ */ styled(Input)((_) => {
   const theme = useCustomTheme();
   return {
     border: `1.5px solid ${theme.colors.borderColor}`,

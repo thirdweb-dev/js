@@ -17,7 +17,7 @@ import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Heading, Link, LinkButton, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const Timer = dynamic(() => import("components/hackathon/common/Timer"), {
   ssr: false,
@@ -240,8 +240,10 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           top="300px"
           left="30%"
           transform="translate(-50%, -50%)"
-          backgroundImage={`radial-gradient(ellipse at center, hsl(300deg 100% 50% / 20%), transparent 60%)`}
-        ></Box>
+          backgroundImage={
+            "radial-gradient(ellipse at center, hsl(300deg 100% 50% / 20%), transparent 60%)"
+          }
+        />
 
         <Box
           pointerEvents={"none"}
@@ -252,8 +254,10 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           top="300px"
           left="70%"
           transform="translate(-50%, -50%)"
-          backgroundImage={`radial-gradient(ellipse at center, hsl(276deg 100% 50% / 20%), transparent 60%)`}
-        ></Box>
+          backgroundImage={
+            "radial-gradient(ellipse at center, hsl(276deg 100% 50% / 20%), transparent 60%)"
+          }
+        />
 
         <Box maxW="100vw" overflowX="hidden">
           {/* Hero */}
@@ -309,7 +313,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
                 Jan 16th - Feb 17th
               </Text>
 
-              <ClientOnly fadeInDuration={400} ssr={<Box height="220px"></Box>}>
+              <ClientOnly fadeInDuration={400} ssr={<Box height="220px" />}>
                 <Flex alignItems={"center"} flexDirection="column">
                   {isAfter(new Date(), new Date("2021-01-16T00:00:00.000Z")) ? (
                     <>
@@ -461,8 +465,10 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
               top="50%"
               left="50%"
               transform="translate(-50%, -50%)"
-              backgroundImage={`radial-gradient(ellipse at center, hsl(300deg 100% 50% / 12%), transparent 60%)`}
-            ></Box>
+              backgroundImage={
+                "radial-gradient(ellipse at center, hsl(300deg 100% 50% / 12%), transparent 60%)"
+              }
+            />
           </HomepageSection>
 
           {/* Judges */}
@@ -499,8 +505,10 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
               top="55%"
               left="50%"
               transform="translate(-50%, -50%)"
-              backgroundImage={`radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)`}
-            ></Box>
+              backgroundImage={
+                "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
+              }
+            />
           </HomepageSection>
 
           {/* Games showcase */}
@@ -516,10 +524,10 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
               left="50%"
               transform="translate(-50%, -50%)"
               backgroundImage={{
-                base: `radial-gradient(ellipse at center, hsl(300deg 100% 60% / 30%), transparent 60%)`,
-                md: `radial-gradient(ellipse at center, hsl(300deg 100% 60% / 15%), transparent 60%)`,
+                base: "radial-gradient(ellipse at center, hsl(300deg 100% 60% / 30%), transparent 60%)",
+                md: "radial-gradient(ellipse at center, hsl(300deg 100% 60% / 15%), transparent 60%)",
               }}
-            ></Box>
+            />
           </HomepageSection>
 
           {/* Resources */}

@@ -1,12 +1,12 @@
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
-import { AffectedAreaInput } from "./AffectedAreaInput";
-import { ReactElement } from "react";
-import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
-import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
-import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
-import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ReactElement } from "react";
 import { useWatch } from "react-hook-form";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
+import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
+import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
+import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
+import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
+import { AffectedAreaInput } from "./AffectedAreaInput";
 
 type ProblemAreaItem = {
   label: string;
@@ -115,13 +115,7 @@ export default function ConnectSupportForm() {
     useWatch<CreateTicketInput>({
       name: "extraInfo_Problem_Area",
     }) || "";
-  const SubFormComponent = () => {
-    return (
-      PROBLEM_AREAS.find((o) => o.label === selectedProblemArea)?.component || (
-        <></>
-      )
-    );
-  };
+
   return (
     <>
       <SupportForm_SelectInput
@@ -131,7 +125,7 @@ export default function ConnectSupportForm() {
         options={PROBLEM_AREAS.map((o) => o.label)}
         required={true}
       />
-      <SubFormComponent />
+      {PROBLEM_AREAS.find((o) => o.label === selectedProblemArea)?.component}
     </>
   );
 }

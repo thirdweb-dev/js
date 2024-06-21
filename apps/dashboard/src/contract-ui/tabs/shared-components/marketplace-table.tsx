@@ -1,4 +1,3 @@
-import { LISTING_STATUS } from "./types";
 import {
   ButtonGroup,
   Center,
@@ -21,7 +20,13 @@ import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import { BigNumber } from "ethers";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { FiArrowRight } from "react-icons/fi";
 import {
   MdFirstPage,
@@ -29,14 +34,15 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import { Cell, Column, usePagination, useTable } from "react-table";
+import type { UseQueryResult } from "react-query-v5";
+import { type Cell, type Column, usePagination, useTable } from "react-table";
+import type {
+  DirectListing,
+  EnglishAuction,
+} from "thirdweb/extensions/marketplace";
 import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import type {
-  EnglishAuction,
-  DirectListing,
-} from "thirdweb/extensions/marketplace";
-import type { UseQueryResult } from "react-query-v5";
+import { LISTING_STATUS } from "./types";
 
 const tableColumns: Column<DirectListing | EnglishAuction>[] = [
   {
@@ -46,6 +52,7 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
   {
     Header: "Media",
     accessor: (row) => row.asset.metadata,
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: (cell: any) => <MediaCell cell={cell} />,
   },
   {
@@ -55,6 +62,7 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
   {
     Header: "Creator",
     accessor: (row) => row.creatorAddress,
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: ({ cell }: { cell: Cell<any, string> }) => (
       <AddressCopyButton variant="outline" address={cell.value} />
     ),
@@ -64,6 +72,7 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
     accessor: (row) =>
       (row as DirectListing)?.currencyValuePerToken ||
       (row as EnglishAuction)?.buyoutCurrencyValue,
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: ({ cell }: { cell: Cell<any, any> }) => {
       return (
         <Text size="label.md" whiteSpace="nowrap">
@@ -123,9 +132,8 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   const renderData = useMemo(() => {
     if (listingsToShow === "all") {
       return getAllQueryResult?.data || prevData;
-    } else {
-      return getValidQueryResult?.data || prevData;
     }
+    return getValidQueryResult?.data || prevData;
   }, [getAllQueryResult, getValidQueryResult, listingsToShow, prevData]);
 
   const {
@@ -145,6 +153,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
   } = useTable(
     {
       columns: tableColumns,
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       data: (renderData as any) || [],
       initialState: {
         pageSize: queryParams.count,
@@ -159,6 +168,8 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         1,
       ),
     },
+    // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
+    // eslint-disable-next-line react-compiler/react-compiler
     usePagination,
   );
 
@@ -210,11 +221,13 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
                     border="none"
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
                     <Text as="label" size="label.sm" color="faded">
@@ -240,6 +253,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
                   borderColor="borderColor"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={rowIndex}
                 >
                   {row.cells.map((cell, cellIndex) => (
@@ -247,6 +261,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
                       {...cell.getCellProps()}
                       borderBottomWidth="inherit"
                       borderColor="borderColor"
+                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                       key={cellIndex}
                     >
                       {cell.render("Cell")}
@@ -300,7 +315,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
 
           <Select
             onChange={(e) => {
-              setPageSize(parseInt(e.target.value as string, 10));
+              setPageSize(Number.parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
             isDisabled={totalCountQuery.isLoading}

@@ -159,7 +159,7 @@ export function prepareGatewayUrls(
  * @internal
  */
 export function convertCidToV1(cid: string) {
-  let normalized: string = '';
+  let normalized: string = "";
   try {
     const hash = cid.split("/")[0];
     normalized = CIDTool.base32(hash);

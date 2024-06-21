@@ -1,4 +1,11 @@
 import {
+  AccountStatus,
+  type ApiKey,
+  useAccount,
+  useApiKeys,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import {
   Alert,
   AlertDescription,
   AlertIcon,
@@ -10,9 +17,17 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
+import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { SmartWallets } from "components/smart-wallets";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
+import { getAbsoluteUrl } from "lib/vercel-utils";
+import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
+import { useMemo, useState } from "react";
 import {
   Card,
   Heading,
@@ -20,22 +35,7 @@ import {
   TrackedLink,
   TrackedLinkButton,
 } from "tw-components";
-import {
-  AccountStatus,
-  ApiKey,
-  useAccount,
-  useApiKeys,
-} from "@3rdweb-sdk/react/hooks/useApi";
-import { useMemo, useState } from "react";
-import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
-import { NextSeo } from "next-seo";
-import { getAbsoluteUrl } from "lib/vercel-utils";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { SmartWallets } from "components/smart-wallets";
-import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { useRouter } from "next/router";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
@@ -46,7 +46,7 @@ export type SmartWalletFormData = {
 
 const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const router = useRouter();
-  const defaultTabIndex = parseInt(router.query.tab?.toString() || "0");
+  const defaultTabIndex = Number.parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
   const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();

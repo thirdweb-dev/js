@@ -1,9 +1,8 @@
-import { CustomChainRenderer } from "./CustomChainRenderer";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { useColorMode } from "@chakra-ui/react";
 import { NetworkSelector, useChain, useWallet } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { StoredChain } from "contexts/configured-chains";
+import type { StoredChain } from "contexts/configured-chains";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import {
   useAddRecentlyUsedChainId,
@@ -14,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { Button } from "tw-components";
 import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
+import { CustomChainRenderer } from "./CustomChainRenderer";
 
 interface NetworkSelectorButtonProps {
   disabledChainIds?: number[];

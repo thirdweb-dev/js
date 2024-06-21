@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { FaReact } from "react-icons/fa";
-import { SiTypescript, SiSolidity, SiDotnet } from "react-icons/si";
-import { FaUnity } from "react-icons/fa6";
 import { redirect } from "next/navigation";
+import { FaReact } from "react-icons/fa";
+import { FaUnity } from "react-icons/fa6";
+import { SiDotnet, SiSolidity, SiTypescript } from "react-icons/si";
 import { getChain } from "../../utils";
 import { InfoCard } from "../components/server/info-card";
 
@@ -76,13 +76,13 @@ export default async function Page(props: { params: { chain_id: string } }) {
         </p>
       </InfoCard>
 
-      <div className="h-10"></div>
+      <div className="h-10" />
 
       <h3 className="text-foreground text-3xl tracking-tighter font-semibold">
         Get Started
       </h3>
 
-      <div className="h-3"></div>
+      <div className="h-3" />
 
       <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
         {sdks.map((sdk) => {

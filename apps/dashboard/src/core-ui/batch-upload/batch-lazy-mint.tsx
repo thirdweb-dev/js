@@ -1,6 +1,3 @@
-import { BatchTable } from "./batch-table";
-import { SelectOption } from "./lazy-mint-form/select-option";
-import { UploadStep } from "./upload-step";
 import {
   Alert,
   AlertIcon,
@@ -19,7 +16,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { AiFillEyeInvisible } from "@react-icons/all-files/ai/AiFillEyeInvisible";
-import { DelayedRevealLazyMintInput } from "@thirdweb-dev/react/evm";
+import type { DelayedRevealLazyMintInput } from "@thirdweb-dev/react/evm";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
@@ -39,9 +36,12 @@ import {
   Text,
   TrackedLink,
 } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { processInputData, shuffleData } from "utils/batch";
 import { z } from "zod";
+import { BatchTable } from "./batch-table";
+import { SelectOption } from "./lazy-mint-form/select-option";
+import { UploadStep } from "./upload-step";
 
 type DelayedSubmit = {
   revealType: "delayed";
@@ -57,7 +57,7 @@ type SubmitType = DelayedSubmit | InstantSubmit;
 interface BatchLazyMintEVMProps {
   nextTokenIdToMint: number;
   isRevealable: boolean;
-  onSubmit: (formData: SubmitType) => Promise<any>;
+  onSubmit: (formData: SubmitType) => Promise<unknown>;
 }
 
 type BatchLazyMintProps = BatchLazyMintEVMProps;
@@ -159,36 +159,35 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
             revealType: "instant",
             data: { metadatas: shuffledMetadatas },
           });
-        } else {
-          // validate password
-          if (!data.password) {
-            form.setError("password", {
-              message: "A password is required for delayed reveal.",
-              type: "validate",
-            });
-            return;
-          }
-          // validate placeholder
-          if (!data.placeHolder?.name) {
-            form.setError("placeHolder.name", {
-              message: "A name is required for delayed reveal.",
-              type: "validate",
-            });
-          }
-          // submit
-          return props.onSubmit({
-            revealType: "delayed",
-            data: {
-              metadatas: shuffledMetadatas,
-              password: data.password,
-              placeholder: {
-                name: data.placeHolder?.name,
-                description: data.placeHolder?.description,
-                image: data.placeHolder?.image,
-              },
-            },
+        }
+        // validate password
+        if (!data.password) {
+          form.setError("password", {
+            message: "A password is required for delayed reveal.",
+            type: "validate",
+          });
+          return;
+        }
+        // validate placeholder
+        if (!data.placeHolder?.name) {
+          form.setError("placeHolder.name", {
+            message: "A name is required for delayed reveal.",
+            type: "validate",
           });
         }
+        // submit
+        return props.onSubmit({
+          revealType: "delayed",
+          data: {
+            metadatas: shuffledMetadatas,
+            password: data.password,
+            placeholder: {
+              name: data.placeHolder?.name,
+              description: data.placeHolder?.description,
+              image: data.placeHolder?.image,
+            },
+          },
+        });
       })}
     >
       <Card bg="backgroundCardHighlight">
@@ -391,15 +390,12 @@ const SelectReveal: React.FC<SelectRevealProps> = ({ form, isRevealable }) => {
                         placeholder="Choose password"
                         type={show ? "text" : "password"}
                       />
-                      <InputRightElement
-                        cursor="pointer"
-                        children={
-                          <Icon
-                            as={show ? AiFillEye : AiFillEyeInvisible}
-                            onClick={() => setShow(!show)}
-                          />
-                        }
-                      />
+                      <InputRightElement cursor="pointer">
+                        <Icon
+                          as={show ? AiFillEye : AiFillEyeInvisible}
+                          onClick={() => setShow(!show)}
+                        />
+                      </InputRightElement>
                     </InputGroup>
 
                     <FormErrorMessage>

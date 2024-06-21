@@ -5,14 +5,14 @@ import {
 import { Flex } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Chain } from "@thirdweb-dev/chains";
+import type { Chain } from "@thirdweb-dev/chains";
 import {
   AsyncContractNameCell,
   AsyncContractTypeCell,
 } from "components/contract-components/tables/cells";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
-import { BasicContract } from "contract-ui/types/types";
+import type { BasicContract } from "contract-ui/types/types";
 import { LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { fetchChain } from "utils/fetchChain";

@@ -28,7 +28,7 @@ import { Logo } from "components/logo";
 import { utils } from "ethers";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DropzoneOptions, useDropzone } from "react-dropzone";
+import { type DropzoneOptions, useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import {
@@ -37,7 +37,7 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import { Column, usePagination, useTable } from "react-table";
+import { type Column, usePagination, useTable } from "react-table";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
@@ -337,30 +337,25 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
         accessor: ({ address, isValid }) => {
           if (isValid) {
             return address;
-          } else {
-            return (
-              <Flex>
-                <Tooltip
-                  label={
-                    address.startsWith("0x")
-                      ? "Address is not valid"
-                      : "Address couldn't be resolved"
-                  }
-                >
-                  <Stack direction="row" align="center">
-                    <Icon
-                      as={IoAlertCircleOutline}
-                      color="red.500"
-                      boxSize={5}
-                    />
-                    <Text fontWeight="bold" color="red.500" cursor="default">
-                      {address}
-                    </Text>
-                  </Stack>
-                </Tooltip>
-              </Flex>
-            );
           }
+          return (
+            <Flex>
+              <Tooltip
+                label={
+                  address.startsWith("0x")
+                    ? "Address is not valid"
+                    : "Address couldn't be resolved"
+                }
+              >
+                <Stack direction="row" align="center">
+                  <Icon as={IoAlertCircleOutline} color="red.500" boxSize={5} />
+                  <Text fontWeight="bold" color="red.500" cursor="default">
+                    {address}
+                  </Text>
+                </Stack>
+              </Tooltip>
+            </Flex>
+          );
         },
       },
       {
@@ -410,11 +405,13 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
                     border="none"
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
                     <Text as="label" size="label.sm" color="faded">
@@ -429,11 +426,13 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
             {page.map((row, rowIndex) => {
               prepareRow(row);
               return (
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 <Tr {...row.getRowProps()} key={rowIndex}>
                   {row.cells.map((cell, cellIndex) => (
                     <Td
                       {...cell.getCellProps()}
                       borderColor="borderColor"
+                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                       key={cellIndex}
                     >
                       {cell.render("Cell")}
@@ -480,7 +479,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
 
             <Select
               onChange={(e) => {
-                setPageSize(parseInt(e.target.value as string, 10));
+                setPageSize(Number.parseInt(e.target.value as string, 10));
               }}
               value={pageSize}
             >

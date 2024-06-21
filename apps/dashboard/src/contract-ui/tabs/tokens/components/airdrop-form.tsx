@@ -8,16 +8,16 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
-  TokenContract,
-  TokenParams,
-  WalletAddress,
+  type TokenContract,
+  type TokenParams,
+  type WalletAddress,
   useAddress,
   useTransferBatchToken,
 } from "@thirdweb-dev/react";
-import { Amount } from "@thirdweb-dev/sdk";
+import type { Amount } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
-  AirdropAddressInput,
+  type AirdropAddressInput,
   AirdropUpload,
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -112,7 +112,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                   isOpen={isOpen}
                   onClose={onClose}
                   setAirdrop={(value) =>
-                    setValue(`addresses`, value, { shouldDirty: true })
+                    setValue("addresses", value, { shouldDirty: true })
                   }
                 />
                 <Flex direction={{ base: "column", md: "row" }} gap={4}>

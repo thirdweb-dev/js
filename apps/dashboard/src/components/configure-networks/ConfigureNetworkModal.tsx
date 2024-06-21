@@ -1,4 +1,3 @@
-import { ConfigureNetworks } from "./ConfigureNetworks";
 import {
   Modal,
   ModalBody,
@@ -6,8 +5,9 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { StoredChain } from "contexts/configured-chains";
+import type { StoredChain } from "contexts/configured-chains";
 import { useSetEditChain } from "hooks/networkConfigModal";
+import { ConfigureNetworks } from "./ConfigureNetworks";
 
 interface AddNetworkModalProps {
   onClose: () => void;

@@ -7,7 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FiHelpCircle } from "react-icons/fi";
-import { Heading, Card, Text } from "tw-components";
+import { Card, Heading, Text } from "tw-components";
 import { toUSD } from "utils/number";
 
 interface UsageCardProps {
@@ -22,7 +22,8 @@ interface UsageCardProps {
 const getProgressColor = (percent: number) => {
   if (percent > 90) {
     return "red";
-  } else if (percent > 50) {
+  }
+  if (percent > 50) {
     return "yellow";
   }
   return "blue";

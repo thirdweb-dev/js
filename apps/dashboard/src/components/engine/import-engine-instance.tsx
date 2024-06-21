@@ -1,7 +1,7 @@
 import {
   Alert,
-  AlertIcon,
   AlertDescription,
+  AlertIcon,
   Flex,
   FormControl,
   Input,
@@ -13,7 +13,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";

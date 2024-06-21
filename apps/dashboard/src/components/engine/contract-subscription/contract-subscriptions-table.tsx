@@ -1,5 +1,5 @@
 import {
-  EngineContractSubscription,
+  type EngineContractSubscription,
   useEngineRemoveContractSubscription,
   useEngineSubscriptionsLastBlock,
 } from "@3rdweb-sdk/react/hooks/useEngine";
@@ -15,7 +15,7 @@ import {
   ModalOverlay,
   Stack,
   Tooltip,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";

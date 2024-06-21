@@ -342,9 +342,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     async (
       listing: DirectListingInputParams,
     ): Promise<Transaction<TransactionResultWithId>> => {
-      const parsedListing = await DirectListingInputParamsSchema.parseAsync(
-        listing,
-      );
+      const parsedListing =
+        await DirectListingInputParamsSchema.parseAsync(listing);
 
       await handleTokenApproval(
         this.contractWrapper,
@@ -484,9 +483,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       listingId: BigNumberish,
       listing: DirectListingInputParams,
     ): Promise<Transaction<TransactionResultWithId>> => {
-      const parsedListing = await DirectListingInputParamsSchema.parseAsync(
-        listing,
-      );
+      const parsedListing =
+        await DirectListingInputParamsSchema.parseAsync(listing);
 
       await handleTokenApproval(
         this.contractWrapper,
@@ -840,8 +838,8 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
         status = BigNumber.from(listing.startTimestamp).gt(blockTime)
           ? Status.Created
           : BigNumber.from(listing.endTimestamp).lt(blockTime)
-          ? Status.Expired
-          : Status.Active;
+            ? Status.Expired
+            : Status.Active;
         break;
       case 2:
         status = Status.Completed;

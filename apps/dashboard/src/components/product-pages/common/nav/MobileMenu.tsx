@@ -1,12 +1,6 @@
 import {
-  DEVELOPER_RESOURCES,
-  MOBILE_PRODUCTS_SECTIONS,
-  SOLUTIONS,
-} from "./data";
-import type { SectionItemProps } from "./types";
-import {
   Flex,
-  FlexProps,
+  type FlexProps,
   Icon,
   IconButton,
   ListItem,
@@ -16,6 +10,12 @@ import {
 import { ChakraNextImage } from "components/Image";
 import { FiMenu } from "react-icons/fi";
 import { Drawer, Heading, TrackedLink, TrackedLinkButton } from "tw-components";
+import {
+  DEVELOPER_RESOURCES,
+  MOBILE_PRODUCTS_SECTIONS,
+  SOLUTIONS,
+} from "./data";
+import type { SectionItemProps } from "./types";
 
 export const MobileMenu: React.FC<FlexProps> = (props) => {
   const disclosure = useDisclosure();

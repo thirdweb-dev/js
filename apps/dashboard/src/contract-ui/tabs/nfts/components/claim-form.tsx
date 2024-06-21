@@ -7,7 +7,11 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { DropContract, useAddress, useClaimNFT } from "@thirdweb-dev/react";
+import {
+  type DropContract,
+  useAddress,
+  useClaimNFT,
+} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";

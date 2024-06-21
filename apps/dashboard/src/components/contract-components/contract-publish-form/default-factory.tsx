@@ -1,10 +1,10 @@
-import { AbiSelector } from "./abi-selector";
-import { NetworksFieldset } from "./networks-fieldset";
 import { Flex, FormControl, ListItem, UnorderedList } from "@chakra-ui/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { useFormContext } from "react-hook-form";
 import { Heading, Link, Text } from "tw-components";
+import { AbiSelector } from "./abi-selector";
 import { DynamicContractsFieldset } from "./dynamic-contract-fieldset";
+import { NetworksFieldset } from "./networks-fieldset";
 
 interface DefaultFactoryProps {
   abi: Abi;
@@ -56,11 +56,11 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
             defaultValue="initialize"
             abi={abi}
             value={form.watch(
-              `factoryDeploymentData.implementationInitializerFunction`,
+              "factoryDeploymentData.implementationInitializerFunction",
             )}
             onChange={(selectedFn) =>
               form.setValue(
-                `factoryDeploymentData.implementationInitializerFunction`,
+                "factoryDeploymentData.implementationInitializerFunction",
                 selectedFn,
               )
             }

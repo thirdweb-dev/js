@@ -11,7 +11,7 @@ import {
   useSharedMetadata,
   useTokenSupply,
 } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk";
 import { detectFeatures } from "components/contract-components/utils";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useTabHref } from "contract-ui/utils";
@@ -207,7 +207,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     "ERC721Revealable",
     "ERC1155Revealable",
   ]);
-  const needsReveal = batchesToReveal.data?.length || 0 > 0;
+  const needsReveal = batchesToReveal.data?.length;
   if (isRevealable && needsReveal) {
     steps.push({
       title: "NFTs revealed",

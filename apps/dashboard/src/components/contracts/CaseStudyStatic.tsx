@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
-import { ReactNode } from "react";
+import type { StaticImageData } from "next/image";
+import type { ReactNode } from "react";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 export interface CaseStudyStaticProps {

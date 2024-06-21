@@ -1,6 +1,6 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Container, Divider, Flex } from "@chakra-ui/react";
 import { Card, Heading, Text } from "tw-components";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
 interface ConnectWalletPromptProps {
   title?: string;

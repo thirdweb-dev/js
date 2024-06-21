@@ -5,30 +5,30 @@ import { StyledAnchor, StyledH2, StyledP } from "../design-system/elements";
 import { IconButton } from "./buttons";
 import { ChevronLeftIcon } from "@radix-ui/react-icons";
 
-export const ModalTitle = /* @__PURE__ */ StyledH2(
-  (props: { centerOnMobile?: boolean }) => {
-    const theme = useCustomTheme();
-    return {
-      margin: 0,
-      fontWeight: 600,
-      fontSize: fontSize.lg,
-      color: theme.colors.primaryText,
-      lineHeight: 1.3,
-      textAlign: "left",
-      [media.mobile]: {
-        textAlign: props.centerOnMobile ? "center" : "left",
-      },
-    };
-  },
-);
+export const ModalTitle = /* @__PURE__ */ StyledH2<{
+  centerOnMobile?: boolean;
+}>((props) => {
+  const theme = useCustomTheme();
+  return {
+    margin: 0,
+    fontWeight: 600,
+    fontSize: fontSize.lg,
+    color: theme.colors.primaryText,
+    lineHeight: 1.3,
+    textAlign: "left",
+    [media.mobile]: {
+      textAlign: props.centerOnMobile ? "center" : "left",
+    },
+  };
+});
 
 type ModalDescriptionProps = {
   centerOnMobile?: boolean;
   sm?: boolean;
 };
 
-export const ModalDescription = /* @__PURE__ */ StyledP(
-  (props: ModalDescriptionProps) => {
+export const ModalDescription = /* @__PURE__ */ StyledP<ModalDescriptionProps>(
+  (props) => {
     const theme = useCustomTheme();
     return {
       all: "unset",
@@ -58,8 +58,8 @@ export const BackButton: React.FC<{
   );
 };
 
-export const HelperLink = /* @__PURE__ */ StyledAnchor(
-  (props: { md?: boolean }) => {
+export const HelperLink = /* @__PURE__ */ StyledAnchor<{ md?: boolean }>(
+  (props) => {
     const theme = useCustomTheme();
     return {
       all: "unset",

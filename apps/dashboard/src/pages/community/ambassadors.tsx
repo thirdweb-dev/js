@@ -7,7 +7,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { PageId } from "page-id";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "ambassadors_page";
 
@@ -447,7 +447,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                   bgClip={"text"}
                   size="label.xl"
                   mb={4}
-                ></Heading>
+                />
                 <Heading
                   as="h2"
                   size="display.md"

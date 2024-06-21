@@ -8,7 +8,7 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
-  TokenContract,
+  type TokenContract,
   useAddress,
   useBurnToken,
   useTokenDecimals,
@@ -71,9 +71,9 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
           </Stack>
           <Text>
             Burning these{" "}
-            {`${parseInt(watch("amount")) > 1 ? watch("amount") : ""} `}tokens
-            will remove them from the total circulating supply. This action is
-            irreversible.
+            {`${Number.parseInt(watch("amount")) > 1 ? watch("amount") : ""} `}
+            tokens will remove them from the total circulating supply. This
+            action is irreversible.
           </Text>
         </Stack>
       </DrawerBody>

@@ -14,7 +14,7 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { FiArrowRight } from "react-icons/fi";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const helpProducts = [
   {

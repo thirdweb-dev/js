@@ -1,13 +1,13 @@
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
-  RevealableContract,
-  useContract,
+  type RevealableContract,
+  type useContract,
   useDelayedRevealLazyMint,
   useLazyMint,
   useTotalCount,
 } from "@thirdweb-dev/react";
-import { UploadProgressEvent } from "@thirdweb-dev/sdk";
+import type { UploadProgressEvent } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";

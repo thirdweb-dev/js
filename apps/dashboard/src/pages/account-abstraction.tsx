@@ -9,7 +9,7 @@ import { LandingShowcaseImage } from "components/landing-pages/showcase-image";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "smart-wallet-landing";
 

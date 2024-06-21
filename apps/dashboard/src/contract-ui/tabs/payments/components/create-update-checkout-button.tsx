@@ -1,5 +1,18 @@
+import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import {
+  ChainIdToSupportedCurrencies,
+  type CreateUpdateCheckoutInput,
+  usePaymentsCreateUpdateCheckout,
+} from "@3rdweb-sdk/react/hooks/usePayments";
+import {
+  Alert,
+  AlertDescription,
+  Box,
   Flex,
+  FormControl,
+  Icon,
+  IconButton,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -7,21 +20,31 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  FormControl,
-  Input,
-  Textarea,
-  Switch,
-  Icon,
-  IconButton,
-  Box,
   Progress,
-  Alert,
-  AlertDescription,
+  Switch,
+  Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
+import {
+  type Abi,
+  NATIVE_TOKEN_ADDRESS,
+  useClaimConditions,
+  useContract,
+  useNFTs,
+} from "@thirdweb-dev/react";
+import { detectFeatures } from "components/contract-components/utils";
+import { PaymentsSettingsFileUploader } from "components/payments/settings/payment-settings-file-uploader";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { CurrencySelector } from "components/shared/CurrencySelector";
+import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
+import { BigNumber } from "ethers";
+import type { Checkout } from "graphql/generated";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useChainSlug } from "hooks/chains/chainSlug";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { type ReactNode, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { BiPencil } from "react-icons/bi";
 import {
   Button,
   FormErrorMessage,
@@ -32,30 +55,7 @@ import {
   Text,
   TrackedLink,
 } from "tw-components";
-import {
-  ChainIdToSupportedCurrencies,
-  CreateUpdateCheckoutInput,
-  usePaymentsCreateUpdateCheckout,
-} from "@3rdweb-sdk/react/hooks/usePayments";
-import { ReactNode, useMemo, useState } from "react";
-import {
-  Abi,
-  NATIVE_TOKEN_ADDRESS,
-  useClaimConditions,
-  useContract,
-  useNFTs,
-} from "@thirdweb-dev/react";
-import { detectFeatures } from "components/contract-components/utils";
-import { BiPencil } from "react-icons/bi";
-import { Checkout } from "graphql/generated";
-import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
-import { PaymentsSettingsFileUploader } from "components/payments/settings/payment-settings-file-uploader";
-import { CurrencySelector } from "components/shared/CurrencySelector";
-import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
 import { PaymentsMintMethodInput } from "./mint-method-input";
-import { BigNumber } from "ethers";
-import { useChainSlug } from "hooks/chains/chainSlug";
 
 const formInputs = [
   {
@@ -280,7 +280,7 @@ const convertInputsToMintMethod = ({
 };
 
 const tokenIdToNumber = (tokenIdStr: string | undefined) => {
-  let tokenId;
+  let tokenId: BigNumber | undefined;
 
   if (!tokenIdStr) {
     return undefined;
@@ -367,7 +367,9 @@ export const CreateUpdateCheckoutButton: React.FC<
     description: checkout?.collection_description || "",
     successCallbackUrl: checkout?.success_callback_url || "",
     cancelCallbackUrl: checkout?.cancel_callback_url || "",
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     brandButtonShape: (checkout?.brand_button_shape as any) || "rounded",
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     brandColorScheme: (checkout?.brand_color_scheme as any) || "blue",
     brandDarkMode: checkout?.brand_dark_mode || true,
     contractArgs: checkout?.contract_args || undefined,
@@ -391,7 +393,7 @@ export const CreateUpdateCheckoutButton: React.FC<
     // dashboard only inputs, parsing mintMethod
     priceAndCurrencySymbol: {
       price: checkout?.contract_args?.mintMethod?.payment
-        ? parseInt(
+        ? Number.parseInt(
             checkout?.contract_args.mintMethod.payment.value || 0,
           ).toString()
         : "0",
@@ -442,7 +444,7 @@ export const CreateUpdateCheckoutButton: React.FC<
   const onError = checkoutId ? onUpdateError : onCreateError;
 
   const canCreate = useMemo(() => {
-    let errorMessage;
+    let errorMessage: JSX.Element | undefined;
 
     if (isErc721 || isErc1155) {
       if (!isNftsLoading && nfts?.length === 0) {
@@ -532,10 +534,7 @@ export const CreateUpdateCheckoutButton: React.FC<
       });
 
       form.handleSubmit((data) => {
-        if (
-          data.twitterHandleOverride &&
-          data.twitterHandleOverride.startsWith("@")
-        ) {
+        if (data.twitterHandleOverride?.startsWith("@")) {
           data.twitterHandleOverride = data.twitterHandleOverride.substring(1);
         }
 
@@ -547,10 +546,12 @@ export const CreateUpdateCheckoutButton: React.FC<
               ?.inputs?.some((input) => input.name === key);
           })
           .reduce(
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             (obj: Record<string, any>, key) => {
               obj[key] = data.mintFunctionArgs[key];
               return obj;
             },
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             {} as Record<string, any>,
           );
 
@@ -563,7 +564,9 @@ export const CreateUpdateCheckoutButton: React.FC<
           {
             checkoutId,
             ...data,
-            limitPerTransaction: parseInt(String(data.limitPerTransaction)),
+            limitPerTransaction: Number.parseInt(
+              String(data.limitPerTransaction),
+            ),
             ...(!hasDetectedExtensions && { mintMethod }),
           },
           {
@@ -780,7 +783,7 @@ export const CreateUpdateCheckoutButton: React.FC<
                                     )}
                                     onChange={(val) =>
                                       form.setValue(
-                                        `priceAndCurrencySymbol.price`,
+                                        "priceAndCurrencySymbol.price",
                                         val,
                                       )
                                     }
@@ -794,7 +797,7 @@ export const CreateUpdateCheckoutButton: React.FC<
                                   }
                                   onChange={(e) =>
                                     form.setValue(
-                                      `priceAndCurrencySymbol.currencySymbol`,
+                                      "priceAndCurrencySymbol.currencySymbol",
                                       e.target.value,
                                     )
                                   }

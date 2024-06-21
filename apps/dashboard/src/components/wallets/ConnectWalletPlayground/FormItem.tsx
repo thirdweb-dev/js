@@ -1,4 +1,4 @@
-import { FormControl, Flex, Tooltip, Box } from "@chakra-ui/react";
+import { Box, Flex, FormControl, Tooltip } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FormLabel } from "tw-components";
 

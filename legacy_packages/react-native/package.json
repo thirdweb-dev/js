@@ -7,9 +7,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
-  "files": [
-    "dist/*"
-  ],
+  "files": ["dist/*"],
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint src/",
@@ -19,11 +17,7 @@
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs"
   },
-  "keywords": [
-    "react-native",
-    "ios",
-    "android"
-  ],
+  "keywords": ["react-native", "ios", "android"],
   "dependencies": {
     "@aws-sdk/client-lambda": "3.549.0",
     "@aws-sdk/credential-providers": "3.549.0",
@@ -36,7 +30,7 @@
     "@thirdweb-dev/sdk": "4.0.77",
     "@thirdweb-dev/storage": "2.0.14",
     "@thirdweb-dev/wallets": "2.5.17",
-    "abitype": "1.0.0",
+    "abitype": "1.0.4",
     "aws-amplify": "^5.3.18",
     "expo-application": "5.8.3",
     "expo-clipboard": "^4.8.0",
@@ -66,7 +60,7 @@
     "react-native-camera": "^4.2.1",
     "rimraf": "5.0.5",
     "typedoc-gen": "^1.0.2",
-    "typescript": "5.4.4",
+    "typescript": "5.5.2",
     "react-native-svg": "^15.1.0",
     "react-native-qrcode-svg": "^6.3.0"
   },

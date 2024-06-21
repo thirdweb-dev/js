@@ -13,18 +13,22 @@ import { DeployUpsellCard } from "components/explore/upsells/deploy-your-own";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import {
   ALL_CATEGORIES,
-  ExploreCategory,
+  type ExploreCategory,
   getCategory,
   prefetchCategory,
 } from "data/explore";
-import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import type {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+} from "next";
 import { NextSeo } from "next-seo";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { FiChevronLeft } from "react-icons/fi";
 import { Heading, Link, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const ExploreCategoryPage: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -128,7 +132,11 @@ interface ExplorePageProps {
 }
 
 export const getStaticProps: GetStaticProps<ExplorePageProps> = async (ctx) => {
-  const categoryId = getSingleQueryValue(ctx.params, "category") as string;
+  const categoryId = getSingleQueryValue(
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    ctx.params as any,
+    "category",
+  ) as string;
 
   const category = getCategory(categoryId);
   if (!category) {

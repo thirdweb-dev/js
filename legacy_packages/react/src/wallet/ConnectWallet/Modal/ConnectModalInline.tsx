@@ -131,7 +131,7 @@ function ConnectModalInlineContent(props: {
   );
 }
 
-const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
+const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.modalBg,

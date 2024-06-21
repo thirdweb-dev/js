@@ -1,4 +1,3 @@
-import type { NFT } from "@thirdweb-dev/sdk";
 import {
   Arbitrum,
   ArbitrumGoerli,
@@ -55,6 +54,7 @@ import {
   ZoraSepoliaTestnet,
   ZoraTestnet,
 } from "@thirdweb-dev/chains";
+import type { NFT } from "@thirdweb-dev/sdk";
 import { optimismSepolia } from "thirdweb/chains";
 
 export type WalletNFT = NFT & {

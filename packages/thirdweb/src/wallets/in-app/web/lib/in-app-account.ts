@@ -4,8 +4,11 @@ import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
-import type { Hex } from "../../../../utils/encoding/hex.js";
+import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
+import { uint8ArrayToString } from "../../../../utils/uint8-array.js";
+import { getEcosystemPartnerPermissions } from "../../../ecosystem/get-ecosystem-partner-permissions.js";
 import type {
   Account,
   SendTransactionOption,
@@ -19,6 +22,7 @@ import {
 } from "../../core/authentication/type.js";
 import type {
   ClientIdWithQuerierType,
+  Ecosystem,
   GetAddressReturnType,
   SignMessageReturnType,
   SignTransactionReturnType,
@@ -45,11 +49,13 @@ export type SignerProcedureTypes = {
     message: string | Hex;
     chainId: number;
     rpcEndpoint?: string;
+    partnerId?: string;
   };
   signTransaction: {
     transaction: ethers5.ethers.providers.TransactionRequest;
     chainId: number;
     rpcEndpoint?: string;
+    partnerId?: string;
   };
   signTypedDataV4: {
     domain: TypedDataDefinition["domain"];
@@ -57,6 +63,7 @@ export type SignerProcedureTypes = {
     message: TypedDataDefinition["message"];
     chainId: number;
     rpcEndpoint?: string;
+    partnerId?: string;
   };
   //connect: { provider: Provider };
 };
@@ -69,7 +76,8 @@ type PostWalletSetup = SetUpWalletRpcReturnType & {
  *
  */
 export class IFrameWallet {
-  protected client: ThirdwebClient;
+  public client: ThirdwebClient;
+  public ecosystem?: Ecosystem;
   protected walletManagerQuerier: InAppWalletIframeCommunicator<
     WalletManagementTypes & WalletManagementUiTypes
   >;
@@ -79,11 +87,23 @@ export class IFrameWallet {
    * Not meant to be initialized directly. Call {@link initializeUser} to get an instance
    * @internal
    */
-  constructor({ client, querier }: ClientIdWithQuerierType) {
+  constructor({
+    client,
+    ecosystem,
+    querier,
+  }: Prettify<
+    ClientIdWithQuerierType & {
+      ecosystem?: Ecosystem;
+    }
+  >) {
     this.client = client;
+    this.ecosystem = ecosystem;
     this.walletManagerQuerier = querier;
 
-    this.localStorage = new LocalStorage({ clientId: client.clientId });
+    this.localStorage = new LocalStorage({
+      clientId: client.clientId,
+      ecosystemId: ecosystem?.id,
+    });
   }
 
   /**
@@ -175,6 +195,17 @@ export class IFrameWallet {
   async getAccount(): Promise<Account> {
     const querier = this
       .walletManagerQuerier as unknown as InAppWalletIframeCommunicator<SignerProcedureTypes>;
+    const client = this.client;
+    const partnerId = this.ecosystem?.partnerId;
+    const isEcosystem = !!this.ecosystem;
+
+    const permissions = this.ecosystem
+      ? await getEcosystemPartnerPermissions(
+          this.ecosystem.id,
+          this.ecosystem?.partnerId,
+        )
+      : undefined;
+
     const { address } = await querier.call<GetAddressReturnType>({
       procedureName: "getAddress",
       params: undefined,
@@ -206,12 +237,16 @@ export class IFrameWallet {
           params: {
             transaction,
             chainId: tx.chainId,
+            partnerId,
             rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
           },
+          // Can hide the iframe if the partner has full control (no user approvals)
+          showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
+            ? false
+            : isEcosystem,
         });
       return signedTransaction as Hex;
     };
-    const client = this.client;
     return {
       address,
       async signTransaction(tx) {
@@ -238,15 +273,28 @@ export class IFrameWallet {
         };
       },
       async signMessage({ message }) {
-        const messageDecoded =
-          typeof message === "string" ? message : message.raw;
+        // in-app wallets use ethers to sign messages, which always expects a string (or bytes maybe but string is safest)
+        const messageDecoded = (() => {
+          if (typeof message === "string") {
+            return message;
+          }
+          if (message.raw instanceof Uint8Array) {
+            return uint8ArrayToString(message.raw);
+          }
+          return hexToString(message.raw);
+        })();
+
         const { signedMessage } = await querier.call<SignMessageReturnType>({
           procedureName: "signMessage",
           params: {
-            // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-            message: messageDecoded as any, // wants Bytes or string
+            message: messageDecoded, // always a string
+            partnerId,
             chainId: 1, // TODO check if we need this
           },
+          // Can hide the iframe if the partner has full control (no user approvals)
+          showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
+            ? false
+            : isEcosystem,
         });
         return signedMessage as Hex;
       },
@@ -275,8 +323,13 @@ export class IFrameWallet {
               message:
                 parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
               chainId,
+              partnerId,
               rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
             },
+            // Can hide the iframe if the partner has full control (no user approvals)
+            showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
+              ? false
+              : isEcosystem,
           });
         return signedTypedData as Hex;
       },

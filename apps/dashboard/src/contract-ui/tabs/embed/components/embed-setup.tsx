@@ -1,4 +1,5 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
+import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   FormControl,
@@ -11,9 +12,10 @@ import {
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { configureChain, minimizeChain } from "@thirdweb-dev/chains";
-import { DropContract } from "@thirdweb-dev/react";
+import type { DropContract } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
@@ -26,9 +28,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { useApiKeys, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { StoredChain } from "../../../../contexts/configured-chains";
+import type { StoredChain } from "../../../../contexts/configured-chains";
 
 interface EmbedSetupProps {
   contract: DropContract;
@@ -530,6 +530,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           <Text>You need to create a client ID to use embeds</Text>
         ) : iframeSrc ? (
           <iframe
+            title="thirdweb embed"
             src={iframeSrc}
             width={isMobile ? "100%" : "600px"}
             height="600px"

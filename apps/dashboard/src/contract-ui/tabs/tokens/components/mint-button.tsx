@@ -1,10 +1,10 @@
-import { TokenMintForm } from "./mint-form";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { TokenContract, useContract } from "@thirdweb-dev/react";
+import type { TokenContract, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
+import { TokenMintForm } from "./mint-form";
 
 interface TokenMintButtonProps {
   contractQuery: ReturnType<typeof useContract>;

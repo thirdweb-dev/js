@@ -1,8 +1,6 @@
-import { NetworkConfigFormData } from "../ConfigureNetworkForm";
-import { TooltipBox } from "./TooltipBox";
 import { FormControl, Input } from "@chakra-ui/react";
 import { useAllChainsData } from "hooks/chains/allChains";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import {
   CodeBlock,
   FormErrorMessage,
@@ -10,8 +8,11 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
+import { TooltipBox } from "./TooltipBox";
 
 export const NetworkIDInput: React.FC<{
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<NetworkConfigFormData, any>;
   disabled?: boolean;
 }> = ({ form, disabled }) => {

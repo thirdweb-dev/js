@@ -1,1 +1,1 @@
-declare module 'asn1.js';
+declare module "asn1.js";

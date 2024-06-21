@@ -1,8 +1,8 @@
-import { useRef, useState, useCallback, useLayoutEffect } from "react";
+import Link from "next/link";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "../../lib/utils";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
-import Link from "next/link";
 
 export function TabLinks(props: {
   links: {
@@ -72,10 +72,10 @@ export function TabLinks(props: {
         <div
           ref={lineRef}
           className="absolute left-0 bottom-0 z-10 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
-        ></div>
+        />
       </ScrollShadow>
       {/* Bottom line */}
-      <div className="h-[1px] bg-border -translate-y-[2px]"></div>
+      <div className="h-[1px] bg-border -translate-y-[2px]" />
     </div>
   );
 }

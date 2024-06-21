@@ -9,6 +9,10 @@ const PropertiesInput = /* @__PURE__ */ (() =>
  */
 export const OptionalPropertiesInput = /* @__PURE__ */ (() =>
   z
-    .union([z.array(z.array(PropertiesInput)).transform(i => i.flat()), z.array(PropertiesInput), PropertiesInput])
+    .union([
+      z.array(z.array(PropertiesInput)).transform((i) => i.flat()),
+      z.array(PropertiesInput),
+      PropertiesInput,
+    ])
     .optional()
     .nullable())();

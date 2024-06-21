@@ -6,7 +6,7 @@ import type {
   LogoutReturnType,
   SendEmailOtpReturnType,
 } from "../../../core/authentication/type.js";
-import type { ClientIdWithQuerierType } from "../../types.js";
+import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { BaseLogin } from "./base-login.js";
@@ -14,6 +14,8 @@ import { BaseLogin } from "./base-login.js";
 export type AuthQuerierTypes = {
   logout: undefined;
   initIframe: {
+    partnerId?: string;
+    ecosystemId?: string;
     clientId: string;
     authCookie: string;
     walletUserId: string;
@@ -39,16 +41,17 @@ export class Auth {
 
   /**
    * Used to manage the user's auth states. This should not be instantiated directly.
-   * Call {@link InAppWalletSdk.auth} instead.
    * @internal
    */
   constructor({
     client,
     querier,
     onAuthSuccess,
+    ecosystem,
     baseUrl,
   }: ClientIdWithQuerierType & {
     baseUrl: string;
+    ecosystem?: Ecosystem;
     onAuthSuccess: (
       authDetails: AuthAndWalletRpcReturnType,
     ) => Promise<AuthLoginReturnType>;
@@ -56,7 +59,10 @@ export class Auth {
     this.client = client;
 
     this.AuthQuerier = querier;
-    this.localStorage = new LocalStorage({ clientId: client.clientId });
+    this.localStorage = new LocalStorage({
+      clientId: client.clientId,
+      ecosystemId: ecosystem?.id,
+    });
     this.onAuthSuccess = onAuthSuccess;
     this.BaseLogin = new BaseLogin({
       postLogin: async (result) => {
@@ -65,6 +71,7 @@ export class Auth {
       preLogin: async () => {
         await this.preLogin();
       },
+      ecosystem,
       querier: querier,
       client,
       baseUrl,

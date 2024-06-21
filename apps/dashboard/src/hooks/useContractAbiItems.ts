@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { Address, defineChain, getContract } from "thirdweb";
+import { type Address, defineChain, getContract } from "thirdweb";
 import { resolveContractAbi } from "thirdweb/contract";
 
 function dedupeAndSort(arr: string[]) {

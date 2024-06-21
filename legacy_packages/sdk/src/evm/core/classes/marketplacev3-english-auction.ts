@@ -696,7 +696,7 @@ export class MarketplaceV3EnglishAuctions<
         const tx = Transaction.fromContractWrapper({
           contractWrapper: this
             .contractWrapper as unknown as ContractWrapper<IMulticall>,
-          method: "multicall",     
+          method: "multicall",
           args: [[closeForSeller, closeForBuyer]],
         });
         tx.setGasLimitMultiple(1.2);
@@ -765,7 +765,9 @@ export class MarketplaceV3EnglishAuctions<
     const minimumNextBid = currentBidOrReservePrice.add(
       // the addition of the current bid and the buffer
       // (have to divide by 10000 to get the fraction of the buffer (since it's in basis points))
-      currentBidOrReservePrice.mul(currentBidBufferBps).div(10000),
+      currentBidOrReservePrice
+        .mul(currentBidBufferBps)
+        .div(10000),
     );
 
     // it's more useful to return a currency value here
@@ -812,8 +814,8 @@ export class MarketplaceV3EnglishAuctions<
         status = BigNumber.from(auction.startTimestamp).gt(blockTime)
           ? Status.Created
           : BigNumber.from(auction.endTimestamp).lt(blockTime)
-          ? Status.Expired
-          : Status.Active;
+            ? Status.Expired
+            : Status.Active;
         break;
       case 2:
         status = Status.Completed;

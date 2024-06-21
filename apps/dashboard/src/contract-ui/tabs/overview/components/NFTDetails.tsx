@@ -1,14 +1,14 @@
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { SupplyCards } from "contract-ui/tabs/nfts/components/supply-cards";
 import { useTabHref } from "contract-ui/utils";
-import { Heading, TrackedLink, TrackedLinkProps } from "tw-components";
-import { NFTCards } from "./NFTCards";
-import { getContract } from "thirdweb";
-import { useMemo } from "react";
-import { useReadContract } from "thirdweb/react";
-import { getNFTs } from "thirdweb/extensions/erc721";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
+import { useMemo } from "react";
+import { getContract } from "thirdweb";
+import { getNFTs } from "thirdweb/extensions/erc721";
+import { useReadContract } from "thirdweb/react";
+import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
+import { NFTCards } from "./NFTCards";
 
 interface NFTDetailsProps {
   contractAddress: string;

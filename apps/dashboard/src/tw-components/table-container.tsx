@@ -1,6 +1,6 @@
 import {
   TableContainer as CTableContainer,
-  TableContainerProps,
+  type TableContainerProps,
 } from "@chakra-ui/react";
 
 export const TableContainer: React.FC<TableContainerProps> = ({ children }) => {

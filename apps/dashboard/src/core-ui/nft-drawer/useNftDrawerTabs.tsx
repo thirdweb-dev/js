@@ -1,9 +1,8 @@
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { NFTDrawerTab } from "./types";
 import {
-  DropContract,
-  NFTContract,
-  SmartContract,
+  type DropContract,
+  type NFTContract,
+  type SmartContract,
   getErcs,
   useAddress,
 } from "@thirdweb-dev/react/evm";
@@ -17,6 +16,7 @@ import {
   getNFT as getErc1155NFT,
 } from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
+import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {
   contract: ThirdwebContract;
@@ -105,7 +105,6 @@ export function useNFTDrawerTabs({
 
     const isOwner =
       (isERC1155 && balanceOfQuery?.data) ||
-      0 > 0 ||
       (isERC721 && nft?.owner === address);
 
     const { erc1155 } = getErcs(oldContract);

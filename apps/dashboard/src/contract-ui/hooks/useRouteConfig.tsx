@@ -2,7 +2,7 @@ import { contractType, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
-import { EnhancedRoute } from "contract-ui/types/types";
+import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
 
 const LazyContractExplorerPage = dynamic(() =>

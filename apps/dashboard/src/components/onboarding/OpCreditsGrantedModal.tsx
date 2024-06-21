@@ -20,7 +20,7 @@ import { formatToDollars } from "components/settings/Account/Billing/CreditsButt
 import { useMemo } from "react";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiOpensea } from "react-icons/si";
-import { Text, Card, Heading, TrackedLinkButton } from "tw-components";
+import { Card, Heading, Text, TrackedLinkButton } from "tw-components";
 
 interface OpCreditsGrantedModalProps {
   setSawYouGotCredits: (value: boolean) => void;

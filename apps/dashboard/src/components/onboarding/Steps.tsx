@@ -1,3 +1,4 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   AccountStatus,
   useAccount,
@@ -13,17 +14,16 @@ import {
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useChainId } from "@thirdweb-dev/react";
+import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
-import { Button, Card, Heading, LinkButton, Text, Link } from "tw-components";
-import { ApplyForOpCreditsModal } from "./ApplyForOpCreditsModal";
-import { StaticImageData } from "next/image";
-import { ChakraNextImage } from "components/Image";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useChainId } from "@thirdweb-dev/react";
+import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { OPSponsoredChains } from "../../constants/chains";
+import { ApplyForOpCreditsModal } from "./ApplyForOpCreditsModal";
 
 enum Step {
   Keys = "keys",
@@ -110,15 +110,17 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
 
     if (isSponsoredChain && (!hasAppliedForOpGrant || !opCredit)) {
       return Step.OptimismCredits;
-    } else if (!onboardingKeys && !hasApiKeys) {
-      return Step.Keys;
-    } else if (!hasValidPayment && !onboardingPaymentMethod) {
-      return Step.Payment;
-    } else if (!onboardingDocs) {
-      return Step.Docs;
-    } else {
-      return null;
     }
+    if (!onboardingKeys && !hasApiKeys) {
+      return Step.Keys;
+    }
+    if (!hasValidPayment && !onboardingPaymentMethod) {
+      return Step.Payment;
+    }
+    if (!onboardingDocs) {
+      return Step.Docs;
+    }
+    return null;
   }, [
     isLoggedIn,
     hasApiKeys,
@@ -207,7 +209,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         description:
           "Add your payment method to ensure no disruption to thirdweb services when you exceed free monthly limits.",
         cta: "Add payment",
-        href: `/dashboard/settings/billing`,
+        href: "/dashboard/settings/billing",
         canSkip: true,
       },
       {

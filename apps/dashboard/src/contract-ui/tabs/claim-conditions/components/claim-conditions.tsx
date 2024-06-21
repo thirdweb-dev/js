@@ -1,11 +1,11 @@
-import { ClaimConditionsForm } from "./claim-conditions-form/index";
 import { Flex, Stack } from "@chakra-ui/react";
-import { DropContract, TokenContract } from "@thirdweb-dev/react";
+import type { DropContract, TokenContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { UpdateNotice } from "core-ui/update-notice/update-notice";
 import { hasNewClaimConditions } from "lib/claimcondition-utils";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
+import { ClaimConditionsForm } from "./claim-conditions-form/index";
 
 interface ClaimConditionsProps {
   contract?: DropContract;

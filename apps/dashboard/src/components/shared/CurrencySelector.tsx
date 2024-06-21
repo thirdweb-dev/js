@@ -1,6 +1,6 @@
-import { Flex, Input, Select, SelectProps } from "@chakra-ui/react";
+import { Flex, Input, Select, type SelectProps } from "@chakra-ui/react";
 import { useSDKChainId } from "@thirdweb-dev/react";
-import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
+import { CURRENCIES, type CurrencyMetadata } from "constants/currencies";
 import { constants, utils } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo, useState } from "react";
@@ -81,6 +81,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
       if (onChange) {
         onChange({
           target: { value: editCustomCurrency },
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
         } as any);
       }
     } else {

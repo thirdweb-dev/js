@@ -1,8 +1,8 @@
-import { Flex, PropsOf } from "@chakra-ui/react";
+import { Flex, type PropsOf } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface GettingStartedCardProps {
   title: string;

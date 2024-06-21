@@ -1,7 +1,7 @@
 import {
   Drawer as ChakraDrawer,
-  DrawerProps as ChakraDrawerProps,
-  CloseButtonProps,
+  type DrawerProps as ChakraDrawerProps,
+  type CloseButtonProps,
   Divider,
   DrawerBody,
   DrawerCloseButton,
@@ -9,12 +9,12 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
-  ModalBodyProps,
-  ModalFooterProps,
-  ModalHeaderProps,
+  type ModalBodyProps,
+  type ModalFooterProps,
+  type ModalHeaderProps,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface DrawerProps extends Omit<ChakraDrawerProps, "placement"> {
   header?: ModalHeaderProps;

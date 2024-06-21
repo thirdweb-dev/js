@@ -1,8 +1,8 @@
-import { ClaimConditions } from "./components/claim-conditions";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { ClaimConditions } from "./components/claim-conditions";
 
 interface ContractClaimConditionsPageProps {
   contractAddress?: string;

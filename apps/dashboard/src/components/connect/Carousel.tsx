@@ -1,10 +1,10 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { useState, useEffect } from "react";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
-import { Carousel as ReactResponsiveCarousel } from "react-responsive-carousel";
-import { PlaygroundMenu } from "./PlaygroundMenu";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useCallback, useEffect, useState } from "react";
+import { Carousel as ReactResponsiveCarousel } from "react-responsive-carousel";
+import { PlaygroundMenu } from "./PlaygroundMenu";
 
 const showcaseMenus = [
   {
@@ -45,9 +45,9 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
 
   const trackEvent = useTrack();
 
-  const increment = () => {
+  const increment = useCallback(() => {
     setSelectedShowCaseIdx((idx) => (idx === 2 ? 0 : idx + 1));
-  };
+  }, []);
 
   // FIXME: this can likely be achieved fully via CSS
   // eslint-disable-next-line no-restricted-syntax
@@ -57,7 +57,7 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
 
       return () => clearInterval(timer);
     }
-  }, [hoveredCard]);
+  }, [hoveredCard, increment]);
 
   // FIXME: this can likely be achieved fully via CSS
   // eslint-disable-next-line no-restricted-syntax
@@ -156,6 +156,7 @@ const Carousel = ({ TRACKING_CATEGORY }: { TRACKING_CATEGORY: string }) => {
       <Flex width="full" maxW="786px">
         {showcaseImages.map((img, idx) => (
           <ChakraNextImage
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             key={idx}
             width="full"
             src={img}

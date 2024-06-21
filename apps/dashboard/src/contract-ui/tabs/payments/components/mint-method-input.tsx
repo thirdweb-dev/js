@@ -7,22 +7,23 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { AbiSelector } from "components/contract-components/contract-publish-form/abi-selector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { FiChevronDown } from "react-icons/fi";
 import {
-  Heading,
-  Text,
-  FormLabel,
   Button,
   FormErrorMessage,
+  FormLabel,
+  Heading,
   MenuItem,
+  Text,
 } from "tw-components";
 
 interface PaymentsMintMethodInputProps {
   abi: Abi;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<any, any>;
 }
 
@@ -44,16 +45,16 @@ export const PaymentsMintMethodInput: React.FC<
         <AbiSelector
           defaultValue="initialize"
           abi={filteredAbi}
-          value={form.watch(`mintFunctionName`)}
+          value={form.watch("mintFunctionName")}
           onChange={(selectedFn) =>
-            form.setValue(`mintFunctionName`, selectedFn)
+            form.setValue("mintFunctionName", selectedFn)
           }
         />
       )}
-      {form.watch(`mintFunctionName`) && (
+      {form.watch("mintFunctionName") && (
         <Flex flexDir="column" gap={2} mt={2}>
           {abi
-            .find((fn) => fn.name === form.watch(`mintFunctionName`))
+            .find((fn) => fn.name === form.watch("mintFunctionName"))
             ?.inputs.map((input) => {
               const error =
                 form.formState.errors?.[`mintFunctionArgs.${input.name}`]

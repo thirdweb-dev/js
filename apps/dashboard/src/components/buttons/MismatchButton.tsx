@@ -1,6 +1,6 @@
 import {
+  type ConnectWalletProps,
   CustomConnectWallet,
-  ConnectWalletProps,
 } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
@@ -29,9 +29,9 @@ import {
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { useCallback, useEffect, useMemo, useRef, forwardRef } from "react";
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
-import { Button, Card, Heading, Text, type ButtonProps } from "tw-components";
+import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
 
 export const MismatchButton = forwardRef<
   HTMLButtonElement,
@@ -271,11 +271,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
       if (chainInfo.chainId === ChainId.Localhost) {
         await sdk.wallet.requestFunds(10);
         await balanceQuery.refetch();
-      } else if (
-        chainInfo &&
-        chainInfo.faucets &&
-        chainInfo.faucets.length > 0
-      ) {
+      } else if (chainInfo?.faucets && chainInfo.faucets.length > 0) {
         const faucet = chainInfo.faucets[0];
         window.open(faucet, "_blank");
       }

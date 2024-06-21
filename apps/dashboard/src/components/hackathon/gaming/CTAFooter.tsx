@@ -26,8 +26,10 @@ export const CTAFooter: React.FC = () => {
         top="50%"
         left="50%"
         transform="translate(-50%, -50%)"
-        backgroundImage={`radial-gradient(ellipse at center, hsl(300deg 100% 50% / 10%), transparent 60%)`}
-      ></Box>
+        backgroundImage={
+          "radial-gradient(ellipse at center, hsl(300deg 100% 50% / 10%), transparent 60%)"
+        }
+      />
 
       <Logo forceShowWordMark color="#fff" />
 

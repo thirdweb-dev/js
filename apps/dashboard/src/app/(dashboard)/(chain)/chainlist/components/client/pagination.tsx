@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -11,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 type ChainlistPaginationProps = {
   totalPages: number;

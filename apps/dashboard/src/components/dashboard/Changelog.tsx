@@ -1,7 +1,7 @@
 import { Flex } from "@chakra-ui/react";
 import { formatDistance } from "date-fns/formatDistance";
-import { Link, Text } from "tw-components";
 import { BsArrowRight } from "react-icons/bs";
+import { Link, Text } from "tw-components";
 
 export interface ChangelogItem {
   published_at: string;

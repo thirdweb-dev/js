@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { Select } from "chakra-react-select";
 import { useMemo } from "react";
 

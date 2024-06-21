@@ -1,9 +1,9 @@
-import { ReactElement } from "react";
-import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ReactElement } from "react";
 import { useWatch } from "react-hook-form";
-import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
+import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
+import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
 
 type ProblemAreaItem = {
   label: string;
@@ -54,13 +54,7 @@ export default function AccountSupportForm() {
     useWatch<CreateTicketInput>({
       name: "extraInfo_Problem_Area",
     }) || "";
-  const SubFormComponent = () => {
-    return (
-      ACCOUNT_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component || (
-        <></>
-      )
-    );
-  };
+
   return (
     <>
       <SupportForm_SelectInput
@@ -70,7 +64,7 @@ export default function AccountSupportForm() {
         options={ACCOUNT_PROBLEM_AREAS.map((o) => o.label)}
         required={true}
       />
-      <SubFormComponent />
+      {ACCOUNT_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>
   );
 }

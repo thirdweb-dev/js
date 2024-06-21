@@ -1,7 +1,7 @@
-import { EmbedSetup } from "./components/embed-setup";
 import { Flex } from "@chakra-ui/react";
 import { getErcs, useContract, useContractType } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
+import { EmbedSetup } from "./components/embed-setup";
 
 interface ContractEmbedPageProps {
   contractAddress?: string;

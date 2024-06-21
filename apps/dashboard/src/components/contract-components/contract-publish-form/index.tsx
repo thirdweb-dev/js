@@ -1,23 +1,9 @@
-import {
-  useConstructorParamsFromABI,
-  useContractFullPublishMetadata,
-  useContractPrePublishMetadata,
-  useContractPublishMetadataFromURI,
-  useEns,
-  useFunctionParamsFromABI,
-  usePublishMutation,
-} from "../hooks";
-import { ContractId } from "../types";
-import { ContractParamsFieldset } from "./contract-params-fieldset";
-import { FactoryFieldset } from "./factory-fieldset";
-import { LandingFieldset } from "./landing-fieldset";
-import { NetworksFieldset } from "./networks-fieldset";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { defaultChains } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
 import {
-  Abi,
+  type Abi,
   CONTRACT_ADDRESSES,
   ExtraPublishMetadataSchemaInput,
   detectFeatures,
@@ -31,6 +17,20 @@ import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
 import { Button, Text } from "tw-components";
 import { z } from "zod";
+import {
+  useConstructorParamsFromABI,
+  useContractFullPublishMetadata,
+  useContractPrePublishMetadata,
+  useContractPublishMetadataFromURI,
+  useEns,
+  useFunctionParamsFromABI,
+  usePublishMutation,
+} from "../hooks";
+import type { ContractId } from "../types";
+import { ContractParamsFieldset } from "./contract-params-fieldset";
+import { FactoryFieldset } from "./factory-fieldset";
+import { LandingFieldset } from "./landing-fieldset";
+import { NetworksFieldset } from "./networks-fieldset";
 
 const ExtraPublishMetadataSchema = ExtraPublishMetadataSchemaInput.extend({
   customFactoryAddresses: z.array(
@@ -214,7 +214,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       : publishMetadata.data?.abi,
     form.watch("deployType") === "customFactory"
       ? form.watch(
-          `factoryDeploymentData.customFactoryInput.factoryFunction`,
+          "factoryDeploymentData.customFactoryInput.factoryFunction",
         ) ||
           fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
             ?.factoryFunction ||
@@ -273,7 +273,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       top: 0,
       behavior: "smooth",
     });
-  }, [fieldsetToShow]);
+  }, []);
 
   return (
     <FormProvider {...form}>

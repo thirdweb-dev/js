@@ -92,7 +92,7 @@ export const ConnectingScreen: React.FC<{
         </Container>
       </Container>
 
-      {props.onGetStarted && (
+      {props.onGetStarted ? (
         <>
           <Spacer y="xl" />
           <Line />
@@ -102,6 +102,8 @@ export const ConnectingScreen: React.FC<{
             </Button>
           </Container>
         </>
+      ) : (
+        <Spacer y={connectModal.size === "compact" ? "lg" : "xxl"} />
       )}
     </Container>
   );

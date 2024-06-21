@@ -1,10 +1,10 @@
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  EditEngineInstanceInput,
-  EngineInstance,
-  RemoveCloudHostedInput,
+  type EditEngineInstanceInput,
+  type EngineInstance,
+  type RemoveCloudHostedInput,
   useEngineEditInstance,
-  useEngineInstances,
+  type useEngineInstances,
   useEngineRemoveCloudHosted,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
@@ -27,7 +27,7 @@ import {
   Stack,
   Textarea,
   Tooltip,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -36,7 +36,12 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import {
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
@@ -82,11 +87,11 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
       });
       if (res.ok) {
         return instance;
-      } else if (res.status === 401) {
-        throw new Error("Unauthorized");
-      } else {
-        throw new Error(`Unexpected status code ${res.status}`);
       }
+      if (res.status === 401) {
+        throw new Error("Unauthorized");
+      }
+      throw new Error(`Unexpected status code ${res.status}`);
     },
     onSuccess: (instance) => {
       trackEvent({

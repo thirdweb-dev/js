@@ -5,12 +5,19 @@ import type { Prettify } from "../../../utils/type-utils.js";
 import type { Wallet } from "../../interfaces/wallet.js";
 import { getDefaultAppMetadata } from "../../utils/defaultDappMetadata.js";
 import { DEFAULT_PROJECT_ID } from "../constants.js";
+import { handleSendRawTransactionRequest } from "./request-handlers/send-raw-transaction.js";
+import { handleSendTransactionRequest } from "./request-handlers/send-transaction.js";
+import { handleSignTransactionRequest } from "./request-handlers/sign-transaction.js";
+import { handleSignTypedDataRequest } from "./request-handlers/sign-typed-data.js";
+import { handleSignRequest } from "./request-handlers/sign.js";
+import { handleSwitchChain } from "./request-handlers/switch-chain.js";
 import {
   getSessions,
   initializeSessionStore,
   removeSession,
 } from "./session-store.js";
 import type {
+  WalletConnectAddEthereumChainRequestParams,
   WalletConnectClient,
   WalletConnectConfig,
   WalletConnectRequestHandlers,
@@ -51,6 +58,11 @@ export type CreateWalletConnectClientOptions = Prettify<
      * Callback triggered whenever a session is disconnected.
      */
     onDisconnect?: (session: WalletConnectSession) => void;
+
+    /**
+     * Callback for handling errors.
+     */
+    onError?: (error: Error) => void;
   }
 >;
 
@@ -64,11 +76,6 @@ export type CreateWalletConnectSessionOptions = {
    * The WalletConnect session URI retrieved from the application to connect with.
    */
   uri: string;
-
-  /**
-   * Callback triggered when the session is successfully created.
-   */
-  onConnect?: (session: WalletConnectSession) => void;
 };
 
 let walletConnectClientCache = new WeakMap<
@@ -84,13 +91,33 @@ export const clearWalletConnectClientCache = () => {
 };
 
 /**
+ * Default request handlers for WalletConnect requests.
+ */
+export const DefaultWalletConnectRequestHandlers = {
+  personal_sign: handleSignRequest,
+  eth_sign: handleSignRequest,
+  eth_signTypedData: handleSignTypedDataRequest,
+  eth_signTypedData_v4: handleSignTypedDataRequest,
+  eth_signTransaction: handleSignTransactionRequest,
+  eth_sendTransaction: handleSendTransactionRequest,
+  eth_sendRawTransaction: handleSendRawTransactionRequest,
+  wallet_addEthereumChain: (_: {
+    wallet: Wallet;
+    params: WalletConnectAddEthereumChainRequestParams;
+  }) => {
+    throw new Error("Unsupported request method: wallet_addEthereumChain");
+  },
+  wallet_switchEthereumChain: handleSwitchChain,
+};
+
+/**
  * Creates a new WalletConnect client for interacting with another application.
  * @param options - The options to use to create the WalletConnect client.
  *
  * @returns The WalletConnect client. Use this client to connect to a WalletConnect URI with {@link createWalletConnectSession}.
  * @example
  * ```ts
- * import { createWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+ * import { createWalletConnectClient } from "thirdweb/wallets";
  *
  * const client = await createWalletConnectClient({
  *   wallet: wallet,
@@ -99,13 +126,13 @@ export const clearWalletConnectClientCache = () => {
  * ```
  * Pass custom handlers:
  * ```ts
- * import { createWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+ * import { createWalletConnectClient } from "thirdweb/wallets";
  *
  * const client = await createWalletConnectClient({
  *   wallet: wallet,
  *   client: client,
  *   requestHandlers: {
- *     eth_signTransaction: ({ transaction }) => {
+ *     eth_signTransaction: ({ account, chainId, params }) => {
  *       // handle transaction signing
  *     },
  *   },
@@ -113,7 +140,7 @@ export const clearWalletConnectClientCache = () => {
  * ```
  * Pass connect and disconnect callbacks:
  * ```ts
- * import { createWalletConnectClient } from "thirdweb/wallets/wallet-connect";
+ * import { createWalletConnectClient } from "thirdweb/wallets";
  *
  * const client = await createWalletConnectClient({
  *   wallet: wallet,
@@ -154,12 +181,18 @@ export async function createWalletConnectClient(
     "session_proposal",
     async (event: WalletConnectSessionProposalEvent) => {
       const { onSessionProposal } = await import("./session-proposal.js");
-      onSessionProposal({
+      await onSessionProposal({
         wallet,
         walletConnectClient,
         event,
         chains,
         onConnect,
+      }).catch((error) => {
+        if (options.onError) {
+          options.onError(error as Error);
+        } else {
+          throw error;
+        }
       });
     },
   );
@@ -168,11 +201,17 @@ export async function createWalletConnectClient(
     "session_request",
     async (event: WalletConnectSessionRequestEvent) => {
       const { fulfillRequest } = await import("./session-request.js");
-      fulfillRequest({
+      await fulfillRequest({
         wallet,
         walletConnectClient,
         event,
         handlers: requestHandlers,
+      }).catch((error) => {
+        if (options.onError) {
+          options.onError(error as Error);
+        } else {
+          throw error;
+        }
       });
     },
   );
@@ -197,6 +236,12 @@ export async function createWalletConnectClient(
       await disconnectWalletConnectSession({
         session: { topic: event.topic },
         walletConnectClient,
+      }).catch((error) => {
+        if (options.onError) {
+          options.onError(error as Error);
+        } else {
+          throw error;
+        }
       });
     },
   );
@@ -221,7 +266,7 @@ export async function createWalletConnectClient(
  * @param options - The options to use to create the WalletConnect session.
  * @example
  * ```ts
- * import { createWalletConnectClient, createWalletConnectSession } from "thirdweb/wallets/wallet-connect";
+ * import { createWalletConnectClient, createWalletConnectSession } from "thirdweb/wallets";
  *
  * const client = await createWalletConnectClient({
  *   wallet: wallet,
@@ -248,7 +293,7 @@ export function createWalletConnectSession(
  * @returns All active WalletConnect sessions.
  * @example
  * ```ts
- * import { getActiveWalletConnectSessions } from "thirdweb/wallets/wallet-connect";
+ * import { getActiveWalletConnectSessions } from "thirdweb/wallets";
  *
  * const sessions = await getActiveWalletConnectSessions();
  * ```
@@ -265,10 +310,10 @@ export async function getActiveWalletConnectSessions(): Promise<
  * @param options - The options to use to disconnect the WalletConnect session.
  * @example
  * ```ts
- * import { disconnectWalletConnectSession } from "thirdweb/wallets/wallet-connect";
+ * import { disconnectWalletConnectSession } from "thirdweb/wallets";
  *
  * await disconnectWalletConnectSession({
- *   session: { topic: "..." },
+ *   session: mySession,
  *   walletConnectClient: wcClient,
  * });
  * ```

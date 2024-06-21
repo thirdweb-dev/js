@@ -3,7 +3,7 @@ import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
 
-export const Overlay = /* @__PURE__ */ StyledDiv(() => {
+export const Overlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     backgroundColor: theme.colors.modalOverlayBg,

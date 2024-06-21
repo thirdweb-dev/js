@@ -1,5 +1,5 @@
 import {
-  EngineInstance,
+  type EngineInstance,
   useEngineLatestVersion,
   useEngineSystemHealth,
   useEngineUpdateVersion,
@@ -16,7 +16,7 @@ import {
   TagLabel,
   TagLeftIcon,
   Tooltip,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -82,7 +82,7 @@ const UpdateVersionModal = ({
 }) => {
   const { mutate } = useEngineUpdateVersion();
   const { onSuccess, onError } = useTxNotifications(
-    `Submitted a request to update your Engine instance. Please allow 1-2 business days for this process.`,
+    "Submitted a request to update your Engine instance. Please allow 1-2 business days for this process.",
     "Unexpected error updating your Engine instance.",
   );
 

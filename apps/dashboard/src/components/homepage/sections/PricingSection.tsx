@@ -1,8 +1,8 @@
-import { Container, Flex, SimpleGrid, Box } from "@chakra-ui/react";
-import { Heading, Text, TrackedLink } from "tw-components";
-import { PricingCard } from "./PricingCard";
 import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Heading, Text, TrackedLink } from "tw-components";
 import { CONTACT_US_URL } from "utils/pricing";
+import { PricingCard } from "./PricingCard";
 
 interface PricingSectionProps {
   trackingCategory: string;
@@ -52,7 +52,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             ctaTitle="Get started for free"
             ctaProps={{
               category: trackingCategory,
-              href: `/dashboard/settings/billing`,
+              href: "/dashboard/settings/billing",
             }}
           />
 
@@ -64,14 +64,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             name={AccountPlan.Growth}
             ctaHint={
               canTrialGrowth
-                ? `Your free trial will end after 30 days.`
+                ? "Your free trial will end after 30 days."
                 : undefined
             }
             canTrialGrowth={canTrialGrowth}
             ctaProps={{
               category: trackingCategory,
               label: canTrialGrowth ? "claimGrowthTrial" : undefined,
-              href: `/dashboard/settings/billing`,
+              href: "/dashboard/settings/billing",
               bgColor: "white",
               color: "black",
               _hover: {
