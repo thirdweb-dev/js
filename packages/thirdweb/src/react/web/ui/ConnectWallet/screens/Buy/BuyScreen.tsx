@@ -287,6 +287,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }
         connectLocale={connectLocale}
         client={client}
+        modalTitle="Buy"
       />
     );
   }
@@ -338,6 +339,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }
         connectLocale={connectLocale}
         client={client}
+        modalTitle="Pay with"
       />
     );
   }
