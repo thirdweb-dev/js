@@ -1,9 +1,9 @@
-import { ContractId } from "../types";
-import CustomContractForm from "./custom-contract";
 import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useEffect, useState } from "react";
+import type { ContractId } from "../types";
+import CustomContractForm from "./custom-contract";
 
 interface ContractDeployFormProps {
   contractId: ContractId;

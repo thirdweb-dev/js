@@ -10,7 +10,7 @@ import { LandingSectionHeading } from "components/landing-pages/section-heading"
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 import checkoutLottie from "../../public/assets/product-pages/checkout/checkout.json";
 
 const TRACKING_CATEGORY = "checkout-landing";

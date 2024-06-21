@@ -11,7 +11,7 @@ export const PLANS: {
     subTitle: string | null;
     trialPeriodDays: number;
     description: string;
-    features: any[];
+    features: Array<string | string[]>;
   };
 } = {
   [AccountPlan.Free]: {

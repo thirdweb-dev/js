@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/unity-js-bridge",
-  "version": "0.6.50",
+  "version": "0.6.48",
   "main": "dist/thirdweb-unity-bridge.js",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/unity-js-bridge",
   "license": "Apache-2.0",
@@ -8,9 +8,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "dependencies": {
     "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/chains": "workspace:*",
@@ -25,11 +23,11 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "esbuild": "0.20.2",
     "node-stdlib-browser": "^1.2.0",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "sideEffects": false,
   "scripts": {
-    "format": "biome format --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "biome check src/",
     "fix": "biome check src/ --fix",
     "clean": "rm -rf dist/",

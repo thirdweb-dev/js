@@ -1,10 +1,10 @@
+import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Icon } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { BsTerminal } from "react-icons/bs";
-import { LinkButton, LinkButtonProps } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
-import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useMemo } from "react";
+import { BsTerminal } from "react-icons/bs";
+import { LinkButton, type LinkButtonProps } from "tw-components";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 type BuildAppsButtonProps = Omit<LinkButtonProps, "href">;
 

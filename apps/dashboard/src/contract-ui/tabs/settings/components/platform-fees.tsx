@@ -1,4 +1,3 @@
-import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,9 +8,9 @@ import {
 } from "@thirdweb-dev/react";
 import {
   CommonPlatformFeeSchema,
-  ValidContractInstance,
+  type ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -25,7 +24,8 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { z } from "zod";
+import type { z } from "zod";
+import { SettingDetectedState } from "./detected-state";
 
 export const SettingsPlatformFees = <
   TContract extends ValidContractInstance | undefined,

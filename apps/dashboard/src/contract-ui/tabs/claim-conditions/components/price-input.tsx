@@ -2,7 +2,7 @@ import {
   InputGroup,
   NumberInput,
   NumberInputField,
-  NumberInputProps,
+  type NumberInputProps,
 } from "@chakra-ui/react";
 
 interface PriceInputProps

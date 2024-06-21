@@ -1,13 +1,13 @@
+import { defaultChains } from "@thirdweb-dev/chains";
 import {
   ThirdwebProvider,
-  WalletConfig,
+  type WalletConfig,
   en,
   es,
   ja,
 } from "@thirdweb-dev/react";
-import { THIRDWEB_DOMAIN, THIRDWEB_API_HOST } from "constants/urls";
 import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
-import { defaultChains } from "@thirdweb-dev/chains";
+import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "constants/urls";
 import { StorageSingleton } from "lib/sdk";
 
 const localeIdToObj = {
@@ -18,6 +18,7 @@ const localeIdToObj = {
 
 export function PreviewThirdwebProvider(props: {
   authEnabled: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   supportedWallets: WalletConfig<any>[];
   children: React.ReactNode;
   locale?: keyof typeof localeIdToObj;

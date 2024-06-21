@@ -1,4 +1,4 @@
-declare module 'sync-disk-cache' {
+declare module "sync-disk-cache" {
   export type CacheEntry = {
     isCached: boolean;
     key: string;
@@ -6,7 +6,13 @@ declare module 'sync-disk-cache' {
   };
 
   export default class Cache {
-    constructor(key: string, options?: { location?: string; compression?: "gzip" | "deflate" | "deflateRaw"; });
+    constructor(
+      key: string,
+      options?: {
+        location?: string;
+        compression?: "gzip" | "deflate" | "deflateRaw";
+      },
+    );
     clear(): void;
     has(key: string): boolean;
     get(key: string): CacheEntry;
@@ -18,4 +24,4 @@ declare module 'sync-disk-cache' {
   }
 }
 
-declare module "solc"
+declare module "solc";

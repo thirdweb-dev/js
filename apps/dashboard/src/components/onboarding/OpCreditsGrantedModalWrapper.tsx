@@ -1,9 +1,9 @@
 import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
+import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useMemo } from "react";
 import { OpCreditsGrantedModal } from "./OpCreditsGrantedModal";
-import { DelayedDisplay } from "components/delayed-display/delayed-display";
 
 export const OpCreditsGrantedModalWrapper = () => {
   const trackEvent = useTrack();

@@ -29,8 +29,8 @@ export type CustomContractArgWrapper<props, T extends ContractType> =
             };
           }
         : T extends ContractType.THIRDWEB_SIGNATURE
-        ? SignedPayload
-        : undefined;
+          ? SignedPayload
+          : undefined;
     });
 
 export type fetchCustomContractArgsFromPropsResponse = {

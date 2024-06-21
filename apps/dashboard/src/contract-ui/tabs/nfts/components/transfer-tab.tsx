@@ -1,5 +1,5 @@
 import { FormControl, Input, Stack } from "@chakra-ui/react";
-import { NFTContract, useTransferNFT } from "@thirdweb-dev/react";
+import { type NFTContract, useTransferNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";

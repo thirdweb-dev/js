@@ -1,15 +1,15 @@
+import { type FrameRequest, getFrameHtmlResponse } from "@coinbase/onchainkit";
 import { CoinbaseKit } from "classes/CoinbaseKit";
-import { FrameRequest, getFrameHtmlResponse } from "@coinbase/onchainkit";
+import { ThirdwebDegenEngine } from "classes/ThirdwebDegenEngine";
+import { getAbsoluteUrl } from "lib/vercel-utils";
+import type { NextRequest } from "next/server";
 import {
   errorResponse,
   redirectResponse,
   successHtmlResponse,
 } from "utils/api";
-import { ThirdwebDegenEngine } from "classes/ThirdwebDegenEngine";
-import { getAbsoluteUrl } from "lib/vercel-utils";
-import { NextRequest } from "next/server";
-import { shortenAddress } from "utils/string";
 import { getFarcasterAccountAddress } from "utils/farcaster";
+import { shortenAddress } from "utils/string";
 
 const postUrl = `${getAbsoluteUrl()}/api/frame/degen/mint`;
 const imageUrl = `${getAbsoluteUrl()}/assets/og-image/degen-enchine-frame.png`;
@@ -49,8 +49,8 @@ export default async function handler(req: NextRequest) {
       const htmlResponse = getFrameHtmlResponse({
         buttons: [
           {
-            label: `NFT already minted`,
-            action: `post_redirect`,
+            label: "NFT already minted",
+            action: "post_redirect",
           },
         ],
         image: imageUrl,
@@ -66,7 +66,7 @@ export default async function handler(req: NextRequest) {
       buttons: [
         {
           label: `Successfully minted to address ${shortenAddress(faracsterAddress)}`,
-          action: `post_redirect`,
+          action: "post_redirect",
         },
       ],
       image: imageUrl,

@@ -1,12 +1,12 @@
-import { PossibleButtonSize, buttonSizesMap } from "./button";
-import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   MenuItem as ChakraMenuItem,
-  MenuItemProps as ChakraMenuItemProps,
+  type MenuItemProps as ChakraMenuItemProps,
   forwardRef,
   useButtonGroup,
 } from "@chakra-ui/react";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
+import { type PossibleButtonSize, buttonSizesMap } from "./button";
+import { convertFontSizeToCSSVar } from "./utils/typography";
 
 interface MenuItemProps extends Omit<ChakraMenuItemProps, "size"> {
   size?: Exclude<PossibleButtonSize, "xs">;

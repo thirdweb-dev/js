@@ -1,8 +1,8 @@
-import { NFTMintForm } from "./mint-form";
 import { Flex, useDisclosure } from "@chakra-ui/react";
-import { SmartContract, useUpdateNFTMetadata } from "@thirdweb-dev/react";
-import { NFT } from "thirdweb";
+import { type SmartContract, useUpdateNFTMetadata } from "@thirdweb-dev/react";
+import type { NFT } from "thirdweb";
 import { Button, Drawer, Text } from "tw-components";
+import { NFTMintForm } from "./mint-form";
 
 interface UpdateMetadataTabProps {
   contract: SmartContract | null;

@@ -19,6 +19,7 @@ const thirdwebEngineAccessToken = process.env.THIRDWEB_ACCESS_TOKEN;
 const degenChainId = 666666666;
 const degenNftContractAddress = "0x1efacE838cdCD5B19d8D0CC4d22d7AEFdDfB0d6f";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: FIXME: refactor to standalone functions
 export class ThirdwebDegenEngine {
   public static mint = async (receiver: string) => {
     const response = await fetch(

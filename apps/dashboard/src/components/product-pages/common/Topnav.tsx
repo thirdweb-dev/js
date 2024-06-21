@@ -1,10 +1,10 @@
-import { DesktopMenu } from "./nav/DesktopMenu";
-import { MobileMenu } from "./nav/MobileMenu";
 import { Box, Container, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Logo } from "components/logo";
 import { useState } from "react";
 import { TrackedLink } from "tw-components";
+import { DesktopMenu } from "./nav/DesktopMenu";
+import { MobileMenu } from "./nav/MobileMenu";
 
 export const HomepageTopNav: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });

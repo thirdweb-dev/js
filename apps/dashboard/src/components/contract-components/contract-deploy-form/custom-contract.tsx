@@ -1,4 +1,40 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Divider,
+  Flex,
+  FormControl,
+  HStack,
+  Icon,
+  Tooltip,
+} from "@chakra-ui/react";
+import { TransactionButton } from "components/buttons/TransactionButton";
+import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
+import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { verifyContract } from "contract-ui/tabs/sources/page";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useSupportedChain } from "hooks/chains/configureChains";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { replaceTemplateValues } from "lib/deployment/template-values";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { FiHelpCircle } from "react-icons/fi";
+import invariant from "tiny-invariant";
+import {
+  Card,
+  Checkbox,
+  FormHelperText,
+  FormLabel,
+  Heading,
+  Text,
+  TrackedLink,
+} from "tw-components";
+import {
   useConstructorParamsFromABI,
   useContractEnabledExtensions,
   useContractFullPublishMetadata,
@@ -14,44 +50,8 @@ import { Param } from "./param";
 import { PlatformFeeFieldset } from "./platform-fee-fieldset";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
-import { Recipient, SplitFieldset } from "./split-fieldset";
-import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Divider,
-  Flex,
-  FormControl,
-  HStack,
-  Icon,
-  Tooltip,
-} from "@chakra-ui/react";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChain } from "hooks/chains/configureChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { replaceTemplateValues } from "lib/deployment/template-values";
-import { useRouter } from "next/router";
-import { FormProvider, useForm } from "react-hook-form";
-import { FiHelpCircle } from "react-icons/fi";
-import invariant from "tiny-invariant";
-import {
-  Card,
-  Checkbox,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Text,
-  TrackedLink,
-} from "tw-components";
+import { type Recipient, SplitFieldset } from "./split-fieldset";
 import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
-import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
-import { useMemo } from "react";
-import { verifyContract } from "contract-ui/tabs/sources/page";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -399,6 +399,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               )}
               {Object.keys(formDeployParams).map((paramKey) => {
                 const deployParam = deployParams.find(
+                  // biome-ignore lint/suspicious/noExplicitAny: FIXME
                   (p: any) => p.name === paramKey,
                 );
                 const contructorParams =
@@ -439,6 +440,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       {hasPlatformFee && <PlatformFeeFieldset form={form} />}
                       {Object.keys(formDeployParams).map((paramKey) => {
                         const deployParam = deployParams.find(
+                          // biome-ignore lint/suspicious/noExplicitAny: FIXME
                           (p: any) => p.name === paramKey,
                         );
                         const contructorParams =
@@ -550,7 +552,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 <SolidityInput
                   defaultValue={""}
                   solidityType={"string"}
-                  {...form.register(`saltForCreate2`)}
+                  {...form.register("saltForCreate2")}
                 />
                 <Flex alignItems="center" gap={3}>
                   <Checkbox

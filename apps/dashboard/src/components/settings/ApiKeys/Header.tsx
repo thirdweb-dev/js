@@ -1,8 +1,8 @@
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { HStack, Icon } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { FiChevronRight } from "react-icons/fi";
-import { Text, Link } from "tw-components";
+import { Link, Text } from "tw-components";
 
 interface EditApiKeyFormProps {
   apiKey: ApiKey;

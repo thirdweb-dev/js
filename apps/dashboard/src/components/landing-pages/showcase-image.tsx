@@ -6,7 +6,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 import { Heading, Text } from "tw-components";
 
 interface LandingShowcaseImageProps {

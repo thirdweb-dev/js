@@ -1,6 +1,3 @@
-import { DelegateButton } from "./components/delegate-button";
-import { Proposal } from "./components/proposal";
-import { ProposalButton } from "./components/proposal-button";
 import {
   useVoteProposalList,
   useVoteTokenBalances,
@@ -16,6 +13,9 @@ import {
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { useMemo } from "react";
 import { Card, Heading } from "tw-components";
+import { DelegateButton } from "./components/delegate-button";
+import { Proposal } from "./components/proposal";
+import { ProposalButton } from "./components/proposal-button";
 
 interface ProposalsPageProps {
   contractAddress?: string;

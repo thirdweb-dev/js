@@ -1,5 +1,8 @@
+import {
+  MaskedAvatar,
+  type MaskedAvatarProps,
+} from "tw-components/masked-avatar";
 import { useEns, usePublisherProfile } from "../hooks";
-import { MaskedAvatar, MaskedAvatarProps } from "tw-components/masked-avatar";
 
 interface PublisherAvatarProps extends Omit<MaskedAvatarProps, "src"> {
   address: string;

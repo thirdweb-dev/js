@@ -1,5 +1,9 @@
 import { Flex, Spinner } from "@chakra-ui/react";
-import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
+import {
+  type DehydratedState,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { Polygon } from "@thirdweb-dev/chains";
 import { AppLayout } from "components/app-layouts/app";
 import {
@@ -11,15 +15,15 @@ import {
 } from "components/contract-components/hooks";
 import {
   PublishWithVersionPage,
-  PublishWithVersionPageProps,
+  type PublishWithVersionPageProps,
 } from "components/pages/publish";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
-import { GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 type PublishPageProps = {
   dehydratedState: DehydratedState;

@@ -1,7 +1,7 @@
+import { Box, Flex, type LayoutProps } from "@chakra-ui/react";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { PartnerLogo } from "./partner-logo";
 import styles from "./partner-logo.module.css";
-import { Box, Flex, LayoutProps } from "@chakra-ui/react";
-import { ComponentWithChildren } from "types/component-with-children";
 
 const gap = { base: "40px", lg: "60px" };
 
@@ -53,7 +53,8 @@ export const PartnerCarousel: React.FC = () => {
       maxW="1200px"
       mx="auto"
       sx={{
-        maskImage: `linear-gradient(to right, hsl(0 0% 0% / 0), hsl(0 0% 0% / 1) 10%, hsl(0 0% 0% / 1) 90%, hsl(0 0% 0% / 0));`,
+        maskImage:
+          "linear-gradient(to right, hsl(0 0% 0% / 0), hsl(0 0% 0% / 1) 10%, hsl(0 0% 0% / 1) 90%, hsl(0 0% 0% / 0));",
       }}
       pt={20}
       mb={{ base: 20, md: 24 }}

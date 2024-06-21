@@ -1,4 +1,4 @@
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, SimpleGrid, useColorModeValue } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { Card, CodeBlock, Heading } from "tw-components";
@@ -55,7 +55,9 @@ export const GeneralDetails: React.FC<GeneralDetailsProps> = ({ apiKey }) => {
 
           <DetailsRow
             title="Client Id"
-            tooltip={`Identifies your application. It should generally be restricted to specific domains (web) and/or bundle-ids (native).`}
+            tooltip={
+              "Identifies your application. It should generally be restricted to specific domains (web) and/or bundle-ids (native)."
+            }
             content={<CodeBlock code={key} />}
           />
 
@@ -94,13 +96,17 @@ export const GeneralDetails: React.FC<GeneralDetailsProps> = ({ apiKey }) => {
 
           <DetailsRow
             title="Allowed Domains"
-            tooltip={`Prevent third-parties from using your Client ID by restricting access to allowed domains.`}
+            tooltip={
+              "Prevent third-parties from using your Client ID by restricting access to allowed domains."
+            }
             content={domainsContent}
           />
 
           <DetailsRow
             title="Allowed Bundle IDs"
-            tooltip={`Prevent third-parties from using your Client ID by restricting access to allowed Bundle IDs. This is applicable only if you want to use your key with native games or native mobile applications.`}
+            tooltip={
+              "Prevent third-parties from using your Client ID by restricting access to allowed Bundle IDs. This is applicable only if you want to use your key with native games or native mobile applications."
+            }
             content={bundleIdsContent}
           />
         </Flex>

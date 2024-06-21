@@ -14,8 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRpcValidation } from "hooks/chains/useRpcValidation";
-import { ChangeEvent, useMemo, useState } from "react";
-import { IconType } from "react-icons";
+import { type ChangeEvent, useMemo, useState } from "react";
+import type { IconType } from "react-icons";
 import { BiCheckCircle, BiErrorCircle } from "react-icons/bi";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { Button, Card, FormLabel, Link, TableContainer } from "tw-components";
@@ -28,17 +28,17 @@ const StatusCheck = ({
   const values: [string, IconType] = useMemo(() => {
     if (status === "error") {
       return ["red.500", BiErrorCircle];
-    } else if (status === "warning") {
-      return ["yellow.500", RiErrorWarningLine];
-    } else {
-      return ["green.500", BiCheckCircle];
     }
+    if (status === "warning") {
+      return ["yellow.500", RiErrorWarningLine];
+    }
+    return ["green.500", BiCheckCircle];
   }, [status]);
 
   return <Icon fontSize={16} color={values[0]} as={values[1]} />;
 };
 
-const ChainValidation: React.FC<{}> = () => {
+const ChainValidation: React.FC = () => {
   const [rpcUrl, setRpcUrl] = useState("");
   const [validationReport, validate] = useRpcValidation(rpcUrl);
   const [validated, setValidated] = useState(false);

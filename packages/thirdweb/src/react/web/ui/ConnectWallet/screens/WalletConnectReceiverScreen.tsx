@@ -1,12 +1,14 @@
 "use client";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   createWalletConnectClient,
   createWalletConnectSession,
+  disconnectWalletConnectSession,
+  getActiveWalletConnectSessions,
 } from "../../../../../wallets/wallet-connect/receiver/index.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
@@ -15,6 +17,7 @@ import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
+import { WalletConnectDisconnectScreen } from "./WalletConnectDisconnectScreen.js";
 import { WalletLogoSpinner } from "./WalletLogoSpinner.js";
 
 /**
@@ -22,13 +25,13 @@ import { WalletLogoSpinner } from "./WalletLogoSpinner.js";
  */
 export function WalletConnectReceiverScreen(props: {
   onBack: () => void;
-  closeModal: () => void;
   client: ThirdwebClient;
   chains?: Chain[];
 }) {
   const activeWallet = useActiveWallet();
   const [loading, setLoading] = useState(false);
   const [errorConnecting, setErrorConnecting] = useState<false | string>(false);
+  const queryClient = useQueryClient();
 
   const { data: walletConnectClient } = useQuery({
     queryKey: ["walletConnectClient"],
@@ -40,8 +43,10 @@ export function WalletConnectReceiverScreen(props: {
           client: props.client,
           chains: props.chains,
           onConnect: () => {
-            props.closeModal();
             setLoading(false);
+            queryClient.invalidateQueries({
+              queryKey: ["walletConnectSession"],
+            });
           },
           onError: (error) => {
             setErrorConnecting(error.message);
@@ -57,6 +62,48 @@ export function WalletConnectReceiverScreen(props: {
     retry: false,
     enabled: !!activeWallet,
   });
+
+  const { data: session, refetch: refetchSession } = useQuery({
+    queryKey: ["walletConnectSession"],
+    queryFn: async () => {
+      if (!walletConnectClient) return null;
+      const sessions = await getActiveWalletConnectSessions();
+      return sessions[0] || null;
+    },
+    enabled: !!walletConnectClient,
+  });
+
+  const { mutateAsync: disconnect } = useMutation({
+    mutationFn: async () => {
+      if (!walletConnectClient || !session) throw new Error("No session");
+      await disconnectWalletConnectSession({
+        session: session,
+        walletConnectClient: walletConnectClient,
+      });
+    },
+    onSuccess: () => {
+      setErrorConnecting(false);
+      queryClient.invalidateQueries({
+        queryKey: ["walletConnectSession"],
+      });
+      refetchSession();
+    },
+    onError: (error) => {
+      console.error(error);
+      setErrorConnecting(error.message);
+    },
+  });
+
+  if (session) {
+    return (
+      <WalletConnectDisconnectScreen
+        disconnect={disconnect}
+        error={errorConnecting}
+        {...props}
+        session={session}
+      />
+    );
+  }
 
   return (
     <Container

@@ -1,21 +1,21 @@
 import { useEngineCreateAccessToken } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
+  Icon,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  Icon,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { Button, Checkbox, CodeBlock, Text } from "tw-components";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useState } from "react";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Button, Checkbox, CodeBlock, Text } from "tw-components";
 
 interface AddAccessTokenButtonProps {
   instanceUrl: string;

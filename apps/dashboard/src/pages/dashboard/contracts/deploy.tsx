@@ -1,5 +1,5 @@
-import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Box,
   Flex,
@@ -24,7 +24,7 @@ import { PageId } from "page-id";
 import { useMemo } from "react";
 import { FiChevronsRight } from "react-icons/fi";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 type ContentItem = {
   title: string;

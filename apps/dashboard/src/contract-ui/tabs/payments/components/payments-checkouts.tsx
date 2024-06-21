@@ -8,15 +8,15 @@ import {
   Stack,
   useClipboard,
 } from "@chakra-ui/react";
-import { CreateUpdateCheckoutButton } from "./create-update-checkout-button";
-import { Text, Heading, Link, LinkButton, Card } from "tw-components";
 import { THIRDWEB_PAYMENTS_API_HOST } from "constants/urls";
+import type { Checkout } from "graphql/generated";
 import { useTrack } from "hooks/analytics/useTrack";
-import { IoMdCheckmark } from "react-icons/io";
-import { FiCopy } from "react-icons/fi";
 import { AiOutlineQrcode } from "react-icons/ai";
+import { FiCopy } from "react-icons/fi";
+import { IoMdCheckmark } from "react-icons/io";
+import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import { CreateUpdateCheckoutButton } from "./create-update-checkout-button";
 import { RemoveCheckoutButton } from "./remove-checkout-button";
-import { Checkout } from "graphql/generated";
 
 interface PaymentCheckoutsProps {
   contractId: string;

@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.30.1",
+  "version": "5.29.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -197,14 +197,14 @@
     "@tanstack/react-query": "5.29.2",
     "@walletconnect/ethereum-provider": "2.12.2",
     "@walletconnect/sign-client": "^2.13.3",
-    "abitype": "1.0.0",
+    "abitype": "1.0.4",
     "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.15.1"
+    "viem": "2.16.0"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",

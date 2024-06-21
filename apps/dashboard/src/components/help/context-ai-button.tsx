@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import Script from "next/script";
@@ -12,6 +11,7 @@ export function ContextAIBotButton() {
   return (
     <>
       <ContextAIBotScript />
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: unnecessary here */}
       <div
         context-launcher="true"
         context-bot-id={contextBotId}
@@ -47,6 +47,6 @@ function ContextAIBotScript() {
       src="https://portal.usecontext.io/portal/portal.js"
       data-theme="dark"
       data-type="attribute"
-    ></Script>
+    />
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "4.0.101",
+  "version": "4.0.99",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/sdk",
   "license": "Apache-2.0",
@@ -40,11 +40,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "evm/",
-    "server/"
-  ],
+  "files": ["dist/", "evm/", "server/"],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
@@ -53,14 +49,12 @@
       "evm/zksync/index.ts"
     ],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "sideEffects": false,
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
@@ -108,7 +102,7 @@
     "nyc": "^15.1.0",
     "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4",
+    "typescript": "5.5.2",
     "zksync-ethers": "^5.7.0"
   },
   "peerDependencies": {
@@ -136,7 +130,7 @@
     "@thirdweb-dev/generated-abis": "workspace:*",
     "@thirdweb-dev/merkletree": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
-    "abitype": "1.0.0",
+    "abitype": "1.0.4",
     "bn.js": "5.2.1",
     "bs58": "^5.0.0",
     "buffer": "^6.0.3",

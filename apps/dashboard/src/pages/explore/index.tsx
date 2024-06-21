@@ -8,16 +8,16 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { ContractsSidebar } from "core-ui/sidebar/contracts";
 import {
   EXPLORE_PAGE_DATA,
-  ExploreCategory,
+  type ExploreCategory,
   prefetchCategory,
 } from "data/explore";
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Fragment } from "react";
 import { Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const ExplorePage: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,

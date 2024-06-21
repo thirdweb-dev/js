@@ -1,6 +1,6 @@
-import { SolidityInputProps } from ".";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { Button } from "tw-components";
+import type { SolidityInputProps } from ".";
 
 export const SolidityBoolInput: React.FC<SolidityInputProps> = ({
   formContext: form,

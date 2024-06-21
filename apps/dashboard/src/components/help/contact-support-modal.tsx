@@ -1,4 +1,9 @@
 import {
+  type CreateTicketInput,
+  useCreateTicket,
+} from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import {
   Box,
   Flex,
   Modal,
@@ -10,18 +15,13 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import { ConnectWallet } from "@thirdweb-dev/react";
+import dynamic from "next/dynamic";
+import { type ReactElement, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button, Heading } from "tw-components";
-import {
-  type CreateTicketInput,
-  useCreateTicket,
-} from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
-import { ConnectWallet } from "@thirdweb-dev/react";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import dynamic from "next/dynamic";
-import { ReactElement, useEffect } from "react";
-import { SupportForm_SelectInput } from "./contact-forms/shared/SupportForm_SelectInput";
 import { SubmitTicketButton } from "./SubmitTicketButton";
+import { SupportForm_SelectInput } from "./contact-forms/shared/SupportForm_SelectInput";
 
 const ConnectSupportForm = dynamic(() => import("./contact-forms/connect"), {
   ssr: false,
@@ -81,11 +81,6 @@ export const ContactSupportModal = () => {
     form.reset({ product: label });
   }, [productLabel, form]);
 
-  const FormComponent = () => {
-    return (
-      productOptions.find((o) => o.label === productLabel)?.component || <></>
-    );
-  };
   return (
     <>
       <Box
@@ -127,7 +122,7 @@ export const ContactSupportModal = () => {
                 promptText="Select a product"
                 required={true}
               />
-              <FormComponent />
+              {productOptions.find((o) => o.label === productLabel)?.component}
             </ModalBody>
             <ModalFooter as={Flex} gap={3}>
               <Button onClick={onClose} variant="ghost">

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "4.9.6",
+  "version": "4.9.4",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/legacy_packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -41,25 +41,16 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "evm/"
-  ],
+  "files": ["dist/", "evm/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "evm/index.ts",
-      "evm/connectors/**/index.ts"
-    ],
+    "entrypoints": ["index.ts", "evm/index.ts", "evm/connectors/**/index.ts"],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "private": false,
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
@@ -97,7 +88,7 @@
     "react-dom": "18.3.1",
     "stream": "npm:stream-browserify@^3.0.0",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@emotion/css": "11.11.2",

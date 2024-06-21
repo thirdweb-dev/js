@@ -8,7 +8,7 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
-  TokenContract,
+  type TokenContract,
   useAddress,
   useClaimToken,
   useTokenDecimals,

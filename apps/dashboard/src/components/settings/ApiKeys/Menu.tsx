@@ -1,4 +1,4 @@
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { FiChevronDown } from "react-icons/fi";
 import { Button, Heading, MenuItem, Text } from "tw-components";

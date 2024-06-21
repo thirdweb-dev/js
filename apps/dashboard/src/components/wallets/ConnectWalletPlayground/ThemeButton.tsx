@@ -41,7 +41,7 @@ export function ThemeButton(props: {
                 });
               }
         }
-      ></Button>
+      />
     </Tooltip>
   );
 }

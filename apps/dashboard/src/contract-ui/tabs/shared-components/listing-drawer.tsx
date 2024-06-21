@@ -1,6 +1,3 @@
-import { CancelDirectListing } from "../direct-listings/components/cancel";
-import { CancelEnglishAuction } from "../english-auctions/components/cancel";
-import { LISTING_STATUS } from "./types";
 import {
   Flex,
   GridItem,
@@ -16,10 +13,16 @@ import { useAddress } from "@thirdweb-dev/react";
 import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
+import type {
+  DirectListing,
+  EnglishAuction,
+} from "thirdweb/extensions/marketplace";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { EnglishAuction, DirectListing } from "thirdweb/extensions/marketplace";
+import { CancelDirectListing } from "../direct-listings/components/cancel";
+import { CancelEnglishAuction } from "../english-auctions/components/cancel";
+import { LISTING_STATUS } from "./types";
 
 interface NFTDrawerProps {
   contract: MarketplaceV3;

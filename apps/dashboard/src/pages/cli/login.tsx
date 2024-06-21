@@ -22,10 +22,10 @@ import { AppLayout } from "components/app-layouts/app";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { PiWarningFill } from "react-icons/pi";
 import { Button, Card, FormLabel, Heading, Link, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const CLI_LOGIN_TOKEN_DURATION_IN_SECONDS = 60 * 60 * 24 * 365;
 
@@ -69,7 +69,8 @@ const LoginPage: ThirdwebNextPage = () => {
     }
     const decodedPayload = decodeURIComponent(payload as string);
     const parsedPayload = JSON.parse(decodedPayload);
-    let token;
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    let token: any;
     try {
       token = await auth?.generate(parsedPayload, {
         expirationTime: new Date(
@@ -135,11 +136,11 @@ const LoginPage: ThirdwebNextPage = () => {
         );
         setLoading(false);
         console.error(
-          `Something went wrong, please visit our support site: https://thirdweb.com/support`,
+          "Something went wrong, please visit our support site: https://thirdweb.com/support",
         );
         // Tell the CLI that something went wrong.
         try {
-          await fetch(`http://localhost:8976/auth/callback?failed=true`, {
+          await fetch("http://localhost:8976/auth/callback?failed=true", {
             method: "POST",
           });
         } catch (err) {
@@ -174,7 +175,7 @@ const LoginPage: ThirdwebNextPage = () => {
         );
         setLoading(false);
         console.error(
-          `Something went wrong, please visit our support site: https://thirdweb.com/support`,
+          "Something went wrong, please visit our support site: https://thirdweb.com/support",
         );
         trackEvent({
           category: "cli-login",
@@ -184,7 +185,7 @@ const LoginPage: ThirdwebNextPage = () => {
         });
         // Tell the CLI that something went wrong.
         try {
-          await fetch(`http://localhost:8976/auth/callback?failed=true`, {
+          await fetch("http://localhost:8976/auth/callback?failed=true", {
             method: "POST",
           });
         } catch (err) {
@@ -204,7 +205,7 @@ const LoginPage: ThirdwebNextPage = () => {
       );
       // Tell the CLI that something went wrong.
       try {
-        await fetch(`http://localhost:8976/auth/callback?failed=true`, {
+        await fetch("http://localhost:8976/auth/callback?failed=true", {
           method: "POST",
         });
       } catch (err) {

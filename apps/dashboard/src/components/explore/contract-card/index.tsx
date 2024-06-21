@@ -1,4 +1,3 @@
-import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 import {
   Flex,
   Icon,
@@ -8,9 +7,9 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import {
+  type QueryClient,
   useQuery,
   useQueryClient,
-  type QueryClient,
 } from "@tanstack/react-query";
 import { Polygon } from "@thirdweb-dev/chains";
 import { ensQuery } from "components/contract-components/hooks";
@@ -19,7 +18,8 @@ import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
 import invariant from "tiny-invariant";
-import { Card, Heading, Link, Text, TrackedLink, Badge } from "tw-components";
+import { Badge, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
   publisher: string;
@@ -208,7 +208,7 @@ type PublishedContractId =
 async function publishedContractQueryFn(
   publisher: string,
   contractId: string,
-  version = "latest",
+  version: string,
   queryClient: QueryClient,
 ) {
   const polygonSdk = getThirdwebSDK(

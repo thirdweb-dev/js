@@ -1,15 +1,15 @@
 import {
-  metamaskWallet,
-  coinbaseWallet,
-  walletConnect,
-  embeddedWallet,
-  trustWallet,
-  zerionWallet,
-  phantomWallet,
+  type WalletConfig,
   bloctoWallet,
+  coinbaseWallet,
+  embeddedWallet,
   frameWallet,
+  metamaskWallet,
+  phantomWallet,
   rainbowWallet,
-  WalletConfig,
+  trustWallet,
+  walletConnect,
+  zerionWallet,
 } from "@thirdweb-dev/react";
 
 const metamaskWalletConfig = metamaskWallet();
@@ -39,6 +39,7 @@ export const hideUIForWalletIdsMobile = new Set([
 
 type WalletInfo = {
   code: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   component: WalletConfig<any>;
   import: string;
   type?: "social" | "eoa";
@@ -70,7 +71,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     type: "eoa",
   },
   WalletConnect: {
-    code: `walletConnect()`,
+    code: "walletConnect()",
     component: walletConnectConfig,
     import: "walletConnect",
     type: "eoa",
@@ -100,7 +101,7 @@ export const walletInfoRecord: WalletInfoRecord = {
     type: "eoa",
   },
   "Email Wallet": {
-    code: `inAppWallet()`,
+    code: "inAppWallet()",
     component: embeddedWallet(),
     import: "inAppWallet",
     type: "social",

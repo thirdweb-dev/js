@@ -1,5 +1,5 @@
 import { FormControl, Input, Stack } from "@chakra-ui/react";
-import { NFTContract, useBurnNFT } from "@thirdweb-dev/react";
+import { type NFTContract, useBurnNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -111,7 +111,7 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
           {isErc1155 && (
             <Text>
               Burning these{" "}
-              {`${parseInt(watch("amount")) > 1 ? watch("amount") : ""} `}
+              {`${Number.parseInt(watch("amount")) > 1 ? watch("amount") : ""} `}
               copies of the NFT will remove them them from your wallet. The NFT
               data will continue to be accessible but no one will be able to
               claim ownership over these copies again. This action is

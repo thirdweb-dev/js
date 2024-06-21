@@ -1,7 +1,7 @@
 import {
-  GenerateURLParams,
-  SimpleHashSupportedChainId,
-  WalletNFT,
+  type GenerateURLParams,
+  type SimpleHashSupportedChainId,
+  type WalletNFT,
   simpleHashSupportedChainIdsMap,
   simpleHashSupportedNetworks,
 } from "./types";
@@ -44,6 +44,7 @@ export async function transformSimpleHashResponseToNFT(
               animation_url:
                 simpleHashNft.extra_metadata.animation_original_url,
               background_color: simpleHashNft.background_color,
+              // biome-ignore lint/suspicious/noExplicitAny: FIXME
             } as any,
             owner: walletAddress,
             supply: simpleHashNft.token_count.toString(),
@@ -114,8 +115,8 @@ interface Collection {
   marketplace_pages: MarketplacePage[];
   metaplex_mint: string | null;
   metaplex_first_verified_creator: string | null;
-  floor_prices: any[];
-  top_bids: any[];
+  floor_prices: unknown[];
+  top_bids: unknown[];
   distinct_owner_count: number;
   distinct_nft_count: number;
   total_quantity: number;
@@ -168,13 +169,13 @@ interface NFT {
   image_url: string;
   image_properties: ImageProperties;
   video_url: string | null;
-  video_properties: any;
+  video_properties: unknown;
   audio_url: string | null;
-  audio_properties: any;
+  audio_properties: unknown;
   model_url: string | null;
-  model_properties: any;
+  model_properties: unknown;
   other_url: string | null;
-  other_properties: any;
+  other_properties: unknown;
   background_color: string | null;
   external_url: string | null;
   created_date: string;
@@ -184,10 +185,10 @@ interface NFT {
   owners: Owner[];
   contract: Contract;
   collection: Collection;
-  last_sale: any;
+  last_sale: unknown;
   first_created: FirstCreated;
   rarity: Rarity;
-  royalty: any[];
+  royalty: unknown[];
   extra_metadata: ExtraMetadata;
 }
 

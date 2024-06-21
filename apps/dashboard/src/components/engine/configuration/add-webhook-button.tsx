@@ -1,5 +1,5 @@
 import {
-  CreateWebhookInput,
+  type CreateWebhookInput,
   useEngineCreateWebhook,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {

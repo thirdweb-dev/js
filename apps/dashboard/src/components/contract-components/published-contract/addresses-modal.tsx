@@ -59,7 +59,7 @@ export const AddressesModal: React.FC<AddressesModalProps> = ({
                   justifyContent="space-between"
                 >
                   <Text size="body.md">
-                    {chainIdToChainRecord[parseInt(chainId)]?.name}
+                    {chainIdToChainRecord[Number.parseInt(chainId)]?.name}
                   </Text>
                   <Link
                     href={`${THIRDWEB_DOMAIN}/${chainId}/${address}`}

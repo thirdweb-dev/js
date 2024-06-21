@@ -11,7 +11,7 @@ import { ProductSection } from "components/product-pages/common/ProductSection";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Link } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SDK_GUIDES = [
   {

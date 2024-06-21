@@ -1,18 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, Filter, XIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ChevronDownIcon, Filter, XIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { PropsWithChildren, useCallback, useMemo } from "react";
+import type React from "react";
+import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { products } from "../../../components/server/products";
 
 function cleanUrl(url: string) {
@@ -86,9 +87,9 @@ const FilterResetButton: React.FC<
       className="font-semibold"
       onClick={() => {
         // delete every filter (however keep the search term)
-        filters.forEach((f) => {
+        for (const f of filters) {
           mutableSearchParams.delete(f);
-        });
+        }
         // always delete page since we're changing filters
         mutableSearchParams.delete("page");
         const url = cleanUrl(`${pathname}?${mutableSearchParams.toString()}`);

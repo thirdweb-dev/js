@@ -1,9 +1,9 @@
+import { Box, type BoxProps, Flex, SimpleGrid } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
+import type { StaticImageData } from "next/image";
+import { Heading, Text, type TrackedLinkProps } from "tw-components";
 import { LandingCTAButtons } from "./cta-buttons";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
-import { Box, BoxProps, Flex, SimpleGrid } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
-import { Heading, Text, TrackedLinkProps } from "tw-components";
 
 interface LandingHeroWithSideImageProps {
   title: string | JSX.Element;
@@ -18,6 +18,7 @@ interface LandingHeroWithSideImageProps {
   gradient: string;
   image?: StaticImageData;
   mobileImage?: StaticImageData;
+  // biome-ignore lint/complexity/noBannedTypes: FIXME
   lottie?: {};
   miniImage?: StaticImageData;
   mt?: BoxProps["mt"];

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "4.1.99",
+  "version": "4.1.97",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "browser": {
@@ -57,7 +57,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "preconstruct build",
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
@@ -74,9 +74,7 @@
       "evm/index.ts"
     ],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "devDependencies": {
@@ -103,7 +101,7 @@
     "fastify": "^4.26.2",
     "next": "^14.1.1",
     "next-auth": "^4.24.7",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "peerDependencies": {
     "cookie-parser": "^1.4.6",

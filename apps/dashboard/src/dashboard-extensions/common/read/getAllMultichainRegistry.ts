@@ -1,4 +1,4 @@
-import { isAddress, readContract, type BaseTransactionOptions } from "thirdweb";
+import { type BaseTransactionOptions, isAddress, readContract } from "thirdweb";
 import { isAddressZero } from "utils/zeroAddress";
 
 const GetAllABI = {

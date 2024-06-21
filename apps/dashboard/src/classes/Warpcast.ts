@@ -16,6 +16,7 @@ export const untrustedMetaDataSchema = z.object({
   }),
 });
 
+// biome-ignore lint/complexity/noStaticOnlyClass: FIXME: refactor to standalone functions
 export class Warpcast {
   public static async validateMessage(messageBytes: string) {
     const url = `${apiUrl}/v2/farcaster/frame/validate`;

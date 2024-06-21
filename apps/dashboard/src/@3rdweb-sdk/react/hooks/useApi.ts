@@ -1,5 +1,5 @@
 import {
-  Query,
+  type Query,
   useMutation,
   useQuery,
   useQueryClient,
@@ -502,7 +502,7 @@ export function useUpdateNotifications() {
   );
 }
 
-export function useCreateBillingSession(enabled: boolean = false) {
+export function useCreateBillingSession(enabled = false) {
   const { user } = useLoggedInUser();
 
   return useQuery(
@@ -1070,7 +1070,7 @@ export function useApiAuthToken() {
 export async function fetchChainsFromApi() {
   // always fetch from prod for chains for now
   // TODO: re-visit this
-  const res = await fetch(`https://api.thirdweb.com/v1/chains`, {
+  const res = await fetch("https://api.thirdweb.com/v1/chains", {
     method: "GET",
     // do not inclue credentials for chains endpoint
     // credentials: "include",

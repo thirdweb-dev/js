@@ -1,4 +1,7 @@
-import { FrameMetadataType, getFrameHtmlResponse } from "@coinbase/onchainkit";
+import {
+  type FrameMetadataType,
+  getFrameHtmlResponse,
+} from "@coinbase/onchainkit";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 
@@ -37,6 +40,7 @@ const validQueryType = z.union([
   z.literal("redirect"),
 ]);
 
+// biome-ignore lint/complexity/noStaticOnlyClass: FIXME: refactor to standalone functions
 export class SuperChainFormFrame {
   static getQueryType = (type: string) => {
     return validQueryType.parse(type);

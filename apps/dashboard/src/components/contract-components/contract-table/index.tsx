@@ -1,14 +1,14 @@
-import { ContractCellContext, ContractId } from "../types";
-import { ContractDescriptionCell } from "./cells/description";
-import { ContractImageCell } from "./cells/image";
-import { ContractNameCell } from "./cells/name";
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { Column, Row, useTable } from "react-table";
+import { type Column, type Row, useTable } from "react-table";
 import { Text } from "tw-components";
 import { TableContainer } from "tw-components/table-container";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import type { ContractCellContext, ContractId } from "../types";
+import { ContractDescriptionCell } from "./cells/description";
+import { ContractImageCell } from "./cells/image";
+import { ContractNameCell } from "./cells/name";
 
 interface DeployableContractTableProps {
   contractIds: ContractId[];
@@ -24,11 +24,13 @@ export const DeployableContractTable: ComponentWithChildren<
       {
         Header: "Icon",
         accessor: (row) => row.contractId,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => <ContractImageCell cell={cell} />,
       },
       {
         Header: "Name",
         accessor: (row) => row.contractId,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => <ContractNameCell cell={cell} />,
       },
     ];
@@ -39,6 +41,7 @@ export const DeployableContractTable: ComponentWithChildren<
         {
           Header: "Description",
           accessor: (row) => row.contractId,
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           Cell: (cell: any) => <ContractDescriptionCell cell={cell} />,
         },
       ];
@@ -46,8 +49,7 @@ export const DeployableContractTable: ComponentWithChildren<
 
     return cols;
     // this is to avoid re-rendering of the table when the contractIds array changes (it will always be a string array, so we can just join it and compare the string output)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractIds.join(), context]);
+  }, [context]);
 
   const tableInstance = useTable({
     columns: tableColumns,

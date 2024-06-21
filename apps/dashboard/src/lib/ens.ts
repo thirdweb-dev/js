@@ -1,8 +1,8 @@
-import { getThirdwebSDK } from "./sdk";
 import { Ethereum } from "@thirdweb-dev/chains";
-import { utils, type providers } from "ethers";
+import { type providers, utils } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import invariant from "tiny-invariant";
+import { getThirdwebSDK } from "./sdk";
 
 let THIRDWEB_PROVIDER: providers.Provider | null = null;
 

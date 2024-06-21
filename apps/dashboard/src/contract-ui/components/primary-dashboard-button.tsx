@@ -1,4 +1,3 @@
-import { BuildAppsButton } from "./build-apps-button";
 import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import {
   useAddContractMutation,
@@ -11,6 +10,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
+import { BuildAppsButton } from "./build-apps-button";
 
 const TRACKING_CATEGORY = "add_to_dashboard_upsell";
 

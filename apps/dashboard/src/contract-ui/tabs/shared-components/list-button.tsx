@@ -1,8 +1,7 @@
-import { CreateListingsForm } from "../listings/components/list-form";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
-  UseContractResult,
+  type UseContractResult,
   useAddress,
   useCreateAuctionListing,
   useCreateDirectListing,
@@ -11,6 +10,7 @@ import type { Marketplace, MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
+import { CreateListingsForm } from "../listings/components/list-form";
 
 const LIST_FORM_ID = "marketplace-list-form";
 

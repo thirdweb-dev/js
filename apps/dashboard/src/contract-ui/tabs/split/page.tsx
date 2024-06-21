@@ -1,4 +1,3 @@
-import { DistributeButton } from "./components/distribute-button";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useBalanceForAddress } from "@3rdweb-sdk/react/hooks/useBalanceForAddress";
 import {
@@ -16,11 +15,12 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
-import { BigNumber, constants, ethers } from "ethers";
+import { constants, BigNumber, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {
   name: string;
@@ -73,6 +73,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
     return balances.reduce(
       (acc, curr) => {
         return {
+          // biome-ignore lint/performance/noAccumulatingSpread: FIXME
           ...acc,
           // convert to bps for BigNumber calculations
           [curr.token_address]: ethers.utils.formatUnits(
@@ -170,7 +171,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
           </SimpleGrid>
           {balanceQuery.isError && (
             <Text color="red.500">
-              {(balanceQuery?.error as any).message === "Invalid chain!"
+              {(balanceQuery?.error as Error).message === "Invalid chain!"
                 ? "Showing ERC20 balances for this network is not currently supported. You can distribute ERC20 funds from the Explorer tab."
                 : "Error loading balances"}
             </Text>

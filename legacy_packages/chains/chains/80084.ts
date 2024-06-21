@@ -1,17 +1,22 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Berachain",
+  "chain": "Berachain bArtio",
   "chainId": 80084,
   "explorers": [
     {
       "name": "Beratrail",
       "url": "https://bartio.beratrail.io",
-      "standard": "none"
+      "standard": "none",
+      "icon": {
+        "url": "ipfs://QmW2xrDkSqBB7qgftp5PUecEGg4zwUBJgSN45CaR7CKJMr",
+        "width": 256,
+        "height": 256,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
-    "https://bartio.faucet.berachain.com",
-    "https://bartio.faucet.berachain.com/"
+    "https://bartio.faucet.berachain.com"
   ],
   "features": [],
   "icon": {
@@ -31,9 +36,7 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://80084.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://quicknode-rpc.berachain.com",
     "https://bartio.rpc.berachain.com",
-    "https://rpc.ankr.com/berachain_testnet",
     "https://bera-testnet.nodeinfra.com"
   ],
   "shortName": "Berachain",

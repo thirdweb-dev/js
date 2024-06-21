@@ -1,4 +1,3 @@
-import { ProductButton } from "./ProductButton";
 import {
   Center,
   Container,
@@ -9,11 +8,12 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
-import { ReactElement, ReactNode } from "react";
+import type { StaticImageData } from "next/image";
+import type { ReactElement, ReactNode } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { ProductButton } from "./ProductButton";
 
 interface HeroProps {
   name: string;
@@ -166,9 +166,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
                 </LinkButton>
               )}
             </GridItem>
-            <GridItem>
-              <>{underGetStarted}</>
-            </GridItem>
+            <GridItem>{underGetStarted}</GridItem>
           </SimpleGrid>
         </Flex>
         {image && (

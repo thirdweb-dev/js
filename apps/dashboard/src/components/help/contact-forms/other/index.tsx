@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
 import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
 import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
@@ -54,13 +54,7 @@ export default function OtherSupportForm() {
     useWatch<CreateTicketInput>({
       name: "extraInfo_Problem_Area",
     }) || "";
-  const SubFormComponent = () => {
-    return (
-      OTHER_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component || (
-        <></>
-      )
-    );
-  };
+
   return (
     <>
       <SupportForm_SelectInput
@@ -70,7 +64,7 @@ export default function OtherSupportForm() {
         options={OTHER_PROBLEM_AREAS.map((o) => o.label)}
         required={true}
       />
-      <SubFormComponent />
+      {OTHER_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>
   );
 }

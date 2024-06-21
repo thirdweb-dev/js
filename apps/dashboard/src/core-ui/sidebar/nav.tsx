@@ -1,6 +1,3 @@
-import { NavLink } from "./nav-link";
-import { SIDEBAR_WIDTH, SideBarTunnel } from "./tunnel";
-import { Route } from "./types";
 import {
   Box,
   Divider,
@@ -12,6 +9,9 @@ import {
 import { useMemo } from "react";
 import { FiMenu } from "react-icons/fi";
 import { Text } from "tw-components";
+import { NavLink } from "./nav-link";
+import { SIDEBAR_WIDTH, SideBarTunnel } from "./tunnel";
+import type { Route } from "./types";
 
 type SidebarNavProps = {
   title?: string;
@@ -102,15 +102,38 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                   </Text>
                 </Flex>
                 {!navLink
-                  ? links.map(({ path, subActivePath, title: linkTitle }) => (
-                      <NavLink
-                        key={path}
-                        href={path}
-                        subActivePath={subActivePath}
-                      >
-                        {linkTitle}
-                      </NavLink>
-                    ))
+                  ? links.map(
+                      ({
+                        name,
+                        path,
+                        subActivePath,
+                        title: linkTitle,
+                        onClick,
+                      }) =>
+                        onClick ? (
+                          <NavLink
+                            key={path}
+                            href={path}
+                            active={name === activePage}
+                            subActivePath={subActivePath}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              onClick();
+                            }}
+                          >
+                            {linkTitle}
+                          </NavLink>
+                        ) : (
+                          <NavLink
+                            key={path}
+                            href={path}
+                            subActivePath={subActivePath}
+                          >
+                            {linkTitle}
+                          </NavLink>
+                        ),
+                    )
                   : null}
               </Flex>
             ) : (

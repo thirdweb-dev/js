@@ -9,9 +9,15 @@ import { LandingOptionSelector } from "components/landing-pages/option-selector"
 import { ImageCard } from "components/product-pages/common/ImageCard";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { ReactNode } from "react";
-import { Card, CardProps, Heading, Text, TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ReactNode } from "react";
+import {
+  Card,
+  type CardProps,
+  Heading,
+  Text,
+  TrackedLink,
+} from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "gaming_kit";
 

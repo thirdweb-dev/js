@@ -15,7 +15,7 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 export interface TemplateCardProps {
   id: string;
@@ -328,10 +328,10 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           </Heading>
 
           <Flex direction="row" alignItems="center" gap={1} mb={3}>
-            {tags.map((tag, idx) => (
+            {tags.map((tag) => (
               <Box
                 as="div"
-                key={idx}
+                key={tag}
                 color="whiteAlpha.700"
                 border="1px solid #383838"
                 borderRadius="8px"
@@ -458,8 +458,8 @@ const Templates: ThirdwebNextPage = () => {
             gap={6}
             margin="0 auto"
           >
-            {templates.map((template, idx) => (
-              <TemplateCard key={template.title + idx} {...template} />
+            {templates.map((template) => (
+              <TemplateCard key={template.id} {...template} />
             ))}
           </SimpleGrid>
         </HomepageSection>

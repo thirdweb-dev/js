@@ -1,5 +1,4 @@
-import { StackToolTip } from "./stack-tooltip";
-import { Box, BoxProps, useColorMode } from "@chakra-ui/react";
+import { Box, type BoxProps, useColorMode } from "@chakra-ui/react";
 import { useId, useMemo, useState } from "react";
 import {
   Bar,
@@ -9,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { StackToolTip } from "./stack-tooltip";
 
 type GenericDataType = Record<string, string | number>;
 
@@ -97,6 +97,7 @@ export const AutoBarChart = <
 
   const categories = useMemo(() => {
     const autoKeys: string[] = [];
+    // biome-ignore lint/complexity/noForEach: FIXME
     data.forEach((item) => {
       for (const key of Object.keys(item)) {
         if (key === index.id) {
@@ -116,9 +117,7 @@ export const AutoBarChart = <
     }));
   }, [data, index.id, barColors]);
 
-  if (!index.type) {
-    index.type = "date";
-  }
+  const indexType = index.type || "date";
 
   const sortedData = useMemo(() => {
     return [...data].sort(
@@ -207,7 +206,7 @@ export const AutoBarChart = <
             tickFormatter={(payload) =>
               index.format
                 ? index.format(payload)
-                : index.type === "date"
+                : indexType === "date"
                   ? new Date(payload).toLocaleDateString(undefined, {
                       day: "2-digit",
                       month: "2-digit",

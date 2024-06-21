@@ -1,9 +1,9 @@
-import { InteractiveAbiFunction } from "./interactive-abi-function";
 import {
   Box,
   Divider,
   Flex,
   GridItem,
+  Image,
   List,
   ListItem,
   SimpleGrid,
@@ -18,12 +18,11 @@ import {
   Th,
   Thead,
   Tr,
-  Image,
 } from "@chakra-ui/react";
 import {
-  AbiEvent,
-  AbiFunction,
-  SmartContract,
+  type AbiEvent,
+  type AbiFunction,
+  type SmartContract,
   extractFunctionsFromAbi,
   joinABIs,
 } from "@thirdweb-dev/sdk";
@@ -31,14 +30,15 @@ import { useContractEnabledExtensions } from "components/contract-components/hoo
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
-import { CodeSegment } from "../contract-tabs/code/CodeSegment";
 import {
   COMMANDS,
   formatSnippet,
 } from "../../contract-ui/tabs/code/components/code-overview";
-import { CodeEnvironment } from "../contract-tabs/code/types";
+import { CodeSegment } from "../contract-tabs/code/CodeSegment";
+import type { CodeEnvironment } from "../contract-tabs/code/types";
+import { InteractiveAbiFunction } from "./interactive-abi-function";
 
 interface ContractFunctionProps {
   fn?: AbiFunction | AbiEvent;
@@ -104,7 +104,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
             .replaceAll("'", '"')}
         />
       )}
-      {fn.inputs && fn.inputs.length && !contract ? (
+      {fn.inputs?.length && !contract ? (
         <>
           <Divider my={2} />
           <Flex flexDir="column" gap={3}>
@@ -180,6 +180,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
         environment={environment}
         setEnvironment={setEnvironment}
         snippet={formatSnippet(
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           COMMANDS[isFunction ? (isRead ? "read" : "write") : "events"] as any,
           {
             contractAddress: contract?.getAddress(),
@@ -214,7 +215,9 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
     let allFunctions = fnsOrEvents as AbiFunction[];
     const results: ExtensionFunctions[] = [];
     const processedFunctions: string[] = [];
+    // biome-ignore lint/complexity/noForEach: FIXME
     extensions.forEach((ext) => {
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       let functions = extractFunctionsFromAbi(joinABIs(ext.abis as any));
       allFunctions = allFunctions.filter(
         (fn) => !functions.map((f) => f.name).includes(fn.name),
@@ -287,7 +290,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   const _defaultTabIndex =
     _item &&
     "stateMutability" in _item &&
-    (_item["stateMutability"] === "view" || _item["stateMutability"] === "pure")
+    (_item.stateMutability === "view" || _item.stateMutability === "pure")
       ? 1
       : 0;
 

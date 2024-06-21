@@ -1,3 +1,5 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -5,11 +7,9 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { products } from "../../../components/server/products";
-import { ChainSupportedService } from "../../../types/chain";
 import { ChainIcon } from "../../../components/server/chain-icon";
+import { products } from "../../../components/server/products";
+import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {

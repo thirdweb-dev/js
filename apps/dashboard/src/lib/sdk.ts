@@ -1,8 +1,7 @@
-import { getAbsoluteUrl } from "./vercel-utils";
-import { ThirdwebSDK, type SDKOptions } from "@thirdweb-dev/sdk";
+import { type SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import {
-  type IStorageDownloader,
   type GatewayUrls,
+  type IStorageDownloader,
   type SingleDownloadOptions,
   StorageDownloader,
   ThirdwebStorage,
@@ -13,6 +12,7 @@ import {
   isProd,
 } from "constants/rpc";
 import type { Signer } from "ethers";
+import { getAbsoluteUrl } from "./vercel-utils";
 
 // use env var to set IPFS gateway or fallback to ipfscdn.io
 export const IPFS_GATEWAY_URL =
@@ -109,8 +109,10 @@ export function getThirdwebSDK(
     console.error("Invalid rpcUrl", e, rpcUrl);
     // overwrite the rpcUrl with a valid one!
     if (isProd) {
+      // biome-ignore lint/style/noParameterAssign: FIXME
       rpcUrl = `https://${chainId}.rpc.thirdweb.com/${DASHBOARD_THIRDWEB_CLIENT_ID}`;
     } else {
+      // biome-ignore lint/style/noParameterAssign: FIXME
       rpcUrl = `https://${chainId}.rpc.thirdweb-dev.com/${DASHBOARD_THIRDWEB_CLIENT_ID}`;
     }
   }

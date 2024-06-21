@@ -15,7 +15,12 @@ import {
   TypedDataUtils,
 } from "@metamask/eth-sig-util";
 
-import { ethers, TypedDataDomain, TypedDataField, UnsignedTransaction } from "ethers";
+import {
+  ethers,
+  TypedDataDomain,
+  TypedDataField,
+  UnsignedTransaction,
+} from "ethers";
 import { bufferToHex } from "ethereumjs-util";
 import {
   getPublicKey,
@@ -136,12 +141,12 @@ export class GcpKmsSigner extends ethers.Signer {
     return messageSignature;
   }
 
-  async _signTypedData(domain: TypedDataDomain, types: Record<string, Array<TypedDataField>>, value: Record<string, any>) {
-    const hash = ethers.utils._TypedDataEncoder.hash(
-      domain,
-      types,
-      value,
-    );
+  async _signTypedData(
+    domain: TypedDataDomain,
+    types: Record<string, Array<TypedDataField>>,
+    value: Record<string, any>,
+  ) {
+    const hash = ethers.utils._TypedDataEncoder.hash(domain, types, value);
     return this._signDigest(hash);
   }
 

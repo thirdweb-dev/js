@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const ContractsPublishPage: ThirdwebNextPage = () => {
   const router = useRouter();

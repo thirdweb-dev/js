@@ -1,16 +1,16 @@
 import { Box, Flex, Grid, Icon, SlideFade, Spacer } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ConnectWalletPlayground } from "components/wallets/ConnectWalletPlayground/Playground";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
-import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
-import { AiOutlineArrowRight } from "react-icons/ai";
 import { SupportedPlatformLink } from "components/wallets/SupportedPlatformLink";
-import { ChakraNextImage } from "components/Image";
-import { useEffect, useState } from "react";
-import { NextSeo } from "next-seo";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { NextSeo } from "next-seo";
+import { PageId } from "page-id";
+import { useEffect, useState } from "react";
+import { AiOutlineArrowRight } from "react-icons/ai";
+import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "connect-playground";
 
@@ -195,7 +195,7 @@ function GuideLink(props: {
   return (
     <TrackedLink
       category={TRACKING_CATEGORY}
-      label={`guide`}
+      label={"guide"}
       trackingProps={{
         guide: props.label,
       }}

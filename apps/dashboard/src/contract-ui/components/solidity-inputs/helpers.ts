@@ -6,7 +6,7 @@ const calculateIntMinValues = (solidityType: string) => {
   const isIntType = solidityType.startsWith("int");
   const isUintType = solidityType.startsWith("uint");
 
-  const bitLength = parseInt(
+  const bitLength = Number.parseInt(
     solidityType.replace(/int|uint/g, "") || "256",
     10,
   );
@@ -15,18 +15,18 @@ const calculateIntMinValues = (solidityType: string) => {
 
   if (isIntType) {
     return min.div(2).mul(-1);
-  } else if (isUintType) {
-    return BigNumber.from(0);
-  } else {
+  }
+  if (isUintType) {
     return BigNumber.from(0);
   }
+  return BigNumber.from(0);
 };
 
 const calculateIntMaxValues = (solidityType: string) => {
   const isIntType = solidityType.startsWith("int");
   const isUintType = solidityType.startsWith("uint");
 
-  const bitLength = parseInt(
+  const bitLength = Number.parseInt(
     solidityType.replace(/int|uint/g, "") || "256",
     10,
   );
@@ -35,19 +35,22 @@ const calculateIntMaxValues = (solidityType: string) => {
 
   if (isIntType) {
     return max.div(2).sub(1);
-  } else if (isUintType) {
-    return max.sub(1);
-  } else {
-    return BigNumber.from(0);
   }
+  if (isUintType) {
+    return max.sub(1);
+  }
+  return BigNumber.from(0);
 };
 
-export const validateInt = (value = "", solidityType: string) => {
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
+export const validateInt = (value: any, solidityType: string) => {
   const min = calculateIntMinValues(solidityType);
   const max = calculateIntMaxValues(solidityType);
 
+  // biome-ignore lint/style/noParameterAssign: FIXME
   value = value.toString();
 
+  // biome-ignore lint/style/noParameterAssign: FIXME
   value = value.replace(/,/g, ".");
 
   if (!value.match(new RegExp(/^(?!-0(\.0+)?$)-?(0|[1-9]\d*)(\.\d+)?$/))) {
@@ -55,34 +58,35 @@ export const validateInt = (value = "", solidityType: string) => {
       type: "pattern",
       message: "Input is not a valid number.",
     };
-  } else if (value.includes(".") || value.includes(",")) {
+  }
+  if (value.includes(".") || value.includes(",")) {
     return {
       type: "pattern",
       message:
         "Can't use decimals, you need to convert your input to Wei first.",
     };
-  } else {
-    try {
-      const bigNumber = BigNumber.from(value || 0);
-      if (bigNumber.lt(min)) {
-        return {
-          type: "minValue",
-          message: solidityType.startsWith("uint")
-            ? `Value must be a positive number for uint types.`
-            : `Value is lower than what ${solidityType} can store.}`,
-        };
-      } else if (bigNumber.gt(max)) {
-        return {
-          type: "maxValue",
-          message: `Value is higher than what ${solidityType} can store.`,
-        };
-      }
-    } catch (error) {
+  }
+  try {
+    const bigNumber = BigNumber.from(value || 0);
+    if (bigNumber.lt(min)) {
       return {
-        type: "pattern",
-        message: "Input is not a valid number.",
+        type: "minValue",
+        message: solidityType.startsWith("uint")
+          ? "Value must be a positive number for uint types."
+          : `Value is lower than what ${solidityType} can store.}`,
       };
     }
+    if (bigNumber.gt(max)) {
+      return {
+        type: "maxValue",
+        message: `Value is higher than what ${solidityType} can store.`,
+      };
+    }
+  } catch (error) {
+    return {
+      type: "pattern",
+      message: "Input is not a valid number.",
+    };
   }
 
   return null;
@@ -99,7 +103,7 @@ const isValidBytes = (value: string, solidityType: string) => {
   const maxLength =
     solidityType === "byte"
       ? 1
-      : parseInt(solidityType.replace("bytes", "") || "0", 10);
+      : Number.parseInt(solidityType.replace("bytes", "") || "0", 10);
 
   if (solidityType === "bytes32" && (value === "[]" || value === "0x00")) {
     return true;
@@ -128,9 +132,11 @@ export const validateBytes = (value: string, solidityType: string) => {
   if (!value?.startsWith("0x") && !value?.startsWith("[")) {
     return {
       type: "pattern",
-      message: `Invalid input. Accepted formats are hex strings (0x...) or array of numbers ([...]).`,
+      message:
+        "Invalid input. Accepted formats are hex strings (0x...) or array of numbers ([...]).",
     };
-  } else if (!isValidBytes(value, solidityType)) {
+  }
+  if (!isValidBytes(value, solidityType)) {
     return {
       type: "pattern",
       message: `Value is not a valid ${solidityType}. Please check the length.`,
@@ -161,7 +167,7 @@ export const validateSolidityInput = (value: string, solidityType: string) => {
   /* else if (solidityType.startsWith("byte")) {
     return validateBytes(value, solidityType);
   } */
-  else if (solidityType === "address") {
+  if (solidityType === "address") {
     return validateAddress(value);
   }
 
@@ -171,32 +177,38 @@ export const validateSolidityInput = (value: string, solidityType: string) => {
 // other stuff
 export const camelToTitle = (string: string): string => {
   if (string[0] === "_") {
+    // biome-ignore lint/style/noParameterAssign: FIXME
     string = string.slice(1);
   }
   return string
     .replace(/^[a-z]/, (match) => match.toUpperCase())
-    .replace(/([A-Z]{1}[a-z]*|_[a-z])/g, function (m) {
-      return m.length > 1
+    .replace(/([A-Z]{1}[a-z]*|_[a-z])/g, (m) =>
+      m.length > 1
         ? ` ${m
             .replace(/^_/, "")
             .replace(/^[a-z]/, (match) => match.toUpperCase())}`
-        : m.replace(/^_/, "").replace(/^[a-z]/, (match) => match.toUpperCase());
-    });
+        : m.replace(/^_/, "").replace(/^[a-z]/, (match) => match.toUpperCase()),
+    );
 };
 
 type FunctionComponents = {
   name: string;
   type: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   [key: string]: any;
 }[];
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 function formatInputType(type: string, components?: FunctionComponents): any {
   if (type?.includes("[]")) {
     const obj = [];
     obj.push(formatInputType(type.replace("[]", ""), components));
     return obj;
-  } else if (type?.includes("tuple")) {
+  }
+  if (type?.includes("tuple")) {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     const obj: any = {};
+    // biome-ignore lint/complexity/noForEach: FIXME
     components?.forEach((component) => {
       obj[component.name] = formatInputType(
         component.type,
@@ -204,17 +216,20 @@ function formatInputType(type: string, components?: FunctionComponents): any {
       );
     });
     return obj;
-  } else if (type?.includes("string")) {
+  }
+  if (type?.includes("string")) {
     return "...";
-  } else if (type?.includes("int")) {
-    return "0";
-  } else if (type?.includes("bool")) {
-    return true;
-  } else if (type?.includes("address")) {
-    return "0x...";
-  } else {
+  }
+  if (type?.includes("int")) {
     return "0";
   }
+  if (type?.includes("bool")) {
+    return true;
+  }
+  if (type?.includes("address")) {
+    return "0x...";
+  }
+  return "0";
 }
 
 export function formatHint(

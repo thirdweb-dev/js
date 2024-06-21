@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "2.0.16",
+  "version": "2.0.15",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "exports": {
@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
@@ -24,9 +24,7 @@
     "push": "yalc push",
     "typedoc": "node scripts/typedoc.mjs"
   },
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "preconstruct": {
     "exports": true
   },
@@ -44,7 +42,7 @@
     "esm": "^3.2.25",
     "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

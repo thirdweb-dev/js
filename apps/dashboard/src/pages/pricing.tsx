@@ -8,8 +8,18 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { EngineTierCard } from "components/engine/tier-card";
+import { PricingSection } from "components/homepage/sections/PricingSection";
+import { LandingFAQ } from "components/landing-pages/faq";
 import { LandingLayout } from "components/landing-pages/layout";
+import { useTrack } from "hooks/analytics/useTrack";
+import { getAbsoluteUrl } from "lib/vercel-utils";
+import { useRouter } from "next/router";
 import { PageId } from "page-id";
+import { AiOutlineDollarCircle } from "react-icons/ai";
+import { FiExternalLink } from "react-icons/fi";
+import { IoIosInformationCircleOutline } from "react-icons/io";
+import { IoCheckmarkCircle } from "react-icons/io5";
 import {
   Card,
   Heading,
@@ -18,18 +28,8 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
-import { IoCheckmarkCircle } from "react-icons/io5";
-import { AiOutlineDollarCircle } from "react-icons/ai";
-import { LandingFAQ } from "components/landing-pages/faq";
-import { getAbsoluteUrl } from "lib/vercel-utils";
-import { PricingSection } from "components/homepage/sections/PricingSection";
 import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "utils/pricing";
-import { IoIosInformationCircleOutline } from "react-icons/io";
-import { FiExternalLink } from "react-icons/fi";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useRouter } from "next/router";
-import { EngineTierCard } from "components/engine/tier-card";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "pricing-page";
 

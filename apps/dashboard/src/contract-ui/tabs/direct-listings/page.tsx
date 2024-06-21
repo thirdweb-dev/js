@@ -1,9 +1,9 @@
-/* import { CreateListingButton } from "./components/list-button"; */
-import { CreateListingButton } from "../shared-components/list-button";
-import { DirectListingsTable } from "./components/table";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { Heading } from "tw-components";
+/* import { CreateListingButton } from "./components/list-button"; */
+import { CreateListingButton } from "../shared-components/list-button";
+import { DirectListingsTable } from "./components/table";
 
 interface ContractDirectListingsPageProps {
   contractAddress?: string;

@@ -1,8 +1,10 @@
-import { AccountsTable } from "./components/accounts-table";
-import { CreateAccountButton } from "./components/create-account-button";
+import { thirdwebClient } from "@/constants/client";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { defineDashboardChain } from "lib/v5-adapter";
+import { useMemo } from "react";
+import { getContract } from "thirdweb";
 import {
   Card,
   Heading,
@@ -11,10 +13,8 @@ import {
   TrackedLinkButton,
 } from "tw-components";
 import { AccountsCount } from "./components/accounts-count";
-import { useMemo } from "react";
-import { getContract } from "thirdweb";
-import { defineDashboardChain } from "lib/v5-adapter";
-import { thirdwebClient } from "@/constants/client";
+import { AccountsTable } from "./components/accounts-table";
+import { CreateAccountButton } from "./components/create-account-button";
 
 interface AccountsPageProps {
   contractAddress?: string;

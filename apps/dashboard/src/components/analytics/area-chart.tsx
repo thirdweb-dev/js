@@ -1,5 +1,4 @@
-import { CustomToolTip } from "./custom-tooltip";
-import { Box, BoxProps, Center } from "@chakra-ui/react";
+import { Box, type BoxProps, Center } from "@chakra-ui/react";
 import { useEffect, useId, useState } from "react";
 import {
   Area,
@@ -10,6 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { Text } from "tw-components";
+import { CustomToolTip } from "./custom-tooltip";
 
 export type GenericDataType = Record<string, string | number>;
 
@@ -56,9 +56,7 @@ const AreaChart = <
     return null;
   }
 
-  if (!index.type) {
-    index.type = "date";
-  }
+  const indexType = index.type || "date";
 
   return (
     <Box h="full" w="full" {...boxProps}>
@@ -132,7 +130,7 @@ const AreaChart = <
             tickFormatter={(payload) =>
               index.format
                 ? index.format(payload)
-                : index.type === "date"
+                : indexType === "date"
                   ? new Date(payload).toLocaleDateString(undefined, {
                       day: "numeric",
                       month: "short",
