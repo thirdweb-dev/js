@@ -37,7 +37,7 @@ export default function Page() {
               <Button asChild size="lg">
                 <Link
                   target="_blank"
-                  href="https://portal.thirdweb.com/connect/account-abstraction"
+                  href="https://portal.thirdweb.com/connect/account-abstraction/overview"
                 >
                   View docs
                 </Link>
