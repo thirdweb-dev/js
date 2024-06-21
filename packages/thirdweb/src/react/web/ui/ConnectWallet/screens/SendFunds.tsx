@@ -8,6 +8,10 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import {
+  type SupportedTokens,
+  defaultTokens,
+} from "../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../components/Skeleton.js";
@@ -20,7 +24,6 @@ import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import { useSendToken } from "../../hooks/useSendToken.js";
-import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { TokenSelector } from "./TokenSelector.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";

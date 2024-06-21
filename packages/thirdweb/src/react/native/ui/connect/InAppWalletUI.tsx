@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { SvgXml } from "react-native-svg";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type {
@@ -17,6 +16,7 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { radius, spacing } from "../../design-system/index.js";
 import type { useConnect } from "../../hooks/wallets/useConnect.js";
+import { RNImage } from "../components/RNImage.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
 import { Spacer } from "../components/spacer.js";
@@ -29,7 +29,7 @@ import {
   GOOGLE_ICON,
   PHONE_ICON,
 } from "../icons/svgs.js";
-import type { ModalState } from "./ConnectButton.js";
+import type { ModalState } from "./ConnectModal.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",
@@ -39,10 +39,10 @@ const defaultAuthOptions: InAppWalletAuth[] = [
   "apple",
 ];
 
-export const authOptionIcons = {
+const socialIcons = {
   google: GOOGLE_ICON,
-  apple: APPLE_ICON,
   facebook: FACEBOOK_ICON,
+  apple: APPLE_ICON,
 };
 
 type InAppWalletFormUIProps = {
@@ -127,7 +127,7 @@ function SocialLogin(
           onPress={connectInAppWallet}
           disabled={connectMutation.isConnecting}
         >
-          <SvgXml width={38} height={38} xml={authOptionIcons[auth]} />
+          <RNImage size={38} data={socialIcons[auth]} />
         </TouchableOpacity>
       )}
     </View>

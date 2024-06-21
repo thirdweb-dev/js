@@ -11,7 +11,7 @@ import {
   useSendTransactionCore,
 } from "../../../core/hooks/transaction/useSendTransaction.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import type { SupportedTokens } from "../../ui/ConnectWallet/defaultTokens.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";

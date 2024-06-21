@@ -22,6 +22,7 @@ import {
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
+import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
@@ -42,7 +43,6 @@ import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
-import type { SupportedTokens } from "../../defaultTokens.js";
 import { CoinsIcon } from "../../icons/CoinsIcon.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";

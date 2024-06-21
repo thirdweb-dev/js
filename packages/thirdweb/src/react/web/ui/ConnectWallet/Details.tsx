@@ -38,6 +38,7 @@ import {
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
@@ -65,7 +66,6 @@ import {
   type NetworkSelectorProps,
 } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
-import type { SupportedTokens } from "./defaultTokens.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";

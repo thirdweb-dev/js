@@ -19,20 +19,20 @@ import {
   iconSize,
   spacing,
 } from "../../../core/design-system/index.js";
-import { setLastAuthProvider } from "../../../core/utils/storage.js";
-import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
-import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import {
   emailIcon,
   passkeyIcon,
   phoneIcon,
-} from "../../ui/ConnectWallet/icons/dataUris.js";
+  socialIcons,
+} from "../../../core/utils/socialIcons.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
+import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
+import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import { Img } from "../../ui/components/Img.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
-import { socialIcons } from "../in-app/socialIcons.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import type { InAppWalletLocale } from "./locale/types.js";

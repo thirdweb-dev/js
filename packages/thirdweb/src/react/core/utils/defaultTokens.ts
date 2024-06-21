@@ -5,7 +5,7 @@ export type TokenInfo = {
   icon?: string;
 };
 
-const wrappedEthIcon =
+export const wrappedEthIcon =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAwIiBoZWlnaHQ9IjI1MDAiIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzYyN0VFQSIvPjxnIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDR2OC44N2w3LjQ5NyAzLjM1eiIvPjxwYXRoIGQ9Ik0xNi40OTggNEw5IDE2LjIybDcuNDk4LTMuMzV6Ii8+PHBhdGggZmlsbC1vcGFjaXR5PSIuNjAyIiBkPSJNMTYuNDk4IDIxLjk2OHY2LjAyN0wyNCAxNy42MTZ6Ii8+PHBhdGggZD0iTTE2LjQ5OCAyNy45OTV2LTYuMDI4TDkgMTcuNjE2eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjIiIGQ9Ik0xNi40OTggMjAuNTczbDcuNDk3LTQuMzUzLTcuNDk3LTMuMzQ4eiIvPjxwYXRoIGZpbGwtb3BhY2l0eT0iLjYwMiIgZD0iTTkgMTYuMjJsNy40OTggNC4zNTN2LTcuNzAxeiIvPjwvZz48L2c+PC9zdmc+";
 
 const tetherUsdIcon =
@@ -86,20 +86,6 @@ export const defaultTokens: SupportedTokens = {
       name: "Polygon",
       symbol: "WMATIC",
       icon: maticIcon,
-    },
-  ],
-  "5": [
-    {
-      address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-      icon: wrappedEthIcon,
-    },
-    {
-      address: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
-      name: "USD Coin",
-      symbol: "USDC",
-      icon: usdcIcon,
     },
   ],
   "10": [
@@ -322,6 +308,15 @@ export const defaultTokens: SupportedTokens = {
   "8453": [
     {
       address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      name: "USD Coin",
+      symbol: "USDC",
+      icon: usdcIcon,
+    },
+  ],
+  // Base sepolia
+  "84532": [
+    {
+      address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
       name: "USD Coin",
       symbol: "USDC",
       icon: usdcIcon,

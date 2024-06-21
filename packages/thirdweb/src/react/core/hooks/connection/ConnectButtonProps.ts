@@ -4,10 +4,10 @@ import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/NetworkSelector.js";
-import type { SupportedTokens } from "../../../web/ui/ConnectWallet/defaultTokens.js";
 import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
+import type { SupportedTokens } from "../../utils/defaultTokens.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
 
 export type PayUIOptions = {
@@ -699,10 +699,7 @@ export type ConnectButtonProps = {
    * />
    * ```
    */
-  onDisconnect?: (info: {
-    wallet: Wallet;
-    account: Account;
-  }) => void;
+  onDisconnect?: (info: { wallet: Wallet; account: Account }) => void;
 
   /**
    * Configure options for WalletConnect

@@ -28,8 +28,8 @@ export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 export type {
   SupportedTokens,
   TokenInfo,
-} from "../react/web/ui/ConnectWallet/defaultTokens.js";
-export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
+} from "../react/core/utils/defaultTokens.js";
+export { defaultTokens } from "../react/core/utils/defaultTokens.js";
 
 // Media Renderer
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";

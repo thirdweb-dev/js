@@ -9,8 +9,6 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
@@ -19,11 +17,7 @@ import { ThemedButton } from "../components/button.js";
 import { ThemedText } from "../components/text.js";
 import { ConnectModal } from "./ConnectModal.js";
 import { ConnectedButton } from "./ConnectedButton.js";
-
-export type ModalState =
-  | { screen: "base" }
-  | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
-  | { screen: "external_wallets" };
+import { ConnectedModal } from "./ConnectedModal.js";
 
 export function ConnectButton(props: ConnectButtonProps) {
   const theme = parseTheme(props.theme);
@@ -79,24 +73,27 @@ export function ConnectButton(props: ConnectButtonProps) {
     }
   }, [visible]);
 
-  return wallet && account ? (
-    <ConnectedButton
-      onClose={closeModal}
-      wallet={wallet}
-      account={account}
-      {...props}
-    />
-  ) : (
+  return (
     <View>
-      <ThemedButton theme={theme} onPress={() => setVisible(true)}>
-        <ThemedText
-          theme={theme}
-          type="defaultSemiBold"
-          style={{ color: theme.colors.primaryButtonText }}
-        >
-          Connect Wallet
-        </ThemedText>
-      </ThemedButton>
+      {wallet && account ? (
+        <ConnectedButton
+          openModal={() => setVisible(true)}
+          onClose={closeModal}
+          wallet={wallet}
+          account={account}
+          {...props}
+        />
+      ) : (
+        <ThemedButton theme={theme} onPress={() => setVisible(true)}>
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{ color: theme.colors.primaryButtonText }}
+          >
+            Connect Wallet
+          </ThemedText>
+        </ThemedButton>
+      )}
       <Modal
         visible={visible}
         animationType="none"
@@ -110,12 +107,23 @@ export function ConnectButton(props: ConnectButtonProps) {
           >
             <Pressable style={styles.dismissArea} onPress={closeModal} />
             <View style={styles.bottomSheetContainer}>
-              <ConnectModal
-                {...props}
-                theme={theme}
-                onClose={closeModal}
-                containerType="modal"
-              />
+              {wallet && account ? (
+                <ConnectedModal
+                  {...props}
+                  theme={theme}
+                  onClose={closeModal}
+                  containerType="modal"
+                  wallet={wallet}
+                  account={account}
+                />
+              ) : (
+                <ConnectModal
+                  {...props}
+                  theme={theme}
+                  onClose={closeModal}
+                  containerType="modal"
+                />
+              )}
             </View>
           </Animated.View>
         </KeyboardAvoidingView>

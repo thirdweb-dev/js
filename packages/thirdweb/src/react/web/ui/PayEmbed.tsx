@@ -13,8 +13,8 @@ import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
+import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
-import type { SupportedTokens } from "./ConnectWallet/defaultTokens.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
 import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";

@@ -4,9 +4,9 @@ import {
   type TouchableOpacityProps,
   View,
 } from "react-native";
-import { SvgXml } from "react-native-svg";
 import type { Theme } from "../../../core/design-system/index.js";
 import { radius, spacing } from "../../design-system/index.js";
+import { RNImage } from "./RNImage.js";
 import { ThemedText } from "./text.js";
 
 export type ThemedButtonProps = TouchableOpacityProps & {
@@ -60,7 +60,7 @@ export function ThemedButtonWithIcon(
           width: "100%",
         }}
       >
-        <SvgXml xml={icon} width={24} height={24} />
+        <RNImage size={24} data={icon} />
         <ThemedText theme={theme}>{title}</ThemedText>
       </View>
     </ThemedButton>

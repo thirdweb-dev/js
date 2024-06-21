@@ -16,6 +16,7 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import { genericWalletIcon } from "../../../core/utils/socialIcons.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Img } from "../components/Img.js";
@@ -40,7 +41,6 @@ import { PoweredByThirdweb } from "./PoweredByTW.js";
 import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
 import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
 import { compactModalMaxHeight } from "./constants.js";
-import { genericWalletIcon } from "./icons/dataUris.js";
 import type { ConnectLocale } from "./locale/types.js";
 
 const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
