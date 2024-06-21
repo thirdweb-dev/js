@@ -861,7 +861,7 @@ function SwapScreenContent(props: {
           client={client}
           onBack={() => {
             setScreen({
-              id: "main",
+              id: "buy-with-crypto",
             });
           }}
           buyWithCryptoQuote={quoteQuery.data}
@@ -871,7 +871,7 @@ function SwapScreenContent(props: {
           onDone={props.onDone}
           onTryAgain={() => {
             setScreen({
-              id: "main",
+              id: "buy-with-crypto",
             });
             quoteQuery.refetch();
           }}
@@ -1045,7 +1045,7 @@ function FiatScreenContent(props: {
           quote={fiatQuoteQuery.data}
           onBack={() => {
             setScreen({
-              id: "main",
+              id: "buy-with-fiat",
             });
           }}
           client={client}
