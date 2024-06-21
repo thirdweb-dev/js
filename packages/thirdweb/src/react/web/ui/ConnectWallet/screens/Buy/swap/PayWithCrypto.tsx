@@ -21,6 +21,7 @@ import type { TokenInfo } from "../../../defaultTokens.js";
 import { GenericWalletIcon } from "../../../icons/GenericWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -78,7 +79,7 @@ export function PayWithCrypto(props: {
         }}
         disabled={props.freezeChainAndTokenSelection}
       >
-        <TokenIcon
+        <PayTokenIcon
           token={props.token}
           chain={props.chain}
           size="md"

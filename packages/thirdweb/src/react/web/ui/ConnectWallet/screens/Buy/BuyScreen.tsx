@@ -957,8 +957,8 @@ function SwapScreenContent(props: {
             <Text color="danger">Not Enough Funds</Text>
           ) : quoteQuery.isLoading ? (
             <>
-              <Spinner size="sm" color="accentText" />
               Getting price quote
+              <Spinner size="sm" color="accentText" />
             </>
           ) : (
             "Continue"
@@ -1150,8 +1150,8 @@ function FiatScreenContent(props: {
       >
         {fiatQuoteQuery.isLoading ? (
           <>
-            <Spinner size="sm" color="accentText" />
             Getting price quote
+            <Spinner size="sm" color="accentText" />
           </>
         ) : (
           "Continue"

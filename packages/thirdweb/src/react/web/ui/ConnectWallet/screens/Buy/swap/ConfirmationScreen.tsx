@@ -26,6 +26,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
@@ -272,7 +273,7 @@ function RenderTokenInfo(props: {
         <Text color="primaryText" size="md">
           {props.amount} {props.symbol}
         </Text>
-        <TokenIcon
+        <PayTokenIcon
           token={props.token}
           chain={props.chain}
           size="sm"
