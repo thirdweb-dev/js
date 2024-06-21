@@ -62,8 +62,6 @@ const TWLogo: React.FC = () => (
   </svg>
 );
 
-
-
 // Image generation
 export default async function Image({
   params,
@@ -95,13 +93,13 @@ export default async function Image({
       : undefined,
     // download the background image (based on chain)
     fetch(
-      chain.icon?.url ? new URL(
-        
-          "og-lib/assets/chain/bg-with-icon.png",
-          
-        import.meta.url,
-      ): new URL(
-        "og-lib/assets/chain/bg-no-icon.png", import.meta.url),
+      chain.icon?.url
+        ? new URL(
+            "og-lib/assets/chain/bg-with-icon.png",
+
+            import.meta.url,
+          )
+        : new URL("og-lib/assets/chain/bg-no-icon.png", import.meta.url),
     ).then((res) => res.arrayBuffer()),
   ]);
 
