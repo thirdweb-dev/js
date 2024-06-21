@@ -41,20 +41,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "evm/"
-  ],
+  "files": ["dist/", "evm/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "evm/index.ts",
-      "evm/connectors/**/index.ts"
-    ],
+    "entrypoints": ["index.ts", "evm/index.ts", "evm/connectors/**/index.ts"],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "private": false,
@@ -97,7 +88,7 @@
     "react-dom": "18.3.1",
     "stream": "npm:stream-browserify@^3.0.0",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@emotion/css": "11.11.2",

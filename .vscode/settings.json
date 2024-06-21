@@ -8,5 +8,6 @@
   "editor.defaultFormatter": "biomejs.biome",
   "typescript.preferences.autoImportFileExcludePatterns": [
     "./packages/thirdweb/src/exports"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
