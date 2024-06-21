@@ -16,6 +16,7 @@ import {
   spacing,
 } from "../../../core/design-system/index.js";
 import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import {
@@ -32,7 +33,6 @@ import { socialIcons } from "../in-app/socialIcons.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import { setLastAuthProvider } from "./storage.js";
 
 export type ConnectWalletSelectUIState =
   | undefined

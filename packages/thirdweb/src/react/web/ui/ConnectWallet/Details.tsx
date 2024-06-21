@@ -10,12 +10,9 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
-import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
-import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
-import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -40,9 +37,7 @@ import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import { shortenString } from "../../../core/utils/addresses.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
@@ -114,12 +109,18 @@ export const ConnectedWalletDetails: React.FC<{
 
   const setRootEl = useContext(SetRootElementContext);
   const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
 
   useChainsQuery(props.chains, 5);
 
   const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(client, props.detailsButton?.displayBalanceToken);
+    useConnectedWalletDetails(
+      client,
+      walletChain,
+      activeAccount,
+      props.detailsButton?.displayBalanceToken,
+    );
 
   function closeModal() {
     setRootEl(null);

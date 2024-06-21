@@ -129,10 +129,7 @@ export {
 } from "../react/web/ui/ConnectWallet/useConnectModal.js";
 
 // wallet info
-export {
-  useWalletInfo,
-  useWalletImage,
-} from "../react/web/ui/hooks/useWalletInfo.js";
+export { useWalletInfo, useWalletImage } from "../react/core/utils/wallet.js";
 
 export {
   useWalletDetailsModal,

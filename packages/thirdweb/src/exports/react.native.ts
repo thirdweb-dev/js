@@ -91,7 +91,4 @@ export { ConnectButton } from "../react/native/ui/connect/ConnectButton.js";
 export { ConnectEmbed } from "../react/native/ui/connect/ConnectModal.js";
 
 // wallet info
-export {
-  useWalletInfo,
-  useWalletImage,
-} from "../react/web/ui/hooks/useWalletInfo.js";
+export { useWalletInfo, useWalletImage } from "../react/core/utils/wallet.js";
