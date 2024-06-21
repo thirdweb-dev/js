@@ -53,7 +53,7 @@ export type CreateListingParams = {
       /**
        * The price per token (in Ether)
        */
-      pricePerToken: string;
+      pricePerToken: string | number;
     }
   | {
       /**
@@ -139,7 +139,7 @@ export function createListing(
       if ("pricePerToken" in options) {
         // for native token, we know decimals are 18
         if (isNativeTokenAddress(currencyAddress)) {
-          pricePerToken = toUnits(options.pricePerToken, 18);
+          pricePerToken = toUnits(`${options.pricePerToken}`, 18);
         } else {
           // otherwise get the decimals of the currency
           const currencyContract = getContract({
@@ -150,7 +150,7 @@ export function createListing(
           const currencyDecimals = await decimals({
             contract: currencyContract,
           });
-          pricePerToken = toUnits(options.pricePerToken, currencyDecimals);
+          pricePerToken = toUnits(`${options.pricePerToken}`, currencyDecimals);
         }
       } else {
         pricePerToken = BigInt(options.pricePerTokenWei);
