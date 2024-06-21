@@ -54,6 +54,7 @@ import {
   isNativeToken,
 } from "../nativeToken.js";
 import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
+import { PayTokenIcon } from "./PayTokenIcon.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
@@ -476,61 +477,45 @@ function SelectedTokenInfo(props: {
   tokenAmount: string;
   client: ThirdwebClient;
 }) {
-  const chainQuery = useChainQuery(props.selectedChain);
-
   return (
-    <Container
-      flex="column"
-      gap="xs"
-      center="both"
-      style={{
-        justifyContent: "space-between",
-      }}
-    >
-      {/* Left - Token Amount + Symbol */}
-      <Container flex="row" gap="xs" center="y">
-        <Text
-          color="primaryText"
-          data-testid="tokenAmount"
-          style={{
-            fontSize: getBuyTokenAmountFontSize(props.tokenAmount),
-          }}
-        >
-          {props.tokenAmount}
-        </Text>
-        <TokenSymbol
-          token={props.selectedToken}
-          chain={props.selectedChain}
-          size="lg"
-          color="secondaryText"
-        />
-      </Container>
+    <div>
+      <Container
+        flex="row"
+        gap="sm"
+        center="y"
+        style={{
+          justifyContent: "space-between",
+        }}
+      >
+        <Container flex="row" gap="xs" center="y">
+          <Text color="primaryText" data-testid="tokenAmount" size="xxl">
+            {formatNumber(Number(props.tokenAmount), 3)}
+          </Text>
 
-      {/* Right - Chain  */}
-      <Container flex="row" gap="xxs" center="y">
+          <Container flex="row" gap="xxs" center="y">
+            <TokenSymbol
+              token={props.selectedToken}
+              chain={props.selectedChain}
+              size="md"
+              color="secondaryText"
+            />
+            <PayTokenIcon
+              chain={props.selectedChain}
+              client={props.client}
+              size="sm"
+              token={props.selectedToken}
+            />
+          </Container>
+        </Container>
+
         <ChainName
           chain={props.selectedChain}
           client={props.client}
-          size="md"
+          size="sm"
+          short
         />
-
-        <Container
-          borderColor="borderColor"
-          style={{
-            borderWidth: "1px",
-            borderRadius: radius.sm,
-            borderStyle: "solid",
-            padding: "3px",
-          }}
-        >
-          <ChainIcon
-            chainIcon={chainQuery.data?.icon}
-            client={props.client}
-            size={iconSize.sm}
-          />
-        </Container>
       </Container>
-    </Container>
+    </div>
   );
 }
 
@@ -681,21 +666,31 @@ function TokenSelectedLayout(props: {
     <Container>
       <Container p="lg">
         <ModalHeader title={"Buy"} onBack={props.onBack} />
-        <Spacer y="xl" />
+      </Container>
 
-        {/* Selected Token Info */}
+      <Container
+        px="lg"
+        style={{
+          paddingBottom: spacing.lg,
+        }}
+      >
+        <Spacer y="xs" />
         <SelectedTokenInfo
           selectedToken={props.selectedToken}
           selectedChain={props.selectedChain}
           tokenAmount={props.tokenAmount}
           client={props.client}
         />
+
+        <Spacer y="md" />
+        <Line />
+        <Spacer y="lg" />
+
+        <Text size="sm"> Pay with </Text>
+        <Spacer y="sm" />
+
+        {props.children}
       </Container>
-
-      <Spacer y="sm" />
-      <Line />
-
-      <Container p="lg">{props.children}</Container>
     </Container>
   );
 }
@@ -709,6 +704,7 @@ function PaymentMethodSelection(props: {
       <Container flex="column" gap="sm">
         <Button
           variant="outline"
+          bg="tertiaryBg"
           onClick={() => props.setScreen("buy-with-fiat")}
           gap="sm"
           style={{
@@ -736,6 +732,7 @@ function PaymentMethodSelection(props: {
         {/* Crypto */}
         <Button
           variant="outline"
+          bg="tertiaryBg"
           onClick={() => props.setScreen("buy-with-crypto")}
           style={{
             justifyContent: "flex-start",

@@ -165,6 +165,8 @@ export const fontSize = {
   md: "16px",
   lg: "20px",
   xl: "24px",
+  xxl: "32px",
+  "3xl": "48px",
 };
 
 export const spacing = {
@@ -269,7 +271,7 @@ export function darkTheme(overrides?: ThemeOverrides): Theme {
  */
 function applyThemeOverrides(
   baseTheme: Theme,
-  themeOverrides: ThemeOverrides,
+  themeOverrides: ThemeOverrides
 ): Theme {
   const theme = { ...baseTheme };
 
