@@ -12,7 +12,6 @@ type Item = {
   from: string;
   to: string;
   value: string;
-  hash: string;
 };
 
 const usdcContractOnBase = getContract({
@@ -37,7 +36,6 @@ export function WatchEventPreview() {
           from: shortenAddress(from),
           to: shortenAddress(to),
           value: Number(toTokens(value, 6)).toFixed(1),
-          hash: item.transactionHash,
         };
       })
       .slice(-5);
@@ -46,7 +44,8 @@ export function WatchEventPreview() {
   return (
     <ul className="m-auto text-sm lg:text-base">
       {items.map((item, index) => (
-        <li key={item.hash}>
+        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+        <li key={index}>
           <span className="font-bold">{item.from}</span> transferred{" "}
           <span className="font-bold text-green-500">{item.value} USDC</span> to{" "}
           <span className="font-bold">{item.to}</span>

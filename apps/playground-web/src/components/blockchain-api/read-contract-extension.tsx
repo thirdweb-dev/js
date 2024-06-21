@@ -6,16 +6,16 @@ import { ethereum } from "thirdweb/chains";
 import { getNFT } from "thirdweb/extensions/erc721";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
-const azukiContract = getContract({
-  address: "0xed5af388653567af2f388e6224dc7c4b3241c544",
+const contract = getContract({
+  address: "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",
   chain: ethereum,
   client: THIRDWEB_CLIENT,
 });
 
 export function ReadContractExtensionPreview() {
   const { data } = useReadContract(getNFT, {
-    contract: azukiContract,
-    tokenId: 2n,
+    contract,
+    tokenId: 458n,
   });
 
   return (
