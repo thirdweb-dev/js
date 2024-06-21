@@ -261,7 +261,7 @@ function App() {
         method:
           "function transfer(address to, uint256 value) returns (bool)",
         params: [
-          "0xd8dA6BF...7aA96045",
+          "recipient-address",
           toUnits("5", 18),
         ],
       })

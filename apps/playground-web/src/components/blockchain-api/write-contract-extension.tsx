@@ -25,10 +25,10 @@ export function WriteContractExtensionPreview() {
   return (
     <div className="flex flex-col">
       <img
-        src="/twcoin.jpeg"
+        src="/twcoin.svg"
         width={"120px"}
         height={"120px"}
-        className="mx-auto rounded-2xl"
+        className="mx-auto rounded-2xl animate-bounce"
       />
       <div className="my-3 text-center">Claim free testnet tokens</div>
       {account ? (
