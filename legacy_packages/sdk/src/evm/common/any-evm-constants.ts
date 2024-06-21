@@ -107,7 +107,12 @@ export function matchError(error: string): boolean {
   }
 
   const hasCompositeError = ERROR_SUBSTRINGS_COMPOSITE.some((arr) => {
-    return arr.some((substring) => error.includes(substring));
+    let foundError = true;
+    arr.forEach((substring) => {
+      foundError &&= error.includes(substring);
+    });
+
+    return foundError;
   });
 
   return hasCompositeError;
