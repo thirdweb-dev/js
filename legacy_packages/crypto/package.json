@@ -16,13 +16,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/"
-  ],
+  "files": ["dist/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ],
+    "entrypoints": ["index.ts"],
     "exports": true
   },
   "sideEffects": false,
@@ -40,8 +36,8 @@
     "ethers": "^5.7.2",
     "js-awe": "^1.0.65",
     "tinybench": "^2.6.0",
-    "typescript": "5.4.4",
-    "viem": "2.15.1"
+    "typescript": "5.5.2",
+    "viem": "2.16.0"
   },
   "scripts": {
     "format": "biome format ./src --write",

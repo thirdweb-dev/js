@@ -20,15 +20,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/",
-    "integrations/"
-  ],
+  "files": ["dist/", "integrations/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "integrations/**"
-    ],
+    "entrypoints": ["index.ts", "integrations/**"],
     "exports": true
   },
   "sideEffects": false,
@@ -40,7 +34,7 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "scripts": {
     "format": "biome format ./src --write",

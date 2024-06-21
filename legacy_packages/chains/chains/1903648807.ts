@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Gemuchain",
   "chainId": 1903648807,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "blockscout",
+      "url": "https://gemutest-explorer.gemuchain.io/",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -19,7 +25,10 @@ export default {
   },
   "networkId": 1903648807,
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://1903648807.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://gemutest-rpc.gemuchain.io/"
+  ],
   "shortName": "GEMU",
   "slug": "gemuchain-testnet",
   "testnet": true

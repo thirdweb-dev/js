@@ -499,10 +499,7 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": [
-    "dist/",
-    "evm/"
-  ],
+  "files": ["dist/", "evm/"],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
@@ -512,9 +509,7 @@
       "evm/wallets/**"
     ],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "sideEffects": false,
@@ -587,7 +582,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.5",
-    "abitype": "1.0.0",
+    "abitype": "1.0.4",
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "bs58": "^5.0.0",
     "cross-env": "^7.0.3",
@@ -601,7 +596,7 @@
     "rimraf": "5.0.7",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "scripts": {
     "format": "biome format ./src --write",

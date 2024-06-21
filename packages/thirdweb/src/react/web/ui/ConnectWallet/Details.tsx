@@ -671,7 +671,6 @@ function DetailsModal(props: {
           setScreen("manage-wallet");
         }}
         chains={props.chains}
-        closeModal={closeModal}
         client={client}
       />
     );

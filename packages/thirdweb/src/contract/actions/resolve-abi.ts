@@ -429,7 +429,7 @@ type JoinAbisOptions = {
 };
 
 function joinAbis(options: JoinAbisOptions): Abi {
-  let mergedPlugins = options.pluginAbis
+  let mergedPlugins: Abi = options.pluginAbis
     .flat()
     .filter((item) => item.type !== "constructor");
 

@@ -2,6 +2,7 @@
 import { ImageResponse } from "@vercel/og";
 import type { NextRequest } from "next/server";
 import { ContractOG } from "og-lib/url-utils";
+import { isProd } from "../../../constants/rpc";
 
 export function shortenString(str: string) {
   return `${str.substring(0, 7)}...${str.substring(str.length - 5)}`;
@@ -23,6 +24,7 @@ const inter700_ = fetch(
 ).then((res) => res.arrayBuffer());
 
 const OgBrandIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="147"
@@ -30,7 +32,6 @@ const OgBrandIcon: React.FC = () => (
     viewBox="0 0 147 21"
     fill="none"
   >
-    <title>OgBrandIcon</title>
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"
@@ -93,7 +94,7 @@ function textShortener(text: string) {
 }
 
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {

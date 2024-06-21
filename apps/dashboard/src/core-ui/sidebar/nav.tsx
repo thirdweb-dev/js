@@ -102,15 +102,38 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
                   </Text>
                 </Flex>
                 {!navLink
-                  ? links.map(({ path, subActivePath, title: linkTitle }) => (
-                      <NavLink
-                        key={path}
-                        href={path}
-                        subActivePath={subActivePath}
-                      >
-                        {linkTitle}
-                      </NavLink>
-                    ))
+                  ? links.map(
+                      ({
+                        name,
+                        path,
+                        subActivePath,
+                        title: linkTitle,
+                        onClick,
+                      }) =>
+                        onClick ? (
+                          <NavLink
+                            key={path}
+                            href={path}
+                            active={name === activePage}
+                            subActivePath={subActivePath}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              onClick();
+                            }}
+                          >
+                            {linkTitle}
+                          </NavLink>
+                        ) : (
+                          <NavLink
+                            key={path}
+                            href={path}
+                            subActivePath={subActivePath}
+                          >
+                            {linkTitle}
+                          </NavLink>
+                        ),
+                    )
                   : null}
               </Flex>
             ) : (

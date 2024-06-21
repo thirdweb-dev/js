@@ -27,19 +27,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/",
-    "evm/"
-  ],
+  "files": ["dist/", "evm/"],
   "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "evm/index.ts"
-    ],
+    "entrypoints": ["index.ts", "evm/index.ts"],
     "exports": {
-      "envConditions": [
-        "browser"
-      ]
+      "envConditions": ["browser"]
     }
   },
   "private": false,
@@ -78,7 +70,7 @@
     "ethers": "^5.7.2",
     "react": "18.3.1",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",

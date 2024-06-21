@@ -114,7 +114,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
   }
 
   return (
-    <Stack spacing={4} direction="row" align="center">
+    <Stack
+      spacing={4}
+      direction="row"
+      align="center"
+      {...getRootProps()}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <input {...getInputProps()} />
       {showPreview && (
         <AspectRatio w="100%" maxW={maxContainerWidth} ratio={1}>
           {isDisabled ? (
@@ -148,7 +155,6 @@ export const FileInput: React.FC<IFileInputProps> = ({
               }}
               borderColor="inputBorder"
               borderWidth="1px"
-              {...getRootProps()}
               position="relative"
               overflow="hidden"
             >
@@ -180,7 +186,6 @@ export const FileInput: React.FC<IFileInputProps> = ({
                   </Text>
                 </Stack>
               )}
-              <input {...getInputProps()} />
             </Center>
           )}
         </AspectRatio>

@@ -39,7 +39,7 @@
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/node": "20.14.6",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "scripts": {
     "format": "biome format ./src --write",
