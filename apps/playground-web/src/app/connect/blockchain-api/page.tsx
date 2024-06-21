@@ -94,9 +94,8 @@ function ReadContractRaw() {
           Query blockchain data
         </h2>
         <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
-          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
-          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
+          Read any contract&apos;s states in a type-safe manner using the
+          Solidity method signature you define.
         </p>
       </div>
 
@@ -139,12 +138,20 @@ function ReadContractExtension() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Query blockchain data with prebuilt extensions
+          Query data with prebuilt extensions
         </h2>
         <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
-          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
-          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
+          Query contract states using our pre-compiled extensions. These
+          extensions are designed to make it easy to interact with popular
+          contracts and protocols.
+          <br />
+          <a
+            href="https://portal.thirdweb.com/typescript/v5/extensions/built-in"
+            target="_blank"
+            className="underline underline-offset-2"
+          >
+            Explore built-in extension
+          </a>
         </p>
       </div>
 
@@ -187,11 +194,7 @@ function WriteContractExtension() {
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Write data to blockchain with prebuilt extension
         </h2>
-        <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
-          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
-          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
-        </p>
+        <p className="max-w-[600px]">{/* ... */}</p>
       </div>
 
       <CodeExample
@@ -233,11 +236,7 @@ function WriteContractRaw() {
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Write data to blockchain
         </h2>
-        <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
-          provident magni mollitia! Provident, ducimus earum ex mollitia quasi
-          ut aut repudiandae quae eius. Sed, officia atque ab quisquam at amet!
-        </p>
+        <p className="max-w-[600px]">{/* ... */}</p>
       </div>
 
       <CodeExample
