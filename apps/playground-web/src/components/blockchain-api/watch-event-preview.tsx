@@ -25,7 +25,7 @@ export function WatchEventPreview() {
   const contractEvents = useContractEvents({
     contract: usdcContractOnBase,
     events: [transferEvent()],
-    blockRange: 1000,
+    blockRange: 100,
   });
 
   const items: Item[] = useMemo(() => {

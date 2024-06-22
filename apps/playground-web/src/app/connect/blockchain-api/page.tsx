@@ -106,7 +106,7 @@ import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
 const onChainCryptoPunks = getContract({
-  address: "0x16F5A3...03aF3B2",
+  address: "0x16F5A35647D6F03D5D3da7b35409D65ba03aF3B2",
   chain: ethereum,
   client: THIRDWEB_CLIENT,
 });
@@ -153,7 +153,7 @@ import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
 
 const nftContract = getContract({
-  address: "0xacf6...35c91",
+  address: "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",
   chain: ethereum,
   client: THIRDWEB_CLIENT,
 });
@@ -198,7 +198,7 @@ import { sepolia } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc20";
 
 const tw_coin = getContract({
-  address: "0xACf072b...3813b60a6",
+  address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
   chain: sepolia,
   client: THIRDWEB_CLIENT,
 });
@@ -242,7 +242,7 @@ function WriteContractRaw() {
 import { sepolia } from "thirdweb/chains";
 
 const tw_coin = getContract({
-  address: "0xACf072b...3813b60a6",
+  address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
   chain: sepolia,
   client: THIRDWEB_CLIENT,
 });
@@ -257,7 +257,7 @@ function App() {
         method:
           "function transfer(address to, uint256 value) returns (bool)",
         params: [
-          "recipient-address",
+          "0x...",
           toUnits("5", 18),
         ],
       })
@@ -294,7 +294,7 @@ import { base } from "thirdweb/chains";
 import { transferEvent } from "thirdweb/extensions/erc20";
 
 const usdcContractOnBase = getContract({
-  address: "0x833...02913",
+  address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   chain: base,
   client,
 });
@@ -304,7 +304,7 @@ function App() {
   const contractEvents = useContractEvents({
     contract: usdcContractOnBase,
     events: [transferEvent()],
-    blockRange: 1000,
+    blockRange: 100,
   });
 
   (contractEvents.data || []).forEach((item) => {
