@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "MOVE",
-  "chainId": 30731,
+  "chainId": 336,
   "explorers": [
     {
       "name": "mevm explorer",
@@ -23,8 +23,10 @@ export default {
     "symbol": "MOVE",
     "decimals": 18
   },
-  "networkId": 30731,
-  "rpc": [],
+  "networkId": 336,
+  "rpc": [
+    "https://mevm.devnet.m1.movementlabs.xyz"
+  ],
   "shortName": "movedev",
   "slug": "movement-evm-devnet",
   "status": "incubating",
