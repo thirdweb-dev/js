@@ -20,7 +20,7 @@ function prepareEmailTitle(
   name: string,
 ) {
   const title =
-    input.product && input["extraInfo_Problem_Area"]
+    input.product && input.extraInfo_Problem_Area
       ? `${input.product}: ${input.extraInfo_Problem_Area} (${email})`
       : `New ticket from ${name} (${email})`;
   return title;
@@ -71,7 +71,9 @@ export function useCreateTicket() {
       };
       const customerId = planToCustomerId[plan] || undefined;
       if (input.files?.length) {
-        input.files.forEach((file) => formData.append("attachments", file));
+        for (const file of input.files) {
+          formData.append("attachments", file);
+        }
       }
       const title = prepareEmailTitle(input, email ?? "", name ?? "");
       const markdown = prepareEmailBody(input, email ?? "", user.address);
