@@ -8,23 +8,26 @@ import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { TOS } from "../Modal/TOS.js";
 import { PoweredByThirdweb } from "../PoweredByTW.js";
 import { GlobeIcon } from "../icons/GlobalIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
+import type { WelcomeScreen } from "./types.js";
 
 /**
  * @internal
  */
 export function StartScreen(props: {
   connectLocale: ConnectLocale;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
   client: ThirdwebClient;
+  welcomeScreen: WelcomeScreen | undefined;
+  meta: {
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
 }) {
-  const WelcomeScreen = props.connectModal.welcomeScreen;
+  const WelcomeScreen = props.welcomeScreen;
   if (WelcomeScreen) {
     if (typeof WelcomeScreen === "function") {
       return <WelcomeScreen />;
@@ -42,8 +45,7 @@ export function StartScreen(props: {
   const img =
     typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;
 
-  const showTOS =
-    props.connectModal.termsOfServiceUrl || props.connectModal.privacyPolicyUrl;
+  const showTOS = props.meta.termsOfServiceUrl || props.meta.privacyPolicyUrl;
 
   return (
     <Container fullHeight animate="fadein" flex="column">
@@ -104,13 +106,13 @@ export function StartScreen(props: {
         <div>
           {showTOS && (
             <TOS
-              termsOfServiceUrl={props.connectModal.termsOfServiceUrl}
-              privacyPolicyUrl={props.connectModal.privacyPolicyUrl}
+              termsOfServiceUrl={props.meta.termsOfServiceUrl}
+              privacyPolicyUrl={props.meta.privacyPolicyUrl}
               locale={props.connectLocale.agreement}
             />
           )}
 
-          {props.connectModal.showThirdwebBranding !== false && (
+          {props.meta.showThirdwebBranding !== false && (
             <Container
               style={{
                 paddingTop: spacing.xl,

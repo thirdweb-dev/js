@@ -10,7 +10,6 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize } from "../../../core/design-system/index.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -42,12 +41,10 @@ export function OTPLoginUI(props: {
   goBack?: () => void;
   client: ThirdwebClient;
   chain: Chain | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }) {
   const { wallet, done, goBack, userInfo } = props;
-  const isWideModal = props.connectModal.size === "wide";
+  const isWideModal = props.size === "wide";
   const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");

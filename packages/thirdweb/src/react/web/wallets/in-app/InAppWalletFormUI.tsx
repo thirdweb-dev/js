@@ -3,7 +3,6 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { iconSize } from "../../../core/design-system/index.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
@@ -22,8 +21,13 @@ export type InAppWalletFormUIProps = {
   done: () => void;
   wallet: Wallet<"inApp">;
   goBack?: () => void;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   client: ThirdwebClient;
   chain: Chain | undefined;
@@ -33,7 +37,7 @@ export type InAppWalletFormUIProps = {
  * @internal
  */
 export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
-  const isCompact = props.connectModal.size === "compact";
+  const isCompact = props.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
   const onBack =
@@ -57,16 +61,16 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
             onBack={onBack}
             title={
               <>
-                {!props.connectModal.titleIcon ? null : (
+                {!props.meta.titleIconUrl ? null : (
                   <Img
-                    src={props.connectModal.titleIcon}
+                    src={props.meta.titleIconUrl}
                     width={iconSize.md}
                     height={iconSize.md}
                     client={props.client}
                   />
                 )}
                 <ModalTitle>
-                  {props.connectModal.title ??
+                  {props.meta.title ??
                     props.inAppWalletLocale.emailLoginScreen.title}
                 </ModalTitle>
               </>
@@ -89,20 +93,18 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
       </Container>
 
       {isCompact &&
-        (props.connectModal.showThirdwebBranding !== false ||
-          props.connectModal.termsOfServiceUrl ||
-          props.connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+        (props.meta.showThirdwebBranding !== false ||
+          props.meta.termsOfServiceUrl ||
+          props.meta.privacyPolicyUrl) && <Spacer y="xl" />}
 
       <Container flex="column" gap="lg">
         <TOS
-          termsOfServiceUrl={props.connectModal.termsOfServiceUrl}
-          privacyPolicyUrl={props.connectModal.privacyPolicyUrl}
+          termsOfServiceUrl={props.meta.termsOfServiceUrl}
+          privacyPolicyUrl={props.meta.privacyPolicyUrl}
           locale={props.connectLocale.agreement}
         />
 
-        {props.connectModal.showThirdwebBranding !== false && (
-          <PoweredByThirdweb />
-        )}
+        {props.meta.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );

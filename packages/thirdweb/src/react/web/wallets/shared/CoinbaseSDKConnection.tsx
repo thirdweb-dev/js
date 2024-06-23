@@ -4,7 +4,6 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { COINBASE } from "../../../../wallets/constants.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 
@@ -20,9 +19,7 @@ function CoinbaseSDKWalletConnectUI(props: {
   walletInfo: WalletInfo;
   client: ThirdwebClient;
   chain: Chain | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -68,7 +65,7 @@ function CoinbaseSDKWalletConnectUI(props: {
       onRetry={connect}
       onGetStarted={onGetStarted}
       client={props.client}
-      connectModal={props.connectModal}
+      size={props.size}
     />
   );
 }

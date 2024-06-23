@@ -19,7 +19,6 @@ import { CrossContainer } from "../../components/Modal.js";
 import { IconButton } from "../../components/buttons.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import type { LocaleId } from "../../types.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
@@ -43,7 +42,6 @@ export type ConnectModalInlineProps = {
   modalSize?: "compact" | "wide";
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
-  welcomeScreen?: WelcomeScreen;
   showThirdwebBranding?: boolean;
   accountAbstraction: SmartWalletOptions | undefined;
   auth: SiweAuthOptions | undefined;
@@ -51,8 +49,14 @@ export type ConnectModalInlineProps = {
   chains: Chain[] | undefined;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  welcomeScreen: WelcomeScreen;
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   isEmbed: boolean;
   localeId: LocaleId;
@@ -72,16 +76,15 @@ export type ConnectModalInlineProps = {
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
   const modalSize =
-    !canFitWideModal() || props.wallets.length === 1
-      ? "compact"
-      : props.modalSize;
+    !canFitWideModal() || props.wallets.length === 1 ? "compact" : props.size;
 
   return (
     <WalletUIStatesProvider theme={props.theme} isOpen={true}>
       <ConnectModalInlineContent
         className={props.className}
-        modalSize={modalSize}
-        connectModal={props.connectModal}
+        size={modalSize}
+        meta={props.meta}
+        welcomeScreen={props.welcomeScreen}
         wallets={props.wallets}
         accountAbstraction={props.accountAbstraction}
         auth={props.auth}
@@ -102,7 +105,6 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
 
 function ConnectModalInlineContent(props: {
   className?: string;
-  modalSize?: "compact" | "wide";
   style?: React.CSSProperties;
   accountAbstraction: SmartWalletOptions | undefined;
   auth: SiweAuthOptions | undefined;
@@ -110,8 +112,14 @@ function ConnectModalInlineContent(props: {
   chains: Chain[] | undefined;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  welcomeScreen: WelcomeScreen | undefined;
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   isEmbed: boolean;
   localeId: LocaleId;
@@ -126,7 +134,8 @@ function ConnectModalInlineContent(props: {
     | undefined;
 }) {
   const screenSetup = useSetupScreen({
-    connectModal: props.connectModal,
+    size: props.size,
+    welcomeScreen: props.welcomeScreen,
     wallets: props.wallets,
   });
 
@@ -147,7 +156,9 @@ function ConnectModalInlineContent(props: {
         chain={props.chain}
         client={props.client}
         connectLocale={props.connectLocale}
-        connectModal={props.connectModal}
+        size={props.size}
+        meta={props.meta}
+        welcomeScreen={props.welcomeScreen}
         isEmbed={props.isEmbed}
         localeId={props.localeId}
         onConnect={props.onConnect}
@@ -177,15 +188,13 @@ function ConnectModalInlineContent(props: {
     <ConnectModalInlineContainer
       className={props.className}
       style={{
-        height: props.modalSize === "compact" ? "auto" : wideModalMaxHeight,
+        height: props.size === "compact" ? "auto" : wideModalMaxHeight,
         maxWidth:
-          props.modalSize === "compact"
-            ? modalMaxWidthCompact
-            : modalMaxWidthWide,
+          props.size === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
         ...props.style,
       }}
     >
-      {props.modalSize === "compact" ? (
+      {props.size === "compact" ? (
         <DynamicHeight> {content} </DynamicHeight>
       ) : (
         content

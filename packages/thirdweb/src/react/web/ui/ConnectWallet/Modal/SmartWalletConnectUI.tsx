@@ -23,7 +23,6 @@ import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import type { LocaleId } from "../../types.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 
@@ -37,9 +36,14 @@ export function SmartConnectUI(props: {
   accountAbstraction: SmartWalletOptions;
   setModalVisibility: (value: boolean) => void;
   localeId: LocaleId;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
+  size: "compact" | "wide";
   client: ThirdwebClient;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
@@ -70,7 +74,8 @@ export function SmartConnectUI(props: {
         chain={props.chain}
         chains={props.chains}
         client={props.client}
-        connectModal={props.connectModal}
+        meta={props.meta}
+        size={props.size}
         localeId={props.localeId}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
@@ -86,7 +91,7 @@ export function SmartConnectUI(props: {
       onBack={props.onBack}
       personalWalletInfo={personalWalletInfo.data}
       localeId={props.localeId}
-      connectModal={props.connectModal}
+      size={props.size}
       client={props.client}
     />
   );
@@ -99,13 +104,10 @@ function SmartWalletConnecting(props: {
   onBack?: () => void;
   personalWalletInfo: WalletInfo;
   localeId: LocaleId;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
   client: ThirdwebClient;
 }) {
   const [locale, setLocale] = useState<SmartWalletLocale | undefined>();
-  const modalSize = props.connectModal.size;
   const { chain: smartWalletChain } = props.accountAbstraction;
 
   // FIXME: use a query instead
@@ -182,10 +184,10 @@ function SmartWalletConnecting(props: {
           />
         </Container>
 
-        {modalSize === "compact" && <Spacer y="lg" />}
+        {props.size === "compact" && <Spacer y="lg" />}
 
         <Container expand flex="column" center="both" p="lg">
-          <Container p={modalSize === "wide" ? "lg" : undefined}>
+          <Container p={props.size === "wide" ? "lg" : undefined}>
             <Container flex="row" center="x" color="danger">
               <ExclamationTriangleIcon
                 width={iconSize.lg}

@@ -102,6 +102,27 @@ function Modal(
     [props.wallets, props.appMetadata, props.chains],
   );
 
+  const size = useMemo(() => {
+    return !canFitWideModal() || wallets.length === 1
+      ? "compact"
+      : props.size || "wide";
+  }, [props.size, wallets.length]);
+  const meta = useMemo(() => {
+    return {
+      privacyPolicyUrl: props.privacyPolicyUrl,
+      showThirdwebBranding: props.showThirdwebBranding,
+      termsOfServiceUrl: props.termsOfServiceUrl,
+      title: props.title,
+      titleIconUrl: props.titleIcon,
+    };
+  }, [
+    props.privacyPolicyUrl,
+    props.showThirdwebBranding,
+    props.termsOfServiceUrl,
+    props.title,
+    props.titleIcon,
+  ]);
+
   return (
     <WalletUIStatesProvider theme={props.theme} isOpen={true}>
       <ConnectModal
@@ -113,18 +134,9 @@ function Modal(
         chain={props.chain}
         client={props.client}
         connectLocale={props.connectLocale}
-        connectModal={{
-          privacyPolicyUrl: props.privacyPolicyUrl,
-          showThirdwebBranding: props.showThirdwebBranding,
-          termsOfServiceUrl: props.termsOfServiceUrl,
-          title: props.title,
-          welcomeScreen: props.welcomeScreen,
-          titleIcon: props.titleIcon,
-          size:
-            !canFitWideModal() || wallets.length === 1
-              ? "compact"
-              : props?.size || "wide",
-        }}
+        meta={meta}
+        size={size}
+        welcomeScreen={props.welcomeScreen}
         isEmbed={false}
         localeId={props.locale || "en_US"}
         onConnect={props.onConnect}

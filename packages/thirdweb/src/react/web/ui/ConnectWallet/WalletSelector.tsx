@@ -34,7 +34,6 @@ import { Link } from "../components/text.js";
 import { Text } from "../components/text.js";
 import { StyledDiv, StyledUl } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
-import type { ConnectButton_connectModalOptions } from "./ConnectButtonProps.js";
 import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { TOS } from "./Modal/TOS.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
@@ -61,8 +60,13 @@ type WalletSelectorProps = {
   onShowAll: () => void;
   setModalVisibility: (value: boolean) => void;
   accountAbstraction?: SmartWalletOptions;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
@@ -97,7 +101,8 @@ export function WalletSelector(props: WalletSelectorProps) {
         personalWallet={personalWallet}
         setModalVisibility={props.setModalVisibility}
         onBack={props.goBack}
-        connectModal={props.connectModal}
+        meta={props.meta}
+        size={props.size}
         localeId={props.localeId}
         chain={props.chain}
         chains={props.chains}
@@ -122,7 +127,7 @@ export function WalletSelector(props: WalletSelectorProps) {
  * @internal
  */
 const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
-  const isCompact = props.connectModal.size === "compact";
+  const isCompact = props.size === "compact";
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
 
   const installedWallets = getInstalledWallets();
@@ -179,9 +184,9 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
 
   const twTitle = (
     <Container gap="xxs" center="y" flex="row">
-      {!props.connectModal.titleIcon ? null : (
+      {!props.meta.titleIconUrl ? null : (
         <Img
-          src={props.connectModal.titleIcon}
+          src={props.meta.titleIconUrl}
           width={iconSize.md}
           height={iconSize.md}
           client={props.client}
@@ -232,11 +237,10 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   );
 
   const tos =
-    props.connectModal.termsOfServiceUrl ||
-    props.connectModal.privacyPolicyUrl ? (
+    props.meta.termsOfServiceUrl || props.meta.privacyPolicyUrl ? (
       <TOS
-        termsOfServiceUrl={props.connectModal.termsOfServiceUrl}
-        privacyPolicyUrl={props.connectModal.privacyPolicyUrl}
+        termsOfServiceUrl={props.meta.termsOfServiceUrl}
+        privacyPolicyUrl={props.meta.privacyPolicyUrl}
         locale={props.connectLocale.agreement}
       />
     ) : undefined;
@@ -255,7 +259,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         onShowAll={props.onShowAll}
         client={props.client}
         connectLocale={props.connectLocale}
-        connectModal={props.connectModal}
+        size={props.size}
         recommendedWallets={props.recommendedWallets}
         chain={props.chain}
         showAllWallets={props.showAllWallets}
@@ -283,7 +287,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           onShowAll={props.onShowAll}
           client={props.client}
           connectLocale={props.connectLocale}
-          connectModal={props.connectModal}
+          size={props.size}
           recommendedWallets={props.recommendedWallets}
           chain={props.chain}
           showAllWallets={props.showAllWallets}
@@ -327,7 +331,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               goBack={props.goBack}
               client={props.client}
               connectLocale={props.connectLocale}
-              connectModal={props.connectModal}
+              size={props.size}
               recommendedWallets={props.recommendedWallets}
               chain={props.chain}
               showAllWallets={props.showAllWallets}
@@ -398,7 +402,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                     onShowAll={props.onShowAll}
                     client={props.client}
                     connectLocale={props.connectLocale}
-                    connectModal={props.connectModal}
+                    size={props.size}
                     recommendedWallets={props.recommendedWallets}
                     chain={props.chain}
                     showAllWallets={props.showAllWallets}
@@ -437,7 +441,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
             onShowAll={props.onShowAll}
             client={props.client}
             connectLocale={props.connectLocale}
-            connectModal={props.connectModal}
+            size={props.size}
             recommendedWallets={props.recommendedWallets}
             chain={props.chain}
             showAllWallets={props.showAllWallets}
@@ -459,10 +463,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       animate="fadein"
       fullHeight
       style={{
-        maxHeight:
-          props.connectModal.size === "compact"
-            ? compactModalMaxHeight
-            : undefined,
+        maxHeight: props.size === "compact" ? compactModalMaxHeight : undefined,
       }}
     >
       {/* Header */}
@@ -526,7 +527,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       </Container>
 
       {bottomSection}
-      {isCompact && props.connectModal.showThirdwebBranding !== false && (
+      {isCompact && props.meta.showThirdwebBranding !== false && (
         <Container py="md">
           <PoweredByThirdweb />
         </Container>
@@ -561,9 +562,7 @@ const WalletSelection: React.FC<{
   onShowAll?: () => void;
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   chain: Chain | undefined;
@@ -583,7 +582,7 @@ const WalletSelection: React.FC<{
             key={wallet.id}
             // data-full-width={!!walletConfig.selectUI}
           >
-            {wallet.id === "inApp" && props.connectModal.size === "compact" ? (
+            {wallet.id === "inApp" && props.size === "compact" ? (
               <Suspense fallback={<LoadingScreen height="195px" />}>
                 <InAppWalletSelectionUI
                   done={() => props.done(wallet)}
@@ -592,7 +591,7 @@ const WalletSelection: React.FC<{
                   goBack={props.goBack}
                   client={props.client}
                   connectLocale={props.connectLocale}
-                  connectModal={props.connectModal}
+                  size={props.size}
                   recommendedWallets={props.recommendedWallets}
                   chain={props.chain}
                   localeId={props.localeId}

@@ -8,7 +8,6 @@ import { openWindow } from "../../../../utils/web/openWindow.js";
 import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 import { ScanScreen } from "./ScanScreen.js";
@@ -33,9 +32,7 @@ export const WalletConnectConnection: React.FC<{
         projectId?: string;
       }
     | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }> = (props) => {
   const { onBack, onGetStarted, wallet, walletInfo, locale, done } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
@@ -128,7 +125,7 @@ export const WalletConnectConnection: React.FC<{
         onRetry={connect}
         onGetStarted={onGetStarted}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -145,7 +142,7 @@ export const WalletConnectConnection: React.FC<{
       error={errorConnecting}
       onRetry={connect}
       client={props.client}
-      connectModalSize={props.connectModal.size}
+      connectModalSize={props.size}
     />
   );
 };
@@ -170,9 +167,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
         projectId?: string;
       }
     | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }> = (props) => {
   const { onBack, wallet, walletInfo, locale, done, setModalVisibility } =
     props;
@@ -290,7 +285,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
         errorConnecting={errorConnecting}
         onRetry={connect}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -306,7 +301,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
       error={errorConnecting}
       onRetry={connect}
       client={props.client}
-      connectModalSize={props.connectModal.size}
+      connectModalSize={props.size}
     />
   );
 };

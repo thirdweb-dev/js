@@ -3,7 +3,6 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
 import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
@@ -22,14 +21,12 @@ function InAppWalletSelectionUI(props: {
   wallet: Wallet<"inApp">;
   done: () => void;
   goBack?: () => void;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   recommendedWallets: Wallet[] | undefined;
   chain: Chain | undefined;
   localeId: LocaleId;
+  size: "compact" | "wide";
 }) {
   const { screen } = useScreenContext();
   const setData = useSetSelectionData();
@@ -39,8 +36,8 @@ function InAppWalletSelectionUI(props: {
   // modal is compact or
   // it is being rendered in Safe wallet
   if (
-    props.connectModal.size === "wide" ||
-    (screen !== reservedScreens.main && props.connectModal.size === "compact")
+    props.size === "wide" ||
+    (screen !== reservedScreens.main && props.size === "compact")
   ) {
     return (
       <WalletEntryButton
@@ -69,7 +66,7 @@ function InAppWalletSelectionUI(props: {
       goBack={props.goBack}
       chain={props.chain}
       client={props.client}
-      connectModal={props.connectModal}
+      size={props.size}
     />
   );
 }

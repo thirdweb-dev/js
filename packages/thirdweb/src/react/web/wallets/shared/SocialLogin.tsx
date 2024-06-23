@@ -6,7 +6,6 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -27,9 +26,7 @@ export function SocialLogin(props: {
   done: () => void;
   goBack?: () => void;
   state: ConnectWalletSelectUIState;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
   client: ThirdwebClient;
   chain: Chain | undefined;
 }) {
@@ -115,7 +112,7 @@ export function SocialLogin(props: {
           <ModalHeader title={locale.title} onBack={props.goBack} />
         )}
 
-        {props.connectModal.size === "compact" ? <Spacer y="xl" /> : null}
+        {props.size === "compact" ? <Spacer y="xl" /> : null}
 
         <Container
           flex="column"

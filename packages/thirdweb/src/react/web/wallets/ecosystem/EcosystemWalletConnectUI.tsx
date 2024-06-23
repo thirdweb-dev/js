@@ -7,7 +7,6 @@ import {
   useSelectionData,
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import type { LocaleId } from "../../ui/types.js";
 import { useInAppWalletLocale } from "../in-app/useInAppWalletLocale.js";
@@ -26,13 +25,18 @@ function EcosystemWalletConnectUI(props: {
   wallet: Wallet<EcosystemWalletId>;
   done: () => void;
   goBack?: () => void;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
   client: ThirdwebClient;
   chain: Chain | undefined;
   localeId: LocaleId;
   connectLocale: ConnectLocale;
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
@@ -44,7 +48,7 @@ function EcosystemWalletConnectUI(props: {
   }
 
   const goBackToMain =
-    props.connectModal.size === "compact"
+    props.size === "compact"
       ? props.goBack
       : () => {
           setSelectionData({});
@@ -66,7 +70,7 @@ function EcosystemWalletConnectUI(props: {
         wallet={props.wallet}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -79,7 +83,7 @@ function EcosystemWalletConnectUI(props: {
         onBack={goBackToMain}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -95,7 +99,7 @@ function EcosystemWalletConnectUI(props: {
         state={state}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -109,8 +113,9 @@ function EcosystemWalletConnectUI(props: {
       wallet={props.wallet}
       chain={props.chain}
       client={props.client}
-      connectModal={props.connectModal}
+      size={props.size}
       connectLocale={props.connectLocale}
+      meta={props.meta}
     />
   );
 }

@@ -18,7 +18,6 @@ import {
   spacing,
 } from "../../../core/design-system/index.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import {
   emailIcon,
@@ -65,9 +64,7 @@ export type ConnectWalletSocialOptionsProps = {
   goBack?: () => void;
   chain: Chain | undefined;
   client: ThirdwebClient;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 };
 
 /**
@@ -227,7 +224,7 @@ export const ConnectWalletSocialOptions = (
         </Container>
       )}
 
-      {props.connectModal.size === "wide" &&
+      {props.size === "wide" &&
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 

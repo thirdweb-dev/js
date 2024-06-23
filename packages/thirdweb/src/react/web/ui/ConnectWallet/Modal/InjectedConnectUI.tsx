@@ -7,7 +7,6 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { wait } from "../../../../core/utils/wait.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 
 /**
  * @internal
@@ -21,9 +20,7 @@ export const InjectedConnectUI = (props: {
   done: () => void;
   client: ThirdwebClient;
   chain: Chain | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }) => {
   const { wallet, done } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
@@ -73,7 +70,7 @@ export const InjectedConnectUI = (props: {
       }}
       errorConnecting={errorConnecting}
       client={props.client}
-      connectModal={props.connectModal}
+      size={props.size}
     />
   );
 };

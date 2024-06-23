@@ -24,7 +24,6 @@ import { AutoConnect } from "../../AutoConnect/AutoConnect.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import type { LocaleId } from "../../types.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
@@ -359,10 +358,25 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     client: props.client,
   });
 
-  const modalSize =
-    !canFitWideModal() || wallets.length === 1
+  const modalSize = useMemo(() => {
+    return !canFitWideModal() || wallets.length === 1
       ? "compact"
       : props.modalSize || ("compact" as const);
+  }, [wallets.length, props.modalSize]);
+
+  const meta = useMemo(() => {
+    return {
+      privacyPolicyUrl: props.privacyPolicyUrl,
+      showThirdwebBranding: props.showThirdwebBranding !== false,
+      termsOfServiceUrl: props.termsOfServiceUrl,
+      title: undefined,
+      titleIconUrl: undefined,
+    };
+  }, [
+    props.privacyPolicyUrl,
+    props.showThirdwebBranding,
+    props.termsOfServiceUrl,
+  ]);
 
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
@@ -402,12 +416,10 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           chains={props.chains}
           client={props.client}
           connectLocale={localeQuery.data}
-          connectModal={{
-            size: modalSize,
-            privacyPolicyUrl: props.privacyPolicyUrl,
-            showThirdwebBranding: props.showThirdwebBranding !== false,
-            termsOfServiceUrl: props.termsOfServiceUrl,
-          }}
+          size={modalSize}
+          // TODO: no welcome screen for embed right now?
+          // welcomeScreen={undefined}
+          meta={meta}
           isEmbed={true}
           localeId={props.locale || "en_US"}
           onConnect={props.onConnect}
@@ -441,9 +453,14 @@ const ConnectEmbedContent = (props: {
   chains: Chain[] | undefined;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
+  size: "compact" | "wide";
   isEmbed: boolean;
   localeId: LocaleId;
   onConnect: ((wallet: Wallet) => void) | undefined;
@@ -458,7 +475,8 @@ const ConnectEmbedContent = (props: {
 }) => {
   // const requiresSignIn = false;
   const screenSetup = useSetupScreen({
-    connectModal: props.connectModal,
+    size: props.size,
+    welcomeScreen: undefined,
     wallets: props.wallets,
   });
   const { setScreen, initialScreen } = screenSetup;
@@ -501,7 +519,11 @@ const ConnectEmbedContent = (props: {
         chains={props.chains}
         client={props.client}
         connectLocale={props.connectLocale}
-        connectModal={props.connectModal}
+        meta={props.meta}
+        size={props.size}
+        // TODO: no welcome screen for embed right now?
+        // welcomeScreen={undefined}
+        welcomeScreen={undefined}
         isEmbed={props.isEmbed}
         localeId={props.localeId}
         onConnect={props.onConnect}

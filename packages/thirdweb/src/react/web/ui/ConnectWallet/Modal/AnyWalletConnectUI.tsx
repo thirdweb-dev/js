@@ -29,7 +29,6 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import type { LocaleId } from "../../types.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { AccentFailIcon } from "../icons/AccentFailIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
@@ -54,8 +53,13 @@ export function AnyWalletConnectUI(props: {
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   client: ThirdwebClient;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   walletConnect:
     | {
@@ -105,7 +109,7 @@ export function AnyWalletConnectUI(props: {
           onBack={props.onBack}
           chain={props.chain}
           client={props.client}
-          connectModal={props.connectModal}
+          size={props.size}
         />
       );
     }
@@ -193,7 +197,7 @@ export function AnyWalletConnectUI(props: {
         onBack={props.onBack}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -213,7 +217,7 @@ export function AnyWalletConnectUI(props: {
           walletInfo={walletInfo.data}
           chain={props.chain}
           client={props.client}
-          connectModal={props.connectModal}
+          size={props.size}
         />
       </Suspense>
     );
@@ -234,7 +238,7 @@ export function AnyWalletConnectUI(props: {
         chain={props.chain}
         chains={props.chains}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
         walletConnect={props.walletConnect}
       />
     );
@@ -253,7 +257,7 @@ export function AnyWalletConnectUI(props: {
         chain={props.chain}
         chains={props.chains}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
         walletConnect={props.walletConnect}
       />
     );
@@ -268,8 +272,9 @@ export function AnyWalletConnectUI(props: {
           goBack={props.onBack}
           chain={props.chain}
           client={props.client}
-          connectModal={props.connectModal}
+          size={props.size}
           connectLocale={props.connectLocale}
+          meta={props.meta}
           localeId={props.localeId}
         />
       </Suspense>
@@ -285,7 +290,8 @@ export function AnyWalletConnectUI(props: {
           goBack={props.onBack}
           chain={props.chain}
           client={props.client}
-          connectModal={props.connectModal}
+          size={props.size}
+          meta={props.meta}
           localeId={props.localeId}
           connectLocale={props.connectLocale}
         />

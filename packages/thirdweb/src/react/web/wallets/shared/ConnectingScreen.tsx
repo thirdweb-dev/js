@@ -2,7 +2,6 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { iconSize, spacing } from "../../../core/design-system/index.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { WalletLogoSpinner } from "../../ui/ConnectWallet/screens/WalletLogoSpinner.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
@@ -27,9 +26,7 @@ export const ConnectingScreen: React.FC<{
     inProgress: string;
   };
   client: ThirdwebClient;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }> = (props) => {
   const { locale } = props;
 
@@ -48,7 +45,7 @@ export const ConnectingScreen: React.FC<{
         flex="column"
         center="y"
         expand
-        px={props.connectModal.size === "compact" ? "lg" : "xxl"}
+        px={props.size === "compact" ? "lg" : "xxl"}
         relative
         style={{
           paddingTop: 0,
@@ -108,7 +105,7 @@ export const ConnectingScreen: React.FC<{
           </Container>
         </>
       ) : (
-        <Spacer y={props.connectModal.size === "compact" ? "lg" : "xxl"} />
+        <Spacer y={props.size === "compact" ? "lg" : "xxl"} />
       )}
     </Container>
   );

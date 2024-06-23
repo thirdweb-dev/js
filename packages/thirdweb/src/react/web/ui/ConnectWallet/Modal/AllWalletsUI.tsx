@@ -18,7 +18,6 @@ import { Input } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
 import { useShowMore } from "../../hooks/useShowMore.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { WalletEntryButton } from "../WalletEntryButton.js";
 import type { ConnectLocale } from "../locale/types.js";
 
@@ -30,9 +29,7 @@ function AllWalletsUI(props: {
   onBack: () => void;
   onSelect: (wallet: Wallet) => void;
   specifiedWallets: Wallet[];
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
   client: ThirdwebClient;
   recommendedWallets: Wallet[] | undefined;
   connectLocale: ConnectLocale;
@@ -124,8 +121,7 @@ function AllWalletsUI(props: {
             <div
               ref={listContainer}
               style={{
-                maxHeight:
-                  props.connectModal.size === "compact" ? "400px" : undefined,
+                maxHeight: props.size === "compact" ? "400px" : undefined,
                 paddingInline: spacing.md,
               }}
             >

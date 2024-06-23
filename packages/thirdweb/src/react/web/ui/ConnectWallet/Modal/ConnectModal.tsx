@@ -13,9 +13,9 @@ import {
 } from "../../../providers/wallet-ui-states-provider.js";
 import { Modal } from "../../components/Modal.js";
 import type { LocaleId } from "../../types.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
 import type { ConnectLocale } from "../locale/types.js";
+import type { WelcomeScreen } from "../screens/types.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
@@ -26,8 +26,14 @@ type ConnectModalOptions = {
   accountAbstraction: SmartWalletOptions | undefined;
   auth: SiweAuthOptions | undefined;
   onConnect: ((wallet: Wallet) => void) | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  welcomeScreen: WelcomeScreen | undefined;
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
@@ -49,7 +55,8 @@ type ConnectModalOptions = {
  */
 const ConnectModal = (props: ConnectModalOptions) => {
   const screenSetup = useSetupScreen({
-    connectModal: props.connectModal,
+    size: props.size,
+    welcomeScreen: props.welcomeScreen,
     wallets: props.wallets,
   });
   const setSelectionData = useSetSelectionData();
@@ -110,7 +117,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
   return (
     <Modal
       hide={hideModal}
-      size={props.connectModal.size}
+      size={props.size}
       open={isWalletModalOpen}
       setOpen={(value) => {
         if (hideModal) {
@@ -132,7 +139,9 @@ const ConnectModal = (props: ConnectModalOptions) => {
         auth={props.auth}
         client={props.client}
         connectLocale={props.connectLocale}
-        connectModal={props.connectModal}
+        size={props.size}
+        welcomeScreen={props.welcomeScreen}
+        meta={props.meta}
         isEmbed={props.isEmbed}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}

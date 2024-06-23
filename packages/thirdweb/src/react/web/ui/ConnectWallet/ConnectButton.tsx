@@ -63,6 +63,12 @@ export function ConnectButton(props: ConnectButtonProps) {
     client: props.client,
   });
 
+  const size = useMemo(() => {
+    return !canFitWideModal() || wallets.length === 1
+      ? "compact"
+      : props.connectModal?.size || "wide";
+  }, [wallets.length, props.connectModal?.size]);
+
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
       appMetadata={props.appMetadata}
@@ -109,13 +115,15 @@ export function ConnectButton(props: ConnectButtonProps) {
         chains={props.chains}
         client={props.client}
         connectLocale={localeQuery.data}
-        connectModal={{
-          ...props.connectModal,
-          size:
-            !canFitWideModal() || wallets.length === 1
-              ? "compact"
-              : props.connectModal?.size || "wide",
+        meta={{
+          title: props.connectModal?.title,
+          titleIconUrl: props.connectModal?.titleIcon,
+          showThirdwebBranding: props.connectModal?.showThirdwebBranding,
+          termsOfServiceUrl: props.connectModal?.termsOfServiceUrl,
+          privacyPolicyUrl: props.connectModal?.privacyPolicyUrl,
         }}
+        welcomeScreen={props.connectModal?.welcomeScreen}
+        size={size}
         isEmbed={false}
         localeId={props.locale || "en_US"}
         onConnect={props.onConnect}

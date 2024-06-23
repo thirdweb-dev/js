@@ -13,12 +13,12 @@ import { useSetActiveWallet } from "../../../hooks/wallets/useSetActiveWallet.js
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import type { LocaleId } from "../../types.js";
-import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { SignatureScreen } from "../screens/SignatureScreen.js";
 import { StartScreen } from "../screens/StartScreen.js";
+import type { WelcomeScreen } from "../screens/types.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 import {
   ConnectModalCompactLayout,
@@ -42,9 +42,15 @@ export const ConnectModalContent = (props: {
   accountAbstraction: SmartWalletOptions | undefined;
   auth: SiweAuthOptions | undefined;
   onConnect: ((wallet: Wallet) => void) | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
+  welcomeScreen: WelcomeScreen | undefined;
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   isEmbed: boolean;
@@ -108,7 +114,7 @@ export const ConnectModalContent = (props: {
 
   const walletList = (
     <WalletSelector
-      title={props.connectModal.title || props.connectLocale.defaultModalTitle}
+      title={props.meta.title || props.connectLocale.defaultModalTitle}
       wallets={props.wallets}
       onGetStarted={() => {
         setScreen(reservedScreens.getStarted);
@@ -131,7 +137,6 @@ export const ConnectModalContent = (props: {
       setModalVisibility={setModalVisibility}
       client={props.client}
       connectLocale={props.connectLocale}
-      connectModal={props.connectModal}
       isEmbed={props.isEmbed}
       recommendedWallets={props.recommendedWallets}
       accountAbstraction={props.accountAbstraction}
@@ -140,6 +145,8 @@ export const ConnectModalContent = (props: {
       showAllWallets={props.showAllWallets}
       chains={props.chains}
       walletConnect={props.walletConnect}
+      meta={props.meta}
+      size={props.size}
     />
   );
 
@@ -150,9 +157,9 @@ export const ConnectModalContent = (props: {
         onSelect={setScreen}
         client={props.client}
         connectLocale={props.connectLocale}
-        connectModal={props.connectModal}
         recommendedWallets={props.recommendedWallets}
         specifiedWallets={props.wallets}
+        size={props.size}
       />
     </Suspense>
   );
@@ -161,7 +168,8 @@ export const ConnectModalContent = (props: {
     <StartScreen
       client={props.client}
       connectLocale={props.connectLocale}
-      connectModal={props.connectModal}
+      meta={props.meta}
+      welcomeScreen={props.welcomeScreen}
     />
   );
 
@@ -179,7 +187,8 @@ export const ConnectModalContent = (props: {
           personalWallet={wallet}
           onBack={goBack}
           setModalVisibility={props.setModalVisibility}
-          connectModal={props.connectModal}
+          meta={props.meta}
+          size={props.size}
           localeId={props.localeId}
           chain={props.chain}
           chains={props.chains}
@@ -202,7 +211,8 @@ export const ConnectModalContent = (props: {
         chain={props.chain}
         chains={props.chains}
         client={props.client}
-        connectModal={props.connectModal}
+        meta={props.meta}
+        size={props.size}
         localeId={props.localeId}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
@@ -213,9 +223,9 @@ export const ConnectModalContent = (props: {
   const signatureScreen = (
     <SignatureScreen
       onDone={onClose}
-      modalSize={props.connectModal.size}
-      termsOfServiceUrl={props.connectModal.termsOfServiceUrl}
-      privacyPolicyUrl={props.connectModal.privacyPolicyUrl}
+      modalSize={props.size}
+      termsOfServiceUrl={props.meta.termsOfServiceUrl}
+      privacyPolicyUrl={props.meta.privacyPolicyUrl}
       auth={props.auth}
       client={props.client}
       connectLocale={props.connectLocale}
@@ -224,7 +234,7 @@ export const ConnectModalContent = (props: {
 
   return (
     <ScreenSetupContext.Provider value={props.screenSetup}>
-      {props.connectModal.size === "wide" ? (
+      {props.size === "wide" ? (
         <ConnectModalWideLayout
           left={walletList}
           right={

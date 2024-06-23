@@ -6,7 +6,6 @@ import {
   useSelectionData,
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import type { LocaleId } from "../../ui/types.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
@@ -25,8 +24,13 @@ function InAppWalletConnectUI(props: {
   wallet: Wallet<"inApp">;
   done: () => void;
   goBack?: () => void;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
   };
   client: ThirdwebClient;
   chain: Chain | undefined;
@@ -43,7 +47,7 @@ function InAppWalletConnectUI(props: {
   }
 
   const goBackToMain =
-    props.connectModal.size === "compact"
+    props.size === "compact"
       ? props.goBack
       : () => {
           setSelectionData({});
@@ -65,7 +69,7 @@ function InAppWalletConnectUI(props: {
         wallet={props.wallet}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -78,7 +82,7 @@ function InAppWalletConnectUI(props: {
         onBack={goBackToMain}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -94,7 +98,7 @@ function InAppWalletConnectUI(props: {
         state={state}
         chain={props.chain}
         client={props.client}
-        connectModal={props.connectModal}
+        size={props.size}
       />
     );
   }
@@ -108,7 +112,8 @@ function InAppWalletConnectUI(props: {
       goBack={props.goBack}
       wallet={props.wallet}
       client={props.client}
-      connectModal={props.connectModal}
+      meta={props.meta}
+      size={props.size}
       chain={props.chain}
     />
   );

@@ -6,7 +6,6 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
 import { iconSize } from "../../../core/design-system/index.js";
-import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -28,11 +27,9 @@ export function PassKeyLogin(props: {
   onBack?: () => void;
   client: ThirdwebClient;
   chain: Chain | undefined;
-  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
-    size: "compact" | "wide";
-  };
+  size: "compact" | "wide";
 }) {
-  const { wallet, done, client, chain, connectModal } = props;
+  const { wallet, done, client, chain, size } = props;
   const [screen, setScreen] = useState<
     "select" | "login" | "loading" | "signup"
   >("loading");
@@ -67,7 +64,7 @@ export function PassKeyLogin(props: {
       </Container>
 
       <Container
-        px={connectModal.size === "wide" ? "xxl" : "lg"}
+        px={size === "wide" ? "xxl" : "lg"}
         expand
         flex="column"
         center="y"
