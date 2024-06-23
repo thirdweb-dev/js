@@ -1,5 +1,9 @@
 "use client";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   type Theme,
@@ -7,18 +11,21 @@ import {
   radius,
   shadow,
 } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { CrossContainer } from "../../components/Modal.js";
 import { IconButton } from "../../components/buttons.js";
 import { StyledDiv } from "../../design-system/elements.js";
+import type { LocaleId } from "../../types.js";
+import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
   wideModalMaxHeight,
 } from "../constants.js";
+import type { ConnectLocale } from "../locale/types.js";
 import type { WelcomeScreen } from "../screens/types.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
@@ -28,7 +35,6 @@ import { useSetupScreen } from "./screen.js";
  */
 export type ConnectModalInlineProps = {
   chainId?: bigint;
-  chains?: (bigint | number)[];
   className?: string;
   theme?: "dark" | "light" | Theme;
   modalTitle?: string;
@@ -39,15 +45,34 @@ export type ConnectModalInlineProps = {
   privacyPolicyUrl?: string;
   welcomeScreen?: WelcomeScreen;
   showThirdwebBranding?: boolean;
+  accountAbstraction: SmartWalletOptions | undefined;
+  auth: SiweAuthOptions | undefined;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+  isEmbed: boolean;
+  localeId: LocaleId;
+  onConnect: ((wallet: Wallet) => void) | undefined;
+  recommendedWallets: Wallet[] | undefined;
+  showAllWallets: boolean | undefined;
+  wallets: Wallet[];
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
 };
 
 /**
  * @internal
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
-  const walletConfigs = useConnectUI().wallets;
   const modalSize =
-    !canFitWideModal() || walletConfigs.length === 1
+    !canFitWideModal() || props.wallets.length === 1
       ? "compact"
       : props.modalSize;
 
@@ -56,6 +81,20 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
       <ConnectModalInlineContent
         className={props.className}
         modalSize={modalSize}
+        connectModal={props.connectModal}
+        wallets={props.wallets}
+        accountAbstraction={props.accountAbstraction}
+        auth={props.auth}
+        chain={props.chain}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        isEmbed={props.isEmbed}
+        localeId={props.localeId}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        chains={props.chains}
+        walletConnect={props.walletConnect}
       />
     </WalletUIStatesProvider>
   );
@@ -65,8 +104,31 @@ function ConnectModalInlineContent(props: {
   className?: string;
   modalSize?: "compact" | "wide";
   style?: React.CSSProperties;
+  accountAbstraction: SmartWalletOptions | undefined;
+  auth: SiweAuthOptions | undefined;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+  isEmbed: boolean;
+  localeId: LocaleId;
+  onConnect: ((wallet: Wallet) => void) | undefined;
+  recommendedWallets: Wallet[] | undefined;
+  showAllWallets: boolean | undefined;
+  wallets: Wallet[];
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
 }) {
-  const screenSetup = useSetupScreen();
+  const screenSetup = useSetupScreen({
+    connectModal: props.connectModal,
+    wallets: props.wallets,
+  });
 
   const content = (
     <>
@@ -80,6 +142,20 @@ function ConnectModalInlineContent(props: {
         onClose={() => {
           // no op
         }}
+        accountAbstraction={props.accountAbstraction}
+        auth={props.auth}
+        chain={props.chain}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        connectModal={props.connectModal}
+        isEmbed={props.isEmbed}
+        localeId={props.localeId}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        wallets={props.wallets}
+        chains={props.chains}
+        walletConnect={props.walletConnect}
       />
 
       {/* close icon */}

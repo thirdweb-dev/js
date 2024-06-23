@@ -1,4 +1,4 @@
-import type { ConnectLocale } from "./types.js";
+import type { InAppWalletLocale } from "./types.js";
 
 export default {
   signInWithGoogle: "Google",
@@ -53,4 +53,4 @@ export default {
   phonePlaceholder: "Phone number",
   signInWithPhone: "Sign in with phone number",
   phoneRequired: "phone number is required",
-} satisfies ConnectLocale;
+} satisfies InAppWalletLocale;

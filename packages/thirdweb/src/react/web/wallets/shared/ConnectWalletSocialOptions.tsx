@@ -1,6 +1,8 @@
 "use client";
 import styled from "@emotion/styled";
 import { useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -15,8 +17,8 @@ import {
   iconSize,
   spacing,
 } from "../../../core/design-system/index.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
+import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import {
   emailIcon,
@@ -30,7 +32,7 @@ import { Button } from "../../ui/components/buttons.js";
 import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
 import { socialIcons } from "../in-app/socialIcons.js";
 import { validateEmail } from "../in-app/validateEmail.js";
-import type { ConnectLocale } from "./locale/types.js";
+import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { setLastAuthProvider } from "./storage.js";
 
@@ -58,9 +60,14 @@ const defaultAuthOptions: AuthOption[] = [
 export type ConnectWalletSocialOptionsProps = {
   select: () => void;
   done: () => void;
-  locale: ConnectLocale;
+  locale: InAppWalletLocale;
   wallet: Wallet<EcosystemWalletId> | Wallet<"inApp">;
   goBack?: () => void;
+  chain: Chain | undefined;
+  client: ThirdwebClient;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
 };
 
 /**
@@ -70,7 +77,6 @@ export const ConnectWalletSocialOptions = (
   props: ConnectWalletSocialOptionsProps,
 ) => {
   const locale = props.locale;
-  const { chain, client, connectModal } = useConnectUI();
   const { wallet } = props;
   const setData = useSetSelectionData() as (
     value: ConnectWalletSelectUIState,
@@ -131,8 +137,8 @@ export const ConnectWalletSocialOptions = (
         throw new Error("Failed to open login window");
       }
       const connectOptions = {
-        chain,
-        client,
+        chain: props.chain,
+        client: props.client,
         strategy,
         openedWindow: socialLoginWindow,
         closeOpenedWindow: (openedWindow: Window) => {
@@ -212,7 +218,7 @@ export const ConnectWalletSocialOptions = (
                   src={socialIcons[loginMethod]}
                   width={imgIconSize}
                   height={imgIconSize}
-                  client={client}
+                  client={props.client}
                 />
                 {!showOnlyIcons && loginMethodsLabel[loginMethod]}
               </SocialButton>
@@ -221,7 +227,7 @@ export const ConnectWalletSocialOptions = (
         </Container>
       )}
 
-      {connectModal.size === "wide" &&
+      {props.connectModal.size === "wide" &&
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
@@ -249,7 +255,7 @@ export const ConnectWalletSocialOptions = (
             />
           ) : (
             <WalletTypeRowButton
-              client={client}
+              client={props.client}
               icon={emailIcon}
               onClick={() => {
                 setInputMode("email");
@@ -289,7 +295,7 @@ export const ConnectWalletSocialOptions = (
             />
           ) : (
             <WalletTypeRowButton
-              client={client}
+              client={props.client}
               icon={phoneIcon}
               onClick={() => {
                 setInputMode("phone");
@@ -304,7 +310,7 @@ export const ConnectWalletSocialOptions = (
       {passKeyEnabled && (
         <>
           <WalletTypeRowButton
-            client={client}
+            client={props.client}
             icon={passkeyIcon}
             onClick={() => {
               handlePassKeyLogin();

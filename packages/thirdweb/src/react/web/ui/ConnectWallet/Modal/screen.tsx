@@ -1,8 +1,8 @@
 "use client";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
+import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { reservedScreens } from "../constants.js";
 
 type Screen = string | Wallet;
@@ -20,20 +20,23 @@ export const ScreenSetupContext = /* @__PURE__ */ createContext<
 /**
  * @internal
  */
-export function useSetupScreen() {
-  const { wallets, connectModal } = useConnectUI();
-
+export function useSetupScreen(props: {
+  wallets: Wallet[];
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+}) {
   let initialScreen: Screen = reservedScreens.main;
 
-  const socialLogin = wallets.find(
+  const socialLogin = props.wallets.find(
     (w) => w.id === "embedded" || w.id === "inApp",
   );
 
-  if (wallets.length === 1 && wallets[0]) {
-    initialScreen = wallets[0];
+  if (props.wallets.length === 1 && props.wallets[0]) {
+    initialScreen = props.wallets[0];
   } else if (
-    connectModal.size === "wide" &&
-    !connectModal.welcomeScreen &&
+    props.connectModal.size === "wide" &&
+    !props.connectModal.welcomeScreen &&
     socialLogin
   ) {
     initialScreen = socialLogin;

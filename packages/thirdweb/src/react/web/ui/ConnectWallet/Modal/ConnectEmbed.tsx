@@ -12,7 +12,6 @@ import {
 import { type Theme, radius } from "../../../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
-import { ConnectUIContext } from "../../../../core/providers/wallet-connection.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useIsAutoConnecting } from "../../../hooks/wallets/useIsAutoConnecting.js";
@@ -25,6 +24,7 @@ import { AutoConnect } from "../../AutoConnect/AutoConnect.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { StyledDiv } from "../../design-system/elements.js";
 import type { LocaleId } from "../../types.js";
+import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
@@ -32,6 +32,7 @@ import {
   wideModalMaxHeight,
 } from "../constants.js";
 import { useConnectLocale } from "../locale/getConnectLocale.js";
+import type { ConnectLocale } from "../locale/types.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
@@ -393,35 +394,33 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
     }
 
     return (
-      <ConnectUIContext.Provider
-        value={{
-          appMetadata: props.appMetadata,
-          client: props.client,
-          wallets: wallets,
-          locale: localeId,
-          connectLocale: localeQuery.data,
-          chain: props.chain || props.accountAbstraction?.chain,
-          chains: props.chains,
-          walletConnect: props.walletConnect,
-          accountAbstraction: props.accountAbstraction,
-          recommendedWallets: props.recommendedWallets,
-          showAllWallets: props.showAllWallets,
-          isEmbed: true,
-          connectModal: {
+      <WalletUIStatesProvider theme={props.theme} isOpen={true}>
+        <ConnectEmbedContent
+          auth={props.auth}
+          accountAbstraction={props.accountAbstraction}
+          chain={props.chain || props.accountAbstraction?.chain}
+          chains={props.chains}
+          client={props.client}
+          connectLocale={localeQuery.data}
+          connectModal={{
             size: modalSize,
             privacyPolicyUrl: props.privacyPolicyUrl,
             showThirdwebBranding: props.showThirdwebBranding !== false,
             termsOfServiceUrl: props.termsOfServiceUrl,
-          },
-          onConnect: props.onConnect,
-          auth: props.auth,
-        }}
-      >
-        <WalletUIStatesProvider theme={props.theme} isOpen={true}>
-          <ConnectEmbedContent {...props} onConnect={props.onConnect} />
-          {autoConnectComp}
-        </WalletUIStatesProvider>
-      </ConnectUIContext.Provider>
+          }}
+          isEmbed={true}
+          localeId={props.locale || "en_US"}
+          onConnect={props.onConnect}
+          recommendedWallets={props.recommendedWallets}
+          showAllWallets={props.showAllWallets}
+          walletConnect={props.walletConnect}
+          wallets={wallets}
+          className={props.className}
+          modalSize={modalSize}
+          style={props.style}
+        />
+        {autoConnectComp}
+      </WalletUIStatesProvider>
     );
   }
 
@@ -431,13 +430,37 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
 /**
  * @internal
  */
-const ConnectEmbedContent = (
-  props: ConnectEmbedProps & {
-    loginOptional?: boolean;
-  },
-) => {
+const ConnectEmbedContent = (props: {
+  modalSize?: "compact" | "wide";
+  className?: string;
+  style?: React.CSSProperties;
+  // ---
+  accountAbstraction: SmartWalletOptions | undefined;
+  auth: SiweAuthOptions | undefined;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+  isEmbed: boolean;
+  localeId: LocaleId;
+  onConnect: ((wallet: Wallet) => void) | undefined;
+  recommendedWallets: Wallet[] | undefined;
+  showAllWallets: boolean | undefined;
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
+  wallets: Wallet[];
+}) => {
   // const requiresSignIn = false;
-  const screenSetup = useSetupScreen();
+  const screenSetup = useSetupScreen({
+    connectModal: props.connectModal,
+    wallets: props.wallets,
+  });
   const { setScreen, initialScreen } = screenSetup;
   const activeWallet = useActiveWallet();
   const siweAuth = useSiweAuth(activeWallet, props.auth);
@@ -472,6 +495,20 @@ const ConnectEmbedContent = (
         setModalVisibility={() => {
           // no op
         }}
+        accountAbstraction={props.accountAbstraction}
+        auth={props.auth}
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        connectModal={props.connectModal}
+        isEmbed={props.isEmbed}
+        localeId={props.localeId}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        walletConnect={props.walletConnect}
+        wallets={props.wallets}
       />
     );
   }

@@ -1,6 +1,8 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect, useState } from "react";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
 import type {
   DeepLinkSupportedWalletIds,
@@ -13,7 +15,6 @@ import { getInstalledWalletProviders } from "../../../../../wallets/injected/mip
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
@@ -27,7 +28,10 @@ import { Spacer } from "../../components/Spacer.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import { useWalletInfo } from "../../hooks/useWalletInfo.js";
+import type { LocaleId } from "../../types.js";
+import type { ConnectButton_connectModalOptions } from "../ConnectButtonProps.js";
 import { AccentFailIcon } from "../icons/AccentFailIcon.js";
+import type { ConnectLocale } from "../locale/types.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
 
@@ -46,12 +50,24 @@ export function AnyWalletConnectUI(props: {
   done: () => void;
   onBack?: () => void;
   setModalVisibility: (value: boolean) => void;
+  localeId: LocaleId;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
+  connectLocale: ConnectLocale;
 }) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const { wallet } = props;
   const walletInfo = useWalletInfo(props.wallet.id);
   const setSelectionData = useSetSelectionData();
-  const localeId = useConnectUI().locale;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: reset the selection data when the wallet changes
   useEffect(() => {
@@ -59,9 +75,9 @@ export function AnyWalletConnectUI(props: {
   }, [wallet.id]);
 
   const localeFnQuery = useQuery({
-    queryKey: ["injectedWalletLocale", localeId, walletInfo.data?.name],
+    queryKey: ["injectedWalletLocale", props.localeId, walletInfo.data?.name],
     queryFn: async () => {
-      return getInjectedWalletLocale(localeId);
+      return getInjectedWalletLocale(props.localeId);
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -87,6 +103,9 @@ export function AnyWalletConnectUI(props: {
           done={props.done}
           locale={localeFn(injectedProvider.info.name)}
           onBack={props.onBack}
+          chain={props.chain}
+          client={props.client}
+          connectModal={props.connectModal}
         />
       );
     }
@@ -134,6 +153,7 @@ export function AnyWalletConnectUI(props: {
         onBack={() => {
           setScreen("main");
         }}
+        client={props.client}
       />
     );
   }
@@ -155,6 +175,7 @@ export function AnyWalletConnectUI(props: {
           setScreen("get-started");
         }}
         onBack={props.onBack}
+        client={props.client}
       />
     );
   }
@@ -170,6 +191,9 @@ export function AnyWalletConnectUI(props: {
           setScreen("get-started");
         }}
         onBack={props.onBack}
+        chain={props.chain}
+        client={props.client}
+        connectModal={props.connectModal}
       />
     );
   }
@@ -187,6 +211,9 @@ export function AnyWalletConnectUI(props: {
           done={props.done}
           wallet={props.wallet as Wallet<typeof COINBASE>}
           walletInfo={walletInfo.data}
+          chain={props.chain}
+          client={props.client}
+          connectModal={props.connectModal}
         />
       </Suspense>
     );
@@ -204,6 +231,11 @@ export function AnyWalletConnectUI(props: {
         done={props.done}
         wallet={props.wallet as Wallet<WCSupportedWalletIds>}
         walletInfo={walletInfo.data}
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        connectModal={props.connectModal}
+        walletConnect={props.walletConnect}
       />
     );
   }
@@ -218,6 +250,11 @@ export function AnyWalletConnectUI(props: {
         wallet={props.wallet as Wallet<"walletConnect">}
         walletInfo={walletInfo.data}
         setModalVisibility={props.setModalVisibility}
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        connectModal={props.connectModal}
+        walletConnect={props.walletConnect}
       />
     );
   }
@@ -229,6 +266,11 @@ export function AnyWalletConnectUI(props: {
           wallet={props.wallet as Wallet<"inApp">}
           done={props.done}
           goBack={props.onBack}
+          chain={props.chain}
+          client={props.client}
+          connectModal={props.connectModal}
+          connectLocale={props.connectLocale}
+          localeId={props.localeId}
         />
       </Suspense>
     );
@@ -241,6 +283,11 @@ export function AnyWalletConnectUI(props: {
           wallet={props.wallet as Wallet<EcosystemWalletId>}
           done={props.done}
           goBack={props.onBack}
+          chain={props.chain}
+          client={props.client}
+          connectModal={props.connectModal}
+          localeId={props.localeId}
+          connectLocale={props.connectLocale}
         />
       </Suspense>
     );
@@ -255,6 +302,7 @@ export function AnyWalletConnectUI(props: {
       onBack={() => {
         setScreen("main");
       }}
+      client={props.client}
     />
   );
 }

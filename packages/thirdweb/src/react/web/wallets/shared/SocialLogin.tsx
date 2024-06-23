@@ -1,17 +1,19 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
-import type { ConnectLocale } from "./locale/types.js";
+import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
 import { setLastAuthProvider } from "./storage.js";
 
@@ -20,22 +22,26 @@ import { setLastAuthProvider } from "./storage.js";
  */
 export function SocialLogin(props: {
   socialAuth: InAppWalletSocialAuth;
-  locale: ConnectLocale;
+  locale: InAppWalletLocale;
   wallet: Wallet;
   done: () => void;
   goBack?: () => void;
   state: ConnectWalletSelectUIState;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+  client: ThirdwebClient;
+  chain: Chain | undefined;
 }) {
   const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;
   const themeObj = useCustomTheme();
-  const { connectModal } = useConnectUI();
+
   const [authError, setAuthError] = useState<string | undefined>(undefined);
   const { done, wallet } = props;
   const [status, setStatus] = useState<"connecting" | "connected" | "error">(
     "connecting",
   );
-  const { client, chain } = useConnectUI();
 
   const handleSocialLogin = async () => {
     try {
@@ -47,13 +53,13 @@ export function SocialLogin(props: {
 
       setStatus("connecting");
       await wallet.connect({
-        chain,
+        chain: props.chain,
         strategy: props.socialAuth,
         openedWindow: socialWindow,
         closeOpenedWindow: (openedWindow) => {
           openedWindow.close();
         },
-        client,
+        client: props.client,
       });
       await setLastAuthProvider(props.socialAuth, webLocalStorage);
       setStatus("connected");
@@ -109,7 +115,7 @@ export function SocialLogin(props: {
           <ModalHeader title={locale.title} onBack={props.goBack} />
         )}
 
-        {connectModal.size === "compact" ? <Spacer y="xl" /> : null}
+        {props.connectModal.size === "compact" ? <Spacer y="xl" /> : null}
 
         <Container
           flex="column"

@@ -1,5 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
@@ -8,7 +10,7 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { fontSize } from "../../../core/design-system/index.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { FadeIn } from "../../ui/components/FadeIn.js";
 import { OTPInput } from "../../ui/components/OTPInput.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -17,7 +19,7 @@ import { Container, Line, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { StyledButton } from "../../ui/design-system/elements.js";
-import type { ConnectLocale } from "./locale/types.js";
+import type { InAppWalletLocale } from "./locale/types.js";
 import { setLastAuthProvider } from "./storage.js";
 
 type VerificationStatus =
@@ -35,13 +37,17 @@ type ScreenToShow = "base" | "enter-password-or-recovery-code";
 export function OTPLoginUI(props: {
   userInfo: { email: string } | { phone: string };
   wallet: Wallet;
-  locale: ConnectLocale;
+  locale: InAppWalletLocale;
   done: () => void;
   goBack?: () => void;
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
 }) {
   const { wallet, done, goBack, userInfo } = props;
-  const { client, chain, connectModal } = useConnectUI();
-  const isWideModal = connectModal.size === "wide";
+  const isWideModal = props.connectModal.size === "wide";
   const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
@@ -67,7 +73,7 @@ export function OTPLoginUI(props: {
             : undefined,
           email: userInfo.email,
           strategy: "email",
-          client,
+          client: props.client,
         });
         setAccountStatus(status);
       } else if ("phone" in userInfo) {
@@ -81,7 +87,7 @@ export function OTPLoginUI(props: {
             : undefined,
           phoneNumber: userInfo.phone,
           strategy: "phone",
-          client,
+          client: props.client,
         });
         setAccountStatus(status);
       } else {
@@ -92,25 +98,25 @@ export function OTPLoginUI(props: {
       setVerifyStatus("idle");
       setAccountStatus("error");
     }
-  }, [client, userInfo, wallet, isEcosystem]);
+  }, [props.client, userInfo, wallet, isEcosystem]);
 
   async function connect(otp: string) {
     if ("email" in userInfo) {
       await wallet.connect({
-        chain,
+        chain: props.chain,
         strategy: "email",
         email: userInfo.email,
         verificationCode: otp,
-        client,
+        client: props.client,
       });
       await setLastAuthProvider("email", webLocalStorage);
     } else if ("phone" in userInfo) {
       await wallet.connect({
-        chain,
+        chain: props.chain,
         strategy: "phone",
         phoneNumber: userInfo.phone,
         verificationCode: otp,
-        client,
+        client: props.client,
       });
       await setLastAuthProvider("phone", webLocalStorage);
     } else {

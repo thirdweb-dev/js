@@ -1,4 +1,4 @@
-import type { ConnectLocale } from "./types.js";
+import type { InAppWalletLocale } from "./types.js";
 
 export default {
   signInWithGoogle: "Mag-sign in gamit ang Google",
@@ -53,4 +53,4 @@ export default {
   phonePlaceholder: "Ilagay ang iyong numero ng telepono",
   signInWithPhone: "Mag-login gamit ang numero ng telepono",
   phoneRequired: "Kinakailangan ang numero ng telepono",
-} satisfies ConnectLocale;
+} satisfies InAppWalletLocale;

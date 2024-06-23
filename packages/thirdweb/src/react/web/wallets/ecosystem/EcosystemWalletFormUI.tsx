@@ -1,30 +1,38 @@
 "use client";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { ConnectButton_connectModalOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
+import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container } from "../../ui/components/basic.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
-import type { ConnectLocale } from "../shared/locale/types.js";
+import type { InAppWalletLocale } from "../shared/locale/types.js";
 import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
 
 export type EcosystemWalletFormUIProps = {
   select: () => void;
   done: () => void;
-  locale: ConnectLocale;
+  locale: InAppWalletLocale;
   wallet: Wallet<EcosystemWalletId>;
   goBack?: () => void;
+  connectModal: Omit<ConnectButton_connectModalOptions, "size"> & {
+    size: "compact" | "wide";
+  };
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  connectLocale: ConnectLocale;
 };
 
 /**
  * @internal
  */
 export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
-  const { client, connectModal } = useConnectUI();
-  const isCompact = connectModal.size === "compact";
+  const isCompact = props.connectModal.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
   const onBack =
@@ -45,7 +53,7 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
       {isCompact ? (
         <>
           <EcosystemWalletHeader
-            client={client}
+            client={props.client}
             onBack={onBack}
             wallet={props.wallet}
           />
@@ -63,17 +71,20 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
       </Container>
 
       {isCompact &&
-        (connectModal.showThirdwebBranding !== false ||
-          connectModal.termsOfServiceUrl ||
-          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+        (props.connectModal.showThirdwebBranding !== false ||
+          props.connectModal.termsOfServiceUrl ||
+          props.connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
 
       <Container flex="column" gap="lg">
         <TOS
-          termsOfServiceUrl={connectModal.termsOfServiceUrl}
-          privacyPolicyUrl={connectModal.privacyPolicyUrl}
+          termsOfServiceUrl={props.connectModal.termsOfServiceUrl}
+          privacyPolicyUrl={props.connectModal.privacyPolicyUrl}
+          locale={props.connectLocale.agreement}
         />
 
-        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        {props.connectModal.showThirdwebBranding !== false && (
+          <PoweredByThirdweb />
+        )}
       </Container>
     </Container>
   );

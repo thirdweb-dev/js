@@ -6,7 +6,6 @@ import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../utils/canFitWideModal.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
@@ -104,21 +103,17 @@ function Modal(
   );
 
   return (
-    <ConnectUIContext.Provider
-      value={{
-        appMetadata: props.appMetadata,
-        client: props.client,
-        wallets: wallets,
-        locale: props.locale || "en_US",
-        connectLocale: props.connectLocale,
-        chain: props.chain,
-        chains: props.chains,
-        walletConnect: props.walletConnect,
-        accountAbstraction: props.accountAbstraction,
-        recommendedWallets: props.recommendedWallets,
-        showAllWallets: props.showAllWallets,
-        isEmbed: false,
-        connectModal: {
+    <WalletUIStatesProvider theme={props.theme} isOpen={true}>
+      <ConnectModal
+        onClose={props.onClose}
+        shouldSetActive={props.setActive === undefined ? true : props.setActive}
+        accountAbstraction={props.accountAbstraction}
+        // TODO: not set up in `useConnectModal` for some reason?
+        auth={undefined}
+        chain={props.chain}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        connectModal={{
           privacyPolicyUrl: props.privacyPolicyUrl,
           showThirdwebBranding: props.showThirdwebBranding,
           termsOfServiceUrl: props.termsOfServiceUrl,
@@ -129,19 +124,17 @@ function Modal(
             !canFitWideModal() || wallets.length === 1
               ? "compact"
               : props?.size || "wide",
-        },
-        onConnect: props.onConnect,
-      }}
-    >
-      <WalletUIStatesProvider theme={props.theme} isOpen={true}>
-        <ConnectModal
-          onClose={props.onClose}
-          shouldSetActive={
-            props.setActive === undefined ? true : props.setActive
-          }
-        />
-      </WalletUIStatesProvider>
-    </ConnectUIContext.Provider>
+        }}
+        isEmbed={false}
+        localeId={props.locale || "en_US"}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        wallets={wallets}
+        chains={props.chains}
+        walletConnect={props.walletConnect}
+      />
+    </WalletUIStatesProvider>
   );
 }
 
