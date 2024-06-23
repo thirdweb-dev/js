@@ -255,7 +255,8 @@ const main = async () => {
     .option("--extension", "Create a smart contract extension.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
-    .option("--react-native", "Initialize as a React Native project.")
+    .option("--react-native", "Initialize as a React Native (Expo) project.")
+    .option("--expo", "Initialize as an Expo project.")
     .option("--node", "Initialize as a Node project.")
     .option(
       "--use-npm",
