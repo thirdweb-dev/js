@@ -253,8 +253,8 @@ const StartupProgram: ThirdwebNextPage = () => {
                 color="white"
                 maxW="800px"
               >
-                Our new startup program is designed to help you build, scale,
-                and generate revenue. We only profit when you do!
+                Our startup program is designed to help you build, scale, and
+                generate revenue.
               </Text>
             </Flex>
 

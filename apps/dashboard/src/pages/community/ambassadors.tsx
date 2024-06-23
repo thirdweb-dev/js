@@ -28,9 +28,9 @@ const ambassadors = [
     profileImage: "/assets/ambassadors/frankramos.jpeg",
   },
   {
-    name: "Kien",
-    twitter: "kienngo_",
-    profileImage: "/assets/ambassadors/kienngo.jpg",
+    name: "Creative Owls",
+    twitter: "MyCreativeOwls",
+    profileImage: "/assets/ambassadors/myCreativeOwl.jpg",
   },
   {
     name: "Matt Wong",
@@ -78,9 +78,9 @@ const ambassadors = [
     profileImage: "/assets/ambassadors/takaji.jpg",
   },
   {
-    name: "Yash",
-    twitter: "0x_yasshhh_",
-    profileImage: "/assets/ambassadors/yash.jpg",
+    name: "Alfredo",
+    twitter: "brolag",
+    profileImage: "/assets/ambassadors/brolag.jpg",
   },
   {
     name: "Yuki",
