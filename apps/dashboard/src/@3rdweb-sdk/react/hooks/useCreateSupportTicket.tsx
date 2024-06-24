@@ -92,6 +92,17 @@ export function useCreateTicket() {
       };
       formData.append("json", JSON.stringify(content));
 
+      // Show toast for "loading"
+      toast({
+        id: "_submitting_ticket_toast_",
+        position: "bottom",
+        variant: "solid",
+        title: "Submitting ticket",
+        status: "loading",
+        duration: 5000,
+        isClosable: true,
+      });
+
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/account/create-unthread-ticket`,
         {
@@ -173,7 +184,8 @@ export function useCreateTicket() {
           isClosable: true,
         });
       },
-      onSuccess: () => {
+      onSuccess: async () => {
+        toast.close("_submitting_ticket_toast_");
         toast({
           position: "bottom",
           variant: "solid",
