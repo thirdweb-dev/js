@@ -7,9 +7,15 @@ export default {
       "name": "Arbitrum Sepolia Rollup Testnet Explorer",
       "url": "https://sepolia-explorer.arbitrum.io",
       "standard": "EIP3091"
+    },
+    {
+      "name": "Arbitrum Sepolia Testnet Explorer",
+      "url": "https://sepolia.arbiscan.io",
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
+  "features": [],
   "infoURL": "https://arbitrum.io",
   "name": "Arbitrum Sepolia",
   "nativeCurrency": {
@@ -27,10 +33,11 @@ export default {
       }
     ]
   },
+  "redFlags": [],
   "rpc": [
     "https://421614.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://sepolia-rollup.arbitrum.io/rpc",
-    "https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}"
+    "https://arbitrum-sepolia.infura.io/v3/${INFURA_API_KEY}",
+    "https://sepolia-rollup.arbitrum.io/rpc"
   ],
   "shortName": "arb-sep",
   "slip44": 1,
