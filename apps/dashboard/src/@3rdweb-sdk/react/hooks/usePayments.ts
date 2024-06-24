@@ -24,7 +24,6 @@ import {
   Xai,
   XaiSepolia,
   Zora,
-  ZoraTestnet,
 } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react";
 import type { Abi, FeatureName, SmartContract } from "@thirdweb-dev/sdk";
@@ -96,7 +95,6 @@ const validPaymentsChainIdsTestnets: number[] = [
   ArbitrumGoerli.chainId,
   BinanceTestnet.chainId,
   BaseSepoliaTestnet.chainId,
-  ZoraTestnet.chainId,
   ArbitrumSepolia.chainId,
   FrameTestnet.chainId,
   RarichainTestnet.chainId,
@@ -133,7 +131,6 @@ const ChainIdToPaperChain: Record<PaymentChainId, string> = {
   [BaseGoerli.chainId]: "BaseGoerli",
   [BaseSepoliaTestnet.chainId]: "BaseSepolia",
   [Zora.chainId]: "Zora",
-  [ZoraTestnet.chainId]: "ZoraTestnet",
   [FrameTestnet.chainId]: "FrameTestnet",
   [RarichainTestnet.chainId]: "RariChainTestnet",
   [Xai.chainId]: "Xai",
@@ -161,7 +158,6 @@ export const PaperChainToChainId: Record<string, number> = {
   BaseGoerli: BaseGoerli.chainId,
   BaseSepolia: BaseSepoliaTestnet.chainId,
   Zora: Zora.chainId,
-  ZoraTestnet: ZoraTestnet.chainId,
   FrameTestnet: FrameTestnet.chainId,
   RariChainTestnet: RarichainTestnet.chainId,
   Xai: Xai.chainId,
@@ -193,7 +189,6 @@ const supportedCurrenciesMap: SupportedCurrenciesMap = {
   [BaseGoerli.chainId]: ["ETH"],
   [BaseSepoliaTestnet.chainId]: ["ETH"],
   [Zora.chainId]: ["ETH"],
-  [ZoraTestnet.chainId]: ["ETH"],
   [FrameTestnet.chainId]: ["ETH"],
   [RarichainTestnet.chainId]: ["ETH"],
   [Xai.chainId]: ["XAI"],
