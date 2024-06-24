@@ -11,6 +11,7 @@ import {
   shortenString,
   useBuyWithCryptoStatus,
   useSigner,
+  useWallet,
 } from "@thirdweb-dev/react-core";
 import {
   type BuyWithCryptoQuote,
@@ -32,6 +33,7 @@ import { SwapFees } from "./SwapFees";
 import { addPendingSwapTransaction } from "./pendingSwapTx";
 import { Text } from "../../../../../components/text";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon";
+import { walletIds } from "@thirdweb-dev/wallets";
 
 /**
  * @internal
@@ -51,6 +53,7 @@ export function ConfirmationScreen(props: {
   clientId: string;
 }) {
   const signer = useSigner();
+  const wallet = useWallet();
 
   const [swapTx, setSwapTx] = useState<BuyWithCryptoTransaction | undefined>();
 
@@ -213,9 +216,16 @@ export function ConfirmationScreen(props: {
           if (step === "swap") {
             setStatus("pending");
             try {
-              const _swapTx = await signer.sendTransaction(
-                props.buyWithCryptoQuote.transactionRequest,
-              );
+              let tx =  props.buyWithCryptoQuote.transactionRequest
+
+              if (wallet?.walletId === walletIds.embeddedWallet) {
+                tx = {
+                  ...tx,
+                  gasPrice: undefined,
+                };
+              }
+
+              const _swapTx = await signer.sendTransaction(tx);
 
               const swapTxReceipt = await _swapTx.wait();
               props.onQuoteFinalized(props.buyWithCryptoQuote);
