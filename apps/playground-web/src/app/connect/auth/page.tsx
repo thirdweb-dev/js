@@ -1,4 +1,5 @@
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
+import { GatedContentPreview } from "@/components/auth/gated-content";
 import { CodeExample } from "@/components/code/code-example";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
@@ -60,6 +61,10 @@ export default function Page() {
       <section className="container px-4 md:px-6 space-y-8">
         <BasicAuth />
       </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <GatedContent />
+      </section>
     </main>
   );
 }
@@ -79,28 +84,28 @@ function BasicAuth() {
         code={`import { getContract } from "thirdweb";
 import { ethereum } from "thirdweb/chains";
 import { MediaRenderer, useReadContract } from "thirdweb/react";
-
-const onChainCryptoPunks = getContract({
-  address: "0x16F5A35647D6F03D5D3da7b35409D65ba03aF3B2",
-  chain: ethereum,
-  client: THIRDWEB_CLIENT,
-});
-
-function App() {
-  // Read the image of the tokenId #1
-  const { data } = useReadContract({
-    contract: onChainCryptoPunks,
-    method: "function punkImageSvg(uint16 index) view returns (string svg)",
-    params: [1],
-  });
-
-  return (
-    <MediaRenderer 
-      client={THIRDWEB_CLIENT} 
-      src={data}
-    />
+`}
+        lang="tsx"
+      />
+    </>
   );
 }
+
+function GatedContent() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Gating content with Auth
+        </h2>
+        <p className="max-w-[600px]">lorem</p>
+      </div>
+
+      <CodeExample
+        preview={<GatedContentPreview />}
+        code={`import { getContract } from "thirdweb";
+import { ethereum } from "thirdweb/chains";
+import { MediaRenderer, useReadContract } from "thirdweb/react";
 `}
         lang="tsx"
       />

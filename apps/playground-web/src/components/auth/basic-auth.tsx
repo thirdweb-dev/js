@@ -1,6 +1,6 @@
+import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 import { AuthButton } from "./auth-button";
-import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export function BasicAuthPreview() {
   const jwt = cookies().get("jwt");
