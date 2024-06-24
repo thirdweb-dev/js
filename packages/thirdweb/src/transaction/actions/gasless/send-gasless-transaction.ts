@@ -1,6 +1,7 @@
 import type { TransactionSerializable } from "viem";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { PreparedTransaction } from "../../prepare-transaction.js";
+import { addTransactionToStore } from "../../transaction-store.js";
 import type { WaitForReceiptOptions } from "../wait-for-tx-receipt.js";
 import type { GaslessOptions } from "./types.js";
 
@@ -32,12 +33,14 @@ export async function sendGaslessTransaction({
 
   // TODO: multiply gas by 2 for some reason(?) - we do in v4, *should* we?
 
+  let result: WaitForReceiptOptions | undefined;
+
   // biconomy
   if (gasless.provider === "biconomy") {
     const { relayBiconomyTransaction } = await import(
       "./providers/biconomy.js"
     );
-    return relayBiconomyTransaction({
+    result = await relayBiconomyTransaction({
       account,
       transaction,
       serializableTransaction,
@@ -50,7 +53,7 @@ export async function sendGaslessTransaction({
     const { relayOpenZeppelinTransaction } = await import(
       "./providers/openzeppelin.js"
     );
-    return relayOpenZeppelinTransaction({
+    result = await relayOpenZeppelinTransaction({
       account,
       transaction,
       serializableTransaction,
@@ -60,7 +63,7 @@ export async function sendGaslessTransaction({
 
   if (gasless.provider === "engine") {
     const { relayEngineTransaction } = await import("./providers/engine.js");
-    return relayEngineTransaction({
+    result = await relayEngineTransaction({
       account,
       transaction,
       serializableTransaction,
@@ -68,5 +71,13 @@ export async function sendGaslessTransaction({
     });
   }
 
-  throw new Error("Unsupported gasless provider");
+  if (!result) {
+    throw new Error("Unsupported gasless provider");
+  }
+  addTransactionToStore({
+    address: account.address,
+    transactionHash: result.transactionHash,
+    chainId: transaction.chain.id,
+  });
+  return result;
 }

@@ -8,6 +8,7 @@ export function ScrollShadow(props: {
   children: React.ReactNode;
   className?: string;
   scrollableClassName?: string;
+  disableTopShadow?: boolean;
 }) {
   const scrollableEl = useRef<HTMLDivElement>(null);
   const shadowTopEl = useRef<HTMLDivElement>(null);
@@ -78,6 +79,7 @@ export function ScrollShadow(props: {
         ref={shadowTopEl}
         style={{
           opacity: "0",
+          display: props.disableTopShadow ? "none" : "block",
         }}
       />
       <div

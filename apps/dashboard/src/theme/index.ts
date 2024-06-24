@@ -383,17 +383,25 @@ const chakraTheme: Theme = extendTheme({
       // borderColor: { default: "accent.200", _dark: "accent.300" },
       bgBlack: { default: "black", _dark: "white" },
       bgWhite: { default: "#fff", _dark: "black" },
-      backgroundBody: { default: "backgroundLight", _dark: "backgroundDark" },
-      backgroundHighlight: { default: "white", _dark: "#131417" },
-      alertBg: {
-        default: "hsl(220 18% 92% / 1)",
-        _dark: "hsl(225 10% 12.5% / 1)",
+      backgroundBody: {
+        default: "hsl(var(--background))",
+        _dark: "hsl(var(--background))",
       },
-      backgroundCardHighlight: { default: "white", _dark: "#131417" },
+      backgroundHighlight: {
+        default: "hsl(var(--secondary))",
+        _dark: "hsl(var(--secondary))",
+      },
+      secondaryCardHighlight: {
+        default: "hsl(var(--secondary))",
+        _dark: "hsl(var(--secondary))",
+      },
       wordmark: { default: "#262A36", _dark: "whiteAlpha.900" },
       heading: { default: "#262A36", _dark: "#ECECEC" },
       paragraph: { default: "rgba(39, 46, 54, 0.9)", _dark: "#b2b2b2" },
-      faded: { default: "rgba(39, 46, 54, 0.6)", _dark: "#646D7A" },
+      faded: {
+        default: "hsl(var(--muted-foreground))",
+        _dark: "hsl(var(--muted-foreground))",
+      },
       headingLight: { default: "#F2FBFF", _dark: "#262A36" },
       paragraphLight: {
         default: "rgba(242, 251, 255, 0.8)",

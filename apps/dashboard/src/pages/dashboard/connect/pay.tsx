@@ -7,7 +7,6 @@ import {
   type BoxProps,
   Flex,
   FormControl,
-  HStack,
   Tab,
   TabList,
   TabPanel,
@@ -28,10 +27,13 @@ import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { useRouter } from "next/router";
-import { PageId } from "page-id";
 import { useEffect, useMemo, useState } from "react";
-import { Heading, Text, TrackedLink } from "tw-components";
-import type { ThirdwebNextPage } from "utils/types";
+import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
+import { TabButtons } from "../../../@/components/ui/tabs";
+import { PayAnalytics } from "../../../components/pay/PayAnalytics/PayAnalytics";
+import { PageId } from "../../../page-id";
+import { TrackedLink } from "../../../tw-components";
+import type { ThirdwebNextPage } from "../../../utils/types";
 
 const TRACKING_CATEGORY = "pay";
 
@@ -142,6 +144,7 @@ function usePayConfig() {
     setSelectedKey,
     apiKeysData,
     hasApiKeys: !!keysQuery.data?.length,
+    isFetchingKeys: keysQuery.isFetching && !keysQuery.isRefetching,
   };
 }
 
@@ -169,15 +172,24 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
     onChange: (value: "pay" | "checkouts") => setTabOption(value),
   });
 
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoggedIn, isLoading } = useLoggedInUser();
   const {
     hasApiKeys,
     hasPayApiKeys,
     selectedKey,
     setSelectedKey,
     apiKeysData,
+    isFetchingKeys,
   } = usePayConfig();
   // Pay setting api key configuration
+
+  if (isLoading || isFetchingKeys) {
+    return (
+      <div className="min-h-[calc(100vh-300px)] lg:min-h-[calc(100vh-250px)] flex items-center justify-center">
+        <Spinner className="size-14" />
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return <ConnectWalletPrompt description="manage your Pay configuration" />;
@@ -185,44 +197,35 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={8}>
-      <Flex
-        flexDir={{ base: "column", lg: "row" }}
-        alignItems={{ base: "start", lg: "end" }}
-        w="full"
-        gap={4}
-        justifyContent={"space-between"}
-      >
-        <Flex flexDir={"column"} gap={2}>
-          <Heading size="title.lg" as="h1">
-            Pay Settings
-          </Heading>
-          <Text maxW="xl">
-            Configure developer settings for all Pay features, including{" "}
+      <div className="flex flex-col lg:flex-row gap-6 justify-between items-start">
+        <div className="max-w-[800px]">
+          <h1 className="text-5xl tracking-tight font-bold mb-5">Pay</h1>
+          <p className="text-secondary-foreground leading-7">
+            Pay allows your users to purchase cryptocurrencies and execute
+            transactions with their credit card or debit card, or with any token
+            via cross-chain routing.{" "}
             <TrackedLink
               isExternal
               category={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/connect/pay/buy-with-crypto"
-              label="buy-with-crypto-docs"
-              color="primary.500"
+              href="https://portal.thirdweb.com/connect/pay/overview"
+              label="pay-docs"
+              className="!text-link-foreground"
             >
-              Buy With Crypto
+              Learn more
             </TrackedLink>
-            .
-          </Text>
-        </Flex>
+          </p>
+        </div>
 
-        {hasPayApiKeys && tabOption === "pay" && (
-          <HStack gap={3}>
-            {selectedKey && (
-              <ApiKeysMenu
-                apiKeys={apiKeysData}
-                selectedKey={selectedKey}
-                onSelect={setSelectedKey}
-              />
-            )}
-          </HStack>
-        )}
-      </Flex>
+        <div className="w-full lg:max-w-[300px]">
+          {hasPayApiKeys && tabOption === "pay" && selectedKey && (
+            <ApiKeysMenu
+              apiKeys={apiKeysData}
+              selectedKey={selectedKey}
+              onSelect={setSelectedKey}
+            />
+          )}
+        </div>
+      </div>
 
       {radioOptions.length > 1 && (
         <FormControl>
@@ -264,25 +267,67 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
           </TabPanels>
         </Tabs>
       ) : (
-        <>
-          {!hasPayApiKeys && (
-            <NoApiKeys
-              service="Pay in Connect"
-              buttonTextOverride={hasApiKeys ? "Enable Pay" : undefined}
-              copyOverride={
-                hasApiKeys
-                  ? "You'll need to enable pay as a service in an API Key to use Pay."
-                  : undefined
-              }
-            />
-          )}
-
-          {hasPayApiKeys && selectedKey && <PayConfig apiKey={selectedKey} />}
-        </>
+        <PayUI
+          hasPayApiKeys={hasPayApiKeys}
+          hasApiKeys={hasApiKeys}
+          selectedKey={selectedKey}
+        />
       )}
     </Flex>
   );
 };
+
+function PayUI(props: {
+  hasPayApiKeys: boolean;
+  hasApiKeys: boolean;
+  selectedKey: ApiKey | undefined;
+}) {
+  const { hasPayApiKeys, hasApiKeys, selectedKey } = props;
+  const [activeTab, setActiveTab] = useState<"settings" | "analytics">(
+    "analytics",
+  );
+
+  return (
+    <div>
+      {!hasPayApiKeys && (
+        <NoApiKeys
+          service="Pay in Connect"
+          buttonTextOverride={hasApiKeys ? "Enable Pay" : undefined}
+          copyOverride={
+            hasApiKeys
+              ? "You'll need to enable pay as a service in an API Key to use Pay."
+              : undefined
+          }
+        />
+      )}
+
+      {hasPayApiKeys && selectedKey && (
+        <>
+          <TabButtons
+            tabs={[
+              {
+                name: "Analytics",
+                isActive: activeTab === "analytics",
+                onClick: () => setActiveTab("analytics"),
+                isEnabled: true,
+              },
+              {
+                name: "Settings",
+                isActive: activeTab === "settings",
+                onClick: () => setActiveTab("settings"),
+                isEnabled: true,
+              },
+            ]}
+          />
+
+          <div className="h-5" />
+          {activeTab === "settings" && <PayConfig apiKey={selectedKey} />}
+          {activeTab === "analytics" && <PayAnalytics apiKey={selectedKey} />}
+        </>
+      )}
+    </div>
+  );
+}
 
 DashboardConnectPay.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>

@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { wait } from "../../../../utils/promise/wait.js";
 import { formatWalletConnectUrl } from "../../../../utils/url.js";
 import { isAndroid, isIOS, isMobile } from "../../../../utils/web/isMobile.js";
@@ -6,7 +8,6 @@ import { openWindow } from "../../../../utils/web/openWindow.js";
 import type { WCSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 import { ScanScreen } from "./ScanScreen.js";
@@ -23,21 +24,29 @@ export const WalletConnectConnection: React.FC<{
   wallet: Wallet<WCSupportedWalletIds>;
   walletInfo: WalletInfo;
   done: () => void;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
+  size: "compact" | "wide";
 }> = (props) => {
   const { onBack, onGetStarted, wallet, walletInfo, locale, done } = props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client, walletConnect, connectModal } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
 
     wallet
       .connect({
-        chain,
-        client: client,
+        chain: props.chain,
+        client: props.client,
         walletConnect: {
-          projectId: walletConnect?.projectId,
+          projectId: props.walletConnect?.projectId,
           showQrModal: false,
           onDisplayUri(uri) {
             const preferNative =
@@ -69,7 +78,7 @@ export const WalletConnectConnection: React.FC<{
               setQrCodeUri(uri);
             }
           },
-          optionalChains: chains,
+          optionalChains: props.chains,
         },
       })
       .then(() => {
@@ -80,13 +89,13 @@ export const WalletConnectConnection: React.FC<{
         console.error(e);
       });
   }, [
-    walletConnect,
+    props.walletConnect,
     walletInfo.mobile.native,
     walletInfo.mobile.universal,
     wallet,
-    chain,
-    client,
-    chains,
+    props.chain,
+    props.client,
+    props.chains,
     done,
   ]);
 
@@ -115,6 +124,8 @@ export const WalletConnectConnection: React.FC<{
         errorConnecting={errorConnecting}
         onRetry={connect}
         onGetStarted={onGetStarted}
+        client={props.client}
+        size={props.size}
       />
     );
   }
@@ -130,8 +141,8 @@ export const WalletConnectConnection: React.FC<{
       getStartedLink={locale.getStartedLink}
       error={errorConnecting}
       onRetry={connect}
-      client={client}
-      connectModalSize={connectModal.size}
+      client={props.client}
+      connectModalSize={props.size}
     />
   );
 };
@@ -148,12 +159,20 @@ export const WalletConnectStandaloneConnection: React.FC<{
   walletInfo: WalletInfo;
   done: () => void;
   setModalVisibility: (value: boolean) => void;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
+  size: "compact" | "wide";
 }> = (props) => {
   const { onBack, wallet, walletInfo, locale, done, setModalVisibility } =
     props;
   const [qrCodeUri, setQrCodeUri] = useState<string | undefined>();
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { chain, chains, client, walletConnect, connectModal } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
@@ -171,11 +190,11 @@ export const WalletConnectStandaloneConnection: React.FC<{
 
       wallet
         .connect({
-          chain,
-          client: client,
-          projectId: walletConnect?.projectId,
+          chain: props.chain,
+          client: props.client,
+          projectId: props.walletConnect?.projectId,
           showQrModal: true,
-          optionalChains: chains,
+          optionalChains: props.chains,
         })
         .then(() => {
           wcModalClosed = true;
@@ -191,9 +210,9 @@ export const WalletConnectStandaloneConnection: React.FC<{
     } else {
       wallet
         .connect({
-          chain,
-          client: client,
-          projectId: walletConnect?.projectId,
+          chain: props.chain,
+          client: props.client,
+          projectId: props.walletConnect?.projectId,
           showQrModal: false,
           onDisplayUri(uri) {
             const platformUris = {
@@ -219,7 +238,7 @@ export const WalletConnectStandaloneConnection: React.FC<{
               }
             }
           },
-          optionalChains: chains,
+          optionalChains: props.chains,
         })
         .then(() => {
           done();
@@ -230,13 +249,13 @@ export const WalletConnectStandaloneConnection: React.FC<{
         });
     }
   }, [
-    walletConnect,
+    props.walletConnect,
     walletInfo.mobile.native,
     walletInfo.mobile.universal,
     wallet,
-    chain,
-    client,
-    chains,
+    props.chain,
+    props.client,
+    props.chains,
     done,
     setModalVisibility,
   ]);
@@ -265,6 +284,8 @@ export const WalletConnectStandaloneConnection: React.FC<{
         walletId={wallet.id}
         errorConnecting={errorConnecting}
         onRetry={connect}
+        client={props.client}
+        size={props.size}
       />
     );
   }
@@ -279,8 +300,8 @@ export const WalletConnectStandaloneConnection: React.FC<{
       getStartedLink={locale.getStartedLink}
       error={errorConnecting}
       onRetry={connect}
-      client={client}
-      connectModalSize={connectModal.size}
+      client={props.client}
+      connectModalSize={props.size}
     />
   );
 };

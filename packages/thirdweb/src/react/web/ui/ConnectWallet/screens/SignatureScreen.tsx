@@ -10,7 +10,6 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { wait } from "../../../../core/utils/wait.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../hooks/wallets/useDisconnect.js";
@@ -38,7 +37,6 @@ export const SignatureScreen: React.FC<{
   client: ThirdwebClient;
   auth: ConnectButtonProps["auth"];
 }> = (props) => {
-  const { client } = useConnectUI();
   const {
     onDone,
     modalSize,
@@ -149,7 +147,7 @@ export const SignatureScreen: React.FC<{
           <>
             <Container py="3xl">
               <WalletLogoSpinner
-                client={client}
+                client={props.client}
                 error={status === "failed"}
                 id={wallet.id}
               />
@@ -210,6 +208,7 @@ export const SignatureScreen: React.FC<{
           <TOS
             termsOfServiceUrl={termsOfServiceUrl}
             privacyPolicyUrl={privacyPolicyUrl}
+            locale={connectLocale.agreement}
           />
         </Container>
       )}

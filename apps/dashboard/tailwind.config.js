@@ -33,6 +33,7 @@ module.exports = {
           foreground: "hsl(var(--destructive-foreground))",
         },
         success: {
+          DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success-foreground))",
         },
         muted: {
@@ -56,7 +57,11 @@ module.exports = {
           foreground: "hsl(var(--inverted-foreground))",
         },
         warning: {
+          DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+        },
+        link: {
+          foreground: "hsl(var(--link-foreground))",
         },
       },
       borderRadius: {
@@ -77,6 +82,7 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        skeleton: "skeleton 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
