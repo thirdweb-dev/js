@@ -60,7 +60,7 @@
     "@types/js-cookie": "^3.0.6",
     "@types/mime": "3.0.0",
     "@types/react": "^18.3.3",
-    "eslint": "8.57.0",
+    "eslint": "9.5.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
     "eslint-plugin-import": "^2.29.1",

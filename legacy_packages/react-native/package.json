@@ -47,7 +47,7 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/react": "^18",
     "@types/react-native": "^0.71.13",
-    "eslint": "8.57.0",
+    "eslint": "9.5.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-i18next": "^6.0.3",
     "eslint-plugin-import": "^2.29.1",

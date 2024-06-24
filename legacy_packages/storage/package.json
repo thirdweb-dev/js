@@ -36,7 +36,7 @@
     "@swc-node/register": "^1.9.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/uuid": "^9.0.8",
-    "eslint": "8.57.0",
+    "eslint": "9.5.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.3.0",
     "esm": "^3.2.25",
