@@ -1,6 +1,7 @@
 "use client";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
+  type Theme,
   fontSize,
   radius,
   spacing,
@@ -12,6 +13,7 @@ export type ButtonProps = {
   unstyled?: boolean;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
+  bg?: keyof Theme["colors"];
 };
 
 export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
@@ -39,6 +41,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     textAlign: "center",
     maxWidth: "100%",
     background: (() => {
+      if (props.bg) {
+        return theme.colors[props.bg];
+      }
       switch (props.variant) {
         case "primary":
           return theme.colors.primaryButtonBg;
@@ -86,6 +91,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
         return {
           border: `1.5px solid ${theme.colors.borderColor}`,
           "&:hover": {
+            borderColor: theme.colors.accentText,
+          },
+          '&[aria-selected="true"]': {
             borderColor: theme.colors.accentText,
           },
         };

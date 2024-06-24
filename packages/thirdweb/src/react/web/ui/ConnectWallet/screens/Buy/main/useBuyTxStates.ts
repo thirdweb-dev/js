@@ -8,15 +8,12 @@ import type { BuyForTx } from "./types.js";
 
 export function useBuyTxStates(options: {
   setTokenAmount: (value: string) => void;
-  buyForTx?: BuyForTx;
+  buyForTx: BuyForTx | null;
   hasEditedAmount: boolean;
-  isMainScreen: boolean;
-  account?: Account;
+  account: Account | null;
 }) {
-  const { buyForTx, hasEditedAmount, isMainScreen, setTokenAmount, account } =
-    options;
-  const shouldRefreshTokenAmount = !hasEditedAmount && isMainScreen;
-  const stopUpdatingAll = !isMainScreen;
+  const { buyForTx, hasEditedAmount, setTokenAmount, account } = options;
+  const shouldRefreshTokenAmount = !hasEditedAmount;
 
   const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
     buyForTx?.cost,
@@ -26,7 +23,7 @@ export function useBuyTxStates(options: {
   // also update the token amount if allowed
   // ( Can't use useQuery because tx can't be added to queryKey )
   useEffect(() => {
-    if (!buyForTx || stopUpdatingAll) {
+    if (!buyForTx) {
       return;
     }
 
@@ -70,13 +67,7 @@ export function useBuyTxStates(options: {
     return () => {
       mounted = false;
     };
-  }, [
-    buyForTx,
-    shouldRefreshTokenAmount,
-    setTokenAmount,
-    stopUpdatingAll,
-    account,
-  ]);
+  }, [buyForTx, shouldRefreshTokenAmount, setTokenAmount, account]);
 
   return {
     amountNeeded,
