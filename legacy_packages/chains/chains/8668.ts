@@ -10,12 +10,6 @@ export default {
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmQbUVcaxFwY8gqMq1Jeup4NEyivo12QYhbLvVRvgXRBFb",
-    "width": 719,
-    "height": 216,
-    "format": "png"
-  },
   "infoURL": "https://helalabs.com",
   "name": "Hela Official Runtime Mainnet",
   "nativeCurrency": {
