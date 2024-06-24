@@ -88,7 +88,7 @@
     "@types/cookie": "^0.6.0",
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "cookie-parser": "^1.4.6",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
@@ -136,7 +136,7 @@
     "@thirdweb-dev/wallets": "workspace:*",
     "cookie": "^0.6.0",
     "fastify-type-provider-zod": "^1.1.9",
-    "uuid": "^9.0.1",
+    "uuid": "^10.0.0",
     "zod": "3.23.8"
   },
   "engines": {

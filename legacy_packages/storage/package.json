@@ -35,7 +35,7 @@
     "@preconstruct/cli": "2.7.0",
     "@swc-node/register": "^1.9.2",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-tsdoc": "^0.3.0",
@@ -48,7 +48,7 @@
     "@thirdweb-dev/crypto": "workspace:*",
     "cid-tool": "^3.0.0",
     "form-data": "^4.0.0",
-    "uuid": "^9.0.1"
+    "uuid": "^10.0.0"
   },
   "engines": {
     "node": ">=18"
