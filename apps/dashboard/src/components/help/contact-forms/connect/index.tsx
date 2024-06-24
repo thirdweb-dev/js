@@ -1,12 +1,12 @@
 import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
-import { AffectedAreaInput } from "./AffectedAreaInput";
 import type { ReactElement } from "react";
-import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
-import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
-import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
-import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
 import { useWatch } from "react-hook-form";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
+import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
+import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
+import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
+import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
+import { AffectedAreaInput } from "./AffectedAreaInput";
 
 type ProblemAreaItem = {
   label: string;
