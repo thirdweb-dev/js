@@ -40,10 +40,10 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const isCompact = props.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
-  const onBack =
-    screen === props.wallet && initialScreen === props.wallet
-      ? undefined
-      : props.goBack;
+  const isInitialScreen =
+    screen === props.wallet && initialScreen === props.wallet;
+
+  const onBack = isInitialScreen ? undefined : props.goBack;
 
   return (
     <Container
@@ -55,10 +55,11 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {isCompact ? (
+      {isCompact && isInitialScreen ? (
         <>
           <ModalHeader
             onBack={onBack}
+            leftAligned={true}
             title={
               <>
                 {!props.meta.titleIconUrl ? null : (
@@ -78,7 +79,9 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
           />
           <Spacer y="lg" />
         </>
-      ) : null}
+      ) : (
+        <ModalHeader onBack={onBack} title={props.inAppWalletLocale.signIn} />
+      )}
 
       <Container
         expand

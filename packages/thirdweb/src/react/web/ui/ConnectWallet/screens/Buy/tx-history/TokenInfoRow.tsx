@@ -3,9 +3,9 @@ import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 
 export function TokenInfoRow(props: {
   tokenSymbol: string;
@@ -37,7 +37,7 @@ export function TokenInfoRow(props: {
         }}
       >
         <Container flex="row" gap="xs" center="y">
-          <TokenIcon
+          <PayTokenIcon
             chain={chainObj}
             size="sm"
             token={{

@@ -30,7 +30,6 @@ export function useUISelectionStates(options: {
         )
       : "");
 
-  const [hasEditedAmount, setHasEditedAmount] = useState(false);
   const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
@@ -81,7 +80,7 @@ export function useUISelectionStates(options: {
   return {
     tokenAmount,
     setTokenAmount,
-    hasEditedAmount,
+
     toChain,
     setToChain,
     deferredTokenAmount,
@@ -92,7 +91,7 @@ export function useUISelectionStates(options: {
     fromToken,
     setFromToken,
     selectedCurrency,
-    setHasEditedAmount,
+
     setSelectedCurrency,
   };
 }

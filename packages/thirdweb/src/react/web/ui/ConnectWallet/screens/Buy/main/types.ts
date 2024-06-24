@@ -9,16 +9,25 @@ export type BuyForTx = {
 
 export type SelectedScreen =
   | {
-      type: "node";
+      id: "node";
       node: React.ReactNode;
     }
   | {
-      type: "screen-id";
-      name: "select-from-token" | "select-to-token" | "select-currency";
+      id:
+        | "main"
+        | "select-payment-method"
+        | "buy-with-fiat"
+        | "buy-with-crypto";
     }
   | {
-      type: "main";
+      id: "select-from-token";
+      backScreen: SelectedScreen;
     }
   | {
-      type: "select-currency";
+      id: "select-to-token";
+      backScreen: SelectedScreen;
+    }
+  | {
+      id: "select-currency";
+      backScreen: SelectedScreen;
     };
