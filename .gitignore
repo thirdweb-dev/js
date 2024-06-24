@@ -23,3 +23,6 @@ legacy_packages/cli/artifacts/
 
 # codecov binary
 codecov
+
+# Remove sitemap files (generated at build time)
+sitemap*.xml
