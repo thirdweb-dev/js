@@ -57,14 +57,12 @@ function WalletsSection() {
           description="Add fiat and cross-chain crypto payments in your apps"
           icon={PayIcon}
         />
-        <ComingSoonWrapper>
-          <ArticleCardIndex
-            href="/connect/blockchain-api"
-            title="Blockchain API"
-            description="Performant, and reliable blockchain API"
-            icon={CodeIcon}
-          />
-        </ComingSoonWrapper>
+        <ArticleCardIndex
+          href="/connect/blockchain-api"
+          title="Blockchain API"
+          description="Performant, and reliable blockchain API"
+          icon={CodeIcon}
+        />
       </div>
     </section>
   );

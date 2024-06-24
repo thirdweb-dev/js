@@ -1,7 +1,7 @@
 import {
   type CreateTicketInput,
   useCreateTicket,
-} from "@3rdweb-sdk/react/hooks/useApi";
+} from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Box,
@@ -16,7 +16,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ConnectWallet } from "@thirdweb-dev/react";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import dynamic from "next/dynamic";
 import { type ReactElement, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -67,10 +66,6 @@ export const ContactSupportModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const form = useForm<CreateTicketInput>();
   const productLabel = form.watch("product");
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully sent support ticket. Our team will be in touch using your account email shortly.",
-    "Failed to send ticket. Please try again.",
-  );
   const { isLoggedIn } = useLoggedInUser();
   const { mutate: createTicket } = useCreateTicket();
 
@@ -107,11 +102,9 @@ export const ContactSupportModal = () => {
               try {
                 createTicket(data);
                 onClose();
-                onSuccess();
                 form.reset();
               } catch (err) {
                 console.error(err);
-                onError(err);
               }
             })}
           >

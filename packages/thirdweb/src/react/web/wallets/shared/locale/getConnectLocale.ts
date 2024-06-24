@@ -1,12 +1,12 @@
 import type { LocaleId } from "../../../ui/types.js";
-import type { ConnectLocale } from "./types.js";
+import type { InAppWalletLocale } from "./types.js";
 
 /**
  * @internal
  */
-export async function getConnectLocale(
+export async function getInAppWalletLocale(
   localeId: LocaleId,
-): Promise<ConnectLocale> {
+): Promise<InAppWalletLocale> {
   switch (localeId) {
     case "es_ES":
       return (await import("./es.js")).default;

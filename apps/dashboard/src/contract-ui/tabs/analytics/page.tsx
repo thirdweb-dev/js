@@ -118,7 +118,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   transaction to this contract.
                 </Text>
               </Stack>
-              <ChartContainer w="full" ratio={4.5 / 1}>
+              <ChartContainer className="w-full" ratio={4.5 / 1}>
                 <AnalyticsChart
                   contractAddress={contractAddress}
                   chainId={evmContractInfo.chain.chainId}
@@ -142,7 +142,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   contract.
                 </Text>
               </Stack>
-              <ChartContainer w="full" ratio={4.5 / 1}>
+              <ChartContainer className="w-full" ratio={4.5 / 1}>
                 <AnalyticsChart
                   contractAddress={contractAddress}
                   chainId={evmContractInfo.chain.chainId}
@@ -167,7 +167,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   contract.
                 </Text>
               </Stack>
-              <ChartContainer w="full" ratio={4.5 / 1}>
+              <ChartContainer className="w-full" ratio={4.5 / 1}>
                 <AnalyticsChart
                   contractAddress={contractAddress}
                   chainId={evmContractInfo.chain.chainId}
@@ -191,7 +191,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                   transactions.
                 </Text>
               </Stack>
-              <ChartContainer w="full" ratio={4.5 / 1}>
+              <ChartContainer className="w-full" ratio={4.5 / 1}>
                 <AnalyticsChart
                   contractAddress={contractAddress}
                   chainId={evmContractInfo.chain.chainId}
@@ -212,7 +212,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
                 </Heading>
                 <Text>The breakdown of events emitted by this contract.</Text>
               </Stack>
-              <ChartContainer w="full" ratio={4.5 / 1}>
+              <ChartContainer className="w-full" ratio={4.5 / 1}>
                 <AnalyticsChart
                   contractAddress={contractAddress}
                   chainId={evmContractInfo.chain.chainId}
