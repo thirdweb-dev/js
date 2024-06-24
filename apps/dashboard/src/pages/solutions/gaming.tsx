@@ -31,7 +31,7 @@ const SELECTOR_ITEMS = [
       "Wallet is created on behalf of the user abstracting away crypto entirely",
       "User interacts with app seamlessly— without disruptive transaction pop-ups",
     ],
-    products: ["connect", "embedded-wallets", "smart-wallet", "nft-checkout"],
+    products: ["connect", "embedded-wallets", "smart-wallet"],
   },
   {
     title: "Uninterrupted game play",
@@ -58,14 +58,8 @@ const SELECTOR_ITEMS = [
       "Loyalty pass is used to unlock in-game experiences",
       "User collects rewards to upgrade their loyalty pass",
     ],
-    products: ["explore", "interact", "nft-checkout"],
+    products: ["explore", "interact"],
   },
-  /* {
-    title: "Add web3 to web2 game",
-    description: "Easily integrate new web3 features into your existing application infrastructure using reusable UI components, SDK's and minting API's.",
-    steps: ["", "", ""],
-    products: ["connect", "auth", "interact", "engine", "sponsored-transactions", "nft-checkout"],
-  }, */
   {
     title: "Interoperable game ecosystems",
     description:
@@ -97,7 +91,7 @@ const SELECTOR_ITEMS = [
       "Set % platform fee (% collected by game dev on every in-game asset sale, e.g. when buyer buys tokens from listing)",
       "Players can list and trade NFTs for sale at a fixed price",
     ],
-    products: ["explore", "interact", "nft-checkout", "engine", "storage"],
+    products: ["explore", "interact", "engine", "storage"],
   },
 ];
 
@@ -381,13 +375,6 @@ const SolutionsGaming: ThirdwebNextPage = () => {
               icon={require("../../../public/assets/solutions-pages/icons/icon-verified.svg")}
               title="Account Abstraction"
               description="Transform your app's user experience with signless transactions, multi-signature security, account recovery and more."
-            />
-          </SolutionsGamingCard>
-          <SolutionsGamingCard p={8} label="unreal" href="/checkout">
-            <LandingIconSectionItem
-              icon={require("../../../public/assets/solutions-pages/icons/icon-credit.svg")}
-              title="NFT Checkout"
-              description="Let users buy digital assets with a credit card, via a one-click checkout flow. Onboard anyone, even if they've never create a wallet or bought crypto before."
             />
           </SolutionsGamingCard>
           <SolutionsGamingCard

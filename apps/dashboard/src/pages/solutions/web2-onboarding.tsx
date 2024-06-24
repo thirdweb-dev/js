@@ -38,7 +38,7 @@ const SELECTOR_ITEMS = [
       "Developer has the option of creating either a shareable checkout link, one-time checkout link, or build their own flow using checkout elements.",
       "Users can make purchases using fiat currency (e.g., USD, EUR) directly with their credit card or bank account.",
     ],
-    products: ["nft-checkout"],
+    products: [],
   },
   {
     title: "Email log-ins that abstract away crypto",
@@ -170,7 +170,7 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
           title="What You Can Build"
         />
 
-        <LandingGridSection desktopColumns={4}>
+        <LandingGridSection desktopColumns={3}>
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("../../../public/assets/solutions-pages/icons/icon-email-signin.svg")}
@@ -185,13 +185,13 @@ const SolutionsWeb2Onboarding: ThirdwebNextPage = () => {
               description="Easy auth for the most popular web3 wallets and web2 login flows — so you can verify your users' identities & prove wallet ownership to off-chain systems."
             />
           </Card>
-          <Card p={8}>
+          {/* <Card p={8}>
             <LandingIconSectionItem
               icon={require("../../../public/assets/solutions-pages/icons/icon-credit.svg")}
               title="Checkout"
               description="Let users buy digital assets with a credit card, via a one-click checkout flow. Onboard anyone, even if they've never create a wallet or bought crypto before."
             />
-          </Card>
+          </Card> */}
           <Card p={8}>
             <LandingIconSectionItem
               icon={require("../../../public/assets/solutions-pages/icons/icon-fee.svg")}

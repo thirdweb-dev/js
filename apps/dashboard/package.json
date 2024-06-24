@@ -16,13 +16,11 @@
     "find:unused": "next-unused",
     "postbuild": "next-sitemap",
     "build:analyze": "ANALYZE=true pnpm run build",
-    "apollo-codegen": "graphql-codegen",
     "knip": "knip",
     "playwright": "playwright test",
     "update-checkly": "npx checkly deploy"
   },
   "dependencies": {
-    "@apollo/client": "^3.10.5",
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/styled-system": "^2.9.2",
     "@chakra-ui/theme-tools": "^2.1.2",
@@ -68,7 +66,6 @@
     "flat": "^6.0.1",
     "framer-motion": "^11.2.11",
     "fuse.js": "^7.0.0",
-    "graphql": "^16.8.2",
     "idb-keyval": "^6.2.1",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.395.0",
@@ -113,10 +110,6 @@
   },
   "devDependencies": {
     "@chakra-ui/cli": "^2.4.1",
-    "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/typescript": "^4.0.7",
-    "@graphql-codegen/typescript-operations": "^4.2.1",
-    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@next/bundle-analyzer": "^14.2.4",
     "@next/eslint-plugin-next": "^14.2.4",
     "@playwright/test": "^1.44.1",
@@ -164,16 +157,8 @@
       "tw-components",
       "contract-ui"
     ],
-    "exclude": [
-      "node_modules",
-      "types",
-      "tw-components"
-    ],
+    "exclude": ["node_modules", "types", "tw-components"],
     "entrypoints": []
   },
-  "browserslist": [
-    "defaults",
-    "unreleased versions",
-    "not UCAndroid > 0"
-  ]
+  "browserslist": ["defaults", "unreleased versions", "not UCAndroid > 0"]
 }
