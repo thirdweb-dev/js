@@ -452,10 +452,7 @@ async function switchChainWC(
             chainName: apiChain.name,
             nativeCurrency: apiChain.nativeCurrency,
             rpcUrls: getValidPublicRPCUrl(apiChain), // no clientId on purpose
-            blockExplorerUrls:
-              chain.blockExplorers?.slice(0, 1) ||
-              apiChain.explorers?.slice(0, 1) ||
-              [],
+            blockExplorerUrls: apiChain.explorers?.map((x) => x.url) || [],
           },
         ],
       });
