@@ -4,16 +4,15 @@ import {
   AlertDescription,
   AlertIcon,
   Flex,
-  useDisclosure,
+  useModalContext,
 } from "@chakra-ui/react";
 import { Optimism } from "@thirdweb-dev/chains";
 import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
 import { formatDistance } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { Button, Card, Text } from "tw-components";
+import { Card, LinkButton, Text } from "tw-components";
 import { formatToDollars } from "./CreditsButton";
 
 interface CreditsItemProps {
@@ -27,14 +26,9 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
   onCreditsButton,
   isOpCreditDefault,
 }) => {
-  const {
-    isOpen: isMoreCreditsOpen,
-    onOpen: onMoreCreditsOpen,
-    onClose: onMoreCreditsClose,
-  } = useDisclosure();
   const trackEvent = useTrack();
-
   const account = useAccount();
+  const modal = useModalContext();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${account?.data?.id || ""}`,
@@ -77,20 +71,21 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           ) : null}
           <Text color="bgBlack">{creditTitle}</Text>
           {!hasAppliedForOpGrant && isOpCredit && (
-            <Button
+            <LinkButton
+              href="/dashboard/settings/gas-credits"
               size="xs"
               variant="outline"
               onClick={() => {
-                onMoreCreditsOpen();
                 trackEvent({
                   category: "op-sponsorship",
                   action: "click",
                   label: "apply-now",
                 });
+                modal.onClose();
               }}
             >
-              Apply now
-            </Button>
+              Apply Now
+            </LinkButton>
           )}
         </Flex>
         <Flex gap={6}>
@@ -137,12 +132,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           </Alert>
         )}
       </Flex>
-      {isOpCredit && (
-        <ApplyForOpCreditsModal
-          isOpen={isMoreCreditsOpen}
-          onClose={onMoreCreditsClose}
-        />
-      )}
     </Card>
   );
 };

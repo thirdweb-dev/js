@@ -4,7 +4,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { Heading } from "tw-components";
+import { Heading, LinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import { ApplyForOpCreditsModal } from "../../../components/onboarding/ApplyForOpCreditsModal";
 
@@ -17,10 +17,22 @@ const SettingsGasCreditsPage: ThirdwebNextPage = () => {
 
   return (
     <Flex flexDir="column" gap={8}>
-      <Heading size="title.lg" as="h1">
-        Apply for Gas Credits
-      </Heading>
-      <ApplyForOpCreditsModal isOpen onClose={() => {}} noModal />
+      <Flex direction="row" gap={4} align="center">
+        <Heading size="title.lg" as="h1">
+          Apply to the Optimism Superchain App Accelerator
+        </Heading>
+        <LinkButton
+          display={{ base: "none", md: "inherit" }}
+          isExternal
+          href="https://blog.thirdweb.com/accelerating-the-superchain-with-optimism/"
+          size="sm"
+          variant="outline"
+        >
+          Learn More
+        </LinkButton>
+      </Flex>
+
+      <ApplyForOpCreditsModal />
     </Flex>
   );
 };
