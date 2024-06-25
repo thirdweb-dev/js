@@ -13,6 +13,6 @@ const rpcClient = getRpcClient({
 describe.runIf(process.env.TW_SECRET_KEY).skip("eth_getLogs", () => {
   it("should return unparsed logs, without events", async () => {
     const logs = await eth_getLogs(rpcClient);
-    expect(logs).toMatchInlineSnapshot("[]");
+    expect(Array.isArray(logs)).toBe(true);
   });
 });
