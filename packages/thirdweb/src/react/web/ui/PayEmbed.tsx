@@ -221,7 +221,22 @@ export function PayEmbed(props: PayEmbedProps) {
   }
 
   return (
-    <CustomThemeProvider theme={theme}>
+    <PayEmbedContainer theme={theme} style={props.style}>
+      {content}
+    </PayEmbedContainer>
+  );
+}
+
+/**
+ * @internal
+ */
+export function PayEmbedContainer(props: {
+  theme: Theme | "light" | "dark";
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+}) {
+  return (
+    <CustomThemeProvider theme={props.theme}>
       <Container
         bg="modalBg"
         style={{
@@ -235,7 +250,7 @@ export function PayEmbed(props: PayEmbedProps) {
         }}
         borderColor="borderColor"
       >
-        <DynamicHeight>{content}</DynamicHeight>
+        <DynamicHeight>{props.children}</DynamicHeight>
       </Container>
     </CustomThemeProvider>
   );

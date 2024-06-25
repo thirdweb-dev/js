@@ -6,18 +6,13 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
-import { toEther } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import {
   type Theme,
-  fontSize,
   iconSize,
   spacing,
 } from "../../../../../core/design-system/index.js";
-import {
-  useChainQuery,
-  useChainsQuery,
-} from "../../../../../core/hooks/others/useChainQuery.js";
+import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
@@ -31,11 +26,9 @@ import {
   useDrawer,
 } from "../../../components/Drawer.js";
 import { DynamicHeight } from "../../../components/DynamicHeight.js";
-import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { Spinner } from "../../../components/Spinner.js";
 import { SwitchNetworkButton } from "../../../components/SwitchNetwork.js";
-import { TokenIcon } from "../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
@@ -46,23 +39,17 @@ import type { SupportedTokens } from "../../defaultTokens.js";
 import { CoinsIcon } from "../../icons/CoinsIcon.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
-import {
-  type ERC20OrNativeToken,
-  NATIVE_TOKEN,
-  isNativeToken,
-} from "../nativeToken.js";
+import { type ERC20OrNativeToken, isNativeToken } from "../nativeToken.js";
 import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayTokenIcon } from "./PayTokenIcon.js";
 import { PayWithCreditCard } from "./PayWIthCreditCard.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import type { CurrencyMeta } from "./fiat/currencies.js";
+import { BuyUIMainScreen } from "./main/BuyUIMainScreen.js";
 import type { BuyForTx, SelectedScreen } from "./main/types.js";
-import { useBuyTxStates } from "./main/useBuyTxStates.js";
-import { useEnabledPaymentMethods } from "./main/useEnabledPaymentMethods.js";
 import { useUISelectionStates } from "./main/useUISelectionStates.js";
 import { openOnrampPopup } from "./openOnRamppopup.js";
-import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
 import { PayWithCrypto } from "./swap/PayWithCrypto.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
@@ -72,8 +59,6 @@ import {
   useBuySupportedDestinations,
   useBuySupportedSources,
 } from "./swap/useSwapSupportedChains.js";
-
-// NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
 
 export type BuyScreenProps = {
   onBack?: () => void;
@@ -369,7 +354,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         )}
 
         {screen.id === "main" && (
-          <MainScreen
+          <BuyUIMainScreen
             account={account || null}
             buyForTx={buyForTx || null}
             client={client}
@@ -513,141 +498,6 @@ function SelectedTokenInfo(props: {
         />
       </Container>
     </div>
-  );
-}
-
-function MainScreen(props: {
-  buyForTx: BuyForTx | null;
-  client: ThirdwebClient;
-  setTokenAmount: (amount: string) => void;
-  account: Account | null;
-  tokenAmount: string;
-  payOptions: PayUIOptions;
-  toToken: ERC20OrNativeToken;
-  toChain: Chain;
-  onSelectBuyToken: () => void;
-  connectButton?: React.ReactNode;
-  onViewPendingTx: () => void;
-  setScreen: (screen: SelectedScreen) => void;
-  supportedDestinations: SupportedChainAndTokens;
-}) {
-  const { showPaymentSelection, buyWithCryptoEnabled, buyWithFiatEnabled } =
-    useEnabledPaymentMethods({
-      payOptions: props.payOptions,
-      supportedDestinations: props.supportedDestinations,
-      toChain: props.toChain,
-      toToken: props.toToken,
-    });
-
-  const [hasEditedAmount, setHasEditedAmount] = useState(false);
-  const {
-    buyForTx,
-    setTokenAmount,
-    account,
-    client,
-    tokenAmount,
-    payOptions,
-    toToken,
-    toChain,
-  } = props;
-
-  // Buy Transaction flow states
-  const { amountNeeded } = useBuyTxStates({
-    setTokenAmount,
-    buyForTx,
-    hasEditedAmount,
-    account,
-  });
-
-  const disableContinue = !tokenAmount;
-
-  return (
-    <Container p="lg">
-      <ModalHeader
-        title={
-          props.buyForTx ? `Not enough ${props.buyForTx.tokenSymbol}` : "Buy"
-        }
-      />
-
-      {/* Amount needed for Send Tx */}
-      {amountNeeded && props.buyForTx ? (
-        <>
-          <Spacer y="lg" />
-          <BuyForTxUI
-            amountNeeded={String(
-              formatNumber(Number(toEther(amountNeeded)), 4),
-            )}
-            buyForTx={props.buyForTx}
-            client={client}
-          />
-        </>
-      ) : (
-        <Spacer y="xl" />
-      )}
-
-      {/* To */}
-      <BuyTokenInput
-        value={tokenAmount}
-        onChange={async (value) => {
-          setHasEditedAmount(true);
-          setTokenAmount(value);
-        }}
-        freezeAmount={payOptions.prefillBuy?.allowEdits?.amount === false}
-        freezeChainAndToken={
-          payOptions.prefillBuy?.allowEdits?.chain === false &&
-          payOptions.prefillBuy?.allowEdits?.token === false
-        }
-        token={toToken}
-        chain={toChain}
-        onSelectToken={props.onSelectBuyToken}
-        client={props.client}
-        hideTokenSelector={!!props.buyForTx}
-      />
-
-      <Spacer y="xl" />
-
-      {/* Continue */}
-      <Container flex="column" gap="sm">
-        {!account && props.connectButton ? (
-          <div>{props.connectButton}</div>
-        ) : (
-          <Button
-            variant="accent"
-            fullWidth
-            disabled={disableContinue}
-            data-disabled={disableContinue}
-            onClick={() => {
-              if (showPaymentSelection) {
-                props.setScreen({ id: "select-payment-method" });
-              } else if (buyWithCryptoEnabled) {
-                props.setScreen({ id: "buy-with-crypto" });
-              } else if (buyWithFiatEnabled) {
-                props.setScreen({ id: "buy-with-fiat" });
-              } else {
-                console.error("No payment method enabled");
-              }
-            }}
-          >
-            Continue
-          </Button>
-        )}
-
-        {/* Do we want to remove this? */}
-        {account && (
-          <Button
-            variant="outline"
-            fullWidth
-            style={{
-              padding: spacing.xs,
-              fontSize: fontSize.sm,
-            }}
-            onClick={props.onViewPendingTx}
-          >
-            View all transactions
-          </Button>
-        )}
-      </Container>
-    </Container>
   );
 }
 
@@ -1153,86 +1003,6 @@ function FiatScreenContent(props: {
           "Continue"
         )}
       </Button>
-    </Container>
-  );
-}
-
-function BuyForTxUI(props: {
-  amountNeeded: string;
-  buyForTx: BuyForTx;
-  client: ThirdwebClient;
-}) {
-  const chainQuery = useChainQuery(props.buyForTx.tx.chain);
-
-  return (
-    <Container>
-      <Spacer y="xs" />
-      <Container
-        flex="row"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm">Amount Needed</Text>
-        <Container
-          flex="column"
-          style={{
-            alignItems: "flex-end",
-          }}
-        >
-          <Container flex="row" gap="xs" center="y">
-            <Text color="primaryText" size="sm">
-              {props.amountNeeded} {props.buyForTx.tokenSymbol}
-            </Text>
-            <TokenIcon
-              chain={props.buyForTx.tx.chain}
-              client={props.client}
-              size="sm"
-              token={NATIVE_TOKEN}
-            />
-          </Container>
-          <Spacer y="xxs" />
-          {chainQuery.data ? (
-            <Text size="sm"> {chainQuery.data.name}</Text>
-          ) : (
-            <Skeleton height={fontSize.sm} width="50px" />
-          )}
-        </Container>
-      </Container>
-
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="md" />
-
-      <Container
-        flex="row"
-        style={{
-          justifyContent: "space-between",
-        }}
-      >
-        <Text size="sm">Your Balance</Text>
-        <Container flex="row" gap="xs">
-          <Text color="primaryText" size="sm">
-            {formatNumber(Number(toEther(props.buyForTx.balance)), 4)}{" "}
-            {props.buyForTx.tokenSymbol}
-          </Text>
-          <TokenIcon
-            chain={props.buyForTx.tx.chain}
-            client={props.client}
-            size="sm"
-            token={NATIVE_TOKEN}
-          />
-        </Container>
-      </Container>
-
-      <Spacer y="md" />
-      <Line />
-      <Spacer y="xl" />
-
-      <Text center size="sm">
-        Purchase
-      </Text>
-      <Spacer y="xxs" />
     </Container>
   );
 }
