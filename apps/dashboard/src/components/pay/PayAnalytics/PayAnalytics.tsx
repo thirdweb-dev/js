@@ -82,21 +82,21 @@ export function PayAnalytics(props: { apiKey: ApiKey }) {
         </GridWithSeparator>
 
         <div className="grid gap-4 grid-cols-1 xl:grid-cols-2 ">
-          <div className="border border-border rounded-xl p-4 xl:p-6">
+          <CardContainer>
             <Payouts
               clientId={clientId}
               from={range.from}
               to={range.to}
               numberOfDays={numberOfDays}
             />
-          </div>
-          <div className="border border-border rounded-xl p-4 xl:p-6 flex ">
+          </CardContainer>
+          <CardContainer>
             <PaymentsSuccessRate
               clientId={clientId}
               from={range.from}
               to={range.to}
             />
-          </div>
+          </CardContainer>
         </div>
 
         <GridWithSeparator>
@@ -115,9 +115,9 @@ export function PayAnalytics(props: { apiKey: ApiKey }) {
           />
         </GridWithSeparator>
 
-        <div className="border border-border rounded-xl p-4 xl:p-6">
+        <CardContainer>
           <PaymentHistory clientId={clientId} from={range.from} to={range.to} />
-        </div>
+        </CardContainer>
       </div>
     </div>
   );
@@ -209,6 +209,14 @@ function GridWithSeparator(props: { children: React.ReactNode }) {
       {props.children}
       {/* Desktop - horizontal middle */}
       <div className="absolute left-[50%] w-[1px] top-6 bottom-6 bg-border hidden xl:block" />
+    </div>
+  );
+}
+
+function CardContainer(props: { children: React.ReactNode }) {
+  return (
+    <div className="border border-border rounded-xl p-4 xl:p-6 flex">
+      {props.children}
     </div>
   );
 }

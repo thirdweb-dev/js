@@ -10,13 +10,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function NoDataAvailable() {
+export function FailedToLoad() {
   return (
     <div className="min-h-[250px] flex items-center justify-center flex-1">
       <div className="flex items-center gap-2">
         <OctagonXIcon className="size-5 text-destructive-foreground" />
-        <p className="text-muted-foreground">No data available</p>
+        <p className="text-muted-foreground">Unable to load</p>
       </div>
+    </div>
+  );
+}
+
+export function NoDataOverlay() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center backdrop-blur-sm text-muted-foreground bg-background/30 text-sm rounded-lg">
+      No data available
     </div>
   );
 }

@@ -7,8 +7,9 @@ import { usePayNewCustomers } from "../hooks/usePayNewCustomers";
 import {
   CardHeading,
   ChangeBadge,
+  FailedToLoad,
   IntervalSelector,
-  NoDataAvailable,
+  NoDataOverlay,
   chartHeight,
 } from "./common";
 
@@ -17,17 +18,20 @@ type GraphDataItem = {
   value: number;
 };
 
-type UIData = {
-  graphData: GraphDataItem[];
-  totalNewCustomers: number;
-  percentChange: number;
-};
-
-function getUIData(newCustomersQuery: ReturnType<typeof usePayNewCustomers>): {
-  data?: UIData;
+type ProcessedQuery = {
+  data?: {
+    graphData: GraphDataItem[];
+    totalNewCustomers: number;
+    percentChange: number;
+  };
   isError?: boolean;
   isLoading?: boolean;
-} {
+  isEmpty?: boolean;
+};
+
+function processQuery(
+  newCustomersQuery: ReturnType<typeof usePayNewCustomers>,
+): ProcessedQuery {
   if (newCustomersQuery.isLoading) {
     return { isLoading: true };
   }
@@ -37,7 +41,7 @@ function getUIData(newCustomersQuery: ReturnType<typeof usePayNewCustomers>): {
   }
 
   if (newCustomersQuery.data.intervalResults.length === 0) {
-    return { isError: true };
+    return { isEmpty: true };
   }
 
   const newCusomtersData: GraphDataItem[] =
@@ -76,14 +80,14 @@ export function PayNewCustomers(props: {
     setIntervalType(props.numberOfDays > 30 ? "week" : "day");
   }, [props.numberOfDays]);
 
-  const newCustomersQuery = usePayNewCustomers({
-    clientId: props.clientId,
-    from: props.from,
-    to: props.to,
-    intervalType,
-  });
-
-  const uiData = getUIData(newCustomersQuery);
+  const uiQuery = processQuery(
+    usePayNewCustomers({
+      clientId: props.clientId,
+      from: props.from,
+      to: props.to,
+      intervalType,
+    }),
+  );
 
   return (
     <section className="relative flex flex-col min-h-[320px]">
@@ -91,7 +95,7 @@ export function PayNewCustomers(props: {
       <div className="flex justify-between gap-2 items-center mb-1">
         <CardHeading>New Customers </CardHeading>
 
-        <div className={!uiData.data ? "invisible" : ""}>
+        <div className={!uiQuery.data ? "invisible" : ""}>
           <IntervalSelector
             intervalType={intervalType}
             setIntervalType={setIntervalType}
@@ -100,31 +104,37 @@ export function PayNewCustomers(props: {
       </div>
 
       {/* Chart */}
-      {!uiData.isError ? (
+      {!uiQuery.isError ? (
         <RenderData
-          data={uiData.data}
+          query={uiQuery}
           intervalType={intervalType}
           setIntervalType={setIntervalType}
         />
       ) : (
-        <NoDataAvailable />
+        <FailedToLoad />
       )}
     </section>
   );
 }
 
 function RenderData(props: {
-  data?: UIData;
+  query: ProcessedQuery;
   intervalType: "day" | "week";
   setIntervalType: (intervalType: "day" | "week") => void;
 }) {
   const uniqueId = useId();
 
+  const chartColor = props.query.isEmpty
+    ? "hsl(var(--muted-foreground))"
+    : "hsl(var(--link-foreground))";
+
   return (
     <div>
       <div className="flex items-center gap-3 mb-5">
         <SkeletonContainer
-          loadedData={props.data?.totalNewCustomers}
+          loadedData={
+            props.query.isEmpty ? "NA" : props.query.data?.totalNewCustomers
+          }
           skeletonData={100}
           render={(v) => {
             return (
@@ -133,32 +143,28 @@ function RenderData(props: {
           }}
         />
 
-        <SkeletonContainer
-          loadedData={props.data?.percentChange}
-          className="rounded-2xl"
-          skeletonData={1}
-          render={(v) => {
-            return <ChangeBadge percent={v} />;
-          }}
-        />
+        {!props.query.isEmpty && (
+          <SkeletonContainer
+            loadedData={props.query.data?.percentChange}
+            className="rounded-2xl"
+            skeletonData={1}
+            render={(v) => {
+              return <ChangeBadge percent={v} />;
+            }}
+          />
+        )}
       </div>
 
       <div className="relative flex justify-center w-full ">
-        {props.data?.graphData ? (
+        {props.query.isLoading ? (
+          <AreaChartLoadingState height={`${chartHeight}px`} />
+        ) : (
           <ResponsiveContainer width="100%" height={chartHeight}>
-            <AreaChart data={props.data.graphData}>
+            <AreaChart data={props.query.data?.graphData || emptyGraphData}>
               <defs>
                 <linearGradient id={uniqueId} x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={"hsl(var(--link-foreground))"}
-                    stopOpacity={0.3}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={"hsl(var(--link-foreground))"}
-                    stopOpacity={0.0}
-                  />
+                  <stop offset="5%" stopColor={chartColor} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={chartColor} stopOpacity={0.0} />
                 </linearGradient>
               </defs>
 
@@ -182,27 +188,39 @@ function RenderData(props: {
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke="hsl(var(--link-foreground))"
+                stroke={chartColor}
                 fillOpacity={1}
                 fill={`url(#${uniqueId})`}
                 strokeWidth={2}
                 strokeLinecap="round"
               />
 
-              <XAxis
-                dataKey="date"
-                axisLine={false}
-                tickLine={false}
-                className="text-xs font-sans mt-5"
-                stroke="hsl(var(--muted-foreground))"
-                dy={12}
-              />
+              {props.query.data && (
+                <XAxis
+                  dataKey="date"
+                  axisLine={false}
+                  tickLine={false}
+                  className="text-xs font-sans mt-5"
+                  stroke="hsl(var(--muted-foreground))"
+                  dy={12}
+                />
+              )}
             </AreaChart>
           </ResponsiveContainer>
-        ) : (
-          <AreaChartLoadingState height={`${chartHeight}px`} />
         )}
+
+        {props.query.isEmpty && <NoDataOverlay />}
       </div>
     </div>
   );
 }
+const emptyGraphData: GraphDataItem[] = [5, 9, 7, 15, 7, 20].map(
+  (x, i, arr) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i - arr.length);
+    return {
+      value: x,
+      date: date.toISOString(),
+    };
+  },
+);

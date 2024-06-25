@@ -9,7 +9,7 @@ import { useState } from "react";
 import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
 import { ToolTipLabel } from "../../../../@/components/ui/tooltip";
 import { usePayVolume } from "../hooks/usePayVolume";
-import { CardHeading, NoDataAvailable } from "./common";
+import { CardHeading, FailedToLoad } from "./common";
 
 type PayVolumeType = "all" | "crypto" | "fiat";
 
@@ -20,14 +20,17 @@ type UIData = {
   total: number;
 };
 
-function getUIData(
-  volumeQuery: ReturnType<typeof usePayVolume>,
-  type: PayVolumeType,
-): {
+type ProcessedQuery = {
   data?: UIData;
   isError?: boolean;
   isLoading?: boolean;
-} {
+  isEmpty?: boolean;
+};
+
+function processQuery(
+  volumeQuery: ReturnType<typeof usePayVolume>,
+  type: PayVolumeType,
+): ProcessedQuery {
   if (volumeQuery.isLoading) {
     return { isLoading: true };
   }
@@ -69,7 +72,7 @@ function getUIData(
 
   if (total === 0) {
     return {
-      isError: true,
+      isEmpty: true,
     };
   }
 
@@ -85,20 +88,22 @@ export function PaymentsSuccessRate(props: {
   to: Date;
 }) {
   const [type, setType] = useState<PayVolumeType>("all");
-  const volumeQuery = usePayVolume({
-    clientId: props.clientId,
-    from: props.from,
-    to: props.to,
-    intervalType: "day",
-  });
 
-  const uiData = getUIData(volumeQuery, type);
+  const uiQuery = processQuery(
+    usePayVolume({
+      clientId: props.clientId,
+      from: props.from,
+      to: props.to,
+      intervalType: "day",
+    }),
+    type,
+  );
 
   return (
     <div className="w-full relative flex flex-col">
       <div className="flex justify-between gap-2 items-center">
         <CardHeading> Payments </CardHeading>
-        {uiData.data && (
+        {uiQuery.data && (
           <Select
             value={type}
             onValueChange={(value: PayVolumeType) => {
@@ -118,37 +123,43 @@ export function PaymentsSuccessRate(props: {
       </div>
 
       <div className="flex-1 flex flex-col justify-center">
-        {!uiData.isError ? (
-          <RenderData data={uiData.data} />
-        ) : (
-          <NoDataAvailable />
-        )}
+        {!uiQuery.isError ? <RenderData query={uiQuery} /> : <FailedToLoad />}
       </div>
     </div>
   );
 }
 
-function RenderData(props: { data?: UIData }) {
+function RenderData(props: { query: ProcessedQuery }) {
   return (
     <div>
       <div className="h-10" />
-      <SkeletonContainer
-        loadedData={props.data?.rate}
-        skeletonData={50}
-        render={(rate) => <Bar rate={rate} />}
-      />
+      {props.query.isEmpty ? (
+        <EmptyBar />
+      ) : (
+        <SkeletonContainer
+          loadedData={props.query.data?.rate}
+          skeletonData={50}
+          render={(rate) => <Bar rate={rate} />}
+        />
+      )}
 
       <div className="h-6" />
 
       <InfoRow
         label="Succeeded"
         type="success"
-        amount={props.data?.succeeded}
+        amount={props.query.data?.succeeded}
+        isEmpty={props.query.isEmpty}
       />
 
       <div className="h-3" />
 
-      <InfoRow label="Failed" type="failure" amount={props.data?.failed} />
+      <InfoRow
+        label="Failed"
+        type="failure"
+        amount={props.query.data?.failed}
+        isEmpty={props.query.isEmpty}
+      />
     </div>
   );
 }
@@ -171,28 +182,41 @@ function Bar(props: { rate: number }) {
   );
 }
 
+function EmptyBar() {
+  return <div className="flex items-center gap-0.5 h-5 bg-accent rounded-lg" />;
+}
+
 function InfoRow(props: {
   label: string;
   type: "success" | "failure";
   amount?: number;
+  isEmpty?: boolean;
 }) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-2">
         <div
           className={`size-5 rounded-lg ${
-            props.type === "success"
-              ? "bg-success-foreground"
-              : "bg-destructive-foreground"
+            !props.amount
+              ? "bg-accent"
+              : props.type === "success"
+                ? "bg-success-foreground"
+                : "bg-destructive-foreground"
           }`}
         />
         <p className="text-base text-secondary-foreground">{props.label}</p>
       </div>
       <SkeletonContainer
-        loadedData={props.amount}
-        skeletonData={50}
+        loadedData={
+          props.isEmpty
+            ? "$-"
+            : props.amount
+              ? `$${props.amount.toLocaleString()}`
+              : undefined
+        }
+        skeletonData={"$50"}
         render={(v) => {
-          return <p className="text-base font-medium">${v.toLocaleString()}</p>;
+          return <p className="text-base font-medium">{v}</p>;
         }}
       />
     </div>

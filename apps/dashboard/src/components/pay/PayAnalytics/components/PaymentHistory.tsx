@@ -14,7 +14,7 @@ import {
 import { ExportToCSVButton } from "./ExportToCSVButton";
 import {
   CardHeading,
-  NoDataAvailable,
+  FailedToLoad,
   TableData,
   TableHeading,
   TableHeadingRow,
@@ -27,11 +27,16 @@ type UIData = {
 
 const pageSize = 10;
 
-function getUIData(purchasesQuery: ReturnType<typeof usePayPurchases>): {
+type ProcessedQuery = {
   data?: UIData;
   isLoading?: boolean;
   isError?: boolean;
-} {
+  isEmpty?: boolean;
+};
+
+function processQuery(
+  purchasesQuery: ReturnType<typeof usePayPurchases>,
+): ProcessedQuery {
   if (purchasesQuery.isLoading) {
     return { isLoading: true };
   }
@@ -43,7 +48,7 @@ function getUIData(purchasesQuery: ReturnType<typeof usePayPurchases>): {
   const totalCount = purchasesQuery.data.count;
 
   if (purchases.length === 0) {
-    return { isError: true };
+    return { isEmpty: true };
   }
 
   return {
@@ -69,13 +74,13 @@ export function PaymentHistory(props: {
     count: pageSize,
   });
 
-  const uiData = getUIData(purchasesQuery);
+  const uiQuery = processQuery(purchasesQuery);
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex flex-col lg:flex-row lg:justify-between gap-2 lg:items-center">
         <CardHeading> Transaction History</CardHeading>
-        {!uiData.isError && (
+        {!uiQuery.isError && (
           <ExportToCSVButton
             fileName="transaction_history"
             getData={async () => {
@@ -95,22 +100,22 @@ export function PaymentHistory(props: {
 
       <div className="h-5" />
 
-      {!uiData.isError ? (
+      {!uiQuery.isError ? (
         <RenderData
-          data={uiData.data}
+          query={uiQuery}
           activePage={page}
           setPage={setPage}
           isLoadingMore={purchasesQuery.isFetching}
         />
       ) : (
-        <NoDataAvailable />
+        <FailedToLoad />
       )}
     </div>
   );
 }
 
 function RenderData(props: {
-  data?: UIData;
+  query: ProcessedQuery;
   isLoadingMore: boolean;
   activePage: number;
   setPage: (page: number) => void;
@@ -130,20 +135,27 @@ function RenderData(props: {
             </TableHeadingRow>
           </thead>
           <tbody>
-            {props.data && !props.isLoadingMore ? (
+            {!props.query.isEmpty && (
               <>
-                {props.data.purchases.map((purchase) => {
-                  return (
-                    <TableRow key={purchase.purchaseId} purchase={purchase} />
-                  );
-                })}
-              </>
-            ) : (
-              <>
-                {new Array(pageSize).fill(0).map((_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: ok
-                  <SkeletonTableRow key={i} />
-                ))}
+                {props.query.data && !props.isLoadingMore ? (
+                  <>
+                    {props.query.data.purchases.map((purchase) => {
+                      return (
+                        <TableRow
+                          key={purchase.purchaseId}
+                          purchase={purchase}
+                        />
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {new Array(pageSize).fill(0).map((_, i) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: ok
+                      <SkeletonTableRow key={i} />
+                    ))}
+                  </>
+                )}
               </>
             )}
           </tbody>
@@ -152,11 +164,17 @@ function RenderData(props: {
 
       <div className="h-8" />
 
-      <PaginationButtons
-        activePage={props.activePage}
-        totalPages={props.data?.pages || 5}
-        onPageClick={props.setPage}
-      />
+      {props.query.isEmpty ? (
+        <div className="min-h-[150px] flex items-center justify-center w-full text-muted-foreground text-sm">
+          No data available
+        </div>
+      ) : (
+        <PaginationButtons
+          activePage={props.activePage}
+          totalPages={props.query.data?.pages || 5}
+          onPageClick={props.setPage}
+        />
+      )}
     </div>
   );
 }

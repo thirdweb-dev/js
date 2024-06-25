@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
 import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
 import { usePayVolume } from "../hooks/usePayVolume";
-import { NoDataAvailable, chartHeight } from "./common";
+import { FailedToLoad, chartHeight } from "./common";
 
 type VolData = {
   name: string;
@@ -10,17 +10,20 @@ type VolData = {
   color: string;
 };
 
-type UIQueryData = {
-  totalAmount: number;
-  cryptoTotalUSD: number;
-  fiatTotalUSD: number;
+type ProcessedQuery = {
+  data?: {
+    totalAmount: number;
+    cryptoTotalUSD: number;
+    fiatTotalUSD: number;
+  };
+  isError?: boolean;
+  isEmpty?: boolean;
+  isLoading?: boolean;
 };
 
-function getUIData(volumeQuery: ReturnType<typeof usePayVolume>): {
-  data?: UIQueryData;
-  isError?: boolean;
-  isLoading?: boolean;
-} {
+function processQuery(
+  volumeQuery: ReturnType<typeof usePayVolume>,
+): ProcessedQuery {
   if (volumeQuery.isLoading) {
     return { isLoading: true };
   }
@@ -30,7 +33,7 @@ function getUIData(volumeQuery: ReturnType<typeof usePayVolume>): {
   }
 
   if (volumeQuery.data.aggregate.sum.succeeded.amountUSDCents === 0) {
-    return { isError: true };
+    return { isEmpty: true };
   }
 
   const cryptoTotalUSD = Math.ceil(
@@ -42,13 +45,13 @@ function getUIData(volumeQuery: ReturnType<typeof usePayVolume>): {
 
   const totalAmount = cryptoTotalUSD + fiatTotalUSD;
 
-  const data: UIQueryData = {
-    totalAmount,
-    cryptoTotalUSD,
-    fiatTotalUSD,
+  return {
+    data: {
+      totalAmount,
+      cryptoTotalUSD,
+      fiatTotalUSD,
+    },
   };
-
-  return { data };
 }
 
 export function TotalVolumePieChart(props: {
@@ -56,39 +59,35 @@ export function TotalVolumePieChart(props: {
   from: Date;
   to: Date;
 }) {
-  const volumeQuery = usePayVolume({
-    clientId: props.clientId,
-    from: props.from,
-    intervalType: "day",
-    to: props.to,
-  });
-
-  const uiData = getUIData(volumeQuery);
+  const uiQuery = processQuery(
+    usePayVolume({
+      clientId: props.clientId,
+      from: props.from,
+      intervalType: "day",
+      to: props.to,
+    }),
+  );
 
   return (
     <section className="w-full">
-      {!uiData.isError ? (
-        <RenderData data={uiData.data} />
-      ) : (
-        <NoDataAvailable />
-      )}
+      {!uiQuery.isError ? <RenderData query={uiQuery} /> : <FailedToLoad />}
     </section>
   );
 }
 
-function RenderData(props: { data?: UIQueryData }) {
-  const queryData = props.data;
+function RenderData(props: { query: ProcessedQuery }) {
+  const queryData = props.query.data;
 
   const skeletonData: VolData[] = [
     {
       name: "Crypto",
       amount: 50,
-      color: "hsl(var(--muted))",
+      color: props.query.isEmpty ? "hsl(var(--accent))" : "hsl(var(--muted))",
     },
     {
       name: "Fiat",
       amount: 50,
-      color: "hsl(var(--muted))",
+      color: props.query.isEmpty ? "hsl(var(--accent))" : "hsl(var(--muted))",
     },
   ];
 
@@ -139,11 +138,15 @@ function RenderData(props: { data?: UIQueryData }) {
             <p className="text-sm font-medium"> Total Volume</p>
 
             <SkeletonContainer
-              loadedData={queryData?.totalAmount}
-              skeletonData={100}
-              render={(v) => {
-                const totalAmount = `$${v.toLocaleString()}`;
-
+              loadedData={
+                queryData
+                  ? `$${queryData?.totalAmount.toLocaleString()}`
+                  : props.query.isEmpty
+                    ? "NA"
+                    : undefined
+              }
+              skeletonData={"$100"}
+              render={(totalAmount) => {
                 return (
                   <p
                     className={cn(
@@ -168,7 +171,13 @@ function RenderData(props: { data?: UIQueryData }) {
               key={v.name}
               color={v.color}
               label={v.name}
-              amount={queryData ? v.amount : undefined}
+              amount={
+                queryData
+                  ? `$${v.amount.toLocaleString()}`
+                  : props.query.isEmpty
+                    ? "$-"
+                    : undefined
+              }
             />
           ))}
         </div>
@@ -180,7 +189,7 @@ function RenderData(props: { data?: UIQueryData }) {
 function VolumeLegend(props: {
   color: string;
   label: string;
-  amount?: number;
+  amount?: string;
 }) {
   return (
     <div className="flex items-start gap-2">
@@ -197,11 +206,11 @@ function VolumeLegend(props: {
 
         <SkeletonContainer
           loadedData={props.amount}
-          skeletonData={50}
+          skeletonData={"$50"}
           render={(amount) => {
             return (
               <p className="text-2xl text-foreground font-semibold tracking-tight">
-                ${amount.toLocaleString()}
+                {amount}
               </p>
             );
           }}

@@ -9,7 +9,7 @@ import {
 } from "../hooks/usePayCustomers";
 import { ExportToCSVButton } from "./ExportToCSVButton";
 import {
-  NoDataAvailable,
+  FailedToLoad,
   TableData,
   TableHeading,
   TableHeadingRow,
@@ -31,11 +31,16 @@ type UIData = {
   showLoadMore: boolean;
 };
 
-function getUIData(topCustomersQuery: ReturnType<typeof usePayCustomers>): {
+type ProcessedQuery = {
   data?: UIData;
   isError?: boolean;
   isLoading?: boolean;
-} {
+  isEmpty?: boolean;
+};
+
+function processQuery(
+  topCustomersQuery: ReturnType<typeof usePayCustomers>,
+): ProcessedQuery {
   if (topCustomersQuery.isLoading) {
     return { isLoading: true };
   }
@@ -51,7 +56,7 @@ function getUIData(topCustomersQuery: ReturnType<typeof usePayCustomers>): {
   customers = customers.filter((x) => x.totalSpendUSDCents > 0);
 
   if (customers.length === 0) {
-    return { isError: true };
+    return { isEmpty: true };
   }
 
   return {
@@ -79,9 +84,9 @@ export function PayCustomersTable(props: {
     type,
   });
 
-  const uiData = getUIData(topCustomersQuery);
+  const uiQuery = processQuery(topCustomersQuery);
 
-  const customersData = uiData.data?.customers;
+  const customersData = uiQuery.data?.customers;
 
   return (
     <div className="flex flex-col">
@@ -115,24 +120,24 @@ export function PayCustomersTable(props: {
         )}
       </div>
 
-      {!uiData.isError ? (
+      {!uiQuery.isError ? (
         <>
           <div className="h-5" />
           <RenderData
-            data={uiData.data}
+            query={uiQuery}
             loadMore={() => {
               topCustomersQuery.fetchNextPage();
             }}
           />
         </>
       ) : (
-        <NoDataAvailable />
+        <FailedToLoad />
       )}
     </div>
   );
 }
 
-function RenderData(props: { data?: UIData; loadMore: () => void }) {
+function RenderData(props: { query: ProcessedQuery; loadMore: () => void }) {
   return (
     <ScrollShadow scrollableClassName="h-[250px]" disableTopShadow={true}>
       <table className="w-full">
@@ -142,29 +147,37 @@ function RenderData(props: { data?: UIData; loadMore: () => void }) {
             <TableHeading> Total spend </TableHeading>
           </TableHeadingRow>
         </thead>
-        <tbody>
-          {props.data ? (
-            props.data?.customers.map((customer, i) => {
-              return (
-                <CustomerTableRow
-                  key={customer.walletAddress}
-                  customer={customer}
-                  rowIndex={i}
-                />
-              );
-            })
-          ) : (
+        <tbody className="relative">
+          {props.query.isLoading ? (
             <>
               {new Array(5).fill(0).map((_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: ok
                 <CustomerTableRow rowIndex={i} key={i} />
               ))}
             </>
+          ) : (
+            <>
+              {props.query.data?.customers.map((customer, i) => {
+                return (
+                  <CustomerTableRow
+                    key={customer.walletAddress}
+                    customer={customer}
+                    rowIndex={i}
+                  />
+                );
+              })}
+            </>
           )}
         </tbody>
       </table>
 
-      {props.data?.showLoadMore && (
+      {props.query.isEmpty && (
+        <div className="min-h-[240px] flex items-center justify-center w-full text-muted-foreground text-sm">
+          No data available
+        </div>
+      )}
+
+      {props.query.data?.showLoadMore && (
         <div className="flex justify-center py-3">
           <Button
             className="text-sm text-link-foreground p-2 h-auto"
