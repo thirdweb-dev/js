@@ -255,7 +255,9 @@
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
     "typedoc": "node scripts/typedoc.mjs",
-    "update-version": "node scripts/version.mjs"
+    "update-version": "node scripts/version.mjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "engines": {
     "node": ">=18"
@@ -263,8 +265,17 @@
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
     "@aws-sdk/credential-providers": "3.577.0",
+    "@chromatic-com/storybook": "^1.5.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@storybook/addon-essentials": "^8.1.10",
+    "@storybook/addon-interactions": "^8.1.10",
+    "@storybook/addon-links": "^8.1.10",
+    "@storybook/addon-onboarding": "^8.1.10",
+    "@storybook/blocks": "^8.1.10",
+    "@storybook/react": "^8.1.10",
+    "@storybook/react-vite": "^8.1.10",
+    "@storybook/test": "^8.1.10",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
@@ -280,6 +291,7 @@
     "react-native": "0.74.2",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
+    "storybook": "^8.1.10",
     "vitest": "1.6.0"
   }
 }

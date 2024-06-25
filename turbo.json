@@ -92,6 +92,9 @@
       "dependsOn": ["^build"],
       "env": ["TW_SECRET_KEY", "CI"]
     },
+    "storybook": {
+      "inputs": ["src/**", "test/**"]
+    },
     "test:legacy": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**"],
