@@ -1,11 +1,5 @@
 import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Flex,
-  useModalContext,
-} from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, Flex } from "@chakra-ui/react";
 import { Optimism } from "@thirdweb-dev/chains";
 import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
@@ -19,16 +13,17 @@ interface CreditsItemProps {
   credit?: BillingCredit;
   onCreditsButton?: true;
   isOpCreditDefault?: boolean;
+  onClickApply?: () => void;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
   onCreditsButton,
   isOpCreditDefault,
+  onClickApply,
 }) => {
   const trackEvent = useTrack();
   const account = useAccount();
-  const modal = useModalContext();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
     `appliedForOpGrant-${account?.data?.id || ""}`,
@@ -81,7 +76,9 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
                   action: "click",
                   label: "apply-now",
                 });
-                modal.onClose();
+                if (onClickApply) {
+                  onClickApply();
+                }
               }}
             >
               Apply Now
