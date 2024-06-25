@@ -10,7 +10,9 @@
     "fix": "biome check ./src --fix"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.48.0",
     "next": "14.2.4",
+    "pino-pretty": "^11.2.1",
     "react": "^18",
     "react-dom": "^18",
     "thirdweb": "workspace:*"
