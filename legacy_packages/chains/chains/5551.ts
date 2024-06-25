@@ -6,22 +6,10 @@ export default {
     {
       "name": "Nahmii 2 Mainnet Explorer",
       "url": "https://explorer.n2.nahmii.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
-        "width": 384,
-        "height": 384,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmZhKXgoGpzvthr2eh8ZNgT75YvMtEBegdELAaMPPzf5QT",
-    "width": 384,
-    "height": 384,
-    "format": "png"
-  },
   "infoURL": "https://nahmii.io",
   "name": "Nahmii 2 Mainnet",
   "nativeCurrency": {

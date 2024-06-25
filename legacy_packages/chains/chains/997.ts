@@ -6,24 +6,12 @@ export default {
     {
       "name": "5ireChain Explorer",
       "url": "https://explorer.5ire.network",
-      "standard": "none",
-      "icon": {
-        "url": "ipfs://QmaZDNDFLWESH4i3XqwEWfWBb1HPnQSNbDAr74nr2x8QAk",
-        "width": 800,
-        "height": 800,
-        "format": "svg"
-      }
+      "standard": "none"
     }
   ],
   "faucets": [
     "https://explorer.5ire.network/faucet"
   ],
-  "icon": {
-    "url": "ipfs://QmaZDNDFLWESH4i3XqwEWfWBb1HPnQSNbDAr74nr2x8QAk",
-    "width": 800,
-    "height": 800,
-    "format": "svg"
-  },
   "infoURL": "https://5ire.org",
   "name": "5ireChain Thunder",
   "nativeCurrency": {
