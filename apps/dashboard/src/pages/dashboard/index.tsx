@@ -52,6 +52,8 @@ const Dashboard: ThirdwebNextPage = (
                               size="title.sm"
                               textTransform="capitalize"
                               color="faded"
+                              fontWeight={600}
+                              letterSpacing="tight"
                             >
                               {section === "infrastructure"
                                 ? "Engine"
