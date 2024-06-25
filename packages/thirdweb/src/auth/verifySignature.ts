@@ -124,6 +124,7 @@ export type VerifySignatureParams = Prettify<
  * ```
  * @auth
  */
+let warningTriggered = false;
 export async function verifySignature(options: VerifySignatureParams) {
   try {
     const isValidEOASig = await verifyEOASignature(options);
@@ -139,6 +140,15 @@ export async function verifySignature(options: VerifySignatureParams) {
     } catch {
       // no-op we skip to return false
     }
+  } else if (!warningTriggered) {
+    // We only trigger this warning once
+    warningTriggered = true;
+    console.error(`
+      Failed to verify EOA signature and no chain or client provided.
+
+      If you mean to use a smart account, please provide a chain and client.
+      For more information on how to setup a smart account with Auth, see https://portal.thirdweb.com/connect/auth
+    `);
   }
   // if we reach here, we have no way to verify the signature
   return false;
@@ -147,5 +157,10 @@ export async function verifySignature(options: VerifySignatureParams) {
 function isVerifyContractWalletSignatureParams(
   options: VerifySignatureParams,
 ): options is VerifyContractWalletSignatureParams {
-  return "chain" in options && "client" in options;
+  return (
+    "chain" in options &&
+    options.chain !== undefined &&
+    "client" in options &&
+    options.client !== undefined
+  );
 }
