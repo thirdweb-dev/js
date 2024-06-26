@@ -1,7 +1,11 @@
+import type { UseQueryResult } from "@tanstack/react-query";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { GetBuyWithCryptoQuoteParams } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type {
+  BuyWithCryptoQuote,
+  GetBuyWithCryptoQuoteParams,
+} from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
@@ -40,8 +44,6 @@ export function SwapScreenMain(props: {
   onBack: () => void;
 }) {
   const {
-    setDrawerScreen,
-    setScreen,
     account,
     client,
     toChain,
@@ -49,16 +51,8 @@ export function SwapScreenMain(props: {
     toToken,
     fromChain,
     fromToken,
-    showFromTokenSelector,
     payOptions,
   } = props;
-
-  const fromTokenBalanceQuery = useWalletBalance({
-    address: account.address,
-    chain: fromChain,
-    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
-    client,
-  });
 
   const quoteParams: GetBuyWithCryptoQuoteParams | undefined =
     tokenAmount && !(fromChain.id === toChain.id && fromToken === toToken)
@@ -86,6 +80,51 @@ export function SwapScreenMain(props: {
     staleTime: 30 * 1000,
     refetchInterval: 30 * 1000,
     gcTime: 30 * 1000,
+  });
+
+  return <SwapScreenMainUI {...props} quoteQuery={quoteQuery} />;
+}
+
+export function SwapScreenMainUI(props: {
+  setDrawerScreen: (screen: React.ReactNode) => void;
+  setScreen: (screen: SelectedScreen) => void;
+  tokenAmount: string;
+  toToken: ERC20OrNativeToken;
+  toChain: Chain;
+  fromChain: Chain;
+  fromToken: ERC20OrNativeToken;
+  showFromTokenSelector: () => void;
+  account: Account;
+  activeChain: Chain;
+  client: ThirdwebClient;
+  payOptions: PayUIOptions;
+  buyForTx: BuyForTx | null;
+  isEmbed: boolean;
+  onViewPendingTx: () => void;
+  onDone: () => void;
+  onBack: () => void;
+  quoteQuery: UseQueryResult<BuyWithCryptoQuote>;
+}) {
+  const {
+    setDrawerScreen,
+    setScreen,
+    account,
+    client,
+    toChain,
+    tokenAmount,
+    toToken,
+    fromChain,
+    fromToken,
+    showFromTokenSelector,
+    payOptions,
+    quoteQuery,
+  } = props;
+
+  const fromTokenBalanceQuery = useWalletBalance({
+    address: account.address,
+    chain: fromChain,
+    tokenAddress: isNativeToken(fromToken) ? undefined : fromToken.address,
+    client,
   });
 
   const sourceTokenAmount = quoteQuery.data?.swapDetails.fromAmount;
@@ -235,10 +274,10 @@ export function SwapScreenMain(props: {
 
   return (
     <TokenSelectedLayout
-      selectedChain={props.toChain}
-      selectedToken={props.toToken}
-      tokenAmount={props.tokenAmount}
-      client={props.client}
+      selectedChain={toChain}
+      selectedToken={toToken}
+      tokenAmount={tokenAmount}
+      client={client}
       onBack={props.onBack}
     >
       {content}

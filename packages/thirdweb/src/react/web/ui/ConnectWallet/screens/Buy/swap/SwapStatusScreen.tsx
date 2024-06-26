@@ -1,8 +1,10 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "@tanstack/react-query";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
@@ -31,6 +33,26 @@ export function SwapStatusScreen(props: {
     client: props.client,
     transactionHash: props.swapTxHash,
   });
+
+  if (swapStatus.data) {
+    console.log("swapStatus", swapStatus.data);
+  }
+
+  return <SwapStatusScreenUI {...props} statusQuery={swapStatus} />;
+}
+
+export function SwapStatusScreenUI(props: {
+  onBack?: () => void;
+  onViewPendingTx: () => void;
+  client: ThirdwebClient;
+  onTryAgain: () => void;
+  onDone: () => void;
+  isBuyForTx: boolean;
+  isEmbed: boolean;
+  quote: BuyWithCryptoQuote;
+  statusQuery: UseQueryResult<BuyWithCryptoStatus, Error>;
+}) {
+  const swapStatus = props.statusQuery;
 
   let uiStatus: UIStatus = "pending";
   if (swapStatus.data?.status === "COMPLETED") {

@@ -1,0 +1,245 @@
+import type { BuyWithCryptoQuote } from "../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithCryptoStatus } from "../../pay/buyWithCrypto/getStatus.js";
+import { storyClient } from "../utils.js";
+
+// Buy 5 Matic with USDC
+export function buyPolygonWithUSDCMocks() {
+  const quote: BuyWithCryptoQuote = {
+    transactionRequest: {
+      chain: {
+        id: 137,
+        rpc: "https://137.rpc.thirdweb.com",
+      },
+      client: storyClient,
+      data: "0x883f57440000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000084063c109f02ccb43a9b69971119dcee1080000000000000000000000000000000042e89942d8bc4937be20391bafd62a28000000000000000000000000000000000000000000000000000000003c499c542cef5e3811e1192ce70d8cc03d5c335900000000000000000000000000000000000000000000000000000000002a8c8700000000000000000000000000000000000000000000000000000000667c603400000000000000000000000000000000000000000000000000000000000001000000000000000000000000001231deb6f5749ef6ce6943a275a1d3e7486f4eae00000000000000000000000000000000000000000000000000000000000001e0000000000000000000000000000000000000000000000000000000000000000263c109f02ccb43a9b69971119dcee108000000000000000000000000000000000000000000000000000000003dde4b49dcfd8f14524b8cb439703d024a5c4a1b000000000000000000000000000000000000000000000000000000000000001e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e68623878ad5ceefa790ce00770de86bfb7a3c83000000000000000000000000000000000000000000000000000000000000004600000000000000000000000000000000000000000000000000000000000005e44630a0d89e430271d46163210874b1448ff68ad7dd36a474bfa348004704a8a7964e210200000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000001000000000000000000000000001f846f6dae38e1c88d71eaa191760b15f38b7a37000000000000000000000000000000000000000000000000456c731cf2a3a8cc000000000000000000000000000000000000000000000000000000000000016000000000000000000000000000000000000000000000000000000000000000087468697264776562000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a307830303030303030303030303030303030303030303030303030303030303030303030303030303030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000001e0000000000000000000000000bd6c7b0d2f68c2b7805d88388319cfb6ecb50ea9000000000000000000000000bd6c7b0d2f68c2b7805d88388319cfb6ecb50ea90000000000000000000000003c499c542cef5e3811e1192ce70d8cc03d5c33590000000000000000000000003c499c542cef5e3811e1192ce70d8cc03d5c335900000000000000000000000000000000000000000000000000000000002a8c8700000000000000000000000000000000000000000000000000000000000000e000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000084eedd56e10000000000000000000000003c499c542cef5e3811e1192ce70d8cc03d5c335900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001b3b00000000000000000000000029dacdf7ccadf4ee67c923b4c22255a4b2494ed70000000000000000000000000000000000000000000000000000000000000000000000000000000046b3fdf7b5cde91ac049936bf0bdb12c5d22202e00000000000000000000000046b3fdf7b5cde91ac049936bf0bdb12c5d22202e0000000000000000000000003c499c542cef5e3811e1192ce70d8cc03d5c3359000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a714c00000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001642646478b0000000000000000000000003c499c542cef5e3811e1192ce70d8cc03d5c335900000000000000000000000000000000000000000000000000000000002a714c000000000000000000000000eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee000000000000000000000000000000000000000000000000456c731cf2a3a8cc0000000000000000000000001231deb6f5749ef6ce6943a275a1d3e7486f4eae00000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000070023c499c542cef5e3811e1192ce70d8cc03d5c335901ffff01b6e57ed85c4c9dbfef2a68711e9d6f36c56e0fcb0046b3fdf7b5cde91ac049936bf0bdb12c5d22202e010d500b1d8e8ef31e21c99d1db9a6444d3adf127001ffff02001231deb6f5749ef6ce6943a275a1d3e7486f4eae0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041b03234b92d9585337796c00445ec766a69aed750ae5c47c70ccc773c1e3691856ff5576f0babab29d8c7bfbc2679ed0c68d834b69579b847d6f54c48df8be6931c00000000000000000000000000000000000000000000000000000000000000",
+      to: "0x654bb023bc21e69de646b4cf350df20d18f5093a",
+      value: BigInt(0),
+      gas: BigInt(667491),
+      gasPrice: BigInt(30000000032),
+    },
+    approval: {
+      to: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+      chain: {
+        id: 137,
+        rpc: "https://137.rpc.thirdweb.com",
+      },
+      client: storyClient,
+      // @ts-expect-error
+      __contract: {
+        client: {
+          clientId: "cebdc2fa8aaa0170af42dc92b0ca34d8",
+        },
+        address: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        chain: {
+          id: 137,
+          rpc: "https://137.rpc.thirdweb.com",
+        },
+      },
+    },
+    swapDetails: {
+      fromAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+      toAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+      fromToken: {
+        chainId: 137,
+        tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        decimals: 6,
+        priceUSDCents: 100,
+        name: "USD Coin",
+        symbol: "USDC",
+      },
+      toToken: {
+        chainId: 137,
+        tokenAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        decimals: 18,
+        priceUSDCents: 56,
+        name: "MATIC",
+        symbol: "MATIC",
+      },
+      fromAmount: "2.788487",
+      fromAmountWei: "2788487",
+      toAmountMinWei: "5002499854268868812",
+      toAmountMin: "5.002499854268868812",
+      toAmountWei: "5027638044491325440",
+      toAmount: "5.02763804449132544",
+      estimated: {
+        fromAmountUSDCents: 278.75,
+        toAmountMinUSDCents: 280,
+        toAmountUSDCents: 281.5,
+        slippageBPS: 50,
+        feesUSDCents: 3.75,
+        gasCostUSDCents: 1,
+        durationSeconds: 30,
+      },
+      maxSlippageBPS: 50,
+    },
+    paymentTokens: [
+      {
+        token: {
+          chainId: 137,
+          tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+          decimals: 6,
+          priceUSDCents: 100,
+          name: "USD Coin",
+          symbol: "USDC",
+        },
+        amountWei: "2816371",
+        amount: "2.816371",
+        amountUSDCents: 281.75,
+      },
+    ],
+    processingFees: [
+      {
+        token: {
+          chainId: 137,
+          tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+          decimals: 6,
+          priceUSDCents: 100,
+          name: "USD Coin",
+          symbol: "USDC",
+        },
+        amountWei: "27884",
+        amount: "0.027884",
+        amountUSDCents: 2.75,
+      },
+    ],
+    client: storyClient,
+  };
+
+  const successStatus: BuyWithCryptoStatus = {
+    quote: {
+      fromToken: {
+        chainId: 137,
+        tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        decimals: 6,
+        priceUSDCents: 100,
+        name: "USD Coin",
+        symbol: "USDC",
+      },
+      toToken: {
+        chainId: 137,
+        tokenAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        decimals: 18,
+        priceUSDCents: 56,
+        name: "MATIC",
+        symbol: "MATIC",
+      },
+      fromAmountWei: "2805902",
+      fromAmount: "2.805902",
+      toAmountWei: "5027638255707228160",
+      toAmount: "5.02763825570722816",
+      toAmountMin: "5.002500064428692019",
+      toAmountMinWei: "5002500064428692019",
+      estimated: {
+        fromAmountUSDCents: 281,
+        toAmountMinUSDCents: 280,
+        toAmountUSDCents: 282,
+        slippageBPS: 50,
+        feesUSDCents: 3,
+        gasCostUSDCents: 1,
+        durationSeconds: 30,
+      },
+      createdAt: "2024-06-26T19:46:20.357Z",
+    },
+    swapType: "SAME_CHAIN",
+    source: {
+      transactionHash:
+        "0x3750a48acb558bebee1840a7d82d3ddd31b64c8127e37c9518d5b3a0bdba2f36",
+      token: {
+        chainId: 137,
+        tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        decimals: 6,
+        priceUSDCents: 100,
+        name: "USD Coin",
+        symbol: "USDC",
+      },
+      amount: "2.805902",
+      amountWei: "2805902",
+      amountUSDCents: 281,
+      completedAt: "1970-01-20T21:37:11.211Z",
+    },
+    status: "COMPLETED",
+    subStatus: "SUCCESS",
+    fromAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+    toAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+    destination: {
+      transactionHash:
+        "0x3750a48acb558bebee1840a7d82d3ddd31b64c8127e37c9518d5b3a0bdba2f36",
+      token: {
+        chainId: 137,
+        tokenAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        decimals: 18,
+        priceUSDCents: 56,
+        name: "MATIC",
+        symbol: "MATIC",
+      },
+      amount: "10.031617680549895067",
+      amountWei: "10031617680549895067",
+      amountUSDCents: 562,
+      completedAt: "1970-01-20T21:37:11.211Z",
+    },
+  };
+
+  const pendingStatus: BuyWithCryptoStatus = {
+    quote: {
+      fromToken: {
+        chainId: 137,
+        tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        decimals: 6,
+        priceUSDCents: 100,
+        name: "USD Coin",
+        symbol: "USDC",
+      },
+      toToken: {
+        chainId: 137,
+        tokenAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        decimals: 18,
+        priceUSDCents: 56,
+        name: "MATIC",
+        symbol: "MATIC",
+      },
+      fromAmountWei: "2805902",
+      fromAmount: "2.805902",
+      toAmountWei: "5027638255707228160",
+      toAmount: "5.02763825570722816",
+      toAmountMin: "5.002500064428692019",
+      toAmountMinWei: "5002500064428692019",
+      estimated: {
+        fromAmountUSDCents: 281,
+        toAmountMinUSDCents: 280,
+        toAmountUSDCents: 282,
+        slippageBPS: 50,
+        feesUSDCents: 3,
+        gasCostUSDCents: 1,
+        durationSeconds: 30,
+      },
+      createdAt: "2024-06-26T19:46:20.357Z",
+    },
+    swapType: "SAME_CHAIN",
+    source: {
+      transactionHash:
+        "0x3750a48acb558bebee1840a7d82d3ddd31b64c8127e37c9518d5b3a0bdba2f36",
+      token: {
+        chainId: 137,
+        tokenAddress: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+        decimals: 6,
+        priceUSDCents: 100,
+        name: "USD Coin",
+        symbol: "USDC",
+      },
+      amount: "2.805902",
+      amountWei: "2805902",
+      amountUSDCents: 281,
+      completedAt: "2024-06-26T19:46:51.000Z",
+    },
+    status: "PENDING",
+    subStatus: "NONE",
+    fromAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+    toAddress: "0x1f846f6dae38e1c88d71eaa191760b15f38b7a37",
+  };
+
+  return {
+    quote,
+    pendingStatus,
+    successStatus,
+  };
+}
