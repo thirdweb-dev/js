@@ -20,7 +20,9 @@
     "runtimes-node-commonjs",
     "runtimes-node-module",
     "playground-web",
-    "thirdweb-dashboard"
+    "thirdweb-dashboard",
+    "eslint-config-thirdweb",
+    "@thirdweb-dev/tsconfig"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
