@@ -1,5 +1,6 @@
+import type { Erc721 } from "@/types/erc721";
+import { chainIdToName, nameToChainId } from "@/util/simplehash";
 import type { Address } from "thirdweb";
-import { chainIdToName } from "../../util/simplehash";
 
 export type Erc721QueryParams = {
   owner: Address;
@@ -13,7 +14,7 @@ export async function getErc721Tokens({
   chainIds,
   limit = 50,
   cursor,
-}: Erc721QueryParams) {
+}: Erc721QueryParams): Promise<{ nextCursor?: string; tokens: Erc721[] }> {
   const chainlist = chainIds
     .map((id) => {
       try {
@@ -52,5 +53,20 @@ export async function getErc721Tokens({
     throw new Error(`Failed to fetch ERC721s: ${response.statusText}`);
   }
 
-  return await response.json();
+  const data = await response.json();
+
+  return {
+    nextCursor: data.next_cursor,
+    tokens: data.nfts
+      .filter((nft) => nft.image_url && nft.description)
+      .map((token: unknown) => ({
+        chainName: token.chain,
+        chainId: nameToChainId(token.chain),
+        contractAddress: token.contract_address,
+        tokenId: Number(token.token_id),
+        name: token.name,
+        description: token.description,
+        image_url: token.image_url,
+      })),
+  };
 }

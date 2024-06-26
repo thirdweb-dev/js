@@ -11,3 +11,13 @@ export function chainIdToName(chainId: number) {
       throw new Error(`Unknown chain id: ${chainId}`);
   }
 }
+export function nameToChainId(name: string) {
+  switch (name) {
+    case "ethereum":
+      return 1;
+    case "polygon":
+      return 137;
+    default:
+      throw new Error(`Unknown chain name: ${name}`);
+  }
+}

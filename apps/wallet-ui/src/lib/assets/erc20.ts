@@ -1,5 +1,5 @@
+import { chainIdToName } from "@/util/simplehash";
 import type { Address } from "thirdweb";
-import { chainIdToName } from "../../util/simplehash";
 
 export type Erc20QueryParams = {
   owner: Address;
