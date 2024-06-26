@@ -90,7 +90,8 @@ export default ${JSON.stringify(
   await fs.writeFile(
     `./src/index.ts`,
     `${imports.join("\n")}
-import type { Chain } from "./types";
+import type { Chain as InternalChain } from "./types";
+export type Chain = InternalChain;
 
 ${exports.join("\n")}
 export * from "./types";
