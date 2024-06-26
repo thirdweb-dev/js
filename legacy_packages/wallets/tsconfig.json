@@ -1,4 +1,4 @@
 {
   "extends": "@thirdweb-dev/tsconfig/sdk.json",
-  "include": ["${configDir}/src", "${configDir}/test"]
+  "include": ["src", "test"]
 }
