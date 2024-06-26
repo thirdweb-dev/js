@@ -5,13 +5,12 @@ import type {
   DropERC721_V3,
   DropSinglePhase,
   DropSinglePhase_V1,
+  IDropSinglePhase,
   IDropSinglePhase_V1,
   IERC20,
   IERC20Metadata,
   Multicall,
 } from "@thirdweb-dev/contracts-js";
-import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
-import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, constants, utils, type BigNumberish } from "ethers";
 import deepEqual from "fast-deep-equal";
@@ -56,6 +55,7 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./internal/contract-wrapper";
 import { Transaction } from "./transactions";
 import { ClaimEligibility } from "../../enums/ClaimEligibility";
+import type { IClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
 
 /**
  * Manages claim conditions for NFT Drop contracts
