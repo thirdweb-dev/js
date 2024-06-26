@@ -25,7 +25,6 @@ overrides:
   ws@>=8.0.0 <8.17.1: 8.17.1
   ws@>=7.0.0 <7.5.10: 7.5.10
   ws@>=6.0.0 <6.2.3: 6.2.3
-  typescript: 5.5.2
 
 importers:
 
@@ -817,7 +816,7 @@ importers:
         version: 2.7.0
       '@swc-node/register':
         specifier: ^1.9.2
-        version: 1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.5.2)
+        version: 1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.4.5)
       '@swc/core':
         specifier: ^1.6.5
         version: 1.6.5(@swc/helpers@0.5.5)
@@ -873,8 +872,8 @@ importers:
         specifier: ^4.24.7
         version: 4.24.7(next@14.2.3(@babel/core@7.24.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.44.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/chains:
     devDependencies:
@@ -894,8 +893,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/cli:
     dependencies:
@@ -1019,16 +1018,16 @@ importers:
         version: link:../eslint-config-thirdweb
       hardhat:
         specifier: ^2.22.2
-        version: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10)
+        version: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       ora:
         specifier: ^8.0.1
         version: 8.0.1
       tsup:
         specifier: 8.0.2
-        version: 8.0.2(@microsoft/api-extractor@7.47.0(@types/node@20.14.6))(@swc/core@1.6.5)(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)
+        version: 8.0.2(@microsoft/api-extractor@7.47.0(@types/node@20.14.6))(@swc/core@1.6.5)(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/contracts-js:
     dependencies:
@@ -1050,7 +1049,7 @@ importers:
         version: link:../../packages/tw-tsconfig
       '@typechain/ethers-v5':
         specifier: 10.0.0
-        version: 10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typechain@8.3.2(typescript@5.5.2))(typescript@5.5.2)
+        version: 10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typechain@8.3.2(typescript@5.4.5))(typescript@5.4.5)
       eslint-config-thirdweb:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
@@ -1059,10 +1058,10 @@ importers:
         version: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       typechain:
         specifier: ^8.3.2
-        version: 8.3.2(typescript@5.5.2)
+        version: 8.3.2(typescript@5.4.5)
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/crypto:
     dependencies:
@@ -1101,11 +1100,11 @@ importers:
         specifier: ^2.6.0
         version: 2.8.0
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
       viem:
         specifier: 2.16.0
-        version: 2.16.0(bufferutil@4.0.8)(typescript@5.5.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 2.16.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8)
 
   legacy_packages/eslint-config-thirdweb:
     dependencies:
@@ -1161,8 +1160,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/pay:
     dependencies:
@@ -1183,8 +1182,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/payments:
     dependencies:
@@ -1205,8 +1204,8 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config-thirdweb
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/react:
     dependencies:
@@ -1359,8 +1358,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typedoc-gen
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/react-core:
     dependencies:
@@ -1453,8 +1452,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typedoc-gen
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/sdk:
     dependencies:
@@ -1481,7 +1480,7 @@ importers:
         version: link:../storage
       abitype:
         specifier: 1.0.4
-        version: 1.0.4(typescript@5.5.2)(zod@3.23.8)
+        version: 1.0.4(typescript@5.4.5)(zod@3.23.8)
       bn.js:
         specifier: 5.2.1
         version: 5.2.1
@@ -1533,13 +1532,13 @@ importers:
         version: 0.15.0
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10))
+        version: 2.2.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@preconstruct/cli':
         specifier: 2.7.0
         version: 2.7.0
       '@swc-node/register':
         specifier: ^1.9.2
-        version: 1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.5.2)
+        version: 1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.4.5)
       '@swc/core':
         specifier: ^1.6.5
         version: 1.6.5(@swc/helpers@0.5.5)
@@ -1602,7 +1601,7 @@ importers:
         version: 1.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       hardhat:
         specifier: ^2.22.2
-        version: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10)
+        version: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       mocha:
         specifier: 10.5.1
         version: 10.5.1
@@ -1616,8 +1615,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typedoc-gen
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
       zksync-ethers:
         specifier: ^5.7.0
         version: 5.7.2(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -1651,7 +1650,7 @@ importers:
         version: 2.7.0
       '@swc-node/register':
         specifier: ^1.9.2
-        version: 1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.5.2)
+        version: 1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.4.5)
       '@thirdweb-dev/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tw-tsconfig
@@ -1677,8 +1676,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typedoc-gen
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/unity-js-bridge:
     dependencies:
@@ -1717,8 +1716,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   legacy_packages/wallets:
     dependencies:
@@ -1839,7 +1838,7 @@ importers:
         version: 7.47.0(@types/node@20.14.6)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10))
+        version: 2.2.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))
       '@preconstruct/cli':
         specifier: 2.7.0
         version: 2.7.0
@@ -1851,7 +1850,7 @@ importers:
         version: 5.1.5
       abitype:
         specifier: 1.0.4
-        version: 1.0.4(typescript@5.5.2)(zod@3.23.8)
+        version: 1.0.4(typescript@5.4.5)(zod@3.23.8)
       babel-plugin-transform-inline-environment-variables:
         specifier: ^0.4.4
         version: 0.4.4
@@ -1881,7 +1880,7 @@ importers:
         version: 1.3.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       hardhat:
         specifier: ^2.22.2
-        version: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10)
+        version: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
       rimraf:
         specifier: 5.0.7
         version: 5.0.7
@@ -1892,8 +1891,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typedoc-gen
       typescript:
-        specifier: 5.5.2
-        version: 5.5.2
+        specifier: 5.4.5
+        version: 5.4.5
 
   packages/react-native-adapter:
     dependencies:
@@ -1943,7 +1942,7 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3
       typescript:
-        specifier: 5.5.2
+        specifier: '>=5.0.4'
         version: 5.5.2
 
   packages/service-utils:
@@ -2040,7 +2039,7 @@ importers:
         specifier: '>=18'
         version: 18.3.1
       typescript:
-        specifier: 5.5.2
+        specifier: '>=5.0.4'
         version: 5.5.2
       uqr:
         specifier: 0.1.2
@@ -7812,7 +7811,7 @@ packages:
     resolution: {integrity: sha512-BBjg0QNuEEmJSoU/++JOXhrjWdu3PTyYeJWsvchsI0Aqtj8ICkz/DqlwtXbmZVZ5vuDPpTfFlwDBZe81zgShMA==}
     peerDependencies:
       '@swc/core': '>= 1.4.13'
-      typescript: 5.5.2
+      typescript: '>= 4.3'
 
   '@swc-node/sourcemap-support@0.5.0':
     resolution: {integrity: sha512-fbhjL5G0YvFoWwNhWleuBUfotiX+USiA9oJqu9STFw+Hb0Cgnddn+HVS/K5fI45mn92e8V+cHD2jgFjk4w2T9Q==}
@@ -8069,7 +8068,7 @@ packages:
       '@ethersproject/providers': ^5.0.0
       ethers: ^5.1.3
       typechain: ^8.0.0
-      typescript: 5.5.2
+      typescript: '>=4.3.0'
 
   '@types/accepts@1.3.7':
     resolution: {integrity: sha512-Pay9fq2lM2wXPWbteBsRAGiWH2hig4ZE2asK+mm7kUzlxRTfL961rj89I6zV/E3PcIkDqyuBEcMxFT7rccugeQ==}
@@ -8905,7 +8904,7 @@ packages:
   abitype@1.0.4:
     resolution: {integrity: sha512-UivtYZOGJGE8rsrM/N5vdRkUpqEZVmuTumfTuolm7m/6O09wprd958rx8kUBwVAAAhQDveGAgD0GJdBuR8s6tw==}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=5.0.4'
       zod: ^3 >=3.22.0
     peerDependenciesMeta:
       typescript:
@@ -10881,7 +10880,7 @@ packages:
     resolution: {integrity: sha512-Qr0wMgG9m6m4uYy2jrYJmyuNlYZzPRQq5Kvb9IDlYwn+7yq6W6sfMNFgb+9guM1KYwuIo6TIaiFhZJ6SnQ/Efw==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
-      typescript: 5.5.2
+      typescript: '>=3.3.1'
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -11941,7 +11940,7 @@ packages:
     hasBin: true
     peerDependencies:
       ts-node: '*'
-      typescript: 5.5.2
+      typescript: '*'
     peerDependenciesMeta:
       ts-node:
         optional: true
@@ -12946,7 +12945,7 @@ packages:
     hasBin: true
     peerDependencies:
       '@types/node': '>=18'
-      typescript: 5.5.2
+      typescript: '>=5.0.4'
 
   language-subtag-registry@0.3.22:
     resolution: {integrity: sha512-tN0MCzyWnoz/4nHS6uxdlFWoUZT7ABptwKPQ52Ea7URk6vll88bWBVhodtnlfEuCcKWNGoc+uGbw1cwa9IKh/w==}
@@ -13703,7 +13702,7 @@ packages:
   mipd@0.0.7:
     resolution: {integrity: sha512-aAPZPNDQ3uMTdKbuO2YmAw2TxLHO0moa4YKAyETM/DTj5FloZo+a+8tU+iv4GmW+sOxKLSRwcSFuczk+Cpt6fg==}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -16634,7 +16633,7 @@ packages:
     resolution: {integrity: sha512-UQMIo7pb8WRomKR1/+MFVLTroIvDVtMX3K6OUir8ynLyzB8Jeriont2bTAtmNPa1ekAgN7YPDyf6V+ygrdU+eQ==}
     engines: {node: '>=16'}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=4.2.0'
 
   ts-command-line-args@2.5.1:
     resolution: {integrity: sha512-H69ZwTw3rFHb5WYpQya40YAX2/w7Ut75uUECbgBIsLmM+BNuYnxsltfyyLMxy6sEeKxgijLTnQtLd0nKd6+IYw==}
@@ -16643,7 +16642,7 @@ packages:
   ts-essentials@7.0.3:
     resolution: {integrity: sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ==}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=3.7.0'
 
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
@@ -16652,7 +16651,7 @@ packages:
     resolution: {integrity: sha512-zXypEIT6k3oTc+OZNx/cqElrsbBtYqDknf48OZos0NQ3RTt045fBIU8RRSu+suObBzYB355aIPGOe/3kj9h7Ig==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '*'
 
   ts-mixer@6.0.4:
     resolution: {integrity: sha512-ufKpbmrugz5Aou4wcr5Wc1UUFWOLhq+Fm6qa6P0w0K5Qw2yhaUoiWszhCVuNQyNwrlGiscHOmqYoAox1PtvgjA==}
@@ -16664,7 +16663,7 @@ packages:
       '@swc/core': '>=1.2.50'
       '@swc/wasm': '>=1.2.50'
       '@types/node': '*'
-      typescript: 5.5.2
+      typescript: '>=2.7'
     peerDependenciesMeta:
       '@swc/core':
         optional: true
@@ -16701,7 +16700,7 @@ packages:
       '@microsoft/api-extractor': ^7.36.0
       '@swc/core': ^1
       postcss: ^8.4.12
-      typescript: 5.5.2
+      typescript: '>=4.5.0'
     peerDependenciesMeta:
       '@microsoft/api-extractor':
         optional: true
@@ -16716,7 +16715,7 @@ packages:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
 
   tty-browserify@0.0.0:
     resolution: {integrity: sha512-JVa5ijo+j/sOoHGjw0sxw734b1LhBkQ3bvUGNdxnVXDCX81Yx7TFgnZygxrIIWn23hbfTaMYLwRmAxFyDuFmIw==}
@@ -16782,7 +16781,7 @@ packages:
   twoslash@0.2.8:
     resolution: {integrity: sha512-mQiUB4SvBF58FJkEEtXvVhTO1h0oDpTZuEAyaC8xwf4P6392ydSFhsMiUBbJEOvaelN9DLesViopn3E9O2GKOA==}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '*'
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -16843,7 +16842,7 @@ packages:
     resolution: {integrity: sha512-x/sQYr5w9K7yv3es7jo4KTX05CLxOf7TRWwoHlrjRh8H82G64g+k7VuWPJlgMo6qrjfCulOdfBjiaDtmhFYD/Q==}
     hasBin: true
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=4.3.0'
 
   typed-array-buffer@1.0.2:
     resolution: {integrity: sha512-gEymJYKZtKXzzBzM4jqa9w6Q1Jjm7x2d+sh19AdsD4wqnMPDYyvwpsIc2Q/835kHuo3BEQ7CjelGhfTsoBb2MQ==}
@@ -16876,10 +16875,30 @@ packages:
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
-      typescript: 5.5.2
+      typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x
 
   types-ramda@0.30.0:
     resolution: {integrity: sha512-oVPw/KHB5M0Du0txTEKKM8xZOG9cZBRdCVXvwHYuNJUVkAiJ9oWyqkA+9Bj2gjMsHgkkhsYevobQBWs8I2/Xvw==}
+
+  typescript@3.9.10:
+    resolution: {integrity: sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+
+  typescript@4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+
+  typescript@5.4.2:
+    resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@5.4.5:
+    resolution: {integrity: sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   typescript@5.5.2:
     resolution: {integrity: sha512-NcRtPEOsPFFWjobJEtfihkLCZCXZt/os3zf8nTxjVH3RvTSxjrCamJpbExGvYOF+tFHc3pA65qpdwPbzjohhew==}
@@ -17263,7 +17282,7 @@ packages:
   viem@2.16.0:
     resolution: {integrity: sha512-qXakKfshaDOiQFgb3MgROKDa4bfr095GMUqrD2WN6UMdzH7WtlAYJ65vnrpoXpny9jXAyNoirEJeBBUF9KFNIQ==}
     peerDependencies:
-      typescript: 5.5.2
+      typescript: '>=5.0.4'
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -24221,7 +24240,7 @@ snapshots:
       resolve: 1.22.8
       semver: 7.5.4
       source-map: 0.6.1
-      typescript: 5.5.2
+      typescript: 5.4.2
     transitivePeerDependencies:
       - '@types/node'
 
@@ -24501,10 +24520,10 @@ snapshots:
       '@nomicfoundation/solidity-analyzer-win32-ia32-msvc': 0.1.1
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
 
-  '@nomiclabs/hardhat-ethers@2.2.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10))':
+  '@nomiclabs/hardhat-ethers@2.2.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10))':
     dependencies:
       ethers: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      hardhat: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10)
+      hardhat: 2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)
 
   '@npmcli/fs@1.1.1':
     dependencies:
@@ -27558,7 +27577,7 @@ snapshots:
       '@swc/core': 1.6.5(@swc/helpers@0.5.5)
       '@swc/types': 0.1.9
 
-  '@swc-node/register@1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.5.2)':
+  '@swc-node/register@1.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)(typescript@5.4.5)':
     dependencies:
       '@swc-node/core': 1.13.1(@swc/core@1.6.5(@swc/helpers@0.5.5))(@swc/types@0.1.9)
       '@swc-node/sourcemap-support': 0.5.0
@@ -27567,7 +27586,7 @@ snapshots:
       debug: 4.3.5(supports-color@8.1.1)
       pirates: 4.0.6
       tslib: 2.6.2
-      typescript: 5.5.2
+      typescript: 5.4.5
     transitivePeerDependencies:
       - '@swc/types'
       - supports-color
@@ -27786,16 +27805,16 @@ snapshots:
     dependencies:
       '@turf/helpers': 6.5.0
 
-  '@typechain/ethers-v5@10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typechain@8.3.2(typescript@5.5.2))(typescript@5.5.2)':
+  '@typechain/ethers-v5@10.0.0(@ethersproject/abi@5.7.0)(@ethersproject/bytes@5.7.0)(@ethersproject/providers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typechain@8.3.2(typescript@5.4.5))(typescript@5.4.5)':
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/providers': 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       ethers: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       lodash: 4.17.21
-      ts-essentials: 7.0.3(typescript@5.5.2)
-      typechain: 8.3.2(typescript@5.5.2)
-      typescript: 5.5.2
+      ts-essentials: 7.0.3(typescript@5.4.5)
+      typechain: 8.3.2(typescript@5.4.5)
+      typescript: 5.4.5
 
   '@types/accepts@1.3.7':
     dependencies:
@@ -28335,7 +28354,7 @@ snapshots:
 
   '@typescript-eslint/types@7.2.0': {}
 
-  '@typescript-eslint/typescript-estree@4.33.0(typescript@5.5.2)':
+  '@typescript-eslint/typescript-estree@4.33.0(typescript@3.9.10)':
     dependencies:
       '@typescript-eslint/types': 4.33.0
       '@typescript-eslint/visitor-keys': 4.33.0
@@ -28343,9 +28362,9 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.6.2
-      tsutils: 3.21.0(typescript@5.5.2)
+      tsutils: 3.21.0(typescript@3.9.10)
     optionalDependencies:
-      typescript: 5.5.2
+      typescript: 3.9.10
     transitivePeerDependencies:
       - supports-color
 
@@ -29338,6 +29357,11 @@ snapshots:
   '@zag-js/focus-visible@0.16.0':
     dependencies:
       '@zag-js/dom-query': 0.16.0
+
+  abitype@1.0.4(typescript@5.4.5)(zod@3.23.8):
+    optionalDependencies:
+      typescript: 5.4.5
+      zod: 3.23.8
 
   abitype@1.0.4(typescript@5.5.2)(zod@3.23.8):
     optionalDependencies:
@@ -31143,7 +31167,7 @@ snapshots:
       debug: 4.3.5(supports-color@8.1.1)
       filing-cabinet: 3.3.1
       precinct: 8.3.1
-      typescript: 5.5.2
+      typescript: 3.9.10
     transitivePeerDependencies:
       - supports-color
 
@@ -31219,19 +31243,19 @@ snapshots:
 
   detective-typescript@6.0.0:
     dependencies:
-      '@typescript-eslint/typescript-estree': 4.33.0(typescript@5.5.2)
+      '@typescript-eslint/typescript-estree': 4.33.0(typescript@3.9.10)
       ast-module-types: 2.7.1
       node-source-walk: 4.3.0
-      typescript: 5.5.2
+      typescript: 3.9.10
     transitivePeerDependencies:
       - supports-color
 
   detective-typescript@7.0.2:
     dependencies:
-      '@typescript-eslint/typescript-estree': 4.33.0(typescript@5.5.2)
+      '@typescript-eslint/typescript-estree': 4.33.0(typescript@3.9.10)
       ast-module-types: 2.7.1
       node-source-walk: 4.3.0
-      typescript: 5.5.2
+      typescript: 3.9.10
     transitivePeerDependencies:
       - supports-color
 
@@ -32636,7 +32660,7 @@ snapshots:
       sass-lookup: 3.0.0
       stylus-lookup: 3.0.2
       tsconfig-paths: 3.15.0
-      typescript: 5.5.2
+      typescript: 3.9.10
     transitivePeerDependencies:
       - supports-color
 
@@ -33256,7 +33280,7 @@ snapshots:
 
   hard-rejection@2.1.0: {}
 
-  hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10):
+  hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10):
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@metamask/eth-sig-util': 4.0.1
@@ -33302,15 +33326,15 @@ snapshots:
       uuid: 8.3.2
       ws: 7.5.10(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     optionalDependencies:
-      ts-node: 10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2)
-      typescript: 5.5.2
+      ts-node: 10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5)
+      typescript: 5.4.5
     transitivePeerDependencies:
       - bufferutil
       - c-kzg
       - supports-color
       - utf-8-validate
 
-  hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2)(utf-8-validate@5.0.10):
+  hardhat@2.22.4(bufferutil@4.0.8)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10):
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@metamask/eth-sig-util': 4.0.1
@@ -33356,8 +33380,8 @@ snapshots:
       uuid: 8.3.2
       ws: 7.5.10(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     optionalDependencies:
-      ts-node: 10.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@types/node@20.14.6)(typescript@5.5.2)
-      typescript: 5.5.2
+      ts-node: 10.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@types/node@20.14.6)(typescript@5.4.5)
+      typescript: 5.4.5
     transitivePeerDependencies:
       - bufferutil
       - c-kzg
@@ -34697,7 +34721,7 @@ snapshots:
       precinct: 7.1.0
       pretty-ms: 7.0.1
       rc: 1.2.8
-      typescript: 5.5.2
+      typescript: 3.9.10
       walkdir: 0.4.1
     transitivePeerDependencies:
       - supports-color
@@ -35729,8 +35753,8 @@ snapshots:
   next-unused@0.0.6:
     dependencies:
       madge: 4.0.2
-      ts-loader: 7.0.5(typescript@5.5.2)
-      typescript: 5.5.2
+      ts-loader: 7.0.5(typescript@4.9.5)
+      typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
 
@@ -36599,13 +36623,13 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.38
 
-  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2)):
+  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5)):
     dependencies:
       lilconfig: 3.1.1
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2)
+      ts-node: 10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5)
 
   postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2)):
     dependencies:
@@ -36613,7 +36637,7 @@ snapshots:
       yaml: 2.4.5
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@types/node@20.14.6)(typescript@5.5.2)
+      ts-node: 10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2)
 
   postcss-nested@6.0.1(postcss@8.4.38):
     dependencies:
@@ -38703,7 +38727,7 @@ snapshots:
       postcss: 8.4.38
       postcss-import: 15.1.0(postcss@8.4.38)
       postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))
       postcss-nested: 6.0.1(postcss@8.4.38)
       postcss-selector-parser: 6.0.16
       resolve: 1.22.8
@@ -38978,24 +39002,24 @@ snapshots:
       command-line-usage: 6.1.3
       string-format: 2.0.0
 
-  ts-essentials@7.0.3(typescript@5.5.2):
+  ts-essentials@7.0.3(typescript@5.4.5):
     dependencies:
-      typescript: 5.5.2
+      typescript: 5.4.5
 
   ts-interface-checker@0.1.13: {}
 
-  ts-loader@7.0.5(typescript@5.5.2):
+  ts-loader@7.0.5(typescript@4.9.5):
     dependencies:
       chalk: 2.4.2
       enhanced-resolve: 4.5.0
       loader-utils: 1.4.2
       micromatch: 4.0.5
       semver: 7.6.2
-      typescript: 5.5.2
+      typescript: 4.9.5
 
   ts-mixer@6.0.4: {}
 
-  ts-node@10.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@types/node@20.14.6)(typescript@5.5.2):
+  ts-node@10.9.2(@swc/core@1.6.5(@swc/helpers@0.5.5))(@types/node@20.14.6)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -39009,7 +39033,28 @@ snapshots:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 5.5.2
+      typescript: 5.4.5
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.6.5(@swc/helpers@0.5.5)
+    optional: true
+
+  ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.14.6
+      acorn: 8.11.3
+      acorn-walk: 8.3.2
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
@@ -39059,6 +39104,31 @@ snapshots:
 
   tsort@0.0.1: {}
 
+  tsup@8.0.2(@microsoft/api-extractor@7.47.0(@types/node@20.14.6))(@swc/core@1.6.5)(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5))(typescript@5.4.5):
+    dependencies:
+      bundle-require: 4.1.0(esbuild@0.19.12)
+      cac: 6.7.14
+      chokidar: 3.6.0
+      debug: 4.3.4(supports-color@8.1.1)
+      esbuild: 0.19.12
+      execa: 5.1.1
+      globby: 11.1.0
+      joycon: 3.1.1
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.4.5))
+      resolve-from: 5.0.0
+      rollup: 4.17.2
+      source-map: 0.8.0-beta.0
+      sucrase: 3.35.0
+      tree-kill: 1.2.2
+    optionalDependencies:
+      '@microsoft/api-extractor': 7.47.0(@types/node@20.14.6)
+      '@swc/core': 1.6.5(@swc/helpers@0.5.5)
+      postcss: 8.4.38
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+
   tsup@8.0.2(@microsoft/api-extractor@7.47.0(@types/node@20.14.6))(@swc/core@1.6.5)(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2))(typescript@5.5.2):
     dependencies:
       bundle-require: 4.1.0(esbuild@0.19.12)
@@ -39069,7 +39139,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.6.5)(@types/node@20.14.6)(typescript@5.5.2))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.6)(typescript@5.5.2))
       resolve-from: 5.0.0
       rollup: 4.17.2
       source-map: 0.8.0-beta.0
@@ -39084,10 +39154,10 @@ snapshots:
       - supports-color
       - ts-node
 
-  tsutils@3.21.0(typescript@5.5.2):
+  tsutils@3.21.0(typescript@3.9.10):
     dependencies:
       tslib: 1.14.1
-      typescript: 5.5.2
+      typescript: 3.9.10
 
   tty-browserify@0.0.0: {}
 
@@ -39183,7 +39253,7 @@ snapshots:
 
   type@2.7.2: {}
 
-  typechain@8.3.2(typescript@5.5.2):
+  typechain@8.3.2(typescript@5.4.5):
     dependencies:
       '@types/prettier': 2.7.3
       debug: 4.3.4(supports-color@8.1.1)
@@ -39194,8 +39264,8 @@ snapshots:
       mkdirp: 1.0.4
       prettier: 2.8.8
       ts-command-line-args: 2.5.1
-      ts-essentials: 7.0.3(typescript@5.5.2)
-      typescript: 5.5.2
+      ts-essentials: 7.0.3(typescript@5.4.5)
+      typescript: 5.4.5
     transitivePeerDependencies:
       - supports-color
 
@@ -39257,6 +39327,14 @@ snapshots:
   types-ramda@0.30.0:
     dependencies:
       ts-toolbelt: 9.6.0
+
+  typescript@3.9.10: {}
+
+  typescript@4.9.5: {}
+
+  typescript@5.4.2: {}
+
+  typescript@5.4.5: {}
 
   typescript@5.5.2: {}
 
@@ -39627,6 +39705,23 @@ snapshots:
       d3-shape: 3.2.0
       d3-time: 3.1.0
       d3-timer: 3.0.1
+
+  viem@2.16.0(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8):
+    dependencies:
+      '@adraffy/ens-normalize': 1.10.0
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@scure/bip32': 1.3.2
+      '@scure/bip39': 1.2.1
+      abitype: 1.0.4(typescript@5.4.5)(zod@3.23.8)
+      isows: 1.0.4(ws@8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))
+      ws: 8.17.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    optionalDependencies:
+      typescript: 5.4.5
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
 
   viem@2.16.0(bufferutil@4.0.8)(typescript@5.5.2)(utf-8-validate@5.0.10)(zod@3.23.8):
     dependencies:

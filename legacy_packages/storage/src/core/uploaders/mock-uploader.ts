@@ -36,11 +36,12 @@ export class MockUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           ? file.data.toString()
           : file.data;
         const name = file.name ? file.name : `file_${index}`;
+        // @ts-expect-error - can't infer
         this.storage[cid][name] = contents;
         uris.push(`mock://${cid}/${name}`);
         continue;
       }
-
+      // @ts-expect-error - can't infer
       this.storage[cid][index.toString()] = contents;
       uris.push(`mock://${cid}/${index}`);
       index += 1;
