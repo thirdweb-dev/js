@@ -55,7 +55,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
   const txInfosToShow: TxStatusInfo[] = [];
 
   const txHashSet = new Set<string>();
-  _historyQuery.data?.page.forEach((tx) => {
+  // TODO: why is the annotation required here?
+  _historyQuery.data?.page.forEach((tx: BuyWithCryptoStatus) => {
     if (tx.status !== "NOT_FOUND" && tx.status !== "NONE") {
       if (tx.source?.transactionHash) {
         txHashSet.add(tx.source?.transactionHash);
@@ -84,7 +85,8 @@ export function SwapTransactionsScreen(props: { onBack: () => void }) {
   });
 
   // Add data from endpoint
-  _historyQuery.data?.page.forEach((tx) => {
+  // TODO: why is the annotation required here?
+  _historyQuery.data?.page.forEach((tx: BuyWithCryptoStatus) => {
     if (tx.status !== "NOT_FOUND" && tx.status !== "NONE") {
       if (tx.source?.transactionHash) {
         txInfosToShow.push({
