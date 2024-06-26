@@ -181,6 +181,7 @@ export function getChainBySlug<TSlug extends ChainSlug>(
     const chainIdsBySlug = getChainIdsBySlug();
     const chainsById = getChainsById();
     return chainsById[
+      // @ts-expect-error - TODO: should check index access
       chainIdsBySlug[slug]
     ] as ChainsById[ChainIdsBySlug[TSlug]];
   }

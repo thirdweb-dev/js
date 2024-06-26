@@ -191,6 +191,7 @@ function useWalletConnectionSetup(
     undefined,
   );
 
+  // @ts-expect-error - TODO: fix unchecked access
   const walletParams: WalletOptions = useMemo(() => {
     return {
       chains: chains,

@@ -1,7 +1,4 @@
 {
   "extends": "@thirdweb-dev/tsconfig/sdk.json",
-  "include": ["${configDir}/src", "${configDir}/test"],
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": true
-  }
+  "include": ["${configDir}/src", "${configDir}/test"]
 }

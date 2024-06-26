@@ -147,6 +147,7 @@ export function getChainRPC(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
 ): string {
+  // @ts-expect-error - TODO: should check index access
   return getChainRPCs(chain, options)[0];
 }
 
@@ -155,6 +156,7 @@ export function minimizeChain(chain: Chain): MinimalChain {
   return {
     name: chain.name,
     chain: chain.chain,
+    // @ts-expect-error - TODO: should check index access
     rpc: [firstRpc],
     nativeCurrency: chain.nativeCurrency,
     shortName: chain.shortName,
