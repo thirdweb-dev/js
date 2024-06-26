@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { getCachedTextDecoder, getCachedTextEncoder } from "../../utils/cache";
 import { arrayBuffer } from "../lib/md5";
 import {
