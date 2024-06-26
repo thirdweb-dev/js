@@ -2114,7 +2114,8 @@ import c868455272153094 from "../chains/868455272153094";
 import c2712670149155000 from "../chains/2712670149155000";
 import c2713017997578000 from "../chains/2713017997578000";
 import c2716446429837000 from "../chains/2716446429837000";
-import type { Chain } from "./types";
+import type { Chain as InternalChain } from "./types";
+export type Chain = InternalChain;
 
 export { default as Ethereum } from "../chains/1"
 export { default as ExpanseNetwork } from "../chains/2"
