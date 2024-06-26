@@ -622,6 +622,8 @@ export function useCustomContractDeployMutation(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
       );
+      invariant(signer, "signer is not provided");
+      invariant(walletAddress, "walletAddress is not provided");
 
       const requiresSignature =
         HEADLESS_WALLET_IDS.indexOf(walletConfig?.id || "") === -1;
@@ -711,9 +713,37 @@ export function useCustomContractDeployMutation(
         // deploy contract
         if (isZkSync) {
           // Get metamask signer using zksync-ethers library -- for custom fields in signature
-          const zkSigner = new Web3Provider(
-            window.ethereum as unknown as providers.ExternalProvider,
-          ).getSigner();
+          const fakeExternalProvider: providers.ExternalProvider = {
+            // fake tell it its metamask always (lul)
+            isMetaMask: true,
+            request({ method, params }) {
+              switch (method) {
+                case "eth_accounts": {
+                  return Promise.resolve([walletAddress]);
+                }
+                case "eth_signTypedData_v4": {
+                  invariant(params?.[1], "invalid signTypedData call");
+                  // yo dawg, I heard you like signing typed data
+                  const { domain, types, message, primaryType } = JSON.parse(
+                    params[1],
+                  );
+                  return (signer as providers.JsonRpcSigner)._signTypedData(
+                    domain,
+                    // don't ask...
+                    { [primaryType]: types[primaryType] },
+                    message,
+                  );
+                }
+                default: {
+                  return (signer as providers.JsonRpcSigner)?.provider?.send(
+                    method,
+                    params ?? [],
+                  );
+                }
+              }
+            },
+          };
+          const zkSigner = new Web3Provider(fakeExternalProvider).getSigner();
 
           if (
             fullPublishMetadata?.data?.compilers?.zksolc ||
