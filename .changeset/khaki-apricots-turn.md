@@ -1,5 +1,4 @@
 ---
-"eslint-config-thirdweb": patch
 "@thirdweb-dev/merkletree": patch
 "@thirdweb-dev/react-core": patch
 "@thirdweb-dev/payments": patch
