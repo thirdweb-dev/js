@@ -42,7 +42,7 @@
     "esm": "^3.2.25",
     "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.5"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

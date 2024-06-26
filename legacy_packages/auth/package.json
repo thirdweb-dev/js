@@ -101,7 +101,7 @@
     "fastify": "^4.26.2",
     "next": "^14.1.1",
     "next-auth": "^4.24.7",
-    "typescript": "5.4.5"
+    "typescript": "5.5.2"
   },
   "peerDependencies": {
     "cookie-parser": "^1.4.6",
