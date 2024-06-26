@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 // stripped down version of `js-md5`
 // changes:
 // - we know we always have ArrayBuffer available
