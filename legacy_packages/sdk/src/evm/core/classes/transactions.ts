@@ -216,6 +216,14 @@ abstract class TransactionContext {
     if (isBrowser()) {
       return {};
     }
+    // if we already have a gasLimit set, don't override it
+    if (this.overrides.gasLimit) {
+     return {};
+    }
+    // if we already have maxFeePerGas && maxPriorityFeePerGas set, don't override it
+    if (this.overrides.maxFeePerGas && this.overrides.maxPriorityFeePerGas) {
+      return {};
+    }
     return getDefaultGasOverrides(this.provider);
   }
 }
