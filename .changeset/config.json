@@ -20,7 +20,8 @@
     "runtimes-node-commonjs",
     "runtimes-node-module",
     "playground-web",
-    "thirdweb-dashboard"
+    "thirdweb-dashboard",
+    "@thirdweb-dev/unity-js-bridge"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
