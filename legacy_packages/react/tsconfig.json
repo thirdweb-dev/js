@@ -3,7 +3,6 @@
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "esModuleInterop": true
   }
