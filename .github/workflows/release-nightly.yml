@@ -43,7 +43,6 @@ jobs:
 
       - name: Create @nightly release
         run: |
-          git checkout main
           pnpm version-packages:nightly
           pnpm release:nightly
         env:
