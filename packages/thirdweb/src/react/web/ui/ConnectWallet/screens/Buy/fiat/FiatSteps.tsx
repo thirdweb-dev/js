@@ -1,4 +1,5 @@
 import {
+  CheckCircledIcon,
   Cross1Icon,
   ExternalLinkIcon,
   TriangleDownIcon,
@@ -576,7 +577,7 @@ function StepContainer(props: {
           right: spacing.sm,
           top: spacing.sm,
           display: "flex",
-          gap: spacing.xs,
+          gap: spacing.xxs,
           alignItems: "center",
         }}
       >
@@ -586,11 +587,14 @@ function StepContainer(props: {
           </Text>
         )}
 
-        {(props.state === "actionRequired" || props.state === "completed") && (
-          <StepIcon
-            isActive={props.state === "actionRequired"}
-            isDone={props.state === "completed"}
-          />
+        {props.state === "completed" && (
+          <Container color="success" flex="row" center="both">
+            <CheckCircledIcon width={iconSize.sm} height={iconSize.sm} />
+          </Container>
+        )}
+
+        {props.state === "actionRequired" && (
+          <StepIcon isActive={true} isDone={false} />
         )}
 
         {props.state === "pending" && <Spinner color="accentText" size="sm" />}

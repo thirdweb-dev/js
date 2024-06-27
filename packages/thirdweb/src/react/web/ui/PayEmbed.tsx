@@ -202,7 +202,6 @@ export function PayEmbed(props: PayEmbedProps) {
             }
           />
         </div>
-        {/* this does not need to persist so we can just show-hide it with JS */}
         {screen === "tx-history" && (
           <BuyTxHistory
             client={props.client}
@@ -239,6 +238,7 @@ export function PayEmbedContainer(props: {
     <CustomThemeProvider theme={props.theme}>
       <Container
         bg="modalBg"
+        color="primaryText"
         style={{
           borderRadius: radius.lg,
           minWidth: "360px",

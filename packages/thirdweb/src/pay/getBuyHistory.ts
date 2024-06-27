@@ -37,6 +37,7 @@ export type BuyHistoryParams = {
  * It includes both "Buy with Crypto" and "Buy with Fiat" transactions
  */
 export type BuyHistoryData = {
+  walletAddress: string;
   /**
    * The list of buy transactions.
    */
@@ -52,6 +53,9 @@ export type BuyHistoryData = {
    * Whether there are more pages of results.
    */
   hasNextPage: boolean;
+
+  start: number;
+  count: number;
 };
 
 /**

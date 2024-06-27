@@ -34,6 +34,26 @@ export function FiatDetailsScreen(props: {
     (statusQuery.data?.status === "NOT_FOUND" ? undefined : statusQuery.data) ||
     initialStatus;
 
+  return (
+    <FiatDetailsScreenUI
+      {...props}
+      status={status}
+      stopPollingStatus={() => setStopPolling(true)}
+    />
+  );
+}
+
+export function FiatDetailsScreenUI(props: {
+  status: ValidBuyWithFiatStatus;
+  onBack: () => void;
+  client: ThirdwebClient;
+  onDone: () => void;
+  isBuyForTx: boolean;
+  isEmbed: boolean;
+  stopPollingStatus: () => void;
+}) {
+  const status = props.status;
+
   const hasTwoSteps = isSwapRequiredAfterOnRamp(status);
   const statusMeta = getBuyWithFiatStatusMeta(status);
 
@@ -67,7 +87,7 @@ export function FiatDetailsScreen(props: {
         }}
         onDone={props.onDone}
         onSwapFlowStarted={() => {
-          setStopPolling(true);
+          props.stopPollingStatus();
         }}
       />
     );

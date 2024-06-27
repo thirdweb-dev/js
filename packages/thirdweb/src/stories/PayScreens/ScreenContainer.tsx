@@ -1,6 +1,6 @@
 import { PayEmbedContainer } from "../../react/web/ui/PayEmbed.js";
 
-export function PayScreenContainer(props: {
+export function ScreenContainer(props: {
   theme: "dark" | "light";
   children: React.ReactNode;
 }) {

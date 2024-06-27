@@ -52,6 +52,27 @@ export function SwapDetailsScreen(props: {
   );
 }
 
+export function SwapDetailsScreenUI(props: {
+  onBack: () => void;
+  client: ThirdwebClient;
+  status: ValidBuyWithCryptoStatus;
+}) {
+  const { status, client } = props;
+  return (
+    <Container>
+      <Container p="lg">
+        <ModalHeader title="Transaction Details" onBack={props.onBack} />
+      </Container>
+
+      <Line />
+
+      <Container p="lg">
+        <SwapTxDetailsTable type="status" status={status} client={client} />
+      </Container>
+    </Container>
+  );
+}
+
 type SwapTxDetailsData = {
   fromToken: {
     chainId: number;

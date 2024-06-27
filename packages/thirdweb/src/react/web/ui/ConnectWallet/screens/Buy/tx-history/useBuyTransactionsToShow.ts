@@ -1,5 +1,9 @@
-import { type UseQueryOptions, useQueries } from "@tanstack/react-query";
-import { useState, useSyncExternalStore } from "react";
+import {
+  type UseQueryOptions,
+  type UseQueryResult,
+  useQueries,
+} from "@tanstack/react-query";
+import { useSyncExternalStore } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import {
   type ValidBuyWithCryptoStatus,
@@ -9,8 +13,7 @@ import {
   type ValidBuyWithFiatStatus,
   getBuyWithFiatStatus,
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
-import { useBuyHistory } from "../../../../../../core/hooks/pay/useBuyHistory.js";
-import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import type { BuyHistoryData } from "../../../../../../../pay/getBuyHistory.js";
 import { pendingTransactions } from "../swap/pendingSwapTx.js";
 
 export type TxStatusInfo =
@@ -23,23 +26,14 @@ export type TxStatusInfo =
       status: ValidBuyWithFiatStatus;
     };
 
-export function useBuyTransactionsToShow(client: ThirdwebClient) {
-  const account = useActiveAccount();
-  const [pageIndex, setPageIndex] = useState(0);
-  const txStatusList: TxStatusInfo[] = [];
-  const PAGE_SIZE = 10;
+export function useBuyTransactionsToShow(options: {
+  client: ThirdwebClient;
+  buyHistory: UseQueryResult<BuyHistoryData>;
+  pageIndex: number;
+}) {
+  const { client, buyHistory, pageIndex } = options;
 
-  const buyHistory = useBuyHistory(
-    {
-      walletAddress: account?.address || "",
-      start: pageIndex * PAGE_SIZE,
-      count: PAGE_SIZE,
-      client,
-    },
-    {
-      refetchInterval: 10 * 1000, // 10 seconds
-    },
-  );
+  const txStatusList: TxStatusInfo[] = [];
 
   const pendingTxStoreValue = useSyncExternalStore(
     pendingTransactions.subscribe,
@@ -176,8 +170,6 @@ export function useBuyTransactionsToShow(client: ThirdwebClient) {
     (buyHistory.data && !buyHistory.data.hasNextPage && pageIndex === 0);
 
   return {
-    pageIndex,
-    setPageIndex,
     txInfosToShow: txStatusList,
     hidePagination,
     isLoading: buyHistory.isLoading,

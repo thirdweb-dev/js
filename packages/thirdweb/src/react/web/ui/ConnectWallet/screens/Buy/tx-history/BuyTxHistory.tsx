@@ -4,16 +4,22 @@ import {
   CrossCircledIcon,
   ExternalLinkIcon,
 } from "@radix-ui/react-icons";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { BuyHistoryData } from "../../../../../../../pay/getBuyHistory.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import {
   fontSize,
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useBuyHistory } from "../../../../../../core/hooks/pay/useBuyHistory.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
@@ -39,7 +45,14 @@ export function BuyTxHistory(props: {
   isBuyForTx: boolean;
   isEmbed: boolean;
 }) {
+  const [pageIndex, setPageIndex] = useState(0);
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
+  const account = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+
+  if (!account || !activeChain) {
+    return <LoadingScreen />;
+  }
 
   if (selectedTx) {
     return (
@@ -54,7 +67,16 @@ export function BuyTxHistory(props: {
     );
   }
 
-  return <BuyTxHistoryList {...props} onSelectTx={setSelectedTx} />;
+  return (
+    <BuyTxHistoryList
+      {...props}
+      onSelectTx={setSelectedTx}
+      pageIndex={pageIndex}
+      setPageIndex={setPageIndex}
+      account={account}
+      activeChain={activeChain}
+    />
+  );
 }
 
 /**
@@ -65,19 +87,57 @@ export function BuyTxHistoryList(props: {
   client: ThirdwebClient;
   onDone: () => void;
   onSelectTx: (tx: TxStatusInfo) => void;
+  account: Account;
+  pageIndex: number;
+  setPageIndex: (index: number) => void;
+  activeChain: Chain;
 }) {
-  const {
-    pageIndex,
-    setPageIndex,
-    txInfosToShow,
-    hidePagination,
-    isLoading,
-    pagination,
-  } = useBuyTransactionsToShow(props.client);
+  const { pageIndex, setPageIndex } = props;
+  const PAGE_SIZE = 10;
+  const buyHistory = useBuyHistory(
+    {
+      walletAddress: props.account?.address,
+      start: pageIndex * PAGE_SIZE,
+      count: PAGE_SIZE,
+      client: props.client,
+    },
+    {
+      refetchInterval: 10 * 1000, // 10 seconds
+    },
+  );
 
-  const activeChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(activeChain);
-  const activeAccount = useActiveAccount();
+  return (
+    <BuyTxHistoryListUI
+      {...props}
+      buyHistory={buyHistory}
+      pageIndex={pageIndex}
+      setPageIndex={setPageIndex}
+    />
+  );
+}
+
+/**
+ * @internal
+ */
+export function BuyTxHistoryListUI(props: {
+  onBack?: () => void;
+  client: ThirdwebClient;
+  onDone: () => void;
+  onSelectTx: (tx: TxStatusInfo) => void;
+  buyHistory: UseQueryResult<BuyHistoryData>;
+  pageIndex: number;
+  setPageIndex: (index: number) => void;
+  account: Account;
+  activeChain: Chain;
+}) {
+  const { txInfosToShow, hidePagination, isLoading, pagination } =
+    useBuyTransactionsToShow({
+      client: props.client,
+      buyHistory: props.buyHistory,
+      pageIndex: props.pageIndex,
+    });
+
+  const chainQuery = useChainQuery(props.activeChain);
 
   const noTransactions = txInfosToShow.length === 0;
 
@@ -162,14 +222,14 @@ export function BuyTxHistoryList(props: {
               <Button
                 variant="outline"
                 gap="xs"
-                disabled={pageIndex === 0}
-                data-disabled={pageIndex === 0}
+                disabled={props.pageIndex === 0}
+                data-disabled={props.pageIndex === 0}
                 style={{
                   fontSize: fontSize.sm,
                   paddingBlock: spacing.sm,
                 }}
                 onClick={() => {
-                  setPageIndex((prev) => prev - 1);
+                  props.setPageIndex(props.pageIndex - 1);
                 }}
               >
                 <ArrowRightIcon
@@ -191,7 +251,7 @@ export function BuyTxHistoryList(props: {
                   paddingBlock: spacing.sm,
                 }}
                 onClick={() => {
-                  setPageIndex((prev) => prev + 1);
+                  props.setPageIndex(props.pageIndex + 1);
                 }}
               >
                 Next
@@ -202,24 +262,28 @@ export function BuyTxHistoryList(props: {
         </Container>
       </Container>
 
-      <Line />
-      <Container p="lg">
-        <ButtonLink
-          fullWidth
-          variant="outline"
-          href={`${chainQuery.data?.explorers?.[0]?.url}/address/${activeAccount?.address}`}
-          target="_blank"
-          as="a"
-          gap="xs"
-          style={{
-            textDecoration: "none",
-            color: "inherit",
-          }}
-        >
-          View on Explorer{" "}
-          <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
-        </ButtonLink>
-      </Container>
+      {chainQuery.data?.explorers?.[0]?.url && (
+        <>
+          <Line />
+          <Container p="lg">
+            <ButtonLink
+              fullWidth
+              variant="outline"
+              href={`${chainQuery.data.explorers[0].url}/address/${props.account.address}`}
+              target="_blank"
+              as="a"
+              gap="xs"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              View on Explorer{" "}
+              <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
+            </ButtonLink>
+          </Container>
+        </>
+      )}
     </Container>
   );
 }

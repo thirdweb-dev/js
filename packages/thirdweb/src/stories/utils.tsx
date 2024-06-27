@@ -34,3 +34,18 @@ export function StoryScreenTitle(props: {
     </p>
   );
 }
+
+export const noop = () => {};
+
+export function Row(props: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: "20px",
+      }}
+    >
+      {props.children}
+    </div>
+  );
+}
