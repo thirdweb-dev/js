@@ -21,7 +21,7 @@
     "build:packages": "turbo run build --filter=./packages/*",
     "build:legacy_packages": "turbo run build --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge",
     "build": "turbo run build --filter=./packages/* --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge --concurrency=1",
-    "build:release": "pnpm run build --filter=./packages/* --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge --force --concurrency=1",
+    "build:release": "pnpm run build --filter=./packages/* --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge --force",
     "test": "turbo run test --filter=./packages/*",
     "test:legacy": "turbo run test --filter=./legacy_packages/* --filter=!@thirdweb-dev/sdk --filter=!@thirdweb-dev/auth",
     "e2e": "turbo run e2e --filter=./packages/*",
