@@ -51,31 +51,34 @@ export const WalletConnectConnection: React.FC<{
           onDisplayUri(uri) {
             const preferNative =
               walletInfo.mobile.native || walletInfo.mobile.universal;
-
-            if (isMobile()) {
-              if (isAndroid()) {
-                if (preferNative) {
-                  openWindow(
-                    formatWalletConnectUrl(preferNative, uri).redirect,
-                  );
-                }
-              } else if (isIOS()) {
-                if (preferNative) {
-                  openWindow(
-                    formatWalletConnectUrl(preferNative, uri).redirect,
-                  );
+            try {
+              if (isMobile()) {
+                if (isAndroid()) {
+                  if (preferNative) {
+                    openWindow(
+                      formatWalletConnectUrl(preferNative, uri).redirect,
+                    );
+                  }
+                } else if (isIOS()) {
+                  if (preferNative) {
+                    openWindow(
+                      formatWalletConnectUrl(preferNative, uri).redirect,
+                    );
+                  }
+                } else {
+                  const preferUniversal =
+                    walletInfo.mobile.universal || walletInfo.mobile.native;
+                  if (preferUniversal) {
+                    openWindow(
+                      formatWalletConnectUrl(preferUniversal, uri).redirect,
+                    );
+                  }
                 }
               } else {
-                const preferUniversal =
-                  walletInfo.mobile.universal || walletInfo.mobile.native;
-                if (preferUniversal) {
-                  openWindow(
-                    formatWalletConnectUrl(preferUniversal, uri).redirect,
-                  );
-                }
+                setQrCodeUri(uri);
               }
-            } else {
-              setQrCodeUri(uri);
+            } catch {
+              setErrorConnecting(true);
             }
           },
           optionalChains: props.chains,
