@@ -7,8 +7,6 @@
     }
   ],
   "commit": false,
-  "fixed": [["@thirdweb-dev/react-core", "@thirdweb-dev/react"]],
-  "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
@@ -21,7 +19,21 @@
     "runtimes-node-module",
     "playground-web",
     "thirdweb-dashboard",
-    "@thirdweb-dev/unity-js-bridge"
+    "@thirdweb-dev/auth",
+    "@thirdweb-dev/chains",
+    "@thirdweb-dev/cli",
+    "@thirdweb-dev/contracts-js",
+    "@thirdweb-dev/crypto",
+    "@thirdweb-dev/generated-abis",
+    "@thirdweb-dev/merkletree",
+    "@thirdweb-dev/pay",
+    "@thirdweb-dev/payments",
+    "@thirdweb-dev/react",
+    "@thirdweb-dev/react-core",
+    "@thirdweb-dev/sdk",
+    "@thirdweb-dev/storage",
+    "@thirdweb-dev/unity-js-bridge",
+    "@thirdweb-dev/wallets"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",
