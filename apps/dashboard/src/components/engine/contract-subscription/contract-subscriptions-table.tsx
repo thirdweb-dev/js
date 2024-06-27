@@ -238,7 +238,7 @@ const ChainLastBlockTimestamp = ({
 }) => {
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
-    queryKey: ["block_timestamp", chainId, blockNumber],
+    queryKey: ["block_timestamp", chainId, Number(blockNumber)],
     // keep the previous data while fetching new data
     keepPreviousData: true,
     queryFn: async () => {
