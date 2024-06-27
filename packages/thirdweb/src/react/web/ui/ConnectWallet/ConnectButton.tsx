@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
+import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";

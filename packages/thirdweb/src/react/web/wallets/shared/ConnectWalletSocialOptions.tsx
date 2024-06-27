@@ -1,7 +1,6 @@
 "use client";
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { setLastAuthProvider } from "src/react/core/utils/storage.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
@@ -34,6 +33,7 @@ import { socialIcons } from "../in-app/socialIcons.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 
 export type ConnectWalletSelectUIState =
   | undefined

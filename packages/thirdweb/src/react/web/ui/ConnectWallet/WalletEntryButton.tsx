@@ -1,5 +1,4 @@
 "use client";
-import { useWalletInfo } from "src/react/core/utils/wallet.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -11,6 +10,7 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container } from "../components/basic.js";

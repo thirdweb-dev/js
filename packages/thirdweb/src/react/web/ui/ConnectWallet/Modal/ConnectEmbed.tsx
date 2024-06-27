@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useMemo } from "react";
-import type { ThirdwebClient } from "src/client/client.js";
-import type { ConnectEmbedProps } from "src/react/core/hooks/connection/ConnectEmbedProps.js";
-import type { SmartWalletOptions } from "src/wallets/smart/types.js";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -12,6 +13,7 @@ import {
   type SiweAuthOptions,
   useSiweAuth,
 } from "../../../../core/hooks/auth/useSiweAuth.js";
+import type { ConnectEmbedProps } from "../../../../core/hooks/connection/ConnectEmbedProps.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useIsAutoConnecting } from "../../../hooks/wallets/useIsAutoConnecting.js";
@@ -34,7 +36,6 @@ import { useConnectLocale } from "../locale/getConnectLocale.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
-import type { Wallet } from "src/wallets/interfaces/wallet.js";
 
 /**
  * A component that allows the user to connect their wallet.

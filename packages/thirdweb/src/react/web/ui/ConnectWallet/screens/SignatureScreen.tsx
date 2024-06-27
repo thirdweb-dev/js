@@ -1,7 +1,6 @@
 import { keyframes } from "@emotion/react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ConnectButtonProps } from "src/react/core/hooks/connection/ConnectButtonProps.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
@@ -11,6 +10,7 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
+import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { wait } from "../../../../core/utils/wait.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../hooks/wallets/useDisconnect.js";
