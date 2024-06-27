@@ -15,14 +15,14 @@ export const walletConnectLocales: Record<LocaleId, WalletConnectLocale> = {
   ja_JP: {
     scanInstruction:
       '接続するためにウォレットアプリでこちらをスキャンしてください"',
-    openWCModal: "Open Official WalletConnect Modal", // TODO translate
+    openWCModal: "公式のWalletConnectモーダルを開く",
   },
   tl_PH: {
     scanInstruction: "I-scan ito gamit ang iyong wallet app para makakonekta",
-    openWCModal: "Open Official WalletConnect Modal", // TODO translate
+    openWCModal: "Buksan ang Opisyal na WalletConnect Modal",
   },
   es_ES: {
     scanInstruction: "Escanea esto con tu aplicación de cartera para conectar",
-    openWCModal: "Open Official WalletConnect Modal", // TODO translate
+    openWCModal: "Abre el Modal Oficial de WalletConnect",
   },
 };

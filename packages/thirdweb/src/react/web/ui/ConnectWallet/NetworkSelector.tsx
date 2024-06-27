@@ -452,6 +452,7 @@ function NetworkSelectorContentInner(
           renderChain={props.networkSelector?.renderChain}
           connectLocale={connectLocale}
           client={props.client}
+          close={props.closeModal}
         />
       </Container>
       {onCustomClick && (
@@ -725,7 +726,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
           }}
         >
           {chainName}
-          <Container animate="fadein" flex="row" gap="xs">
+          <Container animate="fadein" flex="row" gap="xxs" center="y">
             {confirming && (
               <>
                 <Text size="xs" color="accentText">

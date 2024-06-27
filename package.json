@@ -19,9 +19,9 @@
     "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb",
     "dashboard:build": "turbo run build --filter=./apps/dashboard",
     "build:packages": "turbo run build --filter=./packages/*",
-    "build:legacy_packages": "turbo run build --filter=./legacy_packages/*",
-    "build": "turbo run build --filter=./packages/* --filter=./legacy_packages/*",
-    "build:release": "pnpm run build --force",
+    "build:legacy_packages": "turbo run build --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge",
+    "build": "turbo run build --filter=./packages/* --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge --concurrency=1",
+    "build:release": "pnpm run build --filter=./packages/* --filter=./legacy_packages/* --filter=!@thirdweb-dev/unity-js-bridge --force",
     "test": "turbo run test --filter=./packages/*",
     "test:legacy": "turbo run test --filter=./legacy_packages/* --filter=!@thirdweb-dev/sdk --filter=!@thirdweb-dev/auth",
     "e2e": "turbo run e2e --filter=./packages/*",
@@ -31,7 +31,7 @@
     "generate-snippets": "node ./scripts/generate-snippets/index.mjs",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "node ./scripts/pre-release.mjs && turbo run update-version && pnpm build && changeset publish",
+    "release": "node ./scripts/pre-release.mjs && turbo run update-version && pnpm build:release && changeset publish",
     "version-packages:nightly": "node scripts/pre-nightly.mjs && changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && turbo run update-version && pnpm build && changeset publish --tag nightly",
     "push": "turbo run push --filter=./packages/* --filter=./legacy_packages/**",
@@ -45,7 +45,7 @@
     "@manypkg/get-packages": "2.2.1",
     "@playwright/test": "1.44.1",
     "@types/node": "20.14.6",
-    "turbo": "2.0.4",
+    "turbo": "2.0.5",
     "yalc": "1.0.0-pre.53"
   },
   "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______": "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______",
@@ -106,5 +106,5 @@
       "ws@>=6.0.0 <6.2.3": "6.2.3"
     }
   },
-  "packageManager": "pnpm@8.14.1"
+  "packageManager": "pnpm@9.4.0"
 }

@@ -20,13 +20,13 @@ import {
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 import { StepIcon } from "../Stepper.js";
 import {
   type FiatStatusMeta,
@@ -125,6 +125,8 @@ export function FiatSteps(props: {
       address: toTokenMeta.tokenAddress,
       name: toTokenMeta.name || "",
       symbol: toTokenMeta.symbol || "",
+      // TODO: when icon is available in endpoint
+      // icon: toTokenMeta.icon
     };
     return tokenInfo;
   }, [toTokenMeta]);
@@ -143,6 +145,8 @@ export function FiatSteps(props: {
       address: onRampTokenMeta.tokenAddress,
       name: onRampTokenMeta.name || "",
       symbol: onRampTokenMeta.symbol || "",
+      // TODO: when icon is available in endpoint
+      // icon: onRampTokenMeta.icon,
     };
     return tokenInfo;
   }, [onRampTokenMeta]);
@@ -164,7 +168,7 @@ export function FiatSteps(props: {
   const fiatIcon = <currency.icon size={iconSize.sm} />;
 
   const onRampTokenIcon = (
-    <TokenIcon
+    <PayTokenIcon
       token={onRampToken}
       chain={onRampChain}
       size="sm"
@@ -173,7 +177,7 @@ export function FiatSteps(props: {
   );
 
   const toTokenIcon = (
-    <TokenIcon
+    <PayTokenIcon
       token={toToken}
       chain={toChain}
       size="sm"

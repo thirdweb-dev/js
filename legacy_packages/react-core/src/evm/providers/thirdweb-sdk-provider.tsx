@@ -66,6 +66,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
 
         readonlySettings = {
           chainId: supportedChain.chainId,
+          // @ts-expect-error - TODO: fix unchecked access
           rpcUrl,
         };
       } catch (e) {
@@ -100,6 +101,7 @@ const WrappedThirdwebSDKProvider = <TChains extends Chain[]>({
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
       if (supportedChains.length > 0) {
+        // @ts-expect-error - TODO: fix unchecked access
         chainId = supportedChains[0].chainId;
         sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
       } else {
@@ -320,6 +322,7 @@ export const ThirdwebSDKProvider = <TChains extends Chain[]>(
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithClientId(
       supportedChainsNonNull,
+      // @ts-expect-error - TODO: fix unchecked access
       activeChain || supportedChainsNonNull[0],
       clientId,
     );

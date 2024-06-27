@@ -73,7 +73,7 @@ export const CustomChainRenderer = ({
               )}
             </div>
             {switching && (
-              <div className="flex text-primary-foreground text-xs font-medium items-center gap-1">
+              <div className="flex text-link-foreground text-xs font-medium items-center gap-1">
                 Confirm in your wallet
                 <Spinner className="size-3" />
               </div>

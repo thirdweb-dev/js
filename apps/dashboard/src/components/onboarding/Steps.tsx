@@ -12,7 +12,6 @@ import {
   VStack,
   useBreakpointValue,
   useColorMode,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useChainId } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
@@ -23,7 +22,6 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { OPSponsoredChains } from "../../constants/chains";
-import { ApplyForOpCreditsModal } from "./ApplyForOpCreditsModal";
 
 enum Step {
   Keys = "keys",
@@ -58,11 +56,6 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   const apiKeysQuery = useApiKeys();
   const router = useRouter();
   const trackEvent = useTrack();
-  const {
-    isOpen: isClaimCreditsOpen,
-    onOpen: onClaimCreditsOpen,
-    onClose: onClaimCreditsClose,
-  } = useDisclosure();
   const { colorMode } = useColorMode();
   const { data: credits } = useAccountCredits();
   const opCredit = credits?.find((crd) => crd.name.startsWith("OP -"));
@@ -234,13 +227,13 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         ),
         cta: "Apply now",
         onClick: () => {
-          onClaimCreditsOpen();
           trackEvent({
             category: "onboardingChecklist",
             action: "clicked",
             data: { step: Step.OptimismCredits },
           });
         },
+        href: "/dashboard/settings/gas-credits",
         learnMore:
           "https://blog.thirdweb.com/accelerating-the-superchain-with-optimism",
         rightImageDark: require("../../../public/assets/dashboard/optimism-credits-dark.png"),
@@ -256,7 +249,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         canSkip: true,
       },
     ],
-    [onClaimCreditsOpen, trackEvent],
+    [trackEvent],
   );
 
   if (!currentStep) {
@@ -326,10 +319,6 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       {rightImageLight && !isMobile && colorMode === "light" && (
         <ChakraNextImage src={rightImageLight} alt={""} w="50%" priority />
       )}
-      <ApplyForOpCreditsModal
-        isOpen={isClaimCreditsOpen}
-        onClose={onClaimCreditsClose}
-      />
     </Card>
   );
 };

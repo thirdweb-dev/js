@@ -1,39 +1,28 @@
 import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Flex,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Alert, AlertDescription, AlertIcon, Flex } from "@chakra-ui/react";
 import { Optimism } from "@thirdweb-dev/chains";
 import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
 import { formatDistance } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { Button, Card, Text } from "tw-components";
+import { Card, LinkButton, Text } from "tw-components";
 import { formatToDollars } from "./CreditsButton";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
   onCreditsButton?: true;
   isOpCreditDefault?: boolean;
+  onClickApply?: () => void;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
   onCreditsButton,
   isOpCreditDefault,
+  onClickApply,
 }) => {
-  const {
-    isOpen: isMoreCreditsOpen,
-    onOpen: onMoreCreditsOpen,
-    onClose: onMoreCreditsClose,
-  } = useDisclosure();
   const trackEvent = useTrack();
-
   const account = useAccount();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
@@ -77,20 +66,23 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           ) : null}
           <Text color="bgBlack">{creditTitle}</Text>
           {!hasAppliedForOpGrant && isOpCredit && (
-            <Button
+            <LinkButton
+              href="/dashboard/settings/gas-credits"
               size="xs"
               variant="outline"
               onClick={() => {
-                onMoreCreditsOpen();
                 trackEvent({
                   category: "op-sponsorship",
                   action: "click",
                   label: "apply-now",
                 });
+                if (onClickApply) {
+                  onClickApply();
+                }
               }}
             >
-              Apply now
-            </Button>
+              Apply Now
+            </LinkButton>
           )}
         </Flex>
         <Flex gap={6}>
@@ -137,12 +129,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           </Alert>
         )}
       </Flex>
-      {isOpCredit && (
-        <ApplyForOpCreditsModal
-          isOpen={isMoreCreditsOpen}
-          onClose={onMoreCreditsClose}
-        />
-      )}
     </Card>
   );
 };

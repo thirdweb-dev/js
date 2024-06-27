@@ -12,7 +12,6 @@ import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
@@ -21,6 +20,7 @@ import type { TokenInfo } from "../../../defaultTokens.js";
 import { GenericWalletIcon } from "../../../icons/GenericWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -78,7 +78,7 @@ export function PayWithCrypto(props: {
         }}
         disabled={props.freezeChainAndTokenSelection}
       >
-        <TokenIcon
+        <PayTokenIcon
           token={props.token}
           chain={props.chain}
           size="md"

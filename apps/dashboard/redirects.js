@@ -246,12 +246,12 @@ function redirects() {
     },
     {
       source: "/dashboard/payments/settings",
-      destination: "/dashboard/connect/pay?tab=checkouts",
+      destination: "/dashboard/connect/pay",
       permanent: false,
     },
     {
       source: "/dashboard/payments/contracts",
-      destination: "/dashboard/connect/pay?tab=checkouts",
+      destination: "/dashboard/connect/pay",
       permanent: false,
     },
     // Redirecting as ambassadors lives in community now

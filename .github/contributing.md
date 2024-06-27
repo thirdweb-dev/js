@@ -114,6 +114,51 @@ These are the versions the GH action published to npm for testing purposes. Let'
 
 <br/>
 
+### Test Your Changes (React Native)
+
+The repository does not yet have a React Native playground, so some additional steps are needed to test any React Native SDK changes.
+
+#### Create a Local React Native Project
+
+For ease of setup, we recommend using the React Native SDK template project as a local testing playground. To generate this project, just run `npx thirdweb create --react-native`.
+
+#### Linking Your Local Changes
+
+To use the local version of the SDK while listening for changes in your React Native project, we'll use [wml](https://www.npmjs.com/package/wml). To install wml, run `npm i -g wml`.
+
+Once installed, edit the project's `package.json` so the thirdweb package points to your local version of the repository (rather than a version number). It should look something like this:
+
+```json
+"thirdweb": "/Users/me/Desktop/js/packages/thirdweb/"
+```
+
+Now we'll add a wml link between your React Native project and this local repository:
+
+```bash
+wml add /[Path to this repository on your machine]/packages/thirdweb /[Path to your RN project]/node_modules/thirdweb
+```
+
+Run `wml list` to confirm you've added the connection successfully.
+
+Now run `wml start` to start the connection between your two projects. wml will watch for changes in the first directory you specified and copy them to the second.
+
+However, for this to work you'll also need to setup [watchman](https://facebook.github.io/watchman/) on wml (confusing, I know). First, install watchman with homebrew or another installer.
+
+Once watchman is installed, find where wml's src is. You can normally do this by running `which wml` to find your node directory, then adding `/lib/node_modules/wml/src` from the root path of your current node version. It should look something like this: `/Users/me/.nvm/versions/node/v20.13.0/lib/node_modules/wml/src`
+
+Now, run watchman on this path with `watchman watch /Users/me/.nvm/versions/node/v20.13.0/lib/node_modules/wml/src`
+
+Finally, navigate to the V5 SDK package with `cd packages/thirdweb` and run it in dev mode to rebuild on changes with `pnpm dev:esm`.
+
+You should now have:
+
+1. `wml` running in one terminal window, watching your local SDK and your React Native project
+2. `watchman` set to watch your `wml` src directory
+3. `pnpm dev:esm` running in `packages/thirdweb`
+4. The "thirdweb" dependency in your RN `package.json` pointing to `packages/thirdweb` of your local version of this repository
+
+Try making changes in the SDK to see if they affect your React Native project. If they don't, try deleting your RN project `node_modules`, reinstalling via yarn (the preferred package manager for React Native), and trying again.
+
 ### Publish Your Changes
 
 Once you're satisfied with your changes, you are ready to submit them for review!

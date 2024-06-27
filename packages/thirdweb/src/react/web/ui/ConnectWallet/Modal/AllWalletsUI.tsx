@@ -4,12 +4,12 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 import Fuse from "fuse.js";
 import { useMemo, useRef, useState } from "react";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import walletInfos from "../../../../../wallets/__generated__/wallet-infos.js";
 import { createWallet } from "../../../../../wallets/create-wallet.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { sortWallets } from "../../../utils/sortWallets.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -19,6 +19,7 @@ import { Text } from "../../components/text.js";
 import { useDebouncedValue } from "../../hooks/useDebouncedValue.js";
 import { useShowMore } from "../../hooks/useShowMore.js";
 import { WalletEntryButton } from "../WalletEntryButton.js";
+import type { ConnectLocale } from "../locale/types.js";
 
 /**
  *
@@ -27,15 +28,19 @@ import { WalletEntryButton } from "../WalletEntryButton.js";
 function AllWalletsUI(props: {
   onBack: () => void;
   onSelect: (wallet: Wallet) => void;
+  specifiedWallets: Wallet[];
+  size: "compact" | "wide";
+  client: ThirdwebClient;
+  recommendedWallets: Wallet[] | undefined;
+  connectLocale: ConnectLocale;
 }) {
   const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
-  const { wallets: specifiedWallets, connectModal } = useConnectUI();
 
   const walletList = useMemo(() => {
     return walletInfos.filter((wallet) => {
-      return specifiedWallets.findIndex((x) => x.id === wallet.id) === -1;
+      return props.specifiedWallets.findIndex((x) => x.id === wallet.id) === -1;
     });
-  }, [specifiedWallets]);
+  }, [props.specifiedWallets]);
 
   const fuseInstance = useMemo(() => {
     return new Fuse(walletList, {
@@ -116,8 +121,7 @@ function AllWalletsUI(props: {
             <div
               ref={listContainer}
               style={{
-                maxHeight:
-                  connectModal.size === "compact" ? "400px" : undefined,
+                maxHeight: props.size === "compact" ? "400px" : undefined,
                 paddingInline: spacing.md,
               }}
             >
@@ -138,6 +142,9 @@ function AllWalletsUI(props: {
                         const wallet = createWallet(walletInfo.id);
                         props.onSelect(wallet);
                       }}
+                      client={props.client}
+                      recommendedWallets={props.recommendedWallets}
+                      connectLocale={props.connectLocale}
                     />
                   </li>
                 );

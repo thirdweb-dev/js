@@ -8,8 +8,7 @@
     },
     "bench": {
       "cache": false,
-      "dependsOn": [],
-      "env": ["TW_SECRET_KEY", "CI"]
+      "dependsOn": []
     },
     "typedoc": {
       "outputs": ["typedoc/**"],
@@ -74,7 +73,7 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/contracts-js#build": {
-      "outputs": ["dist/**", "factories/**", "src/**"],
+      "outputs": ["dist/**", "factories/**", "src/**", "package.json"],
       "inputs": ["package.json"],
       "dependsOn": ["^build"]
     },
@@ -89,14 +88,12 @@
     "test": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["^build"],
-      "env": ["TW_SECRET_KEY", "CI"]
+      "dependsOn": ["^build"]
     },
     "test:legacy": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["^build"],
-      "env": ["TW_SECRET_KEY", "CI"]
+      "dependsOn": ["^build"]
     },
     "e2e": {
       "outputs": [],
@@ -109,12 +106,15 @@
       "dependsOn": ["^build"]
     },
     "lint": {
+      "cache": false,
       "outputs": []
     },
     "lint:legacy": {
+      "cache": false,
       "outputs": []
     },
     "fix": {
+      "cache": false,
       "outputs": []
     },
     "format": {

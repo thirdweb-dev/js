@@ -1,5 +1,8 @@
 "use client";
+import { useWalletInfo } from "src/react/core/utils/wallet.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdStore.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -8,14 +11,13 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
 import { StyledButton } from "../design-system/elements.js";
 import { useScreenContext } from "./Modal/screen.js";
+import type { ConnectLocale } from "./locale/types.js";
 
 /**
  * @internal
@@ -23,10 +25,14 @@ import { useScreenContext } from "./Modal/screen.js";
 export function WalletEntryButton(props: {
   walletId: WalletId;
   selectWallet: () => void;
+  connectLocale: ConnectLocale;
+  recommendedWallets: Wallet[] | undefined;
+  client: ThirdwebClient;
 }) {
   const { walletId, selectWallet } = props;
-  const { connectLocale, recommendedWallets, client } = useConnectUI();
-  const isRecommended = recommendedWallets?.find((w) => w.id === walletId);
+  const isRecommended = props.recommendedWallets?.find(
+    (w) => w.id === walletId,
+  );
   const { screen } = useScreenContext();
   const walletInfo = useWalletInfo(walletId);
 
@@ -46,7 +52,7 @@ export function WalletEntryButton(props: {
         screen && typeof screen === "object" && screen.id === walletId
       }
     >
-      <WalletImage id={walletId} size={iconSize.xl} client={client} />
+      <WalletImage id={walletId} size={iconSize.xl} client={props.client} />
 
       <Container flex="column" gap="xxs" expand>
         {walletName ? (
@@ -57,10 +63,12 @@ export function WalletEntryButton(props: {
           <Skeleton width="100px" height={fontSize.md} />
         )}
 
-        {isRecommended && <Text size="sm">{connectLocale.recommended}</Text>}
+        {isRecommended && (
+          <Text size="sm">{props.connectLocale.recommended}</Text>
+        )}
 
         {!isRecommended && isInstalled && (
-          <Text size="sm">{connectLocale.installed}</Text>
+          <Text size="sm">{props.connectLocale.installed}</Text>
         )}
       </Container>
     </WalletButton>

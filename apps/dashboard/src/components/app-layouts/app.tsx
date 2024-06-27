@@ -1,6 +1,5 @@
 import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import {
@@ -39,22 +38,6 @@ import {
   DashboardThirdwebProvider,
   type DashboardThirdwebProviderProps,
 } from "./providers";
-
-const apolloClient = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_PAYMENTS_API,
-  credentials: "include",
-  cache: new InMemoryCache(),
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: "no-cache",
-      errorPolicy: "ignore",
-    },
-    query: {
-      fetchPolicy: "no-cache",
-      errorPolicy: "all",
-    },
-  },
-});
 
 const __CACHE_BUSTER = "3.14.40-nightly-1e6f9dcc-20230831023648";
 
@@ -152,27 +135,25 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
     >
       <Hydrate state={props.dehydratedState}>
         <ErrorProvider>
-          <ApolloProvider client={apolloClient}>
-            <DeployModalProvider>
-              <AllChainsProvider>
-                <ChainsProvider>
-                  <EVMContractInfoProvider value={props.contractInfo}>
-                    <DashboardThirdwebProvider>
-                      <SanctionedAddressesChecker>
-                        <PosthogIdentifier />
-                        <ConfigModal />
+          <DeployModalProvider>
+            <AllChainsProvider>
+              <ChainsProvider>
+                <EVMContractInfoProvider value={props.contractInfo}>
+                  <DashboardThirdwebProvider>
+                    <SanctionedAddressesChecker>
+                      <PosthogIdentifier />
+                      <ConfigModal />
 
-                        <OnboardingModal />
-                        <OpCreditsGrantedModalWrapper />
+                      <OnboardingModal />
+                      <OpCreditsGrantedModalWrapper />
 
-                        <AppShell {...props} />
-                      </SanctionedAddressesChecker>
-                    </DashboardThirdwebProvider>
-                  </EVMContractInfoProvider>
-                </ChainsProvider>
-              </AllChainsProvider>
-            </DeployModalProvider>
-          </ApolloProvider>
+                      <AppShell {...props} />
+                    </SanctionedAddressesChecker>
+                  </DashboardThirdwebProvider>
+                </EVMContractInfoProvider>
+              </ChainsProvider>
+            </AllChainsProvider>
+          </DeployModalProvider>
         </ErrorProvider>
       </Hydrate>
     </PersistQueryClientProvider>

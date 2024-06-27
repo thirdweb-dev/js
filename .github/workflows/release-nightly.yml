@@ -21,7 +21,7 @@ jobs:
   release:
     name: Release Nightly
     timeout-minutes: 30
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
@@ -39,11 +39,10 @@ jobs:
         uses: ./.github/composite-actions/install
 
       - name: Build
-        run: pnpm build:release
+        run: pnpm build
 
       - name: Create @nightly release
         run: |
-          git checkout main
           pnpm version-packages:nightly
           pnpm release:nightly
         env:

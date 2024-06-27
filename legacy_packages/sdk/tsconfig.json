@@ -3,6 +3,7 @@
   "include": ["src", "types"],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "allowJs": true
+    "allowJs": true,
+    "noUncheckedIndexedAccess": false // explicitly set to false (default is true)
   }
 }

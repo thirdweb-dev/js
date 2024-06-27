@@ -12,12 +12,6 @@ We use `pnpm`.
 pnpm install
 ```
 
-### Generate graphql types
-
-```sh
-pnpm apollo-codegen
-```
-
 ### Starting local dev server.
 
 ```sh

@@ -7,7 +7,6 @@ import { getRpcClient } from "../../../../rpc/rpc.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
-import { uint8ArrayToString } from "../../../../utils/uint8-array.js";
 import { getEcosystemPartnerPermissions } from "../../../ecosystem/get-ecosystem-partner-permissions.js";
 import type {
   Account,
@@ -279,7 +278,7 @@ export class IFrameWallet {
             return message;
           }
           if (message.raw instanceof Uint8Array) {
-            return uint8ArrayToString(message.raw);
+            return message.raw;
           }
           return hexToString(message.raw);
         })();
@@ -287,7 +286,8 @@ export class IFrameWallet {
         const { signedMessage } = await querier.call<SignMessageReturnType>({
           procedureName: "signMessage",
           params: {
-            message: messageDecoded, // always a string
+            // biome-ignore lint/suspicious/noExplicitAny: ethers tx transformation
+            message: messageDecoded as any, // needs bytes or string
             partnerId,
             chainId: 1, // TODO check if we need this
           },

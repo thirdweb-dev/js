@@ -459,7 +459,7 @@ export type ConnectButtonProps = {
    * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
    * @example
    * ```tsx
-   * import { polygon } from "thirdweb/wallets";
+   * import { polygon } from "thirdweb/chains";
    *
    * function Example() {
    *  return <div> <ConnectButton chain={polygon} /> </div>
@@ -486,7 +486,7 @@ export type ConnectButtonProps = {
    * At minimum, you need to pass the `id` of the blockchain to `defineChain` function to create a `Chain` object.
    *
    * ```tsx
-   * import { defineChain } from "thirdweb/react";
+   * import { defineChain } from "thirdweb/chains";
    *
    * const polygon = defineChain({
    *   id: 137,

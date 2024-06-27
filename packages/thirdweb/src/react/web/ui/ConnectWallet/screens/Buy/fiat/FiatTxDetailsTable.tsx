@@ -52,18 +52,6 @@ export function OnRampTxDetailsTable(props: {
 
   return (
     <div>
-      {/* Receive */}
-      <TokenInfoRow
-        chainId={props.token.chainId}
-        client={props.client}
-        label="Receive"
-        tokenAmount={props.token.amount}
-        tokenSymbol={props.token.symbol}
-        tokenAddress={props.token.address}
-      />
-
-      {lineSpacer}
-
       {/* Pay */}
       <Container
         flex="row"
@@ -88,6 +76,18 @@ export function OnRampTxDetailsTable(props: {
           </Container>
         </Container>
       </Container>
+
+      {lineSpacer}
+
+      {/* Receive */}
+      <TokenInfoRow
+        chainId={props.token.chainId}
+        client={props.client}
+        label="Receive"
+        tokenAmount={props.token.amount}
+        tokenSymbol={props.token.symbol}
+        tokenAddress={props.token.address}
+      />
 
       {/* Status */}
       {props.statusMeta && (

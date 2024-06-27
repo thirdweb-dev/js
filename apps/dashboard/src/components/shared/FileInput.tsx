@@ -119,7 +119,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
       direction="row"
       align="center"
       {...getRootProps()}
-      onClick={(e) => e.stopPropagation()}
+      // onClick={(e) => e.stopPropagation()}
     >
       <input {...getInputProps()} />
       {showPreview && (

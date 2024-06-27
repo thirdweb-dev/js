@@ -72,22 +72,6 @@ const helpProducts = [
       },
     ],
   },
-  // {
-  //   title: "Pay",
-  //   icon: require("../../public/assets/support/payments.svg"),
-  //   viewAllUrl: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/",
-  //   helpArticles: [
-  //     {
-  //       title: "Checkout buyer FAQ",
-  //       url: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/paper-buyer-faq/dejjmXeDPPAEJsA6n35pCi",
-  //     },
-  //     {
-  //       title: "NFT Checkout Buyer FAQ",
-  //       url: "https://support.thirdweb.com/payments/dsjpUFZYNivScVEb3PZGrj/nft-checkout-faqs/pC2JvfwLpXdeH9Dncv5dUm",
-  //     },
-  //   ],
-  // },
-
   {
     title: "Account",
     icon: require("../../public/assets/support/account.svg"),

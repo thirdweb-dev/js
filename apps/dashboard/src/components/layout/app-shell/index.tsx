@@ -50,13 +50,14 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
 
       <GridItem
         id={SIDEBAR_TUNNEL_ID}
-        bg="backgroundHighlight"
         colSpan={{ base: 2, md: 1 }}
         rowSpan={{ base: 1, md: 2 }}
         as="aside"
         position="sticky"
         top={0}
         zIndex="sticky"
+        borderRight="1px solid"
+        borderColor="borderColor"
         boxShadow="sm"
         w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
       >
@@ -94,9 +95,10 @@ const AppHeader: React.FC = () => {
     <GridItem
       colSpan={{ base: 2, md: 2 }}
       rowSpan={1}
-      background="backgroundHighlight"
       zIndex="sticky"
       boxShadow="sm"
+      borderBottom="1px solid"
+      borderColor="borderColor"
       pb={2}
     >
       <Container

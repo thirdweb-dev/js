@@ -1,11 +1,10 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { COINBASE } from "../../../../wallets/constants.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../../wallets/wallet-info.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-
 import type { InjectedWalletLocale } from "../injected/locale/types.js";
-
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { COINBASE } from "../../../../wallets/constants.js";
 import { ConnectingScreen } from "./ConnectingScreen.js";
 
 /**
@@ -18,17 +17,19 @@ function CoinbaseSDKWalletConnectUI(props: {
   locale: InjectedWalletLocale;
   wallet: Wallet<typeof COINBASE>;
   walletInfo: WalletInfo;
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  size: "compact" | "wide";
 }) {
   const { onBack, done, wallet, walletInfo, onGetStarted, locale } = props;
   const [errorConnecting, setErrorConnecting] = useState(false);
-  const { client, chain } = useConnectUI();
 
   const connect = useCallback(() => {
     setErrorConnecting(false);
     wallet
       .connect({
-        client,
-        chain,
+        client: props.client,
+        chain: props.chain,
       })
       .then(() => {
         done();
@@ -37,7 +38,7 @@ function CoinbaseSDKWalletConnectUI(props: {
         console.error(e);
         setErrorConnecting(true);
       });
-  }, [client, wallet, chain, done]);
+  }, [props.client, wallet, props.chain, done]);
 
   const scanStarted = useRef(false);
   useEffect(() => {
@@ -63,6 +64,8 @@ function CoinbaseSDKWalletConnectUI(props: {
       errorConnecting={errorConnecting}
       onRetry={connect}
       onGetStarted={onGetStarted}
+      client={props.client}
+      size={props.size}
     />
   );
 }

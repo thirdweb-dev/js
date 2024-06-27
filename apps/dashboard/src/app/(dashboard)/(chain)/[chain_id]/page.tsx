@@ -67,7 +67,7 @@ export default async function Page() {
         </h3>
         <Link
           href="/explore"
-          className="text-primary-foreground inline-flex items-center gap-1 text-base hover:text-foreground font-medium"
+          className="text-link-foreground inline-flex items-center gap-1 text-base hover:text-foreground font-medium"
         >
           View All
           <ChevronRight className="size-5" />

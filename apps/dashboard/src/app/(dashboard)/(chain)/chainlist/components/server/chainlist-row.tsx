@@ -51,7 +51,7 @@ export async function ChainListRow({
 
             {!isDeprecated && chainMetadata?.gasSponsored && (
               <ToolTipLabel label="Gas Sponsored">
-                <TicketCheckIcon className="text-primary-foreground size-5 z-10 " />
+                <TicketCheckIcon className="text-link-foreground size-5 z-10 " />
               </ToolTipLabel>
             )}
 

@@ -1,6 +1,8 @@
 "use client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
@@ -11,7 +13,6 @@ import {
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
@@ -21,6 +22,8 @@ import { Spinner } from "../../components/Spinner.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
+import type { LocaleId } from "../../types.js";
+import type { ConnectLocale } from "../locale/types.js";
 import { AnyWalletConnectUI } from "./AnyWalletConnectUI.js";
 
 /**
@@ -32,6 +35,24 @@ export function SmartConnectUI(props: {
   onBack?: () => void;
   accountAbstraction: SmartWalletOptions;
   setModalVisibility: (value: boolean) => void;
+  localeId: LocaleId;
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+  size: "compact" | "wide";
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  connectLocale: ConnectLocale;
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
 }) {
   const personalWalletInfo = useWalletInfo(props.personalWallet.id);
   const [keyConnected, setKeyConnected] = useState(false);
@@ -50,6 +71,14 @@ export function SmartConnectUI(props: {
         }}
         onBack={props.onBack}
         setModalVisibility={props.setModalVisibility}
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        meta={props.meta}
+        size={props.size}
+        localeId={props.localeId}
+        walletConnect={props.walletConnect}
+        connectLocale={props.connectLocale}
       />
     );
   }
@@ -61,6 +90,9 @@ export function SmartConnectUI(props: {
       accountAbstraction={props.accountAbstraction}
       onBack={props.onBack}
       personalWalletInfo={personalWalletInfo.data}
+      localeId={props.localeId}
+      size={props.size}
+      client={props.client}
     />
   );
 }
@@ -71,16 +103,17 @@ function SmartWalletConnecting(props: {
   accountAbstraction: SmartWalletOptions;
   onBack?: () => void;
   personalWalletInfo: WalletInfo;
+  localeId: LocaleId;
+  size: "compact" | "wide";
+  client: ThirdwebClient;
 }) {
-  const { locale: localeId, connectModal } = useConnectUI();
-  const client = useConnectUI().client;
   const [locale, setLocale] = useState<SmartWalletLocale | undefined>();
-  const modalSize = connectModal.size;
   const { chain: smartWalletChain } = props.accountAbstraction;
 
+  // FIXME: use a query instead
   useEffect(() => {
-    getSmartWalletLocale(localeId).then(setLocale);
-  }, [localeId]);
+    getSmartWalletLocale(props.localeId).then(setLocale);
+  }, [props.localeId]);
 
   const { personalWallet } = props;
   const { done } = props;
@@ -119,7 +152,7 @@ function SmartWalletConnecting(props: {
         webLocalStorage,
       ).handleConnection(personalWallet, {
         accountAbstraction: props.accountAbstraction,
-        client,
+        client: props.client,
       });
       done(connected);
       setSmartWalletConnectionStatus("idle");
@@ -127,7 +160,7 @@ function SmartWalletConnecting(props: {
       console.error(e);
       setSmartWalletConnectionStatus("connect-error");
     }
-  }, [done, personalWallet, client, props.accountAbstraction]);
+  }, [done, personalWallet, props.client, props.accountAbstraction]);
 
   const connectStarted = useRef(false);
   useEffect(() => {
@@ -151,10 +184,10 @@ function SmartWalletConnecting(props: {
           />
         </Container>
 
-        {modalSize === "compact" && <Spacer y="lg" />}
+        {props.size === "compact" && <Spacer y="lg" />}
 
         <Container expand flex="column" center="both" p="lg">
-          <Container p={modalSize === "wide" ? "lg" : undefined}>
+          <Container p={props.size === "wide" ? "lg" : undefined}>
             <Container flex="row" center="x" color="danger">
               <ExclamationTriangleIcon
                 width={iconSize.lg}

@@ -56,7 +56,7 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "scripts": {
-    "build": "preconstruct build",
+    "build": "tsc && preconstruct build",
     "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
@@ -83,7 +83,7 @@
     "@microsoft/tsdoc": "^0.15.0",
     "@preconstruct/cli": "2.7.0",
     "@swc-node/register": "^1.9.2",
-    "@swc/core": "^1.5.24",
+    "@swc/core": "^1.6.5",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/cookie": "^0.6.0",
     "@types/cookie-parser": "^1.4.7",

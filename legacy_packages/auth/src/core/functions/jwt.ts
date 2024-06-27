@@ -116,6 +116,9 @@ export async function generateJWT({
 export function parseJWT(jwt: string): AuthenticationPayload {
   const encodedPayload = jwt.split(".")[1];
   const encodedSignature = jwt.split(".")[2];
+  if(!encodedPayload || !encodedSignature) {
+    throw new Error(`Invalid JWT token`);
+  }
   const payload: AuthenticationPayloadData = JSON.parse(
     base64decode(encodedPayload),
   );

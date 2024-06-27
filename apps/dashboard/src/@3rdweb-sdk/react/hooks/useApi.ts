@@ -204,27 +204,20 @@ interface UsageEmbeddedWallets {
   countWalletAddresses: number;
 }
 
-interface UsageCheckout {
-  sumTransactionFeeUsd: number;
-}
-
 export interface UsageBillableByService {
   usage: {
     bundler: UsageBundler[];
     storage: UsageStorage;
     embeddedWallets: UsageEmbeddedWallets;
-    checkout: UsageCheckout;
   };
   billableUsd: {
     bundler: number;
     storage: number;
     embeddedWallets: number;
-    checkout: number;
   };
   limits: {
     storage: number;
     embeddedWallets: number;
-    checkout: number;
   };
   rateLimits: {
     storage: number;
@@ -570,81 +563,6 @@ export function useConfirmEmail() {
       },
     },
   );
-}
-
-export type CreateTicketInput = {
-  markdown: string;
-  product: string;
-  files?: File[];
-} & Record<string, string>;
-
-export function useCreateTicket() {
-  const { user } = useLoggedInUser();
-  const account = useAccount();
-  return useMutationWithInvalidate(async (input: CreateTicketInput) => {
-    invariant(user?.address, "walletAddress is required");
-    invariant(account?.data, "Account not found");
-    const { name, email, plan } = account.data;
-    const formData = new FormData();
-    const planToCustomerId: Record<string, string> = {
-      free: process.env.NEXT_PUBLIC_UNTHREAD_FREE_TIER_ID as string,
-      growth: process.env.NEXT_PUBLIC_UNTHREAD_GROWTH_TIER_ID as string,
-      pro: process.env.NEXT_PUBLIC_UNTHREAD_PRO_TIER_ID as string,
-    };
-    const customerId = planToCustomerId[plan] || undefined;
-    if (input.files?.length) {
-      // biome-ignore lint/complexity/noForEach: FIXME
-      input.files.forEach((file) => formData.append("attachments", file));
-    }
-    const title =
-      input.product && input.extraInfo_Problem_Area
-        ? `${input.product}: ${input.extraInfo_Problem_Area} (${email})`
-        : `New ticket from ${name} (${email})`;
-
-    // Update `markdown` to include the infos from the form
-    const extraInfo = Object.keys(input)
-      .filter((key) => key.startsWith("extraInfo_"))
-      .map((key) => {
-        const prettifiedKey = `# ${key.replace("extraInfo_", "").replaceAll("_", " ")}`;
-        return `${prettifiedKey}: ${input[key] ?? "N/A"}\n`;
-      })
-      .join("");
-    const markdown = `# Email: ${email}
-# Address: ${user.address}
-# Product: ${input.product}
-${extraInfo}
-# Message:
-${input.markdown}
-`;
-    const content = {
-      type: "email",
-      title,
-      markdown,
-      status: "open",
-      onBehalfOf: {
-        email,
-        name,
-      },
-      customerId,
-      emailInboxId: process.env.NEXT_PUBLIC_UNTHREAD_EMAIL_INBOX_ID,
-      triageChannelId: process.env.NEXT_PUBLIC_UNTHREAD_TRIAGE_CHANNEL_ID,
-    };
-    formData.append("json", JSON.stringify(content));
-
-    const res = await fetch(
-      `${THIRDWEB_API_HOST}/v1/account/create-unthread-ticket`,
-      {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      },
-    );
-    const json = await res.json();
-    if (json.error) {
-      throw new Error(json.error.message);
-    }
-    return json.data;
-  });
 }
 
 export function useConfirmEmbeddedWallet() {

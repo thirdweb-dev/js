@@ -1,4 +1,4 @@
-import type { ConnectLocale } from "./types.js";
+import type { InAppWalletLocale } from "./types.js";
 
 export default {
   signInWithGoogle: "Googleでサインイン",
@@ -52,4 +52,4 @@ export default {
   phonePlaceholder: "電話番号を入力してください",
   signInWithPhone: "電話番号でログイン",
   phoneRequired: "電話番号が必要です",
-} satisfies ConnectLocale;
+} satisfies InAppWalletLocale;

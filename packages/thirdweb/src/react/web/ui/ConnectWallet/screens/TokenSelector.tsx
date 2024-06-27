@@ -52,6 +52,7 @@ export function TokenSelector(props: {
   };
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
+  modalTitle?: string;
 }) {
   const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
@@ -132,7 +133,10 @@ export function TokenSelector(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title={locale.selectTokenTitle} />
+        <ModalHeader
+          onBack={props.onBack}
+          title={props.modalTitle || locale.selectTokenTitle}
+        />
       </Container>
 
       <Line />

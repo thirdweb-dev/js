@@ -1,17 +1,20 @@
 "use client";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import {
   useSelectionData,
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
+import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
+import type { LocaleId } from "../../ui/types.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { OTPLoginUI } from "../shared/OTPLoginUI.js";
 import { PassKeyLogin } from "../shared/PassKeyLogin.js";
 import { SocialLogin } from "../shared/SocialLogin.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
-import { useConnectLocale } from "./useInAppWalletLocale.js";
+import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 
 /**
  *
@@ -21,19 +24,30 @@ function InAppWalletConnectUI(props: {
   wallet: Wallet<"inApp">;
   done: () => void;
   goBack?: () => void;
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  localeId: LocaleId;
+  connectLocale: ConnectLocale;
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
   const state = data as ConnectWalletSelectUIState;
-  const locale = useConnectLocale();
-  const { connectModal } = useConnectUI();
+  const locale = useInAppWalletLocale(props.localeId);
 
   if (!locale) {
     return <LoadingScreen />;
   }
 
   const goBackToMain =
-    connectModal.size === "compact"
+    props.size === "compact"
       ? props.goBack
       : () => {
           setSelectionData({});
@@ -53,6 +67,9 @@ function InAppWalletConnectUI(props: {
         done={props.done}
         goBack={goBackToMain}
         wallet={props.wallet}
+        chain={props.chain}
+        client={props.client}
+        size={props.size}
       />
     );
   }
@@ -63,6 +80,9 @@ function InAppWalletConnectUI(props: {
         wallet={props.wallet}
         done={props.done}
         onBack={goBackToMain}
+        chain={props.chain}
+        client={props.client}
+        size={props.size}
       />
     );
   }
@@ -76,6 +96,9 @@ function InAppWalletConnectUI(props: {
         goBack={goBackToMain}
         wallet={props.wallet}
         state={state}
+        chain={props.chain}
+        client={props.client}
+        size={props.size}
       />
     );
   }
@@ -83,10 +106,15 @@ function InAppWalletConnectUI(props: {
   return (
     <InAppWalletFormUIScreen
       select={() => {}}
-      locale={locale}
+      connectLocale={props.connectLocale}
+      inAppWalletLocale={locale}
       done={props.done}
       goBack={props.goBack}
       wallet={props.wallet}
+      client={props.client}
+      meta={props.meta}
+      size={props.size}
+      chain={props.chain}
     />
   );
 }
