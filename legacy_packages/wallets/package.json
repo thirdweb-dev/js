@@ -499,7 +499,10 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/", "evm/"],
+  "files": [
+    "dist/",
+    "evm/"
+  ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
@@ -509,7 +512,9 @@
       "evm/wallets/**"
     ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "sideEffects": false,

@@ -27,11 +27,19 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/", "evm/"],
+  "files": [
+    "dist/",
+    "evm/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "evm/index.ts"],
+    "entrypoints": [
+      "index.ts",
+      "evm/index.ts"
+    ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "private": false,

@@ -74,7 +74,9 @@
       "evm/index.ts"
     ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "devDependencies": {
