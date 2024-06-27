@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.33
+
+### Patch Changes
+
+- [#3447](https://github.com/thirdweb-dev/js/pull/3447) [`860f61c`](https://github.com/thirdweb-dev/js/commit/860f61c727d79f2f333a7ce65cd8ffad2ebbd49c) Thanks [@IDubuque](https://github.com/IDubuque)! - add pay fields to usage tracking schema for cf worker
+
 ## 0.4.32
 
 ### Patch Changes

@@ -68,9 +68,15 @@
     "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js",
     "push": "yalc push"
   },
-  "files": ["src/", "dist/"],
+  "files": [
+    "src/",
+    "dist/"
+  ],
   "tsup": {
-    "entry": ["src/cli/index.ts", "src/helpers/hardhat-config-extractor.ts"],
+    "entry": [
+      "src/cli/index.ts",
+      "src/helpers/hardhat-config-extractor.ts"
+    ],
     "splitting": false,
     "sourcemap": true,
     "clean": true

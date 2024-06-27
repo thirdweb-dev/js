@@ -40,7 +40,11 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/", "evm/", "server/"],
+  "files": [
+    "dist/",
+    "evm/",
+    "server/"
+  ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
@@ -49,7 +53,9 @@
       "evm/zksync/index.ts"
     ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "sideEffects": false,
