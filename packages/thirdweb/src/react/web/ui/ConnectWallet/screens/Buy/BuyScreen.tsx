@@ -343,6 +343,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             onViewPendingTx={props.onViewPendingTx}
             setScreen={setScreen}
             supportedDestinations={supportedDestinations}
+            onBack={props.onBack}
           />
         )}
 

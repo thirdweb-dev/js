@@ -11,11 +11,13 @@ export type CurrencyMeta = {
   icon: IconFC;
 };
 
-export const defaultSelectedCurrency: CurrencyMeta = {
+export const USDCurrency: CurrencyMeta = {
   shorthand: "USD",
   name: "US Dollar",
   icon: USDIcon,
 };
+
+export const defaultSelectedCurrency = USDCurrency;
 
 export const currencies: CurrencyMeta[] = [
   defaultSelectedCurrency,

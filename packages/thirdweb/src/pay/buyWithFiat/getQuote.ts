@@ -99,18 +99,6 @@ export type BuyWithFiatQuote = {
    */
   estimatedToAmountMinWei: string;
   /**
-   * Amount of token that is expected to be received in units.
-   *
-   * (estimatedToAmountMinWei - maxSlippageWei)
-   */
-  toAmountMinWei: string;
-  /**
-   * Amount of token that is expected to be received in wei.
-   *
-   * (estimatedToAmountMin - maxSlippageWei)
-   */
-  toAmountMin: string;
-  /**
    * fiat currency used to buy the token - excluding the fees.
    */
   fromCurrency: {
@@ -143,6 +131,11 @@ export type BuyWithFiatQuote = {
    * Address of the wallet to which the tokens will be sent.
    */
   toAddress: string;
+
+  /**
+   * Address of the wallet which is purchasing the token.
+   */
+  fromAddress: string;
   /**
    * The maximum slippage in basis points (bps) allowed for the transaction.
    */
@@ -151,6 +144,7 @@ export type BuyWithFiatQuote = {
    * Id of transaction
    */
   intentId: string;
+
   /**
    * Array of processing fees for the transaction.
    *

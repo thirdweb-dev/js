@@ -37,6 +37,7 @@ export function BuyUIMainScreen(props: {
   onViewPendingTx: () => void;
   setScreen: (screen: SelectedScreen) => void;
   supportedDestinations: SupportedChainAndTokens;
+  onBack?: () => void;
 }) {
   const { showPaymentSelection, buyWithCryptoEnabled, buyWithFiatEnabled } =
     useEnabledPaymentMethods({
@@ -74,6 +75,7 @@ export function BuyUIMainScreen(props: {
         title={
           props.buyForTx ? `Not enough ${props.buyForTx.tokenSymbol}` : "Buy"
         }
+        onBack={props.onBack}
       />
 
       {/* Amount needed for Send Tx */}

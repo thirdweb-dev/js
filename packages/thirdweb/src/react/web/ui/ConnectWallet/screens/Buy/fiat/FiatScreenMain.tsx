@@ -1,6 +1,8 @@
+import type { UseQueryResult } from "@tanstack/react-query";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../../../../core/design-system/index.js";
@@ -40,17 +42,8 @@ export function FiatScreenMain(props: {
   isEmbed: boolean;
   onBack: () => void;
 }) {
-  const {
-    toToken,
-    tokenAmount,
-    account,
-    client,
-    setScreen,
-    setDrawerScreen,
-    toChain,
-    showCurrencySelector,
-    selectedCurrency,
-  } = props;
+  const { toToken, tokenAmount, account, client, toChain, selectedCurrency } =
+    props;
 
   const buyWithFiatOptions = props.payOptions.buyWithFiat;
 
@@ -71,6 +64,41 @@ export function FiatScreenMain(props: {
         }
       : undefined,
   );
+
+  return <FiatScreenMainUI {...props} quoteQuery={fiatQuoteQuery} />;
+}
+
+export function FiatScreenMainUI(props: {
+  setDrawerScreen: (screen: React.ReactNode) => void;
+  setScreen: (screen: SelectedScreen) => void;
+  tokenAmount: string;
+  toToken: ERC20OrNativeToken;
+  toChain: Chain;
+  selectedCurrency: CurrencyMeta;
+  showCurrencySelector: () => void;
+  payOptions: PayUIOptions;
+  theme: "light" | "dark" | Theme;
+  buyForTx: BuyForTx | null;
+  client: ThirdwebClient;
+  onViewPendingTx: () => void;
+  onDone: () => void;
+  isEmbed: boolean;
+  onBack: () => void;
+  quoteQuery: UseQueryResult<BuyWithFiatQuote>;
+}) {
+  const {
+    toToken,
+    tokenAmount,
+    client,
+    setScreen,
+    setDrawerScreen,
+    toChain,
+    showCurrencySelector,
+    selectedCurrency,
+  } = props;
+
+  const buyWithFiatOptions = props.payOptions.buyWithFiat;
+  const fiatQuoteQuery = props.quoteQuery;
 
   function handleSubmit() {
     if (!fiatQuoteQuery.data) {
@@ -216,9 +244,9 @@ export function FiatScreenMain(props: {
 
   return (
     <TokenSelectedLayout
-      selectedChain={props.toChain}
-      selectedToken={props.toToken}
-      tokenAmount={props.tokenAmount}
+      selectedChain={toChain}
+      selectedToken={toToken}
+      tokenAmount={tokenAmount}
       client={props.client}
       onBack={props.onBack}
     >

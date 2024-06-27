@@ -58,62 +58,17 @@ export function PostOnRampSwap(props: {
 
   if (postOnRampQuoteQuery.isError) {
     return (
-      <Container fullHeight>
-        <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
-        </Container>
-
-        <Container
-          style={{
-            minHeight: "300px",
-          }}
-          flex="column"
-          center="both"
-          p="lg"
-        >
-          <AccentFailIcon size={iconSize["3xl"]} />
-          <Spacer y="xl" />
-          <Text color="primaryText">Failed to get a price quote</Text>
-          <Spacer y="lg" />
-
-          <Button
-            fullWidth
-            variant="primary"
-            onClick={() => {
-              postOnRampQuoteQuery.refetch();
-            }}
-          >
-            Try Again
-          </Button>
-        </Container>
-
-        <Spacer y="xxl" />
-      </Container>
+      <PostOnrampQuoteFailed
+        onBack={props.onBack}
+        onRetry={() => {
+          postOnRampQuoteQuery.refetch();
+        }}
+      />
     );
   }
 
   if (!lockedOnRampQuote || !account) {
-    return (
-      <Container fullHeight>
-        <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
-        </Container>
-
-        <Container
-          style={{
-            minHeight: "300px",
-          }}
-          flex="column"
-          center="both"
-        >
-          <Spinner size="xxl" color="accentText" />
-          <Spacer y="xl" />
-          <Text color="primaryText">Getting price quote</Text>
-        </Container>
-
-        <Spacer y="xxl" />
-      </Container>
-    );
+    return <GettingPostOnRampQuote onBack={props.onBack} />;
   }
 
   return (
@@ -132,5 +87,64 @@ export function PostOnRampSwap(props: {
       isBuyForTx={props.isBuyForTx}
       isEmbed={props.isEmbed}
     />
+  );
+}
+
+export function GettingPostOnRampQuote(props: {
+  onBack?: () => void;
+}) {
+  return (
+    <Container fullHeight>
+      <Container p="lg">
+        <ModalHeader title="Buy" onBack={props.onBack} />
+      </Container>
+
+      <Container
+        style={{
+          minHeight: "280px",
+        }}
+        flex="column"
+        center="both"
+      >
+        <Spinner size="xxl" color="accentText" />
+        <Spacer y="xl" />
+        <Text color="primaryText">Getting price quote</Text>
+      </Container>
+
+      <Spacer y="xxl" />
+    </Container>
+  );
+}
+
+export function PostOnrampQuoteFailed(props: {
+  onBack?: () => void;
+  onRetry: () => void;
+}) {
+  return (
+    <Container fullHeight>
+      <Container p="lg">
+        <ModalHeader title="Buy" onBack={props.onBack} />
+      </Container>
+
+      <Container
+        style={{
+          minHeight: "280px",
+        }}
+        flex="column"
+        center="both"
+        p="lg"
+      >
+        <AccentFailIcon size={iconSize["3xl"]} />
+        <Spacer y="xl" />
+        <Text color="primaryText">Failed to get a price quote</Text>
+        <Spacer y="lg" />
+
+        <Button fullWidth variant="primary" onClick={props.onRetry}>
+          Try Again
+        </Button>
+      </Container>
+
+      <Spacer y="lg" />
+    </Container>
   );
 }
