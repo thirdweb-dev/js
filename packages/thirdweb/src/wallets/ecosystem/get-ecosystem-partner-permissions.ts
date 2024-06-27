@@ -6,15 +6,15 @@ export const getEcosystemPartnerPermissions = async (
   ecosystemId: EcosystemWalletId,
   partnerId?: string,
 ): Promise<EcosystemPermssions> => {
-  const headers = new Headers();
-  headers.set("x-ecosystem-id", ecosystemId);
-  headers.set("x-ecosystem-partner-id", partnerId || "");
   const res = await fetch(
     `${getThirdwebBaseUrl(
       "inAppWallet",
     )}/api/2024-05-05/ecosystem-wallet/${ecosystemId}/partner/${partnerId}`,
     {
-      headers,
+      headers: {
+        "x-ecosystem-id": ecosystemId,
+        "x-ecosystem-partner-id": partnerId || "",
+      },
     },
   );
 

@@ -44,6 +44,7 @@ export function EcosystemWalletHeader(props: {
           )}
         </>
       }
+      leftAligned
     />
   );
 }

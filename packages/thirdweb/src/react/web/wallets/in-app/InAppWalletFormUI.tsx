@@ -55,33 +55,34 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {isCompact && isInitialScreen ? (
-        <>
-          <ModalHeader
-            onBack={onBack}
-            leftAligned={true}
-            title={
-              <>
-                {!props.meta.titleIconUrl ? null : (
-                  <Img
-                    src={props.meta.titleIconUrl}
-                    width={iconSize.md}
-                    height={iconSize.md}
-                    client={props.client}
-                  />
-                )}
-                <ModalTitle>
-                  {props.meta.title ??
-                    props.inAppWalletLocale.emailLoginScreen.title}
-                </ModalTitle>
-              </>
-            }
-          />
-          <Spacer y="lg" />
-        </>
-      ) : (
-        <ModalHeader onBack={onBack} title={props.inAppWalletLocale.signIn} />
-      )}
+      {isCompact &&
+        (isInitialScreen ? (
+          <>
+            <ModalHeader
+              onBack={onBack}
+              leftAligned={true}
+              title={
+                <>
+                  {!props.meta.titleIconUrl ? null : (
+                    <Img
+                      src={props.meta.titleIconUrl}
+                      width={iconSize.md}
+                      height={iconSize.md}
+                      client={props.client}
+                    />
+                  )}
+                  <ModalTitle>
+                    {props.meta.title ??
+                      props.inAppWalletLocale.emailLoginScreen.title}
+                  </ModalTitle>
+                </>
+              }
+            />
+            <Spacer y="lg" />
+          </>
+        ) : (
+          <ModalHeader onBack={onBack} title={props.inAppWalletLocale.signIn} />
+        ))}
 
       <Container
         expand
