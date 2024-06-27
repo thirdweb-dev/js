@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://t.me/vexfaucetbot"
   ],
+  "icon": {
+    "url": "ipfs://QmcZiEAGFYEEax1uxYnDUh8X5YBvZqMi9K92yZoq4o2zeM",
+    "width": 451,
+    "height": 446,
+    "format": "png"
+  },
   "infoURL": "https://vexanium.com",
   "name": "VEX EVM TESTNET",
   "nativeCurrency": {

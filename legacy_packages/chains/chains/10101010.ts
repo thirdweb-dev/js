@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.soverun.com"
   ],
+  "icon": {
+    "url": "ipfs://QmTYazUzgY9Nn2mCjWwFUSLy3dG6i2PvALpwCNQvx1zXyi",
+    "width": 1154,
+    "height": 1154,
+    "format": "png"
+  },
   "infoURL": "https://soverun.com",
   "name": "Soverun Mainnet",
   "nativeCurrency": {
