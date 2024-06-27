@@ -1,5 +1,6 @@
 import { generatePrivateKey } from "viem/accounts";
 import { createThirdwebClient } from "../client/client.js";
+import type { ERC20OrNativeToken } from "../react/web/ui/ConnectWallet/screens/nativeToken.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 
@@ -49,3 +50,17 @@ export function Row(props: { children: React.ReactNode }) {
     </div>
   );
 }
+
+export const usdcPolygon: ERC20OrNativeToken = {
+  name: "USD Coin",
+  symbol: "USDC",
+  address: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+  icon: "https://pay.thirdweb.com/public/tokens/usdc.svg",
+};
+
+export const usdcBase: ERC20OrNativeToken = {
+  name: "USD Coin",
+  symbol: "USDC",
+  address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+  icon: "https://pay.thirdweb.com/public/tokens/usdc.svg",
+};

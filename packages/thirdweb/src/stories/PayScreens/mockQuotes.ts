@@ -10,21 +10,7 @@ import {
   USDCurrency,
 } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
 import type { ERC20OrNativeToken } from "../../react/web/ui/ConnectWallet/screens/nativeToken.js";
-import { storyClient } from "../utils.js";
-
-const usdcPolygon: ERC20OrNativeToken = {
-  name: "USD Coin",
-  symbol: "USDC",
-  address: "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
-  icon: "https://pay.thirdweb.com/public/tokens/usdc.svg",
-};
-
-const usdcBase: ERC20OrNativeToken = {
-  name: "USD Coin",
-  symbol: "USDC",
-  address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
-  icon: "https://pay.thirdweb.com/public/tokens/usdc.svg",
-};
+import { storyClient, usdcBase, usdcPolygon } from "../utils.js";
 
 export type BuyWithCryptoMocks = {
   meta: {

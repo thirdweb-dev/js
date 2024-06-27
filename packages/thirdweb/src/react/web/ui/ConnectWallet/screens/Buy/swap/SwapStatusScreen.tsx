@@ -151,7 +151,7 @@ export function SwapStatusScreenUI(props: {
 
         {uiStatus === "failed" && (
           <>
-            <Spacer y="xxl" />
+            <Spacer y="xl" />
 
             <Container flex="column">
               <Container flex="column" center="both">
@@ -167,15 +167,11 @@ export function SwapStatusScreenUI(props: {
                 </Text>
               </Container>
 
-              <Spacer y="md" />
+              <Spacer y="xxl" />
 
               <Button variant="accent" fullWidth onClick={props.onTryAgain}>
                 Try Again
               </Button>
-
-              <Spacer y="xl" />
-
-              {swapDetails}
             </Container>
           </>
         )}

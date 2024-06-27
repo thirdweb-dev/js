@@ -103,235 +103,227 @@ export function BuyWithFiatFlowTest(props: {
     <div>
       <StoryScreenTitle label={props.mocks.meta.label} large />
 
-      <div>
-        <StoryScreenTitle label="Initial Screen: No amount, chain selected" />
-        <ScreenContainer theme={props.theme}>
-          <BuyUIMainScreen
-            account={null}
-            buyForTx={null}
-            client={storyClient}
-            onSelectBuyToken={noop}
-            onViewPendingTx={noop}
-            payOptions={{}}
-            setScreen={noop}
-            setTokenAmount={noop}
-            supportedDestinations={props.supportedDestinations}
-            toChain={props.mocks.meta.buyChain}
-            toToken={props.mocks.meta.buyToken}
-            tokenAmount=""
-          />
-        </ScreenContainer>
-      </div>
+      <ScreenContainer
+        theme={props.theme}
+        label="Initial Screen: No amount, chain selected"
+      >
+        <BuyUIMainScreen
+          account={null}
+          buyForTx={null}
+          client={storyClient}
+          onSelectBuyToken={noop}
+          onViewPendingTx={noop}
+          payOptions={{}}
+          setScreen={noop}
+          setTokenAmount={noop}
+          supportedDestinations={props.supportedDestinations}
+          toChain={props.mocks.meta.buyChain}
+          toToken={props.mocks.meta.buyToken}
+          tokenAmount=""
+        />
+      </ScreenContainer>
 
-      <div>
-        <StoryScreenTitle label="Initial Screen: Amount entered" />
-        <ScreenContainer theme={props.theme}>
-          <BuyUIMainScreen
-            account={null}
-            buyForTx={null}
-            client={storyClient}
-            onSelectBuyToken={noop}
-            onViewPendingTx={noop}
-            payOptions={{}}
-            setScreen={noop}
-            setTokenAmount={noop}
-            supportedDestinations={props.supportedDestinations}
-            toChain={props.mocks.meta.buyChain}
-            toToken={props.mocks.meta.buyToken}
-            tokenAmount={props.mocks.meta.buyTokenAmount}
-          />
-        </ScreenContainer>
-      </div>
+      <ScreenContainer
+        theme={props.theme}
+        label="Initial Screen: Amount entered"
+      >
+        <BuyUIMainScreen
+          account={null}
+          buyForTx={null}
+          client={storyClient}
+          onSelectBuyToken={noop}
+          onViewPendingTx={noop}
+          payOptions={{}}
+          setScreen={noop}
+          setTokenAmount={noop}
+          supportedDestinations={props.supportedDestinations}
+          toChain={props.mocks.meta.buyChain}
+          toToken={props.mocks.meta.buyToken}
+          tokenAmount={props.mocks.meta.buyTokenAmount}
+        />
+      </ScreenContainer>
 
-      <div>
-        <StoryScreenTitle label="Payment method selection" />
-        <ScreenContainer theme={props.theme}>
-          <PaymentMethodSelectionScreen
-            client={storyClient}
-            onBack={noop}
-            selectedChain={props.mocks.meta.buyChain}
-            selectedToken={props.mocks.meta.buyToken}
-            setScreen={noop}
-            tokenAmount={props.mocks.meta.buyTokenAmount}
-          />
-        </ScreenContainer>
-      </div>
+      <ScreenContainer theme={props.theme} label="Payment method selection">
+        <PaymentMethodSelectionScreen
+          client={storyClient}
+          onBack={noop}
+          selectedChain={props.mocks.meta.buyChain}
+          selectedToken={props.mocks.meta.buyToken}
+          setScreen={noop}
+          tokenAmount={props.mocks.meta.buyTokenAmount}
+        />
+      </ScreenContainer>
 
-      <div>
-        <StoryScreenTitle label="Fiat Main screen" />
-        <ScreenContainer theme={props.theme}>
-          <FiatScreenMainUI
-            client={storyClient}
-            onBack={noop}
-            // wallet on same chain as buy chain
-            buyForTx={null}
-            isEmbed={true}
-            onDone={noop}
-            onViewPendingTx={noop}
-            payOptions={{}}
-            setDrawerScreen={noop}
-            setScreen={noop}
-            toChain={props.mocks.meta.buyChain}
-            toToken={props.mocks.meta.buyToken}
-            tokenAmount={props.mocks.meta.buyTokenAmount}
-            quoteQuery={fiatQuoteQuery}
-            selectedCurrency={props.mocks.meta.currency}
-            showCurrencySelector={noop}
-            theme={props.theme}
-          />
-        </ScreenContainer>
-      </div>
+      <ScreenContainer theme={props.theme} label="Fiat Main screen">
+        <FiatScreenMainUI
+          client={storyClient}
+          onBack={noop}
+          // wallet on same chain as buy chain
+          buyForTx={null}
+          isEmbed={true}
+          onDone={noop}
+          onViewPendingTx={noop}
+          payOptions={{}}
+          setDrawerScreen={noop}
+          setScreen={noop}
+          toChain={props.mocks.meta.buyChain}
+          toToken={props.mocks.meta.buyToken}
+          tokenAmount={props.mocks.meta.buyTokenAmount}
+          quoteQuery={fiatQuoteQuery}
+          selectedCurrency={props.mocks.meta.currency}
+          showCurrencySelector={noop}
+          theme={props.theme}
+        />
+      </ScreenContainer>
 
       {props.mocks.type === "onrampandswap" && (
-        <div>
-          <StoryScreenTitle label="Two steps ui" />
-          <ScreenContainer theme={props.theme}>
-            <FiatSteps
-              client={storyClient}
-              onBack={noop}
-              onContinue={noop}
-              partialQuote={fiatQuoteToPartialQuote(props.mocks.quote)}
-              step={1}
-            />
-          </ScreenContainer>
-        </div>
+        <ScreenContainer theme={props.theme} label="Two steps ui">
+          <FiatSteps
+            client={storyClient}
+            onBack={noop}
+            onContinue={noop}
+            partialQuote={fiatQuoteToPartialQuote(props.mocks.quote)}
+            step={1}
+          />
+        </ScreenContainer>
       )}
 
       <Row>
-        <div>
-          <StoryScreenTitle label="Onramp status: none" />
-          <ScreenContainer theme={props.theme}>
-            <OnrampStatusScreenUI
-              client={storyClient}
-              statusQuery={statusPendingQuery}
-              onDone={noop}
-              onBack={noop}
-              isBuyForTx={false}
-              isEmbed={false}
-              quote={props.mocks.quote}
-              hasTwoSteps={false}
-              onShowSwapFlow={noop}
-              openedWindow={null}
-            />
-          </ScreenContainer>
-        </div>
+        <ScreenContainer theme={props.theme} label="Onramp status: none">
+          <OnrampStatusScreenUI
+            client={storyClient}
+            statusQuery={statusPendingQuery}
+            onDone={noop}
+            onBack={noop}
+            isBuyForTx={false}
+            isEmbed={false}
+            quote={props.mocks.quote}
+            hasTwoSteps={false}
+            onShowSwapFlow={noop}
+            openedWindow={null}
+          />
+        </ScreenContainer>
 
-        <div>
-          <StoryScreenTitle label="Onramp status: pending" />
-          <ScreenContainer theme={props.theme}>
-            <OnrampStatusScreenUI
-              client={storyClient}
-              statusQuery={statusNoneQuery}
-              onDone={noop}
-              onBack={noop}
-              isBuyForTx={false}
-              isEmbed={false}
-              quote={props.mocks.quote}
-              hasTwoSteps={false}
-              onShowSwapFlow={noop}
-              openedWindow={null}
-            />
-          </ScreenContainer>
-        </div>
+        <ScreenContainer theme={props.theme} label="Onramp status: pending">
+          <OnrampStatusScreenUI
+            client={storyClient}
+            statusQuery={statusNoneQuery}
+            onDone={noop}
+            onBack={noop}
+            isBuyForTx={false}
+            isEmbed={false}
+            quote={props.mocks.quote}
+            hasTwoSteps={false}
+            onShowSwapFlow={noop}
+            openedWindow={null}
+          />
+        </ScreenContainer>
       </Row>
 
       {props.mocks.type === "onramponly" && (
         <>
           <Row>
-            <div>
-              <StoryScreenTitle label="Onramp status: success" />
-              <ScreenContainer theme={props.theme}>
-                <OnrampStatusScreenUI
-                  client={storyClient}
-                  statusQuery={statusCompletedQuery}
-                  onDone={noop}
-                  onBack={noop}
-                  isBuyForTx={false}
-                  isEmbed={false}
-                  quote={props.mocks.quote}
-                  hasTwoSteps={false}
-                  onShowSwapFlow={noop}
-                  openedWindow={null}
-                />
-              </ScreenContainer>
-            </div>
+            <ScreenContainer theme={props.theme} label="Onramp status: success">
+              <OnrampStatusScreenUI
+                client={storyClient}
+                statusQuery={statusCompletedQuery}
+                onDone={noop}
+                onBack={noop}
+                isBuyForTx={false}
+                isEmbed={false}
+                quote={props.mocks.quote}
+                hasTwoSteps={false}
+                onShowSwapFlow={noop}
+                openedWindow={null}
+              />
+            </ScreenContainer>
 
-            <div>
-              <StoryScreenTitle label="Onramp status: failed" />
-              <ScreenContainer theme={props.theme}>
-                <OnrampStatusScreenUI
-                  client={storyClient}
-                  statusQuery={statusFailedQuery}
-                  onDone={noop}
-                  onBack={noop}
-                  isBuyForTx={false}
-                  isEmbed={false}
-                  quote={props.mocks.quote}
-                  hasTwoSteps={false}
-                  onShowSwapFlow={noop}
-                  openedWindow={null}
-                />
-              </ScreenContainer>
-            </div>
+            <ScreenContainer theme={props.theme} label="Onramp status: failed">
+              <OnrampStatusScreenUI
+                client={storyClient}
+                statusQuery={statusFailedQuery}
+                onDone={noop}
+                onBack={noop}
+                isBuyForTx={false}
+                isEmbed={false}
+                quote={props.mocks.quote}
+                hasTwoSteps={false}
+                onShowSwapFlow={noop}
+                openedWindow={null}
+              />
+            </ScreenContainer>
           </Row>
         </>
       )}
 
       {props.mocks.type === "onrampandswap" && (
         <>
-          <div>
-            <StoryScreenTitle label="Onramp completed, swap required" />
-            <ScreenContainer theme={props.theme}>
-              <FiatSteps
-                client={storyClient}
-                onBack={noop}
-                onContinue={noop}
-                partialQuote={fiatQuoteToPartialQuote(props.mocks.quote)}
-                step={2}
-                status={props.mocks.onrampStatus.swapRequired}
-              />
-            </ScreenContainer>
-          </div>
+          <ScreenContainer
+            theme={props.theme}
+            label="Onramp completed, swap required"
+          >
+            <FiatSteps
+              client={storyClient}
+              onBack={noop}
+              onContinue={noop}
+              partialQuote={fiatQuoteToPartialQuote(props.mocks.quote)}
+              step={2}
+              status={props.mocks.onrampStatus.swapRequired}
+            />
+          </ScreenContainer>
 
           <div>
             <Row>
-              <div>
-                <StoryScreenTitle label="Getting Post onramp quote" />
-                <ScreenContainer theme={props.theme}>
-                  <GettingPostOnRampQuote onBack={noop} />
-                </ScreenContainer>
-              </div>
+              <ScreenContainer
+                theme={props.theme}
+                label="Getting Post onramp quote"
+              >
+                <GettingPostOnRampQuote onBack={noop} />
+              </ScreenContainer>
 
-              <div>
-                <StoryScreenTitle label="Failed to get post onramp quote" />
-                <ScreenContainer theme={props.theme}>
-                  <PostOnrampQuoteFailed onBack={noop} onRetry={noop} />
-                </ScreenContainer>
-              </div>
+              <ScreenContainer
+                theme={props.theme}
+                label="Failed to get post onramp quote"
+              >
+                <PostOnrampQuoteFailed onBack={noop} onRetry={noop} />
+              </ScreenContainer>
             </Row>
           </div>
 
-          <div>
-            <StoryScreenTitle label="Swap Flow" />
-            <ScreenContainer theme={props.theme}>
-              <SwapFlow
-                isEmbed={true}
-                account={storyAccount}
-                buyWithCryptoQuote={props.mocks.postOnrampSwap.quote}
-                client={storyClient}
-                isBuyForTx={false}
-                isFiatFlow={false}
-                onDone={noop}
-                onTryAgain={noop}
-                onViewPendingTx={noop}
-                onBack={noop}
-              />
-            </ScreenContainer>
-          </div>
+          <ScreenContainer theme={props.theme} label="Swap Flow">
+            <SwapFlow
+              isEmbed={true}
+              account={storyAccount}
+              buyWithCryptoQuote={props.mocks.postOnrampSwap.quote}
+              client={storyClient}
+              isBuyForTx={false}
+              isFiatFlow={false}
+              onDone={noop}
+              onTryAgain={noop}
+              onViewPendingTx={noop}
+              onBack={noop}
+            />
+          </ScreenContainer>
 
-          <div>
-            <StoryScreenTitle label="Swap Pending" />
-            <ScreenContainer theme={props.theme}>
+          <ScreenContainer theme={props.theme} label="Swap Pending">
+            <SwapStatusScreenUI
+              client={storyClient}
+              isBuyForTx={false}
+              isEmbed={true}
+              onDone={noop}
+              onTryAgain={noop}
+              onViewPendingTx={noop}
+              quote={props.mocks.postOnrampSwap.quote}
+              statusQuery={postonrampStatusPendingQuery}
+              onBack={noop}
+            />
+          </ScreenContainer>
+
+          <Row>
+            <ScreenContainer
+              theme={props.theme}
+              label="Postonramp Swap: Success"
+            >
               <SwapStatusScreenUI
                 client={storyClient}
                 isBuyForTx={false}
@@ -340,46 +332,24 @@ export function BuyWithFiatFlowTest(props: {
                 onTryAgain={noop}
                 onViewPendingTx={noop}
                 quote={props.mocks.postOnrampSwap.quote}
-                statusQuery={postonrampStatusPendingQuery}
+                statusQuery={postonrampStatusSuccessQuery}
                 onBack={noop}
               />
             </ScreenContainer>
-          </div>
 
-          <Row>
-            <div>
-              <StoryScreenTitle label="Postonramp Swap: Success" />
-              <ScreenContainer theme={props.theme}>
-                <SwapStatusScreenUI
-                  client={storyClient}
-                  isBuyForTx={false}
-                  isEmbed={true}
-                  onDone={noop}
-                  onTryAgain={noop}
-                  onViewPendingTx={noop}
-                  quote={props.mocks.postOnrampSwap.quote}
-                  statusQuery={postonrampStatusSuccessQuery}
-                  onBack={noop}
-                />
-              </ScreenContainer>
-            </div>
-
-            <div>
-              <StoryScreenTitle label="Swap Failed" />
-              <ScreenContainer theme={props.theme}>
-                <SwapStatusScreenUI
-                  client={storyClient}
-                  isBuyForTx={false}
-                  isEmbed={true}
-                  onDone={noop}
-                  onTryAgain={noop}
-                  onViewPendingTx={noop}
-                  quote={props.mocks.postOnrampSwap.quote}
-                  statusQuery={postonrampStatusFailedQuery}
-                  onBack={noop}
-                />
-              </ScreenContainer>
-            </div>
+            <ScreenContainer theme={props.theme} label="Swap Failed">
+              <SwapStatusScreenUI
+                client={storyClient}
+                isBuyForTx={false}
+                isEmbed={true}
+                onDone={noop}
+                onTryAgain={noop}
+                onViewPendingTx={noop}
+                quote={props.mocks.postOnrampSwap.quote}
+                statusQuery={postonrampStatusFailedQuery}
+                onBack={noop}
+              />
+            </ScreenContainer>
           </Row>
         </>
       )}
