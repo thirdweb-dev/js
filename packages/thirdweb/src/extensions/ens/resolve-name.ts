@@ -45,7 +45,15 @@ export async function resolveName(options: ResolveNameOptions) {
         packetToBytes(`${address.toLowerCase().substring(2)}.addr.reverse`),
       );
 
-      const [name, resolvedAddress] = await reverse({ contract, reverseName });
+      const [name, resolvedAddress] = await reverse({
+        contract,
+        reverseName,
+      }).catch((e) => {
+        if ("data" in e && e.data === "0x7199966d") {
+          return [null, address] as const;
+        }
+        throw e;
+      });
 
       if (address.toLowerCase() !== resolvedAddress.toLowerCase()) {
         return null;
