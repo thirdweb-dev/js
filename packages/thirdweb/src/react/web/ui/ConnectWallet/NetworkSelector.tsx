@@ -201,7 +201,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
       ) {
         const recentChains = props.networkSelector.recentChainIds
           .map((id) => allChainsMap.get(id))
-          .filter((c) => c !== undefined) as Chain[];
+          .filter((c) => c !== undefined);
 
         chainSectionsValue.push({
           label: recentLabel,
@@ -219,7 +219,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
       ) {
         const popularChains = props.networkSelector.popularChainIds
           .map((id) => allChainsMap.get(id))
-          .filter((c) => c !== undefined) as Chain[];
+          .filter((c) => c !== undefined);
 
         const chainsToAdd = popularChains.filter(
           (c) => !allChainsToSectionMapValue.has(c.id),
