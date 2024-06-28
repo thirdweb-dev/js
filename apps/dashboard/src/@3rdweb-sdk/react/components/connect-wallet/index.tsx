@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { defineChain } from "thirdweb";
 import { ConnectButton, type SiweAuthOptions } from "thirdweb/react";
+import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
 import { GLOBAL_AUTH_TOKEN_KEY } from "../../../../constants/app";
 import { fetchAuthToken } from "../../hooks/useApi";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
@@ -159,6 +160,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
           onSwitch(chain) {
             addRecentlyUsedChainId(chain.id);
           },
+          renderChain: CustomChainRenderer,
         },
       }}
     />

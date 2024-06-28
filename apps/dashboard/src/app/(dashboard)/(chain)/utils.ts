@@ -1,7 +1,6 @@
 import "server-only";
 
 import { THIRDWEB_API_HOST } from "constants/urls";
-import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/components/server/cta-card";
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
@@ -23,22 +22,6 @@ export async function getChains() {
     throw new Error("Failed to fetch chains");
   }
   return (await response.json()).data as ChainMetadataWithServices[];
-}
-
-export async function getChain(
-  chainIdOrSlug: string,
-): Promise<ChainMetadataWithServices> {
-  const res = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}?includeServices=true`,
-    // revalidate every 15 minutes
-    { next: { revalidate: 15 * 60 } },
-  );
-
-  const result = await res.json();
-  if (!result.data) {
-    redirect("/404");
-  }
-  return result.data as ChainMetadataWithServices;
 }
 
 type ChainMetadata = Partial<{

@@ -6,6 +6,7 @@ import {
   Fragment,
   memo,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -13,8 +14,12 @@ import {
 import type React from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
+  CustomThemeProvider,
+  useCustomTheme,
+} from "../../../core/design-system/CustomThemeProvider.js";
+import {
+  type Theme,
   fontSize,
   iconSize,
   media,
@@ -25,9 +30,11 @@ import {
   useChainIconUrl,
   useChainName,
 } from "../../../core/hooks/others/useChainQuery.js";
+import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { ChainIcon } from "../components/ChainIcon.js";
+import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
@@ -39,9 +46,9 @@ import { Text } from "../components/text.js";
 import { StyledButton, StyledP, StyledUl } from "../design-system/elements.js";
 import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { useShowMore } from "../hooks/useShowMore.js";
+import type { LocaleId } from "../types.js";
+import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
-
-// Note: Must not use useConnectUI here, because this component is also used outside of Connect UI context
 
 type NetworkSelectorChainProps = {
   /**
@@ -194,7 +201,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
       ) {
         const recentChains = props.networkSelector.recentChainIds
           .map((id) => allChainsMap.get(id))
-          .filter((c) => c !== undefined);
+          .filter((c) => c !== undefined) as Chain[];
+
         chainSectionsValue.push({
           label: recentLabel,
           chains: recentChains,
@@ -211,7 +219,8 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
       ) {
         const popularChains = props.networkSelector.popularChainIds
           .map((id) => allChainsMap.get(id))
-          .filter((c) => c !== undefined);
+          .filter((c) => c !== undefined) as Chain[];
+
         const chainsToAdd = popularChains.filter(
           (c) => !allChainsToSectionMapValue.has(c.id),
         );
@@ -324,8 +333,6 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
       ),
     }));
   }, [searchedChainSections, selectedTab]);
-
-  console.log("*** filteredChainSections", filteredChainSections, props);
 
   const handleSwitch = useCallback(
     (chain: Chain) => {
@@ -750,3 +757,174 @@ const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
     };
   },
 );
+
+/**
+ * Options for the `useNetworkSwitcherModal` hook's returned `open` function
+ * @connectWallet
+ */
+export type UseNetworkSwitcherModalOptions = {
+  /**
+   * Set the theme for the `NetworkSwitcher` Modal. By default it is set to `"dark"`
+   *
+   * theme can be set to either `"dark"`, `"light"` or a custom theme object.
+   *
+   * You can also import [`lightTheme`](https://portal.thirdweb.com/references/typescript/v5/lightTheme)
+   * or [`darkTheme`](https://portal.thirdweb.com/references/typescript/v5/darkTheme)
+   * functions from `thirdweb/react` to use the default themes as base and overrides parts of it.
+   * @example
+   * ```ts
+   * import { lightTheme } from "thirdweb/react";
+   *
+   * const customTheme = lightTheme({
+   *  colors: {
+   *    modalBg: 'red'
+   *  }
+   * })
+   * ```
+   */
+  theme?: Theme | "dark" | "light";
+
+  /**
+   * Specify sections of chains to be displayed in the Network Selector Modal
+   *
+   * @example
+   * To display "Polygon", "Avalanche" chains under "Recently used" section and "Ethereum", "Arbitrum" chains under "Popular" section, you can set the prop with the following value
+   * ```ts
+   * import { arbitrum, base, ethereum, polygon } from "thirdweb/chains";
+   *
+   * const sections = [
+   *  { label: 'Recently used', chains: [arbitrum, polygon] },
+   *  { label: 'Popular', chains: [base, ethereum] },
+   * ]
+   * ```
+   */
+  sections?: Array<ChainSection>;
+
+  /**
+   * Override how the chain button is rendered in the Modal
+   */
+  renderChain?: React.FC<NetworkSelectorChainProps>;
+
+  /**
+   * Callback to be called when a chain is successfully switched
+   * @param chain - The `Chain` of the chain that was switched to
+   */
+  onSwitch?: (chain: Chain) => void;
+
+  /**
+   * Callback to be called when the "Add Custom Network" button is clicked
+   *
+   * The "Add Custom Network" button is displayed at the bottom of the modal - only if this prop is provided
+   */
+  onCustomClick?: () => void;
+
+  /**
+   * A client is the entry point to the thirdweb SDK.
+   * It is required for all other actions.
+   * You can create a client using the `createThirdwebClient` function. Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   * You must provide a `clientId` or `secretKey` in order to initialize a client. Pass `clientId` if you want for client-side usage and `secretKey` for server-side usage.
+   *
+   * ```tsx
+   * import { createThirdwebClient } from "thirdweb";
+   *
+   * const client = createThirdwebClient({
+   *  clientId: "<your_client_id>",
+   * })
+   * ```
+   */
+  client: ThirdwebClient;
+
+  /**
+   * By default - NetworkSwitcher UI uses the `en-US` locale for english language users.
+   *
+   * You can customize the language used in the ConnectButton UI by setting the `locale` prop.
+   *
+   * Refer to the [`LocaleId`](https://portal.thirdweb.com/references/typescript/v5/LocaleId) type for supported locales.
+   */
+  locale?: LocaleId;
+};
+
+/**
+ * Hook to open the Wallet Network Switcher Modal that shows allows users to switch to different network.
+ *
+ * @example
+ * ```tsx
+ * import { createThirdwebClient } from "thirdweb";
+ * import { useNetworkSwitcherModal } from "thirdweb/react";
+ * import { base, ethereum, polygon, sepolia, arbitrum } from "thirdweb/chains";
+ *
+ * const client = createThirdwebClient({
+ *  clientId: "<your_client_id>",
+ * });
+ *
+ * function Example() {
+ *   const networkSwitcher = useNetworkSwitcherModal();
+ *
+ *   function handleClick() {
+ *      networkSwitcher.open({
+ *        client,
+ *        theme: 'light'
+ *        sections: [
+ *          { label: 'Recently used', chains: [arbitrum, polygon] },
+ *          { label: 'Popular', chains: [base, ethereum, sepolia] },
+ *        ]
+ *     });
+ *   }
+ *
+ *   return <button onClick={handleClick}> Switch Network </button>
+ * }
+ * ```
+ */
+export function useNetworkSwitcherModal() {
+  const activeChain = useActiveWalletChain();
+  const setRootEl = useContext(SetRootElementContext);
+
+  const closeModal = useCallback(() => {
+    setRootEl(null);
+  }, [setRootEl]);
+
+  const openNetworkSwitcher = useCallback(
+    async (props: UseNetworkSwitcherModalOptions) => {
+      if (!activeChain) {
+        throw new Error("No active wallet found");
+      }
+      const locale = await getConnectLocale(props.locale || "en_US");
+      setRootEl(
+        <CustomThemeProvider theme={props.theme}>
+          <Modal
+            size={"compact"}
+            open={true}
+            setOpen={(value) => {
+              if (!value) {
+                closeModal();
+              }
+            }}
+            style={{
+              paddingBottom: props.onCustomClick ? spacing.md : "0px",
+            }}
+          >
+            <NetworkSelectorContent
+              client={props.client}
+              closeModal={closeModal}
+              chains={[activeChain]}
+              connectLocale={locale}
+              networkSelector={{
+                onCustomClick: props.onCustomClick,
+                onSwitch: props.onSwitch,
+                renderChain: props.renderChain,
+                sections: props.sections,
+              }}
+            />
+          </Modal>
+        </CustomThemeProvider>,
+      );
+    },
+    [setRootEl, closeModal, activeChain],
+  );
+
+  return {
+    open: openNetworkSwitcher,
+    close: closeModal,
+  };
+}

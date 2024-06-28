@@ -140,3 +140,8 @@ export {
   useWalletDetailsModal,
   type UseWalletDetailsModalOptions,
 } from "../react/web/ui/ConnectWallet/Details.js";
+
+export {
+  useNetworkSwitcherModal,
+  type UseNetworkSwitcherModalOptions,
+} from "../react/web/ui/ConnectWallet/NetworkSelector.js";
