@@ -1,7 +1,7 @@
 import { type Store, createStore } from "../reactive/store.js";
 import type { Hex } from "../utils/encoding/hex.js";
 
-type StoredTransaction = {
+export type StoredTransaction = {
   transactionHash: Hex;
   chainId: number;
 };
