@@ -11,6 +11,9 @@ import type { WalletId } from "../../../wallets/wallet-types.js";
 import { useWalletBalance } from "../hooks/others/useWalletBalance.js";
 import { shortenString } from "./addresses.js";
 
+/**
+ * @internal
+ */
 export function useConnectedWalletDetails(
   client: ThirdwebClient,
   walletChain: Chain | undefined,

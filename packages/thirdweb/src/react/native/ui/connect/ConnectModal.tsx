@@ -12,7 +12,7 @@ import { radius, spacing } from "../../design-system/index.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useConnect } from "../../hooks/wallets/useConnect.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
-import { Header } from "../components/Header.js";
+import { type ContainerType, Header } from "../components/Header.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
@@ -26,6 +26,24 @@ export type ModalState =
   | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
   | { screen: "external_wallets" };
 
+/**
+ * A component that allows the user to connect their wallet.
+ *
+ * it renders the same UI as the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) component's modal - but directly on the page instead of being in a modal.
+ *
+ * It only renders UI if wallet is not connected
+ * @example
+ * ```tsx
+ * <ConnectEmbed
+ *    client={client}
+ * />
+ * ```
+ * @param props -
+ * The props for the `ConnectEmbed` component.
+ *
+ * Refer to the [`ConnectEmbedProps`](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbedProps) type for more details
+ * @component
+ */
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const theme = parseTheme(props.theme);
   const wallet = useActiveWallet();
@@ -42,7 +60,7 @@ export function ConnectModal(
   props: ConnectButtonProps & {
     theme: Theme;
     onClose?: () => void;
-    containerType: "modal" | "embed";
+    containerType: ContainerType;
   },
 ) {
   const { theme, client, containerType, accountAbstraction, onConnect } = props;
@@ -90,7 +108,7 @@ export function ConnectModal(
           {containerType === "modal" ? (
             <View style={{ flex: 1 }} />
           ) : (
-            <Spacer size="lg" />
+            <Spacer size="md" />
           )}
         </>
       );
@@ -125,36 +143,65 @@ export function ConnectModal(
             onClose={props.onClose}
             containerType={containerType}
           />
-          <Spacer size="lg" />
-          <View
-            style={{
-              flexDirection: "column",
-              gap: spacing.md,
-              paddingHorizontal: containerType === "modal" ? spacing.lg : 0,
-            }}
-          >
-            {inAppWallet && (
-              <InAppWalletUI
-                wallet={inAppWallet}
-                setScreen={setModalState}
-                client={client}
-                theme={theme}
-                connectMutation={connectMutation}
-              />
-            )}
-            <OrDivider theme={theme} />
-            <ThemedButtonWithIcon
-              theme={theme}
-              icon={genericWalletIcon}
-              title="Connect a wallet"
-              onPress={() => setModalState({ screen: "external_wallets" })}
-            />
-          </View>
-          {containerType === "modal" ? (
-            <View style={{ flex: 1 }} />
-          ) : (
-            <Spacer size="lg" />
-          )}
+          {inAppWallet ? (
+            <>
+              {containerType === "modal" ? (
+                <View style={{ flex: 1 }} />
+              ) : (
+                <Spacer size="lg" />
+              )}
+              <View
+                style={{
+                  flexDirection: "column",
+                  gap: spacing.md,
+                  paddingHorizontal: containerType === "modal" ? spacing.lg : 0,
+                }}
+              >
+                <InAppWalletUI
+                  wallet={inAppWallet}
+                  setScreen={setModalState}
+                  client={client}
+                  theme={theme}
+                  connectMutation={connectMutation}
+                />
+                {externalWallets.length > 0 ? (
+                  <>
+                    <OrDivider theme={theme} />
+                    <ThemedButtonWithIcon
+                      theme={theme}
+                      icon={genericWalletIcon}
+                      title="Connect a wallet"
+                      onPress={() =>
+                        setModalState({ screen: "external_wallets" })
+                      }
+                    />
+                  </>
+                ) : null}
+              </View>
+              {containerType === "modal" ? (
+                <View style={{ flex: 1 }} />
+              ) : (
+                <Spacer size="md" />
+              )}
+            </>
+          ) : externalWallets.length > 0 ? (
+            <>
+              <Spacer size="lg" />
+              <View
+                style={{
+                  flex: 1,
+                }}
+              >
+                <ExternalWalletsList
+                  theme={theme}
+                  externalWallets={externalWallets}
+                  client={client}
+                  connectMutation={connectMutation}
+                  containerType={containerType}
+                />
+              </View>
+            </>
+          ) : null}
         </>
       );
     }

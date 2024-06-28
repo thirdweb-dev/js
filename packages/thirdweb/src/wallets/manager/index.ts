@@ -1,6 +1,6 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { hasSmartAccount } from "../../react/web/utils/isSmartWallet.js";
+import { hasSmartAccount } from "../../react/core/utils/isSmartWallet.js";
 import { computedStore } from "../../reactive/computedStore.js";
 import { effect } from "../../reactive/effect.js";
 import { createStore } from "../../reactive/store.js";

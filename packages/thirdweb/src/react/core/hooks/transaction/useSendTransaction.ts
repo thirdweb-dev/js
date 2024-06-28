@@ -140,7 +140,7 @@ export function useSendTransactionCore(args: {
             const destinations = await fetchBuySupportedDestinations(tx.client);
 
             const isBuySupported = destinations.find(
-              (c) => c.chain.id === tx.chain.id
+              (c) => c.chain.id === tx.chain.id,
             );
 
             // buy not supported, can't show modal - send tx directly
@@ -190,7 +190,7 @@ export function useSendTransactionCore(args: {
 
 export async function getTotalTxCostForBuy(
   tx: PreparedTransaction,
-  from?: string
+  from?: string,
 ) {
   try {
     const gasCost = await estimateGasCost({

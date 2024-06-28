@@ -39,13 +39,13 @@ import {
 } from "../../../core/hooks/others/useChainQuery.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
 import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
-import { hasSmartAccount } from "../../utils/isSmartWallet.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { Img } from "../components/Img.js";

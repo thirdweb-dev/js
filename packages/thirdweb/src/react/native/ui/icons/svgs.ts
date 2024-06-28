@@ -136,3 +136,117 @@ export const COINS_ICON = `<svg
         strokeLinejoin="round"
       />
     </svg>`;
+
+export const RIGHT_CHEVRON = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`;
+
+export const SMART_WALLET_ICON = `<svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 12 12"
+      width={12}
+      height={12}
+    >
+      <g clipPath="url(#clip0_5539_26604)">
+        <path
+          d="M10 6.85691C10 9.35691 8.25 10.6069 6.17 11.3319C6.06108 11.3688 5.94277 11.3671 5.835 11.3269C3.75 10.6069 2 9.35691 2 6.85691V3.35691C2 3.22431 2.05268 3.09713 2.14645 3.00336C2.24021 2.90959 2.36739 2.85691 2.5 2.85691C3.5 2.85691 4.75 2.25691 5.62 1.49691C5.72593 1.40641 5.86068 1.35669 6 1.35669C6.13932 1.35669 6.27407 1.40641 6.38 1.49691C7.255 2.26191 8.5 2.85691 9.5 2.85691C9.63261 2.85691 9.75979 2.90959 9.85355 3.00336C9.94732 3.09713 10 3.22431 10 3.35691V6.85691Z"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M4.5 6.35693L5.5 7.35693L7.5 5.35693"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_5539_26604">
+          <rect
+            width="12"
+            height="12"
+            fill="white"
+            transform="translate(0 0.356934)"
+          />
+        </clipPath>
+      </defs>
+    </svg>`;
+
+export const CHECK_CIRCLE = `<svg
+  width="15"
+  height="15"
+  viewBox="0 0 15 15"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    cx="7.5"
+    cy="7"
+    r="6.5"
+    stroke="currentColor"
+    stroke-width="1"
+  />
+  <path
+    d="M5 7.5L6.5 9L10 5.5"
+    stroke="currentColor"
+    stroke-width="1"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>`;
+
+export const CHECK = `<svg
+  width="15"
+  height="15"
+  viewBox="0 0 15 15"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M2 8L6 12L13 4"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>`;
+
+export const CLOSE_CIRCLE = `<svg
+  width="15"
+  height="15"
+  viewBox="0 0 15 15"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    cx="7.5"
+    cy="7.4"
+    r="6.5"
+    stroke="currentColor"
+    stroke-width="1"
+  />
+  <path
+    d="M5.25 5.25L9.75 9.75M5.25 9.75L9.75 5.25"
+    stroke="currentColor"
+    stroke-width="1"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>`;
+
+export const COPY_ICON = `<svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>`;

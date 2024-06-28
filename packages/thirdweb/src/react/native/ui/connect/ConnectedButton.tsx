@@ -28,54 +28,48 @@ export function ConnectedButton(
       props.detailsButton?.displayBalanceToken,
     );
   return (
-    wallet &&
-    account && (
-      <ThemedButton
-        theme={theme}
-        onPress={() => {
-          props.openModal();
-        }}
-        style={{
-          paddingHorizontal: spacing.md,
-          paddingVertical: spacing.smd,
-        }}
-      >
-        <View style={styles.row}>
-          <WalletImage
-            size={40}
-            wallet={wallet}
-            account={account}
-            ensAvatar={ensAvatarQuery.data}
-          />
-          <View style={styles.col}>
-            <ThemedText
-              theme={theme}
-              type="defaultSemiBold"
-              style={{
-                color: theme.colors.primaryButtonText,
-                fontSize: fontSize.sm,
-              }}
-            >
-              {addressOrENS}
-            </ThemedText>
-            <ThemedText
-              theme={theme}
-              type="subtext"
-              style={{
-                color: theme.colors.secondaryText,
-                fontSize: fontSize.sm,
-                fontWeight: 600,
-              }}
-            >
-              {balanceQuery.data
-                ? Number(balanceQuery.data.displayValue).toFixed(3)
-                : "---"}{" "}
-              {balanceQuery.data?.symbol}{" "}
-            </ThemedText>
-          </View>
+    <ThemedButton
+      theme={theme}
+      onPress={() => {
+        props.openModal();
+      }}
+      style={{
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.smd,
+      }}
+    >
+      <View style={styles.row}>
+        <WalletImage
+          size={40}
+          wallet={wallet}
+          ensAvatar={ensAvatarQuery.data}
+        />
+        <View style={styles.col}>
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{
+              color: theme.colors.primaryButtonText,
+            }}
+          >
+            {addressOrENS}
+          </ThemedText>
+          <ThemedText
+            theme={theme}
+            type="subtext"
+            style={{
+              color: theme.colors.secondaryText,
+              fontSize: fontSize.sm,
+            }}
+          >
+            {balanceQuery.data
+              ? Number(balanceQuery.data.displayValue).toFixed(3)
+              : "---"}{" "}
+            {balanceQuery.data?.symbol}{" "}
+          </ThemedText>
         </View>
-      </ThemedButton>
-    )
+      </View>
+    </ThemedButton>
   );
 }
 

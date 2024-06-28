@@ -12,13 +12,14 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { useWalletImage, useWalletInfo } from "../../../core/utils/wallet.js";
 import { spacing } from "../../design-system/index.js";
 import type { useConnect } from "../../hooks/wallets/useConnect.js";
+import type { ContainerType } from "../components/Header.js";
 import { ThemedText } from "../components/text.js";
 
 export type ExternalWalletsUiProps = {
   theme: Theme;
   client: ThirdwebClient;
   connectMutation: ReturnType<typeof useConnect>;
-  containerType: "modal" | "embed";
+  containerType: ContainerType;
 };
 
 export function ExternalWalletsList(
@@ -30,6 +31,7 @@ export function ExternalWalletsList(
         style={{
           flex: 1,
           paddingHorizontal: props.containerType === "modal" ? spacing.lg : 0,
+          paddingBottom: spacing.md,
         }}
       >
         <View style={{ flexDirection: "column", gap: spacing.md }}>
@@ -38,7 +40,7 @@ export function ExternalWalletsList(
           ))}
         </View>
       </ScrollView>
-      <NewToWallets theme={props.theme} />
+      <NewToWallets theme={props.theme} containerType={props.containerType} />
     </View>
   );
 }
@@ -73,7 +75,10 @@ function ExternalWalletRow(props: ExternalWalletsUiProps & { wallet: Wallet }) {
   );
 }
 
-function NewToWallets({ theme }: { theme: Theme }) {
+function NewToWallets({
+  theme,
+  containerType,
+}: { theme: Theme; containerType: ContainerType }) {
   return (
     <View
       style={[
@@ -81,8 +86,8 @@ function NewToWallets({ theme }: { theme: Theme }) {
         {
           borderTopWidth: 1,
           borderColor: theme.colors.borderColor,
-          paddingVertical: spacing.lg,
-          paddingHorizontal: spacing.lg,
+          paddingVertical: spacing.md,
+          paddingHorizontal: containerType === "modal" ? spacing.lg : 0,
         },
       ]}
     >
@@ -108,7 +113,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    gap: spacing.md,
   },
   row: {
     flexDirection: "row",

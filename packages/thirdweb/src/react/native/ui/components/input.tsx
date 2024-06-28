@@ -14,17 +14,36 @@ import { ThemedSpinner } from "./spinner.js";
 
 export type ThemedInputProps = {
   theme: Theme;
+  rightView?: React.ReactNode;
 } & TextInputProps;
 
 export function ThemedInput(props: ThemedInputProps) {
-  const { theme } = props;
+  const { theme, rightView } = props;
+  const [isFocused, setIsFocused] = useState(false);
   return (
-    <View style={[styles.container, { borderColor: theme.colors.borderColor }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: isFocused
+            ? theme.colors.accentButtonBg
+            : theme.colors.borderColor,
+        },
+      ]}
+    >
       <TextInput
         placeholderTextColor={theme.colors.secondaryText}
         style={[styles.input, { color: theme.colors.primaryText }]}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         {...props}
       />
+      {rightView && (
+        <>
+          <View style={{ flex: 1 }} />
+          {rightView}
+        </>
+      )}
     </View>
   );
 }
@@ -36,9 +55,19 @@ export function ThemedInputWithSubmit(
   },
 ) {
   const { theme, onSubmit } = props;
+  const [isFocused, setIsFocused] = useState(false);
   const [val, setVal] = useState("");
   return (
-    <View style={[styles.container, { borderColor: theme.colors.borderColor }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: isFocused
+            ? theme.colors.accentButtonBg
+            : theme.colors.borderColor,
+        },
+      ]}
+    >
       <TextInput
         placeholderTextColor={theme.colors.secondaryText}
         style={[
@@ -49,6 +78,8 @@ export function ThemedInputWithSubmit(
         ]}
         value={val}
         onChangeText={setVal}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         {...props}
       />
       {onSubmit && (

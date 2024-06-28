@@ -1,15 +1,22 @@
-import { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { getContract } from "../../../../contract/contract.js";
+import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
+import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { fontSize, radius, spacing } from "../../design-system/index.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
+import { Address } from "../components/Address.js";
 import { ChainIcon } from "../components/ChainIcon.js";
-import { Header } from "../components/Header.js";
+import { type ContainerType, Header } from "../components/Header.js";
 import { RNImage } from "../components/RNImage.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { ThemedButton } from "../components/button.js";
@@ -22,7 +29,10 @@ import {
   EXIT_ICON,
   RECEIVE_ICON,
   SEND_ICON,
+  SMART_WALLET_ICON,
 } from "../icons/svgs.js";
+import { ReceiveScreen } from "./ReceiveScreen.js";
+import { SendScreen } from "./SendScreen.js";
 import { TokenListScreen } from "./TokenListScreen.js";
 
 type ConnectedModalState =
@@ -38,7 +48,7 @@ type ConnectedModalProps = ConnectButtonProps & {
   wallet: Wallet;
   account: Account;
   onClose?: () => void;
-  containerType: "modal" | "embed";
+  containerType: ContainerType;
 };
 
 type ConnectedModalPropsInner = ConnectedModalProps & {
@@ -57,12 +67,13 @@ export function ConnectedModal(props: ConnectedModalProps) {
     case "send": {
       content = (
         <>
-          <Header
+          <SendScreen
             theme={theme}
+            client={client}
             onClose={props.onClose}
             onBack={() => setModalState({ screen: "account" })}
             containerType={containerType}
-            title="Send Funds"
+            supportedTokens={props.supportedTokens}
           />
         </>
       );
@@ -71,12 +82,13 @@ export function ConnectedModal(props: ConnectedModalProps) {
     case "receive": {
       content = (
         <>
-          <Header
+          <ReceiveScreen
+            account={props.account}
+            wallet={props.wallet}
             theme={theme}
-            onClose={props.onClose}
+            containerType={props.containerType}
             onBack={() => setModalState({ screen: "account" })}
-            containerType={containerType}
-            title="Receive Funds"
+            onClose={props.onClose}
           />
         </>
       );
@@ -127,7 +139,7 @@ export function ConnectedModal(props: ConnectedModalProps) {
           <AccountHeader {...props} />
           <Spacer size="lg" />
           <WalletActionsRow {...props} setModalState={setModalState} />
-          <Spacer size="xl" />
+          <Spacer size="lg" />
           <WalletMenu {...props} setModalState={setModalState} />
         </>
       );
@@ -160,23 +172,16 @@ const AccountHeader = (props: ConnectedModalProps) => {
     );
   return (
     <View style={styles.accountHeaderContainer}>
-      <WalletImage
-        size={84}
-        account={account}
-        wallet={wallet}
-        ensAvatar={ensAvatarQuery.data}
-      />
-      <Spacer size="sm" />
-      <ThemedText theme={theme} type="defaultSemiBold">
-        {addressOrENS}
-      </ThemedText>
-      <Spacer size="xs" />
+      <WalletImage size={64} wallet={wallet} ensAvatar={ensAvatarQuery.data} />
+      <SmartAccountBadge client={props.client} theme={theme} />
+      <Spacer size="smd" />
+      <Address account={account} theme={theme} addressOrENS={addressOrENS} />
+      <Spacer size="xxs" />
       <ThemedText
         theme={theme}
         type="subtext"
         style={{
           fontSize: fontSize.sm,
-          fontWeight: 600,
         }}
       >
         {balanceQuery.data
@@ -243,7 +248,7 @@ const ChainSwitcher = (props: ConnectedModalPropsInner) => {
   const chainQuery = useChainQuery(chain);
   return (
     <TouchableOpacity style={styles.walletMenuRow}>
-      <ChainIcon client={client} size={32} chainIcon={chainQuery.data?.icon} />
+      <ChainIcon client={client} size={32} chain={chain} theme={theme} />
       <ThemedText theme={theme} type="defaultSemiBold">
         {chainQuery.data?.name || "---"}
       </ThemedText>
@@ -293,6 +298,86 @@ const DisconnectWallet = (props: ConnectedModalProps) => {
   );
 };
 
+function SmartAccountBadge(props: {
+  theme: Theme;
+  client: ThirdwebClient;
+}) {
+  const activeAccount = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const isSmartWallet = hasSmartAccount(activeWallet);
+  const chain = useActiveWalletChain();
+  const { client, theme } = props;
+
+  const [isSmartWalletDeployed, setIsSmartWalletDeployed] = useState(false);
+
+  useEffect(() => {
+    if (activeAccount && isSmartWallet && activeAccount.address && chain) {
+      const contract = getContract({
+        address: activeAccount.address,
+        chain,
+        client,
+      });
+
+      isContractDeployed(contract).then((isDeployed) => {
+        setIsSmartWalletDeployed(isDeployed);
+      });
+    } else {
+      setIsSmartWalletDeployed(false);
+    }
+  }, [activeAccount, chain, client, isSmartWallet]);
+
+  const content = (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: spacing.xs,
+        backgroundColor: theme.colors.secondaryButtonBg,
+        borderRadius: radius.md,
+        paddingVertical: spacing.xs,
+        paddingLeft: spacing.sm,
+        paddingRight: spacing.smd,
+      }}
+    >
+      <RNImage
+        data={SMART_WALLET_ICON}
+        size={14}
+        color={theme.colors.accentButtonBg}
+      />
+      <ThemedText
+        theme={theme}
+        style={{ color: theme.colors.primaryText, fontSize: fontSize.xs }}
+      >
+        Smart Account
+      </ThemedText>
+    </View>
+  );
+
+  if (chain && activeAccount && isSmartWallet) {
+    return (
+      <>
+        <Spacer size="smd" />
+        {isSmartWalletDeployed ? (
+          <TouchableOpacity
+            onPress={() =>
+              Linking.openURL(
+                `https://thirdweb.com/${chain.id}/${activeAccount.address}/account`,
+              )
+            }
+          >
+            {content}
+          </TouchableOpacity>
+        ) : (
+          <View>{content}</View>
+        )}
+      </>
+    );
+  }
+
+  return null;
+}
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -327,7 +412,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   walletMenuRow: {
-    width: 300,
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",

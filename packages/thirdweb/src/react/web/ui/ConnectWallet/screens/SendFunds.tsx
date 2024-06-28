@@ -1,7 +1,6 @@
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { isAddress } from "../../../../../utils/address.js";
 import {
   fontSize,
   iconSize,
@@ -14,6 +13,7 @@ import {
 } from "../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
+import { useSendToken } from "../../../hooks/wallets/useSendToken.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -23,7 +23,6 @@ import { Button } from "../../components/buttons.js";
 import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { useSendToken } from "../../hooks/useSendToken.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { TokenSelector } from "./TokenSelector.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
@@ -137,22 +136,7 @@ function SendFundsForm(props: {
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
-
-  // Ethereum or Rinkeby or Goerli
-  // TODO support ens
-  const isENSSupported = false;
-
-  const isValidReceiverAddress = useMemo(() => {
-    const isENS = receiverAddress.endsWith(".eth");
-
-    if (!isENSSupported && isENS) {
-      return false;
-    }
-
-    return isENS || isAddress(receiverAddress);
-  }, [receiverAddress]);
-
-  const showInvalidAddressError = receiverAddress && !isValidReceiverAddress;
+  const showInvalidAddressError = receiverAddress;
 
   const sendTokenMutation = useSendToken(props.client);
 
@@ -300,7 +284,7 @@ function SendFundsForm(props: {
           data-error={showInvalidAddressError}
           required
           id="receiver"
-          placeholder={isENSSupported ? "0x... / ENS name" : "0x..."}
+          placeholder={"0x... or ENS name"}
           variant="outline"
           value={receiverAddress}
           onChange={(e) => {

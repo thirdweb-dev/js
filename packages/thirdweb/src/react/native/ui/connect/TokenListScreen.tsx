@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -11,13 +11,16 @@ import {
 import { spacing } from "../../design-system/index.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
+import { RNImage } from "../components/RNImage.js";
 import { TokenIcon } from "../components/TokenIcon.js";
 import { ThemedText } from "../components/text.js";
+import { RIGHT_CHEVRON } from "../icons/svgs.js";
 
 export type TokenListScreenProps = {
   theme: Theme;
   client: ThirdwebClient;
   supportedTokens?: SupportedTokens;
+  onTokenSelected?: (token?: TokenInfo) => void;
 };
 
 export const TokenListScreen = (props: TokenListScreenProps) => {
@@ -35,41 +38,36 @@ export const TokenListScreen = (props: TokenListScreenProps) => {
             address={account?.address}
             client={props.client}
             theme={props.theme}
+            onTokenSelected={props.onTokenSelected}
           />
-          {tokens.length ? (
-            tokens.map((t) => {
-              return (
-                <TokenRow
-                  chain={chain}
-                  client={props.client}
-                  address={account?.address}
-                  theme={props.theme}
-                  token={t}
-                  key={t.address}
-                />
-              );
-            })
-          ) : (
-            <View style={styles.emptyContainer}>
-              <ThemedText theme={props.theme}>
-                No tokens found on chain {chain?.id}
-              </ThemedText>
-            </View>
-          )}
+          {tokens.map((t) => {
+            return (
+              <TokenRow
+                chain={chain}
+                client={props.client}
+                address={account?.address}
+                theme={props.theme}
+                token={t}
+                onTokenSelected={props.onTokenSelected}
+                key={t.address}
+              />
+            );
+          })}
         </View>
       </ScrollView>
     </>
   );
 };
 
-const TokenRow = (props: {
+export const TokenRow = (props: {
   token?: TokenInfo;
   theme: Theme;
   client: ThirdwebClient;
   chain?: Chain;
   address?: string;
+  onTokenSelected?: (token?: TokenInfo) => void;
 }) => {
-  const { token, theme, address, chain, client } = props;
+  const { token, theme, address, chain, client, onTokenSelected } = props;
   const balanceQuery = useWalletBalance({
     address,
     chain,
@@ -77,22 +75,48 @@ const TokenRow = (props: {
     tokenAddress: token?.address,
   });
   const tokenName = props.token ? props.token.name : balanceQuery.data?.name;
-  return (
-    <View style={styles.tokenRowContainer}>
-      <TokenIcon token={token} size={48} chain={chain} client={client} />
-      <View style={{ flexDirection: "column", gap: spacing.xs }}>
+  const inner = (
+    <>
+      <TokenIcon
+        token={token}
+        size={40}
+        chain={chain}
+        client={client}
+        theme={theme}
+      />
+      <View style={{ flexDirection: "column", gap: spacing.xxs }}>
         <ThemedText theme={theme} type="defaultSemiBold">
           {tokenName}
         </ThemedText>
         {address && (
           <ThemedText theme={theme} type="subtext">
             {balanceQuery.data
-              ? `${balanceQuery.data.displayValue} ${balanceQuery.data.symbol}`
+              ? `${Number(balanceQuery.data.displayValue).toFixed(3)} ${balanceQuery.data.symbol}`
               : "---"}
           </ThemedText>
         )}
       </View>
-    </View>
+      {props.onTokenSelected && (
+        <>
+          <View style={{ flex: 1 }} />
+          <RNImage
+            size={24}
+            data={RIGHT_CHEVRON}
+            color={theme.colors.secondaryIconColor}
+          />
+        </>
+      )}
+    </>
+  );
+  return onTokenSelected ? (
+    <TouchableOpacity
+      style={styles.tokenRowContainer}
+      onPress={() => onTokenSelected(token)}
+    >
+      {inner}
+    </TouchableOpacity>
+  ) : (
+    <View style={styles.tokenRowContainer}>{inner}</View>
   );
 };
 
@@ -105,7 +129,7 @@ const styles = StyleSheet.create({
   },
   tokenRowContainer: {
     flexDirection: "row",
-    gap: spacing.lg,
+    gap: spacing.md,
     alignItems: "center",
   },
   emptyContainer: {

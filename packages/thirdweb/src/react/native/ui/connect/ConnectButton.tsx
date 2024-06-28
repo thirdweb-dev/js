@@ -13,17 +13,37 @@ import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";
+import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
 import { ThemedButton } from "../components/button.js";
+import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
 import { ConnectModal } from "./ConnectModal.js";
 import { ConnectedButton } from "./ConnectedButton.js";
 import { ConnectedModal } from "./ConnectedModal.js";
 
+/**
+ * A component that allows the user to connect their wallet.
+ * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in `wallets` prop.
+ * @example
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ * />
+ * ```
+ * @param props
+ * Props for the `ConnectButton` component
+ *
+ * Refer to [ConnectButtonProps](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available props.
+ * @component
+ */
 export function ConnectButton(props: ConnectButtonProps) {
   const theme = parseTheme(props.theme);
   const [visible, setVisible] = useState(false);
   const wallet = useActiveWallet();
   const account = useActiveAccount();
+  const status = useActiveWalletConnectionStatus();
+  useAutoConnect(props);
 
   const fadeAnim = useRef(new Animated.Value(0)).current; // For background opacity
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // For bottom sheet position
@@ -85,13 +105,19 @@ export function ConnectButton(props: ConnectButtonProps) {
         />
       ) : (
         <ThemedButton theme={theme} onPress={() => setVisible(true)}>
-          <ThemedText
-            theme={theme}
-            type="defaultSemiBold"
-            style={{ color: theme.colors.primaryButtonText }}
-          >
-            Connect Wallet
-          </ThemedText>
+          {status === "connecting" ? (
+            <>
+              <ThemedSpinner color={theme.colors.primaryButtonText} />
+            </>
+          ) : (
+            <ThemedText
+              theme={theme}
+              type="defaultSemiBold"
+              style={{ color: theme.colors.primaryButtonText }}
+            >
+              Connect Wallet
+            </ThemedText>
+          )}
         </ThemedButton>
       )}
       <Modal

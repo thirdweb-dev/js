@@ -47,10 +47,6 @@ import { useSetupScreen } from "./screen.js";
  * ```tsx
  * <ConnectEmbed
  *    client={client}
- *    appMetadata={{
- *      name: "Example",
- *      url: "https://example.com",
- *    }}
  * />
  * ```
  * @param props -

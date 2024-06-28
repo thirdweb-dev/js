@@ -5,6 +5,8 @@ import { BACK_ICON, CLOSE_ICON } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 import { ThemedText } from "./text.js";
 
+export type ContainerType = "modal" | "embed";
+
 export function Header({
   theme,
   title,
@@ -16,7 +18,7 @@ export function Header({
   title?: string;
   onClose?: () => void;
   onBack?: () => void;
-  containerType: "modal" | "embed";
+  containerType: ContainerType;
 }) {
   if (containerType === "embed") {
     return onBack ? (
