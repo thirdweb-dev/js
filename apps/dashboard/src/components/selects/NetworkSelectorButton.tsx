@@ -1,6 +1,6 @@
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { useColorMode } from "@chakra-ui/react";
-import { NetworkSelector } from "@thirdweb-dev/react";
+import { getChain } from "app/(dashboard)/(chain)/getChain";
 import { ChainIcon } from "components/icons/ChainIcon";
 import type { StoredChain } from "contexts/configured-chains";
 import { useSupportedChains } from "hooks/chains/configureChains";
@@ -9,10 +9,13 @@ import {
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { BiChevronDown } from "react-icons/bi";
+import type { Chain } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
+import { useNetworkSwitcherModal } from "thirdweb/react";
 import { Button } from "tw-components";
+import { thirdwebClient } from "../../@/constants/client";
 import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
 import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 import { CustomChainRenderer } from "./CustomChainRenderer";
@@ -30,13 +33,13 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   isDisabled,
   onSwitchChain,
 }) => {
-  const [showNetworkSelector, setShowNetworkSelector] = useState(false);
   const recentlyUsedChains = useRecentlyUsedChains();
   const addRecentlyUsedChains = useAddRecentlyUsedChainId();
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const { colorMode } = useColorMode();
   const supportedChains = useSupportedChains();
   const favoriteChainsQuery = useFavoriteChains();
+  const networkSwitcherModal = useNetworkSwitcherModal();
 
   const chains = useMemo(() => {
     if (disabledChainIds && disabledChainIds.length > 0) {
@@ -111,7 +114,47 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           gap: "0.5rem",
         }}
         onClick={() => {
-          setShowNetworkSelector(true);
+          networkSwitcherModal.open({
+            theme: colorMode === "dark" ? "dark" : "light",
+            sections: [
+              {
+                label: "Recently Used",
+                chains: (filteredRecentlyUsedChains ?? []).map(
+                  mapStoredChainTov5Chain,
+                ),
+              },
+              {
+                label: "Favorites",
+                chains: (favoriteChainsQuery.data ?? []).map(
+                  mapStoredChainTov5Chain,
+                ),
+              },
+              {
+                label: "Popular",
+                chains: (networksEnabled ? [] : popularChains).map(
+                  mapStoredChainTov5Chain,
+                ),
+              },
+              {
+                label: "All Networks",
+                chains: (chains ?? []).map(mapStoredChainTov5Chain),
+              },
+            ],
+            renderChain: CustomChainRenderer,
+            onCustomClick: networksEnabled
+              ? undefined
+              : () => {
+                  setIsNetworkConfigModalOpen(true);
+                },
+            async onSwitch(chain) {
+              addRecentlyUsedChains(chain.id);
+              if (onSwitchChain) {
+                const chainMeta = await getChain(`${chain.id}`);
+                onSwitchChain(chainMeta);
+              }
+            },
+            client: thirdwebClient,
+          });
         }}
         leftIcon={<ChainIcon ipfsSrc={chain?.icon?.url} size={20} />}
       >
@@ -123,43 +166,23 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
           }}
         />
       </Button>
-
-      {showNetworkSelector && (
-        <NetworkSelector
-          open={showNetworkSelector}
-          theme={colorMode}
-          chains={chains}
-          sections={[
-            {
-              label: "Recently Used",
-              chains: filteredRecentlyUsedChains ?? [],
-            },
-            {
-              label: "Favorites",
-              chains: favoriteChainsQuery.data ?? [],
-            },
-            {
-              label: "Popular",
-              chains: networksEnabled ? [] : popularChains,
-            },
-          ]}
-          renderChain={CustomChainRenderer}
-          onCustomClick={
-            networksEnabled
-              ? undefined
-              : () => {
-                  setIsNetworkConfigModalOpen(true);
-                }
-          }
-          onClose={() => {
-            setShowNetworkSelector(false);
-          }}
-          onSwitch={(_chain) => {
-            onSwitchChain?.(_chain);
-            addRecentlyUsedChains(_chain.chainId);
-          }}
-        />
-      )}
     </>
   );
 };
+
+function mapStoredChainTov5Chain(v4Chain: StoredChain) {
+  const chain: Chain = {
+    id: v4Chain.chainId,
+    rpc: v4Chain.rpc[0],
+    // TypeScript shenanigans, just avoiding as string assertion here
+    blockExplorers: v4Chain.explorers?.map((x) => x),
+    // TypeScript shenanigans, just avoiding as string assertion here
+    faucets: v4Chain.faucets?.map((x) => x),
+    name: v4Chain.name,
+    icon: v4Chain.icon,
+    testnet: v4Chain.testnet === true ? true : undefined,
+    nativeCurrency: v4Chain.nativeCurrency,
+  };
+
+  return chain;
+}
