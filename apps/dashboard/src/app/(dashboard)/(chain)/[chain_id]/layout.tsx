@@ -11,6 +11,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CopyTextButton } from "../../../../@/components/ui/CopyTextButton";
 import { StarButton } from "../components/client/star-button";
 import { ChainIcon } from "../components/server/chain-icon";
 import { getChain, getChainMetadata } from "../utils";
@@ -205,7 +206,14 @@ export default async function ChainPageLayout({
 
               {/* Chain Id */}
               <PrimaryInfoItem title="Chain ID">
-                <div className="text-lg">{chain.chainId}</div>
+                <CopyTextButton
+                  textToCopy={chain.chainId.toString()}
+                  textToShow={chain.chainId.toString()}
+                  tooltip="Copy Chain ID"
+                  variant="ghost"
+                  className="text-lg -translate-x-2 py-0.5"
+                  copyIconPosition="right"
+                />
               </PrimaryInfoItem>
 
               {/* Native token */}

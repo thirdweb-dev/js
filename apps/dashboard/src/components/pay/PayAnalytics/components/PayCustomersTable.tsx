@@ -217,6 +217,7 @@ function CustomerTableRow(props: {
                 address={v}
                 variant="ghost"
                 className="text-secondary-foreground"
+                copyIconPosition="left"
               />
             );
           }}

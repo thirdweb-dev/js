@@ -234,6 +234,7 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
           address={purchase.fromAddress}
           variant="ghost"
           className="text-secondary-foreground"
+          copyIconPosition="left"
         />
       </TableData>
 
