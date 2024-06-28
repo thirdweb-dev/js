@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
@@ -68,6 +69,7 @@ export default function RootLayout({
         >
           <PostHogPageView />
           <AppRouterProviders>{children}</AppRouterProviders>
+          <Toaster />
           <NextTopLoader
             color="hsl(var(--primary))"
             height={2}

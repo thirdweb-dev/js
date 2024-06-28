@@ -1,6 +1,5 @@
+import { Card } from "@/components/ui/card";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Container, Divider, Flex } from "@chakra-ui/react";
-import { Card, Heading, Text } from "tw-components";
 
 interface ConnectWalletPromptProps {
   title?: string;
@@ -14,17 +13,15 @@ export const ConnectWalletPrompt: React.FC<ConnectWalletPromptProps> = ({
   description = "",
 }) => {
   return (
-    <Container maxW="lg">
-      <Card p={6} as={Flex} flexDir="column" gap={2}>
-        <Heading as="h2" size="title.sm">
-          {title}
-        </Heading>
-        <Text>
+    <div className="container max-w-[600px]">
+      <Card className="flex flex-col gap-2 p-6">
+        <h2 className="text-lg font-bold">{title}</h2>
+        <p>
           {prefix} {description || "get started"}.
-        </Text>
-        <Divider my={4} />
+        </p>
+        <div className="border-b my-4" />
         <CustomConnectWallet />
       </Card>
-    </Container>
+    </div>
   );
 };

@@ -1,6 +1,7 @@
-import { Flex, VStack } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import Image from "next/image";
-import { Card, LinkButton, Text } from "tw-components";
+import Link from "next/link";
 
 interface NoApiKeysProps {
   copyOverride?: string;
@@ -14,24 +15,26 @@ export const NoApiKeys: React.FC<NoApiKeysProps> = ({
   buttonTextOverride,
 }) => {
   return (
-    <Card pt={4} pb={8}>
-      <VStack alignItems="center" justifyContent="center" gap={6}>
+    <Card className="pt-4 pb-8">
+      <div className="flex flex-col justify-center items-center gap-6">
         <Image
           src="/assets/tw-icons/keys.png"
           width={77}
           height={95}
           alt="no keys"
         />
-        <Flex flexDir="column" gap={4} alignItems="center">
-          <Text>
+        <div className="flex flex-col gap-4 items-center">
+          <p>
             {copyOverride ??
               `You'll need to create an API Key to use ${service}.`}
-          </Text>
-          <LinkButton href="/dashboard/settings/api-keys" colorScheme="blue">
-            {buttonTextOverride ?? "Create API Key"}
-          </LinkButton>
-        </Flex>
-      </VStack>
+          </p>
+          <Button asChild variant="primary">
+            <Link href="/dashboard/settings/api-keys">
+              {buttonTextOverride ?? "Create API Key"}
+            </Link>
+          </Button>
+        </div>
+      </div>
     </Card>
   );
 };

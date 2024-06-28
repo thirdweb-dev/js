@@ -116,7 +116,8 @@ export const EditServices: React.FC<EditServicesProps> = ({ form, apiKey }) => {
                 <HStack>
                   <LinkButton
                     colorScheme="primary"
-                    href={`/dashboard/connect/pay?clientId=${apiKey.key}`}
+                    // TODO: update this to go to the correct `api key id` page when that is supported
+                    href="/dashboard/connect/pay"
                   >
                     Go to configuration
                   </LinkButton>

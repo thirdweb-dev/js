@@ -1,28 +1,22 @@
+"use client";
+
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { TabButtons } from "@/components/ui/tabs";
 import { apiKeys } from "@3rdweb-sdk/react";
 import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AppLayout } from "components/app-layouts/app";
+import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { PayConfig } from "components/pay/PayConfig";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
 import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
-import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
-import { TabButtons } from "../../../@/components/ui/tabs";
-import { PayAnalytics } from "../../../components/pay/PayAnalytics/PayAnalytics";
-import { PageId } from "../../../page-id";
-import { TrackedLink } from "../../../tw-components";
-import type { ThirdwebNextPage } from "../../../utils/types";
+import { TrackedLink } from "tw-components";
 
 const TRACKING_CATEGORY = "pay";
 
 function usePayConfig() {
-  const router = useRouter();
-  const defaultClientId = router.query.clientId?.toString();
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
@@ -54,13 +48,10 @@ function usePayConfig() {
       return selectedKey_;
     }
     if (apiKeysData.length) {
-      if (defaultClientId) {
-        return apiKeysData.find((k) => k.key === defaultClientId);
-      }
       return apiKeysData[0];
     }
     return undefined;
-  }, [apiKeysData, defaultClientId, selectedKey_]);
+  }, [apiKeysData, selectedKey_]);
 
   return {
     hasPayApiKeys,
@@ -72,7 +63,7 @@ function usePayConfig() {
   };
 }
 
-const DashboardConnectPay: ThirdwebNextPage = () => {
+export default function DashboardConnectPayPage() {
   const { isLoggedIn, isLoading } = useLoggedInUser();
   const {
     hasApiKeys,
@@ -86,18 +77,22 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
 
   if (isLoading || isFetchingKeys) {
     return (
-      <div className="min-h-[calc(100vh-300px)] lg:min-h-[calc(100vh-250px)] flex items-center justify-center">
+      <div className="py-6 w-full grid place-items-center">
         <Spinner className="size-14" />
       </div>
     );
   }
 
   if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="manage your Pay configuration" />;
+    return (
+      <div className="py-6 w-full grid place-items-center">
+        <ConnectWalletPrompt description="manage your Pay configuration" />
+      </div>
+    );
   }
 
   return (
-    <Flex flexDir="column" gap={8}>
+    <div className="flex flex-col gap-8 py-6 w-full">
       <div className="flex flex-col lg:flex-row gap-6 justify-between items-start">
         <div className="max-w-[800px]">
           <h1 className="text-5xl tracking-tight font-bold mb-5">Pay</h1>
@@ -133,9 +128,9 @@ const DashboardConnectPay: ThirdwebNextPage = () => {
         hasApiKeys={hasApiKeys}
         selectedKey={selectedKey}
       />
-    </Flex>
+    </div>
   );
-};
+}
 
 function PayUI(props: {
   hasPayApiKeys: boolean;
@@ -181,6 +176,7 @@ function PayUI(props: {
           />
 
           <div className="h-5" />
+          {/* TODO: split this into sub-pages */}
           {activeTab === "settings" && <PayConfig apiKey={selectedKey} />}
           {activeTab === "analytics" && <PayAnalytics apiKey={selectedKey} />}
         </>
@@ -188,14 +184,3 @@ function PayUI(props: {
     </div>
   );
 }
-
-DashboardConnectPay.getLayout = (page, props) => (
-  <AppLayout {...props} hasSidebar={true}>
-    <ConnectSidebar activePage="pay-settings" />
-    {page}
-  </AppLayout>
-);
-
-DashboardConnectPay.pageId = PageId.DashboardConnectPay;
-
-export default DashboardConnectPay;
