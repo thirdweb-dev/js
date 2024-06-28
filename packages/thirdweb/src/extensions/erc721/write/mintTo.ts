@@ -1,11 +1,14 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC721/write/mintTo.js";
 
-export type MintToParams = {
+export type MintToParams = WithOverrides<{
   to: string;
   nft: NFTInput | string;
-};
+}>;
 
 /**
  * Mints a new ERC721 token and assigns it to the specified address.
@@ -53,6 +56,7 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
       return {
         to: options.to,
         uri: tokenUri,
+        overrides: options.overrides,
       } as const;
     },
   });
