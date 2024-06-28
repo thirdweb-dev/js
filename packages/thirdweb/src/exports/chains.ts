@@ -23,6 +23,8 @@ export { base } from "../chains/chain-definitions/base.js";
 export { ethereum, mainnet } from "../chains/chain-definitions/ethereum.js";
 export { optimismSepolia } from "../chains/chain-definitions/optimism-sepolia.js";
 export { optimism } from "../chains/chain-definitions/optimism.js";
+export { lineaSepolia } from "../chains/chain-definitions/linea-sepolia.js";
+export { linea } from "../chains/chain-definitions/linea.js";
 // mumbai = alias for polygonMumbai
 export {
   polygonMumbai,
