@@ -4,6 +4,7 @@ import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import Link from "next/link";
 import { ThirdwebMiniLogo } from "../ThirdwebMiniLogo";
+import { NavLink } from "../nav-link.client";
 import { MobileBurgerMenu } from "./MobileBurgerMenu";
 import { headerLinks } from "./headerLinks";
 
@@ -23,14 +24,15 @@ export function DashboardHeader() {
 
           <div className="hidden md:flex items-center gap-5">
             {headerLinks.left.map((link) => (
-              <Link
+              <NavLink
                 key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
                 className="text-secondary-foreground hover:text-foreground"
+                activeClassName="text-foreground font-semibold"
               >
                 {link.name}
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>

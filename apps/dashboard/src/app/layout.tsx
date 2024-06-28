@@ -14,7 +14,7 @@ const fontSans = interFont({
 });
 
 export const metadata: Metadata = {
-  title: "hirdweb: The complete web3 development platform",
+  title: "thirdweb: The complete web3 development platform",
   description:
     "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum & 700+ EVM chains. Try now.",
   openGraph: {
