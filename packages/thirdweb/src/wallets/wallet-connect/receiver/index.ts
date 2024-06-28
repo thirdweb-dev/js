@@ -249,7 +249,10 @@ export async function createWalletConnectClient(
   // Disconnects can come from the user or the connected app, so we inject the callback to ensure its always triggered
   const _disconnect = walletConnectClient.disconnect;
   walletConnectClient.disconnect = async (args) => {
-    const result = await _disconnect(args);
+    const result = await _disconnect(args).catch(() => {
+      // no-op if already disconnected
+    });
+
     if (onDisconnect) {
       disconnectHook({ topic: args.topic, onDisconnect });
     }
@@ -323,6 +326,8 @@ export async function disconnectWalletConnectSession(options: {
   session: WalletConnectSession;
   walletConnectClient: WalletConnectClient;
 }): Promise<void> {
+  removeSession(options.session);
+
   try {
     await options.walletConnectClient.disconnect({
       topic: options.session.topic,
@@ -331,10 +336,9 @@ export async function disconnectWalletConnectSession(options: {
         message: "Disconnected",
       },
     });
-  } catch {
+  } catch (error) {
     // ignore, the session doesn't exist already
   }
-  removeSession(options.session);
 }
 
 /**
@@ -346,6 +350,7 @@ async function disconnectHook(options: {
 }) {
   const { topic, onDisconnect } = options;
   const sessions = await getSessions();
+
   onDisconnect(
     sessions.find((s) => s.topic === topic) ?? {
       topic,
