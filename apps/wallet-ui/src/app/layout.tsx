@@ -18,12 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <Providers>
-        <body className={`w-screen h-screen ${inter.className}`}>
-          {children}
-        </body>
-      </Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`max-w-screen flex justify-center w-full min-h-screen ${inter.className}`}
+      >
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

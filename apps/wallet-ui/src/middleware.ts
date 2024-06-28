@@ -26,7 +26,7 @@ export default async function middleware(req: NextRequest) {
   }`;
 
   // keep root application at `/`
-  if (hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN) {
+  if (hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN || hostname === null) {
     return NextResponse.rewrite(
       new URL(`/${path === "/" ? "" : path}`, req.url),
     );
@@ -34,5 +34,6 @@ export default async function middleware(req: NextRequest) {
 
   // rewrite everything else to `/[ecosystem]/... dynamic route
   const ecosystem = hostname.split(".")[0];
+
   return NextResponse.rewrite(new URL(`/${ecosystem}${path}`, req.url));
 }

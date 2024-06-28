@@ -1,7 +1,8 @@
+import type { Erc20Token } from "@/types/Erc20Token";
+import { chainIdToName, nameToChainId } from "@/util/simplehash";
 import type { Address } from "thirdweb";
-import { chainIdToName } from "../../util/simplehash";
 
-export type Erc20QueryParams = {
+export type GetErc20TokensParams = {
   owner: Address;
   chainIds: number[];
   limit?: number;
@@ -13,7 +14,10 @@ export async function getErc20Tokens({
   chainIds,
   limit = 50,
   cursor,
-}: Erc20QueryParams) {
+}: GetErc20TokensParams): Promise<{
+  nextCursor?: string;
+  tokens: Erc20Token[];
+}> {
   const chainlist = chainIds
     .map((id) => {
       try {
@@ -49,8 +53,20 @@ export async function getErc20Tokens({
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch ERC20s: ${response.statusText}`);
+    response.body?.cancel();
+    throw new Error("Failed to fetch ERC20tokens");
   }
 
-  return await response.json();
+  const data = await response.json();
+
+  return {
+    nextCursor: data.next_cursor,
+    // biome-ignore lint/suspicious/noExplicitAny: false
+    tokens: data.fungibles.map((token: any) => ({
+      name: token.name,
+      symbol: token.symbol,
+      decimals: token.decimals,
+      chainId: nameToChainId(token.chain),
+    })),
+  };
 }
