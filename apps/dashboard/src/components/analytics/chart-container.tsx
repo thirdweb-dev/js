@@ -1,7 +1,7 @@
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { AspectRatio } from "../../@/components/ui/aspect-ratio";
-import { cn } from "../../@/lib/utils";
 import { AreaChartLoadingState } from "./area-chart";
 
 type SupportedChartType = "area";

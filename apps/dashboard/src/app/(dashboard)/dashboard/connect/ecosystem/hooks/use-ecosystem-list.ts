@@ -13,7 +13,8 @@ export function useEcosystemList() {
       );
 
       if (!res.ok) {
-        throw new Error("Failed to fetch ecosystems");
+        const data = await res.json();
+        throw new Error(data?.error?.message ?? "Failed to fetch ecosystems");
       }
 
       return (await res.json()) as {
