@@ -12,6 +12,7 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { ToolTipLabel } from "./tooltip";
 
 const Form = FormProvider;
 
@@ -93,10 +94,32 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive-foreground", className)}
+      className={cn(error && "text-destructive", className)}
       htmlFor={formItemId}
       {...props}
     />
+  );
+});
+FormLabel.displayName = "FormLabel";
+
+const RequiredFormLabel = React.forwardRef<
+  React.ElementRef<typeof LabelPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
+>(({ className, ...props }, ref) => {
+  const { error, formItemId } = useFormField();
+
+  return (
+    <ToolTipLabel label="Required">
+      <Label
+        ref={ref}
+        className={cn(error && "text-destructive", "relative", className)}
+        htmlFor={formItemId}
+        {...props}
+      >
+        {props.children}
+        <span className="absolute -top-1.5 -right-2 text-destructive">•</span>
+      </Label>
+    </ToolTipLabel>
   );
 });
 FormLabel.displayName = "FormLabel";
@@ -156,10 +179,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn(
-        "text-sm font-medium text-destructive-foreground",
-        className,
-      )}
+      className={cn("text-sm font-medium text-destructive", className)}
       {...props}
     >
       {body}
@@ -173,6 +193,7 @@ export {
   Form,
   FormItem,
   FormLabel,
+  RequiredFormLabel,
   FormControl,
   FormDescription,
   FormMessage,
