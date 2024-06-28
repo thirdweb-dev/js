@@ -72,6 +72,8 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
           onDrawerVisibilityChanged?.(false);
         }}
         isOpen={isOpen}
+        trapFocus={false}
+        blockScrollOnMount={false}
       >
         <Box py={4} px={2}>
           <ContractDeployForm
