@@ -55,6 +55,9 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
         networksEnabledSet.has(chain.chainId),
       );
     }
+
+    // if no restrictions, show all supported chains
+    return supportedChains;
   }, [disabledChainIds, networksEnabled, supportedChains]);
 
   const filteredRecentlyUsedChains = useMemo(() => {
