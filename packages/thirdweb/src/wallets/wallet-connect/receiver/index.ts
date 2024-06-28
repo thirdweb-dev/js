@@ -158,10 +158,17 @@ export const DefaultWalletConnectRequestHandlers = {
 export async function createWalletConnectClient(
   options: CreateWalletConnectClientOptions,
 ): Promise<WalletConnectClient> {
-  const { wallet, requestHandlers, chains, onConnect, onDisconnect } = options;
+  const {
+    wallet,
+    requestHandlers,
+    chains,
+    onConnect,
+    onDisconnect,
+    client: thirdwebClient,
+  } = options;
 
-  if (walletConnectClientCache.has(options.client)) {
-    return walletConnectClientCache.get(options.client) as WalletConnectClient;
+  if (walletConnectClientCache.has(thirdwebClient)) {
+    return walletConnectClientCache.get(thirdwebClient) as WalletConnectClient;
   }
 
   initializeSessionStore({ clientId: options.client.clientId });
@@ -206,6 +213,7 @@ export async function createWalletConnectClient(
         walletConnectClient,
         event,
         handlers: requestHandlers,
+        thirdwebClient,
       }).catch((error) => {
         if (options.onError) {
           options.onError(error as Error);
