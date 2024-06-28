@@ -137,6 +137,22 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
               </div>
 
               <Line />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingBlock: spacing.md,
+                }}
+              >
+                <Text>Time</Text>
+
+                <Text size="md" color="primaryText">
+                  {props.estimatedTimeToSwap}
+                </Text>
+              </div>
+
+              <Line />
             </div>
             <Spacer y="xxl" />
           </Container>
@@ -332,7 +348,8 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
         )}
 
         {/* Estimated time */}
-        {props.state.status !== "error" &&
+        {!onlySwapRequired &&
+          props.state.status !== "error" &&
           props.state.activeStep === "swap" &&
           props.activeChain === props.from.chain && (
             <>

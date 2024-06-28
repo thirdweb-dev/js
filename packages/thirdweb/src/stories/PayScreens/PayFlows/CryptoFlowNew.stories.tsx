@@ -20,14 +20,10 @@ function Test(props: {
   return (
     <div>
       <Row>
-        {/* Only Swap Required */}
         <SwapOnly theme={props.theme} />
-
-        {/* Approve + Swap */}
         <SwapAndApprove theme={props.theme} />
-
-        {/* Approve + Swap + Tx details */}
         <SwapApproveTx theme={props.theme} />
+        <SwapAndTx theme={props.theme} />
       </Row>
     </div>
   );
@@ -396,8 +392,146 @@ function SwapApproveTx(props: {
   );
 }
 
+function SwapAndTx(props: {
+  theme: "dark" | "light";
+}) {
+  const generalProps: SwapConfirmationScreenUIProps = {
+    client: storyClient,
+    onBack: noop,
+    approvalRequired: null,
+    txInfo: {
+      cost: {
+        amount: "2.7",
+        chain: polygon,
+        token: { nativeToken: true },
+      },
+      label: "Legendary Cat",
+      onSendTxClick: noop,
+    },
+    from: {
+      amount: "8.8432",
+      chain: polygon,
+      token: { nativeToken: true },
+    },
+    to: {
+      amount: "5.0276",
+      chain: polygon,
+      token: usdcPolygon,
+    },
+    state: {
+      activeStep: "approve",
+      status: "idle",
+    },
+    onSwapClick: noop,
+    activeChain: polygon,
+    estimatedTimeToSwap: "~20s",
+  };
+
+  return (
+    <div>
+      <StoryScreenTitle label="Swap + Tx" large />
+
+      <ScreenContainer theme={props.theme} label="Swap">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "idle",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "idle",
+          }}
+          activeChain={ethereum}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swapping">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "pending",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swap Failed">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Purchase">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "purchase",
+            status: "idle",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Purchase (Switch Required)">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "purchase",
+            status: "pending",
+          }}
+          activeChain={ethereum}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Purchasing">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "purchase",
+            status: "pending",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Purchase failed">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "purchase",
+            status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Done">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "done",
+            status: "idle",
+            data: {
+              chain: polygon,
+              txHash: "0x1234567890",
+            },
+          }}
+        />
+      </ScreenContainer>
+    </div>
+  );
+}
+
 const meta = {
-  title: "Pay/Flows/Swap Flow (New)",
+  title: "Pay/Flows/Confirm Swap Flow (New)",
   component: Test,
   parameters: {
     layout: "centered",
