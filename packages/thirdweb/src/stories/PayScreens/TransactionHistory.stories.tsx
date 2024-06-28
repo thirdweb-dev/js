@@ -7,7 +7,7 @@ import { FiatDetailsScreenUI } from "../../react/web/ui/ConnectWallet/screens/Bu
 import { SwapDetailsScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/SwapDetailsScreen.js";
 import { TxDetailsScreen } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/TxDetailsScreen.js";
 import { storyAccount, storyClient } from "../utils.js";
-import { Row, StoryScreenTitle, noop } from "../utils.js";
+import { Row, noop } from "../utils.js";
 import { ScreenContainer } from "./ScreenContainer.js";
 import {
   completedSwapTxStatus,
@@ -29,109 +29,100 @@ function TransactionHistoryTest(props: {
 
   return (
     <div>
-      <div>
-        <StoryScreenTitle label="Transaction history" />
-        <ScreenContainer theme={props.theme}>
-          <BuyTxHistoryListUI
-            buyHistory={buyHistoryQuery}
-            client={storyClient}
-            onDone={noop}
-            onSelectTx={noop}
-            pageIndex={0}
-            setPageIndex={noop}
-            onBack={noop}
-            account={storyAccount}
-            activeChain={polygon}
-          />
-        </ScreenContainer>
-      </div>
+      <ScreenContainer theme={props.theme} label="Transaction history">
+        <BuyTxHistoryListUI
+          buyHistory={buyHistoryQuery}
+          client={storyClient}
+          onDone={noop}
+          onSelectTx={noop}
+          pageIndex={0}
+          setPageIndex={noop}
+          onBack={noop}
+          account={storyAccount}
+          activeChain={polygon}
+        />
+      </ScreenContainer>
 
       <Row>
-        <div>
-          <StoryScreenTitle label="Swap Completed" />
-          <ScreenContainer theme={props.theme}>
-            <SwapDetailsScreenUI
-              client={storyClient}
-              onBack={noop}
-              status={completedSwapTxStatus}
-            />
-          </ScreenContainer>
-        </div>
+        <ScreenContainer theme={props.theme} label="Swap Completed">
+          <SwapDetailsScreenUI
+            client={storyClient}
+            onBack={noop}
+            status={completedSwapTxStatus}
+          />
+        </ScreenContainer>
+
+        <ScreenContainer theme={props.theme} label="Swap Failed">
+          <SwapDetailsScreenUI
+            client={storyClient}
+            onBack={noop}
+            status={failedSwapTxStatus}
+          />
+        </ScreenContainer>
 
         <div>
-          <StoryScreenTitle label="Swap Failed" />
-          <ScreenContainer theme={props.theme}>
-            <SwapDetailsScreenUI
-              client={storyClient}
-              onBack={noop}
-              status={failedSwapTxStatus}
-            />
-          </ScreenContainer>
-        </div>
-
-        <div>
-          <div>
-            <StoryScreenTitle label="OnRamp Pending, Swap Required" />
-            <ScreenContainer theme={props.theme}>
-              <FiatDetailsScreenUI
-                client={storyClient}
-                isBuyForTx={false}
-                isEmbed={true}
-                onBack={noop}
-                onDone={noop}
-                status={onRampPendingSwapRequiredTxStatus}
-                stopPollingStatus={noop}
-              />
-            </ScreenContainer>
-          </div>
-
-          <div>
-            <StoryScreenTitle label="OnRamp Completed, Swap Required" />
-            <ScreenContainer theme={props.theme}>
-              <FiatDetailsScreenUI
-                client={storyClient}
-                isBuyForTx={false}
-                isEmbed={true}
-                onBack={noop}
-                onDone={noop}
-                status={onRampCompleteSwapRequiredTxStatus}
-                stopPollingStatus={noop}
-              />
-            </ScreenContainer>
-          </div>
-
-          <div>
-            <StoryScreenTitle label="OnRamp Completed, Swap Completed" />
-            <ScreenContainer theme={props.theme}>
-              <FiatDetailsScreenUI
-                client={storyClient}
-                isBuyForTx={false}
-                isEmbed={true}
-                onBack={noop}
-                onDone={noop}
-                status={onRampCompletedSwapCompletedTxStatus}
-                stopPollingStatus={noop}
-              />
-            </ScreenContainer>
-          </div>
-        </div>
-
-        <div>
-          <StoryScreenTitle label="OnRamp Completed, No Swap Required" />
-          <ScreenContainer theme={props.theme}>
-            <TxDetailsScreen
+          <ScreenContainer
+            theme={props.theme}
+            label="OnRamp Pending, Swap Required"
+          >
+            <FiatDetailsScreenUI
               client={storyClient}
               isBuyForTx={false}
               isEmbed={true}
               onBack={noop}
               onDone={noop}
-              statusInfo={{
-                status: onRampCompletedNoSwapRequired,
-                type: "fiat",
-              }}
+              status={onRampPendingSwapRequiredTxStatus}
+              stopPollingStatus={noop}
+            />
+          </ScreenContainer>
+
+          <ScreenContainer
+            theme={props.theme}
+            label="OnRamp Completed, Swap Required"
+          >
+            <FiatDetailsScreenUI
+              client={storyClient}
+              isBuyForTx={false}
+              isEmbed={true}
+              onBack={noop}
+              onDone={noop}
+              status={onRampCompleteSwapRequiredTxStatus}
+              stopPollingStatus={noop}
+            />
+          </ScreenContainer>
+
+          <ScreenContainer
+            theme={props.theme}
+            label="OnRamp Completed, Swap Completed"
+          >
+            <FiatDetailsScreenUI
+              client={storyClient}
+              isBuyForTx={false}
+              isEmbed={true}
+              onBack={noop}
+              onDone={noop}
+              status={onRampCompletedSwapCompletedTxStatus}
+              stopPollingStatus={noop}
             />
           </ScreenContainer>
         </div>
+
+        <ScreenContainer
+          theme={props.theme}
+          label="OnRamp Completed, No Swap Required"
+        >
+          <TxDetailsScreen
+            client={storyClient}
+            isBuyForTx={false}
+            isEmbed={true}
+            onBack={noop}
+            onDone={noop}
+            statusInfo={{
+              status: onRampCompletedNoSwapRequired,
+              type: "fiat",
+            }}
+          />
+        </ScreenContainer>
       </Row>
     </div>
   );

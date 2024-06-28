@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { SwapFlowStory } from "./SwapFlowStory.js";
+import { FiatFlowStory } from "./FiatFlowStory.js";
 
 const meta = {
-  title: "Pay/Flows/Confirm Swap Flow (New)",
-  component: SwapFlowStory,
+  title: "Pay/Flows/Confirm Fiat Flow (New)",
+  component: FiatFlowStory,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof SwapFlowStory>;
+} satisfies Meta<typeof FiatFlowStory>;
 
 type Story = StoryObj<typeof meta>;
 

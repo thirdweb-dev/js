@@ -33,7 +33,7 @@ export const noScrollBar = /* @__PURE__ */ {
  * @internal
  */
 export function ModalHeader(props: {
-  onBack: (() => void) | null;
+  onBack?: () => void;
   title: React.ReactNode;
   leftAligned?: boolean;
 }) {
