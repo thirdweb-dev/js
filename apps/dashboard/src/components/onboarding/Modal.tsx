@@ -34,6 +34,7 @@ export const OnboardingModal: ComponentWithChildren<OnboardingModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       trapFocus={false}
+      blockScrollOnMount={false}
     >
       <ModalOverlay />
       <ModalContent>

@@ -48,7 +48,14 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   return (
-    <Modal isOpen={props.isOpen} onClose={onClose} isCentered size="lg">
+    <Modal
+      isOpen={props.isOpen}
+      onClose={onClose}
+      isCentered
+      size="lg"
+      trapFocus={false}
+      blockScrollOnMount={false}
+    >
       <ModalOverlay />
       <ModalContent
         as="form"
