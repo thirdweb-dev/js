@@ -15,7 +15,7 @@ import { Text } from "../text.js";
 export function TokenSymbol(props: {
   token: ERC20OrNativeToken;
   chain: Chain;
-  size: "sm" | "md" | "lg";
+  size: keyof typeof fontSize;
   color?: keyof Theme["colors"];
   inline?: boolean;
 }) {
@@ -43,14 +43,20 @@ export function TokenSymbol(props: {
 
 function NativeTokenSymbol(props: {
   chain: Chain;
-  size: "sm" | "md" | "lg";
+  size: keyof typeof fontSize;
   color?: keyof Theme["colors"];
   inline?: boolean;
 }) {
   const chainQuery = useChainQuery(props.chain);
 
   if (!chainQuery.isFetched) {
-    return <Skeleton width="70px" height={fontSize[props.size]} />;
+    return (
+      <Skeleton
+        width="70px"
+        height={fontSize[props.size]}
+        inline={props.inline}
+      />
+    );
   }
 
   return (

@@ -10,7 +10,7 @@ import { Text } from "./text.js";
  */
 export const ChainName: React.FC<{
   chain: Chain;
-  size: "xs" | "sm" | "md" | "lg";
+  size: keyof typeof fontSize;
   client: ThirdwebClient;
   short?: boolean;
 }> = (props) => {
