@@ -44,7 +44,7 @@ export default function DashboardConnectLayout(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col md:flex-row md:h-full container px-0">
+    <div className="container flex flex-col px-0 md:flex-row md:h-full">
       <SidebarNav sections={SIDEBAR_SECTIONS} />
       {props.children}
     </div>
