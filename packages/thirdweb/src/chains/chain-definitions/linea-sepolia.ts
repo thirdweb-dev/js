@@ -1,7 +1,7 @@
 import { defineChain } from "../utils.js";
 
 export const lineaSepolia = /* @__PURE__ */ defineChain({
-  id: 84532,
+  id: 59141,
   name: "Linea Sepolia",
   nativeCurrency: { name: "Sepolia Ether", symbol: "ETH", decimals: 18 },
   blockExplorers: [
