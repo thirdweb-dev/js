@@ -47,7 +47,7 @@
     "@manypkg/get-packages": "2.2.1",
     "@playwright/test": "1.44.1",
     "@types/node": "20.14.6",
-    "turbo": "2.0.5",
+    "turbo": "2.0.6",
     "yalc": "1.0.0-pre.53"
   },
   "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______": "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______",
