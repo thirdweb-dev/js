@@ -32,7 +32,7 @@ import type {
 import type { NFTDrop } from "@thirdweb-dev/sdk";
 import type { SignatureDrop } from "@thirdweb-dev/sdk";
 import type { SmartContract } from "@thirdweb-dev/sdk";
-import type { providers } from "ethers";
+import type { BigNumber, providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -202,7 +202,7 @@ export function useClaimedNFTs(
  */
 export function useUnclaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
-) {
+): UseQueryResult<BigNumber, unknown> {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
@@ -245,7 +245,7 @@ export function useUnclaimedNFTSupply(
  */
 export function useClaimedNFTSupply(
   contract: RequiredParam<NFTDrop | SignatureDrop | SmartContract | null>,
-) {
+): UseQueryResult<BigNumber, unknown> {
   const contractAddress = contract?.getAddress();
   const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(

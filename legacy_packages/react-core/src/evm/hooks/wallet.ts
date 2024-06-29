@@ -14,7 +14,7 @@ import {
   ThirdwebWalletContext,
   useWalletContext,
 } from "../../core/providers/thirdweb-wallet-provider";
-import { BigNumber } from "ethers";
+import { BigNumber, type Signer } from "ethers";
 
 /**
  * Hook for getting a wallet's current balance of native or (optional) ERC20 token balance
@@ -125,7 +125,7 @@ export function useBalanceForAddress(walletAddress: string): UseQueryResult<
 /**
  * @internal
  */
-export function useConnectedWallet() {
+export function useConnectedWallet(): Signer | undefined {
   const context = useContext(ThirdwebConnectedWalletContext);
   invariant(
     context,
