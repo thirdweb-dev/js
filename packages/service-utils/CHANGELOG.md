@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.34
+
+### Patch Changes
+
+- [#3551](https://github.com/thirdweb-dev/js/pull/3551) [`b6ab038`](https://github.com/thirdweb-dev/js/commit/b6ab038802091ebb6cc6d880b4bafb682a37da95) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
 ## 0.4.33
 
 ### Patch Changes
