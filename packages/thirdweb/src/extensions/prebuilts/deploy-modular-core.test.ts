@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
-import { ADDRESS_ZERO } from "../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
-import { sendTransaction } from "../../transaction/actions/send-transaction.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { installPublishedExtension } from "../modular/ModularCore/write/installPublishedExtension.js";
 import { uninstallExtensionByProxy } from "../modular/ModularCore/write/uninstallExtensionByProxy.js";
 import { uninstallPublishedExtension } from "../modular/ModularCore/write/uninstallPublishedExtension.js";
@@ -65,7 +65,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         extensionName: "DemoExtensionWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: installTransaction,
         account: TEST_ACCOUNT_A,
       });
@@ -75,7 +75,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         contract: core,
       });
       const extensionAddress = installedExtensions[0]?.implementation;
-      expect(extensionAddress).to.not.equal(ADDRESS_ZERO);
+      expect(extensionAddress).to.not.equal(ZERO_ADDRESS);
 
       // uninstall extension
       const uninstallTransaction = uninstallExtensionByProxy({
@@ -85,7 +85,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         extensionProxyAddress: extensionAddress as string,
         extensionData: "0x",
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: uninstallTransaction,
         account: TEST_ACCOUNT_A,
       });
@@ -123,7 +123,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         extensionName: "DemoExtensionWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: installTransaction,
         account: TEST_ACCOUNT_A,
       });
@@ -143,7 +143,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
         extensionData: "0x",
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: uninstallTransaction,
         account: TEST_ACCOUNT_A,
       });
