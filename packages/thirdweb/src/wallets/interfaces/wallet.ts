@@ -203,7 +203,7 @@ export type Account = {
   /**
    * Sign the given transaction and return the signature
    *
-   * This method is not available for on all wallets. This method will be `undefined` if the wallet does not support it.
+   * This method is not available on all wallets. This method will be `undefined` if the wallet does not support it.
    * @example
    * ```ts
    * if (account.signTransaction) {
