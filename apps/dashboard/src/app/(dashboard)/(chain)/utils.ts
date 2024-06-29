@@ -1,7 +1,6 @@
 import "server-only";
 
 import { THIRDWEB_API_HOST } from "constants/urls";
-// END TEMPORARY
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/components/server/cta-card";
 import baseBanner from "./temp-assets/base-banner.jpeg";
@@ -10,6 +9,7 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 // TEMPORARY
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
+// END TEMPORARY
 
 export async function getChains() {
   const response = await fetch(
