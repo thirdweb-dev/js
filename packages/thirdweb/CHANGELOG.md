@@ -1,5 +1,33 @@
 # thirdweb
 
+## 5.31.0
+
+### Minor Changes
+
+- [#3543](https://github.com/thirdweb-dev/js/pull/3543) [`6704fa8`](https://github.com/thirdweb-dev/js/commit/6704fa887013322e23cb0b7a5d96b3cf647ce8c5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to override transaction properties in mintTo functions
+
+- [#3552](https://github.com/thirdweb-dev/js/pull/3552) [`31775dc`](https://github.com/thirdweb-dev/js/commit/31775dc1dcf38568390e505fd7fb53c6b5aa9cec) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds storage unpin function
+
+- [#3533](https://github.com/thirdweb-dev/js/pull/3533) [`e4b6391`](https://github.com/thirdweb-dev/js/commit/e4b6391cb3b3c3879bc4c66eaa742e364ff17b83) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds StoredTransaction type
+
+- [#3534](https://github.com/thirdweb-dev/js/pull/3534) [`cf2d1b8`](https://github.com/thirdweb-dev/js/commit/cf2d1b8df33a2fd271b5a75ec09a9ecd1169e388) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds shortenHex utility
+
+### Patch Changes
+
+- [#3529](https://github.com/thirdweb-dev/js/pull/3529) [`18c3d3b`](https://github.com/thirdweb-dev/js/commit/18c3d3be9f7065feb556649fecc8a3bb38e295c9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Do not log auto connect failure "errors"
+
+- [#3541](https://github.com/thirdweb-dev/js/pull/3541) [`27daf22`](https://github.com/thirdweb-dev/js/commit/27daf220102e3c29e867c46043fb7a17ba2830dc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix in-app wallet transcation execution via WalletConnect
+
+- [#3539](https://github.com/thirdweb-dev/js/pull/3539) [`85f2f6d`](https://github.com/thirdweb-dev/js/commit/85f2f6d2bd61364ee1b66609f51dcaded0eba790) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix WalletConnect client disconnections
+
+- [#3551](https://github.com/thirdweb-dev/js/pull/3551) [`b6ab038`](https://github.com/thirdweb-dev/js/commit/b6ab038802091ebb6cc6d880b4bafb682a37da95) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#3536](https://github.com/thirdweb-dev/js/pull/3536) [`8bfba81`](https://github.com/thirdweb-dev/js/commit/8bfba81d2ecd66c69240989716608a199545c082) Thanks [@maciekzygmunt](https://github.com/maciekzygmunt)! - Add Linea & Linea Sepolia chain config files
+
+- [#3542](https://github.com/thirdweb-dev/js/pull/3542) [`517ecff`](https://github.com/thirdweb-dev/js/commit/517ecff0b2179062ab654592288b47e82c2e3405) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Rename Sepolia native currency symbol to ETH
+
+- [#3545](https://github.com/thirdweb-dev/js/pull/3545) [`7e24260`](https://github.com/thirdweb-dev/js/commit/7e242602e91565c62d7db1e9ba042405ac66dbc6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix errors thrown when connecting with an open access ecosystem
+
 ## 5.30.0
 
 ### Minor Changes
