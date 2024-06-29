@@ -10,6 +10,21 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 // TEMPORARY
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
+// END TEMPORARY
+
+export async function getChains() {
+  const response = await fetch(
+    `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
+    // revalidate every hour
+    { next: { revalidate: 60 * 60 } },
+  );
+
+  if (!response.ok) {
+    response.body?.cancel();
+    throw new Error("Failed to fetch chains");
+  }
+  return (await response.json()).data as ChainMetadataWithServices[];
+}
 
 export async function getChain(
   chainIdOrSlug: string,
@@ -25,20 +40,6 @@ export async function getChain(
     redirect("/404");
   }
   return result.data as ChainMetadataWithServices;
-}
-
-export async function getChains() {
-  const response = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
-    // revalidate every hour
-    { next: { revalidate: 60 * 60 } },
-  );
-
-  if (!response.ok) {
-    response.body?.cancel();
-    throw new Error("Failed to fetch chains");
-  }
-  return (await response.json()).data as ChainMetadataWithServices[];
 }
 
 type ChainMetadata = Partial<{
