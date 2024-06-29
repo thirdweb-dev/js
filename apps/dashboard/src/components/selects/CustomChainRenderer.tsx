@@ -1,5 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { getChain } from "app/(dashboard)/(chain)/getChain";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
@@ -7,11 +5,13 @@ import {
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
 import { SettingsIcon } from "lucide-react";
+import { useMemo } from "react";
 import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
 import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 import { Button } from "../../@/components/ui/button";
 import { cn } from "../../@/lib/utils";
 import { OPSponsoredChains } from "../../constants/chains";
+import { useSupportedChainsRecord } from "../../hooks/chains/configureChains";
 
 type ChainRenderProps = React.ComponentProps<
   NonNullable<UseNetworkSwitcherModalOptions["renderChain"]>
@@ -32,12 +32,15 @@ export const CustomChainRenderer = ({
   const setIsOpenNetworkConfigModal = useSetIsNetworkConfigModalOpen();
   const addRecentlyUsedChain = useAddRecentlyUsedChainId();
   const setEditChain = useSetEditChain();
-  const chainQuery = useQuery({
-    queryKey: ["getChain", chain.id],
-    queryFn: () => getChain(`${chain.id}`),
-  });
+  const supportedChainsRecord = useSupportedChainsRecord();
 
-  const isDeprecated = chainQuery.data?.status === "deprecated";
+  const storedChain = useMemo(() => {
+    return chain.id in supportedChainsRecord
+      ? supportedChainsRecord[chain.id]
+      : undefined;
+  }, [chain, supportedChainsRecord]);
+
+  const isDeprecated = storedChain?.status === "deprecated";
   const isSponsored = OPSponsoredChains.includes(chain.id);
 
   return (
@@ -97,13 +100,13 @@ export const CustomChainRenderer = ({
           </div>
         </div>
 
-        {!disableChainConfig && chainQuery.data && (
+        {!disableChainConfig && storedChain && (
           <Button
             variant="ghost"
             className="ml-auto p-2 leading-4 opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
             aria-label="Configure Network"
             onClick={() => {
-              setEditChain(chainQuery.data);
+              setEditChain(storedChain);
               addRecentlyUsedChain(chain.id);
               setIsOpenNetworkConfigModal(true);
               if (close) {

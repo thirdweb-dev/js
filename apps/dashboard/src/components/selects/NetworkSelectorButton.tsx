@@ -1,9 +1,11 @@
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { useColorMode } from "@chakra-ui/react";
-import { getChain } from "app/(dashboard)/(chain)/getChain";
 import { ChainIcon } from "components/icons/ChainIcon";
 import type { StoredChain } from "contexts/configured-chains";
-import { useSupportedChains } from "hooks/chains/configureChains";
+import {
+  useSupportedChains,
+  useSupportedChainsRecord,
+} from "hooks/chains/configureChains";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
@@ -38,6 +40,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const { colorMode } = useColorMode();
   const supportedChains = useSupportedChains();
+  const supportedChainsRecord = useSupportedChainsRecord();
   const favoriteChainsQuery = useFavoriteChains();
   const networkSwitcherModal = useNetworkSwitcherModal();
 
@@ -152,8 +155,9 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
             async onSwitch(chain) {
               addRecentlyUsedChains(chain.id);
               if (onSwitchChain) {
-                const chainMeta = await getChain(`${chain.id}`);
-                onSwitchChain(chainMeta);
+                if (supportedChainsRecord[chain.id]) {
+                  onSwitchChain(supportedChainsRecord[chain.id]);
+                }
               }
             },
             client: thirdwebClient,
