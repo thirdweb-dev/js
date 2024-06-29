@@ -1,0 +1,5 @@
+[
+    "function mint(((uint48 startTimestamp,uint48 endTimestamp,address recipient,uint256 quantity,address currency,uint256 pricePerUnit,string metadataURI, bytes32 uid) request, bytes signature, string metadataURI) params) view",
+    "function setSaleConfig(address _primarySaleRecipient)",
+    "function grantRoles(address user, uint256 roles) payable"
+]

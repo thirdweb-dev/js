@@ -6,10 +6,11 @@ import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
+import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js";
 import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
 import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/initialize.js";
 
-export type ERC20ContractType = "DropERC20" | "TokenERC20";
+export type ERC20ContractType = "DropERC20" | "TokenERC20" | "ERC20Core";
 
 export type ERC20ContractParams = {
   name: string;
@@ -30,6 +31,7 @@ export type DeployERC20ContractOptions = Prettify<
   ClientAndChainAndAccount & {
     type: ERC20ContractType;
     params: ERC20ContractParams;
+    publisher?: string;
   }
 >;
 
@@ -55,7 +57,7 @@ export type DeployERC20ContractOptions = Prettify<
  * ```
  */
 export async function deployERC20Contract(options: DeployERC20ContractOptions) {
-  const { chain, client, account, type, params } = options;
+  const { chain, client, account, type, params, publisher } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
@@ -63,6 +65,7 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
       account,
       contractId: type,
       constructorParams: [],
+      publisher,
     });
   const initializeTransaction = await getInitializeTransaction({
     client,
@@ -130,6 +133,17 @@ async function getInitializeTransaction(options: {
         platformFeeBps: params.platformFeeBps || 0n,
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
         trustedForwarders: params.trustedForwarders || [],
+      });
+    case "ERC20Core":
+    case "ERC20CoreInitializable": // FIXME
+      return initCoreERC20({
+        contract: implementationContract,
+        owner: params.defaultAdmin || accountAddress,
+        name: params.name || "",
+        symbol: params.symbol || "",
+        contractURI,
+        extensions: [],
+        extensionInstallData: [],
       });
   }
 }

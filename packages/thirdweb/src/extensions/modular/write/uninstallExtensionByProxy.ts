@@ -1,11 +1,11 @@
-import type { Chain } from "../../../../chains/types.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import {
   type ThirdwebContract,
   getContract,
-} from "../../../../contract/contract.js";
-import { resolveImplementation } from "../../../../utils/bytecode/resolveImplementation.js";
-import { uninstallExtension } from "../../__generated__/ModularCore/write/uninstallExtension.js";
+} from "../../../contract/contract.js";
+import { resolveImplementation } from "../../../utils/bytecode/resolveImplementation.js";
+import { uninstallExtension } from "../__generated__/ModularCore/write/uninstallExtension.js";
 
 export type UninstallExtensionByProxyOptions = {
   client: ThirdwebClient;

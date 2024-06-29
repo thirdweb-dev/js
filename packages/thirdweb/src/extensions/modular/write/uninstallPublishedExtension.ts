@@ -1,8 +1,8 @@
-import type { Chain } from "../../../../chains/types.js";
-import type { ThirdwebClient } from "../../../../client/client.js";
-import type { ThirdwebContract } from "../../../../contract/contract.js";
-import { getDeployedInfraContract } from "../../../../contract/deployment/utils/infra.js";
-import { uninstallExtension } from "../../__generated__/ModularCore/write/uninstallExtension.js";
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
+import { getDeployedInfraContract } from "../../../contract/deployment/utils/infra.js";
+import { uninstallExtension } from "../__generated__/ModularCore/write/uninstallExtension.js";
 
 export type UninstallPublishedExtensionOptions = {
   client: ThirdwebClient;
@@ -15,6 +15,24 @@ export type UninstallPublishedExtensionOptions = {
   extensionData?: `0x${string}`;
 };
 
+/**
+ * Uninstall a published extension by name from a modular contract
+ * @param options
+ * @returns the prepared transaction ready to be sent
+ * @example
+ * ```ts
+ * const uninstallTransaction = installPublishedExtension({
+ *  contract: modularContract,
+ *  chain,
+ *  client,
+ *  account,
+ *  extensionName: "YourExtensionName",
+ *  publisherAddress: "0x...",
+ * });
+ *
+ * sendTransaction({ transaction: uninstallTransaction, account });
+ * ```
+ */
 export function uninstallPublishedExtension(
   options: UninstallPublishedExtensionOptions,
 ) {
