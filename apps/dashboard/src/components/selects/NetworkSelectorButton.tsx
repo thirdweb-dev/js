@@ -20,7 +20,6 @@ import { Button } from "tw-components";
 import { thirdwebClient } from "../../@/constants/client";
 import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
 import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
-import { CustomChainRenderer } from "./CustomChainRenderer";
 
 interface NetworkSelectorButtonProps {
   disabledChainIds?: number[];
@@ -146,7 +145,8 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
                 chains: (chains ?? []).map(mapStoredChainTov5Chain),
               },
             ],
-            renderChain: CustomChainRenderer,
+            // TODO: bring this back when it works reliably
+            // renderChain: CustomChainRenderer,
             onCustomClick: networksEnabled
               ? undefined
               : () => {

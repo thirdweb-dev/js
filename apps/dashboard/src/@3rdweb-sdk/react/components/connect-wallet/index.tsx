@@ -1,6 +1,7 @@
 "use client";
 
 import { thirdwebClient } from "@/constants/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSupportedChains } from "@thirdweb-dev/react";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -14,87 +15,10 @@ import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { defineChain } from "thirdweb";
 import { ConnectButton, type SiweAuthOptions } from "thirdweb/react";
-import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
 import { GLOBAL_AUTH_TOKEN_KEY } from "../../../../constants/app";
 import { fetchAuthToken } from "../../hooks/useApi";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { popularChains } from "../popularChains";
-
-const AUTH_CONFIG: SiweAuthOptions = {
-  getLoginPayload: async (params) => {
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/payload`, {
-      method: "POST",
-      body: JSON.stringify({
-        address: params.address,
-        chainId: params.chainId.toString(),
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch login payload");
-    }
-    return (await res.json()).payload;
-  },
-  doLogin: async (payload) => {
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/login`, {
-      method: "POST",
-      body: JSON.stringify({ payload }),
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to login");
-    }
-    const json = await res.json();
-
-    if (json.token) {
-      // biome-ignore lint/suspicious/noExplicitAny: FIXME
-      (window as any)[GLOBAL_AUTH_TOKEN_KEY] = json.token;
-    }
-    return json;
-  },
-  doLogout: async () => {
-    // reset the token ASAP
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      throw new Error("Failed to logout");
-    }
-    return res.json();
-  },
-  isLoggedIn: async (address) => {
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/user`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) {
-      return false;
-    }
-
-    const { jwt } = await fetchAuthToken(address);
-    if (jwt) {
-      // biome-ignore lint/suspicious/noExplicitAny: FIXME
-      (window as any)[GLOBAL_AUTH_TOKEN_KEY] = jwt;
-      return true;
-    }
-
-    return false;
-  },
-};
 
 export interface ConnectWalletProps {
   shrinkMobile?: boolean;
@@ -137,9 +61,98 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
     ];
   }, [recentChainsv4, favChainsQuery.data]);
 
+  const queryClient = useQueryClient();
+
+  const authConfig = useMemo(() => {
+    if (noAuth) {
+      return undefined;
+    }
+    return {
+      getLoginPayload: async (params) => {
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/payload`, {
+          method: "POST",
+          body: JSON.stringify({
+            address: params.address,
+            chainId: params.chainId.toString(),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to fetch login payload");
+        }
+        return (await res.json()).payload;
+      },
+      doLogin: async (payload) => {
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/login`, {
+          method: "POST",
+          body: JSON.stringify({ payload }),
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to login");
+        }
+        const json = await res.json();
+
+        if (json.token) {
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
+          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = json.token;
+          queryClient.invalidateQueries({
+            queryKey: ["logged_in_user"],
+          });
+        }
+        return json;
+      },
+      doLogout: async () => {
+        // reset the token ASAP
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+        (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to logout");
+        }
+        return res.json();
+      },
+      isLoggedIn: async (address) => {
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/user`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          return false;
+        }
+
+        const { jwt } = await fetchAuthToken(address);
+        if (jwt) {
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
+          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = jwt;
+          queryClient.invalidateQueries({
+            queryKey: ["logged_in_user"],
+          });
+          return true;
+        }
+
+        return false;
+      },
+    } satisfies SiweAuthOptions;
+  }, [noAuth, queryClient]);
+
   return (
     <ConnectButton
-      auth={noAuth ? undefined : AUTH_CONFIG}
+      auth={authConfig}
       theme={t}
       client={thirdwebClient}
       connectModal={{
@@ -160,7 +173,8 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
           onSwitch(chain) {
             addRecentlyUsedChainId(chain.id);
           },
-          renderChain: CustomChainRenderer,
+          // TODO: bring this back when it works reliably
+          // renderChain: CustomChainRenderer,
         },
       }}
     />

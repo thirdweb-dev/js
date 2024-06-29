@@ -67,7 +67,6 @@ export function useSiweAuth(
       return authOptions.isLoggedIn(activeAccount.address);
     },
     refetchOnWindowFocus: false,
-    retry: false,
   });
 
   const loginMutation = useMutation({
