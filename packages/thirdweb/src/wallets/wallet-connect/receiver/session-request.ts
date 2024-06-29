@@ -1,3 +1,4 @@
+import type { ThirdwebClient } from "../../../client/client.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import type { Wallet } from "../../interfaces/wallet.js";
 import type {
@@ -23,11 +24,13 @@ export async function fulfillRequest(options: {
   wallet: Wallet;
   walletConnectClient: WalletConnectClient;
   event: WalletConnectSessionRequestEvent;
+  thirdwebClient: ThirdwebClient;
   handlers?: WalletConnectRequestHandlers;
 }) {
   const {
     wallet,
     walletConnectClient,
+    thirdwebClient,
     event: {
       topic,
       id,
@@ -145,6 +148,7 @@ export async function fulfillRequest(options: {
           result = await handleSendTransactionRequest({
             account,
             chainId,
+            thirdwebClient,
             params: request.params as WalletConnectTransactionRequestParams,
           });
         }

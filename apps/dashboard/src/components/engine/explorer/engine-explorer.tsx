@@ -1,5 +1,6 @@
 import { Box, DarkMode } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
+import "../../../css/swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";
 import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import dynamic from "next/dynamic";

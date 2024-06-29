@@ -1,4 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
@@ -80,6 +81,7 @@ describe("session_request", () => {
       walletConnectClient: signClientMock,
       wallet: walletMock,
       event: REQUEST_EVENT_MOCK,
+      thirdwebClient: TEST_CLIENT,
     });
     await expect(promise).rejects.toThrow(
       "No account connected to provided wallet",
@@ -94,6 +96,7 @@ describe("session_request", () => {
       walletConnectClient: signClientMock,
       wallet: walletMock,
       event: unsupportedRequest,
+      thirdwebClient: TEST_CLIENT,
     });
 
     expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -121,6 +124,7 @@ describe("session_request", () => {
       wallet: walletMock,
       event,
       handlers: customHandlers,
+      thirdwebClient: TEST_CLIENT,
     });
 
     await expect(promise).resolves.not.toThrow();
@@ -147,6 +151,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: personalSignRequest,
+        thirdwebClient: TEST_CLIENT,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
         topic: REQUEST_EVENT_MOCK.topic,
@@ -166,6 +171,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: personalSignRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -191,6 +197,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: personalSignRequest,
         handlers: customHandlers,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(customHandlers.personal_sign).toHaveBeenCalledWith({
@@ -224,6 +231,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignRequest,
+        thirdwebClient: TEST_CLIENT,
       });
       expect(signClientMock.respond).toHaveBeenCalledWith({
         topic: REQUEST_EVENT_MOCK.topic,
@@ -246,6 +254,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -271,6 +280,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: ethSignRequest,
         handlers: customHandlers,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(customHandlers.eth_sign).toHaveBeenCalledWith({
@@ -304,6 +314,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignTypedDataRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -327,6 +338,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignTypedDataRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -357,6 +369,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignTypedDataRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -380,6 +393,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignTypedDataRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -403,6 +417,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: ethSignTypedDataRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -428,6 +443,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: ethSignTypedDataRequest,
         handlers: customHandlers,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(customHandlers.eth_signTypedData_v4).toHaveBeenCalledWith({
@@ -460,6 +476,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: signTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -483,6 +500,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: signTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -512,6 +530,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: signTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -537,6 +556,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: signTransactionRequest,
         handlers: customHandlers,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(customHandlers.eth_signTransaction).toHaveBeenCalledWith({
@@ -572,6 +592,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -591,6 +612,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -621,6 +643,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -646,6 +669,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: sendTransactionRequest,
         handlers: customHandlers,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(customHandlers.eth_sendTransaction).toHaveBeenCalledWith({
@@ -683,6 +707,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendRawTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -702,6 +727,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendRawTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -725,6 +751,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: sendRawTransactionRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -751,6 +778,7 @@ describe("session_request", () => {
         wallet: walletMock,
         event: sendRawTransactionRequest,
         handlers: customHandlers,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(customHandlers.eth_sendRawTransaction).toHaveBeenCalledWith({
@@ -794,6 +822,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: addEthereumChainRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(signClientMock.respond).toHaveBeenCalledWith({
@@ -828,6 +857,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: switchEthereumChainRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(walletMock.switchChain).toHaveBeenCalledWith(
@@ -843,6 +873,7 @@ describe("session_request", () => {
         walletConnectClient: signClientMock,
         wallet: walletMock,
         event: switchEthereumChainRequest,
+        thirdwebClient: TEST_CLIENT,
       });
 
       expect(walletMock.switchChain).not.toHaveBeenCalled();

@@ -19,6 +19,7 @@
     "runtimes-node-module",
     "playground-web",
     "thirdweb-dashboard",
+    "wallet-ui",
     "@thirdweb-dev/auth",
     "@thirdweb-dev/chains",
     "@thirdweb-dev/cli",

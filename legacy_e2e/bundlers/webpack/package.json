@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "ora": "^8.0.1",
-    "webpack": "^5.91.0",
+    "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   }
 }

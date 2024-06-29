@@ -1,4 +1,7 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import { toUnits } from "../../../utils/units.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC20/write/mintTo.js";
@@ -6,14 +9,16 @@ import { mintTo as generatedMintTo } from "../__generated__/IMintableERC20/write
  * Represents the parameters for the `mintTo` function.
  */
 export type MintToParams = Prettify<
-  { to: string } & (
-    | {
-        amount: number | string;
-      }
-    | {
-        amountWei: bigint;
-      }
-  )
+  WithOverrides<
+    { to: string } & (
+      | {
+          amount: number | string;
+        }
+      | {
+          amountWei: bigint;
+        }
+    )
+  >
 >;
 
 /**
@@ -49,6 +54,7 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
       return {
         to: options.to,
         amount: amount,
+        overrides: options.overrides,
       } as const;
     },
   });
