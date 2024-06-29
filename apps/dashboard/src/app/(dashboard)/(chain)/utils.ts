@@ -10,7 +10,6 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 // TEMPORARY
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
-// END TEMPORARY
 
 export async function getChains() {
   const response = await fetch(
