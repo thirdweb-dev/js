@@ -2,12 +2,13 @@
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import invariant from "tiny-invariant";
 import type { Ecosystem } from "../../../types";
 import { useUpdateEcosystem } from "../../hooks/use-update-ecosystem";
 
 export function IntegrationPermissionsSection({
   ecosystem,
-}: { ecosystem: Ecosystem }) {
+}: { ecosystem?: Ecosystem }) {
   const { updateEcosystem, variables, isLoading } = useUpdateEcosystem({
     onError: (error) => {
       const message =
@@ -32,22 +33,24 @@ export function IntegrationPermissionsSection({
         <RadioGroup
           defaultValue={ecosystem?.permission}
           value={isLoading ? variables?.permission : ecosystem?.permission}
-          className="flex gap-4 py-2"
+          className={cn("flex gap-4 py-2", !ecosystem && "animate-pulse")}
         >
           <RadioGroupItemButton
             value="PARTNER_WHITELIST"
             id="PARTNER_WHITELIST"
+            disabled={!ecosystem}
             className={cn(
               isLoading &&
                 variables?.permission === "PARTNER_WHITELIST" &&
                 "animate-pulse",
             )}
-            onClick={() =>
+            onClick={() => {
+              invariant(ecosystem, "Ecosystem not found");
               updateEcosystem({
                 id: ecosystem.id,
                 permission: "PARTNER_WHITELIST",
-              })
-            }
+              });
+            }}
           >
             Allowlist
           </RadioGroupItemButton>
@@ -59,9 +62,11 @@ export function IntegrationPermissionsSection({
                 variables?.permission === "ANYONE" &&
                 "animate-pulse",
             )}
-            onClick={() =>
-              updateEcosystem({ id: ecosystem.id, permission: "ANYONE" })
-            }
+            disabled={!ecosystem}
+            onClick={() => {
+              invariant(ecosystem, "Ecosystem not found");
+              updateEcosystem({ id: ecosystem.id, permission: "ANYONE" });
+            }}
           >
             Public
           </RadioGroupItemButton>

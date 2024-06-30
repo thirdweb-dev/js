@@ -26,7 +26,7 @@ export default function Page() {
   // Keep showing the loading UI while we redirect if we have ecosystems
   if (userLoading || isLoading || ecosystems.length > 0) {
     return (
-      <div className="container flex flex-col gap-8 px-4 py-6">
+      <div className="container flex flex-col items-center justify-center gap-8 px-4 py-6">
         <Spinner className="size-8" />
       </div>
     );

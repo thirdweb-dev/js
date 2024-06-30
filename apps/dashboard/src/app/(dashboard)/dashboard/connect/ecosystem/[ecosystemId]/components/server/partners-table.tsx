@@ -1,5 +1,6 @@
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +9,18 @@ import { useDeletePartner } from "../../hooks/use-delete-partner";
 import { usePartners } from "../../hooks/use-partners";
 
 export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
-  const { partners } = usePartners({ ecosystemId: ecosystem.id });
+  const { partners, isLoading } = usePartners({ ecosystemId: ecosystem.id });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-2">
+        {Array.from({ length: 5 }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static list with index as key
+          <Skeleton key={i} className="w-full h-10 rounded-md" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <table className="w-full">
