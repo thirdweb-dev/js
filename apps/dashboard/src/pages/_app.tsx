@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import type { DehydratedState } from "@tanstack/react-query";
@@ -20,8 +21,6 @@ import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
 import { ThemeProvider } from "../@/components/theme-provider";
-import "../css/swagger-ui.css";
-import { Toaster } from "@/components/ui/toaster";
 import chakraTheme from "../theme";
 import "@/styles/globals.css";
 

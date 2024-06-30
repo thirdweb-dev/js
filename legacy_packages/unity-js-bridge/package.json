@@ -8,7 +8,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "dependencies": {
     "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/chains": "workspace:*",

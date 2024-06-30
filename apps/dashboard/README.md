@@ -2,20 +2,13 @@
 
 This repo contains the full source for all of thirdweb.com and the thirdweb dashboard.
 
-## Building
+## Starting a local dev server
 
-### Install dependencies
-
-We use `pnpm`.
+Run from the root folder (thirdweb-dev/js):
 
 ```sh
-pnpm install
-```
-
-### Starting local dev server.
-
-```sh
-pnpm dev
+cd <path/to/thirdweb-dev/js>
+pnpm dashboard
 ```
 
 ### Building for production

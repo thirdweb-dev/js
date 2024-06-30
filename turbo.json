@@ -22,6 +22,10 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "dependsOn": ["^build"]
     },
+    "wallet-ui#build": {
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/chains#build": {
       "outputs": ["dist/**", "chains/**"],
       "dependsOn": ["^build"],

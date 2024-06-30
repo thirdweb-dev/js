@@ -2,11 +2,11 @@ export const headerLinks = {
   left: [
     {
       name: "Connect",
-      href: "/dashboard/connect/playground",
+      href: "/dashboard/connect",
     },
     {
       name: "Contracts",
-      href: "/dashboard/contracts/deploy",
+      href: "/dashboard/contracts",
     },
     {
       name: "Engine",

@@ -756,6 +756,7 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
 });
 
 const TabButton = /* @__PURE__ */ (() =>
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   styled(Tabs.Trigger)((_) => {
     const theme = useCustomTheme();
     return {
@@ -797,6 +798,7 @@ const NetworkListUl = /* @__PURE__ */ StyledUl({
   boxSizing: "border-box",
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
@@ -824,6 +826,7 @@ const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
 });
 
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (_) => {
     const theme = useCustomTheme();
     return {

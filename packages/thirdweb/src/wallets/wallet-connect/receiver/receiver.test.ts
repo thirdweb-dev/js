@@ -146,6 +146,7 @@ describe("createWalletConnectClient", () => {
     });
 
     await listeners.session_delete?.({ topic: "test" });
+    await new Promise((resolve) => setTimeout(resolve, 300));
     expect(onDisconnect).toHaveBeenCalledWith({ topic: "test" });
   });
 

@@ -14,12 +14,12 @@ import type { EcosystemWalletId } from "../wallet-types.js";
 export async function getEcosystemWalletInfo(
   walletId: EcosystemWalletId,
 ): Promise<Prettify<WalletInfo>> {
-  const headers = new Headers();
-  headers.set("x-ecosystem-id", walletId);
   const res = await fetch(
     `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/ecosystem-wallet`,
     {
-      headers,
+      headers: {
+        "x-ecosystem-id": walletId,
+      },
     },
   );
 

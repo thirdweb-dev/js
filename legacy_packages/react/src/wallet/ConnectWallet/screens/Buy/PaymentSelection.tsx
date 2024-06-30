@@ -68,6 +68,7 @@ const CheckButton = /* @__PURE__ */ styled(Button)(
   },
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FloatingBadge = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

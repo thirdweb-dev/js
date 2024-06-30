@@ -65,6 +65,7 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           cache: false
+          version: nightly-c4a984fbf2c48b793c8cd53af84f56009dd1070c
 
       - run: pnpm test
 

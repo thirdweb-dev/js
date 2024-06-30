@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
@@ -14,7 +15,7 @@ const fontSans = interFont({
 });
 
 export const metadata: Metadata = {
-  title: "hirdweb: The complete web3 development platform",
+  title: "thirdweb: The complete web3 development platform",
   description:
     "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum & 700+ EVM chains. Try now.",
   openGraph: {
@@ -68,6 +69,7 @@ export default function RootLayout({
         >
           <PostHogPageView />
           <AppRouterProviders>{children}</AppRouterProviders>
+          <Toaster />
           <NextTopLoader
             color="hsl(var(--primary))"
             height={2}

@@ -7,6 +7,7 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { CopyTextButton } from "../../../../../../@/components/ui/CopyTextButton";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import { products } from "../../../components/server/products";
 import type { ChainSupportedService } from "../../../types/chain";
@@ -64,7 +65,16 @@ export async function ChainListRow({
         </div>
       </TableData>
 
-      <TableData>{chainId}</TableData>
+      <TableData>
+        <CopyTextButton
+          textToCopy={chainId.toString()}
+          textToShow={chainId.toString()}
+          tooltip="Copy Chain ID"
+          className="z-10 relative text-base"
+          variant="ghost"
+          copyIconPosition="right"
+        />
+      </TableData>
 
       <TableData>{currencySymbol}</TableData>
 

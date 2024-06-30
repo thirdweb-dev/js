@@ -70,13 +70,14 @@ export function ConnectButton(props: ConnectButtonProps) {
     });
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: functions not required
   useEffect(() => {
     if (visible) {
       openModal();
     } else {
       closeModal();
     }
-  }, [visible, openModal, closeModal]);
+  }, [visible]);
 
   return wallet && account ? (
     <ConnectedButton

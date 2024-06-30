@@ -125,6 +125,7 @@ export {
   getAddress,
   isAddress,
   shortenAddress,
+  shortenHex,
   type Address,
   type AddressInput,
 } from "../utils/address.js";

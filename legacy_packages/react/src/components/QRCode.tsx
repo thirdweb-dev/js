@@ -102,6 +102,7 @@ export const PlaceholderKeyframes = keyframes`
   100%{ background-position: -100% 0; }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const QRPlaceholder = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

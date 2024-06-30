@@ -1,0 +1,28 @@
+{
+  "name": "wallet-ui",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "biome check ./src",
+    "fix": "biome check ./src --fix"
+  },
+  "dependencies": {
+    "next": "14.2.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "thirdweb": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.4",
+    "typescript": "5.5.2"
+  }
+}

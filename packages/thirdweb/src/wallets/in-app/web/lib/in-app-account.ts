@@ -198,7 +198,7 @@ export class IFrameWallet {
     const partnerId = this.ecosystem?.partnerId;
     const isEcosystem = !!this.ecosystem;
 
-    const permissions = this.ecosystem
+    const permissions = this.ecosystem?.partnerId
       ? await getEcosystemPartnerPermissions(
           this.ecosystem.id,
           this.ecosystem?.partnerId,

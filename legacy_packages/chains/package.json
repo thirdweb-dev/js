@@ -20,7 +20,9 @@
     "typescript": "5.5.2"
   },
   "preconstruct": {
-    "entrypoints": ["index.ts"],
+    "entrypoints": [
+      "index.ts"
+    ],
     "exports": true
   },
   "sideEffects": false,

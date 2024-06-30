@@ -368,6 +368,7 @@ const plusAnimation = keyframes`
 }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PulsatingContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

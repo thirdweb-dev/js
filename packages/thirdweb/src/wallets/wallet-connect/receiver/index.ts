@@ -158,10 +158,17 @@ export const DefaultWalletConnectRequestHandlers = {
 export async function createWalletConnectClient(
   options: CreateWalletConnectClientOptions,
 ): Promise<WalletConnectClient> {
-  const { wallet, requestHandlers, chains, onConnect, onDisconnect } = options;
+  const {
+    wallet,
+    requestHandlers,
+    chains,
+    onConnect,
+    onDisconnect,
+    client: thirdwebClient,
+  } = options;
 
-  if (walletConnectClientCache.has(options.client)) {
-    return walletConnectClientCache.get(options.client) as WalletConnectClient;
+  if (walletConnectClientCache.has(thirdwebClient)) {
+    return walletConnectClientCache.get(thirdwebClient) as WalletConnectClient;
   }
 
   initializeSessionStore({ clientId: options.client.clientId });
@@ -206,6 +213,7 @@ export async function createWalletConnectClient(
         walletConnectClient,
         event,
         handlers: requestHandlers,
+        thirdwebClient,
       }).catch((error) => {
         if (options.onError) {
           options.onError(error as Error);
@@ -249,7 +257,10 @@ export async function createWalletConnectClient(
   // Disconnects can come from the user or the connected app, so we inject the callback to ensure its always triggered
   const _disconnect = walletConnectClient.disconnect;
   walletConnectClient.disconnect = async (args) => {
-    const result = await _disconnect(args);
+    const result = await _disconnect(args).catch(() => {
+      // no-op if already disconnected
+    });
+
     if (onDisconnect) {
       disconnectHook({ topic: args.topic, onDisconnect });
     }
@@ -323,6 +334,8 @@ export async function disconnectWalletConnectSession(options: {
   session: WalletConnectSession;
   walletConnectClient: WalletConnectClient;
 }): Promise<void> {
+  removeSession(options.session);
+
   try {
     await options.walletConnectClient.disconnect({
       topic: options.session.topic,
@@ -331,10 +344,9 @@ export async function disconnectWalletConnectSession(options: {
         message: "Disconnected",
       },
     });
-  } catch {
+  } catch (error) {
     // ignore, the session doesn't exist already
   }
-  removeSession(options.session);
 }
 
 /**
@@ -346,6 +358,7 @@ async function disconnectHook(options: {
 }) {
   const { topic, onDisconnect } = options;
   const sessions = await getSessions();
+
   onDisconnect(
     sessions.find((s) => s.topic === topic) ?? {
       topic,

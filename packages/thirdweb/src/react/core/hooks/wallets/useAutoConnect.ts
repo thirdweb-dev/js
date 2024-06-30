@@ -97,8 +97,7 @@ export function useAutoConnectCore(
         await handleWalletConnection(wallet);
         manager.addConnectedWallet(wallet);
       } catch (e) {
-        console.error("Failed to auto connect a non-active connected wallet");
-        console.error(e);
+        // no-op
       }
     }
     isAutoConnecting.setValue(false);

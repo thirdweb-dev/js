@@ -350,6 +350,7 @@ function TransactionInfo(props: { txInfo: TxStatusInfo }) {
 
 const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const IconBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
@@ -364,6 +365,7 @@ const IconBox = /* @__PURE__ */ StyledDiv((_) => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TxHashLink = /* @__PURE__ */ StyledAnchor((_) => {
   const theme = useCustomTheme();
   return {

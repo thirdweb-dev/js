@@ -10,6 +10,7 @@ import { StyledDiv } from "../design-system/elements";
 import { useCustomTheme } from "../design-system/CustomThemeProvider";
 import type { CSSObject } from "@emotion/react";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

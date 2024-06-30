@@ -105,6 +105,7 @@ export const Button = /* @__PURE__ */ StyledButton<ButtonProps>((props) => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const IconButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
@@ -125,6 +126,7 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const InputButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {

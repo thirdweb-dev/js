@@ -48,6 +48,12 @@ export function WalletConnectReceiverScreen(props: {
               queryKey: ["walletConnectSession"],
             });
           },
+          onDisconnect: () => {
+            setLoading(false);
+            queryClient.invalidateQueries({
+              queryKey: ["walletConnectSession"],
+            });
+          },
           onError: (error) => {
             setErrorConnecting(error.message);
             setLoading(false);

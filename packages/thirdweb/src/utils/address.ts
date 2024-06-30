@@ -112,5 +112,23 @@ export function getAddress(address: string): Address {
  */
 export function shortenAddress(address: string, length = 4) {
   const _address = getAddress(address);
-  return `${_address.slice(0, length + 2)}...${_address.slice(-length)}`;
+  return shortenHex(_address, length);
+}
+
+/**
+ * Shortens a hexadecimal string without performing any validation or checksumming.
+ * @param hex - The hexadecimal string to shorten.
+ * @param length - The number of characters to keep from the start and end of the string.
+ * @returns The shortened hexadecimal string.
+ * @example
+ * ```ts
+ * import { shortenHex } from 'thirdweb/utils';
+ *
+ * shortenHex('0xa0cf798816d4b9b9866b5330eea46a18382f251e');
+ * //=> '0xa0cf...251e'
+ * ```
+ * @utils
+ */
+export function shortenHex(hex: string, length = 4) {
+  return `${hex.slice(0, length + 2)}...${hex.slice(-length)}`;
 }

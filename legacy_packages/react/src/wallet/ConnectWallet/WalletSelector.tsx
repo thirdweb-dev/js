@@ -559,6 +559,7 @@ const WalletList = /* @__PURE__ */ StyledUl({
   paddingBottom: spacing.lg,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const WalletButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
