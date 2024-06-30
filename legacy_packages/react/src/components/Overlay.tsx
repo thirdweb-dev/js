@@ -11,6 +11,7 @@ const overlayEnter = keyframes`
   }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const Overlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

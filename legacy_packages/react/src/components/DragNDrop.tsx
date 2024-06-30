@@ -142,6 +142,7 @@ const UploadIconSecondary = /* @__PURE__ */ styled(UploadIcon)(() => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DropContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

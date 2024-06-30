@@ -41,6 +41,7 @@ export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
   },
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
@@ -69,6 +70,7 @@ export const drawerOpenAnimation = keyframes`
   }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const DrawerOverlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

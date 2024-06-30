@@ -27,7 +27,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@noble/hashes": "^1.4.0",
+    "@noble/hashes": "1.4.0",
     "js-sha3": "^0.9.3"
   },
   "devDependencies": {

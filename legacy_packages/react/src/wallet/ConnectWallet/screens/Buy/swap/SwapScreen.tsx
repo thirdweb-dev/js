@@ -643,6 +643,7 @@ function DrawerContent(props: {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledInput = /* @__PURE__ */ styled(Input)((_) => {
   const theme = useCustomTheme();
   return {

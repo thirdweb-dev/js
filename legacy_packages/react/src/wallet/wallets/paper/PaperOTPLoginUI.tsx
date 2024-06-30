@@ -270,6 +270,7 @@ export const PaperOTPLoginUI: React.FC<PaperOTPLoginUIProps> = (props) => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LinkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {

@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
-    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dialog": "1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
@@ -31,11 +31,11 @@
     "thirdweb": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
+    "@types/node": "20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
     "babel-plugin-react-compiler": "0.0.0-experimental-592953e-20240517",
-    "eslint": "^8",
+    "eslint": "8.57.0",
     "eslint-config-next": "14.2.4",
     "eslint-plugin-react-compiler": "0.0.0-experimental-51a85ea-20240601",
     "postcss": "^8",

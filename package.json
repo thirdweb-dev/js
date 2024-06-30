@@ -11,9 +11,9 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "lint": "turbo run lint",
+    "lint": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk && turbo run lint",
     "lint:legacy": "pnpm lint",
-    "fix": "turbo run fix",
+    "fix": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk --fix && turbo run fix",
     "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb",
@@ -40,7 +40,7 @@
     "hotlink-init": "node ./scripts/hotlink/hotlink-init.mjs",
     "hotlink-revert": "node ./scripts/hotlink/hotlink-revert.mjs"
   },
-  "dependencies": {
+  "devDependencies": {
     "@changesets/changelog-github": "0.5.0",
     "@changesets/cli": "2.27.6",
     "@manypkg/cli": "0.21.4",
@@ -48,10 +48,7 @@
     "@playwright/test": "1.44.1",
     "@types/node": "20.14.9",
     "turbo": "2.0.6",
-    "yalc": "1.0.0-pre.53"
-  },
-  "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______": "_______ALL_PACKAGE_DEV_DEPENDENCIES_GO_IN_HERE_SO_CONSUMERS_DONT_END_UP_INSTALLING_THEM______",
-  "devDependencies": {
+    "yalc": "1.0.0-pre.53",
     "@babel/plugin-transform-flow-strip-types": "^7.24.7",
     "@babel/plugin-transform-private-methods": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
@@ -105,7 +102,9 @@
       "braces@<3.0.3": "3.0.3",
       "ws@>=8.0.0 <8.17.1": "8.17.1",
       "ws@>=7.0.0 <7.5.10": "7.5.10",
-      "ws@>=6.0.0 <6.2.3": "6.2.3"
+      "ws@>=6.0.0 <6.2.3": "6.2.3",
+      "eslint": "8.57.0",
+      "@typescript-eslint/typescript-estree": "^7.14.1"
     }
   },
   "packageManager": "pnpm@9.4.0"
