@@ -17,7 +17,6 @@ export function EcosystemPartnersSection({
       </div>
 
       <AddPartnerForm ecosystemId={ecosystem.id} />
-
       <PartnersTable ecosystem={ecosystem} />
     </section>
   );

@@ -18,7 +18,7 @@ export function IntegrationPermissionsSection({
   });
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-4 md:space-y-8">
       <div className="space-y-2">
         <h4 className="text-2xl font-semibold text-foreground">
           Integration permissions
@@ -29,49 +29,48 @@ export function IntegrationPermissionsSection({
             : "Anyone can add your wallet to their app."}
         </p>
       </div>
-      <div className="flex gap-4">
-        <RadioGroup
-          defaultValue={ecosystem?.permission}
-          value={isLoading ? variables?.permission : ecosystem?.permission}
-          className={cn("flex gap-4 py-2", !ecosystem && "animate-pulse")}
+      <RadioGroup
+        defaultValue={ecosystem?.permission}
+        value={isLoading ? variables?.permission : ecosystem?.permission}
+        className={cn(
+          "flex flex-col md:flex-row md:space-x-4 py-2",
+          !ecosystem && "animate-pulse",
+        )}
+      >
+        <RadioGroupItemButton
+          value="PARTNER_WHITELIST"
+          id="PARTNER_WHITELIST"
+          disabled={!ecosystem}
+          className={cn(
+            isLoading &&
+              variables?.permission === "PARTNER_WHITELIST" &&
+              "animate-pulse",
+          )}
+          onClick={() => {
+            invariant(ecosystem, "Ecosystem not found");
+            updateEcosystem({
+              id: ecosystem.id,
+              permission: "PARTNER_WHITELIST",
+            });
+          }}
         >
-          <RadioGroupItemButton
-            value="PARTNER_WHITELIST"
-            id="PARTNER_WHITELIST"
-            disabled={!ecosystem}
-            className={cn(
-              isLoading &&
-                variables?.permission === "PARTNER_WHITELIST" &&
-                "animate-pulse",
-            )}
-            onClick={() => {
-              invariant(ecosystem, "Ecosystem not found");
-              updateEcosystem({
-                id: ecosystem.id,
-                permission: "PARTNER_WHITELIST",
-              });
-            }}
-          >
-            Allowlist
-          </RadioGroupItemButton>
-          <RadioGroupItemButton
-            value="ANYONE"
-            id="ANYONE"
-            className={cn(
-              isLoading &&
-                variables?.permission === "ANYONE" &&
-                "animate-pulse",
-            )}
-            disabled={!ecosystem}
-            onClick={() => {
-              invariant(ecosystem, "Ecosystem not found");
-              updateEcosystem({ id: ecosystem.id, permission: "ANYONE" });
-            }}
-          >
-            Public
-          </RadioGroupItemButton>
-        </RadioGroup>
-      </div>
+          Allowlist
+        </RadioGroupItemButton>
+        <RadioGroupItemButton
+          value="ANYONE"
+          id="ANYONE"
+          className={cn(
+            isLoading && variables?.permission === "ANYONE" && "animate-pulse",
+          )}
+          disabled={!ecosystem}
+          onClick={() => {
+            invariant(ecosystem, "Ecosystem not found");
+            updateEcosystem({ id: ecosystem.id, permission: "ANYONE" });
+          }}
+        >
+          Public
+        </RadioGroupItemButton>
+      </RadioGroup>
     </section>
   );
 }

@@ -7,7 +7,7 @@ export default function Layout({
 }: { children: React.ReactNode; params: { ecosystemId: string } }) {
   // TODO: check if the user has an access token, if they don't redirect them
   return (
-    <div className="flex flex-col w-full px-4 py-10">
+    <div className="flex flex-col w-full px-2 py-10 sm:px-4">
       <EcosystemHeader ecosystemId={params.ecosystemId} />
       <Separator className="my-6" />
       {children}

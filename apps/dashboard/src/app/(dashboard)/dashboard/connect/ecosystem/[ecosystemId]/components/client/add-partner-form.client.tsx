@@ -61,15 +61,15 @@ export function AddPartnerForm({ ecosystemId }: { ecosystemId: string }) {
             permissions: "PROMPT_USER_V1",
           }),
         )}
-        className="flex space-x-2"
+        className="flex flex-col gap-2 md:flex-row"
       >
-        <div className="grid grid-cols-11 space-x-2 grow">
+        <div className="grid gap-2 md:grid-cols-11 grow">
           <FormField
             control={form.control}
             name="name"
             defaultValue="" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
-              <FormItem className="col-span-3">
+              <FormItem className="col-span-4 md:col-span-3">
                 <FormControl>
                   <Input
                     placeholder="App name"
@@ -77,7 +77,6 @@ export function AddPartnerForm({ ecosystemId }: { ecosystemId: string }) {
                     value={field.value}
                   />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -91,7 +90,7 @@ export function AddPartnerForm({ ecosystemId }: { ecosystemId: string }) {
                 <FormControl>
                   <>
                     <Input placeholder="Domains" className="peer" {...field} />
-                    <FormDescription className="text-xs transition-all -translate-y-4 opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0">
+                    <FormDescription className="hidden text-xs transition-all md:block md:-translate-y-4 md:opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0">
                       Space-separated list of domains to allow
                     </FormDescription>
                   </>
@@ -113,7 +112,7 @@ export function AddPartnerForm({ ecosystemId }: { ecosystemId: string }) {
                       className="peer"
                       {...field}
                     />
-                    <FormDescription className="text-xs transition-all -translate-y-4 opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0">
+                    <FormDescription className="hidden text-xs transition-all md:block md:-translate-y-4 md:opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0">
                       Space-separated list of bundle IDs
                     </FormDescription>
                   </>
@@ -124,7 +123,12 @@ export function AddPartnerForm({ ecosystemId }: { ecosystemId: string }) {
           />
         </div>
 
-        <Button disabled={isLoading} type="submit" variant="outline">
+        <Button
+          disabled={isLoading}
+          type="submit"
+          variant="outline"
+          className="w-full md:w-auto"
+        >
           Add
         </Button>
       </form>
