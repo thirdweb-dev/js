@@ -43,6 +43,7 @@ export type FiatConfirmationScreenUIProps = {
     } | null;
     onSwapClick: () => void;
     estimatedTimeToSwap: string;
+    refetchSwapQuote: () => void;
   } | null;
   fiatFrom: {
     currency: CurrencyMeta;
@@ -65,6 +66,10 @@ export type FiatConfirmationScreenUIProps = {
           chain: Chain;
           txHash: string;
         };
+      }
+    | {
+        activeStep: "swap" | "approve";
+        status: "fetching-quote" | "quote-fetch-error";
       };
   activeChain: Chain;
   onOnrampClick: () => void;
@@ -378,19 +383,6 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
           </StepContainer>
         )}
 
-        {/* Approve Button */}
-        {props.state.activeStep === "approve" &&
-          props.swapRequired?.approvalRequired && (
-            <WithSwitchNetworkButton
-              activeChain={props.activeChain}
-              isLoading={props.state.status === "pending"}
-              label="Approve"
-              loadingLabel="Approving"
-              onClick={props.swapRequired.approvalRequired.onApproveClick}
-              targetChain={props.swapRequired.swapFrom.chain}
-            />
-          )}
-
         {/* onramp Tx Button */}
         {props.state.activeStep === "onramp" && (
           <Button
@@ -410,16 +402,53 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
           </Button>
         )}
 
-        {/* Swap Button */}
-        {props.state.activeStep === "swap" && props.swapRequired && (
-          <WithSwitchNetworkButton
-            activeChain={props.activeChain}
-            isLoading={props.state.status === "pending"}
-            label="Swap"
-            loadingLabel="Swapping"
-            onClick={props.swapRequired.onSwapClick}
-            targetChain={props.swapRequired.swapFrom.chain}
-          />
+        {props.state.status === "fetching-quote" && props.swapRequired ? (
+          <Button variant="outline" disabled aria-disabled gap="xs" fullWidth>
+            Refreshing Quote
+            <Spinner size="sm" color="accentText" />
+          </Button>
+        ) : props.state.status === "quote-fetch-error" && props.swapRequired ? (
+          <>
+            <Button
+              variant="accent"
+              gap="xs"
+              fullWidth
+              onClick={props.swapRequired.refetchSwapQuote}
+            >
+              Try again
+            </Button>
+            <Spacer y="md" />
+            <Text color="danger" center size="sm">
+              Failed to refresh quote
+            </Text>
+          </>
+        ) : (
+          <>
+            {/* Approve Button */}
+            {props.state.activeStep === "approve" &&
+              props.swapRequired?.approvalRequired && (
+                <WithSwitchNetworkButton
+                  activeChain={props.activeChain}
+                  isLoading={props.state.status === "pending"}
+                  label="Approve"
+                  loadingLabel="Approving"
+                  onClick={props.swapRequired.approvalRequired.onApproveClick}
+                  targetChain={props.swapRequired.swapFrom.chain}
+                />
+              )}
+
+            {/* Swap Button */}
+            {props.state.activeStep === "swap" && props.swapRequired && (
+              <WithSwitchNetworkButton
+                activeChain={props.activeChain}
+                isLoading={props.state.status === "pending"}
+                label="Swap"
+                loadingLabel="Swapping"
+                onClick={props.swapRequired.onSwapClick}
+                targetChain={props.swapRequired.swapFrom.chain}
+              />
+            )}
+          </>
         )}
 
         {/* Execute Tx Button */}
@@ -454,7 +483,7 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
 
         {/* Estimated time - onramp */}
         {!onlyOnrampRequired &&
-          props.state.status !== "error" &&
+          (props.state.status === "pending" || props.state.status === "idle") &&
           props.state.activeStep === "onramp" && (
             <>
               <Spacer y="md" />
@@ -466,7 +495,7 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
 
         {/* Estimated time - swap */}
         {props.swapRequired &&
-          props.state.status !== "error" &&
+          (props.state.status === "idle" || props.state.status === "pending") &&
           props.state.activeStep === "swap" &&
           props.swapRequired.swapFrom.chain === props.activeChain && (
             <>

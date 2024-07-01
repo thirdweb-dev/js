@@ -115,6 +115,7 @@ function OnrampAndOneStepSwap(props: {
         chain: polygon,
         token: { nativeToken: true },
       },
+      refetchSwapQuote: noop,
     },
     txInfo: null,
     fiatFrom: {
@@ -160,6 +161,32 @@ function OnrampAndOneStepSwap(props: {
           state={{
             activeStep: "onramp",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Fetching postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "fetching-quote",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Failed to fetch postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "quote-fetch-error",
           }}
         />
       </ScreenContainer>
@@ -238,6 +265,7 @@ function OnrampAndTwoStepSwap(props: {
         chain: polygon,
         token: { nativeToken: true },
       },
+      refetchSwapQuote: noop,
     },
     txInfo: null,
     fiatFrom: {
@@ -283,6 +311,32 @@ function OnrampAndTwoStepSwap(props: {
           state={{
             activeStep: "onramp",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Fetching postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "approve",
+            status: "fetching-quote",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Failed to fetch postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "approve",
+            status: "quote-fetch-error",
           }}
         />
       </ScreenContainer>
@@ -411,6 +465,7 @@ function OnrampAndTwoStepSwapTx(props: {
         chain: polygon,
         token: { nativeToken: true },
       },
+      refetchSwapQuote: noop,
     },
     fiatFrom: {
       amount: "34.32",
@@ -455,6 +510,32 @@ function OnrampAndTwoStepSwapTx(props: {
           state={{
             activeStep: "onramp",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Fetching postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "approve",
+            status: "fetching-quote",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Failed to fetch postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "approve",
+            status: "quote-fetch-error",
           }}
         />
       </ScreenContainer>
@@ -622,6 +703,7 @@ function OnrampOneStepSwapTx(props: {
         chain: polygon,
         token: { nativeToken: true },
       },
+      refetchSwapQuote: noop,
     },
     fiatFrom: {
       amount: "34.32",
@@ -666,6 +748,32 @@ function OnrampOneStepSwapTx(props: {
           state={{
             activeStep: "onramp",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Fetching postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "fetching-quote",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer
+        theme={props.theme}
+        label="Failed to fetch postonramp Swap quote"
+      >
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "quote-fetch-error",
           }}
         />
       </ScreenContainer>
