@@ -14,7 +14,6 @@ import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletB
 import { useBuyWithCryptoQuote } from "../../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
@@ -139,7 +138,6 @@ export function SwapScreenMainUI(props: {
     Number(fromTokenBalanceQuery.data.displayValue) < Number(sourceTokenAmount);
 
   const disableContinue = !quoteQuery.data || isNotEnoughBalance;
-  const switchChainRequired = props.activeChain.id !== fromChain.id;
 
   function getErrorMessage(err: Error) {
     const defaultMessage = "Unable to get price quote";
@@ -221,36 +219,29 @@ export function SwapScreenMainUI(props: {
       )}
 
       {/* Button */}
-      {switchChainRequired &&
-      !quoteQuery.isLoading &&
-      !isNotEnoughBalance &&
-      !quoteQuery.error ? (
-        <SwitchNetworkButton variant="accent" fullWidth chain={fromChain} />
-      ) : (
-        <Button
-          variant={disableContinue ? "outline" : "accent"}
-          fullWidth
-          data-disabled={disableContinue}
-          disabled={disableContinue}
-          onClick={async () => {
-            if (!disableContinue) {
-              showSwapFlow();
-            }
-          }}
-          gap="xs"
-        >
-          {isNotEnoughBalance ? (
-            <Text color="danger">Not Enough Funds</Text>
-          ) : quoteQuery.isLoading ? (
-            <>
-              Getting price quote
-              <Spinner size="sm" color="accentText" />
-            </>
-          ) : (
-            "Continue"
-          )}
-        </Button>
-      )}
+      <Button
+        variant={disableContinue ? "outline" : "accent"}
+        fullWidth
+        data-disabled={disableContinue}
+        disabled={disableContinue}
+        onClick={async () => {
+          if (!disableContinue) {
+            showSwapFlow();
+          }
+        }}
+        gap="xs"
+      >
+        {isNotEnoughBalance ? (
+          <Text color="danger">Not Enough Funds</Text>
+        ) : quoteQuery.isLoading ? (
+          <>
+            Getting price quote
+            <Spinner size="sm" color="accentText" />
+          </>
+        ) : (
+          "Continue"
+        )}
+      </Button>
     </Container>
   );
 

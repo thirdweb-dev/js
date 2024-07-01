@@ -211,7 +211,7 @@ export function WithSwitchNetworkButton(props: {
   loadingLabel: string;
   isLoading: boolean;
 }) {
-  if (props.targetChain.id === props.activeChain.id) {
+  if (props.targetChain.id === props.activeChain.id || props.isLoading) {
     return (
       <Button fullWidth variant="accent" gap="xs" onClick={props.onClick}>
         {props.isLoading ? (
