@@ -1,7 +1,6 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import {
   fontSize,
@@ -46,7 +45,7 @@ export function SwapDetailsScreen(props: {
       <Line />
 
       <Container p="lg">
-        <SwapTxDetailsTable type="status" status={status} client={client} />
+        <SwapTxDetailsTable status={status} client={client} />
       </Container>
     </Container>
   );
@@ -67,7 +66,7 @@ export function SwapDetailsScreenUI(props: {
       <Line />
 
       <Container p="lg">
-        <SwapTxDetailsTable type="status" status={status} client={client} />
+        <SwapTxDetailsTable status={status} client={client} />
       </Container>
     </Container>
   );
@@ -99,77 +98,49 @@ type SwapTxDetailsData = {
   estimatedDuration: number;
 };
 
-export function SwapTxDetailsTable(
-  props:
-    | {
-        type: "quote";
-        quote: BuyWithCryptoQuote;
-        client: ThirdwebClient;
-      }
-    | {
-        client: ThirdwebClient;
-        type: "status";
-        status: ValidBuyWithCryptoStatus;
-        hideStatusRow?: boolean;
-      },
-) {
-  let uiData: SwapTxDetailsData;
+export function SwapTxDetailsTable(props: {
+  client: ThirdwebClient;
+  status: ValidBuyWithCryptoStatus;
+  hideStatusRow?: boolean;
+}) {
   let showStatusRow = true;
-  if (props.type === "status") {
-    const status = props.status;
-    if (props.hideStatusRow) {
-      showStatusRow = false;
-    }
 
-    const isPartialSuccess =
-      status.status === "COMPLETED" && status.subStatus === "PARTIAL_SUCCESS";
+  const status = props.status;
 
-    uiData = {
-      fromToken: {
-        chainId: status.quote.fromToken.chainId,
-        symbol: status.quote.fromToken.symbol || "",
-        address: status.quote.fromToken.tokenAddress,
-        amount: status.quote.fromAmount,
-      },
-      quotedToToken: {
-        chainId: status.quote.toToken.chainId,
-        symbol: status.quote.toToken.symbol || "",
-        address: status.quote.toToken.tokenAddress,
-        amount: status.quote.toAmount,
-      },
-      gotToken: status.destination
-        ? {
-            chainId: status.destination.token.chainId,
-            symbol: status.destination.token.symbol || "",
-            address: status.destination.token.tokenAddress,
-            amount: status.destination.amount,
-          }
-        : undefined,
-      statusMeta: getBuyWithCryptoStatusMeta(status),
-      estimatedDuration: status.quote.estimated.durationSeconds || 0,
-      isPartialSuccess,
-      destinationTxHash: status.destination?.transactionHash,
-      sourceTxHash: status.source?.transactionHash,
-    };
-  } else {
-    const quote = props.quote;
-    uiData = {
-      fromToken: {
-        chainId: quote.swapDetails.fromToken.chainId,
-        symbol: quote.swapDetails.fromToken.symbol || "",
-        address: quote.swapDetails.fromToken.tokenAddress,
-        amount: quote.swapDetails.fromAmount,
-      },
-      quotedToToken: {
-        chainId: quote.swapDetails.toToken.chainId,
-        symbol: quote.swapDetails.toToken.symbol || "",
-        address: quote.swapDetails.toToken.tokenAddress,
-        amount: quote.swapDetails.toAmount,
-      },
-      isPartialSuccess: false,
-      estimatedDuration: quote.swapDetails.estimated.durationSeconds || 0,
-    };
+  if (props.hideStatusRow) {
+    showStatusRow = false;
   }
+
+  const isPartialSuccess =
+    status.status === "COMPLETED" && status.subStatus === "PARTIAL_SUCCESS";
+
+  const uiData: SwapTxDetailsData = {
+    fromToken: {
+      chainId: status.quote.fromToken.chainId,
+      symbol: status.quote.fromToken.symbol || "",
+      address: status.quote.fromToken.tokenAddress,
+      amount: status.quote.fromAmount,
+    },
+    quotedToToken: {
+      chainId: status.quote.toToken.chainId,
+      symbol: status.quote.toToken.symbol || "",
+      address: status.quote.toToken.tokenAddress,
+      amount: status.quote.toAmount,
+    },
+    gotToken: status.destination
+      ? {
+          chainId: status.destination.token.chainId,
+          symbol: status.destination.token.symbol || "",
+          address: status.destination.token.tokenAddress,
+          amount: status.destination.amount,
+        }
+      : undefined,
+    statusMeta: getBuyWithCryptoStatusMeta(status),
+    estimatedDuration: status.quote.estimated.durationSeconds || 0,
+    isPartialSuccess,
+    destinationTxHash: status.destination?.transactionHash,
+    sourceTxHash: status.source?.transactionHash,
+  };
 
   const { client } = props;
 
@@ -179,7 +150,6 @@ export function SwapTxDetailsTable(
     statusMeta,
     sourceTxHash,
     destinationTxHash,
-    isPartialSuccess,
     gotToken,
     estimatedDuration,
   } = uiData;
