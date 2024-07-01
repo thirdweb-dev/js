@@ -389,7 +389,7 @@ function SwapApproveTx(props: {
           {...generalProps}
           state={{
             activeStep: "sendTx",
-            status: "pending",
+            status: "idle",
           }}
           activeChain={ethereum}
         />
@@ -540,7 +540,7 @@ function SwapAndTx(props: {
           {...generalProps}
           state={{
             activeStep: "sendTx",
-            status: "pending",
+            status: "idle",
           }}
           activeChain={ethereum}
         />
