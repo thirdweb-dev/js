@@ -17,7 +17,6 @@ export function FiatDetailsScreen(props: {
   onBack: () => void;
   client: ThirdwebClient;
   onDone: () => void;
-  isBuyForTx: boolean;
   isEmbed: boolean;
   activeChain: Chain;
   activeWallet: Wallet;
@@ -52,7 +51,6 @@ export function FiatDetailsScreenUI(props: {
   onBack: () => void;
   client: ThirdwebClient;
   onDone: () => void;
-  isBuyForTx: boolean;
   isEmbed: boolean;
   stopPollingStatus: () => void;
   activeChain: Chain;
@@ -71,7 +69,6 @@ export function FiatDetailsScreenUI(props: {
         status={status}
         onBack={props.onBack}
         onViewPendingTx={props.onBack}
-        isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
         quote={{
           fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,

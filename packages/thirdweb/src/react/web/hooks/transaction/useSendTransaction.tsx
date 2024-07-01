@@ -156,10 +156,6 @@ function ModalContent(props: ModalProps) {
         onBack={() => {
           setScreen("buy");
         }}
-        onDone={() => {
-          setScreen("execute-tx");
-        }}
-        isBuyForTx={true}
         isEmbed={false}
       />
     );

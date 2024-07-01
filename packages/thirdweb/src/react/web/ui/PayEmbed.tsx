@@ -208,10 +208,6 @@ export function PayEmbed(props: PayEmbedProps) {
             onBack={() => {
               setScreen("buy");
             }}
-            onDone={() => {
-              // noop
-            }}
-            isBuyForTx={false}
             isEmbed={true}
           />
         )}

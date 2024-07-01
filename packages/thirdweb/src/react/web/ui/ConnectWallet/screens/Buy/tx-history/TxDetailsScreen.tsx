@@ -10,7 +10,6 @@ export function TxDetailsScreen(props: {
   statusInfo: TxStatusInfo;
   onBack: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
   isEmbed: boolean;
   activeChain: Chain;
   activeWallet: Wallet;
@@ -34,7 +33,6 @@ export function TxDetailsScreen(props: {
         status={statusInfo.status}
         onBack={props.onBack}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
         activeChain={props.activeChain}
         activeWallet={props.activeWallet}

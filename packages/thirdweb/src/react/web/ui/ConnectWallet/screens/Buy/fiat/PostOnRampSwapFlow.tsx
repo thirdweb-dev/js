@@ -20,7 +20,6 @@ export function PostOnRampSwapFlow(props: {
   onViewPendingTx: () => void;
   onDone: () => void;
   onSwapFlowStarted: () => void;
-  isBuyForTx: boolean;
   isEmbed: boolean;
   activeChain: Chain;
   activeWallet: Wallet;
@@ -37,7 +36,6 @@ export function PostOnRampSwapFlow(props: {
         client={props.client}
         onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
         activeChain={props.activeChain}
         activeWallet={props.activeWallet}

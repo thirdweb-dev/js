@@ -68,7 +68,6 @@ function TransactionHistoryTest(props: {
           >
             <FiatDetailsScreenUI
               client={storyClient}
-              isBuyForTx={false}
               isEmbed={true}
               onBack={noop}
               onDone={noop}
@@ -85,7 +84,6 @@ function TransactionHistoryTest(props: {
           >
             <FiatDetailsScreenUI
               client={storyClient}
-              isBuyForTx={false}
               isEmbed={true}
               onBack={noop}
               onDone={noop}
@@ -102,7 +100,6 @@ function TransactionHistoryTest(props: {
           >
             <FiatDetailsScreenUI
               client={storyClient}
-              isBuyForTx={false}
               isEmbed={true}
               onBack={noop}
               onDone={noop}
@@ -120,7 +117,6 @@ function TransactionHistoryTest(props: {
         >
           <TxDetailsScreen
             client={storyClient}
-            isBuyForTx={false}
             isEmbed={true}
             onBack={noop}
             onDone={noop}

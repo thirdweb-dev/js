@@ -22,7 +22,6 @@ export function PostOnRampSwap(props: {
   onBack: null | (() => void);
   onViewPendingTx: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
   isEmbed: boolean;
   activeChain: Chain;
   activeWallet: Wallet;

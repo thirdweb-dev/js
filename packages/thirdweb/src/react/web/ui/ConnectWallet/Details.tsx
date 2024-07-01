@@ -600,11 +600,9 @@ function DetailsModal(props: {
   if (screen === "pending-tx") {
     content = (
       <BuyTxHistory
-        isBuyForTx={false}
         isEmbed={false}
         onBack={() => setScreen("main")}
         client={client}
-        onDone={closeModal}
       />
     );
   }

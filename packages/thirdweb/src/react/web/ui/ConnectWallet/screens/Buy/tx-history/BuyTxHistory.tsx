@@ -42,8 +42,6 @@ import {
 export function BuyTxHistory(props: {
   onBack?: () => void;
   client: ThirdwebClient;
-  onDone: () => void;
-  isBuyForTx: boolean;
   isEmbed: boolean;
 }) {
   const [pageIndex, setPageIndex] = useState(0);
@@ -62,8 +60,9 @@ export function BuyTxHistory(props: {
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}
-        onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        onDone={() => {
+          setSelectedTx(null);
+        }}
         isEmbed={props.isEmbed}
         activeChain={activeChain}
         activeWallet={activeWallet}
@@ -79,6 +78,9 @@ export function BuyTxHistory(props: {
       setPageIndex={setPageIndex}
       account={account}
       activeChain={activeChain}
+      onDone={() => {
+        setSelectedTx(null);
+      }}
     />
   );
 }
