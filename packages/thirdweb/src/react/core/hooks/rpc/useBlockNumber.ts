@@ -22,6 +22,7 @@ export type UseBlockNumberOptions = {
  * import { useBlockNumber } from "thirdweb/react";
  * const blockNumber = useBlockNumber({client, chain});
  * ```
+ * @utils
  */
 export function useBlockNumber(options: UseBlockNumberOptions) {
   const { client, chain, enabled = true, watch = true } = options;

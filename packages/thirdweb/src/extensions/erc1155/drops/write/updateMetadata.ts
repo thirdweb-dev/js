@@ -101,6 +101,7 @@ export async function getUpdateMetadataParams(
  * @example
  * ```ts
  * import { updateMetadata } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = updateMetadata({
  *  contract,
@@ -112,6 +113,8 @@ export async function getUpdateMetadataParams(
  *    // ...
  *  }
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function updateMetadata(

@@ -153,7 +153,7 @@ export const DefaultWalletConnectRequestHandlers = {
  *   },
  * });
  * ```
- * @wallets
+ * @wallet
  */
 export async function createWalletConnectClient(
   options: CreateWalletConnectClientOptions,
@@ -289,7 +289,7 @@ export async function createWalletConnectClient(
  *   uri: "wc:...",
  * });
  * ```
- * @wallets
+ * @wallet
  */
 export function createWalletConnectSession(
   options: CreateWalletConnectSessionOptions,
@@ -308,7 +308,7 @@ export function createWalletConnectSession(
  *
  * const sessions = await getActiveWalletConnectSessions();
  * ```
- * @wallets
+ * @wallet
  */
 export async function getActiveWalletConnectSessions(): Promise<
   WalletConnectSession[]
@@ -328,7 +328,7 @@ export async function getActiveWalletConnectSessions(): Promise<
  *   walletConnectClient: wcClient,
  * });
  * ```
- * @wallets
+ * @wallet
  */
 export async function disconnectWalletConnectSession(options: {
   session: WalletConnectSession;

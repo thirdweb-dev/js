@@ -23,11 +23,14 @@ export type AcceptOfferParams = GeneratedAcceptOfferParams;
  * @example
  * ```ts
  * import { acceptOffer } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const acceptOfferTx = acceptOffer({
  *  contract,
  *  offerId: 1n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function acceptOffer(

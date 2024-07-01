@@ -26,6 +26,7 @@ export type TransferFromParams = Prettify<
  * @example
  * ```ts
  * import { transferFrom } from "thirdweb/extensions/erc20";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = transferFrom({
  *  contract: USDC_CONTRACT,
@@ -33,6 +34,8 @@ export type TransferFromParams = Prettify<
  *  to: "0x5678...",
  *  amount: 100,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function transferFrom(

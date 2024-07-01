@@ -1135,6 +1135,7 @@ export type UseWalletDetailsModalOptions = {
  *   return <button onClick={handleClick}> Show Wallet Details </button>
  * }
  * ```
+ * @wallet
  */
 export function useWalletDetailsModal() {
   const account = useActiveAccount();

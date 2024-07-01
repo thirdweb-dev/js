@@ -23,6 +23,7 @@ import {
  * @example
  * ```ts
  * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
  *
  * const { payload, signature } = await generateMintSignature(...)
  *

@@ -20,6 +20,7 @@ export type GetGasPriceOptions = {
  *
  * const gasPrice = await getGasPrice({ client, chain });
  * ```
+ * @utils
  */
 export async function getGasPrice(
   options: GetGasPriceOptions,

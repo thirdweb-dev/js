@@ -24,10 +24,14 @@ export type RegisterFidParams = {
  * @example
  * ```ts
  * import { registerFid } from "thirdweb/extensions/farcaster";
- * const tx = await registerFid({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = registerFid({
  *  client,
  * 	recoveryAddress
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function registerFid(options: RegisterFidParams) {

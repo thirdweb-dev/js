@@ -76,10 +76,11 @@ export type UpdateListingParams = {
  * @example
  * ```typescript
  * import { updateListing } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = updateListing({...});
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function updateListing(
