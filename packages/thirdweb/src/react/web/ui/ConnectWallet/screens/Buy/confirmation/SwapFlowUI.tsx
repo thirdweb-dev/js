@@ -96,32 +96,9 @@ export function SwapFlowUI(props: SwapFlowUIProps) {
           <Container>
             <div
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                paddingBottom: spacing.md,
-              }}
-            >
-              <Text>Purchase</Text>
-
-              <TokenInfo
-                client={props.client}
-                token={props.to.token}
-                chain={props.to.chain}
-                amount={props.to.amount}
-                amountSize="sm"
-                chainNameSize="xs"
-                iconSize="xs"
-                align="right"
-              />
-            </div>
-
-            <Line />
-
-            <div
-              style={{
                 gap: spacing.lg,
                 alignItems: "flex-start",
-                paddingBlock: spacing.md,
+                paddingBottom: spacing.md,
               }}
             >
               <div
@@ -137,6 +114,29 @@ export function SwapFlowUI(props: SwapFlowUIProps) {
                   token={props.from.token}
                   chain={props.from.chain}
                   amount={props.from.amount}
+                  amountSize="sm"
+                  chainNameSize="xs"
+                  iconSize="xs"
+                  align="right"
+                />
+              </div>
+
+              <Line />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingBlock: spacing.md,
+                }}
+              >
+                <Text>Purchase</Text>
+
+                <TokenInfo
+                  client={props.client}
+                  token={props.to.token}
+                  chain={props.to.chain}
+                  amount={props.to.amount}
                   amountSize="sm"
                   chainNameSize="xs"
                   iconSize="xs"
