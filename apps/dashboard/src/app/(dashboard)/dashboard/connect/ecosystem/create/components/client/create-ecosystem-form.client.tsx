@@ -122,7 +122,7 @@ export function CreateEcosystemForm() {
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue="PARTNER_WHITELIST"
-                      className="flex gap-4 py-2"
+                      className="flex flex-wrap gap-4 py-2"
                     >
                       <FormItem>
                         <FormControl>
@@ -160,7 +160,7 @@ export function CreateEcosystemForm() {
           <Button
             type="submit"
             variant="primary"
-            className="min-w-28"
+            className="w-full sm:w-auto min-w-28"
             disabled={isLoading}
           >
             {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

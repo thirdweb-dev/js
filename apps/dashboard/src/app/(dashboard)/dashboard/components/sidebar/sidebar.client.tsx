@@ -34,7 +34,7 @@ export const SidebarNav: React.FC<SideBarNavProps> = ({ sections }) => {
   }, [currentPath]);
 
   return (
-    <aside className="w-full md:w-[300px] border-b md:border-b-0 relative md:sticky top-0 flex-shrink-0">
+    <aside className="w-full md:w-[250px] lg:w-[300px] border-b md:border-b-0 relative md:sticky top-0 flex-shrink-0">
       {/* mobile toggle */}
       <div className="flex flex-row items-center justify-between w-full p-4 md:hidden">
         <label className="flex items-center h-8 pl-3 text-sm font-semibold border-l-2 text-accent-foreground border-primary">

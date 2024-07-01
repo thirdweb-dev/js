@@ -27,12 +27,16 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
       <thead>
         <tr className="border-b bg-muted">
           <TableHeading>Name</TableHeading>
-          <TableHeading>Domains</TableHeading>
-          <TableHeading>Bundle ID</TableHeading>
-          <TableHeading>Partner Key</TableHeading>
-          <TableHeading>Permissions</TableHeading>
+          <TableHeading className="hidden md:table-cell">Domains</TableHeading>
+          <TableHeading className="hidden md:table-cell">
+            Bundle ID
+          </TableHeading>
+          <TableHeading className="hidden md:table-cell">
+            Partner Key
+          </TableHeading>
+          <TableHeading>Wallet control</TableHeading>
           {/* Empty space for delete button */}
-          <th />
+          <th className="hidden md:table-cell" />
         </tr>
       </thead>
       <tbody>
@@ -74,11 +78,19 @@ function TableRow(props: {
       )}
     >
       <TableData>{props.partner.name}</TableData>
-      <TableData>{props.partner.allowlistedDomains.join(", ")}</TableData>
-      <TableData>{props.partner.allowlistedBundleIds.join(", ")}</TableData>
-      <TableData>{props.partner.id}</TableData>
-      <TableData>{props.partner.permissions}</TableData>
-      <td className="py-1">
+      <TableData className="hidden md:table-cell">
+        {props.partner.allowlistedDomains.join(", ")}
+      </TableData>
+      <TableData className="hidden md:table-cell">
+        {props.partner.allowlistedBundleIds.join(", ")}
+      </TableData>
+      <TableData className="hidden md:table-cell">{props.partner.id}</TableData>
+      <TableData>
+        {props.partner.permissions === "PROMPT_USER_V1"
+          ? "Require approvals"
+          : "Full control"}
+      </TableData>
+      <td className="hidden py-1 md:table-cell">
         <ConfirmationDialog
           title={`Are you sure you want to delete the partner ${props.partner.name}?`}
           description={
@@ -110,6 +122,7 @@ function TableRow(props: {
             disabled={isDeleting}
           >
             <Trash2 className="size-4" />
+            <span className="sr-only">Delete</span>
           </Button>
         </ConfirmationDialog>
       </td>
@@ -117,6 +130,11 @@ function TableRow(props: {
   );
 }
 
-function TableData({ children }: { children: React.ReactNode }) {
-  return <td className="p-4 text-muted-foreground">{children}</td>;
+function TableData({
+  children,
+  className,
+}: { children: React.ReactNode; className?: string }) {
+  return (
+    <td className={cn("p-4 text-muted-foreground", className)}>{children}</td>
+  );
 }

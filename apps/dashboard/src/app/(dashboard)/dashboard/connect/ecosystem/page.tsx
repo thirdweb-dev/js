@@ -3,7 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { BookMarkedIcon, ExternalLinkIcon, MoveRightIcon } from "lucide-react";
 import Image from "next/image";
@@ -31,15 +31,6 @@ export default function Page() {
       </div>
     );
   }
-  // if no wallet connected, show connect wallet ui
-
-  if (!isLoggedIn) {
-    return (
-      <div className="container flex flex-col gap-8 px-4 py-6">
-        <CustomConnectWallet />
-      </div>
-    );
-  }
 
   return (
     <main className="container flex flex-col gap-8 px-4 pb-6">
@@ -49,19 +40,26 @@ export default function Page() {
         sizes="100vw"
         className="w-full"
       />
-      <div className="flex flex-col gap-4">
-        <h2 className="text-4xl font-bold text-foreground text-balance">
+      <div className="space-y-2 text-center sm:text-left">
+        <h2 className="text-3xl font-bold sm:text-4xl text-foreground text-balance">
           One wallet with shared assets across an ecosystem
         </h2>
         <p className="text-secondary-foreground">
-          Enabling your users to easily access ecosystem wallets across the apps
-          and games they use.
+          Enable your users to access their wallet assets across apps and games.
         </p>
       </div>
-      <div className="flex flex-row gap-4">
-        <Link href="/dashboard/connect/ecosystems/create">
-          <Button variant="primary">Create Ecosystem</Button>
-        </Link>
+      <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+        {!isLoggedIn ? (
+          <ToolTipLabel label="Connect your wallet to create an ecosystem">
+            <Button variant="primary" className="opacity-50">
+              Create Ecosystem
+            </Button>
+          </ToolTipLabel>
+        ) : (
+          <Link href="/dashboard/connect/ecosystems/create">
+            <Button variant="primary">Create Ecosystem</Button>
+          </Link>
+        )}
         <Button variant="outline" asChild>
           <Link
             href="https://poral.thirdweb.com"
@@ -75,7 +73,7 @@ export default function Page() {
       </div>
       <div className="w-full h-0 my-2 border-t" />
       <Link href="#" className="mb-6 group">
-        <Card className="flex flex-col gap-3 p-8 px-10">
+        <Card className="flex flex-col gap-3 p-6 md:p-8 md:px-10">
           <div className="flex items-center gap-2">
             <BookMarkedIcon className="size-5 text-secondary-foreground" />
             <h4 className="text-lg font-bold">Learn more</h4>
