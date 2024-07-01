@@ -1,9 +1,9 @@
 import { ethereum } from "../../../chains/chain-definitions/ethereum.js";
 import { polygon } from "../../../chains/chain-definitions/polygon.js";
 import {
-  SwapConfirmationScreenUI,
-  type SwapConfirmationScreenUIProps,
-} from "../../../react/web/ui/ConnectWallet/screens/Buy/confirmation/SwapConfirmationScreen.js";
+  SwapFlowUI,
+  type SwapFlowUIProps,
+} from "../../../react/web/ui/ConnectWallet/screens/Buy/confirmation/SwapFlowUI.js";
 import {
   Row,
   StoryScreenTitle,
@@ -32,7 +32,7 @@ export function SwapFlowStory(props: {
 function SwapOnly(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: SwapConfirmationScreenUIProps = {
+  const generalProps: SwapFlowUIProps = {
     onBack: noop,
     approvalRequired: null,
     txInfo: null,
@@ -61,15 +61,15 @@ function SwapOnly(props: {
       <StoryScreenTitle label="1 step Swap" large />
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <SwapConfirmationScreenUI {...generalProps} />
+        <SwapFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <SwapConfirmationScreenUI {...generalProps} activeChain={ethereum} />
+        <SwapFlowUI {...generalProps} activeChain={ethereum} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -79,7 +79,7 @@ function SwapOnly(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap Failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -89,7 +89,7 @@ function SwapOnly(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Partial Success">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -103,7 +103,7 @@ function SwapOnly(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -121,7 +121,7 @@ function SwapOnly(props: {
 function SwapAndApprove(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: SwapConfirmationScreenUIProps = {
+  const generalProps: SwapFlowUIProps = {
     onBack: noop,
     txInfo: null,
     from: {
@@ -152,15 +152,15 @@ function SwapAndApprove(props: {
       <StoryScreenTitle label="2 step Swap" large />
 
       <ScreenContainer theme={props.theme} label="Approve">
-        <SwapConfirmationScreenUI {...generalProps} />
+        <SwapFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve (Switch Required)">
-        <SwapConfirmationScreenUI {...generalProps} activeChain={ethereum} />
+        <SwapFlowUI {...generalProps} activeChain={ethereum} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approving">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -170,7 +170,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve Failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -180,7 +180,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -190,7 +190,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -201,7 +201,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap Failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -211,7 +211,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -225,7 +225,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -235,7 +235,7 @@ function SwapAndApprove(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -253,7 +253,7 @@ function SwapAndApprove(props: {
 function SwapApproveTx(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: SwapConfirmationScreenUIProps = {
+  const generalProps: SwapFlowUIProps = {
     client: storyClient,
     onBack: noop,
     approvalRequired: {
@@ -292,15 +292,15 @@ function SwapApproveTx(props: {
       <StoryScreenTitle label="2 step Swap + Tx" large />
 
       <ScreenContainer theme={props.theme} label="Approve">
-        <SwapConfirmationScreenUI {...generalProps} />
+        <SwapFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve (Switch Required)">
-        <SwapConfirmationScreenUI {...generalProps} activeChain={ethereum} />
+        <SwapFlowUI {...generalProps} activeChain={ethereum} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approving">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -310,7 +310,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve Failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -320,7 +320,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -330,7 +330,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -341,7 +341,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -351,7 +351,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap Failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -361,7 +361,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -375,7 +375,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -385,7 +385,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase (Switch Required)">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -396,7 +396,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchasing">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -406,7 +406,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -416,7 +416,7 @@ function SwapApproveTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -434,7 +434,7 @@ function SwapApproveTx(props: {
 function SwapAndTx(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: SwapConfirmationScreenUIProps = {
+  const generalProps: SwapFlowUIProps = {
     client: storyClient,
     onBack: noop,
     approvalRequired: null,
@@ -471,7 +471,7 @@ function SwapAndTx(props: {
       <StoryScreenTitle label="1 step Swap + Tx" large />
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -481,7 +481,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -492,7 +492,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -502,7 +502,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap Failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -512,7 +512,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -526,7 +526,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -536,7 +536,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase (Switch Required)">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -547,7 +547,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchasing">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -557,7 +557,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase failed">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -567,7 +567,7 @@ function SwapAndTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <SwapConfirmationScreenUI
+        <SwapFlowUI
           {...generalProps}
           state={{
             activeStep: "done",

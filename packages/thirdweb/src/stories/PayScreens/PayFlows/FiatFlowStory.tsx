@@ -1,9 +1,9 @@
 import { ethereum } from "../../../chains/chain-definitions/ethereum.js";
 import { polygon } from "../../../chains/chain-definitions/polygon.js";
 import {
-  FiatConfirmationScreenUI,
-  type FiatConfirmationScreenUIProps,
-} from "../../../react/web/ui/ConnectWallet/screens/Buy/confirmation/FiatConfirmationScreen.js";
+  FiatFlowUI,
+  type FiatFlowUIProps,
+} from "../../../react/web/ui/ConnectWallet/screens/Buy/confirmation/FiatFlowUI.js";
 import { USDCurrency } from "../../../react/web/ui/ConnectWallet/screens/Buy/fiat/currencies.js";
 import {
   Row,
@@ -34,7 +34,7 @@ export function FiatFlowStory(props: {
 function OnrampOnly(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: FiatConfirmationScreenUIProps = {
+  const generalProps: FiatFlowUIProps = {
     onBack: noop,
     swapRequired: null,
     txInfo: null,
@@ -62,11 +62,11 @@ function OnrampOnly(props: {
       <StoryScreenTitle label="Only Onramp" large />
 
       <ScreenContainer theme={props.theme} label="Onramp">
-        <FiatConfirmationScreenUI {...generalProps} />
+        <FiatFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -76,7 +76,7 @@ function OnrampOnly(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramp failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -86,7 +86,7 @@ function OnrampOnly(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -104,7 +104,7 @@ function OnrampOnly(props: {
 function OnrampAndOneStepSwap(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: FiatConfirmationScreenUIProps = {
+  const generalProps: FiatFlowUIProps = {
     onBack: noop,
     swapRequired: {
       approvalRequired: null,
@@ -142,11 +142,11 @@ function OnrampAndOneStepSwap(props: {
       <StoryScreenTitle label="OnRamp + 1step swap" large />
 
       <ScreenContainer theme={props.theme} label="Onramp">
-        <FiatConfirmationScreenUI {...generalProps} />
+        <FiatFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -156,7 +156,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramp failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -169,7 +169,7 @@ function OnrampAndOneStepSwap(props: {
         theme={props.theme}
         label="Fetching postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -182,7 +182,7 @@ function OnrampAndOneStepSwap(props: {
         theme={props.theme}
         label="Failed to fetch postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -192,7 +192,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -202,7 +202,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -213,7 +213,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -223,7 +223,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -233,7 +233,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -247,7 +247,7 @@ function OnrampAndOneStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -265,7 +265,7 @@ function OnrampAndOneStepSwap(props: {
 function OnrampAndTwoStepSwap(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: FiatConfirmationScreenUIProps = {
+  const generalProps: FiatFlowUIProps = {
     onBack: noop,
     swapRequired: {
       approvalRequired: {
@@ -305,11 +305,11 @@ function OnrampAndTwoStepSwap(props: {
       <StoryScreenTitle label="OnRamp + 2 step swap" large />
 
       <ScreenContainer theme={props.theme} label="Onramp">
-        <FiatConfirmationScreenUI {...generalProps} />
+        <FiatFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -319,7 +319,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramp failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -332,7 +332,7 @@ function OnrampAndTwoStepSwap(props: {
         theme={props.theme}
         label="Fetching postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -345,7 +345,7 @@ function OnrampAndTwoStepSwap(props: {
         theme={props.theme}
         label="Failed to fetch postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -355,7 +355,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -365,7 +365,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -376,7 +376,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approving">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -386,7 +386,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve Failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -396,7 +396,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -406,7 +406,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -417,7 +417,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -427,7 +427,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -437,7 +437,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -451,7 +451,7 @@ function OnrampAndTwoStepSwap(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -469,7 +469,7 @@ function OnrampAndTwoStepSwap(props: {
 function OnrampAndTwoStepSwapTx(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: FiatConfirmationScreenUIProps = {
+  const generalProps: FiatFlowUIProps = {
     onBack: noop,
     txInfo: {
       cost: {
@@ -517,11 +517,11 @@ function OnrampAndTwoStepSwapTx(props: {
       <StoryScreenTitle label="OnRamp + 2step swap + Tx" large />
 
       <ScreenContainer theme={props.theme} label="Onramp">
-        <FiatConfirmationScreenUI {...generalProps} />
+        <FiatFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -531,7 +531,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramp failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -544,7 +544,7 @@ function OnrampAndTwoStepSwapTx(props: {
         theme={props.theme}
         label="Fetching postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -557,7 +557,7 @@ function OnrampAndTwoStepSwapTx(props: {
         theme={props.theme}
         label="Failed to fetch postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -567,7 +567,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -577,7 +577,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -588,7 +588,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approving">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -598,7 +598,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Approve Failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "approve",
@@ -608,7 +608,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -618,7 +618,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -629,7 +629,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -639,7 +639,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -649,7 +649,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -663,7 +663,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -673,7 +673,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Send Tx (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -684,7 +684,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Sending Tx">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -694,7 +694,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Send Tx failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -704,7 +704,7 @@ function OnrampAndTwoStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "done",
@@ -722,7 +722,7 @@ function OnrampAndTwoStepSwapTx(props: {
 function OnrampOneStepSwapTx(props: {
   theme: "dark" | "light";
 }) {
-  const generalProps: FiatConfirmationScreenUIProps = {
+  const generalProps: FiatFlowUIProps = {
     txInfo: {
       cost: {
         amount: "35",
@@ -768,11 +768,11 @@ function OnrampOneStepSwapTx(props: {
       <StoryScreenTitle label="OnRamp + 1 step swap + Tx" large />
 
       <ScreenContainer theme={props.theme} label="Onramp">
-        <FiatConfirmationScreenUI {...generalProps} />
+        <FiatFlowUI {...generalProps} />
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -782,7 +782,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Onramp failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "onramp",
@@ -795,7 +795,7 @@ function OnrampOneStepSwapTx(props: {
         theme={props.theme}
         label="Fetching postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -808,7 +808,7 @@ function OnrampOneStepSwapTx(props: {
         theme={props.theme}
         label="Failed to fetch postonramp Swap quote"
       >
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -818,7 +818,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -828,7 +828,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -839,7 +839,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swapping">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -849,7 +849,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -859,7 +859,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Swap: Partial Success">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "swap",
@@ -873,7 +873,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Purchase">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -883,7 +883,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Send Tx (Switch Required)">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -894,7 +894,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Sending Tx">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -904,7 +904,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Send Tx failed">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "sendTx",
@@ -914,7 +914,7 @@ function OnrampOneStepSwapTx(props: {
       </ScreenContainer>
 
       <ScreenContainer theme={props.theme} label="Done">
-        <FiatConfirmationScreenUI
+        <FiatFlowUI
           {...generalProps}
           state={{
             activeStep: "done",

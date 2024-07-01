@@ -14,9 +14,9 @@ import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyW
 import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import {
-  SwapConfirmationScreenUI,
-  type SwapConfirmationScreenUIProps,
-} from "../confirmation/SwapConfirmationScreen.js";
+  SwapFlowUI,
+  type SwapFlowUIProps,
+} from "../confirmation/SwapFlowUI.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
@@ -79,9 +79,7 @@ export function SwapFlow(props: SwapFlowProps) {
     return tokenInfo;
   }, [_fromToken]);
 
-  const [uiState, setUIState] = useState<
-    SwapConfirmationScreenUIProps["state"]
-  >({
+  const [uiState, setUIState] = useState<SwapFlowUIProps["state"]>({
     activeStep: quote.approval ? "approve" : "swap",
     status: "idle",
   });
@@ -242,7 +240,7 @@ export function SwapFlow(props: SwapFlowProps) {
   }
 
   return (
-    <SwapConfirmationScreenUI
+    <SwapFlowUI
       activeChain={props.activeChain}
       approvalRequired={
         quote.approval

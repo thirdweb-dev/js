@@ -20,7 +20,7 @@ import {
   WithSwitchNetworkButton,
 } from "./common.js";
 
-export type SwapConfirmationScreenUIProps = {
+export type SwapFlowUIProps = {
   onBack: null | (() => void);
   txInfo: {
     label: string;
@@ -72,7 +72,7 @@ export type SwapConfirmationScreenUIProps = {
   estimatedTimeToSwap: string;
 };
 
-export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
+export function SwapFlowUI(props: SwapFlowUIProps) {
   const swapStep = props.approvalRequired ? 2 : 1;
   const purchaseStep = swapStep + 1;
   const onlySwapRequired = !props.txInfo && !props.approvalRequired;

@@ -22,7 +22,7 @@ import {
   WithSwitchNetworkButton,
 } from "./common.js";
 
-export type FiatConfirmationScreenUIProps = {
+export type FiatFlowUIProps = {
   onBack: null | (() => void);
   txInfo: {
     label: string;
@@ -86,7 +86,7 @@ export type FiatConfirmationScreenUIProps = {
   estimatedTimeToOnramp: string;
 };
 
-export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
+export function FiatFlowUI(props: FiatFlowUIProps) {
   const swapStep = props.swapRequired
     ? props.swapRequired.approvalRequired
       ? 3

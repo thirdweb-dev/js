@@ -20,9 +20,9 @@ import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWit
 import { invalidateWalletBalance } from "../../../../../../core/providers/invalidateWalletBalance.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import {
-  FiatConfirmationScreenUI,
-  type FiatConfirmationScreenUIProps,
-} from "../confirmation/FiatConfirmationScreen.js";
+  FiatFlowUI,
+  type FiatFlowUIProps,
+} from "../confirmation/FiatFlowUI.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { formatSeconds } from "../swap/formatSeconds.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
@@ -47,9 +47,7 @@ export function FiatFlow(props: {
   // swap required or not
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
 
-  const [uiState, setUIState] = useState<
-    FiatConfirmationScreenUIProps["state"]
-  >({
+  const [uiState, setUIState] = useState<FiatFlowUIProps["state"]>({
     activeStep: "onramp",
     status: "idle",
   });
@@ -445,7 +443,7 @@ export function FiatFlow(props: {
   }
 
   return (
-    <FiatConfirmationScreenUI
+    <FiatFlowUI
       activeChain={props.activeChain}
       client={props.client}
       estimatedTimeToOnramp={formatSeconds(
