@@ -18,6 +18,7 @@ import {
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useBuyHistory } from "../../../../../../core/hooks/pay/useBuyHistory.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
@@ -49,8 +50,9 @@ export function BuyTxHistory(props: {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
+  const activeWallet = useActiveWallet();
 
-  if (!account || !activeChain) {
+  if (!account || !activeChain || !activeWallet) {
     return <LoadingScreen />;
   }
 
@@ -63,6 +65,8 @@ export function BuyTxHistory(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        activeChain={activeChain}
+        activeWallet={activeWallet}
       />
     );
   }

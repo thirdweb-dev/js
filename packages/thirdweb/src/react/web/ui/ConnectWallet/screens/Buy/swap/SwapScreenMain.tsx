@@ -6,7 +6,10 @@ import type {
   BuyWithCryptoQuote,
   GetBuyWithCryptoQuoteParams,
 } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
-import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
+import type {
+  Account,
+  Wallet,
+} from "../../../../../../../wallets/interfaces/wallet.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -42,6 +45,7 @@ export function SwapScreenMain(props: {
   onViewPendingTx: () => void;
   onDone: () => void;
   onBack: () => void;
+  activeWallet: Wallet;
 }) {
   const {
     account,
@@ -104,6 +108,7 @@ export function SwapScreenMainUI(props: {
   onDone: () => void;
   onBack: () => void;
   quoteQuery: UseQueryResult<BuyWithCryptoQuote>;
+  activeWallet: Wallet;
 }) {
   const {
     setDrawerScreen,
@@ -171,7 +176,6 @@ export function SwapScreenMainUI(props: {
           }}
           buyWithCryptoQuote={quoteQuery.data}
           account={account}
-          onViewPendingTx={props.onViewPendingTx}
           isFiatFlow={false}
           onDone={props.onDone}
           onTryAgain={() => {
@@ -180,6 +184,8 @@ export function SwapScreenMainUI(props: {
             });
             quoteQuery.refetch();
           }}
+          activeChain={props.activeChain}
+          activeWallet={props.activeWallet}
         />
       ),
     });

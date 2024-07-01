@@ -11,6 +11,7 @@ import {
   noop,
   storyClient,
   usdcPolygon,
+  usdtPolygon,
 } from "../../utils.js";
 import { ScreenContainer } from "../ScreenContainer.js";
 
@@ -232,6 +233,20 @@ function OnrampAndOneStepSwap(props: {
         />
       </ScreenContainer>
 
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "30",
+            },
+          }}
+        />
+      </ScreenContainer>
+
       <ScreenContainer theme={props.theme} label="Done">
         <FiatConfirmationScreenUI
           {...generalProps}
@@ -419,6 +434,20 @@ function OnrampAndTwoStepSwap(props: {
           state={{
             activeStep: "swap",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "35",
+            },
           }}
         />
       </ScreenContainer>
@@ -622,6 +651,20 @@ function OnrampAndTwoStepSwapTx(props: {
         />
       </ScreenContainer>
 
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "30",
+            },
+          }}
+        />
+      </ScreenContainer>
+
       <ScreenContainer theme={props.theme} label="Purchase">
         <FiatConfirmationScreenUI
           {...generalProps}
@@ -815,6 +858,20 @@ function OnrampOneStepSwapTx(props: {
           state={{
             activeStep: "swap",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <FiatConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "30",
+            },
           }}
         />
       </ScreenContainer>

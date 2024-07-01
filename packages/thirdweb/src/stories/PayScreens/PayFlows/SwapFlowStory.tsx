@@ -10,6 +10,7 @@ import {
   noop,
   storyClient,
   usdcPolygon,
+  usdtPolygon,
 } from "../../utils.js";
 import { ScreenContainer } from "../ScreenContainer.js";
 
@@ -83,6 +84,20 @@ function SwapOnly(props: {
           state={{
             activeStep: "swap",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Partial Success">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "5.5",
+            },
           }}
         />
       </ScreenContainer>
@@ -192,6 +207,20 @@ function SwapAndApprove(props: {
           state={{
             activeStep: "swap",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "5.5",
+            },
           }}
         />
       </ScreenContainer>
@@ -333,6 +362,20 @@ function SwapApproveTx(props: {
         />
       </ScreenContainer>
 
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "5.5",
+            },
+          }}
+        />
+      </ScreenContainer>
+
       <ScreenContainer theme={props.theme} label="Purchase">
         <SwapConfirmationScreenUI
           {...generalProps}
@@ -467,6 +510,20 @@ function SwapAndTx(props: {
           state={{
             activeStep: "swap",
             status: "error",
+          }}
+        />
+      </ScreenContainer>
+
+      <ScreenContainer theme={props.theme} label="Swap: Partial Success">
+        <SwapConfirmationScreenUI
+          {...generalProps}
+          state={{
+            activeStep: "swap",
+            status: "partialSuccess",
+            data: {
+              token: usdtPolygon,
+              amount: "5.5",
+            },
           }}
         />
       </ScreenContainer>

@@ -20,6 +20,7 @@ import {
   noop,
   storyAccount,
   storyClient,
+  storyWallet,
 } from "../utils.js";
 import { ScreenContainer } from "./ScreenContainer.js";
 import type { BuyWithFiatMocks } from "./mockQuotes.js";
@@ -173,6 +174,8 @@ export function BuyWithFiatFlowTest(props: {
           selectedCurrency={props.mocks.meta.currency}
           showCurrencySelector={noop}
           theme={props.theme}
+          activeChain={props.mocks.meta.buyChain}
+          activeWallet={storyWallet}
         />
       </ScreenContainer>
 
@@ -300,8 +303,9 @@ export function BuyWithFiatFlowTest(props: {
               isFiatFlow={false}
               onDone={noop}
               onTryAgain={noop}
-              onViewPendingTx={noop}
               onBack={noop}
+              activeChain={props.mocks.meta.buyChain}
+              activeWallet={storyWallet}
             />
           </ScreenContainer>
 

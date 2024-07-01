@@ -1,4 +1,6 @@
 import { generatePrivateKey } from "viem/accounts";
+import { createWalletAdapter } from "../adapters/wallet-adapter.js";
+import { ethereum } from "../chains/chain-definitions/ethereum.js";
 import { createThirdwebClient } from "../client/client.js";
 import type { ERC20OrNativeToken } from "../react/web/ui/ConnectWallet/screens/nativeToken.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
@@ -11,6 +13,14 @@ export const storyClient = createThirdwebClient({
 export const storyAccount: Account = privateKeyToAccount({
   client: storyClient,
   privateKey: generatePrivateKey(),
+});
+
+export const storyWallet = createWalletAdapter({
+  adaptedAccount: storyAccount,
+  client: storyClient,
+  chain: ethereum,
+  onDisconnect: () => {},
+  switchChain: () => {},
 });
 
 export function StoryScreenTitle(props: {
@@ -63,4 +73,11 @@ export const usdcBase: ERC20OrNativeToken = {
   symbol: "USDC",
   address: "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
   icon: "https://pay.thirdweb.com/public/tokens/usdc.svg",
+};
+
+export const usdtPolygon: ERC20OrNativeToken = {
+  name: "Tether USD (PoS)",
+  address: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+  symbol: "USDT",
+  icon: "	https://polygonscan.com/token/images/tether_32.png",
 };

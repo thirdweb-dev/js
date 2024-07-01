@@ -1,6 +1,7 @@
 import { DoubleArrowRightIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import {
   iconSize,
   spacing,
@@ -11,6 +12,7 @@ import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import {
+  PartialSuccessMessage,
   StepContainer,
   Stepper,
   TokenInfo,
@@ -54,7 +56,17 @@ export type SwapConfirmationScreenUIProps = {
           chain: Chain;
           txHash: string;
         };
+      }
+    | {
+        activeStep: "swap";
+        status: "partialSuccess";
+        data: {
+          // unexpected token and amount
+          token: ERC20OrNativeToken;
+          amount: string;
+        };
       };
+
   activeChain: Chain;
   onSwapClick: () => void;
   client: ThirdwebClient;
@@ -69,7 +81,10 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
   const modalTitle =
     props.state.activeStep === "done"
       ? "Purchased successfully"
-      : "Confirm Purchase";
+      : props.state.activeStep === "swap" &&
+          props.state.status === "partialSuccess"
+        ? "Incomplete"
+        : "Confirm Purchase";
 
   return (
     <Container>
@@ -148,7 +163,7 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
 
               <Line />
             </div>
-            <Spacer y="xxl" />
+            <Spacer y="lg" />
           </Container>
         ) : (
           <StepContainer>
@@ -166,7 +181,7 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
                     </Text>
                     <Spacer y="xs" />
                     <Text size="sm" color="secondaryText">
-                      {props.from.amount}{" "}
+                      {formatNumber(Number(props.from.amount), 4)}{" "}
                       <TokenSymbol
                         chain={props.from.chain}
                         size="sm"
@@ -272,7 +287,7 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
                           flexShrink: 0,
                         }}
                       >
-                        {props.txInfo.cost.amount}{" "}
+                        {formatNumber(Number(props.txInfo.cost.amount), 3)}{" "}
                         <TokenSymbol
                           chain={props.txInfo.cost.chain}
                           size="sm"
@@ -302,16 +317,17 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
         )}
 
         {/* Swap Button */}
-        {props.state.activeStep === "swap" && (
-          <WithSwitchNetworkButton
-            activeChain={props.activeChain}
-            isLoading={props.state.status === "pending"}
-            label="Swap"
-            loadingLabel="Swapping"
-            onClick={props.onSwapClick}
-            targetChain={props.from.chain}
-          />
-        )}
+        {props.state.activeStep === "swap" &&
+          props.state.status !== "partialSuccess" && (
+            <WithSwitchNetworkButton
+              activeChain={props.activeChain}
+              isLoading={props.state.status === "pending"}
+              label="Swap"
+              loadingLabel="Swapping"
+              onClick={props.onSwapClick}
+              targetChain={props.from.chain}
+            />
+          )}
 
         {/* Execute Tx Button */}
         {props.state.activeStep === "sendTx" && props.txInfo && (
@@ -341,9 +357,28 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
           </>
         )}
 
+        {/* Partial Sucess  */}
+        {props.state.activeStep === "swap" &&
+          props.state.status === "partialSuccess" && (
+            <>
+              <Spacer y="md" />
+              <PartialSuccessMessage
+                chain={props.to.chain}
+                expected={{
+                  amount: props.to.amount,
+                  token: props.to.token,
+                }}
+                got={{
+                  amount: props.state.data.amount,
+                  token: props.state.data.token,
+                }}
+              />
+            </>
+          )}
+
         {/* Estimated time */}
         {!onlySwapRequired &&
-          props.state.status !== "error" &&
+          (props.state.status === "idle" || props.state.status === "pending") &&
           props.state.activeStep === "swap" &&
           props.activeChain === props.from.chain && (
             <>

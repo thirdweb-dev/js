@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -17,11 +19,13 @@ import { SwapFlow } from "../swap/SwapFlow.js";
 export function PostOnRampSwap(props: {
   client: ThirdwebClient;
   buyWithFiatStatus: BuyWithFiatStatus;
-  onBack?: () => void;
+  onBack: null | (() => void);
   onViewPendingTx: () => void;
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  activeChain: Chain;
+  activeWallet: Wallet;
 }) {
   const account = useActiveAccount();
 
@@ -77,7 +81,6 @@ export function PostOnRampSwap(props: {
       buyWithCryptoQuote={lockedOnRampQuote}
       client={props.client}
       onBack={props.onBack}
-      onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
       onDone={props.onDone}
       onTryAgain={() => {
@@ -86,12 +89,14 @@ export function PostOnRampSwap(props: {
       }}
       isBuyForTx={props.isBuyForTx}
       isEmbed={props.isEmbed}
+      activeChain={props.activeChain}
+      activeWallet={props.activeWallet}
     />
   );
 }
 
 export function GettingPostOnRampQuote(props: {
-  onBack?: () => void;
+  onBack: null | (() => void);
 }) {
   return (
     <Container fullHeight>
@@ -117,7 +122,7 @@ export function GettingPostOnRampQuote(props: {
 }
 
 export function PostOnrampQuoteFailed(props: {
-  onBack?: () => void;
+  onBack: null | (() => void);
   onRetry: () => void;
 }) {
   return (

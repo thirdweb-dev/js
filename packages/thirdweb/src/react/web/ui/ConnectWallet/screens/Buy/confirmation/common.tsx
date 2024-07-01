@@ -1,17 +1,20 @@
 import { CheckIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
+  radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { ChainIcon } from "../../../../components/ChainIcon.js";
 import { ChainName } from "../../../../components/ChainName.js";
+import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
@@ -56,6 +59,8 @@ export function TokenInfo(props: {
   iconSize: keyof typeof iconSize;
   align: "left" | "right";
 }) {
+  const chainQuery = useChainQuery(props.chain);
+
   return (
     <Container
       flex="row"
@@ -74,7 +79,7 @@ export function TokenInfo(props: {
       >
         <Container flex="row" gap="xxs">
           <Text size={props.amountSize} color="primaryText">
-            {props.amount}
+            {formatNumber(Number(props.amount), 4)}
           </Text>
           <TokenSymbol
             chain={props.chain}
@@ -85,11 +90,11 @@ export function TokenInfo(props: {
           />
         </Container>
         <Container flex="row" gap="xxs">
-          <TokenIcon
-            token={props.token}
-            size={props.iconSize}
-            chain={props.chain}
+          <ChainIcon
+            size={iconSize[props.iconSize]}
+            chainIcon={chainQuery.data?.icon}
             client={props.client}
+            loading="eager"
           />
           <ChainName
             chain={props.chain}
@@ -206,9 +211,9 @@ export function WithSwitchNetworkButton(props: {
   loadingLabel: string;
   isLoading: boolean;
 }) {
-  if (props.targetChain === props.activeChain) {
+  if (props.targetChain.id === props.activeChain.id) {
     return (
-      <Button fullWidth variant="accent" gap="xs">
+      <Button fullWidth variant="accent" gap="xs" onClick={props.onClick}>
         {props.isLoading ? (
           <>
             {props.loadingLabel}
@@ -227,5 +232,52 @@ export function WithSwitchNetworkButton(props: {
       fullWidth
       chain={props.targetChain}
     />
+  );
+}
+
+export function PartialSuccessMessage(props: {
+  chain: Chain;
+  expected: {
+    token: ERC20OrNativeToken;
+    amount: string;
+  };
+  got: {
+    token: ERC20OrNativeToken;
+    amount: string;
+  };
+}) {
+  return (
+    <Container
+      p="sm"
+      style={{
+        borderRadius: radius.lg,
+        borderStyle: "solid",
+        borderWidth: "1px",
+      }}
+      borderColor="borderColor"
+    >
+      <Text color="danger" center size="sm">
+        Expected {formatNumber(Number(props.expected.amount), 4)}{" "}
+        <TokenSymbol
+          chain={props.chain}
+          size="sm"
+          token={props.expected.token}
+          color="danger"
+          inline
+        />
+      </Text>
+      <Spacer y="xs" />
+      <Text color="danger" center size="sm">
+        Got {formatNumber(Number(props.got.amount), 4)}{" "}
+        <TokenSymbol
+          chain={props.chain}
+          token={props.got.token}
+          size="sm"
+          color="danger"
+          inline
+        />{" "}
+        Instead
+      </Text>
+    </Container>
   );
 }

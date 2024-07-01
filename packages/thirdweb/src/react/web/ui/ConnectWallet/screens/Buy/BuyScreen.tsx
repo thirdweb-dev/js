@@ -5,6 +5,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { Theme } from "../../../../../core/design-system/index.js";
 import { useChainsQuery } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import {
@@ -116,6 +117,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
+  const activeWallet = useActiveWallet();
 
   // prefetch chains metadata for destination chains
   useChainsQuery(supportedDestinations.map((x) => x.chain) || [], 50);
@@ -360,58 +362,67 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           />
         )}
 
-        {screen.id === "buy-with-crypto" && account && activeChain && (
-          <SwapScreenMain
-            setScreen={setScreen}
-            setDrawerScreen={setDrawerScreen}
-            tokenAmount={deferredTokenAmount}
-            toChain={toChain}
-            toToken={toToken}
-            fromChain={fromChain}
-            fromToken={fromToken}
-            showFromTokenSelector={() => {
-              setScreen({
-                id: "select-from-token",
-                backScreen: screen,
-              });
-            }}
-            account={account}
-            activeChain={activeChain}
-            buyForTx={buyForTx || null}
-            client={client}
-            isEmbed={props.isEmbed}
-            onDone={props.onDone}
-            onViewPendingTx={props.onViewPendingTx}
-            payOptions={payOptions}
-            onBack={() => setScreen({ id: "select-payment-method" })}
-          />
-        )}
+        {screen.id === "buy-with-crypto" &&
+          account &&
+          activeChain &&
+          activeWallet && (
+            <SwapScreenMain
+              setScreen={setScreen}
+              setDrawerScreen={setDrawerScreen}
+              tokenAmount={deferredTokenAmount}
+              toChain={toChain}
+              toToken={toToken}
+              fromChain={fromChain}
+              fromToken={fromToken}
+              showFromTokenSelector={() => {
+                setScreen({
+                  id: "select-from-token",
+                  backScreen: screen,
+                });
+              }}
+              account={account}
+              activeChain={activeChain}
+              buyForTx={buyForTx || null}
+              client={client}
+              isEmbed={props.isEmbed}
+              onDone={props.onDone}
+              onViewPendingTx={props.onViewPendingTx}
+              payOptions={payOptions}
+              onBack={() => setScreen({ id: "select-payment-method" })}
+              activeWallet={activeWallet}
+            />
+          )}
 
-        {screen.id === "buy-with-fiat" && account && activeChain && (
-          <FiatScreenMain
-            setScreen={setScreen}
-            setDrawerScreen={setDrawerScreen}
-            tokenAmount={deferredTokenAmount}
-            toChain={toChain}
-            toToken={toToken}
-            selectedCurrency={selectedCurrency}
-            buyForTx={buyForTx || null}
-            client={client}
-            isEmbed={props.isEmbed}
-            onDone={props.onDone}
-            onViewPendingTx={props.onViewPendingTx}
-            payOptions={payOptions}
-            theme={props.theme}
-            showCurrencySelector={() => {
-              setScreen({
-                id: "select-currency",
-                backScreen: screen,
-              });
-            }}
-            account={account}
-            onBack={() => setScreen({ id: "select-payment-method" })}
-          />
-        )}
+        {screen.id === "buy-with-fiat" &&
+          account &&
+          activeChain &&
+          activeWallet && (
+            <FiatScreenMain
+              setScreen={setScreen}
+              setDrawerScreen={setDrawerScreen}
+              tokenAmount={deferredTokenAmount}
+              toChain={toChain}
+              toToken={toToken}
+              selectedCurrency={selectedCurrency}
+              buyForTx={buyForTx || null}
+              client={client}
+              isEmbed={props.isEmbed}
+              onDone={props.onDone}
+              onViewPendingTx={props.onViewPendingTx}
+              payOptions={payOptions}
+              theme={props.theme}
+              showCurrencySelector={() => {
+                setScreen({
+                  id: "select-currency",
+                  backScreen: screen,
+                });
+              }}
+              account={account}
+              onBack={() => setScreen({ id: "select-payment-method" })}
+              activeChain={activeChain}
+              activeWallet={activeWallet}
+            />
+          )}
       </div>
     </Container>
   );

@@ -31,6 +31,8 @@ import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
 
+// TODO: remove when removed all usage
+
 /**
  * @internal
  */

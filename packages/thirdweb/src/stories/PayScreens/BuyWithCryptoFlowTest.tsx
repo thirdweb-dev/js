@@ -11,6 +11,7 @@ import {
   noop,
   storyAccount,
   storyClient,
+  storyWallet,
 } from "../utils.js";
 import { ScreenContainer } from "./ScreenContainer.js";
 import type { BuyWithCryptoMocks } from "./mockQuotes.js";
@@ -121,6 +122,7 @@ export function BuyWithCryptoFlowTest(props: {
           toToken={props.mocks.meta.buyToken}
           tokenAmount={props.mocks.meta.buyTokenAmount}
           quoteQuery={quoteQuery}
+          activeWallet={storyWallet}
         />
       </ScreenContainer>
 
@@ -134,8 +136,9 @@ export function BuyWithCryptoFlowTest(props: {
           isFiatFlow={false}
           onDone={noop}
           onTryAgain={noop}
-          onViewPendingTx={noop}
           onBack={noop}
+          activeChain={props.mocks.meta.buyChain}
+          activeWallet={storyWallet}
         />
       </ScreenContainer>
 

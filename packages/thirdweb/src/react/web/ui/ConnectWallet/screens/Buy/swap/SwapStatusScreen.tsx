@@ -16,6 +16,8 @@ import { Text } from "../../../../components/text.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 
+// TODO: remove when removed all usage
+
 type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 
 export function SwapStatusScreen(props: {

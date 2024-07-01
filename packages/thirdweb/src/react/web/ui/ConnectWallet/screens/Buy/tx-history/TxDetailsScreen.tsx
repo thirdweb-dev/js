@@ -1,4 +1,6 @@
+import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { Wallet } from "../../../../../../../wallets/interfaces/wallet.js";
 import { FiatDetailsScreen } from "./FiatDetailsScreen.js";
 import { SwapDetailsScreen } from "./SwapDetailsScreen.js";
 import type { TxStatusInfo } from "./useBuyTransactionsToShow.js";
@@ -10,6 +12,8 @@ export function TxDetailsScreen(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  activeChain: Chain;
+  activeWallet: Wallet;
 }) {
   const { statusInfo } = props;
 
@@ -32,6 +36,8 @@ export function TxDetailsScreen(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        activeChain={props.activeChain}
+        activeWallet={props.activeWallet}
       />
     );
   }

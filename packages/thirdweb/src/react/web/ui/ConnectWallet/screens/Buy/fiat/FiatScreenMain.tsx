@@ -4,7 +4,10 @@ import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
-import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
+import type {
+  Account,
+  Wallet,
+} from "../../../../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../../../../core/design-system/index.js";
 import { useBuyWithFiatQuote } from "../../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -41,6 +44,8 @@ export function FiatScreenMain(props: {
   onDone: () => void;
   isEmbed: boolean;
   onBack: () => void;
+  activeChain: Chain;
+  activeWallet: Wallet;
 }) {
   const { toToken, tokenAmount, account, client, toChain, selectedCurrency } =
     props;
@@ -85,6 +90,8 @@ export function FiatScreenMainUI(props: {
   isEmbed: boolean;
   onBack: () => void;
   quoteQuery: UseQueryResult<BuyWithFiatQuote>;
+  activeChain: Chain;
+  activeWallet: Wallet;
 }) {
   const {
     toToken,
@@ -144,6 +151,8 @@ export function FiatScreenMainUI(props: {
           openedWindow={openedWindow}
           onDone={props.onDone}
           isEmbed={props.isEmbed}
+          activeChain={props.activeChain}
+          activeWallet={props.activeWallet}
         />
       ),
     });

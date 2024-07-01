@@ -14,6 +14,7 @@ import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import type { CurrencyMeta } from "../fiat/currencies.js";
 import {
+  PartialSuccessMessage,
   StepContainer,
   Stepper,
   TokenInfo,
@@ -70,6 +71,15 @@ export type FiatConfirmationScreenUIProps = {
     | {
         activeStep: "swap" | "approve";
         status: "fetching-quote" | "quote-fetch-error";
+      }
+    | {
+        activeStep: "swap";
+        status: "partialSuccess";
+        data: {
+          // unexpected token and amount
+          token: ERC20OrNativeToken;
+          amount: string;
+        };
       };
   activeChain: Chain;
   onOnrampClick: () => void;
@@ -89,7 +99,9 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
   const modalTitle =
     props.state.activeStep === "done"
       ? "Purchased successfully"
-      : "Confirm Purchase";
+      : props.state.status === "partialSuccess"
+        ? "Incomplete"
+        : "Confirm Purchase";
 
   return (
     <Container>
@@ -438,16 +450,18 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
               )}
 
             {/* Swap Button */}
-            {props.state.activeStep === "swap" && props.swapRequired && (
-              <WithSwitchNetworkButton
-                activeChain={props.activeChain}
-                isLoading={props.state.status === "pending"}
-                label="Swap"
-                loadingLabel="Swapping"
-                onClick={props.swapRequired.onSwapClick}
-                targetChain={props.swapRequired.swapFrom.chain}
-              />
-            )}
+            {props.state.activeStep === "swap" &&
+              props.swapRequired &&
+              props.state.status !== "partialSuccess" && (
+                <WithSwitchNetworkButton
+                  activeChain={props.activeChain}
+                  isLoading={props.state.status === "pending"}
+                  label="Swap"
+                  loadingLabel="Swapping"
+                  onClick={props.swapRequired.onSwapClick}
+                  targetChain={props.swapRequired.swapFrom.chain}
+                />
+              )}
           </>
         )}
 
@@ -503,6 +517,25 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
               <Text color="accentText" center size="sm">
                 Estimated time {props.swapRequired.estimatedTimeToSwap}
               </Text>
+            </>
+          )}
+
+        {/* Partial Sucess  */}
+        {props.state.activeStep === "swap" &&
+          props.state.status === "partialSuccess" && (
+            <>
+              <Spacer y="md" />
+              <PartialSuccessMessage
+                chain={props.to.chain}
+                expected={{
+                  amount: props.to.amount,
+                  token: props.to.token,
+                }}
+                got={{
+                  amount: props.state.data.amount,
+                  token: props.state.data.token,
+                }}
+              />
             </>
           )}
 

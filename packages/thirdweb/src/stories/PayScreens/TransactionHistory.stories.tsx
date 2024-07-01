@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useQuery } from "@tanstack/react-query";
+import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { polygon } from "../../chains/chain-definitions/polygon.js";
 import { useBuySupportedDestinations } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import { BuyTxHistoryListUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { FiatDetailsScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/FiatDetailsScreen.js";
 import { SwapDetailsScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/SwapDetailsScreen.js";
 import { TxDetailsScreen } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/TxDetailsScreen.js";
-import { storyAccount, storyClient } from "../utils.js";
+import { storyAccount, storyClient, storyWallet } from "../utils.js";
 import { Row, noop } from "../utils.js";
 import { ScreenContainer } from "./ScreenContainer.js";
 import {
@@ -73,6 +74,8 @@ function TransactionHistoryTest(props: {
               onDone={noop}
               status={onRampPendingSwapRequiredTxStatus}
               stopPollingStatus={noop}
+              activeChain={ethereum}
+              activeWallet={storyWallet}
             />
           </ScreenContainer>
 
@@ -88,6 +91,8 @@ function TransactionHistoryTest(props: {
               onDone={noop}
               status={onRampCompleteSwapRequiredTxStatus}
               stopPollingStatus={noop}
+              activeChain={ethereum}
+              activeWallet={storyWallet}
             />
           </ScreenContainer>
 
@@ -103,6 +108,8 @@ function TransactionHistoryTest(props: {
               onDone={noop}
               status={onRampCompletedSwapCompletedTxStatus}
               stopPollingStatus={noop}
+              activeChain={ethereum}
+              activeWallet={storyWallet}
             />
           </ScreenContainer>
         </div>
@@ -121,6 +128,8 @@ function TransactionHistoryTest(props: {
               status: onRampCompletedNoSwapRequired,
               type: "fiat",
             }}
+            activeChain={ethereum}
+            activeWallet={storyWallet}
           />
         </ScreenContainer>
       </Row>
