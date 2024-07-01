@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { FiatScreenMainUI } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/FiatScreenMain.js";
-import { OnrampStatusScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/fiat/FiatStatusScreen.js";
 import {
   FiatSteps,
   fiatQuoteToPartialQuote,
@@ -32,38 +31,6 @@ export function BuyWithFiatFlowTest(props: {
   const fiatQuoteQuery = useQuery({
     queryKey: ["fiat.quote", props.mocks.meta],
     queryFn: () => props.mocks.quote,
-  });
-
-  const statusPendingQuery = useQuery({
-    queryKey: ["fiat.status.pending", props.mocks.meta],
-    queryFn: () => props.mocks.onrampStatus.pending,
-  });
-
-  const statusNoneQuery = useQuery({
-    queryKey: ["fiat.status.none", props.mocks.meta],
-    queryFn: () => props.mocks.onrampStatus.none,
-  });
-
-  const statusCompletedQuery = useQuery({
-    queryKey: ["fiat.status.success", props.mocks.meta],
-    queryFn: () => {
-      if (props.mocks.type === "onramponly") {
-        return props.mocks.onrampStatus.success;
-      }
-
-      throw new Error("invalid");
-    },
-  });
-
-  const statusFailedQuery = useQuery({
-    queryKey: ["fiat.status.failed", props.mocks.meta],
-    queryFn: () => {
-      if (props.mocks.type === "onramponly") {
-        return props.mocks.onrampStatus.failed;
-      }
-
-      throw new Error("invalid");
-    },
   });
 
   return (
@@ -156,74 +123,6 @@ export function BuyWithFiatFlowTest(props: {
             step={1}
           />
         </ScreenContainer>
-      )}
-
-      <Row>
-        <ScreenContainer theme={props.theme} label="Onramp status: none">
-          <OnrampStatusScreenUI
-            client={storyClient}
-            statusQuery={statusPendingQuery}
-            onDone={noop}
-            onBack={noop}
-            isBuyForTx={false}
-            isEmbed={false}
-            quote={props.mocks.quote}
-            hasTwoSteps={false}
-            onShowSwapFlow={noop}
-            openedWindow={null}
-          />
-        </ScreenContainer>
-
-        <ScreenContainer theme={props.theme} label="Onramp status: pending">
-          <OnrampStatusScreenUI
-            client={storyClient}
-            statusQuery={statusNoneQuery}
-            onDone={noop}
-            onBack={noop}
-            isBuyForTx={false}
-            isEmbed={false}
-            quote={props.mocks.quote}
-            hasTwoSteps={false}
-            onShowSwapFlow={noop}
-            openedWindow={null}
-          />
-        </ScreenContainer>
-      </Row>
-
-      {props.mocks.type === "onramponly" && (
-        <>
-          <Row>
-            <ScreenContainer theme={props.theme} label="Onramp status: success">
-              <OnrampStatusScreenUI
-                client={storyClient}
-                statusQuery={statusCompletedQuery}
-                onDone={noop}
-                onBack={noop}
-                isBuyForTx={false}
-                isEmbed={false}
-                quote={props.mocks.quote}
-                hasTwoSteps={false}
-                onShowSwapFlow={noop}
-                openedWindow={null}
-              />
-            </ScreenContainer>
-
-            <ScreenContainer theme={props.theme} label="Onramp status: failed">
-              <OnrampStatusScreenUI
-                client={storyClient}
-                statusQuery={statusFailedQuery}
-                onDone={noop}
-                onBack={noop}
-                isBuyForTx={false}
-                isEmbed={false}
-                quote={props.mocks.quote}
-                hasTwoSteps={false}
-                onShowSwapFlow={noop}
-                openedWindow={null}
-              />
-            </ScreenContainer>
-          </Row>
-        </>
       )}
 
       {props.mocks.type === "onrampandswap" && (
