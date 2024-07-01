@@ -27,8 +27,8 @@ export function sortWallets<T extends { id: string }>(
       })
       // show the recommended wallets even before that
       .sort((a, b) => {
-        const aIsRecommended = recommendedWallets?.find((w) => w === a);
-        const bIsRecommended = recommendedWallets?.find((w) => w === b);
+        const aIsRecommended = recommendedWallets?.find((w) => w.id === a.id);
+        const bIsRecommended = recommendedWallets?.find((w) => w.id === b.id);
 
         if (aIsRecommended && !bIsRecommended) {
           return -1;
@@ -38,7 +38,7 @@ export function sortWallets<T extends { id: string }>(
         }
         return 0;
       })
-      // show wallets with select ui first ( currently only in-app )
+      // show in-app wallets first
       .sort((a, b) => {
         const aIsInApp = a.id === "inApp" || a.id === "embedded";
         const bIsInApp = b.id === "inApp" || b.id === "embedded";
