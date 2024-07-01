@@ -7,8 +7,8 @@ import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWall
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import type { PayUIOptions } from "../../../ConnectButtonProps.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
+import type { SupportedChainAndTokens } from "../fetchChainsAndTokens.js";
 import { defaultSelectedCurrency } from "../fiat/currencies.js";
-import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
 import type { BuyForTx } from "./types.js";
 
 // handle states for token and chain selection

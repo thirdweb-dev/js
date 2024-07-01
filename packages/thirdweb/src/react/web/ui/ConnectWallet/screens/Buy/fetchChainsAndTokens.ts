@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Chain } from "../../../../../../../chains/types.js";
-import { defineChain } from "../../../../../../../chains/utils.js";
-import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { Chain } from "../../../../../../chains/types.js";
+import { defineChain } from "../../../../../../chains/utils.js";
+import type { ThirdwebClient } from "../../../../../../client/client.js";
 import {
   getPaySupportedDestinations,
   getPaySupportedSources,
-} from "../../../../../../../pay/utils/definitions.js";
-import { getClientFetch } from "../../../../../../../utils/fetch.js";
-import { withCache } from "../../../../../../../utils/promise/withCache.js";
+} from "../../../../../../pay/utils/definitions.js";
+import { getClientFetch } from "../../../../../../utils/fetch.js";
+import { withCache } from "../../../../../../utils/promise/withCache.js";
 
 type Response = {
   result: Array<{

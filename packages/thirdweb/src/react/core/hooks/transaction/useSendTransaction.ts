@@ -12,7 +12,7 @@ import {
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 import type { SupportedTokens } from "../../../web/ui/ConnectWallet/defaultTokens.js";
-import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
+import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/fetchChainsAndTokens.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
 

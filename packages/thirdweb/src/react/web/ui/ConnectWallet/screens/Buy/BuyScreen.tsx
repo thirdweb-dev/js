@@ -21,6 +21,11 @@ import type { SupportedTokens } from "../../defaultTokens.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import { isNativeToken } from "../nativeToken.js";
+import {
+  type SupportedChainAndTokens,
+  useBuySupportedDestinations,
+  useBuySupportedSources,
+} from "./fetchChainsAndTokens.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
 import { FiatFlow } from "./fiat/FiatFlow.js";
 import { FiatScreenMain } from "./fiat/FiatScreenMain.js";
@@ -30,11 +35,6 @@ import type { BuyForTx, SelectedScreen } from "./main/types.js";
 import { useUISelectionStates } from "./main/useUISelectionStates.js";
 import { SwapFlow } from "./swap/SwapFlow.js";
 import { SwapScreenMain } from "./swap/SwapScreenMain.js";
-import {
-  type SupportedChainAndTokens,
-  useBuySupportedDestinations,
-  useBuySupportedSources,
-} from "./swap/useSwapSupportedChains.js";
 
 export type BuyScreenProps = {
   onBack?: () => void;

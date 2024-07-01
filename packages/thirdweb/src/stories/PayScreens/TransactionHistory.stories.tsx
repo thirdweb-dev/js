@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useQuery } from "@tanstack/react-query";
 import { ethereum } from "../../chains/chain-definitions/ethereum.js";
 import { polygon } from "../../chains/chain-definitions/polygon.js";
-import { useBuySupportedDestinations } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
+import { useBuySupportedDestinations } from "../../react/web/ui/ConnectWallet/screens/Buy/fetchChainsAndTokens.js";
 import { BuyTxHistoryListUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { FiatDetailsScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/FiatDetailsScreen.js";
 import { SwapDetailsScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/tx-history/SwapDetailsScreen.js";

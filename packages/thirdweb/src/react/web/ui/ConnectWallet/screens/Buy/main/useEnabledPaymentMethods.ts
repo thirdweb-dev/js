@@ -2,7 +2,7 @@ import type { Chain } from "../../../../../../../chains/types.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { PayUIOptions } from "../../../ConnectButtonProps.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
-import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
+import type { SupportedChainAndTokens } from "../fetchChainsAndTokens.js";
 
 // Based on what toToken, toChain, and supportedDestinations are, determine which payment methods should be enabled
 // change the current method if it should be disabled

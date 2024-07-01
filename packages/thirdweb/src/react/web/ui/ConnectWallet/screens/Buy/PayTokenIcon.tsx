@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../../../client/client.js";
 import type { iconSize } from "../../../../../core/design-system/index.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
 import { type NativeToken, isNativeToken } from "../nativeToken.js";
-import { useBuySupportedDestinations } from "./swap/useSwapSupportedChains.js";
+import { useBuySupportedDestinations } from "./fetchChainsAndTokens.js";
 
 // This is a temporary solution to get the token icon working for ERC20 tokens
 // TODO: The proper solutioon is to include the token icon in the quotes / status response objects, currently it is missing.

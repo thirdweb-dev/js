@@ -32,14 +32,14 @@ export function OnRampTxDetailsTable(props: {
     currencySymbol: string;
     amount: string;
   };
-  statusMeta?: {
+  statusMeta: {
     color: FiatStatusMeta["color"];
     text: FiatStatusMeta["status"];
     txHash?: string;
   };
 }) {
   const onRampChainQuery = useChainQuery(getCachedChain(props.token.chainId));
-  const onrampTxHash = props.statusMeta?.txHash;
+  const onrampTxHash = props.statusMeta.txHash;
   const currencyMeta = getCurrencyMeta(props.fiat.currencySymbol);
 
   const lineSpacer = (
