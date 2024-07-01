@@ -43,7 +43,7 @@ export type FiatConfirmationScreenUIProps = {
       onApproveClick: () => void;
     } | null;
     onSwapClick: () => void;
-    estimatedTimeToSwap: string;
+    estimatedTimeToSwap: string | null;
     refetchSwapQuote: () => void;
   } | null;
   fiatFrom: {
@@ -64,7 +64,6 @@ export type FiatConfirmationScreenUIProps = {
         activeStep: "done";
         status: "idle";
         data: {
-          chain: Chain;
           txHash: string;
         };
       }
@@ -502,7 +501,7 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
             <>
               <Spacer y="md" />
               <Text color="accentText" center size="sm">
-                Estimated time {props.estimatedTimeToOnramp}
+                Estimated time: {props.estimatedTimeToOnramp}
               </Text>
             </>
           )}
@@ -511,7 +510,8 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
         {props.swapRequired &&
           (props.state.status === "idle" || props.state.status === "pending") &&
           props.state.activeStep === "swap" &&
-          props.swapRequired.swapFrom.chain === props.activeChain && (
+          props.swapRequired.swapFrom.chain === props.activeChain &&
+          props.swapRequired.estimatedTimeToSwap !== null && (
             <>
               <Spacer y="md" />
               <Text color="accentText" center size="sm">
@@ -541,10 +541,7 @@ export function FiatConfirmationScreenUI(props: FiatConfirmationScreenUIProps) {
 
         {/* Tx hash */}
         {props.state.activeStep === "done" && (
-          <TxHashLink
-            chain={props.state.data.chain}
-            txHash={props.state.data.txHash}
-          />
+          <TxHashLink chain={props.to.chain} txHash={props.state.data.txHash} />
         )}
       </Container>
     </Container>

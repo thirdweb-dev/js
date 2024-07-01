@@ -109,7 +109,6 @@ function SwapOnly(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -242,7 +241,6 @@ function SwapAndApprove(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -424,7 +422,6 @@ function SwapApproveTx(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -576,7 +573,6 @@ function SwapAndTx(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}

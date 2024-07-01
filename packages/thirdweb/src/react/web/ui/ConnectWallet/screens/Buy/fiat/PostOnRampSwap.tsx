@@ -81,13 +81,11 @@ export function PostOnRampSwap(props: {
       buyWithCryptoQuote={lockedOnRampQuote}
       client={props.client}
       onBack={props.onBack}
-      isFiatFlow={true}
       onDone={props.onDone}
       onTryAgain={() => {
         setLockedOnRampQuote(undefined);
         postOnRampQuoteQuery.refetch();
       }}
-      isBuyForTx={props.isBuyForTx}
       isEmbed={props.isEmbed}
       activeChain={props.activeChain}
       activeWallet={props.activeWallet}

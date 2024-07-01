@@ -1,3 +1,5 @@
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
 
 export type BuyForTx = {
@@ -9,8 +11,12 @@ export type BuyForTx = {
 
 export type SelectedScreen =
   | {
-      id: "node";
-      node: React.ReactNode;
+      id: "fiatFlow";
+      quote: BuyWithFiatQuote;
+    }
+  | {
+      id: "swapFlow";
+      quote: BuyWithCryptoQuote;
     }
   | {
       id:

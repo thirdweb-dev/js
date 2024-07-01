@@ -132,8 +132,6 @@ export function BuyWithCryptoFlowTest(props: {
           account={storyAccount}
           buyWithCryptoQuote={props.mocks.quote}
           client={storyClient}
-          isBuyForTx={false}
-          isFiatFlow={false}
           onDone={noop}
           onTryAgain={noop}
           onBack={noop}

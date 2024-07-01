@@ -3,7 +3,6 @@ import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
-import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import type {
   Account,
   Wallet,
@@ -21,10 +20,7 @@ import { EstimatedTimeAndFees } from "../EstimatedTimeAndFees.js";
 import { PayWithCreditCard } from "../PayWIthCreditCard.js";
 import { TokenSelectedLayout } from "../main/TokenSelectedLayout.js";
 import type { BuyForTx, SelectedScreen } from "../main/types.js";
-import { openOnrampPopup } from "../openOnRamppopup.js";
 import { FiatFees } from "../swap/Fees.js";
-import { addPendingTx } from "../swap/pendingSwapTx.js";
-import { FiatFlow } from "./FiatFlow.js";
 import type { CurrencyMeta } from "./currencies.js";
 
 export function FiatScreenMain(props: {
@@ -92,6 +88,7 @@ export function FiatScreenMainUI(props: {
   quoteQuery: UseQueryResult<BuyWithFiatQuote>;
   activeChain: Chain;
   activeWallet: Wallet;
+  account: Account;
 }) {
   const {
     toToken,
@@ -104,7 +101,6 @@ export function FiatScreenMainUI(props: {
     selectedCurrency,
   } = props;
 
-  const buyWithFiatOptions = props.payOptions.buyWithFiat;
   const fiatQuoteQuery = props.quoteQuery;
 
   function handleSubmit() {
@@ -112,49 +108,9 @@ export function FiatScreenMainUI(props: {
       return;
     }
 
-    const hasTwoSteps = isSwapRequiredPostOnramp(fiatQuoteQuery.data);
-    let openedWindow: Window | null = null;
-
-    if (!hasTwoSteps) {
-      openedWindow = openOnrampPopup(
-        fiatQuoteQuery.data.onRampLink,
-        typeof props.theme === "string" ? props.theme : props.theme.type,
-      );
-
-      addPendingTx({
-        type: "fiat",
-        intentId: fiatQuoteQuery.data.intentId,
-      });
-    }
-
     setScreen({
-      id: "node",
-      node: (
-        <FiatFlow
-          isBuyForTx={!!props.buyForTx}
-          quote={fiatQuoteQuery.data}
-          onBack={() => {
-            setScreen({
-              id: "buy-with-fiat",
-            });
-          }}
-          client={client}
-          testMode={
-            buyWithFiatOptions !== false
-              ? buyWithFiatOptions?.testMode || false
-              : false
-          }
-          theme={
-            typeof props.theme === "string" ? props.theme : props.theme.type
-          }
-          onViewPendingTx={props.onViewPendingTx}
-          openedWindow={openedWindow}
-          onDone={props.onDone}
-          isEmbed={props.isEmbed}
-          activeChain={props.activeChain}
-          activeWallet={props.activeWallet}
-        />
-      ),
+      id: "fiatFlow",
+      quote: fiatQuoteQuery.data,
     });
   }
 

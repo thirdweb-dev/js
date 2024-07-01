@@ -22,6 +22,17 @@ export const Dark: Story = {
   },
 };
 
+export const FiatTestMode: Story = {
+  args: {
+    theme: "dark",
+    payOptions: {
+      buyWithFiat: {
+        testMode: true,
+      },
+    },
+  },
+};
+
 export const Light: Story = {
   args: {
     theme: "light",

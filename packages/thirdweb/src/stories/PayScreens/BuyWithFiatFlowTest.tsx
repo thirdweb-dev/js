@@ -176,6 +176,7 @@ export function BuyWithFiatFlowTest(props: {
           theme={props.theme}
           activeChain={props.mocks.meta.buyChain}
           activeWallet={storyWallet}
+          account={storyAccount}
         />
       </ScreenContainer>
 
@@ -299,8 +300,6 @@ export function BuyWithFiatFlowTest(props: {
               account={storyAccount}
               buyWithCryptoQuote={props.mocks.postOnrampSwap.quote}
               client={storyClient}
-              isBuyForTx={false}
-              isFiatFlow={false}
               onDone={noop}
               onTryAgain={noop}
               onBack={noop}

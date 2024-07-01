@@ -22,11 +22,13 @@ import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import { isNativeToken } from "../nativeToken.js";
 import { CurrencySelection } from "./fiat/CurrencySelection.js";
+import { FiatFlow } from "./fiat/FiatFlow.js";
 import { FiatScreenMain } from "./fiat/FiatScreenMain.js";
 import { BuyUIMainScreen } from "./main/BuyUIMainScreen.js";
 import { PaymentMethodSelectionScreen } from "./main/PaymentMethodSelection.js";
 import type { BuyForTx, SelectedScreen } from "./main/types.js";
 import { useUISelectionStates } from "./main/useUISelectionStates.js";
+import { SwapFlow } from "./swap/SwapFlow.js";
 import { SwapScreenMain } from "./swap/SwapScreenMain.js";
 import {
   type SupportedChainAndTokens,
@@ -187,8 +189,53 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   // screens ----------------------------
 
-  if (screen.id === "node") {
-    return screen.node;
+  if (screen.id === "fiatFlow" && account && activeChain && activeWallet) {
+    return (
+      <FiatFlow
+        account={account}
+        activeChain={activeChain}
+        activeWallet={activeWallet}
+        client={client}
+        isBuyForTx={!!props.buyForTx}
+        isEmbed={props.isEmbed}
+        onBack={() => {
+          setScreen({ id: "buy-with-fiat" });
+        }}
+        onDone={props.onDone}
+        quote={screen.quote}
+        theme={typeof props.theme === "string" ? props.theme : props.theme.type}
+        testMode={
+          !!(
+            props.payOptions.buyWithFiat !== false &&
+            props.payOptions.buyWithFiat?.testMode === true
+          )
+        }
+      />
+    );
+  }
+
+  if (screen.id === "swapFlow" && account && activeChain && activeWallet) {
+    return (
+      <SwapFlow
+        account={account}
+        activeChain={activeChain}
+        activeWallet={activeWallet}
+        buyWithCryptoQuote={screen.quote}
+        client={client}
+        isEmbed={props.isEmbed}
+        onBack={() => {
+          setScreen({
+            id: "buy-with-crypto",
+          });
+        }}
+        onDone={props.onDone}
+        onTryAgain={() => {
+          setScreen({
+            id: "buy-with-crypto",
+          });
+        }}
+      />
+    );
   }
 
   if (screen.id === "select-currency") {

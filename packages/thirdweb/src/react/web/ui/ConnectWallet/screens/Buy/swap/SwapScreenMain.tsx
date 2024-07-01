@@ -25,7 +25,6 @@ import { TokenSelectedLayout } from "../main/TokenSelectedLayout.js";
 import type { BuyForTx, SelectedScreen } from "../main/types.js";
 import { SwapFees } from "./Fees.js";
 import { PayWithCrypto } from "./PayWithCrypto.js";
-import { SwapFlow } from "./SwapFlow.js";
 
 export function SwapScreenMain(props: {
   setDrawerScreen: (screen: React.ReactNode) => void;
@@ -163,31 +162,8 @@ export function SwapScreenMainUI(props: {
     }
 
     setScreen({
-      id: "node",
-      node: (
-        <SwapFlow
-          isBuyForTx={!!props.buyForTx}
-          isEmbed={props.isEmbed}
-          client={client}
-          onBack={() => {
-            setScreen({
-              id: "buy-with-crypto",
-            });
-          }}
-          buyWithCryptoQuote={quoteQuery.data}
-          account={account}
-          isFiatFlow={false}
-          onDone={props.onDone}
-          onTryAgain={() => {
-            setScreen({
-              id: "buy-with-crypto",
-            });
-            quoteQuery.refetch();
-          }}
-          activeChain={props.activeChain}
-          activeWallet={props.activeWallet}
-        />
-      ),
+      id: "swapFlow",
+      quote: quoteQuery.data,
     });
   }
 

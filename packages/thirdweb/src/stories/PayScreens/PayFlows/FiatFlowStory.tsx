@@ -92,7 +92,6 @@ function OnrampOnly(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -254,7 +253,6 @@ function OnrampAndOneStepSwap(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -459,7 +457,6 @@ function OnrampAndTwoStepSwap(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -713,7 +710,6 @@ function OnrampAndTwoStepSwapTx(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}
@@ -924,7 +920,6 @@ function OnrampOneStepSwapTx(props: {
             activeStep: "done",
             status: "idle",
             data: {
-              chain: polygon,
               txHash: "0x1234567890",
             },
           }}

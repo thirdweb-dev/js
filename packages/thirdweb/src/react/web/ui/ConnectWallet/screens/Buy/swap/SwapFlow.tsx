@@ -27,11 +27,9 @@ type SwapFlowProps = {
   activeChain: Chain;
   // onViewPendingTx: () => void;
   client: ThirdwebClient;
-  isFiatFlow: boolean;
   onDone: () => void;
   onTryAgain: () => void;
   // TODO - pass the txInfo here
-  isBuyForTx: boolean;
   isEmbed: boolean;
   activeWallet: Wallet;
 };
@@ -113,54 +111,61 @@ export function SwapFlow(props: SwapFlowProps) {
       return;
     }
 
-    // Swap Complete
-    if (
-      swapStatus.data?.status === "COMPLETED" &&
-      swapStatus.data.destination
-    ) {
-      // Partial Success - Got unexpected tokens
-      if (swapStatus.data.subStatus === "PARTIAL_SUCCESS") {
+    switch (swapStatus.data?.status) {
+      case "NONE":
+      case "NOT_FOUND":
+      case "PENDING": {
+        return;
+      }
+
+      case "COMPLETED": {
+        if (swapStatus.data.destination) {
+          // Partial Success - Got unexpected tokens
+          if (swapStatus.data.subStatus === "PARTIAL_SUCCESS") {
+            setUIState({
+              status: "partialSuccess",
+              activeStep: "swap",
+              data: {
+                token:
+                  swapStatus.data.destination.token.tokenAddress ===
+                  NATIVE_TOKEN_ADDRESS
+                    ? { nativeToken: true }
+                    : {
+                        address: swapStatus.data.destination.token.tokenAddress,
+                        name: swapStatus.data.destination.token.name || "",
+                        symbol: swapStatus.data.destination.token.symbol || "",
+                        // TODO: add when available in backend
+                        // icon: swapStatus.data.destination.token.icon
+                      },
+                amount: swapStatus.data.destination.amount,
+              },
+            });
+          }
+
+          // Actually sucessful
+          else {
+            setUIState({
+              status: "idle",
+              activeStep: "done",
+              data: {
+                txHash: swapStatus.data.destination.transactionHash,
+              },
+            });
+          }
+        }
+
+        return;
+      }
+
+      case "FAILED": {
         setUIState({
-          status: "partialSuccess",
+          status: "error",
           activeStep: "swap",
-          data: {
-            token:
-              swapStatus.data.destination.token.tokenAddress ===
-              NATIVE_TOKEN_ADDRESS
-                ? { nativeToken: true }
-                : {
-                    address: swapStatus.data.destination.token.tokenAddress,
-                    name: swapStatus.data.destination.token.name || "",
-                    symbol: swapStatus.data.destination.token.symbol || "",
-                    // TODO: add when available in backend
-                    // icon: swapStatus.data.destination.token.icon
-                  },
-            amount: swapStatus.data.destination.amount,
-          },
         });
-      }
-
-      // Actually sucessful
-      else {
-        setUIState({
-          status: "idle",
-          activeStep: "done",
-          data: {
-            chain: toChain,
-            txHash: swapStatus.data.destination.transactionHash,
-          },
-        });
+        return;
       }
     }
-
-    // Swap Failed
-    if (swapStatus.data?.status === "FAILED") {
-      setUIState({
-        status: "error",
-        activeStep: "swap",
-      });
-    }
-  }, [swapStatus.data, toChain]);
+  }, [swapStatus.data]);
 
   async function sendApproveTx() {
     if (!quote.approval) {

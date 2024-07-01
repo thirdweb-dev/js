@@ -53,7 +53,6 @@ export type SwapConfirmationScreenUIProps = {
         activeStep: "done";
         status: "idle";
         data: {
-          chain: Chain;
           txHash: string;
         };
       }
@@ -384,17 +383,14 @@ export function SwapConfirmationScreenUI(props: SwapConfirmationScreenUIProps) {
             <>
               <Spacer y="md" />
               <Text color="accentText" center size="sm">
-                Estimated time {props.estimatedTimeToSwap}
+                Estimated time: {props.estimatedTimeToSwap}
               </Text>
             </>
           )}
 
         {/* Tx hash */}
         {props.state.activeStep === "done" && (
-          <TxHashLink
-            chain={props.state.data.chain}
-            txHash={props.state.data.txHash}
-          />
+          <TxHashLink chain={props.to.chain} txHash={props.state.data.txHash} />
         )}
       </Container>
     </Container>
