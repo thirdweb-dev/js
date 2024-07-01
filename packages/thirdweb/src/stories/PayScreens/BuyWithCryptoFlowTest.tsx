@@ -3,10 +3,8 @@ import { BuyUIMainScreen } from "../../react/web/ui/ConnectWallet/screens/Buy/ma
 import { PaymentMethodSelectionScreen } from "../../react/web/ui/ConnectWallet/screens/Buy/main/PaymentMethodSelection.js";
 import { SwapFlow } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/SwapFlow.js";
 import { SwapScreenMainUI } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/SwapScreenMain.js";
-import { SwapStatusScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/SwapStatusScreen.js";
 import type { SupportedChainAndTokens } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import {
-  Row,
   StoryScreenTitle,
   noop,
   storyAccount,
@@ -24,26 +22,6 @@ export function BuyWithCryptoFlowTest(props: {
   const quoteQuery = useQuery({
     queryKey: ["crypto.mock.quote", props.mocks.meta],
     queryFn: () => Promise.resolve(props.mocks.quote),
-  });
-
-  const noneStatusQuery = useQuery({
-    queryKey: ["crypto.status.none", props.mocks.meta],
-    queryFn: () => Promise.resolve(props.mocks.status.none),
-  });
-
-  const pendingStatusQuery = useQuery({
-    queryKey: ["crypto.status.pending", props.mocks.meta],
-    queryFn: () => Promise.resolve(props.mocks.status.pending),
-  });
-
-  const failedStatusQuery = useQuery({
-    queryKey: ["crypto.status.failed", props.mocks.meta],
-    queryFn: () => Promise.resolve(props.mocks.status.failed),
-  });
-
-  const sucessStatusQuery = useQuery({
-    queryKey: ["crypto.status.success", props.mocks.meta],
-    queryFn: () => Promise.resolve(props.mocks.status.success),
   });
 
   return (
@@ -139,66 +117,6 @@ export function BuyWithCryptoFlowTest(props: {
           activeWallet={storyWallet}
         />
       </ScreenContainer>
-
-      <Row>
-        <ScreenContainer theme={props.theme} label="Swap Status: none">
-          <SwapStatusScreenUI
-            client={storyClient}
-            isBuyForTx={false}
-            isEmbed={true}
-            onDone={noop}
-            onTryAgain={noop}
-            onViewPendingTx={noop}
-            quote={props.mocks.quote}
-            statusQuery={noneStatusQuery}
-            onBack={noop}
-          />
-        </ScreenContainer>
-
-        <ScreenContainer theme={props.theme} label="Swap Status: Pending">
-          <SwapStatusScreenUI
-            client={storyClient}
-            isBuyForTx={false}
-            isEmbed={true}
-            onDone={noop}
-            onTryAgain={noop}
-            onViewPendingTx={noop}
-            quote={props.mocks.quote}
-            statusQuery={pendingStatusQuery}
-            onBack={noop}
-          />
-        </ScreenContainer>
-      </Row>
-
-      <Row>
-        <ScreenContainer theme={props.theme} label="Swap Success">
-          <SwapStatusScreenUI
-            client={storyClient}
-            isBuyForTx={false}
-            isEmbed={true}
-            onDone={noop}
-            onTryAgain={noop}
-            onViewPendingTx={noop}
-            quote={props.mocks.quote}
-            statusQuery={sucessStatusQuery}
-            onBack={noop}
-          />
-        </ScreenContainer>
-
-        <ScreenContainer theme={props.theme} label="Swap Failed">
-          <SwapStatusScreenUI
-            client={storyClient}
-            isBuyForTx={false}
-            isEmbed={true}
-            onDone={noop}
-            onTryAgain={noop}
-            onViewPendingTx={noop}
-            quote={props.mocks.quote}
-            statusQuery={failedStatusQuery}
-            onBack={noop}
-          />
-        </ScreenContainer>
-      </Row>
     </div>
   );
 }

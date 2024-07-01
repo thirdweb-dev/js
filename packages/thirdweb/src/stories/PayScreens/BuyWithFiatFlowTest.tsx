@@ -12,7 +12,6 @@ import {
 import { BuyUIMainScreen } from "../../react/web/ui/ConnectWallet/screens/Buy/main/BuyUIMainScreen.js";
 import { PaymentMethodSelectionScreen } from "../../react/web/ui/ConnectWallet/screens/Buy/main/PaymentMethodSelection.js";
 import { SwapFlow } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/SwapFlow.js";
-import { SwapStatusScreenUI } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/SwapStatusScreen.js";
 import type { SupportedChainAndTokens } from "../../react/web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import {
   Row,
@@ -61,39 +60,6 @@ export function BuyWithFiatFlowTest(props: {
     queryFn: () => {
       if (props.mocks.type === "onramponly") {
         return props.mocks.onrampStatus.failed;
-      }
-
-      throw new Error("invalid");
-    },
-  });
-
-  const postonrampStatusPendingQuery = useQuery({
-    queryKey: ["postonramp.status.pending", props.mocks.meta],
-    queryFn: () => {
-      if (props.mocks.type === "onrampandswap") {
-        return props.mocks.postOnrampSwap.status.pending;
-      }
-
-      throw new Error("invalid");
-    },
-  });
-
-  const postonrampStatusSuccessQuery = useQuery({
-    queryKey: ["postonramp.status.success", props.mocks.meta],
-    queryFn: () => {
-      if (props.mocks.type === "onrampandswap") {
-        return props.mocks.postOnrampSwap.status.success;
-      }
-
-      throw new Error("invalid");
-    },
-  });
-
-  const postonrampStatusFailedQuery = useQuery({
-    queryKey: ["postonramp.status.failed", props.mocks.meta],
-    queryFn: () => {
-      if (props.mocks.type === "onrampandswap") {
-        return props.mocks.postOnrampSwap.status.failed;
       }
 
       throw new Error("invalid");
@@ -307,53 +273,6 @@ export function BuyWithFiatFlowTest(props: {
               activeWallet={storyWallet}
             />
           </ScreenContainer>
-
-          <ScreenContainer theme={props.theme} label="Swap Pending">
-            <SwapStatusScreenUI
-              client={storyClient}
-              isBuyForTx={false}
-              isEmbed={true}
-              onDone={noop}
-              onTryAgain={noop}
-              onViewPendingTx={noop}
-              quote={props.mocks.postOnrampSwap.quote}
-              statusQuery={postonrampStatusPendingQuery}
-              onBack={noop}
-            />
-          </ScreenContainer>
-
-          <Row>
-            <ScreenContainer
-              theme={props.theme}
-              label="Postonramp Swap: Success"
-            >
-              <SwapStatusScreenUI
-                client={storyClient}
-                isBuyForTx={false}
-                isEmbed={true}
-                onDone={noop}
-                onTryAgain={noop}
-                onViewPendingTx={noop}
-                quote={props.mocks.postOnrampSwap.quote}
-                statusQuery={postonrampStatusSuccessQuery}
-                onBack={noop}
-              />
-            </ScreenContainer>
-
-            <ScreenContainer theme={props.theme} label="Swap Failed">
-              <SwapStatusScreenUI
-                client={storyClient}
-                isBuyForTx={false}
-                isEmbed={true}
-                onDone={noop}
-                onTryAgain={noop}
-                onViewPendingTx={noop}
-                quote={props.mocks.postOnrampSwap.quote}
-                statusQuery={postonrampStatusFailedQuery}
-                onBack={noop}
-              />
-            </ScreenContainer>
-          </Row>
         </>
       )}
     </div>
