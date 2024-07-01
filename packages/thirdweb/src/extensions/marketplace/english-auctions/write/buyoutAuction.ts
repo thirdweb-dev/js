@@ -15,11 +15,14 @@ export type BuyoutAuctionParams = {
  * @example
  * ```ts
  * import { buyoutAuction } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = buyoutAuction({
  *  contract,
  *  auctionId: 0n
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function buyoutAuction(

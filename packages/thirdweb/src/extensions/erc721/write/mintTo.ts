@@ -20,6 +20,8 @@ export type MintToParams = WithOverrides<{
  * @example
  * ```ts
  * import { mintTo } from "thirdweb/extensions/erc721";
+ * import { sendTransaction } from "thirdweb";
+ *
  * const transaction = mintTo({
  *  contract,
  *  to: "0x...",
@@ -30,8 +32,7 @@ export type MintToParams = WithOverrides<{
  *  },
  * });
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {

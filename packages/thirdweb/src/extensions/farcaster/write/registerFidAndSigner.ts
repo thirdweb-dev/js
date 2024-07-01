@@ -59,13 +59,17 @@ export type RegisterFidAndSignerParams = Prettify<
  * @example
  * ```ts
  * import { registerFidAndSigner } from "thirdweb/extensions/farcaster";
- * const tx = await registerFidAndSigner({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = registerFidAndSigner({
  *  client,
  *  userAccount,
  *  appAccount,
  * 	recoveryAddress,
  *  signerPublicKey
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function registerFidAndSigner(options: RegisterFidAndSignerParams) {

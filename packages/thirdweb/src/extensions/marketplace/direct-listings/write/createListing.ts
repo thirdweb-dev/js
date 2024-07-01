@@ -71,10 +71,11 @@ export type CreateListingParams = {
  * @example
  * ```typescript
  * import { createListing } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = createListing({...});
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createListing(

@@ -29,11 +29,15 @@ export type MintToParams = Prettify<
  * @example
  * ```ts
  * import { mintTo } from "thirdweb/extensions/erc20";
- * const tx = await mintTo({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = mintTo({
  *  contract,
  *  to: "0x...",
  *  amount: 100,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {

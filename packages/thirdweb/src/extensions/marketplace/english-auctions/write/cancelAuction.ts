@@ -16,11 +16,14 @@ export type CancelAuctionParams = {
  * @example
  * ```ts
  * import { cancelAuction } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = cancelAuction({
  *  contract,
  *  auctionId: 0n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function cancelAuction(

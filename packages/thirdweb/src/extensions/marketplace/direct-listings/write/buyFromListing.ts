@@ -20,13 +20,16 @@ export type BuyFromListingParams = {
  * @example
  * ```ts
  * import { buyFromListing } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
- * const result = await buyFromListing({
+ * const transaction = buyFromListing({
  *  contract,
  *  listingId: 1n,
  *  quantity: 1n,
  *  recipient: "0x...",
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function buyFromListing(

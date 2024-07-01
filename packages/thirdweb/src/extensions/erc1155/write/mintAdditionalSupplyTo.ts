@@ -16,6 +16,8 @@ export type MintAdditionalSupplyToParams = {
  * @example
  * ```ts
  * import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
+ *
  * const transaction = mintAdditionalSupplyTo({
  *  contract,
  *  to: "0x...",
@@ -23,7 +25,7 @@ export type MintAdditionalSupplyToParams = {
  *  supply: 10n,
  * });
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
+ * await sendTransaction({ transaction, account });
  *
  * ```
  */

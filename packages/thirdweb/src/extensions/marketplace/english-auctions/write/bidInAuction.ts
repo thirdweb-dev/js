@@ -22,12 +22,15 @@ export type BidInAuctionParams = {
  * @example
  * ```ts
  * import { bidInAuction } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = bidInAuction({
  *  contract,
  *  auctionId: 0n,
  *  bidAmount: "100",
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function bidInAuction(

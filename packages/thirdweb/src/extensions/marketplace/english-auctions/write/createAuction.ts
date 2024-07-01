@@ -100,11 +100,11 @@ export type CreateAuctionParams = {
  * @example
  * ```typescript
  * import { createAuction } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = createAuction({...});
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function createAuction(

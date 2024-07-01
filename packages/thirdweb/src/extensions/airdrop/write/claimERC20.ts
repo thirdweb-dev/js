@@ -19,6 +19,7 @@ export type ClaimERC20Params = {
  * @example
  * ```ts
  * import { claimERC20 } from "thirdweb/extensions/airdrop";
+ * import { sendTransaction } from "thirdweb";
  *
  * const tokenAddress = "0x..." // Address of airdropped tokens to claim
  * const recipient = "0x..."  // Address of the allowlisted recipient

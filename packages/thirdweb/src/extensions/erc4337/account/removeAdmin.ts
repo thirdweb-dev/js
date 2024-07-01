@@ -21,12 +21,14 @@ export type RemoveAdminOptions = {
  * @example
  * ```ts
  * import { removeAdmin } from 'thirdweb/extensions/erc4337';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = removeAdmin({
  *  contract,
  *  account,
  *  adminAddress: '0x...'
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC4337
