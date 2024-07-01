@@ -132,7 +132,20 @@ export async function getCoinbaseWebProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
-    const { CoinbaseWalletSDK } = await import("@coinbase/wallet-sdk");
+    let CoinbaseWalletSDK: unknown = (await import("@coinbase/wallet-sdk"))
+      .default;
+    // Workaround for Vite dev import errors
+    // https://github.com/vitejs/vite/issues/7112
+    if (
+      typeof CoinbaseWalletSDK !== "function" &&
+      typeof (CoinbaseWalletSDK as { default: unknown }).default === "function"
+    ) {
+      CoinbaseWalletSDK = (
+        CoinbaseWalletSDK as unknown as { default: typeof CoinbaseWalletSDK }
+      ).default;
+    }
+
+    // @ts-expect-error This import error is not visible to TypeScript
     const client = new CoinbaseWalletSDK({
       appName: options?.appMetadata?.name || getDefaultAppMetadata().name,
       appChainIds: options?.chains
