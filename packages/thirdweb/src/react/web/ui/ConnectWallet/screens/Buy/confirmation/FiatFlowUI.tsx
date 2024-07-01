@@ -510,7 +510,7 @@ export function FiatFlowUI(props: FiatFlowUIProps) {
         {props.swapRequired &&
           (props.state.status === "idle" || props.state.status === "pending") &&
           props.state.activeStep === "swap" &&
-          props.swapRequired.swapFrom.chain === props.activeChain &&
+          props.swapRequired.swapFrom.chain.id === props.activeChain.id &&
           props.swapRequired.estimatedTimeToSwap !== null && (
             <>
               <Spacer y="md" />

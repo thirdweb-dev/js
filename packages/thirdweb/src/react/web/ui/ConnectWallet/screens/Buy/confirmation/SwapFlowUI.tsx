@@ -379,7 +379,7 @@ export function SwapFlowUI(props: SwapFlowUIProps) {
         {!onlySwapRequired &&
           (props.state.status === "idle" || props.state.status === "pending") &&
           props.state.activeStep === "swap" &&
-          props.activeChain === props.from.chain && (
+          props.activeChain.id === props.from.chain.id && (
             <>
               <Spacer y="md" />
               <Text color="accentText" center size="sm">
