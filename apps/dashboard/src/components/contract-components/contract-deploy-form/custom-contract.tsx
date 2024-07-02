@@ -52,6 +52,7 @@ import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
 import { type Recipient, SplitFieldset } from "./split-fieldset";
 import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
+import { ExtensionInputFieldset } from "./extension-input-fieldset";
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -112,6 +113,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       !isImplementationDeploy) ||
     fullPublishMetadata.data?.deployType === "autoFactory" ||
     fullPublishMetadata.data?.deployType === "customFactory";
+  
+  const isModular = fullPublishMetadata.data?.routerType === "modular";
+
+  const defaultExtensions: any[] = fullPublishMetadata.data
+  ?.defaultExtensions;
 
   const deployParams = isFactoryDeployment
     ? initializerParams
@@ -397,6 +403,16 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {hasTrustedForwarders && (
                 <TrustedForwardersFieldset form={form} />
               )}
+              {isModular && defaultExtensions.map(e => {
+                return (
+                  <ExtensionInputFieldset
+                    form={form}
+                    extensionName={e.extensionName}
+                    extensionPublisher={e.publisherAddress}
+                    extensionVersion={e.extensionVersion}
+                  />
+                );
+              })}
               {Object.keys(formDeployParams).map((paramKey) => {
                 const deployParam = deployParams.find(
                   // biome-ignore lint/suspicious/noExplicitAny: FIXME

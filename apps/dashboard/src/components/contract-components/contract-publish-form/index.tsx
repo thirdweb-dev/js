@@ -147,6 +147,11 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       defaultExtensions:
         prePublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata?.defaultExtensions || [],
+      extensionsParamName:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata.factoryDeploymentData?.modularFactoryInput
+          ?.extensionsParamName || "",
+  
     };
   }, [
     configuredChainsIds,
@@ -252,6 +257,18 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     [publishMetadata.data?.abi, extensions],
   );
 
+
+  const isModularContract = useMemo(
+    () =>
+      isExtensionEnabled(
+        publishMetadata.data?.abi as Abi,
+        "ModularCore",
+        extensions,
+      ),
+    [publishMetadata.data?.abi, extensions],
+  );
+
+
   const hasExtensionsParam = useMemo(
     () =>
       constructorParams.some(
@@ -261,8 +278,16 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   );
 
   const shouldShowDynamicFactoryInput = useMemo(
-    () => isPluginRouter || (isDynamicContract && hasExtensionsParam),
-    [isPluginRouter, isDynamicContract, hasExtensionsParam],
+    () => 
+      isPluginRouter || 
+      (isDynamicContract && hasExtensionsParam) ||
+      isModularContract,
+    [isPluginRouter, isDynamicContract, isModularContract, hasExtensionsParam],
+  );
+
+  const shouldShowExtensionsParamInput = useMemo(
+    () => isModularContract,
+    [isModularContract],
   );
 
   // during loading and after success we should stay in loading state
@@ -334,7 +359,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                           ?.customFactoryAddresses,
                     },
                     modularFactoryInput: {
-                      hooksParamName: "",
+                      extensionsParamName: 
+                        data.factoryDeploymentData?.modularFactoryInput
+                          ?.extensionsParamName || "",
                     },
                   },
                 },
@@ -415,6 +442,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                 abi={publishMetadata.data?.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
                 shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
+                shouldShowExtensionsParamInput={shouldShowExtensionsParamInput}
+                deployParams={deployParams}
               />
             </Flex>
           )}

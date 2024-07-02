@@ -5,15 +5,28 @@ import { Heading, Link, Text } from "tw-components";
 import { AbiSelector } from "./abi-selector";
 import { DynamicContractsFieldset } from "./dynamic-contract-fieldset";
 import { NetworksFieldset } from "./networks-fieldset";
+import { ExtensionsParamSelector } from "./extensions-param-selector";
+import {
+  useConstructorParamsFromABI,
+  useFunctionParamsFromABI,
+} from "../hooks";
+
 
 interface DefaultFactoryProps {
   abi: Abi;
   shouldShowDynamicFactoryInput: boolean;
+  shouldShowExtensionsParamInput: boolean;
+  deployParams:
+    | ReturnType<typeof useFunctionParamsFromABI>
+    | ReturnType<typeof useConstructorParamsFromABI>;
+
 }
 
 export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
   abi,
   shouldShowDynamicFactoryInput,
+  shouldShowExtensionsParamInput,
+  deployParams
 }) => {
   const form = useFormContext();
 
@@ -66,9 +79,36 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
             }
           />
         </FormControl>
+        {shouldShowExtensionsParamInput && (
+          <>
+            <Flex flexDir="column" gap={2}>
+              <Heading size="title.md">Extension Param</Heading>
+              <Text>
+                The contract uses extensions. Choose the extension param name
+                from the initializer params below.
+              </Text>
+            </Flex>
+            <FormControl isRequired>
+              <ExtensionsParamSelector
+                deployParams={deployParams}
+                value={form.watch(
+                  `factoryDeploymentData.modularFactoryInput.extensionsParamName`,
+                )}
+                onChange={(selectedParam) =>
+                  form.setValue(
+                    `factoryDeploymentData.modularFactoryInput.extensionsParamName`,
+                    selectedParam,
+                  )
+                }
+              />
+            </FormControl>
+          </>
+        )}
       </Flex>
       <NetworksFieldset />
-      {shouldShowDynamicFactoryInput && <DynamicContractsFieldset />}
+      {shouldShowDynamicFactoryInput && (
+        <DynamicContractsFieldset isModular={shouldShowExtensionsParamInput} />
+      )}
     </Flex>
   );
 };

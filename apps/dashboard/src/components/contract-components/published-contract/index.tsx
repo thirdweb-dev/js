@@ -56,7 +56,7 @@ import { PublisherHeader } from "../publisher/publisher-header";
 import { AddressesModal } from "./addresses-modal";
 import { MarkdownRenderer } from "./markdown-renderer";
 
-interface ExtendedPublishedContract extends PublishedContractType {
+export interface ExtendedPublishedContract extends PublishedContractType {
   name: string;
   displayName?: string;
   description: string;

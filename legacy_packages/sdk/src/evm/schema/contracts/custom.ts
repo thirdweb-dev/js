@@ -171,7 +171,7 @@ export const CustomFactoryInput = /* @__PURE__ */ (() =>
  */
 export const ModularFactoryInput = /* @__PURE__ */ (() =>
   z.object({
-    hooksParamName: z.string(),
+    extensionsParamName: z.string(),
   }))();
 
 /**
