@@ -109,8 +109,9 @@ export const ConnectModalContent = (props: {
   );
 
   const handleBack = useCallback(() => {
+    setSelectionData({});
     setScreen(initialScreen);
-  }, [setScreen, initialScreen]);
+  }, [setScreen, initialScreen, setSelectionData]);
 
   const walletList = (
     <WalletSelector
