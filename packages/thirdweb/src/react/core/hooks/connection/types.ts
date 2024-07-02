@@ -28,7 +28,7 @@ export type AutoConnectProps = {
    * }
    * ```
    */
-  wallets: Wallet[];
+  wallets?: Wallet[];
 
   /**
    * A client is the entry point to the thirdweb SDK.

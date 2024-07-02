@@ -2,6 +2,10 @@ import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { fontSize } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import {
+  type SupportedTokens,
+  defaultTokens,
+} from "../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../components/Skeleton.js";
@@ -9,7 +13,6 @@ import { Spacer } from "../../components/Spacer.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,

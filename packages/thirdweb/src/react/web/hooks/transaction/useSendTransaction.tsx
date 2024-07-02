@@ -5,13 +5,13 @@ import type { PreparedTransaction } from "../../../../transaction/prepare-transa
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import { type Theme, iconSize } from "../../../core/design-system/index.js";
+import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import {
   type SendTransactionConfig,
   useSendTransactionCore,
 } from "../../../core/hooks/transaction/useSendTransaction.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import type { PayUIOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
-import type { SupportedTokens } from "../../ui/ConnectWallet/defaultTokens.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";

@@ -110,15 +110,13 @@ export class InAppNativeConnector implements InAppConnector {
       case "google":
       case "facebook":
       case "apple": {
-        if (!params.redirectUrl) {
-          throw new Error(
-            "redirectUrl deeplink is required for oauth login (ex: myApp://) - You also need add this deeplink in your allowed `Redirect URIs` under your API Key in your thirdweb dashboard: https://thirdweb.com/dashboard/settings/api-keys",
-          );
-        }
+        const ExpoLinking = require("expo-linking");
+        const redirectUrl =
+          params.redirectUrl || (ExpoLinking.createURL("") as string);
         const oauthProvider = oauthStrategyToAuthProvider[strategy];
         return this.socialLogin({
           provider: oauthProvider,
-          redirectUrl: params.redirectUrl,
+          redirectUrl,
         });
       }
       case "jwt": {

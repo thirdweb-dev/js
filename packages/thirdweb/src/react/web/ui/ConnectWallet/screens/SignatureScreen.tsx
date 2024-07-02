@@ -10,6 +10,7 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
+import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { wait } from "../../../../core/utils/wait.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../hooks/wallets/useDisconnect.js";
@@ -21,7 +22,6 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import type { ConnectButtonProps } from "../ConnectButtonProps.js";
 import { TOS } from "../Modal/TOS.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { WalletLogoSpinner } from "./WalletLogoSpinner.js";

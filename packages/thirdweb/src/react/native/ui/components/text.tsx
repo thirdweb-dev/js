@@ -3,7 +3,13 @@ import type { Theme } from "../../../core/design-system/index.js";
 
 export type ThemedTextProps = TextProps & {
   theme: Theme;
-  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
+  type?:
+    | "default"
+    | "title"
+    | "defaultSemiBold"
+    | "subtitle"
+    | "link"
+    | "subtext";
 };
 
 export function ThemedText({
@@ -21,6 +27,9 @@ export function ThemedText({
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
         type === "subtitle" ? styles.subtitle : undefined,
         type === "link" ? styles.link : undefined,
+        type === "subtext"
+          ? { ...styles.subtext, color: theme.colors.secondaryText }
+          : undefined,
         style,
       ]}
       {...rest}
@@ -31,24 +40,24 @@ export function ThemedText({
 const styles = StyleSheet.create({
   default: {
     fontSize: 16,
-    lineHeight: 24,
   },
   defaultSemiBold: {
     fontSize: 16,
-    lineHeight: 24,
     fontWeight: "600",
   },
+  subtext: {
+    fontSize: 14,
+  },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: "bold",
-    lineHeight: 32,
+    lineHeight: 28,
   },
   subtitle: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "600",
   },
   link: {
-    lineHeight: 30,
     fontSize: 16,
   },
 });

@@ -10,12 +10,9 @@ import {
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
-import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
-import { resolveAvatar } from "../../../../extensions/ens/resolve-avatar.js";
-import { resolveName } from "../../../../extensions/ens/resolve-name.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -30,19 +27,25 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import type {
+  ConnectButtonProps,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
+  PayUIOptions,
+} from "../../../core/hooks/connection/ConnectButtonProps.js";
 import {
   useChainQuery,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
-import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import { shortenString } from "../../../core/utils/addresses.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
+import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
 import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
-import { hasSmartAccount } from "../../utils/isSmartWallet.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { Img } from "../components/Img.js";
@@ -57,19 +60,12 @@ import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
-import type {
-  ConnectButtonProps,
-  ConnectButton_detailsButtonOptions,
-  ConnectButton_detailsModalOptions,
-  PayUIOptions,
-} from "./ConnectButtonProps.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector.js";
 import { onModalUnmount } from "./constants.js";
-import type { SupportedTokens } from "./defaultTokens.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
@@ -113,14 +109,18 @@ export const ConnectedWalletDetails: React.FC<{
 
   const setRootEl = useContext(SetRootElementContext);
   const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
 
   useChainsQuery(props.chains, 5);
 
-  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
-    client,
-    props.detailsButton?.displayBalanceToken,
-  );
+  const { ensAvatarQuery, addressOrENS, balanceQuery } =
+    useConnectedWalletDetails(
+      client,
+      walletChain,
+      activeAccount,
+      props.detailsButton?.displayBalanceToken,
+    );
 
   function closeModal() {
     setRootEl(null);
@@ -245,14 +245,17 @@ function DetailsModal(props: {
   const [isOpen, setIsOpen] = useState(true);
 
   const { client, locale } = props;
-  const { ensAvatarQuery, addressOrENS, balanceQuery } = useWalletInfo(
-    client,
-    props.displayBalanceToken,
-  );
+  const walletChain = useActiveWalletChain();
+  const activeAccount = useActiveAccount();
+  const { ensAvatarQuery, addressOrENS, balanceQuery } =
+    useConnectedWalletDetails(
+      client,
+      walletChain,
+      activeAccount,
+      props.displayBalanceToken,
+    );
 
   const activeWallet = useActiveWallet();
-  const activeAccount = useActiveAccount();
-  const walletChain = useActiveWalletChain();
   const chainQuery = useChainQuery(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
@@ -1182,60 +1185,5 @@ export function useWalletDetailsModal() {
 
   return {
     open: openModal,
-  };
-}
-
-function useWalletInfo(
-  client: ThirdwebClient,
-  displayBalanceToken?: Record<number, string>,
-) {
-  const walletChain = useActiveWalletChain();
-
-  const tokenAddress =
-    walletChain && displayBalanceToken
-      ? displayBalanceToken[Number(walletChain.id)]
-      : undefined;
-
-  const activeAccount = useActiveAccount();
-  const ensNameQuery = useQuery({
-    queryKey: ["ens-name", activeAccount?.address],
-    enabled: !!activeAccount?.address,
-    queryFn: () =>
-      resolveName({
-        client,
-        address: activeAccount?.address || "",
-        resolverChain: ethereum,
-      }),
-  });
-
-  const ensAvatarQuery = useQuery({
-    queryKey: ["ens-avatar", ensNameQuery.data],
-    enabled: !!ensNameQuery.data,
-    queryFn: async () =>
-      resolveAvatar({
-        client,
-        name: ensNameQuery.data || "",
-      }),
-  });
-
-  const shortAddress = activeAccount?.address
-    ? shortenString(activeAccount.address, false)
-    : "";
-
-  const balanceQuery = useWalletBalance({
-    chain: walletChain ? walletChain : undefined,
-    tokenAddress,
-    address: activeAccount?.address,
-    client,
-  });
-
-  const addressOrENS = ensNameQuery.data || shortAddress;
-
-  return {
-    ensNameQuery,
-    ensAvatarQuery,
-    addressOrENS,
-    shortAddress,
-    balanceQuery,
   };
 }

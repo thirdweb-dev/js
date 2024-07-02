@@ -14,6 +14,7 @@ import {
 } from "../../../../core/design-system/index.js";
 import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
+import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { ChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
@@ -25,7 +26,6 @@ import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
-import type { TokenInfo } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {

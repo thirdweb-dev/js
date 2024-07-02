@@ -6,6 +6,7 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -14,7 +15,6 @@ import { Text } from "../../ui/components/text.js";
 import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import { setLastAuthProvider } from "./storage.js";
 
 /**
  * @internal

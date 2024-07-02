@@ -15,6 +15,7 @@ import { getInstalledWalletProviders } from "../../../../../wallets/injected/mip
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
+import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
@@ -27,7 +28,6 @@ import {
 import { Spacer } from "../../components/Spacer.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import { useWalletInfo } from "../../hooks/useWalletInfo.js";
 import type { LocaleId } from "../../types.js";
 import { AccentFailIcon } from "../icons/AccentFailIcon.js";
 import type { ConnectLocale } from "../locale/types.js";

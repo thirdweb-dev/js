@@ -11,10 +11,10 @@ import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import type { SupportedTokens } from "../../../web/ui/ConnectWallet/defaultTokens.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
+import type { SupportedTokens } from "../../utils/defaultTokens.js";
 
 /**
  * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
