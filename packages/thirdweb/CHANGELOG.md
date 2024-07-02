@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.31.1
+
+### Patch Changes
+
+- [#3558](https://github.com/thirdweb-dev/js/pull/3558) [`54c1789`](https://github.com/thirdweb-dev/js/commit/54c17893307ea4dac13894cb3e07d82821a6012f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix recommended wallet ordering
+
+- [#3554](https://github.com/thirdweb-dev/js/pull/3554) [`cbb0bc2`](https://github.com/thirdweb-dev/js/commit/cbb0bc2835bcfef62e69c18596063842f305f624) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#3562](https://github.com/thirdweb-dev/js/pull/3562) [`98a9e22`](https://github.com/thirdweb-dev/js/commit/98a9e226fa4cecda00ddd4b7c675ec00d2139940) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix coinbase wallet connections on vite
+
 ## 5.31.0
 
 ### Minor Changes
