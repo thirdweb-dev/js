@@ -121,6 +121,7 @@ export const ConnectModalContent = (props: {
         setScreen(reservedScreens.getStarted);
       }}
       selectWallet={(newWallet) => {
+        setSelectionData({});
         if (newWallet.onConnectRequested) {
           newWallet
             .onConnectRequested()
