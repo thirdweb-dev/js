@@ -1,5 +1,45 @@
 # thirdweb
 
+## 5.32.0
+
+### Minor Changes
+
+- [#3570](https://github.com/thirdweb-dev/js/pull/3570) [`1a2e056`](https://github.com/thirdweb-dev/js/commit/1a2e0563299e22dbcac77d177a7b86011ecf377d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ConnectButton and ConnectEmbed components for React Native
+
+  ## ConnectButton and ConnectEmbed components for React Native
+
+  Same behavior as the web, you can use these prebuilt components to quickly provide wallet connection flows to your users.
+
+  You can use it the same way as you would in the web, with the same supported properties and configuration flags.
+
+  ```ts
+  import { ConnectButton } from "thirdweb/react";
+
+  <ConnectButton
+      client={client}
+  />
+  ```
+
+  and same for ConnectEmbed
+
+  ```ts
+  import { ConnectEmbed } from "thirdweb/react";
+
+  <ConnectEmbed
+      client={client}
+  />
+  ```
+
+### Patch Changes
+
+- [#3574](https://github.com/thirdweb-dev/js/pull/3574) [`f526d73`](https://github.com/thirdweb-dev/js/commit/f526d733d0c512ed607a5fecad8d8e8220f6fe75) Thanks [@MananTank](https://github.com/MananTank)! - \* Fix broken inApp wallet connection flow in Compact size Connect UI
+
+  - Fix missing back button in inApp wallet connection flow in Compact size Connect UI
+
+- [#3575](https://github.com/thirdweb-dev/js/pull/3575) [`5953131`](https://github.com/thirdweb-dev/js/commit/59531310d946396fc413bfaea4f224ab74bb92d7) Thanks [@MananTank](https://github.com/MananTank)! - Reset wallet selection data on wallet selection
+
+- [#3569](https://github.com/thirdweb-dev/js/pull/3569) [`e5f772d`](https://github.com/thirdweb-dev/js/commit/e5f772dd5c69e818bd17496a960d64775f9ffccc) Thanks [@edwardysun](https://github.com/edwardysun)! - Support localhost as a domain override option for the Pay service
+
 ## 5.31.1
 
 ### Patch Changes
