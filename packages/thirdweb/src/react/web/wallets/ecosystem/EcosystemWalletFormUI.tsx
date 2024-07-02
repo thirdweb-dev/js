@@ -54,16 +54,12 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {isCompact ? (
-        <>
-          <EcosystemWalletHeader
-            client={props.client}
-            onBack={onBack}
-            wallet={props.wallet}
-          />
-          <Spacer y="lg" />
-        </>
-      ) : null}
+      <EcosystemWalletHeader
+        client={props.client}
+        onBack={isCompact ? onBack : undefined}
+        wallet={props.wallet}
+      />
+      <Spacer y="lg" />
 
       <Container
         expand
