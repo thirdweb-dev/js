@@ -31,9 +31,9 @@ export async function ChainListCard({
 
   return (
     <div className="relative h-full">
-      <Card className="h-full w-full hover:bg-muted">
-        <CardHeader className="flex flex-row justify-between items-center p-4">
-          <div className="flex flex-row items-center space-x-2">
+      <Card className="w-full h-full hover:bg-muted">
+        <CardHeader className="flex flex-row items-center justify-between p-4">
+          <div className="flex flex-row items-center gap-2">
             <ChainIcon iconUrl={iconUrl} className="size-6" />
             <Link
               className="static group before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:z-0"
@@ -46,12 +46,12 @@ export async function ChainListCard({
           {favoriteButton}
         </CardHeader>
 
-        <CardContent className="pt-0 px-4 pb-4">
+        <CardContent className="px-4 pt-0 pb-4">
           {/* table of `chain id` `native token` `managed support`, header row on left value row on right */}
           <table className="w-full">
             <tbody className="[&_td>*]:min-h-[25px] text-sm">
               <tr>
-                <th className="text-left font-normal text-secondary-foreground">
+                <th className="font-normal text-left text-secondary-foreground">
                   Chain ID
                 </th>
                 <td className="text-right">
@@ -66,7 +66,7 @@ export async function ChainListCard({
                 </td>
               </tr>
               <tr>
-                <th className="text-left font-normal text-secondary-foreground">
+                <th className="font-normal text-left text-secondary-foreground">
                   Native Token
                 </th>
                 <td className="text-right">
@@ -76,7 +76,7 @@ export async function ChainListCard({
                 </td>
               </tr>
               <tr>
-                <th className="text-left font-normal text-secondary-foreground">
+                <th className="font-normal text-left text-secondary-foreground">
                   Available Services
                 </th>
 
@@ -90,7 +90,7 @@ export async function ChainListCard({
           </table>
 
           {(isDeprecated || chainMetadata?.gasSponsored) && (
-            <div className="mt-5 flex gap-5 border-t pt-4">
+            <div className="flex gap-5 pt-4 mt-5 border-t">
               {!isDeprecated && chainMetadata?.gasSponsored && (
                 <div className="gap-1.5 flex items-center">
                   <TicketCheckIcon className="text-foreground size-5" />

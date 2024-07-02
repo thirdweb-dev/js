@@ -5,7 +5,12 @@ import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
 
 export function TabLinks(props: {
-  links: { name: string; href: string; isActive: boolean }[];
+  links: {
+    name: string;
+    href: string;
+    isActive: boolean;
+    isEnabled?: boolean;
+  }[];
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLAnchorElement>();
@@ -16,14 +21,23 @@ export function TabLinks(props: {
         <div className="flex" ref={containerRef}>
           {props.links.map((tab) => {
             return (
-              <Button asChild key={tab.name} variant="ghost">
+              <Button
+                asChild
+                key={tab.name}
+                disabled={!tab.isEnabled}
+                variant="ghost"
+              >
                 <Link
                   data-active={tab.isActive}
                   ref={tab.isActive ? activeTabRef : undefined}
                   href={tab.href}
+                  aria-disabled={!tab.isEnabled}
                   className={cn(
                     "rounded-lg hover:bg-muted px-3 font-medium text-sm lg:text-base relative h-auto",
-                    !tab.isActive && "opacity-50 hover:opacity-100",
+                    !tab.isActive &&
+                      tab.isEnabled &&
+                      "opacity-50 hover:opacity-100",
+                    !tab.isEnabled && "opacity-50 pointer-events-none",
                   )}
                 >
                   {tab.name}
