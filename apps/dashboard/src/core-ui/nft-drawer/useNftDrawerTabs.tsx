@@ -4,7 +4,6 @@ import {
   type NFTContract,
   type SmartContract,
   getErcs,
-  useAddress,
 } from "@thirdweb-dev/react/evm";
 import { detectFeatures } from "components/contract-components/utils";
 import dynamic from "next/dynamic";
@@ -15,7 +14,7 @@ import {
   balanceOf,
   getNFT as getErc1155NFT,
 } from "thirdweb/extensions/erc1155";
-import { useReadContract } from "thirdweb/react";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import type { NFTDrawerTab } from "./types";
 
 type UseNFTDrawerTabsParams = {
@@ -53,7 +52,7 @@ export function useNFTDrawerTabs({
   oldContract,
   tokenId,
 }: UseNFTDrawerTabsParams): NFTDrawerTab[] {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const balanceOfQuery = useReadContract(balanceOf, {
     contract,

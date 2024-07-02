@@ -3,7 +3,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
+import { useChainIconUrl } from "../../../core/hooks/others/useChainQuery.js";
 import { CHAIN_ICON } from "../icons/svgs.js";
 import { RNImage } from "./RNImage.js";
 
@@ -15,9 +15,8 @@ export type ChainIconProps = {
 };
 
 export const ChainIcon = (props: ChainIconProps) => {
-  const chainQuery = useChainQuery(props.chain);
+  const { url } = useChainIconUrl(props.chain);
   const data = useMemo(() => {
-    const url = chainQuery?.data?.icon?.url;
     if (!url) {
       return CHAIN_ICON;
     }
@@ -29,7 +28,7 @@ export const ChainIcon = (props: ChainIconProps) => {
     } catch {
       return CHAIN_ICON;
     }
-  }, [props, chainQuery?.data?.icon?.url]);
+  }, [props, url]);
   return (
     <RNImage
       theme={props.theme}

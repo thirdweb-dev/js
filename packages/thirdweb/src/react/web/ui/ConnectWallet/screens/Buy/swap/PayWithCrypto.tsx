@@ -8,7 +8,7 @@ import {
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
 import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
@@ -37,7 +37,7 @@ export function PayWithCrypto(props: {
   client: ThirdwebClient;
   freezeChainAndTokenSelection?: boolean;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const { name } = useChainName(props.chain);
   const activeAccount = useActiveAccount();
 
   const balanceQuery = useWalletBalance({
@@ -89,8 +89,8 @@ export function PayWithCrypto(props: {
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
-          {chainQuery.data?.name ? (
-            <Text size="xs"> {chainQuery.data.name}</Text>
+          {name ? (
+            <Text size="xs"> {name}</Text>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}

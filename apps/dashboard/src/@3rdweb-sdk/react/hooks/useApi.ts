@@ -960,7 +960,7 @@ type FetchAuthTokenResponse = {
 
 const TOKEN_PROMISE_MAP = new Map<string, Promise<FetchAuthTokenResponse>>();
 
-async function fetchAuthToken(
+export async function fetchAuthToken(
   address: string,
   abortController?: AbortController,
 ): Promise<FetchAuthTokenResponse> {
@@ -990,7 +990,11 @@ async function fetchAuthToken(
         };
       })
       .then(resolve)
-      .catch(reject);
+      .catch(reject)
+      .finally(() => {
+        // remove the promise from the map when it's done
+        TOKEN_PROMISE_MAP.delete(address);
+      });
   });
   TOKEN_PROMISE_MAP.set(address, promise);
   return promise;

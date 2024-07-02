@@ -2,7 +2,6 @@ import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  useAddress,
   usePrimarySaleRecipient,
   useUpdatePrimarySaleRecipient,
 } from "@thirdweb-dev/react";
@@ -16,6 +15,7 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
   FormErrorMessage,
@@ -35,7 +35,7 @@ export const SettingsPrimarySale = <
   contract: TContract;
   detectedState: ExtensionDetectedState;
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const query = usePrimarySaleRecipient(contract);
   const mutation = useUpdatePrimarySaleRecipient(contract);

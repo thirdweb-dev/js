@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Theme } from "../../../core/design-system/index.js";
-import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
+import { useChainSymbol } from "../../../core/hooks/others/useChainQuery.js";
 import type {
   SupportedTokens,
   TokenInfo,
@@ -38,7 +38,7 @@ export const SendScreen = (props: SendScreenProps) => {
   const [selectedToken, setSelectedToken] = useState<TokenInfo>();
   const account = useActiveAccount();
   const chain = useActiveWalletChain();
-  const chainIfo = useChainQuery(chain);
+  const { symbol } = useChainSymbol(chain);
   const sendMutation = useSendToken(client);
   const [screen, setScreen] = useState<
     "base" | "tokenList" | "success" | "error"
@@ -193,7 +193,7 @@ export const SendScreen = (props: SendScreenProps) => {
                 type="subtext"
                 style={{ marginRight: spacing.md }}
               >
-                {selectedToken?.symbol || chainIfo.data?.nativeCurrency?.symbol}
+                {selectedToken?.symbol || symbol}
               </ThemedText>
             }
           />

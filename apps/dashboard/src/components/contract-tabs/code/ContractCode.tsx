@@ -1,12 +1,13 @@
 import { usePascalCaseContractName } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useAddress, useContract } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { constants } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
+import { useActiveAccount } from "thirdweb/react";
 import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
 import { CodeSegment } from "./CodeSegment";
 import type {
@@ -73,7 +74,7 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
     return getContractSnippets(data, contractName);
   }, [data, contractName]);
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 

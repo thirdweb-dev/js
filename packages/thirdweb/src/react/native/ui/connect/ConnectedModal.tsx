@@ -6,7 +6,7 @@ import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deplo
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
-import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../core/hooks/others/useChainQuery.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { fontSize, radius, spacing } from "../../design-system/index.js";
@@ -252,13 +252,13 @@ const WalletMenu = (props: ConnectedModalPropsInner) => {
 const ChainSwitcher = (props: ConnectedModalPropsInner) => {
   const { client, wallet, theme } = props;
   const chain = wallet.getChain();
-  const chainQuery = useChainQuery(chain);
+  const { name } = useChainName(chain);
   return (
     <TouchableOpacity style={styles.walletMenuRow}>
       <ChainIcon client={client} size={32} chain={chain} theme={theme} />
-      {chainQuery.data?.name ? (
+      {name ? (
         <ThemedText theme={theme} type="defaultSemiBold">
-          {chainQuery.data?.name}
+          {name}
         </ThemedText>
       ) : (
         <Skeleton theme={theme} style={{ width: 80, height: 16 }} />

@@ -30,8 +30,9 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
-import { defineChain, eth_getBlockByNumber, getRpcClient } from "thirdweb";
+import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
+import { defineDashboardChain } from "../../../lib/v5-adapter";
 import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
 
 interface ContractSubscriptionTableProps {
@@ -244,7 +245,7 @@ const ChainLastBlockTimestamp = ({
     queryFn: async () => {
       const rpcRequest = getRpcClient({
         client: thirdwebClient,
-        chain: defineChain(chainId),
+        chain: defineDashboardChain(chainId),
       });
       const block = await eth_getBlockByNumber(rpcRequest, {
         blockNumber,

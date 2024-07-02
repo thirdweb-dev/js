@@ -14,10 +14,11 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useAddress, useContract } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import { constants, BigNumber, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { DistributeButton } from "./components/distribute-button";
@@ -37,7 +38,7 @@ interface SplitPageProps {
 export const ContractSplitPage: React.FC<SplitPageProps> = ({
   contractAddress,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const contractQuery = useContract(contractAddress, "split");
   const configuredChainsRecord = useSupportedChainsRecord();
   const chainId = useDashboardEVMChainId();

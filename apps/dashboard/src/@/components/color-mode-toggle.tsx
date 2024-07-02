@@ -11,21 +11,21 @@ export function ColorModeToggle() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => {
-        setTheme(theme === "dark" ? "light" : "dark");
-      }}
-      aria-label="Toggle theme"
-    >
-      <ClientOnly ssr={<Skeleton className="size-6 bg-accent border" />}>
+    <ClientOnly ssr={<Skeleton className="size-10 bg-accent border" />}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => {
+          setTheme(theme === "dark" ? "light" : "dark");
+        }}
+        aria-label="Toggle theme"
+      >
         {theme === "light" ? (
           <Sun strokeWidth={1} className="size-6" />
         ) : (
           <Moon strokeWidth={1} className="size-6" />
         )}
-      </ClientOnly>
-    </Button>
+      </Button>
+    </ClientOnly>
   );
 }
