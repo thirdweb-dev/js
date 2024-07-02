@@ -34,10 +34,10 @@ export const SidebarNav: React.FC<SideBarNavProps> = ({ sections }) => {
   }, [currentPath]);
 
   return (
-    <aside className="w-full md:w-[300px] border-b md:border-b-0 relative md:sticky top-0 flex-shrink-0">
+    <aside className="w-full md:w-[250px] lg:w-[300px] border-b md:border-b-0 relative md:sticky top-0 flex-shrink-0">
       {/* mobile toggle */}
-      <div className="flex flex-row md:hidden w-full justify-between items-center p-4">
-        <label className="flex items-center text-accent-foreground font-semibold text-sm pl-3 border-l-2 border-primary h-8">
+      <div className="flex flex-row items-center justify-between w-full p-4 md:hidden">
+        <label className="flex items-center h-8 pl-3 text-sm font-semibold border-l-2 text-accent-foreground border-primary">
           {activeLinkInSections?.title || "Dashboard"}
         </label>
         <Button
@@ -51,7 +51,7 @@ export const SidebarNav: React.FC<SideBarNavProps> = ({ sections }) => {
       {/* actual link sections */}
       <div
         className={cn(
-          "transition-all md:transition-none max-h-0 md:max-h-full md:h-full overflow-hidden md:overflow-auto absolute md:bg-transparent md:relative w-full px-4 md:py-6",
+          "transition-all md:transition-none max-h-0 md:max-h-full md:h-full overflow-hidden md:overflow-auto absolute md:bg-transparent md:relative w-full px-4 md:py-10",
           isMobileOpen &&
             "h-svh max-h-svh top-full mt-[1px] md:top-0 overflow-auto backdrop-blur-lg md:backdrop-blur-none py-4 bg-background/50 z-50",
         )}
