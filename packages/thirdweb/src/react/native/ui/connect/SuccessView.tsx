@@ -15,7 +15,12 @@ export const SuccessView = (props: SuccessViewProps) => {
 
   return (
     <View style={styles.container}>
-      <RNImage data={CHECK_CIRCLE} size={64} color={theme.colors.success} />
+      <RNImage
+        theme={theme}
+        data={CHECK_CIRCLE}
+        size={64}
+        color={theme.colors.success}
+      />
       <ThemedText
         type="defaultSemiBold"
         theme={theme}

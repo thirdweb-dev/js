@@ -5,6 +5,7 @@ import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectB
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { fontSize, spacing } from "../../design-system/index.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
+import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedText } from "../components/text.js";
@@ -40,6 +41,7 @@ export function ConnectedButton(
     >
       <View style={styles.row}>
         <WalletImage
+          theme={theme}
           size={40}
           wallet={wallet}
           ensAvatar={ensAvatarQuery.data}
@@ -54,19 +56,24 @@ export function ConnectedButton(
           >
             {addressOrENS}
           </ThemedText>
-          <ThemedText
-            theme={theme}
-            type="subtext"
-            style={{
-              color: theme.colors.secondaryText,
-              fontSize: fontSize.sm,
-            }}
-          >
-            {balanceQuery.data
-              ? Number(balanceQuery.data.displayValue).toFixed(3)
-              : "---"}{" "}
-            {balanceQuery.data?.symbol}
-          </ThemedText>
+          {balanceQuery.data ? (
+            <ThemedText
+              theme={theme}
+              type="subtext"
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+              {balanceQuery.data?.symbol}
+            </ThemedText>
+          ) : (
+            <Skeleton
+              theme={theme}
+              style={{ width: 80, height: 16 }}
+              color={theme.colors.secondaryText}
+            />
+          )}
         </View>
       </View>
     </ThemedButton>

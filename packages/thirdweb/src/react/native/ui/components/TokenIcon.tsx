@@ -20,7 +20,11 @@ export function TokenIcon(props: {
   client: ThirdwebClient;
 }) {
   return props.token ? (
-    <RNImage data={props.token?.icon || genericTokenIcon} size={props.size} />
+    <RNImage
+      theme={props.theme}
+      data={props.token?.icon || genericTokenIcon}
+      size={props.size}
+    />
   ) : (
     <ChainIcon {...props} />
   );

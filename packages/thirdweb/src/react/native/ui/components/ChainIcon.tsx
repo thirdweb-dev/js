@@ -32,6 +32,7 @@ export const ChainIcon = (props: ChainIconProps) => {
   }, [props, chainQuery?.data?.icon?.url]);
   return (
     <RNImage
+      theme={props.theme}
       size={props.size}
       data={data}
       placeholder={CHAIN_ICON}

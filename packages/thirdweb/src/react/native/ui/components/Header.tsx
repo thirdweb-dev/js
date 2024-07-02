@@ -32,6 +32,7 @@ export function Header({
         }}
       >
         <RNImage
+          theme={theme}
           data={BACK_ICON}
           size={14}
           color={theme.colors.secondaryIconColor}
@@ -48,6 +49,7 @@ export function Header({
       {onBack && (
         <TouchableOpacity onPress={onBack}>
           <RNImage
+            theme={theme}
             data={BACK_ICON}
             size={24}
             color={theme.colors.secondaryIconColor}
@@ -60,6 +62,7 @@ export function Header({
       {onClose && (
         <TouchableOpacity onPress={onClose}>
           <RNImage
+            theme={theme}
             data={CLOSE_ICON}
             size={24}
             color={theme.colors.secondaryIconColor}

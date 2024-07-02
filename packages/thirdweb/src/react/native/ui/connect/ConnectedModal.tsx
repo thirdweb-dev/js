@@ -18,6 +18,7 @@ import { Address } from "../components/Address.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { type ContainerType, Header } from "../components/Header.js";
 import { RNImage } from "../components/RNImage.js";
+import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { ThemedButton } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
@@ -125,6 +126,7 @@ export function ConnectedModal(props: ConnectedModalProps) {
               }}
             >
               <RNImage
+                theme={theme}
                 data={CLOSE_ICON}
                 size={24}
                 color={theme.colors.secondaryIconColor}
@@ -168,23 +170,30 @@ const AccountHeader = (props: ConnectedModalProps) => {
     );
   return (
     <View style={styles.accountHeaderContainer}>
-      <WalletImage size={64} wallet={wallet} ensAvatar={ensAvatarQuery.data} />
+      <WalletImage
+        theme={theme}
+        size={64}
+        wallet={wallet}
+        ensAvatar={ensAvatarQuery.data}
+      />
       <SmartAccountBadge client={props.client} theme={theme} />
       <Spacer size="smd" />
       <Address account={account} theme={theme} addressOrENS={addressOrENS} />
       <Spacer size="xxs" />
-      <ThemedText
-        theme={theme}
-        type="subtext"
-        style={{
-          fontSize: fontSize.sm,
-        }}
-      >
-        {balanceQuery.data
-          ? Number(balanceQuery.data.displayValue).toFixed(3)
-          : "---"}{" "}
-        {balanceQuery.data?.symbol}{" "}
-      </ThemedText>
+      {balanceQuery.data ? (
+        <ThemedText
+          theme={theme}
+          type="subtext"
+          style={{
+            fontSize: fontSize.sm,
+          }}
+        >
+          {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+          {balanceQuery.data?.symbol}
+        </ThemedText>
+      ) : (
+        <Skeleton theme={theme} style={{ width: 80, height: 16 }} />
+      )}
     </View>
   );
 };
@@ -200,6 +209,7 @@ const WalletActionsRow = (props: ConnectedModalPropsInner) => {
         onPress={() => setModalState({ screen: "send" })}
       >
         <RNImage
+          theme={theme}
           size={24}
           data={SEND_ICON}
           color={theme.colors.secondaryIconColor}
@@ -215,6 +225,7 @@ const WalletActionsRow = (props: ConnectedModalPropsInner) => {
         onPress={() => setModalState({ screen: "receive" })}
       >
         <RNImage
+          theme={theme}
           size={24}
           data={RECEIVE_ICON}
           color={theme.colors.secondaryIconColor}
@@ -245,9 +256,13 @@ const ChainSwitcher = (props: ConnectedModalPropsInner) => {
   return (
     <TouchableOpacity style={styles.walletMenuRow}>
       <ChainIcon client={client} size={32} chain={chain} theme={theme} />
-      <ThemedText theme={theme} type="defaultSemiBold">
-        {chainQuery.data?.name || "---"}
-      </ThemedText>
+      {chainQuery.data?.name ? (
+        <ThemedText theme={theme} type="defaultSemiBold">
+          {chainQuery.data?.name}
+        </ThemedText>
+      ) : (
+        <Skeleton theme={theme} style={{ width: 80, height: 16 }} />
+      )}
     </TouchableOpacity>
   );
 };
@@ -260,6 +275,7 @@ const ViewFunds = (props: ConnectedModalPropsInner) => {
       onPress={() => setModalState({ screen: "view_funds" })}
     >
       <RNImage
+        theme={theme}
         size={32}
         data={COINS_ICON}
         color={theme.colors.secondaryIconColor}
@@ -283,6 +299,7 @@ const DisconnectWallet = (props: ConnectedModalProps) => {
       }}
     >
       <RNImage
+        theme={theme}
         size={32}
         data={EXIT_ICON}
         color={theme.colors.secondaryIconColor}
@@ -337,6 +354,7 @@ function SmartAccountBadge(props: {
       }}
     >
       <RNImage
+        theme={theme}
         data={SMART_WALLET_ICON}
         size={14}
         color={theme.colors.accentButtonBg}

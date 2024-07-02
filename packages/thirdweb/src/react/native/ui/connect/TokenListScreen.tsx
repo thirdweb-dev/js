@@ -12,6 +12,7 @@ import { spacing } from "../../design-system/index.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { RNImage } from "../components/RNImage.js";
+import { Skeleton } from "../components/Skeleton.js";
 import { TokenIcon } from "../components/TokenIcon.js";
 import { ThemedText } from "../components/text.js";
 import { RIGHT_CHEVRON } from "../icons/svgs.js";
@@ -87,17 +88,23 @@ export const TokenRow = (props: {
           {tokenName}
         </ThemedText>
         {address && (
-          <ThemedText theme={theme} type="subtext">
-            {balanceQuery.data
-              ? `${Number(balanceQuery.data.displayValue).toFixed(3)} ${balanceQuery.data.symbol}`
-              : "---"}
-          </ThemedText>
+          <>
+            {balanceQuery.data ? (
+              <ThemedText theme={theme} type="subtext">
+                {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+                {balanceQuery.data?.symbol}
+              </ThemedText>
+            ) : (
+              <Skeleton theme={theme} style={{ width: 80, height: 14 }} />
+            )}
+          </>
         )}
       </View>
       {props.onTokenSelected && (
         <>
           <View style={{ flex: 1 }} />
           <RNImage
+            theme={theme}
             size={24}
             data={RIGHT_CHEVRON}
             color={theme.colors.secondaryIconColor}

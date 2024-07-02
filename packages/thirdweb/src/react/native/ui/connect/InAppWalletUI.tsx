@@ -129,7 +129,7 @@ function SocialLogin(
           onPress={connectInAppWallet}
           disabled={connectMutation.isConnecting}
         >
-          <RNImage size={38} data={socialIcons[auth]} />
+          <RNImage theme={theme} size={38} data={socialIcons[auth]} />
         </TouchableOpacity>
       )}
     </View>

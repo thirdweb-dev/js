@@ -15,7 +15,12 @@ export const ErrorView = (props: ErrorViewProps) => {
 
   return (
     <View style={styles.container}>
-      <RNImage data={CLOSE_CIRCLE} size={64} color={theme.colors.danger} />
+      <RNImage
+        theme={theme}
+        data={CLOSE_CIRCLE}
+        size={64}
+        color={theme.colors.danger}
+      />
       <ThemedText
         type="defaultSemiBold"
         theme={theme}

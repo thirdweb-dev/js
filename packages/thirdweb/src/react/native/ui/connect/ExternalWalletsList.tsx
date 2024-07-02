@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Image,
   Linking,
@@ -13,6 +14,7 @@ import { useWalletImage, useWalletInfo } from "../../../core/utils/wallet.js";
 import { spacing } from "../../design-system/index.js";
 import type { useConnect } from "../../hooks/wallets/useConnect.js";
 import type { ContainerType } from "../components/Header.js";
+import { Skeleton } from "../components/Skeleton.js";
 import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
 
@@ -26,6 +28,19 @@ export type ExternalWalletsUiProps = {
 export function ExternalWalletsList(
   props: ExternalWalletsUiProps & { externalWallets: Wallet[] },
 ) {
+  const { connectMutation, client, theme } = props;
+  const [selectedWallet, setSelectedWallet] = useState<Wallet>();
+
+  const connectWallet = (wallet: Wallet) => {
+    setSelectedWallet(wallet);
+    connectMutation.connect(async () => {
+      await wallet.connect({
+        client,
+      });
+      return wallet;
+    });
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -37,7 +52,15 @@ export function ExternalWalletsList(
       >
         <View style={{ flexDirection: "column", gap: spacing.md }}>
           {props.externalWallets.map((wallet) => (
-            <ExternalWalletRow key={wallet.id} wallet={wallet} {...props} />
+            <ExternalWalletRow
+              key={wallet.id}
+              wallet={wallet}
+              connectWallet={connectWallet}
+              theme={theme}
+              isConnecting={
+                connectMutation.isConnecting && wallet.id === selectedWallet?.id
+              }
+            />
           ))}
         </View>
       </ScrollView>
@@ -46,38 +69,43 @@ export function ExternalWalletsList(
   );
 }
 
-function ExternalWalletRow(props: ExternalWalletsUiProps & { wallet: Wallet }) {
-  const { wallet, theme, client, connectMutation } = props;
+function ExternalWalletRow(props: {
+  theme: Theme;
+  wallet: Wallet;
+  isConnecting: boolean;
+  connectWallet: (wallet: Wallet) => void;
+}) {
+  const { wallet, theme, isConnecting, connectWallet } = props;
   const imageQuery = useWalletImage(wallet.id);
   const infoQuery = useWalletInfo(wallet.id);
-
-  const connectWallet = () => {
-    connectMutation.connect(async () => {
-      await wallet.connect({
-        client,
-      });
-      return wallet;
-    });
-  };
-
   return (
-    <TouchableOpacity style={styles.row} onPress={connectWallet}>
-      {imageQuery.data || connectMutation.isConnecting ? (
-        <Image
-          source={{ uri: imageQuery.data ?? "" }}
-          style={{ width: 52, height: 52, borderRadius: 6 }}
-        />
+    <TouchableOpacity style={styles.row} onPress={() => connectWallet(wallet)}>
+      {imageQuery.data ? (
+        isConnecting ? (
+          <View
+            style={{
+              width: 52,
+              height: 52,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ThemedSpinner color={theme.colors.primaryText} />
+          </View>
+        ) : (
+          <Image
+            source={{ uri: imageQuery.data ?? "" }}
+            style={{ width: 52, height: 52, borderRadius: 6 }}
+          />
+        )
       ) : (
-        <View
+        <Skeleton
+          theme={theme}
           style={{
             width: 52,
             height: 52,
-            justifyContent: "center",
-            alignItems: "center",
           }}
-        >
-          <ThemedSpinner color={theme.colors.primaryText} />
-        </View>
+        />
       )}
       <ThemedText theme={theme} type="subtitle">
         {infoQuery.data?.name || ""}

@@ -60,7 +60,7 @@ export function ThemedButtonWithIcon(
           width: "100%",
         }}
       >
-        <RNImage size={24} data={icon} />
+        <RNImage theme={theme} size={24} data={icon} />
         <ThemedText theme={theme}>{title}</ThemedText>
       </View>
     </ThemedButton>

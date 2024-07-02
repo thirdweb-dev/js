@@ -3,6 +3,7 @@ import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import { getWalletInfo } from "../../../../wallets/__generated__/getWalletInfo.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
+import type { Theme } from "../../../core/design-system/index.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import {
   APPLE_ICON,
@@ -15,6 +16,7 @@ import {
 import { RNImage } from "./RNImage.js";
 
 export const WalletImage = (props: {
+  theme: Theme;
   wallet: Wallet;
   size: number;
   ensAvatar?: string | null;
@@ -75,5 +77,5 @@ export const WalletImage = (props: {
   });
 
   const data = ensAvatar || imageData || WALLET_ICON;
-  return <RNImage data={data} size={size} />;
+  return <RNImage theme={props.theme} data={data} size={size} />;
 };

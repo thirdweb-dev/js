@@ -32,6 +32,7 @@ export const Address = ({ account, theme, addressOrENS }: AddressProps) => {
         {addressOrENS}
       </ThemedText>
       <RNImage
+        theme={theme}
         data={copySuccess ? CHECK : COPY_ICON}
         size={15}
         color={
