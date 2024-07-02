@@ -2,6 +2,7 @@ import { utils } from "ethers";
 import {
   verifyThirdwebPrebuiltImplementation,
   checkVerificationStatus,
+  ExplorerType,
 } from "../../common/verification";
 import { verify } from "../../common/verification";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -60,6 +61,7 @@ export class ContractVerifier extends RPCConnectionHandler {
     explorerAPIUrl: string,
     explorerAPIKey: string,
     contractVersion: string = "latest",
+    type?: ExplorerType,
     constructorArgs?: ConstructorParamMap,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
@@ -72,16 +74,19 @@ export class ContractVerifier extends RPCConnectionHandler {
       contractVersion,
       this.options.clientId,
       this.options.secretKey,
+      type,
       constructorArgs,
     );
 
-    console.info("Checking verification status...");
-    const verificationStatus = await checkVerificationStatus(
-      explorerAPIUrl,
-      explorerAPIKey,
-      guid,
-    );
-    console.info(verificationStatus);
+    if(type !== "blockscoutV2") {
+      console.info("Checking verification status...");
+      const verificationStatus = await checkVerificationStatus(
+        explorerAPIUrl,
+        explorerAPIKey,
+        guid,
+      );
+      console.info(verificationStatus);
+    }
   }
 
   /**
@@ -113,6 +118,7 @@ export class ContractVerifier extends RPCConnectionHandler {
     contractAddress: string,
     explorerAPIUrl: string,
     explorerAPIKey: string,
+    type?: ExplorerType,
     constructorArgs?: ConstructorParamMap,
   ) {
     const chainId = (await this.getProvider().getNetwork()).chainId;
@@ -136,15 +142,18 @@ export class ContractVerifier extends RPCConnectionHandler {
       explorerAPIUrl,
       explorerAPIKey,
       this.storage,
+      type,
       encodedArgs,
     );
 
-    console.info("Checking verification status...");
+    if(type !== "blockscoutV2") {
+      console.info("Checking verification status...");
     const verificationStatus = await checkVerificationStatus(
       explorerAPIUrl,
       explorerAPIKey,
       guid,
     );
     console.info(verificationStatus);
+    }
   }
 }
