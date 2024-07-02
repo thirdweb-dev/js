@@ -67,7 +67,10 @@ export function ConnectModal(
   const connectMutation = useConnect({
     client,
     accountAbstraction,
-    onConnect,
+    onConnect: (wallet) => {
+      props.onClose?.();
+      onConnect?.(wallet);
+    },
   });
   const wallets = props.wallets || getDefaultWallets(props);
   const [modalState, setModalState] = useState<ModalState>({ screen: "base" });

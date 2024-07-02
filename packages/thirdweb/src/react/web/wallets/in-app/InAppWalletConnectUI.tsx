@@ -6,6 +6,7 @@ import {
   useSelectionData,
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
+import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import type { LocaleId } from "../../ui/types.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
@@ -41,17 +42,20 @@ function InAppWalletConnectUI(props: {
   const setSelectionData = useSetSelectionData();
   const state = data as ConnectWalletSelectUIState;
   const locale = useInAppWalletLocale(props.localeId);
+  const { initialScreen } = useScreenContext();
 
   if (!locale) {
     return <LoadingScreen />;
   }
 
+  // if the the modal starts out with the wallet's connect ui instead of wallet selector - going back to main screen requires staying on the same component and clearing the selection data
+  // otherwise, we go back to the wallet selector by calling props.goBack
   const goBackToMain =
-    props.size === "compact"
-      ? props.goBack
-      : () => {
+    initialScreen === props.wallet
+      ? () => {
           setSelectionData({});
-        };
+        }
+      : props.goBack;
 
   const otpUserInfo = state?.emailLogin
     ? { email: state.emailLogin }

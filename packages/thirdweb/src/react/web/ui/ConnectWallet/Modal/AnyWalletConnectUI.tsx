@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
@@ -16,7 +16,6 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
-import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
@@ -71,12 +70,6 @@ export function AnyWalletConnectUI(props: {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const { wallet } = props;
   const walletInfo = useWalletInfo(props.wallet.id);
-  const setSelectionData = useSetSelectionData();
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: reset the selection data when the wallet changes
-  useEffect(() => {
-    setSelectionData({});
-  }, [wallet.id]);
 
   const localeFnQuery = useQuery({
     queryKey: ["injectedWalletLocale", props.localeId, walletInfo.data?.name],

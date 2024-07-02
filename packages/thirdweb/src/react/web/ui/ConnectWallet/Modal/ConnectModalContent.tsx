@@ -109,8 +109,9 @@ export const ConnectModalContent = (props: {
   );
 
   const handleBack = useCallback(() => {
+    setSelectionData({});
     setScreen(initialScreen);
-  }, [setScreen, initialScreen]);
+  }, [setScreen, initialScreen, setSelectionData]);
 
   const walletList = (
     <WalletSelector
@@ -120,6 +121,7 @@ export const ConnectModalContent = (props: {
         setScreen(reservedScreens.getStarted);
       }}
       selectWallet={(newWallet) => {
+        setSelectionData({});
         if (newWallet.onConnectRequested) {
           newWallet
             .onConnectRequested()
