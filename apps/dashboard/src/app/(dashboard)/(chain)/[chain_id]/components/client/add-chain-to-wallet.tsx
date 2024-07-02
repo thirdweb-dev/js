@@ -4,21 +4,29 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useMutation } from "@tanstack/react-query";
-import { useAddress, useChainId, useSwitchChain } from "@thirdweb-dev/react";
+import type { Chain } from "thirdweb";
+import {
+  useActiveAccount,
+  useActiveWalletChain,
+  useSwitchActiveWalletChain,
+} from "thirdweb/react";
 import { useDebounce } from "use-debounce";
 
 type AddChainToWalletProps = {
-  chainId: number;
+  chain?: Chain;
 };
 
 export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
-  const address = useAddress();
-  const switchChain = useSwitchChain();
-  const activeWalletChainId = useChainId();
+  const address = useActiveAccount()?.address;
+  const switchChain = useSwitchActiveWalletChain();
+  const activeWalletChainId = useActiveWalletChain()?.id;
 
   const switchChainMutation = useMutation({
     mutationFn: async () => {
-      await switchChain(props.chainId);
+      if (!props.chain) {
+        throw new Error("Chain is not defined");
+      }
+      await switchChain(props.chain);
     },
   });
 
@@ -28,7 +36,7 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
   const buttonContent = (
     <Button
       disabled={
-        !address || debouncedLoading || activeWalletChainId === props.chainId
+        !address || debouncedLoading || activeWalletChainId === props.chain?.id
       }
       className="w-full md:min-w-40"
       onClick={() => switchChainMutation.mutate()}
@@ -38,14 +46,14 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
     </Button>
   );
 
-  if (address && activeWalletChainId !== props.chainId) {
+  if (address && activeWalletChainId !== props.chain?.id) {
     return buttonContent;
   }
 
   return (
     <ToolTipLabel
       label={
-        activeWalletChainId === props.chainId
+        activeWalletChainId === props.chain?.id
           ? "You are already connected to this chain"
           : "Connect your wallet first"
       }

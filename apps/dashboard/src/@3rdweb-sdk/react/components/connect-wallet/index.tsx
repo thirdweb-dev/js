@@ -1,17 +1,22 @@
 "use client";
 
-import { ConnectWallet } from "@thirdweb-dev/react";
+import { thirdwebClient } from "@/constants/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSupportedChains } from "@thirdweb-dev/react";
+import { THIRDWEB_API_HOST } from "constants/urls";
+import { useTrack } from "hooks/analytics/useTrack";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
-import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { type ComponentProps, useCallback } from "react";
-import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
-import { useTrack } from "../../../../hooks/analytics/useTrack";
+import { useCallback, useMemo } from "react";
+import { defineChain } from "thirdweb";
+import { ConnectButton, type SiweAuthOptions } from "thirdweb/react";
+import { GLOBAL_AUTH_TOKEN_KEY } from "../../../../constants/app";
+import { fetchAuthToken } from "../../hooks/useApi";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { popularChains } from "../popularChains";
 
@@ -19,67 +24,159 @@ export interface ConnectWalletProps {
   shrinkMobile?: boolean;
   upsellTestnet?: boolean;
   onChainSelect?: (chainId: number) => void;
-  auth?: ComponentProps<typeof ConnectWallet>["auth"];
+  noAuth?: boolean;
   disableChainConfig?: boolean;
   disableAddCustomNetwork?: boolean;
 }
 
 export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
-  auth,
-  disableChainConfig,
-  disableAddCustomNetwork,
+  noAuth,
 }) => {
   const { theme } = useTheme();
-  const recentChains = useRecentlyUsedChains();
+  const recentChainsv4 = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
-  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
+  // const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const t = theme === "light" ? "light" : "dark";
+  const allv4Chains = useSupportedChains();
   const favChainsQuery = useFavoriteChains();
 
-  return (
-    <ConnectWallet
-      auth={auth}
-      theme={t}
-      welcomeScreen={() => {
-        return <ConnectWalletWelcomeScreen theme={t} />;
-      }}
-      termsOfServiceUrl="/tos"
-      privacyPolicyUrl="/privacy"
-      hideTestnetFaucet={false}
-      networkSelector={{
-        sections: [
-          {
-            label: "Recently used",
-            chains: recentChains,
-          },
-          {
-            label: "Favorites",
-            chains: favChainsQuery.data ?? [],
-          },
-          {
-            label: "Popular",
-            chains: popularChains,
-          },
-        ],
-        onSwitch(chain) {
-          addRecentlyUsedChainId(chain.chainId);
-        },
-        onCustomClick: disableAddCustomNetwork
-          ? undefined
-          : () => {
-              setIsNetworkConfigModalOpen(true);
-            },
+  const allChains = useMemo(() => {
+    return allv4Chains.map((c) => defineChain(c));
+  }, [allv4Chains]);
 
-        renderChain(props) {
-          return (
-            <CustomChainRenderer
-              {...props}
-              disableChainConfig={disableChainConfig}
-            />
-          );
+  const chainSections = useMemo(() => {
+    return [
+      {
+        label: "Favorites",
+        chains: favChainsQuery.data.map(defineChain),
+      },
+      {
+        label: "Popular",
+        chains: popularChains.map(defineChain),
+      },
+      {
+        label: "Recent",
+        chains: recentChainsv4.map(defineChain),
+      },
+    ];
+  }, [recentChainsv4, favChainsQuery.data]);
+
+  const queryClient = useQueryClient();
+
+  const authConfig = useMemo(() => {
+    if (noAuth) {
+      return undefined;
+    }
+    return {
+      getLoginPayload: async (params) => {
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/payload`, {
+          method: "POST",
+          body: JSON.stringify({
+            address: params.address,
+            chainId: params.chainId.toString(),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to fetch login payload");
+        }
+        return (await res.json()).payload;
+      },
+      doLogin: async (payload) => {
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/login`, {
+          method: "POST",
+          body: JSON.stringify({ payload }),
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to login");
+        }
+        const json = await res.json();
+
+        if (json.token) {
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
+          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = json.token;
+          queryClient.invalidateQueries({
+            queryKey: ["logged_in_user"],
+          });
+        }
+        return json;
+      },
+      doLogout: async () => {
+        // reset the token ASAP
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+        (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          throw new Error("Failed to logout");
+        }
+        return res.json();
+      },
+      isLoggedIn: async (address) => {
+        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/user`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          return false;
+        }
+
+        const { jwt } = await fetchAuthToken(address);
+        if (jwt) {
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
+          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = jwt;
+          queryClient.invalidateQueries({
+            queryKey: ["logged_in_user"],
+          });
+          return true;
+        }
+
+        return false;
+      },
+    } satisfies SiweAuthOptions;
+  }, [noAuth, queryClient]);
+
+  return (
+    <ConnectButton
+      auth={authConfig}
+      theme={t}
+      client={thirdwebClient}
+      connectModal={{
+        privacyPolicyUrl: "/privacy",
+        termsOfServiceUrl: "/tos",
+        showThirdwebBranding: false,
+        welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
+      }}
+      appMetadata={{
+        name: "thirdweb",
+        logoUrl: "https://thirdweb.com/favicon.ico",
+        url: "https://thirdweb.com",
+      }}
+      chains={allChains}
+      detailsModal={{
+        networkSelector: {
+          sections: chainSections,
+          onSwitch(chain) {
+            addRecentlyUsedChainId(chain.id);
+          },
+          // TODO: bring this back when it works reliably
+          // renderChain: CustomChainRenderer,
         },
       }}
-      showThirdwebBranding={false}
     />
   );
 };

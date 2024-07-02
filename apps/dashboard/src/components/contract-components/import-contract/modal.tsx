@@ -9,7 +9,6 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useAddress, useChainId } from "@thirdweb-dev/react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useChainSlug } from "hooks/chains/chainSlug";
@@ -18,6 +17,7 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiFilePlus } from "react-icons/fi";
 import { getAddress } from "thirdweb";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 
 type ImportModalProps = {
@@ -31,7 +31,7 @@ const defaultValues = {
 
 export const ImportModal: React.FC<ImportModalProps> = (props) => {
   const addToDashboard = useAddContractMutation();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const registry = useAllContractList(address);
   const form = useForm({
     defaultValues,
@@ -43,12 +43,19 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
   }, [form, props]);
 
   const router = useRouter();
-  const chainId = useChainId();
+  const chainId = useActiveWalletChain()?.id;
   const chainSlug = useChainSlug(chainId || 1);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   return (
-    <Modal isOpen={props.isOpen} onClose={onClose} isCentered size="lg">
+    <Modal
+      isOpen={props.isOpen}
+      onClose={onClose}
+      isCentered
+      size="lg"
+      trapFocus={false}
+      blockScrollOnMount={false}
+    >
       <ModalOverlay />
       <ModalContent
         as="form"

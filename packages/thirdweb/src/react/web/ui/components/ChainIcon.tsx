@@ -1,4 +1,3 @@
-import type { ChainMetadata } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { StyledDiv } from "../design-system/elements.js";
@@ -12,7 +11,7 @@ export const fallbackChainIcon =
  * @internal
  */
 export const ChainIcon: React.FC<{
-  chainIcon?: ChainMetadata["icon"];
+  chainIconUrl?: string;
   size: string;
   active?: boolean;
   className?: string;
@@ -20,7 +19,7 @@ export const ChainIcon: React.FC<{
   client: ThirdwebClient;
 }> = (props) => {
   const getSrc = () => {
-    const url = props.chainIcon?.url;
+    const url = props.chainIconUrl;
     if (!url) {
       return fallbackChainIcon;
     }

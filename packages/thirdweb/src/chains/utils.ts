@@ -81,7 +81,7 @@ function isLegacyChain(
 }
 
 function convertLegacyChain(legacyChain: LegacyChain): Chain {
-  const c: Chain = {
+  return {
     id: legacyChain.chainId,
     name: legacyChain.name,
     rpc:
@@ -96,11 +96,10 @@ function convertLegacyChain(legacyChain: LegacyChain): Chain {
       symbol: legacyChain.nativeCurrency.symbol,
       decimals: legacyChain.nativeCurrency.decimals,
     },
+    faucets: legacyChain.faucets ? [...legacyChain.faucets] : undefined,
+    icon: legacyChain.icon,
+    testnet: legacyChain.testnet ? true : undefined,
   };
-  if (legacyChain.testnet) {
-    return { ...c, testnet: true };
-  }
-  return c;
 }
 
 function isViemChain(
@@ -110,7 +109,7 @@ function isViemChain(
 }
 
 function convertViemChain(viemChain: ViemChain): Chain {
-  return defineChain({
+  return {
     id: viemChain.id,
     name: viemChain.name,
     nativeCurrency: {
@@ -130,7 +129,8 @@ function convertViemChain(viemChain: ViemChain): Chain {
           };
         })
       : [],
-  });
+    testnet: viemChain.testnet ? true : undefined,
+  };
 }
 
 type GetRpcUrlForChainOptions = {
@@ -310,6 +310,8 @@ export function convertApiChainToChain(apiChain: ChainMetadata): Chain {
         apiUrl: explorer.url,
       };
     }),
+    faucets: apiChain.faucets ? [...apiChain.faucets] : undefined,
+    icon: apiChain.icon,
   };
 }
 

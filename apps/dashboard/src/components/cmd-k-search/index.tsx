@@ -21,7 +21,6 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useAddress } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
@@ -29,6 +28,7 @@ import { type SearchMode, getSearchQuery } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { Button, Card, Heading, Link, Text } from "tw-components";
 import { useDebounce } from "use-debounce";
@@ -144,7 +144,7 @@ export const CmdKSearch: React.FC = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
 
   // debounce 500ms
   const [debouncedSearchValue] = useDebounce(searchValue, 500);

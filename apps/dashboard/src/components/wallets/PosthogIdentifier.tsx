@@ -1,11 +1,12 @@
-import {
-  useAddress,
-  useBalance,
-  useChainId,
-  useWallet,
-} from "@thirdweb-dev/react";
+import { thirdwebClient } from "@/constants/client";
 import posthog from "posthog-js-opensource";
 import { useEffect } from "react";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+  useWalletBalance,
+} from "thirdweb/react";
 
 const walletIdToPHName: Record<string, string> = {
   metamask: "metamask",
@@ -17,16 +18,20 @@ const walletIdToPHName: Record<string, string> = {
 };
 
 export const PosthogIdentifier: React.FC = () => {
-  const address = useAddress();
-  const chainId = useChainId();
-  const balance = useBalance();
-  const wallet = useWallet();
+  const account = useActiveAccount();
+  const chain = useActiveWalletChain();
+  const balance = useWalletBalance({
+    address: account?.address,
+    chain,
+    client: thirdwebClient,
+  });
+  const wallet = useActiveWallet();
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (wallet) {
-      const connector = walletIdToPHName[wallet.walletId] || wallet.walletId;
+      const connector = walletIdToPHName[wallet.id] || wallet.id;
       posthog.register({ connector });
       posthog.capture("wallet_connected", { connector });
     }
@@ -35,19 +40,19 @@ export const PosthogIdentifier: React.FC = () => {
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (address) {
-      posthog.identify(address);
+    if (account?.address) {
+      posthog.identify(account.address);
     }
-  }, [address]);
+  }, [account?.address]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (chainId) {
+    if (chain?.id) {
       posthog.unregister("network");
-      posthog.register({ chain_id: chainId, ecosystem: "evm" });
+      posthog.register({ chain_id: chain?.id, ecosystem: "evm" });
     }
-  }, [chainId]);
+  }, [chain?.id]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax

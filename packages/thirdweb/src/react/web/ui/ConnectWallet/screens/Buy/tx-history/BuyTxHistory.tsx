@@ -11,7 +11,7 @@ import {
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
@@ -76,7 +76,7 @@ export function BuyTxHistoryList(props: {
   } = useBuyTransactionsToShow(props.client);
 
   const activeChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(activeChain);
+  const chainExplorers = useChainExplorers(activeChain);
   const activeAccount = useActiveAccount();
 
   const noTransactions = txInfosToShow.length === 0;
@@ -207,7 +207,7 @@ export function BuyTxHistoryList(props: {
         <ButtonLink
           fullWidth
           variant="outline"
-          href={`${chainQuery.data?.explorers?.[0]?.url}/address/${activeAccount?.address}`}
+          href={`${chainExplorers.explorers[0]?.url}/address/${activeAccount?.address}`}
           target="_blank"
           as="a"
           gap="xs"

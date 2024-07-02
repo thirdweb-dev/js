@@ -1,7 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { fontSize } from "../../../core/design-system/index.js";
-import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../core/hooks/others/useChainQuery.js";
 import { Skeleton } from "./Skeleton.js";
 import { Text } from "./text.js";
 
@@ -14,14 +14,12 @@ export const ChainName: React.FC<{
   client: ThirdwebClient;
   short?: boolean;
 }> = (props) => {
-  const chainQuery = useChainQuery(props.chain);
+  const { name } = useChainName(props.chain);
 
-  if (chainQuery.data) {
+  if (name) {
     return (
       <Text size={props.size}>
-        {props.short
-          ? shorterChainName(chainQuery.data.name)
-          : chainQuery.data.name}
+        {props.short ? shorterChainName(name) : name}
       </Text>
     );
   }

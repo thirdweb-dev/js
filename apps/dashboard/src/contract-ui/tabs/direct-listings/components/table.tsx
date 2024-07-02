@@ -1,7 +1,7 @@
 import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import {
   getAllListings,
   getAllValidListings,
@@ -9,6 +9,7 @@ import {
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
+import { defineDashboardChain } from "../../../../lib/v5-adapter";
 
 interface DirectListingsTableProps {
   contract: MarketplaceV3;
@@ -22,7 +23,7 @@ export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineChain(v4Contract.chainId),
+    chain: defineDashboardChain(v4Contract.chainId),
   });
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
   const getAllQueryResult = useReadContract(getAllListings, {

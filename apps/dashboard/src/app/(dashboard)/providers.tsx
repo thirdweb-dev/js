@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
+import { ThirdwebProvider } from "thirdweb/react";
 import { DashboardThirdwebProviderSetup } from "../../components/app-layouts/provider-setup";
 import { AllChainsProvider } from "../../contexts/all-chains";
 import { ChainsProvider } from "../../contexts/configured-chains";
@@ -13,11 +14,13 @@ export function AppRouterProviders(props: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AllChainsProvider>
         <ChainsProvider>
-          <DashboardThirdwebProviderSetup>
-            <ThemeProvider attribute="class" defaultTheme="dark">
-              {props.children}
-            </ThemeProvider>
-          </DashboardThirdwebProviderSetup>
+          <ThirdwebProvider>
+            <DashboardThirdwebProviderSetup>
+              <ThemeProvider attribute="class" defaultTheme="dark">
+                {props.children}
+              </ThemeProvider>
+            </DashboardThirdwebProviderSetup>
+          </ThirdwebProvider>
         </ChainsProvider>
       </AllChainsProvider>
     </QueryClientProvider>

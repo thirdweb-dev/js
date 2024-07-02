@@ -15,10 +15,7 @@ import {
   spacing,
 } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
-import {
-  useChainQuery,
-  useChainsQuery,
-} from "../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
@@ -158,9 +155,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   const account = useActiveAccount();
   const activeChain = useActiveWalletChain();
-
-  // prefetch chains metadata for destination chains
-  useChainsQuery(supportedDestinations.map((x) => x.chain) || [], 50);
 
   // screen
   const {
@@ -1162,7 +1156,7 @@ function BuyForTxUI(props: {
   buyForTx: BuyForTx;
   client: ThirdwebClient;
 }) {
-  const chainQuery = useChainQuery(props.buyForTx.tx.chain);
+  const chainNameQuery = useChainName(props.buyForTx.tx.chain);
 
   return (
     <Container>
@@ -1192,8 +1186,8 @@ function BuyForTxUI(props: {
             />
           </Container>
           <Spacer y="xxs" />
-          {chainQuery.data ? (
-            <Text size="sm"> {chainQuery.data.name}</Text>
+          {chainNameQuery.name ? (
+            <Text size="sm">{chainNameQuery.name}</Text>
           ) : (
             <Skeleton height={fontSize.sm} width="50px" />
           )}

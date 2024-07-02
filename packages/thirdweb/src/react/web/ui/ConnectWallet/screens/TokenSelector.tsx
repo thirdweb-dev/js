@@ -12,7 +12,10 @@ import {
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainIconUrl,
+  useChainName,
+} from "../../../../core/hooks/others/useChainQuery.js";
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
 import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
@@ -57,7 +60,9 @@ export function TokenSelector(props: {
   const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
   const chain = props.chain;
-  const chainQuery = useChainQuery(chain);
+
+  const chainNameQuery = useChainName(chain);
+  const chainIconQuery = useChainIconUrl(chain);
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
@@ -162,15 +167,14 @@ export function TokenSelector(props: {
                 }}
               >
                 <ChainIcon
-                  chainIcon={chainQuery.data?.icon}
+                  chainIconUrl={chainIconQuery.url}
                   size={iconSize.lg}
                   client={props.client}
                 />
 
-                {chainQuery.data ? (
+                {chainNameQuery.name ? (
                   <Text color="primaryText" size="sm">
-                    {" "}
-                    {chainQuery.data.name}
+                    {chainNameQuery.name}
                   </Text>
                 ) : (
                   <Skeleton height={fontSize.md} />

@@ -1,8 +1,9 @@
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
-import { useAddress, useSDKChainId } from "@thirdweb-dev/react";
+import { useSDKChainId } from "@thirdweb-dev/react";
 import type { SignerWithPermissions } from "@thirdweb-dev/sdk";
 import { formatDistance } from "date-fns/formatDistance";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -15,7 +16,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
   isAdmin,
   signer,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const chainId = useSDKChainId();
   const configuredChainsRecord = useSupportedChainsRecord();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;

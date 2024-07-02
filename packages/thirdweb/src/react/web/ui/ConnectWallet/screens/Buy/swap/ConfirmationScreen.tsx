@@ -10,7 +10,7 @@ import {
   fontSize,
   iconSize,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useSendTransactionCore } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
 import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
@@ -259,7 +259,7 @@ function RenderTokenInfo(props: {
   symbol: string;
   client: ThirdwebClient;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const { name } = useChainName(props.chain);
   return (
     <Container
       flex="column"
@@ -280,8 +280,8 @@ function RenderTokenInfo(props: {
         />
       </Container>
 
-      {chainQuery.data ? (
-        <Text size="sm">{chainQuery.data.name}</Text>
+      {name ? (
+        <Text size="sm">{name}</Text>
       ) : (
         <Skeleton width={"100px"} height={fontSize.sm} />
       )}

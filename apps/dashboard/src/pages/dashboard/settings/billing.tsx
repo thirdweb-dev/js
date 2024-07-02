@@ -2,7 +2,7 @@ import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { AppLayout } from "components/app-layouts/app";
 import { Billing } from "components/settings/Account/Billing";
-import { BillingConnectWalletPrompt } from "components/settings/Account/Billing/ConnectWallet";
+import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
@@ -35,7 +35,7 @@ const SettingsBillingPage: ThirdwebNextPage = () => {
   }, [payment_intent, router, source_redirect_slug]);
 
   if (!isLoading && !isLoggedIn) {
-    return <BillingConnectWalletPrompt />;
+    return <ConnectWalletPrompt description="claim your free 1 month trial." />;
   }
 
   if (!account) {

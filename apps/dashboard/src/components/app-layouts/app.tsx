@@ -11,7 +11,7 @@ import {
   PersistQueryClientProvider,
   type Persister,
 } from "@tanstack/react-query-persist-client";
-import { shouldNeverPersistQuery, useAddress } from "@thirdweb-dev/react";
+import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
 import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
 import { AppShell, type AppShellProps } from "components/layout/app-shell";
@@ -30,6 +30,7 @@ import {
 } from "hooks/networkConfigModal";
 import { del, get, set } from "idb-keyval";
 import { useEffect, useMemo, useState } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { Heading } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
@@ -161,7 +162,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
 };
 
 const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const isBlocked = useMemo(() => {
     return address && isSanctionedAddress(address);
   }, [address]);
@@ -179,7 +180,7 @@ const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
       >
         <Flex gap={4} direction="column" align="center">
           <Heading as="p">Address is blocked</Heading>
-          <CustomConnectWallet auth={{ loginOptional: true }} />
+          <CustomConnectWallet noAuth />
         </Flex>
       </SimpleGrid>
     );
