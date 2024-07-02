@@ -17,6 +17,7 @@ import {
   spacing,
 } from "../../../core/design-system/index.js";
 import { genericWalletIcon } from "../../../core/utils/socialIcons.js";
+import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Img } from "../components/Img.js";
@@ -569,6 +570,7 @@ const WalletSelection: React.FC<{
   localeId: LocaleId;
 }> = (props) => {
   const wallets = sortWallets(props.wallets, props.recommendedWallets);
+  const selectionData = useSetSelectionData();
 
   return (
     <WalletList
@@ -602,6 +604,7 @@ const WalletSelection: React.FC<{
                 walletId={wallet.id}
                 selectWallet={() => {
                   props.selectWallet(wallet);
+                  selectionData({});
                 }}
                 connectLocale={props.connectLocale}
                 client={props.client}
