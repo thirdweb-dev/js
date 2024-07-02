@@ -172,7 +172,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.16.4"
+    "viem": "2.16.5"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
