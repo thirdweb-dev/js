@@ -150,7 +150,7 @@ export const ConnectWalletSocialOptions = (
 
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
-  ) as SocialAuthOption[];
+  );
 
   const hasSocialLogins = socialLogins.length > 0;
 
