@@ -1,3 +1,4 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   type CreateTicketInput,
   useCreateTicket,
@@ -21,7 +22,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Button, Heading } from "tw-components";
 import { SubmitTicketButton } from "./SubmitTicketButton";
 import { SupportForm_SelectInput } from "./contact-forms/shared/SupportForm_SelectInput";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
 const ConnectSupportForm = dynamic(() => import("./contact-forms/connect"), {
   ssr: false,
