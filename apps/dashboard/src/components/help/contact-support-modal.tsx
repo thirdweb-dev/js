@@ -1,3 +1,4 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   type CreateTicketInput,
   useCreateTicket,
@@ -15,7 +16,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ConnectWallet } from "@thirdweb-dev/react";
 import dynamic from "next/dynamic";
 import { type ReactElement, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -128,7 +128,7 @@ export const ContactSupportModal = () => {
               <Button onClick={onClose} variant="ghost">
                 Cancel
               </Button>
-              {isLoggedIn ? <SubmitTicketButton /> : <ConnectWallet />}
+              {isLoggedIn ? <SubmitTicketButton /> : <CustomConnectWallet />}
             </ModalFooter>
           </ModalContent>
         </FormProvider>
