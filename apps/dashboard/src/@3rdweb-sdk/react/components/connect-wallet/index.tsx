@@ -15,10 +15,58 @@ import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { defineChain } from "thirdweb";
 import { ConnectButton, type SiweAuthOptions } from "thirdweb/react";
-import { GLOBAL_AUTH_TOKEN_KEY } from "../../../../constants/app";
-import { fetchAuthToken } from "../../hooks/useApi";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { popularChains } from "../popularChains";
+import { clearAccessToken, setAccessToken } from "./useAccessToken";
+
+// TODO remove all of this
+
+type FetchAuthTokenResponse = {
+  jwt: string;
+};
+
+const TOKEN_PROMISE_MAP = new Map<string, Promise<FetchAuthTokenResponse>>();
+
+async function fetchAuthToken(
+  address: string,
+  abortController?: AbortController,
+): Promise<FetchAuthTokenResponse> {
+  if (!address) {
+    throw new Error("address is required");
+  }
+  if (TOKEN_PROMISE_MAP.has(address)) {
+    return TOKEN_PROMISE_MAP.get(address) as Promise<FetchAuthTokenResponse>;
+  }
+  const promise = new Promise<FetchAuthTokenResponse>((resolve, reject) => {
+    return fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      signal: abortController?.signal,
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.error) {
+          throw new Error(json.error.message);
+        }
+        return {
+          jwt: json.data.jwt as string,
+        };
+      })
+      .then(resolve)
+      .catch(reject)
+      .finally(() => {
+        // remove the promise from the map when it's done
+        TOKEN_PROMISE_MAP.delete(address);
+      });
+  });
+  TOKEN_PROMISE_MAP.set(address, promise);
+  return promise;
+}
+
+// END TODO
 
 export interface ConnectWalletProps {
   shrinkMobile?: boolean;
@@ -99,8 +147,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
         const json = await res.json();
 
         if (json.token) {
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = json.token;
+          setAccessToken(json.token);
           queryClient.invalidateQueries({
             queryKey: ["logged_in_user"],
           });
@@ -109,8 +156,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
       },
       doLogout: async () => {
         // reset the token ASAP
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
+        clearAccessToken();
         const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
           method: "POST",
           credentials: "include",
@@ -137,8 +183,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
 
         const { jwt } = await fetchAuthToken(address);
         if (jwt) {
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          (window as any)[GLOBAL_AUTH_TOKEN_KEY] = jwt;
+          setAccessToken(jwt);
           queryClient.invalidateQueries({
             queryKey: ["logged_in_user"],
           });
