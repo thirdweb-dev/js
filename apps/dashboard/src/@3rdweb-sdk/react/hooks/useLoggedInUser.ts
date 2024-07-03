@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { UserWithData } from "@thirdweb-dev/react";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useMemo } from "react";
+import { getAddress } from "thirdweb";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
@@ -39,7 +40,11 @@ export function useLoggedInUser(): {
         };
       }
       case "connected": {
-        if (connectedAddress !== userQuery.data?.address) {
+        if (
+          connectedAddress &&
+          userQuery.data?.address &&
+          getAddress(connectedAddress) !== getAddress(userQuery.data?.address)
+        ) {
           return {
             user: null,
             isLoading: userQuery.isLoading,
