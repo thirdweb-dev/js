@@ -39,8 +39,10 @@ export function EcosystemHeader({ ecosystemSlug }: { ecosystemSlug: string }) {
                     uri: ecosystem.imageUrl,
                     client: thirdwebClient,
                   })}
+                  sizes="100px"
                   alt={ecosystem.name}
                   fill
+                  unoptimized
                   className="object-cover object-center"
                 />
               </div>
