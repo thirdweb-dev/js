@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Image,
   Linking,
@@ -12,32 +11,33 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useWalletImage, useWalletInfo } from "../../../core/utils/wallet.js";
 import { spacing } from "../../design-system/index.js";
-import type { useConnect } from "../../hooks/wallets/useConnect.js";
 import type { ContainerType } from "../components/Header.js";
 import { Skeleton } from "../components/Skeleton.js";
-import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
 
 export type ExternalWalletsUiProps = {
   theme: Theme;
   client: ThirdwebClient;
-  connectMutation: ReturnType<typeof useConnect>;
+  connector: (args: {
+    wallet: Wallet;
+    connectFn: () => Promise<Wallet>;
+  }) => Promise<void>;
   containerType: ContainerType;
 };
 
 export function ExternalWalletsList(
   props: ExternalWalletsUiProps & { externalWallets: Wallet[] },
 ) {
-  const { connectMutation, client, theme } = props;
-  const [selectedWallet, setSelectedWallet] = useState<Wallet>();
-
+  const { connector, client, theme } = props;
   const connectWallet = (wallet: Wallet) => {
-    setSelectedWallet(wallet);
-    connectMutation.connect(async () => {
-      await wallet.connect({
-        client,
-      });
-      return wallet;
+    connector({
+      wallet,
+      connectFn: async () => {
+        await wallet.connect({
+          client,
+        });
+        return wallet;
+      },
     });
   };
 
@@ -57,9 +57,6 @@ export function ExternalWalletsList(
               wallet={wallet}
               connectWallet={connectWallet}
               theme={theme}
-              isConnecting={
-                connectMutation.isConnecting && wallet.id === selectedWallet?.id
-              }
             />
           ))}
         </View>
@@ -72,32 +69,18 @@ export function ExternalWalletsList(
 function ExternalWalletRow(props: {
   theme: Theme;
   wallet: Wallet;
-  isConnecting: boolean;
   connectWallet: (wallet: Wallet) => void;
 }) {
-  const { wallet, theme, isConnecting, connectWallet } = props;
+  const { wallet, theme, connectWallet } = props;
   const imageQuery = useWalletImage(wallet.id);
   const infoQuery = useWalletInfo(wallet.id);
   return (
     <TouchableOpacity style={styles.row} onPress={() => connectWallet(wallet)}>
       {imageQuery.data ? (
-        isConnecting ? (
-          <View
-            style={{
-              width: 52,
-              height: 52,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <ThemedSpinner color={theme.colors.primaryText} />
-          </View>
-        ) : (
-          <Image
-            source={{ uri: imageQuery.data ?? "" }}
-            style={{ width: 52, height: 52, borderRadius: 6 }}
-          />
-        )
+        <Image
+          source={{ uri: imageQuery.data ?? "" }}
+          style={{ width: 52, height: 52, borderRadius: 6 }}
+        />
       ) : (
         <Skeleton
           theme={theme}

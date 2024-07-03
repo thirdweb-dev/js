@@ -138,17 +138,6 @@ export function ConnectButton(props: ConnectButtonProps) {
                   wallet={wallet}
                   account={account}
                 />
-              ) : status === "connecting" ? (
-                <View
-                  style={{
-                    flexDirection: "column",
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ThemedSpinner color={theme.colors.primaryText} size={32} />
-                </View>
               ) : (
                 <ConnectModal
                   {...props}

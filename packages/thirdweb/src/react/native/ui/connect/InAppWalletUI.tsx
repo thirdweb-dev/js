@@ -16,12 +16,10 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { radius, spacing } from "../../design-system/index.js";
-import type { useConnect } from "../../hooks/wallets/useConnect.js";
 import { RNImage } from "../components/RNImage.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { ThemedInput, ThemedInputWithSubmit } from "../components/input.js";
 import { Spacer } from "../components/spacer.js";
-import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
 import {
   APPLE_ICON,
@@ -51,7 +49,11 @@ type InAppWalletFormUIProps = {
   theme: Theme;
   wallet: Wallet<"inApp">;
   setScreen: (screen: ModalState) => void;
-  connectMutation: ReturnType<typeof useConnect>;
+  connector: (args: {
+    wallet: Wallet;
+    connectFn: () => Promise<Wallet>;
+    authMethod?: InAppWalletAuth;
+  }) => Promise<void>;
 };
 
 export function InAppWalletUI(props: InAppWalletFormUIProps) {
@@ -98,21 +100,23 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
 function SocialLogin(
   props: InAppWalletFormUIProps & { auth: InAppWalletSocialAuth },
 ) {
-  const { theme, wallet, auth, client, connectMutation } = props;
+  const { theme, wallet, auth, client, connector } = props;
   // TODO (rn) - move this onPress and state up
   const strategy = props.auth;
-  const [selectedAuth, setSelectedAuth] = useState<InAppWalletSocialAuth>();
   const connectInAppWallet = useCallback(() => {
-    setSelectedAuth(strategy);
-    connectMutation.connect(async () => {
-      await wallet.connect({
-        client,
-        strategy: auth,
-      });
-      await setLastAuthProvider(auth, nativeLocalStorage);
-      return wallet;
+    connector({
+      wallet,
+      connectFn: async () => {
+        await wallet.connect({
+          client,
+          strategy: auth,
+        });
+        await setLastAuthProvider(auth, nativeLocalStorage);
+        return wallet;
+      },
+      authMethod: auth,
     });
-  }, [connectMutation, auth, client, wallet, strategy]);
+  }, [connector, auth, wallet, client]);
 
   return (
     <View
@@ -121,17 +125,9 @@ function SocialLogin(
         { borderColor: theme.colors.borderColor },
       ]}
     >
-      {connectMutation.isConnecting && selectedAuth === auth ? (
-        <ThemedSpinner color={theme.colors.primaryText} />
-      ) : (
-        <TouchableOpacity
-          key={strategy}
-          onPress={connectInAppWallet}
-          disabled={connectMutation.isConnecting}
-        >
-          <RNImage theme={theme} size={38} data={socialIcons[auth]} />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity key={strategy} onPress={connectInAppWallet}>
+        <RNImage theme={theme} size={38} data={socialIcons[auth]} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -215,29 +211,33 @@ export function OtpLogin(
     auth: MultiStepAuthProviderType;
   },
 ) {
-  const { theme, auth, wallet, client, connectMutation } = props;
+  const { theme, auth, wallet, client, connector } = props;
   const [verificationCode, setVerificationCode] = useState("");
 
   const connectInAppWallet = async () => {
     if (!verificationCode || !verificationCode) return;
-    await connectMutation.connect(async () => {
-      if (auth.strategy === "phone") {
-        await wallet.connect({
-          client,
-          strategy: auth.strategy,
-          phoneNumber: auth.phoneNumber,
-          verificationCode,
-        });
-      } else {
-        await wallet.connect({
-          client,
-          strategy: auth.strategy,
-          email: auth.email,
-          verificationCode,
-        });
-      }
-      await setLastAuthProvider(auth.strategy, nativeLocalStorage);
-      return wallet;
+    await connector({
+      wallet,
+      connectFn: async () => {
+        if (auth.strategy === "phone") {
+          await wallet.connect({
+            client,
+            strategy: auth.strategy,
+            phoneNumber: auth.phoneNumber,
+            verificationCode,
+          });
+        } else {
+          await wallet.connect({
+            client,
+            strategy: auth.strategy,
+            email: auth.email,
+            verificationCode,
+          });
+        }
+        await setLastAuthProvider(auth.strategy, nativeLocalStorage);
+        return wallet;
+      },
+      authMethod: auth.strategy,
     });
   };
 
@@ -265,33 +265,15 @@ export function OtpLogin(
         value={verificationCode}
         keyboardType="number-pad"
       />
-      <ThemedButton
-        theme={theme}
-        onPress={connectInAppWallet}
-        variant="accent"
-        disabled={connectMutation.isConnecting}
-      >
-        {connectMutation.isConnecting ? (
-          <ThemedSpinner color={theme.colors.accentButtonText} />
-        ) : (
-          <ThemedText
-            theme={theme}
-            type="defaultSemiBold"
-            style={{ color: theme.colors.accentButtonText }}
-          >
-            Verify
-          </ThemedText>
-        )}
-      </ThemedButton>
-      {connectMutation.error && (
+      <ThemedButton theme={theme} onPress={connectInAppWallet} variant="accent">
         <ThemedText
           theme={theme}
-          type="subtext"
-          style={{ color: theme.colors.danger }}
+          type="defaultSemiBold"
+          style={{ color: theme.colors.accentButtonText }}
         >
-          {connectMutation.error.message}
+          Verify
         </ThemedText>
-      )}
+      </ThemedButton>
     </>
   );
 }

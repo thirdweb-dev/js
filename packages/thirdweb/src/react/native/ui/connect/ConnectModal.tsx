@@ -1,28 +1,39 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
+import type { InAppWalletAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
 import { genericWalletIcon } from "../../../core/utils/socialIcons.js";
+import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { useConnect } from "../../hooks/wallets/useConnect.js";
+import { connectionManager } from "../../index.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { type ContainerType, Header } from "../components/Header.js";
+import { RNImage } from "../components/RNImage.js";
+import {
+  WalletImage,
+  getAuthProviderImage,
+} from "../components/WalletImage.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
 import { TW_ICON } from "../icons/svgs.js";
+import { ErrorView } from "./ErrorView.js";
 import { ExternalWalletsList } from "./ExternalWalletsList.js";
 import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
+import WalletLoadingThumbnail from "./WalletLoadingThumbnail.js";
 
 export type ModalState =
   | { screen: "base" }
+  | { screen: "connecting"; wallet: Wallet; authMethod?: InAppWalletAuth }
+  | { screen: "error"; error: string }
   | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
   | { screen: "external_wallets" };
 
@@ -63,17 +74,44 @@ export function ConnectModal(
     containerType: ContainerType;
   },
 ) {
-  const { theme, client, containerType, accountAbstraction, onConnect } = props;
-  const connectMutation = useConnect({
+  const {
+    theme,
     client,
+    containerType,
     accountAbstraction,
-    onConnect: (wallet) => {
-      props.onClose?.();
-      onConnect?.(wallet);
-    },
-  });
-  const wallets = props.wallets || getDefaultWallets(props);
+    onConnect,
+    onClose,
+  } = props;
   const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
+  const connector = useCallback(
+    async (args: {
+      wallet: Wallet;
+      connectFn: () => Promise<Wallet>;
+      authMethod?: InAppWalletAuth;
+    }) => {
+      setModalState({
+        screen: "connecting",
+        wallet: args.wallet,
+        authMethod: args.authMethod,
+      });
+      try {
+        const w = await args.connectFn();
+        await connectionManager.connect(w, {
+          client,
+          accountAbstraction,
+          onConnect,
+        });
+        onClose?.();
+      } catch (error) {
+        setModalState({
+          screen: "error",
+          error: (error as Error)?.message || "unknown error",
+        });
+      }
+    },
+    [client, accountAbstraction, onConnect, onClose],
+  );
+  const wallets = props.wallets || getDefaultWallets(props);
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
     | Wallet<"inApp">
     | undefined;
@@ -105,7 +143,7 @@ export function ConnectModal(
               client={client}
               setScreen={setModalState}
               theme={theme}
-              connectMutation={connectMutation}
+              connector={connector}
             />
           </View>
           {containerType === "modal" ? (
@@ -131,9 +169,61 @@ export function ConnectModal(
             theme={theme}
             externalWallets={externalWallets}
             client={client}
-            connectMutation={connectMutation}
+            connector={connector}
             containerType={containerType}
           />
+        </>
+      );
+      break;
+    }
+    case "connecting": {
+      content = (
+        <>
+          <Header
+            theme={theme}
+            onClose={props.onClose}
+            containerType={containerType}
+            onBack={() => setModalState({ screen: "base" })}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="lg" />
+          )}
+          <LoadingView
+            theme={theme}
+            wallet={modalState.wallet}
+            authProvider={modalState.authMethod}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="md" />
+          )}
+        </>
+      );
+      break;
+    }
+    case "error": {
+      content = (
+        <>
+          <Header
+            theme={theme}
+            onClose={props.onClose}
+            containerType={containerType}
+            onBack={() => setModalState({ screen: "base" })}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="lg" />
+          )}
+          <ErrorView theme={theme} title={modalState.error} />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="md" />
+          )}
         </>
       );
       break;
@@ -165,7 +255,7 @@ export function ConnectModal(
                   setScreen={setModalState}
                   client={client}
                   theme={theme}
-                  connectMutation={connectMutation}
+                  connector={connector}
                 />
                 {externalWallets.length > 0 ? (
                   <>
@@ -199,7 +289,7 @@ export function ConnectModal(
                   theme={theme}
                   externalWallets={externalWallets}
                   client={client}
-                  connectMutation={connectMutation}
+                  connector={connector}
                   containerType={containerType}
                 />
               </View>
@@ -222,6 +312,56 @@ export function ConnectModal(
       {content}
       {showBranding && <PoweredByThirdweb theme={theme} />}
     </ThemedView>
+  );
+}
+
+function LoadingView({
+  theme,
+  wallet,
+  authProvider,
+}: { theme: Theme; wallet: Wallet; authProvider?: InAppWalletAuth }) {
+  const walletInfo = useWalletInfo(wallet.id);
+  return (
+    <View
+      style={{
+        flexDirection: "column",
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: spacing.xl,
+      }}
+    >
+      <WalletLoadingThumbnail theme={theme} imageSize={100}>
+        {authProvider ? (
+          <View
+            style={{
+              borderRadius: spacing.md,
+              padding: spacing.xs,
+            }}
+          >
+            <RNImage
+              theme={theme}
+              size={90}
+              data={getAuthProviderImage(authProvider)}
+            />
+          </View>
+        ) : (
+          <WalletImage theme={theme} size={90} wallet={wallet} />
+        )}
+      </WalletLoadingThumbnail>
+      <Spacer size="xl" />
+      <ThemedText theme={theme} type="subtitle">
+        {authProvider
+          ? `Connecting with ${capitalizeFirstLetter(authProvider)}`
+          : "Awaiting confirmation"}
+      </ThemedText>
+      <Spacer size="sm" />
+      <ThemedText theme={theme} type="subtext">
+        {authProvider
+          ? `Sign into your ${capitalizeFirstLetter(authProvider)} account`
+          : `Accept the connection request in ${walletInfo.data?.name}`}
+      </ThemedText>
+    </View>
   );
 }
 
@@ -282,6 +422,11 @@ function PoweredByThirdweb({ theme }: { theme: Theme }) {
       </ThemedText>
     </View>
   );
+}
+
+function capitalizeFirstLetter(str: string): string {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 const styles = StyleSheet.create({
