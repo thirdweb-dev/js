@@ -18,13 +18,13 @@ export function useConnectCore(
       // reset error state
       setError(null);
       if (typeof walletOrFn !== "function") {
-        return connect(walletOrFn, options);
+        return await connect(walletOrFn, options);
       }
 
       setIsConnecting(true);
       try {
         const w = await walletOrFn();
-        return connect(w, options);
+        return await connect(w, options);
       } catch (e) {
         console.error(e);
         setError(e as Error);

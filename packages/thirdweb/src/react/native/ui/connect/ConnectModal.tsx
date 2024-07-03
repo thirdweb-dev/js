@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
@@ -9,12 +10,15 @@ import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectB
 import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
 import { genericWalletIcon } from "../../../core/utils/socialIcons.js";
 import { radius, spacing } from "../../design-system/index.js";
+import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";
 import { useConnect } from "../../hooks/wallets/useConnect.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { type ContainerType, Header } from "../components/Header.js";
 import { ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
+import { ThemedSpinner } from "../components/spinner.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
 import { TW_ICON } from "../icons/svgs.js";
@@ -23,6 +27,7 @@ import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
 
 export type ModalState =
   | { screen: "base" }
+  | { screen: "connecting" }
   | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
   | { screen: "external_wallets" };
 
@@ -63,17 +68,25 @@ export function ConnectModal(
     containerType: ContainerType;
   },
 ) {
-  const { theme, client, containerType, accountAbstraction, onConnect } = props;
+  const {
+    theme,
+    client,
+    containerType,
+    accountAbstraction,
+    onConnect,
+    onClose,
+  } = props;
+  const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
   const connectMutation = useConnect({
     client,
     accountAbstraction,
     onConnect: (wallet) => {
-      props.onClose?.();
+      setModalState({ screen: "connecting" }); // prevent flashing back the connect state
+      onClose?.();
       onConnect?.(wallet);
     },
   });
   const wallets = props.wallets || getDefaultWallets(props);
-  const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
   const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
     | Wallet<"inApp">
     | undefined;
@@ -208,6 +221,21 @@ export function ConnectModal(
         </>
       );
     }
+  }
+
+  if (connectMutation.isConnecting || modalState.screen === "connecting") {
+    content = (
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ThemedSpinner color={theme.colors.primaryText} size={52} />
+      </View>
+    );
   }
 
   return (
