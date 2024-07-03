@@ -5,9 +5,12 @@ import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
+  TEST_ACCOUNT_C,
 } from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import { toEther } from "../../utils/units.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { balanceOf } from "./__generated__/IERC721A/read/balanceOf.js";
@@ -108,6 +111,31 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       await expect(
         balanceOf({ contract, owner: TEST_ACCOUNT_A.address }),
       ).resolves.toBe(1n);
+    });
+
+    it("should allow to claim tokens with value", async () => {
+      // set cc with price
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              price: "0.01",
+            },
+          ],
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
+        contract,
+        to: TEST_ACCOUNT_C.address,
+        quantity: 2n,
+      });
+      // assert value is set correctly
+      const value = await resolvePromisedValue(claimTx.value);
+      expect(value).toBeDefined();
+      if (!value) throw new Error("value is undefined");
+      expect(toEther(value)).toBe("0.02");
     });
 
     describe("Allowlists", () => {
