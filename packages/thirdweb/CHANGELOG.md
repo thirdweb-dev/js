@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.32.1
+
+### Patch Changes
+
+- [#3582](https://github.com/thirdweb-dev/js/pull/3582) [`9651b96`](https://github.com/thirdweb-dev/js/commit/9651b96b96d3f416662e9832902e655c0e6cf0fd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `waitForUserOpReceipt()` helper function
+
+- [#3397](https://github.com/thirdweb-dev/js/pull/3397) [`49ae575`](https://github.com/thirdweb-dev/js/commit/49ae575211f8484296d4aac16782e94ae89c437d) Thanks [@jnsdls](https://github.com/jnsdls)! - improve loading performance for chains
+
+- [#3577](https://github.com/thirdweb-dev/js/pull/3577) [`6b919e1`](https://github.com/thirdweb-dev/js/commit/6b919e13859e146f572619bfb315d5c357808a0e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Show ecosystem wallet branding on wide modal layout
+
 ## 5.32.0
 
 ### Minor Changes
