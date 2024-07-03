@@ -136,8 +136,6 @@ function SendFundsForm(props: {
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
-  const showInvalidAddressError = receiverAddress;
-
   const sendTokenMutation = useSendToken(props.client);
 
   function getErrorMessage(error?: TXError) {
@@ -155,7 +153,7 @@ function SendFundsForm(props: {
       return locale.insufficientFunds;
     }
 
-    return locale.transactionFailed;
+    return message;
   }
 
   if (!activeChain) {
@@ -281,7 +279,6 @@ function SendFundsForm(props: {
         </Label>
         <Spacer y="sm" />
         <Input
-          data-error={showInvalidAddressError}
           required
           id="receiver"
           placeholder={"0x... or ENS name"}
@@ -291,15 +288,6 @@ function SendFundsForm(props: {
             setReceiverAddress(e.target.value);
           }}
         />
-
-        {showInvalidAddressError && (
-          <>
-            <Spacer y="xs" />
-            <Text color="danger" size="sm">
-              {locale.invalidAddress}
-            </Text>
-          </>
-        )}
 
         <Spacer y="lg" />
 
