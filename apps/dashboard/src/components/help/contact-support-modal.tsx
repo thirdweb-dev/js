@@ -15,13 +15,13 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ConnectWallet } from "@thirdweb-dev/react";
 import dynamic from "next/dynamic";
 import { type ReactElement, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button, Heading } from "tw-components";
 import { SubmitTicketButton } from "./SubmitTicketButton";
 import { SupportForm_SelectInput } from "./contact-forms/shared/SupportForm_SelectInput";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 
 const ConnectSupportForm = dynamic(() => import("./contact-forms/connect"), {
   ssr: false,
@@ -128,7 +128,7 @@ export const ContactSupportModal = () => {
               <Button onClick={onClose} variant="ghost">
                 Cancel
               </Button>
-              {isLoggedIn ? <SubmitTicketButton /> : <ConnectWallet />}
+              {isLoggedIn ? <SubmitTicketButton /> : <CustomConnectWallet />}
             </ModalFooter>
           </ModalContent>
         </FormProvider>
