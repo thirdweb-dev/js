@@ -268,7 +268,7 @@ import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 export default function App() {
 return (
     <ThirdwebProvider>
-      <ConnectWallet 
+      <ConnectButton 
         client={client}
         accountAbstraction={{
           chain: defineChain({{chainId}}),

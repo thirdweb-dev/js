@@ -68,6 +68,22 @@ async function fetchAuthToken(
 
 // END TODO
 
+export async function logout() {
+  // reset the token ASAP
+  clearAccessToken();
+  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw new Error("Failed to logout");
+  }
+  return res.json();
+}
+
 export interface ConnectWalletProps {
   shrinkMobile?: boolean;
   upsellTestnet?: boolean;
@@ -154,21 +170,7 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
         }
         return json;
       },
-      doLogout: async () => {
-        // reset the token ASAP
-        clearAccessToken();
-        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) {
-          throw new Error("Failed to logout");
-        }
-        return res.json();
-      },
+      doLogout: logout,
       isLoggedIn: async (address) => {
         const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/user`, {
           method: "GET",
