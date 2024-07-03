@@ -42,26 +42,7 @@ export const WalletImage = (props: {
         (wallet.id === "inApp" || wallet.id === "smart")
       ) {
         const lastAuthProvider = await getLastAuthProvider(nativeLocalStorage);
-        switch (lastAuthProvider) {
-          case "phone":
-            imageData = PHONE_ICON;
-            break;
-          case "email":
-            imageData = EMAIL_ICON;
-            break;
-          case "google":
-            imageData = GOOGLE_ICON;
-            break;
-          case "apple":
-            imageData = APPLE_ICON;
-            break;
-          case "facebook":
-            imageData = FACEBOOK_ICON;
-            break;
-          default:
-            imageData = WALLET_ICON;
-            break;
-        }
+        imageData = getAuthProviderImage(lastAuthProvider);
         return imageData;
       }
       try {
@@ -79,3 +60,20 @@ export const WalletImage = (props: {
   const data = ensAvatar || imageData || WALLET_ICON;
   return <RNImage theme={props.theme} data={data} size={size} />;
 };
+
+export function getAuthProviderImage(lastAuthProvider: string | null): string {
+  switch (lastAuthProvider) {
+    case "phone":
+      return PHONE_ICON;
+    case "email":
+      return EMAIL_ICON;
+    case "google":
+      return GOOGLE_ICON;
+    case "apple":
+      return APPLE_ICON;
+    case "facebook":
+      return FACEBOOK_ICON;
+    default:
+      return WALLET_ICON;
+  }
+}
