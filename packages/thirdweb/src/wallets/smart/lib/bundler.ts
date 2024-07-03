@@ -83,12 +83,13 @@ export async function getUserOpGasPrice(args: {
 /**
  * @internal
  */
-export async function getUserOpReceipt(args: {
-  userOpHash: Hex;
-  options: BundlerOptions;
-}): Promise<TransactionReceipt | undefined> {
+export async function getUserOpReceipt(
+  args: BundlerOptions & {
+    userOpHash: Hex;
+  },
+): Promise<TransactionReceipt | undefined> {
   const res = await sendBundlerRequest({
-    ...args,
+    options: args,
     operation: "eth_getUserOperationReceipt",
     params: [args.userOpHash],
   });
