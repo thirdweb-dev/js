@@ -1,5 +1,6 @@
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
+import { THIRDWEB_API_HOST } from "../../../../../../constants/urls";
 import type { Ecosystem } from "../types";
 
 export function useEcosystemList() {
@@ -8,10 +9,9 @@ export function useEcosystemList() {
   const ecosystemQuery = useQuery({
     queryKey: ["ecosystems", user?.address],
     queryFn: async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/ecosystem-wallet/list`,
-        { credentials: "include" },
-      );
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/ecosystem-wallet/list`, {
+        credentials: "include",
+      });
 
       if (!res.ok) {
         const data = await res.json();

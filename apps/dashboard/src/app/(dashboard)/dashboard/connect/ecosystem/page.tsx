@@ -65,7 +65,7 @@ export default function Page() {
         )}
         <Button variant="outline" asChild>
           <Link
-            href="https://poral.thirdweb.com"
+            href="https://portal.thirdweb.com/connect/ecosystems/overview"
             target="_blank"
             className="flex flex-row gap-2"
           >
@@ -75,7 +75,10 @@ export default function Page() {
         </Button>
       </div>
       <div className="w-full h-0 my-2 border-t" />
-      <Link href="#" className="mb-6 group">
+      <Link
+        href="https://portal.thirdweb.com/connect/ecosystems/overview"
+        className="mb-6 group"
+      >
         <Card className="flex flex-col gap-3 p-6 md:p-8 md:px-10">
           <div className="flex items-center gap-2">
             <BookMarkedIcon className="size-5 text-secondary-foreground" />

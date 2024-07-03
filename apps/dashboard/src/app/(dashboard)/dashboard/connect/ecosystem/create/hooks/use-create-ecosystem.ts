@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { upload } from "thirdweb/storage";
+import { THIRDWEB_API_HOST } from "../../../../../../../constants/urls";
 
 export type CreateEcosystemParams = {
   name: string;
@@ -36,7 +37,7 @@ export function useCreateEcosystem(
       });
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_THIRDWEB_API_HOST}/v1/ecosystem-wallet/add-cloud-hosted`,
+        `${THIRDWEB_API_HOST}/v1/ecosystem-wallet/add-cloud-hosted`,
         {
           method: "POST",
           credentials: "include",
