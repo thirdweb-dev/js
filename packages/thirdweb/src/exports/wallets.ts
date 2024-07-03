@@ -115,6 +115,12 @@ export type {
   WalletConnectSession,
 } from "../wallets/wallet-connect/receiver/types.js";
 
+// engine
+export {
+  type EngineAccountOptions,
+  engineAccount,
+} from "../wallets/engine-account.js";
+
 // WEB ONLY EXPORTS
 
 // injected
