@@ -129,7 +129,6 @@ export const ConnectModalContent = (props: {
       title={props.meta.title || props.connectLocale.defaultModalTitle}
       wallets={props.wallets}
       selectWallet={(newWallet) => {
-        setSelectionData({});
         if (newWallet.onConnectRequested) {
           newWallet
             .onConnectRequested()
