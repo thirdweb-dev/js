@@ -73,26 +73,30 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <SocialLogin key={auth} auth={auth} {...props} />
         ))}
       </View>
-      {inputMode === "email" ? (
-        <PreOtpLogin auth="email" {...props} />
-      ) : (
-        <ThemedButtonWithIcon
-          theme={theme}
-          title="Email address"
-          icon={EMAIL_ICON}
-          onPress={() => setInputMode("email")}
-        />
-      )}
-      {inputMode === "phone" ? (
-        <PreOtpLogin auth="phone" {...props} />
-      ) : (
-        <ThemedButtonWithIcon
-          theme={theme}
-          title="Phone number"
-          icon={PHONE_ICON}
-          onPress={() => setInputMode("phone")}
-        />
-      )}
+      {authOptions.includes("email") ? (
+        inputMode === "email" ? (
+          <PreOtpLogin auth="email" {...props} />
+        ) : (
+          <ThemedButtonWithIcon
+            theme={theme}
+            title="Email address"
+            icon={EMAIL_ICON}
+            onPress={() => setInputMode("email")}
+          />
+        )
+      ) : null}
+      {authOptions.includes("phone") ? (
+        inputMode === "phone" ? (
+          <PreOtpLogin auth="phone" {...props} />
+        ) : (
+          <ThemedButtonWithIcon
+            theme={theme}
+            title="Phone number"
+            icon={PHONE_ICON}
+            onPress={() => setInputMode("phone")}
+          />
+        )
+      ) : null}
     </View>
   );
 }

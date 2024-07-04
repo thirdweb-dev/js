@@ -107,7 +107,7 @@ export function ConnectButton(props: ConnectButtonProps) {
               type="defaultSemiBold"
               style={{ color: theme.colors.primaryButtonText }}
             >
-              Connect Wallet
+              {props.connectButton?.label || "Connect Wallet"}
             </ThemedText>
           )}
         </ThemedButton>

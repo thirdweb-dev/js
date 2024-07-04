@@ -15,7 +15,7 @@ export function Header({
   containerType,
 }: {
   theme: Theme;
-  title?: string;
+  title: string;
   onClose?: () => void;
   onBack?: () => void;
   containerType: ContainerType;
@@ -57,7 +57,7 @@ export function Header({
         </TouchableOpacity>
       )}
       <ThemedText theme={theme} type="title">
-        {title ? title : "Sign in"}
+        {title}
       </ThemedText>
       {onClose && (
         <TouchableOpacity onPress={onClose}>

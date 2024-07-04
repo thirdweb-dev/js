@@ -8,7 +8,6 @@ import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
-import { genericWalletIcon } from "../../../core/utils/socialIcons.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
@@ -24,7 +23,7 @@ import { ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
-import { TW_ICON } from "../icons/svgs.js";
+import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
 import { ErrorView } from "./ErrorView.js";
 import { ExternalWalletsList } from "./ExternalWalletsList.js";
 import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
@@ -128,6 +127,7 @@ export function ConnectModal(
             onClose={props.onClose}
             containerType={containerType}
             onBack={() => setModalState({ screen: "base" })}
+            title={props.connectModal?.title || "Sign in"}
           />
           <Spacer size="xl" />
           <View
@@ -163,6 +163,7 @@ export function ConnectModal(
             onClose={props.onClose}
             containerType={containerType}
             onBack={() => setModalState({ screen: "base" })}
+            title={props.connectModal?.title || "Sign in"}
           />
           <Spacer size="lg" />
           <ExternalWalletsList
@@ -184,6 +185,7 @@ export function ConnectModal(
             onClose={props.onClose}
             containerType={containerType}
             onBack={() => setModalState({ screen: "base" })}
+            title={props.connectModal?.title || "Sign in"}
           />
           {containerType === "modal" ? (
             <View style={{ flex: 1 }} />
@@ -212,6 +214,7 @@ export function ConnectModal(
             onClose={props.onClose}
             containerType={containerType}
             onBack={() => setModalState({ screen: "base" })}
+            title={props.connectModal?.title || "Sign in"}
           />
           {containerType === "modal" ? (
             <View style={{ flex: 1 }} />
@@ -235,6 +238,7 @@ export function ConnectModal(
             theme={theme}
             onClose={props.onClose}
             containerType={containerType}
+            title={props.connectModal?.title || "Sign in"}
           />
           {inAppWallet ? (
             <>
@@ -262,7 +266,7 @@ export function ConnectModal(
                     <OrDivider theme={theme} />
                     <ThemedButtonWithIcon
                       theme={theme}
-                      icon={genericWalletIcon}
+                      icon={WALLET_ICON}
                       title="Connect a wallet"
                       onPress={() =>
                         setModalState({ screen: "external_wallets" })
@@ -279,7 +283,7 @@ export function ConnectModal(
             </>
           ) : externalWallets.length > 0 ? (
             <>
-              <Spacer size="lg" />
+              <Spacer size="xl" />
               <View
                 style={{
                   flex: 1,
@@ -343,6 +347,7 @@ function LoadingView({
               theme={theme}
               size={90}
               data={getAuthProviderImage(authProvider)}
+              color={theme.colors.accentButtonBg}
             />
           </View>
         ) : (
