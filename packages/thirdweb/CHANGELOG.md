@@ -1,5 +1,27 @@
 # thirdweb
 
+## 5.32.2
+
+### Patch Changes
+
+- [#3599](https://github.com/thirdweb-dev/js/pull/3599) [`eac126b`](https://github.com/thirdweb-dev/js/commit/eac126bb14e288108b740f2785d2e7db6889dddb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect title and theme colors in react native modals
+
+- [#3590](https://github.com/thirdweb-dev/js/pull/3590) [`106c013`](https://github.com/thirdweb-dev/js/commit/106c01356c545dffb34c091115d25cbdaa0f2c80) Thanks [@jnsdls](https://github.com/jnsdls)! - fix ethers5 adapter populateTransaction for sendTransaction
+
+- [#3600](https://github.com/thirdweb-dev/js/pull/3600) [`e598f46`](https://github.com/thirdweb-dev/js/commit/e598f464227d5b8230ddfdd8ebce55e3d6236355) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Force legacy transactions on Vanguard chain
+
+- [#3591](https://github.com/thirdweb-dev/js/pull/3591) [`e22b308`](https://github.com/thirdweb-dev/js/commit/e22b308fa72de881feb858acb07c227ff7d7593f) Thanks [@MananTank](https://github.com/MananTank)! - Various Pay UI improvements
+
+- [#3592](https://github.com/thirdweb-dev/js/pull/3592) [`d2de83d`](https://github.com/thirdweb-dev/js/commit/d2de83da6675d8b323b85d083a097637cf9af0ac) Thanks [@jnsdls](https://github.com/jnsdls)! - make siwe_auth more robust
+
+- [#3583](https://github.com/thirdweb-dev/js/pull/3583) [`229561e`](https://github.com/thirdweb-dev/js/commit/229561e1a79fe2ab3f010c5a8659c7e0fc497ec3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Animated connecting states for React Native
+
+- [#3576](https://github.com/thirdweb-dev/js/pull/3576) [`687328a`](https://github.com/thirdweb-dev/js/commit/687328aae9eb8bb577c000f1183e43dd080ec8f4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Blockscout v2 contract verification
+
+- [#3593](https://github.com/thirdweb-dev/js/pull/3593) [`e0f4e5a`](https://github.com/thirdweb-dev/js/commit/e0f4e5a23366cc676bc7949e96c1d92407f816e6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix input validation in Send Funds modal
+
+- [#3598](https://github.com/thirdweb-dev/js/pull/3598) [`e5cccb9`](https://github.com/thirdweb-dev/js/commit/e5cccb9d7028e10c93e17039403bde1fdeccd6cf) Thanks [@MananTank](https://github.com/MananTank)! - Fix Send Transaction UI
+
 ## 5.32.1
 
 ### Patch Changes
