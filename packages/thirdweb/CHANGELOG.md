@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.32.3
+
+### Patch Changes
+
+- [#3605](https://github.com/thirdweb-dev/js/pull/3605) [`c261921`](https://github.com/thirdweb-dev/js/commit/c261921e552f30c3cedfcde29aa84da9428c86d2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix inapp wallet layout reset
+
 ## 5.32.2
 
 ### Patch Changes
