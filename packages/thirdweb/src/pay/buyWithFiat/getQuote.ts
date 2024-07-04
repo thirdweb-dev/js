@@ -144,6 +144,10 @@ export type BuyWithFiatQuote = {
    */
   toAddress: string;
   /**
+   * Address of the wallet used for buying the token.
+   */
+  fromAddress: string;
+  /**
    * The maximum slippage in basis points (bps) allowed for the transaction.
    */
   maxSlippageBPS: number;

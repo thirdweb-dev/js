@@ -63,6 +63,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           return theme.colors.accentButtonText;
         case "secondary":
           return theme.colors.secondaryButtonText;
+        case "ghost":
         case "outline":
           return theme.colors.secondaryButtonText;
         case "link":
@@ -140,7 +141,7 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: radius.lg,
+    borderRadius: radius.md,
     WebkitTapHighlightColor: "transparent",
     color: theme.colors.secondaryIconColor,
     padding: "2px",
@@ -148,6 +149,9 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
     "&:hover": {
       background: theme.colors.secondaryIconHoverBg,
       color: theme.colors.secondaryIconHoverColor,
+    },
+    "&[disabled]": {
+      cursor: "not-allowed",
     },
   };
 });

@@ -1,6 +1,7 @@
 import type { ConnectLocale } from "./types.js";
 
 const connectWalletLocalJa: ConnectLocale = {
+  id: "ja_JP",
   signIn: "サインイン",
   defaultButtonTitle: "ウォレット接続",
   connecting: "接続中",

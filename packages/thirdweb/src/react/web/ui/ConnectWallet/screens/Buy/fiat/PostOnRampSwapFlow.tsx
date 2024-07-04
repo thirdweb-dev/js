@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import type { PayerInfo } from "../types.js";
 import { type BuyWithFiatPartialQuote, FiatSteps } from "./FiatSteps.js";
 import { PostOnRampSwap } from "./PostOnRampSwap.js";
 
@@ -20,6 +21,7 @@ export function PostOnRampSwapFlow(props: {
   onSwapFlowStarted: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  payer: PayerInfo;
 }) {
   const [statusForSwap, setStatusForSwap] = useState<
     BuyWithFiatStatus | undefined
@@ -35,6 +37,7 @@ export function PostOnRampSwapFlow(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        payer={props.payer}
       />
     );
   }

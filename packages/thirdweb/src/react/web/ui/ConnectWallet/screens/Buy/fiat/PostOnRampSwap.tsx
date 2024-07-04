@@ -5,7 +5,6 @@ import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/
 import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
-import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, ModalHeader } from "../../../../components/basic.js";
@@ -13,6 +12,7 @@ import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
 import { SwapFlow } from "../swap/SwapFlow.js";
+import type { PayerInfo } from "../types.js";
 
 export function PostOnRampSwap(props: {
   client: ThirdwebClient;
@@ -22,9 +22,8 @@ export function PostOnRampSwap(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  payer: PayerInfo;
 }) {
-  const account = useActiveAccount();
-
   const [lockedOnRampQuote, setLockedOnRampQuote] = useState<
     BuyWithCryptoQuote | undefined
   >(undefined);
@@ -92,7 +91,7 @@ export function PostOnRampSwap(props: {
     );
   }
 
-  if (!lockedOnRampQuote || !account) {
+  if (!lockedOnRampQuote) {
     return (
       <Container fullHeight>
         <Container p="lg">
@@ -118,7 +117,7 @@ export function PostOnRampSwap(props: {
 
   return (
     <SwapFlow
-      account={account}
+      payer={props.payer}
       buyWithCryptoQuote={lockedOnRampQuote}
       client={props.client}
       onBack={props.onBack}

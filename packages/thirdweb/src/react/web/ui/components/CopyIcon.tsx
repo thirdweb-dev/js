@@ -33,7 +33,11 @@ export const CopyIcon: React.FC<{
     >
       <ToolTip tip={props.tip} side={props.side} align={props.align}>
         <div>
-          <Container color={showCheckIcon ? "success" : undefined}>
+          <Container
+            color={showCheckIcon ? "success" : undefined}
+            flex="row"
+            center="both"
+          >
             {showCheckIcon ? <CheckIcon /> : <CopyIconSVG />}
           </Container>
         </div>

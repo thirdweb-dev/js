@@ -8,7 +8,6 @@ import {
 } from "../../providers/wallet-ui-states-provider.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import type { LocaleId } from "../../ui/types.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { OTPLoginUI } from "../shared/OTPLoginUI.js";
@@ -35,13 +34,13 @@ function InAppWalletConnectUI(props: {
   };
   client: ThirdwebClient;
   chain: Chain | undefined;
-  localeId: LocaleId;
   connectLocale: ConnectLocale;
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
   const state = data as ConnectWalletSelectUIState;
-  const locale = useInAppWalletLocale(props.localeId);
+  const localeId = props.connectLocale.id;
+  const locale = useInAppWalletLocale(localeId);
   const { initialScreen } = useScreenContext();
 
   if (!locale) {

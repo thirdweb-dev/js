@@ -1,4 +1,7 @@
+import type { LocaleId } from "../../types.js";
+
 export type ConnectLocale = {
+  id: LocaleId;
   agreement: {
     and: string;
     prefix: string;

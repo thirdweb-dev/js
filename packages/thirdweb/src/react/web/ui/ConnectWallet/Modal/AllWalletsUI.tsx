@@ -145,6 +145,8 @@ function AllWalletsUI(props: {
                       client={props.client}
                       recommendedWallets={props.recommendedWallets}
                       connectLocale={props.connectLocale}
+                      isActive={false}
+                      badge={undefined}
                     />
                   </li>
                 );

@@ -3,7 +3,9 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -11,10 +13,6 @@ import {
   iconSize,
 } from "../../../../../../core/design-system/index.js";
 import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useSendTransactionCore } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
-import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
-import { useSwitchActiveWalletChain } from "../../../../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -27,6 +25,7 @@ import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
 import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
+import type { PayerInfo } from "../types.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
@@ -49,15 +48,8 @@ export function SwapConfirmationScreen(props: {
   fromToken: ERC20OrNativeToken;
   fromTokenSymbol: string;
   isFiatFlow: boolean;
+  payer: PayerInfo;
 }) {
-  const activeChain = useActiveWalletChain();
-  const activeWallet = useActiveWallet();
-  const switchChain = useSwitchActiveWalletChain();
-  const sendTransactionMutation = useSendTransactionCore({
-    wallet: activeWallet,
-    switchChain,
-  });
-
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";
 
@@ -65,6 +57,9 @@ export function SwapConfirmationScreen(props: {
   const [status, setStatus] = useState<
     "pending" | "success" | "error" | "idle"
   >("idle");
+
+  const receiver = props.quote.swapDetails.toAddress;
+  const sender = props.quote.swapDetails.fromAddress;
 
   return (
     <Container p="lg">
@@ -85,17 +80,6 @@ export function SwapConfirmationScreen(props: {
         <Spacer y="lg" />
       )}
 
-      {/* Receive */}
-      <ConfirmItem label="Receive">
-        <RenderTokenInfo
-          chain={props.toChain}
-          amount={String(formatNumber(Number(props.toAmount), 4))}
-          symbol={props.toTokenSymbol}
-          token={props.toToken}
-          client={props.client}
-        />
-      </ConfirmItem>
-
       {/* Pay */}
       <ConfirmItem label="Pay">
         <RenderTokenInfo
@@ -103,6 +87,17 @@ export function SwapConfirmationScreen(props: {
           amount={String(formatNumber(Number(props.fromAmount), 4))}
           symbol={props.fromTokenSymbol || ""}
           token={props.fromToken}
+          client={props.client}
+        />
+      </ConfirmItem>
+
+      {/* Receive */}
+      <ConfirmItem label="Receive">
+        <RenderTokenInfo
+          chain={props.toChain}
+          amount={String(formatNumber(Number(props.toAmount), 4))}
+          symbol={props.toTokenSymbol}
+          token={props.toToken}
           client={props.client}
         />
       </ConfirmItem>
@@ -121,6 +116,13 @@ export function SwapConfirmationScreen(props: {
           )}
         </Text>
       </ConfirmItem>
+
+      {/* Send to  */}
+      {receiver !== sender && (
+        <ConfirmItem label="Send to">
+          <Text color="primaryText">{shortenAddress(receiver)}</Text>
+        </ConfirmItem>
+      )}
 
       <Spacer y="xl" />
 
@@ -162,11 +164,13 @@ export function SwapConfirmationScreen(props: {
         </>
       )}
 
-      {activeChain && activeChain.id !== props.fromChain.id ? (
+      {props.payer.chain.id !== props.fromChain.id ? (
         <SwitchNetworkButton
           fullWidth
-          chain={props.fromChain}
           variant="accent"
+          switchChain={async () => {
+            await props.payer.wallet.switchChain(props.fromChain);
+          }}
         />
       ) : (
         <Button
@@ -178,9 +182,10 @@ export function SwapConfirmationScreen(props: {
               try {
                 setStatus("pending");
 
-                const tx = await sendTransactionMutation.mutateAsync(
-                  props.quote.approval,
-                );
+                const tx = await sendTransaction({
+                  account: props.payer.account,
+                  transaction: props.quote.approval,
+                });
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
                 // props.onQuoteFinalized(props.quote);
@@ -201,8 +206,8 @@ export function SwapConfirmationScreen(props: {
                 // Fix for inApp wallet
                 // Ideally - the pay server sends a non-legacy transaction to avoid this issue
                 if (
-                  activeWallet?.id === "inApp" ||
-                  activeWallet?.id === "embedded"
+                  props.payer.wallet.id === "inApp" ||
+                  props.payer.wallet.id === "embedded"
                 ) {
                   tx = {
                     ...props.quote.transactionRequest,
@@ -210,7 +215,10 @@ export function SwapConfirmationScreen(props: {
                   };
                 }
 
-                const _swapTx = await sendTransactionMutation.mutateAsync(tx);
+                const _swapTx = await sendTransaction({
+                  account: props.payer.account,
+                  transaction: tx,
+                });
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 
@@ -289,7 +297,10 @@ function RenderTokenInfo(props: {
   );
 }
 
-function ConfirmItem(props: { label: string; children: React.ReactNode }) {
+function ConfirmItem(props: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Container

@@ -70,4 +70,5 @@ export type WalletDetailsModalScreen =
   | "view-funds"
   | "private-key"
   | "manage-wallet"
-  | "wallet-connect-receiver";
+  | "wallet-connect-receiver"
+  | "wallet-manager";

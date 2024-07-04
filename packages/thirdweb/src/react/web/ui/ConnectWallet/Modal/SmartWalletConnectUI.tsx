@@ -1,5 +1,6 @@
 "use client";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
@@ -35,7 +36,6 @@ export function SmartConnectUI(props: {
   onBack?: () => void;
   accountAbstraction: SmartWalletOptions;
   setModalVisibility: (value: boolean) => void;
-  localeId: LocaleId;
   meta: {
     title?: string;
     titleIconUrl?: string;
@@ -76,7 +76,6 @@ export function SmartConnectUI(props: {
         client={props.client}
         meta={props.meta}
         size={props.size}
-        localeId={props.localeId}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
       />
@@ -90,7 +89,7 @@ export function SmartConnectUI(props: {
       accountAbstraction={props.accountAbstraction}
       onBack={props.onBack}
       personalWalletInfo={personalWalletInfo.data}
-      localeId={props.localeId}
+      localeId={props.connectLocale.id}
       size={props.size}
       client={props.client}
     />
@@ -107,13 +106,11 @@ function SmartWalletConnecting(props: {
   size: "compact" | "wide";
   client: ThirdwebClient;
 }) {
-  const [locale, setLocale] = useState<SmartWalletLocale | undefined>();
+  const localeQuery = useQuery<SmartWalletLocale>({
+    queryKey: ["getSmartWalletLocale", props.localeId],
+    queryFn: () => getSmartWalletLocale(props.localeId),
+  });
   const { chain: smartWalletChain } = props.accountAbstraction;
-
-  // FIXME: use a query instead
-  useEffect(() => {
-    getSmartWalletLocale(props.localeId).then(setLocale);
-  }, [props.localeId]);
 
   const { personalWallet } = props;
   const { done } = props;
@@ -170,7 +167,7 @@ function SmartWalletConnecting(props: {
     }
   }, [handleConnect, wrongNetwork]);
 
-  if (!locale) {
+  if (!localeQuery.data) {
     return <LoadingScreen />;
   }
 
@@ -198,13 +195,13 @@ function SmartWalletConnecting(props: {
             <Spacer y="md" />
 
             <Text size="lg" color="primaryText" center weight={500}>
-              {locale.wrongNetworkScreen.title}
+              {localeQuery.data.wrongNetworkScreen.title}
             </Text>
 
             <Spacer y="lg" />
 
             <Text multiline center>
-              {locale.wrongNetworkScreen.subtitle}
+              {localeQuery.data.wrongNetworkScreen.subtitle}
             </Text>
 
             <Spacer y="xl" />
@@ -265,7 +262,9 @@ function SmartWalletConnecting(props: {
                   width={iconSize.sm}
                   height={iconSize.sm}
                 />
-                <span>{locale.wrongNetworkScreen.failedToSwitch}</span>
+                <span>
+                  {localeQuery.data.wrongNetworkScreen.failedToSwitch}
+                </span>
               </Container>
             </Container>
           </Container>
@@ -286,7 +285,7 @@ function SmartWalletConnecting(props: {
           minHeight: "300px",
         }}
       >
-        <Text color="danger">{locale.failedToConnect}</Text>
+        <Text color="danger">{localeQuery.data.failedToConnect}</Text>
       </Container>
     );
   }
@@ -301,7 +300,7 @@ function SmartWalletConnecting(props: {
       }}
     >
       <Text color="primaryText" multiline center>
-        {locale.connecting}
+        {localeQuery.data.connecting}
       </Text>
       <Spacer y="lg" />
       <Spinner color="accentText" size="lg" />

@@ -160,13 +160,14 @@ function ConnectModalInlineContent(props: {
         meta={props.meta}
         welcomeScreen={props.welcomeScreen}
         isEmbed={props.isEmbed}
-        localeId={props.localeId}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         showAllWallets={props.showAllWallets}
         wallets={props.wallets}
         chains={props.chains}
         walletConnect={props.walletConnect}
+        modalHeader={undefined}
+        walletIdsToHide={undefined}
       />
 
       {/* close icon */}
