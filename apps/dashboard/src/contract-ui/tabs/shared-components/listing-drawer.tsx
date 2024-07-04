@@ -171,7 +171,6 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
           <NFTMediaWithEmptyState
-            // @ts-expect-error types are not up to date
             metadata={renderData.asset.metadata}
             requireInteraction
             width="150px"

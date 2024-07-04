@@ -311,7 +311,6 @@ const ListingCards: React.FC<ListingCardsProps> = ({
             <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
               <Skeleton isLoaded={!isLoading}>
                 <NFTMediaWithEmptyState
-                  // @ts-expect-error - metadata type not fixed yet
                   metadata={listing.asset.metadata}
                   requireInteraction
                   width="100%"

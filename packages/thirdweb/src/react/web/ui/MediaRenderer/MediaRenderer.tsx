@@ -60,16 +60,14 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
         height = "300px",
         style,
         mimeType,
-        ...restProps
+        client,
+        controls,
+        className,
       },
       ref,
     ) {
-      const client = restProps.client;
-
       const mergedStyle: React.CSSProperties = {
         objectFit: "contain",
-        width,
-        height,
         ...style,
       };
 
@@ -99,8 +97,10 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
               style={mergedStyle}
               src={mediaInfo.url}
               poster={possiblePosterSrc.url}
+              ref={ref as unknown as React.ForwardedRef<HTMLIFrameElement>}
               requireInteraction={requireInteraction}
-              {...restProps}
+              className={className}
+              alt={alt}
             />
           );
         }
@@ -111,13 +111,12 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
             <Suspense
               fallback={
                 poster ? (
-                  // biome-ignore lint/a11y/useAltText: alt is there
                   <img
                     style={mergedStyle}
                     src={poster}
                     alt={alt}
                     ref={ref as unknown as React.LegacyRef<HTMLImageElement>}
-                    {...restProps}
+                    className={className}
                   />
                 ) : null
               }
@@ -127,7 +126,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
                 src={mediaInfo.url || ""}
                 poster={poster}
                 alt={alt}
-                {...restProps}
+                className={className}
               />
             </Suspense>
           );
@@ -139,9 +138,11 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
             <VideoPlayer
               style={mergedStyle}
               src={mediaInfo.url}
+              ref={ref as unknown as React.ForwardedRef<HTMLVideoElement>}
               poster={possiblePosterSrc.url}
               requireInteraction={requireInteraction}
-              {...restProps}
+              className={className}
+              controls={controls}
             />
           );
         }
@@ -153,8 +154,12 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
               style={mergedStyle}
               src={mediaInfo.url}
               poster={possiblePosterSrc.url}
-              requireInteraction={requireInteraction}
-              {...restProps}
+              alt={alt}
+              ref={ref as unknown as React.ForwardedRef<HTMLAudioElement>}
+              className={className}
+              height={height}
+              width={width}
+              controls={controls}
             />
           );
         }
@@ -167,7 +172,9 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
               src={mediaInfo.url}
               alt={alt}
               ref={ref as unknown as React.ForwardedRef<HTMLImageElement>}
-              {...restProps}
+              className={className}
+              height={height}
+              width={width}
             />
           );
         }
@@ -180,7 +187,7 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
           src={mediaInfo.url}
           alt={alt}
           ref={ref as unknown as React.Ref<HTMLAnchorElement>}
-          {...restProps}
+          className={className}
         />
       );
     },
@@ -242,41 +249,60 @@ const PlayButton: React.FC<PlayButtonProps> = ({ onClick, isPlaying }) => {
 };
 
 const ImageRenderer = /* @__PURE__ */ (() =>
-  React.forwardRef<HTMLImageElement, MediaRendererProps>(
-    function Image_Renderer(props, ref) {
-      const { style, src, alt, ...restProps } = props;
-      const [error, setError] = useState(false);
+  React.forwardRef<
+    HTMLImageElement,
+    Pick<
+      MediaRendererProps,
+      "src" | "style" | "alt" | "className" | "height" | "width"
+    >
+  >(function Image_Renderer(props, ref) {
+    const { style, src, alt, className, height, width } = props;
+    const [error, setError] = useState(false);
 
-      if (error) {
-        return (
-          <LinkPlayer
-            style={style}
-            src={src}
-            alt={alt}
-            ref={ref as unknown as React.Ref<HTMLAnchorElement>}
-            {...restProps}
-          />
-        );
-      }
-
+    if (error) {
       return (
-        // biome-ignore lint/a11y/useAltText: we do set the alt text
-        <img
+        <LinkPlayer
           style={style}
-          src={src ?? undefined}
+          src={src}
           alt={alt}
-          ref={ref}
-          {...restProps}
-          onError={() => {
-            setError(true);
-          }}
+          ref={ref as unknown as React.Ref<HTMLAnchorElement>}
+          className={className}
         />
       );
-    },
-  ))();
+    }
+
+    return (
+      <img
+        style={style}
+        src={src ?? undefined}
+        alt={alt}
+        ref={ref}
+        className={className}
+        height={height}
+        width={width}
+        onError={() => {
+          setError(true);
+        }}
+      />
+    );
+  }))();
 
 const VideoPlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<HTMLVideoElement, MediaRendererProps>(function Video_Player(
+  React.forwardRef<
+    HTMLVideoElement,
+    Pick<
+      MediaRendererProps,
+      | "alt"
+      | "src"
+      | "poster"
+      | "requireInteraction"
+      | "style"
+      | "width"
+      | "height"
+      | "controls"
+      | "className"
+    >
+  >(function Video_Player(
     {
       src,
       alt,
@@ -286,7 +312,7 @@ const VideoPlayer = /* @__PURE__ */ (() =>
       width,
       height,
       controls,
-      ...restProps
+      className,
     },
     ref,
   ) {
@@ -321,13 +347,13 @@ const VideoPlayer = /* @__PURE__ */ (() =>
           src={src}
           alt={alt}
           ref={ref as unknown as React.Ref<HTMLAnchorElement>}
-          {...restProps}
+          className={className}
         />
       );
     }
 
     return (
-      <div style={{ position: "relative", ...style }} {...restProps}>
+      <div style={{ position: "relative", ...style }} className={className}>
         <video
           ref={mergeRefs([videoRef, ref])}
           src={src ?? undefined}
@@ -389,18 +415,21 @@ const VideoPlayer = /* @__PURE__ */ (() =>
   }))();
 
 const AudioPlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<HTMLAudioElement, MediaRendererProps>(function Audio_Player(
-    {
-      src,
-      alt,
-      poster,
-      style,
-      height,
-      width,
-
-      requireInteraction,
-      ...restProps
-    },
+  React.forwardRef<
+    HTMLAudioElement,
+    Pick<
+      MediaRendererProps,
+      | "src"
+      | "alt"
+      | "poster"
+      | "style"
+      | "height"
+      | "width"
+      | "className"
+      | "controls"
+    >
+  >(function Audio_Player(
+    { src, alt, poster, style, height, width, className, controls },
     ref,
   ) {
     const audioRef = useRef<HTMLAudioElement>(null);
@@ -426,13 +455,13 @@ const AudioPlayer = /* @__PURE__ */ (() =>
           src={src}
           alt={alt}
           ref={ref as unknown as React.Ref<HTMLAnchorElement>}
-          {...restProps}
+          className={className}
         />
       );
     }
 
     return (
-      <div style={{ position: "relative", ...style }} {...restProps}>
+      <div style={{ position: "relative", ...style }} className={className}>
         {poster ? (
           <img
             height={height}
@@ -474,6 +503,7 @@ const AudioPlayer = /* @__PURE__ */ (() =>
           src={src ?? undefined}
           loop
           playsInline
+          controls={controls}
           muted={muted}
           preload="none"
           controlsList="nodownload"
@@ -493,69 +523,79 @@ const AudioPlayer = /* @__PURE__ */ (() =>
   }))();
 
 const IframePlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
-    function Iframe_Player(
-      { src, alt, poster, requireInteraction, style, ...restProps },
-      ref,
-    ) {
-      const [playing, setPlaying] = useState(!requireInteraction);
-
-      return (
-        <div style={{ position: "relative", ...style }} {...restProps}>
-          <iframe
-            title={alt || "thirdweb iframe player"}
-            src={playing ? src ?? undefined : undefined}
-            ref={ref}
-            style={{
-              objectFit: "contain",
-              zIndex: 1,
-              height: "100%",
-              width: "100%",
-              transition: "opacity .5s",
-              opacity: !poster ? 1 : playing ? 1 : 0,
-              border: "none",
-            }}
-            sandbox="allow-scripts"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          />
-          {poster && (
-            <img
-              src={poster}
-              style={{
-                objectFit: "contain",
-                pointerEvents: "none",
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                zIndex: 2,
-                transition: "opacity .5s",
-                opacity: playing ? 0 : 1,
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}
-              alt={alt}
-            />
-          )}
-          <PlayButton
-            onClick={() => {
-              setPlaying((prev) => !prev);
-            }}
-            isPlaying={playing}
-          />
-        </div>
-      );
-    },
-  ))();
-
-const LinkPlayer = /* @__PURE__ */ (() =>
-  React.forwardRef<HTMLAnchorElement, MediaRendererProps>(function Link_Player(
-    { src, alt, style, ...restProps },
+  React.forwardRef<
+    HTMLIFrameElement,
+    Omit<
+      MediaRendererProps,
+      | "client"
+      | "gatewayUrl"
+      | "mimeType"
+      | "controls"
+      | "height"
+      | "width"
+      | "children"
+    >
+  >(function Iframe_Player(
+    { src, alt, poster, requireInteraction, style, ...restProps },
     ref,
   ) {
+    const [playing, setPlaying] = useState(!requireInteraction);
+
     return (
       <div style={{ position: "relative", ...style }} {...restProps}>
+        <iframe
+          title={alt || "thirdweb iframe player"}
+          src={playing ? src ?? undefined : undefined}
+          ref={ref}
+          style={{
+            objectFit: "contain",
+            zIndex: 1,
+            height: "100%",
+            width: "100%",
+            transition: "opacity .5s",
+            opacity: !poster ? 1 : playing ? 1 : 0,
+            border: "none",
+          }}
+          sandbox="allow-scripts"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        />
+        {poster && (
+          <img
+            src={poster}
+            style={{
+              objectFit: "contain",
+              pointerEvents: "none",
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              zIndex: 2,
+              transition: "opacity .5s",
+              opacity: playing ? 0 : 1,
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+            alt={alt}
+          />
+        )}
+        <PlayButton
+          onClick={() => {
+            setPlaying((prev) => !prev);
+          }}
+          isPlaying={playing}
+        />
+      </div>
+    );
+  }))();
+
+const LinkPlayer = /* @__PURE__ */ (() =>
+  React.forwardRef<
+    HTMLAnchorElement,
+    Pick<MediaRendererProps, "src" | "alt" | "style" | "className">
+  >(function Link_Player({ src, alt, style, className }, ref) {
+    return (
+      <div style={{ position: "relative", ...style }} className={className}>
         <div
           style={{
             width: "100%",

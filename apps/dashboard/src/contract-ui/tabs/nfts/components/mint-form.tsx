@@ -404,7 +404,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             {nft?.metadata && !mediaFileUrl && (
               <Flex>
                 <NFTMediaWithEmptyState
-                  // @ts-expect-error types are not up to date
                   metadata={nft.metadata}
                   width="200px"
                   height="200px"
