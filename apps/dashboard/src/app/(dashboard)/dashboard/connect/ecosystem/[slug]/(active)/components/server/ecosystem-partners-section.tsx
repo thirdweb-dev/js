@@ -12,8 +12,8 @@ export function EcosystemPartnersSection({
           Ecosystem partners
         </h4>
         <p className="text-sm text-muted-foreground">
-          Configure partners that can use your wallet. Creating a partner will
-          generate a unique partner ID.
+          Configure apps that can use your wallet. Creating a partner will
+          generate a unique partner ID that can access your ecosystem.
         </p>
       </div>
 

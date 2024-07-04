@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ToolTipLabel } from "../../../../../../../../../@/components/ui/tooltip";
 import type { Ecosystem } from "../../../../types";
 import { useAddPartner } from "../../hooks/use-add-partner";
 
@@ -119,7 +120,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
                 <FormDescription
                   className={cn(
                     "text-xs transition-all",
-                    form.formState.errors.domains?.message
+                    form.formState.errors.name?.message
                       ? "text-destructive block opacity-100 translate-y-0"
                       : "opacity-0 lg:-translate-y-4 hidden",
                   )}
@@ -146,7 +147,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
                       )}
                     >
                       {form.formState.errors.domains?.message ??
-                        "Space-separated list of domains to allow"}
+                        "Space or comma-separated list of regex domains (e.g. *.example.com)"}
                     </FormDescription>
                   </>
                 </FormControl>
@@ -174,7 +175,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
                       )}
                     >
                       {form.formState.errors.bundleIds?.message ??
-                        "Space-separated list of bundle IDs"}
+                        "Space or comma-separated list of bundle IDs"}
                     </FormDescription>
                   </>
                 </FormControl>
@@ -185,21 +186,25 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
           <FormField
             control={form.control}
             name="permissions"
-            defaultValue="" // Note: you *must* provide a default value here or the field won't reset
+            defaultValue="PROMPT_USER_V1" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
               <FormItem className="col-span-4 lg:col-span-2">
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Wallet signing" />
-                    </SelectTrigger>
-                  </FormControl>
+                  <ToolTipLabel label="Should wallet actions prompt the user for approval?">
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Wallet prompts" />
+                      </SelectTrigger>
+                    </FormControl>
+                  </ToolTipLabel>
                   <SelectContent>
-                    <SelectItem value="FULL_CONTROL_V1">Default</SelectItem>
-                    <SelectItem value="PROMPT_USER_V1">Prompted</SelectItem>
+                    <SelectItem value="FULL_CONTROL_V1">
+                      Never prompt
+                    </SelectItem>
+                    <SelectItem value="PROMPT_USER_V1">Prompt user</SelectItem>
                   </SelectContent>
 
                   <FormDescription

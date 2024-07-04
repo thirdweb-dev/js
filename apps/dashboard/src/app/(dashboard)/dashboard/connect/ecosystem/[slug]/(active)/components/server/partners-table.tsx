@@ -38,7 +38,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
             Partner ID
           </TableHeading>
           <TableHeading className="hidden lg:table-cell">
-            Wallet Signing
+            Wallet Prompts
           </TableHeading>
           {/* Empty space for delete button */}
           <th className="table-cell" />
@@ -113,8 +113,8 @@ function TableRow(props: {
       </TableData>
       <TableData className="hidden align-top lg:table-cell">
         {props.partner.permissions.includes("PROMPT_USER_V1")
-          ? "Prompted"
-          : "Default"}
+          ? "Prompt user"
+          : "Never prompt"}
       </TableData>
       <td className="table-cell py-1 align-middle">
         <ConfirmationDialog
