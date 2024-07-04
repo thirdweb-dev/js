@@ -30,6 +30,7 @@ export function WalletImage(props: {
   id: WalletId;
   size: string;
   client: ThirdwebClient;
+  style?: React.CSSProperties;
 }) {
   const [image, setImage] = useState<string | undefined>(undefined);
   const activeWallet = useActiveWallet();
@@ -102,6 +103,7 @@ export function WalletImage(props: {
         client={props.client}
         style={{
           borderRadius: radius.md,
+          ...props.style,
         }}
       />
     );

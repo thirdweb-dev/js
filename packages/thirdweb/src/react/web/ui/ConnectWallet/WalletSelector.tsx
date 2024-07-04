@@ -34,11 +34,11 @@ import { ModalTitle } from "../components/modalElements.js";
 import { Link } from "../components/text.js";
 import { Text } from "../components/text.js";
 import { StyledDiv, StyledUl } from "../design-system/elements.js";
-import type { LocaleId } from "../types.js";
 import { SmartConnectUI } from "./Modal/SmartWalletConnectUI.js";
 import { TOS } from "./Modal/TOS.js";
+import { useScreenContext } from "./Modal/screen.js";
 import { PoweredByThirdweb } from "./PoweredByTW.js";
-import { WalletButton, WalletEntryButton } from "./WalletEntryButton.js";
+import { WalletButtonEl, WalletEntryButton } from "./WalletEntryButton.js";
 import { WalletTypeRowButton } from "./WalletTypeRowButton.js";
 import { compactModalMaxHeight } from "./constants.js";
 import type { ConnectLocale } from "./locale/types.js";
@@ -50,10 +50,9 @@ const InAppWalletSelectionUI = /* @__PURE__ */ lazy(
 // const localWalletId = "local";
 const inAppWalletId: WalletId = "inApp";
 
-type WalletSelectorProps = {
+export type WalletSelectorProps = {
   wallets: Wallet[];
   selectWallet: (wallet: Wallet) => void;
-  onGetStarted: () => void;
   title: string;
   done: (wallet: Wallet) => void;
   goBack?: () => void;
@@ -72,7 +71,6 @@ type WalletSelectorProps = {
   connectLocale: ConnectLocale;
   recommendedWallets: Wallet[] | undefined;
   isEmbed: boolean;
-  localeId: LocaleId;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   showAllWallets: boolean | undefined;
@@ -81,6 +79,13 @@ type WalletSelectorProps = {
         projectId?: string;
       }
     | undefined;
+  modalHeader:
+    | {
+        title: string;
+        onBack: () => void;
+      }
+    | undefined;
+  walletIdsToHide: WalletId[] | undefined;
 };
 
 /**
@@ -103,7 +108,6 @@ export function WalletSelector(props: WalletSelectorProps) {
         onBack={props.goBack}
         meta={props.meta}
         size={props.size}
-        localeId={props.localeId}
         chain={props.chain}
         chains={props.chains}
         client={props.client}
@@ -127,17 +131,22 @@ export function WalletSelector(props: WalletSelectorProps) {
  * @internal
  */
 const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
+  const { walletIdsToHide } = props;
   const isCompact = props.size === "compact";
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
 
   const installedWallets = getInstalledWallets();
   const propsWallets = props.wallets;
-  const _wallets: Wallet[] = [...propsWallets];
+  let _wallets: Wallet[] = [...propsWallets];
 
   for (const iW of installedWallets) {
     if (!propsWallets.find((w) => w.id === iW.id)) {
       _wallets.push(iW);
     }
+  }
+
+  if (walletIdsToHide) {
+    _wallets = _wallets.filter((w) => !walletIdsToHide?.includes(w.id));
   }
 
   const localWalletConfig = false; // _wallets.find((w) => w.id === localWalletId);
@@ -182,7 +191,12 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     }, 1000);
   }, []);
 
-  const twTitle = (
+  const twTitle = props.modalHeader ? (
+    <ModalHeader
+      title={props.modalHeader.title}
+      onBack={props.modalHeader.onBack}
+    />
+  ) : (
     <Container gap="xxs" center="y" flex="row">
       {!props.meta.titleIconUrl ? null : (
         <Img
@@ -263,7 +277,6 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         recommendedWallets={props.recommendedWallets}
         chain={props.chain}
         showAllWallets={props.showAllWallets}
-        localeId={props.localeId}
       />
     );
 
@@ -291,7 +304,6 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           recommendedWallets={props.recommendedWallets}
           chain={props.chain}
           showAllWallets={props.showAllWallets}
-          localeId={props.localeId}
         />
       );
 
@@ -335,7 +347,6 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               recommendedWallets={props.recommendedWallets}
               chain={props.chain}
               showAllWallets={props.showAllWallets}
-              localeId={props.localeId}
             />
             {eoaWallets.length > 0 && (
               <>
@@ -406,7 +417,6 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                     recommendedWallets={props.recommendedWallets}
                     chain={props.chain}
                     showAllWallets={props.showAllWallets}
-                    localeId={props.localeId}
                   />
                 </Container>
 
@@ -445,7 +455,6 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
             recommendedWallets={props.recommendedWallets}
             chain={props.chain}
             showAllWallets={props.showAllWallets}
-            localeId={props.localeId}
           />
         );
 
@@ -455,6 +464,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       }
     }
   }
+
+  const showHeader = !props.isEmbed || props.modalHeader;
 
   return (
     <Container
@@ -467,7 +478,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       }}
     >
       {/* Header */}
-      {!props.isEmbed && (
+      {showHeader && (
         <Container p="lg">
           {isWalletGroupExpanded ? (
             <ModalHeader
@@ -488,7 +499,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         scrollY
         px="md"
         style={
-          props.isEmbed
+          !showHeader
             ? {
                 paddingTop: spacing.lg,
               }
@@ -497,7 +508,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               }
         }
       >
-        {props.isEmbed && isWalletGroupExpanded && (
+        {!props.modalHeader && props.isEmbed && isWalletGroupExpanded && (
           <Container
             flex="row"
             center="y"
@@ -566,9 +577,9 @@ const WalletSelection: React.FC<{
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   chain: Chain | undefined;
-  localeId: LocaleId;
 }> = (props) => {
   const wallets = sortWallets(props.wallets, props.recommendedWallets);
+  const { screen } = useScreenContext();
 
   return (
     <WalletList
@@ -577,6 +588,9 @@ const WalletSelection: React.FC<{
       }}
     >
       {wallets.map((wallet) => {
+        const isActive = screen
+          ? typeof screen === "object" && screen.id === wallet.id
+          : false;
         return (
           <li
             key={wallet.id}
@@ -594,7 +608,6 @@ const WalletSelection: React.FC<{
                   size={props.size}
                   recommendedWallets={props.recommendedWallets}
                   chain={props.chain}
-                  localeId={props.localeId}
                 />
               </Suspense>
             ) : (
@@ -606,6 +619,8 @@ const WalletSelection: React.FC<{
                 connectLocale={props.connectLocale}
                 client={props.client}
                 recommendedWallets={props.recommendedWallets}
+                isActive={isActive}
+                badge={undefined}
               />
             )}
           </li>
@@ -614,7 +629,7 @@ const WalletSelection: React.FC<{
 
       {props.onShowAll && props.showAllWallets !== false && (
         <ButtonContainer>
-          <WalletButton onClick={props.onShowAll}>
+          <WalletButtonEl onClick={props.onShowAll}>
             <ShowAllWalletsIcon>
               <div data-dot />
               <div data-dot />
@@ -625,7 +640,7 @@ const WalletSelection: React.FC<{
               <Text color="primaryText">All Wallets</Text>
               <BadgeText> 350+ </BadgeText>
             </Container>
-          </WalletButton>
+          </WalletButtonEl>
         </ButtonContainer>
       )}
     </WalletList>

@@ -8,7 +8,6 @@ import {
   useSetSelectionData,
 } from "../../providers/wallet-ui-states-provider.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import type { LocaleId } from "../../ui/types.js";
 import { useInAppWalletLocale } from "../in-app/useInAppWalletLocale.js";
 import type { ConnectWalletSelectUIState } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
@@ -27,7 +26,6 @@ function EcosystemWalletConnectUI(props: {
   goBack?: () => void;
   client: ThirdwebClient;
   chain: Chain | undefined;
-  localeId: LocaleId;
   connectLocale: ConnectLocale;
   size: "compact" | "wide";
   meta: {
@@ -41,7 +39,8 @@ function EcosystemWalletConnectUI(props: {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
   const state = data as ConnectWalletSelectUIState;
-  const locale = useInAppWalletLocale(props.localeId);
+  const localeId = props.connectLocale.id;
+  const locale = useInAppWalletLocale(localeId);
 
   if (!locale) {
     return <LoadingScreen />;

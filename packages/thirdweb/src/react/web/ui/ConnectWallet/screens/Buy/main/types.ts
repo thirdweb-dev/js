@@ -1,3 +1,5 @@
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
 
 export type BuyForTx = {
@@ -8,10 +10,6 @@ export type BuyForTx = {
 };
 
 export type SelectedScreen =
-  | {
-      id: "node";
-      node: React.ReactNode;
-    }
   | {
       id:
         | "main"
@@ -29,5 +27,18 @@ export type SelectedScreen =
     }
   | {
       id: "select-currency";
+      backScreen: SelectedScreen;
+    }
+  | {
+      id: "swap-flow";
+      quote: BuyWithCryptoQuote;
+    }
+  | {
+      id: "fiat-flow";
+      quote: BuyWithFiatQuote;
+      openedWindow: Window | null;
+    }
+  | {
+      id: "connect-payer-wallet";
       backScreen: SelectedScreen;
     };

@@ -304,6 +304,17 @@ function ConnectButtonInner(
       switchButton={props.switchButton}
       client={props.client}
       connectLocale={locale}
+      connectOptions={{
+        accountAbstraction: props.accountAbstraction,
+        appMetadata: props.appMetadata,
+        chain: props.chain,
+        chains: props.chains,
+        connectModal: props.connectModal,
+        recommendedWallets: props.recommendedWallets,
+        showAllWallets: props.showAllWallets,
+        walletConnect: props.walletConnect,
+        wallets: props.wallets,
+      }}
     />
   );
 }

@@ -1,6 +1,7 @@
 import type { ConnectLocale } from "./types.js";
 
 const connectWalletLocalEs: ConnectLocale = {
+  id: "es_ES",
   signIn: "Iniciar sesión",
   defaultButtonTitle: "Conectar cartera",
   connecting: "Conectando",

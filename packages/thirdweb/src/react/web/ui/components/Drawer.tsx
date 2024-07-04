@@ -1,16 +1,20 @@
 "use client";
 import { keyframes } from "@emotion/react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { forwardRef, useRef } from "react";
-import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import {
-  iconSize,
-  radius,
-  spacing,
-} from "../../../core/design-system/index.js";
+  forwardRef,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { iconSize, radius } from "../../../core/design-system/index.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledDiv } from "../design-system/elements.js";
+import { DynamicHeight } from "./DynamicHeight.js";
 import { CrossContainer } from "./Modal.js";
+import { Container } from "./basic.js";
 import { IconButton } from "./buttons.js";
 
 type DrawerProps = {
@@ -24,23 +28,29 @@ type DrawerProps = {
 export const Drawer = /* @__PURE__ */ forwardRef<HTMLDivElement, DrawerProps>(
   function Drawer_(props, ref) {
     return (
-      <>
-        <DrawerContainer ref={ref}>
-          <CrossContainer>
-            <IconButton type="button" aria-label="Close" onClick={props.close}>
-              <Cross2Icon
-                width={iconSize.md}
-                height={iconSize.md}
-                style={{
-                  color: "inherit",
-                }}
-              />
-            </IconButton>
-          </CrossContainer>
+      <DrawerContainer ref={ref}>
+        <DynamicHeight>
+          <Container p="lg">
+            <CrossContainer>
+              <IconButton
+                type="button"
+                aria-label="Close"
+                onClick={props.close}
+              >
+                <Cross2Icon
+                  width={iconSize.md}
+                  height={iconSize.md}
+                  style={{
+                    color: "inherit",
+                  }}
+                />
+              </IconButton>
+            </CrossContainer>
 
-          {props.children}
-        </DrawerContainer>
-      </>
+            {props.children}
+          </Container>
+        </DynamicHeight>
+      </DrawerContainer>
     );
   },
 );
@@ -49,7 +59,6 @@ export const DrawerContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     zIndex: 10000,
-    padding: spacing.lg,
     borderTopLeftRadius: radius.xl,
     borderTopRightRadius: radius.xl,
     background: theme.colors.modalBg,
@@ -89,32 +98,74 @@ export const DrawerOverlay = /* @__PURE__ */ StyledDiv((_) => {
  * @internal
  */
 export function useDrawer() {
+  const [isOpen, _setIsOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   const drawerOverlayRef = useRef<HTMLDivElement>(null);
 
-  const onClose = (closeDrawer: () => void) => {
-    if (drawerRef.current) {
-      const animOptions = {
-        easing: "cubic-bezier(0.175, 0.885, 0.32, 1.1)",
-        fill: "forwards",
-        duration: 300,
-      } as const;
+  const closeDrawerAnimation = useCallback(() => {
+    return new Promise<void>((resolve) => {
+      if (drawerRef.current) {
+        const animOptions = {
+          easing: "cubic-bezier(0.175, 0.885, 0.32, 1.1)",
+          fill: "forwards",
+          duration: 300,
+        } as const;
 
-      const closeAnimation = drawerRef.current.animate(
-        [{ transform: "translateY(100%)", opacity: 0 }],
-        animOptions,
-      );
+        const closeAnimation = drawerRef.current.animate(
+          [{ transform: "translateY(100%)", opacity: 0 }],
+          animOptions,
+        );
 
-      drawerOverlayRef.current?.animate([{ opacity: 0 }], animOptions);
-      closeAnimation.onfinish = closeDrawer;
-    } else {
-      closeDrawer();
+        drawerOverlayRef.current?.animate([{ opacity: 0 }], animOptions);
+        closeAnimation.onfinish = () => resolve();
+      } else {
+        resolve();
+      }
+    });
+  }, []);
+
+  const setIsOpen = useCallback(
+    async (value: boolean) => {
+      if (value) {
+        _setIsOpen(true);
+      } else {
+        await closeDrawerAnimation();
+        _setIsOpen(false);
+      }
+    },
+    [closeDrawerAnimation],
+  );
+
+  // close on outside click
+  useLayoutEffect(() => {
+    if (!isOpen) {
+      return;
     }
-  };
+
+    const handleClick = (event: MouseEvent) => {
+      if (
+        drawerRef.current &&
+        event.target instanceof Node &&
+        !drawerRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    // avoid listening to the click event that opened the drawer by adding a frame delay
+    requestAnimationFrame(() => {
+      document.addEventListener("click", handleClick);
+    });
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, [isOpen, setIsOpen]);
 
   return {
     drawerRef,
     drawerOverlayRef,
-    onClose,
+    setIsOpen,
+    isOpen,
   };
 }

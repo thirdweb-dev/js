@@ -29,7 +29,7 @@ import { WalletLogoSpinner } from "./WalletLogoSpinner.js";
 type Status = "signing" | "failed" | "idle";
 
 export const SignatureScreen: React.FC<{
-  onDone: () => void;
+  onDone: (() => void) | undefined;
   modalSize: "compact" | "wide";
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
@@ -56,7 +56,7 @@ export const SignatureScreen: React.FC<{
     try {
       setStatus("signing");
       await siweAuth.doLogin();
-      onDone();
+      onDone?.();
     } catch (err) {
       await wait(1000);
       setStatus("failed");

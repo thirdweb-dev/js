@@ -6,6 +6,7 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
+  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -15,6 +16,8 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
+import type { AppMetadata } from "../../../../wallets/types.js";
 import {
   CustomThemeProvider,
   useCustomTheme,
@@ -29,6 +32,7 @@ import {
 } from "../../../core/design-system/index.js";
 import type {
   ConnectButtonProps,
+  ConnectButton_connectModalOptions,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
   PayUIOptions,
@@ -76,6 +80,7 @@ import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
+import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
 import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
@@ -105,6 +110,7 @@ export const ConnectedWalletDetails: React.FC<{
   switchButton: ConnectButtonProps["switchButton"];
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
+  connectOptions: DetailsModalConnectOptions | undefined;
 }> = (props) => {
   const { connectLocale: locale, client } = props;
 
@@ -137,6 +143,7 @@ export const ConnectedWalletDetails: React.FC<{
         onDisconnect={props.onDisconnect}
         chains={props.chains}
         displayBalanceToken={props.detailsButton?.displayBalanceToken}
+        connectOptions={props.connectOptions}
       />,
     );
   }
@@ -238,6 +245,7 @@ function DetailsModal(props: {
   }) => void;
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
+  connectOptions: DetailsModalConnectOptions | undefined;
 }) {
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const { disconnect } = useDisconnect();
@@ -298,12 +306,12 @@ function DetailsModal(props: {
             client={client}
           />
         ) : (
-          <Skeleton height={iconSize.md} width={iconSize.md} />
+          <Skeleton height={`${iconSize.md}px`} width={`${iconSize.md}px`} />
         )}
       </div>
 
       {chainNameQuery.isLoading ? (
-        <Skeleton height={"16px"} width={"200px"} />
+        <Skeleton height={"16px"} width={"150px"} />
       ) : (
         <Text color="primaryText" multiline>
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
@@ -324,6 +332,21 @@ function DetailsModal(props: {
   let content = (
     <div>
       <Spacer y="xl" />
+
+      <IconButton
+        style={{
+          position: "absolute",
+          top: `${spacing.lg}`,
+          left: `${spacing.sm}`,
+          padding: "3px",
+        }}
+        onClick={() => {
+          setScreen("wallet-manager");
+        }}
+      >
+        <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+      </IconButton>
+
       <Container px="lg" flex="column" center="x">
         {ensAvatarQuery.data ? (
           <Img
@@ -613,6 +636,32 @@ function DetailsModal(props: {
     );
   }
 
+  if (
+    screen === "wallet-manager" &&
+    activeAccount &&
+    walletChain &&
+    activeWallet
+  ) {
+    content = (
+      <WalletManagerScreen
+        onBack={() => setScreen("main")}
+        accountAbstraction={props.connectOptions?.accountAbstraction}
+        appMetadata={props.connectOptions?.appMetadata}
+        chain={props.connectOptions?.chain}
+        chains={props.connectOptions?.chains}
+        client={client}
+        connectLocale={locale}
+        recommendedWallets={props.connectOptions?.recommendedWallets}
+        showAllWallets={!!props.connectOptions?.showAllWallets}
+        walletConnect={props.connectOptions?.walletConnect}
+        wallets={props.connectOptions?.wallets}
+        activeAccount={activeAccount}
+        activeChain={walletChain}
+        activeWallet={activeWallet}
+      />
+    );
+  }
+
   if (screen === "network-switcher") {
     content = (
       <NetworkSelectorContent
@@ -718,6 +767,8 @@ function DetailsModal(props: {
         payOptions={props.detailsModal?.payOptions || {}}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
+        connectOptions={undefined}
+        buyForTx={undefined}
       />
     );
   }
@@ -943,6 +994,20 @@ function SwitchNetworkButton(props: {
   );
 }
 
+export type DetailsModalConnectOptions = {
+  connectModal?: ConnectButton_connectModalOptions;
+  walletConnect?: {
+    projectId?: string;
+  };
+  accountAbstraction?: SmartWalletOptions;
+  wallets?: Wallet[];
+  appMetadata?: AppMetadata;
+  chain?: Chain;
+  chains?: Chain[];
+  recommendedWallets?: Wallet[];
+  showAllWallets?: boolean;
+};
+
 export type UseWalletDetailsModalOptions = {
   /**
    * A client is the entry point to the thirdweb SDK.
@@ -1115,6 +1180,11 @@ export type UseWalletDetailsModalOptions = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Options to configure the Connect UI shown when user clicks the "Connect Wallet" button in the Wallet Switcher screen.
+   */
+  connectOptions?: DetailsModalConnectOptions;
 };
 
 /**
@@ -1176,6 +1246,7 @@ export function useWalletDetailsModal() {
               closeModal();
             }}
             chains={props.chains || []}
+            connectOptions={props.connectOptions}
           />,
         );
       })

@@ -3,6 +3,7 @@ import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import { shortenAddress } from "../../../../../../../utils/address.js";
 import {
   fontSize,
   iconSize,
@@ -79,6 +80,8 @@ type SwapTxDetailsData = {
   destinationTxHash?: string;
   isPartialSuccess: boolean;
   estimatedDuration: number;
+  fromAddress: string;
+  toAddress: string;
 };
 
 export function SwapTxDetailsTable(
@@ -132,6 +135,8 @@ export function SwapTxDetailsTable(
       isPartialSuccess,
       destinationTxHash: status.destination?.transactionHash,
       sourceTxHash: status.source?.transactionHash,
+      fromAddress: status.fromAddress,
+      toAddress: status.toAddress,
     };
   } else {
     const quote = props.quote;
@@ -150,6 +155,8 @@ export function SwapTxDetailsTable(
       },
       isPartialSuccess: false,
       estimatedDuration: quote.swapDetails.estimated.durationSeconds || 0,
+      fromAddress: quote.swapDetails.fromAddress,
+      toAddress: quote.swapDetails.toAddress,
     };
   }
 
@@ -265,6 +272,26 @@ export function SwapTxDetailsTable(
             <Text>Status</Text>
             <Container flex="row" gap="xs" center="y">
               <Text color={statusMeta.color}>{statusMeta.status}</Text>
+            </Container>
+          </Container>
+        </>
+      )}
+
+      {uiData.fromAddress.toLowerCase() !== uiData.toAddress.toLowerCase() && (
+        <>
+          {lineSpacer}
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>Send to</Text>
+            <Container flex="row" gap="xs" center="y">
+              <Text color="primaryText">
+                {shortenAddress(uiData.toAddress)}
+              </Text>
             </Container>
           </Container>
         </>

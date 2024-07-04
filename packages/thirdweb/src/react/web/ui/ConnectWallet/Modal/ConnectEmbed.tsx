@@ -246,12 +246,13 @@ const ConnectEmbedContent = (props: {
         // welcomeScreen={undefined}
         welcomeScreen={undefined}
         isEmbed={props.isEmbed}
-        localeId={props.localeId}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         showAllWallets={props.showAllWallets}
         walletConnect={props.walletConnect}
         wallets={props.wallets}
+        modalHeader={undefined}
+        walletIdsToHide={undefined}
       />
     );
   }
@@ -271,7 +272,7 @@ const ConnectEmbedContent = (props: {
   );
 };
 
-const EmbedContainer = /* @__PURE__ */ StyledDiv<{
+export const EmbedContainer = /* @__PURE__ */ StyledDiv<{
   modalSize: "compact" | "wide";
 }>((props) => {
   const { modalSize } = props;

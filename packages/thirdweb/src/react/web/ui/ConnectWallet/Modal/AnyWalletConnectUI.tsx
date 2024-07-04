@@ -27,7 +27,6 @@ import {
 import { Spacer } from "../../components/Spacer.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import type { LocaleId } from "../../types.js";
 import { AccentFailIcon } from "../icons/AccentFailIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
@@ -48,7 +47,6 @@ export function AnyWalletConnectUI(props: {
   done: () => void;
   onBack?: () => void;
   setModalVisibility: (value: boolean) => void;
-  localeId: LocaleId;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   client: ThirdwebClient;
@@ -71,10 +69,11 @@ export function AnyWalletConnectUI(props: {
   const { wallet } = props;
   const walletInfo = useWalletInfo(props.wallet.id);
 
+  const localeId = props.connectLocale.id;
   const localeFnQuery = useQuery({
-    queryKey: ["injectedWalletLocale", props.localeId, walletInfo.data?.name],
+    queryKey: ["injectedWalletLocale", localeId, walletInfo.data?.name],
     queryFn: async () => {
-      return getInjectedWalletLocale(props.localeId);
+      return getInjectedWalletLocale(localeId);
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -268,7 +267,6 @@ export function AnyWalletConnectUI(props: {
           size={props.size}
           connectLocale={props.connectLocale}
           meta={props.meta}
-          localeId={props.localeId}
         />
       </Suspense>
     );
@@ -285,7 +283,6 @@ export function AnyWalletConnectUI(props: {
           client={props.client}
           size={props.size}
           meta={props.meta}
-          localeId={props.localeId}
           connectLocale={props.connectLocale}
         />
       </Suspense>

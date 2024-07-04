@@ -185,6 +185,8 @@ function ModalContent(props: ModalProps) {
       onDone={() => {
         setScreen("execute-tx");
       }}
+      connectOptions={undefined}
+      onBack={undefined}
     />
   );
 }
