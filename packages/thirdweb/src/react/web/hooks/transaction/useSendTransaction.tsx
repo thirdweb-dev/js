@@ -224,33 +224,44 @@ function ExecutingTxScreen(props: {
   return (
     <Container p="lg">
       <ModalHeader title="Transaction" />
+
       <Spacer y="xxl" />
       <Spacer y="xxl" />
+
       <Container flex="row" center="x">
         {status === "loading" && <Spinner size="3xl" color="accentText" />}
-        status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />
-        status === "sent" && (
-        <Container color="success" flex="row" center="both">
-          <CheckCircledIcon width={iconSize["3xl"]} height={iconSize["3xl"]} />
-        </Container>
-        )
+        {status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />}
+        {status === "sent" && (
+          <Container color="success" flex="row" center="both">
+            <CheckCircledIcon
+              width={iconSize["3xl"]}
+              height={iconSize["3xl"]}
+            />
+          </Container>
+        )}
       </Container>
       <Spacer y="lg" />
+
       <Text color="primaryText" center size="lg">
-        status === "loading" && "Sending transaction"status === "failed" &&
-        "Transaction failed"status === "sent" && "Transaction sent"
+        {status === "loading" && "Sending transaction"}
+        {status === "failed" && "Transaction failed"}
+        {status === "sent" && "Transaction sent"}
       </Text>
+
       <Spacer y="xxl" />
       <Spacer y="xxl" />
-      status === "failed" && (
-      <Button variant="accent" fullWidth onClick={sendTx}>
-        Try Again
-      </Button>
-      )status === "sent" && (
-      <Button variant="accent" fullWidth onClick={props.closeModal}>
-        Done
-      </Button>
-      )
+
+      {status === "failed" && (
+        <Button variant="accent" fullWidth onClick={sendTx}>
+          Try Again
+        </Button>
+      )}
+
+      {status === "sent" && (
+        <Button variant="accent" fullWidth onClick={props.closeModal}>
+          Done
+        </Button>
+      )}
     </Container>
   );
 }
