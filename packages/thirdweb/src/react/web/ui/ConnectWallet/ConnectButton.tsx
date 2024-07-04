@@ -222,7 +222,7 @@ function ConnectButtonInner(
   if (siweAuth.requiresAuth) {
     // loading state if loading
     // TODO: figure out a way to consolidate the loading states with the ones from locale loading
-    if (siweAuth.isLoading) {
+    if (siweAuth.isLoading || siweAuth.isLoggingIn || siweAuth.isLoggingOut) {
       return (
         <AnimatedButton
           disabled={true}

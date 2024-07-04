@@ -1,4 +1,3 @@
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Center, Flex, Tooltip } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { DASHBOARD_STORAGE_URL } from "lib/sdk";
 import { useCallback, useState } from "react";
 import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
 import { toSize } from "utils/number";
+import { useAccessToken } from "../../@3rdweb-sdk/react/components/connect-wallet/useAccessToken";
 
 interface PinnedFilesResponse {
   result: PinnedFilesResult;
@@ -37,7 +37,7 @@ function usePinnedFilesQuery({
   pageSize: number;
 }) {
   const user = useLoggedInUser();
-  const { token } = useApiAuthToken();
+  const token = useAccessToken();
 
   const offset = page * pageSize;
 
@@ -76,7 +76,7 @@ function usePinnedFilesQuery({
 }
 
 function useUnpinFileMutation() {
-  const { token } = useApiAuthToken();
+  const token = useAccessToken();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ cid }: { cid: string }) => {
