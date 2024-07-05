@@ -292,6 +292,7 @@ function ConnectButtonInner(
       detailsButton={props.detailsButton}
       detailsModal={props.detailsModal}
       supportedTokens={supportedTokens}
+      supportedNFTs={props.supportedNFTs}
       onDisconnect={(info) => {
         // logout on explicit disconnect!
         if (siweAuth.requiresAuth) {

@@ -7,7 +7,10 @@ import type { NetworkSelectorProps } from "../../../web/ui/ConnectWallet/Network
 import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
-import type { SupportedTokens } from "../../utils/defaultTokens.js";
+import type {
+  SupportedNFTs,
+  SupportedTokens,
+} from "../../utils/defaultTokens.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
 
 export type PayUIOptions = {
@@ -673,6 +676,31 @@ export type ConnectButtonProps = {
    * ```
    */
   supportedTokens?: SupportedTokens;
+
+  /**
+   * Customize the NFTs shown in the "View Funds" screen in Details Modal for various networks.
+   *
+   * By default, The "View Funds" screen shows a few popular tokens for default chains and the native token. For other chains it only shows the native token.
+   * @example
+   *
+   * supportedTokens prop allows you to customize this list as shown below which shows "Pudgy Penguins" help when users wallet is connected to Ethereum mainnet.
+   *
+   * ```tsx
+   * import { ConnectButton } from 'thirdweb/react';
+   *
+   * function Example() {
+   *   return (
+   * 		<ConnectButton
+   * 			supportedNFTs={{
+   *        // when connected to Ethereum mainnet - show Pudgy Penguins
+   * 				1: ['0xBd3531dA5CF5857e7CfAA92426877b022e612cf8'],
+   * 			}}
+   * 		/>
+   * 	);
+   * }
+   * ```
+   */
+  supportedNFTs?: SupportedNFTs;
 
   /**
    * Called on connection of a wallet - including auto connect.

@@ -43,7 +43,10 @@ import {
   useChainName,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
+import type {
+  SupportedNFTs,
+  SupportedTokens,
+} from "../../../core/utils/defaultTokens.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
@@ -86,6 +89,8 @@ import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
 import { ViewFunds } from "./screens/ViewFunds.js";
+import { ViewNFTs } from "./screens/ViewNFTs.js";
+import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
 import type { WalletDetailsModalScreen } from "./screens/types.js";
 
@@ -105,6 +110,7 @@ export const ConnectedWalletDetails: React.FC<{
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens?: SupportedTokens;
+  supportedNFTs?: SupportedNFTs;
   chains: Chain[];
   chain?: Chain;
   switchButton: ConnectButtonProps["switchButton"];
@@ -139,6 +145,7 @@ export const ConnectedWalletDetails: React.FC<{
         detailsModal={props.detailsModal}
         theme={props.theme}
         supportedTokens={props.supportedTokens}
+        supportedNFTs={props.supportedNFTs}
         closeModal={closeModal}
         onDisconnect={props.onDisconnect}
         chains={props.chains}
@@ -238,6 +245,7 @@ function DetailsModal(props: {
   detailsModal?: ConnectButton_detailsModalOptions;
   theme: "light" | "dark" | Theme;
   supportedTokens?: SupportedTokens;
+  supportedNFTs?: SupportedNFTs;
   closeModal: () => void;
   onDisconnect: (info: {
     wallet: Wallet;
@@ -527,7 +535,9 @@ function DetailsModal(props: {
             }}
           >
             <CoinsIcon size={iconSize.md} />
-            <Text color="primaryText">View Funds</Text>
+            <Text color="primaryText">
+              {props.supportedNFTs ? "View Assets" : "View Funds"}
+            </Text>
           </MenuButton>
 
           {/* Manage Wallet */}
@@ -682,8 +692,44 @@ function DetailsModal(props: {
       />
     );
   } else if (screen === "view-funds") {
+    if (props.supportedNFTs) {
+      content = (
+        <ViewFunds
+          supportedTokens={props.supportedTokens}
+          supportedNFTs={props.supportedNFTs}
+          onBack={() => {
+            setScreen("main");
+          }}
+          setScreen={setScreen}
+          client={client}
+        />
+      );
+    } else {
+      // Always show tokens (has the native token at least)
+      content = (
+        <ViewTokens
+          supportedTokens={props.supportedTokens}
+          onBack={() => {
+            setScreen("main");
+          }}
+          client={client}
+        />
+      );
+    }
+  } else if (screen === "view-nfts") {
     content = (
-      <ViewFunds
+      <ViewNFTs
+        theme={props.theme}
+        supportedNFTs={props.supportedNFTs}
+        onBack={() => {
+          setScreen("main");
+        }}
+        client={client}
+      />
+    );
+  } else if (screen === "view-tokens") {
+    content = (
+      <ViewTokens
         supportedTokens={props.supportedTokens}
         onBack={() => {
           setScreen("main");
@@ -1083,6 +1129,32 @@ export type UseWalletDetailsModalOptions = {
    */
   supportedTokens?: SupportedTokens;
   /**
+   * Customize the NFTs shown in the "View Funds" screen in Details Modal for various networks.
+   *
+   * By default, The "View Funds" screen shows a few popular tokens for default chains and the native token. For other chains it only shows the native token.
+   * @example
+   *
+   * supportedTokens prop allows you to customize this list as shown below which shows "Pudgy Penguins" when a users wallet is connected to Ethereum mainnet.
+   *
+   * ```tsx
+   * import { ConnectButton } from 'thirdweb/react';
+   *
+   * function Example() {
+   *   return (
+   * 		<ConnectButton
+   * 			supportedNFTs={{
+   *        // when connected to Ethereum mainnet - show Pudgy Penguins
+   * 				1: [
+   * 					'0xBd3531dA5CF5857e7CfAA92426877b022e612cf8',
+   * 				],
+   * 			}}
+   * 		/>
+   * 	);
+   * }
+   * ```
+   */
+  supportedNFTs?: SupportedNFTs;
+  /**
    * By default - Details Modal UI uses the `en-US` locale for english language users.
    *
    * You can customize the language used in the Details Modal UI by setting the `locale` prop.
@@ -1240,6 +1312,7 @@ export function useWalletDetailsModal() {
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}
             supportedTokens={props.supportedTokens}
+            supportedNFTs={props.supportedNFTs}
             closeModal={closeModal}
             onDisconnect={(info) => {
               props.onDisconnect?.(info);
