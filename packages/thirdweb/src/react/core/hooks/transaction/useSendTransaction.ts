@@ -70,9 +70,10 @@ export type SendTransactionConfig = {
 type ShowModalData = {
   tx: PreparedTransaction;
   sendTx: () => void;
-  rejectTx: () => void;
+  rejectTx: (reason: Error) => void;
   totalCostWei: bigint;
   walletBalance: GetWalletBalanceResult;
+  resolveTx: (data: WaitForReceiptOptions) => void;
 };
 
 /**
@@ -171,9 +172,8 @@ export function useSendTransactionCore(args: {
             showPayModal({
               tx,
               sendTx,
-              rejectTx: () => {
-                reject(new Error("Not enough balance"));
-              },
+              rejectTx: reject,
+              resolveTx: resolve,
               totalCostWei,
               walletBalance,
             });
