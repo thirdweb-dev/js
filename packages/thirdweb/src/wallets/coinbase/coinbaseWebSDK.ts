@@ -373,7 +373,7 @@ function onConnect(
     await provider.disconnect();
   }
 
-  function onDisconnect() {
+  async function onDisconnect() {
     disconnect();
     emitter.emit("disconnect", undefined);
   }
@@ -401,7 +401,7 @@ function onConnect(
   return [
     account,
     chain,
-    disconnect,
+    onDisconnect,
     (newChain) => switchChainCoinbaseWalletSDK(provider, newChain),
   ];
 }

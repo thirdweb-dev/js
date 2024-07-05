@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { typedData } from "../../../test/src/typed-data.js";
-import { verifySignature } from "../../auth/verifySignature.js";
+import { verifySignature } from "../../auth/verify-signature.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";

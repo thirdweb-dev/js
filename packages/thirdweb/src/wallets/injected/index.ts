@@ -228,7 +228,7 @@ async function onConnect(
     provider.removeListener("disconnect", onDisconnect);
   }
 
-  function onDisconnect() {
+  async function onDisconnect() {
     disconnect();
     emitter.emit("disconnect", undefined);
   }
@@ -258,7 +258,7 @@ async function onConnect(
   return [
     account,
     chain,
-    disconnect,
+    onDisconnect,
     (newChain) => switchChain(provider, newChain),
   ] as const;
 }
