@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.33.0
+
+### Minor Changes
+
+- [#3609](https://github.com/thirdweb-dev/js/pull/3609) [`9faa8fc`](https://github.com/thirdweb-dev/js/commit/9faa8fc112aec7109324aad4cb7d5e03d4a0ecbd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds ERC-6942 utilities and verification compatibility. See [ERC-6942](https://eips.ethereum.org/EIPS/eip-6942) for more information.
+
+### Patch Changes
+
+- [#3597](https://github.com/thirdweb-dev/js/pull/3597) [`34b9bbe`](https://github.com/thirdweb-dev/js/commit/34b9bbe77f3a688df1a953e79b28e0349b15bba7) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix wallet disconnect events not being emitted
+
+- [#3608](https://github.com/thirdweb-dev/js/pull/3608) [`2ab8b3c`](https://github.com/thirdweb-dev/js/commit/2ab8b3ca7898289d65d0197692e69ad6992b8178) Thanks [@MananTank](https://github.com/MananTank)! - Set selection data on wallet selection with no custom selection UI - This fixes UI bug in Connect wide modal that has both inApp and ecosystem wallets added
+
 ## 5.32.3
 
 ### Patch Changes
