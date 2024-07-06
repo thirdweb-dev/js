@@ -46,7 +46,7 @@ export default function Page() {
           <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
-                src={""}
+                src={"/auth.png"}
                 width={600}
                 height={400}
                 objectFit={"contain"}
@@ -81,9 +81,39 @@ function BasicAuth() {
 
       <CodeExample
         preview={<BasicAuthPreview />}
-        code={`import { getContract } from "thirdweb";
-import { ethereum } from "thirdweb/chains";
-import { MediaRenderer, useReadContract } from "thirdweb/react";
+        code={`"use client";
+
+import {
+  generatePayload,
+  isLoggedIn,
+  login,
+  logout,
+} from "@/app/connect/auth/actions/auth";
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import { ConnectButton } from "thirdweb/react";
+
+export function AuthButton() {
+  return (
+    <ConnectButton
+      client={THIRDWEB_CLIENT}
+      auth={{
+        isLoggedIn: async (address) => {
+          console.log("checking if logged in!", { address });
+          return await isLoggedIn();
+        },
+        doLogin: async (params) => {
+          console.log("logging in!");
+          await login(params);
+        },
+        getLoginPayload: async ({ address }) => generatePayload({ address }),
+        doLogout: async () => {
+          console.log("logging out!");
+          await logout();
+        },
+      }}
+    />
+  );
+}
 `}
         lang="tsx"
       />
@@ -103,10 +133,54 @@ function GatedContent() {
 
       <CodeExample
         preview={<GatedContentPreview />}
-        code={`import { getContract } from "thirdweb";
-import { ethereum } from "thirdweb/chains";
-import { MediaRenderer, useReadContract } from "thirdweb/react";
-`}
+        code={`import { THIRDWEB_CLIENT } from "@/lib/client";
+import { cookies } from "next/headers";
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { balanceOf } from "thirdweb/extensions/erc20";
+
+export async function GatedContentPreview() {
+  const jwt = cookies().get("jwt");
+  if (!jwt?.value) {
+    return <div>
+      Log in to see the secret content
+    </div>;
+  }
+
+  // This is the part that we do the gating condition.
+  // If pass -> Allow them to access the page.
+  const requiredQuantity = 10n; // 10 erc20 token
+
+  const erc20Contract = getContract({
+    address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
+    chain: sepolia,
+    client: THIRDWEB_CLIENT,
+  });
+
+  const ownedBalance = await balanceOf({
+    contract: erc20Contract,
+    address,
+  });
+
+  // For this example, we check if a user has more than 10 $TWCOIN
+  if (ownedBalance < requiredQuantity) {
+    return (
+      <div className="flex flex-col gap-5">
+        You are logged in but you can't view the content
+        because you don't own enough TWCOIN
+      </div>
+    );
+  }
+
+  // Finally! We can load the gated content for them now
+
+  return (
+    <div>
+      Congratulations!  
+      You can see this message because you own more than 10 TWCOIN.
+    </div>
+  );
+}`}
         lang="tsx"
       />
     </>
