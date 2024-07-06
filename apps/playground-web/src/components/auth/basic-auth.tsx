@@ -4,7 +4,6 @@ import { AuthButton } from "./auth-button";
 
 export function BasicAuthPreview() {
   const jwt = cookies().get("jwt");
-  console.log(jwt);
   return (
     <div className="flex flex-col gap-5">
       <div className="mx-auto">

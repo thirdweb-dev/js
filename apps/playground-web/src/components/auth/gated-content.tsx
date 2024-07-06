@@ -5,6 +5,7 @@ import { sepolia } from "thirdweb/chains";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import { AuthButton } from "./auth-button";
 import { thirdwebAuth } from "./thirdweb-auth";
+import Link from "next/link";
 
 export async function GatedContentPreview() {
   const Content = ({ title }: { title: string }) => {
@@ -46,10 +47,28 @@ export async function GatedContentPreview() {
     address,
   });
 
+  console.log({ ownedBalance });
+
   // For this example, we check if a user has more than 10 $TWCOIN
   if (ownedBalance < requiredQuantity) {
     return (
-      <Content title="You are logged in but you cannot see the content because own less than 10 TWCOIN" />
+      <div className="flex flex-col gap-5">
+        <div className="mx-auto">
+          <AuthButton />
+        </div>
+        <div className="text-center mx-auto px-3 lg:max-w-[450px]">
+          You are logged in. However you cannot see the secret content because
+          you own less than 10 $TWCOIN.
+          <br />
+          Mint some tokens{" "}
+          <Link
+            href="/connect/blockchain-api"
+            className="text-yellow-400 font-bold"
+          >
+            here
+          </Link>
+        </div>
+      </div>
     );
   }
 
@@ -60,8 +79,21 @@ export async function GatedContentPreview() {
       <div className="mx-auto">
         <AuthButton />
       </div>
-      <div className="text-center mx-auto">
-        You can see this message because you own more than 10 TWCOIN
+      <div className="text-center text-green-600 font-bold text-lg">
+        Congratulations!
+      </div>
+      <div className="text-center mx-auto px-3">
+        You can see this message because you own more than 10 TWCOIN.
+        <br />
+        Mint a free commemorative NFT{" "}
+        <a
+          href="https://thirdweb.com/arbitrum/0xE7d6D628163de95D1c72c343ee852539B51f35Dc/nfts/0"
+          rel="noreferrer"
+          target="_blank"
+          className="underline text-yellow-400 font-bold"
+        >
+          here
+        </a>
       </div>
     </div>
   );
