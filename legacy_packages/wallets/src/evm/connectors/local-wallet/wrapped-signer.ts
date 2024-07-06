@@ -1,13 +1,13 @@
 import { getDefaultGasOverrides } from "@thirdweb-dev/sdk";
 import {
-  Bytes,
+  type Bytes,
   Signer,
-  providers,
-  TypedDataDomain,
-  TypedDataField,
-  Wallet,
+  type TypedDataDomain,
+  type TypedDataField,
+  type Wallet,
+  type providers,
 } from "ethers";
-import { Deferrable, defineReadOnly } from "ethers/lib/utils";
+import { type Deferrable, defineReadOnly } from "ethers/lib/utils";
 
 export class WrappedSigner extends Signer {
   constructor(private signer: Wallet) {
@@ -47,7 +47,15 @@ export class WrappedSigner extends Signer {
     if (!this.provider) {
       throw new Error("Provider not found");
     }
-    const gas = await getDefaultGasOverrides(this.provider);
+    let gas = {};
+    // only set overrides if we don't have values already
+    if (
+      !transaction.gasLimit &&
+      !(transaction.maxFeePerGas && transaction.maxPriorityFeePerGas)
+    ) {
+      gas = await getDefaultGasOverrides(this.provider);
+    }
+
     const txWithGas = {
       ...gas,
       ...transaction,

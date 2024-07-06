@@ -2,6 +2,7 @@ import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type { AutoConnectProps } from "../../../core/hooks/connection/types.js";
 import { useAutoConnectCore } from "../../../core/hooks/wallets/useAutoConnect.js";
 import { connectionManager } from "../../index.js";
+import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 
 /**
  * Autoconnect the last previously connected wallet.
@@ -23,5 +24,8 @@ import { connectionManager } from "../../index.js";
  * @returns whether the auto connect was successful.
  */
 export function useAutoConnect(props: AutoConnectProps) {
-  return useAutoConnectCore(connectionManager, nativeLocalStorage, props);
+  return useAutoConnectCore(connectionManager, nativeLocalStorage, {
+    ...props,
+    wallets: props.wallets || getDefaultWallets(props),
+  });
 }

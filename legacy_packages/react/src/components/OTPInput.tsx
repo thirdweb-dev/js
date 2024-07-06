@@ -63,6 +63,7 @@ const caretBlink = keyframes`
   }
   `;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FakeCaret = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
@@ -83,6 +84,7 @@ const FakeCaret = /* @__PURE__ */ StyledDiv((_) => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const OTPInputBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {

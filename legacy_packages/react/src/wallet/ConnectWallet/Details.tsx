@@ -715,6 +715,7 @@ export const ConnectedWalletDetails: React.FC<{
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
@@ -747,6 +748,7 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MenuButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {

@@ -52,7 +52,6 @@ import {
   ZksyncEraGoerliTestnetDeprecated,
   Zora,
   ZoraSepoliaTestnet,
-  ZoraTestnet,
 } from "@thirdweb-dev/chains";
 import type { NFT } from "@thirdweb-dev/sdk";
 import { optimismSepolia } from "thirdweb/chains";
@@ -149,7 +148,6 @@ export const simpleHashSupportedChainIdsMap: Record<number, string> = {
   [ZksyncEraGoerliTestnetDeprecated.chainId]: "zksync-era-testnet",
   [Zora.chainId]: "zora",
   [ZoraSepoliaTestnet.chainId]: "zora-sepolia",
-  [ZoraTestnet.chainId]: "zora-testnet",
 };
 
 export type AlchemySupportedChainId = keyof typeof alchemySupportedChainIdsMap;

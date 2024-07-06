@@ -1,6 +1,7 @@
 "use client";
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
+import Image from "next/image";
 import { useState } from "react";
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
@@ -24,11 +25,9 @@ export function WriteContractExtensionPreview() {
   const [error, setError] = useState<string>("");
   return (
     <div className="flex flex-col">
-      <img
+      <Image
         src="/twcoin.svg"
-        width={"120px"}
-        height={"120px"}
-        className="mx-auto rounded-2xl animate-bounce"
+        className="mx-auto rounded-2xl animate-bounce size-32"
         alt=""
       />
       <div className="my-3 text-center">Claim free testnet tokens</div>

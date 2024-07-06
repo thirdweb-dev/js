@@ -165,6 +165,8 @@ export const fontSize = {
   md: "16px",
   lg: "20px",
   xl: "24px",
+  xxl: "32px",
+  "3xl": "48px",
 };
 
 export const spacing = {

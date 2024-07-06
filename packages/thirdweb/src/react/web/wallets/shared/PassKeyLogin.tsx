@@ -6,7 +6,7 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
 import { iconSize } from "../../../core/design-system/index.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
 import { Spacer } from "../../ui/components/Spacer.js";
@@ -15,7 +15,6 @@ import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import { LoadingScreen } from "./LoadingScreen.js";
-import { setLastAuthProvider } from "./storage.js";
 
 // is passkey stored?
 // - login
@@ -26,9 +25,11 @@ export function PassKeyLogin(props: {
   wallet: Wallet;
   done: () => void;
   onBack?: () => void;
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  size: "compact" | "wide";
 }) {
-  const { client, connectModal, chain } = useConnectUI();
-  const { wallet, done } = props;
+  const { wallet, done, client, chain, size } = props;
   const [screen, setScreen] = useState<
     "select" | "login" | "loading" | "signup"
   >("loading");
@@ -63,7 +64,7 @@ export function PassKeyLogin(props: {
       </Container>
 
       <Container
-        px={connectModal.size === "wide" ? "xxl" : "lg"}
+        px={size === "wide" ? "xxl" : "lg"}
         expand
         flex="column"
         center="y"

@@ -59,6 +59,8 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     });
   })();
 
+  const tokenDecimals = options.type === "erc20" ? options.tokenDecimals : 0; // nfts have no decimals
+
   // compute the allowListProof in an iife
   const allowlistProof = await (async () => {
     // early exit if no merkle root is set
@@ -79,7 +81,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       contract: options.contract,
       claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
       merkleRoot: cc.merkleRoot,
-      tokenDecimals: options.type === "erc20" ? options.tokenDecimals : 0, // nfts have no decimals
+      tokenDecimals,
     });
     // if no proof is found, we'll try the empty proof
     if (!allowListProof) {
@@ -116,7 +118,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     data: "0x" as Hex,
     overrides: {
       value: isNativeTokenAddress(currency)
-        ? pricePerToken * BigInt(options.quantity)
+        ? (pricePerToken * options.quantity) / BigInt(10 ** tokenDecimals)
         : 0n,
     },
   };

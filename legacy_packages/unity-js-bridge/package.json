@@ -8,7 +8,9 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "dependencies": {
     "@thirdweb-dev/auth": "workspace:*",
     "@thirdweb-dev/chains": "workspace:*",
@@ -21,7 +23,7 @@
   },
   "devDependencies": {
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "esbuild": "0.20.2",
+    "esbuild": "0.21.5",
     "node-stdlib-browser": "^1.2.0",
     "typescript": "5.5.2"
   },

@@ -444,6 +444,13 @@ async function switchChainWC(
     if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
       const apiChain = await getChainMetadata(chain);
 
+      const blockExplorerUrls = [
+        ...new Set([
+          ...(chain.blockExplorers?.map((x) => x.url) || []),
+          ...(apiChain.explorers?.map((x) => x.url) || []),
+        ]),
+      ];
+
       await provider.request({
         method: ADD_ETH_CHAIN_METHOD,
         params: [
@@ -453,9 +460,7 @@ async function switchChainWC(
             nativeCurrency: apiChain.nativeCurrency,
             rpcUrls: getValidPublicRPCUrl(apiChain), // no clientId on purpose
             blockExplorerUrls:
-              chain.blockExplorers?.slice(0, 1) ||
-              apiChain.explorers?.slice(0, 1) ||
-              [],
+              blockExplorerUrls.length > 0 ? blockExplorerUrls : undefined,
           },
         ],
       });

@@ -12,6 +12,7 @@ import { airdropERC1155WithSignature as generatedAirdropERC1155WithSignature } f
  * @example
  * ```ts
  * import { airdropERC1155WithSignature, generateAirdropSignatureERC1155 } from "thirdweb/extensions/airdrop";
+ * import { sendTransaction } from "thirdweb";
  *
  * const { req, signature } = await generateAirdropSignatureERC1155(...)
  *

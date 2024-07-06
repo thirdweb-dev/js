@@ -13,7 +13,7 @@ import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-sta
 import { useTabHref } from "contract-ui/utils";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import {
   type DirectListing,
   type EnglishAuction,
@@ -34,6 +34,7 @@ import {
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
+import { defineDashboardChain } from "../../../../lib/v5-adapter";
 
 type ListingData =
   | (Pick<
@@ -97,7 +98,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineChain(v4Contract.chainId),
+    chain: defineDashboardChain(v4Contract.chainId),
   });
   const directListingsHref = useTabHref("direct-listings");
   const countQuery = useReadContract(totalListings, { contract });
@@ -159,7 +160,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineChain(v4Contract.chainId),
+    chain: defineDashboardChain(v4Contract.chainId),
   });
 
   const englishAuctionsHref = useTabHref("english-auctions");
@@ -310,7 +311,6 @@ const ListingCards: React.FC<ListingCardsProps> = ({
             <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
               <Skeleton isLoaded={!isLoading}>
                 <NFTMediaWithEmptyState
-                  // @ts-expect-error - metadata type not fixed yet
                   metadata={listing.asset.metadata}
                   requireInteraction
                   width="100%"

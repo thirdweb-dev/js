@@ -2,6 +2,7 @@ import { concat } from "viem";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import type { TransactionReceipt } from "../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
@@ -9,8 +10,16 @@ import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
 import { isThirdwebUrl } from "../../../utils/fetch.js";
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
-import type { SmartAccountOptions, UserOperation } from "../types.js";
-import { estimateUserOpGas, getUserOpGasPrice } from "./bundler.js";
+import type {
+  BundlerOptions,
+  SmartAccountOptions,
+  UserOperation,
+} from "../types.js";
+import {
+  estimateUserOpGas,
+  getUserOpGasPrice,
+  getUserOpReceipt,
+} from "./bundler.js";
 import { prepareCreateAccount } from "./calls.js";
 import {
   DUMMY_SIGNATURE,
@@ -21,18 +30,64 @@ import { getPaymasterAndData } from "./paymaster.js";
 import { randomNonce } from "./utils.js";
 
 /**
- * Create an unsigned user operation
- * @internal
+ * Wait for the user operation to be mined.
+ * @param args - The options and user operation hash
+ * @returns - The transaction receipt
+ *
+ * @example
+ * ```ts
+ * import { waitForUserOpReceipt } from "thirdweb/wallets/smart";
+ *
+ * const receipt = await waitForUserOpReceipt({
+ *  chain,
+ *  client,
+ *  userOpHash,
+ * });
+ * ```
+ * @walletUtils
  */
+export async function waitForUserOpReceipt(
+  args: BundlerOptions & {
+    userOpHash: Hex;
+    timeoutMs?: number;
+    intervalMs?: number;
+  },
+): Promise<TransactionReceipt> {
+  const timeout = args.timeoutMs || 120000; // 2mins
+  const interval = args.intervalMs || 1000; // 1s
+  const endtime = Date.now() + timeout;
+  while (Date.now() < endtime) {
+    const userOpReceipt = await getUserOpReceipt(args);
+    if (userOpReceipt) {
+      return userOpReceipt;
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  throw new Error("Timeout waiting for userOp to be mined");
+}
+
 /**
- * Creates an unsigned user operation.
- * @internal
+ * Creates an unsigned user operation from a prepared transaction.
+ * @param args - The prepared transaction and options
+ * @returns - The unsigned user operation
+ * @example
+ * ```ts
+ * import { createUnsignedUserOp } from "thirdweb/wallets/smart";
+ *
+ * const transaction = prepareContractCall(...);
+ *
+ * const userOp = await createUnsignedUserOp({
+ *  transaction,
+ *  options,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function createUnsignedUserOp(args: {
-  executeTx: PreparedTransaction;
+  transaction: PreparedTransaction;
   options: SmartAccountOptions;
 }): Promise<UserOperation> {
-  const { executeTx, options } = args;
+  const { transaction: executeTx, options } = args;
   const isDeployed = await isContractDeployed(options.accountContract);
   const initCode = isDeployed ? "0x" : await getAccountInitCode(options);
   const callData = await encode(executeTx);
@@ -148,9 +203,21 @@ export async function createUnsignedUserOp(args: {
 }
 
 /**
- * Sign the filled userOp.
+ * Sign a user operation.
  * @param userOp - The UserOperation to sign (with signature field ignored)
- * @internal
+ * @returns - The user operation with the signature field populated
+ * @example
+ * ```ts
+ * import { signUserOp } from "thirdweb/wallets/smart";
+ *
+ * const userOp = createUnsignedUserOp(...);
+ *
+ * const signedUserOp = await signUserOp({
+ *  userOp,
+ *  options,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function signUserOp(args: {
   userOp: UserOperation;
@@ -186,7 +253,10 @@ async function getAccountInitCode(options: SmartAccountOptions): Promise<Hex> {
 }
 
 /**
- * @internal
+ * Get the hash of a user operation.
+ * @param args - The user operation, entrypoint address, and chain ID
+ * @returns - The hash of the user operation
+ * @walletUtils
  */
 function getUserOpHash(args: {
   userOp: UserOperation;

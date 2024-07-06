@@ -41,11 +41,20 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/", "evm/"],
+  "files": [
+    "dist/",
+    "evm/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "evm/index.ts", "evm/connectors/**/index.ts"],
+    "entrypoints": [
+      "index.ts",
+      "evm/index.ts",
+      "evm/connectors/**/index.ts"
+    ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "private": false,
@@ -64,7 +73,7 @@
   "sideEffects:": false,
   "devDependencies": {
     "@babel/runtime": "^7.24.5",
-    "@microsoft/api-documenter": "^7.25.3",
+    "@microsoft/api-documenter": "^7.25.4",
     "@microsoft/api-extractor": "^7.47.0",
     "@microsoft/tsdoc": "^0.15.0",
     "@preconstruct/cli": "2.7.0",
@@ -74,7 +83,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
     "eslint-plugin-better-tree-shaking": "0.0.4",
@@ -92,17 +101,17 @@
   },
   "dependencies": {
     "@emotion/css": "11.11.2",
-    "@emotion/react": "^11.11.4",
+    "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
-    "@google/model-viewer": "^2.1.1",
+    "@google/model-viewer": "2.1.1",
     "@headlessui/react": "1.7.18",
     "@radix-ui/colors": "^0.1.9",
-    "@radix-ui/react-dialog": "^1.1.0",
-    "@radix-ui/react-focus-scope": "^1.0.4",
-    "@radix-ui/react-icons": "^1.3.0",
-    "@radix-ui/react-popover": "^1.1.0",
+    "@radix-ui/react-dialog": "1.1.1",
+    "@radix-ui/react-focus-scope": "1.1.0",
+    "@radix-ui/react-icons": "1.3.0",
+    "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.0",
-    "@radix-ui/react-tooltip": "^1.1.0",
+    "@radix-ui/react-tooltip": "1.1.2",
     "@tanstack/react-query": "^4.36.1",
     "@thirdweb-dev/chains": "workspace:*",
     "@thirdweb-dev/payments": "workspace:*",
@@ -112,7 +121,7 @@
     "buffer": "^6.0.3",
     "copy-to-clipboard": "^3.3.3",
     "detect-browser": "^5.3.0",
-    "fuse.js": "^7.0.0",
+    "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
     "qrcode": "^1.5.3",
     "tiny-invariant": "^1.3.3"

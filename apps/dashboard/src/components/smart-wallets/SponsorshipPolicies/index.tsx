@@ -71,19 +71,18 @@ const sponsorshipPoliciesValidationSchema = z.object({
       message: "Some of the addresses are invalid",
     })
     .nullable(),
-  serverVerifier: z
-    .object({
-      url: z
-        .string()
-        .refine((str) => str.startsWith("https://"), {
-          message: "URL must start with https://",
-        })
-        .nullable(),
-      headers: z
-        .array(z.object({ key: z.string(), value: z.string() }))
-        .nullable(),
-    })
-    .nullable(),
+  serverVerifier: z.object({
+    url: z
+      .string()
+      .refine((str) => str.startsWith("https://"), {
+        message: "URL must start with https://",
+      })
+      .nullable(),
+    headers: z
+      .array(z.object({ key: z.string(), value: z.string() }))
+      .nullable(),
+    enabled: z.boolean(),
+  }),
   globalLimit: z
     .object({
       maxSpend: z.string().refine((n) => Number.parseFloat(n) > 0, {
@@ -130,8 +129,8 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           ? fromArrayToList(policy?.bypassWallets)
           : null,
       serverVerifier: policy?.serverVerifier?.url
-        ? policy.serverVerifier
-        : null,
+        ? { ...policy.serverVerifier, enabled: true }
+        : { enabled: false, url: null, headers: null },
       globalLimit: policy?.limits?.global ?? null,
       allowedOrBlockedWallets:
         policy?.allowedWallets && policy?.allowedWallets?.length > 0
@@ -225,9 +224,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
             serverVerifier:
               values.serverVerifier &&
               typeof values.serverVerifier.url === "string" &&
-              values.serverVerifier.url !== null
+              values.serverVerifier.enabled
                 ? {
-                    ...values.serverVerifier,
+                    headers: values.serverVerifier.headers ?? [],
                     url: values.serverVerifier.url,
                   }
                 : null,
@@ -536,21 +535,18 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
 
               <GatedSwitch
                 colorScheme="primary"
-                isChecked={form.watch("serverVerifier")?.url !== null}
+                isChecked={form.watch("serverVerifier").enabled}
                 onChange={() => {
                   form.setValue(
                     "serverVerifier",
-                    !form.watch("serverVerifier")
-                      ? {
-                          url: "",
-                          headers: [],
-                        }
-                      : null,
+                    form.watch("serverVerifier").enabled
+                      ? { enabled: false, url: null, headers: null }
+                      : { enabled: true, url: "", headers: [] },
                   );
                 }}
               />
             </HStack>
-            {form.watch("serverVerifier")?.url !== null && (
+            {form.watch("serverVerifier").enabled && (
               <HStack alignItems={"start"}>
                 <FormControl
                   isInvalid={

@@ -117,7 +117,6 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           </Card>
         </Box>
         <NFTMediaWithEmptyState
-          // @ts-expect-error types are not up to date
           metadata={nftMetadata}
           width={isMobile ? "100%" : "300px"}
           height={isMobile ? "100%" : "300px"}

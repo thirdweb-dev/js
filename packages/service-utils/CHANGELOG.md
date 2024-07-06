@@ -1,5 +1,23 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.35
+
+### Patch Changes
+
+- [#3554](https://github.com/thirdweb-dev/js/pull/3554) [`cbb0bc2`](https://github.com/thirdweb-dev/js/commit/cbb0bc2835bcfef62e69c18596063842f305f624) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.4.34
+
+### Patch Changes
+
+- [#3551](https://github.com/thirdweb-dev/js/pull/3551) [`b6ab038`](https://github.com/thirdweb-dev/js/commit/b6ab038802091ebb6cc6d880b4bafb682a37da95) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.4.33
+
+### Patch Changes
+
+- [#3447](https://github.com/thirdweb-dev/js/pull/3447) [`860f61c`](https://github.com/thirdweb-dev/js/commit/860f61c727d79f2f333a7ce65cd8ffad2ebbd49c) Thanks [@IDubuque](https://github.com/IDubuque)! - add pay fields to usage tracking schema for cf worker
+
 ## 0.4.32
 
 ### Patch Changes

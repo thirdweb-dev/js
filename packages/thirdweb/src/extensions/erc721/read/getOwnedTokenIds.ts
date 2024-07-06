@@ -3,7 +3,14 @@ import {
   type BalanceOfParams,
   balanceOf,
 } from "../__generated__/IERC721A/read/balanceOf.js";
-import { tokenOfOwnerByIndex } from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
+import {
+  isTokensOfOwnerSupported,
+  tokensOfOwner,
+} from "../__generated__/IERC721AQueryable/read/tokensOfOwner.js";
+import {
+  isTokenOfOwnerByIndexSupported,
+  tokenOfOwnerByIndex,
+} from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
 
 export type GetOwnedTokenIdsParams = BalanceOfParams;
 
@@ -27,11 +34,29 @@ export async function getOwnedTokenIds(
 ): Promise<bigint[]> {
   const balanceOfResult = await balanceOf(options);
 
-  const promises: ReturnType<typeof tokenOfOwnerByIndex>[] = [];
+  const supportsTokensOfOwnerByIndex = await isTokenOfOwnerByIndexSupported(
+    options.contract,
+  );
 
-  for (let i = 0n; i < balanceOfResult; i++) {
-    promises.push(tokenOfOwnerByIndex({ ...options, index: i }));
+  if (supportsTokensOfOwnerByIndex) {
+    const promises: ReturnType<typeof tokenOfOwnerByIndex>[] = [];
+
+    for (let i = 0n; i < balanceOfResult; i++) {
+      promises.push(tokenOfOwnerByIndex({ ...options, index: i }));
+    }
+
+    return Promise.all(promises);
   }
 
-  return Promise.all(promises);
+  const supportsTokensOfOwner = await isTokensOfOwnerSupported(
+    options.contract,
+  );
+
+  if (supportsTokensOfOwner) {
+    return (await tokensOfOwner({ ...options })).map((token) => token); // Unfortunate map to make this return a mutable array
+  }
+
+  throw new Error(
+    `The contract at ${options.contract.address} on chain ${options.contract.chain.id} does not support the tokenOfOwnerByIndex or tokensOfOwner interface`,
+  );
 }

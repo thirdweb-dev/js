@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="https://blog.thirdweb.com/welcoming-blocktorch/"
+          href="https://onchainolympics.com"
           category="announcement"
-          label="blocktorch"
+          label="onchain-olympics"
           isExternal
         >
           <Container maxW="container.page" display="flex" px={0}>
@@ -47,8 +47,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                thirdweb acquires Blocktorch, a leading web3 observability
-                platform.
+                The Onchain Olympics ⛓️🏅 — Mint an NFT on your preferred chain
+                to unlock builder perks on thirdweb
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>

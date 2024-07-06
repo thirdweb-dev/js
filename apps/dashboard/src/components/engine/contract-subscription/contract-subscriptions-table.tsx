@@ -30,8 +30,9 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
-import { defineChain, eth_getBlockByNumber, getRpcClient } from "thirdweb";
+import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
+import { defineDashboardChain } from "../../../lib/v5-adapter";
 import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
 
 interface ContractSubscriptionTableProps {
@@ -238,13 +239,13 @@ const ChainLastBlockTimestamp = ({
 }) => {
   // Get the block timestamp to display how delayed the last processed block is.
   const ethBlockQuery = useQuery({
-    queryKey: ["block_timestamp", chainId, blockNumber],
+    queryKey: ["block_timestamp", chainId, Number(blockNumber)],
     // keep the previous data while fetching new data
     keepPreviousData: true,
     queryFn: async () => {
       const rpcRequest = getRpcClient({
         client: thirdwebClient,
-        chain: defineChain(chainId),
+        chain: defineDashboardChain(chainId),
       });
       const block = await eth_getBlockByNumber(rpcRequest, {
         blockNumber,

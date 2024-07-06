@@ -6,7 +6,6 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import { Polygon } from "@thirdweb-dev/chains";
-import { useAddress } from "@thirdweb-dev/react/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ensQuery,
@@ -32,6 +31,7 @@ import { useRouter } from "next/router";
 import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useEffect, useMemo } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 import type { ThirdwebNextPage } from "utils/types";
@@ -81,7 +81,7 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
     { onlyMainnet: true },
   );
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const ogImage = useMemo(() => {
     if (!publisherProfile.data || !publishedContracts.data) {

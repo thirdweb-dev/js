@@ -3,12 +3,16 @@ import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { ValidBuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
+import { shortenAddress } from "../../../../../../../utils/address.js";
 import {
   fontSize,
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainExplorers,
+  useChainName,
+} from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useBuyWithCryptoStatus } from "../../../../../../core/hooks/pay/useBuyWithCryptoStatus.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
@@ -76,6 +80,8 @@ type SwapTxDetailsData = {
   destinationTxHash?: string;
   isPartialSuccess: boolean;
   estimatedDuration: number;
+  fromAddress: string;
+  toAddress: string;
 };
 
 export function SwapTxDetailsTable(
@@ -129,6 +135,8 @@ export function SwapTxDetailsTable(
       isPartialSuccess,
       destinationTxHash: status.destination?.transactionHash,
       sourceTxHash: status.source?.transactionHash,
+      fromAddress: status.fromAddress,
+      toAddress: status.toAddress,
     };
   } else {
     const quote = props.quote;
@@ -147,6 +155,8 @@ export function SwapTxDetailsTable(
       },
       isPartialSuccess: false,
       estimatedDuration: quote.swapDetails.estimated.durationSeconds || 0,
+      fromAddress: quote.swapDetails.fromAddress,
+      toAddress: quote.swapDetails.toAddress,
     };
   }
 
@@ -166,8 +176,10 @@ export function SwapTxDetailsTable(
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
 
-  const fromChainQuery = useChainQuery(getCachedChain(fromChainId));
-  const toChainQuery = useChainQuery(getCachedChain(toChainId));
+  const fromChainName = useChainName(getCachedChain(fromChainId));
+  const fromChainExplorers = useChainExplorers(getCachedChain(fromChainId));
+  const toChainName = useChainName(getCachedChain(toChainId));
+  const toChainExplorers = useChainExplorers(getCachedChain(toChainId));
 
   const lineSpacer = (
     <>
@@ -265,14 +277,34 @@ export function SwapTxDetailsTable(
         </>
       )}
 
+      {uiData.fromAddress.toLowerCase() !== uiData.toAddress.toLowerCase() && (
+        <>
+          {lineSpacer}
+          <Container
+            flex="row"
+            center="y"
+            style={{
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>Send to</Text>
+            <Container flex="row" gap="xs" center="y">
+              <Text color="primaryText">
+                {shortenAddress(uiData.toAddress)}
+              </Text>
+            </Container>
+          </Container>
+        </>
+      )}
+
       {lineSpacer}
 
       {/* source chain Tx hash link */}
-      {fromChainQuery.data?.explorers?.[0]?.url && sourceTxHash && (
+      {fromChainExplorers.explorers?.[0]?.url && sourceTxHash && (
         <ButtonLink
           fullWidth
           variant="outline"
-          href={`${fromChainQuery.data.explorers[0].url}/tx/${sourceTxHash}`}
+          href={`${fromChainExplorers.explorers[0].url}/tx/${sourceTxHash}`}
           target="_blank"
           gap="xs"
           style={{
@@ -280,7 +312,7 @@ export function SwapTxDetailsTable(
             padding: spacing.sm,
           }}
         >
-          View on {fromChainQuery.data.name} Explorer
+          View on {fromChainName.name} Explorer
           <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
         </ButtonLink>
       )}
@@ -288,13 +320,13 @@ export function SwapTxDetailsTable(
       {/* destination chain tx hash link */}
       {destinationTxHash &&
         sourceTxHash !== destinationTxHash &&
-        toChainQuery.data?.explorers?.[0]?.url && (
+        toChainExplorers?.explorers?.[0]?.url && (
           <>
             <Spacer y="sm" />
             <ButtonLink
               fullWidth
               variant="outline"
-              href={`${toChainQuery.data.explorers[0].url}/tx/${destinationTxHash}`}
+              href={`${toChainExplorers.explorers[0].url}/tx/${destinationTxHash}`}
               target="_blank"
               gap="xs"
               style={{
@@ -302,7 +334,7 @@ export function SwapTxDetailsTable(
                 padding: spacing.sm,
               }}
             >
-              View on {toChainQuery.data.name} Explorer
+              View on {toChainName.name} Explorer
               <ExternalLinkIcon width={iconSize.sm} height={iconSize.sm} />
             </ButtonLink>
           </>

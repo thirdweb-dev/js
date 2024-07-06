@@ -17,12 +17,15 @@ export type RenounceRoleParams = {
  * @example
  * ```ts
  * import { renounceRole } from "thirdweb/extensions/permissions";
+ * import { sendTransaction } from "thirdweb";
  *
- * const result = await renounceRole({
+ * const transaction = renounceRole({
  *  contract,
  *  role: "admin",
  *  targetAccountAddress: "0x1234567890123456789012345678901234567890",
  * });
+ * await sendTransaction({ transaction, account });
+ * ```
  */
 export function renounceRole(
   options: BaseTransactionOptions<RenounceRoleParams>,

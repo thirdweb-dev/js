@@ -15,7 +15,8 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": true
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true
   },
   "exclude": ["node_modules"]
 }

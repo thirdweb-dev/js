@@ -1,17 +1,18 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import { type Theme, iconSize } from "../../../core/design-system/index.js";
+import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import {
   type SendTransactionConfig,
   useSendTransactionCore,
 } from "../../../core/hooks/transaction/useSendTransaction.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import type { PayUIOptions } from "../../ui/ConnectWallet/ConnectButtonProps.js";
-import type { SupportedTokens } from "../../ui/ConnectWallet/defaultTokens.js";
+import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";
@@ -80,8 +81,11 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
                 onComplete={data.sendTx}
                 onClose={() => {
                   setRootEl(null);
-                  data.rejectTx();
+                  data.rejectTx(
+                    new Error("User rejected transaction by closing modal"),
+                  );
                 }}
+                onTxSent={data.resolveTx}
                 client={data.tx.client}
                 localeId={payModal?.locale || "en_US"}
                 supportedTokens={payModal?.supportedTokens}
@@ -115,6 +119,7 @@ type ModalProps = {
   nativeTokenSymbol: string;
   tx: PreparedTransaction;
   payOptions: PayUIOptions;
+  onTxSent: (data: WaitForReceiptOptions) => void;
 };
 
 function TxModal(props: ModalProps) {
@@ -146,7 +151,13 @@ function ModalContent(props: ModalProps) {
   }
 
   if (screen === "execute-tx") {
-    return <ExecutingTxScreen tx={props.tx} closeModal={props.onClose} />;
+    return (
+      <ExecutingTxScreen
+        tx={props.tx}
+        closeModal={props.onClose}
+        onTxSent={props.onTxSent}
+      />
+    );
   }
 
   if (screen === "tx-history") {
@@ -185,6 +196,8 @@ function ModalContent(props: ModalProps) {
       onDone={() => {
         setScreen("execute-tx");
       }}
+      connectOptions={undefined}
+      onBack={undefined}
     />
   );
 }
@@ -192,6 +205,7 @@ function ModalContent(props: ModalProps) {
 function ExecutingTxScreen(props: {
   tx: PreparedTransaction;
   closeModal: () => void;
+  onTxSent: (data: WaitForReceiptOptions) => void;
 }) {
   const sendTxCore = useSendTransaction({
     payModal: false,
@@ -203,13 +217,16 @@ function ExecutingTxScreen(props: {
   const sendTx = useCallback(async () => {
     setStatus("loading");
     try {
-      await sendTxCore.mutateAsync(props.tx);
+      const txData = await sendTxCore.mutateAsync(props.tx);
+      props.onTxSent(txData);
       setStatus("sent");
     } catch (e) {
+      // Do not reject the transaction here, because the user may want to try again
+      // we only reject on modal close
       console.error(e);
       setStatus("failed");
     }
-  }, [sendTxCore, props.tx]);
+  }, [sendTxCore, props.tx, props.onTxSent]);
 
   const done = useRef(false);
   useEffect(() => {
@@ -224,33 +241,44 @@ function ExecutingTxScreen(props: {
   return (
     <Container p="lg">
       <ModalHeader title="Transaction" />
+
       <Spacer y="xxl" />
       <Spacer y="xxl" />
+
       <Container flex="row" center="x">
         {status === "loading" && <Spinner size="3xl" color="accentText" />}
-        status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />
-        status === "sent" && (
-        <Container color="success" flex="row" center="both">
-          <CheckCircledIcon width={iconSize["3xl"]} height={iconSize["3xl"]} />
-        </Container>
-        )
+        {status === "failed" && <AccentFailIcon size={iconSize["3xl"]} />}
+        {status === "sent" && (
+          <Container color="success" flex="row" center="both">
+            <CheckCircledIcon
+              width={iconSize["3xl"]}
+              height={iconSize["3xl"]}
+            />
+          </Container>
+        )}
       </Container>
       <Spacer y="lg" />
+
       <Text color="primaryText" center size="lg">
-        status === "loading" && "Sending transaction"status === "failed" &&
-        "Transaction failed"status === "sent" && "Transaction sent"
+        {status === "loading" && "Sending transaction"}
+        {status === "failed" && "Transaction failed"}
+        {status === "sent" && "Transaction sent"}
       </Text>
+
       <Spacer y="xxl" />
       <Spacer y="xxl" />
-      status === "failed" && (
-      <Button variant="accent" fullWidth onClick={sendTx}>
-        Try Again
-      </Button>
-      )status === "sent" && (
-      <Button variant="accent" fullWidth onClick={props.closeModal}>
-        Done
-      </Button>
-      )
+
+      {status === "failed" && (
+        <Button variant="accent" fullWidth onClick={sendTx}>
+          Try Again
+        </Button>
+      )}
+
+      {status === "sent" && (
+        <Button variant="accent" fullWidth onClick={props.closeModal}>
+          Done
+        </Button>
+      )}
     </Container>
   );
 }

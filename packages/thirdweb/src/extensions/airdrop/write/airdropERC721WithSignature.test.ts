@@ -15,7 +15,7 @@ import {
   ownerOf,
   setApprovalForAll,
 } from "../../../exports/extensions/erc721.js";
-import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { mintTo } from "../../erc721/write/mintTo.js";
 import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
@@ -27,7 +27,7 @@ import {
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "generateAirdropSignatureERC721721",
+  "generateAirdropSignatureERC721",
   () => {
     let airdropContract: ThirdwebContract;
     let erc721TokenContract: ThirdwebContract;
@@ -92,7 +92,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       ];
 
       for (const tx of mintTransactions) {
-        await sendTransaction({
+        await sendAndConfirmTransaction({
           transaction: tx,
           account: TEST_ACCOUNT_A,
         });
@@ -103,7 +103,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         operator: airdropContract.address,
         approved: true,
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: approvalTx,
         account: TEST_ACCOUNT_A,
       });
@@ -129,7 +129,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         req,
         signature,
       });
-      const { transactionHash } = await sendTransaction({
+      const { transactionHash } = await sendAndConfirmTransaction({
         transaction,
         account: TEST_ACCOUNT_A,
       });

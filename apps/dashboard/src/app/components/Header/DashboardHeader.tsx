@@ -4,40 +4,42 @@ import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import Link from "next/link";
 import { ThirdwebMiniLogo } from "../ThirdwebMiniLogo";
+import { NavLink } from "../nav-link.client";
 import { MobileBurgerMenu } from "./MobileBurgerMenu";
 import { headerLinks } from "./headerLinks";
 
 export function DashboardHeader() {
   return (
     // the "h-24" avoids layout shift when connecting wallet (connected wallet button is taller than disconnected...)
-    <header className="border-b bg-card h-20 md:h-24 flex-shrink-0 flex items-center">
-      <div className="container px-4 gap-5 justify-between flex flex-row items-center py-4">
+    <header className="flex items-center flex-shrink-0 h-20 px-4 border-b bg-card md:h-24">
+      <div className="container flex flex-row items-center justify-between gap-5 px-0 py-4">
         {/* Left */}
-        <div className="flex gap-5 items-center">
-          <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2">
             <MobileBurgerMenu />
             <Link href="/dashboard">
               <ThirdwebMiniLogo className="size-10" />
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center gap-5">
+          <div className="items-center hidden gap-5 md:flex">
             {headerLinks.left.map((link) => (
-              <Link
+              <NavLink
                 key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
                 className="text-secondary-foreground hover:text-foreground"
+                activeClassName="text-foreground font-semibold"
               >
                 {link.name}
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>
 
         {/* Right */}
-        <div className="flex gap-5 items-center">
-          <div className="hidden lg:flex items-center gap-5">
+        <div className="flex items-center gap-5">
+          <div className="items-center hidden gap-5 lg:flex">
             {headerLinks.right.map((link) => (
               <Link
                 key={link.href}

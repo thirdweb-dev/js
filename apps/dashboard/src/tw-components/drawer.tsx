@@ -51,6 +51,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
       }
       closeOnOverlayClick={closeOnOverlayClick ?? false}
       trapFocus={false}
+      blockScrollOnMount={false}
     >
       <DrawerOverlay zIndex="modal" />
       <DrawerContent

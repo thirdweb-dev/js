@@ -11,8 +11,6 @@ import type { BaseTransactionOptions } from "../../transaction/types.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 
-// TODO: add JSDoc description for all properties
-
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
  * It includes information about which tokens to swap, the amount of tokens to swap, slippage, etc.
@@ -37,9 +35,14 @@ export type GetBuyWithCryptoQuoteParams = {
   intentId?: string;
 
   /**
-   * The address of the wallet from which the tokens will be sent.
+   * The address of wallet that pays for the tokens.
    */
   fromAddress: string;
+
+  /**
+   * The address of the wallet where the tokens are sent
+   */
+  toAddress: string;
 
   // source token
 
@@ -246,6 +249,7 @@ export async function getBuyWithCryptoQuote(
       },
       body: JSON.stringify({
         fromAddress: params.fromAddress,
+        toAddress: params.toAddress,
         fromChainId: params.fromChainId.toString(),
         fromTokenAddress: params.fromTokenAddress,
         toChainId: params.toChainId.toString(),

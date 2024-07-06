@@ -1,5 +1,7 @@
 export { smartWallet } from "../../wallets/smart/smart-wallet.js";
 
+export { waitForUserOpReceipt } from "../../wallets/smart/lib/userop.js";
+
 export type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,

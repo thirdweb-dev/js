@@ -37,7 +37,8 @@ export default {
   "rpc": [
     "https://80084.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bartio.rpc.berachain.com",
-    "https://bera-testnet.nodeinfra.com"
+    "https://bera-testnet.nodeinfra.com",
+    "https://bartio.rpc.b-harvest.io"
   ],
   "shortName": "Berachain",
   "slug": "berachain-bartio",

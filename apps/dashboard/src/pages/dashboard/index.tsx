@@ -1,5 +1,4 @@
 import { Flex, GridItem, SimpleGrid, VStack } from "@chakra-ui/react";
-import { useConnectionStatus } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { AppLayout } from "components/app-layouts/app";
@@ -10,6 +9,7 @@ import { OnboardingSteps } from "components/onboarding/Steps";
 import { PRODUCTS } from "components/product-pages/common/nav/data";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
+import { useActiveWalletConnectionStatus } from "thirdweb/react";
 import { Heading } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -18,11 +18,10 @@ const TRACKING_CATEGORY = "dashboard";
 const Dashboard: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
-  const connectionStatus = useConnectionStatus();
+  const connectionStatus = useActiveWalletConnectionStatus();
 
-  const showFTUX =
-    connectionStatus !== "connected" && connectionStatus !== "connecting";
-  const isLoading = connectionStatus === "unknown";
+  const showFTUX = connectionStatus !== "connected";
+  const isLoading = connectionStatus === "connecting";
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -52,6 +51,8 @@ const Dashboard: ThirdwebNextPage = (
                               size="title.sm"
                               textTransform="capitalize"
                               color="faded"
+                              fontWeight={600}
+                              letterSpacing="tight"
                             >
                               {section === "infrastructure"
                                 ? "Engine"

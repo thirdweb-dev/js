@@ -7,20 +7,19 @@ import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../wallets/types.js";
 import { CustomThemeProvider } from "../../core/design-system/CustomThemeProvider.js";
-import { type Theme, radius } from "../../core/design-system/index.js";
+import type { Theme } from "../../core/design-system/index.js";
 import type { SiweAuthOptions } from "../../core/hooks/auth/useSiweAuth.js";
-import { ConnectButton } from "./ConnectWallet/ConnectButton.js";
 import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
-} from "./ConnectWallet/ConnectButtonProps.js";
-import type { SupportedTokens } from "./ConnectWallet/defaultTokens.js";
+} from "../../core/hooks/connection/ConnectButtonProps.js";
+import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
+import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
 import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
-import { Container } from "./components/basic.js";
 import type { LocaleId } from "./types.js";
 
 /**
@@ -124,6 +123,8 @@ export type PayEmbedProps = {
    * Refer to the [`PayEmbedConnectOptions`](https://portal.thirdweb.com/references/typescript/v5/PayEmbedConnectOptions) type for more details.
    */
   connectOptions?: PayEmbedConnectOptions;
+
+  style?: React.CSSProperties;
 };
 
 /**
@@ -186,18 +187,9 @@ export function PayEmbed(props: PayEmbedProps) {
             onDone={() => {
               // noop
             }}
-            connectButton={
-              <ConnectButton
-                {...props.connectOptions}
-                client={props.client}
-                connectButton={{
-                  style: {
-                    width: "100%",
-                  },
-                }}
-                theme={theme}
-              />
-            }
+            connectOptions={props.connectOptions}
+            buyForTx={undefined}
+            onBack={undefined}
           />
         </div>
         {/* this does not need to persist so we can just show-hide it with JS */}
@@ -220,20 +212,9 @@ export function PayEmbed(props: PayEmbedProps) {
 
   return (
     <CustomThemeProvider theme={theme}>
-      <Container
-        bg="modalBg"
-        style={{
-          borderRadius: radius.lg,
-          minWidth: "360px",
-          borderWidth: "1px",
-          borderStyle: "solid",
-          position: "relative",
-          overflow: "hidden",
-        }}
-        borderColor="borderColor"
-      >
+      <EmbedContainer modalSize="compact">
         <DynamicHeight>{content}</DynamicHeight>
-      </Container>
+      </EmbedContainer>
     </CustomThemeProvider>
   );
 }

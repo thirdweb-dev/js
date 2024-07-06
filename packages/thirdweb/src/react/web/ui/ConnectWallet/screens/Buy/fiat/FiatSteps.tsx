@@ -17,16 +17,19 @@ import {
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainExplorers,
+  useChainName,
+} from "../../../../../../core/hooks/others/useChainQuery.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import type { TokenInfo } from "../../../defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 import { StepIcon } from "../Stepper.js";
 import {
   type FiatStatusMeta,
@@ -125,6 +128,8 @@ export function FiatSteps(props: {
       address: toTokenMeta.tokenAddress,
       name: toTokenMeta.name || "",
       symbol: toTokenMeta.symbol || "",
+      // TODO: when icon is available in endpoint
+      // icon: toTokenMeta.icon
     };
     return tokenInfo;
   }, [toTokenMeta]);
@@ -143,14 +148,17 @@ export function FiatSteps(props: {
       address: onRampTokenMeta.tokenAddress,
       name: onRampTokenMeta.name || "",
       symbol: onRampTokenMeta.symbol || "",
+      // TODO: when icon is available in endpoint
+      // icon: onRampTokenMeta.icon,
     };
     return tokenInfo;
   }, [onRampTokenMeta]);
 
-  const onRampChainMetaQuery = useChainQuery(onRampChain);
-  const toChainMetaQuery = useChainQuery(toChain);
-
-  const destinationChainMetaQuery = useChainQuery(destinationChain);
+  const onRampName = useChainName(onRampChain);
+  const onRampExplorers = useChainExplorers(onRampChain);
+  const toChainName = useChainName(toChain);
+  const toChainExplorers = useChainExplorers(toChain);
+  const destinationName = useChainName(destinationChain);
 
   const onRampTokenInfo = (
     <div>
@@ -164,7 +172,7 @@ export function FiatSteps(props: {
   const fiatIcon = <currency.icon size={iconSize.sm} />;
 
   const onRampTokenIcon = (
-    <TokenIcon
+    <PayTokenIcon
       token={onRampToken}
       chain={onRampChain}
       size="sm"
@@ -173,7 +181,7 @@ export function FiatSteps(props: {
   );
 
   const toTokenIcon = (
-    <TokenIcon
+    <PayTokenIcon
       token={toToken}
       chain={toChain}
       size="sm"
@@ -181,9 +189,7 @@ export function FiatSteps(props: {
     />
   );
 
-  const onRampChainInfo = (
-    <Text size="xs">{onRampChainMetaQuery.data?.name}</Text>
-  );
+  const onRampChainInfo = <Text size="xs">{onRampName.name}</Text>;
 
   const partialSuccessToTokenInfo =
     props.status?.status === "CRYPTO_SWAP_FALLBACK" &&
@@ -243,16 +249,16 @@ export function FiatSteps(props: {
             textDecoration: "line-through",
           }}
         >
-          {toChainMetaQuery.data?.name}
+          {toChainName.name}
         </Text>{" "}
         <Text size="xs" inline>
-          {destinationChainMetaQuery.data?.name}
+          {destinationName.name}
         </Text>
       </div>
     ) : null;
 
   const toTokehChainInfo = partialSuccessToChainInfo || (
-    <Text size="xs">{toChainMetaQuery.data?.name}</Text>
+    <Text size="xs">{toChainName.name}</Text>
   );
 
   const onRampTxHash =
@@ -335,10 +341,10 @@ export function FiatSteps(props: {
         }}
         state={getStep1State()}
         explorer={
-          onRampChainMetaQuery.data?.explorers?.[0]?.url && onRampTxHash
+          onRampExplorers.explorers[0]?.url && onRampTxHash
             ? {
                 label: "View on Explorer",
-                url: `${onRampChainMetaQuery.data.explorers[0].url}/tx/${onRampTxHash}`,
+                url: `${onRampExplorers.explorers[0]?.url}/tx/${onRampTxHash}`,
               }
             : undefined
         }
@@ -372,10 +378,10 @@ export function FiatSteps(props: {
         }}
         state={getStep2State()}
         explorer={
-          toChainMetaQuery.data?.explorers?.[0]?.url && toTokenTxHash
+          toChainExplorers.explorers[0]?.url && toTokenTxHash
             ? {
                 label: "View on Explorer",
-                url: `${toChainMetaQuery.data.explorers[0].url}/tx/${toTokenTxHash}`,
+                url: `${toChainExplorers.explorers[0].url}/tx/${toTokenTxHash}`,
               }
             : undefined
         }

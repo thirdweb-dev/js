@@ -162,7 +162,7 @@ export function SwapScreenContent(props: {
   const defaultChainId = isChainSupported ? activeChainId : 1;
   const [fromChainId, setFromChainId] = useState(defaultChainId);
   const [toChainId, setToChainId] = useState(defaultChainId);
-  const [address, setAddress] = useState<string>(activeAddress);
+  const [receiverAddress, setReceiverAddress] = useState<string>(activeAddress);
 
   // selected tokens
   const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(NATIVE_TOKEN);
@@ -189,7 +189,8 @@ export function SwapScreenContent(props: {
     !(fromChainId === toChainId && fromToken === toToken)
       ? {
           // wallet
-          fromAddress: address,
+          fromAddress: activeAddress,
+          toAddress: receiverAddress,
           // from token
           fromChainId: fromChainId,
           fromTokenAddress: isNativeToken(fromToken)
@@ -286,7 +287,7 @@ export function SwapScreenContent(props: {
     return (
       <ConfirmationScreen
         clientId={clientId}
-        accountAddress={address}
+        accountAddress={receiverAddress}
         onBack={() => {
           // remove finalized quote when going back
           setFinalizedQuote(undefined);
@@ -345,7 +346,7 @@ export function SwapScreenContent(props: {
                 activeAddress={activeAddress}
                 activeWalletConfig={props.activeWalletConfig}
                 onSelect={(v) => {
-                  setAddress(v);
+                  setReceiverAddress(v);
                   closeDrawer();
                 }}
               />
@@ -454,7 +455,7 @@ export function SwapScreenContent(props: {
                 <WalletSelectorButton
                   activeAddress={activeAddress}
                   activeWalletConfig={props.activeWalletConfig}
-                  address={address}
+                  address={receiverAddress}
                   activeWallet={activeWallet}
                   onClick={() => {
                     setDrawerScreen("address");
@@ -643,6 +644,7 @@ function DrawerContent(props: {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledInput = /* @__PURE__ */ styled(Input)((_) => {
   const theme = useCustomTheme();
   return {

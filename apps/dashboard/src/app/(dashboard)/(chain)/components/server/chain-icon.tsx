@@ -16,9 +16,7 @@ export async function ChainIcon(props: {
     const resolved = resolveScheme({
       client: thirdwebClient,
       uri: props.iconUrl,
-    })
-      // hack to fix this bug: https://github.com/thirdweb-dev/js/pull/3241
-      .replace("ipfs://", "");
+    });
     const res = await fetch(resolved, {
       // revalidate every hour
       next: { revalidate: 60 * 60 },

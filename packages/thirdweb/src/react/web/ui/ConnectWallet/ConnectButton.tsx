@@ -4,7 +4,8 @@ import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
-import { ConnectUIContext } from "../../../core/providers/wallet-connection.js";
+import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import { defaultTokens } from "../../../core/utils/defaultTokens.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";
@@ -21,10 +22,8 @@ import { Spinner } from "../components/Spinner.js";
 import { Container } from "../components/basic.js";
 import { Button } from "../components/buttons.js";
 import { fadeInAnimation } from "../design-system/animations.js";
-import type { ConnectButtonProps } from "./ConnectButtonProps.js";
 import { ConnectedWalletDetails } from "./Details.js";
 import ConnectModal from "./Modal/ConnectModal.js";
-import { defaultTokens } from "./defaultTokens.js";
 import { LockIcon } from "./icons/LockIcon.js";
 import { useConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
@@ -64,6 +63,12 @@ export function ConnectButton(props: ConnectButtonProps) {
     client: props.client,
   });
 
+  const size = useMemo(() => {
+    return !canFitWideModal() || wallets.length === 1
+      ? "compact"
+      : props.connectModal?.size || "wide";
+  }, [wallets.length, props.connectModal?.size]);
+
   const autoConnectComp = props.autoConnect !== false && (
     <AutoConnect
       appMetadata={props.appMetadata}
@@ -100,38 +105,35 @@ export function ConnectButton(props: ConnectButtonProps) {
   }
 
   return (
-    <ConnectUIContext.Provider
-      value={{
-        appMetadata: props.appMetadata,
-        client: props.client,
-        wallets: wallets,
-        locale: props.locale || "en_US",
-        connectLocale: localeQuery.data,
-        chain: props.chain || props.accountAbstraction?.chain,
-        chains: props.chains,
-        walletConnect: props.walletConnect,
-        accountAbstraction: props.accountAbstraction,
-        recommendedWallets: props.recommendedWallets,
-        showAllWallets: props.showAllWallets,
-        isEmbed: false,
-        connectModal: {
-          ...props.connectModal,
-          size:
-            !canFitWideModal() || wallets.length === 1
-              ? "compact"
-              : props.connectModal?.size || "wide",
-        },
-        onConnect: props.onConnect,
-        onDisconnect: props.onDisconnect,
-        auth: props.auth,
-      }}
-    >
-      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
-        <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
-        <ConnectModal shouldSetActive={true} />
-        {autoConnectComp}
-      </WalletUIStatesProvider>
-    </ConnectUIContext.Provider>
+    <WalletUIStatesProvider theme={props.theme} isOpen={false}>
+      <ConnectButtonInner {...props} connectLocale={localeQuery.data} />
+      <ConnectModal
+        shouldSetActive={true}
+        accountAbstraction={props.accountAbstraction}
+        auth={props.auth}
+        chain={props.chain || props.accountAbstraction?.chain}
+        chains={props.chains}
+        client={props.client}
+        connectLocale={localeQuery.data}
+        meta={{
+          title: props.connectModal?.title,
+          titleIconUrl: props.connectModal?.titleIcon,
+          showThirdwebBranding: props.connectModal?.showThirdwebBranding,
+          termsOfServiceUrl: props.connectModal?.termsOfServiceUrl,
+          privacyPolicyUrl: props.connectModal?.privacyPolicyUrl,
+        }}
+        welcomeScreen={props.connectModal?.welcomeScreen}
+        size={size}
+        isEmbed={false}
+        localeId={props.locale || "en_US"}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        walletConnect={props.walletConnect}
+        wallets={wallets}
+      />
+      {autoConnectComp}
+    </WalletUIStatesProvider>
   );
 }
 
@@ -220,7 +222,7 @@ function ConnectButtonInner(
   if (siweAuth.requiresAuth) {
     // loading state if loading
     // TODO: figure out a way to consolidate the loading states with the ones from locale loading
-    if (siweAuth.isLoading) {
+    if (siweAuth.isLoading || siweAuth.isLoggingIn || siweAuth.isLoggingOut) {
       return (
         <AnimatedButton
           disabled={true}
@@ -290,6 +292,7 @@ function ConnectButtonInner(
       detailsButton={props.detailsButton}
       detailsModal={props.detailsModal}
       supportedTokens={supportedTokens}
+      supportedNFTs={props.supportedNFTs}
       onDisconnect={(info) => {
         // logout on explicit disconnect!
         if (siweAuth.requiresAuth) {
@@ -302,6 +305,17 @@ function ConnectButtonInner(
       switchButton={props.switchButton}
       client={props.client}
       connectLocale={locale}
+      connectOptions={{
+        accountAbstraction: props.accountAbstraction,
+        appMetadata: props.appMetadata,
+        chain: props.chain,
+        chains: props.chains,
+        connectModal: props.connectModal,
+        recommendedWallets: props.recommendedWallets,
+        showAllWallets: props.showAllWallets,
+        walletConnect: props.walletConnect,
+        wallets: props.wallets,
+      }}
     />
   );
 }

@@ -1,7 +1,11 @@
 "use client";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type {
@@ -15,24 +19,24 @@ import {
   iconSize,
   spacing,
 } from "../../../core/design-system/index.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
-import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import {
   emailIcon,
   passkeyIcon,
   phoneIcon,
-} from "../../ui/ConnectWallet/icons/dataUris.js";
+  socialIcons,
+} from "../../../core/utils/socialIcons.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
+import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
+import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import { Img } from "../../ui/components/Img.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
-import { socialIcons } from "../in-app/socialIcons.js";
 import { validateEmail } from "../in-app/validateEmail.js";
-import type { ConnectLocale } from "./locale/types.js";
+import { LoadingScreen } from "./LoadingScreen.js";
+import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import { setLastAuthProvider } from "./storage.js";
 
 export type ConnectWalletSelectUIState =
   | undefined
@@ -58,9 +62,12 @@ const defaultAuthOptions: AuthOption[] = [
 export type ConnectWalletSocialOptionsProps = {
   select: () => void;
   done: () => void;
-  locale: ConnectLocale;
+  locale: InAppWalletLocale;
   wallet: Wallet<EcosystemWalletId> | Wallet<"inApp">;
   goBack?: () => void;
+  chain: Chain | undefined;
+  client: ThirdwebClient;
+  size: "compact" | "wide";
 };
 
 /**
@@ -70,7 +77,6 @@ export const ConnectWalletSocialOptions = (
   props: ConnectWalletSocialOptionsProps,
 ) => {
   const locale = props.locale;
-  const { chain, client, connectModal } = useConnectUI();
   const { wallet } = props;
   const setData = useSetSelectionData() as (
     value: ConnectWalletSelectUIState,
@@ -84,15 +90,34 @@ export const ConnectWalletSocialOptions = (
     apple: locale.signInWithApple,
   };
 
-  const authOptions = defaultAuthOptions; // TODO: Fetch these from the backend
-  const passKeyEnabled = authOptions.includes("passkey");
+  const { data: ecosystemAuthOptions, isLoading } = useQuery({
+    queryKey: ["auth-options", wallet.id],
+    queryFn: async () => {
+      if (isEcosystemWallet(wallet)) {
+        return getEcosystemWalletAuthOptions(wallet.id);
+      }
+      return null;
+    },
+    enabled: isEcosystemWallet(wallet),
+    retry: false,
+  });
+  const authOptions = isEcosystemWallet(wallet)
+    ? ecosystemAuthOptions ?? defaultAuthOptions
+    : wallet.getConfig()?.auth?.options ?? defaultAuthOptions;
 
   const emailIndex = authOptions.indexOf("email");
   const isEmailEnabled = emailIndex !== -1;
   const phoneIndex = authOptions.indexOf("phone");
   const isPhoneEnabled = phoneIndex !== -1;
 
-  const [inputMode, setInputMode] = useState<"email" | "phone" | "none">(() => {
+  const [manualInputMode, setManualInputMode] = useState<
+    "email" | "phone" | "none" | null
+  >(null);
+
+  const inputMode = useMemo(() => {
+    if (manualInputMode) {
+      return manualInputMode;
+    }
     if (isEmailEnabled && isPhoneEnabled) {
       return emailIndex < phoneIndex ? "email" : "phone";
     }
@@ -103,7 +128,13 @@ export const ConnectWalletSocialOptions = (
       return "phone";
     }
     return "none";
-  });
+  }, [isEmailEnabled, isPhoneEnabled, emailIndex, phoneIndex, manualInputMode]);
+
+  if (isEcosystemWallet(wallet) && isLoading) {
+    return <LoadingScreen />;
+  }
+
+  const passKeyEnabled = authOptions.includes("passkey");
 
   const placeholder =
     inputMode === "email" ? locale.emailPlaceholder : locale.phonePlaceholder;
@@ -119,7 +150,7 @@ export const ConnectWalletSocialOptions = (
 
   const socialLogins = authOptions.filter(
     (x) => x === "google" || x === "apple" || x === "facebook",
-  ) as SocialAuthOption[];
+  );
 
   const hasSocialLogins = socialLogins.length > 0;
 
@@ -131,8 +162,8 @@ export const ConnectWalletSocialOptions = (
         throw new Error("Failed to open login window");
       }
       const connectOptions = {
-        chain,
-        client,
+        chain: props.chain,
+        client: props.client,
         strategy,
         openedWindow: socialLoginWindow,
         closeOpenedWindow: (openedWindow: Window) => {
@@ -212,7 +243,7 @@ export const ConnectWalletSocialOptions = (
                   src={socialIcons[loginMethod]}
                   width={imgIconSize}
                   height={imgIconSize}
-                  client={client}
+                  client={props.client}
                 />
                 {!showOnlyIcons && loginMethodsLabel[loginMethod]}
               </SocialButton>
@@ -221,7 +252,7 @@ export const ConnectWalletSocialOptions = (
         </Container>
       )}
 
-      {connectModal.size === "wide" &&
+      {props.size === "wide" &&
         hasSocialLogins &&
         (isEmailEnabled || isPhoneEnabled) && <TextDivider text={locale.or} />}
 
@@ -249,10 +280,10 @@ export const ConnectWalletSocialOptions = (
             />
           ) : (
             <WalletTypeRowButton
-              client={client}
+              client={props.client}
               icon={emailIcon}
               onClick={() => {
-                setInputMode("email");
+                setManualInputMode("email");
               }}
               // TODO locale
               title={"Email address"}
@@ -289,10 +320,10 @@ export const ConnectWalletSocialOptions = (
             />
           ) : (
             <WalletTypeRowButton
-              client={client}
+              client={props.client}
               icon={phoneIcon}
               onClick={() => {
-                setInputMode("phone");
+                setManualInputMode("phone");
               }}
               // TODO locale
               title={"Phone number"}
@@ -304,7 +335,7 @@ export const ConnectWalletSocialOptions = (
       {passKeyEnabled && (
         <>
           <WalletTypeRowButton
-            client={client}
+            client={props.client}
             icon={passkeyIcon}
             onClick={() => {
               handlePassKeyLogin();

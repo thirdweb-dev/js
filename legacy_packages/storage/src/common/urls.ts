@@ -1,7 +1,9 @@
+// @ts-expect-error - we are OK not knowing the types for this
 import CIDTool from "cid-tool";
 import { GatewayUrls } from "../types";
 import { getProcessEnv } from "./process";
 import { sha256HexSync } from "@thirdweb-dev/crypto";
+
 
 const TW_HOSTNAME_SUFFIX = ".ipfscdn.io";
 const TW_STAGINGHOSTNAME_SUFFIX = ".thirdwebstorage-staging.com";
@@ -81,6 +83,7 @@ export function getGatewayUrlForCid(
 ): string {
   const parts = cid.split("/");
 
+  // @ts-expect-error - TODO: should check index access
   const hash = convertCidToV1(parts[0]);
   const filePath = parts.slice(1).join("/");
 
@@ -126,6 +129,7 @@ export function prepareGatewayUrls(
   };
 
   for (const key of Object.keys(allGatewayUrls)) {
+    // @ts-expect-error - TODO: should check index access
     const cleanedGatewayUrls = allGatewayUrls[key]
       .map((url) => {
         // inject clientId when present

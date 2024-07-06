@@ -211,6 +211,7 @@ type FetchPublishedContractOptions = {
  *  client: client,
  * });
  * ```
+ * @contract
  */
 export async function fetchPublishedContract(
   options: FetchPublishedContractOptions,

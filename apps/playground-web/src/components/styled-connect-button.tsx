@@ -12,6 +12,9 @@ export function StyledConnectButton(
 
   return (
     <ConnectButton
+      supportedNFTs={{
+        "84532": ["0x638263e3eAa3917a53630e61B1fBa685308024fa"],
+      }}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}
       {...props}

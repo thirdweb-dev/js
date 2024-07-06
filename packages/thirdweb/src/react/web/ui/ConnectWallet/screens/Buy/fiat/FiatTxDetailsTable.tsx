@@ -1,12 +1,13 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import {
   fontSize,
   iconSize,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
@@ -37,8 +38,12 @@ export function OnRampTxDetailsTable(props: {
     text: FiatStatusMeta["status"];
     txHash?: string;
   };
+  fromAddress?: string;
+  toAddress?: string;
 }) {
-  const onRampChainQuery = useChainQuery(getCachedChain(props.token.chainId));
+  const onRampExplorers = useChainExplorers(
+    getCachedChain(props.token.chainId),
+  );
   const onrampTxHash = props.statusMeta?.txHash;
   const currencyMeta = getCurrencyMeta(props.fiat.currencySymbol);
 
@@ -52,18 +57,6 @@ export function OnRampTxDetailsTable(props: {
 
   return (
     <div>
-      {/* Receive */}
-      <TokenInfoRow
-        chainId={props.token.chainId}
-        client={props.client}
-        label="Receive"
-        tokenAmount={props.token.amount}
-        tokenSymbol={props.token.symbol}
-        tokenAddress={props.token.address}
-      />
-
-      {lineSpacer}
-
       {/* Pay */}
       <Container
         flex="row"
@@ -89,6 +82,18 @@ export function OnRampTxDetailsTable(props: {
         </Container>
       </Container>
 
+      {lineSpacer}
+
+      {/* Receive */}
+      <TokenInfoRow
+        chainId={props.token.chainId}
+        client={props.client}
+        label="Receive"
+        tokenAmount={props.token.amount}
+        tokenSymbol={props.token.symbol}
+        tokenAddress={props.token.address}
+      />
+
       {/* Status */}
       {props.statusMeta && (
         <>
@@ -110,17 +115,37 @@ export function OnRampTxDetailsTable(props: {
         </>
       )}
 
+      {props.fromAddress &&
+        props.toAddress &&
+        props.fromAddress !== props.toAddress && (
+          <>
+            {lineSpacer}
+            <Container
+              flex="row"
+              center="y"
+              style={{
+                justifyContent: "space-between",
+              }}
+            >
+              <Text>Send to</Text>
+              <Container flex="row" gap="xs" center="y">
+                <Text>{shortenAddress(props.toAddress)}</Text>
+              </Container>
+            </Container>
+          </>
+        )}
+
       {lineSpacer}
 
       {/* Transaction Hash link */}
-      {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
+      {onrampTxHash && onRampExplorers.explorers?.[0]?.url && (
         <>
           <Spacer y="md" />
           <ButtonLink
             fullWidth
             variant="outline"
             href={`${
-              onRampChainQuery.data.explorers[0].url || ""
+              onRampExplorers.explorers[0].url || ""
             }/tx/${onrampTxHash}`}
             target="_blank"
             gap="xs"

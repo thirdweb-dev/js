@@ -17,12 +17,11 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import type { UseMutationResult } from "@tanstack/react-query";
-import {
-  type NFTContract,
-  useAddress,
-  type useMintNFT,
-  type useSetSharedMetadata,
-  type useUpdateNFTMetadata,
+import type {
+  NFTContract,
+  useMintNFT,
+  useSetSharedMetadata,
+  useUpdateNFTMetadata,
 } from "@thirdweb-dev/react";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
@@ -36,6 +35,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { NFT } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Button,
   FormErrorMessage,
@@ -97,7 +97,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   updateMetadataMutation,
 }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const mutation =
     mintMutation ||
     lazyMintMutation ||
@@ -404,7 +404,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             {nft?.metadata && !mediaFileUrl && (
               <Flex>
                 <NFTMediaWithEmptyState
-                  // @ts-expect-error types are not up to date
                   metadata={nft.metadata}
                   width="200px"
                   height="200px"

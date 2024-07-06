@@ -20,6 +20,7 @@ export class MockDownloader implements IStorageDownloader {
     const [cid, name] = url.includes("mock://")
       ? url.replace("mock://", "").split("/")
       : url.replace("ipfs://", "").split("/");
+      // @ts-expect-error - TODO: should check index access
     const data = name ? this.storage[cid][name] : this.storage[cid];
 
     return {

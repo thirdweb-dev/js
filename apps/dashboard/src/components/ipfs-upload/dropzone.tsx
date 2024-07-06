@@ -12,13 +12,10 @@ import {
   SimpleGrid,
   Tooltip,
   chakra,
+  useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  MediaRenderer,
-  useAddress,
-  useStorageUpload,
-} from "@thirdweb-dev/react";
+import { MediaRenderer, useStorageUpload } from "@thirdweb-dev/react";
 import type { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
@@ -28,6 +25,7 @@ import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Button,
   Card,
@@ -42,17 +40,34 @@ import { Label } from "../../@/components/ui/label";
 
 const TRACKING_CATEGORY = "ipfs_uploader";
 
+const UNACCEPTED_FILE_TYPES = ["text/html"];
+
 export const IpfsUploadDropzone: React.FC = () => {
-  const address = useAddress();
+  const toast = useToast();
+  const address = useActiveAccount()?.address;
 
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: (files) =>
+    onDrop: (files) => {
+      const invalidFiles = files.filter((f) =>
+        UNACCEPTED_FILE_TYPES.includes(f.type),
+      );
+      if (invalidFiles.length) {
+        const description = `${invalidFiles.length} ${invalidFiles.length > 1 ? "files have" : "file has"} been removed from the list. Uploading ${UNACCEPTED_FILE_TYPES.join(", ")} files is restricted.`;
+        toast({
+          title: "Error",
+          description,
+          status: "error",
+          isClosable: true,
+          duration: 6000,
+        });
+      }
       setDroppedFiles((prev) => [
         ...prev,
-        ...files.filter((f) => f.type !== "text/html"),
-      ]),
+        ...files.filter((f) => !UNACCEPTED_FILE_TYPES.includes(f.type)),
+      ]);
+    },
   });
   return (
     <Flex flexDir="column" gap={4}>
@@ -141,7 +156,7 @@ const filesPerPage = 20;
 
 const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
     total: 100,
@@ -189,7 +204,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   const showNextButton = page < lastPage - 1;
   const showPrevButton = page > 0;
   const showPagination = (showNextButton || showPrevButton) && lastPage > 1;
-
   return (
     <Flex direction="column" w="full" h="full" justify="space-between">
       <SimpleGrid

@@ -5,7 +5,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import type { Chain } from "@thirdweb-dev/chains";
-import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
@@ -204,27 +203,20 @@ interface UsageEmbeddedWallets {
   countWalletAddresses: number;
 }
 
-interface UsageCheckout {
-  sumTransactionFeeUsd: number;
-}
-
 export interface UsageBillableByService {
   usage: {
     bundler: UsageBundler[];
     storage: UsageStorage;
     embeddedWallets: UsageEmbeddedWallets;
-    checkout: UsageCheckout;
   };
   billableUsd: {
     bundler: number;
     storage: number;
     embeddedWallets: number;
-    checkout: number;
   };
   limits: {
     storage: number;
     embeddedWallets: number;
-    checkout: number;
   };
   rateLimits: {
     storage: number;
@@ -570,81 +562,6 @@ export function useConfirmEmail() {
       },
     },
   );
-}
-
-export type CreateTicketInput = {
-  markdown: string;
-  product: string;
-  files?: File[];
-} & Record<string, string>;
-
-export function useCreateTicket() {
-  const { user } = useLoggedInUser();
-  const account = useAccount();
-  return useMutationWithInvalidate(async (input: CreateTicketInput) => {
-    invariant(user?.address, "walletAddress is required");
-    invariant(account?.data, "Account not found");
-    const { name, email, plan } = account.data;
-    const formData = new FormData();
-    const planToCustomerId: Record<string, string> = {
-      free: process.env.NEXT_PUBLIC_UNTHREAD_FREE_TIER_ID as string,
-      growth: process.env.NEXT_PUBLIC_UNTHREAD_GROWTH_TIER_ID as string,
-      pro: process.env.NEXT_PUBLIC_UNTHREAD_PRO_TIER_ID as string,
-    };
-    const customerId = planToCustomerId[plan] || undefined;
-    if (input.files?.length) {
-      // biome-ignore lint/complexity/noForEach: FIXME
-      input.files.forEach((file) => formData.append("attachments", file));
-    }
-    const title =
-      input.product && input.extraInfo_Problem_Area
-        ? `${input.product}: ${input.extraInfo_Problem_Area} (${email})`
-        : `New ticket from ${name} (${email})`;
-
-    // Update `markdown` to include the infos from the form
-    const extraInfo = Object.keys(input)
-      .filter((key) => key.startsWith("extraInfo_"))
-      .map((key) => {
-        const prettifiedKey = `# ${key.replace("extraInfo_", "").replaceAll("_", " ")}`;
-        return `${prettifiedKey}: ${input[key] ?? "N/A"}\n`;
-      })
-      .join("");
-    const markdown = `# Email: ${email}
-# Address: ${user.address}
-# Product: ${input.product}
-${extraInfo}
-# Message:
-${input.markdown}
-`;
-    const content = {
-      type: "email",
-      title,
-      markdown,
-      status: "open",
-      onBehalfOf: {
-        email,
-        name,
-      },
-      customerId,
-      emailInboxId: process.env.NEXT_PUBLIC_UNTHREAD_EMAIL_INBOX_ID,
-      triageChannelId: process.env.NEXT_PUBLIC_UNTHREAD_TRIAGE_CHANNEL_ID,
-    };
-    formData.append("json", JSON.stringify(content));
-
-    const res = await fetch(
-      `${THIRDWEB_API_HOST}/v1/account/create-unthread-ticket`,
-      {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      },
-    );
-    const json = await res.json();
-    if (json.error) {
-      throw new Error(json.error.message);
-    }
-    return json.data;
-  });
 }
 
 export function useConfirmEmbeddedWallet() {
@@ -1033,110 +950,6 @@ export function useAuthorizedWallets() {
     },
     { enabled: !!user?.address && isLoggedIn, cacheTime: 0 },
   );
-}
-
-type FetchAuthTokenResponse = {
-  jwt: string;
-  paymentsSellerId?: string;
-};
-
-const TOKEN_PROMISE_MAP = new Map<string, Promise<FetchAuthTokenResponse>>();
-
-async function fetchAuthToken(
-  address: string,
-  abortController?: AbortController,
-): Promise<FetchAuthTokenResponse> {
-  if (!address) {
-    throw new Error("address is required");
-  }
-  if (TOKEN_PROMISE_MAP.has(address)) {
-    return TOKEN_PROMISE_MAP.get(address) as Promise<FetchAuthTokenResponse>;
-  }
-  const promise = new Promise<FetchAuthTokenResponse>((resolve, reject) => {
-    return fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      signal: abortController?.signal,
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.error) {
-          throw new Error(json.error.message);
-        }
-        return {
-          jwt: json.data.jwt as string,
-          paymentsSellerId: json.data.paymentsSellerId,
-        };
-      })
-      .then(resolve)
-      .catch(reject);
-  });
-  TOKEN_PROMISE_MAP.set(address, promise);
-  return promise;
-}
-
-// keep the promise around so we don't fetch it multiple times even if the hook gets called from different places
-let inflightPromise: Promise<FetchAuthTokenResponse> | null = null;
-export function useApiAuthToken() {
-  const { user } = useLoggedInUser();
-  const [token, setToken] = useState<string | null>(null);
-  const [paymentsSellerId, setPaymentsSellerId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  // not using a query because we don't want to store this in any cache
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    let mounted = true;
-    setError(null);
-    setIsLoading(false);
-    if (!user?.address) {
-      return;
-    }
-    setIsLoading(true);
-
-    const abortController = new AbortController();
-
-    if (!inflightPromise) {
-      inflightPromise = fetchAuthToken(user.address, abortController);
-    }
-
-    // eslint-disable-next-line promise/catch-or-return
-    inflightPromise
-      .then((t) => {
-        // eslint-disable-next-line promise/always-return
-        if (mounted) {
-          setToken(t.jwt);
-          if (t.paymentsSellerId) {
-            setPaymentsSellerId(t.paymentsSellerId);
-          }
-        }
-      })
-      .catch((err) => {
-        if (mounted) {
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (mounted) {
-          inflightPromise = null;
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      mounted = false;
-      // cancel the fetch if it's still in flight
-      abortController.abort();
-      inflightPromise = null;
-      setToken(null);
-    };
-  }, [user?.address]);
-
-  return { error, isLoading, token, paymentsSellerId };
 }
 
 /**

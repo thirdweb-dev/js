@@ -19,13 +19,13 @@ export type StaticPrepareTransactionOptions = {
   nonce?: number | undefined;
   extraGas?: bigint | undefined;
   // zksync specific
-  eip712?: EIP721TransactionOptions | undefined;
+  eip712?: EIP712TransactionOptions | undefined;
   // tw specific
   chain: Chain;
   client: ThirdwebClient;
 };
 
-export type EIP721TransactionOptions = {
+export type EIP712TransactionOptions = {
   // constant or user input
   gasPerPubdata?: bigint | undefined;
   // optional signature, generated
@@ -38,7 +38,7 @@ export type EIP721TransactionOptions = {
   paymasterInput?: Hex | undefined;
 };
 
-export type EIP721SerializedTransaction = {
+export type EIP712SerializedTransaction = {
   txType: bigint;
   from: bigint;
   to: bigint;

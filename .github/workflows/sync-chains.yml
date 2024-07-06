@@ -1,8 +1,9 @@
 name: Sync chains every hour
 
 on:
-  schedule:
-    - cron: "0 * * * *" # Runs every hour
+  # temporarily disabled chain syncing
+  # schedule:
+    # - cron: "0 * * * *" # Runs every hour
   workflow_dispatch: # Allows you to manually run the workflow from the Actions tab
 
 jobs:

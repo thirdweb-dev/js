@@ -1,6 +1,5 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Flex, Spinner } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
@@ -9,13 +8,14 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { ContractsSidebar } from "core-ui/sidebar/contracts";
 import { PageId } from "page-id";
 import { useMemo } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { TrackedLink } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "published_contracts";
 
 const Published: ThirdwebNextPage = () => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const publishedContractsQuery = usePublishedContractsQuery(address);
 
   const hasContracts = useMemo(

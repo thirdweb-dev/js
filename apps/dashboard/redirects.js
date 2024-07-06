@@ -246,12 +246,12 @@ function redirects() {
     },
     {
       source: "/dashboard/payments/settings",
-      destination: "/dashboard/connect/pay?tab=checkouts",
+      destination: "/dashboard/connect/pay",
       permanent: false,
     },
     {
       source: "/dashboard/payments/contracts",
-      destination: "/dashboard/connect/pay?tab=checkouts",
+      destination: "/dashboard/connect/pay",
       permanent: false,
     },
     // Redirecting as ambassadors lives in community now
@@ -268,6 +268,11 @@ function redirects() {
     {
       source: "/embedded-wallets",
       destination: "/in-app-wallets",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/connect/ecosystem/:slug((?!create$)[^/]+)",
+      destination: "/dashboard/connect/ecosystem/:slug/permissions",
       permanent: false,
     },
   ];

@@ -1,13 +1,13 @@
 import type { TransactionSerializable } from "viem";
 import type { Address } from "../../../utils/address.js";
 import type {
-  EIP721SerializedTransaction,
-  EIP721TransactionOptions,
+  EIP712SerializedTransaction,
+  EIP712TransactionOptions,
 } from "../../prepare-transaction.js";
 
 export type EIP721TransactionSerializable = TransactionSerializable & {
   from: Address;
-} & EIP721TransactionOptions;
+} & EIP712TransactionOptions;
 export const gasPerPubdataDefault = 50000n;
 
 export const getEip712Domain = (transaction: EIP721TransactionSerializable) => {
@@ -43,7 +43,7 @@ export const getEip712Domain = (transaction: EIP721TransactionSerializable) => {
 
 function transactionToMessage(
   transaction: EIP721TransactionSerializable,
-): EIP721SerializedTransaction {
+): EIP712SerializedTransaction {
   const {
     gas,
     nonce,

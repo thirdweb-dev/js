@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.32",
+  "version": "0.4.35",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -24,9 +24,17 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/", "node/", "cf-worker/"],
+  "files": [
+    "dist/",
+    "node/",
+    "cf-worker/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "cf-worker/index.ts", "node/index.ts"],
+    "entrypoints": [
+      "index.ts",
+      "cf-worker/index.ts",
+      "node/index.ts"
+    ],
     "exports": true
   },
   "sideEffects": false,
@@ -38,7 +46,7 @@
     "@cloudflare/workers-types": "4.20240405.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "20.14.6",
+    "@types/node": "20.14.9",
     "typescript": "5.5.2"
   },
   "scripts": {

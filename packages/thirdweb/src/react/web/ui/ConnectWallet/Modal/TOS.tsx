@@ -1,8 +1,8 @@
 "use client";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Container } from "../../components/basic.js";
 import { Link } from "../../components/text.js";
 import { Text } from "../../components/text.js";
+import type { ConnectLocale } from "../locale/types.js";
 
 /**
  * @internal
@@ -10,9 +10,9 @@ import { Text } from "../../components/text.js";
 export function TOS(props: {
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
+  locale: ConnectLocale["agreement"];
 }) {
-  const { termsOfServiceUrl, privacyPolicyUrl } = props;
-  const locale = useConnectUI().connectLocale.agreement;
+  const { termsOfServiceUrl, privacyPolicyUrl, locale } = props;
 
   if (!termsOfServiceUrl && !privacyPolicyUrl) {
     return null;

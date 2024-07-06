@@ -2,10 +2,10 @@ import { useMemo } from "react";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Container } from "../../../../components/basic.js";
 import { Text } from "../../../../components/text.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 
 export function TokenInfoRow(props: {
   tokenSymbol: string;
@@ -19,7 +19,7 @@ export function TokenInfoRow(props: {
     () => getCachedChain(props.chainId),
     [props.chainId],
   );
-  const chainQuery = useChainQuery(chainObj);
+  const { name } = useChainName(chainObj);
 
   return (
     <Container
@@ -37,7 +37,7 @@ export function TokenInfoRow(props: {
         }}
       >
         <Container flex="row" gap="xs" center="y">
-          <TokenIcon
+          <PayTokenIcon
             chain={chainObj}
             size="sm"
             token={{
@@ -49,8 +49,7 @@ export function TokenInfoRow(props: {
             {formatNumber(Number(props.tokenAmount), 4)} {props.tokenSymbol}
           </Text>
         </Container>
-
-        <Text size="sm">{chainQuery.data?.name}</Text>
+        <Text size="sm">{name}</Text>
       </Container>
     </Container>
   );

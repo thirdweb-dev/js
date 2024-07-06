@@ -1,30 +1,42 @@
 "use client";
+import type { Chain } from "../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { TOS } from "../../ui/ConnectWallet/Modal/TOS.js";
 import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
+import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Container } from "../../ui/components/basic.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
-import type { ConnectLocale } from "../shared/locale/types.js";
+import type { InAppWalletLocale } from "../shared/locale/types.js";
 import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
 
 export type EcosystemWalletFormUIProps = {
   select: () => void;
   done: () => void;
-  locale: ConnectLocale;
+  locale: InAppWalletLocale;
   wallet: Wallet<EcosystemWalletId>;
   goBack?: () => void;
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  connectLocale: ConnectLocale;
 };
 
 /**
  * @internal
  */
 export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
-  const { client, connectModal } = useConnectUI();
-  const isCompact = connectModal.size === "compact";
+  const isCompact = props.size === "compact";
   const { initialScreen, screen } = useScreenContext();
 
   const onBack =
@@ -42,16 +54,12 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      {isCompact ? (
-        <>
-          <EcosystemWalletHeader
-            client={client}
-            onBack={onBack}
-            wallet={props.wallet}
-          />
-          <Spacer y="lg" />
-        </>
-      ) : null}
+      <EcosystemWalletHeader
+        client={props.client}
+        onBack={isCompact ? onBack : undefined}
+        wallet={props.wallet}
+      />
+      <Spacer y="lg" />
 
       <Container
         expand
@@ -63,17 +71,18 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
       </Container>
 
       {isCompact &&
-        (connectModal.showThirdwebBranding !== false ||
-          connectModal.termsOfServiceUrl ||
-          connectModal.privacyPolicyUrl) && <Spacer y="xl" />}
+        (props.meta.showThirdwebBranding !== false ||
+          props.meta.termsOfServiceUrl ||
+          props.meta.privacyPolicyUrl) && <Spacer y="xl" />}
 
       <Container flex="column" gap="lg">
         <TOS
-          termsOfServiceUrl={connectModal.termsOfServiceUrl}
-          privacyPolicyUrl={connectModal.privacyPolicyUrl}
+          termsOfServiceUrl={props.meta.termsOfServiceUrl}
+          privacyPolicyUrl={props.meta.privacyPolicyUrl}
+          locale={props.connectLocale.agreement}
         />
 
-        {connectModal.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        {props.meta.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );

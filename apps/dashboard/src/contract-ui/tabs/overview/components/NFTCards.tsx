@@ -94,7 +94,6 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
               <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
                 <Skeleton isLoaded={!isLoading}>
                   <NFTMediaWithEmptyState
-                    // @ts-expect-error types are not up to date
                     metadata={token.metadata}
                     requireInteraction
                     width="100%"

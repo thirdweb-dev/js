@@ -8,6 +8,7 @@ import { useBuyWithFiatStatus } from "../../../../../../core/hooks/pay/useBuyWit
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { OnRampTxDetailsTable } from "../fiat/FiatTxDetailsTable.js";
 import { PostOnRampSwapFlow } from "../fiat/PostOnRampSwapFlow.js";
+import type { PayerInfo } from "../types.js";
 import { getBuyWithFiatStatusMeta } from "./statusMeta.js";
 
 export function FiatDetailsScreen(props: {
@@ -17,6 +18,7 @@ export function FiatDetailsScreen(props: {
   onDone: () => void;
   isBuyForTx: boolean;
   isEmbed: boolean;
+  payer: PayerInfo;
 }) {
   const initialStatus = props.status;
   const [stopPolling, setStopPolling] = useState(false);
@@ -69,6 +71,7 @@ export function FiatDetailsScreen(props: {
         onSwapFlowStarted={() => {
           setStopPolling(true);
         }}
+        payer={props.payer}
       />
     );
   }

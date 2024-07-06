@@ -8,7 +8,7 @@ import {
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
@@ -18,6 +18,7 @@ import { Input } from "../../../../components/formElements.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { getBuyTokenAmountFontSize } from "../utils.js";
 
 /**
  * @internal
@@ -33,7 +34,7 @@ export function BuyTokenInput(props: {
   freezeAmount?: boolean;
   freezeChainAndToken?: boolean;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const { name } = useChainName(props.chain);
 
   const getWidth = () => {
     let chars = props.value.replace(".", "").length;
@@ -66,6 +67,7 @@ export function BuyTokenInput(props: {
             variant="outline"
             pattern="^[0-9]*[.,]?[0-9]*$"
             inputMode="decimal"
+            tabIndex={-1}
             placeholder="0"
             type="text"
             data-placeholder={props.value === ""}
@@ -100,13 +102,9 @@ export function BuyTokenInput(props: {
             }}
             style={{
               border: "none",
-              fontSize:
-                props.value.length > 10
-                  ? "26px"
-                  : props.value.length > 6
-                    ? "34px"
-                    : "50px",
+              fontSize: getBuyTokenAmountFontSize(props.value),
               boxShadow: "none",
+              borderRadius: "0",
               padding: "0",
               paddingBlock: "2px",
               fontWeight: 600,
@@ -162,9 +160,9 @@ export function BuyTokenInput(props: {
                   />
 
                   {/* Network Name */}
-                  {chainQuery.data?.name ? (
+                  {name ? (
                     <Text size="xs" color="secondaryText">
-                      {chainQuery.data.name}
+                      {name}
                     </Text>
                   ) : (
                     <Skeleton width="90px" height={fontSize.xs} />

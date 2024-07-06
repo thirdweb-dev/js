@@ -1,3 +1,4 @@
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,6 +12,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { defineChain } from "thirdweb";
 import { StarButton } from "../components/client/star-button";
 import { ChainIcon } from "../components/server/chain-icon";
 import { getChain, getChainMetadata } from "../utils";
@@ -144,7 +146,7 @@ export default async function ChainPageLayout({
               </div>
             </div>
             <div className="flex flex-row md:flex-col gap-4">
-              <AddChainToWallet chainId={chain.chainId} />
+              <AddChainToWallet chain={defineChain(chain)} />
               {isVerified ? null : (
                 <Button
                   className="w-full md:min-w-40"
@@ -205,7 +207,14 @@ export default async function ChainPageLayout({
 
               {/* Chain Id */}
               <PrimaryInfoItem title="Chain ID">
-                <div className="text-lg">{chain.chainId}</div>
+                <CopyTextButton
+                  textToCopy={chain.chainId.toString()}
+                  textToShow={chain.chainId.toString()}
+                  tooltip="Copy Chain ID"
+                  variant="ghost"
+                  className="text-lg -translate-x-2 py-0.5"
+                  copyIconPosition="right"
+                />
               </PrimaryInfoItem>
 
               {/* Native token */}

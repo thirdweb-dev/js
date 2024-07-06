@@ -1,9 +1,7 @@
 {
   "extends": "@thirdweb-dev/tsconfig/react-library.json",
-  "include": ["."],
-  "exclude": ["dist", "build", "node_modules"],
+  "include": ["src"],
   "compilerOptions": {
-    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "esModuleInterop": true
   }

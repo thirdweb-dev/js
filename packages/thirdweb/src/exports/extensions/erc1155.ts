@@ -98,6 +98,10 @@ export {
   updateMetadata,
   type UpdateMetadataParams,
 } from "../../extensions/erc1155/drops/write/updateMetadata.js";
+export {
+  getClaimConditionById,
+  type GetClaimConditionByIdParams,
+} from "../../extensions/erc1155/__generated__/IDrop1155/read/getClaimConditionById.js";
 
 /**
  * SIGNATURE extension for ERC1155

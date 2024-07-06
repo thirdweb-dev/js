@@ -40,7 +40,6 @@ export class MockUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         uris.push(`mock://${cid}/${name}`);
         continue;
       }
-
       this.storage[cid][index.toString()] = contents;
       uris.push(`mock://${cid}/${index}`);
       index += 1;

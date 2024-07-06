@@ -1,5 +1,17 @@
 # eslint-config-thirdweb
 
+## 0.1.11
+
+### Patch Changes
+
+- [#3554](https://github.com/thirdweb-dev/js/pull/3554) [`cbb0bc2`](https://github.com/thirdweb-dev/js/commit/cbb0bc2835bcfef62e69c18596063842f305f624) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+## 0.1.10
+
+### Patch Changes
+
+- [#3551](https://github.com/thirdweb-dev/js/pull/3551) [`b6ab038`](https://github.com/thirdweb-dev/js/commit/b6ab038802091ebb6cc6d880b4bafb682a37da95) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
 ## 0.1.9
 
 ### Patch Changes

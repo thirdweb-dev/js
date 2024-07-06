@@ -77,6 +77,7 @@ const Option = /* @__PURE__ */ StyledOption(() => {
   };
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Select = /* @__PURE__ */ StyledSelect((_) => {
   const theme = useCustomTheme();
   return {

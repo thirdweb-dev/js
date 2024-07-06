@@ -1,40 +1,27 @@
-import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { fontSize } from "../../../../core/design-system/index.js";
-import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
-import { Skeleton } from "../../components/Skeleton.js";
+import { fontSize, iconSize } from "../../../../core/design-system/index.js";
+import type {
+  SupportedNFTs,
+  SupportedTokens,
+} from "../../../../core/utils/defaultTokens.js";
 import { Spacer } from "../../components/Spacer.js";
-import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
-import { formatTokenBalance } from "./formatTokenBalance.js";
-import {
-  type ERC20OrNativeToken,
-  NATIVE_TOKEN,
-  isNativeToken,
-} from "./nativeToken.js";
+import { MenuButton } from "../MenuButton.js";
+import { CoinsIcon } from "../icons/CoinsIcon.js";
+import { ImageIcon } from "../icons/ImageIcon.js";
+import type { WalletDetailsModalScreen } from "./types.js";
 
 /**
  * @internal
  */
 export function ViewFunds(props: {
   supportedTokens?: SupportedTokens;
+  supportedNFTs?: SupportedNFTs;
   onBack: () => void;
+  setScreen: (screen: WalletDetailsModalScreen) => void;
   client: ThirdwebClient;
 }) {
-  const activeChain = useActiveWalletChain();
-  const supportedTokens = props.supportedTokens || defaultTokens;
-
-  if (!activeChain) {
-    return null;
-  }
-
-  const tokenList =
-    (activeChain?.id ? supportedTokens[activeChain.id] : undefined) || [];
-
   return (
     <Container
       style={{
@@ -54,68 +41,29 @@ export function ViewFunds(props: {
       >
         <Spacer y="md" />
 
-        <TokenInfo
-          token={NATIVE_TOKEN}
-          chain={activeChain}
-          client={props.client}
-        />
-
-        {tokenList.map((token) => {
-          return (
-            <TokenInfo
-              token={token}
-              key={token.address}
-              chain={activeChain}
-              client={props.client}
-            />
-          );
-        })}
+        <MenuButton
+          onClick={() => {
+            props.setScreen("view-tokens");
+          }}
+          style={{
+            fontSize: fontSize.sm,
+          }}
+        >
+          <CoinsIcon size={iconSize.md} />
+          <Text color="primaryText">View Tokens</Text>
+        </MenuButton>
+        <MenuButton
+          onClick={() => {
+            props.setScreen("view-nfts");
+          }}
+          style={{
+            fontSize: fontSize.sm,
+          }}
+        >
+          <ImageIcon size={iconSize.md} />
+          <Text color="primaryText">View NFTs</Text>
+        </MenuButton>
         <Spacer y="lg" />
-      </Container>
-    </Container>
-  );
-}
-
-function TokenInfo(props: {
-  token: ERC20OrNativeToken;
-  chain: Chain;
-  client: ThirdwebClient;
-}) {
-  const account = useActiveAccount();
-  const tokenBalanceQuery = useWalletBalance({
-    address: account?.address,
-    chain: props.chain,
-    tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
-    client: props.client,
-  });
-
-  const tokenName = isNativeToken(props.token)
-    ? tokenBalanceQuery.data?.name
-    : props.token.name;
-
-  return (
-    <Container flex="row" gap="sm" p="sm">
-      <TokenIcon
-        token={props.token}
-        chain={props.chain}
-        size="lg"
-        client={props.client}
-      />
-
-      <Container flex="column" gap="xxs">
-        {tokenName ? (
-          <Text size="sm" color="primaryText">
-            {tokenName}
-          </Text>
-        ) : (
-          <Skeleton height={fontSize.md} width="150px" />
-        )}
-
-        {tokenBalanceQuery.data ? (
-          <Text size="xs"> {formatTokenBalance(tokenBalanceQuery.data)}</Text>
-        ) : (
-          <Skeleton height={fontSize.xs} width="100px" />
-        )}
       </Container>
     </Container>
   );

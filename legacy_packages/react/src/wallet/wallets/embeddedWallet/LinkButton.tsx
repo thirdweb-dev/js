@@ -2,6 +2,7 @@ import { fontSize } from "../../../design-system";
 import { useCustomTheme } from "../../../design-system/CustomThemeProvider";
 import { StyledButton } from "../../../design-system/elements";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const LinkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {

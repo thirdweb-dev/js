@@ -1,8 +1,15 @@
 "use client";
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
+import Image from "next/image";
 import { useState } from "react";
-import { getContract, prepareContractCall, toTokens, toUnits } from "thirdweb";
+import {
+  type Hex,
+  getContract,
+  prepareContractCall,
+  toTokens,
+  toUnits,
+} from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import {
@@ -11,7 +18,6 @@ import {
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
-import type { Hex } from "../../../../../packages/thirdweb/dist/types/utils/encoding/hex";
 import { shortenAddress } from "./shortenAddress";
 
 const twCoinContract = getContract({
@@ -39,11 +45,9 @@ export function WriteContractRawPreview() {
           <div className="rounded-2xl border py-2 px-3 mb-3 backdrop-blur">
             <div className="text-2xl">Your balance</div>
             <div className="flex flex-row justify-start gap-3">
-              <img
+              <Image
                 src="/twcoin.svg"
-                width={"20px"}
-                height={"20px"}
-                className="rounded-2xl"
+                className="mx-auto rounded-2xl animate-bounce size-5"
                 alt=""
               />
               <div>

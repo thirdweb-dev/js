@@ -21,7 +21,10 @@ export class LocalStorage {
   constructor({
     clientId,
     ecosystemId,
-  }: { clientId: string; ecosystemId?: EcosystemWalletId }) {
+  }: {
+    clientId: string;
+    ecosystemId?: EcosystemWalletId;
+  }) {
     this.isSupported = typeof window !== "undefined" && !!window.localStorage;
     this.key = getLocalStorageKey(clientId, ecosystemId);
   }

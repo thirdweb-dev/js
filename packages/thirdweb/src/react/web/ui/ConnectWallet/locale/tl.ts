@@ -1,6 +1,7 @@
 import type { ConnectLocale } from "./types.js";
 
 const connectWalletLocalTl: ConnectLocale = {
+  id: "tl_PH",
   signIn: "Mag-sign in",
   defaultButtonTitle: "Ikonekta ang Wallet",
   connecting: "Kumokonekta",

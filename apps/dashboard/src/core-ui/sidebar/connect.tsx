@@ -29,6 +29,11 @@ const links: Route[] = [
     name: "embedded-wallets",
   },
   {
+    path: "/dashboard/connect/ecosystem",
+    title: "Ecosystem Wallets",
+    name: "ecosystem",
+  },
+  {
     path: "/dashboard/connect/account-abstraction",
     title: "Account Abstraction",
     name: "account-abstraction",

@@ -1,5 +1,4 @@
 import type { Prettify } from "../utils/type-utils.js";
-
 export type Chain = Prettify<Readonly<ChainOptions & { rpc: string }>>;
 
 export type ChainOptions = {
@@ -21,6 +20,7 @@ export type ChainOptions = {
   experimental?: {
     increaseZeroByteCount?: boolean;
   };
+  faucets?: Array<string>;
 };
 
 type Icon = {

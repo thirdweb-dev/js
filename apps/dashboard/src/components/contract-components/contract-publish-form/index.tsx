@@ -1,7 +1,6 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import { defaultChains } from "@thirdweb-dev/chains";
-import { useAddress } from "@thirdweb-dev/react";
 import {
   type Abi,
   CONTRACT_ADDRESSES,
@@ -15,6 +14,7 @@ import { useRouter } from "next/router";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Text } from "tw-components";
 import { z } from "zod";
 import {
@@ -62,7 +62,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     "Successfully published contract",
     "Failed to publish contract",
   );
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const publishMutation = usePublishMutation();
 
   const publishMetadata = useContractPublishMetadataFromURI(contractId);

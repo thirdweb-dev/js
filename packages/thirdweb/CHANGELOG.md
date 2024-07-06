@@ -1,5 +1,238 @@
 # thirdweb
 
+## 5.33.0
+
+### Minor Changes
+
+- [#3609](https://github.com/thirdweb-dev/js/pull/3609) [`9faa8fc`](https://github.com/thirdweb-dev/js/commit/9faa8fc112aec7109324aad4cb7d5e03d4a0ecbd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds ERC-6942 utilities and verification compatibility. See [ERC-6942](https://eips.ethereum.org/EIPS/eip-6942) for more information.
+
+### Patch Changes
+
+- [#3597](https://github.com/thirdweb-dev/js/pull/3597) [`34b9bbe`](https://github.com/thirdweb-dev/js/commit/34b9bbe77f3a688df1a953e79b28e0349b15bba7) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix wallet disconnect events not being emitted
+
+- [#3608](https://github.com/thirdweb-dev/js/pull/3608) [`2ab8b3c`](https://github.com/thirdweb-dev/js/commit/2ab8b3ca7898289d65d0197692e69ad6992b8178) Thanks [@MananTank](https://github.com/MananTank)! - Set selection data on wallet selection with no custom selection UI - This fixes UI bug in Connect wide modal that has both inApp and ecosystem wallets added
+
+## 5.32.3
+
+### Patch Changes
+
+- [#3605](https://github.com/thirdweb-dev/js/pull/3605) [`c261921`](https://github.com/thirdweb-dev/js/commit/c261921e552f30c3cedfcde29aa84da9428c86d2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix inapp wallet layout reset
+
+## 5.32.2
+
+### Patch Changes
+
+- [#3599](https://github.com/thirdweb-dev/js/pull/3599) [`eac126b`](https://github.com/thirdweb-dev/js/commit/eac126bb14e288108b740f2785d2e7db6889dddb) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Respect title and theme colors in react native modals
+
+- [#3590](https://github.com/thirdweb-dev/js/pull/3590) [`106c013`](https://github.com/thirdweb-dev/js/commit/106c01356c545dffb34c091115d25cbdaa0f2c80) Thanks [@jnsdls](https://github.com/jnsdls)! - fix ethers5 adapter populateTransaction for sendTransaction
+
+- [#3600](https://github.com/thirdweb-dev/js/pull/3600) [`e598f46`](https://github.com/thirdweb-dev/js/commit/e598f464227d5b8230ddfdd8ebce55e3d6236355) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Force legacy transactions on Vanguard chain
+
+- [#3591](https://github.com/thirdweb-dev/js/pull/3591) [`e22b308`](https://github.com/thirdweb-dev/js/commit/e22b308fa72de881feb858acb07c227ff7d7593f) Thanks [@MananTank](https://github.com/MananTank)! - Various Pay UI improvements
+
+- [#3592](https://github.com/thirdweb-dev/js/pull/3592) [`d2de83d`](https://github.com/thirdweb-dev/js/commit/d2de83da6675d8b323b85d083a097637cf9af0ac) Thanks [@jnsdls](https://github.com/jnsdls)! - make siwe_auth more robust
+
+- [#3583](https://github.com/thirdweb-dev/js/pull/3583) [`229561e`](https://github.com/thirdweb-dev/js/commit/229561e1a79fe2ab3f010c5a8659c7e0fc497ec3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Animated connecting states for React Native
+
+- [#3576](https://github.com/thirdweb-dev/js/pull/3576) [`687328a`](https://github.com/thirdweb-dev/js/commit/687328aae9eb8bb577c000f1183e43dd080ec8f4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Blockscout v2 contract verification
+
+- [#3593](https://github.com/thirdweb-dev/js/pull/3593) [`e0f4e5a`](https://github.com/thirdweb-dev/js/commit/e0f4e5a23366cc676bc7949e96c1d92407f816e6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix input validation in Send Funds modal
+
+- [#3598](https://github.com/thirdweb-dev/js/pull/3598) [`e5cccb9`](https://github.com/thirdweb-dev/js/commit/e5cccb9d7028e10c93e17039403bde1fdeccd6cf) Thanks [@MananTank](https://github.com/MananTank)! - Fix Send Transaction UI
+
+## 5.32.1
+
+### Patch Changes
+
+- [#3582](https://github.com/thirdweb-dev/js/pull/3582) [`9651b96`](https://github.com/thirdweb-dev/js/commit/9651b96b96d3f416662e9832902e655c0e6cf0fd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `waitForUserOpReceipt()` helper function
+
+- [#3397](https://github.com/thirdweb-dev/js/pull/3397) [`49ae575`](https://github.com/thirdweb-dev/js/commit/49ae575211f8484296d4aac16782e94ae89c437d) Thanks [@jnsdls](https://github.com/jnsdls)! - improve loading performance for chains
+
+- [#3577](https://github.com/thirdweb-dev/js/pull/3577) [`6b919e1`](https://github.com/thirdweb-dev/js/commit/6b919e13859e146f572619bfb315d5c357808a0e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Show ecosystem wallet branding on wide modal layout
+
+## 5.32.0
+
+### Minor Changes
+
+- [#3570](https://github.com/thirdweb-dev/js/pull/3570) [`1a2e056`](https://github.com/thirdweb-dev/js/commit/1a2e0563299e22dbcac77d177a7b86011ecf377d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ConnectButton and ConnectEmbed components for React Native
+
+  ## ConnectButton and ConnectEmbed components for React Native
+
+  Same behavior as the web, you can use these prebuilt components to quickly provide wallet connection flows to your users.
+
+  You can use it the same way as you would in the web, with the same supported properties and configuration flags.
+
+  ```ts
+  import { ConnectButton } from "thirdweb/react";
+
+  <ConnectButton
+      client={client}
+  />
+  ```
+
+  and same for ConnectEmbed
+
+  ```ts
+  import { ConnectEmbed } from "thirdweb/react";
+
+  <ConnectEmbed
+      client={client}
+  />
+  ```
+
+### Patch Changes
+
+- [#3574](https://github.com/thirdweb-dev/js/pull/3574) [`f526d73`](https://github.com/thirdweb-dev/js/commit/f526d733d0c512ed607a5fecad8d8e8220f6fe75) Thanks [@MananTank](https://github.com/MananTank)! - \* Fix broken inApp wallet connection flow in Compact size Connect UI
+
+  - Fix missing back button in inApp wallet connection flow in Compact size Connect UI
+
+- [#3575](https://github.com/thirdweb-dev/js/pull/3575) [`5953131`](https://github.com/thirdweb-dev/js/commit/59531310d946396fc413bfaea4f224ab74bb92d7) Thanks [@MananTank](https://github.com/MananTank)! - Reset wallet selection data on wallet selection
+
+- [#3569](https://github.com/thirdweb-dev/js/pull/3569) [`e5f772d`](https://github.com/thirdweb-dev/js/commit/e5f772dd5c69e818bd17496a960d64775f9ffccc) Thanks [@edwardysun](https://github.com/edwardysun)! - Support localhost as a domain override option for the Pay service
+
+## 5.31.1
+
+### Patch Changes
+
+- [#3558](https://github.com/thirdweb-dev/js/pull/3558) [`54c1789`](https://github.com/thirdweb-dev/js/commit/54c17893307ea4dac13894cb3e07d82821a6012f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix recommended wallet ordering
+
+- [#3554](https://github.com/thirdweb-dev/js/pull/3554) [`cbb0bc2`](https://github.com/thirdweb-dev/js/commit/cbb0bc2835bcfef62e69c18596063842f305f624) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#3562](https://github.com/thirdweb-dev/js/pull/3562) [`98a9e22`](https://github.com/thirdweb-dev/js/commit/98a9e226fa4cecda00ddd4b7c675ec00d2139940) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix coinbase wallet connections on vite
+
+## 5.31.0
+
+### Minor Changes
+
+- [#3543](https://github.com/thirdweb-dev/js/pull/3543) [`6704fa8`](https://github.com/thirdweb-dev/js/commit/6704fa887013322e23cb0b7a5d96b3cf647ce8c5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to override transaction properties in mintTo functions
+
+- [#3552](https://github.com/thirdweb-dev/js/pull/3552) [`31775dc`](https://github.com/thirdweb-dev/js/commit/31775dc1dcf38568390e505fd7fb53c6b5aa9cec) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds storage unpin function
+
+- [#3533](https://github.com/thirdweb-dev/js/pull/3533) [`e4b6391`](https://github.com/thirdweb-dev/js/commit/e4b6391cb3b3c3879bc4c66eaa742e364ff17b83) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds StoredTransaction type
+
+- [#3534](https://github.com/thirdweb-dev/js/pull/3534) [`cf2d1b8`](https://github.com/thirdweb-dev/js/commit/cf2d1b8df33a2fd271b5a75ec09a9ecd1169e388) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds shortenHex utility
+
+### Patch Changes
+
+- [#3529](https://github.com/thirdweb-dev/js/pull/3529) [`18c3d3b`](https://github.com/thirdweb-dev/js/commit/18c3d3be9f7065feb556649fecc8a3bb38e295c9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Do not log auto connect failure "errors"
+
+- [#3541](https://github.com/thirdweb-dev/js/pull/3541) [`27daf22`](https://github.com/thirdweb-dev/js/commit/27daf220102e3c29e867c46043fb7a17ba2830dc) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix in-app wallet transcation execution via WalletConnect
+
+- [#3539](https://github.com/thirdweb-dev/js/pull/3539) [`85f2f6d`](https://github.com/thirdweb-dev/js/commit/85f2f6d2bd61364ee1b66609f51dcaded0eba790) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix WalletConnect client disconnections
+
+- [#3551](https://github.com/thirdweb-dev/js/pull/3551) [`b6ab038`](https://github.com/thirdweb-dev/js/commit/b6ab038802091ebb6cc6d880b4bafb682a37da95) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#3536](https://github.com/thirdweb-dev/js/pull/3536) [`8bfba81`](https://github.com/thirdweb-dev/js/commit/8bfba81d2ecd66c69240989716608a199545c082) Thanks [@maciekzygmunt](https://github.com/maciekzygmunt)! - Add Linea & Linea Sepolia chain config files
+
+- [#3542](https://github.com/thirdweb-dev/js/pull/3542) [`517ecff`](https://github.com/thirdweb-dev/js/commit/517ecff0b2179062ab654592288b47e82c2e3405) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Rename Sepolia native currency symbol to ETH
+
+- [#3545](https://github.com/thirdweb-dev/js/pull/3545) [`7e24260`](https://github.com/thirdweb-dev/js/commit/7e242602e91565c62d7db1e9ba042405ac66dbc6) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix errors thrown when connecting with an open access ecosystem
+
+## 5.30.0
+
+### Minor Changes
+
+- [#3451](https://github.com/thirdweb-dev/js/pull/3451) [`2244631`](https://github.com/thirdweb-dev/js/commit/224463175e2496e73c69bb1f60f37e6ff6bec1fa) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds `getTransactionStore` to retrieve a transaction store for a given address
+
+- [#3381](https://github.com/thirdweb-dev/js/pull/3381) [`6429acc`](https://github.com/thirdweb-dev/js/commit/6429acc1f7d45e26bbbe501497df4fb0c3baa5b3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds support for Dawn wallet
+
+- [#3270](https://github.com/thirdweb-dev/js/pull/3270) [`b24e9b2`](https://github.com/thirdweb-dev/js/commit/b24e9b23203a66915ba9e8b4a2d2b8aa17451135) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds ecosystemWallet to TS SDK
+
+  ### Usage
+
+  ```ts
+  import { ecosystemWallet } from "thirdweb/wallets";
+
+  const wallet = ecosystemWallet("ecosystem.hooli", {
+    partnerId: "pied-piper",
+  });
+  ```
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Adds watchAsset support in injected wallet accounts
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - - Add `purchaseData` parameter in `getBuyWithFiatQuote` and `getBuyWithCryptoQuote` functions and UI components to store Extra details for the purchase which can be retrieved later via the status API or Webhook
+
+  - Add a required `fromAddress` parameter in `getBuyWithFiatQuote`
+
+- [#3429](https://github.com/thirdweb-dev/js/pull/3429) [`a3a4008`](https://github.com/thirdweb-dev/js/commit/a3a4008831ca9c34cafe461cd4ca2c07941d1564) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds WalletConnect disconnect screen
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Added `onDisconnect` option in `useWalletDetailsModal`'s `open` method to add a callback when the user disconnects the wallet by clicking the disconnect button in the wallet details modal.
+
+  ```tsx
+  import { useWalletDetailsModal } from "thirdweb/react";
+
+  function Example() {
+    const detailsModal = useWalletDetailsModal();
+
+    return (
+      <button
+        onClick={() => {
+          detailsModal.open({
+            client,
+            onDisconnect: ({ wallet, account }) => {
+              console.log("disconnected", wallet, account);
+            },
+          });
+        }}
+      >
+        Show wallet details
+      </button>
+    );
+  }
+  ```
+
+  `onDisconnect` prop of `ConnectButton` now gets called with the disconnected `wallet` and `account` as arguments
+
+  ```tsx
+  <ConnectButton
+    onDisconnect={({ wallet, account }) => {
+      console.log("disconnected", wallet, account);
+    }}
+  />
+  ```
+
+- [#3270](https://github.com/thirdweb-dev/js/pull/3270) [`b24e9b2`](https://github.com/thirdweb-dev/js/commit/b24e9b23203a66915ba9e8b4a2d2b8aa17451135) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds ecosystem wallet UI
+
+### Patch Changes
+
+- [#3444](https://github.com/thirdweb-dev/js/pull/3444) [`fe77516`](https://github.com/thirdweb-dev/js/commit/fe775166d40fdd50faaa8d6da3fcd624f9a450ed) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds wallet connect functions to react native
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Fix mobile Wallet Connect connection flow
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Add updateMetadata extension for Edition Drop (DropERC1155)
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Fix hex-based signatures for in-app wallets
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - update dependencies
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - - Fix ConnectButton not able to connect Unknown injected wallet provider + Fix Wallet Icon + Fix AutoConnect
+
+- [#3449](https://github.com/thirdweb-dev/js/pull/3449) [`eaa5093`](https://github.com/thirdweb-dev/js/commit/eaa509359fc57a7b0dcdeb4773a1045c91bf0dc6) Thanks [@jnsdls](https://github.com/jnsdls)! - [internals] refactor context usage in connect wallet UI
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Fix uploadMobile function not respecting bundleId
+
+- [#3421](https://github.com/thirdweb-dev/js/pull/3421) [`02a70b9`](https://github.com/thirdweb-dev/js/commit/02a70b928d3b916c94466e3d29fb37319196a2c8) Thanks [@MananTank](https://github.com/MananTank)! - Pay UI improvements - Break down the complex screen into multiple screens each prompting the user for a single action
+
+  Fix PayEmbed Modal title alignment
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Update Connect Modal icons
+
+- [#3513](https://github.com/thirdweb-dev/js/pull/3513) [`c330d0d`](https://github.com/thirdweb-dev/js/commit/c330d0d815eefd9380f7110d597e47ca0fa0d402) Thanks [@gregfromstl](https://github.com/gregfromstl)! - resolveName returns null if no ENS exists for an address
+
+- [#3443](https://github.com/thirdweb-dev/js/pull/3443) [`ea46c70`](https://github.com/thirdweb-dev/js/commit/ea46c70d7ae5132ac9df9c306c5c3cb1ba871a76) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix EIP155 check for create2 factory deployment
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Fix React warning when clicking copy address button and layout shift
+
+- [#3521](https://github.com/thirdweb-dev/js/pull/3521) [`16ea2bc`](https://github.com/thirdweb-dev/js/commit/16ea2bc68420386ec1a65c7ee879f0d0b6f31822) Thanks [@MananTank](https://github.com/MananTank)! - Fix wallet app not opening when using ConnectButton inside an iframe
+
+- [#3465](https://github.com/thirdweb-dev/js/pull/3465) [`70b31dd`](https://github.com/thirdweb-dev/js/commit/70b31ddcd09bfd1c67906f72a89423865610185c) Thanks [@iamcryptofennec](https://github.com/iamcryptofennec)! - Fix error when Switching to an unknown network in wallet when connected using WaletConnect
+
+  Fix Network Selector not closed sometimes when Network switch is successful when connected using WalletConnect
+
+- [#3481](https://github.com/thirdweb-dev/js/pull/3481) [`8807042`](https://github.com/thirdweb-dev/js/commit/88070422ff8389997a92591e0ba4c0fe2528d0f5) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export getClaimConditionById for Drop1155
+
+- [#3428](https://github.com/thirdweb-dev/js/pull/3428) [`fab5cd4`](https://github.com/thirdweb-dev/js/commit/fab5cd43bed972b0a3f70f0f39a790349672ba72) Thanks [@jnsdls](https://github.com/jnsdls)! - Fixed return type for useConnectModal.connect
+
 ## 5.29.6
 
 ### Patch Changes

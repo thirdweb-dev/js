@@ -108,6 +108,9 @@ export const CreditsButton = () => {
                 credit={opCredit}
                 onCreditsButton={true}
                 isOpCreditDefault={true}
+                onClickApply={() => {
+                  onClose();
+                }}
               />
               {restCredits?.map((credit) => (
                 <CreditsItem

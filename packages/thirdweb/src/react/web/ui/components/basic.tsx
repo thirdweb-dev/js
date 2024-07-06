@@ -35,6 +35,7 @@ export const noScrollBar = /* @__PURE__ */ {
 export function ModalHeader(props: {
   onBack?: () => void;
   title: React.ReactNode;
+  leftAligned?: boolean;
 }) {
   const { onBack, title } = props;
   return (
@@ -42,7 +43,7 @@ export function ModalHeader(props: {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: onBack ? "center" : "flex-start",
+        justifyContent: props.leftAligned ? "flex-start" : "center",
         position: "relative",
       }}
     >

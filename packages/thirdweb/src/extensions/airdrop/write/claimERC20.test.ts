@@ -11,7 +11,7 @@ import {
   type ThirdwebContract,
   getContract,
 } from "../../../contract/contract.js";
-import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getBalance } from "../../erc20/read/getBalance.js";
 import { approve } from "../../erc20/write/approve.js";
 import { mintTo } from "../../erc20/write/mintTo.js";
@@ -61,17 +61,17 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       to: TEST_ACCOUNT_A.address,
       amount: 1000,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: mintTx,
       account: TEST_ACCOUNT_A,
     });
 
-    const approvalTx = await approve({
+    const approvalTx = approve({
       contract: erc20TokenContract,
       spender: airdropContract.address,
       amount: 1000,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: approvalTx,
       account: TEST_ACCOUNT_A,
     });
@@ -94,7 +94,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       snapshotUri,
       contract: airdropContract,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: saveSnapshotTransaction,
       account: TEST_ACCOUNT_A,
     });
@@ -105,7 +105,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       resetClaimStatus: true,
       contract: airdropContract,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: setMerkleRootTransaction,
       account: TEST_ACCOUNT_A,
     });
@@ -115,7 +115,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
       recipient: TEST_ACCOUNT_B.address,
       contract: airdropContract,
     });
-    const { transactionHash } = await sendTransaction({
+    const { transactionHash } = await sendAndConfirmTransaction({
       transaction: claimTransaction,
       account: TEST_ACCOUNT_A,
     });

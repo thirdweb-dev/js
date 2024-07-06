@@ -20,9 +20,15 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/", "integrations/"],
+  "files": [
+    "dist/",
+    "integrations/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "integrations/**"],
+    "entrypoints": [
+      "index.ts",
+      "integrations/**"
+    ],
     "exports": true
   },
   "sideEffects": false,

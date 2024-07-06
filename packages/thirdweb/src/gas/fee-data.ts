@@ -26,6 +26,11 @@ type FeeDataParams =
       maxPriorityFeePerGas?: never;
     };
 
+// for these chains - always force pre eip1559 transactions
+const FORCE_GAS_PRICE_CHAIN_IDS = [
+  78600, // vanguard
+];
+
 /**
  *
  * @internal
@@ -98,12 +103,15 @@ export async function getDefaultGasOverrides(
   client: ThirdwebClient,
   chain: Chain,
 ) {
-  const feeData = await getDynamicFeeData(client, chain);
-  if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
-    return {
-      maxFeePerGas: feeData.maxFeePerGas,
-      maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
-    };
+  // if chain is in the force gas price list, always use gas price
+  if (!FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)) {
+    const feeData = await getDynamicFeeData(client, chain);
+    if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+      return {
+        maxFeePerGas: feeData.maxFeePerGas,
+        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
+      };
+    }
   }
   return {
     gasPrice: await getGasPrice({ client, chain, percentMultiplier: 10 }),

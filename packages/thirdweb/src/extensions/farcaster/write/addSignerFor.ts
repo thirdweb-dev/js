@@ -56,12 +56,16 @@ export type AddSignerForParams = Prettify<
  * @example
  * ```ts
  * import { addSignerFor } from "thirdweb/extensions/farcaster";
- * const tx = await addSignerFor({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = addSignerFor({
  *  client,
  * 	appAccount,
  * 	userAccount,
  *  signerPublicKey
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function addSignerFor(options: AddSignerForParams) {

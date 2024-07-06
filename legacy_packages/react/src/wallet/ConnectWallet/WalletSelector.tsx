@@ -511,7 +511,7 @@ export function WalletEntryButton(props: {
   const { screen } = useScreenContext();
 
   return (
-    <WalletButton
+    <WalletButtonEl
       type="button"
       onClick={() => {
         selectWallet();
@@ -538,7 +538,7 @@ export function WalletEntryButton(props: {
             <Text size="sm">{locale.installed}</Text>
           )}
       </Container>
-    </WalletButton>
+    </WalletButtonEl>
   );
 }
 
@@ -559,7 +559,8 @@ const WalletList = /* @__PURE__ */ StyledUl({
   paddingBottom: spacing.lg,
 });
 
-const WalletButton = /* @__PURE__ */ StyledButton((_) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

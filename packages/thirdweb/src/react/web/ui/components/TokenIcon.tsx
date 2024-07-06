@@ -4,8 +4,8 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { iconSize } from "../../../core/design-system/index.js";
-import { useChainQuery } from "../../../core/hooks/others/useChainQuery.js";
-import { genericTokenIcon } from "../ConnectWallet/icons/dataUris.js";
+import { useChainIconUrl } from "../../../core/hooks/others/useChainQuery.js";
+import { genericTokenIcon } from "../../../core/utils/socialIcons.js";
 import {
   type NativeToken,
   isNativeToken,
@@ -28,17 +28,17 @@ export function TokenIcon(props: {
   size: keyof typeof iconSize;
   client: ThirdwebClient;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const chainIconQuery = useChainIconUrl(props.chain);
 
   const tokenImage = useMemo(() => {
     if (
       isNativeToken(props.token) ||
       props.token.address === NATIVE_TOKEN_ADDRESS
     ) {
-      return chainQuery.data?.icon?.url;
+      return chainIconQuery.url;
     }
     return props.token.icon;
-  }, [props.token, chainQuery.data]);
+  }, [props.token, chainIconQuery.url]);
 
   return (
     <Img

@@ -5,10 +5,8 @@ export type {
 } from "../react/core/design-system/index.js";
 
 export { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
-export {
-  ConnectEmbed,
-  type ConnectEmbedProps,
-} from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
+export { ConnectEmbed } from "../react/web/ui/ConnectWallet/Modal/ConnectEmbed.js";
+export { type ConnectEmbedProps } from "../react/core/hooks/connection/ConnectEmbedProps.js";
 
 export type {
   ConnectButtonProps,
@@ -16,7 +14,7 @@ export type {
   ConnectButton_connectModalOptions,
   ConnectButton_detailsButtonOptions,
   ConnectButton_detailsModalOptions,
-} from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
+} from "../react/core/hooks/connection/ConnectButtonProps.js";
 export type { NetworkSelectorProps } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
 export type { WelcomeScreen } from "../react/web/ui/ConnectWallet/screens/types.js";
 export type { LocaleId } from "../react/web/ui/types.js";
@@ -30,8 +28,8 @@ export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 export type {
   SupportedTokens,
   TokenInfo,
-} from "../react/web/ui/ConnectWallet/defaultTokens.js";
-export { defaultTokens } from "../react/web/ui/ConnectWallet/defaultTokens.js";
+} from "../react/core/utils/defaultTokens.js";
+export { defaultTokens } from "../react/core/utils/defaultTokens.js";
 
 // Media Renderer
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
@@ -123,7 +121,7 @@ export {
   type PayEmbedProps,
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
-export type { PayUIOptions } from "../react/web/ui/ConnectWallet/ConnectButtonProps.js";
+export type { PayUIOptions } from "../react/core/hooks/connection/ConnectButtonProps.js";
 
 export {
   useConnectModal,
@@ -131,12 +129,14 @@ export {
 } from "../react/web/ui/ConnectWallet/useConnectModal.js";
 
 // wallet info
-export {
-  useWalletInfo,
-  useWalletImage,
-} from "../react/web/ui/hooks/useWalletInfo.js";
+export { useWalletInfo, useWalletImage } from "../react/core/utils/wallet.js";
 
 export {
   useWalletDetailsModal,
   type UseWalletDetailsModalOptions,
 } from "../react/web/ui/ConnectWallet/Details.js";
+
+export {
+  useNetworkSwitcherModal,
+  type UseNetworkSwitcherModalOptions,
+} from "../react/web/ui/ConnectWallet/NetworkSelector.js";

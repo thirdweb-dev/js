@@ -11,14 +11,17 @@ import {
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button, ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
+import type { PayerInfo } from "../types.js";
 import {
   BuyTxHistoryButton,
   BuyTxHistoryButtonHeight,
@@ -40,6 +43,18 @@ export function BuyTxHistory(props: {
   isEmbed: boolean;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
+  const activeChain = useActiveWalletChain();
+  const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
+
+  const payer: PayerInfo | undefined =
+    activeChain && activeAccount && activeWallet
+      ? { chain: activeChain, account: activeAccount, wallet: activeWallet }
+      : undefined;
+
+  if (!payer) {
+    return <LoadingScreen />;
+  }
 
   if (selectedTx) {
     return (
@@ -50,6 +65,7 @@ export function BuyTxHistory(props: {
         onDone={props.onDone}
         isBuyForTx={props.isBuyForTx}
         isEmbed={props.isEmbed}
+        payer={payer}
       />
     );
   }
@@ -76,7 +92,7 @@ export function BuyTxHistoryList(props: {
   } = useBuyTransactionsToShow(props.client);
 
   const activeChain = useActiveWalletChain();
-  const chainQuery = useChainQuery(activeChain);
+  const chainExplorers = useChainExplorers(activeChain);
   const activeAccount = useActiveAccount();
 
   const noTransactions = txInfosToShow.length === 0;
@@ -207,7 +223,7 @@ export function BuyTxHistoryList(props: {
         <ButtonLink
           fullWidth
           variant="outline"
-          href={`${chainQuery.data?.explorers?.[0]?.url}/address/${activeAccount?.address}`}
+          href={`${chainExplorers.explorers[0]?.url}/address/${activeAccount?.address}`}
           target="_blank"
           as="a"
           gap="xs"

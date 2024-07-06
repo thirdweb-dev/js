@@ -23,11 +23,17 @@
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts"],
+    "entrypoints": [
+      "index.ts"
+    ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "sideEffects": false,

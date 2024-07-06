@@ -14,8 +14,6 @@ import {
   signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import type { TransactionReceipt } from "../../transaction/types.js";
-import type { Hex } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
   Account,
@@ -30,7 +28,6 @@ import type {
 import {
   broadcastZkTransaction,
   bundleUserOp,
-  getUserOpReceipt,
   getZkPaymasterData,
 } from "./lib/bundler.js";
 import {
@@ -39,7 +36,11 @@ import {
   prepareExecute,
 } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
-import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
+import {
+  createUnsignedUserOp,
+  signUserOp,
+  waitForUserOpReceipt,
+} from "./lib/userop.js";
 import { isNativeAAChain } from "./lib/utils.js";
 import type {
   SmartAccountOptions,
@@ -202,9 +203,6 @@ async function createSmartAccount(
       ]);
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
         await _deployAccount({
           options,
           account,
@@ -472,7 +470,7 @@ async function _sendUserOp(args: {
 }): Promise<WaitForReceiptOptions> {
   const { executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({
-    executeTx,
+    transaction: executeTx,
     options,
   });
   const signedUserOp = await signUserOp({
@@ -485,7 +483,7 @@ async function _sendUserOp(args: {
   });
   // wait for tx receipt rather than return the userOp hash
   const receipt = await waitForUserOpReceipt({
-    options,
+    ...options,
     userOpHash,
   });
 
@@ -494,22 +492,4 @@ async function _sendUserOp(args: {
     chain: options.chain,
     transactionHash: receipt.transactionHash,
   };
-}
-
-async function waitForUserOpReceipt(args: {
-  options: SmartAccountOptions;
-  userOpHash: Hex;
-}): Promise<TransactionReceipt> {
-  const { options, userOpHash } = args;
-  const timeout = 120000; // 2mins
-  const interval = 1000;
-  const endtime = Date.now() + timeout;
-  while (Date.now() < endtime) {
-    const userOpReceipt = await getUserOpReceipt({ options, userOpHash });
-    if (userOpReceipt) {
-      return userOpReceipt;
-    }
-    await new Promise((resolve) => setTimeout(resolve, interval));
-  }
-  throw new Error("Timeout waiting for userOp to be mined");
 }

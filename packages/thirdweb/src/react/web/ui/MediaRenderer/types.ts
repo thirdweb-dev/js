@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 
 /**
@@ -87,8 +86,6 @@ export type MediaRendererProps = {
    * The default value is `false`.
    */
   requireInteraction?: boolean;
-
-  children?: ReactNode;
 
   /**
    * Provide the [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) of the media if it is known

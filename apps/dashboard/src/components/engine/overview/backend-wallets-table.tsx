@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { shortenString, useChain } from "@thirdweb-dev/react";
+import { shortenString } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { utils } from "ethers";
@@ -45,6 +45,7 @@ import {
   Text,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { useActiveChainAsDashboardChain } from "../../../lib/v5-adapter";
 import { prettyPrintCurrency } from "../utils";
 
 interface BackendWalletsTableProps {
@@ -126,7 +127,7 @@ const BackendWalletBalanceCell: React.FC<BackendWalletBalanceCellProps> = ({
     instanceUrl,
     address,
   );
-  const chain = useChain();
+  const chain = useActiveChainAsDashboardChain();
   if (!chain || !backendWalletBalance) {
     return;
   }
@@ -395,7 +396,7 @@ const SendFundsModal = ({
   disclosure: UseDisclosureReturn;
   instanceUrl: string;
 }) => {
-  const chain = useChain();
+  const chain = useActiveChainAsDashboardChain();
   const form = useForm<SendFundsInput>();
   const { mutate: sendTokens } = useEngineSendTokens(instanceUrl);
   const { data: backendWalletBalance } = useEngineBackendWalletBalance(

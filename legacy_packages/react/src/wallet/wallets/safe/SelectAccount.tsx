@@ -369,6 +369,7 @@ export const SelectAccount: React.FC<{
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NetworkSelect = /* @__PURE__ */ StyledSelect((_) => {
   const theme = useCustomTheme();
   return {

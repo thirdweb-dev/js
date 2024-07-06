@@ -1,7 +1,7 @@
 import { keyframes } from "@emotion/react";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { spacing } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container } from "../../components/basic.js";
@@ -11,14 +11,23 @@ import { StyledDiv } from "../../design-system/elements.js";
 import { TOS } from "../Modal/TOS.js";
 import { PoweredByThirdweb } from "../PoweredByTW.js";
 import { GlobeIcon } from "../icons/GlobalIcon.js";
+import type { ConnectLocale } from "../locale/types.js";
+import type { WelcomeScreen } from "./types.js";
 
 /**
  * @internal
  */
-export function StartScreen() {
-  const { connectLocale: locale, connectModal, client } = useConnectUI();
-
-  const WelcomeScreen = connectModal.welcomeScreen;
+export function StartScreen(props: {
+  connectLocale: ConnectLocale;
+  client: ThirdwebClient;
+  welcomeScreen: WelcomeScreen | undefined;
+  meta: {
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+}) {
+  const WelcomeScreen = props.welcomeScreen;
   if (WelcomeScreen) {
     if (typeof WelcomeScreen === "function") {
       return <WelcomeScreen />;
@@ -27,17 +36,16 @@ export function StartScreen() {
 
   const title =
     (typeof WelcomeScreen === "object" ? WelcomeScreen?.title : undefined) ||
-    locale.welcomeScreen.defaultTitle;
+    props.connectLocale.welcomeScreen.defaultTitle;
 
   const subtitle =
     (typeof WelcomeScreen === "object" ? WelcomeScreen?.subtitle : undefined) ||
-    locale.welcomeScreen.defaultSubtitle;
+    props.connectLocale.welcomeScreen.defaultSubtitle;
 
   const img =
     typeof WelcomeScreen === "object" ? WelcomeScreen?.img : undefined;
 
-  const showTOS =
-    connectModal.termsOfServiceUrl || connectModal.privacyPolicyUrl;
+  const showTOS = props.meta.termsOfServiceUrl || props.meta.privacyPolicyUrl;
 
   return (
     <Container fullHeight animate="fadein" flex="column">
@@ -56,7 +64,7 @@ export function StartScreen() {
               src={img.src}
               width={img.width ? String(img.width) : undefined}
               height={img.height ? String(img.height) : undefined}
-              client={client}
+              client={props.client}
             />
           ) : (
             <GlobalContainer>
@@ -90,7 +98,7 @@ export function StartScreen() {
           center
           href="https://blog.thirdweb.com/web3-wallet/"
         >
-          {locale.newToWallets}
+          {props.connectLocale.newToWallets}
         </Link>
       </Container>
 
@@ -98,12 +106,13 @@ export function StartScreen() {
         <div>
           {showTOS && (
             <TOS
-              termsOfServiceUrl={connectModal.termsOfServiceUrl}
-              privacyPolicyUrl={connectModal.privacyPolicyUrl}
+              termsOfServiceUrl={props.meta.termsOfServiceUrl}
+              privacyPolicyUrl={props.meta.privacyPolicyUrl}
+              locale={props.connectLocale.agreement}
             />
           )}
 
-          {connectModal.showThirdwebBranding !== false && (
+          {props.meta.showThirdwebBranding !== false && (
             <Container
               style={{
                 paddingTop: spacing.xl,

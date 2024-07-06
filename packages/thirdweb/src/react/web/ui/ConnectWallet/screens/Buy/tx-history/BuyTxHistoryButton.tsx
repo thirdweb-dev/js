@@ -6,10 +6,10 @@ import { useCustomTheme } from "../../../../../../core/design-system/CustomTheme
 import { spacing } from "../../../../../../core/design-system/index.js";
 import { ChainName } from "../../../../components/ChainName.js";
 import { Spacer } from "../../../../components/Spacer.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 import {
   getBuyWithCryptoStatusMeta,
   getBuyWithFiatStatusMeta,
@@ -45,7 +45,7 @@ export function BuyTxHistoryButton(props: {
           flex: 1,
         }}
       >
-        <TokenIcon
+        <PayTokenIcon
           client={props.client}
           chain={getCachedChain(props.txInfo.status.quote.toToken.chainId)}
           size="md"

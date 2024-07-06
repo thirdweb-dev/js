@@ -55,9 +55,6 @@ export enum PageId {
   // thirdweb.com/interact
   InteractLanding = "interact-landing",
 
-  // thirdweb.com/checkout
-  CheckoutLanding = "checkout-landing",
-
   // thirdweb.com/sponsored-transactions
   SponsoredTransactionsLanding = "sponsored-transactions-landing",
 

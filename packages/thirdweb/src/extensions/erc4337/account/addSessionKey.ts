@@ -26,6 +26,7 @@ export type AddSessionKeyOptions = {
  * @example
  * ```ts
  * import { addSessionKey } from 'thirdweb/extensions/erc4337';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = addSessionKey({
  * contract,
@@ -38,6 +39,7 @@ export type AddSessionKeyOptions = {
  *  permissionEndTimestamp: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year from now
  * }
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC4337

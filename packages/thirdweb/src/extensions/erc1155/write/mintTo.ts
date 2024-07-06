@@ -1,13 +1,16 @@
 import { maxUint256 } from "viem";
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../transaction/types.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC1155/write/mintTo.js";
 
-export type MintToParams = {
+export type MintToParams = WithOverrides<{
   to: string;
   nft: NFTInput | string;
   supply: bigint;
-};
+}>;
 
 /**
  * Mints a "supply" number of new ERC1155 tokens to the specified "to" address.
@@ -19,6 +22,8 @@ export type MintToParams = {
  * @example
  * ```ts
  * import { mintTo } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
+ *
  * const transaction = mintTo({
  *  contract,
  *  to: "0x...",
@@ -30,8 +35,7 @@ export type MintToParams = {
  *  },
  * });
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mintTo(options: BaseTransactionOptions<MintToParams>) {
@@ -59,6 +63,7 @@ export function mintTo(options: BaseTransactionOptions<MintToParams>) {
         tokenId: maxUint256,
         uri: tokenUri,
         amount: options.supply,
+        overrides: options.overrides,
       };
     },
   });

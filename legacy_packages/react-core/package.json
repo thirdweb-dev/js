@@ -27,11 +27,19 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist/", "evm/"],
+  "files": [
+    "dist/",
+    "evm/"
+  ],
   "preconstruct": {
-    "entrypoints": ["index.ts", "evm/index.ts"],
+    "entrypoints": [
+      "index.ts",
+      "evm/index.ts"
+    ],
     "exports": {
-      "envConditions": ["browser"]
+      "envConditions": [
+        "browser"
+      ]
     }
   },
   "private": false,
@@ -51,7 +59,7 @@
   "devDependencies": {
     "@babel/preset-react": "^7.24.7",
     "@babel/runtime": "^7.24.5",
-    "@microsoft/api-documenter": "^7.25.3",
+    "@microsoft/api-documenter": "^7.25.4",
     "@microsoft/api-extractor": "^7.47.0",
     "@microsoft/tsdoc": "^0.15.0",
     "@preconstruct/cli": "2.7.0",
