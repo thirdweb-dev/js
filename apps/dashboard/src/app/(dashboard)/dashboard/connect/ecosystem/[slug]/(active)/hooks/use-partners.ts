@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Ecosystem, Partner } from "../../../types";
 
 export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
-  const { isLoggedIn, user } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   const partnersQuery = useQuery({
     queryKey: ["ecosystem", ecosystem.id, "partners"],
@@ -24,12 +24,12 @@ export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
 
       return (await res.json()) as Partner[];
     },
-    enabled: isLoggedIn && !!user?.jwt,
+    enabled: !!user?.jwt,
     retry: false,
   });
 
   return {
-    isLoading: isLoggedIn ? partnersQuery.isLoading : false,
+    isLoading: user?.jwt ? partnersQuery.isLoading : false,
     partners: (partnersQuery.data ?? []) satisfies Partner[],
   };
 }

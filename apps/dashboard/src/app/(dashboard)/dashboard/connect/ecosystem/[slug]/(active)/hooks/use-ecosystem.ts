@@ -8,7 +8,13 @@ export function useEcosystem({
   slug,
   refetchInterval,
   refetchOnWindowFocus,
-}: { slug: string; refetchInterval?: number; refetchOnWindowFocus?: boolean }) {
+  initialData,
+}: {
+  slug: string;
+  refetchInterval?: number;
+  refetchOnWindowFocus?: boolean;
+  initialData?: Ecosystem;
+}) {
   const { isLoggedIn } = useLoggedInUser();
 
   const ecosystemQuery = useQuery({
@@ -34,6 +40,7 @@ export function useEcosystem({
     retry: false,
     refetchInterval,
     refetchOnWindowFocus,
+    initialData,
   });
 
   return {
