@@ -55,12 +55,12 @@ export type SmartAccountOptions = Prettify<
   }
 >;
 
-export type BundlerOptions = Prettify<
-  Omit<SmartWalletOptions, "chain" | "gasless" | "sponsorGas"> & {
-    chain: Chain;
-    client: ThirdwebClient;
-  }
->;
+export type BundlerOptions = {
+  bundlerUrl?: string;
+  entrypointAddress?: string;
+  chain: Chain;
+  client: ThirdwebClient;
+};
 
 export type SmartWalletConnectionOptions = {
   personalAccount: Account;
