@@ -13,6 +13,7 @@ import {
 } from "react";
 import type React from "react";
 import type { Chain } from "../../../../chains/types.js";
+import { convertApiChainToChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import {
   CustomThemeProvider,
@@ -29,6 +30,7 @@ import {
 import {
   useChainIconUrl,
   useChainName,
+  useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
@@ -265,9 +267,25 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
     othersLabel,
   ]);
 
+  // optimizing for dashboard - if we already have names - don't query - we already have the data we want
+  const chainsHaveName = allChains.every((c) => !!c.name);
+
+  const allChainsQuery = useChainsQuery(chainsHaveName ? [] : allChains, 10);
+  const isAllChainsQueryLoading = chainsHaveName
+    ? false
+    : allChainsQuery.some((q) => q.isLoading);
+
+  const allChainsMetadata: Chain[] = chainsHaveName
+    ? allChains
+    : !isAllChainsQueryLoading
+      ? allChainsQuery
+          .filter((x) => !!x.data)
+          .map((q) => convertApiChainToChain(q.data))
+      : [];
+
   // fuse instance for searching
   const fuse = useMemo(() => {
-    return new Fuse(allChains, {
+    return new Fuse(allChainsMetadata, {
       threshold: 0.4,
       keys: [
         {
@@ -280,7 +298,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
         },
       ],
     });
-  }, [allChains]);
+  }, [allChainsMetadata]);
 
   // chains filtered by search term
   const searchedChainSections =
@@ -402,14 +420,19 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
             }}
             tabIndex={-1}
             variant="outline"
-            placeholder={locale.inputPlaceholder}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
             }}
+            disabled={isAllChainsQueryLoading}
+            placeholder={
+              isAllChainsQueryLoading
+                ? "Loading chains..."
+                : locale.inputPlaceholder
+            }
           />
           {/* Searching Spinner */}
-          {deferredSearchTerm !== searchTerm && (
+          {(deferredSearchTerm !== searchTerm || isAllChainsQueryLoading) && (
             <div
               style={{
                 position: "absolute",
