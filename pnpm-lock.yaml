@@ -1435,8 +1435,8 @@ importers:
         specifier: workspace:*
         version: link:../wallets
       mime:
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 4.0.4
+        version: 4.0.4
       tiny-invariant:
         specifier: ^1.3.3
         version: 1.3.3
@@ -1466,8 +1466,8 @@ importers:
         specifier: ^3.0.6
         version: 3.0.6
       '@types/mime':
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 4.0.0
+        version: 4.0.0
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -8436,8 +8436,9 @@ packages:
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
 
-  '@types/mime@3.0.0':
-    resolution: {integrity: sha512-fccbsHKqFDXClBZTDLA43zl0+TbxyIwyzIzwwhvoJvhNjOErCdeX2xJbURimv2EbSVUGav001PaCJg4mZxMl4w==}
+  '@types/mime@4.0.0':
+    resolution: {integrity: sha512-5eEkJZ/BLvTE3vXGKkWlyTSUVZuzj23Wj8PoyOq2lt5I3CYbiLBOPb3XmCW6QcuOibIUE6emHXHt9E/F/rCa6w==}
+    deprecated: This is a stub types definition. mime provides its own type definitions, so you do not need this installed.
 
   '@types/minimist@1.2.5':
     resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
@@ -13782,6 +13783,11 @@ packages:
   mime@3.0.0:
     resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
     engines: {node: '>=10.0.0'}
+    hasBin: true
+
+  mime@4.0.4:
+    resolution: {integrity: sha512-v8yqInVjhXyqP6+Kw4fV3ZzeMRqEW6FotRsKXjRS5VMTNIuXsdRoAvklpoRgSqXm6o9VNH4/C0mgedko9DdLsQ==}
+    engines: {node: '>=16'}
     hasBin: true
 
   mimic-fn@1.2.0:
@@ -28695,7 +28701,9 @@ snapshots:
 
   '@types/mime@1.3.5': {}
 
-  '@types/mime@3.0.0': {}
+  '@types/mime@4.0.0':
+    dependencies:
+      mime: 4.0.4
 
   '@types/minimist@1.2.5': {}
 
@@ -36114,6 +36122,8 @@ snapshots:
   mime@2.6.0: {}
 
   mime@3.0.0: {}
+
+  mime@4.0.4: {}
 
   mimic-fn@1.2.0: {}
 
