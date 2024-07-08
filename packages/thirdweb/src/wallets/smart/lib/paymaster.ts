@@ -1,10 +1,8 @@
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import { hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
-import type {
-  PaymasterResult,
-  SmartAccountOptions,
-  UserOperation,
-} from "../types.js";
+import type { PaymasterResult, UserOperation } from "../types.js";
 import {
   DEBUG,
   ENTRYPOINT_ADDRESS_v0_6,
@@ -18,22 +16,23 @@ import { hexlifyUserOp } from "./utils.js";
  */
 export async function getPaymasterAndData(args: {
   userOp: UserOperation;
-  options: SmartAccountOptions;
+  client: ThirdwebClient;
+  chain: Chain;
+  entrypointAddress?: string;
+  paymasterOverride?: (userOp: UserOperation) => Promise<PaymasterResult>;
 }): Promise<PaymasterResult> {
-  const { userOp, options } = args;
+  const { userOp, paymasterOverride, client, chain, entrypointAddress } = args;
 
-  if (options.overrides?.paymaster) {
-    return options.overrides?.paymaster(userOp);
+  if (paymasterOverride) {
+    return paymasterOverride(userOp);
   }
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
-  const client = options.client;
-  const paymasterUrl = getDefaultPaymasterUrl(options.chain);
-  const entrypoint =
-    options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6;
+  const paymasterUrl = getDefaultPaymasterUrl(chain);
+  const entrypoint = entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6;
 
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);
