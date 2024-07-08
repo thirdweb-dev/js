@@ -1,16 +1,8 @@
 import { concat, maxUint256 } from "viem";
-import { baseSepolia } from "../../../chains/chain-definitions/base-sepolia.js";
-import { ZERO_ADDRESS } from "../../../constants/addresses.js";
-import {
-  type ThirdwebContract,
-  getContract,
-} from "../../../contract/contract.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
 import { encode } from "../../../transaction/actions/encode.js";
-import { simulateTransaction } from "../../../transaction/actions/simulate.js";
-import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
-import { resolveMethod } from "../../../transaction/resolve-method.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
@@ -30,11 +22,7 @@ import {
   getUserOpReceipt,
 } from "./bundler.js";
 import { prepareCreateAccount } from "./calls.js";
-import {
-  DUMMY_SIGNATURE,
-  ENTRYPOINT_ADDRESS_v0_6,
-  getDefaultBundlerUrl,
-} from "./constants.js";
+import { ENTRYPOINT_ADDRESS_v0_6, getDefaultBundlerUrl } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
 import { randomNonce } from "./utils.js";
 
