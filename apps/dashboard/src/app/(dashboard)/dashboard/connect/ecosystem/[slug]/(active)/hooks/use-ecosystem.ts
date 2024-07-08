@@ -16,7 +16,6 @@ export function useEcosystem({
     queryFn: async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/ecosystem-wallet/${slug}`,
-        { credentials: "include" },
       );
 
       if (!res.ok) {

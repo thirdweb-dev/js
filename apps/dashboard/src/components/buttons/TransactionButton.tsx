@@ -1,4 +1,3 @@
-import type { ConnectWalletProps } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Center,
   DarkMode,
@@ -33,8 +32,7 @@ import {
 import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 import { MismatchButton } from "./MismatchButton";
 
-interface TransactionButtonProps
-  extends Omit<ConnectWalletProps & ButtonProps, "leftIcon"> {
+interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
   transactionCount: number;
   isLoading: boolean;
   isGasless?: boolean;
@@ -59,7 +57,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   colorScheme,
   variant,
   isGasless,
-  upsellTestnet,
   onChainSelect,
   ...restButtonProps
 }) => {
@@ -101,7 +98,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     >
       <PopoverTrigger>
         <ButtonComponent
-          upsellTestnet={upsellTestnet}
           onChainSelect={onChainSelect}
           borderRadius="md"
           position="relative"

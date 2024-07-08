@@ -1,6 +1,5 @@
 import "server-only";
 
-import { THIRDWEB_API_HOST } from "constants/urls";
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/components/server/cta-card";
 import baseBanner from "./temp-assets/base-banner.jpeg";
@@ -10,6 +9,9 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
 // END TEMPORARY
+
+const THIRDWEB_API_HOST =
+  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export async function getChains() {
   const response = await fetch(

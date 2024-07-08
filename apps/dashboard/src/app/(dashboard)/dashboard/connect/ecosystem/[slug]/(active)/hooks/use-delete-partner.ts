@@ -18,13 +18,13 @@ export function useDeletePartner(
   >,
 ) {
   const { onSuccess, ...queryOptions } = options || {};
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   const { mutateAsync: deletePartner, isLoading } = useMutation({
     // Returns true on success
     mutationFn: async (params: DeletePartnerParams): Promise<boolean> => {
-      if (!isLoggedIn) {
+      if (!isLoggedIn || !user?.jwt) {
         throw new Error("Please login to delete this partner");
       }
 
@@ -34,7 +34,9 @@ export function useDeletePartner(
         `${params.ecosystem.url}/${params.ecosystem.id}/partner/${params.partnerId}`,
         {
           method: "DELETE",
-          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${user.jwt}`,
+          },
         },
       );
 

@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useEmbeddedWallets } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
@@ -6,7 +7,6 @@ import { AppLayout } from "components/app-layouts/app";
 import { EmbeddedWallets } from "components/embedded-wallets";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
@@ -22,7 +22,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultTabIndex = Number.parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
   const keysQuery = useApiKeys();
 
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
@@ -55,8 +55,12 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
 
   const wallets = walletsQuery?.data || [];
 
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="manage in-app wallets" />;
+  if (isLoading) {
+    return (
+      <div className="grid w-full place-items-center">
+        <Spinner className="size-14" />
+      </div>
+    );
   }
 
   return (

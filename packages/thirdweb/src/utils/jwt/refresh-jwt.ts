@@ -1,5 +1,5 @@
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { deccodeJWT } from "./decode-jwt.js";
+import { decodeJWT } from "./decode-jwt.js";
 import { encodeJWT } from "./encode-jwt.js";
 
 const DEFAULT_EXPIRATION_TIME = 60 * 60 * 24;
@@ -27,7 +27,7 @@ export type RefreshJWTParams = {
  */
 export async function refreshJWT(options: RefreshJWTParams): Promise<string> {
   const { account, jwt, expirationTime = DEFAULT_EXPIRATION_TIME } = options;
-  const payload = deccodeJWT(jwt).payload;
+  const payload = decodeJWT(jwt).payload;
   return encodeJWT({
     payload: {
       iss: payload.iss,

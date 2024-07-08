@@ -15,7 +15,7 @@ import type { JWTPayload } from "./types.js";
  * const { payload, signature } = decodeJWT(jwt);
  * ```
  */
-export function deccodeJWT(jwt: string) {
+export function decodeJWT(jwt: string) {
   const [encodedHeader, encodedPayload, encodedSignature] = jwt.split(".");
 
   if (encodedHeader !== PRECOMPILED_B64_ENCODED_JWT_HEADER) {

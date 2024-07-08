@@ -107,7 +107,6 @@ export function useCreateTicket() {
         `${THIRDWEB_API_HOST}/v1/account/create-unthread-ticket`,
         {
           method: "POST",
-          credentials: "include",
           body: formData,
         },
       );

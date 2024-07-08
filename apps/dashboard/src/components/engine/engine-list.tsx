@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type EngineInstance,
   useEngineInstances,
@@ -29,6 +30,13 @@ export const EngineInstancesList = ({
   const instancesQuery = useEngineInstances();
   const instances = instancesQuery.data ?? [];
 
+  if (instancesQuery.isLoading) {
+    return (
+      <div className="grid place-items-center">
+        <Spinner className="size-14" />
+      </div>
+    );
+  }
   return (
     <Stack spacing={8}>
       {instances.length === 0 ? (
@@ -68,27 +76,18 @@ export const EngineInstancesList = ({
         </Center>
       ) : (
         <>
-          <Stack>
-            <Heading size="title.lg" as="h1">
-              Engine
-            </Heading>
-          </Stack>
+          <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
+            <h1 className="text-4xl font-bold">Engine</h1>
+            <div className="flex flex-row gap-2">
+              <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
+              <CreateEngineInstanceButton
+                ctaText="Create Engine Instance"
+                refetch={instancesQuery.refetch}
+              />
+            </div>
+          </div>
 
           <Stack spacing={4}>
-            <Flex
-              direction={{ base: "column", md: "row" }}
-              gap={3}
-              justify="flex-end"
-            >
-              <Flex direction={{ base: "column-reverse", md: "row" }} gap={3}>
-                <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
-                <CreateEngineInstanceButton
-                  ctaText="Create Engine Instance"
-                  refetch={instancesQuery.refetch}
-                />
-              </Flex>
-            </Flex>
-
             <EngineInstancesTable
               instances={instancesQuery.data ?? ([] as EngineInstance[])}
               isFetched={instancesQuery.isFetched}

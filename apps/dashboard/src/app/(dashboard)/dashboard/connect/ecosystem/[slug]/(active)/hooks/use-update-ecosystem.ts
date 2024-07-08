@@ -18,7 +18,7 @@ export function useUpdateEcosystem(
   >,
 ) {
   const { onSuccess, ...queryOptions } = options || {};
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   const {
@@ -28,7 +28,7 @@ export function useUpdateEcosystem(
   } = useMutation({
     // Returns true if the update was successful
     mutationFn: async (params: UpdateEcosystemParams): Promise<boolean> => {
-      if (!isLoggedIn) {
+      if (!isLoggedIn || !user?.jwt) {
         throw new Error("Please login to update this ecosystem");
       }
 
@@ -36,8 +36,10 @@ export function useUpdateEcosystem(
         `${params.ecosystem.url}/${params.ecosystem.id}`,
         {
           method: "PATCH",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.jwt}`,
+          },
           body: JSON.stringify({
             permission: params.permission,
           }),

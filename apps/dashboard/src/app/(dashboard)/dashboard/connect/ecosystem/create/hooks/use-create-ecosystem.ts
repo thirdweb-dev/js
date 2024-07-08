@@ -40,7 +40,6 @@ export function useCreateEcosystem(
         `${THIRDWEB_API_HOST}/v1/ecosystem-wallet/add-cloud-hosted`,
         {
           method: "POST",
-          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: params.name,

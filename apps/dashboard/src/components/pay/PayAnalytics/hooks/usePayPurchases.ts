@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLoggedInUser } from "../../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { THIRDWEB_PAY_DOMAIN } from "../../../../constants/urls";
 
 export type PayPurchasesData = {
   count: number;
@@ -73,21 +72,23 @@ export function usePayPurchases(options: PayPurcaseOptions) {
 }
 
 export async function getPayPurchases(options: PayPurcaseOptions) {
-  const endpoint = new URL(`https://${THIRDWEB_PAY_DOMAIN}/stats/purchases/v1`);
-  endpoint.searchParams.append("skip", `${options.start}`);
-  endpoint.searchParams.append("take", `${options.count}`);
+  const searchParams = new URLSearchParams();
+  searchParams.append("skip", `${options.start}`);
+  searchParams.append("take", `${options.count}`);
 
-  endpoint.searchParams.append("clientId", options.clientId);
-  endpoint.searchParams.append("fromDate", `${options.from.getTime()}`);
-  endpoint.searchParams.append("toDate", `${options.to.getTime()}`);
+  searchParams.append("clientId", options.clientId);
+  searchParams.append("fromDate", `${options.from.getTime()}`);
+  searchParams.append("toDate", `${options.to.getTime()}`);
 
-  const res = await fetch(endpoint.toString(), {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(
+    `/api/server-proxy/pay/stats/purchases/v1?${searchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
 
   if (!res.ok) {
     throw new Error("Failed to fetch pay volume");

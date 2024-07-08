@@ -8,7 +8,6 @@ import { DASHBOARD_STORAGE_URL } from "lib/sdk";
 import { useCallback, useState } from "react";
 import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
 import { toSize } from "utils/number";
-import { useAccessToken } from "../../@3rdweb-sdk/react/components/connect-wallet/useAccessToken";
 
 interface PinnedFilesResponse {
   result: PinnedFilesResult;
@@ -37,7 +36,6 @@ function usePinnedFilesQuery({
   pageSize: number;
 }) {
   const user = useLoggedInUser();
-  const token = useAccessToken();
 
   const offset = page * pageSize;
 
@@ -54,7 +52,7 @@ function usePinnedFilesQuery({
       if (!user.isLoggedIn) {
         throw new Error("User is not logged in");
       }
-      if (!token) {
+      if (!user.user?.jwt) {
         throw new Error("No token");
       }
       const res = await fetch(
@@ -63,20 +61,20 @@ function usePinnedFilesQuery({
         }`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user.user.jwt}`,
           },
         },
       );
       return (await res.json()) as PinnedFilesResponse;
     },
-    enabled: user.isLoggedIn && !!user.user?.address && !!token,
+    enabled: user.isLoggedIn && !!user.user?.address && !!user.user.jwt,
     // keep the previous data when fetching new data
     keepPreviousData: true,
   });
 }
 
 function useUnpinFileMutation() {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ cid }: { cid: string }) => {

@@ -97,19 +97,7 @@ interface AppLayoutProps extends AppShellProps, DashboardThirdwebProviderProps {
 
 export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
   // has to be constructed in here because it may otherwise share state between SSR'd pages
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // 24 hours
-            cacheTime: 1000 * 60 * 60 * 24,
-            // 30 seconds
-            staleTime: 1000 * 30,
-          },
-        },
-      }),
-  );
+  const [queryClient] = useState(() => new QueryClient());
 
   // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
   // eslint-disable-next-line no-restricted-syntax
@@ -180,7 +168,7 @@ const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
       >
         <Flex gap={4} direction="column" align="center">
           <Heading as="p">Address is blocked</Heading>
-          <CustomConnectWallet noAuth />
+          <CustomConnectWallet />
         </Flex>
       </SimpleGrid>
     );

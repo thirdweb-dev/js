@@ -1,21 +1,14 @@
 import { useAuthorizedWallets } from "@3rdweb-sdk/react/hooks/useApi";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { AuthorizedWalletsTable } from "components/settings/AuthorizedWallets/AuthorizedWalletsTable";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsDevicesPage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
   const authorizedWalletsQuery = useAuthorizedWallets();
-
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="view your authorized devices" />;
-  }
 
   return (
     <Flex flexDir="column" gap={8}>

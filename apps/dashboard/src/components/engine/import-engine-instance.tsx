@@ -93,7 +93,6 @@ const ModalImportEngine = ({
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

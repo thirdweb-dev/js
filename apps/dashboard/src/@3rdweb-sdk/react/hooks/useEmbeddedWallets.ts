@@ -35,9 +35,9 @@ export function useEmbeddedWallets(clientId: string) {
         `${THIRDWEB_EWS_API_HOST}/api/thirdweb/embedded-wallet?clientId=${clientId}&lastAccessedAt=0`,
         {
           method: "GET",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.jwt}`,
           },
         },
       );

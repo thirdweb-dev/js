@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   AccountStatus,
   type ApiKey,
@@ -20,7 +21,6 @@ import { AppLayout } from "components/app-layouts/app";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { SmartWallets } from "components/smart-wallets";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { getAbsoluteUrl } from "lib/vercel-utils";
@@ -48,7 +48,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultTabIndex = Number.parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
   const meQuery = useAccount();
@@ -94,8 +94,12 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
     desc: "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
   };
 
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="manage accounts" />;
+  if (isLoading) {
+    return (
+      <div className="grid w-full place-items-center">
+        <Spinner className="size-14" />
+      </div>
+    );
   }
 
   return (
@@ -160,7 +164,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         )}
       </Flex>
 
-      {isLoggedIn && hasSmartWalletsWithoutBilling ? (
+      {hasSmartWalletsWithoutBilling ? (
         <SmartWalletsBillingAlert />
       ) : (
         <Alert

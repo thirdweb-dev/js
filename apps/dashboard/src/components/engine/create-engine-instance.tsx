@@ -57,7 +57,6 @@ export const CreateEngineInstanceButton = ({
         `${THIRDWEB_API_HOST}/v1/engine/add-cloud-hosted`,
         {
           method: "POST",
-          credentials: "include",
           headers: {
             "Content-type": "application/json",
           },

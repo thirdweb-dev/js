@@ -10,7 +10,6 @@ import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { PayConfig } from "components/pay/PayConfig";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { useEffect, useMemo, useState } from "react";
 import { TrackedLink } from "tw-components";
 
@@ -64,7 +63,7 @@ function usePayConfig() {
 }
 
 export default function DashboardConnectPayPage() {
-  const { isLoggedIn, isLoading } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
   const {
     hasApiKeys,
     hasPayApiKeys,
@@ -79,14 +78,6 @@ export default function DashboardConnectPayPage() {
     return (
       <div className="py-6 w-full grid place-items-center">
         <Spinner className="size-14" />
-      </div>
-    );
-  }
-
-  if (!isLoggedIn) {
-    return (
-      <div className="py-6 w-full grid place-items-center">
-        <ConnectWalletPrompt description="manage your Pay configuration" />
       </div>
     );
   }

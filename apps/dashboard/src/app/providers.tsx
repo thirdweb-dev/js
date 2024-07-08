@@ -1,11 +1,11 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { DashboardThirdwebProviderSetup } from "components/app-layouts/provider-setup";
+import { AllChainsProvider } from "contexts/all-chains";
+import { ChainsProvider } from "contexts/configured-chains";
 import { ThemeProvider } from "next-themes";
 import { ThirdwebProvider } from "thirdweb/react";
-import { DashboardThirdwebProviderSetup } from "../../components/app-layouts/provider-setup";
-import { AllChainsProvider } from "../../contexts/all-chains";
-import { ChainsProvider } from "../../contexts/configured-chains";
 
 const queryClient = new QueryClient();
 
