@@ -43,7 +43,7 @@ import { csvMimeTypes } from "utils/batch";
 
 export interface AirdropAddressInput {
   address: string;
-  quantity?: string;
+  quantity: string;
   isValid?: boolean;
 }
 interface AirdropUploadProps {

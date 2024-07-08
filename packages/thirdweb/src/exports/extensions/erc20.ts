@@ -34,6 +34,10 @@ export {
   type TransferFromParams,
 } from "../../extensions/erc20/write/transferFrom.js";
 export {
+  transferBatch,
+  type TransferBatchParams,
+} from "../../extensions/erc20/write/transferBatch.js";
+export {
   approve,
   type ApproveParams,
 } from "../../extensions/erc20/write/approve.js";

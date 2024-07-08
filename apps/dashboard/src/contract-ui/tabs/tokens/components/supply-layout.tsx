@@ -6,15 +6,15 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import type { CurrencyValue } from "@thirdweb-dev/sdk/evm/";
+import type { GetBalanceResult } from "thirdweb/extensions/erc20";
 import { Card } from "tw-components";
 
 interface TokenSupplyLayoutProps {
   isTokenSupplySuccess: boolean;
-  tokenSupply: CurrencyValue | undefined;
+  tokenSupply: GetBalanceResult | undefined;
   isOwnedBalanceSuccess: boolean;
   address: string | undefined;
-  ownedBalance: CurrencyValue | undefined;
+  ownedBalance: GetBalanceResult | undefined;
 }
 
 export const TokenSupplyLayout: React.FC<TokenSupplyLayoutProps> = ({

@@ -1,5 +1,6 @@
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
+import { type TokenContract, useContract } from "@thirdweb-dev/react";
+import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
 import { TokenBurnButton } from "./components/burn-button";
@@ -16,13 +17,23 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   contractAddress,
 }) => {
   const contractQuery = useContract(contractAddress);
+  const chainId = contractQuery.contract?.chainId;
 
-  if (contractQuery.isLoading) {
+  if (
+    contractQuery.isLoading ||
+    !contractQuery?.contract ||
+    !contractAddress ||
+    !chainId
+  ) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
-  if (!contractQuery?.contract) {
+  const isERC20 = detectFeatures<TokenContract>(contractQuery.contract, [
+    "ERC20",
+  ]);
+
+  if (!isERC20) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}
@@ -53,15 +64,28 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           gap={2}
           w="inherit"
         >
+          {/* TODO: update (claimable detection) */}
           <TokenClaimButton contractQuery={contractQuery} />
-          <TokenBurnButton contractQuery={contractQuery} />
-          <TokenAirdropButton contractQuery={contractQuery} />
-          <TokenTransferButton contractQuery={contractQuery} />
+          <TokenBurnButton
+            contractAddress={contractAddress}
+            chainId={chainId}
+          />
+
+          <TokenAirdropButton
+            contractAddress={contractAddress}
+            chainId={chainId}
+          />
+
+          <TokenTransferButton
+            contractAddress={contractAddress}
+            chainId={chainId}
+          />
+          {/* TODO: update (mintable detection) */}
           <TokenMintButton contractQuery={contractQuery} />
         </ButtonGroup>
       </Flex>
 
-      <TokenSupply contractQuery={contractQuery} />
+      <TokenSupply contractAddress={contractAddress} chainId={chainId} />
     </Flex>
   );
 };

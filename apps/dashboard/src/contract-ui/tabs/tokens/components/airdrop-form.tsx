@@ -7,13 +7,6 @@ import {
   useDisclosure,
   useModalContext,
 } from "@chakra-ui/react";
-import {
-  type TokenContract,
-  type TokenParams,
-  type WalletAddress,
-  useTransferBatchToken,
-} from "@thirdweb-dev/react";
-import type { Amount } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   type AirdropAddressInput,
@@ -24,11 +17,13 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
-import { useActiveAccount } from "thirdweb/react";
+import type { ThirdwebContract } from "thirdweb";
+import { transferBatch } from "thirdweb/extensions/erc20";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Heading, Text } from "tw-components";
 
 interface TokenAirdropFormProps {
-  contract: TokenContract;
+  contract: ThirdwebContract;
 }
 
 export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
@@ -45,7 +40,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const airdrop = useTransferBatchToken(contract);
+  const sendTransaction = useSendAndConfirmTransaction();
 
   const { onSuccess, onError } = useTxNotifications(
     "Airdrop successful",
@@ -68,23 +63,27 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 category: "token",
                 action: "airdrop",
                 label: "attempt",
-                contractAddress: contract?.getAddress(),
+                contractAddress: contract.address,
               });
-              const params: TokenParams[] = data.addresses.map(
-                (paramsData) => ({
-                  to: paramsData.address as WalletAddress,
-                  amount: paramsData.quantity as Amount,
-                }),
-              );
 
-              airdrop.mutate(params, {
+              const tx = transferBatch({
+                contract,
+                batch: data.addresses
+                  .filter((address) => address.quantity !== undefined)
+                  .map((address) => ({
+                    to: address.address,
+                    amount: address.quantity,
+                  })),
+              });
+
+              sendTransaction.mutate(tx, {
                 onSuccess: () => {
                   onSuccess();
                   trackEvent({
                     category: "token",
                     action: "airdrop",
                     label: "success",
-                    contract_address: contract?.getAddress(),
+                    contract_address: contract.address,
                   });
                   modalContext.onClose();
                 },
@@ -93,7 +92,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                     category: "token",
                     action: "airdrop",
                     label: "success",
-                    contract_address: contract?.getAddress(),
+                    contract_address: contract.address,
                     error,
                   });
                   onError(error);
@@ -150,7 +149,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
               </Text>
               <TransactionButton
                 transactionCount={1}
-                isLoading={airdrop.isLoading}
+                isLoading={sendTransaction.isPending}
                 type="submit"
                 colorScheme="primary"
                 disabled={!!address && addresses.length === 0}
