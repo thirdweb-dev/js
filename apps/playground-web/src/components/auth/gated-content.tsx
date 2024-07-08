@@ -1,11 +1,11 @@
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import { AuthButton } from "./auth-button";
 import { thirdwebAuth } from "./thirdweb-auth";
-import Link from "next/link";
 
 export async function GatedContentPreview() {
   const Content = ({ title }: { title: string }) => {

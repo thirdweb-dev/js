@@ -1,7 +1,8 @@
 import { headers } from "next/headers";
+import { shortenAddress } from "thirdweb/utils";
 import { createClient } from "../utils/server";
 import { SubmitButton } from "./submit-button";
-import { shortenAddress } from "thirdweb/utils";
+import Image from "next/image";
 
 export async function WithSupabase() {
   const supabase = createClient();
@@ -16,9 +17,11 @@ export async function WithSupabase() {
   return (
     <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-3 flex flex-col">
       <div className="flex justify-center mt-6">
-        <img
-          className="w-24 h-24 rounded-full"
+        <Image
+          className="rounded-full"
           src="/auth-images/user.svg"
+          width={96}
+          height={96}
           alt="User"
         />
       </div>
