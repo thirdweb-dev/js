@@ -66,20 +66,23 @@ export type SmartWalletConnectionOptions = {
   personalAccount: Account;
   client: ThirdwebClient;
   chain?: Chain;
+  passkeySigner?: {
+    name?: string;
+  }; // TODO define passkey signer
 };
 
 export type UserOperation = {
   sender: Address;
   nonce: bigint;
-  initCode: Hex | Uint8Array;
-  callData: Hex | Uint8Array;
+  initCode: Hex;
+  callData: Hex;
   callGasLimit: bigint;
   verificationGasLimit: bigint;
   preVerificationGas: bigint;
   maxFeePerGas: bigint;
   maxPriorityFeePerGas: bigint;
-  paymasterAndData: Hex | Uint8Array;
-  signature: Hex | Uint8Array;
+  paymasterAndData: Hex;
+  signature: Hex;
 };
 
 export type UserOperationHexed = {

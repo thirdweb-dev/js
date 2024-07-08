@@ -2,7 +2,7 @@ import type { Chain } from "../../../chains/types.js";
 import { getThirdwebDomains } from "../../../utils/domains.js";
 
 // dev only
-export const DEBUG = false;
+export const DEBUG = true;
 
 export const DUMMY_SIGNATURE =
   "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";

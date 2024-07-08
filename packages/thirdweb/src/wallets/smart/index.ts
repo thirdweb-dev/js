@@ -1,10 +1,19 @@
+import { numberToBytesBE } from "@noble/curves/abstract/utils";
 import {
   type SignableMessage,
   type TypedData,
   type TypedDataDefinition,
   type TypedDataDomain,
+  encodeAbiParameters,
   hashTypedData,
 } from "viem";
+import {
+  type CreateCredentialReturnType,
+  type Signature,
+  bytesToHex,
+  createCredential,
+  sign,
+} from "webauthn-p256";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
@@ -13,8 +22,14 @@ import {
   populateEip712Transaction,
   signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
+import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { readContract } from "../../transaction/read-contract.js";
+import type { SendTransactionResult } from "../../transaction/types.js";
+import { type Hex, hexToUint8Array } from "../../utils/encoding/hex.js";
+import { stringify } from "../../utils/json.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import { webLocalStorage } from "../../utils/storage/webStorage.js";
 import type {
   Account,
   SendTransactionOption,
@@ -35,9 +50,13 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
+import {
+  DEFAULT_ACCOUNT_FACTORY,
+  ENTRYPOINT_ADDRESS_v0_6,
+} from "./lib/constants.js";
 import {
   createUnsignedUserOp,
+  getUserOpHash,
   signUserOp,
   waitForUserOpReceipt,
 } from "./lib/userop.js";
@@ -90,6 +109,16 @@ export async function connectSmartWallet(
   const chain = connectChain ?? options.chain;
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
+
+  // FIXME testing passkey signer
+  if (connectionOptions.passkeySigner) {
+    return createPasskeyAccount({
+      creationOptions,
+      connectionOptions,
+      chain,
+      sponsorGas,
+    });
+  }
 
   if (isNativeAAChain(chain)) {
     return [
@@ -168,8 +197,8 @@ async function createSmartAccount(
     async sendTransaction(transaction: SendTransactionOption) {
       const executeTx = prepareExecute({
         accountContract,
-        options,
         transaction,
+        execute: options.overrides?.execute,
       });
       return _sendUserOp({
         executeTx,
@@ -358,6 +387,229 @@ async function createSmartAccount(
   return account;
 }
 
+async function createPasskeyAccount(args: {
+  creationOptions: SmartWalletOptions;
+  connectionOptions: SmartWalletConnectionOptions;
+  chain: Chain;
+  sponsorGas: boolean;
+}): Promise<[Account, Chain]> {
+  const { creationOptions, connectionOptions, chain } = args;
+
+  let predictedAddress: string | undefined = undefined;
+  const factoryContract = getContract({
+    address:
+      creationOptions.factoryAddress ||
+      "0x70A8F32FB4B97840Ea0008d098Ae38A4a572aA4A", // FIXME test factory
+    chain,
+    client: connectionOptions.client,
+  });
+
+  // create or request passkey credentials
+  let credentials: CreateCredentialReturnType | undefined;
+
+  // 1. login
+  // retrieve pub key from local storage
+  // predict address from pub key
+  const storedCredentialsRaw = await webLocalStorage.getItem("passkey");
+  const credentialsUnserialized = storedCredentialsRaw
+    ? (JSON.parse(storedCredentialsRaw) as CreateCredentialReturnType)
+    : undefined;
+  credentials = credentialsUnserialized
+    ? {
+        id: credentialsUnserialized.id,
+        publicKey: {
+          x: BigInt(credentialsUnserialized.publicKey.x),
+          y: BigInt(credentialsUnserialized.publicKey.y),
+          prefix: credentialsUnserialized.publicKey.prefix,
+        },
+      }
+    : undefined;
+
+  console.log("stored credentials", credentials);
+
+  // 2. creation
+  // create new passkey w/ current domain
+  // get pub key => predict address with getAddress()
+  // store pub key (WHERE THOUGH?) - local storage is not enough
+  if (!credentials) {
+    credentials = await createCredential({ name: "p256test" });
+    await webLocalStorage.setItem("passkey", stringify(credentials));
+  }
+
+  let pubkey: Hex | undefined;
+
+  if (credentials) {
+    pubkey = encodeAbiParameters(
+      [
+        { name: "x", type: "uint256" },
+        { name: "y", type: "uint256" },
+      ],
+      [credentials.publicKey.x, credentials.publicKey.y],
+    );
+    console.log("pubkey length", hexToUint8Array(pubkey).length);
+  }
+
+  if (credentials && pubkey) {
+    predictedAddress = await predictAddress(factoryContract, {
+      ...creationOptions,
+      overrides: {
+        predictAddress: async (contract) => {
+          return readContract({
+            contract,
+            method:
+              "function getAddress(bytes[] calldata owners, uint256 nonce) external view returns (address)",
+            params: [[pubkey], 0n],
+          });
+        },
+      },
+    });
+  }
+
+  if (!predictedAddress) {
+    throw new Error("Failed to predict address from passkey credentials");
+  }
+
+  const accountContract = getContract({
+    address: predictedAddress,
+    chain,
+    client: connectionOptions.client,
+  });
+
+  const account: Account = {
+    address: predictedAddress, // TODO async call to get the address based off
+    async sendTransaction(
+      transaction: SendTransactionOption,
+    ): Promise<SendTransactionResult> {
+      // 3. send tx
+      // retrieve pubkey from local storage
+      // use pubkey for initCode (needed for createAccount())
+      // hash the userOp (unsigned)
+      // hash becomes the challenge to sign with passkey
+      // add signature to userOp
+      // send to bundler
+      const executeTx = prepareExecute({
+        accountContract,
+        execute: creationOptions.overrides?.execute,
+        transaction,
+      });
+
+      if (!credentials || !pubkey) {
+        throw new Error("Failed to retrieve credentials or pubkey");
+      }
+
+      const options: SmartAccountOptions = {
+        ...creationOptions,
+        accountContract,
+        client: connectionOptions.client,
+        chain,
+        factoryContract,
+        sponsorGas: false, // FIXME
+        personalAccount: account, // FIXME
+        overrides: {
+          createAccount: (contract) => {
+            return prepareContractCall({
+              contract,
+              method:
+                "function createAccount(bytes[] calldata owners, uint256 nonce)",
+              params: [[pubkey], 0n],
+            });
+          },
+        },
+      };
+
+      const userOp = await createUnsignedUserOp({
+        options,
+        transaction: executeTx,
+      });
+      const unsignedUserOpHash = getUserOpHash({
+        userOp,
+        entryPoint:
+          creationOptions.overrides?.entrypointAddress ||
+          ENTRYPOINT_ADDRESS_v0_6,
+        chainId: creationOptions.chain.id,
+      });
+
+      console.log("unsignedUserOpHash", unsignedUserOpHash);
+
+      const sig = await sign({
+        credentialId: credentials.id,
+        hash: unsignedUserOpHash,
+      });
+
+      console.log("sigData", sig);
+
+      const sigData = encodeAbiParameters(
+        [
+          {
+            name: "signature",
+            type: "tuple",
+            internalType: "struct WebAuthn.WebAuthnAuth",
+            components: [
+              {
+                name: "authenticatorData",
+                type: "bytes",
+                internalType: "bytes",
+              },
+              {
+                name: "clientDataJSON",
+                type: "string",
+                internalType: "string",
+              },
+              {
+                name: "challengeIndex",
+                type: "uint256",
+                internalType: "uint256",
+              },
+              { name: "typeIndex", type: "uint256", internalType: "uint256" },
+              { name: "r", type: "uint256", internalType: "uint256" },
+              { name: "s", type: "uint256", internalType: "uint256" },
+            ],
+          },
+        ],
+        [{ ...sig.webauthn, ...sig.signature }],
+      );
+
+      const signature = encodeAbiParameters(
+        [
+          { name: "ownerId", type: "uint256" },
+          { name: "signature", type: "bytes" },
+        ],
+        [0n, sigData],
+      );
+
+      const userOpHash = await bundleUserOp({
+        options,
+        userOp: {
+          ...userOp,
+          signature,
+        },
+      });
+      // wait for tx receipt rather than return the userOp hash
+      const receipt = await waitForUserOpReceipt({
+        ...options,
+        userOpHash,
+      });
+
+      return {
+        transactionHash: receipt.transactionHash,
+      };
+    },
+    async signMessage({
+      message,
+    }: { message: SignableMessage }): Promise<`0x${string}`> {
+      void message;
+      throw new Error("Function not implemented.");
+    },
+    async signTypedData<
+      const typedData extends TypedData | Record<string, unknown>,
+      primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
+    >(_typedData: TypedDataDefinition<typedData, primaryType>) {
+      throw new Error("Function not implemented.");
+    },
+  };
+  return [account, chain];
+}
+
 function createZkSyncAccount(args: {
   creationOptions: SmartWalletOptions;
   connectionOptions: SmartWalletConnectionOptions;
@@ -492,4 +744,12 @@ async function _sendUserOp(args: {
     chain: options.chain,
     transactionHash: receipt.transactionHash,
   };
+}
+
+export function serializeSignature(signature: Signature): Hex {
+  const result = new Uint8Array([
+    ...numberToBytesBE(signature.r, 32),
+    ...numberToBytesBE(signature.s, 32),
+  ]);
+  return bytesToHex(result);
 }

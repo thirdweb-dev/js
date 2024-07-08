@@ -204,7 +204,8 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.16.5"
+    "viem": "2.16.5",
+    "webauthn-p256": "^0.0.2"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -327,7 +328,7 @@
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-svg": "15.3.0",
-    "vitest": "1.6.0",
-    "typescript": "5.5.2"
+    "typescript": "5.5.2",
+    "vitest": "1.6.0"
   }
 }

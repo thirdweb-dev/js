@@ -7,6 +7,7 @@ import {
   ConnectSmartAccountCustomPreview,
   ConnectSmartAccountPreview,
 } from "../../../components/account-abstraction/connect-smart-account";
+import { PasskeySignerPreview } from "../../../components/account-abstraction/passkey";
 import { SponsoredTxPreview } from "../../../components/account-abstraction/sponsored-tx";
 import { CodeExample } from "../../../components/code/code-example";
 
@@ -65,6 +66,10 @@ export default function Page() {
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
+        <PasskeySmartAccount />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
         <ConnectSmartAccount />
       </section>
 
@@ -72,6 +77,30 @@ export default function Page() {
         <SponsoredTx />
       </section>
     </main>
+  );
+}
+
+function PasskeySmartAccount() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Passkey
+        </h2>
+        <p className="max-w-[600px]">Passkey signer</p>
+      </div>
+      <CodeExample
+        preview={<PasskeySignerPreview />}
+        code={`// Passkey
+
+  function App(){
+    return (<>
+TODO: Add code here
+</>)
+};`}
+        lang="tsx"
+      />
+    </>
   );
 }
 

@@ -1,7 +1,16 @@
-import { concat } from "viem";
+import { concat, maxUint256 } from "viem";
+import { baseSepolia } from "../../../chains/chain-definitions/base-sepolia.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
 import { encode } from "../../../transaction/actions/encode.js";
+import { simulateTransaction } from "../../../transaction/actions/simulate.js";
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import { resolveMethod } from "../../../transaction/resolve-method.js";
 import type { TransactionReceipt } from "../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
@@ -85,11 +94,12 @@ export async function waitForUserOpReceipt(
  */
 export async function createUnsignedUserOp(args: {
   transaction: PreparedTransaction;
-  options: SmartAccountOptions;
+  options: SmartAccountOptions & { personalAccount?: { address: string } };
 }): Promise<UserOperation> {
   const { transaction: executeTx, options } = args;
   const isDeployed = await isContractDeployed(options.accountContract);
   const initCode = isDeployed ? "0x" : await getAccountInitCode(options);
+  console.log("initCode", initCode);
   const callData = await encode(executeTx);
 
   let { maxFeePerGas, maxPriorityFeePerGas } = executeTx;
@@ -131,6 +141,29 @@ export async function createUnsignedUserOp(args: {
   // const nonce = BigInt(transaction.nonce || randomNonce());
   const nonce = randomNonce(); // FIXME getNonce should be overrideable by the wallet
 
+  const dummySigData = encodeAbiParameters(
+    [
+      { name: "authenticatorData", type: "bytes", internalType: "bytes" },
+      { name: "clientDataJSON", type: "string", internalType: "string" },
+      {
+        name: "challengeIndex",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      { name: "typeIndex", type: "uint256", internalType: "uint256" },
+      { name: "r", type: "uint256", internalType: "uint256" },
+      { name: "s", type: "uint256", internalType: "uint256" },
+    ],
+    [
+      "0x",
+      '{"type":"webauthn.get","challenge":"9jEFijuhEWrM4SOW-tChJbUEHEP44VcjcJ-Bqo1fTM8","origin":"http://localhost:5173","crossOrigin":false}',
+      0n,
+      0n,
+      maxUint256,
+      maxUint256,
+    ],
+  );
+
   const partialOp: UserOperation = {
     sender: options.accountContract.address,
     nonce,
@@ -138,11 +171,16 @@ export async function createUnsignedUserOp(args: {
     callData,
     maxFeePerGas,
     maxPriorityFeePerGas,
-    callGasLimit: 0n,
-    verificationGasLimit: 0n,
-    preVerificationGas: 0n,
+    callGasLimit: 1000000n,
+    verificationGasLimit: 1000000n,
+    preVerificationGas: 1000000n,
     paymasterAndData: "0x",
-    signature: DUMMY_SIGNATURE,
+    // signature: DUMMY_SIGNATURE,
+    // FIXME - does the dummy sig need to be in the right abi encoded format??
+    signature: encodeAbiParameters(
+      [{ type: "uint256" }, { type: "bytes" }],
+      [0n, dummySigData],
+    ),
   };
 
   if (options.sponsorGas) {
@@ -150,6 +188,7 @@ export async function createUnsignedUserOp(args: {
       userOp: partialOp,
       options,
     });
+    console.log("paymasterResult", paymasterResult);
     const paymasterAndData = paymasterResult.paymasterAndData;
     if (paymasterAndData && paymasterAndData !== "0x") {
       partialOp.paymasterAndData = paymasterAndData as Hex;
@@ -164,6 +203,9 @@ export async function createUnsignedUserOp(args: {
       partialOp.verificationGasLimit = paymasterResult.verificationGasLimit;
       partialOp.preVerificationGas = paymasterResult.preVerificationGas;
     } else {
+      console.log(
+        "paymaster did not return gas limits, estimating via bundler",
+      );
       // otherwise fallback to bundler for gas limits
       const estimates = await estimateUserOpGas({
         userOp: partialOp,
@@ -188,13 +230,35 @@ export async function createUnsignedUserOp(args: {
     }
   } else {
     // not gasless, so we just need to estimate gas limits
-    const estimates = await estimateUserOpGas({
-      userOp: partialOp,
-      options,
-    });
-    partialOp.callGasLimit = estimates.callGasLimit;
-    partialOp.verificationGasLimit = estimates.verificationGasLimit;
-    partialOp.preVerificationGas = estimates.preVerificationGas;
+    console.log("PARTIAL OP", partialOp);
+
+    // const entrypoint = getContract({
+    //   address: ENTRYPOINT_ADDRESS_v0_6,
+    //   chain: options.chain,
+    //   client: options.client,
+    // });
+    // const res = await simulateTransaction({
+    //   transaction: prepareContractCall({
+    //     contract: entrypoint,
+    //     method:
+    //       "function simulateHandleOp((address sender,uint256 nonce,bytes initCode,bytes callData,uint256 callGasLimit,uint256 verificationGasLimit,uint256 preVerificationGas,uint256 maxFeePerGas,uint256 maxPriorityFeePerGas,bytes paymasterAndData,bytes signature), address target,bytes calldata targetCallData)",
+    //     params: [partialOp, ZERO_ADDRESS, "0x"],
+    //   }),
+    // });
+
+    // console.log("sim result", res);
+
+    // const estimates = await estimateUserOpGas({
+    //   userOp: partialOp,
+    //   options,
+    // });
+    // console.log("GAS ESTIMATES", estimates);
+    // partialOp.callGasLimit = estimates.callGasLimit;
+    // partialOp.verificationGasLimit = estimates.verificationGasLimit;
+    // partialOp.preVerificationGas = estimates.preVerificationGas;
+    partialOp.callGasLimit = 1000000n;
+    partialOp.verificationGasLimit = 1000000n;
+    partialOp.preVerificationGas = 1000000n;
   }
   return {
     ...partialOp,
@@ -243,12 +307,26 @@ export async function signUserOp(args: {
   throw new Error("signMessage not implemented in signingAccount");
 }
 
-async function getAccountInitCode(options: SmartAccountOptions): Promise<Hex> {
+async function getAccountInitCode(options: {
+  factoryContract: ThirdwebContract;
+  personalAccount?: {
+    address: string;
+  };
+  overrides?: {
+    createAccount?: (factoryContract: ThirdwebContract) => PreparedTransaction;
+    accountSalt?: string;
+  };
+}): Promise<Hex> {
   const { factoryContract } = options;
   const deployTx = prepareCreateAccount({
     factoryContract,
     options,
   });
+  console.log("deployTx", factoryContract.address);
+  // return encodePacked(
+  //   ["address", "bytes"],
+  //   [factoryContract.address, await encode(deployTx)],
+  // );
   return concat([factoryContract.address as Hex, await encode(deployTx)]);
 }
 
@@ -258,7 +336,7 @@ async function getAccountInitCode(options: SmartAccountOptions): Promise<Hex> {
  * @returns - The hash of the user operation
  * @walletUtils
  */
-function getUserOpHash(args: {
+export function getUserOpHash(args: {
   userOp: UserOperation;
   entryPoint: string;
   chainId: number;

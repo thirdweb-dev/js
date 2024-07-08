@@ -11,6 +11,7 @@ export async function extractError<abi extends Abi>(args: {
   contract?: ThirdwebContract<abi>;
 }) {
   const { error, contract } = args;
+  console.log("err result", error);
   if (typeof error === "object") {
     // try to parse RPC error
     const errorObj = error as {
@@ -24,10 +25,12 @@ export async function extractError<abi extends Abi>(args: {
         if (contract && !abi) {
           abi = await resolveContractAbi(contract).catch(() => undefined);
         }
+        console.log("abi", abi);
         const parsedError = decodeErrorResult({
           data: errorObj.data,
           abi,
         });
+        console.log("parsedError", parsedError);
         return new TransactionError(
           `${parsedError.errorName}${
             parsedError.args ? ` - ${parsedError.args}` : ""

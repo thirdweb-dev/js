@@ -38,19 +38,31 @@ export async function predictAddress(
  */
 export function prepareCreateAccount(args: {
   factoryContract: ThirdwebContract;
-  options: SmartAccountOptions;
+  options: {
+    personalAccount?: {
+      address: string;
+    };
+    overrides?: {
+      createAccount?: (
+        factoryContract: ThirdwebContract,
+      ) => PreparedTransaction;
+      accountSalt?: string;
+    };
+  };
 }): PreparedTransaction {
   const { factoryContract, options } = args;
   if (options.overrides?.createAccount) {
+    console.log("options.overrides.createAccount set");
     return options.overrides.createAccount(factoryContract);
+  }
+  const adminAddress = options.personalAccount?.address;
+  if (!adminAddress) {
+    throw new Error("Personal account address is required.");
   }
   return prepareContractCall({
     contract: factoryContract,
     method: "function createAccount(address, bytes) returns (address)",
-    params: [
-      options.personalAccount.address,
-      stringToHex(options.overrides?.accountSalt ?? ""),
-    ],
+    params: [adminAddress, stringToHex(options.overrides?.accountSalt ?? "")],
   });
 }
 
@@ -59,12 +71,15 @@ export function prepareCreateAccount(args: {
  */
 export function prepareExecute(args: {
   accountContract: ThirdwebContract;
-  options: SmartAccountOptions;
   transaction: SendTransactionOption;
+  execute?: (
+    accountContract: ThirdwebContract,
+    transaction: SendTransactionOption,
+  ) => PreparedTransaction;
 }): PreparedTransaction {
-  const { accountContract, options, transaction } = args;
-  if (options.overrides?.execute) {
-    return options.overrides.execute(accountContract, transaction);
+  const { accountContract, execute, transaction } = args;
+  if (execute) {
+    return execute(accountContract, transaction);
   }
   return prepareContractCall({
     contract: accountContract,
