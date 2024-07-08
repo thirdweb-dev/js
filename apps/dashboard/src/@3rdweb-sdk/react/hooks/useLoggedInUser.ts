@@ -8,6 +8,13 @@ import {
 } from "thirdweb/react";
 import type { EnsureLoginResponse } from "../../../app/api/auth/ensure-login/route";
 
+// define "TW_AUTH_TOKEN" to exist on the window object
+declare global {
+  interface Window {
+    TW_AUTH_TOKEN?: string;
+  }
+}
+
 export function useLoggedInUser(): {
   isLoading: boolean;
   isLoggedIn: boolean;
@@ -58,6 +65,13 @@ export function useLoggedInUser(): {
     onSuccess: (data) => {
       if (data.redirectTo) {
         router.replace(data.redirectTo);
+      }
+      if (data.jwt) {
+        // necessary for legacy things for now (SDK picks it up from there)
+        // eslint-disable-next-line react-compiler/react-compiler
+        window.TW_AUTH_TOKEN = data.jwt;
+      } else {
+        window.TW_AUTH_TOKEN = undefined;
       }
     },
   });
