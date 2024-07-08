@@ -51,11 +51,24 @@ export async function doLogin(
   });
 
   if (!res.ok) {
-    console.error(
-      "Failed to login - api call failed",
-      res.status,
-      res.statusText,
-    );
+    try {
+      const response = await res.text();
+      // try to log the rich error message
+      console.error(
+        "Failed to login - api call failed:",
+        res.status,
+        res.statusText,
+        response,
+      );
+      throw new Error("Failed to login - api call failed");
+    } catch {
+      // just log the basics
+      console.error(
+        "Failed to login - api call failed",
+        res.status,
+        res.statusText,
+      );
+    }
     throw new Error("Failed to login - api call failed");
   }
 
