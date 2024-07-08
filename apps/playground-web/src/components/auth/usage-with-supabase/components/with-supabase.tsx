@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
+import Image from "next/image";
 import { shortenAddress } from "thirdweb/utils";
 import { createClient } from "../utils/server";
 import { SubmitButton } from "./submit-button";
-import Image from "next/image";
 
 export async function WithSupabase() {
   const supabase = createClient();
