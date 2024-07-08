@@ -1781,8 +1781,8 @@ importers:
         specifier: ^3.9.0
         version: 3.9.3
       '@google-cloud/kms':
-        specifier: ^4.4.0
-        version: 4.4.0
+        specifier: ^4.5.0
+        version: 4.5.0
       '@magic-ext/connect':
         specifier: ^6.7.2
         version: 6.7.2
@@ -5324,8 +5324,8 @@ packages:
   '@gmrchk/cli-testing-library@0.1.2':
     resolution: {integrity: sha512-/oALX+4Zti+92hJaR7trZlDPzI2EekIHEYoDXH3oGTdCdgq5lDT3vHAMDzTjbIfUA0X/XC8sVA2tbtSoUPB5xw==}
 
-  '@google-cloud/kms@4.4.0':
-    resolution: {integrity: sha512-ZS2IOouhNThDYdHQjH7JO9DfqLlfhxsXs/z1Pwzb9vsw+In0RbsyxtVZc/s7n+Qp09MZ+e4kfrR9YiRn6TyT9w==}
+  '@google-cloud/kms@4.5.0':
+    resolution: {integrity: sha512-i2vC0DI7bdfEhQszqASTw0KVvbB7HsO2CwTBod423NawAu7FWi+gVVa7NLfXVNGJaZZayFfci2Hu+om/HmyEjQ==}
     engines: {node: '>=14.0.0'}
 
   '@google/model-viewer@2.1.1':
@@ -24078,7 +24078,7 @@ snapshots:
     dependencies:
       keycode: 2.2.1
 
-  '@google-cloud/kms@4.4.0':
+  '@google-cloud/kms@4.5.0':
     dependencies:
       google-gax: 4.3.3
     transitivePeerDependencies:

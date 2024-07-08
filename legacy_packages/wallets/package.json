@@ -522,7 +522,7 @@
     "@account-abstraction/contracts": "^0.5.0",
     "@blocto/sdk": "0.10.2",
     "@coinbase/wallet-sdk": "^3.9.0",
-    "@google-cloud/kms": "^4.4.0",
+    "@google-cloud/kms": "^4.5.0",
     "@magic-ext/connect": "^6.7.2",
     "@magic-ext/oauth": "^7.6.2",
     "@magic-sdk/provider": "^13.6.2",
