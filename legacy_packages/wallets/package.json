@@ -550,7 +550,7 @@
     "ethereumjs-util": "^7.1.5",
     "eventemitter3": "^5.0.1",
     "key-encoder": "2.0.3",
-    "magic-sdk": "^13.6.2",
+    "magic-sdk": "^28.0.7",
     "web3-core": "1.5.2"
   },
   "peerDependencies": {

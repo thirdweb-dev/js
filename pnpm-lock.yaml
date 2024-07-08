@@ -1865,8 +1865,8 @@ importers:
         specifier: 2.0.3
         version: 2.0.3
       magic-sdk:
-        specifier: ^13.6.2
-        version: 13.6.2
+        specifier: ^28.0.7
+        version: 28.0.7
       web3-core:
         specifier: 1.5.2
         version: 1.5.2
@@ -5589,19 +5589,27 @@ packages:
   '@magic-ext/oauth@7.6.2':
     resolution: {integrity: sha512-yqQBdtkMouD+owAJkPlevLbal/iCREH/D3PmDW9a7Dsfjy2xs557oIpGkLSZexTIHd3Cxga9hWNpdqFukUfzYg==}
 
-  '@magic-sdk/commons@9.6.2':
-    resolution: {integrity: sha512-PgYznuO9GV5wiKgzP3bEQJTnAbvfHmAPTBmwbP/ESag3FrOyXxuk7PIWpeGmnFa/i6SSQUsmKp8sr/BN0dU5vg==}
+  '@magic-sdk/commons@24.0.6':
+    resolution: {integrity: sha512-1TutYw7zDHiJUy9bkMXnaRLkAtgFS51vIB4ojQVnifbMK4y8wUFAN94grPS8rUh72EVleV9EpiJRhXIOYWGYqQ==}
     peerDependencies:
-      '@magic-sdk/provider': '>=4.3.0'
-      '@magic-sdk/types': '>=3.1.1'
+      '@magic-sdk/provider': '>=18.6.0'
+      '@magic-sdk/types': '>=15.8.0'
 
   '@magic-sdk/provider@13.6.2':
     resolution: {integrity: sha512-ecrTyL4NaploZ/cX1b+NGiWYMSAWVseE7xa7tvmkejZgQCrcJQd8UXb3LPVPmF7kQPKGutJSdkeGJCDKwsGKIA==}
     peerDependencies:
       localforage: ^1.7.4
 
+  '@magic-sdk/provider@28.0.6':
+    resolution: {integrity: sha512-WGDXHf7wXxc6hfcIzJzZ+aHpjpd5TuDdjWDlxR2WhgIGJsv5y9s/o3EqnMppNuGddp/KSI7jzt3GDAs+SOxeFQ==}
+    peerDependencies:
+      localforage: ^1.7.4
+
   '@magic-sdk/types@11.6.2':
     resolution: {integrity: sha512-+Emd+9HeeVi2E0bktJ33YleA/ozEuKYCBfmSbGRxlntdyUvaojeC+WPf2jN1WH8FjUEiljAjrEJTTZyRGCL8SQ==}
+
+  '@magic-sdk/types@24.0.5':
+    resolution: {integrity: sha512-RTG3AmAxX+ZGqv3gdJ9+cPZoAa2j0MG1v0OCPcf9kaDbO51xD+FjBbh4Evbcx1ch6092Pq2t50c4VgiSG7KGSg==}
 
   '@manypkg/cli@0.21.4':
     resolution: {integrity: sha512-EACxxb+c/t6G0l1FrlyewZeBnyR5V1cLkXjnBfsay5TN1UgbilFpG6POglzn+lVJet9NqnEKe3RLHABzkIDZ0Q==}
@@ -13423,8 +13431,8 @@ packages:
     engines: {node: ^10.13 || ^12 || >=14}
     hasBin: true
 
-  magic-sdk@13.6.2:
-    resolution: {integrity: sha512-ZjIZM2gqaxxOR+ZAyKVw50akjfdyo0q5hZzrCMiqyCqh4BXulU7yqHgUa/5/nJ+0/4xBgUejoOcDEm+UdmzLjA==}
+  magic-sdk@28.0.7:
+    resolution: {integrity: sha512-SDMPWDO2rWvAxBe/x3dDKZ8byMhDUTT/I1h468eGUwiG2IE3PrKAPR94W+z3WAG/0qmWNrLKTI1rwtoFCpnS+Q==}
 
   magic-string@0.16.0:
     resolution: {integrity: sha512-c4BEos3y6G2qO0B9X7K0FVLOPT9uGrjYwYRLFmDqyl5YMboUviyecnXWp94fJTSMwPw2/sf+CEYt5AGpmklkkQ==}
@@ -24345,10 +24353,10 @@ snapshots:
     dependencies:
       '@magic-sdk/types': 11.6.2
 
-  '@magic-sdk/commons@9.6.2(@magic-sdk/provider@13.6.2(localforage@1.10.0))(@magic-sdk/types@11.6.2)':
+  '@magic-sdk/commons@24.0.6(@magic-sdk/provider@28.0.6(localforage@1.10.0))(@magic-sdk/types@24.0.5)':
     dependencies:
-      '@magic-sdk/provider': 13.6.2(localforage@1.10.0)
-      '@magic-sdk/types': 11.6.2
+      '@magic-sdk/provider': 28.0.6(localforage@1.10.0)
+      '@magic-sdk/types': 24.0.5
 
   '@magic-sdk/provider@13.6.2(localforage@1.10.0)':
     dependencies:
@@ -24359,7 +24367,18 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@magic-sdk/provider@28.0.6(localforage@1.10.0)':
+    dependencies:
+      '@magic-sdk/types': 24.0.5
+      eventemitter3: 4.0.7
+      localforage: 1.10.0
+      web3-core: 1.5.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@magic-sdk/types@11.6.2': {}
+
+  '@magic-sdk/types@24.0.5': {}
 
   '@manypkg/cli@0.21.4':
     dependencies:
@@ -35425,11 +35444,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  magic-sdk@13.6.2:
+  magic-sdk@28.0.7:
     dependencies:
-      '@magic-sdk/commons': 9.6.2(@magic-sdk/provider@13.6.2(localforage@1.10.0))(@magic-sdk/types@11.6.2)
-      '@magic-sdk/provider': 13.6.2(localforage@1.10.0)
-      '@magic-sdk/types': 11.6.2
+      '@magic-sdk/commons': 24.0.6(@magic-sdk/provider@28.0.6(localforage@1.10.0))(@magic-sdk/types@24.0.5)
+      '@magic-sdk/provider': 28.0.6(localforage@1.10.0)
+      '@magic-sdk/types': 24.0.5
       localforage: 1.10.0
     transitivePeerDependencies:
       - supports-color
