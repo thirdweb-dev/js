@@ -118,7 +118,7 @@ export function PayWithCrypto(props: {
             color={props.value ? "primaryText" : "secondaryText"}
             style={{}}
           >
-            {formatNumber(Number(props.value), 4) || "--"}
+            {formatNumber(Number(props.value), 6) || "--"}
           </Text>
         )}
 

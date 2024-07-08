@@ -21,7 +21,7 @@ export function SwapFees(props: {
       }}
     >
       {props.quote.processingFees.map((fee) => {
-        const feeAmount = formatNumber(Number(fee.amount), 4);
+        const feeAmount = formatNumber(Number(fee.amount), 6);
         return (
           <Container
             key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
@@ -61,14 +61,14 @@ export function FiatFees(props: {
           Amount
         </Text>
         <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.fromCurrency.amount), 4)}{" "}
+          {formatNumber(Number(props.quote.fromCurrency.amount), 2)}{" "}
           {props.quote.fromCurrency.currencySymbol}
         </Text>
       </div>
 
       {/* Processing Fees */}
       {props.quote.processingFees.map((fee, i) => {
-        const feeAmount = formatNumber(Number(fee.amount), 4);
+        const feeAmount = formatNumber(Number(fee.amount), 6);
 
         return (
           <div
@@ -106,7 +106,7 @@ export function FiatFees(props: {
           Total
         </Text>
         <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 4)}{" "}
+          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 6)}{" "}
           {props.quote.fromCurrencyWithFees.currencySymbol}
         </Text>
       </div>

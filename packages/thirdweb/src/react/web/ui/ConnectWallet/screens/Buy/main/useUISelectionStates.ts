@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { polygon } from "../../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
 import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
@@ -24,11 +23,7 @@ export function useUISelectionStates(options: {
   // buy token amount ---------------------------------------------------------
   const initialTokenAmount =
     payOptions.prefillBuy?.amount ||
-    (buyForTx
-      ? String(
-          formatNumber(Number(toEther(buyForTx.cost - buyForTx.balance)), 4),
-        )
-      : "");
+    (buyForTx ? String(toEther(buyForTx.cost - buyForTx.balance)) : "");
 
   const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);

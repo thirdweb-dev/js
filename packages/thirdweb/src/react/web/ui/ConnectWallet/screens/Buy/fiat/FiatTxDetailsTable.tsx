@@ -75,7 +75,7 @@ export function OnRampTxDetailsTable(props: {
           <Container flex="row" gap="xs" center="y">
             <currencyMeta.icon size={iconSize.sm} />
             <Text color="primaryText">
-              {formatNumber(Number(props.fiat.amount), 4)}{" "}
+              {formatNumber(Number(props.fiat.amount), 2)}{" "}
               {props.fiat.currencySymbol}
             </Text>
           </Container>
