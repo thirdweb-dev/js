@@ -163,7 +163,7 @@ export function FiatSteps(props: {
   const onRampTokenInfo = (
     <div>
       <Text color="primaryText" size="sm">
-        {formatNumber(Number(onRampTokenAmount), 4)}{" "}
+        {formatNumber(Number(onRampTokenAmount), 6)}{" "}
         <TokenSymbol token={onRampToken} chain={onRampChain} size="sm" inline />
       </Text>
     </div>
@@ -203,7 +203,7 @@ export function FiatSteps(props: {
             textDecoration: "line-through",
           }}
         >
-          {formatNumber(Number(toTokenAmount), 4)}{" "}
+          {formatNumber(Number(toTokenAmount), 6)}{" "}
           <TokenSymbol
             token={toToken}
             chain={toChain}
@@ -213,7 +213,7 @@ export function FiatSteps(props: {
           />
         </Text>{" "}
         <Text color="danger" size="sm" inline>
-          {formatNumber(Number(props.status.destination.amount), 4)}{" "}
+          {formatNumber(Number(props.status.destination.amount), 6)}{" "}
           <TokenSymbol
             token={{
               address: props.status.destination.token.tokenAddress,
@@ -231,7 +231,7 @@ export function FiatSteps(props: {
 
   const toTokenInfo = partialSuccessToTokenInfo || (
     <Text color="primaryText" size="sm">
-      {formatNumber(Number(toTokenAmount), 4)}{" "}
+      {formatNumber(Number(toTokenAmount), 6)}{" "}
       <TokenSymbol token={toToken} chain={toChain} size="sm" inline />
     </Text>
   );
@@ -330,7 +330,7 @@ export function FiatSteps(props: {
           icon: fiatIcon,
           primaryText: (
             <Text color="primaryText" size="sm">
-              {formatNumber(Number(fromCurrencyAmount), 4)} {fromCurrencySymbol}
+              {formatNumber(Number(fromCurrencyAmount), 6)} {fromCurrencySymbol}
             </Text>
           ),
         }}
