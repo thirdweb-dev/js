@@ -21,6 +21,7 @@ export { baseSepolia } from "../chains/chain-definitions/base-sepolia.js";
 export { base } from "../chains/chain-definitions/base.js";
 // mainnet = alias for ethereum
 export { ethereum, mainnet } from "../chains/chain-definitions/ethereum.js";
+export { blast } from "../chains/chain-definitions/blast.js";
 export { optimismSepolia } from "../chains/chain-definitions/optimism-sepolia.js";
 export { optimism } from "../chains/chain-definitions/optimism.js";
 export { lineaSepolia } from "../chains/chain-definitions/linea-sepolia.js";
