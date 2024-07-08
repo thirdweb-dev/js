@@ -1,5 +1,7 @@
 "use client";
 
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { thirdwebClient } from "@/constants/client";
 import { useSupportedChains } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -10,9 +12,10 @@ import {
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { defineChain } from "thirdweb";
-import { ConnectButton } from "thirdweb/react";
+import { AutoConnect, ConnectButton } from "thirdweb/react";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
@@ -48,7 +51,34 @@ export const CustomConnectWallet: React.FC = () => {
   }, [recentChainsv4, favChainsQuery.data]);
 
   // ensures login status on pages that need it
-  useLoggedInUser();
+  const { isLoading, isLoggedIn } = useLoggedInUser();
+  const pathname = usePathname();
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="w-[144px] h-[48px] bg-muted border rounded-lg flex items-center justify-center">
+          <Spinner className="size-4" />
+        </div>
+        {/* need autoconnect here so that we actually connect */}
+        <AutoConnect client={thirdwebClient} />
+      </>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Button asChild variant="default" className="gap-2" size="lg">
+          <Link href={`/login${pathname ? `?next=${pathname}` : ""}`}>
+            Sign In
+          </Link>
+        </Button>
+        {/* need autoconnect here so that we actually connect */}
+        <AutoConnect client={thirdwebClient} />
+      </>
+    );
+  }
 
   return (
     <ConnectButton
