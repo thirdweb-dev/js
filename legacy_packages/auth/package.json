@@ -100,7 +100,7 @@
     "eslint-plugin-tsdoc": "^0.3.0",
     "ethers": "^5.7.2",
     "express": "^4.19.2",
-    "fastify": "^4.28.0",
+    "fastify": "^4.28.1",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "typescript": "5.5.2"
