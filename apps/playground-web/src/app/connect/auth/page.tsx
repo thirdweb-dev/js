@@ -1,5 +1,6 @@
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
+import { WithSupabase } from "@/components/auth/usage-with-supabase/components/with-supabase";
 import { CodeExample } from "@/components/code/code-example";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
@@ -64,6 +65,10 @@ export default function Page() {
 
       <section className="container px-4 md:px-6 space-y-8">
         <GatedContent />
+      </section>
+
+      <section className="container px-4 md:px-6 space-y-8">
+        <WithSupabasePreivew />
       </section>
     </main>
   );
@@ -181,6 +186,25 @@ export async function GatedContentPreview() {
     </div>
   );
 }`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function WithSupabasePreivew() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Usage with Supabase
+        </h2>
+        <p className="max-w-[600px]">lorem</p>
+      </div>
+
+      <CodeExample
+        preview={<WithSupabase />}
+        code={`import { } from "thirdweb"`}
         lang="tsx"
       />
     </>
