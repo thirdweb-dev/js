@@ -562,49 +562,6 @@ export function useConfirmEmail() {
   );
 }
 
-export function useConfirmEmbeddedWallet() {
-  const { user } = useLoggedInUser();
-  const queryClient = useQueryClient();
-
-  return useMutationWithInvalidate(
-    async ({ ewsJwt }: { ewsJwt: string }) => {
-      invariant(user?.address, "walletAddress is required");
-
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/account/confirmEmbeddedWallet`,
-        {
-          method: "PUT",
-
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ paperJwt: ewsJwt }),
-        },
-      );
-      const json = await res.json();
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
-    },
-    {
-      onSuccess: () => {
-        // invalidate related cache, since could be relinking account
-        queryClient.invalidateQueries(apiKeys.keys(user?.address as string));
-        queryClient.invalidateQueries(
-          accountKeys.usage(user?.address as string),
-        );
-
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
-      },
-    },
-  );
-}
-
 export function useResendEmailConfirmation() {
   const { user } = useLoggedInUser();
   const queryClient = useQueryClient();

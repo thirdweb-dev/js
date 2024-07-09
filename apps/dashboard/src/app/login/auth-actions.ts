@@ -79,6 +79,33 @@ export async function doLogin(
     throw new Error("Failed to login - invalid json");
   }
 
+  // check if we have a thirdweb account for the token
+  const userRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${json.token}`,
+    },
+  });
+  // if we do not have a user, create one
+  if (userRes.status === 404) {
+    const newUserRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/create`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${json.token}`,
+      },
+    });
+
+    if (newUserRes.status !== 200) {
+      console.error(
+        "Failed to create new user",
+        newUserRes.status,
+        newUserRes.statusText,
+      );
+      throw new Error("Failed to create new user");
+    }
+  }
+
   const cookieStore = cookies();
 
   // set the token cookie
