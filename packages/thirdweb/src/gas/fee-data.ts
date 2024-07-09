@@ -28,7 +28,8 @@ type FeeDataParams =
 
 // for these chains - always force pre eip1559 transactions
 const FORCE_GAS_PRICE_CHAIN_IDS = [
-  78600, // vanguard
+  78600, // Vanar testnet
+  2040, // Vanar mainnet
 ];
 
 /**
