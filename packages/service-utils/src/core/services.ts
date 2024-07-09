@@ -44,13 +44,6 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
-  checkout: {
-    name: "checkout",
-    title: "Checkouts",
-    description: "NFT Checkouts for easy web3 onboarding",
-    // all actions allowed
-    actions: [],
-  },
   pay: {
     name: "pay",
     title: "Pay",
