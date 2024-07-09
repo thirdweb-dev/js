@@ -9,7 +9,6 @@ import {
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ContactSupportModal } from "components/help/contact-support-modal";
-import { NeedSomeHelp } from "components/help/need-some-help";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { FiArrowRight } from "react-icons/fi";
@@ -134,8 +133,8 @@ const SupportPage: ThirdwebNextPage = () => {
           ], */
         }}
       />
-      <NeedSomeHelp />
-      <Container maxW="container.page" mb={{ base: 12, md: 40 }} mt={12}>
+
+      <Container maxW="container.page" mb={{ base: 12, md: 40 }}>
         <SimpleGrid columns={{ base: 1, md: 12 }} gap={{ base: 4, md: 12 }}>
           <GridItem colSpan={{ base: 1, md: 8 }}>
             <Flex
