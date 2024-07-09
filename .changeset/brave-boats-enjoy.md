@@ -1,5 +1,0 @@
----
-"thirdweb": patch
----
-
-improve <MediaRenderer />

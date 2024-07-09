@@ -1,5 +1,38 @@
 # thirdweb
 
+## 5.34.0
+
+### Minor Changes
+
+- [#3613](https://github.com/thirdweb-dev/js/pull/3613) [`d253bad`](https://github.com/thirdweb-dev/js/commit/d253bad72f0c1eef565b9de23887dc39f745450e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds verifyTypedData and verifyHash functions with full wallet interoperability
+
+- [#3619](https://github.com/thirdweb-dev/js/pull/3619) [`325416e`](https://github.com/thirdweb-dev/js/commit/325416ea19905901f30e795cbf93cb8a085be02f) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds blast preset
+
+- [#3585](https://github.com/thirdweb-dev/js/pull/3585) [`f6ff5a7`](https://github.com/thirdweb-dev/js/commit/f6ff5a78fc2d65f0f250b154f1405210ca57ce0a) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds NFTs to the connect modal, specified with supportedNFTs
+
+- [#3602](https://github.com/thirdweb-dev/js/pull/3602) [`21aaec8`](https://github.com/thirdweb-dev/js/commit/21aaec802fafa60b0f6ce43d8d2d8c2738f68d63) Thanks [@jnsdls](https://github.com/jnsdls)! - [erc20] - added `transferBatch()` extension
+
+- [#3622](https://github.com/thirdweb-dev/js/pull/3622) [`95c9d3d`](https://github.com/thirdweb-dev/js/commit/95c9d3d92406de619cb1e4cccc61b0766dd2a0d4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose smart wallet and bundler utilities
+
+### Patch Changes
+
+- [#3602](https://github.com/thirdweb-dev/js/pull/3602) [`21aaec8`](https://github.com/thirdweb-dev/js/commit/21aaec802fafa60b0f6ce43d8d2d8c2738f68d63) Thanks [@jnsdls](https://github.com/jnsdls)! - improve <MediaRenderer />
+
+- [#3633](https://github.com/thirdweb-dev/js/pull/3633) [`636fe40`](https://github.com/thirdweb-dev/js/commit/636fe40779ed358e4bc7d628cf68addaa9c2b4c4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix uploading files on mobile with directory
+
+- [#3621](https://github.com/thirdweb-dev/js/pull/3621) [`5470dd9`](https://github.com/thirdweb-dev/js/commit/5470dd9cf854e6a28978c7a31669227c2000a98b) Thanks [@MananTank](https://github.com/MananTank)! - Pay UI improvements
+
+  - Only perform token amount rounding when rendering the amount - not in state
+  - increase the rendered decimals for token amount whereever we have enough space available in UI
+  - Fix "Minimum required amount" error message for Buy with fiat when token amount is so low that server calculates its value as 0 USD - which prevents calculation of minimum required token amount
+  - Show token symbol in Minimum required amount error message
+
+- [#3603](https://github.com/thirdweb-dev/js/pull/3603) [`342d74e`](https://github.com/thirdweb-dev/js/commit/342d74efffe2464d9613b439db69d0420baa8b10) Thanks [@jnsdls](https://github.com/jnsdls)! - export JWT utils, fix naming of `decodeJWT`
+
+- [#3611](https://github.com/thirdweb-dev/js/pull/3611) [`f103a90`](https://github.com/thirdweb-dev/js/commit/f103a902f355bfd92b9732d8178cf95340b85a04) Thanks [@MananTank](https://github.com/MananTank)! - Fix Transaction Button callbacks not called when tx is executed in Pay Modal
+
+- [#3630](https://github.com/thirdweb-dev/js/pull/3630) [`41b9a53`](https://github.com/thirdweb-dev/js/commit/41b9a53e35f570aabf8e00acccc683b360064612) Thanks [@MananTank](https://github.com/MananTank)! - Fix Search in Network Selector screen
+
 ## 5.33.0
 
 ### Minor Changes
