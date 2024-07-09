@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.34.1
+
+### Patch Changes
+
+- [#3634](https://github.com/thirdweb-dev/js/pull/3634) [`4d24208`](https://github.com/thirdweb-dev/js/commit/4d24208099d459ea2903a504106abd3ddd423966) Thanks [@MananTank](https://github.com/MananTank)! - Fix random behavior when connecting smart wallet where it sometimes does not add the personal wallet in the list of connected wallets
+
+- [#3637](https://github.com/thirdweb-dev/js/pull/3637) [`02fff7d`](https://github.com/thirdweb-dev/js/commit/02fff7d9e83167ae5dd2c8d02f58f0efce2c151c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Loosen react native peer dep version restriction
+
 ## 5.34.0
 
 ### Minor Changes
