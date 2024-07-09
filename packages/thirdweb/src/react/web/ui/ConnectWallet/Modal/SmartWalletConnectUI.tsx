@@ -4,17 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { connectionManagerSingleton } from "../../../../core/connectionManager.js";
 import {
   fontSize,
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
+import { connectionManager } from "../../../index.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
@@ -145,12 +144,13 @@ function SmartWalletConnecting(props: {
     setSmartWalletConnectionStatus("connecting");
 
     try {
-      const connected = await connectionManagerSingleton(
-        webLocalStorage,
-      ).handleConnection(personalWallet, {
-        accountAbstraction: props.accountAbstraction,
-        client: props.client,
-      });
+      const connected = await connectionManager.handleConnection(
+        personalWallet,
+        {
+          accountAbstraction: props.accountAbstraction,
+          client: props.client,
+        },
+      );
       done(connected);
       setSmartWalletConnectionStatus("idle");
     } catch (e) {
