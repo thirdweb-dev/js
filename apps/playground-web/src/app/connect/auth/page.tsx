@@ -14,7 +14,11 @@ export const metadata: Metadata = {
   description: "lorem ipsum",
 };
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { message: string };
+}) {
   return (
     <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
       <section className="container px-4 md:px-6">
@@ -68,7 +72,7 @@ export default function Page() {
       </section>
 
       <section className="container px-4 md:px-6 space-y-8">
-        <WithSupabasePreivew />
+        <WithSupabasePreview searchParams={searchParams} />
       </section>
     </main>
   );
@@ -192,7 +196,11 @@ export async function GatedContentPreview() {
   );
 }
 
-function WithSupabasePreivew() {
+function WithSupabasePreview({
+  searchParams,
+}: {
+  searchParams: { message: string };
+}) {
   return (
     <>
       <div className="space-y-2">
@@ -203,7 +211,7 @@ function WithSupabasePreivew() {
       </div>
 
       <CodeExample
-        preview={<WithSupabase />}
+        preview={<WithSupabase searchParams={searchParams} />}
         code={`import { } from "thirdweb"`}
         lang="tsx"
       />

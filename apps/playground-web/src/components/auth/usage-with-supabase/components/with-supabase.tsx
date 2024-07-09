@@ -3,17 +3,29 @@ import Image from "next/image";
 import { shortenAddress } from "thirdweb/utils";
 import { createClient } from "../utils/server";
 import { SubmitButton } from "./submit-button";
+import { LogoutButton } from "./logout-button";
+import { UnlinkButton } from "./unlink-button";
+import { LinkWalletButton } from "./link-button";
+import { redirect } from "next/navigation";
+import { isLoggedIn } from "@/app/connect/auth/actions/auth";
+import { AuthButton } from "../../auth-button";
 
-export async function WithSupabase() {
+export async function WithSupabase({
+  searchParams,
+}: {
+  searchParams: { message: string };
+}) {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log({ user });
   if (!user) {
-    return <SupabaseAuthUI />;
+    return <SupabaseAuthUI searchParams={searchParams} />;
   }
+
+  const loggedInThirdweb = await isLoggedIn();
+
   return (
     <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-3 flex flex-col">
       <div className="flex justify-center mt-6">
@@ -30,44 +42,42 @@ export async function WithSupabase() {
       </div>
 
       {user.user_metadata.wallet_address ? (
-        <div className="flex flex-col text-black">
-          <div>Wallet address</div>
-          <div>{shortenAddress(user.user_metadata.wallet_address)}</div>
+        <div className="flex flex-col text-black mx-auto">
+          <div>Associated address</div>
+          <div className="text-center">
+            {shortenAddress(user.user_metadata.wallet_address)}
+          </div>
+          <UnlinkButton />
         </div>
       ) : (
-        <button
-          type="button"
-          className="bg-primary px-3 rounded-lg w-fit mx-auto"
-        >
-          Connect wallet
-        </button>
+        <>{loggedInThirdweb ? <LinkWalletButton /> : <AuthButton />}</>
       )}
 
-      <button type="button" className="text-red-500 mx-auto mt-5">
-        Log out
-      </button>
+      <LogoutButton />
     </div>
   );
 }
 
-function SupabaseAuthUI() {
+function SupabaseAuthUI({
+  searchParams,
+}: {
+  searchParams: { message: string };
+}) {
   const signIn = async (formData: FormData) => {
     "use server";
 
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const supabase = createClient();
-
+    console.log({ email, password });
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return console.log(error);
+      return redirect(`/connect/auth?message=${error.message}`);
     }
-
-    // return redirect("/protected");
   };
 
   const signUp = async (formData: FormData) => {
@@ -87,10 +97,12 @@ function SupabaseAuthUI() {
     });
 
     if (error) {
-      // return redirect("/login?message=Could not authenticate user");
+      return redirect("/connect/auth?message=Could not authenticate user");
     }
 
-    // return redirect("/login?message=Check email to continue sign in process");
+    return redirect(
+      "/connect/auth?message=Check email to continue sign in process",
+    );
   };
 
   return (
@@ -129,11 +141,11 @@ function SupabaseAuthUI() {
         >
           Sign Up
         </SubmitButton>
-        {/* {searchParams?.message && (
-          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
+        {searchParams?.message && (
+          <p className="mt-1 px-3 py-1 text-yellow-400 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
           </p>
-        )} */}
+        )}
       </form>
     </div>
   );
