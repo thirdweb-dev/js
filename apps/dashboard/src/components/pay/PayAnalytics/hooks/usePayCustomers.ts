@@ -1,5 +1,5 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useLoggedInUser } from "../../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 export type PayTopCustomersData = {
   count: number;
@@ -22,7 +22,7 @@ export function usePayCustomers(options: {
   pageSize: number;
   type: "top-customers" | "new-customers";
 }) {
-  const { user, isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   return useInfiniteQuery({
     queryKey: ["usePayCustomers", user?.address, options],
@@ -72,7 +72,7 @@ export function usePayCustomers(options: {
         nextPageIndex,
       };
     },
-    enabled: isLoggedIn,
+    enabled: !!user?.jwt,
     getNextPageParam: (lastPage) => {
       return lastPage.nextPageIndex;
     },

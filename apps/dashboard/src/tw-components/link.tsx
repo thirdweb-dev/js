@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Link as ChakraLink,
   type LinkProps as ChakraLinkProps,

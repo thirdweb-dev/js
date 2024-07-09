@@ -1,5 +1,5 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
-import { useLoggedInUser } from "../../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 export type PayNewCustomersData = {
   intervalType: "day" | "week";
@@ -29,7 +29,7 @@ export function usePayNewCustomers(options: {
   to: Date;
   intervalType: "day" | "week";
 }) {
-  const { user, isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   return useQuery(
     ["usePayNewCustomers", user?.address, options],
@@ -58,6 +58,6 @@ export function usePayNewCustomers(options: {
 
       return resJSON.result.data;
     },
-    { enabled: isLoggedIn },
+    { enabled: !!user?.jwt },
   );
 }

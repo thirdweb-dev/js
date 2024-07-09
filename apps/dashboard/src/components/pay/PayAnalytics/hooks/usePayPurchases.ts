@@ -1,5 +1,5 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
-import { useLoggedInUser } from "../../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
 
 export type PayPurchasesData = {
   count: number;
@@ -61,12 +61,12 @@ type PayPurcaseOptions = {
 };
 
 export function usePayPurchases(options: PayPurcaseOptions) {
-  const { user, isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   return useQuery({
     queryKey: ["usePayPurchases", user?.address, options],
     queryFn: async () => getPayPurchases(options),
-    enabled: isLoggedIn,
+    enabled: !!user?.jwt,
     keepPreviousData: true,
   });
 }
