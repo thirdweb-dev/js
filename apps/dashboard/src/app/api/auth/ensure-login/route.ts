@@ -1,7 +1,10 @@
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { decodeJWT, getAddress } from "thirdweb/utils";
+import { getAddress } from "thirdweb/utils";
+
+const THIRDWEB_API_HOST =
+  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export type EnsureLoginPayload = {
   pathname: string;
@@ -52,10 +55,15 @@ export const GET = async (req: NextRequest) => {
     });
   }
 
-  // otherwise check if the address matches the token
-  const decodedToken = decodeJWT(token);
-  // user is not the same as the token, redirect to login
-  if (getAddress(decodedToken.payload.sub) !== getAddress(address)) {
+  // check that the token is valid by checking for the user account
+  const accountRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (accountRes.status !== 200) {
+    // if the account is not found, clear the token and redirect to login
     cookieStore.delete(authCookieName);
     return NextResponse.json({
       isLoggedIn: false,

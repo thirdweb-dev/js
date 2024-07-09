@@ -25,6 +25,11 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
     if (activeWallet) {
       disconnect(activeWallet);
     }
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    }).catch((err) => {
+      console.error("Failed to log out", err);
+    });
   }
 
   return (

@@ -160,7 +160,7 @@ export async function isLoggedIn(address: string) {
     return false;
   }
 
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/user`, {
+  const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
