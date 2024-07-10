@@ -3,6 +3,8 @@ import { formatNumber } from "./formatNumber.js";
 
 test("formatNumber", () => {
   // no decimals
+  expect(formatNumber(0, 1)).toEqual(0);
+  expect(formatNumber(0, 3)).toEqual(0);
   expect(formatNumber(10, 1)).toEqual(10);
   expect(formatNumber(10, 3)).toEqual(10);
 
