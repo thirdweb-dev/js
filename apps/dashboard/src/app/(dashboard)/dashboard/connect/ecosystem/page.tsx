@@ -52,7 +52,7 @@ export default async function Page() {
   // otherwise we fall through to the page
 
   return (
-    <main className="container flex flex-col max-w-2xl gap-8 px-4 pb-6 mx-auto">
+    <main className="container flex flex-col max-w-2xl gap-8 pb-6 mx-auto">
       <Image
         src={headerImage}
         alt="Ecosystems"

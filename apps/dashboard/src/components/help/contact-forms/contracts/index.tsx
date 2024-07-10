@@ -1,6 +1,4 @@
-import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
-import type { ReactElement } from "react";
-import { useWatch } from "react-hook-form";
+import { type ReactElement, useState } from "react";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
 import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
 import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
@@ -49,15 +47,20 @@ const ContractTypeInput = () => (
   />
 );
 
-const ContractAffectedAreaInput = () => (
-  <SupportForm_SelectInput
-    formLabel="Contract affected area"
-    formValue="extraInfo_Affected_Area"
-    options={["Dashboard", "SDK"]}
-    required={true}
-    promptText="Select an affected area"
-  />
-);
+const ContractAffectedAreaInput = () => {
+  const [selectedAffectedArea, setSelectedAffectedArea] = useState<string>("");
+  return (
+    <SupportForm_SelectInput
+      formLabel="Contract affected area"
+      name="extraInfo_Affected_Area"
+      options={["Dashboard", "SDK"]}
+      required={true}
+      promptText="Select an affected area"
+      value={selectedAffectedArea}
+      onValueChange={setSelectedAffectedArea}
+    />
+  );
+};
 
 const CONTRACT_PROBLEM_AREAS: ProblemAreaItem[] = [
   {
@@ -118,19 +121,17 @@ const CONTRACT_PROBLEM_AREAS: ProblemAreaItem[] = [
 ];
 
 export default function ContractSupportForm() {
-  const problemArea: string =
-    useWatch<CreateTicketInput>({
-      name: "extraInfo_Problem_Area",
-    }) || "";
-
+  const [problemArea, setProblemArea] = useState<string>("");
   return (
     <>
       <SupportForm_SelectInput
         formLabel="Problem area"
-        formValue="extraInfo_Problem_Area"
+        name="extraInfo_Problem_Area"
         promptText="Select a problem area"
         options={CONTRACT_PROBLEM_AREAS.map((o) => o.label)}
         required={true}
+        value={problemArea}
+        onValueChange={setProblemArea}
       />
       {CONTRACT_PROBLEM_AREAS.find((o) => o.label === problemArea)?.component}
     </>

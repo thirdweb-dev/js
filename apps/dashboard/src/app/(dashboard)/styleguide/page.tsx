@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="container py-10 px-4">
+    <div className="container py-10">
       <h1 className="text-5xl tracking-tighter font-semibold mb-8">
         Styleguide
       </h1>

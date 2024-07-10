@@ -66,7 +66,7 @@ export default async function ChainPageLayout({
       {isDeprecated && (
         <>
           <div className="bg-destructive">
-            <div className="container px-4 py-4 flex flex-row items-center gap-4 text-white">
+            <div className="container py-4 flex flex-row items-center gap-4 text-white">
               <CircleAlertIcon className="size-6 flex-shrink-0" />
               <h3 className="font-semibold">
                 This chain has been marked as deprecated. Some or all services
@@ -102,7 +102,7 @@ export default async function ChainPageLayout({
           </div>
 
           {/* end header shaningans */}
-          <div className="container px-4 flex flex-col md:flex-row justify-between md:items-center">
+          <div className="container flex flex-col md:flex-row justify-between md:items-center">
             <div className="flex flex-col gap-2 md:gap-6">
               <Link
                 href="/chainlist"
@@ -169,7 +169,7 @@ export default async function ChainPageLayout({
 
         {chainMetadata?.cta && <ChainCTA {...chainMetadata.cta} />}
 
-        <main className="container px-4 pb-20 flex-1">
+        <main className="container pb-20 flex-1">
           {/* About section */}
           {chainMetadata?.about && (
             <>

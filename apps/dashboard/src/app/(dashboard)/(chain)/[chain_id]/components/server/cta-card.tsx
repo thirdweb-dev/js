@@ -11,7 +11,7 @@ export type ChainCTAProps = {
 
 export function ChainCTA(props: ChainCTAProps) {
   return (
-    <div className="container px-4">
+    <div className="container">
       <div
         className="w-full overflow-hidden rounded-xl shadow-lg bg-cover bg-center bg-no-repeat"
         style={{

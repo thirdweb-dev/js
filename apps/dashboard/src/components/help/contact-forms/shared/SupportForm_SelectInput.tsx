@@ -1,29 +1,63 @@
-import { FormControl, Select } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
-import { FormLabel } from "tw-components";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Props = {
   options: string[];
   promptText: string;
   formLabel: string;
-  formValue: string;
+  name: string;
   required: boolean;
+  value: string;
+  onValueChange: (value: string) => void;
 };
 
 export const SupportForm_SelectInput = (props: Props) => {
-  const { register } = useFormContext();
-  const { options, promptText, formLabel, formValue, required } = props;
+  const { options, formLabel, name, required, promptText } = props;
+
   return (
-    <FormControl isRequired>
-      <FormLabel>{formLabel}</FormLabel>
-      <Select {...register(formValue, { required })}>
-        <option value="">{promptText}</option>
-        {options.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </Select>
-    </FormControl>
+    <>
+      <input
+        hidden
+        value={props.value}
+        name={name}
+        onChange={(e) => props.onValueChange(e.target.value)}
+        required={required}
+      />
+
+      <div className="flex flex-col gap-2 items-start">
+        <Label htmlFor={name} className="relative">
+          {formLabel}
+          {required && (
+            <span className="absolute -top-1.5 -right-2 text-destructive">
+              •
+            </span>
+          )}
+        </Label>
+
+        <Select
+          value={props.value}
+          onValueChange={(val) => {
+            props.onValueChange(val);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={promptText}>{props.value}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {options.map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </>
   );
 };
