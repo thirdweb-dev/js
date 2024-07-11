@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import {
-  type TimeRange,
-  TrendingContractSection,
-} from "./components/trending-table";
+import type { TimeRange } from "../../lib/search";
+import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {
   title: "🔥 HOT Contracts",
   description: "See what's hot onchain right now",
+  openGraph: {
+    title: "🔥 HOT Contracts",
+    description: "See what's hot onchain right now",
+  },
 };
 
 export default async function DashboardContractTrendingPage(props: {
