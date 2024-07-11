@@ -2,31 +2,33 @@
 
 import { ColorModeToggle } from "@/components/color-mode-toggle";
 import { thirdwebClient } from "@/constants/client";
-import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { ConnectEmbed } from "thirdweb/react";
+import { ConnectEmbed, darkTheme, lightTheme } from "thirdweb/react";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 
 export default function LoginPage() {
   return (
-    <div className="h-full bg-gradient-to-br from-[#F213A4] to-[#5204BF] p-2 md:p-4 xl:p-6">
-      <main className="h-full grid grid-cols-2 xl:grid-cols-3 rounded-2xl">
-        <div className="col-span-1 hidden xl:grid bg-card place-items-center rounded-l-3xl my-6 shadow-2xl">
-          <ThirdwebLogo key="logo-xl" />
+    <div className="bg-background h-full">
+      <nav className="fixed top-0 w-full flex flex-row justify-between items-center px-6 py-4 z-20">
+        <ThirdwebMiniLogo className="max-h-7" />
+        <ColorModeToggle />
+      </nav>
+      <main className="h-full relative grid place-items-center">
+        <div className="flex flex-col gap-8 z-10">
+          <h1 className="font-semibold text-2xl">Get started with thirdweb</h1>
+          <Suspense>
+            <CustomConnectEmmbed />
+          </Suspense>
         </div>
-        <div className="relative col-span-2 grid place-items-center bg-background rounded-3xl shadow-2xl">
-          <div className="absolute top-4 right-4">
-            <ColorModeToggle />
-          </div>
-          <div className="flex flex-col gap-8 items-center ">
-            <ThirdwebLogo key="logo-sm" className="flex xl:hidden" />
-            <Suspense>
-              <CustomConnectEmmbed />
-            </Suspense>
-          </div>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt=""
+          src="/assets/login/background.svg"
+          className="fixed bottom-0 right-0"
+        />
       </main>
     </div>
   );
@@ -35,6 +37,7 @@ export default function LoginPage() {
 function CustomConnectEmmbed() {
   const isLG = useMediaQuery("(min-width: 1024px)");
   const searchParams = useSearchParams();
+  const { theme } = useTheme();
   return (
     <ConnectEmbed
       auth={{
@@ -45,19 +48,30 @@ function CustomConnectEmmbed() {
       }}
       client={thirdwebClient}
       modalSize={isLG ? "wide" : "compact"}
+      theme={
+        theme === "light"
+          ? lightTheme({
+              colors: {
+                primaryButtonBg: "hsl(var(--primary))",
+                modalBg: "hsl(var(--background))",
+                borderColor: "hsl(var(--border))",
+                secondaryButtonBg: "hsl(var(--secondary))",
+                secondaryButtonHoverBg: "hsl(var(--accent))",
+                tertiaryBg: "hsl(var(--accent))",
+              },
+            })
+          : darkTheme({
+              colors: {
+                primaryButtonBg: "hsl(var(--primary))",
+                modalBg: "hsl(var(--background))",
+                borderColor: "hsl(var(--border))",
+                secondaryButtonBg: "hsl(var(--secondary))",
+                secondaryButtonHoverBg: "hsl(var(--accent))",
+                tertiaryBg: "hsl(var(--accent))",
+              },
+            })
+      }
     />
-  );
-}
-
-function ThirdwebLogo({ className }: { className?: string }) {
-  return (
-    <div className={cn("flex flex-row items-center gap-4", className)}>
-      <ThirdwebMiniLogo
-        key="foo"
-        className="size-16 md:size-24 flex-shrink-0"
-      />
-      <h1 className="text-4xl md:text-5xl font-bold">thirdweb</h1>
-    </div>
   );
 }
 
