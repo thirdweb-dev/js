@@ -42,7 +42,9 @@ export async function postAuth({
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
-        : undefined, // TODO (rn) store phone number too?
+        : "phoneNumber" in storedToken.authDetails
+          ? storedToken.authDetails.phoneNumber
+          : undefined,
   });
 
   if (storedToken.isNewUser) {
@@ -100,7 +102,9 @@ export async function postAuthUserManaged(
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
-        : undefined, // TODO (rn) store phone number too?
+        : "phoneNumber" in storedToken.authDetails
+          ? storedToken.authDetails.phoneNumber
+          : undefined,
   });
 
   if (storedToken.isNewUser) {
