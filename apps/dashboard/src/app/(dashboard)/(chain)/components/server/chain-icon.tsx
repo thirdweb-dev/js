@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import "server-only";
 
-import { DASHBOARD_THIRDWEB_SECRET_KEY } from "@/constants/env";
-import { thirdwebClient } from "lib/thirdweb-client";
+import {
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+  IPFS_GATEWAY_URL,
+} from "@/constants/env";
+import { createThirdwebClient } from "thirdweb";
 import { resolveScheme } from "thirdweb/storage";
 
 const fallbackChainIcon =
@@ -13,8 +16,16 @@ export async function ChainIcon(props: {
   className?: string;
 }) {
   if (props.iconUrl) {
+    const client = createThirdwebClient({
+      secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
+      config: {
+        storage: {
+          gatewayUrl: IPFS_GATEWAY_URL,
+        },
+      },
+    });
     const resolved = resolveScheme({
-      client: thirdwebClient,
+      client,
       uri: props.iconUrl,
     });
     const res = await fetch(resolved, {

@@ -1,5 +1,8 @@
 export type SearchMode = "all" | "mainnet" | "testnet";
 
+const TYPESENSE_URL =
+  "https://search.thirdweb.com/collections/contracts/documents/search";
+
 export const getSearchQuery = ({
   query,
   walletAddress = "",
@@ -17,9 +20,7 @@ export const getSearchQuery = ({
   getAllOwnedByWallet?: boolean;
   filterByChains?: number[];
 }) => {
-  const baseUrl = new URL(
-    "https://search.thirdweb.com/collections/contracts/documents/search",
-  );
+  const baseUrl = new URL(TYPESENSE_URL);
   baseUrl.searchParams.set("q", query);
   baseUrl.searchParams.set(
     "query_by",

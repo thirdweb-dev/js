@@ -653,7 +653,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               {isAccountFactory
                 ? "Direct contract interaction (advanced)"
                 : chainInfo
-                  ? `Getting Started with ${chainInfo.name}`
+                  ? "Interact with this contract from your app"
                   : "Getting Started"}
             </Heading>
           </Flex>
