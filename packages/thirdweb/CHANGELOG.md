@@ -1,5 +1,15 @@
 # thirdweb
 
+## 5.34.2
+
+### Patch Changes
+
+- [#3642](https://github.com/thirdweb-dev/js/pull/3642) [`f239d09`](https://github.com/thirdweb-dev/js/commit/f239d09eaeb09d7f6d1f7f6cfde798b0a2f8143c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - MediaRenderer: only render video poster if it's an image
+
+- [#3656](https://github.com/thirdweb-dev/js/pull/3656) [`77d7dd1`](https://github.com/thirdweb-dev/js/commit/77d7dd135f9515b4d62b1531d376933838f7db50) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix autoconnect for phone number sign in on RN
+
+- [#3655](https://github.com/thirdweb-dev/js/pull/3655) [`9dd7b4d`](https://github.com/thirdweb-dev/js/commit/9dd7b4de79c8cdd06980e637259c05a1a1a963a0) Thanks [@MananTank](https://github.com/MananTank)! - Ensure all wallet's account address is checksum encoded
+
 ## 5.34.1
 
 ### Patch Changes
