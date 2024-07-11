@@ -4,6 +4,7 @@ import { getCachedChain } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
+import { getAddress } from "../../../../utils/address.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
@@ -247,7 +248,7 @@ export class IFrameWallet {
       return signedTransaction as Hex;
     };
     return {
-      address,
+      address: getAddress(address),
       async signTransaction(tx) {
         if (!tx.chainId) {
           throw new Error("chainId required in tx to sign");

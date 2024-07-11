@@ -277,7 +277,8 @@ export async function coinbaseSDKWalletGetCallsStatus(args: {
   }) as Promise<GetCallsStatusResponse>;
 }
 
-function createAccount(provider: ProviderInterface, address: string) {
+function createAccount(provider: ProviderInterface, _address: string) {
+  const address = getAddress(_address);
   const account: Account = {
     address,
     async sendTransaction(tx: SendTransactionOption) {

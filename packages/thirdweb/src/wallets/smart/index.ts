@@ -14,6 +14,7 @@ import {
   signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { getAddress } from "../../utils/address.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
   Account,
@@ -166,7 +167,7 @@ async function createSmartAccount(
 ): Promise<Account> {
   const { accountContract } = options;
   const account: Account = {
-    address: accountContract.address,
+    address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
       const executeTx = prepareExecute({
         accountContract,
