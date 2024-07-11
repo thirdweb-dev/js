@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.34.3
+
+### Patch Changes
+
+- [#3657](https://github.com/thirdweb-dev/js/pull/3657) [`3d14162`](https://github.com/thirdweb-dev/js/commit/3d14162a69eb413e8c3d89c257a3e76fccddf61c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix extension contract detection
+
 ## 5.34.2
 
 ### Patch Changes
