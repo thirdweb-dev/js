@@ -124,9 +124,9 @@ export async function autoConnectInjectedWallet(
   return onConnect(provider, address, connectedChain, emitter);
 }
 
-function createAccount(provider: Ethereum, address: string) {
+function createAccount(provider: Ethereum, _address: string) {
   const account: Account = {
-    address,
+    address: getAddress(_address),
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
