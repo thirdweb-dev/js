@@ -69,6 +69,12 @@ export function transferBatch(
             return encodeTransfer({
               to: transfer.to,
               value: amount,
+              overrides: {
+                erc20Value: {
+                  amountWei: amount,
+                  tokenAddress: options.contract.address,
+                },
+              },
             });
           }),
         ),

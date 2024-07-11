@@ -53,6 +53,12 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
       return {
         to: options.to,
         value: amount,
+        overrides: {
+          erc20Value: {
+            amountWei: amount,
+            tokenAddress: options.contract.address,
+          },
+        },
       } as const;
     },
   });

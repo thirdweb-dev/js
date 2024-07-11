@@ -6,7 +6,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
-import { toEther } from "../../../../../../utils/units.js";
+import { toEther, toTokens } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import {
   type Theme,
@@ -618,7 +618,10 @@ function MainScreen(props: {
           <Spacer y="lg" />
           <BuyForTxUI
             amountNeeded={String(
-              formatNumber(Number(toEther(amountNeeded)), 6),
+              formatNumber(
+                Number(toTokens(amountNeeded, props.buyForTx.tokenDecimals)),
+                6,
+              ),
             )}
             buyForTx={props.buyForTx}
             client={client}
