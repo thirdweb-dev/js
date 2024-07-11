@@ -152,15 +152,17 @@ export async function createTicketAction(
     return { success: false, message: "The max file size is 20MB." };
   }
 
+  // add the content
+  formData.append("json", JSON.stringify(content));
+
+  const KEEP_FIELDS = ["attachments", "json"];
+  const keys = [...formData.keys()];
   // delete everything except attachments off of the form data
-  for (const key of formData.keys()) {
-    if (key !== "attachments") {
+  for (const key of keys) {
+    if (!KEEP_FIELDS.includes(key)) {
       formData.delete(key);
     }
   }
-  formData.delete("extraInfo_Problem_Area");
-  // add the content
-  formData.append("json", JSON.stringify(content));
 
   // actually create the ticket
   const res = await fetch("https://api.unthread.io/api/conversations", {
