@@ -104,45 +104,45 @@ export default async function ChainPageLayout({
           {/* end header shaningans */}
           <div className="container flex flex-col md:flex-row justify-between md:items-center">
             <div className="flex flex-col gap-2 md:gap-6">
-              <Link href="/chainlist" className="text-foreground mt-4">
-                <span className="relative">
-                  <span className="inline-flex items-center gap-1">
-                    <ArrowLeftIcon className="size-5" />
-                    Chainlist
-                  </span>
-                  <span
-                    aria-hidden
-                    className="inline-flex items-center gap-1 absolute -z-10 left-0 text-background blur-md"
-                  >
-                    <ArrowLeftIcon className="size-5" />
-                    Chainlist
-                  </span>
-                </span>
+              <Link
+                href="/chainlist"
+                className={cn(
+                  "text-foreground mt-4 inline-flex items-center gap-1",
+                  // if we have a header image always light text
+                  chainMetadata?.headerImgUrl && "text-white",
+                )}
+              >
+                <ArrowLeftIcon className="size-5" />
+                Chainlist
               </Link>
 
               <div className="flex gap-3 md:gap-5 items-center">
                 {chain.icon?.url && (
-                  <ChainIcon
-                    iconUrl={chain.icon.url}
-                    className="size-16 md:size-20 bg-secondary p-2 border-2 rounded-full"
-                  />
+                  <div
+                    className={cn(
+                      "bg-secondary p-2 border rounded-full overflow-hidden",
+                    )}
+                  >
+                    <ChainIcon
+                      iconUrl={chain.icon.url}
+                      className={cn(
+                        "size-14 md:size-18 rounded-full",
+                        // if we it's "mantle" chain, invert the icon in dark mode
+                        chain.chainId === 5000 && "dark:invert",
+                      )}
+                    />
+                  </div>
                 )}
 
                 {/* Chain Name */}
                 <h1
                   className={cn(
                     "font-semibold tracking-tighter text-4xl md:text-6xl",
+                    // if we have a header image always light text
+                    chainMetadata?.headerImgUrl && "text-white",
                   )}
                 >
-                  <span className="relative">
-                    {chain.name}
-                    <span
-                      aria-hidden
-                      className="text-background absolute left-0 -z-10 blur-lg"
-                    >
-                      {chain.name}
-                    </span>
-                  </span>
+                  {chain.name}
                 </h1>
                 <StarButton chainId={chain.chainId} variant="secondary" />
               </div>
@@ -162,7 +162,10 @@ export default async function ChainPageLayout({
               </div>
             </div>
             <div className="flex flex-row md:flex-col gap-4">
-              <AddChainToWallet chain={defineChain(chain)} />
+              <AddChainToWallet
+                chain={defineChain(chain)}
+                hasBackground={!!chainMetadata?.headerImgUrl}
+              />
               {isVerified ? null : (
                 <Button
                   className="w-full md:min-w-40"

@@ -3,6 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import type { Chain } from "thirdweb";
 import {
@@ -14,6 +15,7 @@ import { useDebounce } from "use-debounce";
 
 type AddChainToWalletProps = {
   chain?: Chain;
+  hasBackground?: boolean;
 };
 
 export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
@@ -38,7 +40,10 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
       disabled={
         !address || debouncedLoading || activeWalletChainId === props.chain?.id
       }
-      className="w-full md:min-w-40"
+      className={cn(
+        "w-full md:min-w-40",
+        props.hasBackground && "invert dark:invert-0",
+      )}
       onClick={() => switchChainMutation.mutate()}
     >
       {debouncedLoading && <Spinner />}
