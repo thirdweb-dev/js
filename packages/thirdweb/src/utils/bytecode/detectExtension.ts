@@ -1,8 +1,8 @@
 import type { AbiFunction } from "abitype";
 import { toFunctionSelector } from "viem";
-import { getBytecode } from "../../contract/actions/get-bytecode.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import type { PreparedMethod } from "../abi/prepare-method.js";
+import { resolveImplementation } from "./resolveImplementation.js";
 
 type DetectExtensionOptions = {
   contract: ThirdwebContract;
@@ -26,7 +26,7 @@ type DetectExtensionOptions = {
 export async function detectMethod(
   options: DetectExtensionOptions,
 ): Promise<boolean> {
-  const bytecode = await getBytecode(options.contract);
+  const { bytecode } = await resolveImplementation(options.contract);
   return detectMethodInBytecode({ bytecode, method: options.method });
 }
 
