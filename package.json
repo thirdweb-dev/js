@@ -15,6 +15,7 @@
     "lint": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk && turbo run lint",
     "lint:legacy": "pnpm lint",
     "fix": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk --fix && turbo run fix",
+    "tiphub": "turbo run dev --filter=./apps/tiphub --filter=./packages/thirdweb",
     "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb",

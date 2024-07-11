@@ -144,11 +144,7 @@ const moduleExports = {
   reactStrictMode: true,
   experimental: {
     scrollRestoration: true,
-    esmExternals: "loose",
-    webpackBuildWorker: true,
-    serverSourceMaps: false,
   },
-  cacheMaxMemorySize: 0,
   swcMinify: true,
   compiler: {
     emotion: true,

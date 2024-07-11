@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev:no-cache": "rm -rf .next/cache && pnpm run dev",
-    "dev": "next dev",
+    "dev:no-cache": "rm -rf .next/cache && pnpm run dev --turbo",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "format": "biome format ./src --write",
@@ -76,7 +76,7 @@
     "ioredis": "^5.4.1",
     "lottie-react": "^2.4.0",
     "lucide-react": "^0.399.0",
-    "next": "14.2.4",
+    "next": "14.2.5",
     "next-plausible": "^3.12.0",
     "next-seo": "^6.5.0",
     "next-themes": "^0.3.0",
@@ -167,16 +167,8 @@
       "tw-components",
       "contract-ui"
     ],
-    "exclude": [
-      "node_modules",
-      "types",
-      "tw-components"
-    ],
+    "exclude": ["node_modules", "types", "tw-components"],
     "entrypoints": []
   },
-  "browserslist": [
-    "defaults",
-    "unreleased versions",
-    "not UCAndroid > 0"
-  ]
+  "browserslist": ["defaults", "unreleased versions", "not UCAndroid > 0"]
 }

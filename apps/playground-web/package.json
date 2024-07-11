@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .next && next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "format": "biome format ./src --write",
@@ -20,7 +20,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.399.0",
-    "next": "14.2.4",
+    "next": "14.2.5",
     "next-themes": "^0.3.0",
     "prettier": "^3.3.2",
     "react": "18.3.1",
