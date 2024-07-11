@@ -98,18 +98,26 @@ export default async function ChainPageLayout({
                   : undefined
               }
             />
-            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/0 to-secondary/30 shadow-inner" />
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/0 to-secondary/0 shadow-inner" />
           </div>
 
           {/* end header shaningans */}
           <div className="container flex flex-col md:flex-row justify-between md:items-center">
             <div className="flex flex-col gap-2 md:gap-6">
-              <Link
-                href="/chainlist"
-                className="inline-flex items-center gap-1 text-foreground hover:underline mt-4"
-              >
-                <ArrowLeftIcon className="size-5" />
-                Chainlist
+              <Link href="/chainlist" className="text-foreground mt-4">
+                <span className="relative">
+                  <span className="inline-flex items-center gap-1">
+                    <ArrowLeftIcon className="size-5" />
+                    Chainlist
+                  </span>
+                  <span
+                    aria-hidden
+                    className="inline-flex items-center gap-1 absolute -z-10 left-0 text-background blur-md"
+                  >
+                    <ArrowLeftIcon className="size-5" />
+                    Chainlist
+                  </span>
+                </span>
               </Link>
 
               <div className="flex gap-3 md:gap-5 items-center">
@@ -126,7 +134,15 @@ export default async function ChainPageLayout({
                     "font-semibold tracking-tighter text-4xl md:text-6xl",
                   )}
                 >
-                  {chain.name}
+                  <span className="relative">
+                    {chain.name}
+                    <span
+                      aria-hidden
+                      className="text-background absolute left-0 -z-10 blur-lg"
+                    >
+                      {chain.name}
+                    </span>
+                  </span>
                 </h1>
                 <StarButton chainId={chain.chainId} variant="secondary" />
               </div>
@@ -178,8 +194,10 @@ export default async function ChainPageLayout({
                   About
                 </h2>
 
-                <div className="[&_p]:mb-3 [&_p]:text-card-foreground max-w-[1000px]">
-                  <p>{chainMetadata.about}</p>
+                <div className="[&_p]:mb-3 [&_p]:text-card-foreground">
+                  <pre className="text-wrap font-sans">
+                    {chainMetadata.about}
+                  </pre>
                 </div>
               </div>
               <div className="h-8" />

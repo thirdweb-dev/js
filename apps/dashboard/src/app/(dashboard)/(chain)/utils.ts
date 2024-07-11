@@ -2,10 +2,11 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/components/server/cta-card";
+import ancient8Banner from "./temp-assets/ancient8-banner.jpg";
+// TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
-// TEMPORARY
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
 // END TEMPORARY
@@ -113,6 +114,13 @@ const chainMetaRecord = {
   690: {
     cta: OP_CTA,
     gasSponsored: true,
+  },
+  // ancient8
+  888888888: {
+    about:
+      "Ancient8 is building an ETH gaming Layer 2 built with OP Stack, offering a suite of Web3 gaming infrastructure tools that serve as the distribution and marketing channel for games globally. With Space3 Game Publishing Platform, Ancient8 Gaming Guild, Reneverse Web3 Ads engine, A8ID, and Gosu Network, Ancient8 is dedicated to onboard millions of gamers to Web3 gaming, while providing unparalleled support to game developers looking to reach more players. Ancient8’s products have helped 100+ Web3 games and 200K+ users better navigate Web3.\n\nAncient8 has raised $10M in total financing from leading investors including Pantera, Dragonfly, Hashed, Makers Fund, Mechanism, Coinbase, IOSG, Jump and Animoca.",
+    // TODO: add CTA
+    headerImgUrl: ancient8Banner.src,
   },
 } satisfies Record<number, ChainMetadata>;
 // END TEMPORARY
