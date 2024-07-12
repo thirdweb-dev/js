@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import type { SortBy, TimeRange } from "../../lib/search";
+import {
+  type SortBy,
+  type TimeRange,
+  fetchTopContracts,
+} from "../../lib/search";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {
@@ -14,6 +18,9 @@ export const metadata: Metadata = {
 export default async function DashboardContractTrendingPage(props: {
   searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
 }) {
+  const topContracts = await fetchTopContracts({
+    ...props.searchParams,
+  });
   return (
     <div>
       <div className="container px-0 flex flex-col gap-8 py-6">
@@ -33,9 +40,8 @@ export default async function DashboardContractTrendingPage(props: {
           </div>
           <div className="flex my-8 mx-4 gap-8 w-full">
             <TrendingContractSection
-              timeRange={props.searchParams.timeRange}
-              page={props.searchParams.page}
-              sortBy={props.searchParams.sortBy}
+              topContracts={topContracts}
+              {...props.searchParams}
             />
           </div>
         </div>

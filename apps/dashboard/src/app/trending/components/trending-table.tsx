@@ -10,46 +10,43 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
-import {
-  type TrendingContract,
-  type TrendingContractProps,
-  fetchTopContracts,
-} from "../../../lib/search";
+import type { SortBy, TimeRange, TrendingContract } from "../../../lib/search";
 import { TablePagination } from "./pagination.client";
 import { SortingHeader } from "./sorting-header.client";
 import { TimeRangeSwitcher } from "./time-range-switcher.client";
 
-export async function TrendingContractSection(props: TrendingContractProps) {
+export async function TrendingContractSection(props: {
+  topContracts: TrendingContract[];
+  chainId?: number;
+  timeRange?: TimeRange;
+  page?: number;
+  perPage?: number;
+  sortBy?: SortBy;
+}) {
   const isLandingPage = props.chainId === undefined;
-  const topContracts = await fetchTopContracts({
-    timeRange: props.timeRange,
-    perPage: props.perPage,
-    chainId: props.chainId,
-    page: props.page,
-    sortBy: props.sortBy,
-  });
   const firstIndex = Math.max(
     0,
     ((props.page || 1) - 1) * (props.perPage || 10),
   );
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="w-full flex flex-row gap-4 justify-center md:justify-end py-4">
-        <TimeRangeSwitcher />
-      </div>
-      <Table
-        className={`border-white ${isLandingPage && "border-b-[1px] font-mono text-xs md:text-sm mb-4"}`}
-      >
-        <TableHeader>
-          <TableRow
-            className={`bg-secondary ${isLandingPage && "border-white"}`}
-          >
-            <TableHead className="text-left">RANK</TableHead>
-            <TableHead>CONTRACT</TableHead>
-            <TableHead>
-              <SortingHeader
-                title={`CHANGE (
+    props.topContracts.length > 0 && (
+      <div className="flex flex-col gap-4 w-full">
+        <div className="w-full flex flex-row gap-4 justify-center md:justify-end py-4">
+          <TimeRangeSwitcher />
+        </div>
+        <Table
+          className={`border-white ${isLandingPage && "border-b-[1px] font-mono text-xs md:text-sm mb-4"}`}
+        >
+          <TableHeader>
+            <TableRow
+              className={`bg-secondary ${isLandingPage && "border-white"}`}
+            >
+              <TableHead className="text-left">RANK</TableHead>
+              <TableHead>CONTRACT</TableHead>
+              <TableHead>
+                <SortingHeader
+                  title={`CHANGE (
               ${
                 props.timeRange === "month"
                   ? "30d"
@@ -58,91 +55,94 @@ export async function TrendingContractSection(props: TrendingContractProps) {
                     : "24h"
               }
               )`}
-                sortBy="transactionCountChange"
-              />
-            </TableHead>
-            {props.chainId ? null : <TableHead>CHAIN</TableHead>}
-            <TableHead className="text-center">TYPE</TableHead>
-            <TableHead>
-              <SortingHeader title="TRANSACTIONS" sortBy="transactionCount" />
-            </TableHead>
-            <TableHead>
-              <SortingHeader title="WALLETS" sortBy="walletCount" />
-            </TableHead>
-            <TableHead>
-              <SortingHeader title="GAS USAGE" sortBy="gasUsage" />
-            </TableHead>
-            <TableHead>
-              <SortingHeader title="VALUE MOVED" sortBy="totalValueMoved" />
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {topContracts.map((contract, index) => (
-            <TableRow
-              key={`${contract.chainMetadata.chainId}${contract.contractAddress}${index}`}
-              className={`${isLandingPage && "border-white !border-x-[1px]"}`}
-              style={{
-                backgroundColor: isLandingPage
-                  ? `rgb(200, 72, 0, ${0.4 - index * 0.05})`
-                  : isLandingPage
-                    ? "rgba(0, 0, 0, 0.5)"
-                    : undefined,
-              }}
-            >
-              <TableCell className="text-left">
-                {index + 1 + firstIndex}
-              </TableCell>
-              <TableCell className="font-medium">
-                <a
-                  href={`/${contract.chainMetadata.chainId}/${contract.contractAddress}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`${isLandingPage ? "underline" : "text-primary"}`}
-                >
-                  {getContractName(contract)}
-                </a>
-              </TableCell>
-              <TableCell className="text-left flex justify-start">
-                <ChangeCell
-                  displayCount={contract.transactionCount}
-                  change={contract.transactionCountChange}
+                  sortBy="transactionCountChange"
                 />
-              </TableCell>
-              {props.chainId ? null : (
-                <TableCell>
-                  <ChainCell chainMetadata={contract.chainMetadata} />
-                </TableCell>
-              )}
-              <TableCell className="text-center">
-                {contract.type ? contract.type : null}
-              </TableCell>
-              <TableCell className="text-right">
-                {contract.transactionCount}
-              </TableCell>
-              <TableCell className="text-right">
-                {contract.walletCount}
-              </TableCell>
-              <TableCell className="text-right">{contract.gasUsage}</TableCell>
-              <TableCell className="text-right">
-                {contract.valueMoved}
-              </TableCell>
+              </TableHead>
+              {props.chainId ? null : <TableHead>CHAIN</TableHead>}
+              <TableHead className="text-center">TYPE</TableHead>
+              <TableHead>
+                <SortingHeader title="TRANSACTIONS" sortBy="transactionCount" />
+              </TableHead>
+              <TableHead>
+                <SortingHeader title="WALLETS" sortBy="walletCount" />
+              </TableHead>
+              <TableHead>
+                <SortingHeader title="GAS USAGE" sortBy="gasUsage" />
+              </TableHead>
+              <TableHead>
+                <SortingHeader title="VALUE MOVED" sortBy="totalValueMoved" />
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-        {isLandingPage && (
-          <TableCaption className="text-left text-primary-foreground">
-            built by{" "}
-            <a href="https://thirdweb.com" className="underline">
-              thirdweb
-            </a>
-          </TableCaption>
-        )}
-      </Table>
-      <div className="w-full flex flex-row gap-4 justify-end">
-        <TablePagination isLandingPage={isLandingPage} />
+          </TableHeader>
+          <TableBody>
+            {props.topContracts.map((contract, index) => (
+              <TableRow
+                key={`${contract.chainMetadata.chainId}${contract.contractAddress}${index}`}
+                className={`${isLandingPage && "border-white !border-x-[1px]"}`}
+                style={{
+                  backgroundColor: isLandingPage
+                    ? `rgb(200, 72, 0, ${0.5 - index * 0.05})`
+                    : isLandingPage
+                      ? "rgba(0, 0, 0, 0.5)"
+                      : undefined,
+                }}
+              >
+                <TableCell className="text-left">
+                  {index + 1 + firstIndex}
+                </TableCell>
+                <TableCell className="font-medium">
+                  <a
+                    href={`/${contract.chainMetadata.chainId}/${contract.contractAddress}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`${isLandingPage ? "underline" : "text-link-foreground"}`}
+                  >
+                    {getContractName(contract)}
+                  </a>
+                </TableCell>
+                <TableCell className="text-left flex justify-start">
+                  <ChangeCell
+                    displayCount={contract.transactionCount}
+                    change={contract.transactionCountChange}
+                  />
+                </TableCell>
+                {props.chainId ? null : (
+                  <TableCell>
+                    <ChainCell chainMetadata={contract.chainMetadata} />
+                  </TableCell>
+                )}
+                <TableCell className="text-center">
+                  {contract.type ? contract.type : null}
+                </TableCell>
+                <TableCell className="text-right">
+                  {contract.transactionCount}
+                </TableCell>
+                <TableCell className="text-right">
+                  {contract.walletCount}
+                </TableCell>
+                <TableCell className="text-right">
+                  {contract.gasUsage}
+                </TableCell>
+                <TableCell className="text-right">
+                  {contract.valueMoved}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          {isLandingPage && (
+            <TableCaption className="text-left text-primary-foreground">
+              built by{" "}
+              <a href="https://thirdweb.com" className="underline">
+                thirdweb
+              </a>
+            </TableCaption>
+          )}
+        </Table>
+        <div className="w-full flex flex-row gap-4 justify-end">
+          <TablePagination isLandingPage={isLandingPage} />
+        </div>
       </div>
-    </div>
+    )
   );
 }
 

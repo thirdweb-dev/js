@@ -1,7 +1,7 @@
 import { ChevronRight, ShieldCheckIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { TimeRange } from "../../../../lib/search";
+import { type TimeRange, fetchTopContracts } from "../../../../lib/search";
 import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain } from "../utils";
 import { InfoCard } from "./components/server/info-card";
@@ -45,25 +45,33 @@ const popularContracts: ContractCardInfo[] = [
 
 export default async function Page(props: {
   params: { chain_id: string };
-  searchParams: { timeRange?: TimeRange };
+  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
 }) {
   const chain = await getChain(props.params.chain_id);
+  const topContracts = await fetchTopContracts({
+    chainId: chain.chainId,
+    ...props.searchParams,
+  });
   return (
     <div>
       <div className="h-4" />
 
-      <div className="flex flex-col gap-4">
-        <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
-          Popular Contracts on {chain.name.split(" ")[0]}
-        </h3>
-        <TrendingContractSection
-          chainId={chain.chainId}
-          perPage={15}
-          timeRange={props.searchParams.timeRange}
-        />
-      </div>
+      {topContracts.length > 0 && (
+        <>
+          <div className="flex flex-col gap-4">
+            <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
+              Popular Contracts on {chain.name.split(" ")[0]}
+            </h3>
+            <TrendingContractSection
+              topContracts={topContracts}
+              chainId={chain.chainId}
+              {...props.searchParams}
+            />
+          </div>
 
-      <div className="h-10" />
+          <div className="h-10" />
+        </>
+      )}
 
       <div className="flex items-center justify-between">
         <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
