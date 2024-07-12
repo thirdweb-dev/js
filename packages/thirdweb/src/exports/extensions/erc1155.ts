@@ -156,3 +156,6 @@ export {
   openPack,
   type OpenPackParams,
 } from "../../extensions/erc1155/__generated__/IPack/write/openPack.js";
+
+// Zora 1155 contract
+export { nextTokenId } from "../../extensions/erc1155/__generated__/Zora1155/read/nextTokenId.js";
