@@ -25,6 +25,7 @@ import {
   TrackedLink,
 } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
+import { NotificationButton } from "../../notification/NotificationButton";
 
 export interface AppShellProps {
   layout?: "custom-contract";
@@ -146,6 +147,8 @@ const AppHeader: React.FC = () => {
           >
             Support
           </Button>
+
+          <NotificationButton />
 
           <Flex display={{ base: "flex", md: "none" }}>
             <TrackedIconButton
