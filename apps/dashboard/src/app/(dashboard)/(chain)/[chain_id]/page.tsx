@@ -1,7 +1,11 @@
 import { ChevronRight, ShieldCheckIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type TimeRange, fetchTopContracts } from "../../../../lib/search";
+import {
+  type SortBy,
+  type TimeRange,
+  fetchTopContracts,
+} from "../../../../lib/search";
 import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain } from "../utils";
 import { InfoCard } from "./components/server/info-card";
