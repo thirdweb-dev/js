@@ -17,6 +17,7 @@ import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
 type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 
 export function SwapStatusScreen(props: {
+  title: string;
   onBack?: () => void;
   onViewPendingTx: () => void;
   swapTxHash: string;
@@ -77,7 +78,7 @@ export function SwapStatusScreen(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Buy" onBack={props.onBack} />
+        <ModalHeader title={props.title} onBack={props.onBack} />
         <Spacer y="sm" />
 
         {uiStatus === "success" && (

@@ -5,6 +5,7 @@ import { SwapDetailsScreen } from "./SwapDetailsScreen.js";
 import type { TxStatusInfo } from "./useBuyTransactionsToShow.js";
 
 export function TxDetailsScreen(props: {
+  title: string;
   client: ThirdwebClient;
   statusInfo: TxStatusInfo;
   onBack: () => void;
@@ -28,6 +29,7 @@ export function TxDetailsScreen(props: {
   if (statusInfo.type === "fiat") {
     return (
       <FiatDetailsScreen
+        title={props.title}
         client={props.client}
         status={statusInfo.status}
         onBack={props.onBack}

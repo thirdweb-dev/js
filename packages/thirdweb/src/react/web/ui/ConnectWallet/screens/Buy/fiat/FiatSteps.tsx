@@ -83,6 +83,7 @@ export function fiatQuoteToPartialQuote(
 }
 
 export function FiatSteps(props: {
+  title: string;
   partialQuote: BuyWithFiatPartialQuote;
   status?: BuyWithFiatStatus;
   onBack: () => void;
@@ -308,7 +309,7 @@ export function FiatSteps(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={props.title} onBack={props.onBack} />
       <Spacer y="lg" />
 
       {/* Step 1 */}

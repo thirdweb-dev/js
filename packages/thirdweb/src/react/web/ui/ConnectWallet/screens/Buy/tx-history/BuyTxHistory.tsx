@@ -36,6 +36,7 @@ import {
  * @internal
  */
 export function BuyTxHistory(props: {
+  title: string;
   onBack?: () => void;
   client: ThirdwebClient;
   onDone: () => void;
@@ -59,6 +60,7 @@ export function BuyTxHistory(props: {
   if (selectedTx) {
     return (
       <TxDetailsScreen
+        title={props.title}
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}

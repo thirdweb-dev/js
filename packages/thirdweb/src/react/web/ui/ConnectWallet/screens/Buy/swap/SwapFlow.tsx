@@ -10,6 +10,7 @@ import { SwapConfirmationScreen } from "./ConfirmationScreen.js";
 import { SwapStatusScreen } from "./SwapStatusScreen.js";
 
 type SwapFlowProps = {
+  title: string;
   onBack?: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
   payer: PayerInfo;
@@ -75,6 +76,7 @@ export function SwapFlow(props: SwapFlowProps) {
   if (swapTxHash) {
     return (
       <SwapStatusScreen
+        title={props.title}
         onBack={props.onBack}
         onTryAgain={props.onTryAgain}
         onViewPendingTx={props.onViewPendingTx}
@@ -90,6 +92,7 @@ export function SwapFlow(props: SwapFlowProps) {
 
   return (
     <SwapConfirmationScreen
+      title={props.title}
       setSwapTxHash={setSwapTxHash}
       toChain={toChain}
       toAmount={toAmount}

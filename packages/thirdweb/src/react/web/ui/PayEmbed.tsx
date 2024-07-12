@@ -124,6 +124,13 @@ export type PayEmbedProps = {
    */
   connectOptions?: PayEmbedConnectOptions;
 
+  /**
+   * Customize the display of the PayEmbed UI.
+   */
+  metadata?: {
+    title?: string;
+  };
+
   style?: React.CSSProperties;
 };
 
@@ -175,6 +182,7 @@ export function PayEmbed(props: PayEmbedProps) {
       <>
         <div style={{ display: screen === "tx-history" ? "none" : "inherit" }}>
           <BuyScreen
+            title={props.metadata?.title || "Buy"}
             isEmbed={true}
             supportedTokens={props.supportedTokens}
             theme={theme}
@@ -195,6 +203,7 @@ export function PayEmbed(props: PayEmbedProps) {
         {/* this does not need to persist so we can just show-hide it with JS */}
         {screen === "tx-history" && (
           <BuyTxHistory
+            title={props.metadata?.title || "Buy"}
             client={props.client}
             onBack={() => {
               setScreen("buy");

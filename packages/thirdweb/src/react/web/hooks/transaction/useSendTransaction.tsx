@@ -77,6 +77,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
         : (data) => {
             setRootEl(
               <TxModal
+                title={payModal?.metadata?.title || "Buy"}
                 tx={data.tx}
                 onComplete={data.sendTx}
                 onClose={() => {
@@ -108,6 +109,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
 }
 
 type ModalProps = {
+  title: string;
   onComplete: () => void;
   onClose: () => void;
   client: ThirdwebClient;
@@ -163,6 +165,7 @@ function ModalContent(props: ModalProps) {
   if (screen === "tx-history") {
     return (
       <BuyTxHistory
+        title={props.title}
         client={props.client}
         onBack={() => {
           setScreen("buy");
@@ -178,6 +181,7 @@ function ModalContent(props: ModalProps) {
 
   return (
     <LazyBuyScreen
+      title={props.title}
       isEmbed={false}
       client={props.client}
       onViewPendingTx={() => {

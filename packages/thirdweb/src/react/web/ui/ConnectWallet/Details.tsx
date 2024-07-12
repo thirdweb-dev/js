@@ -639,6 +639,7 @@ function DetailsModal(props: {
   if (screen === "pending-tx") {
     content = (
       <BuyTxHistory
+        title="Buy"
         isBuyForTx={false}
         isEmbed={false}
         onBack={() => setScreen("main")}
@@ -810,6 +811,7 @@ function DetailsModal(props: {
   else if (screen === "buy") {
     content = (
       <LazyBuyScreen
+        title="Buy"
         isEmbed={false}
         client={client}
         onBack={() => setScreen("main")}
