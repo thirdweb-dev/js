@@ -18,6 +18,9 @@ export function TimeRangeSwitcher() {
       onValueChange={async (value: TimeRange) => {
         router.replace(
           `${path}?timeRange=${value}${currentSort ? `&sortBy=${currentSort}` : ""}`,
+          {
+            scroll: false,
+          },
         );
       }}
     >

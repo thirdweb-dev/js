@@ -83,12 +83,11 @@ export async function TrendingContractSection(props: TrendingContractProps) {
               key={`${contract.chainMetadata.chainId}${contract.contractAddress}${index}`}
               className={`${isLandingPage && "border-white !border-x-[1px]"}`}
               style={{
-                backgroundColor:
-                  isLandingPage && index + firstIndex < 3
-                    ? `rgb(200, 72, 0, ${0.3 - index * 0.05})`
-                    : isLandingPage
-                      ? "rgba(0, 0, 0, 0.5)"
-                      : undefined,
+                backgroundColor: isLandingPage
+                  ? `rgb(200, 72, 0, ${0.4 - index * 0.05})`
+                  : isLandingPage
+                    ? "rgba(0, 0, 0, 0.5)"
+                    : undefined,
               }}
             >
               <TableCell className="text-left">

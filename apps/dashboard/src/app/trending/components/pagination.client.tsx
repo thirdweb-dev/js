@@ -28,6 +28,9 @@ export function TablePagination(props: { isLandingPage?: boolean }) {
               if (page === 1) return;
               router.replace(
                 `${path}?page=${Number(page) - 1}${range?.length ? `&timeRange=${range}` : ""}${currentSort ? `&sortBy=${currentSort}` : ""}`,
+                {
+                  scroll: false,
+                },
               );
             }}
           />
@@ -38,6 +41,9 @@ export function TablePagination(props: { isLandingPage?: boolean }) {
             onClick={() => {
               router.replace(
                 `${path}?page=${Number(page) + 1}${range?.length ? `&timeRange=${range}` : ""}${currentSort ? `&sortBy=${currentSort}` : ""}`,
+                {
+                  scroll: false,
+                },
               );
             }}
           />

@@ -26,6 +26,9 @@ export function SortingHeader(props: SortingHeaderProps) {
         onClick={() => {
           router.replace(
             `${path}?sortBy=${props.sortBy}${range?.length ? `&timeRange=${range}` : ""}${page?.length ? `&page=${page}` : ""}`,
+            {
+              scroll: false,
+            },
           );
         }}
       >
