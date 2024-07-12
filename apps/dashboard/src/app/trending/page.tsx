@@ -16,14 +16,6 @@ export default async function DashboardContractTrendingPage(props: {
 }) {
   return (
     <div>
-      <div
-        className="fixed bottom-0 w-full -z-10"
-        style={{ backgroundColor: "#0E0E0E" }}
-      >
-        <video className="w-full object-center" autoPlay muted loop>
-          <source src="/assets/trending/fire.mp4" type="video/mp4" />
-        </video>
-      </div>
       <div className="container px-0 flex flex-col gap-8 py-6">
         <div className="flex flex-col gap-6 justify-between items-start">
           <div className="w-full flex flex-row justify-center items-center gap-4 mt-8">
