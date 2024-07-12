@@ -16,6 +16,7 @@ import {
   fetchTopContracts,
 } from "../../../lib/search";
 import { TablePagination } from "./pagination.client";
+import { SortingHeader } from "./sorting-header.client";
 import { TimeRangeSwitcher } from "./time-range-switcher.client";
 
 export async function TrendingContractSection(props: TrendingContractProps) {
@@ -25,6 +26,7 @@ export async function TrendingContractSection(props: TrendingContractProps) {
     perPage: props.perPage,
     chainId: props.chainId,
     page: props.page,
+    sortBy: props.sortBy,
   });
   const firstIndex = Math.max(
     0,
@@ -45,21 +47,34 @@ export async function TrendingContractSection(props: TrendingContractProps) {
           >
             <TableHead className="text-left">RANK</TableHead>
             <TableHead>CONTRACT</TableHead>
-            <TableHead className="text-left">
-              CHANGE (
-              {props.timeRange === "month"
-                ? "30d"
-                : props.timeRange === "week"
-                  ? "7d"
-                  : "24h"}
-              )
+            <TableHead>
+              <SortingHeader
+                title={`CHANGE (
+              ${
+                props.timeRange === "month"
+                  ? "30d"
+                  : props.timeRange === "week"
+                    ? "7d"
+                    : "24h"
+              }
+              )`}
+                sortBy="transactionCountChange"
+              />
             </TableHead>
             {props.chainId ? null : <TableHead>CHAIN</TableHead>}
             <TableHead className="text-center">TYPE</TableHead>
-            <TableHead className="text-right">TRANSACTIONS</TableHead>
-            <TableHead className="text-right">WALLETS</TableHead>
-            <TableHead className="text-right">GAS USAGE</TableHead>
-            <TableHead className="text-right">VALUE RECEIVED</TableHead>
+            <TableHead>
+              <SortingHeader title="TRANSACTIONS" sortBy="transactionCount" />
+            </TableHead>
+            <TableHead>
+              <SortingHeader title="WALLETS" sortBy="walletCount" />
+            </TableHead>
+            <TableHead>
+              <SortingHeader title="GAS USAGE" sortBy="gasUsage" />
+            </TableHead>
+            <TableHead>
+              <SortingHeader title="VALUE MOVED" sortBy="totalValueMoved" />
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

@@ -16,6 +16,7 @@ export function TablePagination(props: { isLandingPage?: boolean }) {
   const searchParams = useSearchParams();
   const page = Number(searchParams?.get("page") || 1);
   const range = searchParams?.get("timeRange");
+  const currentSort = searchParams?.get("sortBy") || "transactionCount";
   return (
     <Pagination>
       <PaginationContent>
@@ -26,7 +27,7 @@ export function TablePagination(props: { isLandingPage?: boolean }) {
             onClick={() => {
               if (page === 1) return;
               router.replace(
-                `${path}?page=${Number(page) - 1}${range?.length ? `&timeRange=${range}` : ""}`,
+                `${path}?page=${Number(page) - 1}${range?.length ? `&timeRange=${range}` : ""}${currentSort ? `&sortBy=${currentSort}` : ""}`,
               );
             }}
           />
@@ -36,7 +37,7 @@ export function TablePagination(props: { isLandingPage?: boolean }) {
             className={`${props.isLandingPage && "bg-black/50"}`}
             onClick={() => {
               router.replace(
-                `${path}?page=${Number(page) + 1}${range?.length ? `&timeRange=${range}` : ""}`,
+                `${path}?page=${Number(page) + 1}${range?.length ? `&timeRange=${range}` : ""}${currentSort ? `&sortBy=${currentSort}` : ""}`,
               );
             }}
           />
