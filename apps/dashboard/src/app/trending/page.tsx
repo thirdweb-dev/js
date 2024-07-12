@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { TimeRange } from "../../lib/search";
+import type { SortBy, TimeRange } from "../../lib/search";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardContractTrendingPage(props: {
-  searchParams: { timeRange?: TimeRange; page?: number };
+  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
 }) {
   return (
     <div>
@@ -43,6 +43,7 @@ export default async function DashboardContractTrendingPage(props: {
             <TrendingContractSection
               timeRange={props.searchParams.timeRange}
               page={props.searchParams.page}
+              sortBy={props.searchParams.sortBy}
             />
           </div>
         </div>

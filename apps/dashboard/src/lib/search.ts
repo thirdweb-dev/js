@@ -6,11 +6,13 @@ import {
 import invariant from "tiny-invariant";
 
 export type TimeRange = "month" | "week" | "day";
+export type SortBy = "transactionCount" | "walletCount" | "gasUsage";
 
 export type TrendingContractProps = {
   chainId?: number;
   perPage?: number;
   page?: number;
+  sortBy?: SortBy;
   timeRange?: TimeRange;
 };
 
@@ -42,12 +44,14 @@ export const getSearchQueryUrl = ({
   query = "",
   chainId,
   timeRange = "day",
+  sortBy = "transactionCount",
 }: {
   page?: number;
   perPage?: number;
   query?: string;
   chainId?: number;
   timeRange?: TimeRange;
+  sortBy?: SortBy;
 }) => {
   const baseUrl = new URL(TYPESENSE_URL);
   baseUrl.searchParams.set("query_by", "name,chainId,contractAddress");
@@ -67,10 +71,10 @@ export const getSearchQueryUrl = ({
   baseUrl.searchParams.set(
     "sort_by",
     timeRange === "month"
-      ? "last30Days.transactionCount:desc"
+      ? `last30Days.${sortBy}:desc`
       : timeRange === "week"
-        ? "last7Days.transactionCount:desc"
-        : "last24Hr.transactionCount:desc",
+        ? `last7Days.${sortBy}:desc`
+        : `last24Hr.${sortBy}:desc`,
   );
   return baseUrl.toString();
 };
@@ -81,6 +85,7 @@ export async function fetchTopContracts(args?: {
   perPage?: number;
   page?: number;
   timeRange?: TimeRange;
+  sortBy?: SortBy;
 }) {
   invariant(typesenseApiKey, "No typesense api key");
   const res = await fetch(
@@ -90,6 +95,7 @@ export async function fetchTopContracts(args?: {
       chainId: args?.chainId,
       query: args?.query,
       timeRange: args?.timeRange,
+      sortBy: args?.sortBy,
     }),
     {
       headers: {
