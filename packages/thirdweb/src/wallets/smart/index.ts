@@ -116,6 +116,7 @@ export async function connectSmartWallet(
     adminAddress: personalAccount.address,
     predictAddressOverride: options.overrides?.predictAddress,
     accountSalt: options.overrides?.accountSalt,
+    accountAddress: options.overrides?.accountAddress,
   })
     .then((address) => address)
     .catch((err) => {
