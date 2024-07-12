@@ -215,4 +215,6 @@ export enum PageId {
   Community = "community",
   StartupProgram = "startup-program",
   Support = "support",
+
+  GithubDeploy = "deploy-with-github"
 }

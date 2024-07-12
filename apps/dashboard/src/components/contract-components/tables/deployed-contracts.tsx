@@ -123,6 +123,13 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
               >
                 Deploy contract
               </LinkButton>
+              <LinkButton
+                leftIcon={<FiPlus />}
+                colorScheme="primary"
+                href="/ghdeploy"
+              >
+                Deploy from github
+              </LinkButton>
             </ButtonGroup>
           </Flex>
         </>
