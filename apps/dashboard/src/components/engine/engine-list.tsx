@@ -1,4 +1,5 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   type EngineInstance,
   useEngineInstances,
@@ -13,9 +14,11 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { useTrack } from "hooks/analytics/useTrack";
 import type { Dispatch, SetStateAction } from "react";
 import { VscBook } from "react-icons/vsc";
-import { Card, Heading, Link, Text } from "tw-components";
+import invariant from "tiny-invariant";
+import { Button, Card, Heading, Link, Text } from "tw-components";
 import { CreateEngineInstanceButton } from "./create-engine-instance";
 import { EngineInstancesTable } from "./engine-instances-table";
 import { ImportEngineInstanceButton } from "./import-engine-instance";
@@ -27,8 +30,16 @@ interface EngineInstancesListProps {
 export const EngineInstancesList = ({
   setConnectedInstance,
 }: EngineInstancesListProps) => {
+  invariant(
+    process.env.NEXT_PUBLIC_DEMO_ENGINE_URL,
+    "missing NEXT_PUBLIC_DEMO_ENGINE_URL",
+  );
+  const NEXT_PUBLIC_DEMO_ENGINE_URL = process.env.NEXT_PUBLIC_DEMO_ENGINE_URL;
+
+  const { data } = useAccount();
   const instancesQuery = useEngineInstances();
   const instances = instancesQuery.data ?? [];
+  const trackEvent = useTrack();
 
   if (instancesQuery.isLoading) {
     return (
@@ -70,6 +81,36 @@ export const EngineInstancesList = ({
                 ctaText="Get Started"
                 refetch={instancesQuery.refetch}
               />
+              <Button
+                onClick={() => {
+                  if (!data) return;
+
+                  trackEvent({
+                    category: "engine",
+                    action: "try-demo",
+                    label: "clicked-try-demo",
+                  });
+
+                  // Need to hardcode the demo engine instance details
+                  // but using the signed-in user account id
+                  setConnectedInstance({
+                    id: "sandbox",
+                    url: NEXT_PUBLIC_DEMO_ENGINE_URL,
+                    name: "Demo Engine",
+                    status: "active",
+                    lastAccessedAt: new Date().toISOString(),
+                    accountId: data.id,
+                  });
+                }}
+                variant="outline"
+                px={6}
+              >
+                🚀 Try Demo
+              </Button>
+            </Flex>
+            <Flex direction="column" gap={2}>
+              <Divider my="2" />
+              <Text>Already have an Engine Instance?</Text>
               <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
             </Flex>
           </Stack>

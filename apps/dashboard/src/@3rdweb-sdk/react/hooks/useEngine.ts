@@ -22,7 +22,7 @@ export type EngineInstance = {
   name: string;
   url: string;
   lastAccessedAt: string;
-  cloudDeployedAt: string;
+  cloudDeployedAt?: string;
   status:
     | "active"
     | "pending"

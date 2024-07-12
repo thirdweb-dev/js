@@ -50,6 +50,7 @@ export const ImportEngineInstanceButton = ({
         }}
         variant="outline"
         px={6}
+        width="fit-content"
       >
         Import
       </Button>
