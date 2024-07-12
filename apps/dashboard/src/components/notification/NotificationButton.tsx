@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { UseQueryResult } from "@tanstack/react-query";
-import { format, formatDistance } from "date-fns";
+import { formatDistance } from "date-fns";
 import Link from "next/link";
 import { ScrollShadow } from "../../@/components/ui/ScrollShadow/ScrollShadow";
 import { Spinner } from "../../@/components/ui/Spinner/Spinner";
