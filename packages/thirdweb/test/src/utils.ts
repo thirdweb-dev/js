@@ -16,6 +16,19 @@ export async function mineBlock(chain = FORKED_ETHEREUM_CHAIN) {
   return res;
 }
 
+export async function resetChain(chain = FORKED_ETHEREUM_CHAIN) {
+  const rpcClient = getRpcClient({
+    chain,
+    client: TEST_CLIENT
+  });
+  const res = await rpcClient({
+    method: "anvil_reset" as any,
+    params: ["0x"]
+  });
+  await wait(500);
+  return res;
+};
+
 export function cloneObject<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
