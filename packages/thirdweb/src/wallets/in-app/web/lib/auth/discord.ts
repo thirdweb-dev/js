@@ -1,7 +1,6 @@
-import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import type { AuthStoredTokenWithCookieReturnType } from "../../../../../wallets/in-app/core/authentication/type.js";
-import { getDiscordLoginPath } from "../../../core/authentication/getLoginPath.js";
+import type { ThirdwebClient } from "src/client/client.js";
+import { getThirdwebBaseUrl } from "src/utils/domains.js";
+import type { AuthStoredTokenWithCookieReturnType } from "src/wallets/in-app/core/authentication/type.js";
 import type { Ecosystem } from "../../types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
 import { closeWindow } from "./utils.js";
@@ -86,7 +85,7 @@ export async function loginWithDiscord(options: {
         }
       };
       window.addEventListener("message", messageListener);
-    },
+    }
   );
   return result;
 }
