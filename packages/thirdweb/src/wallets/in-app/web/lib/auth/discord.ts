@@ -85,7 +85,7 @@ export async function loginWithDiscord(options: {
         }
       };
       window.addEventListener("message", messageListener);
-    }
+    },
   );
   return result;
 }

@@ -52,7 +52,7 @@ export class InAppWebConnector implements InAppConnector {
   }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
-        "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page"
+        "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
       );
     }
     const baseUrl = getThirdwebBaseUrl("inAppWallet");
@@ -134,7 +134,7 @@ export class InAppWebConnector implements InAppConnector {
   }
 
   async preAuthenticate(
-    args: MultiStepAuthProviderType
+    args: MultiStepAuthProviderType,
   ): Promise<SendEmailOtpReturnType> {
     const strategy = args.strategy;
     switch (strategy) {
@@ -147,13 +147,13 @@ export class InAppWebConnector implements InAppConnector {
       default:
         assertUnreachable(
           strategy,
-          `Provider: ${strategy} doesn't require pre-authentication`
+          `Provider: ${strategy} doesn't require pre-authentication`,
         );
     }
   }
 
   async authenticate(
-    args: MultiStepAuthArgsType | SingleStepAuthArgsType
+    args: MultiStepAuthArgsType | SingleStepAuthArgsType,
   ): Promise<AuthLoginReturnType> {
     const strategy = args.strategy;
     switch (strategy) {
