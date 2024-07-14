@@ -171,7 +171,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       ) ||
       file.name?.endsWith(".glb") ||
       file.name?.endsWith(".usdz") ||
-      file.name?.endsWith(".gltf")
+      file.name?.endsWith(".gltf") ||
+      file.name.endsWith(".obj")
     ) {
       // audio, video, html, and glb (3d) files
       setValue("animation_url", file);

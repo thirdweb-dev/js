@@ -99,7 +99,8 @@ export const FileInput: React.FC<IFileInputProps> = ({
               ? "Text"
               : file.type.includes("model") ||
                   file.name.endsWith(".glb") ||
-                  file.name.endsWith(".usdz")
+                  file.name.endsWith(".usdz") ||
+                  file.name.endsWith(".obj")
                 ? "3D Model"
                 : "Media"
     : null;
