@@ -76,8 +76,6 @@ import {
 import type { PayerInfo } from "./types.js";
 import { usePayerSetup } from "./usePayerSetup.js";
 
-// NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
-
 export type BuyScreenProps = {
   onBack: (() => void) | undefined;
   supportedTokens: SupportedTokens | undefined;
