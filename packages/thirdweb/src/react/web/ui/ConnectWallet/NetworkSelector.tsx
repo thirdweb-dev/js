@@ -464,6 +464,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
               variant="link"
               onClick={() => {
                 onCustomClick();
+                props.closeModal();
               }}
               style={{
                 display: "flex",
