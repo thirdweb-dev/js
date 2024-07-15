@@ -26,6 +26,7 @@ const usageEventSchema = z.object({
     "checkout",
     "engine",
     "pay",
+    "rpcV2",
   ]),
   action: z.string(),
 
@@ -98,6 +99,8 @@ const usageEventSchema = z.object({
   toAmountUSDCents: z.number().optional(),
   secondaryProvider: z.string().optional(),
   onRampId: z.string().optional(),
+  evmRequestParams: z.string().optional(),
+  providerIp: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 
