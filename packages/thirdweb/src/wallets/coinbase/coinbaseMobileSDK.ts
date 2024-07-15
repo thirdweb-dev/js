@@ -1,5 +1,6 @@
-import { configure } from "@coinbase/wallet-mobile-sdk";
+import { configure, handleResponse } from "@coinbase/wallet-mobile-sdk";
 import type { ProviderInterface } from "@coinbase/wallet-sdk";
+import { Linking } from "react-native";
 import type { Chain } from "../../chains/types.js";
 import type { COINBASE } from "../constants.js";
 import type { CreateWalletArgs } from "../wallet-types.js";
@@ -13,11 +14,26 @@ export async function getCoinbaseMobileProvider(
   options?: CreateWalletArgs<typeof COINBASE>[1],
 ): Promise<ProviderInterface> {
   if (!_provider) {
+    const callbackURL = new URL(
+      options?.mobileConfig?.callbackURL || "https://thirdweb.com/wsegue",
+    );
     const mobileProvider: ProviderInterface = (await initMobileProvider({
       chain: options?.chains ? options.chains[0] : undefined,
       ...options?.mobileConfig,
     })) as unknown as ProviderInterface;
     _provider = mobileProvider;
+    Linking.addEventListener("url", ({ url }) => {
+      const incomingUrl = new URL(url);
+      if (
+        callbackURL &&
+        incomingUrl.host === callbackURL.host &&
+        incomingUrl.protocol === callbackURL.protocol &&
+        incomingUrl.hostname === callbackURL.hostname
+      ) {
+        // @ts-expect-error - Passing a URL object to handleResponse crashes the function
+        handleResponse(url);
+      }
+    });
     return mobileProvider;
   }
   return _provider;
