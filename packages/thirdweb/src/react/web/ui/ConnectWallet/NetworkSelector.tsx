@@ -330,8 +330,6 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
             chains: [c],
           });
         }
-
-        return filteredChainSectionsValue;
       }
 
       return filteredChainSectionsValue;
