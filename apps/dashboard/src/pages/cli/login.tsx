@@ -54,7 +54,7 @@ const LoginPage: ThirdwebNextPage = () => {
       return null;
     }
     return createAuth({
-      domain: "",
+      domain: "thirdweb.com", // required
       client: thirdwebClient,
       adminAccount: account,
       jwt: {
@@ -84,12 +84,30 @@ const LoginPage: ThirdwebNextPage = () => {
       return null;
     }
     const decodedPayload = decodeURIComponent(payload as string);
-    const parsedPayload = JSON.parse(decodedPayload);
+
+    type DecodedPayLoad = {
+      payload: {
+        address: string;
+        chain_id: string;
+        domain: string; // thirdweb.com
+        expiration_time: string;
+        invalid_before: string;
+        issued_at: string;
+        nonce: string;
+        statement: string;
+        type: "evm";
+        version: string;
+      };
+      signature: string;
+    };
+
+    const parsedPayload: DecodedPayLoad = JSON.parse(decodedPayload);
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     let token: any;
     try {
       token = await auth?.generateJWT({
-        payload: parsedPayload,
+        // @ts-expect-error - we can't add the required symbol [VERIFIED_SYMBOL] to this object ( packages/thirdweb/src/auth/core/verify-login-payload.ts )
+        payload: parsedPayload.payload,
       });
     } catch (e) {
       setLoading(false);

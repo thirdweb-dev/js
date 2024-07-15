@@ -34,7 +34,7 @@ type ConfigPaths = {
 export async function loginUser(
   configPaths: ConfigPaths,
   options?: { new: boolean },
-  showLogs?: boolean,
+  showLogs?: boolean
 ) {
   const { credsConfigPath, tokenPath } = configPaths;
   const authToken = await getSession(tokenPath, credsConfigPath);
@@ -58,7 +58,7 @@ export async function loginUser(
 export async function logoutUser(
   credsConfigPath: string,
   tokenPath: string,
-  cliWalletPath: string,
+  cliWalletPath: string
 ) {
   try {
     ora("Logging out...").start();
@@ -68,7 +68,7 @@ export async function logoutUser(
       fs.existsSync(cliWalletPath);
     if (!dirExists) {
       ora().warn(
-        chalk.yellow("You are already logged out, did you mean to login?"),
+        chalk.yellow("You are already logged out, did you mean to login?")
       );
       return;
     }
@@ -94,11 +94,11 @@ export async function getSession(tokenPath: string, configCredsPath: string) {
 }
 
 export const authenticateUser = async (
-  props: LoginProps = defaultLoginProps,
+  props: LoginProps = defaultLoginProps
 ) => {
   const { credsConfigPath, cliWalletPath, tokenPath } = props.configPaths;
   const waitForDashboard = spinner(
-    "Waiting for a response from the dashboard",
+    "Waiting for a response from the dashboard"
   ).clear();
 
   // Get or generate a localwallet.
@@ -123,14 +123,14 @@ export const authenticateUser = async (
   const timerPromise = new Promise<void>((resolve, reject) => {
     loginTimeoutHandle = setTimeout(() => {
       logger.error(
-        "Login session timed out, server didn't receive a response in 5 minutes. Please try again.",
+        "Login session timed out, server didn't receive a response in 5 minutes. Please try again."
       );
       server.close();
       clearTimeout(loginTimeoutHandle);
       reject(
         new Error(
-          "Login session timed out, server didn't receive a response in 5 minutes. Please try again.",
-        ),
+          "Login session timed out, server didn't receive a response in 5 minutes. Please try again."
+        )
       );
     }, 300000);
   });
@@ -147,12 +147,14 @@ export const authenticateUser = async (
       }
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.setHeader("Access-Control-Allow-Origin", "https://thirdweb.com");
+      // when testing locally - use this instead:
+      // res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader("Access-Control-Allow-Methods", "POST");
 
       if (req.method === "OPTIONS") {
         res.setHeader(
           "Access-Control-Allow-Headers",
-          "content-type, baggage, sentry-trace",
+          "content-type, baggage, sentry-trace"
         );
         res.writeHead(200);
         res.end();
@@ -170,8 +172,8 @@ export const authenticateUser = async (
             });
             reject(
               chalk.red(
-                "Something went wrong! Unable to authenticate with the dashboard.",
-              ),
+                "Something went wrong! Unable to authenticate with the dashboard."
+              )
             );
             waitForDashboard.stop();
           }
@@ -190,7 +192,7 @@ export const authenticateUser = async (
                 finish(new Error("Unauthorized request, state mismatch"));
               });
               reject(
-                new Error(chalk.red("\nUnauthorized request, state mismatch")),
+                new Error(chalk.red("\nUnauthorized request, state mismatch"))
               );
               waitForDashboard.stop();
             } else {
@@ -204,9 +206,7 @@ export const authenticateUser = async (
               res.end(() => {
                 waitForDashboard.clear();
                 console.log(
-                  chalk.green(
-                    `Successfully linked your account to this device`,
-                  ),
+                  chalk.green(`Successfully linked your account to this device`)
                 );
                 finish();
               });
@@ -228,7 +228,7 @@ export const authenticateUser = async (
     server.listen(8976);
   });
   console.log(
-    `Automatically attempting to open a link to authenticate with our dashboard...\n`,
+    `Automatically attempting to open a link to authenticate with our dashboard...\n`
   );
   waitForDashboard.start();
   // Adding this timeout since it feels weird for the browser to open before the spinner.
@@ -238,8 +238,8 @@ export const authenticateUser = async (
 
   console.log(
     chalk.yellow(
-      `If the browser doesn't open, please use this link to authenticate:\n`,
-    ),
+      `If the browser doesn't open, please use this link to authenticate:\n`
+    )
   );
   console.log(chalk.yellow(urlToOpen + "\n"));
 
@@ -267,7 +267,7 @@ async function getOrCreatePassword(configCredsPath: string): Promise<string> {
 
 async function getOrGenerateLocalWallet(
   configCredsPath: string,
-  cliWalletPath: string,
+  cliWalletPath: string
 ) {
   // Get or prompt for password.
   const password = await getOrCreatePassword(configCredsPath);
@@ -310,7 +310,7 @@ async function getOrGenerateLocalWallet(
     JSON.stringify({
       password: password,
     }),
-    "utf8",
+    "utf8"
   );
 
   return wallet;
