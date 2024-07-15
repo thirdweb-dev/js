@@ -22,7 +22,7 @@
     "lucide-react": "^0.399.0",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
-    "prettier": "^3.3.2",
+    "prettier": "^3.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "server-only": "^0.0.1",
