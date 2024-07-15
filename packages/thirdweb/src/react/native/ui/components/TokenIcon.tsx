@@ -7,8 +7,6 @@ import { genericTokenIcon } from "../../../core/utils/socialIcons.js";
 import { ChainIcon } from "./ChainIcon.js";
 import { RNImage } from "./RNImage.js";
 
-// Note: Must not use useConnectUI here
-
 /**
  * @internal
  */

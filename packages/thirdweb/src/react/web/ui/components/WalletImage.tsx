@@ -21,8 +21,6 @@ import { useWalletImage } from "../../../core/utils/wallet.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { Img } from "./Img.js";
 
-// Note: Must not use useConnectUI here
-
 /**
  * @internal
  */
