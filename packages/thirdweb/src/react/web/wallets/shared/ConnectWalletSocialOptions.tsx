@@ -58,6 +58,7 @@ const defaultAuthOptions: AuthOption[] = [
   "apple",
   "facebook",
   "passkey",
+  "discord",
 ];
 
 export type ConnectWalletSocialOptionsProps = {
