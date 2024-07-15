@@ -18,7 +18,7 @@ export default function Page() {
         <section className="flex items-start">
           <div className="overflow-hidden border shadow rounded-xl bg-card">
             <Image src={headerImage} alt="" sizes="50vw" className="w-full" />
-            <div className="p-4 pb-8 border-t md:p-6 md:pb-12">
+            <div className="p-4 pb-8 border-t md:p-6 md:pb-8 relative">
               <h4 className="text-4xl font-bold text-foreground">
                 $250{" "}
                 <span className="text-lg font-normal text-muted-foreground">
@@ -42,7 +42,14 @@ export default function Page() {
                   <CheckIcon className="w-5 h-5 text-green-500 md:mt-0.5" />{" "}
                   Custom permissions and billing across your ecosystem
                 </li>
+                <li className="flex items-start gap-2">
+                  <CheckIcon className="w-5 h-5 text-green-500 md:mt-0.5" />{" "}
+                  30,000 active wallets included*
+                </li>
               </ul>
+              <p className="mt-4 text-xs italic text-muted-foreground text-right">
+                $0.02 per additional wallet
+              </p>
             </div>
           </div>
         </section>
