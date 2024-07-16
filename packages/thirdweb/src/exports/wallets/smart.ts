@@ -15,6 +15,8 @@ export {
 
 export { predictAddress } from "../../wallets/smart/lib/calls.js";
 
+export { getPaymasterAndData } from "../../wallets/smart/lib/paymaster.js";
+
 export type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,
