@@ -3,6 +3,7 @@ import type { Address } from "abitype";
 import type { Chain } from "../../../../chains/types.js";
 import { getContract } from "../../../../contract/contract.js";
 import { getCurrencyMetadata } from "../../../../extensions/erc20/read/getCurrencyMetadata.js";
+import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
@@ -176,10 +177,10 @@ export function useSendTransactionCore(args: {
             let currency: ShowModalData["currency"] | undefined = undefined;
             let walletBalance = nativeWalletBalance;
             let totalCostWei = nativeCostWei;
+            const hasEnoughForGas = nativeWalletBalance.value > nativeCostWei;
 
             const erc20Value = await resolvePromisedValue(tx.erc20Value);
-            if (erc20Value) {
-              totalCostWei = erc20Value.amountWei;
+            if (erc20Value && hasEnoughForGas) {
               const [tokenBalance, tokenMeta] = await Promise.all([
                 getWalletBalance({
                   address: account.address,
@@ -195,11 +196,7 @@ export function useSendTransactionCore(args: {
                   }),
                 }),
               ]);
-              // if enough balance, send tx
-              if (erc20Value.amountWei <= tokenBalance.value) {
-                sendTx();
-                return;
-              }
+              totalCostWei = erc20Value.amountWei;
               walletBalance = tokenBalance;
               currency = {
                 address: erc20Value.tokenAddress,
@@ -261,7 +258,12 @@ export async function getTotalTxCostForBuy(
     // fallback if both fail, use the tx value + 1% buffer
     const value = await resolvePromisedValue(tx.value);
     if (!value) {
-      return 0n;
+      // if value is 0 and we fail to estimate, set a minimum of 1M gas, enough for a few transactions
+      const gasPrice = await getGasPrice({
+        client: tx.client,
+        chain: tx.chain,
+      });
+      return 1_000_000n * gasPrice;
     }
     return value + value / 100n;
   }
