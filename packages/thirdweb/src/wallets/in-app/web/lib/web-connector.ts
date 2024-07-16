@@ -169,8 +169,7 @@ export class InAppWebConnector implements InAppConnector {
           phoneNumber: args.phoneNumber,
         });
       }
-      case "apple":
-      case "facebook": {
+      case "apple": {
         const oauthProvider = oauthStrategyToAuthProvider[strategy];
         return this.auth.loginWithOauth({
           oauthProvider,
@@ -215,6 +214,7 @@ export class InAppWebConnector implements InAppConnector {
         });
         return this.auth.loginWithAuthToken(authToken);
       }
+      case "facebook":
       case "google":
       case "discord": {
         const authToken = await loginWithOauth({
