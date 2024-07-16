@@ -595,7 +595,8 @@ export function useCustomContractDeployMutation(
 ) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
-  const walletAddress = useActiveAccount()?.address;
+  const account = useActiveAccount();
+  const walletAddress = account?.address;
   const chainId = useActiveWalletChain()?.id;
   const signer = useSigner();
   const deployContext = useDeployContextModal();
@@ -845,7 +846,7 @@ export function useCustomContractDeployMutation(
               address: contractAddress,
               chainId,
             },
-            signer,
+            account,
           );
 
           deployContext.nextStep();

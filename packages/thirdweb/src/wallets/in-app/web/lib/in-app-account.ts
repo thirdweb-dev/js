@@ -307,23 +307,27 @@ export class IFrameWallet {
           parsedTypedData.types.EIP712Domain = undefined;
         }
         const domain = parsedTypedData.domain as TypedDataDefinition["domain"];
-        const chainId = domain?.chainId || 1;
+        const chainId = domain?.chainId;
+        const domainData = {
+          verifyingContract: domain?.verifyingContract,
+          name: domain?.name,
+          version: domain?.version,
+        };
+        // chain id can't be included if it wasn't explicitly specified
+        if (chainId) {
+          (domainData as Record<string, unknown>).chainId = chainId;
+        }
 
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
             params: {
-              domain: {
-                chainId: chainId,
-                verifyingContract: domain?.verifyingContract,
-                name: domain?.name,
-                version: domain?.version,
-              },
+              domain: domainData,
               types:
                 parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
                 parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
-              chainId,
+              chainId: chainId || 1,
               partnerId,
               rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
             },

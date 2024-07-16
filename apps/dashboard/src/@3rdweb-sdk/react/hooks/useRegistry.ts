@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSDK, useSigner } from "@thirdweb-dev/react";
+import { useSigner } from "@thirdweb-dev/react";
 import {
   addContractToMultiChainRegistry,
   getGaslessPolygonSDK,
@@ -134,23 +134,20 @@ type AddContractParams = {
 };
 
 export function useAddContractMutation() {
-  const sdk = useSDK();
-  const walletAddress = useActiveAccount()?.address;
-  const signer = useSigner();
+  const account = useActiveAccount();
 
   const queryClient = useQueryClient();
 
   return useMutation(
     async (data: AddContractParams) => {
-      invariant(walletAddress, "cannot add a contract without an address");
-      invariant(sdk, "sdk not provided");
+      invariant(account, "cannot add a contract without an address");
 
       return await addContractToMultiChainRegistry(
         {
           address: data.contractAddress,
           chainId: data.chainId,
         },
-        signer,
+        account,
       );
     },
     {

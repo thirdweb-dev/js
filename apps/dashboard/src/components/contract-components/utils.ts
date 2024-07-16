@@ -10,6 +10,14 @@ import {
 import type { Signer } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
+import { thirdwebClient } from "lib/thirdweb-client";
+import {
+  getContract,
+  prepareContractCall,
+  sendAndConfirmTransaction,
+} from "thirdweb";
+import { polygon } from "thirdweb/chains";
+import type { Account } from "thirdweb/wallets";
 
 export function detectFeatures<TContract extends ValidContractInstance | null>(
   contract: ValidContractInstance | null | undefined,
@@ -56,11 +64,36 @@ export function getGaslessPolygonSDK(signer?: Signer) {
   return polygonSDK;
 }
 
-// TODO - instead of util - create a hook for this to avoid requiring signer
+const contractAddress = "0xcdAD8FA86e18538aC207872E8ff3536501431B73";
+const registry = getContract({
+  chain: polygon,
+  client: thirdwebClient,
+  address: contractAddress,
+});
 export async function addContractToMultiChainRegistry(
   contractData: AddContractInput,
-  signer?: Signer,
+  account: Account,
 ) {
-  const gaslessPolygonSDK = getGaslessPolygonSDK(signer);
-  await gaslessPolygonSDK.multiChainRegistry.addContract(contractData);
+  const transaction = prepareContractCall({
+    contract: registry,
+    method: "function add(address, address, uint256, string)",
+    params: [
+      account.address,
+      contractData.address,
+      BigInt(contractData.chainId),
+      contractData.metadataURI || "",
+    ],
+  });
+
+  await sendAndConfirmTransaction({
+    transaction,
+    account,
+    gasless: {
+      experimentalChainlessSupport: true,
+      provider: "engine",
+      relayerUrl:
+        "https://checkout.engine.thirdweb.com/relayer/0c2bdd3a-307f-4243-b6e5-5ba495222d2b",
+      relayerForwarderAddress: "0x409d530a6961297ece29121dbee2c917c3398659",
+    },
+  });
 }
