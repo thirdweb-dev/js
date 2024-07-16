@@ -34,7 +34,10 @@ export function ManageWalletScreen(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader title="Manage Wallet" onBack={props.onBack} />
+        <ModalHeader
+          title={props.locale.manageWallet.title}
+          onBack={props.onBack}
+        />
       </Container>
       <Line />
       <Container
@@ -62,7 +65,9 @@ export function ManageWalletScreen(props: {
             }}
           >
             <WalletConnectIcon size={iconSize.md} />
-            <Text color="primaryText">Connect an App</Text>
+            <Text color="primaryText">
+              {props.locale.manageWallet.connectAnApp}
+            </Text>
           </MenuButton>
 
           {/* Private Key Export (if enabled) */}
@@ -79,7 +84,9 @@ export function ManageWalletScreen(props: {
                 }}
               >
                 <KeyIcon size={iconSize.md} />
-                <Text color="primaryText">Export Private Key</Text>
+                <Text color="primaryText">
+                  {props.locale.manageWallet.exportPrivateKey}
+                </Text>
               </MenuButton>
             )}
         </Container>

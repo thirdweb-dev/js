@@ -10,6 +10,7 @@ import { Text } from "../../components/text.js";
 import { MenuButton } from "../MenuButton.js";
 import { CoinsIcon } from "../icons/CoinsIcon.js";
 import { ImageIcon } from "../icons/ImageIcon.js";
+import type { ConnectLocale } from "../locale/types.js";
 import type { WalletDetailsModalScreen } from "./types.js";
 
 /**
@@ -21,7 +22,9 @@ export function ViewFunds(props: {
   onBack: () => void;
   setScreen: (screen: WalletDetailsModalScreen) => void;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
+  const { connectLocale } = props;
   return (
     <Container
       style={{
@@ -29,7 +32,10 @@ export function ViewFunds(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader title="View Funds" onBack={props.onBack} />
+        <ModalHeader
+          title={connectLocale.viewFunds.title}
+          onBack={props.onBack}
+        />
       </Container>
       <Line />
       <Container
@@ -50,7 +56,7 @@ export function ViewFunds(props: {
           }}
         >
           <CoinsIcon size={iconSize.md} />
-          <Text color="primaryText">View Tokens</Text>
+          <Text color="primaryText">{connectLocale.viewFunds.viewTokens}</Text>
         </MenuButton>
         <MenuButton
           onClick={() => {
@@ -61,7 +67,7 @@ export function ViewFunds(props: {
           }}
         >
           <ImageIcon size={iconSize.md} />
-          <Text color="primaryText">View NFTs</Text>
+          <Text color="primaryText">{connectLocale.viewFunds.viewNFTs}</Text>
         </MenuButton>
         <Spacer y="lg" />
       </Container>

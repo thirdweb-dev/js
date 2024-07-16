@@ -90,4 +90,15 @@ export type ConnectLocale = {
   transactions: string;
   viewAllTransactions: string;
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
+  manageWallet: {
+    title: string;
+    connectAnApp: string;
+    exportPrivateKey: string;
+  };
+  viewFunds: {
+    title: string;
+    viewTokens: string;
+    viewNFTs: string;
+    viewAssets: string;
+  };
 };

@@ -124,7 +124,7 @@ export function BuyTxHistoryList(props: {
               }}
             >
               <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-              <Text> No Transactions </Text>
+              <Text>No Transactions </Text>
             </Container>
           )}
 

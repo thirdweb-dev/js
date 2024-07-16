@@ -13,6 +13,7 @@ import { Spacer } from "../../components/Spacer.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
+import type { ConnectLocale } from "../locale/types.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
   type ERC20OrNativeToken,
@@ -27,6 +28,7 @@ export function ViewTokens(props: {
   supportedTokens?: SupportedTokens;
   onBack: () => void;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
   const activeChain = useActiveWalletChain();
   const supportedTokens = props.supportedTokens || defaultTokens;
@@ -37,6 +39,7 @@ export function ViewTokens(props: {
 
   const tokenList =
     (activeChain?.id ? supportedTokens[activeChain.id] : undefined) || [];
+  const { connectLocale } = props;
 
   return (
     <Container
@@ -45,7 +48,10 @@ export function ViewTokens(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader title="View Funds" onBack={props.onBack} />
+        <ModalHeader
+          title={connectLocale.viewFunds.title}
+          onBack={props.onBack}
+        />
       </Container>
       <Line />
       <Container

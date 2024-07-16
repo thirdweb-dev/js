@@ -100,6 +100,17 @@ const connectWalletLocalEs: ConnectLocale = {
       inProgress: "Esperando confirmación",
     },
   },
+  manageWallet: {
+    title: "Manage Wallet",
+    connectAnApp: "Connect an App",
+    exportPrivateKey: "Export Private Key",
+  },
+  viewFunds: {
+    title: "View Funds",
+    viewNFTs: "View NFTs",
+    viewTokens: "View Tokens",
+    viewAssets: "View Assets",
+  },
 };
 
 export default connectWalletLocalEs;

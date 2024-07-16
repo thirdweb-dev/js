@@ -536,7 +536,9 @@ function DetailsModal(props: {
           >
             <CoinsIcon size={iconSize.md} />
             <Text color="primaryText">
-              {props.supportedNFTs ? "View Assets" : "View Funds"}
+              {props.supportedNFTs
+                ? locale.viewFunds.viewAssets
+                : locale.viewFunds.title}
             </Text>
           </MenuButton>
 
@@ -550,7 +552,7 @@ function DetailsModal(props: {
             }}
           >
             <OutlineWalletIcon size={iconSize.md} />
-            <Text color="primaryText">Manage Wallet</Text>
+            <Text color="primaryText">{props.locale.manageWallet.title}</Text>
           </MenuButton>
 
           {/* Switch to Personal Wallet  */}
@@ -702,6 +704,7 @@ function DetailsModal(props: {
           }}
           setScreen={setScreen}
           client={client}
+          connectLocale={locale}
         />
       );
     } else {
@@ -713,6 +716,7 @@ function DetailsModal(props: {
             setScreen("main");
           }}
           client={client}
+          connectLocale={locale}
         />
       );
     }
@@ -725,6 +729,7 @@ function DetailsModal(props: {
           setScreen("main");
         }}
         client={client}
+        connectLocale={locale}
       />
     );
   } else if (screen === "view-tokens") {
@@ -735,6 +740,7 @@ function DetailsModal(props: {
           setScreen("main");
         }}
         client={client}
+        connectLocale={locale}
       />
     );
   } else if (screen === "private-key") {
