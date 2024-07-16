@@ -1,8 +1,8 @@
 "use client";
 
+import { logout } from "@/app/connect/auth/actions/auth";
 import { useRouter } from "next/navigation";
 import { createClient } from "../utils/client";
-import { logout } from "@/app/connect/auth/actions/auth";
 
 export function LogoutButton() {
   const supabase = createClient();
