@@ -1,7 +1,6 @@
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
-import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import {
   fontSize,
@@ -38,8 +37,6 @@ export function OnRampTxDetailsTable(props: {
     text: FiatStatusMeta["status"];
     txHash?: string;
   };
-  fromAddress?: string;
-  toAddress?: string;
 }) {
   const onRampExplorers = useChainExplorers(
     getCachedChain(props.token.chainId),
@@ -114,26 +111,6 @@ export function OnRampTxDetailsTable(props: {
           </Container>
         </>
       )}
-
-      {props.fromAddress &&
-        props.toAddress &&
-        props.fromAddress !== props.toAddress && (
-          <>
-            {lineSpacer}
-            <Container
-              flex="row"
-              center="y"
-              style={{
-                justifyContent: "space-between",
-              }}
-            >
-              <Text>Send to</Text>
-              <Container flex="row" gap="xs" center="y">
-                <Text>{shortenAddress(props.toAddress)}</Text>
-              </Container>
-            </Container>
-          </>
-        )}
 
       {lineSpacer}
 

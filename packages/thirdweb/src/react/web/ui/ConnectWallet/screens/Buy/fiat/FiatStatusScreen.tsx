@@ -177,8 +177,6 @@ function OnrampStatusScreenUI(props: {
             }
           : undefined
       }
-      fromAddress={props.quote.fromAddress.toLowerCase()}
-      toAddress={props.quote.toAddress.toLowerCase()}
     />
   );
 

@@ -831,7 +831,7 @@ function SwapScreenContent(props: {
   } = props;
 
   const [receiverAddress, setReceiverAddress] = useState(
-    props.activeAccount.address,
+    props.payOptions.recipientAddress || props.activeAccount.address,
   );
   const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
   const [drawerScreen, setDrawerScreen] = useState<
@@ -923,6 +923,8 @@ function SwapScreenContent(props: {
     payOptions.buyWithCrypto !== false
       ? payOptions.buyWithCrypto?.prefillSource
       : undefined;
+
+  const disableReceiverSelection = !!props.payOptions.recipientAddress;
 
   return (
     <Container flex="column" gap="md" animate="fadein">
@@ -1025,6 +1027,8 @@ function SwapScreenContent(props: {
         <Spacer y="xs" />
         <WalletSelectorButton
           client={props.client}
+          disabled={disableReceiverSelection}
+          disableChevron={disableReceiverSelection}
           onClick={() => {
             setIsOpen(true);
             setDrawerScreen("receiver");
@@ -1100,12 +1104,6 @@ function FiatScreenContent(props: {
   setTokenAmount: (amount: string) => void;
   setHasEditedAmount: (hasEdited: boolean) => void;
 }) {
-  const [receiverAddress, setReceiverAddress] = useState(
-    props.payer.account.address,
-  );
-  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
-  const [drawerScreen, setDrawerScreen] = useState<"fees" | "receiver">("fees");
-
   const {
     toToken,
     tokenAmount,
@@ -1116,6 +1114,11 @@ function FiatScreenContent(props: {
     showCurrencySelector,
     selectedCurrency,
   } = props;
+  const [receiverAddress, setReceiverAddress] = useState(
+    props.payOptions.recipientAddress || props.payer.account.address,
+  );
+  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
+  const [drawerScreen, setDrawerScreen] = useState<"fees" | "receiver">("fees");
 
   const buyWithFiatOptions = props.payOptions.buyWithFiat;
 
@@ -1219,13 +1222,7 @@ function FiatScreenContent(props: {
 
   const disableSubmit = !fiatQuoteQuery.data;
 
-  // TODO: API should just not return a quote if fromAddress !== toAddress and a swap is required after onramp and return an error message with a specific error id
-
-  // TODO: if the receiver wallet is frozen by the developer, we need to stop the user from clicking continue here
-
-  // Selecting Reciever wallet only allowed if no swap required after onramp
-  const enableReceiverSelection =
-    fiatQuoteQuery.data && !isSwapRequiredPostOnramp(fiatQuoteQuery.data);
+  const disableReceiverSelection = !!props.payOptions.recipientAddress;
 
   const errorMsg =
     !fiatQuoteQuery.isLoading && fiatQuoteQuery.error
@@ -1234,11 +1231,11 @@ function FiatScreenContent(props: {
 
   return (
     <Container flex="column" gap="md" animate="fadein">
-      {isOpen && fiatQuoteQuery.data && (
+      {isOpen && (
         <>
           <DrawerOverlay ref={drawerOverlayRef} />
           <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
-            {drawerScreen === "fees" && (
+            {drawerScreen === "fees" && fiatQuoteQuery.data && (
               <div>
                 <Text size="lg" color="primaryText">
                   Fees
@@ -1285,7 +1282,8 @@ function FiatScreenContent(props: {
             setIsOpen(true);
           }}
           address={receiverAddress}
-          disabled={!enableReceiverSelection}
+          disabled={disableReceiverSelection}
+          disableChevron={disableReceiverSelection}
           walletId={undefined}
         />
       </div>
