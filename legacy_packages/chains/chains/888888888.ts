@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreievnqg3xjokaty4kfbxxbrzm5v5y7exbaaia2txrh4sfgrqsalfym",
     "width": 128,
@@ -24,6 +25,7 @@ export default {
     "decimals": 18
   },
   "networkId": 888888888,
+  "redFlags": [],
   "rpc": [
     "https://888888888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ancient8.gg"

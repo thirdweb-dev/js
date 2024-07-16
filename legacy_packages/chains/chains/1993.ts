@@ -35,7 +35,10 @@ export default {
     ]
   },
   "redFlags": [],
-  "rpc": [],
+  "rpc": [
+    "https://1993.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://sepolia.b3.fun/http"
+  ],
   "shortName": "b3-sepolia",
   "slug": "b3-sepolia",
   "testnet": true,

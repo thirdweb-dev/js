@@ -6,7 +6,13 @@ export default {
     {
       "name": "Alfajoresscan",
       "url": "https://alfajores.celoscan.io",
-      "standard": "EIP3091"
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmZcLzM1nMeU2oxhLFBUGJyujQ4gKuWAdXBDGHVtDmzZxf",
+        "width": 400,
+        "height": 400,
+        "format": "png"
+      }
     }
   ],
   "faucets": [
@@ -14,6 +20,12 @@ export default {
     "https://cauldron.pretoriaresearchlab.io/alfajores-faucet"
   ],
   "features": [],
+  "icon": {
+    "url": "ipfs://QmZcLzM1nMeU2oxhLFBUGJyujQ4gKuWAdXBDGHVtDmzZxf",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "infoURL": "https://docs.celo.org/",
   "name": "Celo Alfajores Testnet",
   "nativeCurrency": {
