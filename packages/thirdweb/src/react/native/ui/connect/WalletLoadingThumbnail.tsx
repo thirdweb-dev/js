@@ -14,6 +14,7 @@ interface Props {
   children?: React.ReactNode;
   imageSize: number;
   showError?: boolean;
+  animate: boolean;
 }
 
 function WalletLoadingThumbnail({
@@ -21,10 +22,12 @@ function WalletLoadingThumbnail({
   children,
   showError,
   imageSize,
+  animate,
 }: Props) {
   const spinValue = useRef(new Animated.Value(0));
 
   useEffect(() => {
+    if (!animate) return;
     const animation = Animated.timing(spinValue.current, {
       toValue: 1,
       duration: 1150,
@@ -38,7 +41,7 @@ function WalletLoadingThumbnail({
     return () => {
       loop.stop();
     };
-  }, []);
+  }, [animate]);
 
   const spin = spinValue.current.interpolate({
     inputRange: [0, 1],
@@ -53,18 +56,20 @@ function WalletLoadingThumbnail({
         viewBox={`0 0 ${imageSize + PADDING} ${imageSize + PADDING}`}
         style={styles.loader}
       >
-        <AnimatedRect
-          x="2"
-          y="2"
-          width={imageSize + INTERNAL_PADDING}
-          height={imageSize + INTERNAL_PADDING}
-          rx={15}
-          stroke={showError ? "transparent" : theme.colors.accentButtonBg}
-          strokeWidth={3}
-          fill="transparent"
-          strokeDasharray={"100 300"}
-          strokeDashoffset={spin}
-        />
+        {animate && (
+          <AnimatedRect
+            x="2"
+            y="2"
+            width={imageSize + INTERNAL_PADDING}
+            height={imageSize + INTERNAL_PADDING}
+            rx={15}
+            stroke={showError ? "transparent" : theme.colors.accentButtonBg}
+            strokeWidth={3}
+            fill="transparent"
+            strokeDasharray={"100 300"}
+            strokeDashoffset={spin}
+          />
+        )}
       </Svg>
       {showError && (
         <View

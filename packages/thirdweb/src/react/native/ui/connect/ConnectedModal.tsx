@@ -5,6 +5,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
+import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainName } from "../../../core/hooks/others/useChainQuery.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
@@ -290,12 +291,14 @@ const ViewFunds = (props: ConnectedModalPropsInner) => {
 const DisconnectWallet = (props: ConnectedModalProps) => {
   const { wallet, theme, onClose } = props;
   const { disconnect } = useDisconnect();
+  const siweAuth = useSiweAuth(wallet, props.auth);
   return (
     <TouchableOpacity
       style={styles.walletMenuRow}
       onPress={() => {
         onClose?.();
         disconnect(wallet);
+        siweAuth.doLogout();
       }}
     >
       <RNImage

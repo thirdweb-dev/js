@@ -72,15 +72,19 @@ export function useConnectedWalletDetails(
  * Returns the wallet info for the provided wallet id.
  * @wallet
  */
-export function useWalletInfo(id: WalletId) {
+export function useWalletInfo(id: WalletId | undefined) {
   return useQuery<WalletInfo>({
     queryKey: ["wallet-info", id],
     queryFn: () => {
+      if (!id) {
+        throw new Error("Wallet id is required");
+      }
       return getWalletInfo(id, false);
     },
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: !!id,
   });
 }
 
@@ -88,14 +92,18 @@ export function useWalletInfo(id: WalletId) {
  * Returns the wallet image for the provided wallet id.
  * @wallet
  */
-export function useWalletImage(id: WalletId) {
+export function useWalletImage(id: WalletId | undefined) {
   return useQuery({
     queryKey: ["wallet-image", id],
     queryFn: () => {
+      if (!id) {
+        throw new Error("Wallet id is required");
+      }
       return getWalletInfo(id, true);
     },
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
+    enabled: !!id,
   });
 }
