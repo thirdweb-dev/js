@@ -35,6 +35,7 @@ export async function ChainListRow({
   iconUrl,
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
+  const productsWithoutFaucet = products.filter((p) => p.id !== "faucet");
   return (
     <tr className="border-b relative hover:bg-secondary">
       <TableData>{favoriteButton}</TableData>
@@ -81,7 +82,7 @@ export async function ChainListRow({
       <TableData>
         <div className="flex flex-row gap-14 items-center w-[520px] ">
           <div className="flex items-center gap-7 z-10">
-            {products.map((p) => {
+            {productsWithoutFaucet.map((p) => {
               return (
                 <ProductIcon
                   key={p.name}
