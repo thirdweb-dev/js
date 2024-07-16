@@ -3,12 +3,20 @@ import {
   type UseQueryResult,
   useQuery,
 } from "@tanstack/react-query";
+import type { Chain } from "../../../../chains/types.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 import {
   type GetWalletBalanceOptions,
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 
+export type UseWalletBalanceOptions = Prettify<
+  Omit<GetWalletBalanceOptions, "address" | "chain"> & {
+    address: string | undefined;
+    chain: Chain | undefined;
+  }
+>;
 export type UseWalletBalanceQueryOptions = Omit<
   UseQueryOptions<GetWalletBalanceResult>,
   "queryFn" | "queryKey" | "enabled"
@@ -33,7 +41,7 @@ export type UseWalletBalanceQueryOptions = Omit<
  * @wallet
  */
 export function useWalletBalance(
-  options: Partial<GetWalletBalanceOptions>,
+  options: UseWalletBalanceOptions,
   queryOptions?: UseWalletBalanceQueryOptions,
 ): UseQueryResult<GetWalletBalanceResult> {
   const { chain, address, tokenAddress, client } = options;
