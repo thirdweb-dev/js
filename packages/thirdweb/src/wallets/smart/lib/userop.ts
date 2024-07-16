@@ -54,6 +54,7 @@ export async function waitForUserOpReceipt(
     userOpHash: Hex;
     timeoutMs?: number;
     intervalMs?: number;
+    decodeRevertReason?: boolean;
   },
 ): Promise<TransactionReceipt> {
   const timeout = args.timeoutMs || 120000; // 2mins
@@ -81,7 +82,9 @@ export async function waitForUserOpReceipt(
  *
  * const userOp = await createUnsignedUserOp({
  *  transaction,
+ *  factoryContract,
  *  accountContract,
+ *  adminAddress,
  *  sponsorGas,
  *  overrides,
  * });
@@ -246,7 +249,8 @@ export async function createUnsignedUserOp(args: {
  *
  * const signedUserOp = await signUserOp({
  *  userOp,
- *  options,
+ *  chain,
+ *  adminAccount,
  * });
  * ```
  * @walletUtils
