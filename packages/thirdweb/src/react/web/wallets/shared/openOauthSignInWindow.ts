@@ -30,8 +30,9 @@ function getOauthLoginPath(
   ecosystem?: Ecosystem,
 ) {
   switch (authOption) {
+    case "google":
     case "discord":
-      return getDiscordLoginPath(client, ecosystem);
+      return getSocialAuthLoginPath(authOption, client, ecosystem);
     default:
       return "";
   }
