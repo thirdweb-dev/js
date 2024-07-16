@@ -1,14 +1,14 @@
+import { isLoggedIn } from "@/app/connect/auth/actions/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
-import { shortenAddress } from "thirdweb/utils";
-import { createClient } from "../utils/server";
-import { SubmitButton } from "./submit-button";
-import { LogoutButton } from "./logout-button";
-import { UnlinkButton } from "./unlink-button";
-import { LinkWalletButton } from "./link-button";
 import { redirect } from "next/navigation";
-import { isLoggedIn } from "@/app/connect/auth/actions/auth";
+import { shortenAddress } from "thirdweb/utils";
 import { AuthButton } from "../../auth-button";
+import { createClient } from "../utils/server";
+import { LinkWalletButton } from "./link-button";
+import { LogoutButton } from "./logout-button";
+import { SubmitButton } from "./submit-button";
+import { UnlinkButton } from "./unlink-button";
 
 export async function WithSupabase({
   searchParams,
