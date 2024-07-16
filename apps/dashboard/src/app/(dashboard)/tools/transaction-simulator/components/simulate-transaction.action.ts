@@ -43,7 +43,7 @@ export const simulateTransactionAction = async (
   const transaction = await prepareContractCall({
     contract,
     method: resolveMethod(parsedData.functionName),
-    params: parsedData.functionArgs.split(/[\n,]+/),
+    params: parsedData.functionArgs.split(/[\n,]+/).map((arg) => arg.trim()),
     value: BigInt(parsedData.value),
   });
 
@@ -88,7 +88,7 @@ const getCodeExample = (parsedData: SimulateTransactionForm) =>
 const transaction = await prepareContractCall({
   contract,
   method: resolveMethod("${parsedData.functionName}"),
-  params: [${parsedData.functionArgs.split(/[\n,]+/).map((v) => `"${v}"`)}],
+  params: [${parsedData.functionArgs.split(/[\n,]+/).map((v) => `"${v.trim()}"`)}],
   value: ${parsedData.value}n,
 });
 

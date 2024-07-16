@@ -84,6 +84,7 @@ export const TransactionSimulator = (props: {
                   size="icon"
                   onClick={() => {
                     if (fromInputRef.current) {
+                      // eslint-disable-next-line react-compiler/react-compiler
                       fromInputRef.current.value = activeAccount.address;
                     }
                   }}
@@ -124,11 +125,11 @@ export const TransactionSimulator = (props: {
           </div>
           <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
             <Label htmlFor="functionArgs" className="min-w-60">
-              Function Args
+              Function Arguments
             </Label>
             <Textarea
               name="functionArgs"
-              placeholder="Comma-separated function args"
+              placeholder="Comma-separated arguments to call the function"
               rows={3}
               className="bg-transparent"
               defaultValue={
