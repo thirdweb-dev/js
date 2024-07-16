@@ -134,9 +134,10 @@ export async function getUserOpGasFees(args: {
 export async function getUserOpReceipt(
   args: BundlerOptions & {
     userOpHash: Hex;
-    decodeRevertReason?: boolean;
+    skipDecodeRevertReason?: boolean;
   },
 ): Promise<TransactionReceipt | undefined> {
+  const { skipDecodeRevertReason = false } = args;
   const res = await sendBundlerRequest({
     options: args,
     operation: "eth_getUserOperationReceipt",
@@ -145,7 +146,7 @@ export async function getUserOpReceipt(
   if (!res) {
     return undefined;
   }
-  if (res.success === false && args.decodeRevertReason) {
+  if (res.success === false && !skipDecodeRevertReason) {
     // parse revert reason
     const logs = parseEventLogs({
       events: [userOperationRevertReasonEvent()],

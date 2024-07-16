@@ -11,8 +11,22 @@ import {
 import { hexlifyUserOp } from "./utils.js";
 
 /**
- * TODO Docs
- * @internal
+ * Get paymaster and data details for a user operation.
+ * @param args - The userOp and options
+ * @returns - The paymaster and data details for the user operation.
+ * @example
+ * ```ts
+ * import { getPaymasterAndData } from "thirdweb/wallets/smart";
+ *
+ * const userOp = createUnsignedUserOp(...);
+ *
+ * const paymasterAndData = await getPaymasterAndData({
+ *  userOp,
+ *  client,
+ *  chain,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function getPaymasterAndData(args: {
   userOp: UserOperation;

@@ -54,7 +54,7 @@ export async function waitForUserOpReceipt(
     userOpHash: Hex;
     timeoutMs?: number;
     intervalMs?: number;
-    decodeRevertReason?: boolean;
+    skipDecodeRevertReason?: boolean;
   },
 ): Promise<TransactionReceipt> {
   const timeout = args.timeoutMs || 120000; // 2mins
