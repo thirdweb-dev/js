@@ -63,12 +63,12 @@ const LoginPage: ThirdwebNextPage = () => {
     });
   }, [account]);
 
-  const isBrave = useQuery({
+  const isBraveQuery = useQuery({
     queryKey: ["is-brave-browser"],
     initialData: false,
     queryFn: async () => {
       // @ts-expect-error - brave is not in the types
-      return navigator?.brave && (await navigator?.brave.isBrave());
+      return !!(navigator?.brave && (await navigator?.brave.isBrave()));
     },
   });
 
@@ -297,7 +297,7 @@ const LoginPage: ThirdwebNextPage = () => {
         alignItems="start"
         textAlign="start"
       >
-        {isBrave && (
+        {isBraveQuery.data && (
           <Alert status="error" mb={4} rounded="lg" fontWeight="bold">
             <AlertIcon alignSelf="start" />
             <Flex
@@ -360,13 +360,13 @@ const LoginPage: ThirdwebNextPage = () => {
         </FormControl>
         <Button
           variant="inverted"
-          isDisabled={!isLoggedIn || (isBrave && !hasRemovedShield)}
+          isDisabled={!isLoggedIn || (isBraveQuery.data && !hasRemovedShield)}
           isLoading={loading}
           onClick={authorizeDevice}
         >
           Authorize device
         </Button>
-        {isBrave && !hasRemovedShield && (
+        {isBraveQuery.data && !hasRemovedShield && (
           <Text color="red" size="label.md" mt={4}>
             Please acknowledge that you have disabled the Brave shields above.
           </Text>

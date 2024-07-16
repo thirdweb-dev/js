@@ -26,7 +26,12 @@ import {
 } from "thirdweb/react";
 import { setThirdwebDomains } from "thirdweb/utils";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { THIRDWEB_API_HOST } from "../../constants/urls";
+
+const THIRDWEB_API_HOST = new URL(
+  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com",
+)
+  .toString()
+  .slice(0, -1);
 
 // do this upfront
 setThirdwebDomains({

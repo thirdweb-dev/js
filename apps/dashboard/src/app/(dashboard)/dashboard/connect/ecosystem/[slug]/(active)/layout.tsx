@@ -1,41 +1,52 @@
-"use client";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { getAddress } from "thirdweb";
+import type { Ecosystem } from "../../types";
 import { EcosystemHeader } from "./components/client/ecosystem-header.client";
-import { useEcosystem } from "./hooks/use-ecosystem";
 
-export default function Layout({
+async function fetchEcosystem(slug: string, authToken: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com"}/v1/ecosystem-wallet/${slug}`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
+  if (!res.ok) {
+    const data = await res.json();
+    console.error(data);
+    return null;
+  }
+
+  const data = (await res.json()) as { result: Ecosystem };
+  return data.result;
+}
+
+export default async function Layout({
   children,
   params,
 }: { children: React.ReactNode; params: { slug: string } }) {
-  const { isLoggedIn, isLoading: isLoggedInLoading } = useLoggedInUser();
-  const { ecosystem, error } = useEcosystem({ slug: params.slug });
-  const router = useRouter();
+  const cookiesManager = cookies();
+  const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  const authToken = activeAccount
+    ? cookies().get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))?.value
+    : null;
 
-  if (error) {
-    if (error.res?.status === 404) {
-      toast.error("Ecosystem not found");
-    } else {
-      toast.error(error?.message ?? "Failed to fetch ecosystem");
-    }
-    router.replace("/dashboard/connect/ecosystem");
+  if (!authToken) {
+    redirect("/dashboard/connect/ecosystem");
   }
 
-  if (!isLoggedIn && !isLoggedInLoading) {
-    toast.error("Login to access this ecosystem");
-    router.replace("/dashboard/connect/ecosystem");
-    return null;
-  }
+  const ecosystem = await fetchEcosystem(params.slug, authToken);
 
-  if (ecosystem?.status === "requested") {
-    router.replace(`/dashboard/connect/ecosystem/${ecosystem.slug}/requested`);
-    return null;
+  if (!ecosystem) {
+    redirect("/dashboard/connect/ecosystem");
   }
 
   return (
     <div className="flex flex-col w-full gap-10 px-2 py-10 sm:px-4">
-      <EcosystemHeader ecosystemSlug={params.slug} />
+      <EcosystemHeader ecosystem={ecosystem} />
       {children}
     </div>
   );

@@ -1,3 +1,4 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKey,
   useApiKeys,
@@ -22,7 +23,6 @@ import { ChartContainer } from "components/analytics/chart-container";
 import { AppLayout } from "components/app-layouts/app";
 import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
@@ -45,7 +45,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const defaultClientId = router.query.clientId?.toString();
   const { colorMode } = useColorMode();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
 
@@ -234,9 +234,11 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
     setActiveIndex(index);
   };
 
-  if (!isLoggedIn) {
+  if (isLoading) {
     return (
-      <ConnectWalletPrompt description="view wallet analytics for your apps" />
+      <div className="grid w-full place-items-center">
+        <Spinner className="size-14" />
+      </div>
     );
   }
 

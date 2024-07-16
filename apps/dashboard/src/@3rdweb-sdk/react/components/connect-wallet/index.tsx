@@ -1,9 +1,9 @@
 "use client";
 
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { thirdwebClient } from "@/constants/client";
-import { useQueryClient } from "@tanstack/react-query";
 import { useSupportedChains } from "@thirdweb-dev/react";
-import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
   useAddRecentlyUsedChainId,
@@ -12,91 +12,15 @@ import {
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { defineChain } from "thirdweb";
-import { ConnectButton, type SiweAuthOptions } from "thirdweb/react";
+import { AutoConnect, ConnectButton } from "thirdweb/react";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
-import { fetchUserQuery } from "../../hooks/useLoggedInUser";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
-import { clearAccessToken, setAccessToken } from "./useAccessToken";
 
-// TODO remove all of this
-
-type FetchAuthTokenResponse = {
-  jwt: string;
-};
-
-const TOKEN_PROMISE_MAP = new Map<string, Promise<FetchAuthTokenResponse>>();
-
-async function fetchAuthToken(
-  address: string,
-  abortController?: AbortController,
-): Promise<FetchAuthTokenResponse> {
-  if (!address) {
-    throw new Error("address is required");
-  }
-  if (TOKEN_PROMISE_MAP.has(address)) {
-    return TOKEN_PROMISE_MAP.get(address) as Promise<FetchAuthTokenResponse>;
-  }
-  const promise = new Promise<FetchAuthTokenResponse>((resolve, reject) => {
-    return fetch(`${THIRDWEB_API_HOST}/v1/auth/token`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      signal: abortController?.signal,
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.error) {
-          throw new Error(json.error.message);
-        }
-        return {
-          jwt: json.data.jwt as string,
-        };
-      })
-      .then(resolve)
-      .catch(reject)
-      .finally(() => {
-        // remove the promise from the map when it's done
-        TOKEN_PROMISE_MAP.delete(address);
-      });
-  });
-  TOKEN_PROMISE_MAP.set(address, promise);
-  return promise;
-}
-
-// END TODO
-
-export async function logout() {
-  // reset the token ASAP
-  clearAccessToken();
-  const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/logout`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  if (!res.ok) {
-    throw new Error("Failed to logout");
-  }
-  return res.json();
-}
-
-export interface ConnectWalletProps {
-  shrinkMobile?: boolean;
-  upsellTestnet?: boolean;
-  onChainSelect?: (chainId: number) => void;
-  noAuth?: boolean;
-  disableChainConfig?: boolean;
-  disableAddCustomNetwork?: boolean;
-}
-
-export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
-  noAuth,
-}) => {
+export const CustomConnectWallet: React.FC = () => {
   const { theme } = useTheme();
   const recentChainsv4 = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
@@ -126,78 +50,38 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
     ];
   }, [recentChainsv4, favChainsQuery.data]);
 
-  const queryClient = useQueryClient();
+  // ensures login status on pages that need it
+  const { isLoading, isLoggedIn } = useLoggedInUser();
+  const pathname = usePathname();
 
-  const authConfig = useMemo(() => {
-    if (noAuth) {
-      return undefined;
-    }
-    return {
-      getLoginPayload: async (params) => {
-        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/payload`, {
-          method: "POST",
-          body: JSON.stringify({
-            address: params.address,
-            chainId: params.chainId.toString(),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) {
-          throw new Error("Failed to fetch login payload");
-        }
-        return (await res.json()).payload;
-      },
-      doLogin: async (payload) => {
-        const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/login`, {
-          method: "POST",
-          body: JSON.stringify({ payload }),
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!res.ok) {
-          throw new Error("Failed to login");
-        }
-        const json = await res.json();
+  if (isLoading) {
+    return (
+      <>
+        <div className="w-[144px] h-[48px] bg-muted border rounded-lg flex items-center justify-center">
+          <Spinner className="size-4" />
+        </div>
+        {/* need autoconnect here so that we actually connect */}
+        <AutoConnect client={thirdwebClient} />
+      </>
+    );
+  }
 
-        if (json.token) {
-          setAccessToken(json.token);
-          await queryClient.invalidateQueries({
-            queryKey: ["logged_in_user"],
-          });
-        }
-        return json;
-      },
-      doLogout: async () => {
-        const l = await logout();
-        await queryClient.invalidateQueries({
-          queryKey: ["logged_in_user"],
-        });
-        return l;
-      },
-      isLoggedIn: async (address) => {
-        const user = await queryClient.fetchQuery(fetchUserQuery(address));
-        if (!user) {
-          return false;
-        }
-
-        const { jwt } = await fetchAuthToken(address);
-        if (jwt) {
-          setAccessToken(jwt);
-          return true;
-        }
-
-        return false;
-      },
-    } satisfies SiweAuthOptions;
-  }, [noAuth, queryClient]);
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Button asChild variant="default" className="gap-2" size="lg">
+          <Link href={`/login${pathname ? `?next=${pathname}` : ""}`}>
+            Sign In
+          </Link>
+        </Button>
+        {/* need autoconnect here so that we actually connect */}
+        <AutoConnect client={thirdwebClient} />
+      </>
+    );
+  }
 
   return (
     <ConnectButton
-      auth={authConfig}
       theme={t}
       client={thirdwebClient}
       connectModal={{
@@ -210,6 +94,16 @@ export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
         name: "thirdweb",
         logoUrl: "https://thirdweb.com/favicon.ico",
         url: "https://thirdweb.com",
+      }}
+      onDisconnect={async () => {
+        try {
+          // log out the user
+          await fetch("/api/auth/logout", {
+            method: "POST",
+          });
+        } catch (err) {
+          console.error("Failed to log out", err);
+        }
       }}
       chains={allChains}
       detailsModal={{

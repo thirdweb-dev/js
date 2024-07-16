@@ -297,9 +297,10 @@ async function initProvider(
   return provider;
 }
 
-function createAccount(provider: WCProvider, address: string) {
+function createAccount(provider: WCProvider, _address: string) {
+  const address = getAddress(_address);
   const account: Account = {
-    address,
+    address: address,
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",

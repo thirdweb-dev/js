@@ -1,27 +1,10 @@
-import { equalBytes } from "@noble/curves/abstract/utils";
-import {
-  type Signature,
-  encodeDeployData,
-  recoverAddress,
-  serializeSignature,
-} from "viem";
+import { type Signature, recoverAddress } from "viem";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { getContract } from "../contract/contract.js";
-import { eth_call } from "../rpc/actions/eth_call.js";
-import { getRpcClient } from "../rpc/rpc.js";
-import { fromBytes } from "../utils/encoding/from-bytes.js";
 import { type Hex, isHex } from "../utils/encoding/hex.js";
-import { toBytes } from "../utils/encoding/to-bytes.js";
 import { hashMessage } from "../utils/hashing/hashMessage.js";
 import type { Prettify } from "../utils/type-utils.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "../wallets/smart/lib/constants.js";
-import {
-  universalSignatureValidatorAbi,
-  universalSignatureValidatorByteCode,
-} from "./constants.js";
-import { isErc6492Signature } from "./is-erc6492-signature.js";
-import { serializeErc6492Signature } from "./serialize-erc6492-signature.js";
+import { verifyHash } from "./verify-hash.js";
 
 export type VerifyEOASignatureParams = {
   message: string;
@@ -113,69 +96,15 @@ export async function verifyContractWalletSignature({
   client,
   accountFactory,
 }: VerifyContractWalletSignatureParams) {
-  console.log("verifyContractWalletSignature");
   const messageHash = hashMessage(message);
-
-  const signatureHex = (() => {
-    if (isHex(signature)) return signature;
-    if (typeof signature === "object" && "r" in signature && "s" in signature)
-      return serializeSignature(signature);
-    if (signature instanceof Uint8Array) return fromBytes(signature, "hex");
-    // We should never hit this but TS doesn't know that
-    throw new Error(
-      `Invalid signature type for signature ${signature}: ${typeof signature}`,
-    );
-  })();
-
-  const accountContract = getContract({
+  return verifyHash({
+    hash: messageHash,
+    signature,
     address,
-    chain,
     client,
-  });
-
-  const wrappedSignature = await (async () => {
-    // If this sigature was already wrapped for ERC-6492, carry on
-    if (isErc6492Signature(signatureHex)) return signatureHex;
-
-    // If the contract is already deployed, return the original signature
-    const { isContractDeployed } = await import(
-      "../utils/bytecode/is-contract-deployed.js"
-    );
-    const isDeployed = await isContractDeployed(accountContract);
-    if (!isDeployed) return signatureHex;
-
-    // Otherwise, serialize the signature for ERC-6492 validation
-    return serializeErc6492Signature({
-      address: accountFactory?.address ?? DEFAULT_ACCOUNT_FACTORY,
-      data: accountFactory?.verificationCalldata ?? "0x",
-      signature: signatureHex,
-    });
-  })();
-
-  const verificationData = encodeDeployData({
-    abi: universalSignatureValidatorAbi,
-    args: [address, messageHash, wrappedSignature],
-    bytecode: universalSignatureValidatorByteCode,
-  });
-
-  const rpcRequest = getRpcClient({
     chain,
-    client,
+    accountFactory,
   });
-
-  try {
-    const result = await eth_call(rpcRequest, {
-      data: verificationData,
-    });
-
-    const hexResult = isHex(result) ? toBytes(result) : result;
-    return equalBytes(hexResult, toBytes("0x1"));
-  } catch (error) {
-    console.log("error", error);
-    // TODO: Improve overall RPC error handling so we can tell if this was an actual verification failure or some other error
-    // Verification failed somehow
-    return false;
-  }
 }
 
 export type VerifySignatureParams = Prettify<

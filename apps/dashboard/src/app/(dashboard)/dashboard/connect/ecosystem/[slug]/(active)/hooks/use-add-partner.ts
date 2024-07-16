@@ -21,13 +21,13 @@ export function useAddPartner(
   >,
 ) {
   const { onSuccess, ...queryOptions } = options || {};
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoggedIn, user } = useLoggedInUser();
   const queryClient = useQueryClient();
 
   const { mutateAsync: addPartner, isLoading } = useMutation({
     // Returns the created partner object
     mutationFn: async (params: AddPartnerParams): Promise<Partner> => {
-      if (!isLoggedIn) {
+      if (!isLoggedIn || !user?.jwt) {
         throw new Error("Please login to add a partner");
       }
 
@@ -35,8 +35,11 @@ export function useAddPartner(
         `${params.ecosystem.url}/${params.ecosystem.id}/partner`,
         {
           method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.jwt}`,
+          },
           body: JSON.stringify({
             name: params.name,
             allowlistedDomains: params.allowlistedDomains,

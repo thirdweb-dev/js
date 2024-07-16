@@ -8,7 +8,13 @@ export function useEcosystem({
   slug,
   refetchInterval,
   refetchOnWindowFocus,
-}: { slug: string; refetchInterval?: number; refetchOnWindowFocus?: boolean }) {
+  initialData,
+}: {
+  slug: string;
+  refetchInterval?: number;
+  refetchOnWindowFocus?: boolean;
+  initialData?: Ecosystem;
+}) {
   const { isLoggedIn } = useLoggedInUser();
 
   const ecosystemQuery = useQuery({
@@ -16,7 +22,6 @@ export function useEcosystem({
     queryFn: async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/ecosystem-wallet/${slug}`,
-        { credentials: "include" },
       );
 
       if (!res.ok) {
@@ -35,6 +40,7 @@ export function useEcosystem({
     retry: false,
     refetchInterval,
     refetchOnWindowFocus,
+    initialData,
   });
 
   return {

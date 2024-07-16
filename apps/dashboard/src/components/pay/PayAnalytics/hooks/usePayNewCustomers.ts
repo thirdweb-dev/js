@@ -1,6 +1,5 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useQuery } from "@tanstack/react-query";
-import { useLoggedInUser } from "../../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { THIRDWEB_PAY_DOMAIN } from "../../../../constants/urls";
 
 export type PayNewCustomersData = {
   intervalType: "day" | "week";
@@ -30,26 +29,26 @@ export function usePayNewCustomers(options: {
   to: Date;
   intervalType: "day" | "week";
 }) {
-  const { user, isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   return useQuery(
     ["usePayNewCustomers", user?.address, options],
     async () => {
-      const endpoint = new URL(
-        `https://${THIRDWEB_PAY_DOMAIN}/stats/aggregate/customers/v1`,
-      );
-      endpoint.searchParams.append("intervalType", options.intervalType);
-      endpoint.searchParams.append("clientId", options.clientId);
-      endpoint.searchParams.append("fromDate", `${options.from.getTime()}`);
-      endpoint.searchParams.append("toDate", `${options.to.getTime()}`);
+      const searchParams = new URLSearchParams();
+      searchParams.append("intervalType", options.intervalType);
+      searchParams.append("clientId", options.clientId);
+      searchParams.append("fromDate", `${options.from.getTime()}`);
+      searchParams.append("toDate", `${options.to.getTime()}`);
 
-      const res = await fetch(endpoint.toString(), {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/server-proxy/pay/stats/aggregate/customers/v1?${searchParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to fetch new customers");
@@ -59,6 +58,6 @@ export function usePayNewCustomers(options: {
 
       return resJSON.result.data;
     },
-    { enabled: isLoggedIn },
+    { enabled: !!user?.jwt },
   );
 }

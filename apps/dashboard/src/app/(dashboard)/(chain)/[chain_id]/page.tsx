@@ -1,6 +1,13 @@
 import { ChevronRight, ShieldCheckIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  type SortBy,
+  type TimeRange,
+  fetchTopContracts,
+} from "../../../../lib/search";
+import { TrendingContractSection } from "../../../trending/components/trending-table";
+import { getChain } from "../utils";
 import { InfoCard } from "./components/server/info-card";
 import twPublisherImage from "./tw-publisher.png";
 
@@ -40,30 +47,39 @@ const popularContracts: ContractCardInfo[] = [
   },
 ];
 
-export default async function Page() {
+export default async function Page(props: {
+  params: { chain_id: string };
+  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
+}) {
+  const chain = await getChain(props.params.chain_id);
+  const topContracts = await fetchTopContracts({
+    chainId: chain.chainId,
+    ...props.searchParams,
+  });
   return (
     <div>
-      <InfoCard
-        title="thirdweb Contracts"
-        links={[
-          {
-            label: "Learn More",
-            href: "https://portal.thirdweb.com/contracts",
-          },
-        ]}
-      >
-        <p>End-to-end tools for smart contract development</p>
-        <p>
-          Trusted, modular smart contracts that can be deployed securely on any
-          EVM chain
-        </p>
-      </InfoCard>
+      <div className="h-4" />
 
-      <div className="h-10" />
+      {topContracts.length > 0 && (
+        <>
+          <div className="flex flex-col gap-4">
+            <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
+              Popular Contracts on {chain.name.split(" ")[0]}
+            </h3>
+            <TrendingContractSection
+              topContracts={topContracts}
+              chainId={chain.chainId}
+              {...props.searchParams}
+            />
+          </div>
+
+          <div className="h-10" />
+        </>
+      )}
 
       <div className="flex items-center justify-between">
         <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
-          Get Started
+          Deploy Contracts on {chain.name.split(" ")[0]}
         </h3>
         <Link
           href="/explore"
@@ -88,6 +104,24 @@ export default async function Page() {
           );
         })}
       </div>
+
+      <div className="h-10" />
+
+      <InfoCard
+        title="thirdweb Contracts"
+        links={[
+          {
+            label: "Learn More",
+            href: "https://portal.thirdweb.com/contracts",
+          },
+        ]}
+      >
+        <p>End-to-end tools for smart contract development</p>
+        <p>
+          Trusted, modular smart contracts that can be deployed securely on any
+          EVM chain
+        </p>
+      </InfoCard>
     </div>
   );
 }

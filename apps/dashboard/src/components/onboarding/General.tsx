@@ -4,7 +4,6 @@ import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
 import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { Button } from "tw-components";
-import { logout } from "../../@3rdweb-sdk/react/components/connect-wallet";
 import { OnboardingTitle } from "./Title";
 
 type OnboardingGeneralProps = {
@@ -24,9 +23,13 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
 
   async function handleDisconnect() {
     if (activeWallet) {
-      await logout();
       disconnect(activeWallet);
     }
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    }).catch((err) => {
+      console.error("Failed to log out", err);
+    });
   }
 
   return (

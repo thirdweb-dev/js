@@ -11,7 +11,6 @@ import { Star } from "lucide-react";
 async function favoriteChains() {
   const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains/favorites`, {
     method: "GET",
-    credentials: "include",
   });
 
   const result = await res.json();
@@ -24,7 +23,6 @@ async function addChainToFavorites(chainId: number) {
     `${THIRDWEB_API_HOST}/v1/chains/${chainId}/favorite`,
     {
       method: "POST",
-      credentials: "include",
     },
   );
   const result = await res.json();
@@ -36,7 +34,6 @@ async function removeChainFromFavorites(chainId: number) {
     `${THIRDWEB_API_HOST}/v1/chains/${chainId}/favorite`,
     {
       method: "DELETE",
-      credentials: "include",
     },
   );
   const result = await res.json();

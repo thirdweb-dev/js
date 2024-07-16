@@ -21,7 +21,19 @@ import {
 import { hexlifyUserOp } from "./utils.js";
 
 /**
- * @internal
+ * Bundle a user operation.
+ * @param args - The options for bundling a user operation.
+ * @returns The bundle hash of the user operation.
+ * @example
+ * ```ts
+ * import { bundleUserOp } from "thirdweb/wallets/smart";
+ *
+ * const userOpHash = await bundleUserOp({
+ *  userOp,
+ *  options,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function bundleUserOp(args: {
   userOp: UserOperation;
@@ -32,13 +44,25 @@ export async function bundleUserOp(args: {
     operation: "eth_sendUserOperation",
     params: [
       hexlifyUserOp(args.userOp),
-      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
+      args.options.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
     ],
   });
 }
 
 /**
- * @internal
+ * Estimate the gas cost of a user operation.
+ * @param args - The options for estimating the gas cost of a user operation.
+ * @returns The estimated gas cost of the user operation.
+ * @example
+ * ```ts
+ * import { estimateUserOpGas } from "thirdweb/wallets/smart";
+ *
+ * const gasCost = await estimateUserOpGas({
+ *  userOp,
+ *  options,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function estimateUserOpGas(args: {
   userOp: UserOperation;
@@ -49,7 +73,7 @@ export async function estimateUserOpGas(args: {
     operation: "eth_estimateUserOperationGas",
     params: [
       hexlifyUserOp(args.userOp),
-      args.options.overrides?.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
+      args.options.entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6,
     ],
   });
 
@@ -63,9 +87,20 @@ export async function estimateUserOpGas(args: {
 }
 
 /**
- * @internal
+ * Get the gas fees of a user operation.
+ * @param args - The options for getting the gas price of a user operation.
+ * @returns The gas price of the user operation.
+ * @example
+ * ```ts
+ * import { getUserOpGasPrice } from "thirdweb/wallets/smart";
+ *
+ * const fees = await getUserOpGasPrice({
+ *  options,
+ * });
+ * ```
+ * @walletUtils
  */
-export async function getUserOpGasPrice(args: {
+export async function getUserOpGasFees(args: {
   options: BundlerOptions;
 }): Promise<GasPriceResult> {
   const res = await sendBundlerRequest({
@@ -81,7 +116,20 @@ export async function getUserOpGasPrice(args: {
 }
 
 /**
- * @internal
+ * Get the receipt of a user operation.
+ * @param args - The options for getting the receipt of a user operation.
+ * @returns The receipt of the user operation.
+ * @example
+ * ```ts
+ * import { getUserOpReceipt } from "thirdweb/wallets/smart";
+ *
+ * const receipt = await getUserOpReceipt({
+ *  client,
+ *  chain,
+ *  userOpHash,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function getUserOpReceipt(
   args: BundlerOptions & {
@@ -176,8 +224,7 @@ async function sendBundlerRequest(args: {
     console.debug(`>>> sending ${operation} with payload:`, params);
   }
 
-  const bundlerUrl =
-    options.overrides?.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
+  const bundlerUrl = options.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
   const fetchWithHeaders = getClientFetch(options.client);
   const response = await fetchWithHeaders(bundlerUrl, {
     method: "POST",

@@ -1,6 +1,5 @@
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useLoggedInUser } from "../../../../@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { THIRDWEB_PAY_DOMAIN } from "../../../../constants/urls";
 
 export type PayTopCustomersData = {
   count: number;
@@ -23,32 +22,35 @@ export function usePayCustomers(options: {
   pageSize: number;
   type: "top-customers" | "new-customers";
 }) {
-  const { user, isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   return useInfiniteQuery({
     queryKey: ["usePayCustomers", user?.address, options],
     queryFn: async ({ pageParam = 0 }) => {
-      const endpoint = new URL(
+      const endpoint =
         options.type === "new-customers"
-          ? `https://${THIRDWEB_PAY_DOMAIN}/stats/new-customers/v1`
-          : `https://${THIRDWEB_PAY_DOMAIN}/stats/customers/v1`,
-      );
+          ? "/stats/new-customers/v1"
+          : "/stats/customers/v1";
+
+      const searchParams = new URLSearchParams();
 
       const start = options.pageSize * pageParam;
-      endpoint.searchParams.append("skip", `${start}`);
-      endpoint.searchParams.append("take", `${options.pageSize}`);
+      searchParams.append("skip", `${start}`);
+      searchParams.append("take", `${options.pageSize}`);
 
-      endpoint.searchParams.append("clientId", options.clientId);
-      endpoint.searchParams.append("fromDate", `${options.from.getTime()}`);
-      endpoint.searchParams.append("toDate", `${options.to.getTime()}`);
+      searchParams.append("clientId", options.clientId);
+      searchParams.append("fromDate", `${options.from.getTime()}`);
+      searchParams.append("toDate", `${options.to.getTime()}`);
 
-      const res = await fetch(endpoint.toString(), {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/api/server-proxy/pay/${endpoint}?${searchParams.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to fetch pay volume");
@@ -70,7 +72,7 @@ export function usePayCustomers(options: {
         nextPageIndex,
       };
     },
-    enabled: isLoggedIn,
+    enabled: !!user?.jwt,
     getNextPageParam: (lastPage) => {
       return lastPage.nextPageIndex;
     },

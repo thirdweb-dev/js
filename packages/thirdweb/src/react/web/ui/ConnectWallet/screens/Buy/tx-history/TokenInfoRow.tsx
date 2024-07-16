@@ -46,7 +46,7 @@ export function TokenInfoRow(props: {
             client={props.client}
           />
           <Text color="primaryText">
-            {formatNumber(Number(props.tokenAmount), 4)} {props.tokenSymbol}
+            {formatNumber(Number(props.tokenAmount), 6)} {props.tokenSymbol}
           </Text>
         </Container>
         <Text size="sm">{name}</Text>

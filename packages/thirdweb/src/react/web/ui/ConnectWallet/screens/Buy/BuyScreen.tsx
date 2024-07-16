@@ -76,8 +76,6 @@ import {
 import type { PayerInfo } from "./types.js";
 import { usePayerSetup } from "./usePayerSetup.js";
 
-// NOTE: Must not use useConnectUI here because this UI can be used outside connect ui
-
 export type BuyScreenProps = {
   onBack: (() => void) | undefined;
   supportedTokens: SupportedTokens | undefined;
@@ -140,6 +138,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   const [screen, setScreen] = useState<SelectedScreen>({
     id: "main",
   });
+
+  const [hasEditedAmount, setHasEditedAmount] = useState(false);
 
   // UI selection
   const {
@@ -408,6 +408,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             supportedDestinations={supportedDestinations}
             onBack={props.onBack}
             theme={props.theme}
+            hasEditedAmount={hasEditedAmount}
+            setHasEditedAmount={setHasEditedAmount}
           />
         )}
 
@@ -486,6 +488,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   }}
                   payer={payer}
                   setTokenAmount={setTokenAmount}
+                  setHasEditedAmount={setHasEditedAmount}
                 />
               )}
             </TokenSelectedLayout>
@@ -512,8 +515,8 @@ function SelectedTokenInfo(props: {
         }}
       >
         <Container flex="row" gap="xs" center="y">
-          <Text color="primaryText" data-testid="tokenAmount" size="xxl">
-            {formatNumber(Number(props.tokenAmount), 5)}
+          <Text color="primaryText" data-testid="tokenAmount" size="xl">
+            {formatNumber(Number(props.tokenAmount), 6)}
           </Text>
 
           <Container flex="row" gap="xxs" center="y">
@@ -559,6 +562,8 @@ function MainScreen(props: {
   supportedDestinations: SupportedChainAndTokens;
   onBack: (() => void) | undefined;
   theme: "light" | "dark" | Theme;
+  hasEditedAmount: boolean;
+  setHasEditedAmount: (hasEdited: boolean) => void;
 }) {
   const { showPaymentSelection, buyWithCryptoEnabled, buyWithFiatEnabled } =
     useEnabledPaymentMethods({
@@ -568,7 +573,6 @@ function MainScreen(props: {
       toToken: props.toToken,
     });
 
-  const [hasEditedAmount, setHasEditedAmount] = useState(false);
   const {
     buyForTx,
     setTokenAmount,
@@ -584,7 +588,7 @@ function MainScreen(props: {
   const { amountNeeded } = useBuyTxStates({
     setTokenAmount,
     buyForTx: buyForTx || null,
-    hasEditedAmount,
+    hasEditedAmount: props.hasEditedAmount,
     account: payerAccount || null,
   });
 
@@ -605,7 +609,7 @@ function MainScreen(props: {
           <Spacer y="lg" />
           <BuyForTxUI
             amountNeeded={String(
-              formatNumber(Number(toEther(amountNeeded)), 4),
+              formatNumber(Number(toEther(amountNeeded)), 6),
             )}
             buyForTx={props.buyForTx}
             client={client}
@@ -619,7 +623,7 @@ function MainScreen(props: {
       <BuyTokenInput
         value={tokenAmount}
         onChange={async (value) => {
-          setHasEditedAmount(true);
+          props.setHasEditedAmount(true);
           setTokenAmount(value);
         }}
         freezeAmount={payOptions.prefillBuy?.allowEdits?.amount === false}
@@ -1094,6 +1098,7 @@ function FiatScreenContent(props: {
   isEmbed: boolean;
   payer: PayerInfo;
   setTokenAmount: (amount: string) => void;
+  setHasEditedAmount: (hasEdited: boolean) => void;
 }) {
   const [receiverAddress, setReceiverAddress] = useState(
     props.payer.account.address,
@@ -1182,18 +1187,27 @@ function FiatScreenContent(props: {
     try {
       if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
         const obj = err.error as AmountTooLowError;
-
         const minAmountUSD = obj.data.minimumAmountUSDCents;
         const currentAmountUSD = obj.data.requestedAmountUSDCents;
+
+        // avoid divide by zero
+        // if we can't calculate the minimum amount in # of tokens, don't show the button to set the minimum amount
+        if (obj.data.requestedAmountUSDCents === 0) {
+          return {
+            msg: [
+              "Purchase amount is too low",
+              "Increase the amount and try again",
+            ],
+          };
+        }
+
         const currentAmountToken = Number(props.tokenAmount);
         const minAmountToken =
           (minAmountUSD * currentAmountToken) / currentAmountUSD;
         const minAmountTokenWithBuffer = minAmountToken * 1.2; // 20% buffer
-        const formattedNum = formatNumber(minAmountTokenWithBuffer, 3);
 
         return {
-          msg: [`Minimum purchase amount is ${formattedNum}`],
-          minAmount: formattedNum,
+          minAmount: minAmountTokenWithBuffer,
         };
       }
     } catch {}
@@ -1279,7 +1293,20 @@ function FiatScreenContent(props: {
       {/* Error message */}
       {errorMsg && (
         <div>
-          {errorMsg.msg.map((msg) => (
+          {errorMsg.minAmount && (
+            <Text color="danger" size="sm" center multiline>
+              Minimum amount is {formatNumber(errorMsg.minAmount, 6)}{" "}
+              <TokenSymbol
+                token={toToken}
+                chain={toChain}
+                size="sm"
+                inline
+                color="danger"
+              />
+            </Text>
+          )}
+
+          {errorMsg.msg?.map((msg) => (
             <Text color="danger" size="sm" center multiline key={msg}>
               {msg}
             </Text>
@@ -1293,6 +1320,7 @@ function FiatScreenContent(props: {
           fullWidth
           onClick={() => {
             props.setTokenAmount(String(errorMsg.minAmount));
+            props.setHasEditedAmount(true);
           }}
         >
           Set Minimum
@@ -1376,7 +1404,7 @@ function BuyForTxUI(props: {
         <Text size="sm">Your Balance</Text>
         <Container flex="row" gap="xs">
           <Text color="primaryText" size="sm">
-            {formatNumber(Number(toEther(props.buyForTx.balance)), 4)}{" "}
+            {formatNumber(Number(toEther(props.buyForTx.balance)), 6)}{" "}
             {props.buyForTx.tokenSymbol}
           </Text>
           <TokenIcon

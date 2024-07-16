@@ -1,18 +1,22 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { Heading, LinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { ApplyForOpCreditsModal } from "../../../components/onboarding/ApplyForOpCreditsModal";
 
 const SettingsGasCreditsPage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
 
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="gas credits" />;
+  if (isLoading) {
+    return (
+      <div className="grid w-full place-items-center">
+        <Spinner className="size-14" />
+      </div>
+    );
   }
 
   return (

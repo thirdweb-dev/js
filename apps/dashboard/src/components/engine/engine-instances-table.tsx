@@ -7,6 +7,7 @@ import {
   useEngineRemoveCloudHosted,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Alert,
   AlertDescription,
@@ -45,7 +46,6 @@ import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
 import { useActiveAccount } from "thirdweb/react";
 import { Badge, Button, FormLabel, Heading, Text } from "tw-components";
-import { useAccessToken } from "../../@3rdweb-sdk/react/components/connect-wallet/useAccessToken";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
@@ -65,7 +65,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const trackEvent = useTrack();
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const address = useActiveAccount()?.address;
   const toast = useToast();
 

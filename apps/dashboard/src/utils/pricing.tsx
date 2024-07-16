@@ -88,7 +88,7 @@ export const PRICING_SECTIONS: PricingSection[] = [
     title: "Usage based pricing:",
     items: [
       {
-        title: "Monthly Active Wallets",
+        title: "Monthly Active In-App Wallets",
         starter: ["1,000", "then $0.02/wallet"],
         growth: ["10,000", "then $0.02/wallet"],
         pro: "Custom",

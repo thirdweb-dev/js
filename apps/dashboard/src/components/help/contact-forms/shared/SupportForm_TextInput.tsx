@@ -1,7 +1,6 @@
-import { FormControl, Input } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { HTMLInputTypeAttribute } from "react";
-import { useFormContext } from "react-hook-form";
-import { FormLabel } from "tw-components";
 
 type Props = {
   formLabel: string;
@@ -12,18 +11,21 @@ type Props = {
 };
 export const SupportForm_TextInput = (props: Props) => {
   const { formLabel, formValue, required, placeholder, inputType } = props;
-  const { register } = useFormContext();
   return (
-    <FormControl isRequired={required}>
-      <FormLabel>{formLabel}</FormLabel>
+    <div className="flex flex-col gap-2 items-start">
+      <Label htmlFor={formValue} className="relative">
+        {formLabel}
+        {required && (
+          <span className="absolute -top-1.5 -right-2 text-destructive">•</span>
+        )}
+      </Label>
+
       <Input
-        autoComplete="off"
-        {...register(formValue, {
-          required,
-        })}
-        placeholder={placeholder || ""}
+        name={formValue}
+        placeholder={placeholder}
         type={inputType}
+        required={required}
       />
-    </FormControl>
+    </div>
   );
 };

@@ -37,7 +37,6 @@ import {
   isNativeToken,
 } from "./nativeToken.js";
 
-// NOTE: MUST NOT USE useConnectUI here because this UI can be used outside connect ui
 // Note: TokenSelector can be used when wallet may or may not be connected
 
 /**

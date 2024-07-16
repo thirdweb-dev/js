@@ -100,6 +100,17 @@ const connectWalletLocalJa: ConnectLocale = {
       inProgress: "確認待ち",
     },
   },
+  manageWallet: {
+    title: "Manage Wallet",
+    connectAnApp: "Connect an App",
+    exportPrivateKey: "Export Private Key",
+  },
+  viewFunds: {
+    title: "View Funds",
+    viewNFTs: "View NFTs",
+    viewTokens: "View Tokens",
+    viewAssets: "View Assets",
+  },
 };
 
 export default connectWalletLocalJa;

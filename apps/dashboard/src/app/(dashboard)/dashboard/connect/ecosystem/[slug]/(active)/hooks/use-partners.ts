@@ -3,13 +3,15 @@ import { useQuery } from "@tanstack/react-query";
 import type { Ecosystem, Partner } from "../../../types";
 
 export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
-  const { isLoggedIn } = useLoggedInUser();
+  const { user } = useLoggedInUser();
 
   const partnersQuery = useQuery({
     queryKey: ["ecosystem", ecosystem.id, "partners"],
     queryFn: async () => {
       const res = await fetch(`${ecosystem.url}/${ecosystem.id}/partners`, {
-        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${user?.jwt}`,
+        },
       });
 
       if (!res.ok) {
@@ -22,12 +24,12 @@ export function usePartners({ ecosystem }: { ecosystem: Ecosystem }) {
 
       return (await res.json()) as Partner[];
     },
-    enabled: isLoggedIn,
+    enabled: !!user?.jwt,
     retry: false,
   });
 
   return {
-    isLoading: isLoggedIn ? partnersQuery.isLoading : false,
+    isLoading: user?.jwt ? partnersQuery.isLoading : false,
     partners: (partnersQuery.data ?? []) satisfies Partner[],
   };
 }

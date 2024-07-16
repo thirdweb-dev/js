@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { engineKeys } from "../cache-keys";
-import { useAccessToken } from "../components/connect-wallet/useAccessToken";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";
 
@@ -23,7 +22,7 @@ export type EngineInstance = {
   name: string;
   url: string;
   lastAccessedAt: string;
-  cloudDeployedAt: string;
+  cloudDeployedAt?: string;
   status:
     | "active"
     | "pending"
@@ -60,7 +59,6 @@ export function useEngineInstances() {
     async (): Promise<EngineInstance[]> => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "GET",
-        credentials: "include",
       });
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
@@ -99,7 +97,7 @@ export type BackendWallet = {
 };
 
 export function useEngineBackendWallets(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     [engineKeys.backendWallets(instance)],
@@ -144,7 +142,6 @@ export function useEngineLatestVersion() {
   return useQuery(engineKeys.latestVersion(), async () => {
     const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
       method: "GET",
-      credentials: "include",
     });
     if (!res.ok) {
       throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
@@ -164,7 +161,7 @@ export function useEngineUpdateVersion() {
 
     const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/update-version`, {
       method: "POST",
-      credentials: "include",
+
       headers: {
         "Content-Type": "application/json",
       },
@@ -190,7 +187,6 @@ export function useEngineRemoveFromDashboard() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
         method: "DELETE",
-        credentials: "include",
       });
       // we never use the response body
       res.body?.cancel();
@@ -224,7 +220,7 @@ export function useEngineRemoveCloudHosted() {
         `${THIRDWEB_API_HOST}/v1/engine/${instanceId}/remove-cloud-hosted`,
         {
           method: "POST",
-          credentials: "include",
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -261,7 +257,7 @@ export function useEngineEditInstance() {
     async ({ instanceId, name, url }: EditEngineInstanceInput) => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/${instanceId}`, {
         method: "PUT",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -342,7 +338,7 @@ type TransactionResponse = {
  * @returns
  */
 export function useEngineTransactions(instance: string, autoUpdate: boolean) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.transactions(instance),
@@ -383,7 +379,7 @@ type WalletConfig =
     };
 
 export function useEngineWalletConfig(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.walletConfig(instance),
@@ -413,7 +409,7 @@ export function useEngineBackendWalletBalance(
   instance: string,
   address: string,
 ) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const chainId = useActiveWalletChain()?.id;
 
   invariant(chainId, "chainId is required");
@@ -444,7 +440,7 @@ export type EngineAdmin = {
 };
 
 export function useEnginePermissions(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const address = useActiveAccount()?.address;
 
   return useQuery(
@@ -479,7 +475,7 @@ export type AccessToken = {
 };
 
 export function useEngineAccessTokens(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.accessTokens(instance),
@@ -509,7 +505,7 @@ export type Keypair = {
 };
 
 export function useEngineKeypairs(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.keypairs(instance),
@@ -534,7 +530,7 @@ type AddKeypairInput = {
 };
 
 export function useEngineAddKeypair(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -567,7 +563,7 @@ type RemoveKeypairInput = {
 };
 
 export function useEngineRemoveKeypair(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -605,7 +601,7 @@ export type EngineRelayer = {
 };
 
 export function useEngineRelayer(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.relayers(instance),
@@ -632,7 +628,7 @@ export type CreateRelayerInput = {
 };
 
 export function useEngineCreateRelayer(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -665,7 +661,7 @@ type RevokeRelayerInput = {
 };
 
 export function useEngineRevokeRelayer(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -703,7 +699,7 @@ export type UpdateRelayerInput = {
 };
 
 export function useEngineUpdateRelayer(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -742,7 +738,7 @@ export interface EngineWebhook {
 }
 
 export function useEngineWebhooks(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.webhooks(instance),
@@ -781,7 +777,7 @@ export type SetWalletConfigInput =
     };
 
 export function useEngineSetWalletConfig(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -814,7 +810,7 @@ export type CreateBackendWalletInput = {
 };
 
 export function useEngineCreateBackendWallet(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -850,7 +846,7 @@ interface UpdateBackendWalletInput {
 }
 
 export function useEngineUpdateBackendWallet(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -901,7 +897,7 @@ export type ImportBackendWalletInput =
     };
 
 export function useEngineImportBackendWallet(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -932,7 +928,7 @@ export function useEngineImportBackendWallet(instance: string) {
 }
 
 export function useEngineGrantPermissions(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -965,7 +961,7 @@ type RevokePermissionsInput = {
 };
 
 export function useEngineRevokePermissions(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -998,7 +994,7 @@ type CreateAccessTokenResponse = AccessToken & {
 };
 
 export function useEngineCreateAccessToken(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -1031,7 +1027,7 @@ type RevokeAccessTokenInput = {
 };
 
 export function useEngineRevokeAccessToken(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -1065,7 +1061,7 @@ type UpdateAccessTokenInput = {
 };
 
 export function useEngineUpdateAccessToken(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -1100,7 +1096,7 @@ export type CreateWebhookInput = {
 };
 
 export function useEngineCreateWebhook(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -1133,7 +1129,7 @@ type RevokeWebhookInput = {
 };
 
 export function useEngineRevokeWebhook(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
@@ -1170,7 +1166,7 @@ type SendTokensInput = {
 };
 
 export function useEngineSendTokens(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useMutation(async (input: SendTokensInput) => {
     invariant(instance, "instance is required");
@@ -1201,7 +1197,7 @@ export function useEngineSendTokens(instance: string) {
 }
 
 export function useEngineCorsConfiguration(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.corsUrls(instance),
@@ -1225,7 +1221,7 @@ interface SetCorsUrlInput {
 
 export function useEngineSetCorsConfiguration(instance: string) {
   const queryClient = useQueryClient();
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useMutation(
     async (input: SetCorsUrlInput) => {
@@ -1268,7 +1264,7 @@ export interface EngineContractSubscription {
 }
 
 export function useEngineContractSubscription(instance: string) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   return useQuery(
     engineKeys.contractSubscriptions(instance),
     async () => {
@@ -1298,7 +1294,7 @@ export interface AddContractSubscriptionInput {
 
 export function useEngineAddContractSubscription(instance: string) {
   const queryClient = useQueryClient();
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useMutation(
     async (input: AddContractSubscriptionInput) => {
@@ -1333,7 +1329,7 @@ export interface RemoveContractSubscriptionInput {
 
 export function useEngineRemoveContractSubscription(instance: string) {
   const queryClient = useQueryClient();
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useMutation(
     async (input: RemoveContractSubscriptionInput) => {
@@ -1367,7 +1363,7 @@ export function useEngineSubscriptionsLastBlock(
   chainId: number,
   autoUpdate: boolean,
 ) {
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
     engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
@@ -1408,7 +1404,6 @@ export function useEngineResourceMetrics(engineId: string) {
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,
         {
           method: "GET",
-          credentials: "include",
         },
       );
       if (!res.ok) {

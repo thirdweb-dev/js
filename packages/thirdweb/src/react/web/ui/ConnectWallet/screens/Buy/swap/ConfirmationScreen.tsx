@@ -84,7 +84,7 @@ export function SwapConfirmationScreen(props: {
       <ConfirmItem label="Pay">
         <RenderTokenInfo
           chain={props.fromChain}
-          amount={String(formatNumber(Number(props.fromAmount), 4))}
+          amount={String(formatNumber(Number(props.fromAmount), 6))}
           symbol={props.fromTokenSymbol || ""}
           token={props.fromToken}
           client={props.client}
@@ -95,7 +95,7 @@ export function SwapConfirmationScreen(props: {
       <ConfirmItem label="Receive">
         <RenderTokenInfo
           chain={props.toChain}
-          amount={String(formatNumber(Number(props.toAmount), 4))}
+          amount={String(formatNumber(Number(props.toAmount), 6))}
           symbol={props.toTokenSymbol}
           token={props.toToken}
           client={props.client}

@@ -139,7 +139,11 @@ export const MediaRenderer = /* @__PURE__ */ (() =>
               style={mergedStyle}
               src={mediaInfo.url}
               ref={ref as unknown as React.ForwardedRef<HTMLVideoElement>}
-              poster={possiblePosterSrc.url}
+              poster={
+                possiblePosterSrc.mimeType?.startsWith("image/")
+                  ? possiblePosterSrc.url
+                  : undefined
+              }
               requireInteraction={requireInteraction}
               className={className}
               controls={controls}

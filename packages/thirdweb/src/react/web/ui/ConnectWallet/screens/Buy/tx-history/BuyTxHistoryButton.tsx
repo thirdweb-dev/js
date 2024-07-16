@@ -79,7 +79,7 @@ export function BuyTxHistoryButton(props: {
                     ? props.txInfo.status.quote.toAmount
                     : props.txInfo.status.quote.estimatedToTokenAmount,
                 ),
-                4,
+                6,
               )}{" "}
               {props.txInfo.status.quote.toToken.symbol}
             </Text>{" "}

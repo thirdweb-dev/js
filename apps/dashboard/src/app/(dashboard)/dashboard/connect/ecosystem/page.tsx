@@ -1,39 +1,58 @@
-"use client";
-
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { BookMarkedIcon, ExternalLinkIcon, MoveRightIcon } from "lucide-react";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import headerImage from "./assets/header.png";
-import { useEcosystemList } from "./hooks/use-ecosystem-list";
+import type { Ecosystem } from "./types";
 
-export default function Page() {
-  const { isLoggedIn, isLoading: userLoading } = useLoggedInUser();
-  const { isLoading, ecosystems } = useEcosystemList();
-  const router = useRouter();
+async function fetchEcosystemList(authToken: string) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com"}/v1/ecosystem-wallet/list`,
+    {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    },
+  );
 
-  // if we have at least one ecosystem, redirect to the first one
-  if (ecosystems.length > 0) {
-    router.replace(`/dashboard/connect/ecosystem/${ecosystems[0].slug}`);
+  if (!res.ok) {
+    const data = await res.json();
+    console.error(data);
+    throw new Error(data?.error?.message ?? "Failed to fetch ecosystems");
   }
 
-  // if is loading, show loading UI
-  // Keep showing the loading UI while we redirect if we have ecosystems
-  if (userLoading || isLoading || ecosystems.length > 0) {
-    return (
-      <div className="container flex flex-col items-center justify-center gap-8 px-4 py-6">
-        <Spinner className="size-8" />
-      </div>
-    );
+  const data = (await res.json()) as { result: Ecosystem[] };
+  return data.result;
+}
+
+export default async function Page() {
+  const cookiesManager = cookies();
+  const activeAccount = cookiesManager.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  const authToken = activeAccount
+    ? cookiesManager.get(`${COOKIE_PREFIX_TOKEN}${activeAccount}`)?.value
+    : null;
+
+  // if user is logged in and has an ecosystem, redirect to the first ecosystem
+  if (authToken) {
+    const ecosystems = await fetchEcosystemList(authToken).catch((err) => {
+      console.error("failed to fetch ecosystems", err);
+      return [];
+    });
+    console.log("ecosystems", ecosystems);
+    if (ecosystems.length > 0) {
+      redirect(`/dashboard/connect/ecosystem/${ecosystems[0].slug}`);
+    }
   }
+
+  // otherwise we fall through to the page
 
   return (
-    <main className="container flex flex-col max-w-2xl gap-8 px-4 pb-6 mx-auto">
+    <main className="container flex flex-col max-w-2xl gap-8 pb-6 mx-auto">
       <Image
         src={headerImage}
         alt="Ecosystems"
@@ -52,7 +71,7 @@ export default function Page() {
         </p>
       </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-        {!isLoggedIn ? (
+        {!authToken ? (
           <ToolTipLabel label="Connect your wallet to create an ecosystem">
             <Button variant="primary" className="opacity-50">
               Create Ecosystem

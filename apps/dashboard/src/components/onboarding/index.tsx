@@ -2,11 +2,9 @@ import {
   type Account,
   AccountStatus,
   useAccount,
-  useConfirmEmbeddedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { getLatestEWSToken } from "constants/app";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useActiveWallet } from "thirdweb/react";
 import { useTrack } from "../../hooks/analytics/useTrack";
 import { OnboardingBilling } from "./Billing";
@@ -40,13 +38,10 @@ export const Onboarding: React.FC = () => {
   const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
   const wallet = useActiveWallet();
-  const ewsConfirmMutation = useConfirmEmbeddedWallet();
 
   const [state, setState] = useState<OnboardingState>();
   const [account, setAccount] = useState<Account>();
   const [updatedEmail, setUpdatedEmail] = useState<string | undefined>();
-
-  const isInAppWallet = wallet?.id === "inApp";
 
   const handleSave = (email?: string) => {
     // if account is not ready yet we cannot do anything here
@@ -116,23 +111,6 @@ export const Onboarding: React.FC = () => {
     setState("linking");
   };
 
-  const handleEmbeddedWalletConfirmation = useCallback(() => {
-    const ewsJwt = getLatestEWSToken();
-
-    if (ewsJwt) {
-      ewsConfirmMutation.mutate(
-        { ewsJwt },
-        {
-          onSuccess: (data) => {
-            if (!skipBilling(data as Account)) {
-              setState(data?.trialPeriodEndedAt ? "skipped" : "plan");
-            }
-          },
-        },
-      );
-    }
-  }, [ewsConfirmMutation.mutate]);
-
   // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
@@ -160,11 +138,8 @@ export const Onboarding: React.FC = () => {
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       // if its an embedded wallet, try to auto-confirm it
-      if (isInAppWallet) {
-        handleEmbeddedWalletConfirmation();
-      } else {
-        setState("onboarding");
-      }
+
+      setState("onboarding");
     }
     // user has changed email and needs to confirm
     else if (account.unconfirmedEmail) {
@@ -182,7 +157,7 @@ export const Onboarding: React.FC = () => {
     else if (!skipBilling(account)) {
       setState("plan");
     }
-  }, [account, state, wallet, handleEmbeddedWalletConfirmation, isInAppWallet]);
+  }, [account, state, wallet]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
     return null;

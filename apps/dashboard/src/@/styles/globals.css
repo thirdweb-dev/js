@@ -45,7 +45,7 @@
   .dark {
     /* bg - nuetral  */
     --background: 0 0% 4.5%;
-    --secondary: 0 0% 5.5%;
+    --secondary: 0 0% 6.5%;
     --muted: 0 0% 9%;
     --accent: 0 0% 12%;
     --card: var(--secondary);
@@ -66,7 +66,7 @@
     --secondary-foreground: 0 0% 75%;
     --muted-foreground: 0 0% 63.9%;
     --accent-foreground: 0 0% 98%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 358 0% 100%;
     --success-foreground: 156.2 71.6% 66.86%;
     --warning-foreground: 45.4deg 93.39% 47.45%;
     --link-foreground: 215.88 100% 65%;

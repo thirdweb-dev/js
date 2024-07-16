@@ -1,4 +1,5 @@
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Flex,
   FormControl,
@@ -22,7 +23,6 @@ import { useRef } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { useAccessToken } from "../../../@3rdweb-sdk/react/components/connect-wallet/useAccessToken";
 
 interface TimelineStep {
   step: string;
@@ -182,7 +182,7 @@ const CancelTransactionButton = ({
   instanceUrl: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const token = useAccessToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const { onSuccess, onError } = useTxNotifications(
     "Successfully sent a request to cancel the transaction",
     "Failed to cancel transaction",

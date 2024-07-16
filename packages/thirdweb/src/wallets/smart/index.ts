@@ -14,6 +14,7 @@ import {
   signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
+import { getAddress } from "../../utils/address.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
   Account,
@@ -110,9 +111,12 @@ export async function connectSmartWallet(
   });
 
   // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
-  const accountAddress = await predictAddress(factoryContract, {
-    personalAccountAddress: personalAccount.address,
-    ...options,
+  const accountAddress = await predictAddress({
+    factoryContract,
+    adminAddress: personalAccount.address,
+    predictAddressOverride: options.overrides?.predictAddress,
+    accountSalt: options.overrides?.accountSalt,
+    accountAddress: options.overrides?.accountAddress,
   })
     .then((address) => address)
     .catch((err) => {
@@ -164,12 +168,12 @@ async function createSmartAccount(
 ): Promise<Account> {
   const { accountContract } = options;
   const account: Account = {
-    address: accountContract.address,
+    address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
       const executeTx = prepareExecute({
         accountContract,
-        options,
         transaction,
+        executeOverride: options.overrides?.execute,
       });
       return _sendUserOp({
         executeTx,
@@ -179,8 +183,8 @@ async function createSmartAccount(
     async sendBatchTransaction(transactions: SendTransactionOption[]) {
       const executeTx = prepareBatchExecute({
         accountContract,
-        options,
         transactions,
+        executeBatchOverride: options.overrides?.executeBatch,
       });
       return _sendUserOp({
         executeTx,
@@ -387,8 +391,9 @@ function createZkSyncAccount(args: {
         const pmData = await getZkPaymasterData({
           options: {
             client: connectionOptions.client,
-            overrides: creationOptions.overrides,
             chain,
+            bundlerUrl: creationOptions.overrides?.bundlerUrl,
+            entrypointAddress: creationOptions.overrides?.entrypointAddress,
           },
           transaction: serializableTransaction,
         });
@@ -409,8 +414,9 @@ function createZkSyncAccount(args: {
       const txHash = await broadcastZkTransaction({
         options: {
           client: connectionOptions.client,
-          overrides: creationOptions.overrides,
           chain,
+          bundlerUrl: creationOptions.overrides?.bundlerUrl,
+          entrypointAddress: creationOptions.overrides?.entrypointAddress,
         },
         transaction: serializableTransaction,
         signedTransaction,
@@ -471,10 +477,16 @@ async function _sendUserOp(args: {
   const { executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({
     transaction: executeTx,
-    options,
+    factoryContract: options.factoryContract,
+    accountContract: options.accountContract,
+    adminAddress: options.personalAccount.address,
+    sponsorGas: options.sponsorGas,
+    overrides: options.overrides,
   });
   const signedUserOp = await signUserOp({
-    options,
+    chain: options.chain,
+    adminAccount: options.personalAccount,
+    entrypointAddress: options.overrides?.entrypointAddress,
     userOp: unsignedUserOp,
   });
   const userOpHash = await bundleUserOp({

@@ -70,12 +70,13 @@ export function TabButtons(props: {
   tabClassName?: string;
   activeTabClassName?: string;
   tabContainerClassName?: string;
+  containerClassName?: string;
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLButtonElement>();
 
   return (
-    <div className="relative">
+    <div className={cn("relative", props.containerClassName)}>
       <ScrollShadow scrollableClassName="pb-[8px] relative">
         <div
           className={cn("flex", props.tabContainerClassName)}

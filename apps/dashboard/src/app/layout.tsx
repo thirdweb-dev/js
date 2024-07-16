@@ -6,8 +6,8 @@ import PlausibleProvider from "next-plausible";
 import dynamic from "next/dynamic";
 import { Inter as interFont } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
-import { AppRouterProviders } from "./(dashboard)/providers";
 import { PostHogProvider } from "./components/root-providers";
+import { AppRouterProviders } from "./providers";
 
 const fontSans = interFont({
   subsets: ["latin"],

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { SupportForm_SelectInput } from "./SupportForm_SelectInput";
 import { SupportForm_TextInput } from "./SupportForm_TextInput";
 
@@ -13,21 +14,28 @@ const TARGET_PLATFORMS = [
 ];
 
 export const UnitySupportForm = () => {
+  const [selectedOS, setSelectedOS] = useState<string>("");
+  const [selectedTargetPlatform, setSelectedTargetPlatform] =
+    useState<string>("");
   return (
     <>
       <SupportForm_SelectInput
         formLabel="OS"
-        formValue="extraInfo_OS"
+        name="extraInfo_OS"
         required={true}
         promptText="Select an operating system"
         options={OPERATING_SYSTEMS}
+        value={selectedOS}
+        onValueChange={setSelectedOS}
       />
       <SupportForm_SelectInput
         formLabel="Target platform"
-        formValue="extraInfo_Target_Platform"
+        name="extraInfo_Target_Platform"
         required={true}
         promptText="Select the target platform"
         options={TARGET_PLATFORMS}
+        value={selectedTargetPlatform}
+        onValueChange={setSelectedTargetPlatform}
       />
       <SupportForm_TextInput
         formLabel="Unity version"

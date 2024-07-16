@@ -65,8 +65,7 @@ export function CreateEcosystemForm() {
     },
     onSuccess: (slug: string) => {
       form.reset();
-      // The ecosystem will start in the requested state until payment is processed, so we send the user directly there to minimize redirects
-      router.push(`/dashboard/connect/ecosystem/${slug}/requested`);
+      router.push(`/dashboard/connect/ecosystem/${slug}`);
     },
   });
 

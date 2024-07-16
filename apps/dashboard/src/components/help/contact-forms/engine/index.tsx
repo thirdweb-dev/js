@@ -1,5 +1,4 @@
-import type { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useCreateSupportTicket";
-import { useWatch } from "react-hook-form";
+import { useState } from "react";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
 import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
 import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
@@ -15,31 +14,29 @@ const ENGINE_PROBLEM_AREAS = [
 ];
 
 export default function EngineSupportForm() {
-  const selectedEngineType: string =
-    useWatch<CreateTicketInput>({
-      name: "extraInfo_Engine_Type",
-    }) || "";
-  const problemArea: string =
-    useWatch<CreateTicketInput>({
-      name: "extraInfo_Problem_Area",
-    }) || "";
+  const [selectedEngineType, setSelectedEngineType] = useState<string>("");
+  const [problemArea, setProblemArea] = useState<string>("");
   return (
     <>
       <SupportForm_SelectInput
         formLabel="Problem area"
-        formValue="extraInfo_Engine_Type"
+        name="extraInfo_Engine_Type"
         promptText="Select Engine type"
         options={ENGINE_TYPES}
+        value={selectedEngineType}
+        onValueChange={setSelectedEngineType}
         required={true}
       />
       {selectedEngineType && (
         <>
           <SupportForm_SelectInput
             formLabel="Problem area"
-            formValue="extraInfo_Problem_Area"
+            name="extraInfo_Problem_Area"
             promptText="Select a problem area"
             options={ENGINE_PROBLEM_AREAS}
             required={true}
+            value={problemArea}
+            onValueChange={setProblemArea}
           />
 
           {problemArea && (

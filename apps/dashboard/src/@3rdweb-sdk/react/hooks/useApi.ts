@@ -276,7 +276,6 @@ export function useAccount({ refetchInterval }: UseAccountInput = {}) {
     async () => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -304,7 +303,6 @@ export function useAccountUsage() {
     async () => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/usage`, {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -329,7 +327,7 @@ export function useAccountCredits() {
     async () => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/credits`, {
         method: "GET",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -363,7 +361,7 @@ export function useWalletStats(clientId: string | undefined) {
         `${THIRDWEB_API_HOST}/v1/account/wallets?clientId=${clientId}`,
         {
           method: "GET",
-          credentials: "include",
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -391,7 +389,7 @@ export function useUpdateAccount() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account`, {
         method: "PUT",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -426,7 +424,7 @@ export function useUpdateAccountPlan(waitForWebhook?: boolean) {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
         method: "PUT",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -470,7 +468,7 @@ export function useUpdateNotifications() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/notifications`, {
         method: "PUT",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -506,7 +504,7 @@ export function useCreateBillingSession(enabled = false) {
         `${THIRDWEB_API_HOST}/v1/account/billingSession`,
         {
           method: "GET",
-          credentials: "include",
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -534,55 +532,12 @@ export function useConfirmEmail() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/confirmEmail`, {
         method: "PUT",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(input),
       });
-      const json = await res.json();
-
-      if (json.error) {
-        throw new Error(json.error.message);
-      }
-
-      return json.data;
-    },
-    {
-      onSuccess: () => {
-        // invalidate related cache, since could be relinking account
-        queryClient.invalidateQueries(apiKeys.keys(user?.address as string));
-        queryClient.invalidateQueries(
-          accountKeys.usage(user?.address as string),
-        );
-
-        return queryClient.invalidateQueries(
-          accountKeys.me(user?.address as string),
-        );
-      },
-    },
-  );
-}
-
-export function useConfirmEmbeddedWallet() {
-  const { user } = useLoggedInUser();
-  const queryClient = useQueryClient();
-
-  return useMutationWithInvalidate(
-    async ({ ewsJwt }: { ewsJwt: string }) => {
-      invariant(user?.address, "walletAddress is required");
-
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/account/confirmEmbeddedWallet`,
-        {
-          method: "PUT",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ paperJwt: ewsJwt }),
-        },
-      );
       const json = await res.json();
 
       if (json.error) {
@@ -619,7 +574,7 @@ export function useResendEmailConfirmation() {
         `${THIRDWEB_API_HOST}/v1/account/resendEmailConfirmation`,
         {
           method: "POST",
-          credentials: "include",
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -654,7 +609,7 @@ export function useCreatePaymentMethod() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/paymentMethod`, {
         method: "POST",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -687,7 +642,7 @@ export function useApiKeys() {
     async () => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
         method: "GET",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -713,7 +668,7 @@ export function useCreateApiKey() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
         method: "POST",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -747,7 +702,7 @@ export function useUpdateApiKey() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${input.id}`, {
         method: "PUT",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -782,7 +737,7 @@ export function useRevokeApiKey() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys/${id}/revoke`, {
         method: "POST",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -814,7 +769,7 @@ export const usePolicies = (serviceId?: string) => {
         `${THIRDWEB_API_HOST}/v1/policies?serviceId=${serviceId}`,
         {
           method: "GET",
-          credentials: "include",
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -836,7 +791,7 @@ export const useUpdatePolicies = () => {
     async (input: { serviceId: string; data: ApiKeyServicePolicy }) => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/policies`, {
         method: "POST",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -868,7 +823,7 @@ export function useAuthorizeWalletWithAccount() {
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/jwt/authorize-wallet`, {
         method: "POST",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${variables.token}`,
@@ -902,7 +857,7 @@ export function useRevokeAuthorizedWallet() {
         `${THIRDWEB_API_HOST}/v1/authorized-wallets/${authorizedWalletId}/revoke`,
         {
           method: "POST",
-          credentials: "include",
+
           headers: {
             "Content-Type": "application/json",
           },
@@ -935,7 +890,7 @@ export function useAuthorizedWallets() {
     async () => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/authorized-wallets`, {
         method: "GET",
-        credentials: "include",
+
         headers: {
           "Content-Type": "application/json",
         },
@@ -960,8 +915,6 @@ export async function fetchChainsFromApi() {
   // TODO: re-visit this
   const res = await fetch("https://api.thirdweb.com/v1/chains", {
     method: "GET",
-    // do not inclue credentials for chains endpoint
-    // credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

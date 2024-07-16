@@ -6,11 +6,13 @@ import type { InAppWalletAuth } from "../../../../wallets/in-app/core/wallet/typ
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { Theme } from "../../../core/design-system/index.js";
+import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
+import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
 import { connectionManager } from "../../index.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { type ContainerType, Header } from "../components/Header.js";
@@ -19,7 +21,7 @@ import {
   WalletImage,
   getAuthProviderImage,
 } from "../components/WalletImage.js";
-import { ThemedButtonWithIcon } from "../components/button.js";
+import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
@@ -34,7 +36,8 @@ export type ModalState =
   | { screen: "connecting"; wallet: Wallet; authMethod?: InAppWalletAuth }
   | { screen: "error"; error: string }
   | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
-  | { screen: "external_wallets" };
+  | { screen: "external_wallets" }
+  | { screen: "auth" };
 
 /**
  * A component that allows the user to connect their wallet.
@@ -57,12 +60,20 @@ export type ModalState =
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const theme = parseTheme(props.theme);
   const wallet = useActiveWallet();
+  const siweAuth = useSiweAuth(wallet, props.auth);
+  const needsAuth = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
+  const isConnected = wallet && !needsAuth;
   const adaptedProps = {
     ...props,
     connectModal: { ...props },
   } as ConnectButtonProps;
-  return wallet ? null : (
-    <ConnectModal {...adaptedProps} theme={theme} containerType="embed" />
+  return isConnected ? null : (
+    <ConnectModal
+      {...adaptedProps}
+      theme={theme}
+      containerType="embed"
+      siweAuth={siweAuth}
+    />
   );
 }
 
@@ -71,6 +82,7 @@ export function ConnectModal(
     theme: Theme;
     onClose?: () => void;
     containerType: ContainerType;
+    siweAuth: ReturnType<typeof useSiweAuth>;
   },
 ) {
   const {
@@ -80,8 +92,20 @@ export function ConnectModal(
     accountAbstraction,
     onConnect,
     onClose,
+    siweAuth,
   } = props;
-  const [modalState, setModalState] = useState<ModalState>({ screen: "base" });
+  const wallet = useActiveWallet();
+  const needsAuth = wallet && siweAuth.requiresAuth && !siweAuth.isLoggedIn;
+  const [modalState, setModalState] = useState<ModalState>(
+    needsAuth ? { screen: "auth" } : { screen: "base" },
+  );
+  const wallets = props.wallets || getDefaultWallets(props);
+  const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
+    | Wallet<"inApp">
+    | undefined;
+  const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
+  const showBranding = props.connectModal?.showThirdwebBranding !== false;
+
   const connector = useCallback(
     async (args: {
       wallet: Wallet;
@@ -100,22 +124,30 @@ export function ConnectModal(
           accountAbstraction,
           onConnect,
         });
-        onClose?.();
+        if (siweAuth.requiresAuth && !siweAuth.isLoggedIn) {
+          // if in-app wallet, signin headlessly
+          // TODO (rn) handle signless smart wallets as well
+          if (w.id === "inApp") {
+            await siweAuth.doLogin();
+            onClose?.();
+          } else {
+            setModalState({
+              screen: "auth",
+            });
+          }
+        } else {
+          onClose?.();
+        }
       } catch (error) {
         setModalState({
           screen: "error",
-          error: (error as Error)?.message || "unknown error",
+          error: (error as Error)?.message || "Unknown error",
         });
       }
     },
-    [client, accountAbstraction, onConnect, onClose],
+    [client, accountAbstraction, onConnect, onClose, siweAuth],
   );
-  const wallets = props.wallets || getDefaultWallets(props);
-  const inAppWallet = wallets.find((wallet) => wallet.id === "inApp") as
-    | Wallet<"inApp">
-    | undefined;
-  const externalWallets = wallets.filter((wallet) => wallet.id !== "inApp");
-  const showBranding = props.connectModal?.showThirdwebBranding !== false;
+
   let content: JSX.Element;
 
   switch (modalState.screen) {
@@ -192,10 +224,41 @@ export function ConnectModal(
           ) : (
             <Spacer size="lg" />
           )}
-          <LoadingView
+          <WalletLoadingView
             theme={theme}
             wallet={modalState.wallet}
             authProvider={modalState.authMethod}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="md" />
+          )}
+        </>
+      );
+      break;
+    }
+    case "auth": {
+      content = (
+        <>
+          <Header
+            theme={theme}
+            onClose={props.onClose}
+            containerType={containerType}
+            onBack={props.onClose}
+            title={props.connectModal?.title || "Sign in"}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="lg" />
+          )}
+          <SignInView
+            theme={theme}
+            siweAuth={siweAuth}
+            onSignIn={() => props.onClose?.()}
+            onError={(error) => setModalState({ screen: "error", error })}
+            onDisconnect={() => setModalState({ screen: "base" })}
           />
           {containerType === "modal" ? (
             <View style={{ flex: 1 }} />
@@ -319,11 +382,15 @@ export function ConnectModal(
   );
 }
 
-function LoadingView({
+function WalletLoadingView({
   theme,
   wallet,
   authProvider,
-}: { theme: Theme; wallet: Wallet; authProvider?: InAppWalletAuth }) {
+}: {
+  theme: Theme;
+  wallet: Wallet;
+  authProvider?: InAppWalletAuth;
+}) {
   const walletInfo = useWalletInfo(wallet.id);
   return (
     <View
@@ -335,7 +402,7 @@ function LoadingView({
         paddingVertical: spacing.xl,
       }}
     >
-      <WalletLoadingThumbnail theme={theme} imageSize={100}>
+      <WalletLoadingThumbnail theme={theme} imageSize={100} animate={true}>
         {authProvider ? (
           <View
             style={{
@@ -363,10 +430,105 @@ function LoadingView({
       <Spacer size="sm" />
       <ThemedText theme={theme} type="subtext">
         {authProvider
-          ? `Sign into your ${capitalizeFirstLetter(authProvider)} account`
+          ? `Signing into your ${capitalizeFirstLetter(authProvider)} account`
           : `Accept the connection request in ${walletInfo.data?.name}`}
       </ThemedText>
     </View>
+  );
+}
+
+function SignInView({
+  theme,
+  siweAuth,
+  onSignIn,
+  onError,
+  onDisconnect,
+}: {
+  theme: Theme;
+  siweAuth: ReturnType<typeof useSiweAuth>;
+  onSignIn: () => void;
+  onError: (error: string) => void;
+  onDisconnect: () => void;
+}) {
+  const wallet = useActiveWallet();
+  const walletInfo = useWalletInfo(wallet?.id);
+  const { disconnect } = useDisconnect();
+  const isSigningIn = siweAuth.isLoggingIn || siweAuth.isLoading;
+  return (
+    wallet && (
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          padding: spacing.xl,
+        }}
+      >
+        <WalletLoadingThumbnail
+          theme={theme}
+          imageSize={100}
+          animate={isSigningIn}
+        >
+          <WalletImage theme={theme} size={90} wallet={wallet} />
+        </WalletLoadingThumbnail>
+        <Spacer size="xl" />
+        <ThemedText theme={theme} type="subtitle">
+          {"Complete sign in"}
+        </ThemedText>
+        <Spacer size="xs" />
+        <ThemedText theme={theme} type="subtext">
+          Sign login request in {walletInfo.data?.name} to continue
+        </ThemedText>
+        <Spacer size="xl" />
+        <ThemedButton
+          theme={theme}
+          variant="accent"
+          disabled={isSigningIn}
+          style={{ width: "100%" }}
+          onPress={async () => {
+            try {
+              await siweAuth.doLogin();
+              onSignIn();
+            } catch (e) {
+              onError((e as Error)?.message || "Unknown error");
+            }
+          }}
+        >
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{
+              color: theme.colors.accentButtonText,
+            }}
+          >
+            Sign Login Request
+          </ThemedText>
+        </ThemedButton>
+        <Spacer size="md" />
+        <ThemedButton
+          theme={theme}
+          variant="secondary"
+          disabled={isSigningIn}
+          style={{ width: "100%" }}
+          onPress={async () => {
+            disconnect(wallet);
+            siweAuth.doLogout();
+            onDisconnect();
+          }}
+        >
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{
+              color: theme.colors.accentButtonText,
+            }}
+          >
+            Disconnect
+          </ThemedText>
+        </ThemedButton>
+      </View>
+    )
   );
 }
 

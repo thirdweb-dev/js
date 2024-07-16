@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { getTotalTxCostForBuy } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
@@ -48,10 +47,7 @@ export function useBuyTxStates(options: {
 
         if (shouldRefreshTokenAmount) {
           if (totalCost > buyForTx.balance) {
-            const _tokenAmount = String(
-              formatNumber(Number(toEther(totalCost - buyForTx.balance)), 4),
-            );
-            setTokenAmount(_tokenAmount);
+            setTokenAmount(toEther(totalCost - buyForTx.balance));
           }
         }
       } catch {

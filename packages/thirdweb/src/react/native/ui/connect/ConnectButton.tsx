@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
@@ -43,6 +44,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   const wallet = useActiveWallet();
   const account = useActiveAccount();
   const status = useActiveWalletConnectionStatus();
+  const siweAuth = useSiweAuth(wallet, props.auth);
   useAutoConnect(props);
 
   const fadeAnim = useRef(new Animated.Value(0)); // For background opacity
@@ -84,10 +86,14 @@ export function ConnectButton(props: ConnectButtonProps) {
       slideAnim.current.setValue(screenHeight);
     });
   }, []);
+  const needsAuth = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
+  const isConnected = wallet && account;
+  const isConnectedAndNotAuth = isConnected && needsAuth;
+  const isConnectedAndAuth = isConnected && !needsAuth;
 
   return (
     <View>
-      {wallet && account ? (
+      {isConnectedAndAuth ? (
         <ConnectedButton
           openModal={() => openModal()}
           onClose={closeModal}
@@ -97,7 +103,10 @@ export function ConnectButton(props: ConnectButtonProps) {
         />
       ) : (
         <ThemedButton theme={theme} onPress={() => openModal()}>
-          {status === "connecting" ? (
+          {status === "connecting" ||
+          siweAuth.isLoggingIn ||
+          siweAuth.isLoading ||
+          siweAuth.isLoggingOut ? (
             <>
               <ThemedSpinner color={theme.colors.primaryButtonText} />
             </>
@@ -107,7 +116,9 @@ export function ConnectButton(props: ConnectButtonProps) {
               type="defaultSemiBold"
               style={{ color: theme.colors.primaryButtonText }}
             >
-              {props.connectButton?.label || "Connect Wallet"}
+              {isConnectedAndNotAuth
+                ? props.signInButton?.label || "Sign In"
+                : props.connectButton?.label || "Connect Wallet"}
             </ThemedText>
           )}
         </ThemedButton>
@@ -129,7 +140,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           >
             <Pressable style={styles.dismissArea} onPress={closeModal} />
             <View style={styles.bottomSheetContainer}>
-              {wallet && account ? (
+              {isConnectedAndAuth ? (
                 <ConnectedModal
                   {...props}
                   theme={theme}
@@ -144,6 +155,7 @@ export function ConnectButton(props: ConnectButtonProps) {
                   theme={theme}
                   onClose={closeModal}
                   containerType="modal"
+                  siweAuth={siweAuth}
                 />
               )}
             </View>

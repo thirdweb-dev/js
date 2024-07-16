@@ -3,6 +3,7 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { NFT } from "../../../utils/nft/parseNft.js";
 import { balanceOfBatch } from "../__generated__/IERC1155/read/balanceOfBatch.js";
 import { nextTokenIdToMint } from "../__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
+import { nextTokenId } from "../__generated__/Zora1155/read/nextTokenId.js";
 import { getNFT } from "./getNFT.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100;
@@ -44,7 +45,18 @@ export type GetOwnedNFTsParams = {
 export async function getOwnedNFTs(
   options: BaseTransactionOptions<GetOwnedNFTsParams>,
 ): Promise<(NFT & { quantityOwned: bigint })[]> {
-  const maxId = await nextTokenIdToMint(options);
+  const maxId = await Promise.allSettled([
+    nextTokenIdToMint(options),
+    nextTokenId(options),
+  ]).then(([_nextToMint, _next]) => {
+    if (_nextToMint.status === "fulfilled") {
+      return _nextToMint.value;
+    }
+    if (_next.status === "fulfilled") {
+      return _next.value;
+    }
+    throw Error("Contract doesn't have required extension");
+  });
 
   // approach is naieve, likely can be improved
   const owners: Address[] = [];

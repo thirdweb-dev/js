@@ -1,10 +1,26 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import {
+  type UseQueryOptions,
+  type UseQueryResult,
+  useQuery,
+} from "@tanstack/react-query";
+import type { Chain } from "../../../../chains/types.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 import {
   type GetWalletBalanceOptions,
+  type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
 
-// NOTE: Do not use useConnectUI here - because this hook is also used outside of Connect UI context
+export type UseWalletBalanceOptions = Prettify<
+  Omit<GetWalletBalanceOptions, "address" | "chain"> & {
+    address: string | undefined;
+    chain: Chain | undefined;
+  }
+>;
+export type UseWalletBalanceQueryOptions = Omit<
+  UseQueryOptions<GetWalletBalanceResult>,
+  "queryFn" | "queryKey" | "enabled"
+>;
 
 /**
  * Fetch the balance of a wallet for a specific token.
@@ -24,9 +40,13 @@ import {
  * ```
  * @wallet
  */
-export function useWalletBalance(options: Partial<GetWalletBalanceOptions>) {
+export function useWalletBalance(
+  options: UseWalletBalanceOptions,
+  queryOptions?: UseWalletBalanceQueryOptions,
+): UseQueryResult<GetWalletBalanceResult> {
   const { chain, address, tokenAddress, client } = options;
-  const query = queryOptions({
+  return useQuery({
+    ...queryOptions,
     queryKey: [
       "walletBalance",
       chain?.id || -1,
@@ -43,9 +63,13 @@ export function useWalletBalance(options: Partial<GetWalletBalanceOptions>) {
       if (!address) {
         throw new Error("address is required");
       }
-      return getWalletBalance({ chain, client, address, tokenAddress });
+      return getWalletBalance({
+        chain,
+        client,
+        address,
+        tokenAddress,
+      });
     },
     enabled: !!chain && !!client && !!address,
   });
-  return useQuery(query);
 }

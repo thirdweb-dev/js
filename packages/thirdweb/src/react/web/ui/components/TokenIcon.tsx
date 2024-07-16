@@ -12,8 +12,6 @@ import {
 } from "../ConnectWallet/screens/nativeToken.js";
 import { Img } from "./Img.js";
 
-// Note: Must not use useConnectUI here
-
 /**
  * @internal
  */

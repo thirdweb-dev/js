@@ -1,0 +1,126 @@
+import { equalBytes } from "@noble/curves/abstract/utils";
+import { type Signature, encodeDeployData, serializeSignature } from "viem";
+import type { Chain } from "../chains/types.js";
+import type { ThirdwebClient } from "../client/client.js";
+import { getContract } from "../contract/contract.js";
+import { eth_call } from "../rpc/actions/eth_call.js";
+import { getRpcClient } from "../rpc/rpc.js";
+import { fromBytes } from "../utils/encoding/from-bytes.js";
+import { type Hex, isHex } from "../utils/encoding/hex.js";
+import { toBytes } from "../utils/encoding/to-bytes.js";
+import { DEFAULT_ACCOUNT_FACTORY } from "../wallets/smart/lib/constants.js";
+import {
+  universalSignatureValidatorAbi,
+  universalSignatureValidatorByteCode,
+} from "./constants.js";
+import { isErc6492Signature } from "./is-erc6492-signature.js";
+import { serializeErc6492Signature } from "./serialize-erc6492-signature.js";
+
+export type VerifyHashParams = {
+  hash: Hex;
+  signature: string | Uint8Array | Signature;
+  address: string;
+  client: ThirdwebClient;
+  chain: Chain;
+  accountFactory?: {
+    address: string;
+    verificationCalldata: Hex;
+  };
+};
+
+/**
+ * @description Verify that an address created the provided signature for a given hash using [ERC-6492](https://eips.ethereum.org/EIPS/eip-6492). This function is interoperable with all wallet types, including EOAs.
+ * This function should rarely be used directly, instead use @see {import("./verify-signature.js")} and @see {import("./verify-typed-data.js")}}
+ *
+ * @param {Hex} options.hash The hash that was signed
+ * @param {string | Uint8Array | Signature} options.signature The signature that was signed
+ * @param {string} options.address The address that signed the hash
+ * @param {ThirdwebClient} options.client The Thirdweb client
+ * @param {Chain} options.chain The chain that the address is on. For an EOA, this can be any chain.
+ * @param {string} [options.accountFactory.address] The address of the account factory that created the account if using a smart account with a custom account factory
+ * @param {Hex} [options.accountFactory.verificationCalldata] The calldata that was used to create the account if using a smart account with a custom account factory
+ *
+ * @returns {Promise<boolean>} A promise that resolves to `true` if the signature is valid, or `false` otherwise.
+ *
+ * @example
+ * ```ts
+ * import { verifyHash } from "thirdweb/utils";
+ * const isValid = await verifyHash({
+ *   hash: "0x1234",
+ *   signature: "0x1234",
+ *   address: "0x1234",
+ *   client,
+ *   chain,
+ * });
+ * ```
+ *
+ * @auth
+ */
+export async function verifyHash({
+  hash,
+  signature,
+  address,
+  client,
+  chain,
+  accountFactory,
+}: VerifyHashParams): Promise<boolean> {
+  const signatureHex = (() => {
+    if (isHex(signature)) return signature;
+    if (typeof signature === "object" && "r" in signature && "s" in signature)
+      return serializeSignature(signature);
+    if (signature instanceof Uint8Array) return fromBytes(signature, "hex");
+    // We should never hit this but TS doesn't know that
+    throw new Error(
+      `Invalid signature type for signature ${signature}: ${typeof signature}`,
+    );
+  })();
+
+  const accountContract = getContract({
+    address,
+    chain,
+    client,
+  });
+
+  const wrappedSignature = await (async () => {
+    // If this sigature was already wrapped for ERC-6492, carry on
+    if (isErc6492Signature(signatureHex)) return signatureHex;
+
+    // If the contract is already deployed, return the original signature
+    const { isContractDeployed } = await import(
+      "../utils/bytecode/is-contract-deployed.js"
+    );
+    const isDeployed = await isContractDeployed(accountContract);
+    if (!isDeployed) return signatureHex;
+
+    // Otherwise, serialize the signature for ERC-6492 validation
+    return serializeErc6492Signature({
+      address: accountFactory?.address ?? DEFAULT_ACCOUNT_FACTORY,
+      data: accountFactory?.verificationCalldata ?? "0x",
+      signature: signatureHex,
+    });
+  })();
+
+  const verificationData = encodeDeployData({
+    abi: universalSignatureValidatorAbi,
+    args: [address, hash, wrappedSignature],
+    bytecode: universalSignatureValidatorByteCode,
+  });
+
+  const rpcRequest = getRpcClient({
+    chain,
+    client,
+  });
+
+  try {
+    const result = await eth_call(rpcRequest, {
+      data: verificationData,
+    });
+
+    const hexResult = isHex(result) ? toBytes(result) : result;
+    return equalBytes(hexResult, toBytes("0x1"));
+  } catch (error) {
+    // TODO: Improve overall RPC error handling so we can tell if this was an actual verification failure or some other error
+    // Verification failed somehow
+    return false;
+  }
+}

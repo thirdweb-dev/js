@@ -207,11 +207,6 @@ function buildFormData(
       fileName = `${file.name}`;
     }
 
-    // TODO: If we don't want to wrap with directory, adjust the filepath
-    // const filepath = options?.uploadWithoutDirectory
-    //   ? 'files'
-    //   : `files/${fileName}`;
-
     if (fileNameToFileMap.has(fileName)) {
       // if the file in the map is the same as the file we are already looking at then just skip and continue
       if (isFileBufferOrStringEqual(fileNameToFileMap.get(fileName), file)) {
@@ -241,14 +236,12 @@ function buildFormData(
   };
   form.append("pinataMetadata", JSON.stringify(metadata));
 
-  if (options?.uploadWithoutDirectory) {
-    form.append(
-      "pinataOptions",
-      JSON.stringify({
-        wrapWithDirectory: false,
-      }),
-    );
-  }
+  form.append(
+    "pinataOptions",
+    JSON.stringify({
+      wrapWithDirectory: options?.uploadWithoutDirectory !== true,
+    }),
+  );
 
   return {
     form,
