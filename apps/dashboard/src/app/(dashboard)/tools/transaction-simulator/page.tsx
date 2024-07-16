@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {
-  type SimulateTransactionResult,
+  type SimulateTransactionForm,
   TransactionSimulator,
 } from "./components/TransactionSimulator";
 
@@ -10,10 +10,8 @@ export const metadata: Metadata = {
     "Simulate any EVM transaction. Get gas estimates and onchain error messages to debug your contract calls.",
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: SimulateTransactionResult;
+export default async function Page(props: {
+  searchParams: Partial<SimulateTransactionForm>;
 }) {
-  return <TransactionSimulator searchParams={searchParams} />;
+  return <TransactionSimulator searchParams={props.searchParams} />;
 }
