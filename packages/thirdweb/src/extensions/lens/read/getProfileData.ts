@@ -1,15 +1,26 @@
-import { download } from "../../../storage/download.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
 import type { LensProfileSchema } from "./type.js";
 
 /**
- * In Lens Protocol, which profile is associated with an ERC721 token,
- * thus, the tokenId represent profileId and the 2 can be used interchangeably
+ * Download user lens profile from Arweave
+ * This method does NOT give you the user handle - consider using `getFullProfileData`
  *
  * @important The contract here is the LensHub contract
  * @param options
- * @returns
+ * @returns LensProfileSchema | null
+ * @extension LENS
+ *
+ * @example
+ * ```ts
+ * import { getProfileData } from "thirdweb/extensions/lens";
+ *
+ * const profileData = await getProfileData({ contract, profileId });
+ *
+ * if (profileData) {
+ *   console.log("Display name: ", profileData.lens.name);
+ * }
+ * ```
  */
 export async function getProfileData(
   options: BaseTransactionOptions<{
@@ -17,10 +28,10 @@ export async function getProfileData(
   }>,
 ): Promise<LensProfileSchema | null> {
   const profile = await getProfile(options);
-  console.log(profile);
   if (!profile?.metadataURI) {
     return null;
   }
+  const { download } = await import("../../../storage/download.js");
   const res = await download({
     uri: profile.metadataURI,
     client: options.contract.client,

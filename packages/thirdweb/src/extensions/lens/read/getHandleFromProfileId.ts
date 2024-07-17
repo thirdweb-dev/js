@@ -15,6 +15,7 @@ export type GetHandleFromProfileIdParams = {
  * Return the Lens handle of a profile in the format: lens/@<name-of-user>
  * @param options
  * @returns
+ * @extension LENS
  */
 export async function getHandleFromProfileId(
   options: GetHandleFromProfileIdParams,
