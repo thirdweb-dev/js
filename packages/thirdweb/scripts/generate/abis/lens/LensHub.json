@@ -1,0 +1,10 @@
+[
+  "function getProfile(uint256 profileId) view returns ((uint256 pubCount, address followModule, address followNFT, string __DEPRECATED__handle, string __DEPRECATED__imageURI, string __DEPRECATED__followNFTURI, string metadataURI))",
+  "function getProfileIdByHandleHash(bytes32 handleHash) view returns (uint256)",
+  "function getContentURI(uint256 profileId, uint256 pubId) view returns (string)",
+  "function tokenDataOf(uint256 tokenId) view returns ((address owner, uint96 mintTimestamp))",
+  "function exists(uint256 tokenId) view returns (bool)",
+  "function getPublication(uint256 profileId, uint256 pubId) pure returns ((uint256 pointedProfileId, uint256 pointedPubId, string contentURI, address referenceModule, address __DEPRECATED__collectModule, address __DEPRECATED__collectNFT, uint8 pubType, uint256 rootProfileId, uint256 rootPubId))",
+  "function mintTimestampOf(uint256 tokenId) view returns (uint256)",
+  "function nonces(address signer) view returns (uint256)"
+]
