@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.36
+
+### Patch Changes
+
+- [#3692](https://github.com/thirdweb-dev/js/pull/3692) [`d780bff`](https://github.com/thirdweb-dev/js/commit/d780bff72f3e87b527360ec52edd3958cadae4c0) Thanks [@iuwqyir](https://github.com/iuwqyir)! - schema changes for usage tracker event
+
 ## 0.4.35
 
 ### Patch Changes

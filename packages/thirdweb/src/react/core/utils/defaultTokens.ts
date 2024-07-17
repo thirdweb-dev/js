@@ -91,6 +91,14 @@ export const defaultTokens: SupportedTokens = {
       icon: maticIcon,
     },
   ],
+  "11155111": [
+    {
+      address: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+      name: "USD Coin",
+      symbol: "USDC",
+      icon: usdcIcon,
+    },
+  ],
   "10": [
     {
       address: "0x4200000000000000000000000000000000000006",
