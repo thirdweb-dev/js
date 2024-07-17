@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Chain } from "../../../chains/types.js";
+import { cacheChains } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
@@ -160,6 +161,15 @@ export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
   const theme = props.theme || "dark";
+
+  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
+  if (props.connectOptions?.chains) {
+    cacheChains(props.connectOptions?.chains);
+  }
+
+  if (props.connectOptions?.chain) {
+    cacheChains([props.connectOptions?.chain]);
+  }
 
   let content = null;
 
