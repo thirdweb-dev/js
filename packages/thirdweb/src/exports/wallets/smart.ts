@@ -8,6 +8,7 @@ export {
 
 export {
   getUserOpReceipt,
+  getUserOpReceiptRaw,
   bundleUserOp,
   getUserOpGasFees,
   estimateUserOpGas,
