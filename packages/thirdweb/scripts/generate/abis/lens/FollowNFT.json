@@ -1,0 +1,11 @@
+[
+  "function getFollowData(uint256 followTokenId) view returns ((uint160 followerProfileId, uint48 originalFollowTimestamp, uint48 followTimestamp, uint256 profileIdAllowedToRecover))",
+  "function getFollowTimestamp(uint256 followTokenId) view returns (uint256)",
+  "function getFollowTokenId(uint256 followerProfileId) view returns (uint256)",
+  "function getFollowerCount() view returns (uint256)",
+  "function getFollowerProfileId(uint256 followTokenId) view returns (uint256)",
+  "function getOriginalFollowTimestamp(uint256 followTokenId) view returns (uint256)",
+  "function getProfileIdAllowedToRecover(uint256 followTokenId) view returns (uint256)",
+  "function isFollowing(uint256 followerProfileId) view returns (bool)",
+  "function mintTimestampOf(uint256 tokenId) view returns (uint256)"
+]

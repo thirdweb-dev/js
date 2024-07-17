@@ -1,0 +1,6 @@
+[
+  "function getHandle(uint256 tokenId) view returns (string)",
+  "function getHandleTokenURIContract() view returns (address)",
+  "function getLocalName(uint256 tokenId) view returns (string)",
+  "function getTokenId(string localName) pure returns (uint256)"
+]
