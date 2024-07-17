@@ -34,7 +34,6 @@
     "typescript": ">=5.0.4",
     "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
-    "@react-native-clipboard/clipboard": "^1",
     "@react-native-community/netinfo": "^11",
     "amazon-cognito-identity-js": "^6",
     "expo-application": "^5",

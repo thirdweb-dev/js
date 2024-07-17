@@ -179,7 +179,6 @@
     "@aws-sdk/credential-providers": "^3",
     "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
-    "@react-native-clipboard/clipboard": "*",
     "amazon-cognito-identity-js": "^6",
     "aws-amplify": "^5",
     "ethers": "^5 || ^6",
@@ -235,9 +234,6 @@
     "@react-native-async-storage/async-storage": {
       "optional": true
     },
-    "@react-native-clipboard/clipboard": {
-      "optional": true
-    },
     "@coinbase/wallet-mobile-sdk": {
       "optional": true
     }
@@ -277,7 +273,6 @@
     "@aws-sdk/credential-providers": "3.577.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
-    "@react-native-clipboard/clipboard": "1.14.1",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
