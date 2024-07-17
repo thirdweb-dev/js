@@ -356,6 +356,14 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     section: "tools",
   },
   {
+    name: "Transaction Simulator",
+    label: "transaction-simulator",
+    description: "",
+    link: "https://thirdweb.com/tools/transaction-simulator",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
     name: "Wei Converter",
     label: "wei-converter",
     description: "",

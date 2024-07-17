@@ -164,6 +164,9 @@ export const TransactionSimulator = (props: {
           </div>
           <Card className="max-w-[800px] p-4">
             <p className="text-sm font-mono whitespace-pre-wrap overflow-scroll">
+              {state.success
+                ? "--- ✅ Simulation succeeded ---\n"
+                : "--- ❌ Simulation failed ---\n"}
               {state.message}
             </p>
           </Card>
