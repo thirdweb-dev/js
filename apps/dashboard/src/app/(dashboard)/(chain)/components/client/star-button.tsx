@@ -23,6 +23,8 @@ async function addChainToFavorites(chainId: number) {
     `${THIRDWEB_API_HOST}/v1/chains/${chainId}/favorite`,
     {
       method: "POST",
+      // without body - the API returns 400
+      body: JSON.stringify({}),
     },
   );
   const result = await res.json();

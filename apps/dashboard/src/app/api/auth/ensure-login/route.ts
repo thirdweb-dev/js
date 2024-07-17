@@ -91,5 +91,5 @@ export const GET = async (req: NextRequest) => {
 };
 
 function buildLoginPath(pathname?: string | null): string {
-  return `/login${pathname ? `?next=${pathname}` : ""}`;
+  return `/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`;
 }

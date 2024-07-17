@@ -323,7 +323,7 @@ function AddYourChainButton(props: { className?: string }) {
   return (
     <Button asChild variant="default" className={props.className}>
       <Link
-        href="https://support.thirdweb.com/how-to/vGcHXQ7tHXuSJf7jaL2y5Q/how-to-add-your-evm-chain-to-thirdweb%E2%80%99s-chainlist-/3HMqrwyxXUFxQYaudDJffT"
+        href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
         target="_blank"
         className="flex items-center gap-2"
       >

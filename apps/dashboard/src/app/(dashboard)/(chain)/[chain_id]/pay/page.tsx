@@ -24,7 +24,7 @@ export default async function Page(props: { params: { chain_id: string } }) {
         ]}
       >
         <p>
-          thridweb Pay allows your users to purchase cryptocurrencies and
+          thirdweb Pay allows your users to purchase cryptocurrencies and
           execute transactions with their credit/debit card, or with any token
           via cross-chain routing.
         </p>

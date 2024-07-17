@@ -20,7 +20,6 @@ import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 import { ChainPageTabs } from "./components/client/tabs";
 import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
-import { FaucetsSection } from "./components/server/faucets-section";
 import { PrimaryInfoItem } from "./components/server/primary-info-item";
 
 export async function generateMetadata(
@@ -53,6 +52,18 @@ export default async function ChainPageLayout({
   params: { chain_id: string };
 }) {
   const chain = await getChain(params.chain_id);
+
+  // Enable faucet for all testnet chains.
+  if (chain.testnet) {
+    chain.services = [
+      ...chain.services,
+      {
+        service: "faucet",
+        enabled: true,
+      },
+    ];
+  }
+
   if (params.chain_id !== chain.slug) {
     redirect(chain.slug);
   }
@@ -245,11 +256,6 @@ export default async function ChainPageLayout({
                 </div>
               </PrimaryInfoItem>
             </div>
-
-            {/* Faucets - will later move to dedicated tab */}
-            {chain.faucets && chain.faucets.length > 0 && (
-              <FaucetsSection faucets={chain.faucets} />
-            )}
 
             {/* Explorers */}
             {chain.explorers && chain.explorers.length > 0 && (

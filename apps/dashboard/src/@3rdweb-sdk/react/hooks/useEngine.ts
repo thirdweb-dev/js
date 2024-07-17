@@ -1248,6 +1248,64 @@ export function useEngineSetCorsConfiguration(instance: string) {
   );
 }
 
+export function useEngineIpAllowlistConfiguration(instance: string) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+
+  // don't bother sending requests that bounce
+  // if engine instance is not updated to have IP_ALLOWLIST
+  const { data: health } = useEngineSystemHealth(instance);
+
+  return useQuery(
+    engineKeys.ipAllowlist(instance),
+    async () => {
+      const res = await fetch(`${instance}configuration/ip-allowlist`, {
+        method: "GET",
+        headers: getEngineRequestHeaders(token),
+      });
+
+      const json = await res.json();
+      return (json.result as string[]) || [];
+    },
+    {
+      enabled:
+        !!instance && !!token && health?.features?.includes("IP_ALLOWLIST"),
+    },
+  );
+}
+
+interface SetIpAllowlistInput {
+  ips: string[];
+}
+
+export function useEngineSetIpAllowlistConfiguration(instance: string) {
+  const queryClient = useQueryClient();
+  const token = useLoggedInUser().user?.jwt ?? null;
+
+  return useMutation(
+    async (input: SetIpAllowlistInput) => {
+      invariant(instance, "instance is required");
+
+      const res = await fetch(`${instance}configuration/ip-allowlist`, {
+        method: "PUT",
+        headers: getEngineRequestHeaders(token),
+        body: JSON.stringify(input),
+      });
+      const json = await res.json();
+
+      if (json.error) {
+        throw new Error(json.error.message);
+      }
+
+      return json.result;
+    },
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries(engineKeys.ipAllowlist(instance));
+      },
+    },
+  );
+}
+
 export interface EngineContractSubscription {
   id: string;
   chainId: number;

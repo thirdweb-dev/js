@@ -32,7 +32,12 @@ export function middleware(request: NextRequest) {
 
     if (!authCookie) {
       // if not logged in, rewrite to login page
-      return redirect(request, "/login", `next=${pathname}`, false);
+      return redirect(
+        request,
+        "/login",
+        `next=${encodeURIComponent(pathname)}`,
+        false,
+      );
     }
   }
   // /login redirect
