@@ -17,6 +17,10 @@ export type SmartWalletOptions = Prettify<
       accountAddress?: string;
       accountSalt?: string;
       entrypointAddress?: string;
+      erc20Paymaster?: {
+        address: string;
+        token: string;
+      };
       paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
       predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
       createAccount?: (
