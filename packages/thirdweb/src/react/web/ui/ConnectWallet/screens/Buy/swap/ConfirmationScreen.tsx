@@ -34,6 +34,7 @@ import { addPendingTx } from "./pendingSwapTx.js";
  * @internal
  */
 export function SwapConfirmationScreen(props: {
+  title: string;
   onBack?: () => void;
   client: ThirdwebClient;
   quote: BuyWithCryptoQuote;
@@ -63,7 +64,7 @@ export function SwapConfirmationScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={props.title} onBack={props.onBack} />
 
       {props.isFiatFlow ? (
         <>

@@ -37,6 +37,7 @@ type Screen =
     };
 
 export function FiatFlow(props: {
+  title: string;
   quote: BuyWithFiatQuote;
   onBack: () => void;
   client: ThirdwebClient;
@@ -67,6 +68,7 @@ export function FiatFlow(props: {
   if (screen.id === "step-1") {
     return (
       <FiatSteps
+        title={props.title}
         client={props.client}
         onBack={props.onBack}
         partialQuote={fiatQuoteToPartialQuote(props.quote)}
@@ -87,6 +89,7 @@ export function FiatFlow(props: {
   if (screen.id === "onramp-status") {
     return (
       <OnrampStatusScreen
+        title={props.title}
         client={props.client}
         intentId={props.quote.intentId}
         onBack={props.onBack}
@@ -107,6 +110,7 @@ export function FiatFlow(props: {
   if (screen.id === "postonramp-swap") {
     return (
       <PostOnRampSwapFlow
+        title={props.title}
         status={screen.data}
         quote={fiatQuoteToPartialQuote(props.quote)}
         client={props.client}

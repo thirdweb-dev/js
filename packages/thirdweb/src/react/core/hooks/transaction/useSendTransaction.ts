@@ -38,6 +38,9 @@ import type { SupportedTokens } from "../../utils/defaultTokens.js";
  */
 export type SendTransactionPayModalConfig =
   | {
+      metadata?: {
+        title?: string;
+      };
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";

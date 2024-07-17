@@ -43,6 +43,7 @@ export function FiatDetailsScreen(props: {
     const fiatQuote = status.quote;
     return (
       <PostOnRampSwapFlow
+        title="Buy"
         client={props.client}
         status={status}
         onBack={props.onBack}

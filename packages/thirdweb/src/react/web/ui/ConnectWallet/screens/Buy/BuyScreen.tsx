@@ -77,6 +77,7 @@ import type { PayerInfo } from "./types.js";
 import { usePayerSetup } from "./usePayerSetup.js";
 
 export type BuyScreenProps = {
+  title: string;
   onBack: (() => void) | undefined;
   supportedTokens: SupportedTokens | undefined;
   onViewPendingTx: () => void;
@@ -111,6 +112,7 @@ export default function BuyScreen(props: BuyScreenProps) {
 }
 
 type BuyScreenContentProps = {
+  title: string;
   client: ThirdwebClient;
   onBack?: () => void;
   supportedTokens?: SupportedTokens;
@@ -228,6 +230,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   if (screen.id === "swap-flow" && payer) {
     return (
       <SwapFlow
+        title={props.title}
         isBuyForTx={!!props.buyForTx}
         isEmbed={props.isEmbed}
         client={client}
@@ -253,6 +256,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   if (screen.id === "fiat-flow" && payer) {
     return (
       <FiatFlow
+        title={props.title}
         isBuyForTx={!!props.buyForTx}
         quote={screen.quote}
         onBack={() => {
@@ -329,7 +333,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }
         connectLocale={connectLocale}
         client={client}
-        modalTitle="Buy"
+        modalTitle={props.title}
       />
     );
   }
@@ -391,6 +395,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       <div>
         {screen.id === "main" && (
           <MainScreen
+            title={props.title}
             payerAccount={payer?.account}
             buyForTx={buyForTx}
             client={client}
@@ -418,6 +423,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           screen.id === "buy-with-fiat") &&
           payer && (
             <TokenSelectedLayout
+              title={props.title}
               selectedChain={toChain}
               selectedToken={toToken}
               tokenAmount={tokenAmount}
@@ -547,6 +553,7 @@ function SelectedTokenInfo(props: {
 }
 
 function MainScreen(props: {
+  title: string;
   buyForTx: BuyForTx | undefined;
   client: ThirdwebClient;
   setTokenAmount: (amount: string) => void;
@@ -598,7 +605,9 @@ function MainScreen(props: {
     <Container p="lg">
       <ModalHeader
         title={
-          props.buyForTx ? `Not enough ${props.buyForTx.tokenSymbol}` : "Buy"
+          props.buyForTx
+            ? `Not enough ${props.buyForTx.tokenSymbol}`
+            : props.title
         }
         onBack={props.onBack}
       />
@@ -697,6 +706,7 @@ function MainScreen(props: {
 }
 
 function TokenSelectedLayout(props: {
+  title: string;
   children: React.ReactNode;
   tokenAmount: string;
   selectedToken: ERC20OrNativeToken;
@@ -707,7 +717,7 @@ function TokenSelectedLayout(props: {
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader title={"Buy"} onBack={props.onBack} />
+        <ModalHeader title={props.title} onBack={props.onBack} />
       </Container>
 
       <Container
