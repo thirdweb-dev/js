@@ -1,5 +1,43 @@
 # thirdweb
 
+## 5.35.0
+
+### Minor Changes
+
+- [#3709](https://github.com/thirdweb-dev/js/pull/3709) [`73c74f1`](https://github.com/thirdweb-dev/js/commit/73c74f11d4d3fa1e67f8171228962e6474ae4602) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds fetchProofsERCXX methods
+
+### Patch Changes
+
+- [#3677](https://github.com/thirdweb-dev/js/pull/3677) [`a3fb673`](https://github.com/thirdweb-dev/js/commit/a3fb673e508f2236ebd71e4b50599e542f2ad763) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle universal links on ios for coinbase wallet connection
+
+- [#3708](https://github.com/thirdweb-dev/js/pull/3708) [`1a09f46`](https://github.com/thirdweb-dev/js/commit/1a09f46f246dbcb322fcde84c78895943ecc04f1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support auth in React Native
+
+- [#3689](https://github.com/thirdweb-dev/js/pull/3689) [`6ad65e2`](https://github.com/thirdweb-dev/js/commit/6ad65e234c6ce071c27e18af76720533dbf04a4a) Thanks [@MananTank](https://github.com/MananTank)! - Add `type` prop for `TransactionButton`
+
+- [#3662](https://github.com/thirdweb-dev/js/pull/3662) [`8e1a24a`](https://github.com/thirdweb-dev/js/commit/8e1a24a60eac74923b323f15b73249c4f4f40e7d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add recipient address to PayEmbed
+
+- [#3673](https://github.com/thirdweb-dev/js/pull/3673) [`9f3fb7d`](https://github.com/thirdweb-dev/js/commit/9f3fb7d1eeae91c301745647279c24d451989cc9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix account address override in smart wallet
+
+- [#3694](https://github.com/thirdweb-dev/js/pull/3694) [`817a778`](https://github.com/thirdweb-dev/js/commit/817a778a17d4ccae8a5c46049deb24ed49c92d4b) Thanks [@MananTank](https://github.com/MananTank)! - Fix Network Switcher only showing 1 search result
+
+- [#3681](https://github.com/thirdweb-dev/js/pull/3681) [`3479117`](https://github.com/thirdweb-dev/js/commit/3479117b286ddcd629cf6417eec4e38807317fe9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Vietnamese locale for ConnectButton components
+
+- [#3707](https://github.com/thirdweb-dev/js/pull/3707) [`f8f6790`](https://github.com/thirdweb-dev/js/commit/f8f6790da7f9a7747a4d4e67eee455f1f045c6b5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix in-app wallet typed data signatures
+
+- [#3706](https://github.com/thirdweb-dev/js/pull/3706) [`aadbd33`](https://github.com/thirdweb-dev/js/commit/aadbd33e9d696bd7dd77561fa3f3a0a0fa7747f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make client and chain mandatory in useWalletBalance
+
+- [#3688](https://github.com/thirdweb-dev/js/pull/3688) [`7e416c0`](https://github.com/thirdweb-dev/js/commit/7e416c0f6b0c9ae42d615ca78aa49e13ae54501c) Thanks [@MananTank](https://github.com/MananTank)! - Add queryOptions for `useWalletBalance` hook
+
+- [#3659](https://github.com/thirdweb-dev/js/pull/3659) [`eabb215`](https://github.com/thirdweb-dev/js/commit/eabb2150a93bdd5a6a1aacae141994f1b148232e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add support for Zora1155 in ERC1155 > getOwned
+
+- [#3690](https://github.com/thirdweb-dev/js/pull/3690) [`81751d3`](https://github.com/thirdweb-dev/js/commit/81751d3e0882a79611a9b2f2d9e7fbd8c60afbcd) Thanks [@MananTank](https://github.com/MananTank)! - Fix "add custom network" button not closing details modal
+
+- [#3685](https://github.com/thirdweb-dev/js/pull/3685) [`aee7aef`](https://github.com/thirdweb-dev/js/commit/aee7aef76fd23eceed8b83badad5853a23d15b48) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export utils method: getClaimParams for thirdweb Drop contracts
+
+- [#3712](https://github.com/thirdweb-dev/js/pull/3712) [`c5b9740`](https://github.com/thirdweb-dev/js/commit/c5b97407b06c7255880e2ae483a62d961b7eb065) Thanks [@farhanW3](https://github.com/farhanW3)! - updated getUserOpReceipt & waitForUserOpReceipt to use a decodeRevertReason flag. Updated example for createUnsignedUserOp & signUserOp. Exposed getPaymasterAndData for Paymaster
+
+- [#3704](https://github.com/thirdweb-dev/js/pull/3704) [`baec85f`](https://github.com/thirdweb-dev/js/commit/baec85f6b4f2bbc76aca9e2e0e3624f6aef16437) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix error message not showing on reverts
+
 ## 5.34.3
 
 ### Patch Changes
