@@ -125,3 +125,8 @@ export {
 } from "../../extensions/lens/read/getHandleFromProfileId.js";
 export { getProfileData } from "../../extensions/lens/read/getProfileData.js";
 export type { LensProfileSchema } from "../../extensions/lens/read/type.js";
+export {
+  getFullProfile,
+  type GetFullProfileParams,
+  type FullProfileResponse,
+} from "../../extensions/lens/read/getFullProfile.js";
