@@ -1,5 +1,6 @@
 import { TW_UPLOAD_SERVER_URL } from "../../common/urls";
 import {
+  detectPlatform,
   isBrowser,
   isBufferOrStringWithName,
   isFileBufferOrStringEqual,
@@ -70,8 +71,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const formData = new FormData();
     const { form, fileNames } = this.buildFormData(formData, data, options);
 
-    if (isBrowser()) {
-      return this.uploadBatchBrowser(form, fileNames, options);
+    const platform = detectPlatform();
+    if (platform === "mobile") {
+      return this.uploadBatchMobile(form, fileNames, options);
     } else {
       return this.uploadBatchNode(form, fileNames, options);
     }
@@ -98,9 +100,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
               extensions = file.name.substring(extensionStartIndex);
             }
           }
-          fileName = `${
-            i + options.rewriteFileNames.fileStartNumber
-          }${extensions}`;
+          fileName = `${i + options.rewriteFileNames.fileStartNumber
+            }${extensions}`;
         } else {
           fileName = `${file.name}`;
         }
@@ -174,7 +175,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     };
   }
 
-  private async uploadBatchBrowser(
+  private async uploadBatchMobile(
     form: FormData,
     fileNames: string[],
     options?: IpfsUploadBatchOptions,
@@ -332,9 +333,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       "TW_AUTH_TOKEN" in globalThis &&
       typeof (globalThis as any).TW_AUTH_TOKEN === "string"
     ) {
-      headers["authorization"] = `Bearer ${
-        (globalThis as any).TW_AUTH_TOKEN as string
-      }`;
+      headers["authorization"] = `Bearer ${(globalThis as any).TW_AUTH_TOKEN as string
+        }`;
     }
 
     // CLI auth token
@@ -343,9 +343,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       "TW_CLI_AUTH_TOKEN" in globalThis &&
       typeof (globalThis as any).TW_CLI_AUTH_TOKEN === "string"
     ) {
-      headers["authorization"] = `Bearer ${
-        (globalThis as any).TW_CLI_AUTH_TOKEN as string
-      }`;
+      headers["authorization"] = `Bearer ${(globalThis as any).TW_CLI_AUTH_TOKEN as string
+        }`;
       headers["x-authorize-wallet"] = "true";
     }
 
@@ -367,8 +366,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         );
       }
       throw new Error(
-        `Failed to upload files to IPFS - ${res.status} - ${
-          res.statusText
+        `Failed to upload files to IPFS - ${res.status} - ${res.statusText
         } - ${await res.text()}`,
       );
     }

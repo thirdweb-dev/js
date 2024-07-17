@@ -8,6 +8,25 @@ export function isBrowser() {
   return typeof window !== "undefined";
 }
 
+
+/**
+ * @internal
+ */
+export function detectPlatform() {
+  if (
+    typeof document === "undefined" &&
+    typeof navigator !== "undefined" &&
+    navigator.product === "ReactNative"
+  ) {
+    // react-native
+    return "mobile" as const;
+  }
+  if (typeof navigator !== "undefined") {
+    return "browser" as const;
+  }
+  return "node" as const;
+}
+
 /**
  * @internal
  */
