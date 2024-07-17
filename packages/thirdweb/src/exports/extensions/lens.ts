@@ -120,7 +120,8 @@ export {
  * Custom extension
  */
 export {
-  getProfileFromTokenId,
-  type GetProfileFromTokenIdParams,
-  type LensProfileInfo,
-} from "../../extensions/lens/read/getProfileFromTokenId.js";
+  getHandleFromProfileId,
+  type GetHandleFromProfileIdParams,
+} from "../../extensions/lens/read/getHandleFromProfileId.js";
+export { getProfileData } from "../../extensions/lens/read/getProfileData.js";
+export type { LensProfileSchema } from "../../extensions/lens/read/type.js";
