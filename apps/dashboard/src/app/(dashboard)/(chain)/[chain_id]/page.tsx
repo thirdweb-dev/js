@@ -54,8 +54,11 @@ export default async function Page(props: {
   const chain = await getChain(props.params.chain_id);
   const topContracts = await fetchTopContracts({
     chainId: chain.chainId,
-    ...props.searchParams,
+    timeRange: props.searchParams.timeRange,
+    page: props.searchParams.page,
+    sortBy: props.searchParams.sortBy,
   });
+
   return (
     <div>
       <div className="h-4" />
@@ -69,7 +72,7 @@ export default async function Page(props: {
             <TrendingContractSection
               topContracts={topContracts}
               chainId={chain.chainId}
-              {...props.searchParams}
+              searchParams={props.searchParams}
             />
           </div>
 

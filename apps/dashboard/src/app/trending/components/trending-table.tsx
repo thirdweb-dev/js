@@ -18,16 +18,12 @@ import { TimeRangeSwitcher } from "./time-range-switcher.client";
 export async function TrendingContractSection(props: {
   topContracts: TrendingContract[];
   chainId?: number;
-  timeRange?: TimeRange;
-  page?: number;
   perPage?: number;
-  sortBy?: SortBy;
+  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
 }) {
   const isLandingPage = props.chainId === undefined;
-  const firstIndex = Math.max(
-    0,
-    ((props.page || 1) - 1) * (props.perPage || 10),
-  );
+  const { page, timeRange } = props.searchParams;
+  const firstIndex = Math.max(0, ((page || 1) - 1) * (props.perPage || 10));
 
   return (
     props.topContracts.length > 0 && (
@@ -48,9 +44,9 @@ export async function TrendingContractSection(props: {
                 <SortingHeader
                   title={`CHANGE (
               ${
-                props.timeRange === "month"
+                timeRange === "month"
                   ? "30d"
-                  : props.timeRange === "week"
+                  : timeRange === "week"
                     ? "7d"
                     : "24h"
               }

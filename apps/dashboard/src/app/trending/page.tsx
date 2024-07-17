@@ -41,7 +41,7 @@ export default async function DashboardContractTrendingPage(props: {
           <div className="flex my-8 mx-4 gap-8 w-full">
             <TrendingContractSection
               topContracts={topContracts}
-              {...props.searchParams}
+              searchParams={props.searchParams}
             />
           </div>
         </div>
