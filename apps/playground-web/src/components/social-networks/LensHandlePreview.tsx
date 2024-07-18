@@ -1,9 +1,10 @@
+import { THIRDWEB_CLIENT } from "@/lib/client";
+import Link from "next/link";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getHandleFromProfileId } from "thirdweb/extensions/lens";
-import { THIRDWEB_SERVER_CLIENT } from "../../lib/serverClient";
 
-const client = THIRDWEB_SERVER_CLIENT;
+const client = THIRDWEB_CLIENT;
 
 export async function LensHandlePreview() {
   const profileId = 461662n;
@@ -26,7 +27,12 @@ export async function LensHandlePreview() {
   return (
     <div className="bg-white text-black text-4xl flex flex-row p-4 rounded-lg">
       <div className="border-r border-black pr-3 mr-3">@</div>
-      <div>{handle.replace("lens/@", "")}</div>
+      <Link
+        target="_blank"
+        href={`https://hey.xyz/u/${handle.replace("lens/@", "")}`}
+      >
+        {handle.replace("lens/@", "")}
+      </Link>
     </div>
   );
 }
