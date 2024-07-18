@@ -12,6 +12,16 @@ const transactionsByAddress = new Map<string, Store<StoredTransaction[]>>();
  * Retrieve the transaction store for a given address.
  * @param address - The address to retrieve the transaction store for.
  * @returns A store of transactions for the given account to subscribe to.
+ * @transaction
+ * @example
+ * ```ts
+ * import { getTransactionStore } from "thirdweb/transaction";
+ *
+ * const store = getTransactionStore("0x...");
+ * store.subscribe((transactions) => {
+ *   console.log(transactions);
+ * });
+ * ```
  */
 export function getTransactionStore(
   address: string,

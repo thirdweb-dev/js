@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { CodeExample } from "@/components/code/code-example";
 import { LensHandlePreview } from "@/components/social-networks/LensHandlePreview";
 import { LensProfilePreview } from "@/components/social-networks/LensProfilePreview";
@@ -16,12 +17,12 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
+    <main className="relative content-center flex-1 py-12 space-y-12 md:py-24 lg:py-32 xl:py-48 md:space-y-24">
       <section className="container px-4 md:px-6">
         <div className="grid gap-10 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4 min-h-[100%]">
             <div className="space-y-2">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter mb-6 text-balance">
+              <h1 className="mb-6 text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-inter text-balance">
                 Social Networks
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
@@ -47,7 +48,7 @@ export default function Page() {
               </Button>
             </div>
           </div>
-          <div className="w-full mx-auto my-auto sm:w-full order-first lg:order-last relative flex flex-col space-y-2">
+          <div className="relative flex flex-col order-first w-full mx-auto my-auto space-y-2 sm:w-full lg:order-last">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
                 src={"/blockchain-api.png"}
@@ -62,11 +63,11 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="container px-4 md:px-6 space-y-8">
+      <section className="container px-4 space-y-8 md:px-6">
         <LensProfile />
       </section>
 
-      <section className="container px-4 md:px-6 space-y-8">
+      <section className="container px-4 space-y-8 md:px-6">
         <LensHandle />
       </section>
     </main>
@@ -77,7 +78,7 @@ function LensProfile() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
           Query Lens profile
         </h2>
         <p className="max-w-[600px]">
@@ -112,7 +113,7 @@ function LensHandle() {
   return (
     <>
       <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
           Query Lens handle
         </h2>
         <p className="max-w-[600px]">

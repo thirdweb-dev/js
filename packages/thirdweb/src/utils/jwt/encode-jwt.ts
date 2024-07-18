@@ -43,6 +43,7 @@ type EncodeJWTParams = { payload: JWTPayloadInput; account: Account };
  *  wallet,
  * });
  * ```
+ * @auth
  */
 export async function encodeJWT(options: EncodeJWTParams) {
   const payload = await ensureJWTPayload(options.payload);
