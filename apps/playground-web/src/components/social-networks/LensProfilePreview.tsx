@@ -1,11 +1,11 @@
+import { THIRDWEB_SERVER_CLIENT } from "@/lib/serverClient";
 import Link from "next/link";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getFullProfile } from "thirdweb/extensions/lens";
 import { download } from "thirdweb/storage";
-import { THIRDWEB_CLIENT } from "@/lib/client";
 
-const client = THIRDWEB_CLIENT;
+const client = THIRDWEB_SERVER_CLIENT;
 
 export async function LensProfilePreview() {
   const profileId = 461662n;
