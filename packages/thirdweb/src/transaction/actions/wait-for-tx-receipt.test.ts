@@ -96,15 +96,16 @@ describe("waitForReceipt", () => {
       chain: TRANSACTION.chain,
       client: TRANSACTION.client,
       transactionHash: MOCK_TX_HASH,
+      maxBlocksWaitTime: 10,
     });
 
-    for (let i = 1; i <= DEFAULT_MAX_BLOCKS_WAIT_TIME + 1; i++) {
+    for (let i = 1; i <= 10 + 1; i++) {
       emitBlockNumber(BigInt(i));
     }
 
     await expect(result).rejects.toThrow(
-      `Transaction not found after ${DEFAULT_MAX_BLOCKS_WAIT_TIME} blocks`,
+      `Transaction not found after ${10} blocks`,
     );
-    expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(30);
+    expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(10);
   });
 });
