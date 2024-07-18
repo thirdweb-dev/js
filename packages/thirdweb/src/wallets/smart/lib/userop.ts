@@ -81,7 +81,9 @@ export async function waitForUserOpReceipt(
  *
  * const userOp = await createUnsignedUserOp({
  *  transaction,
+ *  factoryContract,
  *  accountContract,
+ *  adminAddress,
  *  sponsorGas,
  *  overrides,
  * });
@@ -246,7 +248,8 @@ export async function createUnsignedUserOp(args: {
  *
  * const signedUserOp = await signUserOp({
  *  userOp,
- *  options,
+ *  chain,
+ *  adminAccount,
  * });
  * ```
  * @walletUtils

@@ -83,7 +83,7 @@ export async function createTicketAction(
     : null;
   if (!activeAccount || !token) {
     // user is not logged in, make them log in
-    redirect("/login?next=/support");
+    redirect(`/login?next=${encodeURIComponent("/support")}`);
   }
   const accountRes = await fetch(`${THIRDWEB_API_HOST}/v1/account/me`, {
     method: "GET",
@@ -93,7 +93,7 @@ export async function createTicketAction(
   });
   if (accountRes.status !== 200) {
     // user is not logged in, make them log in
-    redirect("/login?next=/support");
+    redirect(`/login?next=${encodeURIComponent("/support")}`);
   }
 
   const account = (await accountRes.json()) as {

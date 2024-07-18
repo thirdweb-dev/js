@@ -88,6 +88,8 @@ export type ConnectLocale = {
   switchTo: string;
   switchingNetwork: string;
   transactions: string;
+  payTransactions: string;
+  walletTransactions: string;
   viewAllTransactions: string;
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
   manageWallet: {

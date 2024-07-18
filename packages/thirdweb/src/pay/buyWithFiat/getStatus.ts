@@ -70,9 +70,16 @@ export type BuyWithFiatStatus =
         | "CRYPTO_SWAP_IN_PROGRESS"
         | "CRYPTO_SWAP_FAILED";
       /**
-       * The wallet address to which the tokens are sent to
+       * The wallet address to which the desired tokens are sent to
        */
       toAddress: string;
+      /**
+       * The wallet address that started the transaction.
+       *
+       * If onramp provider supports buying the destination token directly, the tokens are sent to "toAddress" directly.
+       * Otherwise, the tokens are sent to "fromAddress" and a swap is performed by the payer wallet and the tokens are converted to the desired token and sent to "toAddress".
+       */
+      fromAddress: string;
       /**
        * The quote object for the transaction
        */

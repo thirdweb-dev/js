@@ -67,11 +67,8 @@ export async function getPostOnRampQuote({
   return getBuyWithCryptoQuote({
     client,
     intentId: buyWithFiatStatus.intentId,
-    // setting the fromAddress and toAddress same - because post onramp swap can only be done if payer wallet is same as the receiver wallet
-    // TODO: in future - if fromAddress and toAddress are different, we will onramp to payer wallet and then swap to receiver wallet
-    // fiat endpoint should assume this flow and return the quote/status/history accordingly
-    // but for now - we will just not allow doing a fiat flow in Pay UI if payer and receiver wallets are different + requires a swap
-    fromAddress: buyWithFiatStatus.toAddress,
+    // onramp always happens to fromAddress, and then swap is done from - fromAddress to toAddress
+    fromAddress: buyWithFiatStatus.fromAddress,
     toAddress: buyWithFiatStatus.toAddress,
     fromChainId: buyWithFiatStatus.quote.onRampToken.chainId,
     fromTokenAddress: buyWithFiatStatus.quote.onRampToken.tokenAddress,

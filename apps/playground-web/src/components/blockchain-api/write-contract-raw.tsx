@@ -47,9 +47,9 @@ export function WriteContractRawPreview() {
             <div className="flex flex-row justify-start gap-3">
               <Image
                 src="/twcoin.svg"
-                className="rounded-2xl"
-                width={20}
-                height={20}
+                className="mx-auto rounded-2xl animate-bounce size-5"
+                width={50}
+                height={50}
                 alt=""
               />
               <div>

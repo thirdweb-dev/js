@@ -23,7 +23,10 @@ export default {
     "decimals": 18
   },
   "networkId": 100009,
-  "rpc": [],
+  "rpc": [
+    "https://100009.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.vechain.energy"
+  ],
   "shortName": "vechain",
   "slug": "vechain",
   "testnet": false

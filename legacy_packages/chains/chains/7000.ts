@@ -27,7 +27,9 @@ export default {
   "rpc": [
     "https://7000.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zetachain-evm.blockpi.network/v1/rpc/public",
-    "https://zetachain-mainnet-archive.allthatnode.com:8545"
+    "https://zetachain-mainnet.g.allthatnode.com/archive/evm",
+    "https://zeta-chain.drpc.org",
+    "https://zetachain-mainnet.public.blastapi.io"
   ],
   "shortName": "zetachain-mainnet",
   "slug": "zetachain",

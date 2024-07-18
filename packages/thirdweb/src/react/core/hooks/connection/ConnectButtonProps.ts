@@ -84,6 +84,13 @@ export type PayUIOptions = {
    * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
   purchaseData?: object;
+
+  /**
+   * The address of the recipient of the purchase.
+   *
+   * This address will be used to send the purchased tokens to.
+   */
+  recipientAddress?: string;
 };
 
 /**

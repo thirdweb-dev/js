@@ -1,5 +1,6 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import type { Chain } from "../../../../chains/types.js";
+import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
@@ -38,6 +39,9 @@ import type { SupportedTokens } from "../../utils/defaultTokens.js";
  */
 export type SendTransactionPayModalConfig =
   | {
+      metadata?: {
+        title?: string;
+      };
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";
@@ -210,11 +214,19 @@ export async function getTotalTxCostForBuy(
       // try again without passing from
       return await getTotalTxCostForBuy(tx);
     }
-    // fallback if both fail, use the tx value + 1% buffer
+    // fallback if both fail, use the tx value + 2M * gas price
     const value = await resolvePromisedValue(tx.value);
+
+    const gasPrice = await getGasPrice({
+      client: tx.client,
+      chain: tx.chain,
+    });
+
+    const buffer = 2_000_000n * gasPrice;
+
     if (!value) {
-      return 0n;
+      return 0n + buffer;
     }
-    return value + value / 100n;
+    return value + buffer;
   }
 }

@@ -66,7 +66,7 @@ export type WalletDetailsModalScreen =
   | "receive"
   | "buy"
   | "network-switcher"
-  | "pending-tx"
+  | "transactions"
   | "view-funds"
   | "view-tokens"
   | "view-nfts"

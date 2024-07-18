@@ -304,18 +304,16 @@ export async function zkDeployContractFromUri(
   }
 
   // fire-and-forget verification, don't await
-  try {
-    zkVerify(
-      deployedAddress,
-      chainId,
-      blockExplorerApiMap[chainId],
-      "",
-      storage,
-      compilerMetadata.fetchedMetadataUri,
-    );
-  } catch (error) {
-    // ignore error
-  }
+  zkVerify(
+    deployedAddress,
+    chainId,
+    blockExplorerApiMap[chainId],
+    "",
+    storage,
+    compilerMetadata.fetchedMetadataUri,
+  ).catch((error) => {
+    console.warn("Error verifying contract", error);
+  });
 
   return deployedAddress;
 }

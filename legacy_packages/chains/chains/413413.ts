@@ -26,7 +26,7 @@ export default {
   "name": "AIE Testnet",
   "nativeCurrency": {
     "name": "AIE",
-    "symbol": "tAIE",
+    "symbol": "AIE",
     "decimals": 18
   },
   "networkId": 413413,
@@ -34,7 +34,7 @@ export default {
     "https://413413.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1-testnet.aiechain.io"
   ],
-  "shortName": "aiet",
+  "shortName": "aie",
   "slug": "aie-testnet",
   "testnet": true
 } as const satisfies Chain;

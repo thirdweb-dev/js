@@ -5,12 +5,14 @@ import type { TransactionReceipt } from "../../../transaction/types.js";
 import { type Hex, hexToBigInt } from "../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../utils/fetch.js";
 import { stringify } from "../../../utils/json.js";
-import type {
-  BundlerOptions,
-  EstimationResult,
-  GasPriceResult,
-  PmTransactionData,
-  UserOperation,
+import {
+  type BundlerOptions,
+  type EstimationResult,
+  type GasPriceResult,
+  type PmTransactionData,
+  type UserOperation,
+  type UserOperationReceipt,
+  formatUserOperationReceipt,
 } from "../types.js";
 import {
   DEBUG,
@@ -136,14 +138,12 @@ export async function getUserOpReceipt(
     userOpHash: Hex;
   },
 ): Promise<TransactionReceipt | undefined> {
-  const res = await sendBundlerRequest({
-    options: args,
-    operation: "eth_getUserOperationReceipt",
-    params: [args.userOpHash],
-  });
+  const res = await getUserOpReceiptRaw(args);
+
   if (!res) {
     return undefined;
   }
+
   if (res.success === false) {
     // parse revert reason
     const logs = parseEventLogs({
@@ -152,18 +152,52 @@ export async function getUserOpReceipt(
     });
     const revertReason = logs[0]?.args?.revertReason;
     if (!revertReason) {
-      throw new Error(`UserOp failed at txHash: ${res.transactionHash}`);
+      throw new Error(
+        `UserOp failed at txHash: ${res.receipt.transactionHash}`,
+      );
     }
     const revertMsg = decodeErrorResult({
       data: revertReason,
     });
     throw new Error(
       `UserOp failed with reason: '${revertMsg.args.join(",")}' at txHash: ${
-        res.transactionHash
+        res.receipt.transactionHash
       }`,
     );
   }
   return res.receipt;
+}
+
+/**
+ * Get the receipt of a user operation.
+ * @param args - The options for getting the receipt of a user operation.
+ * @returns The raw receipt of the user operation.
+ * @example
+ * ```ts
+ * import { getUserOpReceiptRaw } from "thirdweb/wallets/smart";
+ *
+ * const receipt = await getUserOpReceiptRaw({
+ *  client,
+ *  chain,
+ *  userOpHash,
+ * });
+ * ```
+ * @walletUtils
+ */
+export async function getUserOpReceiptRaw(
+  args: BundlerOptions & {
+    userOpHash: Hex;
+  },
+): Promise<UserOperationReceipt | undefined> {
+  const res = await sendBundlerRequest({
+    options: args,
+    operation: "eth_getUserOperationReceipt",
+    params: [args.userOpHash],
+  });
+  if (!res) {
+    return undefined;
+  }
+  return formatUserOperationReceipt(res as UserOperationReceipt);
 }
 
 /**

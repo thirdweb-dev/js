@@ -397,7 +397,54 @@ const RemoveModal = ({
     <Modal isOpen onClose={onClose} isCentered size="lg">
       <ModalOverlay />
       <ModalContent>
-        {instance.cloudDeployedAt ? (
+        {instance.status === "paymentFailed" ||
+        (instance.status === "active" && !instance.cloudDeployedAt) ? (
+          <>
+            <ModalHeader>Remove Engine Instance</ModalHeader>
+
+            <ModalBody as={Flex} flexDir="column" gap={2}>
+              <Text>
+                Are you sure you want to remove{" "}
+                <strong>{instance?.name}</strong> from your dashboard?
+              </Text>
+              <Text>
+                This action does not modify your Engine infrastructure. You can
+                re-add it at any time.
+              </Text>
+            </ModalBody>
+
+            <ModalFooter as={Flex} gap={3}>
+              <Button onClick={onClose} variant="ghost">
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  removeFromDashboard(instance.id, {
+                    onSuccess: () => {
+                      toast({
+                        status: "success",
+                        description:
+                          "Removed an Engine instance from your dashboard.",
+                      });
+                      refetch();
+                      onClose();
+                    },
+                    onError: () => {
+                      toast({
+                        status: "error",
+                        description:
+                          "Error removing an Engine instance from your dashboard.",
+                      });
+                    },
+                  });
+                }}
+                colorScheme="red"
+              >
+                Remove
+              </Button>
+            </ModalFooter>
+          </>
+        ) : (
           <form
             onSubmit={form.handleSubmit((data) =>
               removeCloudHosted(data, {
@@ -495,52 +542,6 @@ const RemoveModal = ({
               </Button>
             </ModalFooter>
           </form>
-        ) : (
-          <>
-            <ModalHeader>Remove Engine Instance</ModalHeader>
-
-            <ModalBody as={Flex} flexDir="column" gap={2}>
-              <Text>
-                Are you sure you want to remove{" "}
-                <strong>{instance?.name}</strong> from your dashboard?
-              </Text>
-              <Text>
-                This action does not modify your Engine infrastructure. You can
-                re-add it at any time.
-              </Text>
-            </ModalBody>
-
-            <ModalFooter as={Flex} gap={3}>
-              <Button onClick={onClose} variant="ghost">
-                Close
-              </Button>
-              <Button
-                onClick={() => {
-                  removeFromDashboard(instance.id, {
-                    onSuccess: () => {
-                      toast({
-                        status: "success",
-                        description:
-                          "Removed an Engine instance from your dashboard.",
-                      });
-                      refetch();
-                      onClose();
-                    },
-                    onError: () => {
-                      toast({
-                        status: "error",
-                        description:
-                          "Error removing an Engine instance from your dashboard.",
-                      });
-                    },
-                  });
-                }}
-                colorScheme="red"
-              >
-                Remove
-              </Button>
-            </ModalFooter>
-          </>
         )}
       </ModalContent>
     </Modal>

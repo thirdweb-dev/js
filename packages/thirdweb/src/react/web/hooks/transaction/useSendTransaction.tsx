@@ -16,7 +16,7 @@ import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { useConnectLocale } from "../../ui/ConnectWallet/locale/getConnectLocale.js";
 import { LazyBuyScreen } from "../../ui/ConnectWallet/screens/Buy/LazyBuyScreen.js";
-import { BuyTxHistory } from "../../ui/ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
+import { PayTxHistoryScreen } from "../../ui/ConnectWallet/screens/Buy/pay-transactions/BuyTxHistory.js";
 import { Modal } from "../../ui/components/Modal.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
@@ -77,6 +77,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
         : (data) => {
             setRootEl(
               <TxModal
+                title={payModal?.metadata?.title || "Buy"}
                 tx={data.tx}
                 onComplete={data.sendTx}
                 onClose={() => {
@@ -108,6 +109,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
 }
 
 type ModalProps = {
+  title: string;
   onComplete: () => void;
   onClose: () => void;
   client: ThirdwebClient;
@@ -162,7 +164,7 @@ function ModalContent(props: ModalProps) {
 
   if (screen === "tx-history") {
     return (
-      <BuyTxHistory
+      <PayTxHistoryScreen
         client={props.client}
         onBack={() => {
           setScreen("buy");
@@ -178,6 +180,7 @@ function ModalContent(props: ModalProps) {
 
   return (
     <LazyBuyScreen
+      title={props.title}
       isEmbed={false}
       client={props.client}
       onViewPendingTx={() => {

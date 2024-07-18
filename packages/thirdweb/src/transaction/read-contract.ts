@@ -63,6 +63,7 @@ export type ReadContractOptions<
     | "nonce"
   > & {
     method: TMethod | TPreparedMethod;
+    from?: string;
   } & ParamsOption<TPreparedMethod[1]> &
     Omit<PrepareTransactionOptions, "to" | "data" | "chain" | "client">,
   TAbi
@@ -169,6 +170,7 @@ export async function readContract<
   const result = await eth_call(rpcRequest, {
     data: encodedData,
     to: contract.address,
+    from: options.from,
   });
   // use the prepared method to decode the result
   const decoded = decodeAbiParameters(resolvedPreparedMethod[2], result);

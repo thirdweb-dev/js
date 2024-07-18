@@ -77,6 +77,7 @@ import type { PayerInfo } from "./types.js";
 import { usePayerSetup } from "./usePayerSetup.js";
 
 export type BuyScreenProps = {
+  title: string;
   onBack: (() => void) | undefined;
   supportedTokens: SupportedTokens | undefined;
   onViewPendingTx: () => void;
@@ -111,6 +112,7 @@ export default function BuyScreen(props: BuyScreenProps) {
 }
 
 type BuyScreenContentProps = {
+  title: string;
   client: ThirdwebClient;
   onBack?: () => void;
   supportedTokens?: SupportedTokens;
@@ -228,6 +230,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   if (screen.id === "swap-flow" && payer) {
     return (
       <SwapFlow
+        title={props.title}
         isBuyForTx={!!props.buyForTx}
         isEmbed={props.isEmbed}
         client={client}
@@ -253,6 +256,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
   if (screen.id === "fiat-flow" && payer) {
     return (
       <FiatFlow
+        title={props.title}
         isBuyForTx={!!props.buyForTx}
         quote={screen.quote}
         onBack={() => {
@@ -329,7 +333,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }
         connectLocale={connectLocale}
         client={client}
-        modalTitle="Buy"
+        modalTitle={props.title}
       />
     );
   }
@@ -391,6 +395,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       <div>
         {screen.id === "main" && (
           <MainScreen
+            title={props.title}
             payerAccount={payer?.account}
             buyForTx={buyForTx}
             client={client}
@@ -418,6 +423,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           screen.id === "buy-with-fiat") &&
           payer && (
             <TokenSelectedLayout
+              title={props.title}
               selectedChain={toChain}
               selectedToken={toToken}
               tokenAmount={tokenAmount}
@@ -547,6 +553,7 @@ function SelectedTokenInfo(props: {
 }
 
 function MainScreen(props: {
+  title: string;
   buyForTx: BuyForTx | undefined;
   client: ThirdwebClient;
   setTokenAmount: (amount: string) => void;
@@ -598,7 +605,9 @@ function MainScreen(props: {
     <Container p="lg">
       <ModalHeader
         title={
-          props.buyForTx ? `Not enough ${props.buyForTx.tokenSymbol}` : "Buy"
+          props.buyForTx
+            ? `Not enough ${props.buyForTx.tokenSymbol}`
+            : props.title
         }
         onBack={props.onBack}
       />
@@ -697,6 +706,7 @@ function MainScreen(props: {
 }
 
 function TokenSelectedLayout(props: {
+  title: string;
   children: React.ReactNode;
   tokenAmount: string;
   selectedToken: ERC20OrNativeToken;
@@ -707,7 +717,7 @@ function TokenSelectedLayout(props: {
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader title={"Buy"} onBack={props.onBack} />
+        <ModalHeader title={props.title} onBack={props.onBack} />
       </Container>
 
       <Container
@@ -831,7 +841,7 @@ function SwapScreenContent(props: {
   } = props;
 
   const [receiverAddress, setReceiverAddress] = useState(
-    props.activeAccount.address,
+    props.payOptions.recipientAddress || props.activeAccount.address,
   );
   const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
   const [drawerScreen, setDrawerScreen] = useState<
@@ -923,6 +933,8 @@ function SwapScreenContent(props: {
     payOptions.buyWithCrypto !== false
       ? payOptions.buyWithCrypto?.prefillSource
       : undefined;
+
+  const disableReceiverSelection = !!props.payOptions.recipientAddress;
 
   return (
     <Container flex="column" gap="md" animate="fadein">
@@ -1025,6 +1037,8 @@ function SwapScreenContent(props: {
         <Spacer y="xs" />
         <WalletSelectorButton
           client={props.client}
+          disabled={disableReceiverSelection}
+          disableChevron={disableReceiverSelection}
           onClick={() => {
             setIsOpen(true);
             setDrawerScreen("receiver");
@@ -1100,12 +1114,6 @@ function FiatScreenContent(props: {
   setTokenAmount: (amount: string) => void;
   setHasEditedAmount: (hasEdited: boolean) => void;
 }) {
-  const [receiverAddress, setReceiverAddress] = useState(
-    props.payer.account.address,
-  );
-  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
-  const [drawerScreen, setDrawerScreen] = useState<"fees" | "receiver">("fees");
-
   const {
     toToken,
     tokenAmount,
@@ -1116,6 +1124,11 @@ function FiatScreenContent(props: {
     showCurrencySelector,
     selectedCurrency,
   } = props;
+  const [receiverAddress, setReceiverAddress] = useState(
+    props.payOptions.recipientAddress || props.payer.account.address,
+  );
+  const { drawerRef, drawerOverlayRef, isOpen, setIsOpen } = useDrawer();
+  const [drawerScreen, setDrawerScreen] = useState<"fees" | "receiver">("fees");
 
   const buyWithFiatOptions = props.payOptions.buyWithFiat;
 
@@ -1219,13 +1232,7 @@ function FiatScreenContent(props: {
 
   const disableSubmit = !fiatQuoteQuery.data;
 
-  // TODO: API should just not return a quote if fromAddress !== toAddress and a swap is required after onramp and return an error message with a specific error id
-
-  // TODO: if the receiver wallet is frozen by the developer, we need to stop the user from clicking continue here
-
-  // Selecting Reciever wallet only allowed if no swap required after onramp
-  const enableReceiverSelection =
-    fiatQuoteQuery.data && !isSwapRequiredPostOnramp(fiatQuoteQuery.data);
+  const disableReceiverSelection = !!props.payOptions.recipientAddress;
 
   const errorMsg =
     !fiatQuoteQuery.isLoading && fiatQuoteQuery.error
@@ -1234,11 +1241,11 @@ function FiatScreenContent(props: {
 
   return (
     <Container flex="column" gap="md" animate="fadein">
-      {isOpen && fiatQuoteQuery.data && (
+      {isOpen && (
         <>
           <DrawerOverlay ref={drawerOverlayRef} />
           <Drawer ref={drawerRef} close={() => setIsOpen(false)}>
-            {drawerScreen === "fees" && (
+            {drawerScreen === "fees" && fiatQuoteQuery.data && (
               <div>
                 <Text size="lg" color="primaryText">
                   Fees
@@ -1285,7 +1292,8 @@ function FiatScreenContent(props: {
             setIsOpen(true);
           }}
           address={receiverAddress}
-          disabled={!enableReceiverSelection}
+          disabled={disableReceiverSelection}
+          disableChevron={disableReceiverSelection}
           walletId={undefined}
         />
       </div>

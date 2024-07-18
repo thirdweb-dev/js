@@ -7,10 +7,7 @@ import * as getCallsStatusExports from "../../wallets/eip5792/get-calls-status.j
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
 import type { GetCallsStatusResponse } from "./types.js";
-import {
-  DEFAULT_MAX_BLOCKS_WAIT_TIME,
-  waitForBundle,
-} from "./wait-for-bundle.js";
+import { waitForBundle } from "./wait-for-bundle.js";
 
 const MOCK_BUNDLE_ID = "0x1234567890abcdef";
 
@@ -84,15 +81,16 @@ describe("waitForBundle", () => {
       client: TEST_CLIENT,
       bundleId: MOCK_BUNDLE_ID,
       wallet,
+      maxBlocksWaitTime: 10,
     });
 
-    for (let i = 1; i <= DEFAULT_MAX_BLOCKS_WAIT_TIME + 1; i++) {
+    for (let i = 1; i <= 10 + 1; i++) {
       emitBlockNumber(BigInt(i));
     }
 
     await expect(result).rejects.toThrow(
-      `Bundle not confirmed after ${DEFAULT_MAX_BLOCKS_WAIT_TIME} blocks`,
+      "Bundle not confirmed after 10 blocks",
     );
-    expect(mockGetCallsStatus).toHaveBeenCalledTimes(30);
+    expect(mockGetCallsStatus).toHaveBeenCalledTimes(10);
   });
 });
