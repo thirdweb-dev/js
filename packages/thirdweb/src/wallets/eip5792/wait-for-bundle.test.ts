@@ -7,10 +7,7 @@ import * as getCallsStatusExports from "../../wallets/eip5792/get-calls-status.j
 import { METAMASK } from "../constants.js";
 import { createWallet } from "../create-wallet.js";
 import type { GetCallsStatusResponse } from "./types.js";
-import {
-  DEFAULT_MAX_BLOCKS_WAIT_TIME,
-  waitForBundle,
-} from "./wait-for-bundle.js";
+import { waitForBundle } from "./wait-for-bundle.js";
 
 const MOCK_BUNDLE_ID = "0x1234567890abcdef";
 
