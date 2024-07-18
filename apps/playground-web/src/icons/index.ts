@@ -27,3 +27,5 @@ export { WalletsInAppIcon } from "./products/wallets/WalletsInAppIcon";
 export { WalletsSmartIcon } from "./products/wallets/WalletsSmartIcon";
 // solutions
 export { GamingIcon } from "./solutions/GamingIcon";
+// social networks
+export { SocialIcon } from "./products/social-networks/SocialIcon";
