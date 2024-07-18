@@ -98,21 +98,9 @@ const profileId = 461662n;
 
 const client = createThirdwebClient({ /*...*/ });
 
-const lensHubContract = getContract({
-  address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
-  chain: polygon,
-  client,
-});
-const lensHandleContract = getContract({
-  address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
-  chain: polygon,
-  client,
-});
-const tokenHandleRegistryContract = getContract({
-  address: "0xD4F2F33680FCCb36748FA9831851643781608844",
-  chain: polygon,
-  client,
-});
+const lensHubContract = getContract({ /* ... */ });
+const lensHandleContract = getContract({ /* ... */ });
+const tokenHandleRegistryContract = getContract({ /* ... */ });
 
 const profile = await getFullProfile({
   profileId,
@@ -151,19 +139,9 @@ import { polygon } from "thirdweb/chains";
 import { getHandleFromProfileId } from "thirdweb/extensions/lens";
           
 const profileId = 461662n;
-
 const client = createThirdwebClient({ /*...*/ });
-
-const lensHandleContract = getContract({
-  address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
-  chain: polygon,
-  client,
-});
-const tokenHandleRegistryContract = getContract({
-  address: "0xD4F2F33680FCCb36748FA9831851643781608844",
-  chain: polygon,
-  client,
-});
+const lensHandleContract = getContract({ /* ... */ });
+const tokenHandleRegistryContract = getContract({ /* ... */ });
 
 const handle = await getHandleFromProfileId({
   profileId,
