@@ -58,7 +58,6 @@ export async function fetchProofsERC721(options: {
   const snapshotUri = merkleData[merkleRoot];
 
   if (!snapshotUri) {
-    console.log("no snapshot uri");
     return null;
   }
   // 2. download snapshot data
