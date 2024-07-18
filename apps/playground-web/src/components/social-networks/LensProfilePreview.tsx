@@ -8,26 +8,8 @@ import { download } from "thirdweb/storage";
 export async function LensProfilePreview() {
   const client = THIRDWEB_SERVER_CLIENT;
   const profileId = 461662n;
-  const lensHubContract = getContract({
-    address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
-    chain: polygon,
-    client,
-  });
-  const lensHandleContract = getContract({
-    address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
-    chain: polygon,
-    client,
-  });
-  const tokenHandleRegistryContract = getContract({
-    address: "0xD4F2F33680FCCb36748FA9831851643781608844",
-    chain: polygon,
-    client,
-  });
   const profile = await getFullProfile({
     profileId,
-    lensHubContract,
-    lensHandleContract,
-    tokenHandleRegistryContract,
     client,
     includeJoinDate: true,
   });
