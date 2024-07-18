@@ -46,7 +46,7 @@ export function FiatFlow(props: {
   onViewPendingTx: () => void;
   openedWindow: Window | null;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
 }) {
@@ -101,7 +101,7 @@ export function FiatFlow(props: {
         onShowSwapFlow={(_status) => {
           setScreen({ id: "postonramp-swap", data: _status });
         }}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
       />
     );
@@ -120,7 +120,7 @@ export function FiatFlow(props: {
         onSwapFlowStarted={() => {
           // no op
         }}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={props.payer}
       />

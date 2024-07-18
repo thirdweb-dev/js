@@ -1,5 +1,6 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -13,6 +14,45 @@ import type {
 } from "../../utils/defaultTokens.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
 
+export type Currency = {
+  address: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+  icon?: string;
+};
+
+export type PaymentInfo = {
+  /**
+   * The chain to receive the payment on.
+   */
+  chain: Chain;
+  /**
+   * The address of the seller wallet to receive the payment on.
+   */
+  sellerAddress: string;
+  /**
+   * Optional ERC20 token to receive the payment on.
+   * If not provided, the native token will be used.
+   */
+  currency?: Currency;
+} & (
+  | {
+      /**
+       * The amount of tokens to receive in ETH or tokens.
+       * ex: 0.1 ETH or 100 USDC
+       */
+      amount: string;
+    }
+  | {
+      /**
+       * The amount of tokens to receive in wei.
+       * ex: 1000000000000000000 wei
+       */
+      amountWei: bigint;
+    }
+);
+
 export type PayUIOptions = {
   /**
    * Prefill the Buy Token amount, chain and/or token.
@@ -25,12 +65,7 @@ export type PayUIOptions = {
    */
   prefillBuy?: {
     chain: Chain;
-    token?: {
-      name: string;
-      symbol: string;
-      address: string;
-      icon?: string;
-    };
+    token?: Currency;
     amount?: string;
     allowEdits?: {
       amount: boolean;
@@ -84,14 +119,36 @@ export type PayUIOptions = {
    * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
    */
   purchaseData?: object;
-
-  /**
-   * The address of the recipient of the purchase.
-   *
-   * This address will be used to send the purchased tokens to.
-   */
-  recipientAddress?: string;
-};
+} & (
+  | {
+      mode?: "fund_wallet";
+    }
+  | {
+      mode: "direct_payment";
+      paymentInfo: PaymentInfo;
+      /**
+       * Customize the display of the PayEmbed UI.
+       */
+      metadata?: {
+        name?: string;
+        image?: string;
+      };
+    }
+  | {
+      mode: "transaction";
+      /**
+       * The transaction to be executed.
+       */
+      transaction: PreparedTransaction;
+      /**
+       * Customize the display of the PayEmbed UI.
+       */
+      metadata?: {
+        name?: string;
+        image?: string;
+      };
+    }
+);
 
 /**
  * Options for configuring the `ConnectButton`'s Connect Button

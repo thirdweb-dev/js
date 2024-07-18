@@ -24,7 +24,7 @@ export function SwapStatusScreen(props: {
   client: ThirdwebClient;
   onTryAgain: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   quote: BuyWithCryptoQuote;
 }) {
@@ -100,7 +100,7 @@ export function SwapStatusScreen(props: {
             <Spacer y="sm" />
             {!props.isEmbed && (
               <Button variant="accent" fullWidth onClick={props.onDone}>
-                {props.isBuyForTx ? "Continue Transaction" : "Done"}
+                {props.transactionMode ? "Continue Transaction" : "Done"}
               </Button>
             )}
           </>

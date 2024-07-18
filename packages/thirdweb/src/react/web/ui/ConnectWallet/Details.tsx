@@ -818,11 +818,14 @@ function DetailsModal(props: {
         supportedTokens={props.supportedTokens}
         onViewPendingTx={() => setScreen("transactions")}
         connectLocale={locale}
-        payOptions={props.detailsModal?.payOptions || {}}
+        payOptions={
+          props.detailsModal?.payOptions || {
+            mode: "fund_wallet",
+          }
+        }
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
-        buyForTx={undefined}
       />
     );
   }

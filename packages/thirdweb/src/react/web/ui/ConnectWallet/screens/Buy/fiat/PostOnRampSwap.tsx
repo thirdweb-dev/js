@@ -21,7 +21,7 @@ export function PostOnRampSwap(props: {
   onBack?: () => void;
   onViewPendingTx: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
 }) {
@@ -130,7 +130,7 @@ export function PostOnRampSwap(props: {
         setLockedOnRampQuote(undefined);
         postOnRampQuoteQuery.refetch();
       }}
-      isBuyForTx={props.isBuyForTx}
+      transactionMode={props.transactionMode}
       isEmbed={props.isEmbed}
     />
   );

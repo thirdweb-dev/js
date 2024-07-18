@@ -1,22 +1,22 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
-import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { GetWalletBalanceResult } from "../../../../../../../wallets/utils/getWalletBalance.js";
+import type { Currency } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 
-export type BuyForTx = {
-  cost: bigint;
-  balance: bigint;
-  tx: PreparedTransaction;
-  tokenSymbol: string;
-  tokenDecimals: number;
+export type TransactionCostAndData = {
+  currency: Currency;
+  walletBalance: GetWalletBalanceResult;
+  transactionValueWei: bigint;
+  gasCostWei: bigint;
 };
 
 export type SelectedScreen =
   | {
-      id:
-        | "main"
-        | "select-payment-method"
-        | "buy-with-fiat"
-        | "buy-with-crypto";
+      id: "main" | "select-payment-method" | "buy-with-fiat";
+    }
+  | {
+      id: "buy-with-crypto";
+      payDisabled?: boolean;
     }
   | {
       id: "select-from-token";

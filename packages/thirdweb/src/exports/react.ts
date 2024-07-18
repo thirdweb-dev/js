@@ -121,7 +121,11 @@ export {
   type PayEmbedProps,
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
-export type { PayUIOptions } from "../react/core/hooks/connection/ConnectButtonProps.js";
+export type {
+  PayUIOptions,
+  PaymentInfo,
+  Currency,
+} from "../react/core/hooks/connection/ConnectButtonProps.js";
 
 export {
   useConnectModal,
@@ -140,3 +144,6 @@ export {
   useNetworkSwitcherModal,
   type UseNetworkSwitcherModalOptions,
 } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
+
+// ens
+export { useEnsName, useEnsAvatar } from "../react/core/utils/wallet.js";

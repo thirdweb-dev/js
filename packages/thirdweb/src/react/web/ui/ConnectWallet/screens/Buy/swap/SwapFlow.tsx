@@ -19,7 +19,7 @@ type SwapFlowProps = {
   isFiatFlow: boolean;
   onDone: () => void;
   onTryAgain: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 };
 
@@ -83,7 +83,7 @@ export function SwapFlow(props: SwapFlowProps) {
         swapTxHash={swapTxHash}
         client={props.client}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         quote={quote}
       />

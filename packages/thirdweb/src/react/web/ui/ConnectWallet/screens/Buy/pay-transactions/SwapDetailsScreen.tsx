@@ -289,7 +289,7 @@ export function SwapTxDetailsTable(
           >
             <Text>Send to</Text>
             <Container flex="row" gap="xs" center="y">
-              <Text color="primaryText">
+              <Text color="primaryText" size="sm">
                 {shortenAddress(uiData.toAddress)}
               </Text>
             </Container>
