@@ -1,5 +1,6 @@
 import {
   PayIcon,
+  SocialIcon,
   WalletsAuthIcon,
   WalletsConnectIcon,
   WalletsInAppIcon,
@@ -62,6 +63,12 @@ function WalletsSection() {
           title="Blockchain API"
           description="Performant, and reliable blockchain API"
           icon={CodeIcon}
+        />
+        <ArticleCardIndex
+          href="/connect/social-networks"
+          title="Social Networks"
+          description="First class integration for Farcaster & Lens"
+          icon={SocialIcon}
         />
       </div>
     </section>
