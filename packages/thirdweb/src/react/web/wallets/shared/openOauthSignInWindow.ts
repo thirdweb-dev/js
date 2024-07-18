@@ -30,6 +30,7 @@ function getOauthLoginPath(
   ecosystem?: Ecosystem,
 ) {
   switch (authOption) {
+    case "apple":
     case "facebook":
     case "google":
     case "discord":

@@ -10,7 +10,6 @@ import {
   type SendEmailOtpReturnType,
   type SingleStepAuthArgsType,
   UserWalletStatus,
-  oauthStrategyToAuthProvider,
 } from "../../core/authentication/type.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
@@ -169,14 +168,6 @@ export class InAppWebConnector implements InAppConnector {
           phoneNumber: args.phoneNumber,
         });
       }
-      case "apple": {
-        const oauthProvider = oauthStrategyToAuthProvider[strategy];
-        return this.auth.loginWithOauth({
-          oauthProvider,
-          closeOpenedWindow: args.closeOpenedWindow,
-          openedWindow: args.openedWindow,
-        });
-      }
       case "jwt": {
         return this.auth.loginWithCustomJwt({
           jwt: args.jwt,
@@ -214,6 +205,7 @@ export class InAppWebConnector implements InAppConnector {
         });
         return this.auth.loginWithAuthToken(authToken);
       }
+      case "apple":
       case "facebook":
       case "google":
       case "discord": {
