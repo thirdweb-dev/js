@@ -5,9 +5,8 @@ import { polygon } from "thirdweb/chains";
 import { getFullProfile } from "thirdweb/extensions/lens";
 import { download } from "thirdweb/storage";
 
-const client = THIRDWEB_SERVER_CLIENT;
-
 export async function LensProfilePreview() {
+  const client = THIRDWEB_SERVER_CLIENT;
   const profileId = 461662n;
   const lensHubContract = getContract({
     address: "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",

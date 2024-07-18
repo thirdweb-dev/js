@@ -4,9 +4,8 @@ import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getHandleFromProfileId } from "thirdweb/extensions/lens";
 
-const client = THIRDWEB_SERVER_CLIENT;
-
 export async function LensHandlePreview() {
+  const client = THIRDWEB_SERVER_CLIENT;
   const profileId = 461662n;
   const lensHandleContract = getContract({
     address: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
