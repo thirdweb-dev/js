@@ -18,7 +18,7 @@ import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
-import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
+import { PayTxHistoryScreen } from "./ConnectWallet/screens/Buy/pay-transactions/BuyTxHistory.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
@@ -212,7 +212,7 @@ export function PayEmbed(props: PayEmbedProps) {
         </div>
         {/* this does not need to persist so we can just show-hide it with JS */}
         {screen === "tx-history" && (
-          <BuyTxHistory
+          <PayTxHistoryScreen
             client={props.client}
             onBack={() => {
               setScreen("buy");
