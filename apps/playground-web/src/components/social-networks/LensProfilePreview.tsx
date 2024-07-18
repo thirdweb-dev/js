@@ -47,7 +47,7 @@ export async function LensProfilePreview() {
   return (
     <div className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
       <div
-        className={`h-32 ${coverImage ? "bg-cover" : "bg-black"} ${coverImage && "bg-center"}`}
+        className={`h-32 ${coverImage ? "bg-cover" : "bg-black"} ${coverImage && "bg-center"} rounded-b-3xl`}
         style={{ backgroundImage: coverImage ? `url(${coverImage})` : "" }}
       >
         <div className="relative h-32">
