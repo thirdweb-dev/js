@@ -72,7 +72,7 @@ export type BuyHistoryData = {
  *  walletAddress: "0x...",
  * })
  * ```
- * @buycrypto
+ * @buyCrypto
  */
 export async function getBuyHistory(
   params: BuyHistoryParams,
