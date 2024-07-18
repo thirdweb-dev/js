@@ -11,8 +11,8 @@ import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
-import type { FiatStatusMeta } from "../tx-history/statusMeta.js";
+import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
+import type { FiatStatusMeta } from "../pay-transactions/statusMeta.js";
 import { getCurrencyMeta } from "./currencies.js";
 
 /**

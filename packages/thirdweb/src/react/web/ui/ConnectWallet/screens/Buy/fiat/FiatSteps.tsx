@@ -34,7 +34,7 @@ import { StepIcon } from "../Stepper.js";
 import {
   type FiatStatusMeta,
   getBuyWithFiatStatusMeta,
-} from "../tx-history/statusMeta.js";
+} from "../pay-transactions/statusMeta.js";
 import { getCurrencyMeta } from "./currencies.js";
 
 export type BuyWithFiatPartialQuote = {

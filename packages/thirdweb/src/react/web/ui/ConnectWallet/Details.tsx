@@ -73,6 +73,7 @@ import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector.js";
+import { TransactionsScreen } from "./TransactionsScreen.js";
 import { onModalUnmount } from "./constants.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
@@ -82,7 +83,6 @@ import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
-import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
 import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
@@ -513,7 +513,7 @@ function DetailsModal(props: {
           {/* Transactions */}
           <MenuButton
             onClick={() => {
-              setScreen("pending-tx");
+              setScreen("transactions");
             }}
             style={{
               fontSize: fontSize.sm,
@@ -623,27 +623,17 @@ function DetailsModal(props: {
           <Spacer y="sm" />
         </Container>
       )}
-      {/* {activeWallet?.id === "local" && (
-        <>
-          <Line />
-          <Container py="md">
-            <Text size="xs" center multiline color="danger" balance>
-              {locale.guestWalletWarning}
-            </Text>
-          </Container>
-        </>
-      )} */}
     </div>
   );
 
-  if (screen === "pending-tx") {
+  if (screen === "transactions") {
     content = (
-      <BuyTxHistory
-        isBuyForTx={false}
-        isEmbed={false}
+      <TransactionsScreen
         onBack={() => setScreen("main")}
+        closeModal={closeModal}
+        locale={locale}
+        setScreen={setScreen}
         client={client}
-        onDone={closeModal}
       />
     );
   }
@@ -815,7 +805,7 @@ function DetailsModal(props: {
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
-        onViewPendingTx={() => setScreen("pending-tx")}
+        onViewPendingTx={() => setScreen("transactions")}
         connectLocale={locale}
         payOptions={props.detailsModal?.payOptions || {}}
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
