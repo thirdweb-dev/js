@@ -255,16 +255,19 @@ export async function getTotalTxCostForBuy(
       // try again without passing from
       return await getTotalTxCostForBuy(tx);
     }
-    // fallback if both fail, use the tx value + 1% buffer
+    // fallback if both fail, use the tx value + 2M * gas price
     const value = await resolvePromisedValue(tx.value);
+
+    const gasPrice = await getGasPrice({
+      client: tx.client,
+      chain: tx.chain,
+    });
+
+    const buffer = 2_000_000n * gasPrice;
+
     if (!value) {
-      // if value is 0 and we fail to estimate, set a minimum of 1M gas, enough for a few transactions
-      const gasPrice = await getGasPrice({
-        client: tx.client,
-        chain: tx.chain,
-      });
-      return 1_000_000n * gasPrice;
+      return 0n + buffer;
     }
-    return value + value / 100n;
+    return value + buffer;
   }
 }

@@ -9,6 +9,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { cacheChains } from "../../../../chains/utils.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -66,6 +67,15 @@ export function ConnectButton(props: ConnectButtonProps) {
       }),
     ]).start();
   }, []);
+
+  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
+  if (props.chains) {
+    cacheChains(props.chains);
+  }
+
+  if (props.chain) {
+    cacheChains([props.chain]);
+  }
 
   const closeModal = useCallback(() => {
     Animated.parallel([

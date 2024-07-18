@@ -21,7 +21,9 @@ const connectLocaleVi: ConnectLocale = {
   currentNetwork: "Mạng lưới hiện tại",
   switchAccount: "Chuyển tài khoản",
   requestTestnetFunds: "Nhận Testnet Funds",
-  transactions: "Giao dịch",
+  transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "Tất cả giao dịch",
   backupWallet: "Sao lưu ví",
   guestWalletWarning:

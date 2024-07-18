@@ -63,6 +63,15 @@ export function defineChain(
 /**
  * @internal
  */
+export function cacheChains(chains: Chain[]) {
+  for (const chain of chains) {
+    CUSTOM_CHAIN_MAP.set(chain.id, chain);
+  }
+}
+
+/**
+ * @internal
+ */
 export function getCachedChain(id: number) {
   if (CUSTOM_CHAIN_MAP.has(id)) {
     return CUSTOM_CHAIN_MAP.get(id) as Chain;

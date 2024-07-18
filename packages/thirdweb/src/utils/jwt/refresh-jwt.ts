@@ -24,6 +24,7 @@ export type RefreshJWTParams = {
  *  expirationTime: 1000 * 60 * 60,
  * });
  * ```
+ * @auth
  */
 export async function refreshJWT(options: RefreshJWTParams): Promise<string> {
   const { account, jwt, expirationTime = DEFAULT_EXPIRATION_TIME } = options;

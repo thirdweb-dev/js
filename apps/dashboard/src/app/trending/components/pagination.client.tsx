@@ -35,6 +35,7 @@ export function TablePagination(props: { isLandingPage?: boolean }) {
             }}
           />
         </PaginationItem>
+        <PaginationItem className="px-4">{page}</PaginationItem>
         <PaginationItem>
           <PaginationNext
             className={`${props.isLandingPage && "bg-black/50"}`}

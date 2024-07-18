@@ -1,5 +1,5 @@
 import { getIpAddress } from "lib/ip";
-import { cacheExists, cacheSet } from "lib/redis";
+import { cacheDeleteKey, cacheExists, cacheSet } from "lib/redis";
 import { NextResponse } from "next/server";
 import { ZERO_ADDRESS } from "thirdweb";
 
@@ -15,6 +15,22 @@ export const POST = async (req: Request) => {
   const { chainId, toAddress, amount } = requestBody;
   if (Number.isNaN(chainId)) {
     throw new Error("Invalid chain ID.");
+  }
+
+  const THIRDWEB_ENGINE_URL = process.env.THIRDWEB_ENGINE_URL;
+  const NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET =
+    process.env.NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET;
+  const THIRDWEB_ACCESS_TOKEN = process.env.THIRDWEB_ACCESS_TOKEN;
+
+  if (
+    !THIRDWEB_ENGINE_URL ||
+    !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
+    !THIRDWEB_ACCESS_TOKEN
+  ) {
+    return NextResponse.json(
+      { error: "Testnet faucet not configured." },
+      { status: 500 },
+    );
   }
 
   const ipAddress = getIpAddress();
@@ -34,22 +50,6 @@ export const POST = async (req: Request) => {
   // Assert max amount.
   if (Number.parseFloat(amount) > 0.1) {
     return NextResponse.json({ error: "Invalid amount." }, { status: 400 });
-  }
-
-  const {
-    THIRDWEB_ENGINE_URL,
-    NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
-    THIRDWEB_ACCESS_TOKEN,
-  } = process.env;
-  if (
-    !THIRDWEB_ENGINE_URL ||
-    !NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET ||
-    !THIRDWEB_ACCESS_TOKEN
-  ) {
-    return NextResponse.json(
-      { error: "Testnet faucet not configured." },
-      { status: 500 },
-    );
   }
 
   if (amount !== "0") {
@@ -74,6 +74,8 @@ export const POST = async (req: Request) => {
         throw error.error;
       }
     } catch (error) {
+      // Remove user from cache for retry on transfer failure.
+      cacheDeleteKey(cacheKey);
       return NextResponse.json(
         { error: `${(error as Error)?.message}` },
         { status: 500 },

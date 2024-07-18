@@ -22,6 +22,8 @@ const connectLocaleEn: ConnectLocale = {
   switchAccount: "Switch Account",
   requestTestnetFunds: "Request Testnet Funds",
   transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions",
   backupWallet: "Backup Wallet",
   guestWalletWarning:

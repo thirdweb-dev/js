@@ -16,7 +16,9 @@ const connectWalletLocalTl: ConnectLocale = {
   getStarted: "Simulan",
   guest: "Guest",
   buy: "Buy", // TODO
-  transactions: "Transactions", // TODO
+  transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions", // TODO
   send: "Ipadala",
   receive: "Matanggap",

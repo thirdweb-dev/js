@@ -9,12 +9,30 @@ export type UninstallPublishedExtensionOptions = {
   chain: Chain;
   contract: ThirdwebContract;
   extensionName: string;
-  publisherAddress: string;
+  publisherAddress?: string;
   version?: string;
   constructorParams?: unknown[];
   extensionData?: `0x${string}`;
 };
 
+/**
+ * Uninstall a published extension
+ * @param options - The options for uninstalling a published extension
+ * @returns A prepared transaction to send
+ * @extension MODULAR
+ * @example
+ * ```ts
+ * import { uninstallPublishedExtension } from "thirdweb/extensions/modular";
+ * const transaction = uninstallPublishedExtension({
+ *  client,
+ *  chain,
+ *  contract,
+ *  extensionName: "MyExtension",
+ *  publisherAddress: "0x...",
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
 export function uninstallPublishedExtension(
   options: UninstallPublishedExtensionOptions,
 ) {

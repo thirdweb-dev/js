@@ -18,7 +18,9 @@ const connectWalletLocalEs: ConnectLocale = {
   send: "Enviar",
   receive: "Recibir",
   buy: "Buy", // TODO
-  transactions: "Transactions", // TODO
+  transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions", // TODO
   currentNetwork: "Red actual",
   switchAccount: "Cambiar cuenta",

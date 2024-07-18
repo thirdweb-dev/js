@@ -4,10 +4,14 @@ import {
   type TypedDataDefinition,
   type TypedDataDomain,
   hashTypedData,
+  maxUint96,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+import { approve } from "../../extensions/erc20/write/approve.js";
+import { toSerializableTransaction } from "../../transaction/actions/to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import {
   populateEip712Transaction,
@@ -15,6 +19,8 @@ import {
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { getAddress } from "../../utils/address.js";
+import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
   Account,
@@ -44,9 +50,11 @@ import {
 } from "./lib/userop.js";
 import { isNativeAAChain } from "./lib/utils.js";
 import type {
+  PaymasterResult,
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
+  UserOperation,
 } from "./types.js";
 
 /**
@@ -170,6 +178,27 @@ async function createSmartAccount(
   const account: Account = {
     address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
+      // if erc20 paymaster - check allowance and approve if needed
+      const erc20Paymaster = options.overrides?.erc20Paymaster;
+      let paymasterOverride:
+        | undefined
+        | ((userOp: UserOperation) => Promise<PaymasterResult>) = undefined;
+      if (erc20Paymaster) {
+        await approveERC20({
+          accountContract,
+          erc20Paymaster,
+          options,
+        });
+        const paymasterCallback = async (): Promise<PaymasterResult> => {
+          return {
+            paymasterAndData: concatHex([
+              erc20Paymaster.address as Hex,
+              erc20Paymaster?.token as Hex,
+            ]),
+          };
+        };
+        paymasterOverride = options.overrides?.paymaster || paymasterCallback;
+      }
       const executeTx = prepareExecute({
         accountContract,
         transaction,
@@ -177,7 +206,13 @@ async function createSmartAccount(
       });
       return _sendUserOp({
         executeTx,
-        options,
+        options: {
+          ...options,
+          overrides: {
+            ...options.overrides,
+            paymaster: paymasterOverride,
+          },
+        },
       });
     },
     async sendBatchTransaction(transactions: SendTransactionOption[]) {
@@ -295,9 +330,6 @@ async function createSmartAccount(
 
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
         await _deployAccount({
           options,
           account,
@@ -360,6 +392,57 @@ async function createSmartAccount(
     },
   };
   return account;
+}
+
+async function approveERC20(args: {
+  accountContract: ThirdwebContract;
+  options: SmartAccountOptions;
+  erc20Paymaster: {
+    address: string;
+    token: string;
+  };
+}) {
+  const { accountContract, erc20Paymaster, options } = args;
+  const tokenAddress = erc20Paymaster.token;
+  const tokenContract = getContract({
+    address: tokenAddress,
+    chain: accountContract.chain,
+    client: accountContract.client,
+  });
+  const accountAllowance = await allowance({
+    contract: tokenContract,
+    owner: accountContract.address,
+    spender: erc20Paymaster.address,
+  });
+
+  if (accountAllowance > 0n) {
+    return;
+  }
+
+  const approveTx = approve({
+    contract: tokenContract,
+    spender: erc20Paymaster.address,
+    amountWei: maxUint96 - 1n,
+  });
+  const transaction = await toSerializableTransaction({
+    transaction: approveTx,
+    from: accountContract.address,
+  });
+  const executeTx = prepareExecute({
+    accountContract,
+    transaction,
+    executeOverride: options.overrides?.execute,
+  });
+  await _sendUserOp({
+    executeTx,
+    options: {
+      ...options,
+      overrides: {
+        ...options.overrides,
+        erc20Paymaster: undefined,
+      },
+    },
+  });
 }
 
 function createZkSyncAccount(args: {

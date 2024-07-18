@@ -64,9 +64,15 @@ export const getSearchQueryUrl = ({
       : timeRange === "week"
         ? `updatedAt:> ${new Date().getTime() - 7 * 24 * 60 * 60 * 1000}`
         : `updatedAt:> ${new Date().getTime() - 1 * 24 * 60 * 60 * 1000}`;
+  const gasUsageFilter =
+    timeRange === "month"
+      ? "last30Days.gasUsage:> 0"
+      : timeRange === "week"
+        ? "last7Days.gasUsage:> 0"
+        : "last24Hr.gasUsage:> 0";
   baseUrl.searchParams.set(
     "filter_by",
-    `${dateFilter}${chainId ? ` && chainId:=${chainId}` : ""}`,
+    `${dateFilter} && ${gasUsageFilter}${chainId ? ` && chainId:=${chainId}` : ""}`,
   );
   baseUrl.searchParams.set(
     "sort_by",

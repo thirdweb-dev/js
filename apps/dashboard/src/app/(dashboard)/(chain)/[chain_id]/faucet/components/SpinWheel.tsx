@@ -76,7 +76,7 @@ export function TestnetSpinWheel({
 
   const claimMutation = useMutation({
     mutationFn: async (result: string) => {
-      const amount = result === "Come back tomorrow" ? "0" : result;
+      const amount = result === "Come back tomorrow" ? "0.01" : result;
       const requestBody = {
         chainId: chainId,
         toAddress: address,
@@ -103,7 +103,7 @@ export function TestnetSpinWheel({
       router.refresh();
       const successMessage =
         claimMutation.variables === "Come back tomorrow"
-          ? "You're not lucky today come back tomorrow"
+          ? "You're not lucky today, but don't worry you got 0.01 💜"
           : `${claimMutation.variables} ${chain?.nativeCurrency?.name} sent to ${address}`;
       toast.success(successMessage);
     },

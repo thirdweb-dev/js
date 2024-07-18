@@ -26,6 +26,25 @@ export type GetClaimParamsOptions = {
     }
 );
 
+/**
+ * Get the claim parameters for a given drop
+ * @param options - The options for getting the claim parameters
+ * @returns The claim parameters
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { getClaimParams } from "thirdweb/extensions/erc1155";
+ *
+ * const claimParams = await getClaimParams({
+ *  contract,
+ *  to: "0x...",
+ *  quantity: 1n,
+ *  type: "erc1155",
+ *  tokenId: 0n,
+ * });
+ * ```
+ * @extension COMMON
+ */
 export async function getClaimParams(options: GetClaimParamsOptions) {
   const cc = await (async () => {
     if (options.type === "erc1155") {

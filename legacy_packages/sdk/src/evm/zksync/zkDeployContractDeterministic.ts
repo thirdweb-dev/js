@@ -121,16 +121,16 @@ export async function zkDeployContractDeterministic(
         );
       } catch (error) {}
 
-      try {
-        zkVerify(
-          transaction.predictedAddress,
-          chainId,
-          blockExplorerApiMap[chainId],
-          "",
-          storage,
-          metadataUri,
-        );
-      } catch (error) {}
+      zkVerify(
+        transaction.predictedAddress,
+        chainId,
+        blockExplorerApiMap[chainId],
+        "",
+        storage,
+        metadataUri,
+      ).catch((error) => {
+        console.warn("Error verifying contract", error);
+      });
     }
   }
 }

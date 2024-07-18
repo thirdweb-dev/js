@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.35.0",
+  "version": "5.36.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -211,7 +211,7 @@
     "@aws-sdk/credential-providers": "^3",
     "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
-    "@react-native-clipboard/clipboard": "^1",
+    "@react-native-clipboard/clipboard": "*",
     "amazon-cognito-identity-js": "^6",
     "aws-amplify": "^5",
     "ethers": "^5 || ^6",

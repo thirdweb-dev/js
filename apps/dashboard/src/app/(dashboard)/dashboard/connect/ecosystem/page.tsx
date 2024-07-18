@@ -43,7 +43,6 @@ export default async function Page() {
       console.error("failed to fetch ecosystems", err);
       return [];
     });
-    console.log("ecosystems", ecosystems);
     if (ecosystems.length > 0) {
       redirect(`/dashboard/connect/ecosystem/${ecosystems[0].slug}`);
     }
