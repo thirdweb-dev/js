@@ -1,14 +1,14 @@
+import { polygon } from "../../../chains/chain-definitions/polygon.js";
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../../contract/contract.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
 import { getHandle } from "../__generated__/LensHandle/read/getHandle.js";
 import { getDefaultHandle } from "../__generated__/TokenHandleRegistry/read/getDefaultHandle.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
-import type { Chain } from "../../../chains/types.js";
-import { getContract } from "../../../contract/contract.js";
-import type { ThirdwebClient } from "../../../client/client.js";
 import {
   LENS_HANDLE_ADDRESS,
   LENS_TOKEN_HANDLE_REGISTRY_ADDRESS,
 } from "../consts.js";
-import { polygon } from "../../../chains/chain-definitions/polygon.js";
 
 export type GetHandleFromProfileIdParams = {
   profileId: bigint;
