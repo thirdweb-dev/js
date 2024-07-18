@@ -1,6 +1,6 @@
 import { CodeExample } from "@/components/code/code-example";
-import { LensProfilePreview } from "@/components/social-networks/LensProfilePreview";
 import { LensHandlePreview } from "@/components/social-networks/LensHandlePreview";
+import { LensProfilePreview } from "@/components/social-networks/LensProfilePreview";
 import { Button } from "@/components/ui/button";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";

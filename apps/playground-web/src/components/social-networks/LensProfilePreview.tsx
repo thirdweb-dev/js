@@ -1,9 +1,9 @@
+import Link from "next/link";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 import { getFullProfile } from "thirdweb/extensions/lens";
 import { download } from "thirdweb/storage";
 import { THIRDWEB_SERVER_CLIENT } from "../../lib/serverClient";
-import Link from "next/link";
 
 const client = THIRDWEB_SERVER_CLIENT;
 
