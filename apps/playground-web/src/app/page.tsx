@@ -67,7 +67,7 @@ function WalletsSection() {
         <ArticleCardIndex
           href="/connect/social-networks"
           title="Social Networks"
-          description="First class integration for Farcaster & Lens"
+          description="First class integration for decentralized social networks"
           icon={SocialIcon}
         />
       </div>

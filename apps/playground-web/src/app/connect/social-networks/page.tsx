@@ -90,23 +90,14 @@ function LensProfile() {
 
       <CodeExample
         preview={<LensProfilePreview />}
-        code={`import { createThirdwebClient, getContract } from "thirdweb";
-import { polygon } from "thirdweb/chains";
+        code={`import { createThirdwebClient } from "thirdweb";
 import { getFullProfile } from "thirdweb/extensions/lens";
           
 const profileId = 461662n;
-
 const client = createThirdwebClient({ /*...*/ });
-
-const lensHubContract = getContract({ /* ... */ });
-const lensHandleContract = getContract({ /* ... */ });
-const tokenHandleRegistryContract = getContract({ /* ... */ });
 
 const profile = await getFullProfile({
   profileId,
-  lensHubContract,
-  lensHandleContract,
-  tokenHandleRegistryContract,
   includeJoinDate: true,
   client,
 });
@@ -134,20 +125,15 @@ function LensHandle() {
 
       <CodeExample
         preview={<LensHandlePreview />}
-        code={`import { createThirdwebClient, getContract } from "thirdweb";
-import { polygon } from "thirdweb/chains";
+        code={`import { createThirdwebClient } from "thirdweb";
 import { getHandleFromProfileId } from "thirdweb/extensions/lens";
           
 const profileId = 461662n;
 const client = createThirdwebClient({ /*...*/ });
-const lensHandleContract = getContract({ /* ... */ });
-const tokenHandleRegistryContract = getContract({ /* ... */ });
 
 const handle = await getHandleFromProfileId({
   profileId,
   client,
-  lensHandleContract,
-  tokenHandleRegistryContract,
 });
 `}
         lang="tsx"
