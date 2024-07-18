@@ -10,7 +10,7 @@ import type {
   ShardedMerkleTreeInfo,
 } from "./types.js";
 
-/*
+/**
  * Retrieves the claim merkle proof for the provided address.
  * @param {Object} options
  * @param {@link ThirdwebContract} contract - The ERC1155 airdrop contract
