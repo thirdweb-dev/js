@@ -397,7 +397,8 @@ const RemoveModal = ({
     <Modal isOpen onClose={onClose} isCentered size="lg">
       <ModalOverlay />
       <ModalContent>
-        {instance.cloudDeployedAt ? (
+        {instance.status === "paymentFailed" ||
+        (instance.status === "active" && !instance.cloudDeployedAt) ? (
           <form
             onSubmit={form.handleSubmit((data) =>
               removeCloudHosted(data, {
