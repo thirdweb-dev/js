@@ -1,11 +1,11 @@
-import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
-import type { LensProfileSchema } from "./type.js";
-import type { ThirdwebClient } from "../../../client/client.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
-import type { Chain } from "../../../chains/types.js";
-import { getContract } from "../../../contract/contract.js";
 import { polygon } from "../../../chains/chain-definitions/polygon.js";
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import { getContract } from "../../../contract/contract.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
+import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
 import { LENS_HUB_ADDRESS } from "../consts.js";
+import type { LensProfileSchema } from "./type.js";
 
 export type GetProfileDataParams = {
   profileId: bigint;
