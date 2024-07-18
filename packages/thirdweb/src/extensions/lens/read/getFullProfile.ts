@@ -1,23 +1,27 @@
+import { polygon } from "../../../chains/chain-definitions/polygon.js";
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-// import { getDefaultHandle } from "src/exports/extensions/lens.js";
-import type { ThirdwebContract } from "../../../contract/contract.js";
+import { getContract } from "../../../contract/contract.js";
+import type { Hex } from "../../../utils/encoding/hex.js";
 import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
 import { getDefaultHandle } from "../__generated__/TokenHandleRegistry/read/getDefaultHandle.js";
+import {
+  LENS_HANDLE_ADDRESS,
+  LENS_HUB_ADDRESS,
+  LENS_TOKEN_HANDLE_REGISTRY_ADDRESS,
+} from "../consts.js";
 import type { LensProfileSchema } from "./type.js";
 
 export type GetFullProfileParams = {
   profileId: bigint;
   client: ThirdwebClient;
-
-  // Lens's smart contracts.
-  // Go here for the latest data: https://www.lens.xyz/docs/resources/smart-contracts
-  lensHubContract: ThirdwebContract;
-  lensHandleContract: ThirdwebContract;
-  tokenHandleRegistryContract: ThirdwebContract;
-
   includeJoinDate?: boolean;
-  // includeFollowerCount?: boolean;
-  // includeFollowingCount?: boolean;
+  overrides?: {
+    lensHubAddress?: Hex;
+    lensHandleAddress?: Hex;
+    tokenHandleRegistryAddress?: Hex;
+    chain?: Chain;
+  };
 };
 
 export type FullProfileResponse =
@@ -39,21 +43,26 @@ export type FullProfileResponse =
  * ```ts
  * import { getFullProfile } from "thirdweb/extension/lens";
  *
- * const lensProfile = await getFullProfile({ ... });
+ * const profileId = 10000n; // profileId is the tokenId of the NFT
+ * const lensProfile = await getFullProfile({ profileId, client });
  * ```
  */
 export async function getFullProfile(
   options: GetFullProfileParams,
 ): Promise<FullProfileResponse> {
-  const {
-    profileId,
-    lensHandleContract,
-    lensHubContract,
-    tokenHandleRegistryContract,
-    includeJoinDate,
+  const { profileId, overrides, includeJoinDate, client } = options;
+  const lensHubContract = getContract({
+    address: overrides?.lensHubAddress || LENS_HUB_ADDRESS,
+    chain: overrides?.chain || polygon,
     client,
-  } = options;
-
+  });
+  const tokenHandleRegistryContract = getContract({
+    address:
+      overrides?.tokenHandleRegistryAddress ||
+      LENS_TOKEN_HANDLE_REGISTRY_ADDRESS,
+    chain: overrides?.chain || polygon,
+    client,
+  });
   const [profile, handleTokenId, { download }] = await Promise.all([
     getProfile({ contract: lensHubContract, profileId }),
     getDefaultHandle({ contract: tokenHandleRegistryContract, profileId }),
@@ -73,6 +82,11 @@ export async function getFullProfile(
       : null,
   ]);
 
+  const lensHandleContract = getContract({
+    address: overrides?.lensHandleAddress || LENS_HANDLE_ADDRESS,
+    chain: overrides?.chain || polygon,
+    client,
+  });
   const [handle, joinDate] = await Promise.all([
     getHandle({ contract: lensHandleContract, tokenId: handleTokenId }),
     includeJoinDate

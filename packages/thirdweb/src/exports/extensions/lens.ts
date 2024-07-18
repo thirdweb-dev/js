@@ -130,3 +130,23 @@ export {
   type GetFullProfileParams,
   type FullProfileResponse,
 } from "../../extensions/lens/read/getFullProfile.js";
+
+/**
+ * Contract addresses
+ */
+export {
+  // Mainnet
+  LENS_HUB_ADDRESS,
+  LENS_HANDLE_ADDRESS,
+  LENS_TOKEN_HANDLE_REGISTRY_ADDRESS,
+  LENS_FOLLOW_NFT_ADDRESS,
+  LENS_COLLECT_NFT_ADDRESS,
+  LENS_MODULE_REGISTRY_ADDRESS,
+  // Testnet
+  LENS_HUB_ADDRESS_TESTNET,
+  LENS_HANDLE_ADDRESS_TESTNET,
+  LENS_TOKEN_HANDLE_REGISTRY_ADDRESS_TESTNET,
+  LENS_FOLLOW_NFT_ADDRESS_TESTNET,
+  LENS_COLLECT_NFT_ADDRESS_TESTNET,
+  LENS_MODULE_REGISTRY_ADDRESS_TESTNET,
+} from "../../extensions/lens/consts.js";
