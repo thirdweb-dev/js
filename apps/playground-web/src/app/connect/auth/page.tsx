@@ -31,7 +31,9 @@ export default function Page({
                 Auth
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-300 mb-6 font-inter">
-                lorem ipsum
+                Authenticate users to your backend using only their wallet. This
+                is a secure and easy way to authenticate users without requiring
+                them to create an additional account.
               </p>
             </div>
             <div className="flex flex-col gap-4 min-[400px]:flex-row">

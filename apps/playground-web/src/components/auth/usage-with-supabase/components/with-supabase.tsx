@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { shortenAddress } from "thirdweb/utils";
-import { AuthButton } from "../../auth-button";
 import { createClient } from "../utils/server";
 import { LinkWalletButton } from "./link-button";
 import { LogoutButton } from "./logout-button";
@@ -50,7 +49,7 @@ export async function WithSupabase({
           <UnlinkButton />
         </div>
       ) : (
-        <>{loggedInThirdweb ? <LinkWalletButton /> : <AuthButton />}</>
+        <LinkWalletButton />
       )}
 
       <LogoutButton />

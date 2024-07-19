@@ -3,9 +3,9 @@ import { createClient } from "@/components/auth/usage-with-supabase/utils/server
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   /**
-   * Make sure user is properly logged in for both Supabase and thirdweb Auth
+   * Make sure user is properly logged in with Supabase
    */
   const supabase = createClient();
   const {
@@ -15,24 +15,10 @@ export async function GET(request: Request) {
     throw new Error("unauthorized - supabase");
   }
 
-  const jwt = cookies().get("jwt");
-  if (!jwt?.value) {
-    throw new Error("null jwt value");
-  }
-
-  const authResult = await thirdwebAuth.verifyJWT({ jwt: jwt.value });
-  if (!authResult.valid) {
-    throw new Error("invalid auth result");
-  }
-
-  const address = authResult.parsedJWT.sub;
-  if (!address) {
-    throw new Error("could not get wallet address");
-  }
-
+  const body = await request.json();
   await supabase.auth.updateUser({
     data: {
-      wallet_address: address,
+      wallet_address: body.linkAddress,
     },
   });
 
