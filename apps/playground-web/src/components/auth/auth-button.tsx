@@ -16,9 +16,10 @@ export function AuthButton() {
     <ConnectButton
       client={THIRDWEB_CLIENT}
       auth={{
-        isLoggedIn: async (address) => {
-          console.log("checking if logged in!", { address });
-          return await isLoggedIn();
+        isLoggedIn: async () => {
+          const authResult = await isLoggedIn();
+          if (!authResult) return false;
+          return true;
         },
         doLogin: async (params) => {
           console.log("logging in!");
