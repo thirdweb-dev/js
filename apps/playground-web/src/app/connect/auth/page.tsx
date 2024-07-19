@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
@@ -16,7 +16,9 @@ export const metadata: Metadata = {
   description: "lorem ipsum",
 };
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: { searchParams: { message: string } }) {
   return (
     <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
       <section className="container px-4 md:px-6">
@@ -192,7 +194,28 @@ function WithSupabasePreview({
 
       <CodeExample
         preview={<WithSupabase searchParams={searchParams} />}
-        code={`import { } from "thirdweb"`}
+        code={`import { createClient } from "@/components/auth/usage-with-supabase/utils/server";
+import { NextResponse } from "next/server";
+
+export async function POST(request: Request) {
+  // Make sure user is properly logged in with Supabase
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    throw new Error("unauthorized - supabase");
+  }
+
+  const body = await request.json();
+  await supabase.auth.updateUser({
+    data: {
+      wallet_address: body.linkAddress,
+    },
+  });
+
+  return NextResponse.json({ success: true });
+}`}
         lang="tsx"
       />
     </>
