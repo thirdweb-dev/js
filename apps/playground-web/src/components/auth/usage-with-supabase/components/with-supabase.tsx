@@ -1,7 +1,9 @@
+import { isLoggedIn } from "@/app/connect/auth/actions/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { shortenAddress } from "thirdweb/utils";
+import { AuthButton } from "../../auth-button";
 import { createClient } from "../utils/server";
 import { LinkWalletButton } from "./link-button";
 import { LogoutButton } from "./logout-button";
@@ -21,6 +23,8 @@ export async function WithSupabase({
   if (!user) {
     return <SupabaseAuthUI searchParams={searchParams} />;
   }
+
+  const loggedInThirdweb = await isLoggedIn();
 
   return (
     <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-3 flex flex-col">
@@ -46,7 +50,7 @@ export async function WithSupabase({
           <UnlinkButton />
         </div>
       ) : (
-        <LinkWalletButton />
+        <>{loggedInThirdweb ? <LinkWalletButton /> : <AuthButton />}</>
       )}
 
       <LogoutButton />

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
 import { WithSupabase } from "@/components/auth/usage-with-supabase/components/with-supabase";
@@ -7,8 +9,6 @@ import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   metadataBase,
