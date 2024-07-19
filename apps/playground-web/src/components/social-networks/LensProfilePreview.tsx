@@ -1,4 +1,5 @@
 import { THIRDWEB_CLIENT } from "@/lib/client";
+import Image from "next/image";
 import Link from "next/link";
 import { getFullProfile } from "thirdweb/extensions/lens";
 import { download } from "thirdweb/storage";
@@ -35,7 +36,9 @@ export async function LensProfilePreview() {
       >
         <div className="relative h-32">
           <img
-            src={userImage}
+            width={96}
+            height={96}
+            src={userImage ?? ""}
             alt="User"
             className="absolute w-24 h-24 mx-auto transform -translate-x-1/2 border-4 border-white rounded-full -bottom-12 left-1/2"
           />

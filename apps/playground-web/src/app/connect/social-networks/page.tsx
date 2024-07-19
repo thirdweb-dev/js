@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 import { CodeExample } from "@/components/code/code-example";
+import { EnsProfilePreview } from "@/components/social-networks/EnsProfilePreview";
 import { LensHandlePreview } from "@/components/social-networks/LensHandlePreview";
 import { LensProfilePreview } from "@/components/social-networks/LensProfilePreview";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,7 @@ export default function Page() {
           <div className="relative flex flex-col order-first w-full mx-auto my-auto space-y-2 sm:w-full lg:order-last">
             <div className="max-w-full sm:max-w-[600px]">
               <Image
-                src={"/blockchain-api.png"}
+                src={"/social-networks.png"}
                 width={600}
                 height={400}
                 objectFit={"contain"}
@@ -64,6 +65,10 @@ export default function Page() {
       </section>
 
       <section className="container px-4 space-y-8 md:px-6">
+        <EnsProfile />
+      </section>
+
+      <section className="container px-4 space-y-8 md:px-6">
         <LensProfile />
       </section>
 
@@ -71,6 +76,41 @@ export default function Page() {
         <LensHandle />
       </section>
     </main>
+  );
+}
+
+function EnsProfile() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+          Query ENS profile
+        </h2>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum
+          deleniti, ut facere labore rerum, laborum saepe possimus neque a
+          repellat in tempore animi quam autem minima. Distinctio praesentium
+          odit porro.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<EnsProfilePreview />}
+        code={`import { resolveAvatar } from "thirdweb/extensions/ens";
+
+export async function App() {
+  const name = "vitalik.eth";
+  const avatar = await resolveAvatar({
+    client,
+    name,
+  });
+
+  return <img src={avatar} />
+}
+`}
+        lang="tsx"
+      />
+    </>
   );
 }
 
