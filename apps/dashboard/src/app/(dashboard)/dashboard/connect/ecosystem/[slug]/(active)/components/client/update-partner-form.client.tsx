@@ -19,21 +19,33 @@ import {
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import type { Ecosystem } from "../../../../types";
+import type { Ecosystem, Partner } from "../../../../types";
 import { partnerFormSchema } from "../../constants";
-import { useAddPartner } from "../../hooks/use-add-partner";
+import { useUpdatePartner } from "../../hooks/use-update-partner";
 
-export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
+export function UpdatePartnerForm({
+  ecosystem,
+  partner,
+  onSuccess,
+}: { ecosystem: Ecosystem; partner: Partner; onSuccess: () => void }) {
   const form = useForm<z.input<typeof partnerFormSchema>>({
     resolver: zodResolver(partnerFormSchema),
+    defaultValues: {
+      name: partner.name,
+      domains: partner.allowlistedDomains.join(","),
+      bundleIds: partner.allowlistedBundleIds.join(","),
+      permissions: partner.permissions[0],
+    },
   });
 
-  const { addPartner, isLoading } = useAddPartner({
+  const { updatePartner, isLoading } = useUpdatePartner({
     onSuccess: () => {
       form.reset();
+      onSuccess();
     },
     onError: (error) => {
       const message =
@@ -48,8 +60,9 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          addPartner({
+          updatePartner({
             ecosystem,
+            partnerId: partner.id,
             name: values.name,
             allowlistedDomains: values.domains
               .split(/,| /)
@@ -60,15 +73,15 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
             permissions: [values.permissions],
           });
         })}
-        className="flex flex-col gap-2 lg:flex-row"
+        className="flex flex-col gap-4"
       >
-        <div className="grid gap-2 lg:grid-cols-12 grow">
+        <div className="grid gap-4 grow">
           <FormField
             control={form.control}
             name="name"
             defaultValue="" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
-              <FormItem className="col-span-4 lg:col-span-3">
+              <FormItem className="col-span-4">
                 <FormControl>
                   <Input
                     placeholder="App name"
@@ -81,7 +94,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
                     "text-xs transition-all",
                     form.formState.errors.name?.message
                       ? "text-destructive block opacity-100 translate-y-0"
-                      : "opacity-0 lg:-translate-y-4 hidden",
+                      : "opacity-0 hidden",
                   )}
                 >
                   {form.formState.errors.name?.message}
@@ -100,9 +113,9 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
                     <Input placeholder="Domains" className="peer" {...field} />
                     <FormDescription
                       className={cn(
-                        "hidden text-xs transition-all lg:block lg:-translate-y-4 lg:opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0",
+                        "text-xs block",
                         form.formState.errors.domains?.message &&
-                          "text-destructive lg:translate-y-0 lg:opacity-100 block", // If there are errors show them rather than the tip
+                          "text-destructive translate-y-0 opacity-100 block", // If there are errors show them rather than the tip
                       )}
                     >
                       {form.formState.errors.domains?.message ??
@@ -118,7 +131,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
             name="bundleIds"
             defaultValue="" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
-              <FormItem className="col-span-4 lg:col-span-3">
+              <FormItem className="col-span-4">
                 <FormControl>
                   <>
                     <Input
@@ -128,9 +141,9 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
                     />
                     <FormDescription
                       className={cn(
-                        "hidden text-xs transition-all lg:block lg:-translate-y-4 lg:opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0",
+                        "text-xs block",
                         form.formState.errors.bundleIds?.message &&
-                          "text-destructive translate-y-0 opacity-100 block",
+                          "text-destructive block",
                       )}
                     >
                       {form.formState.errors.bundleIds?.message ??
@@ -147,7 +160,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
             name="permissions"
             defaultValue="PROMPT_USER_V1" // Note: you *must* provide a default value here or the field won't reset
             render={({ field }) => (
-              <FormItem className="col-span-4 lg:col-span-2">
+              <FormItem className="col-span-4">
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -168,9 +181,9 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
 
                   <FormDescription
                     className={cn(
-                      "hidden text-xs transition-all lg:block lg:-translate-y-4 lg:opacity-0 peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0",
+                      "hidden text-xs transition-all peer-focus-visible:opacity-100 peer-focus-visible:translate-y-0",
                       form.formState.errors.permissions?.message &&
-                        "text-destructive lg:translate-y-0 lg:opacity-100 block", // If there are errors show them rather than the tip
+                        "text-destructive block", // If there are errors show them rather than the tip
                     )}
                   >
                     {form.formState.errors.permissions?.message ??
@@ -185,9 +198,10 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
           disabled={isLoading}
           type="submit"
           variant="outline"
-          className="w-full lg:w-auto"
+          className="w-full"
         >
-          Add
+          {isLoading && <Loader2 className="size-4 mr-1 animate-spin" />}
+          Update
         </Button>
       </form>
     </Form>

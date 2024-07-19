@@ -11,12 +11,13 @@ export type Ecosystem = {
   updatedAt: string;
 };
 
+export type PartnerPermission = "PROMPT_USER_V1" | "FULL_CONTROL_V1";
 export type Partner = {
   id: string;
   name: string;
   allowlistedDomains: string[];
   allowlistedBundleIds: string[];
-  permissions: ["PROMPT_USER_V1" | "FULL_CONTROL_V1"];
+  permissions: [PartnerPermission];
   createdAt: string;
   updatedAt: string;
 };
