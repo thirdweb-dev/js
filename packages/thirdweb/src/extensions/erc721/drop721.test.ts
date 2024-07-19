@@ -12,6 +12,7 @@ import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-co
 import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
 import { toEther } from "../../utils/units.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
+import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { deployERC721Contract } from "../prebuilts/deploy-erc721.js";
 import { balanceOf } from "./__generated__/IERC721A/read/balanceOf.js";
 import { nextTokenIdToMint } from "./__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
@@ -27,6 +28,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   },
   () => {
     let contract: ThirdwebContract;
+    let erc20Contract: ThirdwebContract;
 
     beforeAll(async () => {
       const contractAddress = await deployERC721Contract({
@@ -39,13 +41,29 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         type: "DropERC721",
       });
 
+      const erc20ContractAddress = await deployERC20Contract({
+        account: TEST_ACCOUNT_A,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        params: {
+          name: "Test ERC20",
+        },
+        type: "TokenERC20",
+      });
+
+      erc20Contract = getContract({
+        address: erc20ContractAddress,
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+      });
+
       contract = getContract({
         address: contractAddress,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
       });
       // this deploys a contract, it may take some time
-    }, 60_000);
+    }, 120_000);
 
     describe("Deployment", () => {
       it("should deploy", async () => {
@@ -136,6 +154,32 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(value).toBeDefined();
       if (!value) throw new Error("value is undefined");
       expect(toEther(value)).toBe("0.02");
+    });
+
+    it("should allow to claim tokens with erc20 value", async () => {
+      // set cc with price
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              price: "0.01",
+              currencyAddress: erc20Contract.address,
+            },
+          ],
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
+        contract,
+        to: TEST_ACCOUNT_C.address,
+        quantity: 2n,
+      });
+      // assert value is set correctly
+      const value = await resolvePromisedValue(claimTx.erc20Value);
+      expect(value).toBeDefined();
+      if (!value) throw new Error("value is undefined");
+      expect(toEther(value.amountWei)).toBe("0.02");
     });
 
     describe("Allowlists", () => {

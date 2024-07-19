@@ -1,5 +1,6 @@
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
+import { getAddress } from "../../../../../../utils/address.js";
 import type { iconSize } from "../../../../../core/design-system/index.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
 import { type NativeToken, isNativeToken } from "../nativeToken.js";
@@ -24,7 +25,9 @@ export function PayTokenIcon(props: {
   const tokenIcon = !isNativeToken(token)
     ? supportedDestinationsQuery.data
         ?.find((c) => c.chain.id === props.chain.id)
-        ?.tokens.find((t) => t.address === token.address)?.icon
+        ?.tokens.find(
+          (t) => getAddress(t.address) === getAddress(token.address),
+        )?.icon
     : undefined;
 
   return (

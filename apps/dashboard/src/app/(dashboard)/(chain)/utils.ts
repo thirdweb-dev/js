@@ -2,7 +2,7 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/components/server/cta-card";
-import ancient8Banner from "./temp-assets/ancient8-banner.jpg";
+import ancient8Banner from "./temp-assets/ancient8-banner.png";
 // TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";

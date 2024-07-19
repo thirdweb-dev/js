@@ -16,3 +16,5 @@ export const cacheGet = async (key: string) => await _redis.get(key);
 export const cacheExists = async (key: string) => await _redis.exists(key);
 
 export const cacheTtl = async (key: string) => await _redis.ttl(key);
+
+export const cacheDeleteKey = async (key: string) => await _redis.del(key);

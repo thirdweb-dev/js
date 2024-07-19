@@ -26,6 +26,7 @@ import type { WalletDetailsModalScreen } from "./screens/types.js";
  * @internal
  */
 export function TransactionsScreen(props: {
+  title: string;
   onBack: () => void;
   setScreen: (screen: WalletDetailsModalScreen) => void;
   closeModal: () => void;
@@ -53,6 +54,7 @@ export function TransactionsScreen(props: {
   if (selectedTx) {
     return (
       <TxDetailsScreen
+        title={props.title}
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}

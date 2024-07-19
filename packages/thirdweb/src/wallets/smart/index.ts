@@ -330,9 +330,6 @@ async function createSmartAccount(
 
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
         await _deployAccount({
           options,
           account,

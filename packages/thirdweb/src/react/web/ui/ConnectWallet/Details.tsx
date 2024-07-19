@@ -629,6 +629,7 @@ function DetailsModal(props: {
   if (screen === "transactions") {
     content = (
       <TransactionsScreen
+        title="Buy"
         onBack={() => setScreen("main")}
         closeModal={closeModal}
         locale={locale}

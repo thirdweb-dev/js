@@ -5,10 +5,7 @@ import { USDT_CONTRACT } from "../../../test/src/test-contracts.js";
 import { transfer } from "../../extensions/erc20/write/transfer.js";
 import * as ethGetTransactionReceiptExports from "../../rpc/actions/eth_getTransactionReceipt.js";
 import * as watchBlockNumberExports from "../../rpc/watchBlockNumber.js";
-import {
-  DEFAULT_MAX_BLOCKS_WAIT_TIME,
-  waitForReceipt,
-} from "./wait-for-tx-receipt.js";
+import { waitForReceipt } from "./wait-for-tx-receipt.js";
 
 const MOCK_TX_HASH = "0x1234567890abcdef";
 
@@ -96,15 +93,16 @@ describe("waitForReceipt", () => {
       chain: TRANSACTION.chain,
       client: TRANSACTION.client,
       transactionHash: MOCK_TX_HASH,
+      maxBlocksWaitTime: 10,
     });
 
-    for (let i = 1; i <= DEFAULT_MAX_BLOCKS_WAIT_TIME + 1; i++) {
+    for (let i = 1; i <= 10 + 1; i++) {
       emitBlockNumber(BigInt(i));
     }
 
     await expect(result).rejects.toThrow(
-      `Transaction not found after ${DEFAULT_MAX_BLOCKS_WAIT_TIME} blocks`,
+      `Transaction not found after ${10} blocks`,
     );
-    expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(30);
+    expect(mockEthGetTransactionReceipt).toHaveBeenCalledTimes(10);
   });
 });
