@@ -56,7 +56,7 @@
     "@thirdweb-dev/react": "workspace:*",
     "@thirdweb-dev/react-core": "workspace:*",
     "@thirdweb-dev/sdk": "workspace:*",
-    "@thirdweb-dev/service-utils": "^0.4.36",
+    "@thirdweb-dev/service-utils": "workspace:*",
     "@thirdweb-dev/storage": "workspace:*",
     "@thirdweb-dev/wallets": "workspace:*",
     "@vercel/og": "^0.6.2",
