@@ -249,8 +249,8 @@ importers:
         specifier: workspace:*
         version: link:../../legacy_packages/sdk
       '@thirdweb-dev/service-utils':
-        specifier: workspace:*
-        version: link:../../packages/service-utils
+        specifier: ^0.4.36
+        version: 0.4.36
       '@thirdweb-dev/storage':
         specifier: workspace:*
         version: link:../../legacy_packages/storage
@@ -8258,6 +8258,9 @@ packages:
   '@thirdweb-dev/dynamic-contracts@1.2.5':
     resolution: {integrity: sha512-YVsz+jUWbwj+6aF2eTZGMfyw47a1HRmgNl4LQ3gW9gwYL5y5+OX/yOzv6aV5ibvoqCk/k10aIVK2eFrcpMubQA==}
     engines: {node: '>=18.0.0'}
+
+  '@thirdweb-dev/service-utils@0.4.36':
+    resolution: {integrity: sha512-LBK+fBpc7KK9JuTM1NlVTSYYxrnKwmEkv3xe5tMi5ZFYoGn+f5UOaagJqqznzaz5mKxtRsVLtmaZPv5xHLMCug==}
 
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
@@ -28611,6 +28614,11 @@ snapshots:
       solady: 0.0.180
 
   '@thirdweb-dev/dynamic-contracts@1.2.5': {}
+
+  '@thirdweb-dev/service-utils@0.4.36':
+    dependencies:
+      aws4fetch: 1.0.18
+      zod: 3.23.8
 
   '@tokenizer/token@0.3.0': {}
 
