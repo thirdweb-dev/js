@@ -73,6 +73,7 @@ const registry = getContract({
 export async function addContractToMultiChainRegistry(
   contractData: AddContractInput,
   account: Account,
+  gasOverride?: bigint,
 ) {
   const transaction = prepareContractCall({
     contract: registry,
@@ -86,7 +87,10 @@ export async function addContractToMultiChainRegistry(
   });
 
   await sendAndConfirmTransaction({
-    transaction,
+    transaction: {
+      ...transaction,
+      gas: gasOverride || transaction.gas,
+    },
     account,
     gasless: {
       experimentalChainlessSupport: true,
