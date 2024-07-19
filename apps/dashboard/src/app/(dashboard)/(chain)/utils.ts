@@ -8,7 +8,8 @@ import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
 import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import mantleBanner from "./temp-assets/mantle-banner.jpeg";
-// import mantleCTA from "./temp-assets/mantle-cta.jpeg";
+import rootStockBanner from "./temp-assets/rootstock-banner.png";
+import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
 // END TEMPORARY
@@ -137,6 +138,18 @@ const chainMetaRecord = {
     //   buttonText: "Learn More",
     //   buttonLink: "https://www.mantle.xyz",
     // },
+  },
+  // rootstock
+  30: {
+    headerImgUrl: rootStockBanner.src,
+    about:
+      "Deploy EVM compatible smart contracts on Rootstock and leverage the security of the Bitcoin network.",
+    cta: {
+      backgroundImageUrl: rootStockCTABG.src,
+      title: "Fully EVM-compatible Bitcoin L2",
+      buttonLink: "https://rootstock.io/",
+      buttonText: "Learn more",
+    },
   },
 } satisfies Record<number, ChainMetadata>;
 // END TEMPORARY
