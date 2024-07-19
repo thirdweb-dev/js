@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Trash2 } from "lucide-react";
+import { Trash2, Wrench } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "../../../../types";
 import { useDeletePartner } from "../../hooks/use-delete-partner";
 import { usePartners } from "../../hooks/use-partners";
+import { UpdatePartnerModal } from "../client/update-partner-modal.client";
 
 export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
   const { partners, isLoading } = usePartners({ ecosystem });
@@ -45,7 +46,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
         </tr>
       </thead>
       <tbody>
-        {partners?.map((partner: Partner) => (
+        {[...partners].reverse().map((partner: Partner) => (
           <TableRow key={partner.id} partner={partner} ecosystem={ecosystem} />
         ))}
       </tbody>
@@ -117,40 +118,57 @@ function TableRow(props: {
           : "Never prompt"}
       </TableData>
       <td className="table-cell py-1 align-middle">
-        <ConfirmationDialog
-          title={`Are you sure you want to delete the partner ${props.partner.name}?`}
-          description={
-            <span>
-              Their partner key will no longer be able to use your ecosystem
-              wallet. Their users will still have access to their assets at{" "}
-              <Link
-                href={`https://${props.ecosystem.slug.split(".")[1]}.ecosystem.thirdweb.com`}
-                target="_blank"
-                className="text-primary"
-              >
-                {props.ecosystem.slug.split(".")[1]}.ecosystem.thirdweb.com
-              </Link>
-            </span>
-          }
-          onSubmit={(): void => {
-            deletePartner({
-              ecosystem: props.ecosystem,
-              partnerId: props.partner.id,
-            });
-          }}
-          variant="destructive"
-        >
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
-            disabled={isDeleting}
+        <div className="flex gap-1.5 justify-end">
+          <UpdatePartnerModal
+            partner={props.partner}
+            ecosystem={props.ecosystem}
           >
-            <Trash2 className="size-4" />
-            <span className="sr-only">Delete</span>
-          </Button>
-        </ConfirmationDialog>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="text-accent-foreground/50 hover:text-accent-foreground hover:bg-accent"
+              disabled={isDeleting}
+            >
+              <Wrench className="size-4" />
+              <span className="sr-only">Edit</span>
+            </Button>
+          </UpdatePartnerModal>
+          <ConfirmationDialog
+            title={`Are you sure you want to delete the partner ${props.partner.name}?`}
+            description={
+              <span>
+                Their partner key will no longer be able to use your ecosystem
+                wallet. Their users will still have access to their assets at{" "}
+                <Link
+                  href={`https://${props.ecosystem.slug}.ecosystem.thirdweb.com`}
+                  target="_blank"
+                  className="text-primary"
+                >
+                  {props.ecosystem.slug.split(".")[1]}.ecosystem.thirdweb.com
+                </Link>
+              </span>
+            }
+            onSubmit={(): void => {
+              deletePartner({
+                ecosystem: props.ecosystem,
+                partnerId: props.partner.id,
+              });
+            }}
+            variant="destructive"
+          >
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
+              disabled={isDeleting}
+            >
+              <Trash2 className="size-4" />
+              <span className="sr-only">Delete</span>
+            </Button>
+          </ConfirmationDialog>
+        </div>
       </td>
     </tr>
   );
