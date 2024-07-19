@@ -5,27 +5,19 @@ import { getContract } from "thirdweb";
 import { sepolia } from "thirdweb/chains";
 import { balanceOf } from "thirdweb/extensions/erc20";
 import { AuthButton } from "./auth-button";
-import { thirdwebAuth } from "./thirdweb-auth";
+import { isLoggedIn } from "@/app/connect/auth/actions/auth";
 
 export async function GatedContentPreview() {
-  const Content = ({ title }: { title: string }) => {
+  const authResult = await isLoggedIn();
+  if (!authResult) {
     return (
       <div className="flex flex-col gap-5">
         <div className="mx-auto">
           <AuthButton />
         </div>
-        <div className="text-center">{title}</div>
+        <div className="text-center">Log in to see the secret content</div>
       </div>
     );
-  };
-  const jwt = cookies().get("jwt");
-  if (!jwt?.value) {
-    return <Content title="Log in to see the secret content" />;
-  }
-
-  const authResult = await thirdwebAuth.verifyJWT({ jwt: jwt.value });
-  if (!authResult.valid) {
-    return <Content title="Log in to see the secret content" />;
   }
 
   // If the user has logged in, get their wallet address
