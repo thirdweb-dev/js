@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Trash2, Wrench } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { Ecosystem, Partner } from "../../../../types";
@@ -130,7 +130,7 @@ function TableRow(props: {
               className="text-accent-foreground/50 hover:text-accent-foreground hover:bg-accent"
               disabled={isDeleting}
             >
-              <Wrench className="size-4" />
+              <Pencil className="size-4" />
               <span className="sr-only">Edit</span>
             </Button>
           </UpdatePartnerModal>

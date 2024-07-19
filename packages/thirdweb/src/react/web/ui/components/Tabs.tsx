@@ -1,6 +1,9 @@
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { radius, spacing } from "../../../core/design-system/index.js";
 import { Text } from "../components/text.js";
-import { Container, Line } from "./basic.js";
+import { Spacer } from "./Spacer.js";
+import { Container } from "./basic.js";
+import { Button } from "./buttons.js";
 
 export default function Tabs({
   selected,
@@ -15,42 +18,44 @@ export default function Tabs({
 }) {
   const theme = useCustomTheme();
   return (
-    <Container>
-      <Container flex="row" center="y" style={{ width: "100%" }}>
+    <div>
+      <Container
+        flex="row"
+        center="y"
+        style={{ width: "100%", borderRadius: radius.lg }}
+        p="xxs"
+        bg="secondaryButtonBg"
+      >
         {options.map((option) => (
-          <button
+          <Button
+            variant="accent"
             type="button"
             key={option}
             onClick={() => onSelect(option)}
             style={{
               flex: 1,
-              height: "50px",
+              paddingBlock: spacing.sm,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               position: "relative",
+              borderRadius: radius.md,
+              backgroundColor:
+                option === selected ? theme.colors.modalBg : "transparent",
             }}
           >
             <Text
               color={option === selected ? "primaryText" : "secondaryText"}
               style={{ textAlign: "center" }}
+              size="sm"
             >
               {option}
             </Text>
-            <Line
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                backgroundColor:
-                  option === selected ? "white" : theme.colors.separatorLine,
-              }}
-            />
-          </button>
+          </Button>
         ))}
       </Container>
-      <Container py="sm">{children}</Container>
-    </Container>
+      <Spacer y="sm" />
+      {children}
+    </div>
   );
 }
