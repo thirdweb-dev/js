@@ -28,6 +28,11 @@ export function useBuyTxStates(options: {
 
     let mounted = true;
 
+    if (buyForTx.tx.erc20Value) {
+      // if erc20 value is set, we don't need to poll
+      return;
+    }
+
     async function pollTxCost() {
       if (!buyForTx || !mounted) {
         return;
@@ -50,7 +55,7 @@ export function useBuyTxStates(options: {
             setTokenAmount(toEther(totalCost - buyForTx.balance));
           }
         }
-      } catch {
+      } catch (error) {
         // no op
       }
 

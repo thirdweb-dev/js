@@ -42,10 +42,19 @@ export function mintWithSignature(
   const value = isNativeTokenAddress(options.payload.currency)
     ? options.payload.price
     : 0n;
+  const erc20Value =
+    !isNativeTokenAddress(options.payload.currency) &&
+    options.payload.price > 0n
+      ? {
+          amountWei: options.payload.price,
+          tokenAddress: options.payload.currency,
+        }
+      : undefined;
   return generatedMintWithSignature({
     ...options,
     overrides: {
       value,
+      erc20Value,
     },
   });
 }

@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.36.0
+
+### Minor Changes
+
+- [#3718](https://github.com/thirdweb-dev/js/pull/3718) [`6bda057`](https://github.com/thirdweb-dev/js/commit/6bda0573067162384bb2cade88fa2d0bc732be04) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds transaction history page to connect modal UI
+
+### Patch Changes
+
+- [#3730](https://github.com/thirdweb-dev/js/pull/3730) [`db2cadf`](https://github.com/thirdweb-dev/js/commit/db2cadfc4b4838bf3daf6894e437fc32b6300262) Thanks [@MananTank](https://github.com/MananTank)! - Update buffer calculation of transaction if gas estimation fails for Pay Modal
+
+- [#3735](https://github.com/thirdweb-dev/js/pull/3735) [`6cc3038`](https://github.com/thirdweb-dev/js/commit/6cc3038298cb562372dee114cc7e80e65248b09e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add optional 'from' in readContract()
+
+- [#3719](https://github.com/thirdweb-dev/js/pull/3719) [`05df89c`](https://github.com/thirdweb-dev/js/commit/05df89cb614cb40903f27b8904995c9847fd620c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for ERC20 paymaster for smart accounts
+
+- [#3728](https://github.com/thirdweb-dev/js/pull/3728) [`0a5af48`](https://github.com/thirdweb-dev/js/commit/0a5af48f70a76fc060909b853e20c927328c31c3) Thanks [@MananTank](https://github.com/MananTank)! - Fix chain with custom RPC not used if the chain object is passed in the `chains` prop to `ConnectButton`, `ConnectEmbed` or `PayEmbed` components.
+
+  This also fixes dashboard not using custom chain's RPC since it passes the chain object via `chains` prop
+
 ## 5.35.0
 
 ### Minor Changes

@@ -36,6 +36,7 @@ import {
  * @internal
  */
 export function PayTxHistoryScreen(props: {
+  title: string;
   onBack?: () => void;
   client: ThirdwebClient;
   onDone: () => void;
@@ -60,6 +61,7 @@ export function PayTxHistoryScreen(props: {
   if (selectedTx) {
     return (
       <TxDetailsScreen
+        title={props.title}
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}

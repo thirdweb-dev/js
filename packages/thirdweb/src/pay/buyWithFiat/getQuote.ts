@@ -285,7 +285,7 @@ export async function getBuyWithFiatQuote(
 
     return (await response.json()).result;
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Error getting buy with fiat quote", error);
     throw error;
   }
 }

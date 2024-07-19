@@ -127,6 +127,17 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       ? allowlistProof.pricePerToken
       : cc.pricePerToken;
 
+  const totalPrice =
+    (pricePerToken * options.quantity) / BigInt(10 ** tokenDecimals);
+  const value = isNativeTokenAddress(currency) ? totalPrice : 0n;
+  const erc20Value =
+    !isNativeTokenAddress(currency) && pricePerToken > 0n
+      ? {
+          amountWei: totalPrice,
+          tokenAddress: currency,
+        }
+      : undefined;
+
   return {
     receiver: options.to,
     tokenId: options.type === "erc1155" ? options.tokenId : undefined,
@@ -136,9 +147,8 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     allowlistProof,
     data: "0x" as Hex,
     overrides: {
-      value: isNativeTokenAddress(currency)
-        ? (pricePerToken * options.quantity) / BigInt(10 ** tokenDecimals)
-        : 0n,
+      value,
+      erc20Value,
     },
   };
 }

@@ -6,7 +6,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
-import { toEther } from "../../../../../../utils/units.js";
+import { toEther, toTokens } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import {
   type Theme,
@@ -469,6 +469,8 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   setPayer={setPayer}
                   // pass it even though we are passing payer, because payer might be different
                   activeAccount={activeAccount}
+                  setTokenAmount={setTokenAmount}
+                  setHasEditedAmount={setHasEditedAmount}
                 />
               )}
 
@@ -618,7 +620,10 @@ function MainScreen(props: {
           <Spacer y="lg" />
           <BuyForTxUI
             amountNeeded={String(
-              formatNumber(Number(toEther(amountNeeded)), 6),
+              formatNumber(
+                Number(toTokens(amountNeeded, props.buyForTx.tokenDecimals)),
+                6,
+              ),
             )}
             buyForTx={props.buyForTx}
             client={client}
@@ -826,6 +831,8 @@ function SwapScreenContent(props: {
   connectLocale: ConnectLocale;
   setPayer: (payer: PayerInfo) => void;
   activeAccount: Account;
+  setTokenAmount: (amount: string) => void;
+  setHasEditedAmount: (hasEdited: boolean) => void;
 }) {
   const {
     setScreen,
@@ -894,20 +901,38 @@ function SwapScreenContent(props: {
   const disableContinue = !quoteQuery.data || isNotEnoughBalance;
   const switchChainRequired = props.payer.chain.id !== fromChain.id;
 
-  function getErrorMessage(err: Error) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  function getErrorMessage(err: any) {
+    type AmountTooLowError = {
+      code: "MINIMUM_PURCHASE_AMOUNT";
+      data: {
+        minimumAmountUSDCents: number;
+        requestedAmountUSDCents: number;
+        minimumAmountWei: string;
+        minimumAmountEth: string;
+      };
+    };
+
     const defaultMessage = "Unable to get price quote";
     try {
-      if (err instanceof Error) {
-        if (err.message.includes("Minimum")) {
-          const msg = err.message;
-          return msg.replace("Fetch failed: Error: ", "");
-        }
+      if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
+        const obj = err.error as AmountTooLowError;
+        const minAmountToken = obj.data.minimumAmountEth;
+        return {
+          minAmount: formatNumber(Number(minAmountToken), 6),
+        };
       }
-      return defaultMessage;
-    } catch {
-      return defaultMessage;
-    }
+    } catch {}
+
+    return {
+      msg: [defaultMessage],
+    };
   }
+
+  const errorMsg =
+    !quoteQuery.isLoading && quoteQuery.error
+      ? getErrorMessage(quoteQuery.error)
+      : undefined;
 
   function showSwapFlow() {
     if (!quoteQuery.data) {
@@ -1048,18 +1073,46 @@ function SwapScreenContent(props: {
         />
       </div>
 
-      {/* Error */}
-      {quoteQuery.error && (
-        <Text color="danger" size="sm" center>
-          {getErrorMessage(quoteQuery.error)}
-        </Text>
+      {/* Error message */}
+      {errorMsg && (
+        <div>
+          {errorMsg.minAmount && (
+            <Text color="danger" size="sm" center multiline>
+              Minimum amount is {errorMsg.minAmount}{" "}
+              <TokenSymbol
+                token={toToken}
+                chain={toChain}
+                size="sm"
+                inline
+                color="danger"
+              />
+            </Text>
+          )}
+
+          {errorMsg.msg?.map((msg) => (
+            <Text color="danger" size="sm" center multiline key={msg}>
+              {msg}
+            </Text>
+          ))}
+        </div>
       )}
 
       {/* Button */}
-      {switchChainRequired &&
-      !quoteQuery.isLoading &&
-      !isNotEnoughBalance &&
-      !quoteQuery.error ? (
+      {errorMsg?.minAmount ? (
+        <Button
+          variant="accent"
+          fullWidth
+          onClick={() => {
+            props.setTokenAmount(String(errorMsg.minAmount));
+            props.setHasEditedAmount(true);
+          }}
+        >
+          Set Minimum
+        </Button>
+      ) : switchChainRequired &&
+        !quoteQuery.isLoading &&
+        !isNotEnoughBalance &&
+        !quoteQuery.error ? (
         <SwitchNetworkButton
           variant="accent"
           fullWidth
@@ -1193,6 +1246,8 @@ function FiatScreenContent(props: {
       data: {
         minimumAmountUSDCents: number;
         requestedAmountUSDCents: number;
+        minimumAmountWei: string;
+        minimumAmountEth: string;
       };
     };
 
@@ -1200,27 +1255,9 @@ function FiatScreenContent(props: {
     try {
       if (err.error.code === "MINIMUM_PURCHASE_AMOUNT") {
         const obj = err.error as AmountTooLowError;
-        const minAmountUSD = obj.data.minimumAmountUSDCents;
-        const currentAmountUSD = obj.data.requestedAmountUSDCents;
-
-        // avoid divide by zero
-        // if we can't calculate the minimum amount in # of tokens, don't show the button to set the minimum amount
-        if (obj.data.requestedAmountUSDCents === 0) {
-          return {
-            msg: [
-              "Purchase amount is too low",
-              "Increase the amount and try again",
-            ],
-          };
-        }
-
-        const currentAmountToken = Number(props.tokenAmount);
-        const minAmountToken =
-          (minAmountUSD * currentAmountToken) / currentAmountUSD;
-        const minAmountTokenWithBuffer = minAmountToken * 1.2; // 20% buffer
-
+        const minAmountToken = obj.data.minimumAmountEth;
         return {
-          minAmount: minAmountTokenWithBuffer,
+          minAmount: formatNumber(Number(minAmountToken), 6),
         };
       }
     } catch {}
@@ -1303,7 +1340,7 @@ function FiatScreenContent(props: {
         <div>
           {errorMsg.minAmount && (
             <Text color="danger" size="sm" center multiline>
-              Minimum amount is {formatNumber(errorMsg.minAmount, 6)}{" "}
+              Minimum amount is {errorMsg.minAmount}{" "}
               <TokenSymbol
                 token={toToken}
                 chain={toChain}

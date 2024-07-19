@@ -109,7 +109,7 @@ export default async function ChainPageLayout({
                   : undefined
               }
             />
-            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/0 to-secondary/0 shadow-inner" />
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-ba bg-gradient-to-b from-black/25 to-black/0 shadow-inner" />
           </div>
 
           {/* end header shaningans */}

@@ -213,6 +213,7 @@ export function PayEmbed(props: PayEmbedProps) {
         {/* this does not need to persist so we can just show-hide it with JS */}
         {screen === "tx-history" && (
           <PayTxHistoryScreen
+            title={props.metadata?.title || "Buy"}
             client={props.client}
             onBack={() => {
               setScreen("buy");
