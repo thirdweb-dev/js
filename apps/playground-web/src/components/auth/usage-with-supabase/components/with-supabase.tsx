@@ -1,4 +1,3 @@
-import { isLoggedIn } from "@/app/connect/auth/actions/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -22,8 +21,6 @@ export async function WithSupabase({
   if (!user) {
     return <SupabaseAuthUI searchParams={searchParams} />;
   }
-
-  const loggedInThirdweb = await isLoggedIn();
 
   return (
     <div className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-3 flex flex-col">

@@ -75,9 +75,9 @@ export default function Page({
         <GatedContent />
       </section>
 
-      <section className="container px-4 md:px-6 space-y-8">
+      {/* <section className="container px-4 md:px-6 space-y-8">
         <WithSupabasePreview searchParams={searchParams} />
-      </section>
+      </section> */}
     </main>
   );
 }
