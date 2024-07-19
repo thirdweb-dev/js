@@ -88,10 +88,7 @@ function BasicAuth() {
           Basic Auth
         </h2>
         <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi
-          reiciendis sit sint, incidunt veritatis dolorem, aliquam dolores
-          quisquam ratione sed temporibus quae cum iste rerum ipsam placeat
-          maxime assumenda aspernatur?
+          Add authentication to your app with a single component.
         </p>
       </div>
 
@@ -140,10 +137,8 @@ function GatedContent() {
           Gating content with Auth
         </h2>
         <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia,
-          deleniti voluptas quae qui adipisci commodi quasi vero! Dolorem qui,
-          obcaecati, vero enim quisquam corporis suscipit asperiores ratione
-          quaerat tempore sequi.
+          Protect your page with thirdweb Auth. Deliver exclusive content to
+          users who qualify.
         </p>
       </div>
 
@@ -198,10 +193,8 @@ function WithSupabasePreview({
           Usage with Supabase
         </h2>
         <p className="max-w-[600px]">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus
-          non, repellendus doloremque id libero optio ipsam consectetur
-          perspiciatis, laudantium aut illum illo cumque pariatur excepturi,
-          assumenda sunt molestiae dolore animi.
+          Auth with Supabase. Connect your wallet. Link it to the Supabase
+          account. All in one single flow.
         </p>
       </div>
 
