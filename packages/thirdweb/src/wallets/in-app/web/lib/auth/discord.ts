@@ -1,23 +1,10 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../../../wallets/in-app/core/authentication/type.js";
+import { getDiscordLoginPath } from "../../../core/authentication/getLoginPath.js";
 import type { Ecosystem } from "../../types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
 import { closeWindow } from "./utils.js";
-
-export const getDiscordLoginPath = (
-  client: ThirdwebClient,
-  ecosystem?: Ecosystem,
-) => {
-  const baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/discord?clientId=${client.clientId}`;
-  if (ecosystem?.partnerId) {
-    return `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
-  }
-  if (ecosystem) {
-    return `${baseUrl}&ecosystemId=${ecosystem.id}`;
-  }
-  return baseUrl;
-};
 
 export async function loginWithDiscord(options: {
   client: ThirdwebClient;
