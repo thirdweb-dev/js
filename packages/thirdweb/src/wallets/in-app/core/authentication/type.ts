@@ -61,6 +61,7 @@ export enum AuthProvider {
   FACEBOOK = "Facebook",
   APPLE = "Apple",
   PASSKEY = "Passkey",
+  DISCORD = "Discord",
 }
 
 export type OauthOption = {
@@ -208,10 +209,11 @@ export type GetAuthenticatedUserParams = {
 };
 
 export const oauthStrategyToAuthProvider: Record<
-  "google" | "facebook" | "apple",
+  SocialAuthOption,
   AuthProvider
 > = {
   google: AuthProvider.GOOGLE,
   facebook: AuthProvider.FACEBOOK,
   apple: AuthProvider.APPLE,
+  discord: AuthProvider.DISCORD,
 };

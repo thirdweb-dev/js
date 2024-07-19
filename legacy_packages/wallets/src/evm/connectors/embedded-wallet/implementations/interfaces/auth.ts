@@ -18,8 +18,9 @@ export enum AuthProvider {
   FACEBOOK = "Facebook",
   APPLE = "Apple",
   PASSKEY = "Passkey",
-  EXTERNAL_WALLET = "ExternalWallet",
   DISCORD = "Discord",
+  EOA_WALLET = "EoaWallet",
+  TELEGRAM = "Telegram",
 }
 
 /**

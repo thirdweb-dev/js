@@ -140,6 +140,9 @@ export class InAppNativeConnector implements InAppConnector {
       case "iframe_email_verification": {
         throw new Error("iframe_email_verification is not supported in native");
       }
+      case "discord": {
+        throw new Error("Discord authentication is not supported in native");
+      }
       default:
         assertUnreachable(strategy);
     }
