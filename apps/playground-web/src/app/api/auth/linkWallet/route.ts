@@ -1,12 +1,9 @@
-import { thirdwebAuth } from "@/components/auth/thirdweb-auth";
+export const dynamic = 'force-dynamic';
 import { createClient } from "@/components/auth/usage-with-supabase/utils/server";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  /**
-   * Make sure user is properly logged in with Supabase
-   */
+  // Make sure user is properly logged in with Supabase
   const supabase = createClient();
   const {
     data: { user },
