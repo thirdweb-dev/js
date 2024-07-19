@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { getProfileData } from "./getProfileData.js";
 import { MAX_UINT256 } from "~test/test-consts.js";
+import { getProfileData } from "./getProfileData.js";
 
 /**
  * For Lens protocol, each profileId is an ERC721 tokenId.
