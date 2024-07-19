@@ -5,7 +5,9 @@ import { privateKeyToAccount } from "thirdweb/wallets";
 const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY || "";
 
 if (!privateKey) {
-  throw new Error("Missing THIRDWEB_ADMIN_PRIVATE_KEY in .env file.");
+  throw new Error(
+    "Missing THIRDWEB_ADMIN_PRIVATE_KEY in .env file." + typeof window,
+  );
 }
 
 export const thirdwebAuth = createAuth({
