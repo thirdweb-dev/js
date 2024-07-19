@@ -69,7 +69,7 @@ export async function estimateGas(
   const promise = (async () => {
     const predefinedGas = await resolvePromisedValue(options.transaction.gas);
     // if we have a predefined gas value in the TX -> always use that
-    if (predefinedGas) {
+    if (predefinedGas !== undefined) {
       return predefinedGas;
     }
 
