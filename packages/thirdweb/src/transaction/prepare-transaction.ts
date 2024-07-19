@@ -24,6 +24,7 @@ export type StaticPrepareTransactionOptions = {
   chain: Chain;
   client: ThirdwebClient;
   // extras
+  extraCallData?: Hex;
   erc20Value?: {
     amountWei: bigint;
     tokenAddress: Address;
