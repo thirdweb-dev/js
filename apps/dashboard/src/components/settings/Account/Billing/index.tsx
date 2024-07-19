@@ -198,6 +198,8 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
     ];
   }, [account, onPaymentMethodOpen, paymentMethodSaving, stepsCompleted]);
 
+  // FIXME: this entire flow needs to be re-worked
+  // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (account) {
       setStepsCompleted({
