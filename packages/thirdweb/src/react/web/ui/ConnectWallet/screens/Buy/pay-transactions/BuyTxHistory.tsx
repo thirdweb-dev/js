@@ -186,7 +186,7 @@ export function PayTxHistoryList(props: {
         )}
       </Container>
 
-      <Container p="lg">
+      <Container py="lg">
         {pagination && !hidePagination && (
           <div
             style={{

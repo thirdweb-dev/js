@@ -1,6 +1,7 @@
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import { radius } from "../../../core/design-system/index.js";
+import { radius, spacing } from "../../../core/design-system/index.js";
 import { Text } from "../components/text.js";
+import { Spacer } from "./Spacer.js";
 import { Container } from "./basic.js";
 import { Button } from "./buttons.js";
 
@@ -17,11 +18,11 @@ export default function Tabs({
 }) {
   const theme = useCustomTheme();
   return (
-    <Container>
+    <div>
       <Container
         flex="row"
         center="y"
-        style={{ width: "100%", borderRadius: radius.md, marginTop: 8 }}
+        style={{ width: "100%", borderRadius: radius.lg }}
         p="xxs"
         bg="secondaryButtonBg"
       >
@@ -33,13 +34,12 @@ export default function Tabs({
             onClick={() => onSelect(option)}
             style={{
               flex: 1,
-              height: "40px",
+              paddingBlock: spacing.sm,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               position: "relative",
               borderRadius: radius.md,
-              color: option === selected ? theme.colors.primaryText : "auto",
               backgroundColor:
                 option === selected ? theme.colors.modalBg : "transparent",
             }}
@@ -47,13 +47,15 @@ export default function Tabs({
             <Text
               color={option === selected ? "primaryText" : "secondaryText"}
               style={{ textAlign: "center" }}
+              size="sm"
             >
               {option}
             </Text>
           </Button>
         ))}
       </Container>
-      <Container py="sm">{children}</Container>
-    </Container>
+      <Spacer y="sm" />
+      {children}
+    </div>
   );
 }
