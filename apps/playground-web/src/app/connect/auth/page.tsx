@@ -8,6 +8,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   metadataBase,
   title: "Auth | thirdweb Connect",
@@ -107,16 +109,13 @@ export function AuthButton() {
       client={THIRDWEB_CLIENT}
       auth={{
         isLoggedIn: async (address) => {
-          console.log("checking if logged in!", { address });
           return await isLoggedIn();
         },
         doLogin: async (params) => {
-          console.log("logging in!");
           await login(params);
         },
         getLoginPayload: async ({ address }) => generatePayload({ address }),
         doLogout: async () => {
-          console.log("logging out!");
           await logout();
         },
       }}
@@ -144,9 +143,7 @@ function GatedContent() {
         preview={<GatedContentPreview />}
         code={`import { THIRDWEB_CLIENT } from "@/lib/client";
 import { cookies } from "next/headers";
-import { getContract } from "thirdweb";
-import { sepolia } from "thirdweb/chains";
-import { balanceOf } from "thirdweb/extensions/erc20";
+import { hasEnoughBalance } from "...";
 
 export async function GatedContentPreview() {
   const jwt = cookies().get("jwt");
@@ -156,23 +153,9 @@ export async function GatedContentPreview() {
     </div>;
   }
 
-  // This is the part that we do the gating condition.
-  // If pass -> Allow them to access the page.
-  const requiredQuantity = 10n; // 10 erc20 token
-
-  const erc20Contract = getContract({
-    address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
-    chain: sepolia,
-    client: THIRDWEB_CLIENT,
-  });
-
-  const ownedBalance = await balanceOf({
-    contract: erc20Contract,
-    address,
-  });
-
   // For this example, we check if a user has more than 10 $TWCOIN
-  if (ownedBalance < requiredQuantity) {
+  // If pass -> Allow them to access the page.
+  if (await hasEnoughBalance()) {
     return (
       <div className="flex flex-col gap-5">
         You are logged in but you can't view the content
@@ -182,7 +165,6 @@ export async function GatedContentPreview() {
   }
 
   // Finally! We can load the gated content for them now
-
   return (
     <div>
       Congratulations!  

@@ -34,23 +34,25 @@ export async function GatedContentPreview() {
 
   // This is the part that we do the gating condition.
   // If pass -> Allow them to access the page.
-  const requiredQuantity = 10n; // 10 erc20 token
+  async function hasEnoughBalance() {
+    const erc20Contract = getContract({
+      address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
+      chain: sepolia,
+      client: THIRDWEB_CLIENT,
+    });
 
-  const erc20Contract = getContract({
-    address: "0xACf072b740a23D48ECd302C9052fbeb3813b60a6",
-    chain: sepolia,
-    client: THIRDWEB_CLIENT,
-  });
+    const requiredQuantity = 10n; // 10 erc20 token
 
-  const ownedBalance = await balanceOf({
-    contract: erc20Contract,
-    address,
-  });
+    const ownedBalance = await balanceOf({
+      contract: erc20Contract,
+      address,
+    });
 
-  console.log({ ownedBalance });
+    return ownedBalance < requiredQuantity;
+  }
 
   // For this example, we check if a user has more than 10 $TWCOIN
-  if (ownedBalance < requiredQuantity) {
+  if (await hasEnoughBalance()) {
     return (
       <div className="flex flex-col gap-5">
         <div className="mx-auto">

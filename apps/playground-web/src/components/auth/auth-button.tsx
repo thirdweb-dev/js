@@ -8,8 +8,10 @@ import {
 } from "@/app/connect/auth/actions/auth";
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { ConnectButton } from "thirdweb/react";
+import { createClient } from "./usage-with-supabase/utils/client";
 
 export function AuthButton() {
+  const supabase = createClient();
   return (
     <ConnectButton
       client={THIRDWEB_CLIENT}
@@ -24,7 +26,7 @@ export function AuthButton() {
         },
         getLoginPayload: async ({ address }) => generatePayload({ address }),
         doLogout: async () => {
-          console.log("logging out!");
+          await supabase.auth.signOut();
           await logout();
         },
       }}
