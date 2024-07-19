@@ -1,5 +1,8 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import type { Address } from "abitype";
 import type { Chain } from "../../../../chains/types.js";
+import { getContract } from "../../../../contract/contract.js";
+import { getCurrencyMetadata } from "../../../../extensions/erc20/read/getCurrencyMetadata.js";
 import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
@@ -76,6 +79,13 @@ type ShowModalData = {
   sendTx: () => void;
   rejectTx: (reason: Error) => void;
   totalCostWei: bigint;
+  currency?: {
+    address: Address;
+    name: string;
+    symbol: string;
+    decimals: number;
+    icon?: string;
+  };
   walletBalance: GetWalletBalanceResult;
   resolveTx: (data: WaitForReceiptOptions) => void;
 };
@@ -155,7 +165,7 @@ export function useSendTransactionCore(args: {
             }
 
             //  buy supported, check if there is enough balance - if not show modal to buy tokens
-            const [walletBalance, totalCostWei] = await Promise.all([
+            const [nativeWalletBalance, nativeCostWei] = await Promise.all([
               getWalletBalance({
                 address: account.address,
                 chain: tx.chain,
@@ -164,10 +174,40 @@ export function useSendTransactionCore(args: {
               getTotalTxCostForBuy(tx, account?.address),
             ]);
 
-            const walletBalanceWei = walletBalance.value;
+            let currency: ShowModalData["currency"] | undefined = undefined;
+            let walletBalance = nativeWalletBalance;
+            let totalCostWei = nativeCostWei;
+            const hasEnoughForGas = nativeWalletBalance.value > nativeCostWei;
+
+            const erc20Value = await resolvePromisedValue(tx.erc20Value);
+            if (erc20Value && hasEnoughForGas) {
+              const [tokenBalance, tokenMeta] = await Promise.all([
+                getWalletBalance({
+                  address: account.address,
+                  chain: tx.chain,
+                  client: tx.client,
+                  tokenAddress: erc20Value.tokenAddress,
+                }),
+                getCurrencyMetadata({
+                  contract: getContract({
+                    address: erc20Value.tokenAddress,
+                    chain: tx.chain,
+                    client: tx.client,
+                  }),
+                }),
+              ]);
+              totalCostWei = erc20Value.amountWei;
+              walletBalance = tokenBalance;
+              currency = {
+                address: erc20Value.tokenAddress,
+                name: tokenMeta.name,
+                symbol: tokenMeta.symbol,
+                decimals: tokenMeta.decimals,
+              };
+            }
 
             // if enough balance, send tx
-            if (totalCostWei < walletBalanceWei) {
+            if (totalCostWei < walletBalance.value) {
               sendTx();
               return;
             }
@@ -180,6 +220,7 @@ export function useSendTransactionCore(args: {
               resolveTx: resolve,
               totalCostWei,
               walletBalance,
+              currency,
             });
           } catch (e) {
             console.error("Failed to estimate cost", e);

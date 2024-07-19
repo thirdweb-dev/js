@@ -1,9 +1,12 @@
 import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import { toTokens } from "../../../../utils/units.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { GetWalletBalanceResult } from "../../../../wallets/utils/getWalletBalance.js";
 import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import { type Theme, iconSize } from "../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -56,6 +59,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     payModalEnabled = false;
   }
 
+  // TODO handle erc20 pay modal
   // if active wallet is smart wallet with gasless enabled, don't show the pay modal
   if (activeWallet && activeWallet.id === "smart") {
     const options = (activeWallet as Wallet<"smart">).getConfig();
@@ -69,12 +73,35 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
     }
   }
 
+  if (activeWallet && activeWallet.id === "inApp") {
+    const options = (activeWallet as Wallet<"inApp">).getConfig();
+
+    if (options && "smartAccount" in options && options.smartAccount) {
+      const smartOptions = options.smartAccount;
+      if ("sponsorGas" in smartOptions && smartOptions.sponsorGas === true) {
+        payModalEnabled = false;
+      }
+
+      if ("gasless" in smartOptions && smartOptions.gasless === true) {
+        payModalEnabled = false;
+      }
+    }
+  }
+
   const setRootEl = useContext(SetRootElementContext);
   return useSendTransactionCore({
     showPayModal:
       !payModalEnabled || payModal === false
         ? undefined
         : (data) => {
+            const prefillBuy: PayUIOptions["prefillBuy"] =
+              data.currency && !isNativeTokenAddress(data.currency.address)
+                ? {
+                    chain: data.tx.chain,
+                    amount: toTokens(data.totalCostWei, data.currency.decimals),
+                    token: data.currency,
+                  }
+                : undefined;
             setRootEl(
               <TxModal
                 title={payModal?.metadata?.title || "Buy"}
@@ -92,12 +119,12 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
                 supportedTokens={payModal?.supportedTokens}
                 theme={payModal?.theme || "dark"}
                 txCostWei={data.totalCostWei}
-                walletBalanceWei={data.walletBalance.value}
-                nativeTokenSymbol={data.walletBalance.symbol}
+                walletBalance={data.walletBalance}
                 payOptions={{
                   buyWithCrypto: payModal?.buyWithCrypto,
                   buyWithFiat: payModal?.buyWithFiat,
                   purchaseData: payModal?.purchaseData,
+                  prefillBuy,
                 }}
               />,
             );
@@ -117,8 +144,7 @@ type ModalProps = {
   supportedTokens?: SupportedTokens;
   theme: Theme | "light" | "dark";
   txCostWei: bigint;
-  walletBalanceWei: bigint;
-  nativeTokenSymbol: string;
+  walletBalance: GetWalletBalanceResult;
   tx: PreparedTransaction;
   payOptions: PayUIOptions;
   onTxSent: (data: WaitForReceiptOptions) => void;
@@ -165,6 +191,7 @@ function ModalContent(props: ModalProps) {
   if (screen === "tx-history") {
     return (
       <PayTxHistoryScreen
+        title={props.title}
         client={props.client}
         onBack={() => {
           setScreen("buy");
@@ -189,10 +216,11 @@ function ModalContent(props: ModalProps) {
       supportedTokens={props.supportedTokens}
       connectLocale={localeQuery.data}
       buyForTx={{
-        balance: props.walletBalanceWei,
+        balance: props.walletBalance.value,
         cost: props.txCostWei,
         tx: props.tx,
-        tokenSymbol: props.nativeTokenSymbol,
+        tokenSymbol: props.walletBalance.symbol,
+        tokenDecimals: props.walletBalance.decimals,
       }}
       theme={typeof props.theme === "string" ? props.theme : props.theme.type}
       payOptions={props.payOptions}
@@ -266,6 +294,12 @@ function ExecutingTxScreen(props: {
         {status === "loading" && "Sending transaction"}
         {status === "failed" && "Transaction failed"}
         {status === "sent" && "Transaction sent"}
+      </Text>
+      <Spacer y="sm" />
+      <Text color="danger" center size="sm">
+        {status === "failed" && sendTxCore.error
+          ? sendTxCore.error.message
+          : ""}
       </Text>
 
       <Spacer y="xxl" />

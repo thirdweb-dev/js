@@ -7,6 +7,7 @@ export type BuyForTx = {
   balance: bigint;
   tx: PreparedTransaction;
   tokenSymbol: string;
+  tokenDecimals: number;
 };
 
 export type SelectedScreen =
