@@ -1,5 +1,4 @@
 export type LensProfileSchema = {
-  $schema: "https://json-schemas.lens.dev/profile/2.0.0.json";
   // A cryptographic signature of the Lens metadata
   signature: string;
   lens: {

@@ -24,13 +24,12 @@ export type GetFullProfileParams = {
   };
 };
 
-export type FullProfileResponse =
-  | (LensProfileSchema & {
-      handle: string;
-      // Timestamp of the join date
-      joinDate: bigint | null;
-    })
-  | null;
+export type FullProfileResponse = {
+  handle: string;
+  // Timestamp of the join date
+  joinDate: bigint | null;
+  profileData: LensProfileSchema | null;
+} | null;
 
 /**
  * Return the profile data _with Lens handle_ and optional join date + follower/following count
@@ -65,11 +64,14 @@ export async function getFullProfile(
   });
   const [profile, handleTokenId, { download }] = await Promise.all([
     getProfile({ contract: lensHubContract, profileId }),
-    getDefaultHandle({ contract: tokenHandleRegistryContract, profileId }),
+    getDefaultHandle({
+      contract: tokenHandleRegistryContract,
+      profileId,
+    }).catch(() => null),
     import("../../../storage/download.js"),
   ]);
 
-  // A profile data should always pair with a handle
+  // A profile data should always pair with a handle, so we exit if either is missing
   if (!profile || !handleTokenId) {
     return null;
   }
@@ -95,7 +97,7 @@ export async function getFullProfile(
   ]);
 
   const result: FullProfileResponse = {
-    ...profileData,
+    profileData,
     handle,
     joinDate,
   };

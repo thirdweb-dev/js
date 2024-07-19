@@ -13,20 +13,20 @@ export async function LensProfilePreview() {
   });
 
   // console.log(profile);
-  const coverImage = profile?.lens.coverPicture
+  const coverImage = profile?.profileData?.lens.coverPicture
     ? (
         await download({
-          uri: profile?.lens.coverPicture,
+          uri: profile?.profileData?.lens.coverPicture,
           client: THIRDWEB_CLIENT,
         })
       ).url
     : "";
   console.log({ coverImage });
-  const userImage = profile?.lens.picture;
-  const userName = profile?.lens.name;
-  const userBio = profile?.lens.bio;
-  const joinDate = profile?.joinDate
-    ? new Date(Number(profile.joinDate * 1000n))
+  const userImage = profile?.profileData?.lens.picture;
+  const userName = profile?.profileData?.lens.name;
+  const userBio = profile?.profileData?.lens.bio;
+  const joinDate = profile?.profileData?.joinDate
+    ? new Date(Number(profile.profileData?.joinDate * 1000n))
     : "";
   return (
     <div className="max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md">

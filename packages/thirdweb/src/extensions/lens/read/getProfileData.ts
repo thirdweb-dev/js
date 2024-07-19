@@ -30,7 +30,7 @@ export type GetProfileDataParams = {
  * ```ts
  * import { getProfileData } from "thirdweb/extensions/lens";
  *
- * const profileData = await getProfileData({ contract, profileId });
+ * const profileData = await getProfileData({ profileId, client });
  *
  * if (profileData) {
  *   console.log("Display name: ", profileData.lens.name);
@@ -47,7 +47,13 @@ export async function getProfileData(
     chain: overrides?.chain || polygon,
     client,
   });
-  const profile = await getProfile({ contract: lensHubContract, profileId });
+  const profile = await getProfile({
+    contract: lensHubContract,
+    profileId,
+  }).catch(() => null);
+  if (profile === null) {
+    return profile;
+  }
   if (!profile?.metadataURI) {
     return null;
   }

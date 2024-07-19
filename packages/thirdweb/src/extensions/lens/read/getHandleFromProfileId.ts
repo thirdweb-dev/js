@@ -31,7 +31,7 @@ export type GetHandleFromProfileIdParams = {
  * import { getHandleFromProfileId } from "thirdweb/extensions/lens";
  *
  * const profileId = 461662n;
- * const handle = await getHandleFromProfileId({ profileId }); // "lens/@captain_jack"
+ * const handle = await getHandleFromProfileId({ profileId, client }); // "lens/@captain_jack"
  * ```
  */
 export async function getHandleFromProfileId(
@@ -53,12 +53,15 @@ export async function getHandleFromProfileId(
   const handleTokenId = await getDefaultHandle({
     contract: tokenHandleRegistryContract,
     profileId,
-  });
+  }).catch(() => null);
+  if (handleTokenId === null) {
+    return null;
+  }
   // e.g: "lens/@JuanWick"
   const handle = await getHandle({
     contract: lensHandleContract,
     tokenId: handleTokenId,
-  });
+  }).catch(() => null);
 
   return handle;
 }
