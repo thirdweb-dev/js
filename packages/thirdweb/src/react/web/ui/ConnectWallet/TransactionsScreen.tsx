@@ -33,7 +33,7 @@ export function TransactionsScreen(props: {
   locale: ConnectLocale;
   client: ThirdwebClient;
 }) {
-  const [activeTab, setActiveTab] = useState("Purchases");
+  const [activeTab, setActiveTab] = useState("Transactions");
   // For now, you can only select pay transactions (purcahses)
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
@@ -81,7 +81,7 @@ export function TransactionsScreen(props: {
       >
         <Container style={{ position: "relative", height: "250px" }}>
           <Tabs
-            options={["Purchases", "Transactions"]}
+            options={["Transactions", "Purchases"]}
             selected={activeTab}
             onSelect={setActiveTab}
           >

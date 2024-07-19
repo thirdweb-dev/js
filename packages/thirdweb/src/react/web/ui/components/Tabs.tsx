@@ -1,6 +1,8 @@
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { radius } from "../../../core/design-system/index.js";
 import { Text } from "../components/text.js";
-import { Container, Line } from "./basic.js";
+import { Container } from "./basic.js";
+import { Button } from "./buttons.js";
 
 export default function Tabs({
   selected,
@@ -16,19 +18,30 @@ export default function Tabs({
   const theme = useCustomTheme();
   return (
     <Container>
-      <Container flex="row" center="y" style={{ width: "100%" }}>
+      <Container
+        flex="row"
+        center="y"
+        style={{ width: "100%", borderRadius: radius.md, marginTop: 8 }}
+        p="xxs"
+        bg="secondaryButtonBg"
+      >
         {options.map((option) => (
-          <button
+          <Button
+            variant="accent"
             type="button"
             key={option}
             onClick={() => onSelect(option)}
             style={{
               flex: 1,
-              height: "50px",
+              height: "40px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               position: "relative",
+              borderRadius: radius.md,
+              color: option === selected ? theme.colors.primaryText : "auto",
+              backgroundColor:
+                option === selected ? theme.colors.modalBg : "transparent",
             }}
           >
             <Text
@@ -37,17 +50,7 @@ export default function Tabs({
             >
               {option}
             </Text>
-            <Line
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                backgroundColor:
-                  option === selected ? "white" : theme.colors.separatorLine,
-              }}
-            />
-          </button>
+          </Button>
         ))}
       </Container>
       <Container py="sm">{children}</Container>

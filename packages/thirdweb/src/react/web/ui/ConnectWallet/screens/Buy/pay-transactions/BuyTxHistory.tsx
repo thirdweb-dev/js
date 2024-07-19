@@ -125,11 +125,12 @@ export function PayTxHistoryList(props: {
       flex="column"
       fullHeight
       style={{
+        width: "100%",
         minHeight: "250px",
         maxHeight: "370px",
       }}
     >
-      <Container flex="column" gap="xs" px="lg" expand>
+      <Container flex="column" gap="xs" expand>
         {noTransactions && !isLoading && (
           <Container
             flex="column"
