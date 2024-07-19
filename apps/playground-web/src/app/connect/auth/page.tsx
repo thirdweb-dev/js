@@ -1,4 +1,4 @@
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
@@ -16,11 +16,7 @@ export const metadata: Metadata = {
   description: "lorem ipsum",
 };
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams: { message: string };
-}) {
+export default function Page() {
   return (
     <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
       <section className="container px-4 md:px-6">
