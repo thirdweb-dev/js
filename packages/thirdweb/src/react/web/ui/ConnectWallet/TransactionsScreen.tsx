@@ -9,6 +9,7 @@ import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
+import { Spacer } from "../components/Spacer.js";
 import Tabs from "../components/Tabs.js";
 import { Container, Line, ModalHeader } from "../components/basic.js";
 import { ButtonLink } from "../components/buttons.js";
@@ -33,7 +34,7 @@ export function TransactionsScreen(props: {
   locale: ConnectLocale;
   client: ThirdwebClient;
 }) {
-  const [activeTab, setActiveTab] = useState("Purchases");
+  const [activeTab, setActiveTab] = useState("Transactions");
   // For now, you can only select pay transactions (purcahses)
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
 
@@ -73,33 +74,32 @@ export function TransactionsScreen(props: {
       </Container>
       <Line />
       <Container
-        px="sm"
+        px="lg"
         scrollY
         style={{
           minHeight: "330px",
         }}
       >
-        <Container style={{ position: "relative", height: "250px" }}>
-          <Tabs
-            options={["Purchases", "Transactions"]}
-            selected={activeTab}
-            onSelect={setActiveTab}
-          >
-            {activeTab === "Purchases" && (
-              <PayTxHistoryList
-                client={props.client}
-                onSelectTx={setSelectedTx}
-              />
-            )}
-            {activeTab === "Transactions" && (
-              <WalletTransactionHistory
-                locale={props.locale}
-                client={props.client}
-                address={payer.account.address}
-              />
-            )}
-          </Tabs>
-        </Container>
+        <Spacer y="md" />
+        <Tabs
+          options={["Transactions", "Purchases"]}
+          selected={activeTab}
+          onSelect={setActiveTab}
+        >
+          {activeTab === "Purchases" && (
+            <PayTxHistoryList
+              client={props.client}
+              onSelectTx={setSelectedTx}
+            />
+          )}
+          {activeTab === "Transactions" && (
+            <WalletTransactionHistory
+              locale={props.locale}
+              client={props.client}
+              address={payer.account.address}
+            />
+          )}
+        </Tabs>
       </Container>
       <Line />
       <Container p="lg">
