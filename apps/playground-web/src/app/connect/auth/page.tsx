@@ -87,7 +87,12 @@ function BasicAuth() {
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Basic Auth
         </h2>
-        <p className="max-w-[600px]">lorem</p>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi
+          reiciendis sit sint, incidunt veritatis dolorem, aliquam dolores
+          quisquam ratione sed temporibus quae cum iste rerum ipsam placeat
+          maxime assumenda aspernatur?
+        </p>
       </div>
 
       <CodeExample
@@ -136,7 +141,12 @@ function GatedContent() {
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Gating content with Auth
         </h2>
-        <p className="max-w-[600px]">lorem</p>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia,
+          deleniti voluptas quae qui adipisci commodi quasi vero! Dolorem qui,
+          obcaecati, vero enim quisquam corporis suscipit asperiores ratione
+          quaerat tempore sequi.
+        </p>
       </div>
 
       <CodeExample
@@ -189,7 +199,12 @@ function WithSupabasePreview({
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
           Usage with Supabase
         </h2>
-        <p className="max-w-[600px]">lorem</p>
+        <p className="max-w-[600px]">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus
+          non, repellendus doloremque id libero optio ipsam consectetur
+          perspiciatis, laudantium aut illum illo cumque pariatur excepturi,
+          assumenda sunt molestiae dolore animi.
+        </p>
       </div>
 
       <CodeExample
