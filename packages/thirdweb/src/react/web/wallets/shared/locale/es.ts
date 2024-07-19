@@ -4,6 +4,7 @@ export default {
   signInWithGoogle: "Iniciar sesión con Google",
   signInWithFacebook: "Iniciar sesión con Facebook",
   signInWithApple: "Iniciar sesión con Apple",
+  signInWithDiscord: "Iniciar sesión con Discord",
   emailPlaceholder: "Ingresa tu dirección de correo electrónico",
   submitEmail: "Continuar",
   signIn: "Iniciar sesión",

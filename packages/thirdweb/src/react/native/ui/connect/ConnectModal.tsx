@@ -407,12 +407,12 @@ function WalletLoadingView({
           <View
             style={{
               borderRadius: spacing.md,
-              padding: spacing.xs,
+              padding: spacing.sm,
             }}
           >
             <RNImage
               theme={theme}
-              size={90}
+              size={80}
               data={getAuthProviderImage(authProvider)}
               color={theme.colors.accentButtonBg}
             />

@@ -4,6 +4,7 @@ export default {
   signInWithGoogle: "Googleでサインイン",
   signInWithFacebook: "Facebookでサインイン",
   signInWithApple: "Appleでサインイン",
+  signInWithDiscord: "Discordでサインイン",
   emailPlaceholder: "メールアドレスを入力してください",
   submitEmail: "続ける",
   emailRequired: "メールアドレスが必要です",

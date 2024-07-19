@@ -7,6 +7,7 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import {
   APPLE_ICON,
+  DISCORD_ICON,
   EMAIL_ICON,
   FACEBOOK_ICON,
   GOOGLE_ICON,
@@ -73,6 +74,8 @@ export function getAuthProviderImage(lastAuthProvider: string | null): string {
       return APPLE_ICON;
     case "facebook":
       return FACEBOOK_ICON;
+    case "discord":
+      return DISCORD_ICON;
     default:
       return WALLET_ICON;
   }

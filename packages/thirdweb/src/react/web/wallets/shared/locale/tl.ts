@@ -4,6 +4,7 @@ export default {
   signInWithGoogle: "Mag-sign in gamit ang Google",
   signInWithFacebook: "Mag-sign in gamit ang Facebook",
   signInWithApple: "Mag-sign in gamit ang Apple",
+  signInWithDiscord: "Mag-sign in gamit ang Discord",
   emailPlaceholder: "Ilagay ang iyong email address",
   submitEmail: "Magpatuloy",
   signIn: "Mag-sign in",
