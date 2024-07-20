@@ -1,5 +1,4 @@
 import { THIRDWEB_CLIENT } from "@/lib/client";
-import Image from "next/image";
 import Link from "next/link";
 import { getFullProfile } from "thirdweb/extensions/lens";
 import { download } from "thirdweb/storage";
@@ -25,7 +24,7 @@ export async function LensProfilePreview() {
   const userName = profile?.profileData?.lens.name;
   const userBio = profile?.profileData?.lens.bio;
   const joinDate = profile?.joinDate
-    ? new Date(Number(profile.profileData?.joinDate * 1000n))
+    ? new Date(Number(profile?.joinDate * 1000n))
     : "";
   return (
     <div className="max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md">
