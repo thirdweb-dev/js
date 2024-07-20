@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { MAX_UINT256 } from "~test/test-consts.js";
 import { NFT_DROP_CONTRACT } from "../../../../../test/src/test-contracts.js";
 import { getActiveClaimCondition } from "./getActiveClaimCondition.js";
-import { MAX_UINT256 } from "~test/test-consts.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("erc20.getClaimConditions", () => {
   it("should return the correct claim conditions", async () => {
