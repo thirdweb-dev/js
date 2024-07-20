@@ -1,5 +1,11 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.37
+
+### Patch Changes
+
+- [#3745](https://github.com/thirdweb-dev/js/pull/3745) [`af4acc4`](https://github.com/thirdweb-dev/js/commit/af4acc4319fdfb323778694bd8843bd695e52d6b) Thanks [@iuwqyir](https://github.com/iuwqyir)! - added chainsaw service definition
+
 ## 0.4.36
 
 ### Patch Changes
