@@ -40,6 +40,7 @@ export const TransactionSimulator = (props: {
       shareUrl: "",
     },
   );
+  console.log({ isPending });
   const activeAccount = useActiveAccount();
 
   return (
@@ -141,18 +142,23 @@ export const TransactionSimulator = (props: {
           </div>
           <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
             <Label htmlFor="value" className="min-w-60">
-              Value in Wei
+              Value
             </Label>
             <Input
               name="value"
-              required
-              placeholder="The amount of native currency to send in wei"
-              defaultValue={initialFormValues.value ?? 0}
+              placeholder={`The amount of native currency to send (e.g \"0.01\")`}
             />
           </div>
 
           <Button type="submit" disabled={isPending}>
-            {isPending ? <Spinner /> : "Simulate Transaction"}
+            {isPending ? (
+              <>
+                <Spinner className="w-4 h-4 mr-2" />
+                Simulating
+              </>
+            ) : (
+              "Simulate Transaction"
+            )}
           </Button>
         </Card>
       </form>
@@ -163,7 +169,7 @@ export const TransactionSimulator = (props: {
             <ArrowDown />
           </div>
           <Card className="max-w-[800px] p-4">
-            <p className="text-sm font-mono whitespace-pre-wrap overflow-scroll">
+            <p className="text-sm font-mono whitespace-pre-wrap overflow-auto">
               {state.success
                 ? "--- ✅ Simulation succeeded ---\n"
                 : "--- ❌ Simulation failed ---\n"}

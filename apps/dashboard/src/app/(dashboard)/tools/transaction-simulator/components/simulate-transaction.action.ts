@@ -8,6 +8,7 @@ import {
   resolveMethod,
   simulateTransaction,
   toSerializableTransaction,
+  toWei,
 } from "thirdweb";
 import type { SimulateTransactionForm } from "./TransactionSimulator";
 
@@ -40,22 +41,24 @@ export const simulateTransactionAction = async (
     chain,
     address: parsedData.to,
   });
-  const transaction = await prepareContractCall({
+  const transaction = prepareContractCall({
     contract,
     method: resolveMethod(parsedData.functionName),
     params: parsedData.functionArgs.split(/[\n,]+/).map((arg) => arg.trim()),
-    value: BigInt(parsedData.value),
+    value: toWei(parsedData.value),
   });
 
   try {
-    const simulateResult = await simulateTransaction({
-      from: parsedData.from,
-      transaction,
-    });
-    const populatedTransaction = await toSerializableTransaction({
-      from: parsedData.from,
-      transaction,
-    });
+    const [simulateResult, populatedTransaction] = await Promise.all([
+      simulateTransaction({
+        from: parsedData.from,
+        transaction,
+      }),
+      toSerializableTransaction({
+        from: parsedData.from,
+        transaction,
+      }),
+    ]);
     return {
       success: true,
       message: `result: ${simulateResult.length > 0 ? simulateResult.join(",") : "Method did not return a result."}
@@ -79,13 +82,24 @@ value: ${populatedTransaction.value}`,
 
 // Generate code example with input values.
 const getCodeExample = (parsedData: SimulateTransactionForm) =>
-  `const contract = getContract({
+  `import { 
+  getContract,
+  defineChain,
+  prepareContractCall,
+  createThirdwebClient 
+} from "thirdweb";
+
+const client = createThirdwebClient({
+  clientId: "your-client-id", // use secretKey instead of clientId in backend environment
+});
+
+const contract = getContract({
   client,
-  chain,
+  chain: defineChain(${parsedData.chainId}),
   address: "${parsedData.to}",
 });
 
-const transaction = await prepareContractCall({
+const transaction = prepareContractCall({
   contract,
   method: resolveMethod("${parsedData.functionName}"),
   params: [${parsedData.functionArgs.split(/[\n,]+/).map((v) => `"${v.trim()}"`)}],

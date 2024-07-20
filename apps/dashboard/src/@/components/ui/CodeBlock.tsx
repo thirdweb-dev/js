@@ -26,7 +26,7 @@ export const CodeBlock = ({
 
           <div
             className={cn(
-              "block font-mono text-sm whitespace-pre-wrap p-4 overflow-scroll",
+              "block font-mono text-sm whitespace-pre-wrap p-4 overflow-auto",
               className,
             )}
           >
