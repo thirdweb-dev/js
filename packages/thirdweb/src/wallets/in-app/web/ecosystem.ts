@@ -23,23 +23,12 @@ import { createEcosystemWallet } from "../core/wallet/ecosystem-core.js";
  * });
  * ```
  *
- * Enable smart accounts and sponsor gas for your users:
+ * Connect to a restricted ecosystem wallet with your designated partner ID
+ * @note The parnter ID will be provided to you by the ecosystem with which you're integrating.
  * ```ts
  * import { ecosystemWallet } from "thirdweb/wallets";
  * const wallet = ecosystemWallet("ecosystem.hooli", {
- *  smartAccount: {
- *   chain: sepolia,
- *   sponsorGas: true,
- * },
- * });
- * ```
- *
- * Connect to a restricted ecosystem wallet with your designated integrator ID
- * @note The integrator ID will be provided to you by the ecosystem with which you're integrating.
- * ```ts
- * import { ecosystemWallet } from "thirdweb/wallets";
- * const wallet = ecosystemWallet("ecosystem.hooli", {
- *  integratorId: "..."
+ *  partnerId: "..."
  * });
  * ```
  * @wallet

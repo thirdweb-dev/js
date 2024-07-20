@@ -1,39 +1,46 @@
+import { thirdwebClient } from "@/constants/client";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import {
-  type TokenContract,
-  useAddress,
-  type useContract,
-  useTokenBalance,
-} from "@thirdweb-dev/react";
-import { detectFeatures } from "components/contract-components/utils";
-import { BigNumber } from "ethers";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { useMemo } from "react";
 import { FaBurn } from "react-icons/fa";
+import { getContract } from "thirdweb";
+import { balanceOf } from "thirdweb/extensions/erc20";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { TokenBurnForm } from "./burn-form";
 
 interface TokenBurnButtonProps {
-  contractQuery: ReturnType<typeof useContract>;
+  contractAddress: string;
+  chainId: number;
 }
 
 export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
-  contractQuery,
+  contractAddress,
+  chainId,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
-  const tokenBalance = useTokenBalance(contractQuery.contract, address);
+  const chain = useV5DashboardChain(chainId);
 
-  const isERC20Burnable = detectFeatures<TokenContract>(
-    contractQuery.contract,
-    ["ERC20Burnable"],
+  const contract = useMemo(
+    () =>
+      getContract({
+        address: contractAddress,
+        chain,
+        client: thirdwebClient,
+      }),
+    [chain, contractAddress],
   );
 
-  if (!isERC20Burnable || !contractQuery.contract) {
-    return null;
-  }
+  const tokenBalanceQuery = useReadContract(balanceOf, {
+    contract,
+    address: address || "",
+    queryOptions: { enabled: !!address },
+  });
 
-  const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
+  const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
 
   return (
     <>
@@ -44,7 +51,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenBurnForm contract={contractQuery.contract} />
+        <TokenBurnForm contract={contract} />
       </Drawer>
       <Button
         colorScheme="primary"

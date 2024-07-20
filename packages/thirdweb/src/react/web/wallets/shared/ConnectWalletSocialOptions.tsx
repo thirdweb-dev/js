@@ -8,9 +8,10 @@ import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type {
-  AuthOption,
-  SocialAuthOption,
+import {
+  type AuthOption,
+  type SocialAuthOption,
+  socialAuthOptions,
 } from "../../../../wallets/types.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -19,24 +20,24 @@ import {
   iconSize,
   spacing,
 } from "../../../core/design-system/index.js";
-import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
-import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import {
   emailIcon,
   passkeyIcon,
   phoneIcon,
-} from "../../ui/ConnectWallet/icons/dataUris.js";
+  socialIcons,
+} from "../../../core/utils/socialIcons.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
+import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
+import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import { Img } from "../../ui/components/Img.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
 import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
-import { socialIcons } from "../in-app/socialIcons.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import { setLastAuthProvider } from "./storage.js";
 
 export type ConnectWalletSelectUIState =
   | undefined
@@ -88,6 +89,7 @@ export const ConnectWalletSocialOptions = (
     google: locale.signInWithGoogle,
     facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
+    discord: locale.signInWithDiscord,
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({
@@ -148,16 +150,27 @@ export const ConnectWalletSocialOptions = (
     type = "tel";
   }
 
-  const socialLogins = authOptions.filter(
-    (x) => x === "google" || x === "apple" || x === "facebook",
-  ) as SocialAuthOption[];
+  const socialLogins = authOptions.filter((o) =>
+    socialAuthOptions.includes(o as SocialAuthOption),
+  );
 
   const hasSocialLogins = socialLogins.length > 0;
+  const ecosystemInfo = isEcosystemWallet(wallet)
+    ? {
+        id: wallet.id,
+        partnerId: wallet.getConfig()?.partnerId,
+      }
+    : undefined;
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
     try {
-      const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
+      const socialLoginWindow = openOauthSignInWindow({
+        authOption: strategy,
+        themeObj,
+        client: props.client,
+        ecosystem: ecosystemInfo,
+      });
       if (!socialLoginWindow) {
         throw new Error("Failed to open login window");
       }
@@ -236,16 +249,17 @@ export const ConnectWalletSocialOptions = (
                 variant={"outline"}
                 fullWidth={!showOnlyIcons}
                 onClick={() => {
-                  handleSocialLogin(loginMethod);
+                  handleSocialLogin(loginMethod as SocialAuthOption);
                 }}
               >
                 <Img
-                  src={socialIcons[loginMethod]}
+                  src={socialIcons[loginMethod as SocialAuthOption]}
                   width={imgIconSize}
                   height={imgIconSize}
                   client={props.client}
                 />
-                {!showOnlyIcons && loginMethodsLabel[loginMethod]}
+                {!showOnlyIcons &&
+                  loginMethodsLabel[loginMethod as SocialAuthOption]}
               </SocialButton>
             );
           })}

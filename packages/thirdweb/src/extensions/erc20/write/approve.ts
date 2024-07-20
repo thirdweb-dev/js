@@ -55,6 +55,12 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
       return {
         spender: options.spender,
         value: amount,
+        overrides: {
+          erc20Value: {
+            amountWei: amount,
+            tokenAddress: options.contract.address,
+          },
+        },
       } as const;
     },
   });

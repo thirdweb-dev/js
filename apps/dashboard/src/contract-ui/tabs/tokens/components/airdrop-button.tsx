@@ -1,36 +1,46 @@
+import { thirdwebClient } from "@/constants/client";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import {
-  type TokenContract,
-  useAddress,
-  type useContract,
-  useTokenBalance,
-} from "@thirdweb-dev/react";
-import { detectFeatures } from "components/contract-components/utils";
-import { BigNumber } from "ethers";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { useMemo } from "react";
 import { FiDroplet } from "react-icons/fi";
+import { getContract } from "thirdweb";
+import { balanceOf } from "thirdweb/extensions/erc20";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { TokenAirdropForm } from "./airdrop-form";
 
 interface TokenAirdropButtonProps {
-  contractQuery: ReturnType<typeof useContract>;
+  contractAddress: string;
+  chainId: number;
 }
 
 export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
-  contractQuery,
+  contractAddress,
+  chainId,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const address = useAddress();
-  const tokenBalance = useTokenBalance(contractQuery.contract, address);
-  const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
+  const address = useActiveAccount()?.address;
 
-  const isErc20 = detectFeatures<TokenContract>(contractQuery.contract, [
-    "ERC20",
-  ]);
+  const chain = useV5DashboardChain(chainId);
 
-  if (!isErc20 || !contractQuery.contract) {
-    return null;
-  }
+  const contract = useMemo(
+    () =>
+      getContract({
+        address: contractAddress,
+        chain,
+        client: thirdwebClient,
+      }),
+    [chain, contractAddress],
+  );
+
+  const tokenBalanceQuery = useReadContract(balanceOf, {
+    contract,
+    address: address || "",
+    queryOptions: { enabled: !!address },
+  });
+
+  const hasBalance = tokenBalanceQuery.data && tokenBalanceQuery.data > 0n;
 
   return (
     <>
@@ -41,7 +51,7 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenAirdropForm contract={contractQuery.contract} />
+        <TokenAirdropForm contract={contract} />
       </Drawer>
       <Button
         colorScheme="primary"

@@ -1,6 +1,6 @@
 import type { Chain } from "../../../../../../../chains/types.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { PayUIOptions } from "../../../ConnectButtonProps.js";
+import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
 

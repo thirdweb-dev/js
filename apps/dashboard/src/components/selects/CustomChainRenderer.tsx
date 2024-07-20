@@ -1,4 +1,3 @@
-import type { NetworkSelectorChainProps } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
@@ -6,12 +5,19 @@ import {
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
 import { SettingsIcon } from "lucide-react";
+import { useMemo } from "react";
+import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
 import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 import { Button } from "../../@/components/ui/button";
 import { cn } from "../../@/lib/utils";
 import { OPSponsoredChains } from "../../constants/chains";
+import { useSupportedChainsRecord } from "../../hooks/chains/configureChains";
 
-type CustomChainRendererProps = NetworkSelectorChainProps & {
+type ChainRenderProps = React.ComponentProps<
+  NonNullable<UseNetworkSwitcherModalOptions["renderChain"]>
+>;
+
+type CustomChainRendererProps = ChainRenderProps & {
   disableChainConfig?: boolean;
 };
 
@@ -26,9 +32,16 @@ export const CustomChainRenderer = ({
   const setIsOpenNetworkConfigModal = useSetIsNetworkConfigModalOpen();
   const addRecentlyUsedChain = useAddRecentlyUsedChainId();
   const setEditChain = useSetEditChain();
+  const supportedChainsRecord = useSupportedChainsRecord();
 
-  const isDeprecated = chain.status === "deprecated";
-  const isSponsored = OPSponsoredChains.includes(chain?.chainId);
+  const storedChain = useMemo(() => {
+    return chain.id in supportedChainsRecord
+      ? supportedChainsRecord[chain.id]
+      : undefined;
+  }, [chain, supportedChainsRecord]);
+
+  const isDeprecated = storedChain?.status === "deprecated";
+  const isSponsored = OPSponsoredChains.includes(chain.id);
 
   return (
     <div className="flex w-full justify-start hover:bg-[#22232b] rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
@@ -87,14 +100,14 @@ export const CustomChainRenderer = ({
           </div>
         </div>
 
-        {!disableChainConfig && (
+        {!disableChainConfig && storedChain && (
           <Button
             variant="ghost"
             className="ml-auto p-2 leading-4 opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
             aria-label="Configure Network"
             onClick={() => {
-              setEditChain(chain);
-              addRecentlyUsedChain(chain.chainId);
+              setEditChain(storedChain);
+              addRecentlyUsedChain(chain.id);
               setIsOpenNetworkConfigModal(true);
               if (close) {
                 close();

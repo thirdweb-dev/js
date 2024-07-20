@@ -92,9 +92,13 @@ export function useBuyWithCryptoQuote(
       if (failureCount > 3) {
         return false;
       }
-
-      if (error.message.includes("Minimum purchase")) {
-        return false;
+      try {
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        if ((error as any).error.code === "MINIMUM_PURCHASE_AMOUNT") {
+          return false;
+        }
+      } catch {
+        return true;
       }
 
       return true;

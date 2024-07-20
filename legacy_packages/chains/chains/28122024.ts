@@ -10,6 +10,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreievnqg3xjokaty4kfbxxbrzm5v5y7exbaaia2txrh4sfgrqsalfym",
     "width": 128,
@@ -24,12 +25,14 @@ export default {
     "decimals": 18
   },
   "networkId": 28122024,
+  "redFlags": [],
   "rpc": [
     "https://28122024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpcv2-testnet.ancient8.gg"
+    "https://rpcv2-testnet.ancient8.gg",
+    "https://testnet-rpc.etherspot.io/v1/28122024"
   ],
   "shortName": "a8",
   "slip44": 1,
   "slug": "ancient8-testnet",
-  "testnet": true
+  "testnet": false
 } as const satisfies Chain;

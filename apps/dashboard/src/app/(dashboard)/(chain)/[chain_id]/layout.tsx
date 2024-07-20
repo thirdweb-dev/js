@@ -1,3 +1,4 @@
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +12,7 @@ import {
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CopyTextButton } from "../../../../@/components/ui/CopyTextButton";
+import { defineChain } from "thirdweb";
 import { StarButton } from "../components/client/star-button";
 import { ChainIcon } from "../components/server/chain-icon";
 import { getChain, getChainMetadata } from "../utils";
@@ -19,7 +20,6 @@ import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 import { ChainPageTabs } from "./components/client/tabs";
 import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
-import { FaucetsSection } from "./components/server/faucets-section";
 import { PrimaryInfoItem } from "./components/server/primary-info-item";
 
 export async function generateMetadata(
@@ -52,6 +52,18 @@ export default async function ChainPageLayout({
   params: { chain_id: string };
 }) {
   const chain = await getChain(params.chain_id);
+
+  // Enable faucet for all testnet chains.
+  if (chain.testnet) {
+    chain.services = [
+      ...chain.services,
+      {
+        service: "faucet",
+        enabled: true,
+      },
+    ];
+  }
+
   if (params.chain_id !== chain.slug) {
     redirect(chain.slug);
   }
@@ -65,7 +77,7 @@ export default async function ChainPageLayout({
       {isDeprecated && (
         <>
           <div className="bg-destructive">
-            <div className="container px-4 py-4 flex flex-row items-center gap-4 text-white">
+            <div className="container py-4 flex flex-row items-center gap-4 text-white">
               <CircleAlertIcon className="size-6 flex-shrink-0" />
               <h3 className="font-semibold">
                 This chain has been marked as deprecated. Some or all services
@@ -97,15 +109,19 @@ export default async function ChainPageLayout({
                   : undefined
               }
             />
-            <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-b from-secondary/0 to-secondary/30 shadow-inner" />
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-ba bg-gradient-to-b from-black/25 to-black/0 shadow-inner" />
           </div>
 
           {/* end header shaningans */}
-          <div className="container px-4 flex flex-col md:flex-row justify-between md:items-center">
+          <div className="container flex flex-col md:flex-row justify-between md:items-center">
             <div className="flex flex-col gap-2 md:gap-6">
               <Link
                 href="/chainlist"
-                className="inline-flex items-center gap-1 text-foreground hover:underline mt-4"
+                className={cn(
+                  "text-foreground mt-4 inline-flex items-center gap-1",
+                  // if we have a header image always light text
+                  chainMetadata?.headerImgUrl && "text-white",
+                )}
               >
                 <ArrowLeftIcon className="size-5" />
                 Chainlist
@@ -113,16 +129,28 @@ export default async function ChainPageLayout({
 
               <div className="flex gap-3 md:gap-5 items-center">
                 {chain.icon?.url && (
-                  <ChainIcon
-                    iconUrl={chain.icon.url}
-                    className="size-16 md:size-20 bg-secondary p-2 border-2 rounded-full"
-                  />
+                  <div
+                    className={cn(
+                      "bg-secondary p-2 border rounded-full overflow-hidden",
+                    )}
+                  >
+                    <ChainIcon
+                      iconUrl={chain.icon.url}
+                      className={cn(
+                        "size-14 md:size-18 rounded-full",
+                        // if we it's "mantle" chain, invert the icon in dark mode
+                        chain.chainId === 5000 && "dark:invert",
+                      )}
+                    />
+                  </div>
                 )}
 
                 {/* Chain Name */}
                 <h1
                   className={cn(
                     "font-semibold tracking-tighter text-4xl md:text-6xl",
+                    // if we have a header image always light text
+                    chainMetadata?.headerImgUrl && "text-white",
                   )}
                 >
                   {chain.name}
@@ -145,7 +173,10 @@ export default async function ChainPageLayout({
               </div>
             </div>
             <div className="flex flex-row md:flex-col gap-4">
-              <AddChainToWallet chainId={chain.chainId} />
+              <AddChainToWallet
+                chain={defineChain(chain)}
+                hasBackground={!!chainMetadata?.headerImgUrl}
+              />
               {isVerified ? null : (
                 <Button
                   className="w-full md:min-w-40"
@@ -168,7 +199,7 @@ export default async function ChainPageLayout({
 
         {chainMetadata?.cta && <ChainCTA {...chainMetadata.cta} />}
 
-        <main className="container px-4 pb-20 flex-1">
+        <main className="container pb-20 flex-1">
           {/* About section */}
           {chainMetadata?.about && (
             <>
@@ -177,8 +208,10 @@ export default async function ChainPageLayout({
                   About
                 </h2>
 
-                <div className="[&_p]:mb-3 [&_p]:text-card-foreground max-w-[1000px]">
-                  <p>{chainMetadata.about}</p>
+                <div className="[&_p]:mb-3 [&_p]:text-card-foreground">
+                  <pre className="text-wrap font-sans">
+                    {chainMetadata.about}
+                  </pre>
                 </div>
               </div>
               <div className="h-8" />
@@ -223,11 +256,6 @@ export default async function ChainPageLayout({
                 </div>
               </PrimaryInfoItem>
             </div>
-
-            {/* Faucets - will later move to dedicated tab */}
-            {chain.faucets && chain.faucets.length > 0 && (
-              <FaucetsSection faucets={chain.faucets} />
-            )}
 
             {/* Explorers */}
             {chain.explorers && chain.explorers.length > 0 && (

@@ -14,8 +14,8 @@ import {
   EmbeddedWalletFormUI,
   EmbeddedWalletFormUIScreen,
 } from "./EmbeddedWalletFormUI";
-import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletSocialLogin";
 import { EmbeddedWalletOTPLoginUI } from "./EmbeddedWalletOTPLoginUI";
+import { EmbeddedWalletSocialLogin } from "./EmbeddedWalletSocialLogin";
 import {
   AuthOption,
   EmbeddedWalletConfigOptions,

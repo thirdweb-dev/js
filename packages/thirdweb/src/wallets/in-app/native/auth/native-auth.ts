@@ -3,6 +3,7 @@ import type { CognitoUser } from "amazon-cognito-identity-js";
 import { Auth } from "aws-amplify";
 import * as WebBrowser from "expo-web-browser";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { getDiscordLoginPath } from "../../core/authentication/getLoginPath.js";
 import {
   AuthProvider,
   type AuthStoredTokenWithCookieReturnType,
@@ -229,15 +230,24 @@ export async function socialLogin(
 
   const { platformLoginLink } = json;
 
-  const completeLoginUrl = `${platformLoginLink}?developerClientId=${encodeURIComponent(
-    client.clientId,
-  )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
-    oauthOptions.redirectUrl,
-  )}&authOption=${encodedProvider}`;
+  // Temporary fork for discord until we migrate all methods to the new auth flow
+  const loginUrl = (() => {
+    if (oauthOptions.provider === AuthProvider.DISCORD) {
+      return `${getDiscordLoginPath(client)}&redirectUrl=${encodeURIComponent(
+        oauthOptions.redirectUrl,
+      )}`;
+    } else {
+      return `${platformLoginLink}?developerClientId=${encodeURIComponent(
+        client.clientId,
+      )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
+        oauthOptions.redirectUrl,
+      )}&authOption=${encodedProvider}`;
+    }
+  })();
 
   // TODO platform specific code should be extracted out
   const result = await WebBrowser.openAuthSessionAsync(
-    completeLoginUrl,
+    loginUrl,
     oauthOptions.redirectUrl,
     {
       preferEphemeralSession: false,

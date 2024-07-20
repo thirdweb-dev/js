@@ -1,56 +1,58 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Icon,
-  type PropsOf,
-  chakra,
-} from "@chakra-ui/react";
-import {
-  ThirdwebNftMedia,
-  type ThirdwebNftMediaProps,
-} from "@thirdweb-dev/react";
-import { FiImage } from "react-icons/fi";
-import { Text } from "./text";
+import { thirdwebClient } from "@/constants/client";
+import { cn } from "@/lib/utils";
+import { ImageIcon } from "lucide-react";
+import { MediaRenderer } from "thirdweb/react";
 
-const NFTMedia = chakra(ThirdwebNftMedia, {
-  shouldForwardProp: (prop) =>
-    ["width", "height", "metadata", "requireInteraction", "controls"].includes(
-      prop,
-    ),
-});
-
-export const NFTMediaWithEmptyState: React.FC<
-  PropsOf<typeof NFTMedia> & ThirdwebNftMediaProps
-> = (props) => {
+export const NFTMediaWithEmptyState: React.FC<{
+  className?: string;
+  width?: string;
+  height?: string;
+  metadata: {
+    image?: string | null;
+    animation_url?: string | null;
+    name?: string | number | null;
+  };
+  requireInteraction?: boolean;
+  controls?: boolean;
+}> = (props) => {
   if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
-      <Center
-        borderRadius="xl"
-        width={props.width}
-        height={props.height}
-        borderColor="accent.300"
-        borderWidth="1px"
+      <div
+        className={cn(
+          "overflow-hidden rounded-xl object-contain flex-shrink-0 border grid place-items-center",
+          props.width && `w-[${props.width}]`,
+          props.height && `h-[${props.height}]`,
+          props.className,
+        )}
       >
-        <Flex direction="column" align="center" gap={1.5}>
-          <Icon boxSize={6} as={FiImage} color="accent.300" />
-          <Text as="span" size="label.sm" color="accent.300">
-            No Media
-          </Text>
-        </Flex>
-      </Center>
+        <div className="flex flex-col gap-1 items-center">
+          <ImageIcon className="size-6" />
+          <span className="text-sm font-semibold">No Media</span>
+        </div>
+      </div>
     );
   }
   return (
-    <Box
-      width={props.width}
-      height={props.height}
-      borderRadius="xl"
-      overflow="hidden"
-      objectFit="contain"
-      flexShrink={0}
+    <div
+      style={{
+        width: props.width,
+        height: props.height,
+      }}
+      className={cn(
+        "overflow-hidden rounded-xl object-contain flex-shrink-0",
+
+        props.className,
+      )}
     >
-      <NFTMedia {...props} width="100%" height="100%" />
-    </Box>
+      <MediaRenderer
+        client={thirdwebClient}
+        src={props.metadata.animation_url || props.metadata.image}
+        alt={props.metadata.name?.toString() || ""}
+        poster={props.metadata.image}
+        requireInteraction={props.requireInteraction}
+        controls={props.controls}
+        className="w-full h-full"
+      />
+    </div>
   );
 };

@@ -1,7 +1,10 @@
 import { concat } from "viem";
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+import type { TransactionReceipt } from "../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../utils/abi/encodeAbiParameters.js";
 import { isContractDeployed } from "../../../utils/bytecode/is-contract-deployed.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
@@ -9,8 +12,17 @@ import { hexToBytes } from "../../../utils/encoding/to-bytes.js";
 import { isThirdwebUrl } from "../../../utils/fetch.js";
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
 import { resolvePromisedValue } from "../../../utils/promise/resolve-promised-value.js";
-import type { SmartAccountOptions, UserOperation } from "../types.js";
-import { estimateUserOpGas, getUserOpGasPrice } from "./bundler.js";
+import type { Account } from "../../interfaces/wallet.js";
+import type {
+  BundlerOptions,
+  SmartWalletOptions,
+  UserOperation,
+} from "../types.js";
+import {
+  estimateUserOpGas,
+  getUserOpGasFees,
+  getUserOpReceipt,
+} from "./bundler.js";
 import { prepareCreateAccount } from "./calls.js";
 import {
   DUMMY_SIGNATURE,
@@ -21,29 +33,103 @@ import { getPaymasterAndData } from "./paymaster.js";
 import { randomNonce } from "./utils.js";
 
 /**
- * Create an unsigned user operation
- * @internal
+ * Wait for the user operation to be mined.
+ * @param args - The options and user operation hash
+ * @returns - The transaction receipt
+ *
+ * @example
+ * ```ts
+ * import { waitForUserOpReceipt } from "thirdweb/wallets/smart";
+ *
+ * const receipt = await waitForUserOpReceipt({
+ *  chain,
+ *  client,
+ *  userOpHash,
+ * });
+ * ```
+ * @walletUtils
  */
+export async function waitForUserOpReceipt(
+  args: BundlerOptions & {
+    userOpHash: Hex;
+    timeoutMs?: number;
+    intervalMs?: number;
+  },
+): Promise<TransactionReceipt> {
+  const timeout = args.timeoutMs || 120000; // 2mins
+  const interval = args.intervalMs || 1000; // 1s
+  const endtime = Date.now() + timeout;
+  while (Date.now() < endtime) {
+    const userOpReceipt = await getUserOpReceipt(args);
+    if (userOpReceipt) {
+      return userOpReceipt;
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  throw new Error("Timeout waiting for userOp to be mined");
+}
+
 /**
- * Creates an unsigned user operation.
- * @internal
+ * Creates an unsigned user operation from a prepared transaction.
+ * @param args - The prepared transaction and options
+ * @returns - The unsigned user operation
+ * @example
+ * ```ts
+ * import { createUnsignedUserOp } from "thirdweb/wallets/smart";
+ *
+ * const transaction = prepareContractCall(...);
+ *
+ * const userOp = await createUnsignedUserOp({
+ *  transaction,
+ *  factoryContract,
+ *  accountContract,
+ *  adminAddress,
+ *  sponsorGas,
+ *  overrides,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function createUnsignedUserOp(args: {
-  executeTx: PreparedTransaction;
-  options: SmartAccountOptions;
+  transaction: PreparedTransaction;
+  factoryContract: ThirdwebContract;
+  accountContract: ThirdwebContract;
+  adminAddress: string;
+  sponsorGas: boolean;
+  overrides?: SmartWalletOptions["overrides"];
 }): Promise<UserOperation> {
-  const { executeTx, options } = args;
-  const isDeployed = await isContractDeployed(options.accountContract);
-  const initCode = isDeployed ? "0x" : await getAccountInitCode(options);
+  const {
+    transaction: executeTx,
+    accountContract,
+    factoryContract,
+    adminAddress,
+    overrides,
+    sponsorGas,
+  } = args;
+  const chain = executeTx.chain;
+  const client = executeTx.client;
+  const isDeployed = await isContractDeployed(accountContract);
+  const initCode = isDeployed
+    ? "0x"
+    : await getAccountInitCode({
+        factoryContract: factoryContract,
+        adminAddress,
+        accountSalt: overrides?.accountSalt,
+        createAccountOverride: overrides?.createAccount,
+      });
   const callData = await encode(executeTx);
+  const bundlerOptions = {
+    client,
+    chain,
+    entrypointAddress: overrides?.entrypointAddress,
+  };
 
   let { maxFeePerGas, maxPriorityFeePerGas } = executeTx;
-  const bundlerUrl =
-    options.overrides?.bundlerUrl ?? getDefaultBundlerUrl(options.chain);
+  const bundlerUrl = overrides?.bundlerUrl ?? getDefaultBundlerUrl(chain);
   if (isThirdwebUrl(bundlerUrl)) {
     // get gas prices from bundler
-    const bundlerGasPrice = await getUserOpGasPrice({
-      options,
+    const bundlerGasPrice = await getUserOpGasFees({
+      options: bundlerOptions,
     });
     maxFeePerGas = bundlerGasPrice.maxFeePerGas;
     maxPriorityFeePerGas = bundlerGasPrice.maxPriorityFeePerGas;
@@ -61,10 +147,7 @@ export async function createUnsignedUserOp(args: {
       maxPriorityFeePerGas = resolvedMaxPriorityFeePerGas;
     } else {
       // Fallback to RPC gas prices if no explicit values provided
-      const feeData = await getDefaultGasOverrides(
-        options.client,
-        options.chain,
-      );
+      const feeData = await getDefaultGasOverrides(client, chain);
 
       // Still check for explicit values in case one is provided and not the other
       maxPriorityFeePerGas =
@@ -77,7 +160,7 @@ export async function createUnsignedUserOp(args: {
   const nonce = randomNonce(); // FIXME getNonce should be overrideable by the wallet
 
   const partialOp: UserOperation = {
-    sender: options.accountContract.address,
+    sender: accountContract.address,
     nonce,
     initCode,
     callData,
@@ -90,10 +173,13 @@ export async function createUnsignedUserOp(args: {
     signature: DUMMY_SIGNATURE,
   };
 
-  if (options.sponsorGas) {
+  if (sponsorGas) {
     const paymasterResult = await getPaymasterAndData({
       userOp: partialOp,
-      options,
+      chain,
+      client,
+      entrypointAddress: overrides?.entrypointAddress,
+      paymasterOverride: overrides?.paymaster,
     });
     const paymasterAndData = paymasterResult.paymasterAndData;
     if (paymasterAndData && paymasterAndData !== "0x") {
@@ -112,7 +198,7 @@ export async function createUnsignedUserOp(args: {
       // otherwise fallback to bundler for gas limits
       const estimates = await estimateUserOpGas({
         userOp: partialOp,
-        options,
+        options: bundlerOptions,
       });
       partialOp.callGasLimit = estimates.callGasLimit;
       partialOp.verificationGasLimit = estimates.verificationGasLimit;
@@ -121,7 +207,10 @@ export async function createUnsignedUserOp(args: {
       if (paymasterAndData && paymasterAndData !== "0x") {
         const paymasterResult2 = await getPaymasterAndData({
           userOp: partialOp,
-          options,
+          chain,
+          client,
+          entrypointAddress: overrides?.entrypointAddress,
+          paymasterOverride: overrides?.paymaster,
         });
         if (
           paymasterResult2.paymasterAndData &&
@@ -135,7 +224,7 @@ export async function createUnsignedUserOp(args: {
     // not gasless, so we just need to estimate gas limits
     const estimates = await estimateUserOpGas({
       userOp: partialOp,
-      options,
+      options: bundlerOptions,
     });
     partialOp.callGasLimit = estimates.callGasLimit;
     partialOp.verificationGasLimit = estimates.verificationGasLimit;
@@ -148,22 +237,37 @@ export async function createUnsignedUserOp(args: {
 }
 
 /**
- * Sign the filled userOp.
+ * Sign a user operation.
  * @param userOp - The UserOperation to sign (with signature field ignored)
- * @internal
+ * @returns - The user operation with the signature field populated
+ * @example
+ * ```ts
+ * import { signUserOp } from "thirdweb/wallets/smart";
+ *
+ * const userOp = createUnsignedUserOp(...);
+ *
+ * const signedUserOp = await signUserOp({
+ *  userOp,
+ *  chain,
+ *  adminAccount,
+ * });
+ * ```
+ * @walletUtils
  */
 export async function signUserOp(args: {
   userOp: UserOperation;
-  options: SmartAccountOptions;
+  chain: Chain;
+  entrypointAddress?: string;
+  adminAccount: Account;
 }): Promise<UserOperation> {
-  const { userOp, options } = args;
+  const { userOp, chain, entrypointAddress, adminAccount } = args;
   const userOpHash = getUserOpHash({
     userOp,
-    entryPoint: options.overrides?.entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
-    chainId: options.chain.id,
+    entryPoint: entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
+    chainId: chain.id,
   });
-  if (options.personalAccount.signMessage) {
-    const signature = await options.personalAccount.signMessage({
+  if (adminAccount.signMessage) {
+    const signature = await adminAccount.signMessage({
       message: {
         raw: hexToBytes(userOpHash),
       },
@@ -176,17 +280,30 @@ export async function signUserOp(args: {
   throw new Error("signMessage not implemented in signingAccount");
 }
 
-async function getAccountInitCode(options: SmartAccountOptions): Promise<Hex> {
-  const { factoryContract } = options;
+async function getAccountInitCode(options: {
+  factoryContract: ThirdwebContract;
+  adminAddress: string;
+  accountSalt?: string;
+  createAccountOverride?: (
+    factoryContract: ThirdwebContract,
+  ) => PreparedTransaction;
+}): Promise<Hex> {
+  const { factoryContract, adminAddress, accountSalt, createAccountOverride } =
+    options;
   const deployTx = prepareCreateAccount({
     factoryContract,
-    options,
+    adminAddress,
+    accountSalt,
+    createAccountOverride,
   });
   return concat([factoryContract.address as Hex, await encode(deployTx)]);
 }
 
 /**
- * @internal
+ * Get the hash of a user operation.
+ * @param args - The user operation, entrypoint address, and chain ID
+ * @returns - The hash of the user operation
+ * @walletUtils
  */
 function getUserOpHash(args: {
   userOp: UserOperation;

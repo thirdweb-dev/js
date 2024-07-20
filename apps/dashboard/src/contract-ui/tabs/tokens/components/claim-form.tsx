@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import {
   type TokenContract,
-  useAddress,
   useClaimToken,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
@@ -18,6 +17,7 @@ import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -32,7 +32,7 @@ interface TokenClaimFormProps {
 
 export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const claim = useClaimToken(contract);
   const {
     register,

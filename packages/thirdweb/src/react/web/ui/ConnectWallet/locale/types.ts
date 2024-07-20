@@ -1,4 +1,7 @@
+import type { LocaleId } from "../../types.js";
+
 export type ConnectLocale = {
+  id: LocaleId;
   agreement: {
     and: string;
     prefix: string;
@@ -85,6 +88,19 @@ export type ConnectLocale = {
   switchTo: string;
   switchingNetwork: string;
   transactions: string;
+  payTransactions: string;
+  walletTransactions: string;
   viewAllTransactions: string;
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
+  manageWallet: {
+    title: string;
+    connectAnApp: string;
+    exportPrivateKey: string;
+  };
+  viewFunds: {
+    title: string;
+    viewTokens: string;
+    viewNFTs: string;
+    viewAssets: string;
+  };
 };

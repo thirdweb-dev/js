@@ -12,7 +12,7 @@ export const MediaCell: React.FC<MediaCellProps> = ({ cell }) => {
 
   return (
     <NFTMediaWithEmptyState
-      pointerEvents="none"
+      className="pointer-events-none"
       metadata={nftMetadata}
       requireInteraction
       width="120px"

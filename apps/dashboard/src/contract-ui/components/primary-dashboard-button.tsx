@@ -4,11 +4,11 @@ import {
   useAllContractList,
 } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Icon } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react/evm";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { FiPlus } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { Button } from "tw-components";
 import { BuildAppsButton } from "./build-apps-button";
 
@@ -24,7 +24,7 @@ export const PrimaryDashboardButton: React.FC<AddToDashboardCardProps> = ({
   const chain = useEVMContractInfo()?.chain;
   const addContract = useAddContractMutation();
   const trackEvent = useTrack();
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
   const router = useRouter();
 
   const registry = useAllContractList(walletAddress);

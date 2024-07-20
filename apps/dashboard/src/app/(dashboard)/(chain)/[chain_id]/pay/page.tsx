@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getChain } from "../../utils";
 import { InfoCard } from "../components/server/info-card";
+import { CustomPayEmbed } from "./components/pay-embed.client";
 
 export default async function Page(props: { params: { chain_id: string } }) {
   const chain = await getChain(props.params.chain_id);
@@ -11,7 +12,8 @@ export default async function Page(props: { params: { chain_id: string } }) {
   }
 
   return (
-    <div className="pb-20">
+    <div className="pb-20 flex flex-col xl:flex-row gap-8">
+      <CustomPayEmbed chainId={chain.chainId} />
       <InfoCard
         title="thirdweb Pay"
         links={[
@@ -22,7 +24,7 @@ export default async function Page(props: { params: { chain_id: string } }) {
         ]}
       >
         <p>
-          thridweb Pay allows your users to purchase cryptocurrencies and
+          thirdweb Pay allows your users to purchase cryptocurrencies and
           execute transactions with their credit/debit card, or with any token
           via cross-chain routing.
         </p>

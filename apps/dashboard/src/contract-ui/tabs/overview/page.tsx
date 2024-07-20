@@ -79,7 +79,10 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           )}
         {contract &&
           ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
-            <TokenDetails contractAddress={contractAddress} />
+            <TokenDetails
+              contractAddress={contractAddress}
+              chainId={contract.chainId}
+            />
           )}
         <LatestEvents
           address={contractAddress}

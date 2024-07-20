@@ -1,11 +1,11 @@
 import {
   type RequiredParam,
-  useAddress,
   useContract,
   useContractMetadata,
   useSDK,
 } from "@thirdweb-dev/react";
 import type { Vote, VoteType } from "@thirdweb-dev/sdk";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { voteKeys } from "../cache-keys";
 import {
@@ -27,7 +27,7 @@ export function useHasVotedOnProposal(
   contract: RequiredParam<Vote>,
   proposalId: string,
 ) {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   return useQueryWithNetwork(
     voteKeys.userHasVotedOnProposal(
       proposalId,
@@ -56,7 +56,7 @@ export function useCanExecuteProposal(
 
 export function useTokensDelegated(contract?: Vote) {
   const sdk = useSDK();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   return useQueryWithNetwork(
     voteKeys.delegation(contract?.getAddress(), address),
@@ -127,7 +127,7 @@ export function useProposalCreateMutation(contractAddress?: string) {
 
 export function useDelegateMutation(contract?: Vote) {
   const sdk = useSDK();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const contractAddress = contract?.getAddress();
 
@@ -159,7 +159,7 @@ export function useCastVoteMutation(
   contract: RequiredParam<Vote>,
   proposalId: string,
 ) {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const contractAddress = contract?.getAddress();
 
   return useMutationWithInvalidate(

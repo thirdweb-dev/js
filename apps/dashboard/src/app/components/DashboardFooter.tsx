@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export function DashboardFooter() {
   return (
-    <footer className="border-t py-4 justify-center items-center flex-col md:flex-row flex gap-4 bg-card">
+    <footer className="flex flex-col items-center justify-center gap-4 p-4 border-t md:flex-row bg-card">
       <a
         target="_blank"
         href="https://feedback.thirdweb.com"
         rel="noreferrer"
-        className="text-muted-foreground text-sm hover:underline"
+        className="text-sm text-muted-foreground hover:underline"
       >
         Feedback
       </a>
@@ -15,7 +15,7 @@ export function DashboardFooter() {
         href="/privacy"
         target="_blank"
         rel="noreferrer"
-        className="text-muted-foreground text-sm hover:underline"
+        className="text-sm text-muted-foreground hover:underline"
       >
         Privacy Policy
       </Link>
@@ -23,7 +23,7 @@ export function DashboardFooter() {
         href="/tos"
         target="_blank"
         rel="noreferrer"
-        className="text-muted-foreground text-sm hover:underline"
+        className="text-sm text-muted-foreground hover:underline"
       >
         Terms of Service
       </Link>
@@ -31,7 +31,7 @@ export function DashboardFooter() {
         href="/gas"
         target="_blank"
         rel="noreferrer"
-        className="text-muted-foreground text-sm hover:underline"
+        className="text-sm text-muted-foreground hover:underline"
       >
         Gas Estimator
       </Link>
@@ -39,11 +39,11 @@ export function DashboardFooter() {
         href="/chainlist"
         target="_blank"
         rel="noreferrer"
-        className="text-muted-foreground text-sm hover:underline"
+        className="text-sm text-muted-foreground hover:underline"
       >
         Chain List
       </Link>
-      <p className="text-muted-foreground text-sm">Copyright © 2024 thirdweb</p>
+      <p className="text-sm text-muted-foreground">Copyright © 2024 thirdweb</p>
     </footer>
   );
 }

@@ -1,85 +1,51 @@
 "use client";
 
+import { thirdwebClient } from "@/constants/client";
 import {
   type EVMContractInfo,
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Chain } from "@thirdweb-dev/chains";
-import {
-  ThirdwebProvider as ThirdwebProviderOld,
-  coin98Wallet,
-  coinbaseWallet,
-  coreWallet,
-  cryptoDefiWallet,
-  embeddedWallet,
-  localWallet,
-  metamaskWallet,
-  okxWallet,
-  oneKeyWallet,
-  phantomWallet,
-  rabbyWallet,
-  rainbowWallet,
-  safeWallet,
-  trustWallet,
-  walletConnect,
-  zerionWallet,
-} from "@thirdweb-dev/react";
-import { GLOBAL_AUTH_TOKEN_KEY, storeEWSToken } from "constants/app";
+import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
   DASHBOARD_THIRDWEB_SECRET_KEY,
 } from "constants/rpc";
+import type { Signer } from "ethers";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
-import { useEffect, useMemo } from "react";
-import { ThirdwebProvider } from "thirdweb/react";
+import { useEffect, useMemo, useState } from "react";
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+} from "thirdweb/react";
+import { setThirdwebDomains } from "thirdweb/utils";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "../../constants/urls";
+
+const THIRDWEB_API_HOST = new URL(
+  process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com",
+)
+  .toString()
+  .slice(0, -1);
+
+// do this upfront
+setThirdwebDomains({
+  bundler: `bundler.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
+  inAppWallet: `embedded-wallet.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
+  pay: `pay.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
+  rpc: `rpc.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
+  storage: `storage.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
+});
 
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
   activeChain?: Chain;
 }
-
-const personalWallets = [
-  metamaskWallet(),
-  coinbaseWallet(),
-  walletConnect({
-    qrModalOptions: {
-      themeVariables: {
-        "--wcm-z-index": "10000",
-      },
-    },
-  }),
-  rainbowWallet(),
-  trustWallet(),
-  zerionWallet(),
-  phantomWallet(),
-  embeddedWallet({
-    onAuthSuccess: ({ storedToken }) => {
-      // save authToken to localstorage
-      storeEWSToken(storedToken.cookieString);
-    },
-  }),
-  localWallet(),
-  rabbyWallet(),
-  okxWallet(),
-  coin98Wallet(),
-  coreWallet(),
-  cryptoDefiWallet(),
-  oneKeyWallet(),
-];
-
-const dashboardSupportedWallets = [
-  ...personalWallets,
-  safeWallet({
-    personalWallets,
-  }),
-];
 
 export const DashboardThirdwebProviderSetup: ComponentWithChildren<
   DashboardThirdwebProviderProps
@@ -103,52 +69,60 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
     };
   }, [chain]);
 
+  const ethersSigner = useEthersSigner();
+
   return (
-    <ThirdwebProvider>
-      <ThirdwebProviderOld
-        queryClient={queryClient}
-        dAppMeta={{
-          name: "thirdweb",
-          logoUrl: "https://thirdweb.com/favicon.ico",
-          isDarkMode: false,
-          url: "https://thirdweb.com",
-        }}
-        activeChain={activeChain}
-        supportedChains={supportedChains}
-        sdkOptions={{
-          gasSettings: { maxPriceInGwei: 650 },
-          readonlySettings,
-        }}
-        clientId={DASHBOARD_THIRDWEB_CLIENT_ID}
-        secretKey={DASHBOARD_THIRDWEB_SECRET_KEY}
-        supportedWallets={dashboardSupportedWallets}
-        storageInterface={StorageSingleton}
-        authConfig={{
-          domain: THIRDWEB_DOMAIN,
-          authUrl: `${THIRDWEB_API_HOST}/v1/auth`,
-        }}
-      >
-        <GlobalAuthTokenProvider />
-        {children}
-      </ThirdwebProviderOld>
-    </ThirdwebProvider>
+    <ThirdwebSDKProvider
+      queryClient={queryClient}
+      signer={ethersSigner}
+      activeChain={activeChain}
+      supportedChains={supportedChains}
+      sdkOptions={{
+        gasSettings: { maxPriceInGwei: 650 },
+        readonlySettings,
+      }}
+      clientId={DASHBOARD_THIRDWEB_CLIENT_ID}
+      secretKey={DASHBOARD_THIRDWEB_SECRET_KEY}
+      storageInterface={StorageSingleton}
+    >
+      {children}
+    </ThirdwebSDKProvider>
   );
 };
 
-const GlobalAuthTokenProvider = () => {
-  const { token, isLoading } = useApiAuthToken();
+function useEthersSigner() {
+  const activeWallet = useActiveWallet();
+  const activeAccount = useActiveAccount();
+  const activeChain = useActiveWalletChain();
+  const [signer, setSigner] = useState<Signer | undefined>(undefined);
 
   // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    if (token && !isLoading) {
-      // biome-ignore lint/suspicious/noExplicitAny: FIXME
-      (window as any)[GLOBAL_AUTH_TOKEN_KEY] = token;
-    } else {
-      // biome-ignore lint/suspicious/noExplicitAny: FIXME
-      (window as any)[GLOBAL_AUTH_TOKEN_KEY] = undefined;
+    let active = true;
+    async function run() {
+      if (!activeWallet || !activeAccount || !activeChain) {
+        setSigner(undefined);
+        return;
+      }
+      try {
+        const s = await ethers5Adapter.signer.toEthers({
+          account: activeAccount,
+          chain: activeChain,
+          client: thirdwebClient,
+        });
+        if (active) {
+          setSigner(s);
+        }
+      } catch (e) {
+        console.error("failed to get signer", e);
+      }
     }
-  }, [token, isLoading]);
+    run();
+    return () => {
+      active = false;
+    };
+  }, [activeAccount, activeChain, activeWallet]);
 
-  return null;
-};
+  return signer;
+}

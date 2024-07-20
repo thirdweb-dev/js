@@ -10,13 +10,12 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
+import { useWalletInfo } from "../../../core/utils/wallet.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { WalletImage } from "../components/WalletImage.js";
 import { Container } from "../components/basic.js";
 import { Text } from "../components/text.js";
 import { StyledButton } from "../design-system/elements.js";
-import { useWalletInfo } from "../hooks/useWalletInfo.js";
-import { useScreenContext } from "./Modal/screen.js";
 import type { ConnectLocale } from "./locale/types.js";
 
 /**
@@ -28,12 +27,14 @@ export function WalletEntryButton(props: {
   connectLocale: ConnectLocale;
   recommendedWallets: Wallet[] | undefined;
   client: ThirdwebClient;
+  isActive: boolean;
+  badge: string | undefined;
 }) {
   const { walletId, selectWallet } = props;
   const isRecommended = props.recommendedWallets?.find(
     (w) => w.id === walletId,
   );
-  const { screen } = useScreenContext();
+
   const walletInfo = useWalletInfo(walletId);
 
   const walletName =
@@ -45,12 +46,10 @@ export function WalletEntryButton(props: {
   );
 
   return (
-    <WalletButton
+    <WalletButtonEl
       type="button"
       onClick={selectWallet}
-      data-active={
-        screen && typeof screen === "object" && screen.id === walletId
-      }
+      data-active={props.isActive}
     >
       <WalletImage id={walletId} size={iconSize.xl} client={props.client} />
 
@@ -63,19 +62,19 @@ export function WalletEntryButton(props: {
           <Skeleton width="100px" height={fontSize.md} />
         )}
 
-        {isRecommended && (
+        {props.badge ? (
+          <Text size="sm">{props.badge}</Text>
+        ) : isRecommended ? (
           <Text size="sm">{props.connectLocale.recommended}</Text>
-        )}
-
-        {!isRecommended && isInstalled && (
+        ) : isInstalled ? (
           <Text size="sm">{props.connectLocale.installed}</Text>
-        )}
+        ) : null}
       </Container>
-    </WalletButton>
+    </WalletButtonEl>
   );
 }
 
-export const WalletButton = /* @__PURE__ */ StyledButton((_) => {
+export const WalletButtonEl = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

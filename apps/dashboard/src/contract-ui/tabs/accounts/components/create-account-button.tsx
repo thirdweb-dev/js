@@ -1,12 +1,12 @@
 import { Tooltip } from "@chakra-ui/react";
 import {
   useAccountsForAddress,
-  useAddress,
   type useContract,
   useCreateAccount,
   useIsAccountDeployed,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, Text } from "tw-components";
 
 interface CreateAccountButtonProps {
@@ -21,7 +21,7 @@ export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
     contractQuery?.contract,
   );
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { data: isAccountDeployed } = useIsAccountDeployed(
     contractQuery.contract,
     address,

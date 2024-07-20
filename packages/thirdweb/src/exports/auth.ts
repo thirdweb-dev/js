@@ -5,7 +5,15 @@ export {
   type VerifyEOASignatureParams,
   verifyContractWalletSignature,
   type VerifyContractWalletSignatureParams,
-} from "../auth/verifySignature.js";
+} from "../auth/verify-signature.js";
+
+export { isErc6492Signature } from "../auth/is-erc6492-signature.js";
+export { serializeErc6492Signature } from "../auth/serialize-erc6492-signature.js";
+export {
+  parseErc6492Signature,
+  type ParseErc6492SignatureReturnType,
+} from "../auth/parse-erc6492-signature.js";
+export type { Erc6492Signature } from "../auth/types.js";
 
 export { createAuth } from "../auth/auth.js";
 export type {

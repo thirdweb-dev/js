@@ -48,20 +48,20 @@ class TransactionError<abi extends Abi> extends Error {
   public chainId: number | undefined;
 
   constructor(reason: string, contract?: ThirdwebContract<abi>) {
-    super();
+    let message = reason;
+    if (__DEV__ && contract) {
+      // show more infor in dev
+      message = [
+        reason,
+        "",
+        `contract: ${contract.address}`,
+        `chainId: ${contract.chain?.id}`,
+      ].join("\n");
+    }
+    super(message);
     this.name = "TransactionError";
     this.contractAddress = contract?.address;
     this.chainId = contract?.chain?.id;
-    if (__DEV__ && contract) {
-      // show more infor in dev
-      this.message = [
-        reason,
-        "",
-        `contract: ${this.contractAddress}`,
-        `chainId: ${this.chainId}`,
-      ].join("\n");
-    } else {
-      this.message = reason;
-    }
+    this.message = message;
   }
 }

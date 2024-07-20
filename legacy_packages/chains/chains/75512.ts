@@ -13,8 +13,8 @@ export default {
   "infoURL": "https://www.geekout-pte.com",
   "name": "GEEK Verse Mainnet",
   "nativeCurrency": {
-    "name": "Geek",
-    "symbol": "GEEK",
+    "name": "OAS",
+    "symbol": "OAS",
     "decimals": 18
   },
   "networkId": 75512,

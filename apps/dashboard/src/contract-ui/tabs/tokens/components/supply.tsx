@@ -1,32 +1,84 @@
+import { thirdwebClient } from "@/constants/client";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { useMemo } from "react";
+import { getContract, toTokens } from "thirdweb";
 import {
-  useAddress,
-  type useContract,
-  useTokenBalance,
-  useTokenSupply,
-} from "@thirdweb-dev/react";
+  getBalance,
+  getCurrencyMetadata,
+  totalSupply,
+} from "thirdweb/extensions/erc20";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { TokenSupplyLayout } from "./supply-layout";
 
 interface TokenBalancesProps {
-  contractQuery: ReturnType<typeof useContract>;
+  contractAddress: string;
+  chainId: number;
 }
 
 export const TokenSupply: React.FC<TokenBalancesProps> = ({
-  contractQuery,
+  contractAddress,
+  chainId,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
-  const { data: tokenSupply, isSuccess: isTokenSupplySuccess } = useTokenSupply(
-    contractQuery.contract,
+  const chain = useV5DashboardChain(chainId);
+
+  const contract = useMemo(
+    () =>
+      getContract({
+        address: contractAddress,
+        chain,
+        client: thirdwebClient,
+      }),
+    [chain, contractAddress],
   );
-  const { data: ownedBalance, isSuccess: isOwnedBalanceSuccess } =
-    useTokenBalance(contractQuery.contract, address);
+
+  const tokenBalanceQuery = useReadContract(getBalance, {
+    contract,
+    address: address || "",
+    queryOptions: { enabled: !!address },
+  });
+
+  const tokenSupplyQuery = useReadContract(totalSupply, {
+    contract,
+    queryOptions: { enabled: !!address },
+  });
+
+  const tokenMetadataQuery = useReadContract(getCurrencyMetadata, { contract });
+
+  const tokenSupply = useMemo(() => {
+    if (
+      tokenMetadataQuery.data === undefined ||
+      tokenSupplyQuery.data === undefined
+    ) {
+      return {
+        value: 0n,
+        displayValue: "0.0",
+        symbol: "LOA",
+        decimals: 18,
+        name: "Loading...",
+      };
+    }
+
+    return {
+      ...tokenMetadataQuery.data,
+      value: tokenSupplyQuery.data,
+      displayValue: toTokens(
+        tokenSupplyQuery.data,
+        tokenMetadataQuery.data.decimals,
+      ),
+    };
+  }, [tokenMetadataQuery.data, tokenSupplyQuery.data]);
+
   return (
     <TokenSupplyLayout
-      isTokenSupplySuccess={isTokenSupplySuccess}
+      isTokenSupplySuccess={
+        tokenSupplyQuery.isSuccess && tokenMetadataQuery.isSuccess
+      }
       tokenSupply={tokenSupply}
-      isOwnedBalanceSuccess={isOwnedBalanceSuccess}
+      isOwnedBalanceSuccess={tokenBalanceQuery.isSuccess}
       address={address}
-      ownedBalance={ownedBalance}
+      ownedBalance={tokenBalanceQuery.data}
     />
   );
 };

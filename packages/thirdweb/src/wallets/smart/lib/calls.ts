@@ -4,28 +4,51 @@ import type { PreparedTransaction } from "../../../transaction/prepare-transacti
 import { readContract } from "../../../transaction/read-contract.js";
 import { stringToHex } from "../../../utils/encoding/hex.js";
 import type { SendTransactionOption } from "../../interfaces/wallet.js";
-import type { SmartAccountOptions, SmartWalletOptions } from "../types.ts";
 
 /**
- * @internal
+ * Predict the address of a smart account.
+ * @param args - The options for predicting the address of a smart account.
+ * @returns The predicted address of the smart account.
+ * @example
+ * ```ts
+ * import { predictAddress } from "thirdweb/wallets/smart";
+ *
+ * const predictedAddress = await predictAddress({
+ *  factoryContract,
+ *  adminAddress,
+ *  accountSalt,
+ * });
+ * ```
+ * @walletUtils
  */
-export async function predictAddress(
-  factoryContract: ThirdwebContract,
-  options: SmartWalletOptions & { personalAccountAddress?: string },
-): Promise<string> {
-  if (options.overrides?.predictAddress) {
-    return options.overrides.predictAddress(factoryContract);
+export async function predictAddress(args: {
+  factoryContract: ThirdwebContract;
+  predictAddressOverride?: (
+    factoryContract: ThirdwebContract,
+  ) => Promise<string>;
+  adminAddress: string;
+  accountSalt?: string;
+  accountAddress?: string;
+}): Promise<string> {
+  const {
+    factoryContract,
+    predictAddressOverride: predictAddress,
+    adminAddress,
+    accountSalt,
+    accountAddress,
+  } = args;
+  if (predictAddress) {
+    return predictAddress(factoryContract);
   }
-  if (options.overrides?.accountAddress) {
-    return options.overrides.accountAddress;
+  if (accountAddress) {
+    return accountAddress;
   }
-  const adminAddress = options.personalAccountAddress;
   if (!adminAddress) {
     throw new Error(
       "Account address is required to predict the smart wallet address.",
     );
   }
-  const extraData = stringToHex(options.overrides?.accountSalt ?? "");
+  const extraData = stringToHex(accountSalt ?? "");
   return readContract({
     contract: factoryContract,
     method: "function getAddress(address, bytes) returns (address)",
@@ -38,19 +61,25 @@ export async function predictAddress(
  */
 export function prepareCreateAccount(args: {
   factoryContract: ThirdwebContract;
-  options: SmartAccountOptions;
+  adminAddress: string;
+  accountSalt?: string;
+  createAccountOverride?: (
+    factoryContract: ThirdwebContract,
+  ) => PreparedTransaction;
 }): PreparedTransaction {
-  const { factoryContract, options } = args;
-  if (options.overrides?.createAccount) {
-    return options.overrides.createAccount(factoryContract);
+  const {
+    adminAddress,
+    factoryContract,
+    createAccountOverride: createAccount,
+    accountSalt,
+  } = args;
+  if (createAccount) {
+    return createAccount(factoryContract);
   }
   return prepareContractCall({
     contract: factoryContract,
     method: "function createAccount(address, bytes) returns (address)",
-    params: [
-      options.personalAccount.address,
-      stringToHex(options.overrides?.accountSalt ?? ""),
-    ],
+    params: [adminAddress, stringToHex(accountSalt ?? "")],
   });
 }
 
@@ -59,12 +88,15 @@ export function prepareCreateAccount(args: {
  */
 export function prepareExecute(args: {
   accountContract: ThirdwebContract;
-  options: SmartAccountOptions;
   transaction: SendTransactionOption;
+  executeOverride?: (
+    accountContract: ThirdwebContract,
+    transaction: SendTransactionOption,
+  ) => PreparedTransaction;
 }): PreparedTransaction {
-  const { accountContract, options, transaction } = args;
-  if (options.overrides?.execute) {
-    return options.overrides.execute(accountContract, transaction);
+  const { accountContract, transaction, executeOverride: execute } = args;
+  if (execute) {
+    return execute(accountContract, transaction);
   }
   return prepareContractCall({
     contract: accountContract,
@@ -82,12 +114,19 @@ export function prepareExecute(args: {
  */
 export function prepareBatchExecute(args: {
   accountContract: ThirdwebContract;
-  options: SmartAccountOptions;
   transactions: SendTransactionOption[];
+  executeBatchOverride?: (
+    accountContract: ThirdwebContract,
+    transactions: SendTransactionOption[],
+  ) => PreparedTransaction;
 }): PreparedTransaction {
-  const { accountContract, options, transactions } = args;
-  if (options.overrides?.executeBatch) {
-    return options.overrides.executeBatch(accountContract, transactions);
+  const {
+    accountContract,
+    transactions,
+    executeBatchOverride: executeBatch,
+  } = args;
+  if (executeBatch) {
+    return executeBatch(accountContract, transactions);
   }
   return prepareContractCall({
     contract: accountContract,

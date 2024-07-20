@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
@@ -15,7 +15,7 @@ import { getInstalledWalletProviders } from "../../../../../wallets/injected/mip
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
-import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
+import { useWalletInfo } from "../../../../core/utils/wallet.js";
 import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
@@ -27,8 +27,6 @@ import {
 import { Spacer } from "../../components/Spacer.js";
 import { Container, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
-import { useWalletInfo } from "../../hooks/useWalletInfo.js";
-import type { LocaleId } from "../../types.js";
 import { AccentFailIcon } from "../icons/AccentFailIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
@@ -49,7 +47,6 @@ export function AnyWalletConnectUI(props: {
   done: () => void;
   onBack?: () => void;
   setModalVisibility: (value: boolean) => void;
-  localeId: LocaleId;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   client: ThirdwebClient;
@@ -71,17 +68,12 @@ export function AnyWalletConnectUI(props: {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const { wallet } = props;
   const walletInfo = useWalletInfo(props.wallet.id);
-  const setSelectionData = useSetSelectionData();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: reset the selection data when the wallet changes
-  useEffect(() => {
-    setSelectionData({});
-  }, [wallet.id]);
-
+  const localeId = props.connectLocale.id;
   const localeFnQuery = useQuery({
-    queryKey: ["injectedWalletLocale", props.localeId, walletInfo.data?.name],
+    queryKey: ["injectedWalletLocale", localeId, walletInfo.data?.name],
     queryFn: async () => {
-      return getInjectedWalletLocale(props.localeId);
+      return getInjectedWalletLocale(localeId);
     },
     refetchOnWindowFocus: false,
     refetchOnMount: false,
@@ -275,7 +267,6 @@ export function AnyWalletConnectUI(props: {
           size={props.size}
           connectLocale={props.connectLocale}
           meta={props.meta}
-          localeId={props.localeId}
         />
       </Suspense>
     );
@@ -292,7 +283,6 @@ export function AnyWalletConnectUI(props: {
           client={props.client}
           size={props.size}
           meta={props.meta}
-          localeId={props.localeId}
           connectLocale={props.connectLocale}
         />
       </Suspense>

@@ -10,6 +10,7 @@ import { createWallet } from "../../../../../wallets/create-wallet.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
+import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../../utils/sortWallets.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -35,6 +36,7 @@ function AllWalletsUI(props: {
   connectLocale: ConnectLocale;
 }) {
   const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
+  const setSelectionData = useSetSelectionData();
 
   const walletList = useMemo(() => {
     return walletInfos.filter((wallet) => {
@@ -141,10 +143,13 @@ function AllWalletsUI(props: {
                       selectWallet={() => {
                         const wallet = createWallet(walletInfo.id);
                         props.onSelect(wallet);
+                        setSelectionData({});
                       }}
                       client={props.client}
                       recommendedWallets={props.recommendedWallets}
                       connectLocale={props.connectLocale}
+                      isActive={false}
+                      badge={undefined}
                     />
                   </li>
                 );

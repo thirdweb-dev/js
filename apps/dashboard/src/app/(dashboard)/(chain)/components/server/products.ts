@@ -37,6 +37,11 @@ export const products = [
     id: "pay",
     icon: PayIcon,
   },
+  {
+    name: "Faucet",
+    id: "faucet",
+    icon: PayIcon,
+  },
 ] satisfies Array<{
   name: string;
   id: ChainSupportedService;

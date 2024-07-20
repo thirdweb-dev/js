@@ -8,6 +8,6 @@ describe("wait", () => {
     await wait(waitTime);
     const end = Date.now();
     const elapsedTime = end - start;
-    expect(elapsedTime).toBeGreaterThanOrEqual(waitTime);
+    expect(Math.abs(elapsedTime - waitTime)).toBeLessThan(10);
   });
 });

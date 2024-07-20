@@ -3,9 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
+import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -14,7 +16,6 @@ import { Text } from "../../ui/components/text.js";
 import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "./locale/types.js";
 import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
-import { setLastAuthProvider } from "./storage.js";
 
 /**
  * @internal
@@ -42,7 +43,17 @@ export function SocialLogin(props: {
 
   const handleSocialLogin = async () => {
     try {
-      const socialWindow = openOauthSignInWindow(props.socialAuth, themeObj);
+      const socialWindow = openOauthSignInWindow({
+        authOption: props.socialAuth,
+        themeObj,
+        client: props.client,
+        ecosystem: isEcosystemWallet(wallet)
+          ? {
+              id: wallet.id,
+              partnerId: wallet.getConfig()?.partnerId,
+            }
+          : undefined,
+      });
 
       if (!socialWindow) {
         throw new Error(`Failed to open ${props.socialAuth} login window`);

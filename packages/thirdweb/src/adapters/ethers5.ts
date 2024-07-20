@@ -339,7 +339,7 @@ export async function toEthersSigner(
       if (!account.sendTransaction) {
         throw new Error("Account does not support sendTransaction");
       }
-      const awaitedTx = await ethers.utils.resolveProperties(transaction);
+      const awaitedTx = await this.populateTransaction(transaction);
       const alignedTx = await alignTxFromEthers(awaitedTx, ethers);
       const tx = prepareTransaction({
         client: client,
@@ -364,7 +364,7 @@ export async function toEthersSigner(
         chainId: tx.chain.id,
         from: account.address,
         data: alignedTx.data ?? "0x",
-        nonce: alignedTx.nonce ?? -1,
+        nonce: alignedTx.nonce ?? 0,
         value: ethers.BigNumber.from(alignedTx.value ?? 0),
         gasLimit: ethers.BigNumber.from(alignedTx.gas ?? 0),
         // biome-ignore lint/style/noNonNullAssertion: TODO: fix later

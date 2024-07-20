@@ -14,6 +14,8 @@ export async function getInAppWalletLocale(
       return (await import("./ja.js")).default;
     case "tl_PH":
       return (await import("./tl.js")).default;
+    case "vi_VN":
+      return (await import("./vi.js")).default;
     default:
       return (await import("./en.js")).default;
   }

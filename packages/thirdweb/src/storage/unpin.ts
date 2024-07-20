@@ -22,8 +22,8 @@ export type UnpinOptions = {
  *   client: thirdwebClient,
  *   cid: "QmTzQ1N1z1Q1N1z1Q1N1z1Q1N1z1Q1N1z1Q1N1z1Q1N1z1",
  * });
- *
  * ```
+ * @storage
  */
 
 export async function unpin(options: UnpinOptions) {

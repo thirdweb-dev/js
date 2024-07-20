@@ -7,7 +7,6 @@ import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { WalletEntryButton } from "../../ui/ConnectWallet/WalletEntryButton.js";
 import { reservedScreens } from "../../ui/ConnectWallet/constants.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
-import type { LocaleId } from "../../ui/types.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import { LoadingScreen } from "../shared/LoadingScreen.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
@@ -25,12 +24,11 @@ function InAppWalletSelectionUI(props: {
   client: ThirdwebClient;
   recommendedWallets: Wallet[] | undefined;
   chain: Chain | undefined;
-  localeId: LocaleId;
   size: "compact" | "wide";
 }) {
   const { screen } = useScreenContext();
   const setData = useSetSelectionData();
-  const locale = useInAppWalletLocale(props.localeId);
+  const locale = useInAppWalletLocale(props.connectLocale.id);
 
   // do not show the "selectUI" if
   // modal is compact or
@@ -49,6 +47,8 @@ function InAppWalletSelectionUI(props: {
         client={props.client}
         connectLocale={props.connectLocale}
         recommendedWallets={props.recommendedWallets}
+        isActive={screen === props.wallet}
+        badge={undefined}
       />
     );
   }

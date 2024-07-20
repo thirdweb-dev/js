@@ -7,16 +7,17 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import {
-  type TokenContract,
-  useAddress,
-  useBurnToken,
-  useTokenDecimals,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { type ThirdwebContract, toUnits } from "thirdweb";
+import { burn, decimals } from "thirdweb/extensions/erc20";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -27,13 +28,13 @@ import {
 
 const BURN_FORM_ID = "token-burn-form";
 interface TokenBurnFormProps {
-  contract: TokenContract;
+  contract: ThirdwebContract;
 }
 
 export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
-  const burn = useBurnToken(contract);
+  const address = useActiveAccount()?.address;
+
   const {
     register,
     handleSubmit,
@@ -48,7 +49,8 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
     contract,
   );
 
-  const decimals = useTokenDecimals(contract);
+  const decimalsQuery = useReadContract(decimals, { contract });
+  const sendTransaction = useSendAndConfirmTransaction();
 
   return (
     <>
@@ -62,7 +64,7 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
               <FormLabel>Amount</FormLabel>
               <Input
                 type="text"
-                pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
+                pattern={`^\\d+(\\.\\d{1,${decimalsQuery.data || 18}})?$`}
                 {...register("amount")}
               />
               <FormHelperText>How many would you like to burn?</FormHelperText>
@@ -81,40 +83,48 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
         <TransactionButton
           transactionCount={1}
           form={BURN_FORM_ID}
-          isLoading={burn.isLoading}
+          isLoading={sendTransaction.isPending}
           type="submit"
           colorScheme="primary"
           isDisabled={!isDirty}
-          onClick={handleSubmit((d) => {
+          onClick={handleSubmit((data) => {
             if (address) {
               trackEvent({
                 category: "token",
                 action: "burn",
                 label: "attempt",
               });
-              burn.mutate(
-                { amount: d.amount },
-                {
-                  onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "burn",
-                      label: "success",
-                    });
-                    onSuccess();
-                    modalContext.onClose();
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "burn",
-                      label: "error",
-                      error,
-                    });
-                    onError(error);
-                  },
+
+              // TODO: burn should be updated to take amount / amountWei (v6?)
+              const tx = burn({
+                contract,
+                asyncParams: async () => {
+                  return {
+                    amount: toUnits(data.amount, await decimals({ contract })),
+                  };
                 },
-              );
+              });
+
+              sendTransaction.mutate(tx, {
+                onSuccess: () => {
+                  trackEvent({
+                    category: "token",
+                    action: "burn",
+                    label: "success",
+                  });
+                  onSuccess();
+                  modalContext.onClose();
+                },
+                onError: (error) => {
+                  trackEvent({
+                    category: "token",
+                    action: "burn",
+                    label: "error",
+                    error,
+                  });
+                  onError(error);
+                },
+              });
             }
           })}
         >

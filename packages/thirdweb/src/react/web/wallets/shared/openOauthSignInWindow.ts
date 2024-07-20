@@ -1,4 +1,7 @@
+import type { ThirdwebClient } from "../../../../client/client.js";
+import { getDiscordLoginPath } from "../../../../wallets/in-app/core/authentication/getLoginPath.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
+import type { Ecosystem } from "../../../../wallets/in-app/web/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 
 function getBodyTitle(authOption: InAppWalletSocialAuth) {
@@ -21,21 +24,41 @@ function getWidthAndHeight(authOption: InAppWalletSocialAuth) {
   }
 }
 
+function getOauthLoginPath(
+  authOption: InAppWalletSocialAuth,
+  client: ThirdwebClient,
+  ecosystem?: Ecosystem,
+) {
+  switch (authOption) {
+    case "discord":
+      return getDiscordLoginPath(client, ecosystem);
+    default:
+      return "";
+  }
+}
+
 /**
  *
  * @internal
  */
-export function openOauthSignInWindow(
-  authOption: InAppWalletSocialAuth,
-  themeObj: Theme,
-) {
+export function openOauthSignInWindow({
+  authOption,
+  themeObj,
+  client,
+  ecosystem,
+}: {
+  authOption: InAppWalletSocialAuth;
+  themeObj: Theme;
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+}) {
   // open the popup in the center of the screen
   const { height, width } = getWidthAndHeight(authOption);
   const top = (window.innerHeight - height) / 2;
   const left = (window.innerWidth - width) / 2;
 
   const win = window.open(
-    "",
+    getOauthLoginPath(authOption, client, ecosystem),
     undefined,
     `width=${width}, height=${height}, top=${top}, left=${left}`,
   );

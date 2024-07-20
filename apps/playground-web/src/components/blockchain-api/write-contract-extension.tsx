@@ -28,6 +28,8 @@ export function WriteContractExtensionPreview() {
       <Image
         src="/twcoin.svg"
         className="mx-auto rounded-2xl animate-bounce size-32"
+        width={50}
+        height={50}
         alt=""
       />
       <div className="my-3 text-center">Claim free testnet tokens</div>

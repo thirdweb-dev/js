@@ -66,10 +66,12 @@ export function useSiweAuth(
       }
       return authOptions.isLoggedIn(activeAccount.address);
     },
+    placeholderData: false,
     refetchOnWindowFocus: false,
   });
 
   const loginMutation = useMutation({
+    mutationKey: ["siwe_auth", "login"],
     mutationFn: async () => {
       if (!authOptions) {
         throw new Error("No auth options provided");
@@ -109,6 +111,7 @@ export function useSiweAuth(
   });
 
   const logoutMutation = useMutation({
+    mutationKey: ["siwe_auth", "logout"],
     mutationFn: async () => {
       if (!authOptions) {
         throw new Error("No auth options provided");
@@ -137,6 +140,6 @@ export function useSiweAuth(
 
     // checking if logged in
     isLoggedIn: isLoggedInQuery.data,
-    isLoading: isLoggedInQuery.isLoading,
+    isLoading: isLoggedInQuery.isFetching,
   };
 }

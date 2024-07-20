@@ -2,7 +2,7 @@ import { Box, DarkMode } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import "../../../css/swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import dynamic from "next/dynamic";
 
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
@@ -14,7 +14,7 @@ interface EngineExplorerProps {
 export const EngineExplorer: React.FC<EngineExplorerProps> = ({
   instanceUrl,
 }) => {
-  const { token } = useApiAuthToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   return (
     <ClientOnly ssr={null}>
       <DarkMode>

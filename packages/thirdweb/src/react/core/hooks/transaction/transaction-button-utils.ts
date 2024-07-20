@@ -100,6 +100,13 @@ export type TransactionButtonProps = {
    * The theme to use for the button
    */
   theme?: "dark" | "light" | Theme;
+
+  /**
+   * Set the type attribute of the button element.
+   *
+   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLButtonElement/type)
+   */
+  type?: HTMLButtonElement["type"];
 };
 
 export const useTransactionButtonMutation = (

@@ -11,7 +11,10 @@ import {
   setWallerUserDetails,
 } from "../storage/local.js";
 import { setUpNewUserWallet } from "../wallet/creation.js";
-import { getCognitoRecoveryPassword } from "../wallet/recoveryCode.js";
+import {
+  getCognitoRecoveryPasswordV1,
+  getCognitoRecoveryPasswordV2,
+} from "../wallet/recoveryCode.js";
 import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 
 export async function preAuth(args: {
@@ -42,7 +45,9 @@ export async function postAuth({
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
-        : undefined, // TODO (rn) store phone number too?
+        : "phoneNumber" in storedToken.authDetails
+          ? storedToken.authDetails.phoneNumber
+          : undefined,
   });
 
   if (storedToken.isNewUser) {
@@ -100,7 +105,9 @@ export async function postAuthUserManaged(
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
-        : undefined, // TODO (rn) store phone number too?
+        : "phoneNumber" in storedToken.authDetails
+          ? storedToken.authDetails.phoneNumber
+          : undefined,
   });
 
   if (storedToken.isNewUser) {
@@ -147,7 +154,10 @@ async function getRecoveryCode(
       return recoveryCode;
     } else {
       try {
-        const code = await getCognitoRecoveryPassword(client);
+        // temporary fork for discord until we migrate all methods to the new auth flow
+        const code = await (storedToken.authProvider === AuthProvider.DISCORD
+          ? getCognitoRecoveryPasswordV2(client)
+          : getCognitoRecoveryPasswordV1(client));
         return code;
       } catch (e) {
         throw new Error("Something went wrong getting cognito recovery code");

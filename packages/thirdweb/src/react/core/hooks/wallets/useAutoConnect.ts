@@ -15,7 +15,7 @@ import { useSetActiveWalletConnectionStatusCore } from "./useSetActiveWalletConn
 export function useAutoConnectCore(
   manager: ConnectionManager,
   storage: AsyncStorage,
-  props: AutoConnectProps,
+  props: AutoConnectProps & { wallets: Wallet[] },
   getInstalledWallets?: () => Wallet[],
 ) {
   const setConnectionStatus = useSetActiveWalletConnectionStatusCore(manager);

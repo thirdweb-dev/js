@@ -2,21 +2,20 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import {
   fontSize,
   iconSize,
-  radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import type { TokenInfo } from "../../../defaultTokens.js";
 import { GenericWalletIcon } from "../../../icons/GenericWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
@@ -36,12 +35,12 @@ export function PayWithCrypto(props: {
   isLoading: boolean;
   client: ThirdwebClient;
   freezeChainAndTokenSelection?: boolean;
+  payerAccount: Account;
 }) {
-  const chainQuery = useChainQuery(props.chain);
-  const activeAccount = useActiveAccount();
+  const { name } = useChainName(props.chain);
 
   const balanceQuery = useWalletBalance({
-    address: activeAccount?.address,
+    address: props.payerAccount.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
     client: props.client,
@@ -53,10 +52,8 @@ export function PayWithCrypto(props: {
       borderColor="borderColor"
       flex="row"
       style={{
-        borderRadius: radius.md,
-        borderBottomRightRadius: 0,
-        borderBottomLeftRadius: 0,
         borderWidth: "1px",
+        borderTopWidth: 0,
         borderStyle: "solid",
         borderBottom: "none",
         flexWrap: "nowrap",
@@ -89,8 +86,8 @@ export function PayWithCrypto(props: {
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
-          {chainQuery.data?.name ? (
-            <Text size="xs"> {chainQuery.data.name}</Text>
+          {name ? (
+            <Text size="xs"> {name}</Text>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
@@ -121,7 +118,7 @@ export function PayWithCrypto(props: {
             color={props.value ? "primaryText" : "secondaryText"}
             style={{}}
           >
-            {formatNumber(Number(props.value), 4) || "--"}
+            {formatNumber(Number(props.value), 6) || "--"}
           </Text>
         )}
 

@@ -8,7 +8,7 @@ import {
   iconSize,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { TokenIcon } from "../../../../components/TokenIcon.js";
@@ -34,7 +34,7 @@ export function BuyTokenInput(props: {
   freezeAmount?: boolean;
   freezeChainAndToken?: boolean;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const { name } = useChainName(props.chain);
 
   const getWidth = () => {
     let chars = props.value.replace(".", "").length;
@@ -160,9 +160,9 @@ export function BuyTokenInput(props: {
                   />
 
                   {/* Network Name */}
-                  {chainQuery.data?.name ? (
+                  {name ? (
                     <Text size="xs" color="secondaryText">
-                      {chainQuery.data.name}
+                      {name}
                     </Text>
                   ) : (
                     <Skeleton width="90px" height={fontSize.xs} />

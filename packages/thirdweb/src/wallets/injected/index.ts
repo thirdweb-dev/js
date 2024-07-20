@@ -124,9 +124,9 @@ export async function autoConnectInjectedWallet(
   return onConnect(provider, address, connectedChain, emitter);
 }
 
-function createAccount(provider: Ethereum, address: string) {
+function createAccount(provider: Ethereum, _address: string) {
   const account: Account = {
-    address,
+    address: getAddress(_address),
     async sendTransaction(tx: SendTransactionOption) {
       const transactionHash = (await provider.request({
         method: "eth_sendTransaction",
@@ -228,7 +228,7 @@ async function onConnect(
     provider.removeListener("disconnect", onDisconnect);
   }
 
-  function onDisconnect() {
+  async function onDisconnect() {
     disconnect();
     emitter.emit("disconnect", undefined);
   }
@@ -258,7 +258,7 @@ async function onConnect(
   return [
     account,
     chain,
-    disconnect,
+    onDisconnect,
     (newChain) => switchChain(provider, newChain),
   ] as const;
 }

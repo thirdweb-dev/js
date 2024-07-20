@@ -9,7 +9,6 @@ import {
   Tabs,
   usePrevious,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
@@ -17,6 +16,7 @@ import type {
   DirectListing,
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
+import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
@@ -39,7 +39,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
   data,
   type,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const prevData = usePrevious(data);
 
   const renderData = data || prevData;
@@ -171,7 +171,6 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
           <NFTMediaWithEmptyState
-            // @ts-expect-error types are not up to date
             metadata={renderData.asset.metadata}
             requireInteraction
             width="150px"

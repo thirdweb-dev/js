@@ -1,5 +1,5 @@
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Flex,
   FormControl,
@@ -182,7 +182,7 @@ const CancelTransactionButton = ({
   instanceUrl: string;
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const auth = useApiAuthToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const { onSuccess, onError } = useTxNotifications(
     "Successfully sent a request to cancel the transaction",
     "Failed to cancel transaction",
@@ -195,7 +195,7 @@ const CancelTransactionButton = ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${auth.token}`,
+          Authorization: `Bearer ${token}`,
           "x-backend-wallet-address": transaction.fromAddress ?? "",
         },
         body: JSON.stringify({ queueId: transaction.queueId }),

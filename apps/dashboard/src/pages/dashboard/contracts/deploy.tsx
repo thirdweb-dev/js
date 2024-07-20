@@ -12,7 +12,6 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ImportModal } from "components/contract-components/import-contract/modal";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
@@ -23,6 +22,7 @@ import Image from "next/image";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { FiChevronsRight } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -180,7 +180,7 @@ const DeployOptions = () => {
 };
 
 const Contracts: ThirdwebNextPage = () => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const deployedContracts = useAllContractList(address);
 
   const hasContracts = useMemo(

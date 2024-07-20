@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAddress, useSDK, useSigner } from "@thirdweb-dev/react";
+import { useSigner } from "@thirdweb-dev/react";
 import {
   addContractToMultiChainRegistry,
   getGaslessPolygonSDK,
@@ -13,6 +13,7 @@ import { defineDashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 
 const MULTICHAIN_REGISTRY_ADDRESS =
@@ -95,7 +96,7 @@ type RemoveContractParams = {
 };
 
 export function useRemoveContractMutation() {
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
   const signer = useSigner();
   const { chainIdToChainRecord } = useAllChainsData();
 
@@ -133,23 +134,20 @@ type AddContractParams = {
 };
 
 export function useAddContractMutation() {
-  const sdk = useSDK();
-  const walletAddress = useAddress();
-  const signer = useSigner();
+  const account = useActiveAccount();
 
   const queryClient = useQueryClient();
 
   return useMutation(
     async (data: AddContractParams) => {
-      invariant(walletAddress, "cannot add a contract without an address");
-      invariant(sdk, "sdk not provided");
+      invariant(account, "cannot add a contract without an address");
 
       return await addContractToMultiChainRegistry(
         {
           address: data.contractAddress,
           chainId: data.chainId,
         },
-        signer,
+        account,
       );
     },
     {

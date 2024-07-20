@@ -1,7 +1,5 @@
-import {
-  type ConnectWalletProps,
-  CustomConnectWallet,
-} from "@3rdweb-sdk/react/components/connect-wallet";
+import { thirdwebClient } from "@/constants/client";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
   Flex,
@@ -15,55 +13,52 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
-import {
-  ChainId,
-  useBalance,
-  useChainId,
-  useConnectionStatus,
-  useNetworkMismatch,
-  useSDK,
-  useSDKChainId,
-  useSwitchChain,
-  useWallet,
-} from "@thirdweb-dev/react";
+import { ChainId, useSDK, useSDKChainId } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { forwardRef, useCallback, useEffect, useMemo, useRef } from "react";
+import { forwardRef, useCallback, useMemo, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+  useActiveWalletConnectionStatus,
+  useSwitchActiveWalletChain,
+  useWalletBalance,
+} from "thirdweb/react";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
+import { defineDashboardChain } from "../../lib/v5-adapter";
 
-export const MismatchButton = forwardRef<
-  HTMLButtonElement,
-  ButtonProps & ConnectWalletProps
->(
-  (
-    {
-      children,
-      isDisabled,
-      onClick,
-      loadingText,
-      type,
-      upsellTestnet = false,
-      onChainSelect,
-      ...props
-    },
-    ref,
-  ) => {
-    const wallet = useWallet();
-    const evmBalance = useBalance();
+function useNetworkMismatchAdapter() {
+  const walletChainId = useActiveWalletChain()?.id;
+  const v4SDKChainId = useSDKChainId();
+  if (!walletChainId || !v4SDKChainId) {
+    // simply not ready yet, assume false
+    return false;
+  }
+  // otherwise, compare the chain ids
+  return walletChainId !== v4SDKChainId;
+}
+
+export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
+    const account = useActiveAccount();
+    const wallet = useActiveWallet();
+    const activeWalletChain = useActiveWalletChain();
+    const evmBalance = useWalletBalance({
+      address: account?.address,
+      chain: activeWalletChain,
+      client: thirdwebClient,
+    });
     const initialFocusRef = useRef<HTMLButtonElement>(null);
-    const networksMismatch = useNetworkMismatch();
+    const networksMismatch = useNetworkMismatchAdapter();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const trackEvent = useTrack();
 
-    const chainId = useChainId();
+    const chainId = useActiveWalletChain()?.id;
     const chainInfo = useSupportedChain(chainId || -1);
 
-    const hasFaucet =
-      chainInfo &&
-      (chainInfo.chainId === ChainId.Localhost ||
-        (chainInfo.faucets && chainInfo.faucets.length > 0));
     const eventRef = useRef<React.MouseEvent<HTMLButtonElement, MouseEvent>>();
     if (!wallet) {
       return (
@@ -139,12 +134,6 @@ export const MismatchButton = forwardRef<
                   }
                 }}
               />
-            ) : !hasFaucet && upsellTestnet && onChainSelect ? (
-              <UpsellTestnetNotice
-                initialFocusRef={initialFocusRef}
-                onClose={onClose}
-                onChainSelect={onChainSelect}
-              />
             ) : (
               <NoFundsNotice symbol={chainInfo?.nativeCurrency.symbol || ""} />
             )}
@@ -161,13 +150,13 @@ const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
   onClose: (hasSwitched: boolean) => void;
 }> = ({ initialFocusRef, onClose }) => {
-  const connectedChainId = useChainId();
+  const connectedChainId = useActiveWalletChain()?.id;
   const desiredChainId = useSDKChainId();
-  const switchNetwork = useSwitchChain();
-  const connectionStatus = useConnectionStatus();
-  const activeChain = useWallet();
+  const switchNetwork = useSwitchActiveWalletChain();
+  const connectionStatus = useActiveWalletConnectionStatus();
+  const activeWallet = useActiveWallet();
   const actuallyCanAttemptSwitch =
-    activeChain && activeChain.walletId !== "Safe";
+    activeWallet && activeWallet.id !== "global.safe";
   const walletConnectedNetworkInfo = useSupportedChain(connectedChainId || -1);
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -176,7 +165,7 @@ const MismatchNotice: React.FC<{
   const onSwitchWallet = useCallback(async () => {
     if (actuallyCanAttemptSwitch && desiredChainId && chain) {
       try {
-        await switchNetwork(desiredChainId);
+        await switchNetwork(defineDashboardChain(desiredChainId));
         onClose(true);
       } catch (e) {
         //  failed to switch network
@@ -222,9 +211,7 @@ const MismatchNotice: React.FC<{
         leftIcon={<Icon as={VscDebugDisconnect} />}
         size="sm"
         onClick={onSwitchWallet}
-        isLoading={
-          connectionStatus === "connecting" || connectionStatus === "unknown"
-        }
+        isLoading={connectionStatus === "connecting"}
         isDisabled={!actuallyCanAttemptSwitch}
         colorScheme="orange"
         textTransform="capitalize"
@@ -251,9 +238,8 @@ interface NoFundsNoticeProps {
 const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
   const trackEvent = useTrack();
 
-  const balanceQuery = useBalance();
   const sdk = useSDK();
-  const chainId = useChainId();
+  const chainId = useActiveWalletChain()?.id;
   const chainInfo = useSupportedChain(chainId || -1);
 
   const hasFaucet =
@@ -270,7 +256,6 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
       });
       if (chainInfo.chainId === ChainId.Localhost) {
         await sdk.wallet.requestFunds(10);
-        await balanceQuery.refetch();
       } else if (chainInfo?.faucets && chainInfo.faucets.length > 0) {
         const faucet = chainInfo.faucets[0];
         window.open(faucet, "_blank");
@@ -297,93 +282,6 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
         <Button size="sm" colorScheme="orange" onClick={requestFunds}>
           Get {symbol} from faucet
         </Button>
-      )}
-    </Flex>
-  );
-};
-
-const UpsellTestnetNotice: React.FC<{
-  initialFocusRef: React.RefObject<HTMLButtonElement>;
-  onClose: () => void;
-  onChainSelect: (chainId: number) => void;
-}> = ({ initialFocusRef, onClose, onChainSelect }) => {
-  const trackEvent = useTrack();
-  const connectedChainId = useChainId();
-  const switchNetwork = useSwitchChain();
-  const actuallyCanAttemptSwitch = !!switchNetwork;
-
-  const chain = useSupportedChain(connectedChainId || -1);
-
-  // FIXME: find a better way to track the "show" state of a component
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    trackEvent({
-      category: "no-funds",
-      action: "popover",
-      label: "switch-to-testnet",
-    });
-  }, [trackEvent]);
-
-  const onSwitchWallet = useCallback(async () => {
-    trackEvent({
-      category: "no-funds",
-      action: "click",
-      label: "switch-to-testnet",
-    });
-    if (actuallyCanAttemptSwitch && chain) {
-      await switchNetwork(80002);
-    }
-    onChainSelect(80002);
-    onClose();
-  }, [
-    chain,
-    actuallyCanAttemptSwitch,
-    onClose,
-    switchNetwork,
-    onChainSelect,
-    trackEvent,
-  ]);
-
-  return (
-    <Flex direction="column" gap={4}>
-      <Heading size="label.lg">
-        <Flex gap={2} align="center">
-          <Icon boxSize={6} as={AiOutlineWarning} />
-          <span>No funds to deploy</span>
-        </Flex>
-      </Heading>
-
-      <Text>
-        You&apos;re trying to deploy to the{" "}
-        <Box as="strong" textTransform="capitalize">
-          {chain?.name}
-        </Box>{" "}
-        network but no funds have been detected.
-      </Text>
-      <Text>
-        You can either get funds on this network or switch to a testnet like
-        Amoy to test your contract.
-      </Text>
-
-      <Button
-        ref={actuallyCanAttemptSwitch ? initialFocusRef : undefined}
-        leftIcon={<Icon as={VscDebugDisconnect} />}
-        size="sm"
-        onClick={onSwitchWallet}
-        // isLoading={network.loading}
-        isDisabled={!actuallyCanAttemptSwitch}
-        colorScheme="orange"
-        noOfLines={1}
-      >
-        Switch wallet to Polygon Amoy Testnet
-      </Button>
-
-      {!actuallyCanAttemptSwitch && (
-        <Text size="body.sm" fontStyle="italic">
-          Your connected wallet does not support programmatic switching.
-          <br />
-          Please manually switch the network in your wallet.
-        </Text>
       )}
     </Flex>
   );

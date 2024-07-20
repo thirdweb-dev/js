@@ -19,7 +19,6 @@ import { DeploymentTransaction } from "../types/any-evm/deploy-data";
 import { zkDeployCreate2Factory } from "./zkDeployCreate2Factory";
 import { getZkDeploymentInfo } from "./getZkDeploymentInfo";
 import {
-  registerContractOnMultiChainRegistry,
   zkDeployContractDeterministic,
 } from "./zkDeployContractDeterministic";
 import invariant from "tiny-invariant";
@@ -206,13 +205,6 @@ export async function zkDeployContractFromUri(
 
       await proxy.deployed();
 
-      // register on multichain registry
-      await registerContractOnMultiChainRegistry(
-        proxy.address,
-        chainId,
-        compilerMetadata.fetchedMetadataUri,
-      );
-
       deployedAddress = proxy.address;
     } else {
       throw new Error("Invalid deploy type");
@@ -292,30 +284,19 @@ export async function zkDeployContractFromUri(
       const contract = await factory.deploy(...paramValues);
       deployedAddress = contract.address;
     }
-
-    if (deployedAddress) {
-      // register on multichain registry
-      await registerContractOnMultiChainRegistry(
-        deployedAddress,
-        chainId,
-        compilerMetadata.fetchedMetadataUri,
-      );
-    }
   }
 
   // fire-and-forget verification, don't await
-  try {
-    zkVerify(
-      deployedAddress,
-      chainId,
-      blockExplorerApiMap[chainId],
-      "",
-      storage,
-      compilerMetadata.fetchedMetadataUri,
-    );
-  } catch (error) {
-    // ignore error
-  }
+  zkVerify(
+    deployedAddress,
+    chainId,
+    blockExplorerApiMap[chainId],
+    "",
+    storage,
+    compilerMetadata.fetchedMetadataUri,
+  ).catch((error) => {
+    console.warn("Error verifying contract", error);
+  });
 
   return deployedAddress;
 }

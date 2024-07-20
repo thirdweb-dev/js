@@ -11,7 +11,6 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import {
   type TokenContract,
   type TokenParams,
-  useAddress,
   useMintToken,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
@@ -19,6 +18,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 const MINT_FORM_ID = "token-mint-form";
@@ -27,7 +27,7 @@ interface TokenMintFormProps {
 }
 
 export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const mint = useMintToken(contract);
   const decimals = useTokenDecimals(contract);
 

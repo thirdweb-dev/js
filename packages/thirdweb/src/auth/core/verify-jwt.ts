@@ -1,6 +1,6 @@
-import { deccodeJWT } from "../../utils/jwt/decode-jwt.js";
+import { decodeJWT } from "../../utils/jwt/decode-jwt.js";
 import type { JWTPayload } from "../../utils/jwt/types.js";
-import { verifyEOASignature } from "../verifySignature.js";
+import { verifyEOASignature } from "../verify-signature.js";
 import type { AuthOptions } from "./types.js";
 
 export type VerifyJWTParams = {
@@ -26,7 +26,7 @@ export type VerifyJWTResult =
  */
 export function verifyJWT(options: AuthOptions) {
   return async (params: VerifyJWTParams): Promise<VerifyJWTResult> => {
-    const { payload, signature } = deccodeJWT(params.jwt);
+    const { payload, signature } = decodeJWT(params.jwt);
 
     if (!options.adminAccount) {
       throw new Error("No admin account provided. Cannot verify JWT.");

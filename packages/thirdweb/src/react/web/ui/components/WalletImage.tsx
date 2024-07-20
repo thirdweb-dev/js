@@ -7,23 +7,20 @@ import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdSt
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
-import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { getLastAuthProvider } from "../../wallets/shared/storage.js";
-import {
-  emailIcon,
-  genericWalletIcon,
-  passkeyIcon,
-  phoneIcon,
-} from "../ConnectWallet/icons/dataUris.js";
 import {
   appleIconUri,
+  discordIconUri,
+  emailIcon,
   facebookIconUri,
+  genericWalletIcon,
   googleIconUri,
-} from "../ConnectWallet/icons/socialLogins.js";
-import { useWalletImage } from "../hooks/useWalletInfo.js";
+  passkeyIcon,
+  phoneIcon,
+} from "../../../core/utils/socialIcons.js";
+import { getLastAuthProvider } from "../../../core/utils/storage.js";
+import { useWalletImage } from "../../../core/utils/wallet.js";
+import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { Img } from "./Img.js";
-
-// Note: Must not use useConnectUI here
 
 /**
  * @internal
@@ -32,6 +29,7 @@ export function WalletImage(props: {
   id: WalletId;
   size: string;
   client: ThirdwebClient;
+  style?: React.CSSProperties;
 }) {
   const [image, setImage] = useState<string | undefined>(undefined);
   const activeWallet = useActiveWallet();
@@ -76,6 +74,9 @@ export function WalletImage(props: {
           case "passkey":
             image = passkeyIcon;
             break;
+          case "discord":
+            image = discordIconUri;
+            break;
         }
       } else {
         const mipdImage = getInstalledWalletProviders().find(
@@ -104,6 +105,7 @@ export function WalletImage(props: {
         client={props.client}
         style={{
           borderRadius: radius.md,
+          ...props.style,
         }}
       />
     );

@@ -26,18 +26,67 @@ export async function encode<abi extends Abi, abiFn extends AbiFunction>(
     return encodeWeakMap.get(transaction)!;
   }
   const promise = (async () => {
-    if (transaction.data === undefined) {
-      return "0x";
+    const [data, extraData, { concatHex }] = await Promise.all([
+      getDataFromTx(transaction),
+      getExtraCallDataFromTx(transaction),
+      import("../../utils/encoding/helpers/concat-hex.js"),
+    ]);
+    if (extraData) {
+      return concatHex([data, extraData]);
     }
-    if (typeof transaction.data === "function") {
-      const data = await transaction.data();
-      if (!data) {
-        return "0x";
-      }
-      return data;
-    }
-    return transaction.data;
+    return data;
   })();
   encodeWeakMap.set(transaction, promise);
   return promise;
+}
+
+/**
+ * Get the transaction.data (from a PreparedTransaction)
+ * If the transaction does not have `data`, we default to "0x"
+ * @internal
+ */
+export async function getDataFromTx<abi extends Abi, abiFn extends AbiFunction>(
+  transaction: PreparedTransaction<abi, abiFn>,
+): Promise<Hex> {
+  if (transaction.data === undefined) {
+    return "0x";
+  }
+  if (typeof transaction.data === "function") {
+    const data = await transaction.data();
+    if (!data) {
+      return "0x";
+    }
+    return data;
+  }
+  return transaction.data;
+}
+
+/**
+ * Get the extraCallData from a PreparedTransaction
+ * @internal
+ * If extraCallData is "0x", we will return `undefined`
+ * to simplify the code, since concatenating "0x" doesn't do anything
+ */
+export async function getExtraCallDataFromTx<
+  abi extends Abi,
+  abiFn extends AbiFunction,
+>(transaction: PreparedTransaction<abi, abiFn>): Promise<Hex | undefined> {
+  if (!transaction.extraCallData) {
+    return undefined;
+  }
+  if (typeof transaction.extraCallData === "function") {
+    const extraData = await transaction.extraCallData();
+    if (!extraData) return undefined;
+    if (!extraData.startsWith("0x")) {
+      throw Error("Invalid extra calldata - must be a hex string");
+    }
+    if (extraData === "0x") {
+      return undefined;
+    }
+    return extraData;
+  }
+  if (!transaction.extraCallData.startsWith("0x")) {
+    throw Error("Invalid extra calldata - must be a hex string");
+  }
+  return transaction.extraCallData;
 }

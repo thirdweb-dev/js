@@ -146,11 +146,12 @@ const ConnectModal = (props: ConnectModalOptions) => {
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         wallets={props.wallets}
-        localeId={props.localeId}
         chain={props.chain}
         showAllWallets={props.showAllWallets}
         chains={props.chains}
         walletConnect={props.walletConnect}
+        modalHeader={undefined}
+        walletIdsToHide={undefined}
       />
     </Modal>
   );

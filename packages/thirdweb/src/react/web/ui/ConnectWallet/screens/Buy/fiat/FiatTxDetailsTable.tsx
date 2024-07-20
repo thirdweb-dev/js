@@ -6,13 +6,13 @@ import {
   fontSize,
   iconSize,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container, Line } from "../../../../components/basic.js";
 import { ButtonLink } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
-import { TokenInfoRow } from "../tx-history/TokenInfoRow.js";
-import type { FiatStatusMeta } from "../tx-history/statusMeta.js";
+import { TokenInfoRow } from "../pay-transactions/TokenInfoRow.js";
+import type { FiatStatusMeta } from "../pay-transactions/statusMeta.js";
 import { getCurrencyMeta } from "./currencies.js";
 
 /**
@@ -38,7 +38,9 @@ export function OnRampTxDetailsTable(props: {
     txHash?: string;
   };
 }) {
-  const onRampChainQuery = useChainQuery(getCachedChain(props.token.chainId));
+  const onRampExplorers = useChainExplorers(
+    getCachedChain(props.token.chainId),
+  );
   const onrampTxHash = props.statusMeta?.txHash;
   const currencyMeta = getCurrencyMeta(props.fiat.currencySymbol);
 
@@ -70,7 +72,7 @@ export function OnRampTxDetailsTable(props: {
           <Container flex="row" gap="xs" center="y">
             <currencyMeta.icon size={iconSize.sm} />
             <Text color="primaryText">
-              {formatNumber(Number(props.fiat.amount), 4)}{" "}
+              {formatNumber(Number(props.fiat.amount), 2)}{" "}
               {props.fiat.currencySymbol}
             </Text>
           </Container>
@@ -113,14 +115,14 @@ export function OnRampTxDetailsTable(props: {
       {lineSpacer}
 
       {/* Transaction Hash link */}
-      {onrampTxHash && onRampChainQuery.data?.explorers?.[0]?.url && (
+      {onrampTxHash && onRampExplorers.explorers?.[0]?.url && (
         <>
           <Spacer y="md" />
           <ButtonLink
             fullWidth
             variant="outline"
             href={`${
-              onRampChainQuery.data.explorers[0].url || ""
+              onRampExplorers.explorers[0].url || ""
             }/tx/${onrampTxHash}`}
             target="_blank"
             gap="xs"

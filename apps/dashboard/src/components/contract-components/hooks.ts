@@ -14,25 +14,7 @@ import {
   ZksyncSepoliaTestnet,
   getChainByChainIdAsync,
 } from "@thirdweb-dev/chains";
-import {
-  useAddress,
-  useChainId,
-  useSDK,
-  useSDKChainId,
-  useSigner,
-  useWalletConfig,
-} from "@thirdweb-dev/react";
-import {
-  getStepAddToRegistry,
-  getStepDeploy,
-  getStepSetNFTMetadata,
-  useDeployContextModal,
-} from "./contract-deploy-form/deploy-context-modal";
-import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
-import type { Recipient } from "./contract-deploy-form/split-fieldset";
-import type { ContractId } from "./types";
-import { addContractToMultiChainRegistry } from "./utils";
-
+import { useSDK, useSDKChainId, useSigner } from "@thirdweb-dev/react";
 import {
   type Abi,
   type ContractInfoSchema,
@@ -48,35 +30,42 @@ import {
   extractEventsFromAbi,
   extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
+  fetchAndCacheDeployMetadata,
   fetchContractMetadata,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   getTrustedForwarders,
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
-
 import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
-import { walletIds } from "@thirdweb-dev/wallets";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
-import { type providers, utils } from "ethers";
+import { utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import { useMemo } from "react";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+} from "thirdweb/react";
 import invariant from "tiny-invariant";
-import { Web3Provider } from "zksync-ethers";
 import type { z } from "zod";
-
-const HEADLESS_WALLET_IDS: string[] = [
-  walletIds.localWallet,
-  walletIds.magicLink,
-  walletIds.paper,
-] as string[];
+import {
+  getStepAddToRegistry,
+  getStepDeploy,
+  getStepSetNFTMetadata,
+  useDeployContextModal,
+} from "./contract-deploy-form/deploy-context-modal";
+import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
+import type { Recipient } from "./contract-deploy-form/split-fieldset";
+import type { ContractId } from "./types";
+import { addContractToMultiChainRegistry } from "./utils";
 
 interface ContractPublishMetadata {
   image: string | StaticImageData;
@@ -524,7 +513,7 @@ export function usePublishMutation() {
   // this has to actually have the signer!
   const sdk = useSDK();
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   return useMutationWithInvalidate(
     async ({ predeployUri, extraMetadata }: PublishMutationData) => {
@@ -550,7 +539,7 @@ export function usePublishMutation() {
 
 export function useEditProfileMutation() {
   const sdk = useSDK();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   return useMutationWithInvalidate(
     async (data: ProfileMetadata) => {
@@ -606,15 +595,16 @@ export function useCustomContractDeployMutation(
 ) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
-  const walletAddress = useAddress();
-  const chainId = useChainId();
+  const account = useActiveAccount();
+  const walletAddress = account?.address;
+  const chainId = useActiveWalletChain()?.id;
   const signer = useSigner();
   const deployContext = useDeployContextModal();
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
   const rawPredeployMetadata = useContractRawPredeployMetadataFromURI(ipfsHash);
 
-  const walletConfig = useWalletConfig();
+  const walletId = useActiveWallet()?.id;
 
   return useMutation(
     async (data: ContractDeployMutationParams) => {
@@ -625,8 +615,7 @@ export function useCustomContractDeployMutation(
       invariant(signer, "signer is not provided");
       invariant(walletAddress, "walletAddress is not provided");
 
-      const requiresSignature =
-        HEADLESS_WALLET_IDS.indexOf(walletConfig?.id || "") === -1;
+      const requiresSignature = walletId !== "inApp";
 
       const stepDeploy = getStepDeploy(
         transactions?.length || 1,
@@ -649,6 +638,12 @@ export function useCustomContractDeployMutation(
 
       // open the modal with the appropriate steps
       deployContext.open(steps);
+
+      const isZkSync =
+        chainId === Zksync.chainId ||
+        chainId === ZksyncSepoliaTestnet.chainId ||
+        chainId === ZkcandySepoliaTestnet.chainId ||
+        chainId === ZksyncEraGoerliTestnetDeprecated.chainId;
 
       let contractAddress: string;
       try {
@@ -704,46 +699,14 @@ export function useCustomContractDeployMutation(
         }
 
         // Handle ZkSync deployments separately
-        const isZkSync =
-          chainId === Zksync.chainId ||
-          chainId === ZksyncSepoliaTestnet.chainId ||
-          chainId === ZkcandySepoliaTestnet.chainId ||
-          chainId === ZksyncEraGoerliTestnetDeprecated.chainId;
 
         // deploy contract
         if (isZkSync) {
-          // Get metamask signer using zksync-ethers library -- for custom fields in signature
-          const fakeExternalProvider: providers.ExternalProvider = {
-            // fake tell it its metamask always (lul)
-            isMetaMask: true,
-            request({ method, params }) {
-              switch (method) {
-                case "eth_accounts": {
-                  return Promise.resolve([walletAddress]);
-                }
-                case "eth_signTypedData_v4": {
-                  invariant(params?.[1], "invalid signTypedData call");
-                  // yo dawg, I heard you like signing typed data
-                  const { domain, types, message, primaryType } = JSON.parse(
-                    params[1],
-                  );
-                  return (signer as providers.JsonRpcSigner)._signTypedData(
-                    domain,
-                    // don't ask...
-                    { [primaryType]: types[primaryType] },
-                    message,
-                  );
-                }
-                default: {
-                  return (signer as providers.JsonRpcSigner)?.provider?.send(
-                    method,
-                    params ?? [],
-                  );
-                }
-              }
-            },
-          };
-          const zkSigner = new Web3Provider(fakeExternalProvider).getSigner();
+          const publishUri = ipfsHash.startsWith("ipfs://")
+            ? ipfsHash
+            : `ipfs://${ipfsHash}`;
+
+          let uriToRegister = "";
 
           if (
             fullPublishMetadata?.data?.compilers?.zksolc ||
@@ -757,11 +720,9 @@ export function useCustomContractDeployMutation(
                 : data.saltForCreate2;
 
               contractAddress = await zkDeployContractFromUri(
-                ipfsHash.startsWith("ipfs://")
-                  ? ipfsHash
-                  : `ipfs://${ipfsHash}`,
+                publishUri,
                 Object.values(data.deployParams),
-                zkSigner,
+                signer,
                 StorageSingleton,
                 chainId as number,
                 {
@@ -774,11 +735,9 @@ export function useCustomContractDeployMutation(
               );
             } else {
               contractAddress = await zkDeployContractFromUri(
-                ipfsHash.startsWith("ipfs://")
-                  ? ipfsHash
-                  : `ipfs://${ipfsHash}`,
+                publishUri,
                 Object.values(data.deployParams),
-                zkSigner,
+                signer,
                 StorageSingleton,
                 chainId as number,
                 {
@@ -788,15 +747,44 @@ export function useCustomContractDeployMutation(
                 },
               );
             }
+
+            const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+              publishUri,
+              StorageSingleton,
+              {
+                compilerType: "zksolc",
+              },
+            );
+            uriToRegister = compilerMetadata.fetchedMetadataUri;
           } else {
             contractAddress = await zkDeployContractFromUri(
-              ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+              publishUri,
               Object.values(data.deployParams),
-              zkSigner,
+              signer,
               StorageSingleton,
               chainId as number,
             );
+
+            const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+              publishUri,
+              StorageSingleton,
+              {
+                compilerType: "zksolc",
+              },
+            );
+            uriToRegister = compilerMetadata.fetchedMetadataUri;
           }
+
+          // register deployed zksync contract on multichain registry
+          await addContractToMultiChainRegistry(
+            {
+              address: contractAddress,
+              chainId,
+              metadataURI: uriToRegister,
+            },
+            account,
+            300000n,
+          );
         } else {
           if (data.deployDeterministic) {
             const salt = data.signerAsSalt
@@ -850,14 +838,14 @@ export function useCustomContractDeployMutation(
 
       try {
         // let user decide if they want this or not
-        if (data.addToDashboard) {
+        if (data.addToDashboard && !isZkSync) {
           invariant(chainId, "chainId is not provided");
           await addContractToMultiChainRegistry(
             {
               address: contractAddress,
               chainId,
             },
-            signer,
+            account,
           );
 
           deployContext.nextStep();
@@ -887,7 +875,7 @@ export function useCustomContractDeployMutation(
 
 export function useTransactionsForDeploy(publishMetadataOrUri: string) {
   const sdk = useSDK();
-  const chainId = useChainId();
+  const chainId = useActiveWalletChain()?.id;
 
   const queryResult = useQuery<DeploymentTransaction[]>(
     ["transactions-for-deploy", publishMetadataOrUri, chainId],

@@ -1,8 +1,8 @@
 import type { Account } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, FocusLock, VStack } from "@chakra-ui/react";
-import { useDisconnect, useLogout } from "@thirdweb-dev/react";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { useState } from "react";
+import { useActiveWallet, useDisconnect } from "thirdweb/react";
 import { Button } from "tw-components";
 import { OnboardingTitle } from "./Title";
 
@@ -17,14 +17,20 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
   onSave,
   onDuplicate,
 }) => {
-  const { logout } = useLogout();
   const [existing, setExisting] = useState(false);
-  const disconnect = useDisconnect();
+  const activeWallet = useActiveWallet();
+  const { disconnect } = useDisconnect();
 
-  const handleLogout = async () => {
-    await logout();
-    disconnect();
-  };
+  async function handleDisconnect() {
+    if (activeWallet) {
+      disconnect(activeWallet);
+    }
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    }).catch((err) => {
+      console.error("Failed to log out", err);
+    });
+  }
 
   return (
     <FocusLock>
@@ -68,7 +74,7 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
               </Button>
               <Button
                 variant="link"
-                onClick={handleLogout}
+                onClick={handleDisconnect}
                 w="full"
                 size="sm"
                 pt={4}

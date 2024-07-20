@@ -1,5 +1,5 @@
 import { Input } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
+import { useActiveAccount } from "thirdweb/react";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
 
@@ -16,7 +16,7 @@ export const CreatorInput: React.FC<CreatorInputProps> = ({
 }) => {
   const { formDisabled, claimConditionType, isAdmin } =
     useClaimConditionsFormContext();
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
 
   if (claimConditionType !== "creator") {
     return null;

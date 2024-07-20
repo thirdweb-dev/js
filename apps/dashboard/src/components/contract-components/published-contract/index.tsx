@@ -8,7 +8,6 @@ import {
 } from "@chakra-ui/react";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQuery } from "@tanstack/react-query";
-import { useAddress } from "@thirdweb-dev/react";
 import {
   type PublishedContract as PublishedContractType,
   type PublishedMetadata,
@@ -32,6 +31,7 @@ import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
 import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import {
   Card,
@@ -76,7 +76,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
   contract,
   walletOrEns,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const publishedContractInfo = usePublishedContractInfo(contract);
   const { data: compilerInfo } = usePublishedContractCompilerMetadata(contract);
 

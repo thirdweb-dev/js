@@ -1,4 +1,3 @@
-import type { ConnectWalletProps } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Center,
   DarkMode,
@@ -12,17 +11,16 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
-import {
-  useAddress,
-  useChain,
-  useChainId,
-  useInstalledWallets,
-  useWallet,
-} from "@thirdweb-dev/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+} from "thirdweb/react";
+import type { WalletId } from "thirdweb/wallets";
 import {
   Button,
   type ButtonProps,
@@ -31,10 +29,10 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
+import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 import { MismatchButton } from "./MismatchButton";
 
-interface TransactionButtonProps
-  extends Omit<ConnectWalletProps & ButtonProps, "leftIcon"> {
+interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
   transactionCount: number;
   isLoading: boolean;
   isGasless?: boolean;
@@ -42,19 +40,12 @@ interface TransactionButtonProps
   onChainSelect?: (chainId: number) => void;
 }
 
-// this is in react-package as well
-function useWalletRequiresConfirmation() {
-  const activeWallet = useWallet();
-  const installedWallets = useInstalledWallets();
+function useWalletRequiresExternalConfirmation() {
+  const activeWallet = useActiveWallet();
 
   return (
     activeWallet &&
-    (activeWallet.walletId === "walletConnectV1" ||
-      activeWallet.walletId === "walletConnectV2" ||
-      activeWallet.walletId === "Safe" ||
-      (activeWallet.walletId === "metamask" && !installedWallets.metamask) ||
-      (activeWallet.walletId === "coinbaseWallet" &&
-        !installedWallets.coinbaseWallet))
+    (activeWallet.id === "walletConnect" || activeWallet.id === "global.safe")
   );
 }
 
@@ -66,16 +57,16 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   colorScheme,
   variant,
   isGasless,
-  upsellTestnet,
   onChainSelect,
   ...restButtonProps
 }) => {
   const colorMode = useColorMode();
-  const activeWallet = useWallet();
-  const walletRequiresExternalConfirmation = useWalletRequiresConfirmation();
+  const activeWallet = useActiveWallet();
+  const walletRequiresExternalConfirmation =
+    useWalletRequiresExternalConfirmation();
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
-  const chain = useChain();
+  const chain = useActiveChainAsDashboardChain();
   const isChainDeprecated = useMemo(
     () => chain?.status === "deprecated",
     [chain],
@@ -88,11 +79,11 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     return Math.floor(transactionCount.toString().length * 8.3);
   }, [transactionCount]);
 
-  const evmAddress = useAddress();
+  const address = useActiveAccount()?.address;
 
   const isConnected = useMemo(() => {
-    return !!evmAddress;
-  }, [evmAddress]);
+    return !!address;
+  }, [address]);
 
   const ButtonComponent = useMemo(() => {
     return isGasless ? Button : MismatchButton;
@@ -107,7 +98,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     >
       <PopoverTrigger>
         <ButtonComponent
-          upsellTestnet={upsellTestnet}
           onChainSelect={onChainSelect}
           borderRadius="md"
           position="relative"
@@ -204,7 +194,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
         <PopoverArrow bg="backgroundCardHighlight" />
         <PopoverBody>
           <ExternalApprovalNotice
-            walletId={activeWallet?.walletId}
+            walletId={activeWallet?.id}
             initialFocusRef={initialFocusRef}
           />
         </PopoverBody>
@@ -214,7 +204,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
 };
 
 interface ExternalApprovalNoticeProps {
-  walletId?: string;
+  walletId?: WalletId;
   initialFocusRef: React.RefObject<HTMLButtonElement>;
 }
 
@@ -222,8 +212,8 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   walletId,
   initialFocusRef,
 }) => {
-  const address = useAddress();
-  const chainId = useChainId() || -1;
+  const address = useActiveAccount()?.address;
+  const chainId = useActiveWalletChain()?.id || -1;
 
   const [showHint, setShowHint] = useState(false);
 
@@ -236,7 +226,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
     return () => clearTimeout(t);
   }, []);
 
-  if (walletId?.toLowerCase() === "safe") {
+  if (walletId === "global.safe") {
     const isChainIdSupported = chainId in CHAIN_ID_TO_GNOSIS;
     return (
       <Flex direction="column" gap={4}>
@@ -272,7 +262,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
       </Flex>
     );
   }
-  if (walletId === "walletConnect" || walletId === "walletConnectV1") {
+  if (walletId === "walletConnect") {
     return (
       <Flex direction="column" gap={4}>
         <Heading size="label.lg">

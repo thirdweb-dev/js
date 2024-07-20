@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAuthorizeWalletWithAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
@@ -17,13 +18,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import { PiWarningFill } from "react-icons/pi";
+import { createAuth } from "thirdweb/auth";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, FormLabel, Heading, Link, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -39,20 +41,34 @@ const LoginPage: ThirdwebNextPage = () => {
   const [hasRemovedShield, setHasRemovedShield] = useState<boolean>(false);
 
   const { isLoggedIn } = useLoggedInUser();
-  const auth = useAuth();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [errorText, setErrorText] = useState<string | ReactNode | undefined>(
     undefined,
   );
   const [success, setSuccess] = useState<boolean>(false);
+  const account = useActiveAccount();
 
-  const isBrave = useQuery({
+  const auth = useMemo(() => {
+    if (!account) {
+      return null;
+    }
+    return createAuth({
+      domain: "",
+      client: thirdwebClient,
+      adminAccount: account,
+      jwt: {
+        expirationTimeSeconds: CLI_LOGIN_TOKEN_DURATION_IN_SECONDS,
+      },
+    });
+  }, [account]);
+
+  const isBraveQuery = useQuery({
     queryKey: ["is-brave-browser"],
     initialData: false,
     queryFn: async () => {
       // @ts-expect-error - brave is not in the types
-      return navigator?.brave && (await navigator?.brave.isBrave());
+      return !!(navigator?.brave && (await navigator?.brave.isBrave()));
     },
   });
 
@@ -72,10 +88,8 @@ const LoginPage: ThirdwebNextPage = () => {
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     let token: any;
     try {
-      token = await auth?.generate(parsedPayload, {
-        expirationTime: new Date(
-          Date.now() + 1000 * CLI_LOGIN_TOKEN_DURATION_IN_SECONDS,
-        ),
+      token = await auth?.generateJWT({
+        payload: parsedPayload,
       });
     } catch (e) {
       setLoading(false);
@@ -93,10 +107,13 @@ const LoginPage: ThirdwebNextPage = () => {
       return null;
     }
     try {
-      const decodedToken = auth?.parseToken(token);
+      const decodedToken = await auth?.verifyJWT({ jwt: token });
+      if (!decodedToken?.valid) {
+        throw new Error("invalid token");
+      }
       await authorizeWallet({
         token,
-        deviceName: deviceName || decodedToken?.payload.sub,
+        deviceName: deviceName || decodedToken.parsedJWT.sub,
       });
       trackEvent({
         category: "cli-login",
@@ -280,7 +297,7 @@ const LoginPage: ThirdwebNextPage = () => {
         alignItems="start"
         textAlign="start"
       >
-        {isBrave && (
+        {isBraveQuery.data && (
           <Alert status="error" mb={4} rounded="lg" fontWeight="bold">
             <AlertIcon alignSelf="start" />
             <Flex
@@ -343,13 +360,13 @@ const LoginPage: ThirdwebNextPage = () => {
         </FormControl>
         <Button
           variant="inverted"
-          isDisabled={!isLoggedIn || (isBrave && !hasRemovedShield)}
+          isDisabled={!isLoggedIn || (isBraveQuery.data && !hasRemovedShield)}
           isLoading={loading}
           onClick={authorizeDevice}
         >
           Authorize device
         </Button>
-        {isBrave && !hasRemovedShield && (
+        {isBraveQuery.data && !hasRemovedShield && (
           <Text color="red" size="label.md" mt={4}>
             Please acknowledge that you have disabled the Brave shields above.
           </Text>

@@ -32,6 +32,11 @@ export type GetBuyWithCryptoQuoteParams = {
    */
   fromAddress: string;
 
+  /**
+   * The address of the wallet to which the tokens will be sent.
+   */
+  toAddress: string;
+
   // source token
 
   /**

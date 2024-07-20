@@ -138,10 +138,7 @@ export const CrossContainer = /* @__PURE__ */ StyledDiv({
   position: "absolute",
   top: spacing.lg,
   right: spacing.lg,
-  transform: "translateX(15%)",
-  [media.mobile]: {
-    right: spacing.md,
-  },
+  transform: "translateX(6px)",
 });
 
 const modalAnimationDesktop = keyframes`

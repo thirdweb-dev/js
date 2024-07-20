@@ -4,15 +4,16 @@ import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
+import type { WalletId } from "../../../../../wallets/wallet-types.js";
 import {
   type SiweAuthOptions,
   useSiweAuth,
 } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useSetActiveWallet } from "../../../hooks/wallets/useSetActiveWallet.js";
+import { connectionManager } from "../../../index.js";
 import { useSetSelectionData } from "../../../providers/wallet-ui-states-provider.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
-import type { LocaleId } from "../../types.js";
 import { WalletSelector } from "../WalletSelector.js";
 import { onModalUnmount, reservedScreens } from "../constants.js";
 import type { ConnectLocale } from "../locale/types.js";
@@ -34,7 +35,7 @@ const AllWalletsUI = /* @__PURE__ */ lazy(() => import("./AllWalletsUI.js"));
  */
 export const ConnectModalContent = (props: {
   screenSetup: ScreenSetup;
-  onClose: () => void;
+  onClose: (() => void) | undefined;
   isOpen: boolean;
   setModalVisibility: (value: boolean) => void;
   shouldSetActive: boolean;
@@ -55,7 +56,6 @@ export const ConnectModalContent = (props: {
   client: ThirdwebClient;
   isEmbed: boolean;
   recommendedWallets: Wallet[] | undefined;
-  localeId: LocaleId;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   showAllWallets: boolean | undefined;
@@ -64,6 +64,13 @@ export const ConnectModalContent = (props: {
         projectId?: string;
       }
     | undefined;
+  modalHeader:
+    | {
+        title: string;
+        onBack: () => void;
+      }
+    | undefined;
+  walletIdsToHide: WalletId[] | undefined;
 }) => {
   const { setModalVisibility, onClose, shouldSetActive } = props;
   const { screen, setScreen, initialScreen } = props.screenSetup;
@@ -78,6 +85,8 @@ export const ConnectModalContent = (props: {
     (wallet: Wallet) => {
       if (shouldSetActive) {
         setActiveWallet(wallet);
+      } else {
+        connectionManager.addConnectedWallet(wallet);
       }
 
       if (props.onConnect) {
@@ -93,7 +102,8 @@ export const ConnectModalContent = (props: {
       if (showSignatureScreen) {
         setScreen(reservedScreens.signIn);
       } else {
-        onClose();
+        setScreen(initialScreen);
+        onClose?.();
       }
     },
     [
@@ -105,20 +115,19 @@ export const ConnectModalContent = (props: {
       setScreen,
       setSelectionData,
       shouldSetActive,
+      initialScreen,
     ],
   );
 
   const handleBack = useCallback(() => {
+    setSelectionData({});
     setScreen(initialScreen);
-  }, [setScreen, initialScreen]);
+  }, [setScreen, initialScreen, setSelectionData]);
 
   const walletList = (
     <WalletSelector
       title={props.meta.title || props.connectLocale.defaultModalTitle}
       wallets={props.wallets}
-      onGetStarted={() => {
-        setScreen(reservedScreens.getStarted);
-      }}
       selectWallet={(newWallet) => {
         if (newWallet.onConnectRequested) {
           newWallet
@@ -140,13 +149,14 @@ export const ConnectModalContent = (props: {
       isEmbed={props.isEmbed}
       recommendedWallets={props.recommendedWallets}
       accountAbstraction={props.accountAbstraction}
-      localeId={props.localeId}
       chain={props.chain}
       showAllWallets={props.showAllWallets}
       chains={props.chains}
       walletConnect={props.walletConnect}
       meta={props.meta}
       size={props.size}
+      modalHeader={props.modalHeader}
+      walletIdsToHide={props.walletIdsToHide}
     />
   );
 
@@ -189,7 +199,6 @@ export const ConnectModalContent = (props: {
           setModalVisibility={props.setModalVisibility}
           meta={props.meta}
           size={props.size}
-          localeId={props.localeId}
           chain={props.chain}
           chains={props.chains}
           client={props.client}
@@ -213,7 +222,6 @@ export const ConnectModalContent = (props: {
         client={props.client}
         meta={props.meta}
         size={props.size}
-        localeId={props.localeId}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
       />

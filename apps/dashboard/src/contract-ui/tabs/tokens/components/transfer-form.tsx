@@ -7,17 +7,15 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import {
-  type TokenContract,
-  useTokenDecimals,
-  useTransferToken,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import type { ThirdwebContract } from "thirdweb";
+import { decimals, transfer } from "thirdweb/extensions/erc20";
+import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -26,15 +24,16 @@ import {
 } from "tw-components";
 
 const TRANSFER_FORM_ID = "token-transfer-form";
+
 interface TokenTransferFormProps {
-  contract: TokenContract;
+  contract: ThirdwebContract;
 }
 
 export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
   contract,
 }) => {
   const trackEvent = useTrack();
-  const transfer = useTransferToken(contract);
+
   const form = useForm({ defaultValues: { amount: "0", to: "" } });
   const modalContext = useModalContext();
 
@@ -44,7 +43,9 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
     contract,
   );
 
-  const decimals = useTokenDecimals(contract);
+  const decimalsQuery = useReadContract(decimals, { contract });
+
+  const sendConfirmation = useSendAndConfirmTransaction();
 
   return (
     <>
@@ -71,7 +72,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
               <FormLabel>Amount</FormLabel>
               <Input
                 type="text"
-                pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
+                pattern={`^\\d+(\\.\\d{1,${decimalsQuery.data || 18}})?$`}
                 {...form.register("amount")}
               />
               <FormHelperText>
@@ -88,7 +89,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
         <TransactionButton
           transactionCount={1}
           form={TRANSFER_FORM_ID}
-          isLoading={transfer.isLoading}
+          isLoading={sendConfirmation.isPending}
           type="submit"
           colorScheme="primary"
           isDisabled={!form.formState.isDirty}
@@ -98,29 +99,31 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
               action: "transfer",
               label: "attempt",
             });
-            transfer.mutate(
-              { amount: d.amount, to: d.to },
-              {
-                onSuccess: () => {
-                  trackEvent({
-                    category: "token",
-                    action: "transfer",
-                    label: "success",
-                  });
-                  onSuccess();
-                  modalContext.onClose();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "token",
-                    action: "transfer",
-                    label: "error",
-                    error,
-                  });
-                  onError(error);
-                },
+            const transaction = transfer({
+              contract,
+              amount: d.amount,
+              to: d.to,
+            });
+            sendConfirmation.mutate(transaction, {
+              onSuccess: () => {
+                trackEvent({
+                  category: "token",
+                  action: "transfer",
+                  label: "success",
+                });
+                onSuccess();
+                modalContext.onClose();
               },
-            );
+              onError: (error) => {
+                trackEvent({
+                  category: "token",
+                  action: "transfer",
+                  label: "error",
+                  error,
+                });
+                onError(error);
+              },
+            });
           })}
         >
           Transfer Tokens

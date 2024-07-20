@@ -48,6 +48,8 @@ export function WriteContractRawPreview() {
               <Image
                 src="/twcoin.svg"
                 className="mx-auto rounded-2xl animate-bounce size-5"
+                width={50}
+                height={50}
                 alt=""
               />
               <div>

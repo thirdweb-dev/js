@@ -2,13 +2,13 @@ import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
   type UseContractResult,
-  useAddress,
   useCreateAuctionListing,
   useCreateDirectListing,
 } from "@thirdweb-dev/react";
 import type { Marketplace, MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { CreateListingsForm } from "../listings/components/list-form";
 
@@ -28,7 +28,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   type,
   ...restButtonProps
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const directList = useCreateDirectListing(contractQuery.contract);
   const auctionList = useCreateAuctionListing(contractQuery.contract);

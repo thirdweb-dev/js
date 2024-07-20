@@ -1,85 +1,123 @@
 "use client";
 
-import { ConnectWallet } from "@thirdweb-dev/react";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import { thirdwebClient } from "@/constants/client";
+import { useSupportedChains } from "@thirdweb-dev/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
-import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { type ComponentProps, useCallback } from "react";
-import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
-import { useTrack } from "../../../../hooks/analytics/useTrack";
+import { usePathname } from "next/navigation";
+import { useCallback, useMemo } from "react";
+import { defineChain } from "thirdweb";
+import { AutoConnect, ConnectButton } from "thirdweb/react";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
+import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
 
-export interface ConnectWalletProps {
-  shrinkMobile?: boolean;
-  upsellTestnet?: boolean;
-  onChainSelect?: (chainId: number) => void;
-  auth?: ComponentProps<typeof ConnectWallet>["auth"];
-  disableChainConfig?: boolean;
-  disableAddCustomNetwork?: boolean;
-}
-
-export const CustomConnectWallet: React.FC<ConnectWalletProps> = ({
-  auth,
-  disableChainConfig,
-  disableAddCustomNetwork,
-}) => {
+export const CustomConnectWallet: React.FC = () => {
   const { theme } = useTheme();
-  const recentChains = useRecentlyUsedChains();
+  const recentChainsv4 = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
-  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
+  // const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const t = theme === "light" ? "light" : "dark";
+  const allv4Chains = useSupportedChains();
   const favChainsQuery = useFavoriteChains();
 
-  return (
-    <ConnectWallet
-      auth={auth}
-      theme={t}
-      welcomeScreen={() => {
-        return <ConnectWalletWelcomeScreen theme={t} />;
-      }}
-      termsOfServiceUrl="/tos"
-      privacyPolicyUrl="/privacy"
-      hideTestnetFaucet={false}
-      networkSelector={{
-        sections: [
-          {
-            label: "Recently used",
-            chains: recentChains,
-          },
-          {
-            label: "Favorites",
-            chains: favChainsQuery.data ?? [],
-          },
-          {
-            label: "Popular",
-            chains: popularChains,
-          },
-        ],
-        onSwitch(chain) {
-          addRecentlyUsedChainId(chain.chainId);
-        },
-        onCustomClick: disableAddCustomNetwork
-          ? undefined
-          : () => {
-              setIsNetworkConfigModalOpen(true);
-            },
+  const allChains = useMemo(() => {
+    return allv4Chains.map((c) => defineChain(c));
+  }, [allv4Chains]);
 
-        renderChain(props) {
-          return (
-            <CustomChainRenderer
-              {...props}
-              disableChainConfig={disableChainConfig}
-            />
-          );
+  const chainSections = useMemo(() => {
+    return [
+      {
+        label: "Favorites",
+        chains: favChainsQuery.data.map(defineChain),
+      },
+      {
+        label: "Popular",
+        chains: popularChains.map(defineChain),
+      },
+      {
+        label: "Recent",
+        chains: recentChainsv4.map(defineChain),
+      },
+    ];
+  }, [recentChainsv4, favChainsQuery.data]);
+
+  // ensures login status on pages that need it
+  const { isLoading, isLoggedIn } = useLoggedInUser();
+  const pathname = usePathname();
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="w-[144px] h-[48px] bg-muted border rounded-lg flex items-center justify-center">
+          <Spinner className="size-4" />
+        </div>
+        {/* need autoconnect here so that we actually connect */}
+        <AutoConnect client={thirdwebClient} />
+      </>
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Button asChild variant="default" className="gap-2" size="lg">
+          <Link
+            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
+          >
+            Sign In
+          </Link>
+        </Button>
+        {/* need autoconnect here so that we actually connect */}
+        <AutoConnect client={thirdwebClient} />
+      </>
+    );
+  }
+
+  return (
+    <ConnectButton
+      theme={t}
+      client={thirdwebClient}
+      connectModal={{
+        privacyPolicyUrl: "/privacy",
+        termsOfServiceUrl: "/tos",
+        showThirdwebBranding: false,
+        welcomeScreen: () => <ConnectWalletWelcomeScreen theme={t} />,
+      }}
+      appMetadata={{
+        name: "thirdweb",
+        logoUrl: "https://thirdweb.com/favicon.ico",
+        url: "https://thirdweb.com",
+      }}
+      onDisconnect={async () => {
+        try {
+          // log out the user
+          await fetch("/api/auth/logout", {
+            method: "POST",
+          });
+        } catch (err) {
+          console.error("Failed to log out", err);
+        }
+      }}
+      chains={allChains}
+      detailsModal={{
+        networkSelector: {
+          sections: chainSections,
+          onSwitch(chain) {
+            addRecentlyUsedChainId(chain.id);
+          },
+          // TODO: bring this back when it works reliably
+          // renderChain: CustomChainRenderer,
         },
       }}
-      showThirdwebBranding={false}
     />
   );
 };
