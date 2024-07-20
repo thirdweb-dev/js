@@ -146,7 +146,7 @@ export const TransactionSimulator = (props: {
             </Label>
             <Input
               name="value"
-              placeholder={`The amount of native currency to send (e.g \"0.01\")`}
+              placeholder={`The amount of native currency to send (e.g "0.01")`}
             />
           </div>
 
