@@ -1,3 +1,5 @@
+import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+
 export const AUTH_SHARE_ID = 3;
 export const AUTH_SHARE_INDEX = AUTH_SHARE_ID - 1;
 export const NO_EXISTING_WALLET_FOUND_FOR_USER =
@@ -19,13 +21,18 @@ export const COGNITO_USER_POOL_ID = "us-west-2_UFwLcZIpq";
 export const COGNITO_APP_CLIENT_ID = "2e02ha2ce6du13ldk8pai4h3d0";
 export const COGNITO_IDENTITY_POOL_ID =
   "us-west-2:2ad7ab1e-f48b-48a6-adfa-ac1090689c26";
-export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
+export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V1 =
   "arn:aws:lambda:us-west-2:324457261097:function:recovery-share-password-GenerateRecoverySharePassw-bbE5ZbVAToil";
+export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V2 =
+  "arn:aws:lambda:us-west-2:324457261097:function:lambda-thirdweb-auth-enc-key-prod-ThirdwebAuthEncKeyFunction";
+export const GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION =
+  GENERATE_RECOVERY_PASSWORD_LAMBDA_FUNCTION_V2;
 
 // TODO allow overriding domain
-export const DOMAIN_URL_2023 = "https://embedded-wallet.thirdweb.com";
+export const DOMAIN_URL_2023 = getThirdwebBaseUrl("inAppWallet");
 const BASE_URL_2023 = `${DOMAIN_URL_2023}/`;
 const ROUTE_2023_10_20_API_BASE_PATH = `${BASE_URL_2023}api/2023-10-20`;
+const ROUTE_2024_05_05_API_BASE_PATH = `${BASE_URL_2023}api/2024-05-05`;
 
 export const ROUTE_EMBEDDED_WALLET_DETAILS = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/embedded-wallet-user-details`;
 export const ROUTE_VERIFY_COGNITO_OTP = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/validate-cognito-email-otp`;
@@ -43,4 +50,6 @@ export const ROUTE_IS_VALID_USER_MANAGED_OTP = `${ROUTE_2023_10_20_API_BASE_PATH
 
 export const ROUTE_HEADLESS_OAUTH_LOGIN = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/headless-oauth-login-link`;
 
-export const ROUTE_AUTH_COGNITO_ID_TOKEN = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/cognito-id-token`;
+export const ROUTE_AUTH_COGNITO_ID_TOKEN_V1 = `${ROUTE_2023_10_20_API_BASE_PATH}/embedded-wallet/cognito-id-token`;
+export const ROUTE_AUTH_COGNITO_ID_TOKEN_V2 = `${ROUTE_2024_05_05_API_BASE_PATH}/login/web-token-exchange`;
+export const ROUTE_AUTH_COGNITO_ID_TOKEN = ROUTE_AUTH_COGNITO_ID_TOKEN_V2;

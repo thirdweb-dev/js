@@ -6,7 +6,6 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
-  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -79,6 +78,7 @@ import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
 import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
+import { ShuffleIconLucide } from "./icons/ShuffleIconLucide.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
@@ -344,15 +344,25 @@ function DetailsModal(props: {
       <IconButton
         style={{
           position: "absolute",
-          top: `${spacing.lg}`,
-          left: `${spacing.sm}`,
-          padding: "3px",
+          top: spacing.lg,
+          left: spacing.lg,
+          transform: "translateX(-6px)",
         }}
         onClick={() => {
           setScreen("wallet-manager");
         }}
       >
-        <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+        <div
+          style={{
+            width: `${iconSize.md}px`,
+            height: `${iconSize.md}px`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ShuffleIconLucide size="20" />
+        </div>
       </IconButton>
 
       <Container px="lg" flex="column" center="x">

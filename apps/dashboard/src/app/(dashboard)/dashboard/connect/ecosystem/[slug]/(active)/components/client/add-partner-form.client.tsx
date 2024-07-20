@@ -16,56 +16,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-import { ToolTipLabel } from "../../../../../../../../../@/components/ui/tooltip";
+import type { z } from "zod";
 import type { Ecosystem } from "../../../../types";
+import { partnerFormSchema } from "../../constants";
 import { useAddPartner } from "../../hooks/use-add-partner";
 
-const isDomainRegex =
-  /^(?:\*|(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*(?:\*(?:\.[a-z0-9][a-z0-9-]{0,61}[a-z0-9](?:\.[a-z0-9][a-z0-9-]{0,61}[a-z0-9])*)?)|(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]|localhost(?::\d{1,5})?)$/;
-const formSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(3, {
-      message: "Name must be at least 3 characters",
-    })
-    .refine((name) => /^[a-zA-Z0-9 ]*$/.test(name), {
-      message: "Name can only contain letters, numbers and spaces",
-    }),
-  domains: z
-    .string()
-    .trim()
-    .transform((s) => s.split(/,| /).filter((d) => d.length > 0))
-    .refine((domains) => domains.every((d) => isDomainRegex.test(d)), {
-      message: "Invalid domain format", // This error message CANNOT be within the array iteration, or the FormMessage won't be able to find it in the form state
-    })
-    .transform((s) => s.join(",")), // This is rejoined to return a string (and later split again) since react-hook-form's typings can't hnadle different input vs output types
-  bundleIds: z
-    .string()
-    .trim()
-    .transform((s) =>
-      s
-        .split(/,| /)
-        .filter((d) => d.length > 0)
-        .join(","),
-    ),
-  permissions: z
-    .string({
-      required_error: "Please specify wallet permissions",
-    }) // We use a string rather than an enum here so the defualt value will work
-    .refine((p) => ["PROMPT_USER_V1", "FULL_CONTROL_V1"].includes(p), {
-      message: "Invalid permissions setting",
-    }),
-});
-
 export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
-  const form = useForm<z.input<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.input<typeof partnerFormSchema>>({
+    resolver: zodResolver(partnerFormSchema),
   });
 
   const { addPartner, isLoading } = useAddPartner({
@@ -94,11 +57,7 @@ export function AddPartnerForm({ ecosystem }: { ecosystem: Ecosystem }) {
             allowlistedBundleIds: values.bundleIds
               .split(/,| /)
               .filter((d) => d.length > 0),
-            permissions: [
-              values.permissions as unknown as
-                | "FULL_CONTROL_V1"
-                | "PROMPT_USER_V1",
-            ],
+            permissions: [values.permissions],
           });
         })}
         className="flex flex-col gap-2 lg:flex-row"

@@ -254,6 +254,22 @@ describe("toSerializableTransaction", () => {
         }),
       ).not.toThrow();
     });
+
+    test("should respect a 0 gas value", async () => {
+      const serializableTransaction = await toSerializableTransaction({
+        transaction: {
+          ...transaction,
+          gas: async () => Promise.resolve(0n),
+        },
+      });
+
+      expect(() =>
+        serializeTransaction({
+          transaction: serializableTransaction,
+        }),
+      ).not.toThrow();
+      expect(serializableTransaction.gas).toBe(0n);
+    });
   });
 
   describe("extraGas override", () => {

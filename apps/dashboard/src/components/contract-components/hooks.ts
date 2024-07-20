@@ -30,6 +30,7 @@ import {
   extractEventsFromAbi,
   extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
+  fetchAndCacheDeployMetadata,
   fetchContractMetadata,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
@@ -638,6 +639,12 @@ export function useCustomContractDeployMutation(
       // open the modal with the appropriate steps
       deployContext.open(steps);
 
+      const isZkSync =
+        chainId === Zksync.chainId ||
+        chainId === ZksyncSepoliaTestnet.chainId ||
+        chainId === ZkcandySepoliaTestnet.chainId ||
+        chainId === ZksyncEraGoerliTestnetDeprecated.chainId;
+
       let contractAddress: string;
       try {
         if (hasContractURI) {
@@ -692,14 +699,15 @@ export function useCustomContractDeployMutation(
         }
 
         // Handle ZkSync deployments separately
-        const isZkSync =
-          chainId === Zksync.chainId ||
-          chainId === ZksyncSepoliaTestnet.chainId ||
-          chainId === ZkcandySepoliaTestnet.chainId ||
-          chainId === ZksyncEraGoerliTestnetDeprecated.chainId;
 
         // deploy contract
         if (isZkSync) {
+          const publishUri = ipfsHash.startsWith("ipfs://")
+            ? ipfsHash
+            : `ipfs://${ipfsHash}`;
+
+          let uriToRegister = "";
+
           if (
             fullPublishMetadata?.data?.compilers?.zksolc ||
             rawPredeployMetadata?.data?.compilers?.zksolc
@@ -712,9 +720,7 @@ export function useCustomContractDeployMutation(
                 : data.saltForCreate2;
 
               contractAddress = await zkDeployContractFromUri(
-                ipfsHash.startsWith("ipfs://")
-                  ? ipfsHash
-                  : `ipfs://${ipfsHash}`,
+                publishUri,
                 Object.values(data.deployParams),
                 signer,
                 StorageSingleton,
@@ -729,9 +735,7 @@ export function useCustomContractDeployMutation(
               );
             } else {
               contractAddress = await zkDeployContractFromUri(
-                ipfsHash.startsWith("ipfs://")
-                  ? ipfsHash
-                  : `ipfs://${ipfsHash}`,
+                publishUri,
                 Object.values(data.deployParams),
                 signer,
                 StorageSingleton,
@@ -743,15 +747,44 @@ export function useCustomContractDeployMutation(
                 },
               );
             }
+
+            const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+              publishUri,
+              StorageSingleton,
+              {
+                compilerType: "zksolc",
+              },
+            );
+            uriToRegister = compilerMetadata.fetchedMetadataUri;
           } else {
             contractAddress = await zkDeployContractFromUri(
-              ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+              publishUri,
               Object.values(data.deployParams),
               signer,
               StorageSingleton,
               chainId as number,
             );
+
+            const { compilerMetadata } = await fetchAndCacheDeployMetadata(
+              publishUri,
+              StorageSingleton,
+              {
+                compilerType: "zksolc",
+              },
+            );
+            uriToRegister = compilerMetadata.fetchedMetadataUri;
           }
+
+          // register deployed zksync contract on multichain registry
+          await addContractToMultiChainRegistry(
+            {
+              address: contractAddress,
+              chainId,
+              metadataURI: uriToRegister,
+            },
+            account,
+            300000n,
+          );
         } else {
           if (data.deployDeterministic) {
             const salt = data.signerAsSalt
@@ -805,7 +838,7 @@ export function useCustomContractDeployMutation(
 
       try {
         // let user decide if they want this or not
-        if (data.addToDashboard) {
+        if (data.addToDashboard && !isZkSync) {
           invariant(chainId, "chainId is not provided");
           await addContractToMultiChainRegistry(
             {

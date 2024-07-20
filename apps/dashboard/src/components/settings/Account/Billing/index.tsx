@@ -202,12 +202,18 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (account) {
-      const paymentCompleted = validPayment;
-
       setStepsCompleted({
         account: !!account.email,
-        payment: paymentCompleted,
+        payment: validPayment,
       });
+    }
+  }, [validPayment, account]);
+
+  // FIXME: this entire flow needs to be re-worked
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (account) {
+      const paymentCompleted = validPayment;
 
       if (paymentCompleted && paymentMethodSaving) {
         // user chose a growth plan before adding a payment method,

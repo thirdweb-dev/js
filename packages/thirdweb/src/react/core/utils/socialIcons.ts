@@ -47,4 +47,5 @@ export const socialIcons = {
   google: googleIconUri,
   apple: appleIconUri,
   facebook: facebookIconUri,
+  discord: discordIconUri,
 };

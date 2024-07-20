@@ -19,7 +19,13 @@ export type AppMetadata = {
   logoUrl?: string;
 };
 
-export type SocialAuthOption = "google" | "apple" | "facebook";
+export const socialAuthOptions = [
+  "google",
+  "apple",
+  "facebook",
+  "discord",
+] as const;
+export type SocialAuthOption = (typeof socialAuthOptions)[number];
 
 export type AuthOption = "email" | "phone" | "passkey" | SocialAuthOption;
 

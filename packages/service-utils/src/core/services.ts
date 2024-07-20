@@ -51,6 +51,13 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
+  chainsaw: {
+    name: "chainsaw",
+    title: "Chainsaw",
+    description: "Indexed data for any EVM chain",
+    // all actions allowed
+    actions: [],
+  },
 } as const;
 
 export const SERVICE_NAMES = Object.keys(

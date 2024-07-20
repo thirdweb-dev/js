@@ -4,6 +4,7 @@ export default {
   signInWithGoogle: "Google",
   signInWithFacebook: "Facebook",
   signInWithApple: "Apple",
+  signInWithDiscord: "Discord",
   emailPlaceholder: "Email address",
   submitEmail: "Continue",
   signIn: "Sign in",
