@@ -23,8 +23,8 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { resolveAddress } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
+import { thirdwebClient } from "lib/thirdweb-client";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
@@ -37,7 +37,8 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
-import { isAddress } from "thirdweb";
+import { resolveAddress } from "thirdweb/extensions/ens";
+import { isAddress } from "thirdweb/utils";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
@@ -126,7 +127,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           try {
             resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress(address);
+              : await resolveAddress({ name: address, client: thirdwebClient });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;
