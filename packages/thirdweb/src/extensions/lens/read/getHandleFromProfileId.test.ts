@@ -28,4 +28,18 @@ describe("lens/getHandleFromProfileId should return a handle for a valid profile
     });
     expect(handle).toBe(null);
   });
+
+  it("should work with overrides", async () => {
+    const handle = await getHandleFromProfileId({
+      profileId,
+      client,
+      overrides: {
+        lensHandleAddress: "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
+        tokenHandleRegistryAddress:
+          "0xD4F2F33680FCCb36748FA9831851643781608844",
+      },
+    });
+    // @ts-ignore expected
+    expect(handle.startsWith("lens/")).toBe(true);
+  });
 });
