@@ -11,10 +11,7 @@ import {
   setWallerUserDetails,
 } from "../storage/local.js";
 import { setUpNewUserWallet } from "../wallet/creation.js";
-import {
-  getCognitoRecoveryPasswordV1,
-  getCognitoRecoveryPasswordV2,
-} from "../wallet/recoveryCode.js";
+import { getCognitoRecoveryPasswordV2 } from "../wallet/recoveryCode.js";
 import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 
 export async function preAuth(args: {
@@ -154,11 +151,7 @@ async function getRecoveryCode(
       return recoveryCode;
     } else {
       try {
-        // temporary fork for discord until we migrate all methods to the new auth flow
-        const code = await (storedToken.authProvider === AuthProvider.DISCORD
-          ? getCognitoRecoveryPasswordV2(client)
-          : getCognitoRecoveryPasswordV1(client));
-        return code;
+        return await getCognitoRecoveryPasswordV2(client);
       } catch (e) {
         throw new Error("Something went wrong getting cognito recovery code");
       }

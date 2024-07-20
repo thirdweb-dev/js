@@ -1,5 +1,5 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { getDiscordLoginPath } from "../../../../wallets/in-app/core/authentication/getLoginPath.js";
+import { getSocialAuthLoginPath } from "../../../../wallets/in-app/core/authentication/getLoginPath.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Ecosystem } from "../../../../wallets/in-app/web/types.js";
 import type { Theme } from "../../../core/design-system/index.js";

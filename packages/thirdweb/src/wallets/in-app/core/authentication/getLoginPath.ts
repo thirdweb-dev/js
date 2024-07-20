@@ -1,13 +1,14 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Ecosystem } from "../../web/types.js";
 
-// TODO: make this generic for all auth providers
-export const getDiscordLoginPath = (
+export const getSocialAuthLoginPath = (
+  authOption: SocialAuthOption,
   client: ThirdwebClient,
   ecosystem?: Ecosystem,
 ) => {
-  const baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/discord?clientId=${client.clientId}`;
+  const baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
     return `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
   }
