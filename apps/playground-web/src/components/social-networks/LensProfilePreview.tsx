@@ -21,11 +21,10 @@ export async function LensProfilePreview() {
         })
       ).url
     : "";
-  console.log({ coverImage });
   const userImage = profile?.profileData?.lens.picture;
   const userName = profile?.profileData?.lens.name;
   const userBio = profile?.profileData?.lens.bio;
-  const joinDate = profile?.profileData?.joinDate
+  const joinDate = profile?.joinDate
     ? new Date(Number(profile.profileData?.joinDate * 1000n))
     : "";
   return (
