@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { ChainId, useSDK, useSDKChainId } from "@thirdweb-dev/react";
-import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { forwardRef, useCallback, useMemo, useRef } from "react";
@@ -69,9 +68,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
         />
       );
     }
-    const shouldShowEVMFaucet = BigNumber.from(evmBalance.data?.value || 0).eq(
-      0,
-    );
+    const shouldShowEVMFaucet = (evmBalance.data?.value || 0n) === 0n;
     return (
       <Popover
         initialFocusRef={initialFocusRef}

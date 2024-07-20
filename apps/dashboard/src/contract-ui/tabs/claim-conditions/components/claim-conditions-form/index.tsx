@@ -31,7 +31,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { detectFeatures } from "components/contract-components/utils";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import {
@@ -46,6 +45,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
+import { ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { Button, Heading, MenuItem, Text } from "tw-components";
@@ -468,14 +468,13 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                 ? {
                     address: v,
                     maxClaimable: "unlimited",
-                    currencyAddress: constants.AddressZero,
+                    currencyAddress: ZERO_ADDRESS,
                     price: "unlimited",
                   }
                 : {
                     ...v,
                     maxClaimable: v?.maxClaimable?.toString() || "unlimited",
-                    currencyAddress:
-                      v?.currencyAddress || constants.AddressZero,
+                    currencyAddress: v?.currencyAddress || ZERO_ADDRESS,
                     price: v?.price?.toString() || "unlimited",
                   },
             );

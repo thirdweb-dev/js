@@ -3,10 +3,10 @@ import { type NFTContract, useTransferNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { ZERO_ADDRESS } from "thirdweb";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TransferTabProps {
@@ -75,7 +75,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
               <SolidityInput
                 solidityType="address"
                 formContext={form}
-                placeholder={constants.AddressZero}
+                placeholder={ZERO_ADDRESS}
                 {...form.register("to")}
               />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>

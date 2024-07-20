@@ -29,13 +29,13 @@ import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { shortenString } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
-import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import QRCode from "qrcode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiExport, BiImport, BiPencil } from "react-icons/bi";
+import { getAddress } from "thirdweb";
 import {
   Badge,
   Button,
@@ -68,7 +68,7 @@ const setColumns = (instanceUrl: string) => [
       const address = cell.getValue();
       return (
         <AddressCopyButton
-          address={utils.getAddress(address)}
+          address={getAddress(address)}
           shortenAddress={false}
           size="xs"
         />

@@ -12,8 +12,8 @@ import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { constants } from "ethers";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
+import { ZERO_ADDRESS } from "thirdweb";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 
 interface SplitFieldsetProps {
@@ -67,7 +67,7 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                     solidityType="address"
                     formContext={form}
                     variant="filled"
-                    placeholder={constants.AddressZero}
+                    placeholder={ZERO_ADDRESS}
                     {...form.register(`recipients.${index}.address`)}
                   />
                   <FormErrorMessage>

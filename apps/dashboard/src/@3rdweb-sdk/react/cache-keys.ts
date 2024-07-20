@@ -1,5 +1,5 @@
 import type { ContractType } from "@thirdweb-dev/sdk";
-import { constants } from "ethers";
+import { ZERO_ADDRESS } from "thirdweb";
 
 export const networkKeys = {
   all: ["network"] as const,
@@ -97,14 +97,11 @@ export const engineKeys = {
 export const contractKeys = {
   all: ["contract"] as const,
   lists: () => [...contractKeys.all, "list"] as const,
-  list: (address = constants.AddressZero) =>
-    [...contractKeys.lists(), address] as const,
-  listWithFilters: (
-    address = constants.AddressZero,
-    filters?: ContractType[],
-  ) => [...contractKeys.list(address), { filters }] as const,
+  list: (address = ZERO_ADDRESS) => [...contractKeys.lists(), address] as const,
+  listWithFilters: (address = ZERO_ADDRESS, filters?: ContractType[]) =>
+    [...contractKeys.list(address), { filters }] as const,
   details: () => [...contractKeys.all, "detail"] as const,
-  detail: (address: string = constants.AddressZero) =>
+  detail: (address: string = ZERO_ADDRESS) =>
     [...contractKeys.details(), address] as const,
 };
 
@@ -117,42 +114,37 @@ export const walletKeys = {
 export const splitsKeys = {
   all: ["splits"] as const,
   lists: () => [...splitsKeys.all, "list"] as const,
-  list: (address = constants.AddressZero) =>
-    [...splitsKeys.lists(), address] as const,
-  detail: (address = constants.AddressZero) =>
-    [...splitsKeys.all, address] as const,
-  currencies: (address = constants.AddressZero) =>
+  list: (address = ZERO_ADDRESS) => [...splitsKeys.lists(), address] as const,
+  detail: (address = ZERO_ADDRESS) => [...splitsKeys.all, address] as const,
+  currencies: (address = ZERO_ADDRESS) =>
     [...splitsKeys.detail(address), "currencies"] as const,
-  balances: (address = constants.AddressZero) =>
+  balances: (address = ZERO_ADDRESS) =>
     [...splitsKeys.detail(address), "balances"] as const,
 };
 
 export const voteKeys = {
   all: ["vote"] as const,
-  detail: (address = constants.AddressZero) =>
-    [...voteKeys.all, address] as const,
-  proposals: (address = constants.AddressZero) =>
+  detail: (address = ZERO_ADDRESS) => [...voteKeys.all, address] as const,
+  proposals: (address = ZERO_ADDRESS) =>
     [...voteKeys.detail(address), "proposals"] as const,
-  proposal: (proposalId = "-1", address = constants.AddressZero) =>
+  proposal: (proposalId = "-1", address = ZERO_ADDRESS) =>
     [...voteKeys.proposals(address), proposalId] as const,
-  balances: (address = constants.AddressZero, addresses = [] as string[]) =>
+  balances: (address = ZERO_ADDRESS, addresses = [] as string[]) =>
     [...voteKeys.detail(address), "balances", { addresses }] as const,
-  delegations: (address = constants.AddressZero) =>
+  delegations: (address = ZERO_ADDRESS) =>
     [...voteKeys.detail(address), "delegations"] as const,
-  delegation: (
-    address = constants.AddressZero,
-    userAddress = constants.AddressZero,
-  ) => [...voteKeys.delegations(address), userAddress] as const,
+  delegation: (address = ZERO_ADDRESS, userAddress = ZERO_ADDRESS) =>
+    [...voteKeys.delegations(address), userAddress] as const,
   userHasVotedOnProposal: (
     proposalId = "-1",
-    address = constants.AddressZero,
-    userAddress = constants.AddressZero,
+    address = ZERO_ADDRESS,
+    userAddress = ZERO_ADDRESS,
   ) =>
     [
       ...voteKeys.proposal(proposalId, address),
       "hasVotedOnProposal",
       userAddress,
     ] as const,
-  canExecuteProposal: (proposalId = "-1", address = constants.AddressZero) =>
+  canExecuteProposal: (proposalId = "-1", address = ZERO_ADDRESS) =>
     [...voteKeys.proposal(proposalId, address), "canExecute"] as const,
 };

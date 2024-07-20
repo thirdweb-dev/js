@@ -15,9 +15,10 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { constants, BigNumber, ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
+import { ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -56,7 +57,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
     return [
       {
         name: "Native Token",
-        token_address: constants.AddressZero,
+        token_address: ZERO_ADDRESS,
         balance: nativeBalanceQuery?.data?.value?.toString() || "0",
         display_balance: nativeBalanceQuery?.data?.displayValue || "0.0",
         decimals: nativeBalanceQuery?.data?.decimals || 18,
@@ -121,13 +122,13 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
                 {nativeBalanceQuery.data?.symbol}
               </StatLabel>
               <StatNumber>{nativeBalanceQuery?.data?.displayValue}</StatNumber>
-              {shareOfBalancesForConnectedWallet[constants.AddressZero] && (
+              {shareOfBalancesForConnectedWallet[ZERO_ADDRESS] && (
                 <StatNumber>
                   <Text size="body.md">
                     <Text as="span" size="label.md">
                       Your Share:
                     </Text>{" "}
-                    {shareOfBalancesForConnectedWallet[constants.AddressZero]}
+                    {shareOfBalancesForConnectedWallet[ZERO_ADDRESS]}
                   </Text>
                 </StatNumber>
               )}
