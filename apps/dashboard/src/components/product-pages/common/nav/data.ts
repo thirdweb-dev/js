@@ -359,7 +359,7 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     name: "Transaction Simulator",
     label: "transaction-simulator",
     description: "",
-    link: "https://thirdweb.com/tools/transaction-simulator",
+    link: "/tools/transaction-simulator",
     icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
     section: "tools",
   },
