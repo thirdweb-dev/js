@@ -167,8 +167,16 @@
       "tw-components",
       "contract-ui"
     ],
-    "exclude": ["node_modules", "types", "tw-components"],
+    "exclude": [
+      "node_modules",
+      "types",
+      "tw-components"
+    ],
     "entrypoints": []
   },
-  "browserslist": ["defaults", "unreleased versions", "not UCAndroid > 0"]
+  "browserslist": [
+    "defaults",
+    "unreleased versions",
+    "not UCAndroid > 0"
+  ]
 }
