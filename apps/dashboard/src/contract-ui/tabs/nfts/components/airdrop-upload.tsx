@@ -24,7 +24,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
-import { thirdwebClient } from "lib/thirdweb-client";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
@@ -37,8 +36,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
-import { resolveAddress } from "thirdweb/extensions/ens";
-import { isAddress } from "thirdweb/utils";
+import { isAddress } from "thirdweb";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
