@@ -12,12 +12,14 @@ const profileId = 1000n;
 const client = TEST_CLIENT;
 
 describe("lens/getFullProfile", () => {
-  it("should return a profile object or null for valid profileId", async () => {
+  it("should return a full profile with handle and (maybe) profile metadata", async () => {
     const profile = await getFullProfile({ profileId, client });
 
-    // Although there is a profile, the data of that profile might still be "null"
+    // Although there is a profile, the metadata of that profile might still be "null"
     // if user hasn't set up any metadata like avatar, coverPicture, name, bio etc.
     expect(typeof profile).toBe("object");
+    expect(profile?.handle.startsWith("lens/@")).toBe(true);
+    expect(typeof profile?.profileData).toBe("object");
   });
 
   it("should return null for invalid profileId", async () => {
@@ -25,5 +27,14 @@ describe("lens/getFullProfile", () => {
     // gotta be a very long before this number is reached so we should be safe
     const profile = await getFullProfile({ profileId: MAX_UINT256, client });
     expect(profile === null).toBe(true);
+  });
+
+  it("should return joinDate", async () => {
+    const profile = await getFullProfile({
+      profileId,
+      client,
+      includeJoinDate: true,
+    });
+    expect(typeof profile?.joinDate).toBe("bigint");
   });
 });

@@ -7,7 +7,7 @@ import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
 import { LENS_HUB_ADDRESS } from "../consts.js";
 import type { LensProfileSchema } from "./type.js";
 
-export type GetProfileDataParams = {
+export type GetProfileMetadataParams = {
   profileId: bigint;
   client: ThirdwebClient;
   overrides?: {
@@ -28,9 +28,9 @@ export type GetProfileDataParams = {
  *
  * @example
  * ```ts
- * import { getProfileData } from "thirdweb/extensions/lens";
+ * import { getProfileMetadata } from "thirdweb/extensions/lens";
  *
- * const profileData = await getProfileData({ profileId, client });
+ * const profileData = await getProfileMetadata({ profileId, client });
  *
  * if (profileData) {
  *   console.log("Display name: ", profileData.lens.name);
@@ -38,8 +38,8 @@ export type GetProfileDataParams = {
  * }
  * ```
  */
-export async function getProfileData(
-  options: GetProfileDataParams,
+export async function getProfileMetadata(
+  options: GetProfileMetadataParams,
 ): Promise<LensProfileSchema | null> {
   const { client, profileId, overrides } = options;
   const lensHubContract = getContract({
