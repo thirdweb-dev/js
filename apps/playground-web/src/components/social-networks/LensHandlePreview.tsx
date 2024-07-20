@@ -4,10 +4,11 @@ import { getHandleFromProfileId } from "thirdweb/extensions/lens";
 
 export async function LensHandlePreview() {
   const profileId = 461662n;
-  const handle = await getHandleFromProfileId({
-    profileId,
-    client: THIRDWEB_CLIENT,
-  }) ?? "";
+  const handle =
+    (await getHandleFromProfileId({
+      profileId,
+      client: THIRDWEB_CLIENT,
+    })) ?? "";
 
   return (
     <div className="flex flex-row p-4 text-4xl text-black bg-white rounded-lg">
