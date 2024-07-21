@@ -520,7 +520,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                 <FormLabel pointerEvents={"none"}>Server verifier</FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
-                  and decide wether it should be sponsored or not. This gives
+                  and decide whether it should be sponsored or not. This gives
                   you fine grained control and lets you build your own rules.{" "}
                   <TrackedLink
                     category={trackingCategory}
