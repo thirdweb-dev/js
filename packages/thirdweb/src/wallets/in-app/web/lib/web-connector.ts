@@ -10,13 +10,12 @@ import {
   type SendEmailOtpReturnType,
   type SingleStepAuthArgsType,
   UserWalletStatus,
-  oauthStrategyToAuthProvider,
 } from "../../core/authentication/type.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
-import { loginWithDiscord } from "./auth/discord.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
+import { loginWithOauth } from "./auth/oauth.js";
 import { loginWithPasskey, registerPasskey } from "./auth/passkeys.js";
 import { IFrameWallet } from "./in-app-account.js";
 
@@ -169,16 +168,6 @@ export class InAppWebConnector implements InAppConnector {
           phoneNumber: args.phoneNumber,
         });
       }
-      case "apple":
-      case "facebook":
-      case "google": {
-        const oauthProvider = oauthStrategyToAuthProvider[strategy];
-        return this.auth.loginWithOauth({
-          oauthProvider,
-          closeOpenedWindow: args.closeOpenedWindow,
-          openedWindow: args.openedWindow,
-        });
-      }
       case "jwt": {
         return this.auth.loginWithCustomJwt({
           jwt: args.jwt,
@@ -216,8 +205,12 @@ export class InAppWebConnector implements InAppConnector {
         });
         return this.auth.loginWithAuthToken(authToken);
       }
+      case "apple":
+      case "facebook":
+      case "google":
       case "discord": {
-        const authToken = await loginWithDiscord({
+        const authToken = await loginWithOauth({
+          authOption: strategy,
           client: this.wallet.client,
           ecosystem: this.wallet.ecosystem,
           closeOpenedWindow: args.closeOpenedWindow,

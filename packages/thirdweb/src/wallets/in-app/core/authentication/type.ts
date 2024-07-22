@@ -65,7 +65,7 @@ export enum AuthProvider {
 }
 
 export type OauthOption = {
-  provider: AuthProvider;
+  strategy: SocialAuthOption;
   redirectUrl: string;
 };
 
@@ -206,14 +206,4 @@ export type GetUser =
 
 export type GetAuthenticatedUserParams = {
   client: ThirdwebClient;
-};
-
-export const oauthStrategyToAuthProvider: Record<
-  SocialAuthOption,
-  AuthProvider
-> = {
-  google: AuthProvider.GOOGLE,
-  facebook: AuthProvider.FACEBOOK,
-  apple: AuthProvider.APPLE,
-  discord: AuthProvider.DISCORD,
 };

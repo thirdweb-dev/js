@@ -1,23 +1,62 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../../../wallets/in-app/core/authentication/type.js";
-import { getDiscordLoginPath } from "../../../core/authentication/getLoginPath.js";
+import type { SocialAuthOption } from "../../../../../wallets/types.js";
 import type { Ecosystem } from "../../types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
-import { closeWindow } from "./utils.js";
 
-export async function loginWithDiscord(options: {
+const closeWindow = ({
+  isWindowOpenedByFn,
+  win,
+  closeOpenedWindow,
+}: {
+  win?: Window | null;
+  isWindowOpenedByFn: boolean;
+  closeOpenedWindow?: (openedWindow: Window) => void;
+}) => {
+  if (isWindowOpenedByFn) {
+    win?.close();
+  } else {
+    if (win && closeOpenedWindow) {
+      closeOpenedWindow(win);
+    } else if (win) {
+      win.close();
+    }
+  }
+};
+
+export const getSocialAuthLoginPath = (
+  authOption: SocialAuthOption,
+  client: ThirdwebClient,
+  ecosystem?: Ecosystem,
+) => {
+  const baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
+  if (ecosystem?.partnerId) {
+    return `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
+  }
+  if (ecosystem) {
+    return `${baseUrl}&ecosystemId=${ecosystem.id}`;
+  }
+  return baseUrl;
+};
+
+export const loginWithOauth = async (options: {
+  authOption: SocialAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   openedWindow?: Window | null | undefined;
   closeOpenedWindow?: ((openedWindow: Window) => void) | undefined;
-}): Promise<AuthStoredTokenWithCookieReturnType> {
+}): Promise<AuthStoredTokenWithCookieReturnType> => {
   let win = options.openedWindow;
   let isWindowOpenedByFn = false;
   if (!win) {
     win = window.open(
-      getDiscordLoginPath(options.client, options.ecosystem),
-      "Login to discord",
+      getSocialAuthLoginPath(
+        options.authOption,
+        options.client,
+        options.ecosystem,
+      ),
+      `Login to ${options.authOption}`,
       DEFAULT_POP_UP_SIZE,
     );
     isWindowOpenedByFn = true;
@@ -30,9 +69,6 @@ export async function loginWithDiscord(options: {
     (resolve, reject) => {
       // detect when the user closes the login window
       const pollTimer = window.setInterval(async () => {
-        if (!win) {
-          return;
-        }
         if (win.closed) {
           clearInterval(pollTimer);
           window.removeEventListener("message", messageListener);
@@ -89,4 +125,4 @@ export async function loginWithDiscord(options: {
     },
   );
   return result;
-}
+};
