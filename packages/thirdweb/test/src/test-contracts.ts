@@ -32,6 +32,7 @@ export const DOODLES_CONTRACT = getContract({
 });
 
 const NFT_DROP_ADDRESS = "0xE333cD2f6e26A949Ce1F3FB15d7BfAc2871cc9e4";
+export const NFT_DROP_IMPLEMENTATION = "0x6f6010fb5da6f757d5b1822aadf1d3b806d6546d"; // https://etherscan.io/address/0x6f6010fb5da6f757d5b1822aadf1d3b806d6546d#code
 
 export const NFT_DROP_CONTRACT = getContract({
 	client: TEST_CLIENT,
