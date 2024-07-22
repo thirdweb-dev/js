@@ -50,6 +50,7 @@ export default {
     "https://rpc.zerion.io/v1/zero-sepolia"
   ],
   "shortName": "eth",
+  "slip44": 1,
   "slug": "zer-network",
   "testnet": true
 } as const satisfies Chain;

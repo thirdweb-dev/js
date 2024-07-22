@@ -4,8 +4,13 @@ export default {
   "chainId": 33979,
   "explorers": [
     {
+      "name": "FunkiScan",
+      "url": "https://funkiscan.io",
+      "standard": "none"
+    },
+    {
       "name": "Funki Mainnet Explorer",
-      "url": "https://mainnet.funkichain.com",
+      "url": "https://funki.superscan.network",
       "standard": "none"
     }
   ],
@@ -24,7 +29,11 @@ export default {
     "decimals": 18
   },
   "networkId": 33979,
-  "rpc": [],
+  "rpc": [
+    "https://33979.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc-mainnet.funkichain.com",
+    "wss://rpc-mainnet.funkichain.com"
+  ],
   "shortName": "funki",
   "slug": "funki",
   "testnet": false

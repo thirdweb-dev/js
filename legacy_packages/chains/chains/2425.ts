@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "KOL",
+  "chain": "KCC",
   "chainId": 2425,
   "explorers": [
     {
-      "name": "King Of Legends Devnet Explorer",
-      "url": "https://devnet.kingscan.org",
+      "name": "King Of Legends Mainnet Explorer",
+      "url": "https://kingscan.org",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmTZFXhYJboYE9fbaeje12iTF3QPLn6xgyFgrDVe2isDBH",
@@ -23,20 +23,20 @@ export default {
     "format": "png"
   },
   "infoURL": "https://kingoflegends.net/",
-  "name": "King Of Legends Devnet",
+  "name": "King Of Legends Mainnet",
   "nativeCurrency": {
     "name": "King Of Legends",
-    "symbol": "KOL",
+    "symbol": "KCC",
     "decimals": 18
   },
   "networkId": 2425,
   "rpc": [
     "https://2425.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-devnet.kinggamer.org/"
+    "https://rpc-mainnet.kinggamer.org/"
   ],
-  "shortName": "kol",
+  "shortName": "kcc",
   "slip44": 1,
-  "slug": "king-of-legends-devnet",
+  "slug": "king-of-legends",
   "testnet": false,
-  "title": "King Of Legends Devnet"
+  "title": "King Of Legends Mainnet"
 } as const satisfies Chain;

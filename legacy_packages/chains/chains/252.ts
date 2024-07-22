@@ -2,6 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "FRAX",
   "chainId": 252,
+  "contracts": {
+    "l1Contracts": {
+      "L1StandardBridgeProxy": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2",
+      "L2OutputOracleProxy": "0x66CC916Ed5C6C2FA97014f7D1cD141528Ae171e4",
+      "OptimismPortalProxy": "0x36cb65c1967A0Fb0EEE11569C51C2f2aA1Ca6f6D"
+    }
+  },
   "explorers": [
     {
       "name": "fraxscan",
@@ -32,6 +39,11 @@ export default {
   ],
   "shortName": "fraxtal",
   "slug": "fraxtal",
+  "stackInfo": {
+    "parentChainId": 1,
+    "nativeTokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "stackType": "optimism_bedrock",
   "status": "active",
   "testnet": false
 } as const satisfies Chain;

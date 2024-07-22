@@ -1,7 +1,7 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "NeoX",
-  "chainId": 12227331,
+  "chainId": 12227332,
   "explorers": [
     {
       "name": "neox-scan",
@@ -17,19 +17,19 @@ export default {
     "format": "png"
   },
   "infoURL": "https://neo.org/",
-  "name": "NeoX Testnet T3",
+  "name": "NeoX Testnet T4",
   "nativeCurrency": {
     "name": "Gas",
     "symbol": "GAS",
     "decimals": 18
   },
-  "networkId": 12227331,
+  "networkId": 12227332,
   "rpc": [
-    "https://12227331.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://neoxseed1.ngd.network/"
+    "https://12227332.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://testnet.rpc.banelabs.org/"
   ],
-  "shortName": "neox",
-  "slug": "neox-testnet-t3",
-  "status": "deprecated",
+  "shortName": "neox-t4",
+  "slug": "neox-testnet-t4",
+  "status": "active",
   "testnet": true
 } as const satisfies Chain;

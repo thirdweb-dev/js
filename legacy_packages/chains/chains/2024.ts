@@ -16,7 +16,7 @@ export default {
     "https://2024.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://saturn-rpc.swanchain.io"
   ],
-  "shortName": "swan",
+  "shortName": "saturn",
   "slug": "swan-saturn-testnet",
   "testnet": true
 } as const satisfies Chain;

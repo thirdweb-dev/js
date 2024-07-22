@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
   "chain": "ETH",
-  "chainId": 6806,
+  "chainId": 6805,
   "explorers": [
     {
       "name": "blockscout",
-      "url": "https://testnet.racescan.io",
+      "url": "https://racescan.io",
       "standard": "EIP3091",
       "icon": {
         "url": "ipfs://QmYtUimyqHkkFxYdbXXRbUqNg2VLPUg6Uu2C2nmFWowiZM",
@@ -15,9 +15,7 @@ export default {
       }
     }
   ],
-  "faucets": [
-    "https://faucet.racetestnet.io/"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmQGaiPkSHc8ZGLAE4A8yZdFWLeuEts4VX6FjEqnuPXvxh",
     "width": 184,
@@ -25,28 +23,28 @@ export default {
     "format": "png"
   },
   "infoURL": "https://race.foundation/",
-  "name": "RACE Testnet",
+  "name": "RACE Mainnet",
   "nativeCurrency": {
-    "name": "Sepolia Ether",
+    "name": "Ether",
     "symbol": "ETH",
     "decimals": 18
   },
-  "networkId": 6806,
+  "networkId": 6805,
   "parent": {
     "type": "L2",
-    "chain": "eip155-11155111",
+    "chain": "eip155-1",
     "bridges": [
       {
-        "url": "https://testnet-bridge.race.foundation/"
+        "url": "https://bridge.race.foundation/"
       }
     ]
   },
   "rpc": [
-    "https://6806.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://racetestnet.io/"
+    "https://6805.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://racemainnet.io/"
   ],
-  "shortName": "racesep",
+  "shortName": "raceeth",
   "slip44": 1,
-  "slug": "race-testnet",
-  "testnet": true
+  "slug": "race",
+  "testnet": false
 } as const satisfies Chain;

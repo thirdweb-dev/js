@@ -4,9 +4,9 @@ export default {
   "chainId": 646,
   "explorers": [
     {
-      "name": "Flow Diver",
-      "url": "https://previewnet.flowdiver.io",
-      "standard": "none"
+      "name": "EVM on Flow Block Explorer (PreviewNet)",
+      "url": "https://eth.flowscan.io",
+      "standard": "EIP3091"
     },
     {
       "name": "Eth Flow Scan",

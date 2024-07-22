@@ -20,21 +20,11 @@
     "playground-web",
     "thirdweb-dashboard",
     "wallet-ui",
-    "@thirdweb-dev/auth",
-    "@thirdweb-dev/chains",
-    "@thirdweb-dev/cli",
-    "@thirdweb-dev/contracts-js",
-    "@thirdweb-dev/crypto",
-    "@thirdweb-dev/generated-abis",
-    "@thirdweb-dev/merkletree",
     "@thirdweb-dev/pay",
     "@thirdweb-dev/payments",
     "@thirdweb-dev/react",
     "@thirdweb-dev/react-core",
-    "@thirdweb-dev/sdk",
-    "@thirdweb-dev/storage",
-    "@thirdweb-dev/unity-js-bridge",
-    "@thirdweb-dev/wallets"
+    "@thirdweb-dev/unity-js-bridge"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "updateInternalDependents": "always",

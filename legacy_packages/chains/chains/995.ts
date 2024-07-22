@@ -1,11 +1,11 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "5ireChain Testnet",
-  "chainId": 997,
+  "chain": "5ireChain",
+  "chainId": 995,
   "explorers": [
     {
       "name": "5ireChain Explorer",
-      "url": "https://explorer.5ire.network",
+      "url": "https://5irescan.io",
       "standard": "none",
       "icon": {
         "url": "ipfs://QmaZDNDFLWESH4i3XqwEWfWBb1HPnQSNbDAr74nr2x8QAk",
@@ -15,9 +15,7 @@ export default {
       }
     }
   ],
-  "faucets": [
-    "https://explorer.5ire.network/faucet"
-  ],
+  "faucets": [],
   "icon": {
     "url": "ipfs://QmaZDNDFLWESH4i3XqwEWfWBb1HPnQSNbDAr74nr2x8QAk",
     "width": 800,
@@ -25,18 +23,18 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://5ire.org",
-  "name": "5ireChain Thunder",
+  "name": "5ireChain Mainnet",
   "nativeCurrency": {
-    "name": "5ire Testnet Token",
-    "symbol": "T5IRE",
+    "name": "5ire Token",
+    "symbol": "5IRE",
     "decimals": 18
   },
-  "networkId": 997,
+  "networkId": 995,
   "rpc": [
-    "https://997.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc-testnet.5ire.network"
+    "https://995.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.5ire.network"
   ],
-  "shortName": "T5ire",
-  "slug": "5irechain-thunder",
-  "testnet": true
+  "shortName": "5ire",
+  "slug": "5irechain",
+  "testnet": false
 } as const satisfies Chain;
