@@ -840,6 +840,7 @@ export function useCustomContractDeployMutation(
               chainId,
             },
             account,
+            300000n,
           );
 
           deployContext.nextStep();

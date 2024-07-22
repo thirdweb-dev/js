@@ -148,6 +148,7 @@ export function useAddContractMutation() {
           chainId: data.chainId,
         },
         account,
+        300000n,
       );
     },
     {
