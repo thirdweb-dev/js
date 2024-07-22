@@ -11,7 +11,6 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import { configureChain, minimizeChain } from "@thirdweb-dev/chains";
 import type { DropContract } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
@@ -19,6 +18,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
+import type { ChainMetadata } from "thirdweb/chains";
 import {
   Button,
   Card,
@@ -158,6 +158,58 @@ const buildIframeSrc = (
   }
   return url.toString();
 };
+
+// taken from @thirdweb-dev /chains
+// @internal
+function minimizeChain(
+  chain: ChainMetadata,
+): Pick<
+  ChainMetadata,
+  | "name"
+  | "chain"
+  | "rpc"
+  | "nativeCurrency"
+  | "shortName"
+  | "chainId"
+  | "testnet"
+  | "slug"
+  | "icon"
+> {
+  const [firstRpc] = chain.rpc;
+  return {
+    name: chain.name,
+    chain: chain.chain,
+    rpc: [firstRpc],
+    nativeCurrency: chain.nativeCurrency,
+    shortName: chain.shortName,
+    chainId: chain.chainId,
+    testnet: chain.testnet,
+    slug: chain.slug,
+    icon: chain.icon,
+  };
+}
+
+// taken from @thirdweb-dev /chains
+// @internal
+type ChainConfiguration = {
+  rpc?: string | string[];
+};
+
+function configureChain(
+  chain: ChainMetadata,
+  chainConfig: ChainConfiguration,
+): ChainMetadata {
+  let additionalRPCs: string[] = [];
+  if (chainConfig?.rpc) {
+    if (typeof chainConfig.rpc === "string") {
+      additionalRPCs = [chainConfig.rpc];
+    } else {
+      additionalRPCs = chainConfig.rpc;
+    }
+  }
+  // prepend additional RPCs to the chain's RPCs
+  return { ...chain, rpc: [...additionalRPCs, ...chain.rpc] };
+}
 
 export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   contract,

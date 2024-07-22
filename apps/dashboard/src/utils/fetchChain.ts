@@ -1,8 +1,8 @@
-import type { Chain } from "@thirdweb-dev/chains";
+import type { ChainMetadata } from "thirdweb/chains";
 
 export async function fetchChain(
   chainIdOrSlug: string | number,
-): Promise<Chain | null> {
+): Promise<ChainMetadata | null> {
   // always fetch from prod for chains for now
   // TODO: re-visit this
   const res = await fetch(
@@ -10,7 +10,7 @@ export async function fetchChain(
   );
   if (res.ok) {
     try {
-      return (await res.json()).data as Chain;
+      return (await res.json()).data as ChainMetadata;
     } catch (err) {
       return null;
     }
@@ -24,7 +24,7 @@ export async function fetchAllChains() {
   const res = await fetch("https://api.thirdweb.com/v1/chains");
   if (res.ok) {
     try {
-      return (await res.json()).data as Chain[];
+      return (await res.json()).data as ChainMetadata[];
     } catch (err) {
       return [];
     }

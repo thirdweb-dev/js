@@ -41,7 +41,7 @@ export const CustomConnectWallet: React.FC = () => {
       },
       {
         label: "Popular",
-        chains: popularChains.map(defineChain),
+        chains: popularChains,
       },
       {
         label: "Recent",

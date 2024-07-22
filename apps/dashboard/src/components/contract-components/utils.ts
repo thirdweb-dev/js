@@ -1,4 +1,3 @@
-import { Polygon } from "@thirdweb-dev/chains";
 import {
   type Abi,
   type AddContractInput,
@@ -46,8 +45,8 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
 
 export function getGaslessPolygonSDK(signer?: Signer) {
   const polygonSDK = getThirdwebSDK(
-    Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    polygon.id,
+    getDashboardChainRpc(polygon.id),
     {
       gasless: {
         engine: {

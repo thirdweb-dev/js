@@ -1,11 +1,11 @@
-import { type Chain, defaultChains } from "@thirdweb-dev/chains";
 import { isProd } from "constants/rpc";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { createContext, useCallback, useEffect, useState } from "react";
+import type { ChainMetadata } from "thirdweb/chains";
 
 // extra information on top of Chain interface
 // all keys added here must be optional
-export interface StoredChain extends Chain {
+export interface StoredChain extends ChainMetadata {
   isModified?: boolean;
   isCustom?: boolean;
   isOverwritten?: boolean;
@@ -16,7 +16,7 @@ const RECENTLY_USED_CHAIN_IDS_KEY = "tw-recently-used-chains";
 
 /**
  * holds the "supported chains" array
- * intially it is set to the defaultChains, then it is updated to the "allChains" with "modified chains" overrides
+ * initially it is set to the defaultChains, then it is updated to the "allChains" with "modified chains" overrides
  */
 export const SupportedChainsContext = createContext<StoredChain[] | undefined>(
   undefined,
@@ -55,7 +55,7 @@ export const AddRecentlyUsedChainIdsContext = createContext<
  * and handles the logic of updating the "supported chains" and "modified chains" and "recently used chains"
  */
 export const ModifyChainContext = createContext<
-  ((chain: Chain, remove?: boolean) => void) | undefined
+  ((chain: ChainMetadata, remove?: boolean) => void) | undefined
 >(undefined);
 
 /**
@@ -77,12 +77,14 @@ export const SetIsNetworkConfigModalOpenCtx = createContext<
 /**
  * Chain object to be edited in the "Network Config" Modal
  */
-export const EditChainContext = createContext<Chain | undefined>(undefined);
+export const EditChainContext = createContext<ChainMetadata | undefined>(
+  undefined,
+);
 export const SetEditChainContext = createContext<
-  ((chain: Chain | undefined) => void) | undefined
+  ((chain: ChainMetadata | undefined) => void) | undefined
 >(undefined);
 
-const replaceRpcsWithDevUrl = (chains: Chain[]) => {
+const replaceRpcsWithDevUrl = (chains: ChainMetadata[]) => {
   if (isProd) {
     return chains;
   }
@@ -101,8 +103,7 @@ const replaceRpcsWithDevUrl = (chains: Chain[]) => {
  * if no networks are configured by the user, return the defaultChains
  */
 export function ChainsProvider(props: { children: React.ReactNode }) {
-  const [supportedChains, setSupportedChains] =
-    useState<StoredChain[]>(defaultChains);
+  const [supportedChains, setSupportedChains] = useState<StoredChain[]>([]);
   const [modifiedChains, setModifiedChains] = useState<StoredChain[]>([]);
   const [isSupportedChainsReady, setIsSupportedChainsReady] = useState(false);
   const [recentlyUsedChainIds, setRecentlyUsedChainIds] = useState<number[]>(
@@ -110,7 +111,9 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
   );
   const [isNetworkConfigModalOpen, setIsNetworkConfigModalOpen] =
     useState(false);
-  const [editChain, setEditChain] = useState<Chain | undefined>(undefined);
+  const [editChain, setEditChain] = useState<ChainMetadata | undefined>(
+    undefined,
+  );
 
   const addRecentlyUsedChainId = useCallback((chainId: number) => {
     setRecentlyUsedChainIds((_recentlyUsedChainIds) => {
@@ -198,7 +201,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
   );
 
   const applyModificationsToSupportedChains = useCallback(
-    (newModifiedChains: Chain[]) => {
+    (newModifiedChains: ChainMetadata[]) => {
       setSupportedChains((_supportedChains) => {
         return applyOverrides(_supportedChains, newModifiedChains);
       });
@@ -321,7 +324,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
 // storage  --------------------------------------------
 
 const chainStorage = {
-  get(key: string): Chain[] {
+  get(key: string): ChainMetadata[] {
     try {
       const networkListStr = localStorage.getItem(key);
       return networkListStr ? JSON.parse(networkListStr) : [];
@@ -333,7 +336,7 @@ const chainStorage = {
     return [];
   },
 
-  set(key: string, networkList: Chain[]) {
+  set(key: string, networkList: ChainMetadata[]) {
     const value = JSON.stringify(networkList);
     try {
       localStorage.setItem(key, value);

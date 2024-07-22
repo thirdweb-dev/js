@@ -1,7 +1,7 @@
-import { Ethereum } from "@thirdweb-dev/chains";
 import { type providers, utils } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import { isAddress } from "thirdweb";
+import { ethereum } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 import { getThirdwebSDK } from "./sdk";
 
@@ -12,8 +12,8 @@ function getMainnetProvider(): providers.Provider {
     return THIRDWEB_PROVIDER;
   }
   THIRDWEB_PROVIDER = getThirdwebSDK(
-    Ethereum.chainId,
-    getDashboardChainRpc(Ethereum),
+    ethereum.id,
+    getDashboardChainRpc(ethereum.id),
   ).getProvider();
   return THIRDWEB_PROVIDER;
 }

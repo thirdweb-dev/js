@@ -1,11 +1,11 @@
 import { Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { getChainByChainIdAsync } from "@thirdweb-dev/chains";
 import { AsyncContractNameCell } from "components/contract-components/tables/cells";
 import { TWTable } from "components/shared/TWTable";
 import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import type { BasicContract } from "contract-ui/types/types";
+import { defineChain, getChainMetadata } from "thirdweb/chains";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -43,7 +43,7 @@ const columns = [
 function NetworkName(props: { id: number }) {
   const chainQuery = useQuery({
     queryKey: ["getChainByChainIdAsync", props.id],
-    queryFn: () => getChainByChainIdAsync(props.id),
+    queryFn: () => getChainMetadata(defineChain(props.id)),
   });
 
   return (

@@ -36,7 +36,7 @@ export const CustomSDKContext: ComponentWithChildren<{
           networkInfo && desiredChainId
             ? {
                 chainId: desiredChainId,
-                rpcUrl: getDashboardChainRpc(networkInfo),
+                rpcUrl: getDashboardChainRpc(desiredChainId),
               }
             : undefined,
         ...options,

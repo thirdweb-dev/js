@@ -93,7 +93,8 @@ const ContractPage: ThirdwebNextPage = () => {
 
       const configuredChain = supportedChainsSlugRecord[chainSlug];
       if (
-        getDashboardChainRpc(configuredChain) !== getDashboardChainRpc(chain)
+        getDashboardChainRpc(configuredChain.chainId) !==
+        getDashboardChainRpc(chain.chainId)
       ) {
         setContractInfo({
           chainSlug,
@@ -416,7 +417,10 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   if (chain?.chainId) {
     try {
       // create the SDK on the chain
-      const sdk = getThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
+      const sdk = getThirdwebSDK(
+        chain.chainId,
+        getDashboardChainRpc(chain.chainId),
+      );
       // get the contract
       const contract = await sdk.getContract(address);
       // extract the abi to detect extensions

@@ -1,6 +1,5 @@
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
-import { defaultChains } from "@thirdweb-dev/chains";
 import {
   type Abi,
   CONTRACT_ADDRESSES,
@@ -8,6 +7,7 @@ import {
   detectFeatures,
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
+import { defaultChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
@@ -49,9 +49,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
-
-  const configuredChains = defaultChains;
-  const configuredChainsIds = configuredChains.map((c) => c.chainId);
+  const configuredChainsIds = defaultChains.map((c) => c.id);
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "networks"
   >("landing");
