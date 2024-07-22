@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.38.0
+
+### Minor Changes
+
+- [#3766](https://github.com/thirdweb-dev/js/pull/3766) [`9f555ca`](https://github.com/thirdweb-dev/js/commit/9f555cab0d96f5094ea35efec14a1622a63379af) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add more chains: Astria EVM Dusknet (912559), Blast Sepolia (168587773), Celo (42220), Cronos (25), Degen (666666666), Fantom Testnet (4002), Fantom (250), Frame Tesnet (68840142), Gnosis Chiado Testnet (10200), Gnosis (100), GodWoken (71402), GodWoken Testnet (71401), Hokum Testnet (20482050), Localhost (1337), Loot chain (5151706), Manta Pacific (169), Manta Pacific Testnet (3441005), Moonbeam (1284), Palm Testnet (11297108099), Palm (11297108109), Polygon zkEvm Testnet (1442), Polygon zkEVM (1101), Rari Testnet (1918988905), Rari chain (1380012617), Scroll Alpha Testnet (534353), Scroll Sepolia Testnet (534353), Scroll (534352), Xai Sepolia (37714555429), Xai Mainnet(660279), zk Candy Sepolia (302)
+
+### Patch Changes
+
+- [#3767](https://github.com/thirdweb-dev/js/pull/3767) [`11b2ad0`](https://github.com/thirdweb-dev/js/commit/11b2ad05ad2bd42ecb1e2840796950ec93d6264a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose roleMap and getRoleHash
+
+- [#3764](https://github.com/thirdweb-dev/js/pull/3764) [`26d825b`](https://github.com/thirdweb-dev/js/commit/26d825bc4f0475523ea761aa18ab979557295c28) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add extension support for Lens Protocol
+
+- [#3779](https://github.com/thirdweb-dev/js/pull/3779) [`d3c8302`](https://github.com/thirdweb-dev/js/commit/d3c83023f8d802d0cae54a27239d5c98668bf4d5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improved in-app wallet sign-in speed
+
+- [#3769](https://github.com/thirdweb-dev/js/pull/3769) [`a9a3f0f`](https://github.com/thirdweb-dev/js/commit/a9a3f0f423c1ec78c2cc72507f21c5b3ca0d1dbd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix deterministic deploys with specified versions
+
+- [#3687](https://github.com/thirdweb-dev/js/pull/3687) [`f082af0`](https://github.com/thirdweb-dev/js/commit/f082af0403befffa37a448d41864f1462ede3312) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix proxy resolution. Use implementation call in case of beacon.
+
 ## 5.37.0
 
 ### Minor Changes
