@@ -12,7 +12,6 @@ import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
-
 // END TEMPORARY
 
 const THIRDWEB_API_HOST =
