@@ -396,7 +396,10 @@ export async function toEthersSigner(
               blockNumber: Number(log.blockNumber),
             })),
             cumulativeGasUsed: ethers.BigNumber.from(receipt.cumulativeGasUsed),
-            effectiveGasPrice: ethers.BigNumber.from(receipt.effectiveGasPrice),
+            // How to handle effectiveGasPrice being null? - setting 0 for now
+            effectiveGasPrice: ethers.BigNumber.from(
+              receipt.effectiveGasPrice || 0,
+            ),
             byzantium: true,
           };
         },
