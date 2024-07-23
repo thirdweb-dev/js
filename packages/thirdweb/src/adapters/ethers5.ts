@@ -396,7 +396,10 @@ export async function toEthersSigner(
               blockNumber: Number(log.blockNumber),
             })),
             cumulativeGasUsed: ethers.BigNumber.from(receipt.cumulativeGasUsed),
-            effectiveGasPrice: ethers.BigNumber.from(receipt.effectiveGasPrice),
+            effectiveGasPrice:
+              receipt.effectiveGasPrice !== null
+                ? ethers.BigNumber.from(receipt.effectiveGasPrice)
+                : receipt.effectiveGasPrice,
             byzantium: true,
           };
         },
