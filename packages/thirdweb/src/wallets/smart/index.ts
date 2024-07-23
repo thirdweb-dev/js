@@ -27,6 +27,7 @@ import type {
   SendTransactionOption,
   Wallet,
 } from "../interfaces/wallet.js";
+import { convertAccount } from "../utils/convertAccount.js";
 import type {
   CreateWalletArgs,
   WalletConnectionOption,
@@ -88,7 +89,10 @@ export async function connectSmartWallet(
   connectionOptions: WalletConnectionOption<"smart">,
   creationOptions: CreateWalletArgs<"smart">[1],
 ): Promise<[Account, Chain]> {
-  const { personalAccount, client, chain: connectChain } = connectionOptions;
+  const { client, chain: connectChain } = connectionOptions;
+  const personalAccount = await convertAccount(
+    connectionOptions.personalAccount,
+  );
 
   if (!personalAccount) {
     throw new Error("Personal wallet does not have an account");
@@ -102,7 +106,7 @@ export async function connectSmartWallet(
 
   if (isNativeAAChain(chain)) {
     return [
-      createZkSyncAccount({
+      await createZkSyncAccount({
         creationOptions,
         connectionOptions,
         chain,
@@ -445,15 +449,19 @@ async function approveERC20(args: {
   });
 }
 
-function createZkSyncAccount(args: {
+async function createZkSyncAccount(args: {
   creationOptions: SmartWalletOptions;
   connectionOptions: SmartWalletConnectionOptions;
   chain: Chain;
   sponsorGas: boolean;
-}): Account {
+}): Promise<Account> {
   const { creationOptions, connectionOptions, chain } = args;
+  const personalAccount = await convertAccount(
+    connectionOptions.personalAccount,
+  );
+
   const account: Account = {
-    address: connectionOptions.personalAccount.address,
+    address: personalAccount.address,
     async sendTransaction(transaction: SendTransactionOption) {
       // override passed tx, we have to refetch gas and fees always
       const prepTx = {
@@ -511,19 +519,17 @@ function createZkSyncAccount(args: {
       };
     },
     async signMessage({ message }: { message: SignableMessage }) {
-      return connectionOptions.personalAccount.signMessage({ message });
+      return personalAccount.signMessage({ message });
     },
     async signTypedData<
       const typedData extends TypedData | Record<string, unknown>,
       primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
     >(_typedData: TypedDataDefinition<typedData, primaryType>) {
       const typedData = parseTypedData(_typedData);
-      return connectionOptions.personalAccount.signTypedData(typedData);
+      return personalAccount.signTypedData(typedData);
     },
     async onTransactionRequested(transaction) {
-      return connectionOptions.personalAccount.onTransactionRequested?.(
-        transaction,
-      );
+      return personalAccount.onTransactionRequested?.(transaction);
     },
   };
   return account;

@@ -6,7 +6,11 @@ import type { PreparedTransaction } from "../../transaction/prepare-transaction.
 import type { TransactionReceipt } from "../../transaction/types.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import type { Account, SendTransactionOption } from "../interfaces/wallet.js";
+import type {
+  Account,
+  AnyAccount,
+  SendTransactionOption,
+} from "../interfaces/wallet.js";
 
 export type SmartWalletOptions = Prettify<
   {
@@ -69,7 +73,7 @@ export type BundlerOptions = {
 };
 
 export type SmartWalletConnectionOptions = {
-  personalAccount: Account;
+  personalAccount: AnyAccount;
   client: ThirdwebClient;
   chain?: Chain;
 };

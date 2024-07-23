@@ -60,7 +60,7 @@ export const viemAdapter = {
    * ```ts
    * import { viemAdapter } from "thirdweb/adapters/viem";
    *
-   *  const publicClient = viemAdapter.publicClient.toViem({
+   * const publicClient = viemAdapter.publicClient.toViem({
    *  chain: ethereum,
    *  client,
    * });

@@ -1,10 +1,12 @@
 import type { Address } from "abitype";
+import type { Signer as EthersSigner } from "ethers6";
 import type {
   Hex,
   SignableMessage,
   TransactionSerializable,
   TypedData,
   TypedDataDefinition,
+  WalletClient as ViemWalletClient,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
@@ -261,3 +263,5 @@ export type Account = {
    */
   watchAsset?: (asset: WatchAssetParams) => Promise<boolean>;
 };
+
+export type AnyAccount = Account | ViemWalletClient | EthersSigner;
