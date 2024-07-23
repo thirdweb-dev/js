@@ -150,7 +150,7 @@ async function getDynamicFeeData(
     return { maxFeePerGas: null, maxPriorityFeePerGas: null };
     // mumbai & polygon
   }
-  if (chainId === 80001 || chainId === 137) {
+  if (chainId === 80002 || chainId === 137) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
   } else if (maxPriorityFeePerGas) {
@@ -200,37 +200,23 @@ function getPreferredPriorityFee(
 /**
  * @internal
  */
-function getGasStationUrl(chainId: 137 | 80001): string {
+function getGasStationUrl(chainId: 137 | 80002): string {
   switch (chainId) {
     case 137:
       return "https://gasstation.polygon.technology/v2";
-    case 80001:
+    case 80002:
       return "https://gasstation-testnet.polygon.technology/v2";
   }
 }
 
 const MIN_POLYGON_GAS_PRICE = 31n; // 31 gwei
 
-const MIN_MUMBAI_GAS_PRICE = 1n; // 1 gwei
-
-/**
- * @internal
- */
-function getDefaultGasFee(chainId: 137 | 80001): bigint {
-  switch (chainId) {
-    case 137:
-      return MIN_POLYGON_GAS_PRICE;
-    case 80001:
-      return MIN_MUMBAI_GAS_PRICE;
-  }
-}
-
 /**
  *
  * @returns The gas price
  * @internal
  */
-async function getPolygonGasPriorityFee(chainId: 137 | 80001): Promise<bigint> {
+async function getPolygonGasPriorityFee(chainId: 137 | 80002): Promise<bigint> {
   const gasStationUrl = getGasStationUrl(chainId);
   try {
     const data = await (await fetch(gasStationUrl)).json();
@@ -243,5 +229,5 @@ async function getPolygonGasPriorityFee(chainId: 137 | 80001): Promise<bigint> {
   } catch (e) {
     console.error("failed to fetch gas", e);
   }
-  return getDefaultGasFee(chainId);
+  return MIN_POLYGON_GAS_PRICE;
 }
