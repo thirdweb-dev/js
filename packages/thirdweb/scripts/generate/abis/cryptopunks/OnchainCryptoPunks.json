@@ -1,0 +1,5 @@
+[
+  "function punkAttributes(uint16 index) view returns (string text)",
+  "function punkImage(uint16 index) view returns (bytes)",
+  "function punkImageSvg(uint16 index) view returns (string svg)"
+]

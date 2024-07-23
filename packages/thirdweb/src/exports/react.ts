@@ -140,3 +140,5 @@ export {
   useNetworkSwitcherModal,
   type UseNetworkSwitcherModalOptions,
 } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
+
+export { NFTMedia } from "../react/web/ui/prebuilt/NFTMedia/index.js";
