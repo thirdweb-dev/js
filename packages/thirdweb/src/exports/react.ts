@@ -140,3 +140,9 @@ export {
   useNetworkSwitcherModal,
   type UseNetworkSwitcherModalOptions,
 } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
+
+/**
+ * Prebuilt UI components for thirdweb contracts
+ */
+export { ClaimButton } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/index.js";
+export type { ClaimButtonProps } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/types.js";
