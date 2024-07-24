@@ -69,7 +69,7 @@ export function DatePickerWithRange(props: {
         <DynamicHeight>
           <div>
             {!isValid && (
-              <p className="text-sm pt-2 justify-center text-destructive-foreground text-center flex items-center gap-2">
+              <p className="text-sm pt-2 justify-center text-destructive-text text-center flex items-center gap-2">
                 <CalendarX2Icon className="h-4 w-4" />
                 Invalid date range
               </p>
@@ -113,9 +113,9 @@ export function DatePickerWithRange(props: {
                   }
                 }}
                 classNames={{
-                  day_range_start: "!bg-inverted",
+                  day_range_start: "!bg-inverted !text-inverted-foreground",
                   day_range_end:
-                    "!bg-inverted/20 !text-inverted pointer-events-none",
+                    "!bg-inverted/50 !text-inverted-foreground pointer-events-none",
                 }}
               />
             )}
@@ -135,9 +135,9 @@ export function DatePickerWithRange(props: {
                   }
                 }}
                 classNames={{
-                  day_range_end: "!bg-inverted",
+                  day_range_end: "!bg-inverted !text-inverted-foreground",
                   day_range_start:
-                    "!bg-inverted/20 !text-inverted pointer-events-none",
+                    "!bg-inverted/50 !text-inverted-foreground pointer-events-none",
                 }}
               />
             )}

@@ -69,11 +69,11 @@ export function ChainLiveStats(props: { rpc: string }) {
         titleIcon={
           stats.isSuccess ? (
             <ToolTipLabel label="Working">
-              <CircleCheck className="size-4 text-success-foreground" />
+              <CircleCheck className="size-4 text-success-text" />
             </ToolTipLabel>
           ) : stats.isError ? (
             <ToolTipLabel label="Not Working">
-              <XIcon className="size-4 text-destructive-foreground" />
+              <XIcon className="size-4 text-destructive-text" />
             </ToolTipLabel>
           ) : null
         }
@@ -87,7 +87,7 @@ export function ChainLiveStats(props: { rpc: string }) {
       {/* Latency */}
       <PrimaryInfoItem title="RPC Latency" titleIcon={<PulseDot />}>
         {stats.isError ? (
-          <p className="text-lg fade-in-0 animate-in text-destructive-foreground">
+          <p className="text-lg fade-in-0 animate-in text-destructive-text">
             N/A
           </p>
         ) : stats.data ? (
@@ -102,7 +102,7 @@ export function ChainLiveStats(props: { rpc: string }) {
       {/* Block Height */}
       <PrimaryInfoItem title="Block Height" titleIcon={<PulseDot />}>
         {stats.isError ? (
-          <p className="text-lg fade-in-0 animate-in text-destructive-foreground">
+          <p className="text-lg fade-in-0 animate-in text-destructive-text">
             N/A
           </p>
         ) : stats.data ? (
