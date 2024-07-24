@@ -1,9 +1,9 @@
 import { Box, Flex, Icon, Input, Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
-import { utils } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { useActiveAccount } from "thirdweb/react";
+import { isAddress } from "thirdweb/utils";
 import { FormHelperText } from "tw-components";
 import type { SolidityInputProps } from ".";
 import { validateAddress } from "./helpers";
@@ -25,7 +25,7 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   const handleChange = (value: string) => {
     setLocalInput(value);
     // if it's an address we can set it immediately
-    if (utils.isAddress(value)) {
+    if (isAddress(value)) {
       setValue(inputName, value, { shouldDirty: true });
       clearErrors(inputName);
     } else {
@@ -86,7 +86,7 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   );
 
   const ensFound = useMemo(
-    () => utils.isAddress(localInput) && !hasError && ensQuery?.data?.ensName,
+    () => isAddress(localInput) && !hasError && ensQuery?.data?.ensName,
     [ensQuery?.data?.ensName, hasError, localInput],
   );
 

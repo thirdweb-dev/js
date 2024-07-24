@@ -38,10 +38,11 @@ const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
 export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
+  const RPC_URL = getThirdwebDomains().rpc;
   if (typeof options === "number") {
     return {
       id: options,
-      rpc: `https://${options}.rpc.thirdweb.com`,
+      rpc: `https://${options}.${RPC_URL}`,
     } as const;
   }
   if (isViemChain(options)) {
@@ -53,7 +54,7 @@ export function defineChain(
   // otherwise if it's not a viem chain, continue
   let rpc = options.rpc;
   if (!rpc) {
-    rpc = `https://${options.id}.rpc.thirdweb.com`;
+    rpc = `https://${options.id}.${RPC_URL}`;
   }
   const chain = { ...options, rpc } as const;
   CUSTOM_CHAIN_MAP.set(options.id, chain);
@@ -76,9 +77,10 @@ export function getCachedChain(id: number) {
   if (CUSTOM_CHAIN_MAP.has(id)) {
     return CUSTOM_CHAIN_MAP.get(id) as Chain;
   }
+  const RPC_URL = getThirdwebDomains().rpc;
   const chain = {
     id: id,
-    rpc: `https://${id}.rpc.thirdweb.com`,
+    rpc: `https://${id}.${RPC_URL}`,
   } as const;
   return chain;
 }
@@ -90,11 +92,11 @@ function isLegacyChain(
 }
 
 function convertLegacyChain(legacyChain: LegacyChain): Chain {
+  const RPC_URL = getThirdwebDomains().rpc;
   return {
     id: legacyChain.chainId,
     name: legacyChain.name,
-    rpc:
-      legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.rpc.thirdweb.com`,
+    rpc: legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.${RPC_URL}`,
     blockExplorers: legacyChain?.explorers?.map((explorer) => ({
       name: explorer.name,
       url: explorer.url,
@@ -118,6 +120,7 @@ function isViemChain(
 }
 
 function convertViemChain(viemChain: ViemChain): Chain {
+  const RPC_URL = getThirdwebDomains().rpc;
   return {
     id: viemChain.id,
     name: viemChain.name,
@@ -127,8 +130,7 @@ function convertViemChain(viemChain: ViemChain): Chain {
       decimals: viemChain.nativeCurrency.decimals,
     },
     rpc:
-      viemChain.rpcUrls.default.http[0] ??
-      `https://${viemChain.id}.rpc.thirdweb.com`,
+      viemChain.rpcUrls.default.http[0] ?? `https://${viemChain.id}.${RPC_URL}`,
     blockExplorers: viemChain?.blockExplorers
       ? Object.values(viemChain?.blockExplorers).map((explorer) => {
           return {
