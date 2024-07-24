@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { renounceRole as generatedRenounceRole } from "../__generated__/IPermissions/write/renounceRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type RenounceRoleParams = {
   role: RoleInput;
   targetAccountAddress: Address;

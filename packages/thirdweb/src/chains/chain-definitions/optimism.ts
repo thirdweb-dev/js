@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const optimism = /* @__PURE__ */ defineChain({
   id: 10,
   name: "OP Mainnet",

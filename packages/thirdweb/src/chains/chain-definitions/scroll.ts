@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const scroll = /*@__PURE__*/ defineChain({
   id: 534352,
   name: "Scroll",

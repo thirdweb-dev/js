@@ -13,6 +13,9 @@ import {
 import { resolve } from "./__generated__/UniversalResolver/read/resolve.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
+/**
+ * @extension ENS
+ */
 export type ResolveTextOptions = {
   client: ThirdwebClient;
   name: string;

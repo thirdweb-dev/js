@@ -3,6 +3,9 @@ import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { makeOffer as makeOfferGenerated } from "../../__generated__/IOffers/write/makeOffer.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type MakeOfferParams = {
   /**
    * The address of the asset contract to offer on.

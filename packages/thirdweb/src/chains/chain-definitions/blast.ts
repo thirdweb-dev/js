@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const blast = /* @__PURE__ */ defineChain({
   id: 81457,
   name: "Blast",

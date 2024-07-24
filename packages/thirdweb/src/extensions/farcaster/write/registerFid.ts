@@ -5,8 +5,10 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import { toBigInt } from "../../../utils/bigint.js";
 import { getIdGateway } from "../contracts/getIdGateway.js";
 import { getRegistrationPrice } from "../read/getRegistrationPrice.js";
+
 /**
  * Represents the parameters for the `registerFid` function.
+ * @extension FARCASTER
  */
 export type RegisterFidParams = {
   client: ThirdwebClient;

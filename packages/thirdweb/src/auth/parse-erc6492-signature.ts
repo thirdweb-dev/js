@@ -3,6 +3,9 @@ import type { Hex } from "../utils/encoding/hex.js";
 import type { OneOf } from "../utils/type-utils.js";
 import type { Erc6492Signature } from "./types.js";
 
+/**
+ * @auth
+ */
 export type ParseErc6492SignatureReturnType = OneOf<
   Erc6492Signature | { signature: Hex }
 >;

@@ -25,6 +25,9 @@ export const KEY_GATEWAY_EIP_712_TYPES = {
   types: { Add: KEY_GATEWAY_ADD_TYPE },
 } as const;
 
+/**
+ * @extension FARCASTER
+ */
 export type AddMessage = {
   /** FID owner address */
   owner: Address;
@@ -42,6 +45,9 @@ export type AddMessage = {
   deadline: bigint;
 };
 
+/**
+ * @extension FARCASTER
+ */
 export type SignAddOptions = {
   account: Account;
   message: AddMessage;

@@ -7,6 +7,9 @@ import {
 import { resolveImplementation } from "../../../../utils/bytecode/resolveImplementation.js";
 import { uninstallExtension } from "../../__generated__/ModularCore/write/uninstallExtension.js";
 
+/**
+ * @extension MODULAR
+ */
 export type UninstallExtensionByProxyOptions = {
   client: ThirdwebClient;
   chain: Chain;

@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toWei } from "../../../utils/units.js";
 import { FN_SELECTOR } from "../__generated__/IWETH/write/deposit.js";
 
+/**
+ * @extension ERC20
+ */
 export type DepositParams =
   | {
       amount: string;

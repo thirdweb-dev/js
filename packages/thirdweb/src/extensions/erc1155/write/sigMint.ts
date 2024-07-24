@@ -51,6 +51,9 @@ export function mintWithSignature(
   });
 }
 
+/**
+ * @extension ERC1155
+ */
 export type GenerateMintSignatureOptions = {
   account: Account;
   contract: ThirdwebContract;

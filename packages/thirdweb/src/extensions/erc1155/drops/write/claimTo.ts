@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
 import { claim } from "../../__generated__/IDrop1155/write/claim.js";
 
+/**
+ * @extension ERC1155
+ */
 export type ClaimToParams = {
   to: Address;
   tokenId: bigint;

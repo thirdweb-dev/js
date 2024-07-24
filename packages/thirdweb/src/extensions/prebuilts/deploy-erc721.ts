@@ -10,11 +10,17 @@ import { initialize as initDropERC721 } from "./__generated__/DropERC721/write/i
 import { initialize as initOpenEditionERC721 } from "./__generated__/OpenEditionERC721/write/initialize.js";
 import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
 
+/**
+ * @extension DEPLOY
+ */
 export type ERC721ContractType =
   | "DropERC721"
   | "TokenERC721"
   | "OpenEditionERC721";
 
+/**
+ * @extension DEPLOY
+ */
 export type ERC721ContractParams = {
   name: string;
   description?: string;
@@ -32,6 +38,9 @@ export type ERC721ContractParams = {
   trustedForwarders?: string[];
 };
 
+/**
+ * @extension DEPLOY
+ */
 export type DeployERC721ContractOptions = Prettify<
   ClientAndChainAndAccount & {
     type: ERC721ContractType;

@@ -1,5 +1,8 @@
 import type { Abi } from "abitype";
 
+/**
+ * @contract
+ */
 export type PublishedMetadata = {
   name: string;
   abi: Abi;

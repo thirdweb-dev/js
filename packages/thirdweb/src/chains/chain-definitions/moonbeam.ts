@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const moonbeam = /* @__PURE__ */ defineChain({
   id: 1284,
   name: "Moonbeam",

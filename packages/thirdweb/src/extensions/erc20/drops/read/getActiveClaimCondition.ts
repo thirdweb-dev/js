@@ -9,7 +9,7 @@ import { getClaimConditionById } from "../../__generated__/IDropERC20/read/getCl
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.
- * @extension
+ * @extension ERC20
  * @example
  * ```ts
  * import { getActiveClaimCondition } from "thirdweb/extensions/erc20";

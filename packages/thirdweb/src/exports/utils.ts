@@ -134,6 +134,10 @@ export {
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+
+/**
+ * @utils
+ */
 export { encodePacked } from "viem";
 
 // Useful helpers

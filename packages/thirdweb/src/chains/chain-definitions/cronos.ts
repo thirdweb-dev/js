@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const cronos = /* @__PURE__ */ defineChain({
   id: 25,
   name: "Cronos Mainnet",

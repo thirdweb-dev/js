@@ -13,6 +13,9 @@ import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { updateListing as generatedUpdateListing } from "../../__generated__/IDirectListings/write/updateListing.js";
 import { getListing } from "../read/getListing.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type UpdateListingParams = {
   /**
    * The ID of the listing to update

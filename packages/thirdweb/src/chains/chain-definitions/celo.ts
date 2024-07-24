@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const celo = /* @__PURE__ */ defineChain({
   id: 42220,
   name: "Celo Mainnet",
