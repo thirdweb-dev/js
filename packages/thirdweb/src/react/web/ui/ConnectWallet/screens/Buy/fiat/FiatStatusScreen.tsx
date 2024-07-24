@@ -34,7 +34,6 @@ export function OnrampStatusScreen(props: {
   client: ThirdwebClient;
   onBack: () => void;
   intentId: string;
-  onViewPendingTx: () => void;
   hasTwoSteps: boolean;
   openedWindow: Window | null;
   quote: BuyWithFiatQuote;

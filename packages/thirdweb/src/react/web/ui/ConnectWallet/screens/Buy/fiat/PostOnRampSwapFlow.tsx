@@ -17,7 +17,6 @@ export function PostOnRampSwapFlow(props: {
   quote: BuyWithFiatPartialQuote;
   client: ThirdwebClient;
   onBack: () => void;
-  onViewPendingTx: () => void;
   onDone: () => void;
   onSwapFlowStarted: () => void;
   transactionMode: boolean;
@@ -35,7 +34,6 @@ export function PostOnRampSwapFlow(props: {
         title={props.title}
         buyWithFiatStatus={statusForSwap}
         client={props.client}
-        onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
         transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}

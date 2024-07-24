@@ -74,7 +74,6 @@ export type BuyScreenProps = {
   title: string;
   onBack: (() => void) | undefined;
   supportedTokens: SupportedTokens | undefined;
-  onViewPendingTx: () => void;
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
   payOptions: PayUIOptions;
@@ -97,7 +96,6 @@ export default function BuyScreen(props: BuyScreenProps) {
   return (
     <BuyScreenContent
       {...props}
-      onViewPendingTx={props.onViewPendingTx}
       supportedDestinations={supportedDestinationsQuery.data}
     />
   );
@@ -108,7 +106,6 @@ type BuyScreenContentProps = {
   client: ThirdwebClient;
   onBack?: () => void;
   supportedTokens?: SupportedTokens;
-  onViewPendingTx: () => void;
   supportedDestinations: SupportedChainAndTokens;
   connectLocale: ConnectLocale;
   theme: "light" | "dark" | Theme;
@@ -237,7 +234,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         }}
         buyWithCryptoQuote={screen.quote}
         payer={payer}
-        onViewPendingTx={props.onViewPendingTx}
         isFiatFlow={false}
         onDone={props.onDone}
         onTryAgain={() => {
@@ -266,7 +262,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           props.payOptions.buyWithFiat?.testMode === true
         }
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
-        onViewPendingTx={props.onViewPendingTx}
         openedWindow={screen.openedWindow}
         onDone={props.onDone}
         isEmbed={props.isEmbed}
@@ -407,7 +402,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             toToken={toToken}
             tokenAmount={tokenAmount}
             connectOptions={props.connectOptions}
-            onViewPendingTx={props.onViewPendingTx}
             setScreen={setScreen}
             supportedDestinations={supportedDestinations}
             onBack={props.onBack}
@@ -462,7 +456,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   client={client}
                   isEmbed={props.isEmbed}
                   onDone={props.onDone}
-                  onViewPendingTx={props.onViewPendingTx}
                   payOptions={payOptions}
                   connectLocale={connectLocale}
                   connectOptions={props.connectOptions}
@@ -492,7 +485,6 @@ function BuyScreenContent(props: BuyScreenContentProps) {
                   client={client}
                   isEmbed={props.isEmbed}
                   onDone={props.onDone}
-                  onViewPendingTx={props.onViewPendingTx}
                   payOptions={payOptions}
                   theme={props.theme}
                   showCurrencySelector={() => {
@@ -576,7 +568,6 @@ function MainScreen(props: {
   toChain: Chain;
   onSelectBuyToken: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
-  onViewPendingTx: () => void;
   setScreen: (screen: SelectedScreen) => void;
   supportedDestinations: SupportedChainAndTokens;
   onBack: (() => void) | undefined;
@@ -846,7 +837,6 @@ function SwapScreenContent(props: {
   client: ThirdwebClient;
   payOptions: PayUIOptions;
   isEmbed: boolean;
-  onViewPendingTx: () => void;
   onDone: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
   connectLocale: ConnectLocale;
@@ -1175,7 +1165,6 @@ function FiatScreenContent(props: {
   payOptions: PayUIOptions;
   theme: "light" | "dark" | Theme;
   client: ThirdwebClient;
-  onViewPendingTx: () => void;
   onDone: () => void;
   isEmbed: boolean;
   payer: PayerInfo;

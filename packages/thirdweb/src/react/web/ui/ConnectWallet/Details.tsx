@@ -816,7 +816,6 @@ function DetailsModal(props: {
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
-        onViewPendingTx={() => setScreen("transactions")}
         connectLocale={locale}
         payOptions={
           props.detailsModal?.payOptions || {

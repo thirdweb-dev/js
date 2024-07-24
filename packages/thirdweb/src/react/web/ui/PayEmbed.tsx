@@ -18,7 +18,6 @@ import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
-import { PayTxHistoryScreen } from "./ConnectWallet/screens/Buy/pay-transactions/BuyTxHistory.js";
 import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
@@ -153,7 +152,7 @@ export type PayEmbedProps = {
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
-  const [screen, setScreen] = useState<"buy" | "tx-history" | "execute-tx">(
+  const [screen, setScreen] = useState<"buy" | "execute-tx">(
     "buy",
   );
   const theme = props.theme || "dark";
@@ -198,9 +197,6 @@ export function PayEmbed(props: PayEmbedProps) {
             theme={theme}
             client={props.client}
             connectLocale={localeQuery.data}
-            onViewPendingTx={() => {
-              setScreen("tx-history");
-            }}
             payOptions={
               props.payOptions || {
                 mode: "fund_wallet",
@@ -215,21 +211,7 @@ export function PayEmbed(props: PayEmbedProps) {
             onBack={undefined}
           />
         </div>
-        {/* this does not need to persist so we can just show-hide it with JS */}
-        {screen === "tx-history" && (
-          <PayTxHistoryScreen
-            title={"Past Transactions"}
-            client={props.client}
-            onBack={() => {
-              setScreen("buy");
-            }}
-            onDone={() => {
-              // noop
-            }}
-            transactionMode={false}
-            isEmbed={true}
-          />
-        )}
+
 
         {screen === "execute-tx" &&
           props.payOptions?.mode === "transaction" &&

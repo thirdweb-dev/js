@@ -48,7 +48,7 @@ export function TransactionModalContent(
   props: ModalProps & { onBack?: () => void },
 ) {
   const localeQuery = useConnectLocale(props.localeId);
-  const [screen, setScreen] = useState<"buy" | "tx-history" | "execute-tx">(
+  const [screen, setScreen] = useState<"buy" | "execute-tx">(
     "buy",
   );
 
@@ -72,7 +72,6 @@ export function TransactionModalContent(
       isEmbed={false}
       client={props.client}
       onBack={props.onBack}
-      onViewPendingTx={() => {}}
       supportedTokens={props.supportedTokens}
       connectLocale={localeQuery.data}
       theme={typeof props.theme === "string" ? props.theme : props.theme.type}

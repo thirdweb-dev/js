@@ -19,7 +19,6 @@ type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 export function SwapStatusScreen(props: {
   title: string;
   onBack?: () => void;
-  onViewPendingTx: () => void;
   swapTxHash: string;
   client: ThirdwebClient;
   onTryAgain: () => void;

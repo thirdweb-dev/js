@@ -6,7 +6,7 @@ import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../../utils/units.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
-import { spacing } from "../../../../../core/design-system/index.js";
+import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainQuery } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useEnsName } from "../../../../../core/utils/wallet.js";
@@ -16,6 +16,7 @@ import { ChainIcon } from "../../../components/ChainIcon.js";
 import { Img } from "../../../components/Img.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { TokenIcon } from "../../../components/TokenIcon.js";
+import { WalletImage } from "../../../components/WalletImage.js";
 import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
@@ -43,6 +44,7 @@ export function DirectPaymentModeScreen(props: {
     payerAccount,
   } = props;
   const theme = useCustomTheme();
+  const activeWallet = useActiveWallet();
   const metadata = payUiOptions.metadata;
   const paymentInfo = payUiOptions.paymentInfo;
   const { data: chainData } = useChainQuery(paymentInfo.chain);
@@ -85,11 +87,11 @@ export function DirectPaymentModeScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title={metadata?.name || "Direct Payment"} />
+      <ModalHeader title={metadata?.name || "Payment Details"} />
 
       <Spacer y="lg" />
       <Container>
-        {metadata?.image && (
+        {metadata?.image ? (
           <Img
             client={client}
             src={metadata?.image}
@@ -99,7 +101,38 @@ export function DirectPaymentModeScreen(props: {
               backgroundColor: theme.colors.tertiaryBg,
             }}
           />
-        )}
+        ) : activeWallet ? (
+          <Container
+            flex="row"
+            center="both"
+            style={{
+              padding: spacing.md,
+              marginBottom: spacing.md,
+              borderRadius: spacing.md,
+              backgroundColor: theme.colors.tertiaryBg,
+            }}
+          >
+            <WalletImage
+              size={iconSize.xl}
+              id={activeWallet.id}
+              client={client}
+            />
+            <div
+              style={{
+                flexGrow: 1,
+                borderBottom: "6px dotted",
+                borderColor: theme.colors.secondaryIconColor,
+                marginLeft: spacing.md,
+                marginRight: spacing.md,
+              }}
+            />
+            <ChainIcon
+              client={client}
+              size={iconSize.xl}
+              chainIconUrl={chainData.icon?.url}
+            />
+          </Container>
+        ) : null}
         <Spacer y="md" />
         <Container flex="row">
           <Container flex="column" expand>

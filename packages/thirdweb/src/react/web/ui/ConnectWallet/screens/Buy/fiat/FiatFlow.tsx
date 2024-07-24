@@ -43,7 +43,6 @@ export function FiatFlow(props: {
   client: ThirdwebClient;
   testMode: boolean;
   theme: "light" | "dark";
-  onViewPendingTx: () => void;
   openedWindow: Window | null;
   onDone: () => void;
   transactionMode: boolean;
@@ -93,7 +92,6 @@ export function FiatFlow(props: {
         client={props.client}
         intentId={props.quote.intentId}
         onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
         hasTwoSteps={hasTwoSteps}
         openedWindow={popupWindow}
         quote={props.quote}
@@ -115,7 +113,6 @@ export function FiatFlow(props: {
         quote={fiatQuoteToPartialQuote(props.quote)}
         client={props.client}
         onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
         onSwapFlowStarted={() => {
           // no op

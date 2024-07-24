@@ -19,7 +19,6 @@ export function PostOnRampSwap(props: {
   client: ThirdwebClient;
   buyWithFiatStatus: BuyWithFiatStatus;
   onBack?: () => void;
-  onViewPendingTx: () => void;
   onDone: () => void;
   transactionMode: boolean;
   isEmbed: boolean;
@@ -123,7 +122,6 @@ export function PostOnRampSwap(props: {
       buyWithCryptoQuote={lockedOnRampQuote}
       client={props.client}
       onBack={props.onBack}
-      onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
       onDone={props.onDone}
       onTryAgain={() => {

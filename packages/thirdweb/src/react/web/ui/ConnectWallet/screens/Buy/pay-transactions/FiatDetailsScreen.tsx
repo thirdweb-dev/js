@@ -48,7 +48,6 @@ export function FiatDetailsScreen(props: {
         client={props.client}
         status={status}
         onBack={props.onBack}
-        onViewPendingTx={props.onBack}
         transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         quote={{
