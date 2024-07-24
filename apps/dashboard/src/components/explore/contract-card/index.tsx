@@ -97,7 +97,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                 isExternal
                 as={Link}
                 align="center"
-                gap={0}
+                gap={1}
                 href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
                 _dark={{
                   color: "green.300",
@@ -106,14 +106,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                   color: "green.600",
                 }}
               >
-                <Skeleton boxSize={5} isLoaded={!showSkeleton}>
-                  <Icon as={BsShieldCheck} />
-                </Skeleton>
-                <Skeleton isLoaded={!showSkeleton}>
-                  <Text color="inherit" size="label.sm" fontWeight={500}>
-                    Audited
-                  </Text>
-                </Skeleton>
+                <Icon as={BsShieldCheck} />
+                <Text color="inherit" size="label.sm" fontWeight={500}>
+                  Audited
+                </Text>
               </Flex>
             )}
             {showSkeleton ||

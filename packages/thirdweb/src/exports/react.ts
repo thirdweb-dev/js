@@ -147,3 +147,9 @@ export {
 
 // ens
 export { useEnsName, useEnsAvatar } from "../react/core/utils/wallet.js";
+
+/**
+ * Prebuilt UI components for thirdweb contracts
+ */
+export { ClaimButton } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/index.js";
+export type { ClaimButtonProps } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/types.js";

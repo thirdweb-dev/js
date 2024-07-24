@@ -132,8 +132,8 @@ export default async function Page(props: {
 function ContractCard(props: ContractCardInfo) {
   return (
     <div className="border bg-secondary rounded-xl p-4 hover:bg-muted relative flex flex-col h-full shadow-sm min-h-[200px]">
-      <div className="text-success-foreground flex items-center gap-1 mb-4 text-sm font-medium">
-        <ShieldCheckIcon className="size-4 text-success-foreground" />
+      <div className="text-success-text flex items-center gap-1 mb-4 text-sm font-medium">
+        <ShieldCheckIcon className="size-4 text-success-text" />
         Audited
       </div>
 
