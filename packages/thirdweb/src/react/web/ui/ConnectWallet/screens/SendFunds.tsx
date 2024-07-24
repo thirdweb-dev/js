@@ -181,7 +181,9 @@ function SendFundsForm(props: {
           color="danger"
         >
           <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-          <Text color="danger">{getErrorMessage(sendTokenMutation.error)}</Text>
+          <Text center multiline color="danger">
+            {getErrorMessage(sendTokenMutation.error)}
+          </Text>
         </Container>
       </Container>
     );
@@ -336,10 +338,10 @@ function SendFundsForm(props: {
             padding: spacing.md,
           }}
         >
-          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
           {sendTokenMutation.isPending && (
             <Spinner size="sm" color="accentButtonText" />
           )}
+          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
         </Button>
       </form>
     </Container>
