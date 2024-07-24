@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* bg - nuetral  */
+    /* bg - neutral  */
     --background: 0 0% 100%;
     --secondary: 0 0% 97%;
     --muted: 0 0% 95%;
@@ -15,9 +15,9 @@
 
     /* bg - colorful */
     --primary: 221.21deg 83.19% 53.33%;
-    --destructive: 0 84.2% 60.2%;
-    --success: 142.09 60.56% 80%;
-    --warning: 40.61deg 96.12% 88%;
+    --destructive: 0 84.2% 94%;
+    --success: 142.09 60.56% 90%;
+    --warning: 40.61deg 96.12% 92%;
 
     /* Text */
     --foreground: 0 0% 3.9%;
@@ -32,6 +32,8 @@
     --inverted-foreground: var(--background);
     --warning-foreground: 40.61deg 96.12% 40.4%;
     --link-foreground: 221.21deg 83.19% 53.33%;
+    --destructive-text: 0 84.24% 60.2%;
+    --success-text: 142.09 70.56% 35.29%;
 
     /* Borders */
     --border: 0 0% 80%;
@@ -43,7 +45,7 @@
   }
 
   .dark {
-    /* bg - nuetral  */
+    /* bg - neutral  */
     --background: 0 0% 4.5%;
     --secondary: 0 0% 6.5%;
     --muted: 0 0% 9%;
@@ -53,8 +55,8 @@
     --inverted: var(--foreground);
 
     /* bg - colorful */
-    --primary: 215.88 100% 60%;
-    --destructive: 358 86% 64%;
+    --primary: 215.88 100% 55%;
+    --destructive: 0 62.8% 15%;
     --success: 156.2 71.6% 10%;
     --warning: 40.61deg 96.12% 8%;
 
@@ -66,10 +68,12 @@
     --secondary-foreground: 0 0% 75%;
     --muted-foreground: 0 0% 63.9%;
     --accent-foreground: 0 0% 98%;
-    --destructive-foreground: 358 0% 100%;
+    --destructive-foreground: 0deg 90.6% 80%;
     --success-foreground: 156.2 71.6% 66.86%;
     --warning-foreground: 45.4deg 93.39% 47.45%;
     --link-foreground: 215.88 100% 65%;
+    --destructive-text: 0 84.24% 65%;
+    --success-text: 156.2 71.6% 66.86%;
 
     /* Borders */
     --border: 0 0% 14.9%;

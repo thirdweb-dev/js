@@ -169,14 +169,14 @@ function Bar(props: { rate: number }) {
     <div className="flex items-center gap-0.5">
       <ToolTipLabel label="Succeeded">
         <div
-          className="h-5 bg-success-foreground transition-all rounded-lg rounded-r-none border-r-0"
+          className="h-5 bg-success-text transition-all rounded-lg rounded-r-none border-r-0"
           style={{
             width: `${props.rate}%`,
           }}
         />
       </ToolTipLabel>
       <ToolTipLabel label="Failed">
-        <div className="h-5 bg-destructive-foreground flex-1 transition-all rounded-lg rounded-l-none border-l-0" />
+        <div className="h-5 bg-destructive-text flex-1 transition-all rounded-lg rounded-l-none border-l-0" />
       </ToolTipLabel>
     </div>
   );
@@ -200,8 +200,8 @@ function InfoRow(props: {
             !props.amount
               ? "bg-accent"
               : props.type === "success"
-                ? "bg-success-foreground"
-                : "bg-destructive-foreground"
+                ? "bg-success-text"
+                : "bg-destructive-text"
           }`}
         />
         <p className="text-base text-secondary-foreground">{props.label}</p>

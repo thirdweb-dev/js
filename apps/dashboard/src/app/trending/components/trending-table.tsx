@@ -146,7 +146,7 @@ function ChangeCell(props: { displayCount: string; change: number }) {
   if (!props.displayCount) {
     return null;
   }
-  const color = props.change > 0 ? "text-success-foreground" : "text-red-400";
+  const color = props.change > 0 ? "text-success-text" : "text-red-400";
   const badge = (
     <span className={`${color}`}>
       {props.change > 0 ? "▲" : "▼"}{" "}
