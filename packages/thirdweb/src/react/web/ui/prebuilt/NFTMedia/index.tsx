@@ -1,15 +1,18 @@
 import type { Chain } from "../../../../../chains/types.js";
-import { getContract } from "../../../../../contract/contract.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../../../contract/contract.js";
 import { punkImageSvg } from "../../../../../extensions/cryptopunks/__generated__/OnchainCryptoPunks/read/punkImageSvg.js";
 import { tokenURI } from "../../../../../extensions/erc721/__generated__/IERC721A/read/tokenURI.js";
 import { uri } from "../../../../../extensions/erc1155/__generated__/IERC1155/read/uri.js";
-import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import type { MediaRendererProps } from "../../MediaRenderer/types.js";
 
 type NFTMediaProps = MediaRendererProps & {
   // The NFT contract address
-  contractAddress: Hex;
+  contractAddress: string;
   // The chain which the NFT contract was deployed on
   chain: Chain;
   // The tokenId whose media you want to load
@@ -46,6 +49,29 @@ export async function NFTMedia(props: NFTMediaProps) {
     chain,
     client,
   });
+  const src = await getNFTMedia({
+    contract,
+    client,
+    tokenId,
+    overrideMediaField,
+  });
+  return <MediaRenderer client={client} src={src} {...rest} />;
+}
+
+/**
+ * @internal
+ */
+export async function getNFTMedia({
+  contract,
+  tokenId,
+  overrideMediaField,
+  client,
+}: {
+  contract: ThirdwebContract;
+  tokenId: bigint;
+  overrideMediaField?: string;
+  client: ThirdwebClient;
+}): Promise<string> {
   // No need to check whether a token is ERC721 or 1155. Because there are
   // other standards of NFT beside 721 and 1155 (404, onchain CryptoPunks etc.)
   // So we run all possible uri-fetching methods at once and use the one that's available
@@ -57,18 +83,12 @@ export async function NFTMedia(props: NFTMediaProps) {
       import("../../../../../utils/nft/fetchTokenMetadata.js"),
     ]);
 
-  // Support for onchain CryptoPunks contract
+  // Support for onchain CryptoPunks contract (or similar ones)
   if (imageBase64?.startsWith("data:image/")) {
     const dataStart = imageBase64.indexOf(",") + 1;
     return (
-      <MediaRenderer
-        client={client}
-        src={
-          imageBase64.slice(0, dataStart) +
-            encodeURIComponent(imageBase64.slice(dataStart)) ?? ""
-        }
-        {...rest}
-      />
+      imageBase64.slice(0, dataStart) +
+        encodeURIComponent(imageBase64.slice(dataStart)) ?? ""
     );
   }
   const url = _tokenURI || _uri;
@@ -84,14 +104,7 @@ export async function NFTMedia(props: NFTMediaProps) {
         `Invalid value for ${overrideMediaField} - expected a string`,
       );
     }
-    return (
-      <MediaRenderer
-        client={client}
-        src={metadata[overrideMediaField] ?? null}
-        {...rest}
-      />
-    );
+    return metadata[overrideMediaField] ?? "";
   }
-  const mediaURL = metadata.animation_url || metadata.image;
-  return <MediaRenderer client={client} src={mediaURL} {...rest} />;
+  return metadata.animation_url || metadata.image || "";
 }
