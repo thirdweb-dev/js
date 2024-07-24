@@ -9,12 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import type { Abi, AbiFunction } from "abitype";
+import { thirdwebClient } from "lib/thirdweb-client";
 import { ArrowDown } from "lucide-react";
 import { useState } from "react";
-import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { useActiveAccount } from "thirdweb/react";
-import { ShareButton } from "../../components/share";
 import { useForm } from "react-hook-form";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import {
   defineChain,
   getContract,
@@ -24,7 +24,9 @@ import {
   toSerializableTransaction,
   toWei,
 } from "thirdweb";
-import { thirdwebClient } from "lib/thirdweb-client";
+import { resolveContractAbi } from "thirdweb/contract";
+import { useActiveAccount } from "thirdweb/react";
+import { ShareButton } from "../../components/share";
 
 export type SimulateTransactionForm = {
   chainId: number;
@@ -43,7 +45,10 @@ type State = {
 };
 
 // Generate code example with input values.
-const getCodeExample = (parsedData: SimulateTransactionForm) =>
+const getCodeExample = (
+  parsedData: SimulateTransactionForm,
+  params: unknown[],
+) =>
   `import { 
   getContract,
   defineChain,
@@ -65,18 +70,28 @@ const contract = getContract({
 const transaction = prepareContractCall({
   contract,
   method: resolveMethod("${parsedData.functionName}"),
-  params: [${parsedData.functionArgs.split(/[\n,]+/).map((v) => `"${v.trim()}"`)}],
+  params: [${params
+    .map((item) => {
+      if (typeof item === "string") {
+        return `"${item}"`;
+      }
+      if (typeof item === "bigint") {
+        return `${item}n`;
+      }
+      return item;
+    })
+    .join(",")}],
   value: ${parsedData.value ? `${parsedData.value}n` : ""},
 });
 
-await simulateTransaction({
+const result = await simulateTransaction({
   from: "${parsedData.from}",
   transaction,
 });`;
 
 // Generate share link from input values.
 const getShareUrl = (parsedData: SimulateTransactionForm) => {
-  const url = new URL("https://thirdweb.com/tools/transaction-simulator");
+  const url = new URL(`${window.location.origin}/tools/transaction-simulator`);
   url.searchParams.set("chainId", parsedData.chainId.toString());
   url.searchParams.set("from", parsedData.from);
   url.searchParams.set("to", parsedData.to);
@@ -94,53 +109,86 @@ export const TransactionSimulator = (props: {
 }) => {
   const activeAccount = useActiveAccount();
   const initialFormValues = props.searchParams;
+  const [isLoading, setIsLoading] = useState(false);
   const [state, setState] = useState<State>({
     success: false,
     message: "",
     codeExample: "",
     shareUrl: "",
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isLoading },
-    setValue,
-  } = useForm<SimulateTransactionForm>();
+  const { register, handleSubmit, setValue } =
+    useForm<SimulateTransactionForm>();
 
   async function handleSimulation(data: SimulateTransactionForm) {
-    const { from, to, value, functionArgs, functionName, chainId } = data;
-    if (Number.isNaN(Number(chainId)) || !Number.isInteger(Number(chainId))) {
-      throw new Error("Invalid chainId");
-    }
-    const chain = defineChain(Number(chainId));
-    const contract = getContract({
-      client: thirdwebClient,
-      chain,
-      address: to,
-    });
-    const codeExample = getCodeExample({
-      chainId: chain.id,
-      from,
-      to,
-      value,
-      functionArgs,
-      functionName,
-    });
-    const shareUrl = getShareUrl({
-      chainId: chain.id,
-      from,
-      to,
-      value,
-      functionArgs,
-      functionName,
-    });
     try {
+      setIsLoading(true);
+      const { from, to, value, functionArgs, functionName, chainId } = data;
+      if (Number.isNaN(Number(chainId)) || !Number.isInteger(Number(chainId))) {
+        throw new Error("Invalid chainId");
+      }
+      const chain = defineChain(Number(chainId));
+      const contract = getContract({
+        client: thirdwebClient,
+        chain,
+        address: to,
+      });
+      const abi = (await resolveContractAbi(contract)) as Abi;
+      const abiItem = abi.find(
+        (o) => o.type === "function" && o.name === functionName,
+      ) as AbiFunction;
+      if (!abiItem) {
+        throw new Error(`Contract does not have method \`${functionName}]\``);
+      }
+      const inputParams = functionArgs
+        ? functionArgs.split(/[\n,]+/).map((arg) => arg.trim())
+        : [];
+      if (abiItem.inputs.length !== inputParams.length) {
+        throw new Error(
+          `Param length mismatch. Expected ${abiItem.inputs.length} params. Received ${
+            inputParams.length
+          }`,
+        );
+      }
+      // Parse
+      const params: unknown[] = [];
+      abiItem.inputs.forEach((item, index) => {
+        const inputType = item.type;
+        const value = inputParams[index];
+        if (inputType.startsWith("uint") || inputType.startsWith("int")) {
+          return params.push(BigInt(value));
+        }
+        if (inputType === "bool") {
+          return params.push(value === "true");
+        }
+        try {
+          params.push(JSON.parse(value));
+        } catch (e) {
+          params.push(value);
+        }
+      });
+      const codeExample = getCodeExample(
+        {
+          chainId: chain.id,
+          from,
+          to,
+          value,
+          functionArgs,
+          functionName,
+        },
+        params,
+      );
+      const shareUrl = getShareUrl({
+        chainId: chain.id,
+        from,
+        to,
+        value,
+        functionArgs,
+        functionName,
+      });
       const transaction = prepareContractCall({
         contract,
         method: resolveMethod(functionName),
-        params: functionArgs
-          ? functionArgs.split(/[\n,]+/).map((arg) => arg.trim())
-          : [],
+        params,
         value: value ? toWei(value) : undefined,
       });
       const [simulateResult, populatedTransaction] = await Promise.all([
@@ -168,16 +216,15 @@ ${Object.keys(populatedTransaction)
         codeExample,
         shareUrl,
       });
-      console.log({ simulateResult, populatedTransaction });
     } catch (err) {
-      console.log(err);
       setState({
         success: false,
         message: `${err}`,
-        codeExample,
-        shareUrl,
+        codeExample: "",
+        shareUrl: "",
       });
     }
+    setIsLoading(false);
   }
   return (
     <div className="max-w-[800px] space-y-4">
@@ -311,15 +358,13 @@ ${Object.keys(populatedTransaction)
       )}
 
       <div className="flex justify-between">
-        {state.shareUrl ? (
+        {state.shareUrl && (
           <CopyTextButton
             textToShow="Copy Simulation Link"
             tooltip="Copy Simulation Link"
             textToCopy={state.shareUrl}
             copyIconPosition="right"
           />
-        ) : (
-          <div />
         )}
         <ShareButton
           cta="Share on X"
