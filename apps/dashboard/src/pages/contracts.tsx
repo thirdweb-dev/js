@@ -13,7 +13,7 @@ import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "contracts";
 

@@ -125,6 +125,7 @@ export {
   getAddress,
   isAddress,
   shortenAddress,
+  shortenHex,
   type Address,
   type AddressInput,
 } from "../utils/address.js";
@@ -148,3 +149,19 @@ export { stringify } from "../utils/json.js";
 // values
 // ------------------------------------------------
 export { maxUint256 } from "viem";
+
+// ------------------------------------------------
+// jwt
+// ------------------------------------------------
+export { decodeJWT } from "../utils/jwt/decode-jwt.js";
+export { encodeJWT, type JWTPayloadInput } from "../utils/jwt/encode-jwt.js";
+export { refreshJWT, type RefreshJWTParams } from "../utils/jwt/refresh-jwt.js";
+export type { JWTPayload } from "../utils/jwt/types.js";
+
+// ------------------------------------------------
+// thirdweb Drop contracts
+// ------------------------------------------------
+export {
+  getClaimParams,
+  type GetClaimParamsOptions,
+} from "../utils/extensions/drops/get-claim-params.js";

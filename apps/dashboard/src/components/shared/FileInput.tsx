@@ -1,12 +1,12 @@
 import {
   AspectRatio,
   Box,
-  BoxProps,
+  type BoxProps,
   Center,
   Flex,
   Icon,
   Image,
-  LayoutProps,
+  type LayoutProps,
   Link,
   Stack,
 } from "@chakra-ui/react";
@@ -14,7 +14,12 @@ import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { AiOutlineFileAdd } from "@react-icons/all-files/ai/AiOutlineFileAdd";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useCallback } from "react";
-import { Accept, DropEvent, FileRejection, useDropzone } from "react-dropzone";
+import {
+  type Accept,
+  type DropEvent,
+  type FileRejection,
+  useDropzone,
+} from "react-dropzone";
 import { FiImage, FiUpload } from "react-icons/fi";
 import { Button, Text } from "tw-components";
 
@@ -55,7 +60,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
     ) => void
   >(
     (droppedFiles) => {
-      if (droppedFiles && droppedFiles[0]) {
+      if (droppedFiles?.[0]) {
         setValue(droppedFiles[0]);
       }
     },
@@ -94,7 +99,8 @@ export const FileInput: React.FC<IFileInputProps> = ({
               ? "Text"
               : file.type.includes("model") ||
                   file.name.endsWith(".glb") ||
-                  file.name.endsWith(".usdz")
+                  file.name.endsWith(".usdz") ||
+                  file.name.endsWith(".obj")
                 ? "3D Model"
                 : "Media"
     : null;
@@ -109,7 +115,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
   }
 
   return (
-    <Stack spacing={4} direction="row" align="center">
+    <Stack
+      spacing={4}
+      direction="row"
+      align="center"
+      {...getRootProps()}
+      // onClick={(e) => e.stopPropagation()}
+    >
+      <input {...getInputProps()} />
       {showPreview && (
         <AspectRatio w="100%" maxW={maxContainerWidth} ratio={1}>
           {isDisabled ? (
@@ -143,7 +156,6 @@ export const FileInput: React.FC<IFileInputProps> = ({
               }}
               borderColor="inputBorder"
               borderWidth="1px"
-              {...getRootProps()}
               position="relative"
               overflow="hidden"
             >
@@ -175,7 +187,6 @@ export const FileInput: React.FC<IFileInputProps> = ({
                   </Text>
                 </Stack>
               )}
-              <input {...getInputProps()} />
             </Center>
           )}
         </AspectRatio>

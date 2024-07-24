@@ -1,9 +1,9 @@
-import { SolidityInputWithTypeProps } from ".";
-import { validateInt } from "./helpers";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { Button } from "tw-components";
+import type { SolidityInputWithTypeProps } from ".";
+import { validateInt } from "./helpers";
 
 export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
   formContext: form,

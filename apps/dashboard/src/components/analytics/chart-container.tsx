@@ -1,31 +1,35 @@
-import { AreaChartLoadingState } from "./area-chart";
-import { AspectRatio, AspectRatioProps, Flex } from "@chakra-ui/react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { cn } from "@/lib/utils";
 import { Suspense } from "react";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { AreaChartLoadingState } from "./area-chart";
 
 type SupportedChartType = "area";
 
-interface ChartContainerProps extends AspectRatioProps {
+interface ChartContainerProps {
   chartTitle?: JSX.Element;
   chartType?: SupportedChartType;
+  ratio: number;
+  className?: string;
 }
 
 export const ChartContainer: ComponentWithChildren<ChartContainerProps> = ({
   chartType = "area",
   chartTitle,
+  ratio,
   children,
-  ...aspectRatioProps
+  className,
 }) => {
   return (
-    <Flex direction="column">
+    <div className={cn("flex flex-col", className)}>
       {chartTitle}
-      <AspectRatio {...aspectRatioProps}>
+      <AspectRatio ratio={ratio}>
         {/* suspense to handle loading state */}
         <Suspense fallback={<ChartLoadingState chartType={chartType} />}>
           {children}
         </Suspense>
       </AspectRatio>
-    </Flex>
+    </div>
   );
 };
 

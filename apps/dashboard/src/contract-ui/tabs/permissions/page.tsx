@@ -1,10 +1,10 @@
-import { Permissions } from "./components";
 import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { useTabHref } from "contract-ui/utils";
 import { useLayoutEffect } from "react";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import { Permissions } from "./components";
 
 interface ContractPermissionsPageProps {
   contractAddress?: string;

@@ -1,14 +1,14 @@
 import {
+  Divider,
   Flex,
   FormControl,
-  IconButton,
   Icon,
-  Divider,
+  IconButton,
   Input,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { FiTrash } from "react-icons/fi";
-import { FormLabel, FormErrorMessage } from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
 
 interface ExternalLinksInputProps {
   index: number;
@@ -60,9 +60,8 @@ export const ExternalLinksInput: React.FC<ExternalLinksInputProps> = ({
               validate: (value: string) => {
                 if (value.match(new RegExp(/^https:\/\/[^\s/$.?#].[^\s]*$/))) {
                   return true;
-                } else {
-                  return "Provide a valid URL";
                 }
+                return "Provide a valid URL";
               },
             })}
           />

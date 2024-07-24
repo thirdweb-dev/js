@@ -1,6 +1,5 @@
 import {
   Box,
-  ButtonGroup,
   Divider,
   Flex,
   Icon,
@@ -16,26 +15,20 @@ import {
   ModalOverlay,
   Spinner,
 } from "@chakra-ui/react";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAddress } from "@thirdweb-dev/react";
+import {
+  type QueryClient,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { SearchMode, getSearchQuery } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
-import invariant from "tiny-invariant";
-import { Button, Card, Heading, Link, Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
+import { Card, Heading, Link, Text } from "tw-components";
 import { useDebounce } from "use-debounce";
-
-type ContractSearchResult = {
-  address: string;
-  chainId: number;
-  metadata: { name: string; image?: string; symbol?: string };
-  needsImport: boolean;
-};
+import { shortenIfAddress } from "utils/usedapp-external";
+import { type TrendingContract, fetchTopContracts } from "../../lib/search";
 
 const TRACKING_CATEGORY = "any_contract_search";
 
@@ -44,20 +37,12 @@ const typesenseApiKey =
 
 function contractTypesenseSearchQuery(
   searchQuery: string,
-  walletAddress = "",
-  searchMode: SearchMode,
   queryClient: QueryClient,
   trackEvent: ReturnType<typeof useTrack>,
 ) {
   return {
-    queryKey: [
-      "typesense-contract-search",
-      { search: searchQuery, searchMode, walletAddress },
-    ],
+    queryKey: ["typesense-contract-search", { search: searchQuery }],
     queryFn: async () => {
-      invariant(typesenseApiKey, "No typesense api key");
-      invariant(queryClient, "No query client");
-      invariant(searchQuery, "No search query");
       trackEvent({
         category: TRACKING_CATEGORY,
         action: "query",
@@ -65,35 +50,11 @@ function contractTypesenseSearchQuery(
         searchQuery,
       });
 
-      const res = await fetch(
-        getSearchQuery({
-          query: searchQuery,
-          walletAddress,
-          searchMode,
-        }),
-        {
-          headers: {
-            "x-typesense-api-key": typesenseApiKey,
-          },
-        },
-      );
-      const result = await res.json();
-      trackEvent({
-        category: TRACKING_CATEGORY,
-        action: "query",
-        label: "attempt",
-        searchQuery,
+      return fetchTopContracts({
+        query: searchQuery,
+        perPage: 10,
+        timeRange: "month",
       });
-      return result.hits.map((hit: any) => {
-        const document = hit.document;
-        return {
-          address: document.contract_address,
-          chainId: document.chain_id,
-          metadata: {
-            name: document.name,
-          },
-        } as ContractSearchResult;
-      }) as ContractSearchResult[];
     },
     enabled: !!searchQuery && !!queryClient && !!typesenseApiKey,
     onSuccess: (d: unknown) => {
@@ -120,7 +81,6 @@ function contractTypesenseSearchQuery(
 
 export const CmdKSearch: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [searchMode, setSearchMode] = useState<SearchMode>("mainnet");
   const trackEvent = useTrack();
   const queryClient = useQueryClient();
 
@@ -139,34 +99,33 @@ export const CmdKSearch: React.FC = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const walletAddress = useAddress();
-
   // debounce 500ms
   const [debouncedSearchValue] = useDebounce(searchValue, 500);
 
-  const typesenseSearchQuery = useQuery<ContractSearchResult[]>(
-    contractTypesenseSearchQuery(
-      debouncedSearchValue,
-      walletAddress,
-      searchMode,
-      queryClient,
-      trackEvent,
-    ),
+  const typesenseSearchQuery = useQuery<TrendingContract[]>(
+    contractTypesenseSearchQuery(debouncedSearchValue, queryClient, trackEvent),
   );
 
   const data = useMemo(() => {
     const potentiallyDuplicated = [...(typesenseSearchQuery.data || [])].filter(
       (d) => !!d,
-    ) as ContractSearchResult[];
+    ) as TrendingContract[];
 
     // dedupe the results
     return Array.from(
-      new Set(potentiallyDuplicated.map((d) => `${d.chainId}_${d.address}`)),
+      new Set(
+        potentiallyDuplicated.map(
+          (d) => `${d.chainMetadata.chainId}_${d.contractAddress}`,
+        ),
+      ),
     ).map((chainIdAndAddress) => {
       return potentiallyDuplicated.find((d) => {
-        return `${d.chainId}_${d.address}` === chainIdAndAddress;
+        return (
+          `${d.chainMetadata.chainId}_${d.contractAddress}` ===
+          chainIdAndAddress
+        );
       });
-    }) as ContractSearchResult[];
+    }) as TrendingContract[];
   }, [typesenseSearchQuery]);
 
   const isFetching = useMemo(() => {
@@ -207,16 +166,14 @@ export const CmdKSearch: React.FC = () => {
         if (result) {
           e.preventDefault();
           router.push(
-            `/${result.chainId}/${result.address}${
-              result.needsImport ? "?import=true" : ""
-            }`,
+            `/${result.chainMetadata.chainId}/${result.contractAddress}`,
           );
           trackEvent({
             category: TRACKING_CATEGORY,
             action: "select_contract",
             input_mode: "keyboard",
-            chainId: result.chainId,
-            contract_address: result.address,
+            chainId: result.chainMetadata.chainId,
+            contract_address: result.contractAddress,
           });
           handleClose();
         }
@@ -302,34 +259,6 @@ export const CmdKSearch: React.FC = () => {
           {searchValue.length > 0 && (!isFetching || data.length) ? (
             <Flex px={2} direction="column">
               <Divider borderColor="borderColor" />
-
-              <ButtonGroup size="xs" my={2}>
-                <Button
-                  variant={searchMode === "all" ? "solid" : "ghost"}
-                  onClick={() => {
-                    setSearchMode("all");
-                  }}
-                >
-                  All
-                </Button>
-                <Button
-                  variant={searchMode === "mainnet" ? "solid" : "ghost"}
-                  onClick={() => {
-                    setSearchMode("mainnet");
-                  }}
-                >
-                  Mainnet
-                </Button>
-                <Button
-                  variant={searchMode === "testnet" ? "solid" : "ghost"}
-                  onClick={() => {
-                    setSearchMode("testnet");
-                  }}
-                >
-                  Testnet
-                </Button>
-              </ButtonGroup>
-
               <Flex py={2}>
                 {!data || data?.length === 0 ? (
                   <Text p={3} size="label.md">
@@ -340,7 +269,7 @@ export const CmdKSearch: React.FC = () => {
                     {data.map((result, idx) => {
                       return (
                         <SearchResult
-                          key={`${result.chainId}_${result.address}`}
+                          key={`${result.chainMetadata.chainId}_${result.contractAddress}`}
                           result={result}
                           isActive={idx === activeIndex}
                           onClick={() => {
@@ -349,8 +278,8 @@ export const CmdKSearch: React.FC = () => {
                               category: TRACKING_CATEGORY,
                               action: "select_contract",
                               input_mode: "click",
-                              chainId: result.chainId,
-                              contract_address: result.address,
+                              chainId: result.chainMetadata.chainId,
+                              contract_address: result.contractAddress,
                             });
                           }}
                           onMouseEnter={() => setActiveIndex(idx)}
@@ -369,7 +298,7 @@ export const CmdKSearch: React.FC = () => {
 };
 
 interface SearchResultProps {
-  result: ContractSearchResult;
+  result: TrendingContract;
   isActive: boolean;
   onMouseEnter: () => void;
   onClick: () => void;
@@ -381,14 +310,6 @@ const SearchResult: React.FC<SearchResultProps> = ({
   onMouseEnter,
   onClick,
 }) => {
-  const { chainIdToChainRecord } = useAllChainsData();
-
-  const chain = chainIdToChainRecord[result.chainId];
-
-  // not able to resolve chain...
-  if (!chain) {
-    return null;
-  }
   return (
     <Flex
       as={LinkBox}
@@ -405,25 +326,24 @@ const SearchResult: React.FC<SearchResultProps> = ({
       p={3}
     >
       <Box flexShrink={0}>
-        <ChainIcon size={24} ipfsSrc={chain?.icon?.url} />
+        <ChainIcon size={24} ipfsSrc={result.chainMetadata?.icon?.url} />
       </Box>
       <Flex direction="column">
         <LinkOverlay
           textDecor="none!important"
           as={Link}
-          href={`/${chain.slug}/${result.address}${
-            result.needsImport ? "?import=true" : ""
-          }`}
+          href={`/${result.chainMetadata.chainId}/${result.contractAddress}`}
           onMouseEnter={onMouseEnter}
           onClick={onClick}
           size="label.xl"
         >
           <Heading as="h3" size="label.lg">
-            {shortenIfAddress(result.metadata.name)}
+            {shortenIfAddress(result.name)}
           </Heading>
         </LinkOverlay>
         <Heading pointerEvents="none" as="h4" opacity={0.6} size="subtitle.xs">
-          {chain.name} - {shortenIfAddress(result.address)}
+          {result.chainMetadata.name} -{" "}
+          {shortenIfAddress(result.contractAddress)}
         </Heading>
       </Flex>
       <Flex ml="auto" align="center" gap={3} flexShrink={0}>

@@ -1,4 +1,4 @@
-import { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
 import { DarkMode, Flex, Icon, Spacer, Stack } from "@chakra-ui/react";
 import { FiCheck } from "react-icons/fi";
 import { Badge, Button, Card, Heading, Text } from "tw-components";

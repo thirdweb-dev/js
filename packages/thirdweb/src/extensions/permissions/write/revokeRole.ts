@@ -17,12 +17,16 @@ export type RevokeRoleParams = {
  * @example
  * ```ts
  * import { revokeRole } from "thirdweb/extensions/permissions";
+ * import { sendTransaction } from "thirdweb";
  *
- * const result = await revokeRole({
+ * const transaction = revokeRole({
  *  contract,
  *  role: "admin",
  *  targetAccountAddress: "0x1234567890123456789012345678901234567890",
  * });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
  */
 export function revokeRole(options: BaseTransactionOptions<RevokeRoleParams>) {
   return generatedRevokeRole({

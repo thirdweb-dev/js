@@ -11,7 +11,8 @@ const overlayEnter = keyframes`
   }
 `;
 
-export const Overlay = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const Overlay = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     backgroundColor: theme.colors.modalOverlayBg,

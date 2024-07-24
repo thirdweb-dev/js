@@ -1,31 +1,31 @@
-import { useForm } from "react-hook-form";
+import { type Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  AccountValidationSchema,
-  accountValidationSchema,
-} from "./validations";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import {
-  FormControl,
-  Input,
   Flex,
-  VStack,
+  FormControl,
   HStack,
+  Input,
+  VStack,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { type ChangeEvent, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   Button,
-  ButtonProps,
-  FormLabel,
+  type ButtonProps,
+  Checkbox,
   FormErrorMessage,
+  FormLabel,
   Heading,
   Text,
-  Checkbox,
 } from "tw-components";
-import { Account, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTrack } from "hooks/analytics/useTrack";
-import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
-import { ChangeEvent, useState } from "react";
+import {
+  type AccountValidationSchema,
+  accountValidationSchema,
+} from "./validations";
 
 interface AccountFormProps {
   account: Account;

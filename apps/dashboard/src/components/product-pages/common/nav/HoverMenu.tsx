@@ -1,4 +1,3 @@
-import { NavCard } from "./NavCard";
 import {
   Box,
   Fade,
@@ -7,9 +6,10 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Card, Text } from "tw-components";
-import { SectionItemProps, SectionProps } from "./types";
 import { useEffect, useRef, useState } from "react";
+import { Card, Text } from "tw-components";
+import { NavCard } from "./NavCard";
+import type { SectionItemProps, SectionProps } from "./types";
 
 interface HoverMenuProps {
   title: string;
@@ -52,7 +52,7 @@ export const HoverMenu: React.FC<HoverMenuProps> = ({
         window.removeEventListener("resize", updateOffset);
       };
     }
-  }, [isOpen, triggerRef, width, setOffset]);
+  }, [isOpen, width]);
 
   return (
     <Box onMouseLeave={onClose}>

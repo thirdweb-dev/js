@@ -130,6 +130,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
             return (
               <Flex
                 flexDir={{ base: "column", md: "row" }}
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={index}
                 mt={8}
                 gap={4}

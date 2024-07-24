@@ -6,11 +6,12 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { UseFormReturn } from "react-hook-form";
-import { Button, FormErrorMessage, Heading, Text, Card } from "tw-components";
+import type { UseFormReturn } from "react-hook-form";
+import { Button, Card, FormErrorMessage, Heading, Text } from "tw-components";
 import { useDefaultForwarders } from "../hooks";
 
 interface TrustedForwardersFieldsetProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<any, any>;
 }
 
@@ -29,12 +30,12 @@ export const TrustedForwardersFieldset: React.FC<
         to use default forwarders provided by thirdweb. Leave empty if not
         needed.
       </Text>
-      <Flex gap={4} direction={{ base: "column", md: "row" }}></Flex>
+      <Flex gap={4} direction={{ base: "column", md: "row" }} />
       <FormControl
         isRequired
         isInvalid={
           !!form.getFieldState(
-            `deployParams._trustedForwarders`,
+            "deployParams._trustedForwarders",
             form.formState,
           ).error
         }
@@ -42,9 +43,9 @@ export const TrustedForwardersFieldset: React.FC<
         <InputGroup size="md">
           <Flex flexDir="column" w="full">
             <SolidityInput
-              value={form.watch(`deployParams._trustedForwarders`)}
+              value={form.watch("deployParams._trustedForwarders")}
               solidityType="address[]"
-              {...form.register(`deployParams._trustedForwarders`)}
+              {...form.register("deployParams._trustedForwarders")}
             />
           </Flex>
           <InputRightElement>
@@ -93,7 +94,7 @@ export const TrustedForwardersFieldset: React.FC<
         <FormErrorMessage>
           {
             form.getFieldState(
-              `deployParams._trustedForwarders`,
+              "deployParams._trustedForwarders",
               form.formState,
             ).error?.message
           }

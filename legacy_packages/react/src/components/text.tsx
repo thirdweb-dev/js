@@ -13,7 +13,7 @@ type TextProps = {
   balance?: boolean;
 };
 
-export const Text = /* @__PURE__ */ StyledSpan((p: TextProps) => {
+export const Text = /* @__PURE__ */ StyledSpan<TextProps>((p) => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize[p.size || "md"],
@@ -40,7 +40,7 @@ type LinkProps = {
   hoverColor?: keyof Theme["colors"];
 };
 
-export const Link = /* @__PURE__ */ StyledAnchor((p: LinkProps) => {
+export const Link = /* @__PURE__ */ StyledAnchor<LinkProps>((p) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

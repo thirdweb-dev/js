@@ -1,5 +1,5 @@
 import {
-  EVMContractInfo,
+  type EVMContractInfo,
   useEVMContractInfo,
   useSetEVMContractInfo,
 } from "@3rdweb-sdk/react";
@@ -11,39 +11,43 @@ import {
   Flex,
   Spinner,
 } from "@chakra-ui/react";
-import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
+import {
+  type DehydratedState,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { detectContractFeature } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
+import { THIRDWEB_DOMAIN } from "constants/urls";
 import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ContractSidebar } from "core-ui/sidebar/detail-page";
+import { getAddress, isAddress } from "ethers/lib/utils";
 import {
   useSupportedChainsRecord,
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
-import { GetStaticPaths, GetStaticProps } from "next";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { defineDashboardChain } from "lib/v5-adapter";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useContext, useEffect, useMemo, useState } from "react";
+import { getContract } from "thirdweb";
 import { fetchChain } from "utils/fetchChain";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
-import { THIRDWEB_DOMAIN } from "constants/urls";
-import { getAddress, isAddress } from "ethers/lib/utils";
-import { getContract } from "thirdweb";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
-import { defineDashboardChain } from "lib/v5-adapter";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -89,7 +93,9 @@ const ContractPage: ThirdwebNextPage = () => {
 
       const configuredChain = supportedChainsSlugRecord[chainSlug];
       if (
-        getDashboardChainRpc(configuredChain) !== getDashboardChainRpc(chain)
+        configuredChain &&
+        getDashboardChainRpc(configuredChain.chainId) !==
+          getDashboardChainRpc(chain.chainId)
       ) {
         setContractInfo({
           chainSlug,
@@ -151,7 +157,7 @@ const ContractPage: ThirdwebNextPage = () => {
     isSupportedChainsReady,
   ]);
 
-  const isSlugNumber = !isNaN(Number(chainSlug));
+  const isSlugNumber = !Number.isNaN(Number(chainSlug));
 
   const router = useRouter();
 
@@ -189,9 +195,8 @@ const ContractPage: ThirdwebNextPage = () => {
         <Box mb={8} mt={8}>
           <Alert borderRadius="md" background="backgroundHighlight">
             <AlertIcon />
-            You tried to connecting to {isSlugNumber
-              ? "Chain"
-              : "Network"} ID {`"`}
+            You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID{" "}
+            {`"`}
             {chainSlug}
             {`"`} but it is not configured yet. Please configure it and try
             again.
@@ -342,7 +347,7 @@ ContractPage.getLayout = (page, props: EVMContractProps) => {
               ? [
                   {
                     url: ogImage.toString(),
-                    alt: ``,
+                    alt: "",
                     width: 1200,
                     height: 630,
                   },
@@ -405,18 +410,23 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   }
   const chain = await fetchChain(chainSlug);
 
-  let contractMetadata;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  let contractMetadata: any;
 
   let detectedExtension: EVMContractProps["detectedExtension"] = "unknown";
 
-  if (chain && chain.chainId) {
+  if (chain?.chainId) {
     try {
       // create the SDK on the chain
-      const sdk = getThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
+      const sdk = getThirdwebSDK(
+        chain.chainId,
+        getDashboardChainRpc(chain.chainId),
+      );
       // get the contract
       const contract = await sdk.getContract(address);
       // extract the abi to detect extensions
       // we know it's there...
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
       const contractWrapper = (contract as any).contractWrapper;
       // detect extension bases
       const isErc20 = detectContractFeature(contractWrapper, "ERC20");

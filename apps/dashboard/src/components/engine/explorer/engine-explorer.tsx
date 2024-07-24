@@ -1,8 +1,9 @@
 import { Box, DarkMode } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
+import "../../../css/swagger-ui.css";
 import "swagger-ui-react/swagger-ui.css";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import dynamic from "next/dynamic";
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
 
@@ -13,7 +14,7 @@ interface EngineExplorerProps {
 export const EngineExplorer: React.FC<EngineExplorerProps> = ({
   instanceUrl,
 }) => {
-  const { token } = useApiAuthToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   return (
     <ClientOnly ssr={null}>
       <DarkMode>
@@ -23,7 +24,7 @@ export const EngineExplorer: React.FC<EngineExplorerProps> = ({
             docExpansion="none"
             persistAuthorization={true}
             requestInterceptor={(req) => {
-              req.headers["Authorization"] = `Bearer ${token}`;
+              req.headers.Authorization = `Bearer ${token}`;
               // This is required to skip the browser warning when using ngrok
               // else, Engine -> Explorer doesn't work
               // more info: https://ngrok.com/abuse

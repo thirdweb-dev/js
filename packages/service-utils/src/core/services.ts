@@ -44,17 +44,17 @@ export const SERVICE_DEFINITIONS = {
     // all actions allowed
     actions: [],
   },
-  checkout: {
-    name: "checkout",
-    title: "Checkouts",
-    description: "NFT Checkouts for easy web3 onboarding",
-    // all actions allowed
-    actions: [],
-  },
   pay: {
     name: "pay",
     title: "Pay",
     description: "Pay for a blockchain transaction with any currency",
+    // all actions allowed
+    actions: [],
+  },
+  chainsaw: {
+    name: "chainsaw",
+    title: "Chainsaw",
+    description: "Indexed data for any EVM chain",
     // all actions allowed
     actions: [],
   },

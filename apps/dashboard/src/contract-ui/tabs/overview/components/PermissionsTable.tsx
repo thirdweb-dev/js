@@ -12,19 +12,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAllRoleMembers } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk";
 import { useTabHref } from "contract-ui/utils";
-import { constants } from "ethers";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
+import { ZERO_ADDRESS } from "thirdweb";
 import {
   Button,
   Card,
   Heading,
   Text,
   TrackedLink,
-  TrackedLinkProps,
+  type TrackedLinkProps,
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -44,6 +44,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
     return (
       Object.entries(allRoleMembers.data || {}).reduce(
         (acc, [role, roleMembers]) => {
+          // biome-ignore lint/complexity/noForEach: FIXME
           roleMembers.forEach((member) => {
             return !acc.find((m) => m.member === member)
               ? acc.push({ member, roles: [role] })
@@ -54,7 +55,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
         },
         [] as { member: string; roles: string[] }[],
       ) || []
-    ).filter((m) => m.member !== constants.AddressZero);
+    ).filter((m) => m.member !== ZERO_ADDRESS);
   }, [allRoleMembers.data]);
 
   return (
@@ -203,8 +204,8 @@ const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
         <Box gridColumn="span 1" />
 
         <Flex gridColumn="span 6" flexWrap="wrap" gap={2}>
-          {data.roles.slice(0, 3).map((role, idx) => (
-            <Tag key={idx}>
+          {data.roles.slice(0, 3).map((role) => (
+            <Tag key={role}>
               <Text size="body.md" fontWeight="medium">
                 {role}
               </Text>

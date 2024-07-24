@@ -6,22 +6,10 @@ export default {
     {
       "name": "blockscout",
       "url": "https://explorer.zksats.io",
-      "standard": "EIP3091",
-      "icon": {
-        "url": "ipfs://QmaopiJuCSxRKZJHDkCu9w77x2HEmbNb3QeLC1SUavehEE",
-        "width": 3072,
-        "height": 3072,
-        "format": "png"
-      }
+      "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "icon": {
-    "url": "ipfs://QmaopiJuCSxRKZJHDkCu9w77x2HEmbNb3QeLC1SUavehEE",
-    "width": 3072,
-    "height": 3072,
-    "format": "png"
-  },
   "infoURL": "https://zksats.io",
   "name": "ZKSats Mainnet",
   "nativeCurrency": {

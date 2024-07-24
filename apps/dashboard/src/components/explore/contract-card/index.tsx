@@ -1,4 +1,3 @@
-import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 import {
   Flex,
   Icon,
@@ -8,18 +7,19 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import {
+  type QueryClient,
   useQuery,
   useQueryClient,
-  type QueryClient,
 } from "@tanstack/react-query";
-import { Polygon } from "@thirdweb-dev/chains";
 import { ensQuery } from "components/contract-components/hooks";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
+import { polygon } from "thirdweb/chains";
 import invariant from "tiny-invariant";
-import { Card, Heading, Link, Text, TrackedLink, Badge } from "tw-components";
+import { Badge, Card, Heading, Link, Text, TrackedLink } from "tw-components";
+import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
   publisher: string;
@@ -97,7 +97,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                 isExternal
                 as={Link}
                 align="center"
-                gap={0}
+                gap={1}
                 href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
                 _dark={{
                   color: "green.300",
@@ -106,14 +106,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                   color: "green.600",
                 }}
               >
-                <Skeleton boxSize={5} isLoaded={!showSkeleton}>
-                  <Icon as={BsShieldCheck} />
-                </Skeleton>
-                <Skeleton isLoaded={!showSkeleton}>
-                  <Text color="inherit" size="label.sm" fontWeight={500}>
-                    Audited
-                  </Text>
-                </Skeleton>
+                <Icon as={BsShieldCheck} />
+                <Text color="inherit" size="label.sm" fontWeight={500}>
+                  Audited
+                </Text>
               </Flex>
             )}
             {showSkeleton ||
@@ -208,12 +204,12 @@ type PublishedContractId =
 async function publishedContractQueryFn(
   publisher: string,
   contractId: string,
-  version = "latest",
+  version: string,
   queryClient: QueryClient,
 ) {
   const polygonSdk = getThirdwebSDK(
-    Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    polygon.id,
+    getDashboardChainRpc(polygon.id),
   );
 
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));

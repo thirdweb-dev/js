@@ -7,7 +7,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { PageId } from "page-id";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "ambassadors_page";
 
@@ -28,9 +28,9 @@ const ambassadors = [
     profileImage: "/assets/ambassadors/frankramos.jpeg",
   },
   {
-    name: "Kien",
-    twitter: "kienngo_",
-    profileImage: "/assets/ambassadors/kienngo.jpg",
+    name: "Creative Owls",
+    twitter: "MyCreativeOwls",
+    profileImage: "/assets/ambassadors/myCreativeOwl.jpg",
   },
   {
     name: "Matt Wong",
@@ -78,9 +78,9 @@ const ambassadors = [
     profileImage: "/assets/ambassadors/takaji.jpg",
   },
   {
-    name: "Yash",
-    twitter: "0x_yasshhh_",
-    profileImage: "/assets/ambassadors/yash.jpg",
+    name: "Alfredo",
+    twitter: "brolag",
+    profileImage: "/assets/ambassadors/brolag.jpg",
   },
   {
     name: "Yuki",
@@ -447,7 +447,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                   bgClip={"text"}
                   size="label.xl"
                   mb={4}
-                ></Heading>
+                />
                 <Heading
                   as="h2"
                   size="display.md"

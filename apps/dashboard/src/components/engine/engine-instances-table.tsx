@@ -1,13 +1,13 @@
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  EditEngineInstanceInput,
-  EngineInstance,
-  RemoveCloudHostedInput,
+  type EditEngineInstanceInput,
+  type EngineInstance,
+  type RemoveCloudHostedInput,
   useEngineEditInstance,
-  useEngineInstances,
+  type useEngineInstances,
   useEngineRemoveCloudHosted,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Alert,
   AlertDescription,
@@ -27,19 +27,24 @@ import {
   Stack,
   Textarea,
   Tooltip,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useAddress } from "@thirdweb-dev/react";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import {
+  type Dispatch,
+  type ReactNode,
+  type SetStateAction,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { Badge, Button, FormLabel, Heading, Text } from "tw-components";
 
 interface EngineInstancesTableProps {
@@ -60,8 +65,8 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const trackEvent = useTrack();
-  const { token } = useApiAuthToken();
-  const address = useAddress();
+  const token = useLoggedInUser().user?.jwt ?? null;
+  const address = useActiveAccount()?.address;
   const toast = useToast();
 
   const [instanceToUpdate, setInstanceToUpdate] = useState<
@@ -82,11 +87,11 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
       });
       if (res.ok) {
         return instance;
-      } else if (res.status === 401) {
-        throw new Error("Unauthorized");
-      } else {
-        throw new Error(`Unexpected status code ${res.status}`);
       }
+      if (res.status === 401) {
+        throw new Error("Unauthorized");
+      }
+      throw new Error(`Unexpected status code ${res.status}`);
     },
     onSuccess: (instance) => {
       trackEvent({
@@ -392,7 +397,54 @@ const RemoveModal = ({
     <Modal isOpen onClose={onClose} isCentered size="lg">
       <ModalOverlay />
       <ModalContent>
-        {instance.cloudDeployedAt ? (
+        {instance.status === "paymentFailed" ||
+        (instance.status === "active" && !instance.cloudDeployedAt) ? (
+          <>
+            <ModalHeader>Remove Engine Instance</ModalHeader>
+
+            <ModalBody as={Flex} flexDir="column" gap={2}>
+              <Text>
+                Are you sure you want to remove{" "}
+                <strong>{instance?.name}</strong> from your dashboard?
+              </Text>
+              <Text>
+                This action does not modify your Engine infrastructure. You can
+                re-add it at any time.
+              </Text>
+            </ModalBody>
+
+            <ModalFooter as={Flex} gap={3}>
+              <Button onClick={onClose} variant="ghost">
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  removeFromDashboard(instance.id, {
+                    onSuccess: () => {
+                      toast({
+                        status: "success",
+                        description:
+                          "Removed an Engine instance from your dashboard.",
+                      });
+                      refetch();
+                      onClose();
+                    },
+                    onError: () => {
+                      toast({
+                        status: "error",
+                        description:
+                          "Error removing an Engine instance from your dashboard.",
+                      });
+                    },
+                  });
+                }}
+                colorScheme="red"
+              >
+                Remove
+              </Button>
+            </ModalFooter>
+          </>
+        ) : (
           <form
             onSubmit={form.handleSubmit((data) =>
               removeCloudHosted(data, {
@@ -490,52 +542,6 @@ const RemoveModal = ({
               </Button>
             </ModalFooter>
           </form>
-        ) : (
-          <>
-            <ModalHeader>Remove Engine Instance</ModalHeader>
-
-            <ModalBody as={Flex} flexDir="column" gap={2}>
-              <Text>
-                Are you sure you want to remove{" "}
-                <strong>{instance?.name}</strong> from your dashboard?
-              </Text>
-              <Text>
-                This action does not modify your Engine infrastructure. You can
-                re-add it at any time.
-              </Text>
-            </ModalBody>
-
-            <ModalFooter as={Flex} gap={3}>
-              <Button onClick={onClose} variant="ghost">
-                Close
-              </Button>
-              <Button
-                onClick={() => {
-                  removeFromDashboard(instance.id, {
-                    onSuccess: () => {
-                      toast({
-                        status: "success",
-                        description:
-                          "Removed an Engine instance from your dashboard.",
-                      });
-                      refetch();
-                      onClose();
-                    },
-                    onError: () => {
-                      toast({
-                        status: "error",
-                        description:
-                          "Error removing an Engine instance from your dashboard.",
-                      });
-                    },
-                  });
-                }}
-                colorScheme="red"
-              >
-                Remove
-              </Button>
-            </ModalFooter>
-          </>
         )}
       </ModalContent>
     </Modal>

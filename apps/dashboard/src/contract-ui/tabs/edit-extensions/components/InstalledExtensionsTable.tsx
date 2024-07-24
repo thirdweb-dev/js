@@ -1,18 +1,8 @@
 import {
-  Flex,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  Tooltip,
-  Skeleton,
   Alert,
   AlertIcon,
-  useToast,
   Box,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -20,21 +10,31 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Skeleton,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tooltip,
+  Tr,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { Button, Text, Heading } from "tw-components";
-import { uninstallExtensionByProxy } from "thirdweb/extensions/modular";
 import {
+  type ContractOptions,
   sendTransaction,
   waitForReceipt,
-  type ContractOptions,
 } from "thirdweb";
+import { uninstallExtensionByProxy } from "thirdweb/extensions/modular";
+import type { Account } from "thirdweb/wallets";
+import { Button, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { useExtensionContractInfo } from "./extensionContractInfo";
-import type { Account } from "thirdweb/wallets";
-import { TransactionButton } from "components/buttons/TransactionButton";
-import { useMutation } from "@tanstack/react-query";
 
 export const InstalledExtensionsTable = (props: {
   contract: ContractOptions;
@@ -104,6 +104,7 @@ export const InstalledExtensionsTable = (props: {
               <>
                 {installedExtensions.data?.map((e, i) => (
                   <ExtensionRow
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={i}
                     extensionAddress={e}
                     contract={props.contract}

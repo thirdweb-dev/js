@@ -1,6 +1,7 @@
 import type { ConnectLocale } from "./types.js";
 
 const connectWalletLocalEs: ConnectLocale = {
+  id: "es_ES",
   signIn: "Iniciar sesión",
   defaultButtonTitle: "Conectar cartera",
   connecting: "Conectando",
@@ -17,7 +18,9 @@ const connectWalletLocalEs: ConnectLocale = {
   send: "Enviar",
   receive: "Recibir",
   buy: "Buy", // TODO
-  transactions: "Transactions", // TODO
+  transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions", // TODO
   currentNetwork: "Red actual",
   switchAccount: "Cambiar cuenta",
@@ -98,6 +101,17 @@ const connectWalletLocalEs: ConnectLocale = {
       failedToSignIn: "Error al iniciar sesión",
       inProgress: "Esperando confirmación",
     },
+  },
+  manageWallet: {
+    title: "Manage Wallet",
+    connectAnApp: "Connect an App",
+    exportPrivateKey: "Export Private Key",
+  },
+  viewFunds: {
+    title: "View Funds",
+    viewNFTs: "View NFTs",
+    viewTokens: "View Tokens",
+    viewAssets: "View Assets",
   },
 };
 

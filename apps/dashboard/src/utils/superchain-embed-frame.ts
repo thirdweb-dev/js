@@ -1,4 +1,4 @@
-import { FrameMetadataType } from "@coinbase/onchainkit";
+import type { FrameMetadataType } from "@coinbase/onchainkit";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 
 export const getApplyFrameMetaData = (): FrameMetadataType => {
@@ -6,7 +6,7 @@ export const getApplyFrameMetaData = (): FrameMetadataType => {
     buttons: [
       {
         label: "Confirm",
-        action: `post`,
+        action: "post",
       },
     ],
     input: {
@@ -22,7 +22,7 @@ export const getEmailMetaData = (chain: string): FrameMetadataType => {
     buttons: [
       {
         label: "Confirm",
-        action: `post`,
+        action: "post",
       },
     ],
     input: {
@@ -41,7 +41,7 @@ export const getWebsiteMetaData = (
     buttons: [
       {
         label: "Confirm",
-        action: `post`,
+        action: "post",
       },
     ],
     input: {
@@ -57,7 +57,7 @@ export const getSuccessMetaData = (): FrameMetadataType => {
     buttons: [
       {
         label: "Explore thirdweb",
-        action: `post_redirect`,
+        action: "post_redirect",
       },
     ],
     image: `${getAbsoluteUrl()}/assets/superchain/frame-5.png`,

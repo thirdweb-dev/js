@@ -1,11 +1,16 @@
-import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
 import { Flex, Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { themes } from "prism-react-renderer";
 import { useState } from "react";
 import { AiOutlineCode } from "react-icons/ai";
 import { CgFileDocument } from "react-icons/cg";
-import { Card, CodeBlock, LinkButton, LinkButtonProps } from "tw-components";
+import {
+  Card,
+  CodeBlock,
+  LinkButton,
+  type LinkButtonProps,
+} from "tw-components";
+import { CodeOptionButton, type CodeOptions } from "../common/CodeOptionButton";
 
 const darkTheme = themes.dracula;
 

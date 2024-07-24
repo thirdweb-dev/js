@@ -1,22 +1,22 @@
-import HomePageCard from "components/homepage/sections/HomePageCard";
-import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
 import { Box, Center, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { HeroSection } from "components/homepage/sections/HeroSection";
+import HomePageCard from "components/homepage/sections/HomePageCard";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { SolutionsSection } from "components/homepage/sections/Solutions";
 import { WithoutThirdwebSection } from "components/homepage/sections/WithoutThirdwebSection";
+import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 import { PartnerCarousel } from "components/partners/carousel";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
+import { metrics } from "components/product-pages/common/nav/data";
 import { PageId } from "page-id";
 import { Suspense } from "react";
-import { ThirdwebNextPage } from "utils/types";
-import { metrics } from "components/product-pages/common/nav/data";
 import { Heading, Text } from "tw-components";
-import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
+import type { ThirdwebNextPage } from "utils/types";
+import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
 
 const TRACKING_CATEGORY = "homepage";
 

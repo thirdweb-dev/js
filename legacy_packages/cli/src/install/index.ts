@@ -137,10 +137,10 @@ export async function install(projectPath = ".", options: any) {
   const version = !isJSPackageManager
     ? ""
     : options.dev
-    ? "@dev"
-    : options.nightly
-    ? "@nightly"
-    : "";
+      ? "@dev"
+      : options.nightly
+        ? "@nightly"
+        : "";
 
   const thirdwebDepsToUpdate = new Set<string>(
     [

@@ -4,8 +4,6 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { resolveScheme } from "../../../../utils/ipfs.js";
 import { Skeleton } from "./Skeleton.js";
 
-// Note: Must not use useConnectUI here
-
 /**
  * @internal
  */

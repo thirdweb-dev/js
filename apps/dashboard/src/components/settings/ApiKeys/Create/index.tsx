@@ -1,4 +1,4 @@
-import { ApiKey, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { type ApiKey, useCreateApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   HStack,
@@ -19,11 +19,11 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { Button, ButtonProps, Checkbox, Text } from "tw-components";
+import { Button, type ButtonProps, Checkbox, Text } from "tw-components";
 import { toArrFromList } from "utils/string";
 import Message from "../message";
 import {
-  ApiKeyCreateValidationSchema,
+  type ApiKeyCreateValidationSchema,
   apiKeyCreateValidationSchema,
 } from "../validations";
 import { CreateGeneral } from "./General";

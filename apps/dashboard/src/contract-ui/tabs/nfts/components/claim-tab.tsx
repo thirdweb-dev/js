@@ -1,10 +1,11 @@
 import { Flex, FormControl, Input } from "@chakra-ui/react";
-import { DropContract, useAddress, useClaimNFT } from "@thirdweb-dev/react";
+import { type DropContract, useClaimNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { ZERO_ADDRESS } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface ClaimTabProps {
@@ -14,7 +15,7 @@ interface ClaimTabProps {
 
 const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1", to: address },
   });
@@ -70,10 +71,7 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
             isInvalid={!!form.getFieldState("to", form.formState).error}
           >
             <FormLabel>To Address</FormLabel>
-            <Input
-              placeholder={constants.AddressZero}
-              {...form.register("to")}
-            />
+            <Input placeholder={ZERO_ADDRESS} {...form.register("to")} />
             <FormHelperText>Enter the address to claim to.</FormHelperText>
             <FormErrorMessage>
               {form.getFieldState("to", form.formState).error?.message}

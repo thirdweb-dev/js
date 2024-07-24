@@ -1,14 +1,14 @@
 import {
   Container,
   Flex,
-  FlexboxProps,
+  type FlexboxProps,
   GridItem,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
-import { LandingDesktopMobileImage } from "./desktop-mobile-image";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
+import type { ReactNode } from "react";
 import { Heading, Text, TrackedLink } from "tw-components";
+import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 
 interface MetricItem {
   title: string;
@@ -85,6 +85,7 @@ const CardWithMetric = ({
             mt={8}
           >
             {items.map((item, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <GridItem colSpan={item.colSpan ? item.colSpan : 1} key={index}>
                 <Flex flex={1} flexDir="column">
                   <Heading size="title.xs" color="white">
@@ -144,6 +145,7 @@ const LandingCardWithMetrics = ({
                 idx,
               ) => (
                 <CardWithMetric
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={idx}
                   title={cardTitle}
                   description={cardDescription}

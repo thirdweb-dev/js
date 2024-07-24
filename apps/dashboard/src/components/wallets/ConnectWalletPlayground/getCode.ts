@@ -52,7 +52,7 @@ ${options.wallets ? `const wallets = ${options.wallets};` : ""}
 export default function App() {
   return (
     <ThirdwebProvider>
-      <ConnectButton client={client} ${options.wallets ? `wallets={wallets}` : ""}   ${
+      <ConnectButton client={client} ${options.wallets ? "wallets={wallets}" : ""}   ${
         options.smartWalletOptions
           ? `accountAbstraction={{
             chain: sepolia,

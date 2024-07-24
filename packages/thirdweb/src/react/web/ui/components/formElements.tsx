@@ -32,7 +32,7 @@ type InputProps = {
   theme?: Theme;
 };
 
-export const Input = /* @__PURE__ */ StyledInput((props: InputProps) => {
+export const Input = /* @__PURE__ */ StyledInput<InputProps>((props) => {
   const theme = useCustomTheme();
   return {
     fontSize: fontSize.md,

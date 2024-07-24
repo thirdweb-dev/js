@@ -108,7 +108,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         extensionName: "DemoExtensionWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: installTransaction,
         account: TEST_ACCOUNT_A,
       });
@@ -128,7 +128,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
         extensionData: "0x",
       });
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: uninstallTransaction,
         account: TEST_ACCOUNT_A,
       });

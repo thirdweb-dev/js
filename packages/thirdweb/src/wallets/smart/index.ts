@@ -4,17 +4,22 @@ import {
   type TypedDataDefinition,
   type TypedDataDomain,
   hashTypedData,
+  maxUint96,
 } from "viem";
 import type { Chain } from "../../chains/types.js";
 import { getCachedChain } from "../../chains/utils.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
+import { allowance } from "../../extensions/erc20/__generated__/IERC20/read/allowance.js";
+import { approve } from "../../extensions/erc20/write/approve.js";
+import { toSerializableTransaction } from "../../transaction/actions/to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "../../transaction/actions/wait-for-tx-receipt.js";
 import {
   populateEip712Transaction,
   signEip712Transaction,
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
-import type { TransactionReceipt } from "../../transaction/types.js";
+import { getAddress } from "../../utils/address.js";
+import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
 import type {
@@ -30,7 +35,6 @@ import type {
 import {
   broadcastZkTransaction,
   bundleUserOp,
-  getUserOpReceipt,
   getZkPaymasterData,
 } from "./lib/bundler.js";
 import {
@@ -39,12 +43,18 @@ import {
   prepareExecute,
 } from "./lib/calls.js";
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
-import { createUnsignedUserOp, signUserOp } from "./lib/userop.js";
+import {
+  createUnsignedUserOp,
+  signUserOp,
+  waitForUserOpReceipt,
+} from "./lib/userop.js";
 import { isNativeAAChain } from "./lib/utils.js";
 import type {
+  PaymasterResult,
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
+  UserOperation,
 } from "./types.js";
 
 /**
@@ -109,9 +119,12 @@ export async function connectSmartWallet(
   });
 
   // TODO: listen for chainChanged event on the personal wallet and emit the disconnect event on the smart wallet
-  const accountAddress = await predictAddress(factoryContract, {
-    personalAccountAddress: personalAccount.address,
-    ...options,
+  const accountAddress = await predictAddress({
+    factoryContract,
+    adminAddress: personalAccount.address,
+    predictAddressOverride: options.overrides?.predictAddress,
+    accountSalt: options.overrides?.accountSalt,
+    accountAddress: options.overrides?.accountAddress,
   })
     .then((address) => address)
     .catch((err) => {
@@ -163,23 +176,50 @@ async function createSmartAccount(
 ): Promise<Account> {
   const { accountContract } = options;
   const account: Account = {
-    address: accountContract.address,
+    address: getAddress(accountContract.address),
     async sendTransaction(transaction: SendTransactionOption) {
+      // if erc20 paymaster - check allowance and approve if needed
+      const erc20Paymaster = options.overrides?.erc20Paymaster;
+      let paymasterOverride:
+        | undefined
+        | ((userOp: UserOperation) => Promise<PaymasterResult>) = undefined;
+      if (erc20Paymaster) {
+        await approveERC20({
+          accountContract,
+          erc20Paymaster,
+          options,
+        });
+        const paymasterCallback = async (): Promise<PaymasterResult> => {
+          return {
+            paymasterAndData: concatHex([
+              erc20Paymaster.address as Hex,
+              erc20Paymaster?.token as Hex,
+            ]),
+          };
+        };
+        paymasterOverride = options.overrides?.paymaster || paymasterCallback;
+      }
       const executeTx = prepareExecute({
         accountContract,
-        options,
         transaction,
+        executeOverride: options.overrides?.execute,
       });
       return _sendUserOp({
         executeTx,
-        options,
+        options: {
+          ...options,
+          overrides: {
+            ...options.overrides,
+            paymaster: paymasterOverride,
+          },
+        },
       });
     },
     async sendBatchTransaction(transactions: SendTransactionOption[]) {
       const executeTx = prepareBatchExecute({
         accountContract,
-        options,
         transactions,
+        executeBatchOverride: options.overrides?.executeBatch,
       });
       return _sendUserOp({
         executeTx,
@@ -202,9 +242,6 @@ async function createSmartAccount(
       ]);
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
         await _deployAccount({
           options,
           account,
@@ -293,9 +330,6 @@ async function createSmartAccount(
 
       const isDeployed = await isContractDeployed(accountContract);
       if (!isDeployed) {
-        console.log(
-          "Account contract not deployed yet. Deploying account before signing message",
-        );
         await _deployAccount({
           options,
           account,
@@ -360,6 +394,57 @@ async function createSmartAccount(
   return account;
 }
 
+async function approveERC20(args: {
+  accountContract: ThirdwebContract;
+  options: SmartAccountOptions;
+  erc20Paymaster: {
+    address: string;
+    token: string;
+  };
+}) {
+  const { accountContract, erc20Paymaster, options } = args;
+  const tokenAddress = erc20Paymaster.token;
+  const tokenContract = getContract({
+    address: tokenAddress,
+    chain: accountContract.chain,
+    client: accountContract.client,
+  });
+  const accountAllowance = await allowance({
+    contract: tokenContract,
+    owner: accountContract.address,
+    spender: erc20Paymaster.address,
+  });
+
+  if (accountAllowance > 0n) {
+    return;
+  }
+
+  const approveTx = approve({
+    contract: tokenContract,
+    spender: erc20Paymaster.address,
+    amountWei: maxUint96 - 1n,
+  });
+  const transaction = await toSerializableTransaction({
+    transaction: approveTx,
+    from: accountContract.address,
+  });
+  const executeTx = prepareExecute({
+    accountContract,
+    transaction,
+    executeOverride: options.overrides?.execute,
+  });
+  await _sendUserOp({
+    executeTx,
+    options: {
+      ...options,
+      overrides: {
+        ...options.overrides,
+        erc20Paymaster: undefined,
+      },
+    },
+  });
+}
+
 function createZkSyncAccount(args: {
   creationOptions: SmartWalletOptions;
   connectionOptions: SmartWalletConnectionOptions;
@@ -389,8 +474,9 @@ function createZkSyncAccount(args: {
         const pmData = await getZkPaymasterData({
           options: {
             client: connectionOptions.client,
-            overrides: creationOptions.overrides,
             chain,
+            bundlerUrl: creationOptions.overrides?.bundlerUrl,
+            entrypointAddress: creationOptions.overrides?.entrypointAddress,
           },
           transaction: serializableTransaction,
         });
@@ -411,8 +497,9 @@ function createZkSyncAccount(args: {
       const txHash = await broadcastZkTransaction({
         options: {
           client: connectionOptions.client,
-          overrides: creationOptions.overrides,
           chain,
+          bundlerUrl: creationOptions.overrides?.bundlerUrl,
+          entrypointAddress: creationOptions.overrides?.entrypointAddress,
         },
         transaction: serializableTransaction,
         signedTransaction,
@@ -472,11 +559,17 @@ async function _sendUserOp(args: {
 }): Promise<WaitForReceiptOptions> {
   const { executeTx, options } = args;
   const unsignedUserOp = await createUnsignedUserOp({
-    executeTx,
-    options,
+    transaction: executeTx,
+    factoryContract: options.factoryContract,
+    accountContract: options.accountContract,
+    adminAddress: options.personalAccount.address,
+    sponsorGas: options.sponsorGas,
+    overrides: options.overrides,
   });
   const signedUserOp = await signUserOp({
-    options,
+    chain: options.chain,
+    adminAccount: options.personalAccount,
+    entrypointAddress: options.overrides?.entrypointAddress,
     userOp: unsignedUserOp,
   });
   const userOpHash = await bundleUserOp({
@@ -485,7 +578,7 @@ async function _sendUserOp(args: {
   });
   // wait for tx receipt rather than return the userOp hash
   const receipt = await waitForUserOpReceipt({
-    options,
+    ...options,
     userOpHash,
   });
 
@@ -494,22 +587,4 @@ async function _sendUserOp(args: {
     chain: options.chain,
     transactionHash: receipt.transactionHash,
   };
-}
-
-async function waitForUserOpReceipt(args: {
-  options: SmartAccountOptions;
-  userOpHash: Hex;
-}): Promise<TransactionReceipt> {
-  const { options, userOpHash } = args;
-  const timeout = 120000; // 2mins
-  const interval = 1000;
-  const endtime = Date.now() + timeout;
-  while (Date.now() < endtime) {
-    const userOpReceipt = await getUserOpReceipt({ options, userOpHash });
-    if (userOpReceipt) {
-      return userOpReceipt;
-    }
-    await new Promise((resolve) => setTimeout(resolve, interval));
-  }
-  throw new Error("Timeout waiting for userOp to be mined");
 }

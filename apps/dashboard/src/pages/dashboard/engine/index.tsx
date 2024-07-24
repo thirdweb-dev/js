@@ -1,26 +1,20 @@
-import { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import type { EngineInstance } from "@3rdweb-sdk/react/hooks/useEngine";
 import { AppLayout } from "components/app-layouts/app";
 import { EngineInstancesList } from "components/engine/engine-list";
 import { EngineNavigation } from "components/engine/engine-navigation";
-import { EngineNoConnectedWallet } from "components/engine/no-connected-wallet";
-import { EngineSidebar } from "core-ui/sidebar/engine";
+import { SidebarNav } from "core-ui/sidebar/nav";
 import { PageId } from "page-id";
 import { useState } from "react";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const EngineManage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
   const [connectedInstance, setConnectedInstance] = useState<
     EngineInstance | undefined
   >();
 
-  if (!isLoggedIn) {
-    return <EngineNoConnectedWallet />;
-  }
-
   if (connectedInstance) {
     return (
+      // contains its own sidebarnav component
       <EngineNavigation
         instance={connectedInstance}
         setConnectedInstance={setConnectedInstance}
@@ -28,12 +22,17 @@ const EngineManage: ThirdwebNextPage = () => {
     );
   }
 
-  return <EngineInstancesList setConnectedInstance={setConnectedInstance} />;
+  return (
+    <>
+      {/* just placeholder, so it doesn't look empty */}
+      <SidebarNav title="Engine" />
+      <EngineInstancesList setConnectedInstance={setConnectedInstance} />
+    </>
+  );
 };
 
 EngineManage.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <EngineSidebar activePage="manage" />
     {page}
   </AppLayout>
 );

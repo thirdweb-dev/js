@@ -2,8 +2,8 @@ import {
   useIsAdmin,
   useIsAdminOrSelf,
 } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface AdminOnlyProps {
   contract?: ValidContractInstance;

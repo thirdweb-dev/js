@@ -1,5 +1,5 @@
 import { Flex, Icon, SimpleGrid, Spinner } from "@chakra-ui/react";
-import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { FiExternalLink } from "react-icons/fi";
 import { VscExtensions } from "react-icons/vsc";
 import { Heading, Text, TrackedLink } from "tw-components";

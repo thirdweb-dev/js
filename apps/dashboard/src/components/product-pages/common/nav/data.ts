@@ -1,4 +1,4 @@
-import { SectionItemProps, SectionProps } from "./types";
+import type { SectionItemProps, SectionProps } from "./types";
 
 export const PRODUCT_SECTIONS: SectionProps[] = [
   {
@@ -106,9 +106,10 @@ export const PRODUCTS: SectionItemProps[] = [
     section: "contracts",
   },
   {
-    name: "Connect UI",
-    label: "connect",
-    description: "Fully customizable Connect Wallet component",
+    name: "Sign in",
+    label: "sign-in",
+    description:
+      "Flexible user sign-up flow with wallet and social sign-in methods",
     link: "/connect",
     dashboardLink: "/dashboard/connect/playground",
     icon: require("../../../../../public/assets/product-icons/wallet-sdk.png"),
@@ -132,6 +133,17 @@ export const PRODUCTS: SectionItemProps[] = [
     link: "/embedded-wallets",
     dashboardLink: "/dashboard/connect/in-app-wallets",
     icon: require("../../../../../public/assets/product-icons/embedded-wallet.png"),
+    section: "connect",
+    inLandingPage: true,
+  },
+  {
+    name: "Pay",
+    label: "pay",
+    description:
+      "Easily integrate fiat onramps and cross-chain crypto purchases",
+    link: "/pay",
+    dashboardLink: "/dashboard/connect/pay",
+    icon: require("../../../../../public/assets/product-icons/pay.svg"),
     section: "connect",
     inLandingPage: true,
   },
@@ -341,6 +353,38 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     description: "Tools to create, build, and deploy web3 applications",
     link: "https://portal.thirdweb.com/cli",
     icon: require("../../../../../public/assets/product-icons/cli.svg"),
+    section: "tools",
+  },
+  {
+    name: "Wei Converter",
+    label: "wei-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/wei-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
+    name: "Hex Converter",
+    label: "hex-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/hex-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
+    name: "Unix Time Converter",
+    label: "unixtime-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/unixtime-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
+    name: "Keccak-256 Converter",
+    label: "keccak256-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/keccak256-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
     section: "tools",
   },
 ];

@@ -1,5 +1,5 @@
 import { Center, Divider, Flex } from "@chakra-ui/react";
-import { SetStateAction } from "react";
+import type { SetStateAction } from "react";
 import { Button } from "tw-components";
 
 interface ShowMoreButtonProps {

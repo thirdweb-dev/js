@@ -1,5 +1,5 @@
 import { useContract, useContractEvents } from "@thirdweb-dev/react";
-import { ContractEvent } from "@thirdweb-dev/sdk";
+import type { ContractEvent } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
 
 interface InternalTransaction {
@@ -29,6 +29,7 @@ export function useActivity(contractAddress?: string, autoUpdate?: boolean) {
         if (acc[curr.transaction.transactionHash]) {
           acc[curr.transaction.transactionHash].events.push(curr);
           acc[curr.transaction.transactionHash].events.sort(
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             (a: any, b: any) => b.transaction.logIndex - a.transaction.logIndex,
           );
           if (

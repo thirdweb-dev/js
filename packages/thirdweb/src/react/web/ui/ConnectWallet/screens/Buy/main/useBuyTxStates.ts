@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { toEther } from "../../../../../../../utils/units.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import { getTotalTxCostForBuy } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
@@ -8,15 +7,12 @@ import type { BuyForTx } from "./types.js";
 
 export function useBuyTxStates(options: {
   setTokenAmount: (value: string) => void;
-  buyForTx?: BuyForTx;
+  buyForTx: BuyForTx | null;
   hasEditedAmount: boolean;
-  isMainScreen: boolean;
-  account?: Account;
+  account: Account | null;
 }) {
-  const { buyForTx, hasEditedAmount, isMainScreen, setTokenAmount, account } =
-    options;
-  const shouldRefreshTokenAmount = !hasEditedAmount && isMainScreen;
-  const stopUpdatingAll = !isMainScreen;
+  const { buyForTx, hasEditedAmount, setTokenAmount, account } = options;
+  const shouldRefreshTokenAmount = !hasEditedAmount;
 
   const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
     buyForTx?.cost,
@@ -26,11 +22,16 @@ export function useBuyTxStates(options: {
   // also update the token amount if allowed
   // ( Can't use useQuery because tx can't be added to queryKey )
   useEffect(() => {
-    if (!buyForTx || stopUpdatingAll) {
+    if (!buyForTx) {
       return;
     }
 
     let mounted = true;
+
+    if (buyForTx.tx.erc20Value) {
+      // if erc20 value is set, we don't need to poll
+      return;
+    }
 
     async function pollTxCost() {
       if (!buyForTx || !mounted) {
@@ -51,13 +52,10 @@ export function useBuyTxStates(options: {
 
         if (shouldRefreshTokenAmount) {
           if (totalCost > buyForTx.balance) {
-            const _tokenAmount = String(
-              formatNumber(Number(toEther(totalCost - buyForTx.balance)), 4),
-            );
-            setTokenAmount(_tokenAmount);
+            setTokenAmount(toEther(totalCost - buyForTx.balance));
           }
         }
-      } catch {
+      } catch (error) {
         // no op
       }
 
@@ -70,13 +68,7 @@ export function useBuyTxStates(options: {
     return () => {
       mounted = false;
     };
-  }, [
-    buyForTx,
-    shouldRefreshTokenAmount,
-    setTokenAmount,
-    stopUpdatingAll,
-    account,
-  ]);
+  }, [buyForTx, shouldRefreshTokenAmount, setTokenAmount, account]);
 
   return {
     amountNeeded,

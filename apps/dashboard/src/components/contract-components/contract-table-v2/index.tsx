@@ -1,4 +1,3 @@
-import { PublishedContractDetails } from "../hooks";
 import {
   Flex,
   Icon,
@@ -13,17 +12,17 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import { ContractType } from "@thirdweb-dev/sdk";
+import type { ContractType } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { replaceDeployerAddress } from "components/explore/publisher";
-import { BuiltinContractDetails } from "constants/mappings";
+import type { BuiltinContractDetails } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { FiArrowRight } from "react-icons/fi";
-import { Column, Row, useTable } from "react-table";
+import { type Column, type Row, useTable } from "react-table";
 import {
   Card,
   Heading,
@@ -32,7 +31,8 @@ import {
   TrackedIconButton,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import type { PublishedContractDetails } from "../hooks";
 
 interface PublishedContractTableProps {
   contractDetails: ContractDataInput[];
@@ -71,6 +71,7 @@ export const PublishedContractTable: ComponentWithChildren<
       {
         Header: "Logo",
         accessor: (row) => row.logo,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) =>
           cell.value ? (
             typeof cell.value === "string" ? (
@@ -83,6 +84,7 @@ export const PublishedContractTable: ComponentWithChildren<
       {
         Header: "Name",
         accessor: (row) => row.name,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => (
           <Heading size="label.md" whiteSpace="nowrap">
             {cell.value}
@@ -92,6 +94,7 @@ export const PublishedContractTable: ComponentWithChildren<
       {
         Header: "Description",
         accessor: (row) => row.description,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => (
           <Text noOfLines={2} size="body.md">
             {cell.value}
@@ -101,16 +104,19 @@ export const PublishedContractTable: ComponentWithChildren<
       {
         Header: "Version",
         accessor: (row) => row.version,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => <Text>{cell.value}</Text>,
       },
       {
         Header: "Published By",
         accessor: (row) => row.publisher,
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => <AddressCopyButton address={cell.value} />,
       },
       {
         id: "audit-badge",
         accessor: (row) => ({ audit: row.audit }),
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => (
           <Flex align="center" as="span" gap="2">
             {cell.value.audit ? (
@@ -158,8 +164,7 @@ export const PublishedContractTable: ComponentWithChildren<
       (col) => !hidePublisher || col.Header !== "Published By",
     );
     // this is to avoid re-rendering of the table when the contractIds array changes (it will always be a string array, so we can just join it and compare the string output)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows.map((row) => row.name).join(), hidePublisher]);
+  }, [trackEvent, hidePublisher]);
 
   const tableInstance = useTable({
     columns: tableColumns,
@@ -179,11 +184,13 @@ export const PublishedContractTable: ComponentWithChildren<
       <Table {...tableInstance.getTableProps()}>
         <Thead>
           {tableInstance.headerGroups.map((headerGroup, headerGroupIndex) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
               {headerGroup.headers.map((column, columnIndex) => (
                 <Th
                   {...column.getHeaderProps()}
                   border="none"
+                  // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                   key={columnIndex}
                 >
                   <Text as="label" size="label.sm" color="faded">

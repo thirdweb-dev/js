@@ -1,6 +1,3 @@
-import { CancelDirectListing } from "../direct-listings/components/cancel";
-import { CancelEnglishAuction } from "../english-auctions/components/cancel";
-import { LISTING_STATUS } from "./types";
 import {
   Flex,
   GridItem,
@@ -12,14 +9,20 @@ import {
   Tabs,
   usePrevious,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
+import type {
+  DirectListing,
+  EnglishAuction,
+} from "thirdweb/extensions/marketplace";
+import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { EnglishAuction, DirectListing } from "thirdweb/extensions/marketplace";
+import { CancelDirectListing } from "../direct-listings/components/cancel";
+import { CancelEnglishAuction } from "../english-auctions/components/cancel";
+import { LISTING_STATUS } from "./types";
 
 interface NFTDrawerProps {
   contract: MarketplaceV3;
@@ -36,7 +39,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
   data,
   type,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const prevData = usePrevious(data);
 
   const renderData = data || prevData;
@@ -109,7 +112,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             </Card>
             {data?.asset.metadata.properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
-                <Heading size="label.md">Properties</Heading>
+                <Heading size="label.md">Attributes</Heading>
                 <CodeBlock
                   code={
                     JSON.stringify(data.asset.metadata.properties, null, 2) ||
@@ -168,7 +171,6 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
           <NFTMediaWithEmptyState
-            // @ts-expect-error types are not up to date
             metadata={renderData.asset.metadata}
             requireInteraction
             width="150px"

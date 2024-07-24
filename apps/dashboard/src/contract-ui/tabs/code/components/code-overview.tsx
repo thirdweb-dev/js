@@ -16,7 +16,6 @@ import {
   Tabs,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import type { Abi, AbiEvent, AbiFunction } from "@thirdweb-dev/sdk";
 import { formatAbiItem } from "abitype";
 import {
@@ -25,10 +24,11 @@ import {
   useContractFunctions,
 } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
-import { CodeEnvironment } from "components/contract-tabs/code/types";
+import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useMemo, useState } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface CodeOverviewProps {
@@ -268,7 +268,7 @@ import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
 export default function App() {
 return (
     <ThirdwebProvider>
-      <ConnectWallet 
+      <ConnectButton 
         client={client}
         accountAbstraction={{
           chain: defineChain({{chainId}}),
@@ -434,6 +434,7 @@ interface SnippetOptions {
 }
 
 export function formatSnippet(
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   snippet: Record<CodeEnvironment, any>,
   {
     contractAddress,
@@ -451,6 +452,7 @@ export function formatSnippet(
     ? formatAbiItem({
         ...fn,
         type: "stateMutability" in fn ? "function" : "event",
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
       } as any)
     : "";
 
@@ -508,7 +510,7 @@ export function formatSnippet(
       ?.replace(/{{function}}/gm, formattedAbi || "")
       ?.replace(/{{chainId}}/gm, chainId?.toString() || "1");
 
-    if (args && args?.some((arg) => arg)) {
+    if (args?.some((arg) => arg)) {
       code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
     } else {
       code[env] = code[env]?.replace(/{{args}}/gm, "");
@@ -535,7 +537,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const [tab, setTab] = useState("write");
 
   const enabledExtensions = useContractEnabledExtensions(abi);
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const isAccountFactory = enabledExtensions.some(
@@ -629,7 +631,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   setEnvironment={setEnvironment}
                   snippet={formatSnippet(
                     (WALLETS_SNIPPETS.find((w) => w.id === "smart-wallet")
-                      ?.supportedLanguages || {}) as any,
+                      ?.supportedLanguages || {}) as Record<
+                      CodeEnvironment,
+                      string
+                    >,
                     {
                       contractAddress,
                       address,
@@ -648,7 +653,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
               {isAccountFactory
                 ? "Direct contract interaction (advanced)"
                 : chainInfo
-                  ? `Getting Started with ${chainInfo.name}`
+                  ? "Interact with this contract from your app"
                   : "Getting Started"}
             </Heading>
           </Flex>
@@ -698,6 +703,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             <CodeSegment
               environment={environment}
               setEnvironment={setEnvironment}
+              // biome-ignore lint/suspicious/noExplicitAny: FIXME
               snippet={formatSnippet(COMMANDS.setup as any, {
                 contractAddress,
 
@@ -886,6 +892,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                   environment={environment}
                   setEnvironment={setEnvironment}
                   snippet={formatSnippet(
+                    // biome-ignore lint/suspicious/noExplicitAny: FIXME
                     COMMANDS[tab as keyof typeof COMMANDS] as any,
                     {
                       contractAddress,

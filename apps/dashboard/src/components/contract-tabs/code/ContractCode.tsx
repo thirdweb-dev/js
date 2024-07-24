@@ -1,20 +1,21 @@
+import { usePascalCaseContractName } from "@3rdweb-sdk/react";
+import { Flex, Spinner, Stack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { useContract } from "@thirdweb-dev/react";
+import type { Abi } from "@thirdweb-dev/sdk";
+import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
+import { useCallback, useMemo, useState } from "react";
+import { IoDocumentOutline } from "react-icons/io5";
+import { ZERO_ADDRESS } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
+import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
 import { CodeSegment } from "./CodeSegment";
-import {
+import type {
   CodeEnvironment,
   CodeSnippet,
   SnippetApiResponse,
   SnippetSchema,
 } from "./types";
-import { usePascalCaseContractName } from "@3rdweb-sdk/react";
-import { Flex, Spinner, Stack } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { useAddress, useContract } from "@thirdweb-dev/react";
-import type { Abi } from "@thirdweb-dev/sdk";
-import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
-import { constants } from "ethers";
-import { useCallback, useMemo, useState } from "react";
-import { IoDocumentOutline } from "react-icons/io5";
-import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
 
 function replaceVariablesInCodeSnippet(
   snippet: CodeSnippet,
@@ -53,13 +54,13 @@ const INSTALL_COMMANDS = {
   react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
   "react-native":
     "npm install 'ethers@5' node-libs-browser react-native-crypto react-native-randombytes react-native-get-random-values react-native-svg react-native-mmkv@2.5.1 @react-native-async-storage/async-storage @thirdweb-dev/react-native @thirdweb-dev/react-native-compat",
-  unity: ``,
+  unity: "",
 };
 
 const CREATE_APP_COMMAND = "npx thirdweb create app";
 
 export const ContractCode: React.FC<ContractCodeProps> = ({
-  contractAddress = constants.AddressZero,
+  contractAddress = ZERO_ADDRESS,
   contractType,
 }) => {
   const { data, isLoading } = useContractCodeSnippetQuery();
@@ -73,14 +74,14 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
     return getContractSnippets(data, contractName);
   }, [data, contractName]);
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
 
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<CodeEnvironment, string>>) =>
       replaceVariablesInCodeSnippet(snip, contractAddress, address, chainName),
-    [address, contractAddress, chainName],
+    [address, contractAddress],
   );
 
   const { contract } = useContract(contractAddress);
@@ -194,7 +195,7 @@ function getContractSnippets(
 function useContractCodeSnippetQuery() {
   return useQuery(["code-snippet"], async () => {
     const res = await fetch(
-      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json`,
+      "https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json",
     );
     return (await res.json()) as SnippetApiResponse;
   });

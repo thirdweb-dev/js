@@ -1,15 +1,15 @@
-import { useSupportedChains } from "@thirdweb-dev/react";
-import { Polygon } from "@thirdweb-dev/chains";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { Flex, Spinner } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import { useSupportedChains } from "@thirdweb-dev/react";
+import type { BasicContract } from "contract-ui/types/types";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
-import invariant from "tiny-invariant";
-import { useQuery } from "@tanstack/react-query";
-import { Flex, Spinner } from "@chakra-ui/react";
-import { Heading, TrackedLinkButton, Text } from "tw-components";
 import { FiPlus } from "react-icons/fi";
+import { polygon } from "thirdweb/chains";
+import invariant from "tiny-invariant";
+import { Heading, Text, TrackedLinkButton } from "tw-components";
 import { FactoryContracts } from "./factory-contracts";
-import { BasicContract } from "contract-ui/types/types";
 
 const useFactories = () => {
   const { user, isLoggedIn } = useLoggedInUser();
@@ -24,8 +24,8 @@ const useFactories = () => {
     async () => {
       invariant(user?.address, "user should be logged in");
       const polygonSDK = getThirdwebSDK(
-        Polygon.chainId,
-        getDashboardChainRpc(Polygon),
+        polygon.id,
+        getDashboardChainRpc(polygon.id),
       );
       const contractList = await polygonSDK.getMultichainContractList(
         user.address,

@@ -17,18 +17,18 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import {
-  ColumnDef,
-  PaginationState,
-  TableOptions,
+  type ColumnDef,
+  type PaginationState,
+  type TableOptions,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import pluralize from "pluralize";
-import { SetStateAction, useMemo, useState } from "react";
+import { type SetStateAction, useMemo, useState } from "react";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
-import { IconType } from "react-icons/lib";
+import type { IconType } from "react-icons/lib";
 import { Button, MenuItem, TableContainer, Text } from "tw-components";
 
 type CtaMenuItem<TRowData> = {
@@ -39,6 +39,7 @@ type CtaMenuItem<TRowData> = {
 };
 
 type TWTableProps<TRowData> = {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   columns: ColumnDef<TRowData, any>[];
   data: TRowData[];
   isLoading: boolean;
@@ -57,7 +58,7 @@ type TWTableProps<TRowData> = {
 
 export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   const [showMoreLimit, setShowMoreLimit] = useState(
-    tableProps.showMore?.pageSize || Infinity,
+    tableProps.showMore?.pageSize || Number.POSITIVE_INFINITY,
   );
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -66,7 +67,10 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
 
   const slicedData = useMemo(() => {
     if (tableProps.showMore) {
-      return tableProps.data.slice(0, showMoreLimit || Infinity);
+      return tableProps.data.slice(
+        0,
+        showMoreLimit || Number.POSITIVE_INFINITY,
+      );
     }
     if (tableProps.pagination) {
       return tableProps.data.slice(

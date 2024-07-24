@@ -1,5 +1,5 @@
-import { TabList, Tabs, Tab, TabPanels, TabPanel } from "@chakra-ui/react";
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import { AccountFactories } from "./AccountFactories";
 import { SponsorshipPolicies } from "./SponsorshipPolicies";
 

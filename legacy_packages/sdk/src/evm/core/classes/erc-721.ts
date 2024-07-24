@@ -89,14 +89,13 @@ import { Transaction } from "./transactions";
  * @public
  */
 export class Erc721<
-    T extends
-      | Multiwrap
-      | SignatureDrop
-      | DropERC721
-      | TokenERC721
-      | BaseERC721 = BaseERC721,
-  >
-  implements UpdateableNetwork, DetectableFeature
+  T extends
+    | Multiwrap
+    | SignatureDrop
+    | DropERC721
+    | TokenERC721
+    | BaseERC721 = BaseERC721,
+> implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
   private query: Erc721Supply | undefined;

@@ -1,22 +1,21 @@
-import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  useAddress,
   usePrimarySaleRecipient,
   useUpdatePrimarySaleRecipient,
 } from "@thirdweb-dev/react";
 import {
   CommonPrimarySaleSchema,
-  ValidContractInstance,
+  type ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
   FormErrorMessage,
@@ -24,7 +23,8 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { z } from "zod";
+import type { z } from "zod";
+import { SettingDetectedState } from "./detected-state";
 
 export const SettingsPrimarySale = <
   TContract extends ValidContractInstance | undefined,
@@ -35,7 +35,7 @@ export const SettingsPrimarySale = <
   contract: TContract;
   detectedState: ExtensionDetectedState;
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const query = usePrimarySaleRecipient(contract);
   const mutation = useUpdatePrimarySaleRecipient(contract);

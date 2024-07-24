@@ -1,11 +1,11 @@
-import { Text } from "./text";
 import {
   Badge as ChakraBadge,
+  type BadgeProps as ChakraBadgeProps,
   LightMode,
   forwardRef,
-  type BadgeProps as ChakraBadgeProps,
 } from "@chakra-ui/react";
 import type { TextSizes } from "theme/typography";
+import { Text } from "./text";
 
 export interface BadgeProps extends ChakraBadgeProps {
   size?: TextSizes;

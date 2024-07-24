@@ -1,11 +1,11 @@
 import {
-  Bytes,
+  type Bytes,
   Signer,
-  TypedDataDomain,
-  TypedDataField,
-  providers,
+  type TypedDataDomain,
+  type TypedDataField,
+  type providers,
 } from "ethers";
-import { Deferrable, defineReadOnly } from "ethers/lib/utils";
+import { type Deferrable, defineReadOnly } from "ethers/lib/utils";
 import type { ClientIdWithQuerierType } from "../../interfaces/embedded-wallets/embedded-wallets";
 import type {
   GetAddressReturnType,
@@ -14,9 +14,9 @@ import type {
   SignedTypedDataReturnType,
 } from "../../interfaces/embedded-wallets/signer";
 
-import Provider from "ethereum-provider";
-import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 import { getDefaultGasOverrides } from "@thirdweb-dev/sdk";
+import type Provider from "ethereum-provider";
+import type { EmbeddedWalletIframeCommunicator } from "../../utils/iFrameCommunication/EmbeddedWalletIframeCommunicator";
 
 export type SignerProcedureTypes = {
   getAddress: void;
@@ -105,7 +105,15 @@ export class EthersSigner extends Signer {
     if (!this.provider) {
       throw new Error("Provider not found");
     }
-    const gas = await getDefaultGasOverrides(this.provider);
+    let gas = {};
+    // only set overrides if we don't have values already
+    if (
+      !transaction.gasLimit &&
+      !(transaction.maxFeePerGas && transaction.maxPriorityFeePerGas)
+    ) {
+      gas = await getDefaultGasOverrides(this.provider);
+    }
+
     const txWithGas = {
       ...gas,
       ...transaction,

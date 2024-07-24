@@ -18,11 +18,15 @@ export type ClaimToParams = {
  * @example
  * ```ts
  * import { claimTo } from "thirdweb/extensions/erc721";
- * const tx = await claimTo({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = claimTo({
  *   contract,
  *   to: "0x...",
  *   quantity: 1n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  * @throws If no claim condition is set
  * @returns A promise that resolves with the submitted transaction hash.

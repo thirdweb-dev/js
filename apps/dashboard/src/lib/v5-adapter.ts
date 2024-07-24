@@ -1,9 +1,13 @@
 import { defineChain } from "thirdweb";
-import { useSupportedChainsRecord } from "../hooks/chains/configureChains";
-import type { Chain } from "@thirdweb-dev/chains";
+import type { ChainMetadata } from "thirdweb/chains";
+import { useActiveWalletChain } from "thirdweb/react";
 import { PROD_OR_DEV_URL } from "../constants/rpc";
+import { useSupportedChainsRecord } from "../hooks/chains/configureChains";
 
-export function defineDashboardChain(chainId: number, dashboardChain?: Chain) {
+export function defineDashboardChain(
+  chainId: number,
+  dashboardChain?: ChainMetadata,
+) {
   return defineChain({
     id: chainId,
     rpc:
@@ -20,4 +24,17 @@ export function useV5DashboardChain(chainId: number) {
     configuedChain = configuredChainsRecord[chainId as number];
   }
   return defineDashboardChain(chainId, configuedChain);
+}
+
+/**
+ * same behavior as v4 `useChain()` but for v5
+ */
+export function useActiveChainAsDashboardChain(): ChainMetadata | undefined {
+  const activeChain = useActiveWalletChain()?.id;
+  const configuredChainsRecord = useSupportedChainsRecord();
+
+  if (activeChain && activeChain in configuredChainsRecord) {
+    return configuredChainsRecord[activeChain as number];
+  }
+  return undefined;
 }

@@ -1,3 +1,22 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
+import {
+  type Abi,
+  CONTRACT_ADDRESSES,
+  ExtraPublishMetadataSchemaInput,
+  detectFeatures,
+  isExtensionEnabled,
+} from "@thirdweb-dev/sdk";
+import { defaultChains } from "constants/chains";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useRouter } from "next/router";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { IoChevronBack } from "react-icons/io5";
+import { useActiveAccount } from "thirdweb/react";
+import { Button, Text } from "tw-components";
+import { z } from "zod";
 import {
   useConstructorParamsFromABI,
   useContractFullPublishMetadata,
@@ -7,30 +26,11 @@ import {
   useFunctionParamsFromABI,
   usePublishMutation,
 } from "../hooks";
-import { ContractId } from "../types";
+import type { ContractId } from "../types";
 import { ContractParamsFieldset } from "./contract-params-fieldset";
 import { FactoryFieldset } from "./factory-fieldset";
 import { LandingFieldset } from "./landing-fieldset";
 import { NetworksFieldset } from "./networks-fieldset";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
-import { defaultChains } from "@thirdweb-dev/chains";
-import { useAddress } from "@thirdweb-dev/react";
-import {
-  Abi,
-  CONTRACT_ADDRESSES,
-  ExtraPublishMetadataSchemaInput,
-  detectFeatures,
-  isExtensionEnabled,
-} from "@thirdweb-dev/sdk";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useRouter } from "next/router";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { IoChevronBack } from "react-icons/io5";
-import { Button, Text } from "tw-components";
-import { z } from "zod";
 
 const ExtraPublishMetadataSchema = ExtraPublishMetadataSchemaInput.extend({
   customFactoryAddresses: z.array(
@@ -49,9 +49,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   contractId,
 }) => {
   const [customFactoryAbi, setCustomFactoryAbi] = useState<Abi>([]);
-
-  const configuredChains = defaultChains;
-  const configuredChainsIds = configuredChains.map((c) => c.chainId);
+  const configuredChainsIds = defaultChains.map((c) => c.id);
   const [fieldsetToShow, setFieldsetToShow] = useState<
     "landing" | "factory" | "contractParams" | "networks"
   >("landing");
@@ -62,7 +60,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     "Successfully published contract",
     "Failed to publish contract",
   );
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const publishMutation = usePublishMutation();
 
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
@@ -214,7 +212,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       : publishMetadata.data?.abi,
     form.watch("deployType") === "customFactory"
       ? form.watch(
-          `factoryDeploymentData.customFactoryInput.factoryFunction`,
+          "factoryDeploymentData.customFactoryInput.factoryFunction",
         ) ||
           fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
             ?.factoryFunction ||
@@ -273,7 +271,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       top: 0,
       behavior: "smooth",
     });
-  }, [fieldsetToShow]);
+  }, []);
 
   return (
     <FormProvider {...form}>

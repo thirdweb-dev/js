@@ -1,8 +1,10 @@
 import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
-import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
-import { Polygon } from "@thirdweb-dev/chains";
-import { useAddress } from "@thirdweb-dev/react/evm";
+import {
+  type DehydratedState,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ensQuery,
@@ -22,15 +24,17 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
-import { GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useEffect, useMemo } from "react";
+import { polygon } from "thirdweb/chains";
+import { useActiveAccount } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 type UserPageProps = {
@@ -77,7 +81,7 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
     { onlyMainnet: true },
   );
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const ogImage = useMemo(() => {
     if (!publisherProfile.data || !publishedContracts.data) {
@@ -219,11 +223,15 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   const queryClient = new QueryClient();
 
   const polygonSdk = getThirdwebSDK(
-    Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    polygon.id,
+    getDashboardChainRpc(polygon.id),
   );
 
-  const profileAddress = getSingleQueryValue(ctx.params, "profileAddress");
+  const profileAddress = getSingleQueryValue(
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    ctx.params as any,
+    "profileAddress",
+  );
 
   if (!profileAddress) {
     return {
@@ -239,7 +247,8 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     ? getAddress(lowercaseAddress)
     : lowercaseAddress;
 
-  let address: string | null, ensName: string | null;
+  let address: string | null;
+  let ensName: string | null;
   try {
     const info = await queryClient.fetchQuery(ensQuery(checksummedAddress));
     address = info.address;

@@ -2,7 +2,7 @@ import { contractType, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
-import { EnhancedRoute } from "contract-ui/types/types";
+import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
 
 const LazyContractExplorerPage = dynamic(() =>
@@ -18,11 +18,6 @@ const LazyContractEventsPage = dynamic(() =>
 const LazyContractAnalyticsPage = dynamic(() =>
   import("../tabs/analytics/page").then(
     ({ ContractAnalyticsPage }) => ContractAnalyticsPage,
-  ),
-);
-const LazyContractPaymentsPage = dynamic(() =>
-  import("../tabs/payments/page").then(
-    ({ ContractPaymentsPage }) => ContractPaymentsPage,
   ),
 );
 const LazyContractNFTPage = dynamic(() =>
@@ -167,13 +162,6 @@ export function useContractRouteConfig(
       component: LazyContractAnalyticsPage,
       isDefault: true,
       isBeta: true,
-    },
-    {
-      title: "Payments",
-      path: "payments",
-      component: LazyContractPaymentsPage,
-      isDefault: true,
-      isDeprecated: true,
     },
     {
       title: "NFTs",

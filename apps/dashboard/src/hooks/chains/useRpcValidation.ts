@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchChain } from "utils/fetchChain";
-import { ZodError, z } from "zod";
+import { type ZodError, z } from "zod";
 
 const rpcUrlSchema = z.string().url();
 
@@ -47,7 +47,7 @@ export function useRpcValidation(rpcUrl: string) {
       }
 
       try {
-        const rpcChainId = parseInt(json.result, 16);
+        const rpcChainId = Number.parseInt(json.result, 16);
         const r = await fetchChain(rpcChainId);
         if (!r) {
           setExistingChain(null);

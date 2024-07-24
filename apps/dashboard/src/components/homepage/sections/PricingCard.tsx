@@ -1,17 +1,17 @@
-import { Box, CardProps, Center, Flex } from "@chakra-ui/react";
+import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { Box, type CardProps, Center, Flex } from "@chakra-ui/react";
 import {
-  TrackedLinkButton,
-  Heading,
-  Card,
-  Text,
-  TrackedLinkButtonProps,
   Badge,
+  Card,
+  Heading,
+  Text,
+  TrackedLinkButton,
+  type TrackedLinkButtonProps,
 } from "tw-components";
 import { PLANS } from "utils/pricing";
-import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { remainingDays } from "../../../utils/date-utils";
 import { FeatureItem } from "./FeatureItem";
 import { UpgradeModal } from "./UpgradeModal";
-import { remainingDays } from "../../../utils/date-utils";
 
 interface PricingCardProps {
   name: AccountPlan;
@@ -130,7 +130,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         )}
 
         {plan.features.map((f) => (
-          <FeatureItem key={f} text={f} />
+          <FeatureItem key={Array.isArray(f) ? f[0] : f} text={f} />
         ))}
       </Flex>
       {name === AccountPlan.Growth && onDashboard ? (

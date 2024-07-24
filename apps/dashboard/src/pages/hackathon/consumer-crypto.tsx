@@ -246,7 +246,9 @@ const Hackathon = () => {
                 top="55%"
                 left="50%"
                 transform="translate(-50%, -50%)"
-                backgroundImage={`radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)`}
+                backgroundImage={
+                  "radial-gradient(ellipse at center, hsl(300deg 90% 50% / 15%), transparent 60%)"
+                }
               />
               <Heading size="title.2xl" textStyle="center">
                 Judging Criteria

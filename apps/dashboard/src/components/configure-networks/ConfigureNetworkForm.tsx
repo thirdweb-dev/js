@@ -1,9 +1,3 @@
-import { ChainIdInput } from "./Form/ChainIdInput";
-import { ConfirmationPopover } from "./Form/ConfirmationPopover";
-import { IconUpload } from "./Form/IconUpload";
-import { NetworkIDInput } from "./Form/NetworkIdInput";
-import { RpcInput } from "./Form/RpcInput";
-import { TooltipBox } from "./Form/TooltipBox";
 import {
   Alert,
   AlertIcon,
@@ -16,13 +10,19 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { StoredChain } from "contexts/configured-chains";
+import type { StoredChain } from "contexts/configured-chains";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
 import { useRemoveChainModification } from "hooks/chains/useModifyChain";
 import { getDashboardChainRpc } from "lib/rpc";
 import { useForm } from "react-hook-form";
 import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
+import { ChainIdInput } from "./Form/ChainIdInput";
+import { ConfirmationPopover } from "./Form/ConfirmationPopover";
+import { IconUpload } from "./Form/IconUpload";
+import { NetworkIDInput } from "./Form/NetworkIdInput";
+import { RpcInput } from "./Form/RpcInput";
+import { TooltipBox } from "./Form/TooltipBox";
 
 export type NetworkConfigFormData = {
   name: string;
@@ -66,7 +66,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       name: editingChain?.name || "",
       rpcUrl:
         editingChain && editingChain?.status !== "deprecated"
-          ? getDashboardChainRpc(editingChain)
+          ? getDashboardChainRpc(editingChain.chainId)
           : "" || "",
       chainId: editingChain?.chainId
         ? `${editingChain?.chainId}`
@@ -127,7 +127,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         ...editingChain,
         name: data.name,
         rpc: [data.rpcUrl],
-        chainId: parseInt(data.chainId),
+        chainId: Number.parseInt(data.chainId),
         nativeCurrency: {
           ...editingChain.nativeCurrency,
           symbol: data.currencySymbol,
@@ -151,7 +151,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       configuredNetwork = {
         name: data.name,
         rpc: [data.rpcUrl],
-        chainId: parseInt(data.chainId),
+        chainId: Number.parseInt(data.chainId),
         nativeCurrency: {
           symbol: data.currencySymbol,
           name: data.currencySymbol,

@@ -1,5 +1,5 @@
 import {
-  CreateBackendWalletInput,
+  type CreateBackendWalletInput,
   useEngineCreateBackendWallet,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";

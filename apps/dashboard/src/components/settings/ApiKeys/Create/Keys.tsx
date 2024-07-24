@@ -1,8 +1,8 @@
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { DetailsRow } from "../DetailsRow";
-import { Flex, Spinner, Divider } from "@chakra-ui/react";
-import { Text, CodeBlock } from "tw-components";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { Divider, Flex, Spinner } from "@chakra-ui/react";
+import { CodeBlock, Text } from "tw-components";
 import { FieldAlert } from "../Alerts";
+import { DetailsRow } from "../DetailsRow";
 
 interface CreateKeysProps {
   isLoading: boolean;

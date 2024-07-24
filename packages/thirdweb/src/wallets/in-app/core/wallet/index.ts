@@ -2,7 +2,7 @@ import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
-import type { WalletId } from "../../../wallet-types.js";
+import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
 import type {
   CreateWalletArgs,
   WalletAutoConnectionOption,
@@ -27,14 +27,22 @@ export function isInAppWallet(
  * @internal
  */
 export async function connectInAppWallet(
-  options: WalletConnectionOption<"inApp">,
-  createOptions: CreateWalletArgs<"inApp">[1],
+  options:
+    | WalletConnectionOption<"inApp">
+    | WalletConnectionOption<EcosystemWalletId>,
+  createOptions:
+    | CreateWalletArgs<"inApp">[1]
+    | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
   const authResult = await connector.authenticate(options);
   const authAccount = authResult.user.account;
 
-  if (createOptions?.smartAccount) {
+  if (
+    createOptions &&
+    "smartAccount" in createOptions &&
+    createOptions?.smartAccount
+  ) {
     return convertToSmartAccount({
       client: options.client,
       authAccount,
@@ -43,28 +51,33 @@ export async function connectInAppWallet(
     });
   }
 
-  return [
-    authAccount,
-    options.chain || createOptions?.smartAccount?.chain || ethereum,
-  ] as const;
+  return [authAccount, options.chain || ethereum] as const;
 }
 
 /**
  * @internal
  */
 export async function autoConnectInAppWallet(
-  options: WalletAutoConnectionOption<"inApp">,
-  createOptions: CreateWalletArgs<"inApp">[1],
+  options:
+    | WalletAutoConnectionOption<"inApp">
+    | WalletAutoConnectionOption<EcosystemWalletId>,
+  createOptions:
+    | CreateWalletArgs<"inApp">[1]
+    | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
   const user = await getAuthenticatedUser(connector);
   if (!user) {
-    throw new Error("not authenticated");
+    throw new Error("Failed to authenticate user.");
   }
 
   const authAccount = user.account;
 
-  if (createOptions?.smartAccount) {
+  if (
+    createOptions &&
+    "smartAccount" in createOptions &&
+    createOptions?.smartAccount
+  ) {
     return convertToSmartAccount({
       client: options.client,
       authAccount,
@@ -73,10 +86,7 @@ export async function autoConnectInAppWallet(
     });
   }
 
-  return [
-    authAccount,
-    options.chain || createOptions?.smartAccount?.chain || ethereum,
-  ] as const;
+  return [authAccount, options.chain || ethereum] as const;
 }
 
 async function convertToSmartAccount(options: {

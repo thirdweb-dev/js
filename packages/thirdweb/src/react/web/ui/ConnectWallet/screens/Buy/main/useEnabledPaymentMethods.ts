@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import type { PayUIOptions } from "../../../ConnectButtonProps.js";
+import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { type ERC20OrNativeToken, isNativeToken } from "../../nativeToken.js";
 import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
 
@@ -14,17 +13,8 @@ export function useEnabledPaymentMethods(options: {
   supportedDestinations: SupportedChainAndTokens;
   toChain: Chain;
   toToken: ERC20OrNativeToken;
-  method: "crypto" | "creditCard";
-  setMethod: (method: "crypto" | "creditCard") => void;
 }) {
-  const {
-    payOptions,
-    supportedDestinations,
-    toChain,
-    toToken,
-    method,
-    setMethod,
-  } = options;
+  const { payOptions, supportedDestinations, toChain, toToken } = options;
 
   function getEnabledPayMethodsForSelectedToken(): {
     fiat: boolean;
@@ -64,26 +54,11 @@ export function useEnabledPaymentMethods(options: {
   const buyWithFiatEnabled = payOptions.buyWithFiat !== false && fiat;
   const buyWithCryptoEnabled = payOptions.buyWithCrypto !== false && swap;
 
-  useEffect(() => {
-    // both payment methods are disabled - do nothing
-    if (!buyWithFiatEnabled && !buyWithCryptoEnabled) {
-      return;
-    }
-
-    // if credit card tab is enabled but should be disabled, switch to crypto
-    if (method === "creditCard" && !buyWithFiatEnabled) {
-      setMethod("crypto");
-    }
-
-    // if crypto tab is enabled but should be disabled, switch to credit card
-    if (method === "crypto" && !buyWithCryptoEnabled) {
-      setMethod("creditCard");
-    }
-  }, [buyWithFiatEnabled, buyWithCryptoEnabled, method, setMethod]);
-
   const showPaymentSelection = buyWithFiatEnabled && buyWithCryptoEnabled;
 
   return {
+    buyWithFiatEnabled,
+    buyWithCryptoEnabled,
     showPaymentSelection,
   };
 }

@@ -8,7 +8,6 @@ import switchAccountHandler from "./routes/switch-account";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthContext,
-  ThirdwebAuthRoute,
 } from "./types";
 import { NextRequest } from "next/server";
 import {
@@ -16,6 +15,7 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next/types";
+import { ThirdwebAuthRoute } from "../common/types";
 
 export * from "./types";
 

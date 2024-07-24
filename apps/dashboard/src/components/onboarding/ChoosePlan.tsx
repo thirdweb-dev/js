@@ -1,8 +1,8 @@
+import { AccountPlan, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { SimpleGrid } from "@chakra-ui/react";
-import { OnboardingTitle } from "./Title";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useTrack } from "hooks/analytics/useTrack";
-import { AccountPlan, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { OnboardingTitle } from "./Title";
 
 interface OnboardingChoosePlanProps {
   onSave: () => void;

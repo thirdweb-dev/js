@@ -1,4 +1,3 @@
-import { ListingDrawer } from "./listing-drawer";
 import {
   ButtonGroup,
   Center,
@@ -36,9 +35,10 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import { Cell, Column, usePagination, useTable } from "react-table";
+import { type Cell, type Column, usePagination, useTable } from "react-table";
 import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { ListingDrawer } from "./listing-drawer";
 
 type ListingMetadata = AuctionListing | DirectListing;
 
@@ -50,6 +50,7 @@ const tableColumns: Column<ListingMetadata>[] = [
   {
     Header: "Media",
     accessor: (row) => row.asset,
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: (cell: any) => <MediaCell cell={cell} />,
   },
   {
@@ -66,6 +67,7 @@ const tableColumns: Column<ListingMetadata>[] = [
   {
     Header: "Price",
     accessor: (row) => row.buyoutCurrencyValuePerToken,
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     Cell: ({ cell }: { cell: Cell<ListingMetadata, any> }) => {
       return (
         <Text size="label.md" whiteSpace="nowrap">
@@ -111,9 +113,8 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
   const renderData = useMemo(() => {
     if (listingsToShow === "all") {
       return getAllQueryResult?.data || prevData;
-    } else {
-      return getActiveQueryResult?.data || prevData;
     }
+    return getActiveQueryResult?.data || prevData;
   }, [getAllQueryResult, getActiveQueryResult, listingsToShow, prevData]);
 
   const {
@@ -147,6 +148,8 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
         1,
       ),
     },
+    // FIXME: re-work tables and pagination with @tanstack/table@latest - which (I believe) does not need this workaround anymore
+    // eslint-disable-next-line react-compiler/react-compiler
     usePagination,
   );
 
@@ -195,11 +198,13 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
         <Table {...getTableProps()}>
           <Thead>
             {headerGroups.map((headerGroup, headerGroupIndex) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
                 {headerGroup.headers.map((column, columnIndex) => (
                   <Th
                     {...column.getHeaderProps()}
                     border="none"
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={columnIndex}
                   >
                     <Text as="label" size="label.sm" color="faded">
@@ -215,12 +220,14 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
             {page.map((row, rowIndex) => {
               prepareRow(row);
               return (
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 <Tr {...row.getRowProps()} key={rowIndex}>
                   {row.cells.map((cell, cellIndex) => {
                     return (
                       <Td
                         {...cell.getCellProps()}
                         borderColor="borderColor"
+                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                         key={cellIndex}
                       >
                         {cell.render("Cell")}
@@ -272,7 +279,7 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
 
           <Select
             onChange={(e) => {
-              setPageSize(parseInt(e.target.value as string, 10));
+              setPageSize(Number.parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
             isDisabled={totalCountQuery.isLoading}

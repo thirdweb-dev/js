@@ -1,23 +1,24 @@
-import { ApiKeyCreateValidationSchema } from "../validations";
 import {
-  FormControl,
-  Input,
   Flex,
-  ListItem,
-  UnorderedList,
-  Textarea,
+  FormControl,
   HStack,
+  Input,
+  ListItem,
+  Textarea,
+  UnorderedList,
 } from "@chakra-ui/react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import {
-  FormLabel,
+  Checkbox,
   FormErrorMessage,
   FormHelperText,
+  FormLabel,
   Text,
-  Checkbox,
 } from "tw-components";
+import type { ApiKeyCreateValidationSchema } from "../validations";
 
 interface CreateGeneralProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<ApiKeyCreateValidationSchema, any>;
 }
 

@@ -8,6 +8,7 @@ export function SmartAccountIcon(props: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
     >
+      <title>Smart Account</title>
       <rect
         x="11.6693"
         y="16.9566"

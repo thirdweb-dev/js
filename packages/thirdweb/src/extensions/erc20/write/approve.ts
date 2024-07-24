@@ -26,11 +26,15 @@ export type ApproveParams = Prettify<
  * @example
  * ```ts
  * import { approve } from "thirdweb/extensions/erc20";
- * const tx = await approve({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = await approve({
  *  contract,
  *  spender: "0x...",
  *  amount: 100,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function approve(options: BaseTransactionOptions<ApproveParams>) {
@@ -51,6 +55,12 @@ export function approve(options: BaseTransactionOptions<ApproveParams>) {
       return {
         spender: options.spender,
         value: amount,
+        overrides: {
+          erc20Value: {
+            amountWei: amount,
+            tokenAddress: options.contract.address,
+          },
+        },
       } as const;
     },
   });

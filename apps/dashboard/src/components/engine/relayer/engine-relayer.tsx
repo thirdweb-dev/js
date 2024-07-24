@@ -1,8 +1,8 @@
 import { useEngineRelayer } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
 import { Heading, Link, Text } from "tw-components";
-import { RelayersTable } from "./relayers-table";
 import { AddRelayerButton } from "./add-relayer-button";
+import { RelayersTable } from "./relayers-table";
 
 interface EngineRelayerProps {
   instanceUrl: string;

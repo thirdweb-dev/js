@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { embeddedWalletsKeys } from "../cache-keys";
 import { THIRDWEB_EWS_API_HOST } from "constants/urls";
+import { embeddedWalletsKeys } from "../cache-keys";
 import { useLoggedInUser } from "./useLoggedInUser";
 
 // FIXME: Make API to return camelCase or transform
@@ -35,9 +35,9 @@ export function useEmbeddedWallets(clientId: string) {
         `${THIRDWEB_EWS_API_HOST}/api/thirdweb/embedded-wallet?clientId=${clientId}&lastAccessedAt=0`,
         {
           method: "GET",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.jwt}`,
           },
         },
       );

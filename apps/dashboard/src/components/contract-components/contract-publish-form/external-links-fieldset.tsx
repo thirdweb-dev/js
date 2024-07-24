@@ -2,7 +2,7 @@ import { Box, Flex, Icon } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { Heading, Text, Button } from "tw-components";
+import { Button, Heading, Text } from "tw-components";
 import { ExternalLinksInput } from "./external-links-input";
 
 export const ExternalLinksFieldset = () => {

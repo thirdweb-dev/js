@@ -1,13 +1,13 @@
+import { Image, Skeleton } from "@chakra-ui/react";
+import { ChakraNextImage, type ChakraNextImageProps } from "components/Image";
+import { replaceIpfsUrl } from "lib/sdk";
+import type { StaticImageData } from "next/image";
+import { useActiveAccount } from "thirdweb/react";
 import {
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
 } from "../hooks";
-import { ContractId } from "../types";
-import { Image, Skeleton } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
-import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
-import { replaceIpfsUrl } from "lib/sdk";
-import { StaticImageData } from "next/image";
+import type { ContractId } from "../types";
 
 interface ContractIdImageProps
   extends Omit<ChakraNextImageProps, "src" | "alt" | "boxSize"> {
@@ -20,7 +20,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   boxSize = 8,
   ...imgProps
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const fullPublishMetadata = useContractPrePublishMetadata(
     contractId,

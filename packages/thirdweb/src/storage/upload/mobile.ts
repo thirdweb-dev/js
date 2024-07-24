@@ -1,6 +1,6 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getThirdwebDomains } from "../../utils/domains.js";
-import { getPlatformHeaders } from "../../utils/fetch.js";
+import { getClientFetch, getPlatformHeaders } from "../../utils/fetch.js";
 import type { UploadMobileOptions } from "../uploadMobile.js";
 import { isFileBufferOrStringEqual } from "./helpers.js";
 import type { UploadFile } from "./types.js";
@@ -9,7 +9,7 @@ const METADATA_NAME = "Storage React Native SDK";
 
 export async function uploadBatchMobile(
   client: ThirdwebClient,
-  data: (UploadFile | Record<string, unknown>)[],
+  data: UploadFile[],
   options?: UploadMobileOptions,
 ): Promise<string[]> {
   if (!data || data.length === 0 || !data[0]) {
@@ -144,14 +144,12 @@ export async function uploadBatchMobile(
   });
 
   try {
-    const res = await fetch(
+    const res = await getClientFetch(client)(
       `https://${getThirdwebDomains().storage}/ipfs/batch-pin-json`,
       {
         method: "POST",
         headers: {
-          ...(client.clientId ? { "x-client-id": client.clientId } : {}),
           "Content-Type": "application/json",
-          ...getPlatformHeaders(),
         },
         body: fetchBody,
       },
@@ -209,11 +207,6 @@ function buildFormData(
       fileName = `${file.name}`;
     }
 
-    // TODO: If we don't want to wrap with directory, adjust the filepath
-    // const filepath = options?.uploadWithoutDirectory
-    //   ? 'files'
-    //   : `files/${fileName}`;
-
     if (fileNameToFileMap.has(fileName)) {
       // if the file in the map is the same as the file we are already looking at then just skip and continue
       if (isFileBufferOrStringEqual(fileNameToFileMap.get(fileName), file)) {
@@ -243,14 +236,12 @@ function buildFormData(
   };
   form.append("pinataMetadata", JSON.stringify(metadata));
 
-  if (options?.uploadWithoutDirectory) {
-    form.append(
-      "pinataOptions",
-      JSON.stringify({
-        wrapWithDirectory: false,
-      }),
-    );
-  }
+  form.append(
+    "pinataOptions",
+    JSON.stringify({
+      wrapWithDirectory: options?.uploadWithoutDirectory !== true,
+    }),
+  );
 
   return {
     form,

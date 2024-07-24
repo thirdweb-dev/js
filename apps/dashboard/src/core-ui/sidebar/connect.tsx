@@ -1,5 +1,5 @@
 import { SidebarNav } from "./nav";
-import { Route } from "./types";
+import type { Route } from "./types";
 
 type ConnectSidebarProps = {
   activePage:
@@ -27,6 +27,11 @@ const links: Route[] = [
     path: "/dashboard/connect/in-app-wallets",
     title: "In-App Wallets",
     name: "embedded-wallets",
+  },
+  {
+    path: "/dashboard/connect/ecosystem",
+    title: "Ecosystem Wallets",
+    name: "ecosystem",
   },
   {
     path: "/dashboard/connect/account-abstraction",

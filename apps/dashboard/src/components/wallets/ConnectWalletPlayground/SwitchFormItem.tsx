@@ -1,4 +1,4 @@
-import { Box, Flex, FormControl, Switch, Spacer } from "@chakra-ui/react";
+import { Box, Flex, FormControl, Spacer, Switch } from "@chakra-ui/react";
 import { FormLabel, Text } from "tw-components";
 
 export const SwitchFormItem: React.FC<{

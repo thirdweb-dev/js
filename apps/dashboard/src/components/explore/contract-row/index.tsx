@@ -1,8 +1,8 @@
-import { ContractCard } from "../contract-card";
 import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
-import { ExploreCategory } from "data/explore";
+import type { ExploreCategory } from "data/explore";
 import { FiArrowRight } from "react-icons/fi";
 import { Heading, Link, LinkButton } from "tw-components";
+import { ContractCard } from "../contract-card";
 
 interface ContractRowProps {
   category: ExploreCategory;

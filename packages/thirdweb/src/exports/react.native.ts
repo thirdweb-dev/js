@@ -1,5 +1,12 @@
 export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
 
+// theme
+export { darkTheme, lightTheme } from "../react/core/design-system/index.js";
+export type {
+  Theme,
+  ThemeOverrides,
+} from "../react/core/design-system/index.js";
+
 // wallet hooks
 export { useActiveWallet } from "../react/native/hooks/wallets/useActiveWallet.js";
 export { useActiveWalletChain } from "../react/native/hooks/wallets/useActiveWalletChain.js";
@@ -77,11 +84,18 @@ export {
 export { AutoConnect } from "../react/native/ui/AutoConnect/AutoConnect.js";
 export type { AutoConnectProps } from "../react/core/hooks/connection/types.js";
 
-export { TransactionButton } from "../react/native/ui/TransactionButton/TrabsactionButton.js";
+export { TransactionButton } from "../react/native/ui/transaction/TransactionButton.js";
 export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";
 
+export type {
+  ConnectButtonProps,
+  ConnectButton_connectButtonOptions,
+  ConnectButton_connectModalOptions,
+  ConnectButton_detailsButtonOptions,
+  ConnectButton_detailsModalOptions,
+} from "../react/core/hooks/connection/ConnectButtonProps.js";
+export { ConnectButton } from "../react/native/ui/connect/ConnectButton.js";
+export { ConnectEmbed } from "../react/native/ui/connect/ConnectModal.js";
+
 // wallet info
-export {
-  useWalletInfo,
-  useWalletImage,
-} from "../react/web/ui/hooks/useWalletInfo.js";
+export { useWalletInfo, useWalletImage } from "../react/core/utils/wallet.js";

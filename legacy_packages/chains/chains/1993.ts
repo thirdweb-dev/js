@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "B3 Sepolia",
   "chainId": 1993,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "B3 Sepolia Explorer",
+      "url": "https://sepolia.explorer.b3.fun/",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {

@@ -51,7 +51,7 @@ to {
 `;
 
 const TooltipContent = /* @__PURE__ */ (() =>
-  styled(RadixTooltip.Content)(() => {
+  styled(RadixTooltip.Content)((_) => {
     const theme = useCustomTheme();
     return {
       background: theme.colors.tooltipBg,

@@ -1,11 +1,11 @@
-import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 import { Box, useToast } from "@chakra-ui/react";
-import { StoredChain } from "contexts/configured-chains";
+import type { StoredChain } from "contexts/configured-chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import { useModifyChain } from "hooks/chains/useModifyChain";
 import { useEditChain } from "hooks/networkConfigModal";
 import { Heading } from "tw-components";
+import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 
 function useChainConfigTrack() {
   const trackEvent = useTrack();

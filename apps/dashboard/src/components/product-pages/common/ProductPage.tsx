@@ -3,8 +3,8 @@ import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
-import { NextSeo, NextSeoProps } from "next-seo";
-import { PropsWithChildren } from "react";
+import { NextSeo, type NextSeoProps } from "next-seo";
+import type { PropsWithChildren } from "react";
 
 interface IProductPage {
   seo: NextSeoProps;

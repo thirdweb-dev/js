@@ -1,8 +1,8 @@
-import { CreateListingButton } from "../shared-components/list-button";
-import { EnglishAuctionsTable } from "./components/table";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { Heading } from "tw-components";
+import { CreateListingButton } from "../shared-components/list-button";
+import { EnglishAuctionsTable } from "./components/table";
 
 interface ContractEnglishAuctionsProps {
   contractAddress?: string;

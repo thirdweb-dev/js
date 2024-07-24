@@ -1,17 +1,17 @@
-import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   Text as ChakraText,
-  TextProps as ChakraTextProps,
+  type TextProps as ChakraTextProps,
 } from "@chakra-ui/react";
 import {
-  TextBase,
-  TextSizes,
-  TypographySize,
+  type TextBase,
+  type TextSizes,
+  type TypographySize,
   fontWeights,
   letterSpacings,
   lineHeights,
 } from "theme/typography";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { convertFontSizeToCSSVar } from "./utils/typography";
 
 interface TextProps extends Omit<ChakraTextProps, "size"> {
   size?: TextSizes;

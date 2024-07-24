@@ -178,7 +178,7 @@ export async function getContractEvents<
     logsParams.map((ethLogParams) => eth_getLogs(rpcRequest, ethLogParams)),
   );
   const flattenLogs = logs
-    .flatMap((log) => log)
+    .flat()
     .sort((a, b) => Number((a.blockNumber ?? 0n) - (b.blockNumber ?? 0n)));
   return parseEventLogs({
     logs: flattenLogs,

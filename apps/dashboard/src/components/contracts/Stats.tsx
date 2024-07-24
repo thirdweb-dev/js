@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, SimpleGridProps } from "@chakra-ui/react";
+import { Flex, SimpleGrid, type SimpleGridProps } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
 
 interface Stat {
@@ -24,6 +24,7 @@ const Stats = ({ stats, ...rest }: StatsProps) => {
 
         return (
           <Flex
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             key={idx}
             alignItems="center"
             justifyContent="center"

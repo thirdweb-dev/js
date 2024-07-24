@@ -4,7 +4,12 @@ export default {
   "chainId": 7001,
   "explorers": [
     {
-      "name": "blockscout",
+      "name": "ZetaScan",
+      "url": "https://athens.explorer.zetachain.com",
+      "standard": "none"
+    },
+    {
+      "name": "Blockscout",
       "url": "https://zetachain-athens-3.blockscout.com",
       "standard": "EIP3091",
       "icon": {
@@ -13,15 +18,10 @@ export default {
         "height": 540,
         "format": "png"
       }
-    },
-    {
-      "name": "ZetaChain Athens Testnet Explorer",
-      "url": "https://athens3.explorer.zetachain.com",
-      "standard": "none"
     }
   ],
   "faucets": [
-    "https://labs.zetachain.com/get-zeta"
+    "https://www.zetachain.com/docs/reference/apps/get-testnet-zeta/"
   ],
   "icon": {
     "url": "ipfs://QmP4Gnf4Lkp8q5LQVePNjAWxSqrw8vU2JAf7amcFz4vEUy",
@@ -30,7 +30,7 @@ export default {
     "format": "png"
   },
   "infoURL": "https://zetachain.com/docs",
-  "name": "ZetaChain Athens 3 Testnet",
+  "name": "ZetaChain Testnet",
   "nativeCurrency": {
     "name": "Zeta",
     "symbol": "ZETA",
@@ -40,12 +40,13 @@ export default {
   "rpc": [
     "https://7001.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zetachain-athens-evm.blockpi.network/v1/rpc/public",
-    "wss://zetachain-athens.blockpi.network/rpc/v1/public/websocket",
-    "https://zetachain-testnet-archive.allthatnode.com:8545"
+    "https://zetachain-testnet.public.blastapi.io",
+    "https://zetachain-athens.g.allthatnode.com/archive/evm",
+    "https://zeta-chain-testnet.drpc.org"
   ],
-  "shortName": "zetachain-athens",
+  "shortName": "zetachain-testnet",
   "slip44": 1,
-  "slug": "zetachain-athens-3-testnet",
+  "slug": "zetachain-testnet",
   "status": "active",
   "testnet": true
 } as const satisfies Chain;

@@ -1,9 +1,15 @@
-/* eslint-disable react/forbid-dom-props */
 import { ChevronRight, ShieldCheckIcon } from "lucide-react";
-import Link from "next/link";
-import twPublisherImage from "./tw-publisher.png";
 import Image from "next/image";
+import Link from "next/link";
+import {
+  type SortBy,
+  type TimeRange,
+  fetchTopContracts,
+} from "../../../../lib/search";
+import { TrendingContractSection } from "../../../trending/components/trending-table";
+import { getChain } from "../utils";
 import { InfoCard } from "./components/server/info-card";
+import twPublisherImage from "./tw-publisher.png";
 
 type ContractCardInfo = {
   name: string;
@@ -41,9 +47,69 @@ const popularContracts: ContractCardInfo[] = [
   },
 ];
 
-export default async function Page() {
+export default async function Page(props: {
+  params: { chain_id: string };
+  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
+}) {
+  const chain = await getChain(props.params.chain_id);
+  const topContracts = await fetchTopContracts({
+    chainId: chain.chainId,
+    timeRange: props.searchParams.timeRange,
+    page: props.searchParams.page,
+    sortBy: props.searchParams.sortBy,
+  });
+
   return (
     <div>
+      <div className="h-4" />
+
+      {topContracts.length > 0 && (
+        <>
+          <div className="flex flex-col gap-4">
+            <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
+              Popular Contracts on {chain.name.split(" ")[0]}
+            </h3>
+            <TrendingContractSection
+              topContracts={topContracts}
+              chainId={chain.chainId}
+              searchParams={props.searchParams}
+            />
+          </div>
+
+          <div className="h-10" />
+        </>
+      )}
+
+      <div className="flex items-center justify-between">
+        <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
+          Deploy Contracts on {chain.name.split(" ")[0]}
+        </h3>
+        <Link
+          href="/explore"
+          className="text-link-foreground inline-flex items-center gap-1 text-base hover:text-foreground font-medium"
+        >
+          View All
+          <ChevronRight className="size-5" />
+        </Link>
+      </div>
+
+      <div className="h-3" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        {popularContracts.map((c) => {
+          return (
+            <ContractCard
+              key={c.name}
+              name={c.name}
+              description={c.description}
+              href={c.href}
+            />
+          );
+        })}
+      </div>
+
+      <div className="h-10" />
+
       <InfoCard
         title="thirdweb Contracts"
         links={[
@@ -59,36 +125,6 @@ export default async function Page() {
           EVM chain
         </p>
       </InfoCard>
-
-      <div className="h-10"></div>
-
-      <div className="flex items-center justify-between">
-        <h3 className="text-foreground text-2xl tracking-tighter font-semibold">
-          Get Started
-        </h3>
-        <Link
-          href="/explore"
-          className="text-primary-foreground inline-flex items-center gap-1 text-base hover:text-foreground font-medium"
-        >
-          View All
-          <ChevronRight className="size-5" />
-        </Link>
-      </div>
-
-      <div className="h-3"></div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-        {popularContracts.map((c) => {
-          return (
-            <ContractCard
-              key={c.name}
-              name={c.name}
-              description={c.description}
-              href={c.href}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 }
@@ -96,8 +132,8 @@ export default async function Page() {
 function ContractCard(props: ContractCardInfo) {
   return (
     <div className="border bg-secondary rounded-xl p-4 hover:bg-muted relative flex flex-col h-full shadow-sm min-h-[200px]">
-      <div className="text-success-foreground flex items-center gap-1 mb-4 text-sm font-medium">
-        <ShieldCheckIcon className="size-4 text-success-foreground" />
+      <div className="text-success-text flex items-center gap-1 mb-4 text-sm font-medium">
+        <ShieldCheckIcon className="size-4 text-success-text" />
         Audited
       </div>
 

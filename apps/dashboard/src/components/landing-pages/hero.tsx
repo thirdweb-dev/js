@@ -1,9 +1,9 @@
-import { LandingCTAButtons } from "./cta-buttons";
-import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 import { Box, Container, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 import { Heading, Text } from "tw-components";
+import { LandingCTAButtons } from "./cta-buttons";
+import { LandingDesktopMobileImage } from "./desktop-mobile-image";
 
 interface LandingHeroProps {
   title: string;

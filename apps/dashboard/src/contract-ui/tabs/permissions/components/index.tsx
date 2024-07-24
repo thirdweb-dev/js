@@ -1,20 +1,20 @@
-import { ContractPermission } from "./contract-permission";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import {
-  ContractWithRoles,
-  RolesForContract,
+  type ContractWithRoles,
+  type RolesForContract,
   useAllRoleMembers,
   useContractType,
   useSetAllRoleMembers,
 } from "@thirdweb-dev/react";
-import { Role } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import type { roleMap } from "thirdweb/extensions/permissions";
 import { Button } from "tw-components";
+import { ContractPermission } from "./contract-permission";
 
 type PermissionFormContext<TContract extends ContractWithRoles> = {
   [role in RolesForContract<TContract>]: string[];
@@ -54,7 +54,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
     return Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP).filter(
       (role) =>
         contractData && contractData.contractType !== "custom"
-          ? contractData.roles?.includes(role as Role)
+          ? contractData.roles?.includes(role as keyof typeof roleMap)
           : true,
     );
   }, [allRoleMembers.data, contractData]);

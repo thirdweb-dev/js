@@ -1,14 +1,17 @@
-import { CopyApiKeyButton } from "./CopyButton";
-import { HIDDEN_SERVICES } from "./validations";
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { ServiceName, getServiceByName } from "@thirdweb-dev/service-utils";
+import {
+  type ServiceName,
+  getServiceByName,
+} from "@thirdweb-dev/service-utils";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
 import { useRouter } from "next/router";
 import { Badge, Text } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { CopyApiKeyButton } from "./CopyButton";
+import { HIDDEN_SERVICES } from "./validations";
 
 interface ApiKeysProps {
   keys: ApiKey[];

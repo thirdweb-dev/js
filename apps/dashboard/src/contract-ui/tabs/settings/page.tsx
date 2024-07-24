@@ -1,10 +1,10 @@
+import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { useContract } from "@thirdweb-dev/react";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
 import { SettingsRoyalties } from "./components/royalties";
-import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 
 interface ContractSettingsPageProps {
   contractAddress?: string;

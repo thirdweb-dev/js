@@ -1,7 +1,7 @@
 import {
   Box,
   Code,
-  CodeProps,
+  type CodeProps,
   Flex,
   Icon,
   IconButton,
@@ -34,6 +34,7 @@ interface CodeBlockProps extends Omit<CodeProps, "size"> {
   typingSpeed?: number;
   title?: string;
   titleColor?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   containerHeight?: any;
 }
 export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
@@ -99,7 +100,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [currentCodeIndex]);
+  }, []);
 
   return (
     <Box ref={ref}>
@@ -212,6 +213,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
                 <Box>
                   <Box as="span" display="block" my={1} color="heading">
                     {tokens.map((line, i) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                       <Box key={i} {...getLineProps({ line })}>
                         <LineNumbers
                           lineNumber={i + 1}
@@ -219,6 +221,7 @@ export const HomePageCodeBlock: React.FC<CodeBlockProps> = ({
                           totalLines={tokens.length}
                         />
                         {line.map((token, key) => (
+                          // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                           <span key={key} {...getTokenProps({ token })} />
                         ))}
                       </Box>

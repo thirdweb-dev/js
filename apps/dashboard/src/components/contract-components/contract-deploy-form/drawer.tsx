@@ -1,10 +1,10 @@
-import { ContractDeployForm } from ".";
-import { ContractId } from "../types";
 import { Box, Flex, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { BiRocket } from "react-icons/bi";
 import { FiChevronsRight } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
+import { ContractDeployForm } from ".";
+import type { ContractId } from "../types";
 
 interface DeployFormDrawerProps {
   contractId: ContractId;
@@ -72,6 +72,8 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
           onDrawerVisibilityChanged?.(false);
         }}
         isOpen={isOpen}
+        trapFocus={false}
+        blockScrollOnMount={false}
       >
         <Box py={4} px={2}>
           <ContractDeployForm

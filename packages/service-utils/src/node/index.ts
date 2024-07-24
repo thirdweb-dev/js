@@ -70,7 +70,7 @@ function getHeader(
 ): string | null {
   const header = headers[headerName];
   if (Array.isArray(header)) {
-    return header[0];
+    return header?.[0] ?? null;
   }
   return header ?? null;
 }
@@ -147,7 +147,7 @@ export function extractAuthorizationData(
   const authorizationHeader = getHeader(headers, "authorization");
   if (authorizationHeader) {
     const [type, token] = authorizationHeader.split(" ");
-    if (type.toLowerCase() === "bearer" && !!token) {
+    if (type?.toLowerCase() === "bearer" && !!token) {
       jwt = token;
       const walletAuthHeader = getHeader(headers, "x-authorize-wallet");
       // IK a stringified boolean is not ideal, but it's required to pass it in the headers.

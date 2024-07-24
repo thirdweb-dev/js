@@ -49,6 +49,7 @@ export type MakeOfferParams = {
  * @example
  * ```ts
  * import { makeOffer } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const offerTx = makeOffer({
  *  contract,
@@ -58,8 +59,9 @@ export type MakeOfferParams = {
  *  offerExpiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
  *  totalOffer: "1.0",
  * });
- * ```
  *
+ * await sendTransaction({ transaction, account });
+ * ```
  */
 export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
   return makeOfferGenerated({

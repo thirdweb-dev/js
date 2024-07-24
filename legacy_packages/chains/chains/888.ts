@@ -2,8 +2,26 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "WAN",
   "chainId": 888,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "wanscan",
+      "url": "https://wanscan.org",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmcRVHdG7Sr1f26DhkBwE1YuwFZXFjNth5S3TookXoyFaq",
+        "width": 360,
+        "height": 360,
+        "format": "png"
+      }
+    }
+  ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmcRVHdG7Sr1f26DhkBwE1YuwFZXFjNth5S3TookXoyFaq",
+    "width": 360,
+    "height": 360,
+    "format": "png"
+  },
   "infoURL": "https://www.wanscan.org",
   "name": "Wanchain",
   "nativeCurrency": {

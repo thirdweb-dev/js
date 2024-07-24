@@ -1,6 +1,6 @@
-import { removeEmptyValues } from "./parseAttributes";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import Papa from "papaparse";
+import { removeEmptyValues } from "./parseAttributes";
 
 interface CSVData extends Record<string, string | undefined> {
   name: string;
@@ -53,8 +53,8 @@ function removeSpecialCharacters(str: string) {
 
 function sortAscending(a: File, b: File) {
   return (
-    parseInt(removeSpecialCharacters(a.name)) -
-    parseInt(removeSpecialCharacters(b.name))
+    Number.parseInt(removeSpecialCharacters(a.name)) -
+    Number.parseInt(removeSpecialCharacters(b.name))
   );
 }
 
@@ -102,7 +102,9 @@ const getAcceptedFiles = async (acceptedFiles: File[]) => {
   return { csv, json, images, videos };
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 const removeEmptyKeysFromObject = (obj: any) => {
+  // biome-ignore lint/complexity/noForEach: FIXME
   Object.keys(obj).forEach((key) => {
     if (obj[key] === "" || obj[key] === null || obj[key] === undefined) {
       delete obj[key];
@@ -122,6 +124,7 @@ const convertToOsStandard = (obj: NFTMetadataInput["attributes"]) => {
 
 const getMergedData = (
   csvData: Papa.ParseResult<CSVData> | undefined,
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   jsonData: any,
   imageFiles: File[],
   videoFiles: File[],
@@ -165,7 +168,8 @@ const getMergedData = (
           undefined,
       });
     });
-  } else if (Array.isArray(jsonData)) {
+  }
+  if (Array.isArray(jsonData)) {
     const isImageMapped = jsonData.some((row) =>
       imageFiles.find((img) => img?.name === row.image),
     );
@@ -173,6 +177,7 @@ const getMergedData = (
       videoFiles.find((video) => video?.name === row.animation_url),
     );
 
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return jsonData.map((nft: any, index: number) => ({
       ...nft,
       image:
@@ -187,9 +192,8 @@ const getMergedData = (
         nft.animation_url ||
         undefined,
     }));
-  } else {
-    return [];
   }
+  return [];
 };
 
 export async function processInputData(

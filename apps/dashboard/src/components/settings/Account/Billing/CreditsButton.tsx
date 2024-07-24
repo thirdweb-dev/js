@@ -1,22 +1,22 @@
 import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
-  ModalBody,
-  Flex,
-  ModalFooter,
   Box,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { Button, Card, Text } from "tw-components";
-import { CreditsItem } from "./CreditsItem";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+import { Button, Card, Text } from "tw-components";
+import { CreditsItem } from "./CreditsItem";
 
 export const formatToDollars = (cents: number) => {
   const dollars = cents / 100;
@@ -108,6 +108,9 @@ export const CreditsButton = () => {
                 credit={opCredit}
                 onCreditsButton={true}
                 isOpCreditDefault={true}
+                onClickApply={() => {
+                  onClose();
+                }}
               />
               {restCredits?.map((credit) => (
                 <CreditsItem

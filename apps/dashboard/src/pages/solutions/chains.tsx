@@ -12,7 +12,7 @@ import { LandingSectionHeading } from "components/landing-pages/section-heading"
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Text, TrackedLink, TrackedLinkButton } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "chains-landing";
 
@@ -254,7 +254,7 @@ const SolutionsChains: ThirdwebNextPage = () => {
               image={require("../../../public/assets/landingpage/aa-desktop.png")}
               mobileImage={require("../../../public/assets/landingpage/aa-desktop.png")}
               TRACKING_CATEGORY={TRACKING_CATEGORY}
-              href="https://portal.thirdweb.com/connect/account-abstraction"
+              href="https://portal.thirdweb.com/connect/account-abstraction/overview"
               cardBg="#131418"
               colSpan={1}
             />

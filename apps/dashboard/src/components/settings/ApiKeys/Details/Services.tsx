@@ -1,4 +1,4 @@
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import {
   Flex,
   HStack,
@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import {
   SERVICES,
-  ServiceName,
+  type ServiceName,
   getServiceByName,
 } from "@thirdweb-dev/service-utils";
 import { useMemo } from "react";

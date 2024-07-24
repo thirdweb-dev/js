@@ -13,6 +13,9 @@ export {
   tokenMerkleRoot,
   type TokenMerkleRootParams,
 } from "../../extensions/airdrop/__generated__/Airdrop/read/tokenMerkleRoot.js";
+export { fetchProofsERC721 } from "../../utils/extensions/airdrop/fetch-proofs-erc721.js";
+export { fetchProofsERC20 } from "../../utils/extensions/airdrop/fetch-proofs-erc20.js";
+export { fetchProofsERC1155 } from "../../utils/extensions/airdrop/fetch-proofs-erc1155.js";
 
 /**
  * Write

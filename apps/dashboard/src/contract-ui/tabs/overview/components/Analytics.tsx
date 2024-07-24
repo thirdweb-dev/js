@@ -1,15 +1,20 @@
-import { Card, Heading, TrackedLink, TrackedLinkProps } from "tw-components";
-import { useState } from "react";
 import { Flex, GridItem, Icon, SimpleGrid, Tooltip } from "@chakra-ui/react";
-import { useTabHref } from "contract-ui/utils";
 import { ChartContainer } from "components/analytics/chart-container";
 import { AnalyticsChart } from "contract-ui/tabs/analytics/page";
+import { useTabHref } from "contract-ui/utils";
 import {
   useLogsAnalytics,
   useTransactionAnalytics,
   useUniqueWalletsAnalytics,
 } from "data/analytics/hooks";
+import { useState } from "react";
 import { FiInfo } from "react-icons/fi";
+import {
+  Card,
+  Heading,
+  TrackedLink,
+  type TrackedLinkProps,
+} from "tw-components";
 
 interface AnalyticsOverviewProps {
   chainId: number;
@@ -51,7 +56,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
         </TrackedLink>
       </Flex>
 
-      <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 2, md: 3 }}>
+      <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 1, md: 3 }}>
         <GridItem>
           <Flex
             flexDir="column"
@@ -78,7 +83,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
                 <Icon as={FiInfo} boxSize={4} color="gray.700" />
               </Tooltip>
             </Flex>
-            <ChartContainer w="full" ratio={1.7}>
+            <ChartContainer className="w-full" ratio={1.7}>
               <AnalyticsChart
                 contractAddress={contractAddress}
                 chainId={chainId}
@@ -86,6 +91,8 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
                 endDate={endDate}
                 index={"time"}
                 categories={[{ id: "wallets", label: "Unique Wallets" }]}
+                // FIXME
+                // eslint-disable-next-line react-compiler/react-compiler
                 useAnalytics={useUniqueWalletsAnalytics}
                 showYAxis={false}
               />
@@ -118,7 +125,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
                 <Icon as={FiInfo} boxSize={4} color="gray.700" />
               </Tooltip>
             </Flex>
-            <ChartContainer w="full" ratio={1.7}>
+            <ChartContainer className="w-full" ratio={1.7}>
               <AnalyticsChart
                 contractAddress={contractAddress}
                 chainId={chainId}
@@ -126,6 +133,8 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
                 endDate={endDate}
                 index={"time"}
                 categories={[{ id: "count", label: "Transactions" }]}
+                // FIXME
+                // eslint-disable-next-line react-compiler/react-compiler
                 useAnalytics={useTransactionAnalytics}
                 showYAxis={false}
               />
@@ -158,7 +167,7 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
                 <Icon as={FiInfo} boxSize={4} color="gray.700" />
               </Tooltip>
             </Flex>
-            <ChartContainer w="full" ratio={1.7}>
+            <ChartContainer className="w-full" ratio={1.7}>
               <AnalyticsChart
                 contractAddress={contractAddress}
                 chainId={chainId}
@@ -166,6 +175,8 @@ export const AnalyticsOverview: React.FC<AnalyticsOverviewProps> = ({
                 endDate={endDate}
                 index={"time"}
                 categories={[{ id: "count", label: "Events" }]}
+                // FIXME
+                // eslint-disable-next-line react-compiler/react-compiler
                 useAnalytics={useLogsAnalytics}
                 showYAxis={false}
               />

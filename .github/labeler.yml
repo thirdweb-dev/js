@@ -1,9 +1,13 @@
 # PRs with these paths will be labeled with the following labels
 dashboard:
-  - "apps/dashboard/**/*"
+  - changed-files:
+    - any-glob-to-any-file: "apps/dashboard/**/*"
 playground:
-  - "apps/playground-web/**/*"
+  - changed-files:
+    - any-glob-to-any-file: "apps/playground-web/**/*"
 legacy_packages:
-  - "legacy-packages/**/*"
+  - changed-files:
+    - any-glob-to-any-file: "legacy-packages/**/*"
 packages:
-  - "packages/**/*"
+  - changed-files:
+    - any-glob-to-any-file: "packages/**/*"

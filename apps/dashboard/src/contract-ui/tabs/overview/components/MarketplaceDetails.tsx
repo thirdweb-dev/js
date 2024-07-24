@@ -8,32 +8,33 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { MarketplaceV3 } from "@thirdweb-dev/sdk";
+import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-stats";
 import { useTabHref } from "contract-ui/utils";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
+import { getContract } from "thirdweb";
+import {
+  type DirectListing,
+  type EnglishAuction,
+  getAllAuctions,
+  getAllListings,
+  totalAuctions,
+  totalListings,
+} from "thirdweb/extensions/marketplace";
+import { useReadContract } from "thirdweb/react";
 import {
   Badge,
   Card,
   Heading,
   Text,
   TrackedLink,
-  TrackedLinkProps,
+  type TrackedLinkProps,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import {
-  DirectListing,
-  EnglishAuction,
-  getAllAuctions,
-  getAllListings,
-  totalAuctions,
-  totalListings,
-} from "thirdweb/extensions/marketplace";
-import { defineChain, getContract } from "thirdweb";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
-import { useReadContract } from "thirdweb/react";
+import { defineDashboardChain } from "../../../../lib/v5-adapter";
 
 type ListingData =
   | (Pick<
@@ -75,15 +76,14 @@ export const MarketplaceDetails: React.FC<MarketplaceDetailsProps> = ({
   if (contractType === "marketplace" && contract) {
     // no longer supported
     return null;
-  } else {
-    return (
-      <MarketplaceV3Details
-        contract={contract as MarketplaceV3}
-        trackingCategory={trackingCategory}
-        features={features}
-      />
-    );
   }
+  return (
+    <MarketplaceV3Details
+      contract={contract as MarketplaceV3}
+      trackingCategory={trackingCategory}
+      features={features}
+    />
+  );
 };
 
 type ListingCardsSectionProps = {
@@ -98,7 +98,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineChain(v4Contract.chainId),
+    chain: defineDashboardChain(v4Contract.chainId),
   });
   const directListingsHref = useTabHref("direct-listings");
   const countQuery = useReadContract(totalListings, { contract });
@@ -160,7 +160,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineChain(v4Contract.chainId),
+    chain: defineDashboardChain(v4Contract.chainId),
   });
 
   const englishAuctionsHref = useTabHref("english-auctions");
@@ -311,7 +311,6 @@ const ListingCards: React.FC<ListingCardsProps> = ({
             <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
               <Skeleton isLoaded={!isLoading}>
                 <NFTMediaWithEmptyState
-                  // @ts-expect-error - metadata type not fixed yet
                   metadata={listing.asset.metadata}
                   requireInteraction
                   width="100%"

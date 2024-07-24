@@ -1,13 +1,13 @@
 import {
-  SetWalletConfigInput,
+  type SetWalletConfigInput,
   useEngineSetWalletConfig,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { Button, Card, FormLabel, Text } from "tw-components";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useTrack } from "hooks/analytics/useTrack";
 
 interface KmsAwsConfigProps {
   instanceUrl: string;

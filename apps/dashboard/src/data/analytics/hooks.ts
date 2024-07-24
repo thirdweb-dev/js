@@ -16,7 +16,7 @@ async function makeQuery(
   const queryString = `?${Object.entries(query)
     .filter(([, value]) => !!value)
     .map(([key, value]) => `${key}=${value}`)
-    .join(`&`)}`;
+    .join("&")}`;
   return fetch(`${THIRDWEB_ANALYTICS_API_HOSTNAME}${path}${queryString}`, {
     method: "GET",
   });
@@ -39,8 +39,9 @@ async function getTransactionAnalytics(
   });
 
   const { results } = await res.json();
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   return results.map((item: any) => ({
-    count: parseInt(item.cnt),
+    count: Number.parseInt(item.cnt),
     time: new Date(item.time).getTime(),
   }));
 }
@@ -78,7 +79,7 @@ async function getTotalTransactionAnalytics(
 
   const { results } = await res.json();
   return {
-    count: parseInt(results[0].cnt),
+    count: Number.parseInt(results[0].cnt),
   };
 }
 
@@ -112,8 +113,9 @@ async function getLogsAnalytics(
   });
 
   const { results } = await res.json();
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   return results.map((item: any) => ({
-    count: parseInt(item.cnt),
+    count: Number.parseInt(item.cnt),
     time: new Date(item.time).getTime(),
   }));
 }
@@ -147,7 +149,7 @@ async function getTotalLogsAnalytics(
 
   const { results } = await res.json();
   return {
-    count: parseInt(results[0].cnt),
+    count: Number.parseInt(results[0].cnt),
   };
 }
 
@@ -177,6 +179,7 @@ type FunctionsQueryResponse = {
 
 type FunctionsQueryResult = {
   time: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   [key: string]: any;
 };
 
@@ -197,18 +200,19 @@ async function getFunctionsAnalytics(
       const time = new Date(item.time).getTime();
       if (!acc[time]) {
         acc[time] = {
-          [item.function_name]: parseInt(item.cnt),
+          [item.function_name]: Number.parseInt(item.cnt),
         };
       } else {
-        acc[time][item.function_name] = parseInt(item.cnt);
+        acc[time][item.function_name] = Number.parseInt(item.cnt);
       }
       return acc;
     },
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     {} as Record<string, any>,
   );
 
   return Object.keys(callsByTime).map((time) => {
-    return { time: parseInt(time), ...callsByTime[time] };
+    return { time: Number.parseInt(time), ...callsByTime[time] };
   });
 }
 
@@ -239,6 +243,7 @@ type EventsQueryResponse = {
 
 type EventsQueryResult = {
   time: string;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   [key: string]: any;
 };
 
@@ -259,18 +264,19 @@ async function getEventsAnalytics(
       const time = new Date(item.time).getTime();
       if (!acc[time]) {
         acc[time] = {
-          [item.event_name]: parseInt(item.cnt),
+          [item.event_name]: Number.parseInt(item.cnt),
         };
       } else {
-        acc[time][item.event_name] = parseInt(item.cnt);
+        acc[time][item.event_name] = Number.parseInt(item.cnt);
       }
       return acc;
     },
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     {} as Record<string, any>,
   );
 
   return Object.keys(callsByTime).map((time) => {
-    return { time: parseInt(time), ...callsByTime[time] };
+    return { time: Number.parseInt(time), ...callsByTime[time] };
   });
 }
 
@@ -310,8 +316,9 @@ async function getUniqueWalletsAnalytics(
   });
 
   const { results } = await res.json();
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   return results.map((item: any) => ({
-    wallets: parseInt(item.active_wallets),
+    wallets: Number.parseInt(item.active_wallets),
     time: new Date(item.time).getTime(),
   }));
 }
@@ -345,7 +352,7 @@ async function getTotalWalletsAnalytics(
 
   const { results } = await res.json();
   return {
-    count: parseInt(results[0].cnt),
+    count: Number.parseInt(results[0].cnt),
   };
 }
 

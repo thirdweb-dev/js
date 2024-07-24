@@ -1,6 +1,9 @@
-import { AccountSigner } from "./account-signer";
 import { Flex } from "@chakra-ui/react";
-import { useContract, useAccountAdminsAndSigners } from "@thirdweb-dev/react";
+import {
+  useAccountAdminsAndSigners,
+  type useContract,
+} from "@thirdweb-dev/react";
+import { AccountSigner } from "./account-signer";
 
 interface AccountSignersProps {
   contractQuery: ReturnType<typeof useContract>;

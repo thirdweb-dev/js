@@ -1,7 +1,7 @@
 import { Container, Flex } from "@chakra-ui/react";
 import { LandingLayout } from "components/landing-pages/layout";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 import { MarkdownRenderer } from "../components/contract-components/published-contract/markdown-renderer";
 
 const ToS: ThirdwebNextPage = () => {

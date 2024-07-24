@@ -1,10 +1,10 @@
-import { LandingSectionHeading } from "./section-heading";
-import { LandingSectionHeadingProps } from "./types";
 import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ReactElement, useState } from "react";
-import { HeadingSizes } from "theme/typography";
+import { type ReactElement, useState } from "react";
+import type { HeadingSizes } from "theme/typography";
 import { Text } from "tw-components";
+import { LandingSectionHeading } from "./section-heading";
+import type { LandingSectionHeadingProps } from "./types";
 
 interface SelectorItem {
   title: string;
@@ -65,9 +65,9 @@ export const LandingDynamicSelector: React.FC<LandingDynamicSelectorProps> = ({
           w={{ base: "100%", md: "100%" }}
           colSpan={{ base: 12, md: 4 }}
         >
-          {items.map((item, index) => (
+          {items.map((item) => (
             <Flex
-              key={index}
+              key={item.title}
               borderColor="gray.900"
               borderWidth={1}
               p={8}

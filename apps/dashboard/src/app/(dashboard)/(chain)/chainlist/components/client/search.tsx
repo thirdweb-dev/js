@@ -1,11 +1,11 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SearchIcon, XCircleIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 function cleanUrl(url: string) {
   if (url.endsWith("?")) {
@@ -22,11 +22,7 @@ export const SearchInput: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // hah, no need for useEffect here this just works!
-  if (
-    inputRef.current &&
-    inputRef.current.value &&
-    !searchParams?.get("query")
-  ) {
+  if (inputRef.current?.value && !searchParams?.get("query")) {
     inputRef.current.value = "";
   }
 

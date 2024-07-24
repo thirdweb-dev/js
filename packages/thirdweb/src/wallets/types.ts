@@ -19,5 +19,15 @@ export type AppMetadata = {
   logoUrl?: string;
 };
 
+export const socialAuthOptions = [
+  "google",
+  "apple",
+  "facebook",
+  "discord",
+] as const;
+export type SocialAuthOption = (typeof socialAuthOptions)[number];
+
+export type AuthOption = "email" | "phone" | "passkey" | SocialAuthOption;
+
 export type DisconnectFn = () => Promise<void>;
 export type SwitchChainFn = (chain: Chain) => Promise<void>;

@@ -6,6 +6,7 @@ export function Spinner(props: { className?: string }) {
       viewBox="0 0 50 50"
       className={`${style.loader} ${props.className || ""}`}
     >
+      <title>loading</title>
       <circle
         cx="25"
         cy="25"

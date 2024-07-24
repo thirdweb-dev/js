@@ -59,10 +59,7 @@ export async function createApp({
   const isReactNative =
     template?.includes("react-native") || framework === "react-native";
   function isReactNativeCLI() {
-    return (
-      isReactNative &&
-      (template && !template.includes("expo"))
-    );
+    return isReactNative && template && !template.includes("expo");
   }
 
   function isMacOS() {

@@ -3,13 +3,13 @@ import { AppLayout } from "components/app-layouts/app";
 import { ContractsSidebar } from "core-ui/sidebar/contracts";
 import { PageId } from "page-id";
 import {
+  CodeBlock,
   Heading,
   Text,
   TrackedLink,
-  CodeBlock,
   TrackedLinkButton,
 } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "dashboard-contract-build";
 

@@ -1,16 +1,16 @@
 import {
   ButtonGroup,
+  Flex,
   FormControl,
   HStack,
   Input,
   ListItem,
   Textarea,
   UnorderedList,
-  Flex,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import {
   Button,
   Card,
@@ -21,9 +21,10 @@ import {
   Text,
 } from "tw-components";
 import { FieldAlert } from "../Alerts";
-import { ApiKeyValidationSchema } from "../validations";
+import type { ApiKeyValidationSchema } from "../validations";
 
 interface EditGeneralProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<ApiKeyValidationSchema, any>;
 }
 

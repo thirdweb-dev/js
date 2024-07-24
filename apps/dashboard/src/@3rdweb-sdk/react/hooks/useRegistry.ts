@@ -1,19 +1,20 @@
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { useAddress, useSDK, useSigner } from "@thirdweb-dev/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSigner } from "@thirdweb-dev/react";
 import {
   addContractToMultiChainRegistry,
   getGaslessPolygonSDK,
 } from "components/contract-components/utils";
-import { useAllChainsData } from "hooks/chains/allChains";
-import invariant from "tiny-invariant";
-import { useSupportedChainsRecord } from "hooks/chains/configureChains";
-import { useMemo } from "react";
+import type { BasicContract } from "contract-ui/types/types";
 import { getAllMultichainRegistry } from "dashboard-extensions/common/read/getAllMultichainRegistry";
-import { polygon } from "thirdweb/chains";
-import { getContract } from "thirdweb";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { BasicContract } from "contract-ui/types/types";
 import { defineDashboardChain } from "lib/v5-adapter";
+import { useMemo } from "react";
+import { getContract } from "thirdweb";
+import { polygon } from "thirdweb/chains";
+import { useActiveAccount } from "thirdweb/react";
+import invariant from "tiny-invariant";
 
 const MULTICHAIN_REGISTRY_ADDRESS =
   "0xcdAD8FA86e18538aC207872E8ff3536501431B73";
@@ -59,6 +60,7 @@ export const useAllContractList = (
     const mainnets: BasicContract[] = [];
     const testnets: BasicContract[] = [];
 
+    // biome-ignore lint/complexity/noForEach: FIXME
     data.forEach((net) => {
       if (net.chainId in configuredChainsRecord) {
         const chainRecord = configuredChainsRecord[net.chainId];
@@ -94,7 +96,7 @@ type RemoveContractParams = {
 };
 
 export function useRemoveContractMutation() {
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
   const signer = useSigner();
   const { chainIdToChainRecord } = useAllChainsData();
 
@@ -132,23 +134,21 @@ type AddContractParams = {
 };
 
 export function useAddContractMutation() {
-  const sdk = useSDK();
-  const walletAddress = useAddress();
-  const signer = useSigner();
+  const account = useActiveAccount();
 
   const queryClient = useQueryClient();
 
   return useMutation(
     async (data: AddContractParams) => {
-      invariant(walletAddress, "cannot add a contract without an address");
-      invariant(sdk, "sdk not provided");
+      invariant(account, "cannot add a contract without an address");
 
       return await addContractToMultiChainRegistry(
         {
           address: data.contractAddress,
           chainId: data.chainId,
         },
-        signer,
+        account,
+        300000n,
       );
     },
     {

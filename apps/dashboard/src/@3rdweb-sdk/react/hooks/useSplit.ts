@@ -1,17 +1,17 @@
-import { splitsKeys } from "..";
-import {
-  useMutationWithInvalidate,
-  useQueryWithNetwork,
-} from "./query/useQueryWithNetwork";
 import { useToast } from "@chakra-ui/react";
 import { useSDKChainId } from "@thirdweb-dev/react";
 import type { Split } from "@thirdweb-dev/sdk";
-import {
+import type {
   BalanceQueryRequest,
   BalanceQueryResponse,
 } from "pages/api/moralis/balances";
 import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
+import { splitsKeys } from "..";
+import {
+  useMutationWithInvalidate,
+  useQueryWithNetwork,
+} from "./query/useQueryWithNetwork";
 
 export function useSplitData(contract?: Split) {
   return useQueryWithNetwork(
@@ -68,7 +68,7 @@ export function useSplitDistributeFunds(contract?: Split) {
                 toast({
                   position: "bottom",
                   variant: "solid",
-                  title: `Success`,
+                  title: "Success",
                   description: `Successfully distributed ${currency.name}`,
                   status: "success",
                   duration: 5000,
@@ -94,7 +94,7 @@ export function useSplitDistributeFunds(contract?: Split) {
                 toast({
                   position: "bottom",
                   variant: "solid",
-                  title: `Success`,
+                  title: "Success",
                   description: `Successfully distributed ${currency.name}`,
                   status: "success",
                   duration: 5000,

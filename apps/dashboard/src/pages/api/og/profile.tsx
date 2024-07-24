@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable react/forbid-dom-props */
-/* eslint-disable react/no-unknown-property */
 import { ImageResponse } from "@vercel/og";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { ProfileOG } from "og-lib/url-utils";
+import { isProd } from "../../../constants/rpc";
 
 // Make sure the font exists in the specified path:
 export const config = {
@@ -15,26 +14,27 @@ const image = fetch(
 ).then((res) => res.arrayBuffer());
 
 const inter400_ = fetch(
-  new URL(`og-lib/fonts/inter/400.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/400.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const inter500_ = fetch(
-  new URL(`og-lib/fonts/inter/500.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/500.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const inter700_ = fetch(
-  new URL(`og-lib/fonts/inter/700.ttf`, import.meta.url),
+  new URL("og-lib/fonts/inter/700.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 const ibmPlexMono400_ = fetch(
-  new URL(`og-lib/fonts/ibm-plex-mono/400.ttf`, import.meta.url),
+  new URL("og-lib/fonts/ibm-plex-mono/400.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const ibmPlexMono500_ = fetch(
-  new URL(`og-lib/fonts/ibm-plex-mono/500.ttf`, import.meta.url),
+  new URL("og-lib/fonts/ibm-plex-mono/500.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 const ibmPlexMono700_ = fetch(
-  new URL(`og-lib/fonts/ibm-plex-mono/700.ttf`, import.meta.url),
+  new URL("og-lib/fonts/ibm-plex-mono/700.ttf", import.meta.url),
 ).then((res) => res.arrayBuffer());
 
 const OgBrandIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="59"
@@ -53,6 +53,7 @@ const OgBrandIcon: React.FC = () => (
 );
 
 const PackageIcon: React.FC = () => (
+  // biome-ignore lint/a11y/noSvgWithoutTitle: not needed
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="36"
@@ -64,10 +65,10 @@ const PackageIcon: React.FC = () => (
     stroke-linecap="round"
     stroke-linejoin="round"
   >
-    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
-    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21" />
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+    <line x1="12" y1="22.08" x2="12" y2="12" />
   </svg>
 );
 
@@ -99,7 +100,7 @@ function descriptionShortener(description: string) {
 }
 
 const IPFS_GATEWAY = process.env.API_ROUTES_CLIENT_ID
-  ? `https://${process.env.API_ROUTES_CLIENT_ID}.ipfscdn.io/ipfs/`
+  ? `https://${process.env.API_ROUTES_CLIENT_ID}.${isProd ? "ipfscdn.io/ipfs/" : "thirdwebstorage-dev.com/ipfs/"}`
   : "https://ipfs.io/ipfs/";
 
 function replaceAnyIpfsUrlWithGateway(url: string) {
@@ -139,65 +140,63 @@ export default async function handler(req: NextRequest) {
   ]);
 
   return new ImageResponse(
-    (
-      <div
-        tw="w-full h-full flex justify-center py-20 px-16"
-        style={{
-          background: "#0D0D12",
-          fontFamily: "Inter",
-        }}
-      >
-        <img
-          // @ts-expect-error - this works fine
-          src={imageData}
-          width="1200px"
-          height="630px"
-          tw="absolute"
-          alt=""
-        />
-        {/* the actual component starts here */}
+    <div
+      tw="w-full h-full flex justify-center py-20 px-16"
+      style={{
+        background: "#0D0D12",
+        fontFamily: "Inter",
+      }}
+    >
+      <img
+        // @ts-expect-error - this works fine
+        src={imageData}
+        width="1200px"
+        height="630px"
+        tw="absolute"
+        alt=""
+      />
+      {/* the actual component starts here */}
 
-        <div tw="w-full h-full flex flex-col justify-between">
-          {/* title description and profile image */}
-          <div tw="flex flex-col w-full">
-            <img
-              alt=""
-              tw="w-32 h-32 rounded-full"
-              src={
-                profileData.avatar
-                  ? replaceAnyIpfsUrlWithGateway(profileData.avatar)
-                  : `https://source.boringavatars.com/marble/120/${profileData.displayName}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
-              }
-            />
-            <h1 tw="text-7xl text-white font-bold my-3">
-              {profileData.displayName}
-            </h1>
-            {profileData.bio && (
-              <p tw="font-medium text-3xl text-opacity-90 text-white">
-                {descriptionShortener(profileData.bio)}
-              </p>
-            )}
+      <div tw="w-full h-full flex flex-col justify-between">
+        {/* title description and profile image */}
+        <div tw="flex flex-col w-full">
+          <img
+            alt=""
+            tw="w-32 h-32 rounded-full"
+            src={
+              profileData.avatar
+                ? replaceAnyIpfsUrlWithGateway(profileData.avatar)
+                : `https://source.boringavatars.com/marble/120/${profileData.displayName}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
+            }
+          />
+          <h1 tw="text-7xl text-white font-bold my-3">
+            {profileData.displayName}
+          </h1>
+          {profileData.bio && (
+            <p tw="font-medium text-3xl text-opacity-90 text-white">
+              {descriptionShortener(profileData.bio)}
+            </p>
+          )}
+        </div>
+        <div tw="flex justify-between w-full items-end">
+          <div
+            tw="flex flex-row text-white font-medium text-3xl max-w-4xl items-center text-opacity-75"
+            style={{
+              fontFamily: "IBM Plex Mono",
+            }}
+          >
+            <PackageIcon />
+            <span tw="ml-4">
+              {profileData.publishedCnt || 0} published contract
+              {profileData.publishedCnt === "1" ? "" : "s"}
+            </span>
           </div>
-          <div tw="flex justify-between w-full items-end">
-            <div
-              tw="flex flex-row text-white font-medium text-3xl max-w-4xl items-center text-opacity-75"
-              style={{
-                fontFamily: "IBM Plex Mono",
-              }}
-            >
-              <PackageIcon />
-              <span tw="ml-4">
-                {profileData.publishedCnt || 0} published contract
-                {profileData.publishedCnt === "1" ? "" : "s"}
-              </span>
-            </div>
-            <div tw="flex flex-shrink-0">
-              <OgBrandIcon />
-            </div>
+          <div tw="flex flex-shrink-0">
+            <OgBrandIcon />
           </div>
         </div>
       </div>
-    ),
+    </div>,
     {
       width: 1200,
       height: 630,

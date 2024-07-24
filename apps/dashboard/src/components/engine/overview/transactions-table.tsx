@@ -1,4 +1,4 @@
-import { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
+import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Collapse,
   Divider,
@@ -7,11 +7,10 @@ import {
   FormControl,
   Stack,
   Tooltip,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
@@ -19,6 +18,7 @@ import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useState } from "react";
 import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
+import type { ChainMetadata } from "thirdweb/chains";
 import {
   Badge,
   Button,
@@ -124,7 +124,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return;
         }
 
-        const chain = chainIdToChainRecord[parseInt(chainId)];
+        const chain = chainIdToChainRecord[Number.parseInt(chainId)];
         if (chain) {
           return (
             <Flex align="center" gap={2}>
@@ -201,7 +201,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           return;
         }
 
-        const chain = chainIdToChainRecord[parseInt(chainId)];
+        const chain = chainIdToChainRecord[Number.parseInt(chainId)];
         if (chain) {
           const explorer = chain.explorers?.[0];
           if (!explorer) {
@@ -309,8 +309,8 @@ const TransactionDetailsDrawer = ({
     return null;
   }
 
-  const chain: Chain | undefined =
-    chainIdToChainRecord[parseInt(transaction.chainId)];
+  const chain: ChainMetadata | undefined =
+    chainIdToChainRecord[Number.parseInt(transaction.chainId)];
   const explorer = chain?.explorers?.[0];
 
   const status = statusDetails[transaction.status as EngineStatus];
@@ -322,7 +322,8 @@ const TransactionDetailsDrawer = ({
   let txFeeDisplay = "N/A";
   if (transaction.gasLimit && transaction.gasPrice) {
     const txFee =
-      (parseFloat(transaction.gasLimit) * parseFloat(transaction.gasPrice)) /
+      (Number.parseFloat(transaction.gasLimit) *
+        Number.parseFloat(transaction.gasPrice)) /
       10 ** (chain?.nativeCurrency.decimals || 18);
     txFeeDisplay = `${txFee} ${chain?.nativeCurrency.symbol || "ETH"}`;
   }

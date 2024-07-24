@@ -15,6 +15,23 @@ export type UninstallExtensionByProxyOptions = {
   extensionData?: `0x${string}`;
 };
 
+/**
+ * Uninstall an extension by proxy
+ * @param options - The options for uninstalling an extension by proxy
+ * @returns A prepared transaction to send
+ * @extension MODULAR
+ * @example
+ * ```ts
+ * import { uninstallExtensionByProxy } from "thirdweb/extensions/modular";
+ * const transaction = uninstallExtensionByProxy({
+ *  client,
+ *  chain,
+ *  contract,
+ *  extensionProxyAddress: "0x...",
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
 export function uninstallExtensionByProxy(
   options: UninstallExtensionByProxyOptions,
 ) {

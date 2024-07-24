@@ -20,7 +20,7 @@ const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
-describe("erc1155 claimTo extension", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("erc1155 claimTo extension", () => {
   beforeEach(async () => {
     const address = await deployERC1155Contract({
       client,

@@ -1,11 +1,11 @@
+import { StorageSingleton } from "lib/sdk";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
-  GenerateURLParams,
-  MoralisSupportedChainId,
-  WalletNFT,
+  type GenerateURLParams,
+  type MoralisSupportedChainId,
+  type WalletNFT,
   moralisSupportedChainIds,
 } from "./types";
-import { StorageSingleton } from "lib/sdk";
 
 export function isMoralisSupported(
   chainId: number,

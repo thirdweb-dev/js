@@ -3,4 +3,5 @@ export interface Route {
   path: string;
   subActivePath?: boolean;
   title: string;
+  onClick?: () => void;
 }

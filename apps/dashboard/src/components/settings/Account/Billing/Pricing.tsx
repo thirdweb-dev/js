@@ -1,5 +1,5 @@
-import { SimpleGrid } from "@chakra-ui/react";
 import { AccountPlan } from "@3rdweb-sdk/react/hooks/useApi";
+import { SimpleGrid } from "@chakra-ui/react";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useMemo } from "react";
 import { CONTACT_US_URL } from "utils/pricing";

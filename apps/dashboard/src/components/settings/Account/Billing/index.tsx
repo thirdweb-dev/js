@@ -1,25 +1,25 @@
-import { Flex, HStack, Icon, useDisclosure } from "@chakra-ui/react";
-import { Button, Heading, TrackedLink, Text } from "tw-components";
-import { AccountForm } from "components/settings/Account/AccountForm";
 import {
-  Account,
+  type Account,
   AccountPlan,
   AccountStatus,
   useUpdateAccountPlan,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
+import { Flex, HStack, Icon, useDisclosure } from "@chakra-ui/react";
 import { StepsCard } from "components/dashboard/StepsCard";
-import { useEffect, useMemo, useState } from "react";
-import { PLANS } from "utils/pricing";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { BillingDowngradeDialog } from "./DowngradeDialog";
-import { BillingHeader } from "./Header";
-import { BillingPricing } from "./Pricing";
 import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
+import { AccountForm } from "components/settings/Account/AccountForm";
+import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiExternalLink } from "react-icons/fi";
+import { Button, Heading, Text, TrackedLink } from "tw-components";
+import { PLANS } from "utils/pricing";
+import { BillingDowngradeDialog } from "./DowngradeDialog";
+import { BillingHeader } from "./Header";
 import { BillingPlanCard } from "./PlanCard";
+import { BillingPricing } from "./Pricing";
 
 interface BillingProps {
   account: Account;
@@ -58,49 +58,59 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
     account.status === AccountStatus.PaymentVerification;
   const invalidPayment = account.status === AccountStatus.InvalidPayment;
 
-  const handleUpdatePlan = (plan: AccountPlan, feedback?: string) => {
-    const action = downgradePlan ? "downgradePlan" : "upgradePlan";
-    setDowngradePlan(undefined);
+  const handleUpdatePlan = useCallback(
+    (plan: AccountPlan, feedback?: string) => {
+      const action = downgradePlan ? "downgradePlan" : "upgradePlan";
+      setDowngradePlan(undefined);
 
-    trackEvent({
-      category: "account",
-      action,
-      label: "attempt",
-    });
+      trackEvent({
+        category: "account",
+        action,
+        label: "attempt",
+      });
 
-    updatePlanMutation.mutate(
-      {
-        plan,
-        feedback,
-        useTrial: !account?.trialPeriodEndedAt,
-      },
-      {
-        onSuccess: () => {
-          onSuccess();
-
-          trackEvent({
-            category: "account",
-            action,
-            label: "success",
-            data: {
-              plan,
-              feedback,
-            },
-          });
+      updatePlanMutation.mutate(
+        {
+          plan,
+          feedback,
+          useTrial: !account?.trialPeriodEndedAt,
         },
-        onError: (error) => {
-          onError(error);
+        {
+          onSuccess: () => {
+            onSuccess();
 
-          trackEvent({
-            category: "account",
-            action,
-            label: "error",
-            error,
-          });
+            trackEvent({
+              category: "account",
+              action,
+              label: "success",
+              data: {
+                plan,
+                feedback,
+              },
+            });
+          },
+          onError: (error) => {
+            onError(error);
+
+            trackEvent({
+              category: "account",
+              action,
+              label: "error",
+              error,
+            });
+          },
         },
-      },
-    );
-  };
+      );
+    },
+    [
+      account?.trialPeriodEndedAt,
+      downgradePlan,
+      onError,
+      onSuccess,
+      trackEvent,
+      updatePlanMutation,
+    ],
+  );
 
   const handlePlanSelect = (plan: AccountPlan) => {
     if (invalidPayment || paymentVerification) {
@@ -192,12 +202,18 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (account) {
-      const paymentCompleted = validPayment;
-
       setStepsCompleted({
         account: !!account.email,
-        payment: paymentCompleted,
+        payment: validPayment,
       });
+    }
+  }, [validPayment, account]);
+
+  // FIXME: this entire flow needs to be re-worked
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (account) {
+      const paymentCompleted = validPayment;
 
       if (paymentCompleted && paymentMethodSaving) {
         // user chose a growth plan before adding a payment method,
@@ -216,8 +232,14 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         setPaymentMethodSaving(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, validPayment, paymentVerification, invalidPayment]);
+  }, [
+    account,
+    validPayment,
+    paymentVerification,
+    selectedPlan,
+    paymentMethodSaving,
+    handleUpdatePlan,
+  ]);
 
   const showSteps = [
     AccountStatus.NoCustomer,
@@ -256,7 +278,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
       <BillingPricing
         plan={account.plan}
         trialPeriodEndedAt={account.trialPeriodEndedAt}
-        canTrialGrowth={account.trialPeriodEndedAt ? false : true}
+        canTrialGrowth={!account.trialPeriodEndedAt}
         validPayment={validPayment}
         paymentVerification={paymentVerification}
         invalidPayment={invalidPayment}

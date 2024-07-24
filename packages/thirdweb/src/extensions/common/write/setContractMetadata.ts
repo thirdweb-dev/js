@@ -13,6 +13,7 @@ export type SetContractMetadataParams = Record<string, unknown>;
  * @example
  * ```ts
  * import { setContractMetadata } from '@thirdweb/extensions/common';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = setContractMetadata({
  *  contract,

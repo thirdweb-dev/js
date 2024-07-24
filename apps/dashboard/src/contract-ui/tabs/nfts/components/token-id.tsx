@@ -1,30 +1,30 @@
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
-  Flex,
-  SimpleGrid,
-  GridItem,
-  useBreakpointValue,
-  Icon,
-  IconButton,
   Box,
   ButtonGroup,
   Divider,
+  Flex,
+  GridItem,
+  Icon,
+  IconButton,
+  SimpleGrid,
   Tooltip,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { Heading, Badge, Card, CodeBlock, Text, Button } from "tw-components";
-import { NftProperty } from "./nft-property";
-import { useRouter } from "next/router";
-import { IoChevronBack } from "react-icons/io5";
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import { useState } from "react";
+import type { useContract } from "@thirdweb-dev/react";
+import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { ThirdwebContract } from "thirdweb";
-import { useReadContract } from "thirdweb/react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { IoChevronBack } from "react-icons/io5";
+import type { ThirdwebContract } from "thirdweb";
 import { getNFT as getErc721NFT } from "thirdweb/extensions/erc721";
 import { getNFT as getErc1155NFT } from "thirdweb/extensions/erc1155";
-import { useNFTDrawerTabs } from "core-ui/nft-drawer/useNftDrawerTabs";
-import { useContract } from "@thirdweb-dev/react";
+import { useReadContract } from "thirdweb/react";
+import { Badge, Button, Card, CodeBlock, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { NftProperty } from "./nft-property";
 
 function isValidUrl(possibleUrl?: string | null) {
   if (!possibleUrl) {
@@ -89,9 +89,12 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
   }
 
   // in the case we have an invalid url, we want to remove it
-  if (!isValidUrl(nft.metadata.animation_url)) {
-    nft.metadata.animation_url = undefined;
-  }
+  const nftMetadata = {
+    ...nft.metadata,
+    animation_url: isValidUrl(nft.metadata.animation_url)
+      ? nft.metadata.animation_url
+      : undefined,
+  };
 
   const properties = nft.metadata.attributes || nft.metadata.properties;
 
@@ -114,8 +117,7 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
           </Card>
         </Box>
         <NFTMediaWithEmptyState
-          // @ts-expect-error types are not up to date
-          metadata={nft.metadata}
+          metadata={nftMetadata}
           width={isMobile ? "100%" : "300px"}
           height={isMobile ? "100%" : "300px"}
         />
@@ -238,11 +240,13 @@ export const TokenIdPage: React.FC<TokenIdPageProps> = ({
             </Card>
             {properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
-                <Heading size="label.md">Properties</Heading>
+                <Heading size="label.md">Attributes</Heading>
                 {Array.isArray(properties) &&
                 String(properties[0]?.value) !== "undefined" ? (
                   <SimpleGrid columns={{ base: 2, md: 4 }} gap={2}>
+                    {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
                     {properties.map((property: any, idx) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                       <NftProperty key={idx} property={property} />
                     ))}
                   </SimpleGrid>

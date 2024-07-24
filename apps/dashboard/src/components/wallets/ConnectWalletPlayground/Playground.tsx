@@ -1,61 +1,61 @@
 import {
-  Box,
-  Flex,
-  GridItem,
-  Input,
-  Grid,
-  useBreakpointValue,
-  useColorMode,
-  Spacer,
-  Switch,
-  Icon,
-  Select,
-  FormControl,
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
+  Box,
+  Flex,
+  FormControl,
+  Grid,
+  GridItem,
+  Icon,
+  Input,
+  Select,
+  Spacer,
+  Switch,
+  useBreakpointValue,
+  useColorMode,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { ConnectWallet } from "@thirdweb-dev/react";
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Heading,
-  Text,
-  FormLabel,
-  CodeBlock,
-  TrackedLink,
-} from "tw-components";
+import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
-import { format } from "prettier/standalone";
+import { useTrack } from "hooks/analytics/useTrack";
 import parserBabel from "prettier/plugins/babel";
 import estree from "prettier/plugins/estree";
-import { ClientOnly } from "components/ClientOnly/ClientOnly";
-import { walletInfoRecord, type WalletId } from "./walletInfoRecord";
-import { getCode } from "./getCode";
+import { format } from "prettier/standalone";
+import { useEffect, useState } from "react";
+import { AiOutlineStar, AiOutlineWarning } from "react-icons/ai";
+import { BsStars } from "react-icons/bs";
+import { FiChevronRight } from "react-icons/fi";
 import {
-  RecommendedIconButton,
-  SocialButton,
-  WalletButton,
-} from "./WalletButton";
+  Button,
+  CodeBlock,
+  FormLabel,
+  Heading,
+  Text,
+  TrackedLink,
+} from "tw-components";
+import { ColorInput } from "./ColorInput";
 import {
   ConnectModalInlinePreview,
   type WelcomeScreen,
   useCanShowInlineModal,
 } from "./ConnectModalInlinePreview";
 import { FormItem } from "./FormItem";
-import { SwitchFormItem } from "./SwitchFormItem";
-import { AiOutlineStar, AiOutlineWarning } from "react-icons/ai";
-import { ColorInput } from "./ColorInput";
-import { BsStars } from "react-icons/bs";
-import { ThemeButton } from "./ThemeButton";
 import { ModalSizeButton } from "./ModalSizeButton";
 import { PreviewThirdwebProvider } from "./PreviewThirdwebProvider";
-import { usePlaygroundWallets } from "./usePlaygroundWallets";
+import { SwitchFormItem } from "./SwitchFormItem";
+import { ThemeButton } from "./ThemeButton";
+import {
+  RecommendedIconButton,
+  SocialButton,
+  WalletButton,
+} from "./WalletButton";
+import { getCode } from "./getCode";
 import { usePlaygroundTheme } from "./usePlaygroundTheme";
-import { useTrack } from "hooks/analytics/useTrack";
-import { FiChevronRight } from "react-icons/fi";
-import { useQuery } from "@tanstack/react-query";
+import { usePlaygroundWallets } from "./usePlaygroundWallets";
+import { type WalletId, walletInfoRecord } from "./walletInfoRecord";
 
 type LocaleId = "en-US" | "ja-JP" | "es-ES";
 
@@ -174,6 +174,7 @@ export const ConnectWalletPlayground: React.FC<{
               if (!socialOptions.length) {
                 walletCode = "inAppWallet()";
               } else {
+                // biome-ignore lint/suspicious/noExplicitAny: FIXME
                 const options: Record<string, any> = {};
                 if (socialOptions.length) {
                   options.auth = {

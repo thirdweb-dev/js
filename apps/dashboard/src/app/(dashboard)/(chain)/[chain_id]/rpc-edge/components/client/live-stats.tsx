@@ -1,15 +1,15 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { CircleCheck, XIcon } from "lucide-react";
-import { ToolTipLabel } from "@/components/ui/tooltip";
 import { CopyButton } from "@/components/ui/CopyButton";
-import { PrimaryInfoItem } from "../../../components/server/primary-info-item";
-import { useState } from "react";
-import { thirdwebClient } from "lib/thirdweb-client";
-import { hostnameEndsWith } from "utils/url";
-import { isProd } from "constants/rpc";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
+import { isProd } from "constants/rpc";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { CircleCheck, XIcon } from "lucide-react";
+import { useState } from "react";
+import { hostnameEndsWith } from "utils/url";
+import { PrimaryInfoItem } from "../../../components/server/primary-info-item";
 
 function useChainStatswithRPC(_rpcUrl: string) {
   const [shouldRefetch, setShouldRefetch] = useState(true);
@@ -46,7 +46,7 @@ function useChainStatswithRPC(_rpcUrl: string) {
 
       return {
         latency,
-        blockNumber: parseInt(json.result, 16),
+        blockNumber: Number.parseInt(json.result, 16),
       };
     },
     refetchInterval: shouldRefetch ? 5 * 1000 : undefined,
@@ -69,11 +69,11 @@ export function ChainLiveStats(props: { rpc: string }) {
         titleIcon={
           stats.isSuccess ? (
             <ToolTipLabel label="Working">
-              <CircleCheck className="size-4 text-success-foreground" />
+              <CircleCheck className="size-4 text-success-text" />
             </ToolTipLabel>
           ) : stats.isError ? (
             <ToolTipLabel label="Not Working">
-              <XIcon className="size-4 text-destructive-foreground" />
+              <XIcon className="size-4 text-destructive-text" />
             </ToolTipLabel>
           ) : null
         }
@@ -87,7 +87,7 @@ export function ChainLiveStats(props: { rpc: string }) {
       {/* Latency */}
       <PrimaryInfoItem title="RPC Latency" titleIcon={<PulseDot />}>
         {stats.isError ? (
-          <p className="text-lg fade-in-0 animate-in text-destructive-foreground">
+          <p className="text-lg fade-in-0 animate-in text-destructive-text">
             N/A
           </p>
         ) : stats.data ? (
@@ -102,7 +102,7 @@ export function ChainLiveStats(props: { rpc: string }) {
       {/* Block Height */}
       <PrimaryInfoItem title="Block Height" titleIcon={<PulseDot />}>
         {stats.isError ? (
-          <p className="text-lg fade-in-0 animate-in text-destructive-foreground">
+          <p className="text-lg fade-in-0 animate-in text-destructive-text">
             N/A
           </p>
         ) : stats.data ? (
@@ -123,8 +123,8 @@ function PulseDot() {
   return (
     <ToolTipLabel label={"Live Data"}>
       <span className="relative flex size-3">
-        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-        <span className="relative inline-flex rounded-full size-3 bg-primary"></span>
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+        <span className="relative inline-flex rounded-full size-3 bg-primary" />
       </span>
     </ToolTipLabel>
   );

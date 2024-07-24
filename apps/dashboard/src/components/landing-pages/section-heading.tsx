@@ -1,6 +1,6 @@
-import { LandingSectionHeadingProps } from "./types";
 import { Box, Flex } from "@chakra-ui/react";
 import { Heading, Text } from "tw-components";
+import type { LandingSectionHeadingProps } from "./types";
 
 export const LandingSectionHeading: React.FC<LandingSectionHeadingProps> = ({
   blackToWhiteTitle,

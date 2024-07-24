@@ -1,8 +1,7 @@
-import { Text } from "./text";
 import {
   Box,
   Code,
-  CodeProps,
+  type CodeProps,
   Icon,
   IconButton,
   useClipboard,
@@ -11,6 +10,7 @@ import {
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { Highlight, Prism, themes } from "prism-react-renderer";
 import { FiCopy } from "react-icons/fi";
+import { Text } from "./text";
 
 const darkThemeDefault = themes.vsDark;
 const lightThemeDefault = themes.vsLight;
@@ -106,8 +106,10 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           )}
           <Box as="span" display="block" my={1} color="heading" h="full">
             {tokens.map((line, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: index IS the key here
               <Box {...getLineProps({ line, key: i })} key={i}>
                 {line.map((token, key) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: index IS the key here
                   <span {...getTokenProps({ token, key })} key={key} />
                 ))}
               </Box>

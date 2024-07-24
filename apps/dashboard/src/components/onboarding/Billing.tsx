@@ -1,15 +1,18 @@
-import { Elements } from "@stripe/react-stripe-js";
-import { OnboardingPaymentForm } from "./PaymentForm";
-import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
-import { OnboardingTitle } from "./Title";
-import { loadStripe } from "@stripe/stripe-js";
-import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useQueryClient } from "@tanstack/react-query";
 import { accountKeys } from "@3rdweb-sdk/react/cache-keys";
+import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { useQueryClient } from "@tanstack/react-query";
+import { useTrack } from "hooks/analytics/useTrack";
+import { OnboardingPaymentForm } from "./PaymentForm";
+import { OnboardingTitle } from "./Title";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? "");
+// only load stripe if the key is available
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_KEY
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY)
+  : null;
 
 interface OnboardingBillingProps {
   onSave: () => void;

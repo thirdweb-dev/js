@@ -66,8 +66,11 @@ export type WalletDetailsModalScreen =
   | "receive"
   | "buy"
   | "network-switcher"
-  | "pending-tx"
+  | "transactions"
   | "view-funds"
+  | "view-tokens"
+  | "view-nfts"
   | "private-key"
   | "manage-wallet"
-  | "wallet-connect-receiver";
+  | "wallet-connect-receiver"
+  | "wallet-manager";

@@ -1,4 +1,4 @@
-import { contractSlugMapping } from "./contractSlugMapping";
+import type { contractSlugMapping } from "./contractSlugMapping";
 // Map the alias of the benchmark function to the operation it carries
 // eg. "erc20_100" -> "Claim 100 ERC20 token"
 export const functionNameMapping: Record<

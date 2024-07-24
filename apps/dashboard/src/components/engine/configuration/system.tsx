@@ -1,5 +1,5 @@
 import {
-  EngineInstance,
+  type EngineInstance,
   useEngineResourceMetrics,
   useEngineSystemHealth,
 } from "@3rdweb-sdk/react/hooks/useEngine";

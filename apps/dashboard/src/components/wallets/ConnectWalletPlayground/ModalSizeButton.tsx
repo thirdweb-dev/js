@@ -1,4 +1,4 @@
-import { IconButton, Icon, Tooltip } from "@chakra-ui/react";
+import { Icon, IconButton, Tooltip } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FaRectangleList } from "react-icons/fa6";
 import { RiFileListFill } from "react-icons/ri";

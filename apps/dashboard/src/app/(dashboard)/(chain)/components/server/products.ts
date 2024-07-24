@@ -1,10 +1,10 @@
+import type { ChainSupportedService } from "../../types/chain";
 import { ConnectSDKIcon } from "./icons/ConnectSDKIcon";
 import { ContractIcon } from "./icons/ContractIcon";
 import { EngineIcon } from "./icons/EngineIcon";
 import { PayIcon } from "./icons/PayIcon";
 import { RPCIcon } from "./icons/RPCIcon";
 import { SmartAccountIcon } from "./icons/SmartAccountIcon";
-import type { ChainSupportedService } from "../../types/chain";
 
 export const products = [
   {
@@ -35,6 +35,11 @@ export const products = [
   {
     name: "Pay",
     id: "pay",
+    icon: PayIcon,
+  },
+  {
+    name: "Faucet",
+    id: "faucet",
     icon: PayIcon,
   },
 ] satisfies Array<{

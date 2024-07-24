@@ -3,7 +3,7 @@ import { Flex, SimpleGrid, Switch } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
 import {
-  BenchmarkItem,
+  type BenchmarkItem,
   GasEstimatorBox,
 } from "components/gas-estimator/GasEstimatorBox";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -11,7 +11,48 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import { Badge, Card, Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
+
+function parseGasBenchMark(content: string): BenchmarkItem[] {
+  if (!content) {
+    return [];
+  }
+  const _data: BenchmarkItem[] = [];
+  const separator = "test_benchmark_";
+  const lines = content
+    .split("\n")
+    .filter((line) => line.trim() !== "" && line.includes(separator));
+  // biome-ignore lint/complexity/noForEach: FIXME
+  lines.forEach((line) => {
+    const str = line.split(separator)[1];
+    const str2 = str.split("(gas:");
+    const [contractName, ...functionParts] = str2[0]
+      .replace(/[()\s:]/g, "")
+      .split("_");
+    const functionName = functionParts.join("_");
+    const gasCost = str2[1].replace(/[()\s:]/g, "");
+
+    // There are some lines with "weird" result. we'll be filtering them
+    if (Number.isNaN(Number(gasCost))) {
+      return;
+    }
+    const index = _data.findIndex((o) => o.contractName === contractName);
+    if (index >= 0) {
+      _data[index].benchmarks.push({ functionName, gasCost });
+    } else {
+      _data.push({
+        contractName,
+        benchmarks: [
+          {
+            functionName,
+            gasCost,
+          },
+        ],
+      });
+    }
+  });
+  return _data;
+}
 
 const GasPage: ThirdwebNextPage = () => {
   const [ethOrUsd, setEthOrUsd] = useState<"eth" | "usd">("eth");
@@ -30,46 +71,6 @@ const GasPage: ThirdwebNextPage = () => {
     },
   );
 
-  const parseGasBenchMark = (content: string): BenchmarkItem[] => {
-    if (!content) {
-      return [];
-    }
-    const _data: BenchmarkItem[] = [];
-    const separator = "test_benchmark_";
-    const lines = content
-      .split("\n")
-      .filter((line) => line.trim() !== "" && line.includes(separator));
-    lines.forEach((line) => {
-      const str = line.split(separator)[1];
-      const str2 = str.split("(gas:");
-      const [contractName, ...functionParts] = str2[0]
-        .replace(/[()\s:]/g, "")
-        .split("_");
-      const functionName = functionParts.join("_");
-      const gasCost = str2[1].replace(/[()\s:]/g, "");
-
-      // There are some lines with "weird" result. we'll be filtering them
-      if (isNaN(Number(gasCost))) {
-        return;
-      }
-      const index = _data.findIndex((o) => o.contractName === contractName);
-      if (index >= 0) {
-        _data[index].benchmarks.push({ functionName, gasCost });
-      } else {
-        _data.push({
-          contractName,
-          benchmarks: [
-            {
-              functionName,
-              gasCost,
-            },
-          ],
-        });
-      }
-    });
-    return _data;
-  };
-
   const gasItems = useMemo(
     () => parseGasBenchMark(gasBenchmark.data || ""),
     [gasBenchmark.data],
@@ -81,7 +82,7 @@ const GasPage: ThirdwebNextPage = () => {
         description="Estimate the cost of gas fees when deploying contracts or performing common use cases to the blockchain on thirdweb."
         openGraph={{
           title: "Blockchain Gas Estimator",
-          url: `https://thirdweb.com/gas`,
+          url: "https://thirdweb.com/gas",
         }}
       />
       <Flex mb={4}>

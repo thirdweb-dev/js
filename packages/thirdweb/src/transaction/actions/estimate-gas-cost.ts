@@ -23,6 +23,7 @@ export type EstimateGasCostResult = {
  *
  * const gasCost = await estimateGasCost({ transaction });
  * ```
+ * @transaction
  */
 export async function estimateGasCost(
   options: EstimateGasOptions,

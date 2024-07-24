@@ -18,7 +18,7 @@ import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { getBuyWithFiatStatusMeta } from "../tx-history/statusMeta.js";
+import { getBuyWithFiatStatusMeta } from "../pay-transactions/statusMeta.js";
 import { OnRampTxDetailsTable } from "./FiatTxDetailsTable.js";
 
 type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
@@ -30,6 +30,7 @@ type UIStatus = "loading" | "failed" | "completed" | "partialSuccess";
  * - call `onShowSwapFlow` if on-ramp is completed and swap is required
  */
 export function OnrampStatusScreen(props: {
+  title: string;
   client: ThirdwebClient;
   onBack: () => void;
   intentId: string;
@@ -97,7 +98,7 @@ export function OnrampStatusScreen(props: {
 
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={props.title} onBack={props.onBack} />
 
       {props.hasTwoSteps && (
         <>

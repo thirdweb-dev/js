@@ -1,15 +1,15 @@
-import { useEns, usePublisherProfile } from "../hooks";
-import { PublisherSocials } from "./PublisherSocials";
-import { EditProfile } from "./edit-profile";
-import { PublisherAvatar } from "./masked-avatar";
 import { Flex, Skeleton } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import {
   replaceDeployerAddress,
   treatAddress,
 } from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useActiveAccount } from "thirdweb/react";
 import { Heading, Link, LinkButton } from "tw-components";
+import { useEns, usePublisherProfile } from "../hooks";
+import { PublisherSocials } from "./PublisherSocials";
+import { EditProfile } from "./edit-profile";
+import { PublisherAvatar } from "./masked-avatar";
 
 const TRACKING_CATEGORY = "releaser-header";
 
@@ -25,7 +25,7 @@ export const PublisherHeader: React.FC<PublisherHeaderProps> = ({
   const publisherProfile = usePublisherProfile(
     ensQuery.data?.address || undefined,
   );
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const trackEvent = useTrack();
 

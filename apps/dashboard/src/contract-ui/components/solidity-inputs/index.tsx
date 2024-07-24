@@ -1,4 +1,6 @@
+import { Input, type InputProps } from "@chakra-ui/react";
 import { forwardRef } from "react";
+import { type UseFormReturn, useFormContext } from "react-hook-form";
 import { SolidityAddressInput } from "./address-input";
 import { SolidityBoolInput } from "./bool-input";
 import { SolidityBytesInput } from "./bytes-input";
@@ -6,10 +8,9 @@ import { SolidityIntInput } from "./int-input";
 import { SolidityRawInput } from "./raw-input";
 import { SolidityStringInput } from "./string-input";
 import { SolidityTupleInput } from "./tuple-input";
-import { Input, InputProps } from "@chakra-ui/react";
-import { UseFormReturn, useFormContext } from "react-hook-form";
 
 export interface SolidityInputProps extends InputProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   formContext: UseFormReturn<any, any>;
 }
 export interface SolidityInputWithTypeProps extends SolidityInputProps {
@@ -17,6 +18,7 @@ export interface SolidityInputWithTypeProps extends SolidityInputProps {
   solidityName?: string;
   solidityComponents?:
     | {
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         [x: string]: any;
         type: string;
         name: string;
@@ -29,11 +31,13 @@ interface SolidityInputPropsOptionalFormProps extends InputProps {
   solidityName?: string;
   solidityComponents?:
     | {
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
         [x: string]: any;
         type: string;
         name: string;
       }[]
     | undefined;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   formContext?: UseFormReturn<any, any>;
   functionName?: string;
 }
@@ -63,10 +67,8 @@ export const SolidityInput = forwardRef<
         {...inputProps}
       />
     );
-  } else if (
-    solidityType?.startsWith("uint") ||
-    solidityType?.startsWith("int")
-  ) {
+  }
+  if (solidityType?.startsWith("uint") || solidityType?.startsWith("int")) {
     return (
       <SolidityIntInput
         formContext={form}
@@ -74,7 +76,8 @@ export const SolidityInput = forwardRef<
         {...inputProps}
       />
     );
-  } else if (solidityType === "tuple") {
+  }
+  if (solidityType === "tuple") {
     return (
       <SolidityTupleInput
         solidityType={solidityType}
@@ -83,9 +86,11 @@ export const SolidityInput = forwardRef<
         {...inputProps}
       />
     );
-  } else if (solidityType === "address") {
+  }
+  if (solidityType === "address") {
     return <SolidityAddressInput formContext={form} {...inputProps} />;
-  } else if (solidityType === "string") {
+  }
+  if (solidityType === "string") {
     return (
       <SolidityStringInput
         formContext={form}
@@ -94,7 +99,8 @@ export const SolidityInput = forwardRef<
         {...inputProps}
       />
     );
-  } else if (solidityType.startsWith("byte")) {
+  }
+  if (solidityType.startsWith("byte")) {
     return (
       <SolidityBytesInput
         formContext={form}
@@ -102,7 +108,8 @@ export const SolidityInput = forwardRef<
         {...inputProps}
       />
     );
-  } else if (solidityType === "bool") {
+  }
+  if (solidityType === "bool") {
     return <SolidityBoolInput formContext={form} {...inputProps} />;
   }
   return <Input {...inputProps} />;

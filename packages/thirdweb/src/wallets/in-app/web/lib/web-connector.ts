@@ -2,19 +2,20 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import {
-  type AuthArgsType,
   type AuthLoginReturnType,
   type GetUser,
   type LogoutReturnType,
-  type PreAuthArgsType,
+  type MultiStepAuthArgsType,
+  type MultiStepAuthProviderType,
   type SendEmailOtpReturnType,
+  type SingleStepAuthArgsType,
   UserWalletStatus,
-  oauthStrategyToAuthProvider,
 } from "../../core/authentication/type.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
+import { loginWithOauth } from "./auth/oauth.js";
 import { loginWithPasskey, registerPasskey } from "./auth/passkeys.js";
 import { IFrameWallet } from "./in-app-account.js";
 
@@ -43,7 +44,11 @@ export class InAppWebConnector implements InAppConnector {
    * `const thirdwebInAppWallet = new InAppWalletSdk({ clientId: "", chain: "Goerli" });`
    * @internal
    */
-  constructor({ client, onAuthSuccess }: InAppWalletConstructorType) {
+  constructor({
+    client,
+    onAuthSuccess,
+    ecosystem,
+  }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
         "You are using a legacy clientId. Please use the clientId found on the thirdweb dashboard settings page",
@@ -53,10 +58,12 @@ export class InAppWebConnector implements InAppConnector {
     this.client = client;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
+      ecosystem,
       baseUrl,
     });
     this.wallet = new IFrameWallet({
       client,
+      ecosystem,
       querier: this.querier,
     });
 
@@ -64,6 +71,7 @@ export class InAppWebConnector implements InAppConnector {
       client,
       querier: this.querier,
       baseUrl,
+      ecosystem,
       onAuthSuccess: async (authResult) => {
         onAuthSuccess?.(authResult);
         await this.wallet.postWalletSetUp({
@@ -73,6 +81,8 @@ export class InAppWebConnector implements InAppConnector {
         await this.querier.call({
           procedureName: "initIframe",
           params: {
+            partnerId: ecosystem?.partnerId,
+            ecosystemId: ecosystem?.id,
             deviceShareStored: authResult.walletDetails.deviceShareStored,
             clientId: this.client.clientId,
             walletUserId: authResult.storedToken.authDetails.userWalletId,
@@ -123,7 +133,7 @@ export class InAppWebConnector implements InAppConnector {
   }
 
   async preAuthenticate(
-    args: PreAuthArgsType,
+    args: MultiStepAuthProviderType,
   ): Promise<SendEmailOtpReturnType> {
     const strategy = args.strategy;
     switch (strategy) {
@@ -136,12 +146,14 @@ export class InAppWebConnector implements InAppConnector {
       default:
         assertUnreachable(
           strategy,
-          `Provider: ${strategy} doesnt require pre-authentication`,
+          `Provider: ${strategy} doesn't require pre-authentication`,
         );
     }
   }
 
-  async authenticate(args: AuthArgsType): Promise<AuthLoginReturnType> {
+  async authenticate(
+    args: MultiStepAuthArgsType | SingleStepAuthArgsType,
+  ): Promise<AuthLoginReturnType> {
     const strategy = args.strategy;
     switch (strategy) {
       case "email": {
@@ -154,16 +166,6 @@ export class InAppWebConnector implements InAppConnector {
         return await this.auth.verifySmsLoginOtp({
           otp: args.verificationCode,
           phoneNumber: args.phoneNumber,
-        });
-      }
-      case "apple":
-      case "facebook":
-      case "google": {
-        const oauthProvider = oauthStrategyToAuthProvider[strategy];
-        return this.auth.loginWithOauth({
-          oauthProvider,
-          closeOpenedWindow: args.closeOpenedWindow,
-          openedWindow: args.openedWindow,
         });
       }
       case "jwt": {
@@ -189,18 +191,34 @@ export class InAppWebConnector implements InAppConnector {
       case "passkey": {
         if (args.type === "sign-up") {
           const authToken = await registerPasskey({
-            client: args.client,
+            client: this.wallet.client,
+            ecosystem: this.wallet.ecosystem,
             authenticatorType: args.authenticatorType,
             username: args.passkeyName,
           });
           return this.auth.loginWithAuthToken(authToken);
         }
         const authToken = await loginWithPasskey({
-          client: args.client,
+          client: this.wallet.client,
+          ecosystem: this.wallet.ecosystem,
           authenticatorType: args.authenticatorType,
         });
         return this.auth.loginWithAuthToken(authToken);
       }
+      case "apple":
+      case "facebook":
+      case "google":
+      case "discord": {
+        const authToken = await loginWithOauth({
+          authOption: strategy,
+          client: this.wallet.client,
+          ecosystem: this.wallet.ecosystem,
+          closeOpenedWindow: args.closeOpenedWindow,
+          openedWindow: args.openedWindow,
+        });
+        return this.auth.loginWithAuthToken(authToken);
+      }
+
       default:
         assertUnreachable(strategy);
     }

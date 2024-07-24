@@ -1,7 +1,7 @@
 import {
-  ApiKey,
-  ApiKeyServicePolicy,
-  ApiKeyServicePolicyLimits,
+  type ApiKey,
+  type ApiKeyServicePolicy,
+  type ApiKeyServicePolicyLimits,
   usePolicies,
   useUpdatePolicies,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -71,22 +71,21 @@ const sponsorshipPoliciesValidationSchema = z.object({
       message: "Some of the addresses are invalid",
     })
     .nullable(),
-  serverVerifier: z
-    .object({
-      url: z
-        .string()
-        .refine((str) => str.startsWith("https://"), {
-          message: "URL must start with https://",
-        })
-        .nullable(),
-      headers: z
-        .array(z.object({ key: z.string(), value: z.string() }))
-        .nullable(),
-    })
-    .nullable(),
+  serverVerifier: z.object({
+    url: z
+      .string()
+      .refine((str) => str.startsWith("https://"), {
+        message: "URL must start with https://",
+      })
+      .nullable(),
+    headers: z
+      .array(z.object({ key: z.string(), value: z.string() }))
+      .nullable(),
+    enabled: z.boolean(),
+  }),
   globalLimit: z
     .object({
-      maxSpend: z.string().refine((n) => parseFloat(n) > 0, {
+      maxSpend: z.string().refine((n) => Number.parseFloat(n) > 0, {
         message: "Must be a positive number",
       }),
       maxSpendUnit: z.enum(["usd", "native"]),
@@ -130,8 +129,8 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
           ? fromArrayToList(policy?.bypassWallets)
           : null,
       serverVerifier: policy?.serverVerifier?.url
-        ? policy.serverVerifier
-        : null,
+        ? { ...policy.serverVerifier, enabled: true }
+        : { enabled: false, url: null, headers: null },
       globalLimit: policy?.limits?.global ?? null,
       allowedOrBlockedWallets:
         policy?.allowedWallets && policy?.allowedWallets?.length > 0
@@ -225,9 +224,9 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
             serverVerifier:
               values.serverVerifier &&
               typeof values.serverVerifier.url === "string" &&
-              values.serverVerifier.url !== null
+              values.serverVerifier.enabled
                 ? {
-                    ...values.serverVerifier,
+                    headers: values.serverVerifier.headers ?? [],
                     url: values.serverVerifier.url,
                   }
                 : null,
@@ -521,7 +520,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                 <FormLabel pointerEvents={"none"}>Server verifier</FormLabel>
                 <Text>
                   Specify your own endpoint that will verify each transaction
-                  and decide wether it should be sponsored or not. This gives
+                  and decide whether it should be sponsored or not. This gives
                   you fine grained control and lets you build your own rules.{" "}
                   <TrackedLink
                     category={trackingCategory}
@@ -536,21 +535,18 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
 
               <GatedSwitch
                 colorScheme="primary"
-                isChecked={form.watch("serverVerifier")?.url !== null}
+                isChecked={form.watch("serverVerifier").enabled}
                 onChange={() => {
                   form.setValue(
                     "serverVerifier",
-                    !form.watch("serverVerifier")
-                      ? {
-                          url: "",
-                          headers: [],
-                        }
-                      : null,
+                    form.watch("serverVerifier").enabled
+                      ? { enabled: false, url: null, headers: null }
+                      : { enabled: true, url: "", headers: [] },
                   );
                 }}
               />
             </HStack>
-            {form.watch("serverVerifier")?.url !== null && (
+            {form.watch("serverVerifier").enabled && (
               <HStack alignItems={"start"}>
                 <FormControl
                   isInvalid={
@@ -576,6 +572,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
                   <Stack gap={3} alignItems={"end"}>
                     {customHeaderFields.fields.map((_, customHeaderIdx) => {
                       return (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                         <Flex key={customHeaderIdx} gap={2} w="full">
                           <Input
                             placeholder="Key"

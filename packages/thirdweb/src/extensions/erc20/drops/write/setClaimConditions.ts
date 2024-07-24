@@ -17,8 +17,9 @@ export type SetClaimConditionsParams = {
  * @example
  * ```ts
  * import { setClaimConditions } from "thirdweb/extensions/erc20";
+ * import { sendTransaction } from "thirdweb";
  *
- * const tx = setClaimConditions({
+ * const transaction = setClaimConditions({
  *  contract,
  *  phases: [
  *    {
@@ -30,6 +31,8 @@ export type SetClaimConditionsParams = {
  *    },
  *   ],
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setClaimConditions(

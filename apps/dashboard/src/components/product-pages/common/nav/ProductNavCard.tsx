@@ -1,6 +1,6 @@
 import { Box, Flex, Stack } from "@chakra-ui/react";
-import { IconType } from "@react-icons/all-files";
-import { StaticImageData } from "next/image";
+import type { IconType } from "@react-icons/all-files";
+import type { StaticImageData } from "next/image";
 import { Text } from "tw-components";
 
 interface ProductSectionItemProps {

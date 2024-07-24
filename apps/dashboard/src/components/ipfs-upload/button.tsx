@@ -1,12 +1,13 @@
 import { Icon } from "@chakra-ui/react";
-import { UseMutationResult } from "@tanstack/react-query";
+import type { UseMutationResult } from "@tanstack/react-query";
 import { FileInput } from "components/shared/FileInput";
 import { useErrorHandler } from "contexts/error-handler";
 import { FiUpload } from "react-icons/fi";
-import { Button, ButtonProps } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import { Button, type ButtonProps } from "tw-components";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface IpfsUploadButtonProps extends ButtonProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   storageUpload: UseMutationResult<string[], unknown, any, unknown>;
   onUpload: (uri: string) => void;
 }

@@ -1,9 +1,9 @@
-import { moveDown, moveUp } from "../animations";
-import { SlideStateProps } from "../shared";
 import { Center, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { motion } from "framer-motion";
 import { Heading } from "tw-components";
+import { moveDown, moveUp } from "../animations";
+import type { SlideStateProps } from "../shared";
 
 export const Titles: React.FC<SlideStateProps> = ({
   slideIndex: step,

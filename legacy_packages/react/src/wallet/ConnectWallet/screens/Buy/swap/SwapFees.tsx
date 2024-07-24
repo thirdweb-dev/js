@@ -18,7 +18,8 @@ export function SwapFees(props: {
         alignItems: props.align === "right" ? "flex-end" : "flex-start",
       }}
     >
-      {props.quote.processingFees.map((fee, i) => {
+      {/* TODO: why are the explicit annotations required here? */}
+      {props.quote.processingFees.map((fee: BuyWithCryptoQuote['processingFees'][number], i: number) => {
         const feeAmount = formatNumber(Number(fee.amount), 4);
         return (
           <Container key={i} flex="row" gap="xxs">

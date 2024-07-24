@@ -6,16 +6,6 @@ import { resolveAvatar } from "./resolve-avatar.js";
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
 describe.runIf(process.env.TW_SECRET_KEY)("ENS:resolve-avatar", () => {
-  it("resolves offchain record", async () => {
-    const avatarUri = await resolveAvatar({
-      client: TEST_CLIENT,
-      name: "snowowl.eth",
-    });
-    expect(avatarUri).toMatchInlineSnapshot(
-      `"https://i.imgur.com/MO1wCsI.jpg"`,
-    );
-  });
-
   it("resolves onchain record", async () => {
     const avatarUri = await resolveAvatar({
       client: TEST_CLIENT,

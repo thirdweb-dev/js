@@ -1,43 +1,31 @@
-import { BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Flex,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { Optimism } from "@thirdweb-dev/chains";
-import { ChainIcon } from "components/icons/ChainIcon";
-import { ApplyForOpCreditsModal } from "components/onboarding/ApplyForOpCreditsModal";
-import { formatDistance } from "date-fns";
-import { Text, Button, Card } from "tw-components";
-import { formatToDollars } from "./CreditsButton";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { useTrack } from "hooks/analytics/useTrack";
+import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { Alert, AlertDescription, AlertIcon, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { ChainIcon } from "components/icons/ChainIcon";
+import { formatDistance } from "date-fns";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
+import { Card, LinkButton, Text } from "tw-components";
+import { formatToDollars } from "./CreditsButton";
 
 interface CreditsItemProps {
   credit?: BillingCredit;
   onCreditsButton?: true;
   isOpCreditDefault?: boolean;
+  onClickApply?: () => void;
 }
 
 export const CreditsItem: React.FC<CreditsItemProps> = ({
   credit,
   onCreditsButton,
   isOpCreditDefault,
+  onClickApply,
 }) => {
-  const {
-    isOpen: isMoreCreditsOpen,
-    onOpen: onMoreCreditsOpen,
-    onClose: onMoreCreditsClose,
-  } = useDisclosure();
   const trackEvent = useTrack();
-
   const account = useAccount();
 
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${(account?.data && account.data.id) || ""}`,
+    `appliedForOpGrant-${account?.data?.id || ""}`,
     false,
   );
 
@@ -59,7 +47,13 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
       <Flex flexDir="column" gap={4}>
         <Flex gap={2}>
           {isOpCredit ? (
-            <ChainIcon ipfsSrc={Optimism.icon.url} size={24} />
+            <ChainIcon
+              ipfsSrc={
+                // Hard-coded here to remove @thirdweb dev/chains
+                "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
+              }
+              size={24}
+            />
           ) : isTwCredit ? (
             <ChakraNextImage
               src={require("../../../../../public/brand/thirdweb-icon.svg")}
@@ -77,20 +71,23 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           ) : null}
           <Text color="bgBlack">{creditTitle}</Text>
           {!hasAppliedForOpGrant && isOpCredit && (
-            <Button
+            <LinkButton
+              href="/dashboard/settings/gas-credits"
               size="xs"
               variant="outline"
               onClick={() => {
-                onMoreCreditsOpen();
                 trackEvent({
                   category: "op-sponsorship",
                   action: "click",
                   label: "apply-now",
                 });
+                if (onClickApply) {
+                  onClickApply();
+                }
               }}
             >
-              Apply now
-            </Button>
+              Apply Now
+            </LinkButton>
           )}
         </Flex>
         <Flex gap={6}>
@@ -137,12 +134,6 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
           </Alert>
         )}
       </Flex>
-      {isOpCredit && (
-        <ApplyForOpCreditsModal
-          isOpen={isMoreCreditsOpen}
-          onClose={onMoreCreditsClose}
-        />
-      )}
     </Card>
   );
 };

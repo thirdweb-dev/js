@@ -1,8 +1,8 @@
-import { AccountSigners } from "./components/account-signers";
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { AccountSigners } from "./components/account-signers";
 
 interface AccountPermissionsPageProps {
   contractAddress?: string;

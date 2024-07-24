@@ -1,6 +1,6 @@
+import { Input } from "@chakra-ui/react";
 import { CustomFormControl } from "../common";
 import { useClaimConditionsFormContext } from "../index";
-import { Input } from "@chakra-ui/react";
 
 /**
  * Allows users to edit the name for the claim phase.

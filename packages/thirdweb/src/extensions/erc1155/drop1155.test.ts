@@ -8,6 +8,8 @@ import {
 } from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import { toEther } from "../../utils/units.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC1155Contract } from "../prebuilts/deploy-erc1155.js";
 import { balanceOf } from "./__generated__/IERC1155/read/balanceOf.js";
@@ -135,6 +137,11 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         tokenId: 0n,
         quantity: 1n,
       });
+      // assert value is set correctly
+      const value = await resolvePromisedValue(claimTx.value);
+      expect(value).toBeDefined();
+      if (!value) throw new Error("value is undefined");
+      expect(toEther(value)).toBe("0.001");
       await sendAndConfirmTransaction({
         transaction: claimTx,
         account: TEST_ACCOUNT_A,

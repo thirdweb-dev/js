@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 
 interface LandingPlanProps {

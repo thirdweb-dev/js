@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { ThirdwebClient } from "../../../../client/client.js";
 import { isMobile } from "../../../../utils/web/isMobile.js";
 import { openWindow } from "../../../../utils/web/openWindow.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -10,7 +11,6 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
 import { AppleIcon } from "../../ui/ConnectWallet/icons/AppleIcon.js";
 import { ChromeIcon } from "../../ui/ConnectWallet/icons/ChromeIcon.js";
 import { PlayStoreIcon } from "../../ui/ConnectWallet/icons/PlayStoreIcon.js";
@@ -33,7 +33,8 @@ export const GetStartedScreen: React.FC<{
   footer?: React.ReactNode;
   showBack?: boolean;
   locale: InjectedWalletLocale;
-}> = ({ wallet, walletInfo, header, footer, onBack, locale }) => {
+  client: ThirdwebClient;
+}> = ({ wallet, walletInfo, header, footer, onBack, locale, client }) => {
   const [showScreen, setShowScreen] = useState<
     "base" | "android-scan" | "ios-scan"
   >("base");
@@ -65,6 +66,7 @@ export const GetStartedScreen: React.FC<{
             locale={{
               scanToDownload: locale.getStartedScreen.instruction,
             }}
+            client={client}
           />
         )}
 
@@ -79,6 +81,7 @@ export const GetStartedScreen: React.FC<{
             locale={{
               scanToDownload: locale.getStartedScreen.instruction,
             }}
+            client={client}
           />
         )}
 
@@ -168,8 +171,8 @@ const InstallScanScreen: React.FC<{
   locale: {
     scanToDownload: string;
   };
+  client: ThirdwebClient;
 }> = (props) => {
-  const { client } = useConnectUI();
   return (
     <Container animate="fadein" expand>
       <ModalHeader title={props.walletName} onBack={props.onBack} />
@@ -189,7 +192,7 @@ const InstallScanScreen: React.FC<{
             <WalletImage
               id={props.walletId}
               size={iconSize.xxl}
-              client={client}
+              client={props.client}
             />
           }
         />
@@ -206,7 +209,7 @@ const InstallScanScreen: React.FC<{
   );
 };
 
-const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+const ButtonLink = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

@@ -1,7 +1,7 @@
 import { List, ListItem } from "@chakra-ui/react";
-import { WalletNFT } from "lib/wallet/nfts/types";
-import { shortenIfAddress } from "utils/usedapp-external";
+import type { WalletNFT } from "lib/wallet/nfts/types";
 import { Card } from "tw-components";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 interface ListLabelProps {
   nft: WalletNFT;

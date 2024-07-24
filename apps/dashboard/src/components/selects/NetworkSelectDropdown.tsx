@@ -1,6 +1,6 @@
 import { Flex, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { StoredChain } from "contexts/configured-chains";
+import type { StoredChain } from "contexts/configured-chains";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useMemo, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";

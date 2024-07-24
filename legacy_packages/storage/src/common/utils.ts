@@ -119,7 +119,7 @@ export function replaceGatewayUrlWithScheme(
   gatewayUrls: GatewayUrls,
 ): string {
   for (const scheme of Object.keys(gatewayUrls)) {
-    for (const gatewayUrl of gatewayUrls[scheme]) {
+    for (const gatewayUrl of (gatewayUrls?.[scheme] || [])) {
       // If the url is a tokenized url, we need to convert it to a canonical url
       // Otherwise, we just need to check if the url is a prefix of the uri
       if (gatewayUrl.includes("{cid}")) {
@@ -153,6 +153,7 @@ export function replaceSchemeWithGatewayUrl(
   const scheme = Object.keys(gatewayUrls).find((s) => uri.startsWith(s));
   const schemeGatewayUrls = scheme ? gatewayUrls[scheme] : [];
 
+  // @ts-expect-error - TODO: should check index access
   if ((!scheme && index > 0) || (scheme && index >= schemeGatewayUrls.length)) {
     return undefined;
   }
@@ -164,6 +165,7 @@ export function replaceSchemeWithGatewayUrl(
   const path = uri.replace(scheme, "");
   try {
     const gatewayUrl = getGatewayUrlForCid(
+      // @ts-expect-error - TODO: should check index access
       schemeGatewayUrls[index],
       path,
       clientId,

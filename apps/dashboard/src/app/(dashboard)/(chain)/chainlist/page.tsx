@@ -1,26 +1,26 @@
 import { Button } from "@/components/ui/button";
+import Fuse from "fuse.js";
+import { PlusIcon } from "lucide-react";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
+import Link from "next/link";
+import { StarButton } from "../components/client/star-button";
+import type {
+  ChainMetadataWithServices,
+  ChainSupportedService,
+} from "../types/chain";
+import { getChains } from "../utils";
 import {
   AllFilters,
   ChainOptionsFilter,
   ChainServiceFilter,
   ChainTypeFilter,
 } from "./components/client/filters";
-import Link from "next/link";
-import { PlusIcon } from "lucide-react";
-import { headers } from "next/headers";
-import { SearchInput } from "./components/client/search";
-import {
-  ChainMetadataWithServices,
-  ChainSupportedService,
-} from "../types/chain";
-import Fuse from "fuse.js";
 import { ChainlistPagination } from "./components/client/pagination";
-import { ChainListRow } from "./components/server/chainlist-row";
-import { StarButton } from "../components/client/star-button";
-import { ChainListCard } from "./components/server/chainlist-card";
+import { SearchInput } from "./components/client/search";
 import { ChainListView } from "./components/client/view";
-import { Metadata } from "next";
-import { getChains } from "../utils";
+import { ChainListCard } from "./components/server/chainlist-card";
+import { ChainListRow } from "./components/server/chainlist-row";
 
 type SearchParams = Partial<{
   type: "mainnet" | "testnet";
@@ -188,7 +188,7 @@ export default function ChainListPage(props: { searchParams: SearchParams }) {
           </div>
         </div>
       </header>
-      <div className="h-10"></div>
+      <div className="h-10" />
       {/* we used to have suspense + spinner here, that feels more jarring than the page loading _minutely_ slower */}
       <ChainsData searchParams={props.searchParams} activeView={activeView} />
     </section>
@@ -286,7 +286,7 @@ async function ChainsData(props: {
           </ul>
         )}
       </main>
-      <div className="h-10"></div>
+      <div className="h-10" />
       {totalPages > 1 && (
         <ChainlistPagination totalPages={totalPages} activePage={activePage} />
       )}
@@ -323,7 +323,7 @@ function AddYourChainButton(props: { className?: string }) {
   return (
     <Button asChild variant="default" className={props.className}>
       <Link
-        href="https://support.thirdweb.com/how-to/vGcHXQ7tHXuSJf7jaL2y5Q/how-to-add-your-evm-chain-to-thirdweb%E2%80%99s-chainlist-/3HMqrwyxXUFxQYaudDJffT"
+        href="https://share.hsforms.com/1XDi-ieM9Rl6oIkn7ynK6Lgea58c"
         target="_blank"
         className="flex items-center gap-2"
       >

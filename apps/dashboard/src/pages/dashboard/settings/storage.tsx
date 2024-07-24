@@ -1,7 +1,7 @@
 import { Divider, Flex, GridItem, SimpleGrid, Tooltip } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
-import { CodeEnvironment } from "components/contract-tabs/code/types";
+import type { CodeEnvironment } from "components/contract-tabs/code/types";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
 import { IpfsUploadDropzone } from "components/ipfs-upload/dropzone";
 import { YourFilesSection } from "components/storage/your-files";
@@ -9,8 +9,8 @@ import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useState } from "react";
-import { Card, Heading, Text, TrackedCopyButton, Link } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import { Card, Heading, Link, Text, TrackedCopyButton } from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "storage";
 

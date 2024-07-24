@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
 import { Tab } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import type { ReactNode } from "react";
 import { Heading } from "tw-components";
 
 interface ConnectPlaygroundTabProps {

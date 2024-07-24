@@ -9,10 +9,9 @@ export const useBuildId = () => {
 
     const nextData = document.querySelector("#__NEXT_DATA__");
 
-    const buildId =
-      nextData && nextData.textContent
-        ? JSON.parse(nextData.textContent).buildId
-        : null;
+    const buildId = nextData?.textContent
+      ? JSON.parse(nextData.textContent).buildId
+      : null;
 
     const request = new XMLHttpRequest();
     request.open("HEAD", `/_next/static/${buildId}/_buildManifest.js`, false);

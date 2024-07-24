@@ -1,4 +1,3 @@
-import { useEditProfileMutation } from "../hooks";
 import {
   Box,
   Flex,
@@ -11,7 +10,7 @@ import {
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk";
+import type { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -29,6 +28,7 @@ import {
   Heading,
 } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
+import { useEditProfileMutation } from "../hooks";
 
 interface EditProfileProps {
   publisherProfile: ProfileMetadata;

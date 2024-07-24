@@ -1,8 +1,4 @@
 import {
-  useConstructorParamsFromABI,
-  useFunctionParamsFromABI,
-} from "../hooks";
-import {
   Divider,
   Flex,
   FormControl,
@@ -27,6 +23,10 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import type {
+  useConstructorParamsFromABI,
+  useFunctionParamsFromABI,
+} from "../hooks";
 
 interface ContractParamsFieldsetProps {
   deployParams:

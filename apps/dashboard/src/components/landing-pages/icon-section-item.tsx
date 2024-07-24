@@ -1,7 +1,7 @@
-import { Flex, FlexProps } from "@chakra-ui/react";
+import { Flex, type FlexProps } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
-import { ReactNode } from "react";
+import type { StaticImageData } from "next/image";
+import type { ReactNode } from "react";
 import { Text } from "tw-components";
 
 interface LandingIconSectionItemProps {

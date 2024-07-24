@@ -1,23 +1,23 @@
 import { Center, Container, Flex, Spacer } from "@chakra-ui/react";
+import Carousel from "components/connect/Carousel";
+import CodePlayground from "components/connect/CodePlayground";
 import { LandingCardWithImage } from "components/landing-pages/card-with-image";
+import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
 import { LandingEndCTA } from "components/landing-pages/end-cta";
+import { Gradients } from "components/landing-pages/gradients";
 import { LandingGridSection } from "components/landing-pages/grid-section";
 import { LandingGuidesShowcase } from "components/landing-pages/guide-showcase";
 import { LandingHeroWithSideImage } from "components/landing-pages/hero-with-side-image";
 import { LandingLayout } from "components/landing-pages/layout";
 import { MiniPlayground } from "components/wallets/ConnectWalletMiniPlayground/MiniPlayground";
 import { SupportedPlatformLink } from "components/wallets/SupportedPlatformLink";
+import { connectFrames } from "lib/connect-frames";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import Head from "next/head";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 import connectLottie from "../../public/assets/product-pages/connect/connect-lottie.json";
-import LandingCardWithMetrics from "components/landing-pages/card-with-metrics";
-import CodePlayground from "components/connect/CodePlayground";
-import Carousel from "components/connect/Carousel";
-import Head from "next/head";
-import { Gradients } from "components/landing-pages/gradients";
-import { connectFrames } from "lib/connect-frames";
 
 const TRACKING_CATEGORY = "connect-wallet-landing";
 
@@ -275,7 +275,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
             titleWithGradient="smart accounts"
             subtitle="The complete toolkit to integrate account abstraction into your app — for signless transactions, custom token spending, & more."
             trackingCategory={TRACKING_CATEGORY}
-            ctaLink="https://portal.thirdweb.com/connect/account-abstraction"
+            ctaLink="https://portal.thirdweb.com/connect/account-abstraction/overview"
             gradient="linear(to-r, #4490FF, #4490FF)"
             image={require("../../public/assets/product-pages/hero/desktop-aa.png")}
             mobileImage={require("../../public/assets/product-pages/hero/mobile-aa.png")}

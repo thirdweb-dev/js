@@ -1,4 +1,4 @@
-import { Flex, DarkMode, Container, Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, DarkMode, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import HeroSection from "components/grant/superchain/HeroSection";

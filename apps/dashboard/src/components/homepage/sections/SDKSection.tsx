@@ -1,11 +1,11 @@
-import { Aurora } from "../Aurora";
 import { Flex } from "@chakra-ui/react";
 import {
   CodeSelector,
-  CodeSelectorProps,
+  type CodeSelectorProps,
 } from "components/product-pages/homepage/CodeSelector";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { Heading } from "tw-components";
+import { Aurora } from "../Aurora";
 
 interface SDKSectionProps {
   title?: string;

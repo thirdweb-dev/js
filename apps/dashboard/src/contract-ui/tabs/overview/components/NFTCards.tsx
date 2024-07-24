@@ -1,25 +1,25 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
-  useBreakpointValue,
-  SimpleGrid,
-  GridItem,
   AspectRatio,
-  Skeleton,
   Flex,
+  GridItem,
+  SimpleGrid,
+  Skeleton,
   SkeletonText,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-import { NFT } from "thirdweb";
-import { WalletNFT } from "lib/wallet/nfts/types";
+import { useChainSlug } from "hooks/chains/chainSlug";
+import type { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
+import type { NFT } from "thirdweb";
 import {
-  TrackedLinkProps,
-  TrackedLink,
-  Heading,
   Card,
+  Heading,
   Text,
+  TrackedLink,
+  type TrackedLinkProps,
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { useChainSlug } from "hooks/chains/chainSlug";
 
 const dummyMetadata: (idx: number) => NFT = (idx) => ({
   id: BigInt(idx || 0),
@@ -94,7 +94,6 @@ export const NFTCards: React.FC<NFTCardsProps> = ({
               <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
                 <Skeleton isLoaded={!isLoading}>
                   <NFTMediaWithEmptyState
-                    // @ts-expect-error types are not up to date
                     metadata={token.metadata}
                     requireInteraction
                     width="100%"

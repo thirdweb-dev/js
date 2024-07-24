@@ -1,3 +1,5 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import {
   CheckIcon,
   CircleAlertIcon,
@@ -5,11 +7,10 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { products } from "../../../components/server/products";
-import { ChainSupportedService } from "../../../types/chain";
+import { CopyTextButton } from "../../../../../../@/components/ui/CopyTextButton";
 import { ChainIcon } from "../../../components/server/chain-icon";
+import { products } from "../../../components/server/products";
+import type { ChainSupportedService } from "../../../types/chain";
 import { getChainMetadata } from "../../../utils";
 
 type ChainListRowProps = {
@@ -34,6 +35,7 @@ export async function ChainListRow({
   iconUrl,
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
+  const productsWithoutFaucet = products.filter((p) => p.id !== "faucet");
   return (
     <tr className="border-b relative hover:bg-secondary">
       <TableData>{favoriteButton}</TableData>
@@ -51,27 +53,36 @@ export async function ChainListRow({
 
             {!isDeprecated && chainMetadata?.gasSponsored && (
               <ToolTipLabel label="Gas Sponsored">
-                <TicketCheckIcon className="text-primary-foreground size-5 z-10 " />
+                <TicketCheckIcon className="text-link-foreground size-5 z-10 " />
               </ToolTipLabel>
             )}
 
             {isDeprecated && (
               <ToolTipLabel label="Deprecated">
-                <CircleAlertIcon className="text-destructive-foreground size-5 z-10 " />
+                <CircleAlertIcon className="text-destructive-text size-5 z-10 " />
               </ToolTipLabel>
             )}
           </div>
         </div>
       </TableData>
 
-      <TableData>{chainId}</TableData>
+      <TableData>
+        <CopyTextButton
+          textToCopy={chainId.toString()}
+          textToShow={chainId.toString()}
+          tooltip="Copy Chain ID"
+          className="z-10 relative text-base"
+          variant="ghost"
+          copyIconPosition="right"
+        />
+      </TableData>
 
       <TableData>{currencySymbol}</TableData>
 
       <TableData>
         <div className="flex flex-row gap-14 items-center w-[520px] ">
           <div className="flex items-center gap-7 z-10">
-            {products.map((p) => {
+            {productsWithoutFaucet.map((p) => {
               return (
                 <ProductIcon
                   key={p.name}
@@ -104,9 +115,9 @@ function ProductIcon(props: {
       label={props.label}
       leftIcon={
         props.isEnabled ? (
-          <CheckIcon className="text-success-foreground size-4" />
+          <CheckIcon className="text-success-text size-4" />
         ) : (
-          <XIcon className="text-destructive-foreground size-4" />
+          <XIcon className="text-destructive-text size-4" />
         )
       }
     >

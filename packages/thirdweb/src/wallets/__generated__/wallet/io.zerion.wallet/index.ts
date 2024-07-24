@@ -11,7 +11,7 @@ export const wallet = {
     ios: "https://apps.apple.com/app/id1456732565",
     android:
       "https://play.google.com/store/apps/details?id=io.zerion.android&hl=en&gl=US",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome:
@@ -24,7 +24,7 @@ export const wallet = {
   rdns: "io.zerion.wallet",
   mobile: {
     native: "zerion://",
-    universal: "https://wallet.zerion.io",
+    universal: "https://wallet.zerion.io/wc",
   },
   desktop: {
     native: "zerion://",

@@ -2,7 +2,7 @@ import {
   Box,
   DarkMode,
   Flex,
-  FlexProps,
+  type FlexProps,
   FormControl,
   Icon,
   Image,
@@ -22,7 +22,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Button, Card, Heading, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 interface FormSchema {
   firstname: string;
@@ -136,6 +136,7 @@ const ContactUs: ThirdwebNextPage = () => {
                 onSubmit={form.handleSubmit(async (data) => {
                   const fields = Object.keys(data).map((key) => ({
                     name: key,
+                    // biome-ignore lint/suspicious/noExplicitAny: FIXME
                     value: (data as any)[key],
                   }));
 

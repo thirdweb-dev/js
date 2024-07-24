@@ -1,10 +1,10 @@
-import { CustomFactory } from "./custom-factory";
-import { DefaultFactory } from "./default-factory";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
-import { Abi } from "@thirdweb-dev/sdk";
-import { Dispatch, SetStateAction } from "react";
+import type { Abi } from "@thirdweb-dev/sdk";
+import type { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, Heading } from "tw-components";
+import { CustomFactory } from "./custom-factory";
+import { DefaultFactory } from "./default-factory";
 
 interface FactoryFieldsetProps {
   abi: Abi;

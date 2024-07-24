@@ -20,7 +20,7 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink, TrackedLinkButton } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "startup-program";
 
@@ -253,8 +253,8 @@ const StartupProgram: ThirdwebNextPage = () => {
                 color="white"
                 maxW="800px"
               >
-                Our new startup program is designed to help you build, scale,
-                and generate revenue. We only profit when you do!
+                Our startup program is designed to help you build, scale, and
+                generate revenue.
               </Text>
             </Flex>
 
@@ -360,6 +360,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               >
                 {partnersCompanies.slice(0, 4).map((partner, idx) => (
                   <ChakraNextImage
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={idx}
                     maxW={partner.maxWidth}
                     src={partner.src}
@@ -376,6 +377,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               >
                 {partnersCompanies.slice(4).map((partner, idx) => (
                   <ChakraNextImage
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     key={idx}
                     maxW={partner.maxWidth}
                     src={partner.src}

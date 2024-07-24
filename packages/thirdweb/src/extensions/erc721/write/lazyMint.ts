@@ -36,8 +36,9 @@ export type LazyMintParams = {
  * @example
  * ```ts
  * import { lazyMint } from "thirdweb/extensions/erc721";
+ * import { sendTransaction } from "thirdweb";
  *
- * const tx = lazyMint({
+ * const transaction = lazyMint({
  *   contract,
  *   nfts: [
  *     {
@@ -47,6 +48,8 @@ export type LazyMintParams = {
  *     },
  *   ],
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {

@@ -7,12 +7,13 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { DropContract, useAddress, useClaimNFT } from "@thirdweb-dev/react";
+import { type DropContract, useClaimNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { ZERO_ADDRESS } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -28,7 +29,7 @@ interface NFTClaimFormProps {
 export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
   const claim = useClaimNFT(contract);
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const {
     register,
     handleSubmit,
@@ -52,7 +53,7 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>To Address</FormLabel>
-              <Input placeholder={constants.AddressZero} {...register("to")} />
+              <Input placeholder={ZERO_ADDRESS} {...register("to")} />
               <FormHelperText>Enter the address to claim to.</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>

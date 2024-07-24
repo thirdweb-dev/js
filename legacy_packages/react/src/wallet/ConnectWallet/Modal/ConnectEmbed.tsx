@@ -431,7 +431,8 @@ export function SyncedWalletUIStates(
   return <WalletUIStatesProvider {...props} />;
 }
 
-const EmbedContainer = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const EmbedContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     color: theme.colors.primaryText,

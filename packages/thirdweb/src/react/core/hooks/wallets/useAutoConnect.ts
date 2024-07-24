@@ -15,7 +15,7 @@ import { useSetActiveWalletConnectionStatusCore } from "./useSetActiveWalletConn
 export function useAutoConnectCore(
   manager: ConnectionManager,
   storage: AsyncStorage,
-  props: AutoConnectProps,
+  props: AutoConnectProps & { wallets: Wallet[] },
   getInstalledWallets?: () => Wallet[],
 ) {
   const setConnectionStatus = useSetActiveWalletConnectionStatusCore(manager);
@@ -80,8 +80,6 @@ export function useAutoConnectCore(
           setConnectionStatus("disconnected");
         }
       } catch (e) {
-        console.error("Failed to auto connect last active wallet");
-        console.error(e);
         setConnectionStatus("disconnected");
       }
     } else {
@@ -99,8 +97,7 @@ export function useAutoConnectCore(
         await handleWalletConnection(wallet);
         manager.addConnectedWallet(wallet);
       } catch (e) {
-        console.error("Failed to auto connect a non-active connected wallet");
-        console.error(e);
+        // no-op
       }
     }
     isAutoConnecting.setValue(false);

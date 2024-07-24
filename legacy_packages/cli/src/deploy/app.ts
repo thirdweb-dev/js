@@ -76,10 +76,7 @@ export async function deployApp(
 
   try {
     const uri = await upload(storage, distPath);
-    return `${uri.replace(
-      "ipfs://",
-      "https://cf-ipfs.com/ipfs/",
-    )}`;
+    return `${uri.replace("ipfs://", "https://cf-ipfs.com/ipfs/")}`;
   } catch (err: any) {
     console.error(err.message ? err.message : err);
     return Promise.reject("Can't upload project");

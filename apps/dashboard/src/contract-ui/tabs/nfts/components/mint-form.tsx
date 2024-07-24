@@ -9,17 +9,16 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
+  Flex,
   FormControl,
   Input,
   Stack,
   Textarea,
   useModalContext,
-  Flex,
 } from "@chakra-ui/react";
-import { UseMutationResult } from "@tanstack/react-query";
-import {
+import type { UseMutationResult } from "@tanstack/react-query";
+import type {
   NFTContract,
-  useAddress,
   useMintNFT,
   useSetSharedMetadata,
   useUpdateNFTMetadata,
@@ -35,7 +34,8 @@ import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { type NFT } from "thirdweb";
+import type { NFT } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Button,
   FormErrorMessage,
@@ -44,7 +44,7 @@ import {
   Heading,
 } from "tw-components";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
-import { NFTMetadataInputLimited } from "types/modified-types";
+import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
 
 const MINT_FORM_ID = "nft-mint-form";
@@ -97,7 +97,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   updateMetadataMutation,
 }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const mutation =
     mintMutation ||
     lazyMintMutation ||
@@ -171,7 +171,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       ) ||
       file.name?.endsWith(".glb") ||
       file.name?.endsWith(".usdz") ||
-      file.name?.endsWith(".gltf")
+      file.name?.endsWith(".gltf") ||
+      file.name.endsWith(".obj")
     ) {
       // audio, video, html, and glb (3d) files
       setValue("animation_url", file);
@@ -304,6 +305,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                     onSuccess();
                     modalContext.onClose();
                   },
+                  // biome-ignore lint/suspicious/noExplicitAny: FIXME
                   onError: (error: any) => {
                     trackEvent({
                       category: "nft",
@@ -333,6 +335,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   onSuccess();
                   modalContext.onClose();
                 },
+                // biome-ignore lint/suspicious/noExplicitAny: FIXME
                 onError: (error: any) => {
                   trackEvent({
                     category: "nft",
@@ -373,6 +376,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                     onSuccess();
                     modalContext.onClose();
                   },
+                  // biome-ignore lint/suspicious/noExplicitAny: FIXME
                   onError: (error: any) => {
                     trackEvent({
                       category: "nft",
@@ -394,16 +398,13 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           <FormControl isRequired isInvalid={!!errors.name}>
             <FormLabel>Name</FormLabel>
             <Input autoFocus {...register("name")} />
-            <FormErrorMessage>
-              <>{errors?.name?.message}</>
-            </FormErrorMessage>
+            <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={!!mediaFileError}>
             <FormLabel>Media</FormLabel>
             {nft?.metadata && !mediaFileUrl && (
               <Flex>
                 <NFTMediaWithEmptyState
-                  // @ts-expect-error types are not up to date
                   metadata={nft.metadata}
                   width="200px"
                   height="200px"
@@ -460,9 +461,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           <FormControl isInvalid={!!errors.description}>
             <FormLabel>Description</FormLabel>
             <Textarea {...register("description")} />
-            <FormErrorMessage>
-              <>{errors?.description?.message}</>
-            </FormErrorMessage>
+            <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
           {!sharedMetadataMutation && (
             <>
@@ -480,6 +479,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
               )}
               <PropertiesFormControl
                 watch={watch}
+                // biome-ignore lint/suspicious/noExplicitAny: FIXME
                 errors={errors as any}
                 control={control}
                 register={register}
@@ -510,7 +510,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                         Must be a six-character hexadecimal with a pre-pended #.
                       </FormHelperText>
                       <FormErrorMessage>
-                        <>{errors?.background_color?.message}</>
+                        {errors?.background_color?.message}
                       </FormErrorMessage>
                     </FormControl>
                     {!externalIsTextFile && (
@@ -539,7 +539,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                     the URL or URI here.
                   </FormHelperText>
                   <FormErrorMessage>
-                    <>{errors?.customImage?.message}</>
+                    {errors?.customImage?.message}
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl isInvalid={!!errors.customAnimationUrl}>
@@ -550,7 +550,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                     can set the URL or URI here.
                   </FormHelperText>
                   <FormErrorMessage>
-                    <>{errors?.customAnimationUrl?.message}</>
+                    {errors?.customAnimationUrl?.message}
                   </FormErrorMessage>
                 </FormControl>
               </AccordionPanel>

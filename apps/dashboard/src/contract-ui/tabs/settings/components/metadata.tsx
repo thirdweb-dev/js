@@ -1,4 +1,3 @@
-import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
   Box,
@@ -11,13 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContractMetadata } from "@thirdweb-dev/react";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
-import { setContractMetadata } from "thirdweb/extensions/common";
 import {
   CommonContractSchema,
-  ValidContractInstance,
+  type ValidContractInstance,
 } from "@thirdweb-dev/sdk/evm";
-import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -26,6 +23,9 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlus, FiTrash } from "react-icons/fi";
+import { getContract } from "thirdweb";
+import { setContractMetadata } from "thirdweb/extensions/common";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   Button,
   Card,
@@ -35,9 +35,10 @@ import {
   Text,
 } from "tw-components";
 import { z } from "zod";
-import { defineChain, getContract } from "thirdweb";
-import { thirdwebClient } from "../../../../lib/thirdweb-client";
 import { useInvalidatev4Contract } from "../../../../hooks/invalidate-v4-contract";
+import { thirdwebClient } from "../../../../lib/thirdweb-client";
+import { defineDashboardChain } from "../../../../lib/v5-adapter";
+import { SettingDetectedState } from "./detected-state";
 
 const DashboardCommonContractSchema = CommonContractSchema.extend({
   dashboard_social_urls: z.array(
@@ -154,7 +155,7 @@ export const SettingsMetadata = <
 
           const contractV5 = getContract({
             address: contract.getAddress(),
-            chain: defineChain(contract.chainId),
+            chain: defineDashboardChain(contract.chainId),
             client: thirdwebClient,
           });
           const tx = setContractMetadata({
@@ -276,7 +277,7 @@ export const SettingsMetadata = <
                   isDisabled={metadata.isLoading || sendTransaction.isPending}
                 >
                   <FormLabel textTransform="capitalize">
-                    {/* // TODO: Fix this */}
+                    {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
                     {(item as any).key ||
                       extractDomain(
                         watch(`dashboard_social_urls.${index}.value`),

@@ -1,12 +1,12 @@
-import { NextRequest } from "next/server";
-import { FrameRequest } from "@coinbase/onchainkit";
+import type { FrameRequest } from "@coinbase/onchainkit";
 import { CoinbaseKit } from "classes/CoinbaseKit";
+import { ConnectFrame } from "classes/ConnectFrame";
+import type { NextRequest } from "next/server";
 import {
   errorResponse,
   redirectResponse,
   successHtmlResponse,
 } from "utils/api";
-import { ConnectFrame } from "classes/ConnectFrame";
 import { getFarcasterAccountAddress } from "utils/farcaster";
 
 export const config = {

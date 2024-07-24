@@ -1,4 +1,3 @@
-import { SourceFile } from "../types";
 import {
   Accordion,
   AccordionButton,
@@ -6,8 +5,9 @@ import {
   AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { CodeBlock, Heading } from "tw-components";
+import type { SourceFile } from "../types";
 
 interface SourcesAccordionProps {
   sources: SourceFile[];

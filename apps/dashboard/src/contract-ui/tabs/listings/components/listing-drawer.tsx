@@ -1,4 +1,3 @@
-import { CancelTab } from "./cancel-tab";
 import {
   Flex,
   GridItem,
@@ -10,7 +9,6 @@ import {
   Tabs,
   usePrevious,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import type {
   AuctionListing,
   DirectListing,
@@ -18,9 +16,11 @@ import type {
 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
+import { CancelTab } from "./cancel-tab";
 
 interface NFTDrawerProps {
   contract: Marketplace;
@@ -34,7 +34,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
   data,
   contract,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const prevData = usePrevious(data);
 
   const renderData = data || prevData;
@@ -97,7 +97,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
             </Card>
             {data?.asset.attributes || data?.asset.properties ? (
               <Card as={Flex} flexDir="column" gap={4}>
-                <Heading size="label.md">Properties</Heading>
+                <Heading size="label.md">Attributes</Heading>
                 <CodeBlock
                   code={
                     JSON.stringify(

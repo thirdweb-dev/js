@@ -21,12 +21,14 @@ export type AddAdminOptions = {
  * @example
  * ```ts
  * import { addAdmin } from 'thirdweb/extensions/erc4337';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = addAdmin({
  * contract,
  * account,
  * adminAddress: '0x...'
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC4337

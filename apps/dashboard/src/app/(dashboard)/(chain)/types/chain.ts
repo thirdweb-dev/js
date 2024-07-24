@@ -1,4 +1,4 @@
-import { ChainMetadata } from "thirdweb/chains";
+import type { ChainMetadata } from "thirdweb/chains";
 
 export type ChainSupportedService =
   | "contracts"
@@ -6,6 +6,7 @@ export type ChainSupportedService =
   | "engine"
   | "account-abstraction"
   | "pay"
+  | "faucet"
   | "rpc-edge";
 
 export type ChainService = {

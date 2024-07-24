@@ -35,7 +35,9 @@ function parseError(error: unknown): string | JSX.Element {
     return error;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME: remove any
   if ((error as any)?.error?.message?.includes("execution reverted:")) {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME: remove any
     return (error as any)?.error?.message;
   }
 
@@ -70,7 +72,9 @@ function isErrorWithCode(error: unknown): error is ErrorWithCode {
   return (error as ErrorWithCode)?.code !== undefined;
 }
 
-function parseErrorCode(error: ErrorWithCode): string | JSX.Element | void {
+function parseErrorCode(
+  error: ErrorWithCode,
+): string | JSX.Element | undefined {
   switch (error.code) {
     case "CALL_EXCEPTION": {
       if (error.reason) {

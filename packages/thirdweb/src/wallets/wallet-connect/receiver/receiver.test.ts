@@ -146,7 +146,42 @@ describe("createWalletConnectClient", () => {
     });
 
     await listeners.session_delete?.({ topic: "test" });
+    await new Promise((resolve) => setTimeout(resolve, 300));
     expect(onDisconnect).toHaveBeenCalledWith({ topic: "test" });
+  });
+
+  describe("onError handling", () => {
+    it("triggers callback when session_proposal handler throws an error", async () => {
+      const onError = vi.fn();
+      onSessionProposal.mockRejectedValue(new Error("Proposal Error"));
+
+      await createWalletConnectClient({
+        client: TEST_CLIENT,
+        wallet: TEST_IN_APP_WALLET_A,
+        onError,
+      });
+
+      await listeners.session_proposal?.();
+
+      expect(onError).toHaveBeenCalledWith(expect.any(Error));
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it("triggers callback when session_request handler throws an error", async () => {
+      const onError = vi.fn();
+      fulfillRequest.mockRejectedValue(new Error("Request Error"));
+
+      await createWalletConnectClient({
+        client: TEST_CLIENT,
+        wallet: TEST_IN_APP_WALLET_A,
+        onError,
+      });
+
+      await listeners.session_request?.();
+
+      expect(onError).toHaveBeenCalledWith(expect.any(Error));
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
   });
 });
 

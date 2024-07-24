@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { ComponentWithChildren } from "types/component-with-children";
+import { useEffect, useState } from "react";
+import type { ComponentWithChildren } from "types/component-with-children";
 
 interface DelayedDisplayProps {
   delay: number;

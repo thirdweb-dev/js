@@ -17,7 +17,7 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "community";
 
@@ -304,6 +304,7 @@ const Community: ThirdwebNextPage = () => {
           >
             {Array.from({ length: 9 }).map((_, i) => (
               <ChakraNextImage
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={i}
                 src={require(
                   `../../../public/assets/community/gallery/${i + 1}.png`,

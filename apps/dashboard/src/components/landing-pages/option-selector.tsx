@@ -1,16 +1,16 @@
-import { ChakraNextImage } from "components/Image";
-import { LandingSectionHeading } from "./section-heading";
-import { LandingSectionHeadingProps } from "./types";
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { StaticImageData } from "next/image";
-import { useState } from "react";
-import { Card, Text, Heading, Link } from "tw-components";
+import { ChakraNextImage } from "components/Image";
 import {
   PRODUCTS,
-  ProductLabel,
+  type ProductLabel,
 } from "components/product-pages/common/nav/data";
+import { useTrack } from "hooks/analytics/useTrack";
+import type { StaticImageData } from "next/image";
+import { useState } from "react";
+import { Card, Heading, Link, Text } from "tw-components";
 import { LandingDesktopMobileImage } from "./desktop-mobile-image";
+import { LandingSectionHeading } from "./section-heading";
+import type { LandingSectionHeadingProps } from "./types";
 
 interface OptionItem {
   title: string;

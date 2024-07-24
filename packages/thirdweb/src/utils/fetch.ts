@@ -1,5 +1,6 @@
 import type { ThirdwebClient } from "../client/client.js";
 import { version } from "../version.js";
+import type { Ecosystem } from "../wallets/in-app/web/types.js";
 import { LruMap } from "./caching/lru.js";
 import {
   type OperatingSystem,
@@ -10,17 +11,17 @@ import {
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
 const FETCH_CACHE = new WeakMap<
-  ThirdwebClient,
+  { client: ThirdwebClient; ecosystem?: Ecosystem },
   (url: string, init?: RequestInit) => Promise<Response>
 >();
 
 /**
  * @internal
  */
-export function getClientFetch(client: ThirdwebClient) {
-  if (FETCH_CACHE.has(client)) {
+export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
+  if (FETCH_CACHE.has({ client, ecosystem })) {
     // biome-ignore lint/style/noNonNullAssertion: the `has` above ensures that this will always be set
-    return FETCH_CACHE.get(client)!;
+    return FETCH_CACHE.get({ client, ecosystem })!;
   }
 
   /**
@@ -49,6 +50,13 @@ export function getClientFetch(client: ThirdwebClient) {
       } else if (client.clientId) {
         headers.set("x-client-id", client.clientId);
       }
+
+      if (ecosystem) {
+        headers.set("x-ecosystem-id", ecosystem.id);
+        if (ecosystem.partnerId) {
+          headers.set("x-ecosystem-partner-id", ecosystem.partnerId);
+        }
+      }
       // this already internally caches
       for (const [key, value] of getPlatformHeaders()) {
         (headers as Headers).set(key, value);
@@ -74,7 +82,7 @@ export function getClientFetch(client: ThirdwebClient) {
       }
     });
   }
-  FETCH_CACHE.set(client, fetchWithHeaders);
+  FETCH_CACHE.set({ client, ecosystem }, fetchWithHeaders);
   return fetchWithHeaders;
 }
 

@@ -18,20 +18,22 @@ export type InstallPublishedExtensionOptions = {
 };
 
 /**
- * Install a published extension by name on a modular contract
- * @param options
- * @returns the prepared transaction ready to be sent
+ * Install a published extension on a modular contract
+ * @param options - The options for installing a published extension
+ * @returns A prepared transaction to send
+ * @extension MODULAR
  * @example
  * ```ts
- * const installTransaction = installPublishedExtension({
- *  contract: modularContract,
- *  chain,
+ * import { installPublishedExtension } from "thirdweb/extensions/modular";
+ * const transaction = installPublishedExtension({
  *  client,
- *  extensionName: "YourExtensionName",
+ *  chain,
+ *  account,
+ *  contract,
+ *  extensionName: "MyExtension",
  *  publisherAddress: "0x...",
  * });
- *
- * sendTransaction({ transaction: installTransaction, account });
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function installPublishedExtension(

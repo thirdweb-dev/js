@@ -1,6 +1,7 @@
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import type { ComponentType } from "react";
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 export type EnhancedRoute<T = any> = {
   title: string;
   path: string;

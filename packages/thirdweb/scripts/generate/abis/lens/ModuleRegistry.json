@@ -1,0 +1,6 @@
+[
+  "function getModuleTypes(address moduleAddress) view returns (uint256)",
+  "function isErc20CurrencyRegistered(address currencyAddress) view returns (bool)",
+  "function isModuleRegistered(address moduleAddress) view returns (bool)",
+  "function isModuleRegisteredAs(address moduleAddress, uint256 moduleType) view returns (bool)"
+]

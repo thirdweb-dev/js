@@ -7,7 +7,7 @@ import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { SendTransactionResult, TransactionReceipt } from "../types.js";
 
-export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 30;
+export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
 
 const map = new Map<string, Promise<TransactionReceipt>>();
 
@@ -22,7 +22,7 @@ export type WaitForReceiptOptions = Prettify<
 /**
  * Waits for the transaction receipt of a given transaction hash on a specific contract.
  * @param options - The options for waiting for the receipt.
- * By default, it's 30 blocks.
+ * By default, it's 100 blocks.
  * @returns A promise that resolves with the transaction receipt.
  * @transaction
  * @example

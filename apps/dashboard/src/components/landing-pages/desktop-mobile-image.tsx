@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
-import { LandingDesktopMobileImageProps } from "./types";
 import { ChakraNextImage } from "components/Image";
 import Lottie from "lottie-react";
+import type { LandingDesktopMobileImageProps } from "./types";
 
 export const LandingDesktopMobileImage: React.FC<
   LandingDesktopMobileImageProps

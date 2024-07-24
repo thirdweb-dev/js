@@ -1,11 +1,13 @@
+"use client";
+
 import {
   Link as ChakraLink,
-  LinkProps as ChakraLinkProps,
+  type LinkProps as ChakraLinkProps,
   forwardRef,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import _NextLink, { LinkProps as _NextLinkProps } from "next/link";
-import { useCallback, forwardRef as reactForwardRef } from "react";
+import _NextLink, { type LinkProps as _NextLinkProps } from "next/link";
+import { forwardRef as reactForwardRef, useCallback } from "react";
 
 type ChakraNextLinkProps = Omit<ChakraLinkProps, "as"> &
   Omit<_NextLinkProps, "as">;

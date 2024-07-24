@@ -14,10 +14,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { Badge, Button, Card, Heading } from "tw-components";
 
@@ -68,7 +68,7 @@ export async function verifyContract({
 
 function useVerifyCall(
   shouldFetch: boolean,
-  contractAddress = "",
+  contractAddress: string,
   resetSignal: number,
 ) {
   const chainId = useDashboardEVMChainId();
@@ -135,6 +135,7 @@ const VerifyContractModal: React.FC<
             {verifyResult?.results
               ? verifyResult?.results.map(
                   (result: VerificationResult, index: number) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                     <Flex key={index} gap={2} align="center" mb={4}>
                       {result.success && (
                         <>

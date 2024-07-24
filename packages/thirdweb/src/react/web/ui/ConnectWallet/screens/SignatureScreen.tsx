@@ -10,7 +10,7 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
 import { wait } from "../../../../core/utils/wait.js";
 import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../hooks/wallets/useDisconnect.js";
@@ -22,7 +22,6 @@ import { Container, ModalHeader } from "../../components/basic.js";
 import { Button } from "../../components/buttons.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import type { ConnectButtonProps } from "../ConnectButtonProps.js";
 import { TOS } from "../Modal/TOS.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { WalletLogoSpinner } from "./WalletLogoSpinner.js";
@@ -30,7 +29,7 @@ import { WalletLogoSpinner } from "./WalletLogoSpinner.js";
 type Status = "signing" | "failed" | "idle";
 
 export const SignatureScreen: React.FC<{
-  onDone: () => void;
+  onDone: (() => void) | undefined;
   modalSize: "compact" | "wide";
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
@@ -38,7 +37,6 @@ export const SignatureScreen: React.FC<{
   client: ThirdwebClient;
   auth: ConnectButtonProps["auth"];
 }> = (props) => {
-  const { client } = useConnectUI();
   const {
     onDone,
     modalSize,
@@ -58,7 +56,7 @@ export const SignatureScreen: React.FC<{
     try {
       setStatus("signing");
       await siweAuth.doLogin();
-      onDone();
+      onDone?.();
     } catch (err) {
       await wait(1000);
       setStatus("failed");
@@ -149,7 +147,7 @@ export const SignatureScreen: React.FC<{
           <>
             <Container py="3xl">
               <WalletLogoSpinner
-                client={client}
+                client={props.client}
                 error={status === "failed"}
                 id={wallet.id}
               />
@@ -210,6 +208,7 @@ export const SignatureScreen: React.FC<{
           <TOS
             termsOfServiceUrl={termsOfServiceUrl}
             privacyPolicyUrl={privacyPolicyUrl}
+            locale={connectLocale.agreement}
           />
         </Container>
       )}
@@ -309,7 +308,7 @@ const pulseAnimation = keyframes`
 }
 `;
 
-const PulsatingContainer = /* @__PURE__ */ StyledDiv(() => {
+const PulsatingContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "relative",

@@ -1,3 +1,10 @@
+import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import type { DropContract } from "@thirdweb-dev/react";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { FiX } from "react-icons/fi";
+import { RxCaretDown, RxCaretUp } from "react-icons/rx";
+import { Badge, Button, Card, Heading, Text } from "tw-components";
 import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
 import { PricePreview } from "../price-preview";
 import { ClaimPriceInput } from "./Inputs/ClaimPriceInput";
@@ -9,13 +16,6 @@ import { PhaseNameInput } from "./Inputs/PhaseNameInput";
 import { PhaseStartTimeInput } from "./Inputs/PhaseStartTimeInput";
 import { WaitingTimeInput } from "./Inputs/WaitingTimeInput";
 import { CustomFormGroup } from "./common";
-import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
-import { DropContract } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { FiX } from "react-icons/fi";
-import { RxCaretDown, RxCaretUp } from "react-icons/rx";
-import { Badge, Button, Card, Heading, Text } from "tw-components";
 
 interface ClaimConditionsPhaseProps {
   contract: DropContract;

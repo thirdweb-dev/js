@@ -4,27 +4,27 @@ import {
   useAccountUsage,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { useCallback, useMemo, useState } from "react";
-import { useRouter } from "next/router";
 import {
-  useDisclosure,
   Alert,
-  Flex,
+  AlertDescription,
   AlertIcon,
   AlertTitle,
-  AlertDescription,
+  Flex,
   IconButton,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
+import { format } from "date-fns";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
+import { useRouter } from "next/router";
+import { useCallback, useMemo, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { Text, Heading, TrackedLinkButton } from "tw-components";
+import { Heading, Text, TrackedLinkButton } from "tw-components";
 import { ManageBillingButton } from "../ManageButton";
 import { RecurringPaymentFailureAlert } from "./RecurringPaymentFailureAlert";
-import { format } from "date-fns";
 
 type AlertConditionType = {
   shouldShowAlert: boolean;
@@ -207,6 +207,7 @@ export const BillingAlerts = () => {
           case "recurringPayment": {
             return (
               <RecurringPaymentFailureAlert
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={index}
                 affectedServices={[alert.description].filter((v) => v)}
                 paymentFailureCode={alert.key}
@@ -217,6 +218,7 @@ export const BillingAlerts = () => {
             return (
               <RecurringPaymentFailureAlert
                 isServiceCutoff={true}
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={index}
                 affectedServices={[alert.description].filter((v) => v)}
                 paymentFailureCode={alert.key}
@@ -226,6 +228,7 @@ export const BillingAlerts = () => {
           case "paymentVerification": {
             return (
               <BillingAlertNotification
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={index}
                 status={alert.status}
                 title={alert.title}
@@ -239,6 +242,7 @@ export const BillingAlerts = () => {
           case "usage": {
             return (
               <BillingAlertNotification
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={index}
                 status={alert.status}
                 onDismiss={() => handleDismiss(alert.key)}

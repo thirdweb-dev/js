@@ -1,10 +1,10 @@
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { OnboardingTitle } from "./Title";
-import { shortenString } from "utils/usedapp-external";
-import { Flex } from "@chakra-ui/react";
-import { Button, TrackedLink } from "tw-components";
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { Flex } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { Button, TrackedLink } from "tw-components";
+import { shortenString } from "utils/usedapp-external";
+import { OnboardingTitle } from "./Title";
 
 interface OnboardingLinkWalletProps {
   email: string;

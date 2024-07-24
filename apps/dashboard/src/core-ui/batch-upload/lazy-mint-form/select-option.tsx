@@ -3,11 +3,11 @@ import {
   Icon,
   Radio,
   Stack,
-  StackProps,
+  type StackProps,
   Tooltip,
 } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
-import { MouseEventHandler } from "react";
+import type { MouseEventHandler } from "react";
 import { Card, Heading, Text } from "tw-components";
 
 interface SelectOptionProps extends StackProps {

@@ -2,9 +2,10 @@ import { Box, DarkMode, Flex, Image } from "@chakra-ui/react";
 import { CopyButton } from "components/homepage/AnimatedCLICommand/AnimatedCLICommand";
 import { ProductButton } from "components/product-pages/common/ProductButton";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
-import { GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
-import { TemplateCardProps, templates } from "pages/templates";
+import { type TemplateCardProps, templates } from "pages/templates";
+import { Fragment } from "react";
 import {
   Heading,
   Link,
@@ -13,7 +14,7 @@ import {
   TrackedLink,
   TrackedLinkButton,
 } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 type TemplateContentsProps = {
   overview: React.ReactNode;
@@ -58,6 +59,7 @@ const TemplateContents: React.FC<TemplateContentsProps> = (props) => {
             {props.featurePoints.map((feature, idx) => (
               <Box
                 as="li"
+                // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                 key={idx}
                 fontWeight={400}
                 fontSize={16}
@@ -123,7 +125,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           </>
         }
         featurePoints={[
-          <>
+          <Fragment key="react">
             Built with our{" "}
             <Link
               fontWeight="500"
@@ -134,9 +136,9 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               React SDK
             </Link>
             .
-          </>,
-          <>Uses Vite, TypeScript, and Tailwind.</>,
-          <>
+          </Fragment>,
+          "Uses Vite, TypeScript, and Tailwind.",
+          <Fragment key="nft-renderer">
             Render NFT metadata with the{" "}
             <Link
               fontWeight="500"
@@ -147,8 +149,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               NFT Renderer
             </Link>{" "}
             UI Component.
-          </>,
-          <>
+          </Fragment>,
+          <Fragment key="connect-wallet">
             Configure wallet options with the{" "}
             <Link
               fontWeight="500"
@@ -159,8 +161,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               Connect Wallet Button
             </Link>{" "}
             UI Component.
-          </>,
-          <>
+          </Fragment>,
+          <Fragment key="contract-metadata">
             View{" "}
             <Link
               fontWeight="500"
@@ -171,8 +173,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               contract metadata
             </Link>{" "}
             such as the name, remaining & total supply, description, etc.
-          </>,
-          <>
+          </Fragment>,
+          <Fragment key="claim-phases">
             Claim NFTs from the smart contract under the criteria of{" "}
             <Link
               fontWeight="500"
@@ -183,8 +185,8 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               claim phases
             </Link>
             .
-          </>,
-          <>Compatible with all EVM chains.</>,
+          </Fragment>,
+          "Compatible with all EVM chains.",
         ]}
         runningLocally={
           <div>
@@ -255,7 +257,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           </>
         }
         featurePoints={[
-          <>
+          <Fragment key="react-sdk">
             Built with our{" "}
             <Link
               fontWeight="500"
@@ -266,9 +268,9 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               React SDK
             </Link>
             .
-          </>,
-          <>Uses Next.js, TypeScript, and CSS Modules.</>,
-          <>
+          </Fragment>,
+          "Uses Next.js, TypeScript, and CSS Modules.",
+          <Fragment key="ui-components">
             Display all NFTs from your collection using the{" "}
             <Link
               fontWeight="500"
@@ -279,16 +281,11 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               NFT Media Renderer
             </Link>{" "}
             UI component.
-          </>,
-          <>
-            Allow users to buy, sell and make offers on NFTs in your collection.
-          </>,
-          <>Supports both direct listings and english auction sales.</>,
-          <>
-            You control the platform fees of each sale made on the smart
-            contract.
-          </>,
-          <>Compatible with all EVM chains.</>,
+          </Fragment>,
+          "Allow users to buy, sell and make offers on NFTs in your collection.",
+          "Supports both direct listings and english auction sales.",
+          "You control the platform fees of each sale made on the smart contract.",
+          "Compatible with all EVM chains.",
         ]}
         runningLocally={
           <div>
@@ -358,7 +355,7 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
           </>
         }
         featurePoints={[
-          <>
+          <Fragment key="react-sdk">
             Built with our{" "}
             <Link
               fontWeight="500"
@@ -369,10 +366,10 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               React SDK
             </Link>
             .
-          </>,
-          <>Uses Vite, TypeScript, and Tailwind.</>,
-          <>Compatible with both ERC721 and ERC1155 NFT collections.</>,
-          <>
+          </Fragment>,
+          "Uses Vite, TypeScript, and Tailwind.",
+          "Compatible with both ERC721 and ERC1155 NFT collections.",
+          <Fragment key="nft-media-renderer">
             Display all NFTs from your collection using the{" "}
             <Link
               fontWeight="500"
@@ -383,9 +380,9 @@ const templateContents: Record<(typeof templates)[number]["id"], JSX.Element> =
               NFT Media Renderer
             </Link>{" "}
             UI component.
-          </>,
-          <>Search for NFTs by token ID, or paginate through all NFTs.</>,
-          <>Compatible with all EVM chains.</>,
+          </Fragment>,
+          "Search for NFTs by token ID, or paginate through all NFTs.",
+          "Compatible with all EVM chains.",
         ]}
         runningLocally={
           <div>
@@ -511,10 +508,10 @@ const TemplatePage: ThirdwebNextPage = (props: TemplatePageProps) => {
               my={4}
               flexWrap="wrap"
             >
-              {props.template.tags.map((tag, idx) => (
+              {props.template.tags.map((tag) => (
                 <Box
                   as="div"
-                  key={idx}
+                  key={tag}
                   color="whiteAlpha.700"
                   border="1px solid #383838"
                   borderRadius="8px"

@@ -16,13 +16,13 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
-import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";
 import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
+import { ZERO_ADDRESS, isAddress } from "thirdweb";
 import { Button, FormErrorMessage, Text } from "tw-components";
 
 interface PermissionEditorProps {
@@ -46,7 +46,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
   const [address, setAddress] = useState("");
 
   const members = watch(role) || [];
-  const isDisabled = !utils.isAddress(address) || members.includes(address);
+  const isDisabled = !isAddress(address) || members.includes(address);
 
   const addAddress = () => {
     if (isDisabled) {
@@ -125,35 +125,31 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
               fontFamily="mono"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder={constants.AddressZero}
+              placeholder={ZERO_ADDRESS}
               px={2}
             />
-            <InputRightAddon
-              p={0}
-              border="none"
-              children={
-                <Button
-                  leftIcon={<Icon as={FiPlus} boxSize={4} />}
-                  size="sm"
-                  borderLeftRadius="none"
-                  borderRightRadius="md"
-                  colorScheme="primary"
-                  isDisabled={isDisabled}
-                  onClick={addAddress}
-                  height="100%"
-                  width="100%"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  Add Address
-                </Button>
-              }
-            />
+            <InputRightAddon p={0} border="none">
+              <Button
+                leftIcon={<Icon as={FiPlus} boxSize={4} />}
+                size="sm"
+                borderLeftRadius="none"
+                borderRightRadius="md"
+                colorScheme="primary"
+                isDisabled={isDisabled}
+                onClick={addAddress}
+                height="100%"
+                width="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                Add Address
+              </Button>
+            </InputRightAddon>
           </InputGroup>
           <FormErrorMessage>
             {members.includes(address)
               ? "Address already has this role"
-              : !utils.isAddress(address)
+              : !isAddress(address)
                 ? "Not a valid address"
                 : ""}
           </FormErrorMessage>
@@ -180,19 +176,6 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
   const toast = useToast();
 
   const { onCopy } = useClipboard(member);
-  const handleCopy = (e: any) => {
-    e.stopPropagation();
-    e.preventDefault();
-    onCopy();
-    toast({
-      position: "bottom",
-      variant: "solid",
-      title: "Address copied.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-  };
 
   return (
     <Flex gap={0} align="center">
@@ -207,7 +190,19 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
               _hover={{ bgColor: "gray.300" }}
               width="100%"
               height="100%"
-              onClick={handleCopy}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onCopy();
+                toast({
+                  position: "bottom",
+                  variant: "solid",
+                  title: "Address copied.",
+                  status: "success",
+                  duration: 5000,
+                  isClosable: true,
+                });
+              }}
             />
           </Tooltip>
         </InputLeftAddon>
@@ -221,27 +216,23 @@ const PermissionAddress: React.FC<PermissionAddressProps> = ({
           contract={contract as ValidContractInstance}
           self={member}
         >
-          <InputRightAddon
-            p={0}
-            border="none"
-            children={
-              <Button
-                leftIcon={<Icon as={FiTrash} boxSize={3} />}
-                size="sm"
-                borderLeftRadius="none"
-                borderRightRadius="md"
-                colorScheme="red"
-                isDisabled={isSubmitting}
-                onClick={removeAddress}
-                height="100%"
-                width="100%"
-                justifyContent="center"
-                alignItems="center"
-              >
-                Remove
-              </Button>
-            }
-          />
+          <InputRightAddon p={0} border="none">
+            <Button
+              leftIcon={<Icon as={FiTrash} boxSize={3} />}
+              size="sm"
+              borderLeftRadius="none"
+              borderRightRadius="md"
+              colorScheme="red"
+              isDisabled={isSubmitting}
+              onClick={removeAddress}
+              height="100%"
+              width="100%"
+              justifyContent="center"
+              alignItems="center"
+            >
+              Remove
+            </Button>
+          </InputRightAddon>
         </AdminOrSelfOnly>
       </InputGroup>
     </Flex>

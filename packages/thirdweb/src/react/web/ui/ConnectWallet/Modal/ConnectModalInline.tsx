@@ -1,5 +1,9 @@
 "use client";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
+import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
 import {
   type Theme,
@@ -7,18 +11,20 @@ import {
   radius,
   shadow,
 } from "../../../../core/design-system/index.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { DynamicHeight } from "../../components/DynamicHeight.js";
 import { CrossContainer } from "../../components/Modal.js";
 import { IconButton } from "../../components/buttons.js";
 import { StyledDiv } from "../../design-system/elements.js";
+import type { LocaleId } from "../../types.js";
 import {
   modalMaxWidthCompact,
   modalMaxWidthWide,
   wideModalMaxHeight,
 } from "../constants.js";
+import type { ConnectLocale } from "../locale/types.js";
 import type { WelcomeScreen } from "../screens/types.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
@@ -28,7 +34,6 @@ import { useSetupScreen } from "./screen.js";
  */
 export type ConnectModalInlineProps = {
   chainId?: bigint;
-  chains?: (bigint | number)[];
   className?: string;
   theme?: "dark" | "light" | Theme;
   modalTitle?: string;
@@ -37,25 +42,62 @@ export type ConnectModalInlineProps = {
   modalSize?: "compact" | "wide";
   termsOfServiceUrl?: string;
   privacyPolicyUrl?: string;
-  welcomeScreen?: WelcomeScreen;
   showThirdwebBranding?: boolean;
+  accountAbstraction: SmartWalletOptions | undefined;
+  auth: SiweAuthOptions | undefined;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+  size: "compact" | "wide";
+  welcomeScreen: WelcomeScreen;
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+  isEmbed: boolean;
+  localeId: LocaleId;
+  onConnect: ((wallet: Wallet) => void) | undefined;
+  recommendedWallets: Wallet[] | undefined;
+  showAllWallets: boolean | undefined;
+  wallets: Wallet[];
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
 };
 
 /**
  * @internal
  */
 export const ConnectModalInline = (props: ConnectModalInlineProps) => {
-  const walletConfigs = useConnectUI().wallets;
   const modalSize =
-    !canFitWideModal() || walletConfigs.length === 1
-      ? "compact"
-      : props.modalSize;
+    !canFitWideModal() || props.wallets.length === 1 ? "compact" : props.size;
 
   return (
     <WalletUIStatesProvider theme={props.theme} isOpen={true}>
       <ConnectModalInlineContent
         className={props.className}
-        modalSize={modalSize}
+        size={modalSize}
+        meta={props.meta}
+        welcomeScreen={props.welcomeScreen}
+        wallets={props.wallets}
+        accountAbstraction={props.accountAbstraction}
+        auth={props.auth}
+        chain={props.chain}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        isEmbed={props.isEmbed}
+        localeId={props.localeId}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        chains={props.chains}
+        walletConnect={props.walletConnect}
       />
     </WalletUIStatesProvider>
   );
@@ -63,10 +105,39 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
 
 function ConnectModalInlineContent(props: {
   className?: string;
-  modalSize?: "compact" | "wide";
   style?: React.CSSProperties;
+  accountAbstraction: SmartWalletOptions | undefined;
+  auth: SiweAuthOptions | undefined;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+  size: "compact" | "wide";
+  welcomeScreen: WelcomeScreen | undefined;
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+  isEmbed: boolean;
+  localeId: LocaleId;
+  onConnect: ((wallet: Wallet) => void) | undefined;
+  recommendedWallets: Wallet[] | undefined;
+  showAllWallets: boolean | undefined;
+  wallets: Wallet[];
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
 }) {
-  const screenSetup = useSetupScreen();
+  const screenSetup = useSetupScreen({
+    size: props.size,
+    welcomeScreen: props.welcomeScreen,
+    wallets: props.wallets,
+  });
 
   const content = (
     <>
@@ -80,6 +151,23 @@ function ConnectModalInlineContent(props: {
         onClose={() => {
           // no op
         }}
+        accountAbstraction={props.accountAbstraction}
+        auth={props.auth}
+        chain={props.chain}
+        client={props.client}
+        connectLocale={props.connectLocale}
+        size={props.size}
+        meta={props.meta}
+        welcomeScreen={props.welcomeScreen}
+        isEmbed={props.isEmbed}
+        onConnect={props.onConnect}
+        recommendedWallets={props.recommendedWallets}
+        showAllWallets={props.showAllWallets}
+        wallets={props.wallets}
+        chains={props.chains}
+        walletConnect={props.walletConnect}
+        modalHeader={undefined}
+        walletIdsToHide={undefined}
       />
 
       {/* close icon */}
@@ -101,15 +189,13 @@ function ConnectModalInlineContent(props: {
     <ConnectModalInlineContainer
       className={props.className}
       style={{
-        height: props.modalSize === "compact" ? "auto" : wideModalMaxHeight,
+        height: props.size === "compact" ? "auto" : wideModalMaxHeight,
         maxWidth:
-          props.modalSize === "compact"
-            ? modalMaxWidthCompact
-            : modalMaxWidthWide,
+          props.size === "compact" ? modalMaxWidthCompact : modalMaxWidthWide,
         ...props.style,
       }}
     >
-      {props.modalSize === "compact" ? (
+      {props.size === "compact" ? (
         <DynamicHeight> {content} </DynamicHeight>
       ) : (
         content
@@ -118,7 +204,7 @@ function ConnectModalInlineContent(props: {
   );
 }
 
-const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
+const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.modalBg,

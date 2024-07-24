@@ -6,6 +6,7 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
+  EcosystemWalletId,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
   WalletId,
@@ -18,6 +19,8 @@ import { openWindow } from "../utils/web/openWindow.js";
 import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
 import { getCoinbaseWebProvider } from "./coinbase/coinbaseWebSDK.js";
 import { COINBASE } from "./constants.js";
+import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
+import { ecosystemWallet } from "./in-app/web/ecosystem.js";
 import { inAppWallet } from "./in-app/web/in-app.js";
 import { smartWallet } from "./smart/smart-wallet.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
@@ -46,11 +49,11 @@ export function createWallet<const ID extends WalletId>(
 ): Wallet<ID> {
   const [id, creationOptions] = args;
 
-  switch (id) {
+  switch (true) {
     /**
      * SMART WALLET
      */
-    case "smart": {
+    case id === "smart": {
       return smartWallet(
         creationOptions as CreateWalletArgs<"smart">[1],
       ) as Wallet<ID>;
@@ -58,8 +61,7 @@ export function createWallet<const ID extends WalletId>(
     /**
      * IN-APP WALLET
      */
-    case "embedded":
-    case "inApp": {
+    case id === "embedded" || id === "inApp": {
       return inAppWallet(
         creationOptions as CreateWalletArgs<"inApp">[1],
       ) as Wallet<ID>;
@@ -69,7 +71,7 @@ export function createWallet<const ID extends WalletId>(
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
-    case COINBASE: {
+    case id === COINBASE: {
       const options = creationOptions as CreateWalletArgs<typeof COINBASE>[1];
       return coinbaseWalletSDK({
         createOptions: options,
@@ -84,6 +86,10 @@ export function createWallet<const ID extends WalletId>(
         },
       }) as Wallet<ID>;
     }
+    case isEcosystemWallet(id):
+      return ecosystemWallet(
+        ...(args as CreateWalletArgs<EcosystemWalletId>),
+      ) as Wallet<ID>;
 
     /**
      * WALLET CONNECT AND INJECTED WALLETS + walletConnect standalone

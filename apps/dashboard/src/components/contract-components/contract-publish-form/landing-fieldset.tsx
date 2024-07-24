@@ -1,4 +1,3 @@
-import { MarkdownRenderer } from "../published-contract/markdown-renderer";
 import {
   Box,
   Flex,
@@ -12,7 +11,7 @@ import {
   Tabs,
   Textarea,
 } from "@chakra-ui/react";
-import { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
+import type { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
 import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -29,6 +28,7 @@ import {
   Link,
   Text,
 } from "tw-components";
+import { MarkdownRenderer } from "../published-contract/markdown-renderer";
 import { ExternalLinksFieldset } from "./external-links-fieldset";
 
 interface LandingFieldsetProps {

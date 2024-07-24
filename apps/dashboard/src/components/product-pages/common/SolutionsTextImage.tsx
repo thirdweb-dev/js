@@ -1,8 +1,8 @@
-import { ProductSection } from "./ProductSection";
 import { Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Heading } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
+import { ProductSection } from "./ProductSection";
 
 interface SolutionsTextImageProps {
   image: string;

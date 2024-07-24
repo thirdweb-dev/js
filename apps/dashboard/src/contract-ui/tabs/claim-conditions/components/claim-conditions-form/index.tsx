@@ -1,5 +1,3 @@
-import { ResetClaimEligibility } from "../reset-claim-eligibility";
-import { ClaimConditionsPhase } from "./phase";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
@@ -16,43 +14,45 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import {
-  DropContract,
-  TokenContract,
-  useAddress,
+  type DropContract,
+  type TokenContract,
   useClaimConditions,
   useSetClaimConditions,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
 import {
-  ClaimConditionInput,
+  type ClaimConditionInput,
   ClaimConditionInputSchema,
   NATIVE_TOKEN_ADDRESS,
-  SnapshotEntry,
-  ValidContractInstance,
+  type SnapshotEntry,
+  type ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { detectFeatures } from "components/contract-components/utils";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import {
   hasLegacyClaimConditions,
   hasMultiphaseClaimConditions,
 } from "lib/claimcondition-utils";
-import { createContext, useContext, useMemo, useState, Fragment } from "react";
+import { Fragment, createContext, useContext, useMemo, useState } from "react";
 import {
-  UseFieldArrayReturn,
-  UseFormReturn,
+  type UseFieldArrayReturn,
+  type UseFormReturn,
   useFieldArray,
   useForm,
 } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
+import { ZERO_ADDRESS } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { Button, Heading, MenuItem, Text } from "tw-components";
 import * as z from "zod";
 import { ZodError } from "zod";
+import { ResetClaimEligibility } from "../reset-claim-eligibility";
+import { ClaimConditionsPhase } from "./phase";
 
 type ClaimConditionDashboardInput = ClaimConditionInput & {
   isEditing: boolean;
@@ -127,7 +127,8 @@ const getClaimConditionTypeFromPhase = (
 ): ClaimConditionType => {
   if (!phase.snapshot) {
     return "public";
-  } else if (phase.snapshot) {
+  }
+  if (phase.snapshot) {
     if (
       typeof phase.snapshot !== "string" &&
       phase.snapshot.length === 1 &&
@@ -136,11 +137,11 @@ const getClaimConditionTypeFromPhase = (
       )
     ) {
       return "creator";
-    } else if (phase.maxClaimablePerWallet?.toString() === "0") {
-      return "specific";
-    } else {
-      return "overrides";
     }
+    if (phase.maxClaimablePerWallet?.toString() === "0") {
+      return "specific";
+    }
+    return "overrides";
   }
   return "custom";
 };
@@ -199,7 +200,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     };
   }, [contract]);
 
-  const walletAddress = useAddress();
+  const walletAddress = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);
   const isAdmin = useIsAdmin(contract);
@@ -375,8 +376,10 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
         label: "error",
       });
       if (error instanceof ZodError) {
+        // biome-ignore lint/complexity/noForEach: FIXME
         error.errors.forEach((e) => {
           const path = `phases.${e.path.join(".")}`;
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           form.setError(path as any, e);
         });
       } else {
@@ -389,6 +392,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     let phaseId: string | null = null;
     let latestStartTime = 0;
 
+    // biome-ignore lint/complexity/noForEach: FIXME
     controlledFields.forEach((phase) => {
       if (!phase.startTime || !phase.fromSdk) {
         return;
@@ -464,14 +468,13 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                 ? {
                     address: v,
                     maxClaimable: "unlimited",
-                    currencyAddress: constants.AddressZero,
+                    currencyAddress: ZERO_ADDRESS,
                     price: "unlimited",
                   }
                 : {
                     ...v,
                     maxClaimable: v?.maxClaimable?.toString() || "unlimited",
-                    currencyAddress:
-                      v?.currencyAddress || constants.AddressZero,
+                    currencyAddress: v?.currencyAddress || ZERO_ADDRESS,
                     price: v?.price?.toString() || "unlimited",
                   },
             );

@@ -1,7 +1,7 @@
 import { useTransferNativeToken } from "@3rdweb-sdk/react/hooks/useTransferNativeToken";
 import { Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import { Card } from "tw-components";
 
 interface DepositNativeProps {
@@ -38,7 +38,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
       <TransactionButton
         transactionCount={1}
         isLoading={isLoading}
-        isDisabled={amount.length === 0 || parseFloat(amount) <= 0}
+        isDisabled={amount.length === 0 || Number.parseFloat(amount) <= 0}
         colorScheme="primary"
         onClick={() =>
           transfer(

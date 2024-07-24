@@ -1,9 +1,9 @@
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Box, Flex, HStack, Icon, useColorModeValue } from "@chakra-ui/react";
+import Image from "next/image";
+import type { ReactNode } from "react";
 import { FiLock } from "react-icons/fi";
 import { Card, Heading, Text, TrackedLinkButton } from "tw-components";
-import Image from "next/image";
-import { ReactNode } from "react";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 
 interface GatedFeatureProps {
   children: ReactNode;
@@ -84,7 +84,7 @@ export const GatedFeature: React.FC<GatedFeatureProps> = ({
               colorScheme="primary"
               category="advancedFeature"
               label={trackingLabel}
-              href={`/dashboard/settings/billing`}
+              href={"/dashboard/settings/billing"}
               borderRadius="lg"
               py={6}
               px={6}

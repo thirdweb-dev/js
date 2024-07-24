@@ -1,22 +1,24 @@
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import {
-  DashboardThirdwebProvider,
-  DashboardThirdwebProviderProps,
-} from "./providers";
 import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
+import {
+  type DehydratedState,
+  Hydrate,
+  QueryClient,
+} from "@tanstack/react-query";
 import {
   PersistQueryClientProvider,
-  Persister,
+  type Persister,
 } from "@tanstack/react-query-persist-client";
-import { shouldNeverPersistQuery, useAddress } from "@thirdweb-dev/react";
+import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
 import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
-import { AppShell, AppShellProps } from "components/layout/app-shell";
+import { AppShell, type AppShellProps } from "components/layout/app-shell";
 import { Onboarding as OnboardingModal } from "components/onboarding";
+import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
 import { PosthogIdentifier } from "components/wallets/PosthogIdentifier";
+import { isProd } from "constants/rpc";
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
@@ -28,29 +30,15 @@ import {
 } from "hooks/networkConfigModal";
 import { del, get, set } from "idb-keyval";
 import { useEffect, useMemo, useState } from "react";
+import { useActiveAccount } from "thirdweb/react";
 import { Heading } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { isProd } from "constants/rpc";
-import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
-
-const apolloClient = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_PAYMENTS_API,
-  credentials: "include",
-  cache: new InMemoryCache(),
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: "no-cache",
-      errorPolicy: "ignore",
-    },
-    query: {
-      fetchPolicy: "no-cache",
-      errorPolicy: "all",
-    },
-  },
-});
+import {
+  DashboardThirdwebProvider,
+  type DashboardThirdwebProviderProps,
+} from "./providers";
 
 const __CACHE_BUSTER = "3.14.40-nightly-1e6f9dcc-20230831023648";
 
@@ -100,7 +88,7 @@ const persister: Persister = createAsyncStoragePersister({
       bigNumberReplacer,
     );
   },
-  key: `tw-query-cache`,
+  key: "tw-query-cache",
 });
 
 interface AppLayoutProps extends AppShellProps, DashboardThirdwebProviderProps {
@@ -109,19 +97,7 @@ interface AppLayoutProps extends AppShellProps, DashboardThirdwebProviderProps {
 
 export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
   // has to be constructed in here because it may otherwise share state between SSR'd pages
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // 24 hours
-            cacheTime: 1000 * 60 * 60 * 24,
-            // 30 seconds
-            staleTime: 1000 * 30,
-          },
-        },
-      }),
-  );
+  const [queryClient] = useState(() => new QueryClient());
 
   // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
   // eslint-disable-next-line no-restricted-syntax
@@ -148,27 +124,25 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
     >
       <Hydrate state={props.dehydratedState}>
         <ErrorProvider>
-          <ApolloProvider client={apolloClient}>
-            <DeployModalProvider>
-              <AllChainsProvider>
-                <ChainsProvider>
-                  <EVMContractInfoProvider value={props.contractInfo}>
-                    <DashboardThirdwebProvider>
-                      <SanctionedAddressesChecker>
-                        <PosthogIdentifier />
-                        <ConfigModal />
+          <DeployModalProvider>
+            <AllChainsProvider>
+              <ChainsProvider>
+                <EVMContractInfoProvider value={props.contractInfo}>
+                  <DashboardThirdwebProvider>
+                    <SanctionedAddressesChecker>
+                      <PosthogIdentifier />
+                      <ConfigModal />
 
-                        <OnboardingModal />
-                        <OpCreditsGrantedModalWrapper />
+                      <OnboardingModal />
+                      <OpCreditsGrantedModalWrapper />
 
-                        <AppShell {...props} />
-                      </SanctionedAddressesChecker>
-                    </DashboardThirdwebProvider>
-                  </EVMContractInfoProvider>
-                </ChainsProvider>
-              </AllChainsProvider>
-            </DeployModalProvider>
-          </ApolloProvider>
+                      <AppShell {...props} />
+                    </SanctionedAddressesChecker>
+                  </DashboardThirdwebProvider>
+                </EVMContractInfoProvider>
+              </ChainsProvider>
+            </AllChainsProvider>
+          </DeployModalProvider>
         </ErrorProvider>
       </Hydrate>
     </PersistQueryClientProvider>
@@ -176,7 +150,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
 };
 
 const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const isBlocked = useMemo(() => {
     return address && isSanctionedAddress(address);
   }, [address]);
@@ -194,7 +168,7 @@ const SanctionedAddressesChecker: ComponentWithChildren = ({ children }) => {
       >
         <Flex gap={4} direction="column" align="center">
           <Heading as="p">Address is blocked</Heading>
-          <CustomConnectWallet auth={{ loginOptional: true }} />
+          <CustomConnectWallet />
         </Flex>
       </SimpleGrid>
     );

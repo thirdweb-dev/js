@@ -1,5 +1,3 @@
-/* eslint-disable react/forbid-dom-props */
-
 export function ContractIcon(props: { className?: string }) {
   return (
     <svg
@@ -10,6 +8,7 @@ export function ContractIcon(props: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>Contract</title>
       <g>
         <rect
           x="3"

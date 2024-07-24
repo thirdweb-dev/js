@@ -1,7 +1,7 @@
-import { SlideStateProps } from "../shared";
-import { slides } from "../slides";
 import { AspectRatio, Center } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import type { SlideStateProps } from "../shared";
+import { slides } from "../slides";
 
 interface BackgroundVariant {
   background: string;

@@ -1,32 +1,25 @@
 import {
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Box,
-  SimpleGrid,
+  AccountPlan,
+  AccountStatus,
+  useAccount,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
+  Flex,
+  SimpleGrid,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Button, Card, Heading, Text, Badge } from "tw-components";
-import {
-  useAccount,
-  AccountPlan,
-  AccountStatus,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
 import { useEffect, useMemo, useState } from "react";
+import { Badge, Button, Card, Heading, Text } from "tw-components";
+import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
 import { OnboardingBilling } from "./Billing";
 import { OnboardingModal } from "./Modal";
 import { PlanCard } from "./PlanCard";
-import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { useTrack } from "hooks/analytics/useTrack";
 
 export type CreditsRecord = {
   title: string;
@@ -78,27 +71,13 @@ export const PlanToCreditsRecord: Record<AccountPlan, CreditsRecord> = {
   },
 };
 
-interface ApplyForOpCreditsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  noModal?: boolean;
-}
-
-export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
-  isOpen,
-  onClose,
-  noModal,
-}) => {
-  const {
-    isOpen: isPaymentMethodOpen,
-    onOpen: onPaymentMethodOpen,
-    onClose: onPaymentMethodClose,
-  } = useDisclosure();
+export const ApplyForOpCreditsModal: React.FC = () => {
+  const paymentMethodModalState = useDisclosure();
   const [page, setPage] = useState<"eligible" | "form">("eligible");
   const [hasAddedPaymentMethod, setHasAddedPaymentMethod] = useState(false);
   const account = useAccount();
   const [hasAppliedForOpGrant] = useLocalStorage(
-    `appliedForOpGrant-${(account?.data && account.data.id) || ""}`,
+    `appliedForOpGrant-${account?.data?.id || ""}`,
     false,
   );
   const trackEvent = useTrack();
@@ -126,7 +105,7 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
   const creditsRecord =
     PlanToCreditsRecord[account.data?.plan || AccountPlan.Free];
 
-  const content = (
+  return (
     <>
       {page === "eligible" ? (
         <>
@@ -180,7 +159,7 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
                       <Text
                         as="span"
                         onClick={() => {
-                          onPaymentMethodOpen();
+                          paymentMethodModalState.onOpen();
                           trackEvent({
                             category: "op-sponsorship",
                             action: "add-payment-method",
@@ -236,19 +215,18 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
         <ApplyForOpCreditsForm
           onClose={() => {
             setPage("eligible");
-            onClose();
           }}
         />
       )}
       {/* // Add Payment Method Modal */}
       <OnboardingModal
-        isOpen={isPaymentMethodOpen}
-        onClose={onPaymentMethodClose}
+        isOpen={paymentMethodModalState.isOpen}
+        onClose={paymentMethodModalState.onClose}
       >
         <OnboardingBilling
           onSave={() => {
             setHasAddedPaymentMethod(true);
-            onPaymentMethodClose();
+            paymentMethodModalState.onClose();
             trackEvent({
               category: "op-sponsorship",
               action: "add-payment-method",
@@ -256,7 +234,7 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
             });
           }}
           onCancel={() => {
-            onPaymentMethodClose();
+            paymentMethodModalState.onClose();
             trackEvent({
               category: "op-sponsorship",
               action: "add-payment-method",
@@ -265,31 +243,6 @@ export const ApplyForOpCreditsModal: React.FC<ApplyForOpCreditsModalProps> = ({
           }}
         />
       </OnboardingModal>
-    </>
-  );
-
-  if (noModal) {
-    return content;
-  }
-
-  return (
-    <>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        onOverlayClick={() => setPage("eligible")}
-        size="lg"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader textAlign="center">Apply for Gas Credits</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>{content}</ModalBody>
-
-          <ModalFooter />
-        </ModalContent>
-      </Modal>
     </>
   );
 };

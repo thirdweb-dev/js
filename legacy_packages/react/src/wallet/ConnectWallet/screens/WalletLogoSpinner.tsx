@@ -85,7 +85,8 @@ const plusAnimation = keyframes`
 }
 `;
 
-const LogoContainer = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const LogoContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     display: "flex",

@@ -1,6 +1,6 @@
 import {
-  EngineRelayer,
-  UpdateRelayerInput,
+  type EngineRelayer,
+  type UpdateRelayerInput,
   useEngineBackendWallets,
   useEngineRevokeRelayer,
   useEngineUpdateRelayer,
@@ -19,7 +19,7 @@ import {
   Select,
   Stack,
   Textarea,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -42,7 +42,7 @@ import {
   Text,
   TrackedCopyButton,
 } from "tw-components";
-import { AddModalInput, parseAddressListRaw } from "./add-relayer-button";
+import { type AddModalInput, parseAddressListRaw } from "./add-relayer-button";
 
 interface RelayersTableProps {
   instanceUrl: string;
@@ -68,7 +68,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
     columnHelper.accessor("chainId", {
       header: "Chain",
       cell: (cell) => {
-        const chain = chainIdToChainRecord[parseInt(cell.getValue())];
+        const chain = chainIdToChainRecord[Number.parseInt(cell.getValue())];
         return (
           <Flex align="center" gap={2}>
             <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
@@ -81,7 +81,7 @@ export const RelayersTable: React.FC<RelayersTableProps> = ({
       header: "Backend Wallet",
       cell: (cell) => {
         const { chainId, backendWalletAddress } = cell.row.original;
-        const chain = chainIdToChainRecord[parseInt(chainId)];
+        const chain = chainIdToChainRecord[Number.parseInt(chainId)];
 
         const explorer = chain?.explorers?.[0];
         if (!explorer) {
@@ -218,7 +218,7 @@ const EditModal = ({
   const form = useForm<AddModalInput>({
     defaultValues: {
       ...relayer,
-      chainId: parseInt(relayer.chainId),
+      chainId: Number.parseInt(relayer.chainId),
       allowedContractsRaw: (relayer.allowedContracts ?? []).join("\n"),
       allowedForwardersRaw: (relayer.allowedForwarders ?? []).join("\n"),
     },
@@ -388,11 +388,12 @@ const RemoveModal = ({
                 <ChainIcon
                   size={12}
                   ipfsSrc={
-                    chainIdToChainRecord[parseInt(relayer.chainId)]?.icon?.url
+                    chainIdToChainRecord[Number.parseInt(relayer.chainId)]?.icon
+                      ?.url
                   }
                 />
                 <Text>
-                  {chainIdToChainRecord[parseInt(relayer.chainId)]?.name}
+                  {chainIdToChainRecord[Number.parseInt(relayer.chainId)]?.name}
                 </Text>
               </Flex>
             </FormControl>

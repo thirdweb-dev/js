@@ -1,5 +1,3 @@
-import { CustomToolTip } from "./custom-tooltip";
-import { Box, BoxProps, Center } from "@chakra-ui/react";
 import { useEffect, useId, useState } from "react";
 import {
   Area,
@@ -9,7 +7,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Text } from "tw-components";
+import { cn } from "../../@/lib/utils";
+import { CustomToolTip } from "./custom-tooltip";
 
 export type GenericDataType = Record<string, string | number>;
 
@@ -18,7 +17,7 @@ type IndexType = "date";
 export interface AreaChartProps<
   TData extends GenericDataType,
   TIndexKey extends keyof TData,
-> extends BoxProps {
+> {
   data: TData[];
   index: {
     id: TIndexKey;
@@ -36,6 +35,8 @@ export interface AreaChartProps<
   showXAxis?: boolean;
   showYAxis?: boolean;
   startEndOnly?: boolean;
+  className?: string;
+  isAnimationActive?: boolean;
 }
 
 const AreaChart = <
@@ -48,7 +49,7 @@ const AreaChart = <
   showXAxis,
   showYAxis,
   startEndOnly,
-  ...boxProps
+  className,
 }: AreaChartProps<TData, TIndexKey>) => {
   const id = useId();
 
@@ -56,12 +57,10 @@ const AreaChart = <
     return null;
   }
 
-  if (!index.type) {
-    index.type = "date";
-  }
+  const indexType = index.type || "date";
 
   return (
-    <Box h="full" w="full" {...boxProps}>
+    <div className={cn("h-full w-full", className)}>
       <ResponsiveContainer width="100%" height="100%">
         <RechartsAreaChart data={data}>
           <defs>
@@ -132,7 +131,7 @@ const AreaChart = <
             tickFormatter={(payload) =>
               index.format
                 ? index.format(payload)
-                : index.type === "date"
+                : indexType === "date"
                   ? new Date(payload).toLocaleDateString(undefined, {
                       day: "numeric",
                       month: "short",
@@ -140,13 +139,10 @@ const AreaChart = <
                     })
                   : payload
             }
-            style={{
-              fontSize: "12px",
-              fontFamily: "var(--chakra-fonts-body)",
-            }}
-            stroke="var(--chakra-colors-paragraph)"
+            className="text-xs font-sans"
+            stroke="hsl(var(--muted-foreground))"
             tickLine={false}
-            axisLine={{ stroke: "var(--chakra-colors-borderColor)" }}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             interval="preserveStartEnd"
             minTickGap={5}
             domain={["dataMin", "dataMax"]}
@@ -168,10 +164,7 @@ const AreaChart = <
                 ? category.format(payload)
                 : payload.toString();
             }}
-            style={{
-              fontSize: "12px",
-              fontFamily: "var(--chakra-fonts-body)",
-            }}
+            className="text-xs font-sans"
             domain={([dataMin, dataMax]) => [
               // start from 0 unless dataMin is below 0 in which case start from dataMin - 10%
               Math.min(0, dataMin - Math.round(dataMin * 0.1)),
@@ -180,14 +173,14 @@ const AreaChart = <
             ]}
             tick={{ transform: "translate(-3, 0)" }}
             type="number"
-            stroke="var(--chakra-colors-paragraph)"
+            stroke="hsl(var(--muted-foreground))"
             tickLine={false}
-            axisLine={{ stroke: "var(--chakra-colors-borderColor)" }}
+            axisLine={{ stroke: "hsl(var(--border))" }}
             interval="preserveStartEnd"
           />
         </RechartsAreaChart>
       </ResponsiveContainer>
-    </Box>
+    </div>
   );
 };
 
@@ -206,8 +199,8 @@ function generateFakeData() {
   return data;
 }
 
-export const AreaChartLoadingState: React.FC = () => {
-  const [loadingData, setLoadingData] = useState(generateFakeData());
+export const AreaChartLoadingState = (props: { height?: string }) => {
+  const [loadingData, setLoadingData] = useState(() => generateFakeData());
 
   // legitimate use case
   // eslint-disable-next-line no-restricted-syntax
@@ -218,26 +211,21 @@ export const AreaChartLoadingState: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <Box position="relative">
-      <Center
-        backdropFilter="blur(4px)"
-        zIndex={1}
-        position="absolute"
-        top={0}
-        left={0}
-        right={0}
-        bottom={0}
-      >
-        <Text size="label.lg" color="faded">
-          Loading Chart...
-        </Text>
-      </Center>
+    <div
+      className="relative w-full"
+      style={{
+        height: props.height,
+      }}
+    >
+      <div className="flex items-center justify-center filter backdrop-blur-sm z-10 absolute inset-0">
+        <p className="text-secondary-foreground">Loading Chart</p>
+      </div>
       <AreaChart
-        pointerEvents="none"
+        className="pointer-events-none"
         data={loadingData}
         index={{ id: "key" }}
-        categories={[{ id: "value", color: "var(--chakra-colors-faded)" }]}
+        categories={[{ id: "value", color: "hsl(var(--muted-foreground))" }]}
       />
-    </Box>
+    </div>
   );
 };

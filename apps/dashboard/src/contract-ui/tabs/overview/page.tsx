@@ -1,3 +1,9 @@
+import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { contractType, useContract } from "@thirdweb-dev/react";
+import { type Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
+import { PublishedBy } from "components/contract-components/shared/published-by";
+import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
+import { useMemo } from "react";
 import { AnalyticsOverview } from "./components/Analytics";
 import { BuildYourApp } from "./components/BuildYourApp";
 import { ContractChecklist } from "./components/ContractChecklist";
@@ -8,12 +14,6 @@ import { NFTDetails } from "./components/NFTDetails";
 import { PermissionsTable } from "./components/PermissionsTable";
 import { TokenDetails } from "./components/TokenDetails";
 import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
-import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { contractType, useContract } from "@thirdweb-dev/react";
-import { Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
-import { PublishedBy } from "components/contract-components/shared/published-by";
-import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
-import { useMemo } from "react";
 
 interface ContractOverviewPageProps {
   contractAddress?: string;
@@ -79,7 +79,10 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           )}
         {contract &&
           ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
-            <TokenDetails contractAddress={contractAddress} />
+            <TokenDetails
+              contractAddress={contractAddress}
+              chainId={contract.chainId}
+            />
           )}
         <LatestEvents
           address={contractAddress}

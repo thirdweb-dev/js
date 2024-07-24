@@ -17,8 +17,8 @@ import {
   MdNavigateBefore,
   MdNavigateNext,
 } from "react-icons/md";
-import { ThirdwebContract } from "thirdweb";
-import { totalAccounts, getAccounts } from "thirdweb/extensions/erc4337";
+import type { ThirdwebContract } from "thirdweb";
+import { getAccounts, totalAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
 import { Text, TrackedCopyButton } from "tw-components";
 
@@ -154,7 +154,7 @@ export const AccountsTable: React.FC<AccountsTableProps> = ({ contract }) => {
 
           <Select
             onChange={(e) => {
-              const newPageSize = parseInt(e.target.value as string, 10);
+              const newPageSize = Number.parseInt(e.target.value as string, 10);
               // compute the new page number based on the new page size
               const newPage = Math.floor(
                 (currentPage * pageSize) / newPageSize,

@@ -1,11 +1,11 @@
 import { Skeleton } from "@chakra-ui/react";
-import { memo } from "react";
-import { Text } from "tw-components";
 import { useQuery } from "@tanstack/react-query";
-import { getThirdwebSDK } from "lib/sdk";
+import type { BasicContract } from "contract-ui/types/types";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { BasicContract } from "contract-ui/types/types";
+import { getThirdwebSDK } from "lib/sdk";
+import { memo } from "react";
+import { Text } from "tw-components";
 
 interface AsyncFactoryAccountCellProps {
   cell: BasicContract;
@@ -20,7 +20,7 @@ const useAccountCount = (address: string, chainId: number) => {
       if (!chain) {
         throw new Error("chain not found");
       }
-      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chain));
+      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId));
       const contract = await sdk.getContract(address);
       const accounts = await contract.accountFactory.getAllAccounts();
       return accounts.length;

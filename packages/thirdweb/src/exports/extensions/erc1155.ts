@@ -98,6 +98,10 @@ export {
   updateMetadata,
   type UpdateMetadataParams,
 } from "../../extensions/erc1155/drops/write/updateMetadata.js";
+export {
+  getClaimConditionById,
+  type GetClaimConditionByIdParams,
+} from "../../extensions/erc1155/__generated__/IDrop1155/read/getClaimConditionById.js";
 
 /**
  * SIGNATURE extension for ERC1155
@@ -152,3 +156,6 @@ export {
   openPack,
   type OpenPackParams,
 } from "../../extensions/erc1155/__generated__/IPack/write/openPack.js";
+
+// Zora 1155 contract
+export { nextTokenId } from "../../extensions/erc1155/__generated__/Zora1155/read/nextTokenId.js";

@@ -5,8 +5,9 @@ import {
   Skeleton,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
+import Link from "next/link";
+import type { ChainMetadata } from "thirdweb/chains";
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -24,7 +25,7 @@ interface MetadataHeaderProps {
     description?: string | null;
     image?: string | null;
   };
-  chain?: Chain;
+  chain?: ChainMetadata;
   externalLinks?: ExternalLink[];
 }
 
@@ -111,6 +112,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
                 py={{ base: 1.5, md: 1 }}
                 px={{ base: 1.5, md: 2 }}
                 gap={3}
+                as={Link}
+                href={`/${chain.chainId}`}
+                cursor="pointer"
               >
                 {chain.icon?.url && (
                   <Center
@@ -154,30 +158,28 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         )}
         <Flex gap={2}>
           <AddressCopyButton size="xs" address={address} />
-          {validBlockExplorers &&
-            validBlockExplorers.map((validBlockExplorer) => (
-              <LinkButton
-                key={validBlockExplorer.name}
-                variant="ghost"
-                isExternal
-                size="xs"
-                href={`${validBlockExplorer.url}/address/${address}`}
-              >
-                {validBlockExplorer.name}
-              </LinkButton>
-            ))}
-          {validExternalLinks &&
-            validExternalLinks.map((e) => (
-              <LinkButton
-                key={e.name}
-                variant="ghost"
-                isExternal
-                size="xs"
-                href={e.url}
-              >
-                {e.name}
-              </LinkButton>
-            ))}
+          {validBlockExplorers?.map((validBlockExplorer) => (
+            <LinkButton
+              key={validBlockExplorer.name}
+              variant="ghost"
+              isExternal
+              size="xs"
+              href={`${validBlockExplorer.url}/address/${address}`}
+            >
+              {validBlockExplorer.name}
+            </LinkButton>
+          ))}
+          {validExternalLinks?.map((e) => (
+            <LinkButton
+              key={e.name}
+              variant="ghost"
+              isExternal
+              size="xs"
+              href={e.url}
+            >
+              {e.name}
+            </LinkButton>
+          ))}
         </Flex>
       </Flex>
     </Flex>

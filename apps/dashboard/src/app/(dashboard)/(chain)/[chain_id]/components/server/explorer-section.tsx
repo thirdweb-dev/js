@@ -1,6 +1,6 @@
+import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadataWithServices } from "../../../types/chain";
-import { ExternalLinkIcon } from "lucide-react";
 
 export function ExplorersSection(props: {
   explorers: NonNullable<ChainMetadataWithServices["explorers"]>;

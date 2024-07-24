@@ -1,4 +1,3 @@
-import { DistributeButton } from "./components/distribute-button";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useBalanceForAddress } from "@3rdweb-sdk/react/hooks/useBalanceForAddress";
 import {
@@ -15,12 +14,15 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useAddress, useContract } from "@thirdweb-dev/react";
-import { BigNumber, constants, ethers } from "ethers";
+import { useContract } from "@thirdweb-dev/react";
+import { BigNumber, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
+import { ZERO_ADDRESS } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {
   name: string;
@@ -37,7 +39,7 @@ interface SplitPageProps {
 export const ContractSplitPage: React.FC<SplitPageProps> = ({
   contractAddress,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const contractQuery = useContract(contractAddress, "split");
   const configuredChainsRecord = useSupportedChainsRecord();
   const chainId = useDashboardEVMChainId();
@@ -55,7 +57,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
     return [
       {
         name: "Native Token",
-        token_address: constants.AddressZero,
+        token_address: ZERO_ADDRESS,
         balance: nativeBalanceQuery?.data?.value?.toString() || "0",
         display_balance: nativeBalanceQuery?.data?.displayValue || "0.0",
         decimals: nativeBalanceQuery?.data?.decimals || 18,
@@ -73,6 +75,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
     return balances.reduce(
       (acc, curr) => {
         return {
+          // biome-ignore lint/performance/noAccumulatingSpread: FIXME
           ...acc,
           // convert to bps for BigNumber calculations
           [curr.token_address]: ethers.utils.formatUnits(
@@ -119,13 +122,13 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
                 {nativeBalanceQuery.data?.symbol}
               </StatLabel>
               <StatNumber>{nativeBalanceQuery?.data?.displayValue}</StatNumber>
-              {shareOfBalancesForConnectedWallet[constants.AddressZero] && (
+              {shareOfBalancesForConnectedWallet[ZERO_ADDRESS] && (
                 <StatNumber>
                   <Text size="body.md">
                     <Text as="span" size="label.md">
                       Your Share:
                     </Text>{" "}
-                    {shareOfBalancesForConnectedWallet[constants.AddressZero]}
+                    {shareOfBalancesForConnectedWallet[ZERO_ADDRESS]}
                   </Text>
                 </StatNumber>
               )}
@@ -170,7 +173,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
           </SimpleGrid>
           {balanceQuery.isError && (
             <Text color="red.500">
-              {(balanceQuery?.error as any).message === "Invalid chain!"
+              {(balanceQuery?.error as Error).message === "Invalid chain!"
                 ? "Showing ERC20 balances for this network is not currently supported. You can distribute ERC20 funds from the Explorer tab."
                 : "Error loading balances"}
             </Text>

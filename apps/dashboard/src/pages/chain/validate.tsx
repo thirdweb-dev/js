@@ -4,7 +4,7 @@ import ChainValidation from "components/chain-validation";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Link, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
+import type { ThirdwebNextPage } from "utils/types";
 
 const ValidateChainPage: ThirdwebNextPage = () => {
   return (

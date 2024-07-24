@@ -1,18 +1,23 @@
-/* eslint-disable react/forbid-dom-props */
-import { NetworkSelectorChainProps } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import {
   useSetEditChain,
   useSetIsNetworkConfigModalOpen,
 } from "hooks/networkConfigModal";
-import { OPSponsoredChains } from "../../constants/chains";
 import { SettingsIcon } from "lucide-react";
-import { cn } from "../../@/lib/utils";
-import { Button } from "../../@/components/ui/button";
+import { useMemo } from "react";
+import type { UseNetworkSwitcherModalOptions } from "thirdweb/react";
 import { Spinner } from "../../@/components/ui/Spinner/Spinner";
+import { Button } from "../../@/components/ui/button";
+import { cn } from "../../@/lib/utils";
+import { OPSponsoredChains } from "../../constants/chains";
+import { useSupportedChainsRecord } from "../../hooks/chains/configureChains";
 
-type CustomChainRendererProps = NetworkSelectorChainProps & {
+type ChainRenderProps = React.ComponentProps<
+  NonNullable<UseNetworkSwitcherModalOptions["renderChain"]>
+>;
+
+type CustomChainRendererProps = ChainRenderProps & {
   disableChainConfig?: boolean;
 };
 
@@ -27,13 +32,21 @@ export const CustomChainRenderer = ({
   const setIsOpenNetworkConfigModal = useSetIsNetworkConfigModalOpen();
   const addRecentlyUsedChain = useAddRecentlyUsedChainId();
   const setEditChain = useSetEditChain();
+  const supportedChainsRecord = useSupportedChainsRecord();
 
-  const isDeprecated = chain.status === "deprecated";
-  const isSponsored = OPSponsoredChains.includes(chain?.chainId);
+  const storedChain = useMemo(() => {
+    return chain.id in supportedChainsRecord
+      ? supportedChainsRecord[chain.id]
+      : undefined;
+  }, [chain, supportedChainsRecord]);
+
+  const isDeprecated = storedChain?.status === "deprecated";
+  const isSponsored = OPSponsoredChains.includes(chain.id);
 
   return (
     <div className="flex w-full justify-start hover:bg-[#22232b] rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
       <div className="flex flex-1 items-center group">
+        {/* biome-ignore lint/a11y/useKeyWithClickEvents: FIXME */}
         <div
           className={cn(
             "flex flex-1 gap-4 items-center",
@@ -73,28 +86,28 @@ export const CustomChainRenderer = ({
               )}
             </div>
             {switching && (
-              <div className="flex text-primary-foreground text-xs font-medium items-center gap-1">
+              <div className="flex text-link-foreground text-xs font-medium items-center gap-1">
                 Confirm in your wallet
                 <Spinner className="size-3" />
               </div>
             )}
 
             {switchFailed && (
-              <div className="text-destructive-foreground text-xs font-semibold">
+              <div className="text-destructive-text text-xs font-semibold">
                 Error switching network
               </div>
             )}
           </div>
         </div>
 
-        {!disableChainConfig && (
+        {!disableChainConfig && storedChain && (
           <Button
             variant="ghost"
             className="ml-auto p-2 leading-4 opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
             aria-label="Configure Network"
             onClick={() => {
-              setEditChain(chain);
-              addRecentlyUsedChain(chain.chainId);
+              setEditChain(storedChain);
+              addRecentlyUsedChain(chain.id);
               setIsOpenNetworkConfigModal(true);
               if (close) {
                 close();

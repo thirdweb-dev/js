@@ -1,7 +1,12 @@
 import { AspectRatio, Box, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import NextImage from "next/image";
-import { Heading, Text, TrackedLink, TrackedLinkProps } from "tw-components";
+import {
+  Heading,
+  Text,
+  TrackedLink,
+  type TrackedLinkProps,
+} from "tw-components";
 
 interface GuideCardProps
   extends Pick<TrackedLinkProps, "category" | "label" | "trackingProps"> {

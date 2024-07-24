@@ -82,6 +82,10 @@ export type WalletConnectRequestHandlers = Prettify<
       account: Account;
       params: WalletConnectSignTypedDataRequestParams;
     }) => Promise<Hex | WalletConnectRequestError>;
+    eth_signTypedData_v4?: (_: {
+      account: Account;
+      params: WalletConnectSignTypedDataRequestParams;
+    }) => Promise<Hex | WalletConnectRequestError>;
     eth_signTransaction?: (_: {
       account: Account;
       params: WalletConnectTransactionRequestParams;

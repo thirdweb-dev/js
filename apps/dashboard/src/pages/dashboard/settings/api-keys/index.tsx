@@ -12,12 +12,9 @@ import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { useMemo } from "react";
 import { Heading, Link, Text } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const meQuery = useAccount();
 
@@ -37,10 +34,6 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
     );
   }, [apiKeys, account]);
 
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="manage your developer API keys" />;
-  }
-
   return (
     <Flex flexDir="column" gap={8}>
       <Flex direction="column" gap={2}>
@@ -57,7 +50,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
 
         <Text>
           An API key is required to use thirdweb&apos;s services through the SDK
-          and CLI. {` `}
+          and CLI.{" "}
           <Link
             target="_blank"
             color="blue.500"

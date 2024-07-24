@@ -17,7 +17,7 @@ export function CurrencySelection(props: {
   return (
     <Container>
       <Container p="lg">
-        <ModalHeader title="Select Currency" onBack={props.onBack} />
+        <ModalHeader title="Pay with" onBack={props.onBack} />
       </Container>
 
       <Line />

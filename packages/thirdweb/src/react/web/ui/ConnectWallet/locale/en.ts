@@ -1,6 +1,7 @@
 import type { ConnectLocale } from "./types.js";
 
 const connectLocaleEn: ConnectLocale = {
+  id: "en_US",
   signIn: "Sign in",
   defaultButtonTitle: "Connect Wallet",
   connecting: "Connecting",
@@ -21,6 +22,8 @@ const connectLocaleEn: ConnectLocale = {
   switchAccount: "Switch Account",
   requestTestnetFunds: "Request Testnet Funds",
   transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions",
   backupWallet: "Backup Wallet",
   guestWalletWarning:
@@ -96,6 +99,17 @@ const connectLocaleEn: ConnectLocale = {
       failedToSignIn: "Failed to Sign in",
       inProgress: "Awaiting Confirmation",
     },
+  },
+  manageWallet: {
+    title: "Manage Wallet",
+    connectAnApp: "Connect an App",
+    exportPrivateKey: "Export Private Key",
+  },
+  viewFunds: {
+    title: "View Funds",
+    viewNFTs: "View NFTs",
+    viewTokens: "View Tokens",
+    viewAssets: "View Assets",
   },
 };
 

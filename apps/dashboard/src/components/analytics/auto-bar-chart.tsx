@@ -1,5 +1,4 @@
-import { StackToolTip } from "./stack-tooltip";
-import { Box, BoxProps, useColorMode } from "@chakra-ui/react";
+import { useTheme } from "next-themes";
 import { useId, useMemo, useState } from "react";
 import {
   Bar,
@@ -9,6 +8,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { StackToolTip } from "./stack-tooltip";
 
 type GenericDataType = Record<string, string | number>;
 
@@ -17,7 +17,7 @@ type IndexType = "date";
 interface AutoBarChartProps<
   TData extends GenericDataType,
   TIndexKey extends keyof TData,
-> extends BoxProps {
+> {
   data: TData[];
   index: {
     id: TIndexKey;
@@ -81,22 +81,22 @@ export const AutoBarChart = <
   showXAxis,
   showYAxis,
   stacked,
-  ...boxProps
 }: AutoBarChartProps<TData, TIndexKey>) => {
-  const { colorMode } = useColorMode();
+  const { theme } = useTheme();
   const [hoverKey, setHoverKey] = useState("");
   const id = useId();
 
   const barColors = useMemo(() => {
-    if (colorMode === "light") {
+    if (theme === "light") {
       return BAR_COLORS_LIGHT;
     }
 
     return BAR_COLORS_DARK;
-  }, [colorMode]);
+  }, [theme]);
 
   const categories = useMemo(() => {
     const autoKeys: string[] = [];
+    // biome-ignore lint/complexity/noForEach: FIXME
     data.forEach((item) => {
       for (const key of Object.keys(item)) {
         if (key === index.id) {
@@ -116,10 +116,6 @@ export const AutoBarChart = <
     }));
   }, [data, index.id, barColors]);
 
-  if (!index.type) {
-    index.type = "date";
-  }
-
   const sortedData = useMemo(() => {
     return [...data].sort(
       (a, b) => (a[index.id] as number) - (b[index.id] as number),
@@ -131,126 +127,121 @@ export const AutoBarChart = <
   }
 
   return (
-    <Box {...boxProps}>
-      <ResponsiveContainer width="100%" height="100%">
-        <RechartsBarChart data={data}>
-          <defs>
-            {categories.map((cat) => (
-              <linearGradient
-                key={`${cat.id as string}`}
-                id={`bar_color_${id}_${cat.id as string}`}
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="100%"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop
-                  offset="0"
-                  stopColor={cat.color || "#3385FF"}
-                  stopOpacity={1}
-                />
-                <stop
-                  offset="1"
-                  stopColor={cat.color || "#3385FF"}
-                  stopOpacity={0.75}
-                />
-              </linearGradient>
-            ))}
-          </defs>
-
+    <ResponsiveContainer width="100%" height="100%">
+      <RechartsBarChart data={data}>
+        <defs>
           {categories.map((cat) => (
-            <Bar
+            <linearGradient
               key={`${cat.id as string}`}
-              dataKey={cat.id as string}
-              stackId={stacked ? "a" : (cat.id as string)}
-              stroke={cat.color || "#3385FF"}
-              fill={`url(#bar_color_${id}_${cat.id as string})`}
-              opacity={cat.id === hoverKey || !hoverKey ? 1 : 0.5}
-              strokeWidth={0}
-              onMouseOver={(item) => {
-                setHoverKey(item.tooltipPayload[0].dataKey);
-              }}
-              onMouseLeave={() => {
-                setHoverKey("");
-              }}
-            />
+              id={`bar_color_${id}_${cat.id as string}`}
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="100%"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop
+                offset="0"
+                stopColor={cat.color || "#3385FF"}
+                stopOpacity={1}
+              />
+              <stop
+                offset="1"
+                stopColor={cat.color || "#3385FF"}
+                stopOpacity={0.75}
+              />
+            </linearGradient>
           ))}
-          <Tooltip
-            wrapperStyle={{ outline: "none" }}
-            content={({ active, payload }) => {
-              if (!active || !payload) {
-                return null;
-              }
+        </defs>
 
-              const { time, ...values } = payload[0].payload;
-              return (
-                <StackToolTip time={time} values={values} hoverKey={hoverKey} />
-              );
+        {categories.map((cat) => (
+          <Bar
+            key={`${cat.id as string}`}
+            dataKey={cat.id as string}
+            stackId={stacked ? "a" : (cat.id as string)}
+            stroke={cat.color || "#3385FF"}
+            fill={`url(#bar_color_${id}_${cat.id as string})`}
+            opacity={cat.id === hoverKey || !hoverKey ? 1 : 0.5}
+            strokeWidth={0}
+            onMouseOver={(item) => {
+              setHoverKey(item.tooltipPayload[0].dataKey);
             }}
-            cursor={
-              !hoverKey || categories.length <= 1
-                ? {
-                    stroke: "#EAEAEA",
-                    fill: "#EAEAEA",
-                    opacity: 0.3,
-                    strokeDasharray: 2,
-                    strokeWidth: 0,
-                  }
-                : false
+            onMouseLeave={() => {
+              setHoverKey("");
+            }}
+          />
+        ))}
+        <Tooltip
+          wrapperStyle={{ outline: "none" }}
+          content={({ active, payload }) => {
+            if (!active || !payload) {
+              return null;
             }
-          />
 
-          <XAxis
-            hide={!showXAxis}
-            dataKey={index.id as string}
-            tickFormatter={(payload) =>
-              index.format
-                ? index.format(payload)
-                : index.type === "date"
-                  ? new Date(payload).toLocaleDateString(undefined, {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "2-digit",
-                    })
-                  : payload
-            }
-            style={{
-              fontSize: "12px",
-              fontFamily: "var(--chakra-fonts-body)",
-            }}
-            stroke="var(--chakra-colors-paragraph)"
-            tickLine={false}
-            axisLine={false}
-            interval="preserveStartEnd"
-            minTickGap={5}
-            domain={["dataMin - 86400000", "dataMax + 86400000"]}
-            type="number"
-            tick={{ transform: "translate(0, 6)" }}
-            ticks={[
-              sortedData[0][index.id],
-              sortedData[Math.floor(sortedData.length / 2)][index.id],
-              sortedData[sortedData.length - 1][index.id],
-            ]}
-          />
+            const { time, ...values } = payload[0].payload;
+            return (
+              <StackToolTip time={time} values={values} hoverKey={hoverKey} />
+            );
+          }}
+          cursor={
+            !hoverKey || categories.length <= 1
+              ? {
+                  stroke: "#EAEAEA",
+                  fill: "#EAEAEA",
+                  opacity: 0.3,
+                  strokeDasharray: 2,
+                  strokeWidth: 0,
+                }
+              : false
+          }
+        />
 
-          <YAxis
-            hide={!showYAxis}
-            width={60}
-            tickFormatter={(payload) => {
-              return payload.toLocaleString();
-            }}
-            style={{
-              fontSize: "12px",
-              fontFamily: "var(--chakra-fonts-body)",
-            }}
-            type="number"
-            stroke="var(--chakra-colors-paragraph)"
-            tickLine={false}
-            axisLine={false}
-          />
-        </RechartsBarChart>
-      </ResponsiveContainer>
-    </Box>
+        <XAxis
+          hide={!showXAxis}
+          dataKey={index.id as string}
+          tickFormatter={(payload) =>
+            index.format
+              ? index.format(payload)
+              : index.type === "date"
+                ? new Date(payload).toLocaleDateString(undefined, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "2-digit",
+                  })
+                : payload
+          }
+          style={{
+            fontSize: "12px",
+            fontFamily: "var(--chakra-fonts-body)",
+          }}
+          stroke="var(--chakra-colors-paragraph)"
+          tickLine={false}
+          axisLine={false}
+          interval="preserveStartEnd"
+          minTickGap={5}
+          domain={["dataMin - 86400000", "dataMax + 86400000"]}
+          type="number"
+          tick={{ transform: "translate(0, 6)" }}
+          ticks={[
+            sortedData[0][index.id],
+            sortedData[Math.floor(sortedData.length / 2)][index.id],
+            sortedData[sortedData.length - 1][index.id],
+          ]}
+        />
+
+        <YAxis
+          hide={!showYAxis}
+          width={60}
+          tickFormatter={(payload) => {
+            return payload.toLocaleString();
+          }}
+          className="text-xs font-sans"
+          type="number"
+          stroke="hsl(var(--muted-foreground))"
+          tickLine={false}
+          axisLine={false}
+        />
+      </RechartsBarChart>
+    </ResponsiveContainer>
   );
 };

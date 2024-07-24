@@ -1,10 +1,11 @@
-import { NetworkConfigFormData } from "../ConfigureNetworkForm";
 import { Alert, AlertIcon, FormControl, Input } from "@chakra-ui/react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { IoWarning } from "react-icons/io5";
 import { FormErrorMessage, FormLabel } from "tw-components";
+import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const RpcInput: React.FC<{
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<NetworkConfigFormData, any>;
 }> = ({ form }) => {
   const reg = form.register("rpcUrl", {

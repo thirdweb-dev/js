@@ -1,14 +1,15 @@
-import { MarketplaceV3 } from "@thirdweb-dev/sdk";
+import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
-import { useReadContract } from "thirdweb/react";
+import { getContract } from "thirdweb";
 import {
   getAllAuctions,
   getAllValidAuctions,
   totalAuctions,
 } from "thirdweb/extensions/marketplace";
-import { defineChain, getContract } from "thirdweb";
+import { useReadContract } from "thirdweb/react";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
+import { defineDashboardChain } from "../../../../lib/v5-adapter";
 
 interface EnglishAuctionsTableProps {
   contract: MarketplaceV3;
@@ -23,7 +24,7 @@ export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineChain(v4Contract.chainId),
+    chain: defineDashboardChain(v4Contract.chainId),
   });
   const getAllQueryResult = useReadContract(getAllAuctions, {
     contract,

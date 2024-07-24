@@ -1,5 +1,5 @@
-import { ArbitrumSepolia as ArbitrumSepoliaChain } from "@thirdweb-dev/chains";
 import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
+import { arbitrumSepolia } from "thirdweb/chains";
 
 export interface CurrencyMetadata {
   address: string;
@@ -30,18 +30,6 @@ const Ethereum: CurrencyMetadata[] = [
     address: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
     name: "Polygon",
     symbol: "MATIC",
-  },
-];
-
-const Goerli: CurrencyMetadata[] = [
-  {
-    ...NATIVE_TOKENS[ChainId.Goerli].wrapped,
-  },
-  // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-ethereum-goerli
-  {
-    address: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
-    name: "USD Coin",
-    symbol: "USDC",
   },
 ];
 
@@ -202,12 +190,6 @@ const Optimism: CurrencyMetadata[] = [
   },
 ];
 
-const OptimismGoerli: CurrencyMetadata[] = [
-  {
-    ...NATIVE_TOKENS[ChainId.OptimismGoerli].wrapped,
-  },
-];
-
 const Arbitrum: CurrencyMetadata[] = [
   {
     ...NATIVE_TOKENS[ChainId.Arbitrum].wrapped,
@@ -223,18 +205,6 @@ const Arbitrum: CurrencyMetadata[] = [
     address: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
     name: "USD Coin (Bridged)",
     symbol: "USDC.e",
-  },
-];
-
-const ArbitrumGoerli: CurrencyMetadata[] = [
-  {
-    ...NATIVE_TOKENS[ChainId.ArbitrumGoerli].wrapped,
-  },
-  // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-arbitrum-goerli
-  {
-    address: "0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63",
-    name: "USD Coin",
-    symbol: "USDC",
   },
 ];
 
@@ -285,7 +255,6 @@ const ArbitrumSepolia: CurrencyMetadata[] = [
 
 export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.Mainnet]: Ethereum,
-  [ChainId.Goerli]: Goerli,
   [ChainId.Polygon]: Polygon,
   [ChainId.Mumbai]: Mumbai,
   [ChainId.Fantom]: Fantom,
@@ -293,10 +262,8 @@ export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.Avalanche]: Avalanche,
   [ChainId.AvalancheFujiTestnet]: AvalancheFujiTestnet,
   [ChainId.Optimism]: Optimism,
-  [ChainId.OptimismGoerli]: OptimismGoerli,
   [ChainId.Arbitrum]: Arbitrum,
-  [ChainId.ArbitrumGoerli]: ArbitrumGoerli,
   [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
   [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
-  [ArbitrumSepoliaChain.chainId]: ArbitrumSepolia,
+  [arbitrumSepolia.id]: ArbitrumSepolia,
 } as const;

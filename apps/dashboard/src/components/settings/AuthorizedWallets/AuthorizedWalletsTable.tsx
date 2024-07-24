@@ -1,18 +1,18 @@
 import {
-  AuthorizedWallet,
+  type AuthorizedWallet,
   useRevokeAuthorizedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
+import { isAddress } from "ethers/lib/utils";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { Button, Text } from "tw-components";
-import { ComponentWithChildren } from "types/component-with-children";
-import { AuthorizedWalletRevokeModal } from "./AuthorizedWalletRevokeModal";
-import { isAddress } from "ethers/lib/utils";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { shortenString } from "utils/usedapp-external";
-import { useTrack } from "hooks/analytics/useTrack";
+import { AuthorizedWalletRevokeModal } from "./AuthorizedWalletRevokeModal";
 
 interface AuthorizedWalletsTableProps {
   authorizedWallets: AuthorizedWallet[];

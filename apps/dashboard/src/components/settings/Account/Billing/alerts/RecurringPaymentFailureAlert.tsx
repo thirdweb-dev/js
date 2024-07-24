@@ -1,21 +1,21 @@
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import {
-  useDisclosure,
   Alert,
-  Flex,
-  AlertIcon,
   AlertDescription,
-  IconButton,
+  AlertIcon,
   AlertTitle,
+  Flex,
+  IconButton,
   UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
+import { getRecurringPaymentFailureResponse } from "lib/billing";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 import { ManageBillingButton } from "../ManageButton";
-import { getRecurringPaymentFailureResponse } from "lib/billing";
 
 type RecurringPaymentFailureAlertProps = {
   isServiceCutoff?: boolean;
@@ -94,7 +94,7 @@ export const RecurringPaymentFailureAlert: React.FC<
                 {resolution ? `${resolution}. ` : ""}
                 {isServiceCutoff
                   ? ""
-                  : `We will retry several times over the next 10 days after your invoice date, after which you will lose access to your services.`}
+                  : "We will retry several times over the next 10 days after your invoice date, after which you will lose access to your services."}
               </Text>
               {affectedServices.length > 0 && (
                 <Flex direction="column">

@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 
+// biome-ignore lint/suspicious/noExplicitAny: FIXME
 export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
   if (

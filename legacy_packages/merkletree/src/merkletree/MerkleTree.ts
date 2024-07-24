@@ -592,13 +592,13 @@ export class MerkleTree extends Base {
         ? // @ts-expect-error - issue from original code
           index - 1
         : this.isBitcoinTree &&
-          index === layer.length - 1 &&
-          i < this.layers.length - 1
-        ? // Proof Generation for Bitcoin Trees
-          index
-        : // Proof Generation for Non-Bitcoin Trees
-          // @ts-expect-error - issue from original code
-          index + 1;
+            index === layer.length - 1 &&
+            i < this.layers.length - 1
+          ? // Proof Generation for Bitcoin Trees
+            index
+          : // Proof Generation for Non-Bitcoin Trees
+            // @ts-expect-error - issue from original code
+            index + 1;
 
       if (pairIndex < layer.length) {
         proof.push({

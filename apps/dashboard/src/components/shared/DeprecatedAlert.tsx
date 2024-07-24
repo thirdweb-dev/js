@@ -1,41 +1,43 @@
 import {
   Alert,
-  AlertIcon,
-  Flex,
-  AlertTitle,
   AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Flex,
 } from "@chakra-ui/react";
 import {
-  Goerli,
-  Sepolia,
-  Mumbai,
-  PolygonAmoyTestnet,
-  OptimismGoerli,
-  OpSepoliaTestnet,
-  BaseGoerli,
-  BaseSepoliaTestnet,
-  ArbitrumGoerli,
-  ArbitrumSepolia,
-  Chain,
-} from "@thirdweb-dev/chains";
+  type Chain,
+  type ChainMetadata,
+  arbitrumSepolia,
+  baseSepolia,
+  mumbai,
+  optimismSepolia,
+  polygonAmoy,
+  sepolia,
+} from "thirdweb/chains";
 import { Link, Text } from "tw-components";
 
 interface DeprecatedAlertProps {
-  chain: Chain | undefined;
+  chain: ChainMetadata | undefined;
 }
 
 const TO_BE_DEPRECATED_CHAINS: Record<number, { date: Date }> = {
-  [Mumbai.chainId]: {
+  [mumbai.id]: {
     date: new Date("2024-04-08"),
   },
 };
 
 const RECOMMENDED_CHAINS: Record<number, Chain> = {
-  [Goerli.chainId]: Sepolia,
-  [BaseGoerli.chainId]: BaseSepoliaTestnet,
-  [OptimismGoerli.chainId]: OpSepoliaTestnet,
-  [ArbitrumGoerli.chainId]: ArbitrumSepolia,
-  [Mumbai.chainId]: PolygonAmoyTestnet,
+  // ethereum goerli
+  [5]: sepolia,
+  // base goerli
+  [84531]: baseSepolia,
+  // optimism goerli
+  [420]: optimismSepolia,
+  // arbitrum goerli
+  [421613]: arbitrumSepolia,
+  // polygon mumbai
+  [80001]: polygonAmoy,
 };
 
 export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
@@ -84,7 +86,7 @@ export const DeprecatedAlert: React.FC<DeprecatedAlertProps> = ({ chain }) => {
             <>
               <br />
               We recommend switching to{" "}
-              <Link href={`/${recommendedChain.slug}`} color="primary.500">
+              <Link href={`/${recommendedChain.id}`} color="primary.500">
                 {recommendedChain.name}
               </Link>{" "}
               to continue testing your smart contracts.

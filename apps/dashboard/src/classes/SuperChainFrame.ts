@@ -1,4 +1,7 @@
-import { FrameMetadataType, getFrameHtmlResponse } from "@coinbase/onchainkit";
+import {
+  type FrameMetadataType,
+  getFrameHtmlResponse,
+} from "@coinbase/onchainkit";
 import { superchainFrameChains } from "lib/superchain-frames";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { z } from "zod";
@@ -15,6 +18,7 @@ const validChains = z.union([
   z.literal(superchainFrameChains.zora.name),
 ]);
 
+// biome-ignore lint/complexity/noStaticOnlyClass: FIXME: refactor to standalone functions
 export class SuperChainFrame {
   public static validateAction = (action: string) => {
     return validAction.parse(action);

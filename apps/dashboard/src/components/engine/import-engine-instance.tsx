@@ -1,7 +1,7 @@
 import {
   Alert,
-  AlertIcon,
   AlertDescription,
+  AlertIcon,
   Flex,
   FormControl,
   Input,
@@ -13,7 +13,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -50,6 +50,7 @@ export const ImportEngineInstanceButton = ({
         }}
         variant="outline"
         px={6}
+        width="fit-content"
       >
         Import
       </Button>
@@ -93,7 +94,6 @@ const ModalImportEngine = ({
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

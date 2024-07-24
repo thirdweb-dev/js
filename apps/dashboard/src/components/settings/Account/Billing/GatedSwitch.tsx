@@ -1,6 +1,6 @@
-import { Flex, Switch, SwitchProps, Tooltip } from "@chakra-ui/react";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Card, Text, Badge, TrackedLink } from "tw-components";
+import { Flex, Switch, type SwitchProps, Tooltip } from "@chakra-ui/react";
+import { Badge, Card, Text, TrackedLink } from "tw-components";
 
 interface GatedSwitchProps extends SwitchProps {
   trackingLabel?: string;
@@ -35,7 +35,7 @@ export const GatedSwitch: React.FC<GatedSwitchProps> = ({
             To access this feature, you need to upgrade to the{" "}
             <TrackedLink
               textAlign="center"
-              href={`/dashboard/settings/billing`}
+              href={"/dashboard/settings/billing"}
               category="advancedFeature"
               label={trackingLabel}
               color="blue.500"

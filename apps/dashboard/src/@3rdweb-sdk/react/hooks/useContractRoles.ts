@@ -1,13 +1,13 @@
 import {
-  ContractWithRoles,
-  RequiredParam,
-  RolesForContract,
-  useAddress,
+  type ContractWithRoles,
+  type RequiredParam,
+  type RolesForContract,
   useContractType,
   useRoleMembers,
 } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { constants } from "ethers";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ZERO_ADDRESS } from "thirdweb";
+import { useActiveAccount } from "thirdweb/react";
 
 function isContractWithRoles(
   contract: RequiredParam<ValidContractInstance>,
@@ -30,7 +30,7 @@ function useIsAccountRole<TContract extends ContractWithRoles>(
     return false;
   }
 
-  if (data?.includes(constants.AddressZero)) {
+  if (data?.includes(ZERO_ADDRESS)) {
     return true;
   }
 
@@ -40,7 +40,7 @@ function useIsAccountRole<TContract extends ContractWithRoles>(
 export function useIsAdmin<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
 ) {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { data: contractType } = useContractType(contract?.getAddress());
 
   const contractHasRoles = isContractWithRoles(contract);
@@ -60,7 +60,7 @@ export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
   self: RequiredParam<string>,
 ) {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { data: contractType } = useContractType(contract?.getAddress());
   const isAdmin = useIsAdmin(contract);
 
@@ -76,7 +76,7 @@ export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
 export function useIsMinter<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
 ) {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { data: contractType } = useContractType(contract?.getAddress());
   const contractHasRoles = isContractWithRoles(contract);
   const isAccountRole = useIsAccountRole(
@@ -94,7 +94,7 @@ export function useIsMinter<TContract extends ValidContractInstance>(
 export function useIsLister<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
 ) {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const { data: contractType } = useContractType(contract?.getAddress());
   const contractHasRoles = isContractWithRoles(contract);
   const isAccountRole = useIsAccountRole(

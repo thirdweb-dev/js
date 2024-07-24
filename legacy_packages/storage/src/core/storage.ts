@@ -175,6 +175,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions>
    */
   async upload(data: unknown, options?: T): Promise<string> {
     const [uri] = await this.uploadBatch([data], options);
+    // @ts-expect-error - TODO: should check index access
     return uri;
   }
 

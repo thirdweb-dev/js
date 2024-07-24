@@ -1,3 +1,4 @@
+import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   AccountStatus,
   useAccount,
@@ -11,18 +12,15 @@ import {
   VStack,
   useBreakpointValue,
   useColorMode,
-  useDisclosure,
 } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
-import { Button, Card, Heading, LinkButton, Text, Link } from "tw-components";
-import { ApplyForOpCreditsModal } from "./ApplyForOpCreditsModal";
-import { StaticImageData } from "next/image";
-import { ChakraNextImage } from "components/Image";
-import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useChainId } from "@thirdweb-dev/react";
+import { useActiveWalletChain } from "thirdweb/react";
+import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { OPSponsoredChains } from "../../constants/chains";
 
 enum Step {
@@ -58,11 +56,6 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   const apiKeysQuery = useApiKeys();
   const router = useRouter();
   const trackEvent = useTrack();
-  const {
-    isOpen: isClaimCreditsOpen,
-    onOpen: onClaimCreditsOpen,
-    onClose: onClaimCreditsClose,
-  } = useDisclosure();
   const { colorMode } = useColorMode();
   const { data: credits } = useAccountCredits();
   const opCredit = credits?.find((crd) => crd.name.startsWith("OP -"));
@@ -91,7 +84,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     return apiKeysQuery?.data && apiKeysQuery?.data?.length > 0;
   }, [apiKeysQuery?.data]);
 
-  const chainId = useChainId();
+  const chainId = useActiveWalletChain()?.id;
 
   const isSponsoredChain = useMemo(() => {
     if (chainId) {
@@ -110,15 +103,17 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
 
     if (isSponsoredChain && (!hasAppliedForOpGrant || !opCredit)) {
       return Step.OptimismCredits;
-    } else if (!onboardingKeys && !hasApiKeys) {
-      return Step.Keys;
-    } else if (!hasValidPayment && !onboardingPaymentMethod) {
-      return Step.Payment;
-    } else if (!onboardingDocs) {
-      return Step.Docs;
-    } else {
-      return null;
     }
+    if (!onboardingKeys && !hasApiKeys) {
+      return Step.Keys;
+    }
+    if (!hasValidPayment && !onboardingPaymentMethod) {
+      return Step.Payment;
+    }
+    if (!onboardingDocs) {
+      return Step.Docs;
+    }
+    return null;
   }, [
     isLoggedIn,
     hasApiKeys,
@@ -207,7 +202,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         description:
           "Add your payment method to ensure no disruption to thirdweb services when you exceed free monthly limits.",
         cta: "Add payment",
-        href: `/dashboard/settings/billing`,
+        href: "/dashboard/settings/billing",
         canSkip: true,
       },
       {
@@ -232,13 +227,13 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         ),
         cta: "Apply now",
         onClick: () => {
-          onClaimCreditsOpen();
           trackEvent({
             category: "onboardingChecklist",
             action: "clicked",
             data: { step: Step.OptimismCredits },
           });
         },
+        href: "/dashboard/settings/gas-credits",
         learnMore:
           "https://blog.thirdweb.com/accelerating-the-superchain-with-optimism",
         rightImageDark: require("../../../public/assets/dashboard/optimism-credits-dark.png"),
@@ -254,7 +249,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         canSkip: true,
       },
     ],
-    [onClaimCreditsOpen, trackEvent],
+    [trackEvent],
   );
 
   if (!currentStep) {
@@ -324,10 +319,6 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       {rightImageLight && !isMobile && colorMode === "light" && (
         <ChakraNextImage src={rightImageLight} alt={""} w="50%" priority />
       )}
-      <ApplyForOpCreditsModal
-        isOpen={isClaimCreditsOpen}
-        onClose={onClaimCreditsClose}
-      />
     </Card>
   );
 };

@@ -25,7 +25,7 @@ import {
   LinkButton,
   Text,
   TrackedLink,
-  TrackedLinkProps,
+  type TrackedLinkProps,
 } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 
@@ -99,11 +99,9 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
               </Center>
             ) : null}
             <AnimatePresence initial={false}>
-              {allEvents
-                ?.slice(0, 3)
-                .map((e) => (
-                  <EventsFeedItem key={e.transactionHash} transaction={e} />
-                ))}
+              {allEvents?.slice(0, 3).map((e) => (
+                <EventsFeedItem key={e.transactionHash} transaction={e} />
+              ))}
             </AnimatePresence>
           </List>
         </Card>
@@ -206,6 +204,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {
           spacing={0}
         >
           {transaction.events.slice(0, 2).map((e, idx) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             <LinkButton key={idx} href={`${href}?event=${e.eventName}`}>
               <Text color="whiteBg" fontWeight="600" isTruncated>
                 {e.eventName}

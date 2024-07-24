@@ -1,16 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
-import { useConnectUI } from "../../../core/hooks/others/useWalletConnectionCtx.js";
-import { getInAppWalletLocale } from "./locale/getInAppWalletLocale.js";
+import { useEffect, useState } from "react";
+import type { LocaleId } from "../../ui/types.js";
+import { getInAppWalletLocale } from "../shared/locale/getConnectLocale.js";
+import type { InAppWalletLocale } from "../shared/locale/types.js";
 
 /**
  * @internal
  */
-export function useInAppWalletLocale() {
-  const localeId = useConnectUI().locale;
-  return useQuery({
-    queryKey: ["inAppWalletLocale", localeId],
-    queryFn: () => getInAppWalletLocale(localeId),
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
+export function useInAppWalletLocale(localeId: LocaleId) {
+  const [locale, setLocale] = useState<InAppWalletLocale | undefined>(
+    undefined,
+  );
+
+  // TODO: move this to a useQuery hook
+  // or at the very least dedupe it?
+  useEffect(() => {
+    getInAppWalletLocale(localeId).then((l) => {
+      setLocale(l);
+    });
+  }, [localeId]);
+
+  return locale;
 }

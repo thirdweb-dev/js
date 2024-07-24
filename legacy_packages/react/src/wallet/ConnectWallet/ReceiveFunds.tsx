@@ -58,7 +58,8 @@ export function ReceiveFunds(props: { iconUrl: string; onBack: () => void }) {
   );
 }
 
-const WalletAddressContainer = /* @__PURE__ */ StyledButton(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

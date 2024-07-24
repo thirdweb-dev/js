@@ -1,5 +1,4 @@
-import { Flex, useColorMode } from "@chakra-ui/react";
-import { Heading, Text } from "tw-components";
+import { cn } from "../../@/lib/utils";
 
 type CustomToolTipProps = {
   time: string;
@@ -18,44 +17,25 @@ export const StackToolTip: React.FC<CustomToolTipProps> = ({
   values,
   hoverKey,
 }) => {
-  const { colorMode } = useColorMode();
-
   return (
-    <Flex
-      py={1.5}
-      px={2.5}
-      backdropFilter="blur(10px)"
-      bg="transparent"
-      flexDirection="column"
-      gap={1}
-      border="none"
-      outline="none"
-      borderRadius="lg"
-      _dark={{
-        bg: "rgba(0,0,0,0.2)",
-      }}
-      _light={{
-        bg: "rgba(255,255,255,0.2)",
-      }}
-    >
-      <Flex direction="column" gap={0.5}>
-        <Heading as="label" size="label.sm">
-          Date
-        </Heading>
-        <Text size="body.sm">
+    <div className="flex flex-col p-3 gap-2 border-none outline-none rounded-lg backdrop-blur-lg bg-[rgba(255,255,255,0.2)] dark:bg-[rgba(0,0,0,0.2)] ">
+      <div className="flex flex-col gap-0.5">
+        <label className="text-xs font-semibold text-foreground">Date</label>
+        <p className="text-xs">
           {new Date(time).toLocaleDateString(undefined, formattingOptions)}
-        </Text>
-      </Flex>
+        </p>
+      </div>
 
-      <Flex direction="column" gap={0.5}>
+      <div className="flex flex-col gap-0.5">
         {Object.entries(values)
           .reverse()
           .map(([key, value]) => (
-            <Text
+            <p
+              className={cn(
+                "text-xs",
+                hoverKey && key !== hoverKey ? "opacity-70" : "opacity-100",
+              )}
               key={key}
-              fontSize="12px"
-              color={colorMode === "dark" ? "white" : "#333"}
-              opacity={hoverKey && key !== hoverKey ? 0.8 : 1}
             >
               {hoverKey && key !== hoverKey ? (
                 `${key}: `
@@ -63,9 +43,9 @@ export const StackToolTip: React.FC<CustomToolTipProps> = ({
                 <strong>{key}: </strong>
               )}
               {value.toLocaleString()}
-            </Text>
+            </p>
           ))}
-      </Flex>
-    </Flex>
+      </div>
+    </div>
   );
 };

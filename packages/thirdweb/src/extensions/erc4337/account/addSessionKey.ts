@@ -6,7 +6,7 @@ import type { AccountPermissions } from "./types.js";
 
 export type AddSessionKeyOptions = {
   /**
-   * The adming account that will perform the operation.
+   * The admin account that will perform the operation.
    */
   account: Account;
   /**
@@ -22,10 +22,12 @@ export type AddSessionKeyOptions = {
 /**
  * Adds session key permissions for a specified address.
  * @param options - The options for the removeSessionKey function.
+ * @param {Contract} options.contract - The smart account contract to add the session key to
  * @returns The transaction object to be sent.
  * @example
  * ```ts
  * import { addSessionKey } from 'thirdweb/extensions/erc4337';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = addSessionKey({
  * contract,
@@ -38,6 +40,7 @@ export type AddSessionKeyOptions = {
  *  permissionEndTimestamp: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year from now
  * }
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC4337

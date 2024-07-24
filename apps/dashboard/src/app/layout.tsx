@@ -1,12 +1,13 @@
 import "@/styles/globals.css";
-import { Inter as interFont } from "next/font/google";
-import PlausibleProvider from "next-plausible";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
-import { AppRouterProviders } from "./(dashboard)/providers";
-import { Metadata } from "next";
-import { PostHogProvider } from "./components/root-providers";
+import type { Metadata } from "next";
+import PlausibleProvider from "next-plausible";
 import dynamic from "next/dynamic";
+import { Inter as interFont } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
+import { PostHogProvider } from "./components/root-providers";
+import { AppRouterProviders } from "./providers";
 
 const fontSans = interFont({
   subsets: ["latin"],
@@ -14,7 +15,7 @@ const fontSans = interFont({
 });
 
 export const metadata: Metadata = {
-  title: "hirdweb: The complete web3 development platform",
+  title: "thirdweb: The complete web3 development platform",
   description:
     "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum & 700+ EVM chains. Try now.",
   openGraph: {
@@ -68,6 +69,7 @@ export default function RootLayout({
         >
           <PostHogPageView />
           <AppRouterProviders>{children}</AppRouterProviders>
+          <Toaster />
           <NextTopLoader
             color="hsl(var(--primary))"
             height={2}

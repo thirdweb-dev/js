@@ -1,28 +1,28 @@
-import { ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useEmbeddedWallets } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex, Grid, HStack, Icon, Spacer } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { EmbeddedWallets } from "components/embedded-wallets";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
+import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
-import { Card, Heading, Text, TrackedLink } from "tw-components";
-import { ThirdwebNextPage } from "utils/types";
-import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
-import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { Card, Heading, Text, TrackedLink } from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 import { SupportedPlatformLink } from "../../../components/wallets/SupportedPlatformLink";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { useRouter } from "next/router";
 
 const TRACKING_CATEGORY = "embedded-wallet";
 
 const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
   const router = useRouter();
-  const defaultTabIndex = parseInt(router.query.tab?.toString() || "0");
+  const defaultTabIndex = Number.parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
   const keysQuery = useApiKeys();
 
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
@@ -55,8 +55,12 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
 
   const wallets = walletsQuery?.data || [];
 
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="manage in-app wallets" />;
+  if (isLoading) {
+    return (
+      <div className="grid w-full place-items-center">
+        <Spinner className="size-14" />
+      </div>
+    );
   }
 
   return (
@@ -233,7 +237,7 @@ function GuideLink(props: {
   return (
     <TrackedLink
       category={TRACKING_CATEGORY}
-      label={`guide`}
+      label={"guide"}
       trackingProps={{
         guide: props.label,
       }}

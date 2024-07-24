@@ -1,10 +1,10 @@
-import { TrackedLinkButton } from "tw-components";
-import { MouseEvent, useMemo } from "react";
 import {
-  Account,
+  type Account,
   AccountStatus,
   useCreateBillingSession,
 } from "@3rdweb-sdk/react/hooks/useApi";
+import { type MouseEvent, useMemo } from "react";
+import { TrackedLinkButton } from "tw-components";
 
 interface ManageBillingButtonProps {
   account: Account;

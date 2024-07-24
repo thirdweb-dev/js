@@ -1,24 +1,17 @@
-import { AppLayout } from "components/app-layouts/app";
+import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, HStack } from "@chakra-ui/react";
+import { AppLayout } from "components/app-layouts/app";
+import { BillingPeriod } from "components/settings/Account/Billing/Period";
+import { BillingPlan } from "components/settings/Account/Billing/Plan";
+import { Usage } from "components/settings/Account/Usage";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { Heading } from "tw-components";
-import { Usage } from "components/settings/Account/Usage";
-import { BillingPeriod } from "components/settings/Account/Billing/Period";
-import { useAccount, useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-import { BillingPlan } from "components/settings/Account/Billing/Plan";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsUsagePage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
   const meQuery = useAccount();
   const usageQuery = useAccountUsage();
-
-  if (!isLoggedIn) {
-    return <ConnectWalletPrompt description="view usage analytics" />;
-  }
 
   if (meQuery.isLoading || !meQuery.data) {
     return null;

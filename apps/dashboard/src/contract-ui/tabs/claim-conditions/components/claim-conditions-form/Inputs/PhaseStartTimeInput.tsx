@@ -1,7 +1,7 @@
-import { CustomFormControl } from "../common";
-import { useClaimConditionsFormContext } from "../index";
 import { Input } from "@chakra-ui/react";
 import { toDateTimeLocal } from "utils/date-utils";
+import { CustomFormControl } from "../common";
+import { useClaimConditionsFormContext } from "../index";
 
 /**
  * Allows users to edit the start time for the claim phase.

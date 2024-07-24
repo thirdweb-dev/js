@@ -1,12 +1,12 @@
 import {
+  Divider,
   Flex,
   FormControl,
-  IconButton,
   Icon,
-  Divider,
+  IconButton,
+  Input,
   Select,
   Skeleton,
-  Input,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { FiTrash } from "react-icons/fi";

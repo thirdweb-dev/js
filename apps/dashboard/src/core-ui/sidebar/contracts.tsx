@@ -1,5 +1,5 @@
 import { SidebarNav } from "./nav";
-import { Route } from "./types";
+import type { Route } from "./types";
 
 type ContractsSidebarProps = {
   activePage: "build" | "explore" | "deploy" | "publish";
@@ -16,6 +16,11 @@ const links: Route[] = [
     path: "/explore",
     title: "Explore",
     name: "explore",
+  },
+  {
+    path: "/trending",
+    title: "Trending",
+    name: "trending",
   },
   { path: "/dashboard/contracts/build", title: "Build", name: "build" },
 ];

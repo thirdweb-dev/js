@@ -72,6 +72,7 @@ export async function fetchPreDeployMetadata(
   return PreDeployMetadataFetchedSchema.parse({
     ...rawMeta,
     ...parsedMeta,
+    name: rawMeta.name,
     bytecode: await deployBytecode.text(),
     fetchedMetadataUri: metadataUri,
     fetchedBytecodeUri: bytecodeUri,

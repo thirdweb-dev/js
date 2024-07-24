@@ -1,12 +1,13 @@
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Stack } from "@chakra-ui/react";
-import { UseMutationResult } from "@tanstack/react-query";
+import type { UseMutationResult } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { BigNumberish } from "ethers";
+import type { BigNumberish } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 
 interface CancelTabProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   cancelQuery: UseMutationResult<any, unknown, BigNumberish, unknown>;
   id: string;
 }

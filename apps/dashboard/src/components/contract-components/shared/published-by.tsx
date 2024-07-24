@@ -1,5 +1,4 @@
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
-import { useAddress } from "@thirdweb-dev/react";
 import {
   useEns,
   usePublishedContractsFromDeploy,
@@ -7,6 +6,7 @@ import {
 import { ContractCard } from "components/explore/contract-card";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useMemo } from "react";
+import { useActiveAccount } from "thirdweb/react";
 
 interface PublishedByProps {
   contractAddress: string;
@@ -23,7 +23,7 @@ export const PublishedBy: React.FC<PublishedByProps> = ({
     activeNetworkInfo?.chain?.chainId,
   );
 
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const publishedContractToShow = useMemo(() => {
     const reversedPublishedContractsFromDeploy = [

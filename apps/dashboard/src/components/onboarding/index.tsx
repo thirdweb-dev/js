@@ -1,22 +1,18 @@
 import {
-  Account,
+  type Account,
   AccountStatus,
   useAccount,
-  useConfirmEmbeddedWallet,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import { useEffect, useState } from "react";
-import { OnboardingModal } from "./Modal";
-import { OnboardingGeneral } from "./General";
-import { OnboardingConfirmEmail } from "./ConfirmEmail";
-import { useRouter } from "next/router";
-import { OnboardingBilling } from "./Billing";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { useWallet } from "@thirdweb-dev/react";
-import { getLatestEWSToken } from "constants/app";
-import { walletIds } from "@thirdweb-dev/wallets";
+import { useEffect, useState } from "react";
+import { useActiveWallet } from "thirdweb/react";
+import { useTrack } from "../../hooks/analytics/useTrack";
+import { OnboardingBilling } from "./Billing";
 import { OnboardingChoosePlan } from "./ChoosePlan";
+import { OnboardingConfirmEmail } from "./ConfirmEmail";
+import { OnboardingGeneral } from "./General";
 import { OnboardingLinkWallet } from "./LinkWallet";
+import { OnboardingModal } from "./Modal";
 
 const skipBilling = (account: Account) => {
   return (
@@ -38,17 +34,14 @@ type OnboardingState =
 
 export const Onboarding: React.FC = () => {
   const meQuery = useAccount();
-  const router = useRouter();
+
   const { isLoggedIn } = useLoggedInUser();
   const trackEvent = useTrack();
-  const wallet = useWallet();
-  const ewsConfirmMutation = useConfirmEmbeddedWallet();
+  const wallet = useActiveWallet();
 
   const [state, setState] = useState<OnboardingState>();
   const [account, setAccount] = useState<Account>();
   const [updatedEmail, setUpdatedEmail] = useState<string | undefined>();
-
-  const isEmbeddedWallet = wallet?.walletId === walletIds.embeddedWallet;
 
   const handleSave = (email?: string) => {
     // if account is not ready yet we cannot do anything here
@@ -118,24 +111,7 @@ export const Onboarding: React.FC = () => {
     setState("linking");
   };
 
-  const handleEmbeddedWalletConfirmation = () => {
-    const ewsJwt = getLatestEWSToken();
-
-    if (ewsJwt) {
-      ewsConfirmMutation.mutate(
-        { ewsJwt },
-        {
-          onSuccess: (data) => {
-            if (!skipBilling(data as Account)) {
-              setState(data?.trialPeriodEndedAt ? "skipped" : "plan");
-            }
-          },
-        },
-      );
-    }
-  };
-
-  // FIXME: this entire flow needs reworked - re-vist as part of FTUX imrpovements
+  // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!isLoggedIn || meQuery.isLoading) {
@@ -151,10 +127,9 @@ export const Onboarding: React.FC = () => {
       setState(undefined);
     }
     setAccount(loadedAccount);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, meQuery]);
+  }, [isLoggedIn, meQuery, account?.id, state]);
 
-  // FIXME: this entire flow needs reworked - re-vist as part of FTUX imrpovements
+  // FIXME: this entire flow needs reworked - re-vist as part of FTUX improvements
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (!account || state || !wallet) {
@@ -163,11 +138,8 @@ export const Onboarding: React.FC = () => {
     // user hasn't confirmed email
     if (!account.emailConfirmedAt && !account.unconfirmedEmail) {
       // if its an embedded wallet, try to auto-confirm it
-      if (isEmbeddedWallet) {
-        handleEmbeddedWalletConfirmation();
-      } else {
-        setState("onboarding");
-      }
+
+      setState("onboarding");
     }
     // user has changed email and needs to confirm
     else if (account.unconfirmedEmail) {
@@ -185,8 +157,7 @@ export const Onboarding: React.FC = () => {
     else if (!skipBilling(account)) {
       setState("plan");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [account, router, state, wallet]);
+  }, [account, state, wallet]);
 
   if (!isLoggedIn || !account || state === "skipped" || !state) {
     return null;

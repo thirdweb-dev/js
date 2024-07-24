@@ -1,13 +1,13 @@
+import type { NFTMetadata } from "@thirdweb-dev/sdk";
+import { StorageSingleton } from "lib/sdk";
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import {
-  AlchemySupportedChainId,
-  GenerateURLParams,
-  WalletNFT,
+  type AlchemySupportedChainId,
+  type GenerateURLParams,
+  type WalletNFT,
   alchemySupportedChainIds,
   alchemySupportedChainIdsMap,
 } from "./types";
-import { type NFTMetadata } from "@thirdweb-dev/sdk";
-import { StorageSingleton } from "lib/sdk";
 
 export function isAlchemySupported(
   chainId: number,

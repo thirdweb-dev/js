@@ -11,7 +11,7 @@ import { createContext, useCallback, useContext, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiCopy, FiHelpCircle } from "react-icons/fi";
 import { Button, Drawer, Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { ComponentWithChildren } from "types/component-with-children";
+import type { ComponentWithChildren } from "types/component-with-children";
 import { parseErrorToMessage } from "utils/errorParser";
 
 interface ErrorContext {
@@ -32,23 +32,26 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
   const toast = useToast();
   const [currentError, setCurrentError] = useState<EnhancedTransactionError>();
   const dismissError = useCallback(() => setCurrentError(undefined), []);
-  const onError = useCallback((err: unknown, title = "An error occurred") => {
-    if (isTransactionError(err)) {
-      (err as any).title = title;
-      setCurrentError(err as EnhancedTransactionError);
-    } else {
-      toast({
-        position: "bottom",
-        variant: "solid",
-        title,
-        description: parseErrorToMessage(err),
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const onError = useCallback(
+    (err: unknown, title = "An error occurred") => {
+      if (isTransactionError(err)) {
+        // biome-ignore lint/suspicious/noExplicitAny: FIXME
+        (err as any).title = title;
+        setCurrentError(err as EnhancedTransactionError);
+      } else {
+        toast({
+          position: "bottom",
+          variant: "solid",
+          title,
+          description: parseErrorToMessage(err),
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    },
+    [toast],
+  );
 
   const { onCopy, hasCopied } = useClipboard(currentError?.message || "");
 

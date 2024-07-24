@@ -1,24 +1,14 @@
 import { AccountPlan, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Flex,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  FormControl,
-  Input,
-  Textarea,
-} from "@chakra-ui/react";
+import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
+import { Select as ChakraSelect } from "chakra-react-select";
+import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormHelperText, FormLabel } from "tw-components";
 import { PlanToCreditsRecord } from "./ApplyForOpCreditsModal";
-import { ChakraNextImage } from "components/Image";
-import { useLocalStorage } from "hooks/useLocalStorage";
-import { Select as ChakraSelect } from "chakra-react-select";
 
 interface FormSchema {
   firstname: string;
@@ -86,11 +76,14 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
   }, [trackEvent]);
 
   return (
-    <ModalContent
+    <Flex
+      direction="column"
+      gap={4}
       as="form"
       onSubmit={form.handleSubmit(async (data) => {
         const fields = Object.keys(data).map((key) => ({
           name: key,
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           value: (data as any)[key],
         }));
 
@@ -140,13 +133,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         }
       })}
     >
-      <ModalHeader textAlign="center">Gas Credits Application</ModalHeader>
-      <ModalCloseButton
-        onClick={() => {
-          onClose();
-        }}
-      />
-      <ModalBody as={Flex} flexDir="column" gap={4}>
+      <Flex flexDir="column" gap={4}>
         <ChakraNextImage
           src={require("../../../public/assets/dashboard/op-sponsorship-form.png")}
           alt=""
@@ -242,8 +229,8 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
           />
           <FormHelperText>Minimum 150 characters recommended.</FormHelperText>
         </FormControl>
-      </ModalBody>
-      <ModalFooter>
+      </Flex>
+      <Flex>
         <Button
           w="full"
           type="submit"
@@ -252,7 +239,7 @@ export const ApplyForOpCreditsForm: React.FC<ApplyForOpCreditsFormProps> = ({
         >
           {form.formState.isSubmitting ? "Applying..." : "Apply now"}
         </Button>
-      </ModalFooter>
-    </ModalContent>
+      </Flex>
+    </Flex>
   );
 };

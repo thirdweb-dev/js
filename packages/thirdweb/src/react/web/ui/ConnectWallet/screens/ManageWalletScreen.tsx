@@ -1,6 +1,7 @@
 "use client";
 import { ShuffleIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
@@ -33,7 +34,10 @@ export function ManageWalletScreen(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader title="Manage Wallet" onBack={props.onBack} />
+        <ModalHeader
+          title={props.locale.manageWallet.title}
+          onBack={props.onBack}
+        />
       </Container>
       <Line />
       <Container
@@ -61,13 +65,16 @@ export function ManageWalletScreen(props: {
             }}
           >
             <WalletConnectIcon size={iconSize.md} />
-            <Text color="primaryText">Connect an App</Text>
+            <Text color="primaryText">
+              {props.locale.manageWallet.connectAnApp}
+            </Text>
           </MenuButton>
 
           {/* Private Key Export (if enabled) */}
           {activeWallet &&
-            isInAppWallet(activeWallet) &&
-            !activeWallet.getConfig()?.hidePrivateKeyExport && (
+            ((isInAppWallet(activeWallet) &&
+              !activeWallet.getConfig()?.hidePrivateKeyExport) ||
+              isEcosystemWallet(activeWallet)) && (
               <MenuButton
                 onClick={() => {
                   props.setScreen("private-key");
@@ -77,7 +84,9 @@ export function ManageWalletScreen(props: {
                 }}
               >
                 <KeyIcon size={iconSize.md} />
-                <Text color="primaryText">Export Private Key</Text>
+                <Text color="primaryText">
+                  {props.locale.manageWallet.exportPrivateKey}
+                </Text>
               </MenuButton>
             )}
         </Container>

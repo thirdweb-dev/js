@@ -1,5 +1,8 @@
-// middleware.ts
-import { NextRequest, NextResponse } from "next/server";
+import { LOGGED_IN_ONLY_PATHS } from "@/constants/auth";
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
+import { type NextRequest, NextResponse } from "next/server";
+import { getAddress } from "thirdweb";
+import { defineChain, getChainMetadata } from "thirdweb/chains";
 
 // ignore assets, api - only intercept page routes
 export const config = {
@@ -16,11 +19,52 @@ export const config = {
   ],
 };
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
+  const authCookie = activeAccount
+    ? request.cookies.get(COOKIE_PREFIX_TOKEN + getAddress(activeAccount))
+    : null;
+
+  // logged in paths
+  if (LOGGED_IN_ONLY_PATHS.some((path) => pathname.startsWith(path))) {
+    // check if the user is logged in (has a valid auth cookie)
+
+    if (!authCookie) {
+      // if not logged in, rewrite to login page
+      return redirect(
+        request,
+        "/login",
+        `next=${encodeURIComponent(pathname)}`,
+        false,
+      );
+    }
+  }
+  // /login redirect
+  if (pathname === "/login" && authCookie) {
+    // if the user is logged in, redirect to dashboard
+    return redirect(request, "/dashboard");
+  }
 
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");
+
+  // if the first section of the path is a number, check if it's a valid chain_id and re-write it to the slug
+  const possibleChainId = Number.parseInt(paths[0]);
+  if (!Number.isNaN(possibleChainId) && possibleChainId !== 404) {
+    const possibleChain = defineChain(possibleChainId);
+    try {
+      const chainMetadata = await getChainMetadata(possibleChain);
+      if (chainMetadata.slug) {
+        return redirect(
+          request,
+          `/${chainMetadata.slug}/${paths.slice(1).join("/")}`,
+        );
+      }
+    } catch {
+      // no-op, we continue with the default routing
+    }
+  }
 
   // DIFFERENT DYNAMIC ROUTING CASES
 
@@ -32,6 +76,7 @@ export function middleware(request: NextRequest) {
       return redirect(
         request,
         `/thirdweb.eth/${paths.slice(1).join("/")}`,
+        undefined,
         true,
       );
     }
@@ -63,9 +108,11 @@ function rewrite(request: NextRequest, relativePath: string) {
 function redirect(
   request: NextRequest,
   relativePath: string,
+  searchParams?: string,
   permanent = false,
 ) {
   const url = request.nextUrl.clone();
   url.pathname = relativePath;
+  url.search = searchParams ? `?${searchParams}` : "";
   return NextResponse.redirect(url, permanent ? 308 : undefined);
 }

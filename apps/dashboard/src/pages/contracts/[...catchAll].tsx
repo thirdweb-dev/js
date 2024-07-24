@@ -1,5 +1,5 @@
 // handle old contract paths - redirect to /explore
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 
 export default function page() {
   return null;

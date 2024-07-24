@@ -43,28 +43,24 @@ function WalletsSection() {
           href="/connect/in-app-wallet"
           icon={WalletsInAppIcon}
         />
-        <ComingSoonWrapper>
-          <ArticleCardIndex
-            href="/connect/auth"
-            title="Auth"
-            description="Authenticate users with their wallets"
-            icon={WalletsAuthIcon}
-          />
-        </ComingSoonWrapper>
+        <ArticleCardIndex
+          href="/connect/auth"
+          title="Auth"
+          description="Authenticate users with their wallets"
+          icon={WalletsAuthIcon}
+        />
         <ArticleCardIndex
           href="/connect/pay"
           title="Pay"
           description="Add fiat and cross-chain crypto payments in your apps"
           icon={PayIcon}
         />
-        <ComingSoonWrapper>
-          <ArticleCardIndex
-            href="/connect/blockchain-api"
-            title="Blockchain API"
-            description="Performant, and reliable blockchain API"
-            icon={CodeIcon}
-          />
-        </ComingSoonWrapper>
+        <ArticleCardIndex
+          href="/connect/blockchain-api"
+          title="Blockchain API"
+          description="Performant, and reliable blockchain API"
+          icon={CodeIcon}
+        />
       </div>
     </section>
   );

@@ -14,7 +14,9 @@ import { BsFillCloudUploadFill } from "react-icons/bs";
 import { Heading, Text } from "tw-components";
 
 interface UploadStepProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   getRootProps: any;
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   getInputProps: any;
   hasFailed: boolean;
   isDragActive: boolean;

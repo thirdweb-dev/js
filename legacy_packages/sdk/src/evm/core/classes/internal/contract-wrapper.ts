@@ -25,7 +25,10 @@ import {
   getAndIncrementNonce,
 } from "../../../common/forwarder";
 import { getDefaultGasOverrides } from "../../../common/gas-price";
-import { fetchContractMetadataFromAddress, getContractMetadataFromCache } from "../../../common/metadata-resolver";
+import {
+  fetchContractMetadataFromAddress,
+  getContractMetadataFromCache,
+} from "../../../common/metadata-resolver";
 import { signEIP2612Permit } from "../../../common/permit";
 import { signTypedDataInternal } from "../../../common/sign";
 import { CONTRACT_ADDRESSES } from "../../../constants/addresses/CONTRACT_ADDRESSES";
@@ -498,10 +501,7 @@ export class ContractWrapper<
     let contractName: string | undefined = undefined;
     try {
       const chainId = (await provider.getNetwork()).chainId;
-      const metadata = getContractMetadataFromCache(
-        this.address,
-        chainId,
-      );
+      const metadata = getContractMetadataFromCache(this.address, chainId);
 
       if (metadata?.name) {
         contractName = metadata.name;

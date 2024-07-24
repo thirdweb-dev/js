@@ -1,7 +1,7 @@
 import { Box, Flex, Icon, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Text, TrackedLink } from "tw-components";
-import { SectionItemProps, SectionProps } from "./types";
+import type { SectionItemProps, SectionProps } from "./types";
 
 export const NavCard: React.FC<SectionItemProps | SectionProps> = ({
   name,

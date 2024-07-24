@@ -8,12 +8,12 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useAddress, useContractWrite } from "@thirdweb-dev/react";
-import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
+import { useContractWrite } from "@thirdweb-dev/react";
+import type { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
-import { BigNumber, CallOverrides, constants, utils } from "ethers";
+import { BigNumber, type CallOverrides, utils } from "ethers";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useId, useMemo } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
@@ -33,12 +33,15 @@ import {
 
 function formatResponseData(data: unknown): string {
   if (BigNumber.isBigNumber(data)) {
+    // biome-ignore lint/style/noParameterAssign: FIXME
     data = data.toString();
   }
 
   if (typeof data === "object") {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     const receipt: any = (data as any).receipt;
     if (receipt) {
+      // biome-ignore lint/style/noParameterAssign: FIXME
       data = {
         to: receipt.to,
         from: receipt.from,
@@ -52,7 +55,9 @@ function formatResponseData(data: unknown): string {
 }
 
 function formatError(error: Error): string {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   if ((error as any).reason) {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return (error as any).reason;
   }
 
@@ -70,6 +75,7 @@ function formatContractCall(
     type: string;
     components:
       | {
+          // biome-ignore lint/suspicious/noExplicitAny: FIXME
           [x: string]: any;
           type: string;
           name?: string;
@@ -79,18 +85,15 @@ function formatContractCall(
   value?: BigNumber,
 ) {
   const parsedParams = params
-    .map((p) =>
-      p.type === "bool" ? (p.value === "false" ? false : true) : p.value,
-    )
+    .map((p) => (p.type === "bool" ? p.value !== "false" : p.value))
     .map((p) => {
       try {
         const parsed = JSON.parse(p as string);
         if (Array.isArray(parsed) || typeof parsed === "object") {
           return parsed;
-        } else {
-          // Return original value if its not an array or object
-          return p;
         }
+        // Return original value if its not an array or object
+        return p;
       } catch {
         // JSON.parse on string will throw an error
         return p;
@@ -116,6 +119,7 @@ function useDelayedRead(
   functionName?: string,
 ) {
   return useMutation(
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     async ({ args, overrides }: { args: any[]; overrides?: CallOverrides }) => {
       invariant(contract, "Contract is required");
       invariant(functionName, "functionName is required");
@@ -169,8 +173,6 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
   const error = isView ? readError : mutationError;
 
-  const connectedWalletAddress = useAddress() || constants.AddressZero;
-
   // legitimate(?) use-case
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
@@ -181,7 +183,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     ) {
       readFn({ args: [] });
     }
-  }, [readFn, abiFunction?.stateMutability, form, connectedWalletAddress]);
+  }, [readFn, abiFunction?.stateMutability, form]);
 
   return (
     <FormProvider {...form}>
@@ -272,7 +274,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               <Divider mb="8px" />
               <FormControl gap={0.5}>
                 <FormLabel>Native Token Value</FormLabel>
-                <Input {...form.register(`value`)} />
+                <Input {...form.register("value")} />
                 <FormHelperText>
                   The native currency value (in Ether) to send with this
                   transaction (ex: 0.01 to send 0.01 native currency).
@@ -297,6 +299,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 borderWidth="1px"
                 position="relative"
               >
+                {/* biome-ignore lint/suspicious/noExplicitAny: FIXME */}
                 {formatError(error as any)}
               </Text>
             </>

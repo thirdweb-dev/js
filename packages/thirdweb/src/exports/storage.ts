@@ -4,6 +4,7 @@ export {
   type UploadMobileOptions,
 } from "../storage/uploadMobile.js";
 export { download, type DownloadOptions } from "../storage/download.js";
+export { unpin, type UnpinOptions } from "../storage/unpin.js";
 export { resolveScheme, type ResolveSchemeOptions } from "../utils/ipfs.js";
 export {
   resolveArweaveScheme,

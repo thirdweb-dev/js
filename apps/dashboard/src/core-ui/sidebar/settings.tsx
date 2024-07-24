@@ -1,5 +1,5 @@
 import { SidebarNav } from "./nav";
-import { Route } from "./types";
+import type { Route } from "./types";
 
 type SettingsSidebarProps = {
   activePage:

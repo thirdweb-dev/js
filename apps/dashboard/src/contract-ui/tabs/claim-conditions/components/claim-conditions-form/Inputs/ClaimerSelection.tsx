@@ -1,9 +1,9 @@
-import { useClaimConditionsFormContext } from "..";
-import { CustomFormControl } from "../common";
 import { Box, Flex, Icon, Select } from "@chakra-ui/react";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
 import { Button, Text } from "tw-components";
+import { useClaimConditionsFormContext } from "..";
+import { CustomFormControl } from "../common";
 
 /**
  * Allows the user to
@@ -51,13 +51,8 @@ export const ClaimerSelection = () => {
   const disabledSnapshotButton = isAdmin && formDisabled;
 
   if (isClaimPhaseV1) {
-    helperText = (
-      <>
-        Snapshot spots are one-time-use! Once a wallet has claimed the drop, it
-        cannot claim again, even if it did not claim the entire amount assigned
-        to it in the snapshot.
-      </>
-    );
+    helperText =
+      "Snapshot spots are one-time-use! Once a wallet has claimed the drop, it cannot claim again, even if it did not claim the entire amount assigned to it in the snapshot.";
   } else {
     if (dropType === "specific") {
       helperText = (

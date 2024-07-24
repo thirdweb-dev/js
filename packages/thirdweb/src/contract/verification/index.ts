@@ -16,6 +16,7 @@ type VerifyContractOptions = {
   explorerApiUrl: string;
   explorerApiKey: string;
   encodedConstructorArgs?: string;
+  type?: "etherscan" | "blockscoutV1" | "blockscoutV2" | "routescan";
 };
 
 /**
@@ -105,39 +106,71 @@ export async function verifyContract(
   const targets = Object.keys(compilationTarget);
   const contractPath = targets[0];
 
-  const encodedArgs = options.encodedConstructorArgs
-    ? options.encodedConstructorArgs
-    : await fetchConstructorParams({
-        abi: compilerMetadata?.metadata?.output?.abi || [],
-        contract: options.contract,
-        explorerApiUrl: options.explorerApiUrl,
-        explorerApiKey: options.explorerApiKey,
-      });
+  if (options.type === "blockscoutV2") {
+    const metadataBlob = new Blob([JSON.stringify(compilerInput)], {
+      type: "application/json",
+    });
+    const formData = new FormData();
+    formData.append("address_hash", options.contract.address);
+    formData.append(
+      "contract_name",
+      `${contractPath}:${compilerMetadata.name}`,
+    );
+    formData.append(
+      "compiler_version",
+      `v${compilerMetadata.metadata.compiler.version}`,
+    );
+    formData.append("autodetect_constructor_args", "true");
+    formData.append("files[0]", metadataBlob, "metadata.json");
 
-  const requestBody: Record<string, string> = {
-    apikey: options.explorerApiKey,
-    module: "contract",
-    action: "verifysourcecode",
-    contractaddress: options.contract.address,
-    sourceCode: JSON.stringify(compilerInput),
-    codeformat: "solidity-standard-json-input",
-    contractname: `${contractPath}:${compilerMetadata.name}`,
-    compilerversion: `v${compilerMetadata.metadata.compiler.version}`,
-    constructorArguements: encodedArgs,
-  };
+    const result = await fetch(
+      `${options.explorerApiUrl}/v2/smart-contracts/${options.contract.address.toLowerCase()}/verification/via/standard-input`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+    const data = await result.json();
 
-  const parameters = new URLSearchParams({ ...requestBody });
-  const result = await fetch(options.explorerApiUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: parameters.toString(),
-  });
+    if (data.message) {
+      return data.message;
+    } else {
+      throw new Error(`${data}`);
+    }
+  } else {
+    const encodedArgs = options.encodedConstructorArgs
+      ? options.encodedConstructorArgs
+      : await fetchConstructorParams({
+          abi: compilerMetadata?.metadata?.output?.abi || [],
+          contract: options.contract,
+          explorerApiUrl: options.explorerApiUrl,
+          explorerApiKey: options.explorerApiKey,
+        });
 
-  const data = await result.json();
-  if (data.status === RequestStatus.OK) {
-    return data.result;
+    const requestBody: Record<string, string> = {
+      apikey: options.explorerApiKey,
+      module: "contract",
+      action: "verifysourcecode",
+      contractaddress: options.contract.address,
+      sourceCode: JSON.stringify(compilerInput),
+      codeformat: "solidity-standard-json-input",
+      contractname: `${contractPath}:${compilerMetadata.name}`,
+      compilerversion: `v${compilerMetadata.metadata.compiler.version}`,
+      constructorArguements: encodedArgs,
+    };
+
+    const parameters = new URLSearchParams({ ...requestBody });
+    const result = await fetch(options.explorerApiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: parameters.toString(),
+    });
+    const data = await result.json();
+    if (data.status === RequestStatus.OK) {
+      return data.result;
+    }
+    throw new Error(`${data.result}`);
   }
-  throw new Error(`${data.result}`);
 }
 
 const VerificationStatus = {

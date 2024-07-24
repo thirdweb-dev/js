@@ -1,5 +1,9 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
+import type { Address } from "abitype";
 import type { Chain } from "../../../../chains/types.js";
+import { getContract } from "../../../../contract/contract.js";
+import { getCurrencyMetadata } from "../../../../extensions/erc20/read/getCurrencyMetadata.js";
+import { getGasPrice } from "../../../../gas/get-gas-price.js";
 import { estimateGasCost } from "../../../../transaction/actions/estimate-gas-cost.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
@@ -11,10 +15,10 @@ import {
   type GetWalletBalanceResult,
   getWalletBalance,
 } from "../../../../wallets/utils/getWalletBalance.js";
-import type { SupportedTokens } from "../../../web/ui/ConnectWallet/defaultTokens.js";
 import { fetchBuySupportedDestinations } from "../../../web/ui/ConnectWallet/screens/Buy/swap/useSwapSupportedChains.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
+import type { SupportedTokens } from "../../utils/defaultTokens.js";
 
 /**
  * Configuration for the "Pay Modal" that opens when the user doesn't have enough funds to send a transaction.
@@ -38,6 +42,9 @@ import type { Theme } from "../../design-system/index.js";
  */
 export type SendTransactionPayModalConfig =
   | {
+      metadata?: {
+        title?: string;
+      };
       locale?: LocaleId;
       supportedTokens?: SupportedTokens;
       theme?: Theme | "light" | "dark";
@@ -70,9 +77,17 @@ export type SendTransactionConfig = {
 type ShowModalData = {
   tx: PreparedTransaction;
   sendTx: () => void;
-  rejectTx: () => void;
+  rejectTx: (reason: Error) => void;
   totalCostWei: bigint;
+  currency?: {
+    address: Address;
+    name: string;
+    symbol: string;
+    decimals: number;
+    icon?: string;
+  };
   walletBalance: GetWalletBalanceResult;
+  resolveTx: (data: WaitForReceiptOptions) => void;
 };
 
 /**
@@ -150,7 +165,7 @@ export function useSendTransactionCore(args: {
             }
 
             //  buy supported, check if there is enough balance - if not show modal to buy tokens
-            const [walletBalance, totalCostWei] = await Promise.all([
+            const [nativeWalletBalance, nativeCostWei] = await Promise.all([
               getWalletBalance({
                 address: account.address,
                 chain: tx.chain,
@@ -159,10 +174,40 @@ export function useSendTransactionCore(args: {
               getTotalTxCostForBuy(tx, account?.address),
             ]);
 
-            const walletBalanceWei = walletBalance.value;
+            let currency: ShowModalData["currency"] | undefined = undefined;
+            let walletBalance = nativeWalletBalance;
+            let totalCostWei = nativeCostWei;
+            const hasEnoughForGas = nativeWalletBalance.value > nativeCostWei;
+
+            const erc20Value = await resolvePromisedValue(tx.erc20Value);
+            if (erc20Value && hasEnoughForGas) {
+              const [tokenBalance, tokenMeta] = await Promise.all([
+                getWalletBalance({
+                  address: account.address,
+                  chain: tx.chain,
+                  client: tx.client,
+                  tokenAddress: erc20Value.tokenAddress,
+                }),
+                getCurrencyMetadata({
+                  contract: getContract({
+                    address: erc20Value.tokenAddress,
+                    chain: tx.chain,
+                    client: tx.client,
+                  }),
+                }),
+              ]);
+              totalCostWei = erc20Value.amountWei;
+              walletBalance = tokenBalance;
+              currency = {
+                address: erc20Value.tokenAddress,
+                name: tokenMeta.name,
+                symbol: tokenMeta.symbol,
+                decimals: tokenMeta.decimals,
+              };
+            }
 
             // if enough balance, send tx
-            if (totalCostWei < walletBalanceWei) {
+            if (totalCostWei < walletBalance.value) {
               sendTx();
               return;
             }
@@ -171,11 +216,11 @@ export function useSendTransactionCore(args: {
             showPayModal({
               tx,
               sendTx,
-              rejectTx: () => {
-                reject(new Error("Not enough balance"));
-              },
+              rejectTx: reject,
+              resolveTx: resolve,
               totalCostWei,
               walletBalance,
+              currency,
             });
           } catch (e) {
             console.error("Failed to estimate cost", e);
@@ -210,11 +255,19 @@ export async function getTotalTxCostForBuy(
       // try again without passing from
       return await getTotalTxCostForBuy(tx);
     }
-    // fallback if both fail, use the tx value + 1% buffer
+    // fallback if both fail, use the tx value + 2M * gas price
     const value = await resolvePromisedValue(tx.value);
+
+    const gasPrice = await getGasPrice({
+      client: tx.client,
+      chain: tx.chain,
+    });
+
+    const buffer = 2_000_000n * gasPrice;
+
     if (!value) {
-      return 0n;
+      return 0n + buffer;
     }
-    return value + value / 100n;
+    return value + buffer;
   }
 }

@@ -15,7 +15,7 @@ import {
   ownerOf,
   setApprovalForAll,
 } from "../../../exports/extensions/erc721.js";
-import { sendTransaction } from "../../../transaction/actions/send-transaction.js";
+import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { mintTo } from "../../erc721/write/mintTo.js";
 import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
 import { deployPublishedContract } from "../../prebuilts/deploy-published.js";
@@ -91,7 +91,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC721", () => {
     ];
 
     for (const tx of mintTransactions) {
-      await sendTransaction({
+      await sendAndConfirmTransaction({
         transaction: tx,
         account: TEST_ACCOUNT_A,
       });
@@ -102,7 +102,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC721", () => {
       operator: airdropContract.address,
       approved: true,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: approvalTx,
       account: TEST_ACCOUNT_A,
     });
@@ -125,7 +125,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC721", () => {
       snapshotUri,
       contract: airdropContract,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: saveSnapshotTransaction,
       account: TEST_ACCOUNT_A,
     });
@@ -136,7 +136,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC721", () => {
       resetClaimStatus: true,
       contract: airdropContract,
     });
-    await sendTransaction({
+    await sendAndConfirmTransaction({
       transaction: setMerkleRootTransaction,
       account: TEST_ACCOUNT_A,
     });
@@ -146,7 +146,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("claimERC721", () => {
       recipient: TEST_ACCOUNT_B.address,
       contract: airdropContract,
     });
-    const { transactionHash } = await sendTransaction({
+    const { transactionHash } = await sendAndConfirmTransaction({
       transaction: claimTransaction,
       account: TEST_ACCOUNT_A,
     });

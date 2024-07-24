@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { InfoCard } from "../components/server/info-card";
 import { getChain } from "../../utils";
+import { InfoCard } from "../components/server/info-card";
 
 export default async function Page(props: { params: { chain_id: string } }) {
   const chain = await getChain(props.params.chain_id);
@@ -36,7 +36,7 @@ export default async function Page(props: { params: { chain_id: string } }) {
           This includes:
         </p>
 
-        <div className="h-3"></div>
+        <div className="h-3" />
 
         <ul className="text-secondary-foreground pl-4 [&_li]:list-disc [&_li]:mb-3 [&_li]:pl-1">
           <li>

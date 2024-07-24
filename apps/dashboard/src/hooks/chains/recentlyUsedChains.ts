@@ -1,4 +1,3 @@
-import { useSupportedChainsRecord } from "./configureChains";
 import {
   AddRecentlyUsedChainIdsContext,
   RecentlyUsedChainIdsContext,
@@ -6,6 +5,7 @@ import {
 } from "contexts/configured-chains";
 import { useContext, useMemo } from "react";
 import invariant from "tiny-invariant";
+import { useSupportedChainsRecord } from "./configureChains";
 
 export function useRecentlyUsedChains() {
   const recentlyUsedChainIds = useContext(RecentlyUsedChainIdsContext);

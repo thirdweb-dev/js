@@ -26,7 +26,7 @@ export const Resources: React.FC = () => {
         Resources
       </Heading>
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap={8}>
-        {resources.map(({ name, link, image }, i) => (
+        {resources.map(({ name, link, image }) => (
           <TrackedLink
             overflow={"hidden"}
             href={link}
@@ -35,7 +35,7 @@ export const Resources: React.FC = () => {
             label={name}
             target="_blank"
             rel="noopener noreferrer"
-            key={i}
+            key={name}
             position="relative"
             backgroundImage={`linear-gradient(to bottom, hsl(319deg 98% 10%), hsl(300deg 100% 8% / 52%)), url(${image})`}
             backgroundPosition="center"

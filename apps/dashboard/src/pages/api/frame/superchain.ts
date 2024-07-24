@@ -1,22 +1,22 @@
-import { NextRequest } from "next/server";
-import { FrameRequest } from "@coinbase/onchainkit";
+import type { FrameRequest } from "@coinbase/onchainkit";
 import { CoinbaseKit } from "classes/CoinbaseKit";
-import {
-  errorResponse,
-  redirectResponse,
-  successHtmlResponse,
-} from "utils/api";
 import { SuperChainFrame } from "classes/SuperChainFrame";
 import {
   finalGrowthPlanFrameMetaData,
   growthPlanFrameMetaData,
 } from "lib/superchain-frames";
+import type { NextRequest } from "next/server";
+import {
+  errorResponse,
+  redirectResponse,
+  successHtmlResponse,
+} from "utils/api";
 
 export const config = {
   runtime: "edge",
 };
 
-const superchainLandingUrl = `https://thirdweb.com/grant/superchain`;
+const superchainLandingUrl = "https://thirdweb.com/grant/superchain";
 
 export default async function handler(req: NextRequest) {
   if (req.method !== "POST") {

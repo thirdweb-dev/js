@@ -1,8 +1,8 @@
-import { CodeOverview } from "./components/code-overview";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { useLayoutEffect } from "react";
+import { CodeOverview } from "./components/code-overview";
 
 interface ContractCodePageProps {
   contractAddress?: string;

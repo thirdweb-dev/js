@@ -30,10 +30,17 @@ module.exports = {
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
+          // destructive-foreground should only be used on destructive bg
           foreground: "hsl(var(--destructive-foreground))",
+          // destructive-text can be used on neutral bg - it's red-ish
+          text: "hsl(var(--destructive-text))",
         },
         success: {
+          DEFAULT: "hsl(var(--success))",
+          // success-foreground should only be used on success bg
           foreground: "hsl(var(--success-foreground))",
+          // success-text can be used on neutral bg, it's green-ish
+          text: "hsl(var(--success-text))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -56,7 +63,11 @@ module.exports = {
           foreground: "hsl(var(--inverted-foreground))",
         },
         warning: {
+          DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
+        },
+        link: {
+          foreground: "hsl(var(--link-foreground))",
         },
       },
       borderRadius: {
@@ -77,6 +88,7 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        skeleton: "skeleton 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

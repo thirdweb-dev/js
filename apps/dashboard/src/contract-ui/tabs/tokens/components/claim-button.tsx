@@ -1,9 +1,9 @@
-import { TokenClaimForm } from "./claim-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { TokenContract, useContract } from "@thirdweb-dev/react";
+import type { TokenContract, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { GiDiamondHard } from "react-icons/gi";
 import { Button, Drawer } from "tw-components";
+import { TokenClaimForm } from "./claim-form";
 
 interface TokenClaimButtonProps {
   contractQuery: ReturnType<typeof useContract>;

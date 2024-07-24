@@ -1,20 +1,20 @@
 import {
-  Stack,
   Alert,
   AlertIcon,
   Flex,
   Spacer,
   Spinner,
+  Stack,
 } from "@chakra-ui/react";
-import { InstalledExtensionsTable } from "./components/InstalledExtensionsTable";
-import { InstallExtensionForm } from "./components/ExtensionForm";
-import { Heading, Text } from "../../../tw-components";
-import { useEVMContractInfo } from "../../../@3rdweb-sdk/react";
+import { useMemo } from "react";
 import { defineChain, getContract } from "thirdweb";
 import { getInstalledExtensions, owner } from "thirdweb/extensions/modular";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
+import { useEVMContractInfo } from "../../../@3rdweb-sdk/react";
 import { thirdwebClient } from "../../../lib/thirdweb-client";
-import { useMemo } from "react";
+import { Heading, Text } from "../../../tw-components";
+import { InstallExtensionForm } from "./components/ExtensionForm";
+import { InstalledExtensionsTable } from "./components/InstalledExtensionsTable";
 
 interface ContractEditExtensionsPageProps {
   contractAddress?: string;

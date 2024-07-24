@@ -26,6 +26,25 @@ export type GetClaimParamsOptions = {
     }
 );
 
+/**
+ * Get the claim parameters for a given drop
+ * @param options - The options for getting the claim parameters
+ * @returns The claim parameters
+ * @extension ERC1155
+ * @example
+ * ```ts
+ * import { getClaimParams } from "thirdweb/extensions/erc1155";
+ *
+ * const claimParams = await getClaimParams({
+ *  contract,
+ *  to: "0x...",
+ *  quantity: 1n,
+ *  type: "erc1155",
+ *  tokenId: 0n,
+ * });
+ * ```
+ * @extension COMMON
+ */
 export async function getClaimParams(options: GetClaimParamsOptions) {
   const cc = await (async () => {
     if (options.type === "erc1155") {
@@ -59,6 +78,8 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     });
   })();
 
+  const tokenDecimals = options.type === "erc20" ? options.tokenDecimals : 0; // nfts have no decimals
+
   // compute the allowListProof in an iife
   const allowlistProof = await (async () => {
     // early exit if no merkle root is set
@@ -79,7 +100,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       contract: options.contract,
       claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
       merkleRoot: cc.merkleRoot,
-      tokenDecimals: options.type === "erc20" ? options.tokenDecimals : 0, // nfts have no decimals
+      tokenDecimals,
     });
     // if no proof is found, we'll try the empty proof
     if (!allowListProof) {
@@ -106,6 +127,17 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       ? allowlistProof.pricePerToken
       : cc.pricePerToken;
 
+  const totalPrice =
+    (pricePerToken * options.quantity) / BigInt(10 ** tokenDecimals);
+  const value = isNativeTokenAddress(currency) ? totalPrice : 0n;
+  const erc20Value =
+    !isNativeTokenAddress(currency) && pricePerToken > 0n
+      ? {
+          amountWei: totalPrice,
+          tokenAddress: currency,
+        }
+      : undefined;
+
   return {
     receiver: options.to,
     tokenId: options.type === "erc1155" ? options.tokenId : undefined,
@@ -115,9 +147,8 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     allowlistProof,
     data: "0x" as Hex,
     overrides: {
-      value: isNativeTokenAddress(currency)
-        ? pricePerToken * BigInt(options.quantity)
-        : 0n,
+      value,
+      erc20Value,
     },
   };
 }

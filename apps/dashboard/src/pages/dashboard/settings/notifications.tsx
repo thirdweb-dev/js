@@ -1,23 +1,14 @@
-import { AppLayout } from "components/app-layouts/app";
+import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
+import { AppLayout } from "components/app-layouts/app";
+import { Notifications } from "components/settings/Account/Notifications";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
 import { Heading, Text } from "tw-components";
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Notifications } from "components/settings/Account/Notifications";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsNotificationsPage: ThirdwebNextPage = () => {
-  const { isLoggedIn } = useLoggedInUser();
   const meQuery = useAccount();
-
-  if (!isLoggedIn) {
-    return (
-      <ConnectWalletPrompt description="configure your notification preferences" />
-    );
-  }
 
   if (meQuery.isLoading || !meQuery.data) {
     return null;

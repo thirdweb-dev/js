@@ -7,6 +7,7 @@ import {
   UserWalletStatus,
 } from "../../../core/authentication/type.js";
 import { getOrCreateInAppWalletConnector } from "../../../core/wallet/in-app-core.js";
+import type { Ecosystem } from "../../types.js";
 
 // ---- KEEP IN SYNC WITH /wallets/in-app/native/auth/index.ts ---- //
 // duplication needed for separate exports between web and native
@@ -14,13 +15,21 @@ import { getOrCreateInAppWalletConnector } from "../../../core/wallet/in-app-cor
 /**
  * @internal
  */
-async function getInAppWalletConnector(client: ThirdwebClient) {
-  return getOrCreateInAppWalletConnector(client, async (client) => {
-    const { InAppWebConnector } = await import("../web-connector.js");
-    return new InAppWebConnector({
-      client: client,
-    });
-  });
+async function getInAppWalletConnector(
+  client: ThirdwebClient,
+  ecosystem?: Ecosystem,
+) {
+  return getOrCreateInAppWalletConnector(
+    client,
+    async (client) => {
+      const { InAppWebConnector } = await import("../web-connector.js");
+      return new InAppWebConnector({
+        client: client,
+        ecosystem: ecosystem,
+      });
+    },
+    ecosystem,
+  );
 }
 
 /**
@@ -112,7 +121,7 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
  * @wallet
  */
 export async function preAuthenticate(args: PreAuthArgsType) {
-  const connector = await getInAppWalletConnector(args.client);
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
   return connector.preAuthenticate(args);
 }
 
@@ -136,6 +145,6 @@ export async function preAuthenticate(args: PreAuthArgsType) {
 export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
-  const connector = await getInAppWalletConnector(args.client);
+  const connector = await getInAppWalletConnector(args.client, args.ecosystem);
   return connector.authenticate(args);
 }

@@ -7,7 +7,7 @@ import {
 export type ICredsConfig = {
   password: string;
   expiration: number;
-}
+};
 
 export type IProcessContractAppTypeArgs = {
   detectedPackageManager: PackageManagerType;

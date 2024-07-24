@@ -24,11 +24,15 @@ export type TransferParams = Prettify<
  * @example
  * ```ts
  * import { transfer } from "thirdweb/extensions/erc20";
- * const tx = await transfer({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = transfer({
  *  contract,
  *  to: "0x...",
  *  amount: 100,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function transfer(options: BaseTransactionOptions<TransferParams>) {
@@ -49,6 +53,12 @@ export function transfer(options: BaseTransactionOptions<TransferParams>) {
       return {
         to: options.to,
         value: amount,
+        overrides: {
+          erc20Value: {
+            amountWei: amount,
+            tokenAddress: options.contract.address,
+          },
+        },
       } as const;
     },
   });

@@ -11,9 +11,9 @@ const GithubIcon = () => {
       viewBox="0 0 21 21"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      // eslint-disable-next-line react/forbid-dom-props
       className={styles.githubIcon}
     >
+      <title>GitHub</title>
       <g id="github-mark-white 1" clipPath="url(#clip0_3418_4084)">
         <path
           id="Vector"
@@ -51,10 +51,7 @@ export const OpenSource: React.FC<OpenSourceProps> = ({
       href={thirdwebRepoUrl}
       isExternal
     >
-      <span
-        // eslint-disable-next-line react/forbid-dom-props
-        className={styles.animatedGradient}
-      >
+      <span className={styles.animatedGradient}>
         open-source <GithubIcon />
       </span>
     </TrackedLink>

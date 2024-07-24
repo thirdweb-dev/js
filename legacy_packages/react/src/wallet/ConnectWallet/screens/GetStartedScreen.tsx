@@ -206,7 +206,8 @@ const InstallScanScreen: React.FC<{
   );
 };
 
-export const ButtonLink = /* @__PURE__ */ StyledButton(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const ButtonLink = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

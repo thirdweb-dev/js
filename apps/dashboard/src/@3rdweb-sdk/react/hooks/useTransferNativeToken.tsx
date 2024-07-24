@@ -1,4 +1,4 @@
-import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSDK } from "@thirdweb-dev/react";
 import invariant from "tiny-invariant";
 import { walletKeys } from "../cache-keys";

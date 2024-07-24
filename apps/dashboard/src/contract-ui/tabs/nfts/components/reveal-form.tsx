@@ -9,8 +9,8 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
-  NFTContract,
-  RevealableContract,
+  type NFTContract,
+  type RevealableContract,
   useBatchesToReveal,
   useRevealLazyMint,
 } from "@thirdweb-dev/react";

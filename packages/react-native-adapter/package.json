@@ -23,10 +23,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist/*",
-    "src/*"
-  ],
+  "files": ["dist/*", "src/*"],
   "dependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
     "@aws-sdk/credential-providers": "3.577.0",
@@ -37,15 +34,18 @@
     "typescript": ">=5.0.4",
     "@coinbase/wallet-mobile-sdk": "^1",
     "@react-native-async-storage/async-storage": "^1",
+    "@react-native-clipboard/clipboard": "^1",
     "@react-native-community/netinfo": "^11",
     "amazon-cognito-identity-js": "^6",
     "expo-application": "^5",
+    "expo-linking": "^6",
     "expo-web-browser": "^13",
     "react-native-aes-gcm-crypto": "^0.2",
     "react-native-quick-crypto": ">=0.7.0-rc.6 || >=0.7",
     "shamir-secret-sharing": "^0.0.3",
     "react-native": ">=0.70",
-    "react-native-get-random-values": "^1"
+    "react-native-get-random-values": "^1",
+    "react-native-svg": "^15"
   },
   "peerDependenciesMeta": {
     "typescript": {
@@ -53,9 +53,9 @@
     }
   },
   "scripts": {
-    "format": "biome format 'src/**/*' --write",
-    "lint": "biome check src/",
-    "fix": "biome check src/ --apply",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src",
+    "fix": "biome check ./src --fix",
     "build": "pnpm clean && pnpm build:cjs && pnpm build:esm && pnpm build:types",
     "build:cjs": "tsc --project ./tsconfig.build.json --module commonjs --outDir ./dist/cjs --verbatimModuleSyntax false && printf '{\"type\":\"commonjs\"}' > ./dist/cjs/package.json",
     "build:esm": "tsc --project ./tsconfig.build.json --module es2020 --outDir ./dist/esm && printf '{\"type\": \"module\",\"sideEffects\":false}' > ./dist/esm/package.json",

@@ -1,12 +1,10 @@
-import { CreateTicketInput } from "@3rdweb-sdk/react/hooks/useApi";
-import { AffectedAreaInput } from "./AffectedAreaInput";
-import { ReactElement } from "react";
-import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
-import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
-import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
-import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
-import { useWatch } from "react-hook-form";
+import { type ReactElement, useState } from "react";
 import { AttachmentForm } from "../shared/SupportForm_AttachmentUploader";
+import { DescriptionInput } from "../shared/SupportForm_DescriptionInput";
+import { SupportForm_SelectInput } from "../shared/SupportForm_SelectInput";
+import { SupportForm_TextInput } from "../shared/SupportForm_TextInput";
+import { UnitySupportForm } from "../shared/SupportForm_UnityInput";
+import { AffectedAreaInput } from "./AffectedAreaInput";
 
 type ProblemAreaItem = {
   label: string;
@@ -21,6 +19,21 @@ const SDKVersionInput = () => (
     inputType="text"
   />
 );
+
+const OSSelect = () => {
+  const [selectedOS, setSelectedOS] = useState<string>("");
+  return (
+    <SupportForm_SelectInput
+      formLabel="OS"
+      name="extraInfo_OS"
+      required={true}
+      promptText="Select an operating system"
+      options={["Windows", "MacOS", "Linux", "Other"]}
+      value={selectedOS}
+      onValueChange={setSelectedOS}
+    />
+  );
+};
 
 const PROBLEM_AREAS: ProblemAreaItem[] = [
   {
@@ -75,13 +88,7 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
     component: (
       <>
         <SDKVersionInput />
-        <SupportForm_SelectInput
-          formLabel="OS"
-          formValue="extraInfo_OS"
-          required={true}
-          promptText="Select an operating system"
-          options={["Windows", "MacOS", "Linux", "Other"]}
-        />
+        <OSSelect />
         <SupportForm_TextInput
           formLabel="Framework"
           formValue="extraInfo_dotNET_Framework"
@@ -111,27 +118,20 @@ const PROBLEM_AREAS: ProblemAreaItem[] = [
 ];
 
 export default function ConnectSupportForm() {
-  const selectedProblemArea: string =
-    useWatch<CreateTicketInput>({
-      name: "extraInfo_Problem_Area",
-    }) || "";
-  const SubFormComponent = () => {
-    return (
-      PROBLEM_AREAS.find((o) => o.label === selectedProblemArea)?.component || (
-        <></>
-      )
-    );
-  };
+  const [selectedProblemArea, setSelectedProblemArea] = useState("");
+
   return (
     <>
       <SupportForm_SelectInput
         formLabel="Problem area"
-        formValue="extraInfo_Problem_Area"
+        name="extraInfo_Problem_Area"
         promptText="Select a problem area"
         options={PROBLEM_AREAS.map((o) => o.label)}
         required={true}
+        onValueChange={setSelectedProblemArea}
+        value={selectedProblemArea}
       />
-      <SubFormComponent />
+      {PROBLEM_AREAS.find((o) => o.label === selectedProblemArea)?.component}
     </>
   );
 }

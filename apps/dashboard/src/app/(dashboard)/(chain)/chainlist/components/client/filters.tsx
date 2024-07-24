@@ -1,18 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, Filter, XIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ChevronDownIcon, Filter, XIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { PropsWithChildren, useCallback, useMemo } from "react";
+import type React from "react";
+import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { products } from "../../../components/server/products";
 
 function cleanUrl(url: string) {
@@ -28,7 +29,7 @@ export function AllFilters() {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="h-10 w-auto p-2 gap-2 lg:px-4 lg:py-2 lg:h-10 lg:border-0"
+          className="w-auto h-10 gap-2 p-2 lg:px-4 lg:py-2 lg:h-10 lg:border-0"
         >
           <Filter strokeWidth={1} className="lg:size-4" />
           <span className="hidden lg:inline">All Filters</span>
@@ -86,9 +87,9 @@ const FilterResetButton: React.FC<
       className="font-semibold"
       onClick={() => {
         // delete every filter (however keep the search term)
-        filters.forEach((f) => {
+        for (const f of filters) {
           mutableSearchParams.delete(f);
-        });
+        }
         // always delete page since we're changing filters
         mutableSearchParams.delete("page");
         const url = cleanUrl(`${pathname}?${mutableSearchParams.toString()}`);
@@ -110,7 +111,7 @@ const FilterSection: React.FC<PropsWithChildren<FilterSectionProps>> = ({
 }) => {
   return (
     <section className="flex flex-col">
-      <h4 className="text-sm font-semibold text-muted-foreground mb-2">
+      <h4 className="mb-2 text-sm font-semibold text-muted-foreground">
         {title}
       </h4>
       {children}
@@ -161,15 +162,15 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
           router.replace(url);
         }}
       >
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <RadioGroupItem value="all" id="all" />
           <Label htmlFor="all">All Chains</Label>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <RadioGroupItem value="mainnet" id="mainnet" />
           <Label htmlFor="mainnet">Mainnets Only</Label>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <RadioGroupItem value="testnet" id="testnet" />
           <Label htmlFor="testnet">Testnets Only</Label>
         </div>
@@ -194,7 +195,7 @@ export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
               : value === "testnet"
                 ? "Testnets Only"
                 : "Chain Type"}
-            {value === "all" && <ChevronDownIcon className="size-4 ml-2" />}
+            {value === "all" && <ChevronDownIcon className="ml-2 size-4" />}
           </Button>
         </PopoverTrigger>
         {value !== "all" && (
@@ -240,7 +241,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
 
   const section = (
     <FilterSection title="Options">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-2">
         <Checkbox
           id="deprecated"
           checked={hasDeprecated}
@@ -283,7 +284,7 @@ export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
             className={hasFilters ? "pr-11 border-primary" : undefined}
           >
             Chain Options
-            {!hasFilters && <ChevronDownIcon className="size-4 ml-2" />}
+            {!hasFilters && <ChevronDownIcon className="ml-2 size-4" />}
           </Button>
         </PopoverTrigger>
         {hasFilters && (
@@ -371,7 +372,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
               router.push(url);
             }}
             size="sm"
-            className="rounded-full ml-auto lg:opacity-0 group-hover:opacity-100"
+            className="ml-auto rounded-full lg:opacity-0 group-hover:opacity-100"
             variant="ghost"
           >
             Only
@@ -407,7 +408,7 @@ export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
             className={hasActiveFilter ? "pr-11 border-primary" : undefined}
           >
             {buttonTitle}
-            {!hasActiveFilter && <ChevronDownIcon className="size-4 ml-2" />}
+            {!hasActiveFilter && <ChevronDownIcon className="ml-2 size-4" />}
           </Button>
         </PopoverTrigger>
         {hasActiveFilter && (

@@ -86,9 +86,9 @@ export async function compatibleExtensions(
     "getSupportedCallbackFunctions",
     core,
   );
-  const coreCallbackSelectors = decodedCore.flat().map(
-    (c: SupportedCallbackFunction) => c.selector,
-  );
+  const coreCallbackSelectors = decodedCore
+    .flat()
+    .map((c: SupportedCallbackFunction) => c.selector);
 
   // extract callback/fallback selectors and required interfaces from extension config
   const requiredInterfaces: string[] = [];
@@ -103,28 +103,26 @@ export async function compatibleExtensions(
     );
 
     requiredInterfaces.push(...decodedExtensionConfig[0].requiredInterfaces);
-    const fallbackSelectors =
-      decodedExtensionConfig[0].fallbackFunctions.map(
-        (a: FallbackFunction) => a.selector,
-      );
-    const callbackSelectors =
-      decodedExtensionConfig[0].callbackFunctions.map(
-        (a: CallbackFunction) => a.selector,
-      );
+    const fallbackSelectors = decodedExtensionConfig[0].fallbackFunctions.map(
+      (a: FallbackFunction) => a.selector,
+    );
+    const callbackSelectors = decodedExtensionConfig[0].callbackFunctions.map(
+      (a: CallbackFunction) => a.selector,
+    );
 
-      extensionFallbackSelectors.push(...fallbackSelectors);
-      extensionCallbackSelectors.push(...callbackSelectors);
+    extensionFallbackSelectors.push(...fallbackSelectors);
+    extensionCallbackSelectors.push(...callbackSelectors);
   });
-  
+
   // check if callback selectors are supported
-  for(const callback of extensionCallbackSelectors) {
-    if(!coreCallbackSelectors.includes(callback)) {
+  for (const callback of extensionCallbackSelectors) {
+    if (!coreCallbackSelectors.includes(callback)) {
       return false;
     }
   }
 
   // check if the core contract supports required interfaces by extensions above
-  if(requiredInterfaces.length > 0) {
+  if (requiredInterfaces.length > 0) {
     const supportsInterfaceResult = await Promise.all(
       requiredInterfaces.map((r) => {
         const supportsInterfaceCalldata = coreIface.encodeFunctionData(
@@ -138,12 +136,9 @@ export async function compatibleExtensions(
         ]);
       }),
     );
-    const supportsInterfaceDecoded = supportsInterfaceResult.map(r => {
-      return coreIface.decodeFunctionResult(
-        "supportsInterface",
-        r,
-      );
-    })
+    const supportsInterfaceDecoded = supportsInterfaceResult.map((r) => {
+      return coreIface.decodeFunctionResult("supportsInterface", r);
+    });
     if (supportsInterfaceDecoded.flat().some((element) => element === false)) {
       return false;
     }

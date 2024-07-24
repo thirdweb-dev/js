@@ -1,9 +1,10 @@
 import { Flex, FormControl } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
 
 interface PrimarySaleFieldsetProps {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<any, any>;
 }
 

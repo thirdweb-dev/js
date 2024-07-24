@@ -1,9 +1,9 @@
-import { ContentContainer } from "./components/ContentContainer";
-import { GraphicContainer } from "./components/GraphicContainer";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import { useState } from "react";
 import { Card } from "tw-components";
+import { ContentContainer } from "./components/ContentContainer";
+import { GraphicContainer } from "./components/GraphicContainer";
 
 /**
  * FTUX (First Time User Experience)

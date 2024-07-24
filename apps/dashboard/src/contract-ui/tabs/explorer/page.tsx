@@ -1,6 +1,6 @@
 import { Center, Flex, Skeleton } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "@thirdweb-dev/sdk";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { Heading, Text } from "tw-components";

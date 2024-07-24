@@ -1,4 +1,4 @@
-import { FrameValidationData } from "@coinbase/onchainkit";
+import type { FrameValidationData } from "@coinbase/onchainkit";
 
 export const getFarcasterAccountAddress = (
   interactor: FrameValidationData["interactor"],

@@ -1,10 +1,13 @@
 import {
-  CreateRelayerInput,
+  type CreateRelayerInput,
   useEngineBackendWallets,
   useEngineCreateRelayer,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Flex,
+  FormControl,
+  Icon,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,23 +15,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
-  Icon,
-  FormControl,
-  Input,
   Select,
-  UseDisclosureReturn,
   Textarea,
+  type UseDisclosureReturn,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useForm } from "react-hook-form";
-import { Button, FormHelperText, FormLabel } from "tw-components";
-import { AiOutlinePlusCircle } from "react-icons/ai";
-import { useAllChainsData } from "hooks/chains/allChains";
+import { shortenString } from "@thirdweb-dev/react";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { isAddress } from "ethers/lib/utils";
-import { shortenString } from "@thirdweb-dev/react";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useAllChainsData } from "hooks/chains/allChains";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import { useForm } from "react-hook-form";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { Button, FormHelperText, FormLabel } from "tw-components";
 
 interface AddRelayerButtonProps {
   instanceUrl: string;
@@ -85,7 +85,7 @@ const AddModal = ({
 
   const form = useForm<AddModalInput>({
     defaultValues: {
-      chainId: slugToChainRecord["sepolia"].chainId,
+      chainId: slugToChainRecord.sepolia.chainId,
     },
   });
 

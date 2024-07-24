@@ -1,7 +1,7 @@
-import { Flex, Image, Tooltip, Icon } from "@chakra-ui/react";
-import { Text } from "tw-components";
+import { Flex, Icon, Image, Tooltip } from "@chakra-ui/react";
 import { replaceIpfsUrl } from "lib/sdk";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { Text } from "tw-components";
 
 export function WalletButton(props: {
   name: string;

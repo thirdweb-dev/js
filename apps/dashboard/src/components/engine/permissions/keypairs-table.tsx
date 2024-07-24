@@ -1,5 +1,5 @@
 import {
-  Keypair,
+  type Keypair,
   useEngineRemoveKeypair,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -13,7 +13,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";

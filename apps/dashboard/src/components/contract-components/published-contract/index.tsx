@@ -1,17 +1,4 @@
 import {
-  useContractEnabledExtensions,
-  useContractPublishMetadataFromURI,
-  useEns,
-  usePublishedContractCompilerMetadata,
-  usePublishedContractEvents,
-  usePublishedContractFunctions,
-  usePublishedContractInfo,
-  usePublisherProfile,
-} from "../hooks";
-import { PublisherHeader } from "../publisher/publisher-header";
-import { AddressesModal } from "./addresses-modal";
-import { MarkdownRenderer } from "./markdown-renderer";
-import {
   Divider,
   Flex,
   GridItem,
@@ -21,10 +8,9 @@ import {
 } from "@chakra-ui/react";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQuery } from "@tanstack/react-query";
-import { useAddress } from "@thirdweb-dev/react";
 import {
-  PublishedContract as PublishedContractType,
-  PublishedMetadata,
+  type PublishedContract as PublishedContractType,
+  type PublishedMetadata,
   fetchSourceFilesFromMetadata,
 } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -45,6 +31,7 @@ import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
 import { VscBook, VscCalendar, VscServer } from "react-icons/vsc";
+import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import {
   Card,
@@ -55,6 +42,19 @@ import {
   TrackedIconButton,
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
+import {
+  useContractEnabledExtensions,
+  useContractPublishMetadataFromURI,
+  useEns,
+  usePublishedContractCompilerMetadata,
+  usePublishedContractEvents,
+  usePublishedContractFunctions,
+  usePublishedContractInfo,
+  usePublisherProfile,
+} from "../hooks";
+import { PublisherHeader } from "../publisher/publisher-header";
+import { AddressesModal } from "./addresses-modal";
+import { MarkdownRenderer } from "./markdown-renderer";
 
 interface ExtendedPublishedContract extends PublishedContractType {
   name: string;
@@ -76,7 +76,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
   contract,
   walletOrEns,
 }) => {
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
   const publishedContractInfo = usePublishedContractInfo(contract);
   const { data: compilerInfo } = usePublishedContractCompilerMetadata(contract);
 
@@ -122,7 +122,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
 
   const publishDate = format(
     new Date(
-      parseInt(
+      Number.parseInt(
         publishedContractInfo?.data?.publishedTimestamp.toString() || "0",
       ) * 1000,
     ),
@@ -285,7 +285,7 @@ Deploy it in one click`,
           content={`${getAbsoluteUrl()}/api/frame/redirect`}
         />
         <meta property="fc:frame:button:1" content="Deploy now" />
-        <meta name="fc:frame:button:1:action" content="post_redirect"></meta>
+        <meta name="fc:frame:button:1:action" content="post_redirect" />
       </Head>
 
       <GridItem colSpan={{ base: 12, md: 9 }}>

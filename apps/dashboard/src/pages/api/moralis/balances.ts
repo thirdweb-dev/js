@@ -1,10 +1,11 @@
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import { constants, utils } from "ethers";
-import { NextApiRequest, NextApiResponse } from "next";
-import { createThirdwebClient, defineChain } from "thirdweb";
+import type { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { utils } from "ethers";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { ZERO_ADDRESS, createThirdwebClient, isAddress } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "../../../constants/rpc";
 import { IPFS_GATEWAY_URL } from "../../../lib/sdk";
+import { defineDashboardChain } from "../../../lib/v5-adapter";
 
 export type BalanceQueryRequest = {
   chainId: SUPPORTED_CHAIN_ID;
@@ -26,12 +27,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { chainId, address } = req.body;
-  if (!utils.isAddress(address)) {
+  if (!isAddress(address)) {
     return res.status(400).json({ error: "invalid address" });
   }
 
   const getNativeBalance = async (): Promise<BalanceQueryResponse> => {
-    const chain = defineChain(chainId);
+    const chain = defineDashboardChain(chainId);
     const balance = await getWalletBalance({
       address,
       chain,
@@ -46,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
     return [
       {
-        token_address: constants.AddressZero,
+        token_address: ZERO_ADDRESS,
         symbol: balance.symbol,
         name: "Native Token",
         decimals: balance.decimals,
@@ -72,6 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return [];
     }
     const json = await resp.json();
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return json.map((balance: any) => ({
       ...balance,
       display_balance: utils

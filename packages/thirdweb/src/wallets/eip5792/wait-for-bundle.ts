@@ -6,7 +6,7 @@ import type { Wallet } from "../interfaces/wallet.js";
 import { getCallsStatus } from "./get-calls-status.js";
 import type { GetCallsStatusResponse, WalletSendCallsId } from "./types.js";
 
-export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 30;
+export const DEFAULT_MAX_BLOCKS_WAIT_TIME = 100;
 
 const map = new Map<string, Promise<GetCallsStatusResponse>>();
 
@@ -24,7 +24,7 @@ export type WaitForBundleOptions = Prettify<{
  * @note This function is dependent on the wallet's support for EIP-5792 and could fail.
  *
  * @param options - The options for waiting for the bundle.
- * By default, the max wait time is 30 blocks.
+ * By default, the max wait time is 100 blocks.
  * @returns A promise that resolves with the final {@link getCallsStatus} result.
  * @throws an error if the wallet does not support EIP-5792.
  * @beta

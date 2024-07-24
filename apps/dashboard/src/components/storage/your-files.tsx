@@ -1,14 +1,13 @@
-import { useApiAuthToken } from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Center, Flex, Tooltip } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { DASHBOARD_STORAGE_URL } from "lib/sdk";
-import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
-import { formatDistance } from "date-fns/formatDistance";
-import { useCallback, useState } from "react";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { toSize } from "utils/number";
 import { TWQueryTable } from "components/shared/TWQueryTable";
+import { formatDistance } from "date-fns/formatDistance";
+import { DASHBOARD_STORAGE_URL } from "lib/sdk";
+import { useCallback, useState } from "react";
+import { Button, Card, Heading, Text, TrackedCopyButton } from "tw-components";
+import { toSize } from "utils/number";
 
 interface PinnedFilesResponse {
   result: PinnedFilesResult;
@@ -37,7 +36,6 @@ function usePinnedFilesQuery({
   pageSize: number;
 }) {
   const user = useLoggedInUser();
-  const { token } = useApiAuthToken();
 
   const offset = page * pageSize;
 
@@ -54,29 +52,29 @@ function usePinnedFilesQuery({
       if (!user.isLoggedIn) {
         throw new Error("User is not logged in");
       }
-      if (!token) {
+      if (!user.user?.jwt) {
         throw new Error("No token");
       }
       const res = await fetch(
         `${DASHBOARD_STORAGE_URL}/ipfs/pinned?limit=${pageSize}${
-          offset ? `&offset=${offset}` : ``
+          offset ? `&offset=${offset}` : ""
         }`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${user.user.jwt}`,
           },
         },
       );
       return (await res.json()) as PinnedFilesResponse;
     },
-    enabled: user.isLoggedIn && !!user.user?.address && !!token,
+    enabled: user.isLoggedIn && !!user.user?.address && !!user.user.jwt,
     // keep the previous data when fetching new data
     keepPreviousData: true,
   });
 }
 
 function useUnpinFileMutation() {
-  const { token } = useApiAuthToken();
+  const token = useLoggedInUser().user?.jwt ?? null;
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ cid }: { cid: string }) => {

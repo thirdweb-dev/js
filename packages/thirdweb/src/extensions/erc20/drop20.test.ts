@@ -5,9 +5,12 @@ import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import {
   TEST_ACCOUNT_A,
   TEST_ACCOUNT_B,
+  TEST_ACCOUNT_C,
 } from "../../../test/src/test-wallets.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
+import { resolvePromisedValue } from "../../utils/promise/resolve-promised-value.js";
+import { toEther } from "../../utils/units.js";
 import { getContractMetadata } from "../common/read/getContractMetadata.js";
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { claimTo } from "./drops/write/claimTo.js";
@@ -88,6 +91,58 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           "name": "Test DropERC20",
           "symbol": "",
           "value": 1000000000000000000n,
+        }
+      `);
+    });
+
+    it("should allow to claim tokens with value", async () => {
+      await expect(
+        getBalance({ contract, address: TEST_ACCOUNT_C.address }),
+      ).resolves.toMatchInlineSnapshot(`
+        {
+          "decimals": 18,
+          "displayValue": "0",
+          "name": "Test DropERC20",
+          "symbol": "",
+          "value": 0n,
+        }
+      `);
+      // set cc with price
+      await sendAndConfirmTransaction({
+        transaction: setClaimConditions({
+          contract,
+          phases: [
+            {
+              price: "0.01",
+            },
+          ],
+        }),
+        account: TEST_ACCOUNT_A,
+      });
+      const claimTx = claimTo({
+        contract,
+        to: TEST_ACCOUNT_C.address,
+        quantity: "2",
+      });
+      // assert value is set correctly
+      const value = await resolvePromisedValue(claimTx.value);
+      expect(value).toBeDefined();
+      if (!value) throw new Error("value is undefined");
+      expect(toEther(value)).toBe("0.02");
+      // claim
+      await sendAndConfirmTransaction({
+        transaction: claimTx,
+        account: TEST_ACCOUNT_C,
+      });
+      await expect(
+        getBalance({ contract, address: TEST_ACCOUNT_C.address }),
+      ).resolves.toMatchInlineSnapshot(`
+        {
+          "decimals": 18,
+          "displayValue": "2",
+          "name": "Test DropERC20",
+          "symbol": "",
+          "value": 2000000000000000000n,
         }
       `);
     });

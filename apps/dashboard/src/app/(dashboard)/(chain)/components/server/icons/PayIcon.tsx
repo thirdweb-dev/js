@@ -8,6 +8,7 @@ export function PayIcon(props: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={props.className}
     >
+      <title>Pay</title>
       <circle cx="15.9849" cy="16" r="5" fill="url(#paint0_linear_585_2)" />
       <g filter="url(#filter0_bi_585_2)">
         <path

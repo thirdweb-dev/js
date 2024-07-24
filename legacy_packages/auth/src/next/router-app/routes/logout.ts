@@ -38,7 +38,7 @@ export default async function handler(
 
   response.cookies.set({
     name: activeCookie,
-    value: '',
+    value: "",
     domain: ctx.cookieOptions?.domain,
     path: ctx.cookieOptions?.path || "/",
     sameSite: ctx.cookieOptions?.sameSite || "none",

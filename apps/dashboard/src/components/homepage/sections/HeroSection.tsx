@@ -1,10 +1,10 @@
 import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
-import { Aurora } from "../Aurora";
-import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
-import { Heading, Text, TrackedLink, TrackedLinkButton } from "tw-components";
 import { ChakraNextImage } from "components/Image";
-import styles from "../category/categories.module.css";
+import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { BsFillLightningChargeFill } from "react-icons/bs";
+import { Heading, Text, TrackedLink, TrackedLinkButton } from "tw-components";
+import { Aurora } from "../Aurora";
+import styles from "../category/categories.module.css";
 import { OpenSource } from "../open-source/OpenSource";
 
 interface HeroSectionProps {

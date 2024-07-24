@@ -1,3 +1,10 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import {
+  type ApiKey,
+  useApiKeys,
+  useWalletStats,
+} from "@3rdweb-sdk/react/hooks/useApi";
+import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Flex,
   Stack,
@@ -7,18 +14,19 @@ import {
   useBreakpointValue,
   useColorMode,
 } from "@chakra-ui/react";
-import { AppLayout } from "components/app-layouts/app";
-import { ConnectSidebar } from "core-ui/sidebar/connect";
-import { PageId } from "page-id";
-import { ThirdwebNextPage } from "utils/types";
-import { Card, Heading, LinkButton, Text } from "tw-components";
-import { useMemo, useState } from "react";
 import {
-  ApiKey,
-  useApiKeys,
-  useWalletStats,
-} from "@3rdweb-sdk/react/hooks/useApi";
+  AutoBarChart,
+  BAR_COLORS_DARK,
+  BAR_COLORS_LIGHT,
+} from "components/analytics/auto-bar-chart";
 import { ChartContainer } from "components/analytics/chart-container";
+import { AppLayout } from "components/app-layouts/app";
+import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
+import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
+import { ConnectSidebar } from "core-ui/sidebar/connect";
+import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { useMemo, useState } from "react";
 import {
   Cell,
   Legend,
@@ -27,16 +35,8 @@ import {
   ResponsiveContainer,
   Sector,
 } from "recharts";
-import {
-  AutoBarChart,
-  BAR_COLORS_DARK,
-  BAR_COLORS_LIGHT,
-} from "components/analytics/auto-bar-chart";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
-import { ConnectWalletPrompt } from "components/settings/ConnectWalletPrompt";
-import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
-import { useRouter } from "next/router";
+import { Card, Heading, LinkButton, Text } from "tw-components";
+import type { ThirdwebNextPage } from "utils/types";
 
 const RADIAN = Math.PI / 180;
 
@@ -45,7 +45,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const defaultClientId = router.query.clientId?.toString();
   const { colorMode } = useColorMode();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const { isLoggedIn } = useLoggedInUser();
+  const { isLoading } = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
 
@@ -138,6 +138,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
               }
               return acc;
             },
+            // biome-ignore lint/suspicious/noExplicitAny: FIXME
             {} as Record<string, any>,
           ),
         )
@@ -157,6 +158,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
       : { uniqueWallets: 0, totalWallets: 0 };
   }, [statsQuery.data]);
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const renderActiveShape = (props: any) => {
     const {
       cx,
@@ -227,13 +229,16 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
     );
   };
 
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
 
-  if (!isLoggedIn) {
+  if (isLoading) {
     return (
-      <ConnectWalletPrompt description="view wallet analytics for your apps" />
+      <div className="grid w-full place-items-center">
+        <Spinner className="size-14" />
+      </div>
     );
   }
 
@@ -292,7 +297,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
                     app each day.
                   </Text>
                 </Stack>
-                <ChartContainer w="full" ratio={21 / 9}>
+                <ChartContainer className="w-full" ratio={21 / 9}>
                   <AutoBarChart
                     data={barChartData}
                     showXAxis
@@ -313,7 +318,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
                     each day.
                   </Text>
                 </Stack>
-                <ChartContainer w="full" ratio={21 / 9}>
+                <ChartContainer className="w-full" ratio={21 / 9}>
                   <AutoBarChart
                     data={walletBarChartData}
                     showXAxis
@@ -334,7 +339,10 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
                     Distribution of wallet types used to connect to your app.
                   </Text>
                 </Stack>
-                <ChartContainer w="full" ratio={isMobile ? 1.5 : 21 / 9}>
+                <ChartContainer
+                  className="w-full"
+                  ratio={isMobile ? 1.5 : 21 / 9}
+                >
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -351,6 +359,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
                       >
                         {pieChartData.map((entry, index) => (
                           <Cell
+                            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                             key={index}
                             fill={barColors[index % barColors.length]}
                           />

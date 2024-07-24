@@ -1,5 +1,9 @@
-import { useRouter } from "next/router";
+import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
+import { detectFeatures } from "components/contract-components/utils";
+import { useRouter } from "next/router";
+import type { ThirdwebContract } from "thirdweb";
+import { Card, Heading, LinkButton, Text } from "tw-components";
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
@@ -8,10 +12,6 @@ import { NFTRevealButton } from "./components/reveal-button";
 import { NFTSharedMetadataButton } from "./components/shared-metadata-button";
 import { SupplyCards } from "./components/supply-cards";
 import { NFTGetAllTable } from "./components/table";
-import { Box, Flex } from "@chakra-ui/react";
-import { detectFeatures } from "components/contract-components/utils";
-import { Card, Heading, LinkButton, Text } from "tw-components";
-import type { ThirdwebContract } from "thirdweb";
 import { TokenIdPage } from "./components/token-id";
 
 interface NftOverviewPageProps {

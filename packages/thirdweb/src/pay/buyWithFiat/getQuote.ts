@@ -144,6 +144,10 @@ export type BuyWithFiatQuote = {
    */
   toAddress: string;
   /**
+   * Address of the wallet used for buying the token.
+   */
+  fromAddress: string;
+  /**
    * The maximum slippage in basis points (bps) allowed for the transaction.
    */
   maxSlippageBPS: number;
@@ -281,7 +285,7 @@ export async function getBuyWithFiatQuote(
 
     return (await response.json()).result;
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Error getting buy with fiat quote", error);
     throw error;
   }
 }

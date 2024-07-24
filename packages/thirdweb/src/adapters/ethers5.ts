@@ -346,11 +346,6 @@ export async function toEthersSigner(
         chain: chain,
         accessList: alignedTx.accessList,
         data: alignedTx.data,
-        gas: alignedTx.gas,
-        maxFeePerGas: alignedTx.maxFeePerGas,
-        gasPrice: alignedTx.gasPrice,
-        maxFeePerBlobGas: alignedTx.maxFeePerGas,
-        maxPriorityFeePerGas: alignedTx.maxPriorityFeePerGas,
         nonce: alignedTx.nonce,
         to: alignedTx.to ?? undefined,
         value: alignedTx.value,
@@ -364,7 +359,7 @@ export async function toEthersSigner(
         chainId: tx.chain.id,
         from: account.address,
         data: alignedTx.data ?? "0x",
-        nonce: alignedTx.nonce ?? -1,
+        nonce: alignedTx.nonce ?? 0,
         value: ethers.BigNumber.from(alignedTx.value ?? 0),
         gasLimit: ethers.BigNumber.from(alignedTx.gas ?? 0),
         // biome-ignore lint/style/noNonNullAssertion: TODO: fix later
@@ -396,7 +391,10 @@ export async function toEthersSigner(
               blockNumber: Number(log.blockNumber),
             })),
             cumulativeGasUsed: ethers.BigNumber.from(receipt.cumulativeGasUsed),
-            effectiveGasPrice: ethers.BigNumber.from(receipt.effectiveGasPrice),
+            effectiveGasPrice:
+              receipt.effectiveGasPrice !== null
+                ? ethers.BigNumber.from(receipt.effectiveGasPrice)
+                : receipt.effectiveGasPrice,
             byzantium: true,
           };
         },

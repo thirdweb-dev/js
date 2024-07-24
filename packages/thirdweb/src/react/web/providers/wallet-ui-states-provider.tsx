@@ -30,7 +30,7 @@ export const WalletUIStatesProvider = (
       <SetWalletModalOpen.Provider value={setIsWalletModalOpen}>
         <SelectionUIDataCtx.Provider value={selectionUIData}>
           <SetSelectionUIDataCtx.Provider value={setSelectionUIData}>
-            <CustomThemeProvider theme={props.theme || "dark"}>
+            <CustomThemeProvider theme={props.theme}>
               {props.children}
             </CustomThemeProvider>
           </SetSelectionUIDataCtx.Provider>

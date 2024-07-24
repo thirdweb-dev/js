@@ -1,33 +1,33 @@
-import { useForm } from "react-hook-form";
 import {
   Flex,
+  FormControl,
+  Grid,
   Input,
   Select,
-  FormControl,
   Skeleton,
   Spacer,
-  Grid,
-  useToast,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
-import { FormLabel, FormErrorMessage, Text } from "tw-components";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { compatibleExtensions } from "@thirdweb-dev/sdk";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   useAllVersions,
   usePublishedContractsQuery,
 } from "components/contract-components/hooks";
-import { installPublishedExtension } from "thirdweb/extensions/modular";
+import { useForm } from "react-hook-form";
 import {
+  type ContractOptions,
   sendTransaction,
   waitForReceipt,
-  type ContractOptions,
 } from "thirdweb";
-import type { Account } from "thirdweb/wallets";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { thirdwebClient } from "../../../../@/constants/client";
-import { compatibleExtensions } from "@thirdweb-dev/sdk";
+import { installPublishedExtension } from "thirdweb/extensions/modular";
 import { download } from "thirdweb/storage";
 import { resolveImplementation } from "thirdweb/utils";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import type { Account } from "thirdweb/wallets";
+import { FormErrorMessage, FormLabel, Text } from "tw-components";
+import { thirdwebClient } from "../../../../@/constants/client";
 
 type FormData = {
   publisherAddress: string;
@@ -241,7 +241,7 @@ export const InstallExtensionForm = (props: InstallExtensionFormProps) => {
             })}
           />
           <FormErrorMessage>
-            {errors.publisherAddress && errors.publisherAddress.message}
+            {errors.publisherAddress?.message}
           </FormErrorMessage>
         </FormControl>
 
@@ -290,7 +290,7 @@ export const InstallExtensionForm = (props: InstallExtensionFormProps) => {
             {!isExtensionCompatibleQuery.isFetching &&
               isExtensionCompatibleQuery.data === false &&
               "Extension is not compatible"}
-            {errors.extensionContract && errors.extensionContract.message}
+            {errors.extensionContract?.message}
           </FormErrorMessage>
 
           {isExtensionCompatibleQuery.isFetching && selectedExtension && (
@@ -345,9 +345,7 @@ export const InstallExtensionForm = (props: InstallExtensionFormProps) => {
               ))}
             </Select>
           </Skeleton>
-          <FormErrorMessage>
-            {errors.version && errors.version.message}
-          </FormErrorMessage>
+          <FormErrorMessage>{errors.version?.message}</FormErrorMessage>
         </FormControl>
       </Grid>
 

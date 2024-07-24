@@ -1,11 +1,9 @@
-import { ChakraNextLink } from "./link";
-import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   Button as ChakraButton,
-  ButtonProps as ChakraButtonProps,
+  type ButtonProps as ChakraButtonProps,
   Icon,
   IconButton,
-  IconButtonProps,
+  type IconButtonProps,
   LightMode,
   Link,
   forwardRef,
@@ -16,6 +14,8 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { forwardRef as reactForwardRef } from "react";
 import { FiCheck, FiCopy, FiExternalLink } from "react-icons/fi";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
+import { ChakraNextLink } from "./link";
+import { convertFontSizeToCSSVar } from "./utils/typography";
 
 export const buttonSizesMap = {
   xs: "sm",

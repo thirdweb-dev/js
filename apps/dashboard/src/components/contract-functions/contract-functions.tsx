@@ -1,4 +1,3 @@
-import { ContractFunctionsPanel } from "./contract-function";
 import {
   Flex,
   Tab,
@@ -14,9 +13,10 @@ import type {
   SmartContract,
 } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { SourceFile } from "components/contract-components/types";
+import type { SourceFile } from "components/contract-components/types";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { Heading } from "tw-components";
+import { ContractFunctionsPanel } from "./contract-function";
 
 interface ContractFunctionsOverview {
   functions?: AbiFunction[] | null;

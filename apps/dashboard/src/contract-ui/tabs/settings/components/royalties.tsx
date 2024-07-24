@@ -1,20 +1,22 @@
-import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  useAddress,
   useRoyaltySettings,
   useUpdateRoyaltySettings,
 } from "@thirdweb-dev/react";
-import { CommonRoyaltySchema, ValidContractInstance } from "@thirdweb-dev/sdk";
-import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import {
+  CommonRoyaltySchema,
+  type ValidContractInstance,
+} from "@thirdweb-dev/sdk";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
   FormErrorMessage,
@@ -22,7 +24,8 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { z } from "zod";
+import type { z } from "zod";
+import { SettingDetectedState } from "./detected-state";
 
 export const SettingsRoyalties = <
   TContract extends ValidContractInstance | undefined,
@@ -42,7 +45,7 @@ export const SettingsRoyalties = <
     defaultValues: query.data,
     values: query.data,
   });
-  const address = useAddress();
+  const address = useActiveAccount()?.address;
 
   const { onSuccess, onError } = useTxNotifications(
     "Royalty settings updated",

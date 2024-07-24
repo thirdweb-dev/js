@@ -1,10 +1,10 @@
 import {
   CONTRACTS_MAP,
-  ContractType,
-  FullPublishMetadata,
-  Role,
+  type ContractType,
+  type FullPublishMetadata,
+  type Role,
 } from "@thirdweb-dev/sdk";
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 
 const FeatureIconMap: Record<ContractType, StaticImageData> = {
   "nft-drop": require("../../public/assets/tw-icons/nft-drop.png"),
@@ -162,6 +162,7 @@ const GNOSIS_TO_CHAIN_ID = {
 
 export const CHAIN_ID_TO_GNOSIS = Object.entries(GNOSIS_TO_CHAIN_ID).reduce(
   (acc, [gnosis, chainId]) => ({
+    // biome-ignore lint/performance/noAccumulatingSpread: FIXME
     ...acc,
     [chainId]: gnosis,
   }),

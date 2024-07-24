@@ -21,6 +21,7 @@ import {
  * @example
  * ```ts
  * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc20";
+ * import { sendTransaction } from "thirdweb";
  *
  * const { payload, signature } = await generateMintSignature(...)
  *
@@ -29,6 +30,7 @@ import {
  *   payload,
  *   signature,
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC20
@@ -40,10 +42,19 @@ export function mintWithSignature(
   const value = isNativeTokenAddress(options.payload.currency)
     ? options.payload.price
     : 0n;
+  const erc20Value =
+    !isNativeTokenAddress(options.payload.currency) &&
+    options.payload.price > 0n
+      ? {
+          amountWei: options.payload.price,
+          tokenAddress: options.payload.currency,
+        }
+      : undefined;
   return generatedMintWithSignature({
     ...options,
     overrides: {
       value,
+      erc20Value,
     },
   });
 }

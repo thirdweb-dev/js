@@ -1,7 +1,7 @@
 import { Box, Center, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { useTrack } from "hooks/analytics/useTrack";
-import NextImage, { StaticImageData } from "next/image";
+import NextImage, { type StaticImageData } from "next/image";
 import { IoGameControllerOutline } from "react-icons/io5";
 import {
   Button,

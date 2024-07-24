@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, type BoxProps } from "@chakra-ui/react";
 
 interface AuroraProps {
   zIndex?: BoxProps["zIndex"];
@@ -19,6 +19,6 @@ export const Aurora: React.FC<AuroraProps> = ({ zIndex, color, pos, size }) => {
       transform="translate(-50%, -50%)"
       backgroundImage={`radial-gradient(ellipse at center, ${color}, transparent 60%)`}
       zIndex={zIndex || -1}
-    ></Box>
+    />
   );
 };

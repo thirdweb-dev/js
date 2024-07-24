@@ -114,7 +114,7 @@ const pulseAnimation = keyframes`
 }
 `;
 
-const LogoContainer = /* @__PURE__ */ StyledDiv(() => {
+const LogoContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     display: "flex",

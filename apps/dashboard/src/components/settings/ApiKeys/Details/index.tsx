@@ -1,10 +1,10 @@
-import { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { Button } from "tw-components";
 import { ApiKeyHeader } from "../Header";
+import { RevokeApiKeyButton } from "../RevokeButton";
 import { GeneralDetails } from "./General";
 import { ServicesDetails } from "./Services";
-import { RevokeApiKeyButton } from "../RevokeButton";
 
 interface ApiKeyDetailsProps {
   apiKey: ApiKey;

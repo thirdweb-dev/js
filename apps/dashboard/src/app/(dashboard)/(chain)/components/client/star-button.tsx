@@ -1,17 +1,16 @@
 "use client";
 
-import { Star } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { THIRDWEB_API_HOST } from "constants/urls";
+import { Star } from "lucide-react";
 
 async function favoriteChains() {
   const res = await fetch(`${THIRDWEB_API_HOST}/v1/chains/favorites`, {
     method: "GET",
-    credentials: "include",
   });
 
   const result = await res.json();
@@ -24,7 +23,8 @@ async function addChainToFavorites(chainId: number) {
     `${THIRDWEB_API_HOST}/v1/chains/${chainId}/favorite`,
     {
       method: "POST",
-      credentials: "include",
+      // without body - the API returns 400
+      body: JSON.stringify({}),
     },
   );
   const result = await res.json();
@@ -36,7 +36,6 @@ async function removeChainFromFavorites(chainId: number) {
     `${THIRDWEB_API_HOST}/v1/chains/${chainId}/favorite`,
     {
       method: "DELETE",
-      credentials: "include",
     },
   );
   const result = await res.json();

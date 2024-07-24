@@ -1,5 +1,5 @@
 import {
-  AddContractSubscriptionInput,
+  type AddContractSubscriptionInput,
   useEngineAddContractSubscription,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
@@ -20,15 +20,15 @@ import {
   RadioGroup,
   Spinner,
   Stack,
-  UseDisclosureReturn,
+  type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useContractAbiItems } from "hooks/useContractAbiItems";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import {
   Button,
@@ -167,6 +167,7 @@ const ModalBodyInputContract = ({
   form,
   setModalState,
 }: {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<AddContractSubscriptionForm, any, undefined>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
 }) => {
@@ -227,6 +228,7 @@ const ModalBodyInputData = ({
   form,
   setModalState,
 }: {
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<AddContractSubscriptionForm, any, undefined>;
   setModalState: Dispatch<SetStateAction<"inputContract" | "inputData">>;
 }) => {
@@ -414,6 +416,7 @@ const FilterSelector = ({
   setFilter,
 }: {
   abiItemType: "function" | "event";
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
   form: UseFormReturn<AddContractSubscriptionForm, any, undefined>;
   filter: string[];
   setFilter: (value: string[]) => void;

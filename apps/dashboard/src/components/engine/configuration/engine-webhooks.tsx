@@ -1,8 +1,8 @@
 import { useEngineWebhooks } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex } from "@chakra-ui/react";
 import { Heading, Link, Text } from "tw-components";
-import { WebhooksTable } from "./webhooks-table";
 import { AddWebhookButton } from "./add-webhook-button";
+import { WebhooksTable } from "./webhooks-table";
 
 interface EngineWebhooksProps {
   instanceUrl: string;
