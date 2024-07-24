@@ -10,7 +10,7 @@ import { uri } from "../../../../../extensions/erc1155/__generated__/IERC1155/re
 import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import type { MediaRendererProps } from "../../MediaRenderer/types.js";
 
-type NFTMediaProps = MediaRendererProps & {
+export type NFTMediaProps = MediaRendererProps & {
   // The NFT contract address
   contractAddress: string;
   // The chain which the NFT contract was deployed on
@@ -20,19 +20,49 @@ type NFTMediaProps = MediaRendererProps & {
 
   /**
    * By standard format we look for the `image` field from the metadata (e.g: `const image = metadata.image`)
-   * However, some contracts do not follow the standard.
-   * We allow them to override that rule.
+   * However, some contracts do not follow the standard. In that case users can use this field to override the default
    */
   overrideMediaField?: string;
 };
 
 /**
- * This component returns the media of an NFT.
+ * This component returns an [`MediaRenderer`](https://portal.thirdweb.com/references/typescript/v5/MediaRenderer) component
+ * representing the media of an NFT (based on the tokenId & contract address that you give it)
  *
- * @param props
- * @returns
+ * @param props NFTMediaProps
+ * @returns a <MediaRenderer /> that shows the content of the NFT media
  *
  * @example
+ * ```tsx
+ * import { NFTMedia } from "thirdweb/react";
+ *
+ * <NFTMedia
+ *   contractAddress="0x" // the NFT contract address
+ *   tokenId={0n} // Get the image of the tokenId #0
+ *   chain={ethereum}
+ *   client={...}
+ * />
+ *
+ * // --- Advanced use case ---
+ * // Let's say the NFT has the following data:
+ * const metadata = {
+ *   name: "Name #1",
+ *   image_data: "https://cat-image.png",
+ * }
+ *
+ * // It will not work out-of-the-box with the <NFTMedia />  because
+ * // by default, the component is looking for `image` and not `image_data`
+ *
+ * // In that case, you can override the default like this:
+ *
+ * <NFTMedia
+ *   contractAddress="0x"
+ *   tokenId={0n}
+ *   chain={ethereum}
+ *   client={...}
+ *   overrideMediaField="image_data" // <---
+ * />
+ * ```
  *
  */
 export async function NFTMedia(props: NFTMediaProps) {
