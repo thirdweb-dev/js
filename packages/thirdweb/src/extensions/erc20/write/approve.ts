@@ -6,6 +6,7 @@ import { approve as generatedApprove } from "../__generated__/IERC20/write/appro
 
 /**
  * Represents the parameters for the `approve` function.
+ * @extension ERC20
  */
 export type ApproveParams = Prettify<
   { spender: Address } & (

@@ -20,6 +20,9 @@ export const roleMap = {
   migration: "MIGRATION_ROLE",
 } as const;
 
+/**
+ * @extension PERMISSIONS
+ */
 export type ThirdwebContractRole = keyof typeof roleMap;
 
 export const ALL_ROLES = /* @__PURE__ */ (() =>

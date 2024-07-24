@@ -9,6 +9,9 @@ import {
 import type { EnglishAuction } from "../types.js";
 import { mapEnglishAuction } from "../utils.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetAuctionParams = GetAuctionParamsGenerated;
 
 /**

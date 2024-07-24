@@ -8,6 +8,9 @@ import {
 } from "../../__generated__/IOffers/write/acceptOffer.js";
 import { getOffer } from "../read/getOffer.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type AcceptOfferParams = GeneratedAcceptOfferParams;
 
 /**

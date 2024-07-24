@@ -11,6 +11,9 @@ const RequestStatus = {
   NOTOK: "0",
 };
 
+/**
+ * @contract
+ */
 type VerifyContractOptions = {
   contract: ThirdwebContract;
   explorerApiUrl: string;

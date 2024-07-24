@@ -11,6 +11,9 @@ import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/i
 
 export type ERC20ContractType = "DropERC20" | "TokenERC20";
 
+/**
+ * @extension DEPLOY
+ */
 export type ERC20ContractParams = {
   name: string;
   description?: string;
@@ -26,6 +29,9 @@ export type ERC20ContractParams = {
   trustedForwarders?: string[];
 };
 
+/**
+ * @extension DEPLOY
+ */
 export type DeployERC20ContractOptions = Prettify<
   ClientAndChainAndAccount & {
     type: ERC20ContractType;

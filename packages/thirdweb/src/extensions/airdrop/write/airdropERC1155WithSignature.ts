@@ -28,6 +28,9 @@ import { airdropERC1155WithSignature as generatedAirdropERC1155WithSignature } f
  */
 export const airdropERC1155WithSignature = generatedAirdropERC1155WithSignature;
 
+/**
+ * @extension Airdrop
+ */
 export type GenerateAirdropERC1155SignatureOptions = {
   account: Account;
   contract: ThirdwebContract;

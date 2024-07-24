@@ -12,6 +12,9 @@ import { encryptDecrypt } from "../../__generated__/IDelayedReveal/read/encryptD
 import { lazyMint as generatedLazyMint } from "../../__generated__/ILazyMint/write/lazyMint.js";
 import { hashDelayedRevealPassword } from "../helpers/hashDelayedRevealBatch.js";
 
+/**
+ * @extension ERC721
+ */
 export type CreateDelayedRevealBatchParams = {
   placeholderMetadata: NFTInput;
   metadata: NFTInput[];

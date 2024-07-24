@@ -10,6 +10,9 @@ import { mapDirectListing } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetAllListingParams = {
   /**
    * The start index of the listings to retrieve.

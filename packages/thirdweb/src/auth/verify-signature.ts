@@ -6,6 +6,9 @@ import { hashMessage } from "../utils/hashing/hashMessage.js";
 import type { Prettify } from "../utils/type-utils.js";
 import { verifyHash } from "./verify-hash.js";
 
+/**
+ * @auth
+ */
 export type VerifyEOASignatureParams = {
   message: string;
   signature: string | Uint8Array | Signature;
@@ -47,6 +50,9 @@ export async function verifyEOASignature(options: VerifyEOASignatureParams) {
   return false;
 }
 
+/**
+ * @auth
+ */
 export type VerifyContractWalletSignatureParams = Prettify<
   VerifyEOASignatureParams & {
     chain: Chain;

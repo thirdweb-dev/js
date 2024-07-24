@@ -17,6 +17,8 @@ import { getFid } from "../read/getFid.js";
  *
  * If the `appAccount` is not provided, the `signedKeyRequestMetadata`, `appAccountAddress` and `deadline` must be provided.
  * `deadline` must match the one used to generate the signature.
+ *
+ * @extension FARCASTER
  */
 export type AddSignerParams = Prettify<
   {

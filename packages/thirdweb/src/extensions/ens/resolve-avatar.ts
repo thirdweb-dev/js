@@ -4,6 +4,9 @@ import { parseAvatarRecord } from "../../utils/ens/avatar.js";
 import { withCache } from "../../utils/promise/withCache.js";
 import { resolveText } from "./resolve-text.js";
 
+/**
+ * @extension ENS
+ */
 export type ResolveAvatarOptions = {
   client: ThirdwebClient;
   name: string;

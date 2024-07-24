@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { hasRole as hasRoleGenerated } from "../__generated__/IPermissions/read/hasRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type HasRoleParams = {
   role: RoleInput;
   targetAccountAddress: string;

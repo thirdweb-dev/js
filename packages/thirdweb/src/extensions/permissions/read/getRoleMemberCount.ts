@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { getRoleMemberCount as generatedGetRoleMemberCount } from "../__generated__/IPermissionsEnumerable/read/getRoleMemberCount.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type GetRoleMemberCountParams = {
   role: RoleInput;
 };

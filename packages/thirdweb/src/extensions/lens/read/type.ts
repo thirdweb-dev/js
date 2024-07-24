@@ -1,3 +1,6 @@
+/**
+ * @extension LENS
+ */
 export type LensProfileSchema = {
   // A cryptographic signature of the Lens metadata
   signature: string;
