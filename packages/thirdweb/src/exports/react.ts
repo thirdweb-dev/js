@@ -141,4 +141,9 @@ export {
   type UseNetworkSwitcherModalOptions,
 } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
 
+/**
+ * Prebuilt UI components for thirdweb contracts
+ */
 export { NFTMedia } from "../react/web/ui/prebuilt/NFTMedia/index.js";
+export { ClaimButton } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/index.js";
+export type { ClaimButtonProps } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/types.js";
