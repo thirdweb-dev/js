@@ -1,7 +1,7 @@
 "use client";
 
 import { base } from "thirdweb/chains";
-import { PayEmbed } from "thirdweb/react";
+import { PayEmbed, getDefaultToken } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
@@ -16,14 +16,9 @@ export function BuyMerchPreview() {
         payOptions={{
           mode: "direct_payment",
           paymentInfo: {
-            amount: "35",
+            amount: "15",
             chain: base,
-            currency: {
-              address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-              name: "USD Coin",
-              symbol: "USDC",
-              decimals: 6,
-            },
+            token: getDefaultToken(base, "USDC"),
             sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
           },
           metadata: {

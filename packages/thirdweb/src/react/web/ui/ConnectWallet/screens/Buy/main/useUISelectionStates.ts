@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { polygon } from "../../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import type { PayUIOptions } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
+import type {
+  FundWalletOptions,
+  PayUIOptions,
+} from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
@@ -19,7 +22,8 @@ export function useUISelectionStates(options: {
 
   // buy token amount ---------------------------------------------------------
   // NOTE - for transaction / direct payment modes, the token amount is set when the user tap continue
-  const initialTokenAmount = payOptions.prefillBuy?.amount || "";
+  const prefillBuy = (payOptions as FundWalletOptions)?.prefillBuy;
+  const initialTokenAmount = prefillBuy?.amount || "";
 
   const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
@@ -29,7 +33,7 @@ export function useUISelectionStates(options: {
   // Destination chain and token selection -----------------------------------
   const [toChain, setToChain] = useState<Chain>(
     // use prefill chain if available
-    payOptions.prefillBuy?.chain ||
+    prefillBuy?.chain ||
       (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
       (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain) ||
       // use active chain if its supported as destination
@@ -40,9 +44,8 @@ export function useUISelectionStates(options: {
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    payOptions.prefillBuy?.token ||
-      (payOptions.mode === "direct_payment" &&
-        payOptions.paymentInfo.currency) ||
+    prefillBuy?.token ||
+      (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
       NATIVE_TOKEN,
   );
   // --------------------------------------------------------------------------
@@ -62,8 +65,7 @@ export function useUISelectionStates(options: {
     // use prefill token if available
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.token) ||
-      (payOptions.mode === "direct_payment" &&
-        payOptions.paymentInfo.currency) ||
+      (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
       // default to native token
       NATIVE_TOKEN,
   );

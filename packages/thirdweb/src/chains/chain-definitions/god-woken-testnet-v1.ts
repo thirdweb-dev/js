@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const godWokenTestnetV1 = /*@__PURE__*/ defineChain({
   id: 71401,
   name: "Godwoken Testnet v1",

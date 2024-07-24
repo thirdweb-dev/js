@@ -29,7 +29,10 @@ export type {
   SupportedTokens,
   TokenInfo,
 } from "../react/core/utils/defaultTokens.js";
-export { defaultTokens } from "../react/core/utils/defaultTokens.js";
+export {
+  defaultTokens,
+  getDefaultToken,
+} from "../react/core/utils/defaultTokens.js";
 
 // Media Renderer
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
@@ -124,7 +127,9 @@ export {
 export type {
   PayUIOptions,
   PaymentInfo,
-  Currency,
+  DirectPaymentOptions,
+  FundWalletOptions,
+  TranasctionOptions,
 } from "../react/core/hooks/connection/ConnectButtonProps.js";
 
 export {

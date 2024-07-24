@@ -4,6 +4,9 @@ import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/wr
 import { signPermissionRequest, toContractPermissions } from "./common.js";
 import type { AccountPermissions } from "./types.js";
 
+/**
+ * @extension ERC4337
+ */
 export type AddSessionKeyOptions = {
   /**
    * The admin account that will perform the operation.

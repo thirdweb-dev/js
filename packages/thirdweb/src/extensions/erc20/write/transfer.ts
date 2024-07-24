@@ -2,8 +2,10 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Prettify } from "../../../utils/type-utils.js";
 import { toUnits } from "../../../utils/units.js";
 import { transfer as generatedTransfer } from "../__generated__/IERC20/write/transfer.js";
+
 /**
  * Represents the parameters for a transfer operation.
+ * @extension ERC20
  */
 export type TransferParams = Prettify<
   { to: string } & (

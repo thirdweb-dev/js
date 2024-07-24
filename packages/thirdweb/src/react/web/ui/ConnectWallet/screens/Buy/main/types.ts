@@ -1,10 +1,11 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
 import type { GetWalletBalanceResult } from "../../../../../../../wallets/utils/getWalletBalance.js";
-import type { Currency } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 
 export type TransactionCostAndData = {
-  currency: Currency;
+  token: TokenInfo;
+  decimals: number;
   walletBalance: GetWalletBalanceResult;
   transactionValueWei: bigint;
   gasCostWei: bigint;
@@ -12,7 +13,7 @@ export type TransactionCostAndData = {
 
 export type SelectedScreen =
   | {
-      id: "main" | "select-payment-method" | "buy-with-fiat";
+      id: "main" | "select-payment-method" | "buy-with-fiat" | "select-wallet";
     }
   | {
       id: "buy-with-crypto";
@@ -38,6 +39,9 @@ export type SelectedScreen =
       id: "fiat-flow";
       quote: BuyWithFiatQuote;
       openedWindow: Window | null;
+    }
+  | {
+      id: "transfer-flow";
     }
   | {
       id: "connect-payer-wallet";

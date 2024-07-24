@@ -1,6 +1,9 @@
+import { useQuery } from "@tanstack/react-query";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
+import { getContract } from "../../../../../../contract/contract.js";
+import { decimals } from "../../../../../../extensions/erc20/read/decimals.js";
 import { shortenAddress } from "../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import { toTokens } from "../../../../../../utils/units.js";
@@ -9,7 +12,9 @@ import { useCustomTheme } from "../../../../../core/design-system/CustomThemePro
 import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainQuery } from "../../../../../core/hooks/others/useChainQuery.js";
+import type { TokenInfo } from "../../../../../core/utils/defaultTokens.js";
 import { useEnsName } from "../../../../../core/utils/wallet.js";
+import { useActiveWallet } from "../../../../hooks/wallets/useActiveWallet.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainIcon } from "../../../components/ChainIcon.js";
@@ -21,7 +26,7 @@ import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { ConnectButton } from "../../ConnectButton.js";
-import type { ERC20OrNativeToken } from "../nativeToken.js";
+import { type ERC20OrNativeToken, isNativeToken } from "../nativeToken.js";
 import type { SupportedChainAndTokens } from "./swap/useSwapSupportedChains.js";
 
 export function DirectPaymentModeScreen(props: {
@@ -53,37 +58,53 @@ export function DirectPaymentModeScreen(props: {
     address: paymentInfo.sellerAddress,
   });
 
-  if (!chainData) {
+  const totalCostQuery = useQuery({
+    queryKey: ["amount", paymentInfo],
+    queryFn: async () => {
+      let tokenDecimals = 18;
+      if (paymentInfo.token && !isNativeToken(paymentInfo.token)) {
+        tokenDecimals = await decimals({
+          contract: getContract({
+            address: paymentInfo.token.address,
+            chain: paymentInfo.chain,
+            client,
+          }),
+        });
+      }
+      let cost: string;
+      if ("amountWei" in paymentInfo) {
+        cost = toTokens(paymentInfo.amountWei, tokenDecimals);
+      } else {
+        cost = paymentInfo.amount;
+      }
+      return cost;
+    },
+  });
+
+  const totalCost = totalCostQuery.data;
+  if (!chainData || totalCost === undefined) {
     return <LoadingScreen />;
   }
 
-  const currency = paymentInfo.currency
+  const token: TokenInfo = paymentInfo.token
     ? {
-        ...paymentInfo.currency,
+        ...paymentInfo.token,
         icon:
-          paymentInfo.currency?.icon ||
+          paymentInfo.token?.icon ||
           supportedDestinations
             .find((c) => c.chain.id === paymentInfo.chain.id)
             ?.tokens.find(
               (t) =>
                 t.address.toLowerCase() ===
-                paymentInfo.currency?.address.toLowerCase(),
+                paymentInfo.token?.address.toLowerCase(),
             )?.icon,
       }
     : {
         address: NATIVE_TOKEN_ADDRESS,
-        decimals: 18,
         name: chainData.nativeCurrency.name,
         symbol: chainData.nativeCurrency.symbol,
         icon: chainData.icon?.url,
       };
-
-  let totalCost: string;
-  if ("amountWei" in paymentInfo) {
-    totalCost = toTokens(paymentInfo.amountWei, currency.decimals);
-  } else {
-    totalCost = paymentInfo.amount;
-  }
 
   return (
     <Container p="lg">
@@ -151,10 +172,10 @@ export function DirectPaymentModeScreen(props: {
                 chain={paymentInfo.chain}
                 client={props.client}
                 size="sm"
-                token={currency}
+                token={token}
               />
               <Text color="primaryText" size="md" weight={700}>
-                {String(formatNumber(Number(totalCost), 6))} {currency.symbol}
+                {String(formatNumber(Number(totalCost), 6))} {token.symbol}
               </Text>
             </Container>
           </Container>
@@ -221,7 +242,7 @@ export function DirectPaymentModeScreen(props: {
           variant="accent"
           fullWidth
           onClick={() => {
-            onContinue(totalCost, paymentInfo.chain, currency);
+            onContinue(totalCost, paymentInfo.chain, token);
           }}
         >
           Choose Payment Method

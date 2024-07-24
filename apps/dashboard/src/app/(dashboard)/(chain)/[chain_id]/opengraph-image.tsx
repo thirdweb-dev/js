@@ -80,20 +80,23 @@ export default async function Image({
     return new Response("Chain not found", { status: 400 });
   }
 
+  // TODO: handle svg - doesn't work right now
+  const hasWorkingChainIcon = chain.icon?.url && chain.icon?.format !== "svg";
+
   const [interBold, chainIcon, imageData] = await Promise.all([
     // fetch the font we use
     fetch(new URL("og-lib/fonts/inter/700.ttf", import.meta.url)).then((res) =>
       res.arrayBuffer(),
     ),
     // download the chain icon if there is one
-    chain.icon?.url
+    chain.icon?.url && hasWorkingChainIcon
       ? download({ uri: chain.icon.url, client: thirdwebClient }).then((res) =>
           res.arrayBuffer(),
         )
       : undefined,
     // download the background image (based on chain)
     fetch(
-      chain.icon?.url
+      chain.icon?.url && hasWorkingChainIcon
         ? new URL(
             "og-lib/assets/chain/bg-with-icon.png",
 
@@ -121,7 +124,7 @@ export default async function Image({
       />
       {/* the actual component starts here */}
 
-      {chainIcon && (
+      {hasWorkingChainIcon && (
         <img
           alt=""
           // @ts-expect-error - TS doesn't know about the ImageResponse component

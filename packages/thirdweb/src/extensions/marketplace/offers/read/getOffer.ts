@@ -8,6 +8,9 @@ import {
 import type { Offer } from "../types.js";
 import { mapOffer } from "../utils.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetOfferParams = GetOfferParamsGenerated;
 
 /**

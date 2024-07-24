@@ -152,9 +152,7 @@ export type PayEmbedProps = {
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
-  const [screen, setScreen] = useState<"buy" | "execute-tx">(
-    "buy",
-  );
+  const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
 
   // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
@@ -211,7 +209,6 @@ export function PayEmbed(props: PayEmbedProps) {
             onBack={undefined}
           />
         </div>
-
 
         {screen === "execute-tx" &&
           props.payOptions?.mode === "transaction" &&

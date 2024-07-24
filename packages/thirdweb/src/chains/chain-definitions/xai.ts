@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const xai = /*@__PURE__*/ defineChain({
   id: 660279,
   name: "Xai Mainnet",

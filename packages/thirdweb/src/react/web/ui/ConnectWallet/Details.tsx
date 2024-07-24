@@ -1248,7 +1248,7 @@ export type UseWalletDetailsModalOptions = {
    *
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
-  payOptions?: PayUIOptions;
+  payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
 
   /**
    * Display the balance of a token instead of the native token

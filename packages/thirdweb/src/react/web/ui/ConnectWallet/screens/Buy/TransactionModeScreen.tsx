@@ -126,7 +126,7 @@ export function TransactionModeScreen(props: {
                 chain={payUiOptions.transaction.chain}
                 client={props.client}
                 size="sm"
-                token={transactionCostAndData.currency}
+                token={transactionCostAndData.token}
               />
               <Text color="primaryText" size="md" weight={700}>
                 {String(
@@ -134,13 +134,13 @@ export function TransactionModeScreen(props: {
                     Number(
                       toTokens(
                         transactionCostAndData.transactionValueWei,
-                        transactionCostAndData.currency.decimals,
+                        transactionCostAndData.decimals,
                       ),
                     ),
                     6,
                   ),
                 )}{" "}
-                {transactionCostAndData.currency.symbol}
+                {transactionCostAndData.token.symbol}
               </Text>
             </Container>
           </Container>
@@ -161,7 +161,6 @@ export function TransactionModeScreen(props: {
               center="y"
               style={{ justifyContent: "right" }}
             >
-              {/* TODO (pay) show sponsored if gasless is enabled */}
               <Text
                 color={sponsoredTransactionsEnabled ? "success" : "primaryText"}
                 size="xs"
@@ -221,16 +220,15 @@ export function TransactionModeScreen(props: {
           onClick={() => {
             let totalCostWei = transactionCostAndData.transactionValueWei;
             if (
-              transactionCostAndData.currency.address ===
-                NATIVE_TOKEN_ADDRESS &&
+              transactionCostAndData.token.address === NATIVE_TOKEN_ADDRESS &&
               !sponsoredTransactionsEnabled
             ) {
               totalCostWei += transactionCostAndData.gasCostWei;
             }
             onContinue(
-              toTokens(totalCostWei, transactionCostAndData.currency.decimals),
+              toTokens(totalCostWei, transactionCostAndData.decimals),
               payUiOptions.transaction.chain,
-              transactionCostAndData.currency,
+              transactionCostAndData.token,
             );
           }}
         >

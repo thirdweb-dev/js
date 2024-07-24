@@ -4,6 +4,9 @@ import type { ThirdwebContract } from "../../../../contract/contract.js";
 import { getDeployedInfraContract } from "../../../../contract/deployment/utils/infra.js";
 import { uninstallExtension } from "../../__generated__/ModularCore/write/uninstallExtension.js";
 
+/**
+ * @extension MODULAR
+ */
 export type UninstallPublishedExtensionOptions = {
   client: ThirdwebClient;
   chain: Chain;

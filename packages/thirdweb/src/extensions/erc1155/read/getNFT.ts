@@ -6,6 +6,7 @@ import { uri } from "../__generated__/IERC1155/read/uri.js";
 
 /**
  * Parameters for getting an NFT.
+ * @extension ERC1155
  */
 export type GetNFTParams = {
   tokenId: bigint;

@@ -9,8 +9,14 @@ import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize as initDropERC1155 } from "./__generated__/DropERC1155/write/initialize.js";
 import { initialize as initTokenERC1155 } from "./__generated__/TokenERC1155/write/initialize.js";
 
+/**
+ * @extension DEPLOY
+ */
 export type ERC1155ContractType = "DropERC1155" | "TokenERC1155";
 
+/**
+ * @extension DEPLOY
+ */
 export type ERC1155ContractParams = {
   name: string;
   description?: string;
@@ -28,6 +34,9 @@ export type ERC1155ContractParams = {
   trustedForwarders?: string[];
 };
 
+/**
+ * @extension DEPLOY
+ */
 export type DeployERC1155ContractOptions = Prettify<
   ClientAndChainAndAccount & {
     type: ERC1155ContractType;

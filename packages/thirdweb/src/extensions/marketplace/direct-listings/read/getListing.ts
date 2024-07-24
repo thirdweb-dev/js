@@ -9,6 +9,9 @@ import {
 import type { DirectListing } from "../types.js";
 import { mapDirectListing } from "../utils.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetListingParams = GetListingParamsGenerated;
 
 /**

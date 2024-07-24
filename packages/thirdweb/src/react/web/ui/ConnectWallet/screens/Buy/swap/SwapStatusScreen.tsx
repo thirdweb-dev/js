@@ -90,7 +90,7 @@ export function SwapStatusScreen(props: {
               />
               <Spacer y="sm" />
               <Text color={"primaryText"} size="lg">
-                Buy Success
+                Buy Complete
               </Text>
             </Container>
 

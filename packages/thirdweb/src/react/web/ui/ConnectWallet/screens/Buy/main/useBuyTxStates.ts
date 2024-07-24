@@ -85,7 +85,6 @@ export function useTransactionCostAndData(args: {
           address: erc20Value.tokenAddress,
           name: tokenMeta.name,
           symbol: tokenMeta.symbol,
-          decimals: tokenMeta.decimals,
           icon: supportedDestinations
             .find((c) => c.chain.id === transaction.chain.id)
             ?.tokens.find(
@@ -95,7 +94,8 @@ export function useTransactionCostAndData(args: {
             )?.icon,
         };
         return {
-          currency,
+          token: currency,
+          decimals: tokenMeta.decimals,
           walletBalance,
           gasCostWei,
           transactionValueWei,
@@ -117,13 +117,13 @@ export function useTransactionCostAndData(args: {
       const transactionValueWei =
         (await resolvePromisedValue(transaction.value)) || 0n;
       return {
-        currency: {
+        token: {
           address: NATIVE_TOKEN_ADDRESS,
-          decimals: 18,
           name: chainMetadata.nativeCurrency.name,
           symbol: chainMetadata.nativeCurrency.symbol,
           icon: chainMetadata.icon?.url,
         },
+        decimals: 18,
         walletBalance,
         gasCostWei,
         transactionValueWei,

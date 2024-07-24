@@ -260,7 +260,7 @@ export function SwapConfirmationScreen(props: {
   );
 }
 
-const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
+export const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     height: "4px",

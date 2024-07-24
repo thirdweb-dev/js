@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const polygonZkEvmTestnet = /*@__PURE__*/ defineChain({
   id: 1442,
   name: "Polygon zkEVM Testnet",

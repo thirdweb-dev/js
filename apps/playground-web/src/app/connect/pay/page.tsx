@@ -123,7 +123,8 @@ function BuyMerch() {
 
       <CodeExample
         preview={<BuyMerchPreview />}
-        code={`import { PayEmbed } from "thirdweb/react";
+        code={`import { PayEmbed, getDefaultToken } from "thirdweb/react";
+          import { base } from "thirdweb/chains";
 
         function App() {
           return (
@@ -135,7 +136,7 @@ function BuyMerch() {
                 paymentInfo: {
                   amount: "35",
                   chain: base,
-                  currency: USDC,
+                  token: getDefaultToken(base, "USDC"),
                   sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
                 },
                 metadata: {

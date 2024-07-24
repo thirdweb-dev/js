@@ -48,9 +48,7 @@ export function TransactionModalContent(
   props: ModalProps & { onBack?: () => void },
 ) {
   const localeQuery = useConnectLocale(props.localeId);
-  const [screen, setScreen] = useState<"buy" | "execute-tx">(
-    "buy",
-  );
+  const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
 
   if (!localeQuery.data) {
     return <LoadingScreen />;
