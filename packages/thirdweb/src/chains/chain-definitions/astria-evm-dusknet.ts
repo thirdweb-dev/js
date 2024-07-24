@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const astriaEvmDusknet = /* @__PURE__ */ defineChain({
   id: 912559,
   name: "Astria EVM Dusknet",

@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const rariTestnet = /*@__PURE__*/ defineChain({
   id: 1918988905,
   name: "RARIchain Testnet",

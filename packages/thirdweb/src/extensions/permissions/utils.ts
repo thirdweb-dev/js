@@ -45,6 +45,7 @@ const roleCache = new LruMap<Hex>(128);
  * ```ts
  * const adminRoleHash = getRoleHash("admin"); // 0x0000000...000000
  * ```
+ * @extension PERMISSIONS
  */
 export function getRoleHash(role: RoleInput) {
   if (roleCache.has(role)) {

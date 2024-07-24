@@ -111,6 +111,8 @@ export type VerifySignatureParams = Prettify<
   VerifyEOASignatureParams & Partial<VerifyContractWalletSignatureParams>
 >;
 
+let warningTriggered = false;
+
 /**
  * Verifies the signature based on the provided options.
  * Handles smart contract wallet signatures and EOA signatures.
@@ -132,7 +134,6 @@ export type VerifySignatureParams = Prettify<
  * ```
  * @auth
  */
-let warningTriggered = false;
 export async function verifySignature(options: VerifySignatureParams) {
   try {
     const isValidEOASig = await verifyEOASignature(options);
