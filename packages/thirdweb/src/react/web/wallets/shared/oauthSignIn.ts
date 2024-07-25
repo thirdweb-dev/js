@@ -41,7 +41,6 @@ function getOauthLoginPath(
 }
 
 /**
- *
  * @internal
  */
 export function openOauthSignInWindow({
@@ -137,7 +136,7 @@ const spinnerWindowHtml = `
   @keyframes spin {
     100% {
       transform: rotate(360deg);
-    }
+        }
   }
 </style>
 `;

@@ -40,6 +40,18 @@ export const getSocialAuthLoginPath = (
   return baseUrl;
 };
 
+export const loginWithOauthRedirect = (options: {
+  authOption: SocialAuthOption;
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+}): void => {
+  const redirectUrl = new URL(window.location.href);
+  redirectUrl.searchParams.set("walletId", options.ecosystem?.id || "inApp");
+  redirectUrl.searchParams.set("authProvider", options.authOption);
+  const loginUrl = `${getSocialAuthLoginPath(options.authOption, options.client, options.ecosystem)}&redirectUrl=${encodeURIComponent(redirectUrl.toString())}`;
+  window.location.href = loginUrl;
+};
+
 export const loginWithOauth = async (options: {
   authOption: SocialAuthOption;
   client: ThirdwebClient;

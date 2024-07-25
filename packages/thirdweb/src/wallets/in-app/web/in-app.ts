@@ -53,6 +53,16 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  *  hidePrivateKeyExport: true
  * });
  * ```
+ *
+ * Open the Oauth window in the same tab
+ * ```ts
+ * import { inAppWallet } from "thirdweb/wallets";
+ * const wallet = inAppWallet({
+ *  auth: {
+ *    mode: "redirect"
+ *  }
+ * });
+ * ```
  * @wallet
  */
 export function inAppWallet(

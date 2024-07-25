@@ -1,6 +1,10 @@
 import { ethereum } from "../../../../chains/chain-definitions/ethereum.js";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import {
+  type SocialAuthOption,
+  socialAuthOptions,
+} from "../../../../wallets/types.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import type { EcosystemWalletId, WalletId } from "../../../wallet-types.js";
 import type {
@@ -35,6 +39,20 @@ export async function connectInAppWallet(
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
+  if (
+    createOptions?.auth?.mode === "redirect" &&
+    connector.authenticateWithRedirect
+  ) {
+    const strategy = options.strategy;
+    if (!socialAuthOptions.includes(strategy as SocialAuthOption)) {
+      throw new Error("This authentication method does not support redirects");
+    }
+    connector.authenticateWithRedirect(strategy as SocialAuthOption);
+  }
+  // If we don't have authenticateWithRedirect then it's likely react native, so the default is to redirect and we can carry on
+  // IF WE EVER ADD MORE CONNECTOR TYPES, this could cause redirect to be ignored despite being specified
+  // TODO: In V6, make everything redirect auth
+
   const authResult = await connector.authenticate(options);
   const authAccount = authResult.user.account;
 
@@ -66,6 +84,10 @@ export async function autoConnectInAppWallet(
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
+  if (options.authResult && connector.loginWithAuthToken) {
+    await connector.loginWithAuthToken(options.authResult);
+  }
+
   const user = await getAuthenticatedUser(connector);
   if (!user) {
     throw new Error("Failed to authenticate user.");
