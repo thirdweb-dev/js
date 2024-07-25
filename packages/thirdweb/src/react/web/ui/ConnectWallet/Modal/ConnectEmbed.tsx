@@ -210,7 +210,7 @@ const ConnectEmbedContent = (props: {
     welcomeScreen: undefined,
     wallets: props.wallets,
   });
-  const { setScreen, initialScreen } = screenSetup;
+  const { setScreen, initialScreen, screen } = screenSetup;
   const activeWallet = useActiveWallet();
   const siweAuth = useSiweAuth(activeWallet, props.auth);
   const activeAccount = useActiveAccount();
@@ -219,11 +219,17 @@ const ConnectEmbedContent = (props: {
 
   let content = null;
 
+  // if sign in is required but connect embed is showing the initial screen - change to sign in screen
   useEffect(() => {
-    if (siweAuth.requiresAuth && !siweAuth.isLoggedIn && activeAccount) {
+    if (
+      siweAuth.requiresAuth &&
+      !siweAuth.isLoggedIn &&
+      activeAccount &&
+      screen === initialScreen
+    ) {
       setScreen(reservedScreens.signIn);
     }
-  }, [siweAuth, setScreen, activeAccount]);
+  }, [siweAuth, setScreen, activeAccount, screen, initialScreen]);
 
   const modalSize = !canFitWideModal()
     ? "compact"
