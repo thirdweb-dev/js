@@ -140,3 +140,5 @@ export {
   useNetworkSwitcherModal,
   type UseNetworkSwitcherModalOptions,
 } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
+
+export { useConnectionManager } from "../react/core/providers/connection-manager.js";
