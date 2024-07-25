@@ -661,7 +661,8 @@ class ThirdwebBridge implements TWBridge {
           const fees = await this.activeSDK.getProvider().getFeeData();
           const result = {
             maxFeePerGas: fees.maxFeePerGas ?? fees.gasPrice ?? 0,
-            maxPriorityFeePerGas: fees.maxPriorityFeePerGas ?? fees.gasPrice ?? 0,
+            maxPriorityFeePerGas:
+              fees.maxPriorityFeePerGas ?? fees.gasPrice ?? 0,
           };
           return JSON.stringify({ result: result }, bigNumberReplacer);
         }
@@ -991,11 +992,13 @@ class ThirdwebBridge implements TWBridge {
     });
   }
 
-  public async getNonce(address: string, blockTag: string){
+  public async getNonce(address: string, blockTag: string) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
-    const res = await this.activeSDK.getProvider().getTransactionCount(address, blockTag);
+    const res = await this.activeSDK
+      .getProvider()
+      .getTransactionCount(address, blockTag);
     return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
