@@ -5,8 +5,8 @@ import { getIpAddress } from "lib/ip";
 import { cacheTtl } from "lib/redis";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next/types";
+import { InfoCard } from "../(chainPage)/components/server/info-card";
 import { getChain } from "../../utils";
-import { InfoCard } from "../components/server/info-card";
 import { TestnetSpinWheel } from "./components/SpinWheel";
 
 export async function generateMetadata({

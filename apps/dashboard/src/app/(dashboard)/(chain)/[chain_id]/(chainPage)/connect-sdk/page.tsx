@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { FaReact } from "react-icons/fa";
 import { FaUnity } from "react-icons/fa6";
 import { SiDotnet, SiSolidity, SiTypescript } from "react-icons/si";
-import { getChain } from "../../utils";
+import { getChain } from "../../../utils";
 import { InfoCard } from "../components/server/info-card";
 
 type SDKInfo = {

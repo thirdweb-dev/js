@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getChain } from "../../utils";
+import { getChain } from "../../../utils";
 import { InfoCard } from "../components/server/info-card";
 import { CustomPayEmbed } from "./components/pay-embed.client";
 

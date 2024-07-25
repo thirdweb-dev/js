@@ -2,10 +2,9 @@
 
 import { TabLinks } from "@/components/ui/tabs";
 import { useSelectedLayoutSegment } from "next/navigation";
-import type { ChainSupportedService } from "../../../types/chain";
-
 import { useMemo } from "react";
-import { products } from "../../../components/server/products";
+import { products } from "../../../../components/server/products";
+import type { ChainSupportedService } from "../../../../types/chain";
 
 export function getEnabledTabs(enabledServices: ChainSupportedService[]) {
   return products

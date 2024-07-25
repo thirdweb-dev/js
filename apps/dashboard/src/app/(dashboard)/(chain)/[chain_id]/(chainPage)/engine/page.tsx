@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getChain } from "../../utils";
+import { getChain } from "../../../utils";
 import { InfoCard } from "../components/server/info-card";
 
 export default async function Page(props: { params: { chain_id: string } }) {
