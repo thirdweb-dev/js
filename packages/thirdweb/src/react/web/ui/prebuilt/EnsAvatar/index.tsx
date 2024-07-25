@@ -1,14 +1,14 @@
-import { MediaRenderer } from "src/exports/react.js";
 import {
   type ResolveAvatarOptions,
   resolveAvatar,
 } from "../../../../../extensions/ens/resolve-avatar.js";
+import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import type { MediaRendererProps } from "../../MediaRenderer/types.js";
 
 /**
  * Props for the EnsAvatar component.
  * It's the combination of MediaRendererProps & ResolveAvatarOptions - type EnsAvatarProps = MediaRendererProps & ResolveAvatarOptions
- * 
+ *
  * please look up those 2 types for better context
  */
 export type EnsAvatarProps = MediaRendererProps & ResolveAvatarOptions;
@@ -33,7 +33,7 @@ export type EnsAvatarProps = MediaRendererProps & ResolveAvatarOptions;
  *   height="100px"
  * />
  * ```
- * 
+ *
  */
 export async function EnsAvatar(props: EnsAvatarProps) {
   const { name } = props;
