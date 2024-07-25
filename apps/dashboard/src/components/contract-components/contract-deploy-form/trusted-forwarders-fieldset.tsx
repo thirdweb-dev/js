@@ -6,13 +6,12 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import type { UseFormReturn } from "react-hook-form";
 import { Button, Card, FormErrorMessage, Heading, Text } from "tw-components";
 import { useDefaultForwarders } from "../hooks";
+import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface TrustedForwardersFieldsetProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<any, any>;
+  form: CustomContractDeploymentForm;
 }
 
 export const TrustedForwardersFieldset: React.FC<

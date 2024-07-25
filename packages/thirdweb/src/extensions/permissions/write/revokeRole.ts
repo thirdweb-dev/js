@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { revokeRole as generatedRevokeRole } from "../__generated__/IPermissions/write/revokeRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type RevokeRoleParams = {
   role: RoleInput;
   targetAccountAddress: Address;

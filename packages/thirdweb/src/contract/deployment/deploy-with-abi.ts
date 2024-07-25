@@ -13,6 +13,9 @@ import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChain } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 
+/**
+ * @extension DEPLOY
+ */
 export type PrepareDirectDeployTransactionOptions<
   TConstructor extends AbiConstructor,
   TParams = AbiParametersToPrimitiveTypes<TConstructor["inputs"]>,

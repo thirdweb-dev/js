@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { grantRole as generatedGrantRole } from "../__generated__/IPermissions/write/grantRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type GrantRoleParams = {
   role: RoleInput;
   targetAccountAddress: Address;

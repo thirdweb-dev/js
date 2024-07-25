@@ -12,13 +12,13 @@ import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { type UseFormReturn, useFieldArray } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { ZERO_ADDRESS } from "thirdweb";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
+import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface SplitFieldsetProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<any, any>;
+  form: CustomContractDeploymentForm;
 }
 
 export interface Recipient {

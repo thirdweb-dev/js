@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const polygon = /*@__PURE__*/ defineChain({
   id: 137,
   name: "Polygon",

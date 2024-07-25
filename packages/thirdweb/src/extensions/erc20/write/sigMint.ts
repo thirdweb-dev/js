@@ -18,6 +18,7 @@ import {
 /**
  * Mints a new ERC20 token with the given minter signature
  * @param options - The transaction options.
+ * @extension ERC20
  * @example
  * ```ts
  * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc20";
@@ -59,6 +60,9 @@ export function mintWithSignature(
   });
 }
 
+/**
+ * @extension ERC20
+ */
 export type GenerateMintSignatureOptions = {
   account: Account;
   contract: ThirdwebContract;

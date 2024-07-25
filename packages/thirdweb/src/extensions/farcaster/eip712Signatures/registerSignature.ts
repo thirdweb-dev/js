@@ -22,6 +22,9 @@ export const ID_GATEWAY_EIP_712_TYPES = {
   types: { Register: ID_GATEWAY_REGISTER_TYPE },
 } as const;
 
+/**
+ * @extension FARCASTER
+ */
 export type RegisterMessage = {
   /** FID custody address */
   to: Address;
@@ -33,6 +36,9 @@ export type RegisterMessage = {
   deadline: bigint;
 };
 
+/**
+ * @extension FARCASTER
+ */
 export type SignRegisterOptions = {
   account: Account;
   message: RegisterMessage;

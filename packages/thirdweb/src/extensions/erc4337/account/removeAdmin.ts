@@ -3,6 +3,9 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
+/**
+ * @extension ERC4337
+ */
 export type RemoveAdminOptions = {
   /**
    * The admin account that will perform the operation.

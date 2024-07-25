@@ -1,5 +1,68 @@
 # thirdweb
 
+## 5.39.0
+
+### Minor Changes
+
+- [#3785](https://github.com/thirdweb-dev/js/pull/3785) [`105e523`](https://github.com/thirdweb-dev/js/commit/105e523ce4cddbd343ac8c06fb9f234fb3a8b4f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ClaimButton for claiming tokens from all thirdweb Drop contracts
+
+  Higher level abstraction to claim tokens from all thirdweb Drop contracts
+
+  ```tsx
+  import { ClaimButton } from "thirdweb/react";
+  import { ethereum } from "thirdweb/chains";
+
+  <ClaimButton
+    contractAddress="0x..."
+    chain={ethereum}
+    client={client}
+    claimParams={{
+      type: "ERC721",
+      quantity: 1n,
+    }}
+  >
+    Claim now
+  </ClaimButton>;
+  ```
+
+### Patch Changes
+
+- [#3792](https://github.com/thirdweb-dev/js/pull/3792) [`5fabe66`](https://github.com/thirdweb-dev/js/commit/5fabe6661399615b393d1055a722b9de59bf19bb) Thanks [@MananTank](https://github.com/MananTank)! - handle `null` value of `effectiveGasPrice` in `sendTransaction` method of `toEthersSigner` adapter that throws error when trying to convert to BigNumber. This is causing issue in XDC Network (chain Id 50) and XDC Apothem testnet (chain id 51)
+
+- [#3804](https://github.com/thirdweb-dev/js/pull/3804) [`cb616f7`](https://github.com/thirdweb-dev/js/commit/cb616f75ed38fac2be243163f0139e5cbb9892be) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimation on arbitrum sepolia
+
+- [#3524](https://github.com/thirdweb-dev/js/pull/3524) [`8599fbf`](https://github.com/thirdweb-dev/js/commit/8599fbf4e008de64c6118193c411b6d3b0810790) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Modular contracts deployment setup
+
+- [#3782](https://github.com/thirdweb-dev/js/pull/3782) [`c82c524`](https://github.com/thirdweb-dev/js/commit/c82c524e139d7960794e08bca838a1a1b78a3532) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding nonce for smart accounts
+
+- [#3801](https://github.com/thirdweb-dev/js/pull/3801) [`a51f53f`](https://github.com/thirdweb-dev/js/commit/a51f53f531adedc355624fb89d2d50767a9fb1a1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix RPC URL construction for chains
+
+- [#3805](https://github.com/thirdweb-dev/js/pull/3805) [`5c9af85`](https://github.com/thirdweb-dev/js/commit/5c9af853fa7a58ee8c0572e235a5b20f8247297c) Thanks [@jnsdls](https://github.com/jnsdls)! - [performance] - fix rpc client reuse
+
+- [#3796](https://github.com/thirdweb-dev/js/pull/3796) [`c51f785`](https://github.com/thirdweb-dev/js/commit/c51f7857e2363e01371f21487f4a5aa74f6f89f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle polygon amoy gas station
+
+- [#3800](https://github.com/thirdweb-dev/js/pull/3800) [`b15118a`](https://github.com/thirdweb-dev/js/commit/b15118a34fcfb3ed7b81d6ffea733a2499e5a895) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Minor style fixes on the Connect UI Send Funds page
+
+- [#3791](https://github.com/thirdweb-dev/js/pull/3791) [`9cc9f05`](https://github.com/thirdweb-dev/js/commit/9cc9f05f68654f12ef8f9434a3d7af6fc40ecb18) Thanks [@keyding](https://github.com/keyding)! - Fix bun detection
+
+## 5.38.0
+
+### Minor Changes
+
+- [#3766](https://github.com/thirdweb-dev/js/pull/3766) [`9f555ca`](https://github.com/thirdweb-dev/js/commit/9f555cab0d96f5094ea35efec14a1622a63379af) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add more chains: Astria EVM Dusknet (912559), Blast Sepolia (168587773), Celo (42220), Cronos (25), Degen (666666666), Fantom Testnet (4002), Fantom (250), Frame Tesnet (68840142), Gnosis Chiado Testnet (10200), Gnosis (100), GodWoken (71402), GodWoken Testnet (71401), Hokum Testnet (20482050), Localhost (1337), Loot chain (5151706), Manta Pacific (169), Manta Pacific Testnet (3441005), Moonbeam (1284), Palm Testnet (11297108099), Palm (11297108109), Polygon zkEvm Testnet (1442), Polygon zkEVM (1101), Rari Testnet (1918988905), Rari chain (1380012617), Scroll Alpha Testnet (534353), Scroll Sepolia Testnet (534353), Scroll (534352), Xai Sepolia (37714555429), Xai Mainnet(660279), zk Candy Sepolia (302)
+
+### Patch Changes
+
+- [#3767](https://github.com/thirdweb-dev/js/pull/3767) [`11b2ad0`](https://github.com/thirdweb-dev/js/commit/11b2ad05ad2bd42ecb1e2840796950ec93d6264a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose roleMap and getRoleHash
+
+- [#3764](https://github.com/thirdweb-dev/js/pull/3764) [`26d825b`](https://github.com/thirdweb-dev/js/commit/26d825bc4f0475523ea761aa18ab979557295c28) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add extension support for Lens Protocol
+
+- [#3779](https://github.com/thirdweb-dev/js/pull/3779) [`d3c8302`](https://github.com/thirdweb-dev/js/commit/d3c83023f8d802d0cae54a27239d5c98668bf4d5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improved in-app wallet sign-in speed
+
+- [#3769](https://github.com/thirdweb-dev/js/pull/3769) [`a9a3f0f`](https://github.com/thirdweb-dev/js/commit/a9a3f0f423c1ec78c2cc72507f21c5b3ca0d1dbd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix deterministic deploys with specified versions
+
+- [#3687](https://github.com/thirdweb-dev/js/pull/3687) [`f082af0`](https://github.com/thirdweb-dev/js/commit/f082af0403befffa37a448d41864f1462ede3312) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix proxy resolution. Use implementation call in case of beacon.
+
 ## 5.37.0
 
 ### Minor Changes

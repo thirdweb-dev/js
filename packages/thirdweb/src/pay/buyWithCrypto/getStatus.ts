@@ -8,6 +8,9 @@ import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoQuoteSummary = {
   fromToken: PayTokenInfo;
   toToken: PayTokenInfo;
@@ -34,6 +37,9 @@ export type BuyWithCryptoQuoteSummary = {
   createdAt: string; // ISO DATE
 };
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoTransaction = {
   client: ThirdwebClient;
   transactionHash: string;

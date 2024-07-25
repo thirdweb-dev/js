@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const xaiSepolia = /* @__PURE__ */ defineChain({
   id: 37714555429,
   name: "Xai Sepolia",

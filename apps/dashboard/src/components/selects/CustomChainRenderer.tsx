@@ -93,7 +93,7 @@ export const CustomChainRenderer = ({
             )}
 
             {switchFailed && (
-              <div className="text-destructive-foreground text-xs font-semibold">
+              <div className="text-destructive-text text-xs font-semibold">
                 Error switching network
               </div>
             )}

@@ -9,7 +9,10 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { OnboardingPaymentForm } from "./PaymentForm";
 import { OnboardingTitle } from "./Title";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY ?? "");
+// only load stripe if the key is available
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_KEY
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY)
+  : null;
 
 interface OnboardingBillingProps {
   onSave: () => void;

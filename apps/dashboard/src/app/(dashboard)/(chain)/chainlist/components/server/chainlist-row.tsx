@@ -59,7 +59,7 @@ export async function ChainListRow({
 
             {isDeprecated && (
               <ToolTipLabel label="Deprecated">
-                <CircleAlertIcon className="text-destructive-foreground size-5 z-10 " />
+                <CircleAlertIcon className="text-destructive-text size-5 z-10 " />
               </ToolTipLabel>
             )}
           </div>
@@ -115,9 +115,9 @@ function ProductIcon(props: {
       label={props.label}
       leftIcon={
         props.isEnabled ? (
-          <CheckIcon className="text-success-foreground size-4" />
+          <CheckIcon className="text-success-text size-4" />
         ) : (
-          <XIcon className="text-destructive-foreground size-4" />
+          <XIcon className="text-destructive-text size-4" />
         )
       }
     >

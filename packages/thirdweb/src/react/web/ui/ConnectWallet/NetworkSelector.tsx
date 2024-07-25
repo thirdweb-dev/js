@@ -897,6 +897,7 @@ export type UseNetworkSwitcherModalOptions = {
  *   return <button onClick={handleClick}> Switch Network </button>
  * }
  * ```
+ * @wallet
  */
 export function useNetworkSwitcherModal() {
   const activeChain = useActiveWalletChain();

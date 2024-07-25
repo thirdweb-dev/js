@@ -12,6 +12,9 @@ import {
 } from "../consts.js";
 import type { LensProfileSchema } from "./type.js";
 
+/**
+ * @extension LENS
+ */
 export type GetFullProfileParams = {
   profileId: bigint;
   client: ThirdwebClient;
@@ -24,6 +27,9 @@ export type GetFullProfileParams = {
   };
 };
 
+/**
+ * @extension LENS
+ */
 export type FullProfileResponse = {
   handle: string;
   // Timestamp of the join date

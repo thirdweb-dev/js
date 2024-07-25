@@ -20,6 +20,9 @@ export const roleMap = {
   migration: "MIGRATION_ROLE",
 } as const;
 
+/**
+ * @extension PERMISSIONS
+ */
 export type ThirdwebContractRole = keyof typeof roleMap;
 
 export const ALL_ROLES = /* @__PURE__ */ (() =>
@@ -45,6 +48,7 @@ const roleCache = new LruMap<Hex>(128);
  * ```ts
  * const adminRoleHash = getRoleHash("admin"); // 0x0000000...000000
  * ```
+ * @extension PERMISSIONS
  */
 export function getRoleHash(role: RoleInput) {
   if (roleCache.has(role)) {

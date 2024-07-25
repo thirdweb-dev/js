@@ -9,7 +9,7 @@ import { getClaimConditionById } from "../../__generated__/IDrop/read/getClaimCo
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.
- * @extension
+ * @extension ERC721
  * @example
  * ```ts
  * import { getActiveClaimCondition } from "thirdweb/extensions/erc721";

@@ -10,6 +10,9 @@ import {
   LENS_TOKEN_HANDLE_REGISTRY_ADDRESS,
 } from "../consts.js";
 
+/**
+ * @extension LENS
+ */
 export type GetHandleFromProfileIdParams = {
   profileId: bigint;
   client: ThirdwebClient;

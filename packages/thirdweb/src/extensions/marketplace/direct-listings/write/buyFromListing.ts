@@ -5,6 +5,9 @@ import { buyFromListing as generatedBuyFromListing } from "../../__generated__/I
 import { getListing } from "../read/getListing.js";
 import { isListingValid } from "../utils.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type BuyFromListingParams = {
   listingId: bigint;
   quantity: bigint;

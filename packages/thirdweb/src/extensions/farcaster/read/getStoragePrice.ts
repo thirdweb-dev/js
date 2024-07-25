@@ -5,6 +5,9 @@ import { withCache } from "../../../utils/promise/withCache.js";
 import { unitPrice } from "../__generated__/IStorageRegistry/read/unitPrice.js";
 import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
 
+/**
+ * @extension FARCASTER
+ */
 export type GetStoragePriceParams = {
   client: ThirdwebClient;
   chain?: Chain;

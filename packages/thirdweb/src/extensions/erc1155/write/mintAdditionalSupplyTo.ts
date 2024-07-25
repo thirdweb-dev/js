@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { uri } from "../__generated__/IERC1155/read/uri.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC1155/write/mintTo.js";
 
+/**
+ * @extension ERC1155
+ */
 export type MintAdditionalSupplyToParams = {
   to: string;
   tokenId: bigint;

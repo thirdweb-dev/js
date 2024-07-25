@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const scrollAlphaTestnet = /*@__PURE__*/ defineChain({
   id: 534353,
   name: "Scroll Alpha Testnet",

@@ -61,12 +61,10 @@ export function getRpcClient(
   options: RPCOptions,
 ): EIP1193RequestFn<EIP1474Methods> {
   const rpcClientMap = getRpcClientMap(options.client);
-  const chainId = options.chain.id;
+  const rpcUrl = options.chain.rpc;
 
-  if (rpcClientMap.has(options.chain.rpc)) {
-    return rpcClientMap.get(
-      options.chain.rpc,
-    ) as EIP1193RequestFn<EIP1474Methods>;
+  if (rpcClientMap.has(rpcUrl)) {
+    return rpcClientMap.get(rpcUrl) as EIP1193RequestFn<EIP1474Methods>;
   }
 
   const rpcClient: EIP1193RequestFn<EIP1474Methods> = (() => {
@@ -242,6 +240,6 @@ export function getRpcClient(
     };
   })();
 
-  rpcClientMap.set(chainId, rpcClient);
+  rpcClientMap.set(rpcUrl, rpcClient);
   return rpcClient as EIP1193RequestFn<EIP1474Methods>;
 }

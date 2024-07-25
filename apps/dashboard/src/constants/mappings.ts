@@ -1,10 +1,10 @@
 import {
   CONTRACTS_MAP,
-  type ContractType,
   type FullPublishMetadata,
   type Role,
 } from "@thirdweb-dev/sdk";
 import type { StaticImageData } from "next/image";
+import type { ContractType } from "./contracts";
 
 const FeatureIconMap: Record<ContractType, StaticImageData> = {
   "nft-drop": require("../../public/assets/tw-icons/nft-drop.png"),

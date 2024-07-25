@@ -4,19 +4,16 @@ import { render } from "../../../../test/src/react-render.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
 import { PayEmbed } from "./PayEmbed.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(!!process.env.TW_SECRET_KEY)(
   "PayEmbed - Connected state",
-  async () => {
-    const { findByRole } = render(<PayEmbed client={TEST_CLIENT} />, {
-      setConnectedWallet: true,
-    });
-
-    // continue button is shown
-    const connectWalletButton = await findByRole("button", {
-      name: "Continue",
-    });
-
+  () => {
     it("continue button is disabled if no token amount is set", async () => {
+      const { findByRole } = render(<PayEmbed client={TEST_CLIENT} />, {
+        setConnectedWallet: true,
+      });
+      const connectWalletButton: HTMLElement = await findByRole("button", {
+        name: "Continue",
+      });
       // continue button is disabled when no amount is entered
       expect(connectWalletButton).toBeDisabled();
 

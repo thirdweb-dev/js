@@ -24,6 +24,7 @@ export async function computeDeploymentInfoFromContractId(args: {
     client,
     contractId,
     publisher: args.publisher,
+    version: args.version,
   });
   return computeDeploymentInfoFromMetadata({
     client,

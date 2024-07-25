@@ -6,7 +6,7 @@ import { mainnet } from "../chains/chain-definitions/ethereum.js";
 import { signTypedData } from "../utils/signatures/sign-typed-data.js";
 import { verifyTypedData } from "./verify-typed-data.js";
 
-describe("verifyTypedData", async () => {
+describe.runIf(process.env.TW_SECRET_KEY)("verifyTypedData", async () => {
   test("valid EOA signature", async () => {
     const signature = signTypedData({
       ...typedData.basic,

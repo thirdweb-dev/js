@@ -14,6 +14,7 @@ import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
  * It includes information about which tokens to swap, the amount of tokens to swap, slippage, etc.
+ * @buyCrypto
  */
 export type GetBuyWithCryptoQuoteParams = {
   /**
@@ -103,6 +104,9 @@ export type GetBuyWithCryptoQuoteParams = {
     }
 );
 
+/**
+ * @buyCrypto
+ */
 export type QuoteTokenInfo = {
   chainId: number;
   tokenAddress: string;
@@ -169,8 +173,14 @@ type BuyWithCryptoQuoteRouteResponse = {
   bridge?: string;
 };
 
+/**
+ * @buyCrypto
+ */
 export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoQuote = {
   transactionRequest: PrepareTransactionOptions;
   approval?: PrepareTransactionOptions;

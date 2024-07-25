@@ -7,6 +7,7 @@ import type { BuyWithFiatStatus } from "./getStatus.js";
 
 /**
  * The parameters for [`getPostOnRampQuote`](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote) function
+ * @buyCrypto
  */
 export type GetPostOnRampQuoteParams = {
   /**

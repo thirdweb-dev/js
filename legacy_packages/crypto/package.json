@@ -41,7 +41,7 @@
     "js-awe": "^1.0.65",
     "tinybench": "^2.6.0",
     "typescript": "5.5.2",
-    "viem": "2.16.5"
+    "viem": "2.17.10"
   },
   "scripts": {
     "format": "biome format ./src --write",

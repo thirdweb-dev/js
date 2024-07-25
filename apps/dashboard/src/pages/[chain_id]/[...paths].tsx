@@ -93,8 +93,9 @@ const ContractPage: ThirdwebNextPage = () => {
 
       const configuredChain = supportedChainsSlugRecord[chainSlug];
       if (
+        configuredChain &&
         getDashboardChainRpc(configuredChain.chainId) !==
-        getDashboardChainRpc(chain.chainId)
+          getDashboardChainRpc(chain.chainId)
       ) {
         setContractInfo({
           chainSlug,

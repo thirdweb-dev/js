@@ -7,6 +7,9 @@ import {
 } from "../../__generated__/DropERC721/write/updateBatchBaseURI.js";
 import { getBaseURICount } from "../../__generated__/IBatchMintMetadata/read/getBaseURICount.js";
 
+/**
+ * @extension ERC721
+ */
 export type UpdateMetadataParams = {
   targetTokenId: bigint;
   newMetadata: NFTInput;

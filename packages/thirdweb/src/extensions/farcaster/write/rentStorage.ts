@@ -7,6 +7,7 @@ import { getStoragePrice } from "../read/getStoragePrice.js";
 
 /**
  * Represents the parameters for the `rentStorage` function.
+ * @extension FARCASTER
  */
 export type RentStorageParams = {
   client: ThirdwebClient;

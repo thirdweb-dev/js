@@ -6,6 +6,9 @@ import {
   getOwnedTokenIds,
 } from "./getOwnedTokenIds.js";
 
+/**
+ * @extension ERC721
+ */
 export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
 
 /**

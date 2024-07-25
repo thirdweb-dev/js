@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import type { DehydratedState } from "@tanstack/react-query";

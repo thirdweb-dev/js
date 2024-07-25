@@ -89,6 +89,24 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                   />
                 </GridItem>
                 <GridItem colSpan={3}>
+                  <Heading size="label.md">Listing ID</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <AddressCopyButton
+                    size="xs"
+                    title="listing ID"
+                    address={renderData.id.toString()}
+                  />
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <Heading size="label.md">Type</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <Text fontFamily="mono" size="body.md">
+                    {renderData.asset.type}
+                  </Text>
+                </GridItem>
+                <GridItem colSpan={3}>
                   <Heading size="label.md">Status</Heading>
                 </GridItem>
                 <GridItem colSpan={9}>
@@ -105,9 +123,32 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 </GridItem>
                 <GridItem colSpan={9}>
                   <Text fontFamily="mono" size="body.md">
-                    {BigNumber.from(renderData.quantity || "0").toString()}
+                    {BigNumber.from(renderData.quantity || "0").toString()}{" "}
+                    {/* For listings that are completed, the `quantity` would be `0`
+                    So we show this text to make it clear */}
+                    {LISTING_STATUS[renderData.status] === "Completed"
+                      ? "(Sold out)"
+                      : ""}
                   </Text>
                 </GridItem>
+
+                <GridItem colSpan={3}>
+                  <Heading size="label.md">Price</Heading>
+                </GridItem>
+                <GridItem colSpan={9}>
+                  <Text fontFamily="mono" size="body.md">
+                    {
+                      (renderData as DirectListing).currencyValuePerToken
+                        .displayValue
+                    }{" "}
+                    {(renderData as DirectListing).currencyValuePerToken.symbol}
+                  </Text>
+                </GridItem>
+
+                {/* 
+                  Todo: Add a Buy button somewhere in this section once the Dashboard is fully migrated to v5 (?)
+                  Kien is working on a prebuilt component for the Marketplace Buy Button in SDK v5 
+                */}
               </SimpleGrid>
             </Card>
             {data?.asset.metadata.properties ? (

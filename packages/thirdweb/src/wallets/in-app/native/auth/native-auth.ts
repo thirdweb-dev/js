@@ -3,7 +3,7 @@ import type { CognitoUser } from "amazon-cognito-identity-js";
 import { Auth } from "aws-amplify";
 import * as WebBrowser from "expo-web-browser";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { getDiscordLoginPath } from "../../core/authentication/getLoginPath.js";
+import { getSocialAuthLoginPath } from "../../core/authentication/getLoginPath.js";
 import {
   AuthProvider,
   type AuthStoredTokenWithCookieReturnType,
@@ -30,10 +30,8 @@ import {
   preAuth,
 } from "../helpers/auth/middleware.js";
 import {
-  DOMAIN_URL_2023,
   ROUTE_AUTH_ENDPOINT_CALLBACK,
   ROUTE_AUTH_JWT_CALLBACK,
-  ROUTE_HEADLESS_OAUTH_LOGIN,
 } from "../helpers/constants.js";
 import { createErrorMessage } from "../helpers/errors.js";
 import { isDeviceSharePresentForUser } from "../helpers/storage/local.js";
@@ -207,48 +205,14 @@ export async function validateEmailOTP(options: {
 }
 
 export async function socialLogin(
-  oauthOptions: OauthOption,
+  auth: OauthOption,
   client: ThirdwebClient,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
-  const encodedProvider = encodeURIComponent(oauthOptions.provider);
-  const headlessLoginLinkWithParams = `${ROUTE_HEADLESS_OAUTH_LOGIN}?authProvider=${encodedProvider}&baseUrl=${encodeURIComponent(
-    DOMAIN_URL_2023,
-  )}&platform=${encodeURIComponent("mobile")}`;
+  const loginUrl = `${getSocialAuthLoginPath(auth.strategy, client)}&redirectUrl=${encodeURIComponent(auth.redirectUrl)}`;
 
-  const resp = await fetch(headlessLoginLinkWithParams, {
-    headers: {
-      ...getSessionHeaders(),
-    },
-  });
-
-  if (!resp.ok) {
-    const error = await resp.json();
-    throw new Error(`Error getting headless sign in link: ${error.message}`);
-  }
-
-  const json = await resp.json();
-
-  const { platformLoginLink } = json;
-
-  // Temporary fork for discord until we migrate all methods to the new auth flow
-  const loginUrl = (() => {
-    if (oauthOptions.provider === AuthProvider.DISCORD) {
-      return `${getDiscordLoginPath(client)}&redirectUrl=${encodeURIComponent(
-        oauthOptions.redirectUrl,
-      )}`;
-    } else {
-      return `${platformLoginLink}?developerClientId=${encodeURIComponent(
-        client.clientId,
-      )}&platform=${encodeURIComponent("mobile")}&redirectUrl=${encodeURIComponent(
-        oauthOptions.redirectUrl,
-      )}&authOption=${encodedProvider}`;
-    }
-  })();
-
-  // TODO platform specific code should be extracted out
   const result = await WebBrowser.openAuthSessionAsync(
     loginUrl,
-    oauthOptions.redirectUrl,
+    auth.redirectUrl,
     {
       preferEphemeralSession: false,
       showTitle: false,
@@ -262,19 +226,18 @@ export async function socialLogin(
   }
 
   if (result.type !== "success") {
-    throw new Error(`Can't sign in with ${oauthOptions.provider}: ${result}`);
+    throw new Error(`Can't sign in with ${auth.strategy}: ${result}`);
   }
 
-  const decodedUrl = decodeURIComponent(result.url);
+  const resultURL = new URL(result.url);
+  const authResult = resultURL.searchParams.get("authResult");
+  const error = resultURL.searchParams.get("error");
 
-  const parts = decodedUrl.split("?authResult=");
-  if (parts.length < 2) {
-    // assume error
-    const error = decodedUrl.split("?error=")?.[1];
+  // assume error
+  if (error) {
     throw new Error(`Something went wrong: ${error}`);
   }
 
-  const authResult = parts[1];
   if (!authResult) {
     throw new Error("No auth result found");
   }
