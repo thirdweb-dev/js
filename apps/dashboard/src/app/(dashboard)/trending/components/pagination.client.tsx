@@ -1,12 +1,12 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationNext,
   PaginationPrevious,
-} from "../../../@/components/ui/pagination";
+} from "@/components/ui/pagination";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import React from "react";
 

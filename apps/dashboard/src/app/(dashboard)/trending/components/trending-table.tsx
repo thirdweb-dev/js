@@ -1,6 +1,3 @@
-import type { ChainMetadata } from "thirdweb/chains";
-import { shortenAddress } from "thirdweb/utils";
-import { ChainIcon } from "../../(dashboard)/(chain)/components/server/chain-icon";
 import {
   Table,
   TableBody,
@@ -9,8 +6,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../@/components/ui/table";
-import type { SortBy, TimeRange, TrendingContract } from "../../../lib/search";
+} from "@/components/ui/table";
+import type { ChainMetadata } from "thirdweb/chains";
+import { shortenAddress } from "thirdweb/utils";
+import { ChainIcon } from "../../(chain)/components/server/chain-icon";
+import type {
+  SortBy,
+  TimeRange,
+  TrendingContract,
+} from "../../../../lib/search";
 import { TablePagination } from "./pagination.client";
 import { SortingHeader } from "./sorting-header.client";
 import { TimeRangeSwitcher } from "./time-range-switcher.client";

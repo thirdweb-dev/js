@@ -3,7 +3,7 @@ import {
   type SortBy,
   type TimeRange,
   fetchTopContracts,
-} from "../../lib/search";
+} from "../../../lib/search";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {
