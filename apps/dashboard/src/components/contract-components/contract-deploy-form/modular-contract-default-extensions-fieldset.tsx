@@ -46,23 +46,25 @@ export function ModularContractDefaultExtensionsFieldset(props: {
 }) {
   const { form } = props;
 
-  // hide the extensions that don't have any install params
-  // but still keep them in the form to mainnain the order of extensions (index)
-  const installParams = props.installParams.filter(
-    (ext) => ext.params.length > 0,
-  );
+  // save the index of the extension before filtering out
+  const installParams = props.installParams
+    .map((v, i) => ({
+      ...v,
+      extensionIndex: i,
+    }))
+    .filter((v) => v.params.length > 0);
 
   return (
     <div className="py-4">
       <div className="flex flex-col gap-6">
-        {installParams.map((ext, extIndex) => {
+        {installParams.map((ext) => {
           return (
             <div key={ext.extensionName}>
               <h3 className="text-lg mb-4">{ext.extensionName}</h3>
               <div className="flex flex-col gap-3">
                 {ext.params.map((param) => {
                   const formFieldKey =
-                    `modularContractDefaultExtensionsInstallParams.${extIndex}.${param.name}` as const;
+                    `modularContractDefaultExtensionsInstallParams.${ext.extensionIndex}.${param.name}` as const;
 
                   return (
                     <FormControl
