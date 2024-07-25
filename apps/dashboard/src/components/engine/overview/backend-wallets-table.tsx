@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { shortenString } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -36,6 +35,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiExport, BiImport, BiPencil } from "react-icons/bi";
 import { getAddress } from "thirdweb";
+import { shortenAddress } from "thirdweb/utils";
 import {
   Badge,
   Button,
@@ -460,7 +460,7 @@ const SendFundsModal = ({
                     .filter((wallet) => wallet.address !== fromWallet.address)
                     .map((wallet) => (
                       <option key={wallet.address} value={wallet.address}>
-                        {shortenString(wallet.address, false)}
+                        {shortenAddress(wallet.address)}
                         {wallet.label && ` (${wallet.label})`}
                       </option>
                     ))}

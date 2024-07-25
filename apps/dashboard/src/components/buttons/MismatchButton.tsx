@@ -13,11 +13,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
-import { ChainId, useSDK, useSDKChainId } from "@thirdweb-dev/react";
+import { useSDK, useSDKChainId } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { forwardRef, useCallback, useMemo, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
+import { localhost } from "thirdweb/chains";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -241,7 +242,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
 
   const hasFaucet =
     chainInfo &&
-    (chainInfo.chainId === ChainId.Localhost ||
+    (chainInfo.chainId === localhost.id ||
       (chainInfo.faucets && chainInfo.faucets.length > 0));
 
   const requestFunds = async () => {
@@ -251,7 +252,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
         action: "click",
         label: "request-funds",
       });
-      if (chainInfo.chainId === ChainId.Localhost) {
+      if (chainInfo.chainId === localhost.id) {
         await sdk.wallet.requestFunds(10);
       } else if (chainInfo?.faucets && chainInfo.faucets.length > 0) {
         const faucet = chainInfo.faucets[0];
