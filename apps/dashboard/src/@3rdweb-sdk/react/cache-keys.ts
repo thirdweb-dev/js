@@ -1,4 +1,4 @@
-import type { ContractType } from "@thirdweb-dev/sdk";
+import type { ContractType } from "constants/contracts";
 import { ZERO_ADDRESS } from "thirdweb";
 
 export const networkKeys = {

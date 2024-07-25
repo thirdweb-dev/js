@@ -10,8 +10,11 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import mantleBanner from "./temp-assets/mantle-banner.jpeg";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
+import vanarBanner from "./temp-assets/vanar-banner.png";
+import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import type { ChainMetadataWithServices } from "./types/chain";
+
 // END TEMPORARY
 
 const THIRDWEB_API_HOST =
@@ -149,6 +152,18 @@ const chainMetaRecord = {
       title: "Fully EVM-compatible Bitcoin L2",
       buttonLink: "https://rootstock.io/",
       buttonText: "Learn more",
+    },
+  },
+  // vanar
+  2040: {
+    headerImgUrl: vanarBanner.src,
+    about:
+      "Discover VANAR – The future of blockchain technology tailored for global adoption. This cutting-edge, L1 EVM blockchain offers high-speed transactions and scalability, powered by Google's renewable energy sources. With a suite of apps, low fixed transaction costs and a zero-cost option for brands, VANAR makes blockchain scalable, accessible and affordable.",
+    cta: {
+      buttonLink: "https://docs.vanarchain.com",
+      buttonText: "Learn more",
+      backgroundImageUrl: vanarCTABG.src,
+      title: "",
     },
   },
 } satisfies Record<number, ChainMetadata>;

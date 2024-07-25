@@ -23,7 +23,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import { shortenString } from "@thirdweb-dev/react";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
@@ -34,6 +33,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
+import { shortenAddress } from "thirdweb/utils";
 import {
   Button,
   FormHelperText,
@@ -280,7 +280,7 @@ const EditModal = ({
               >
                 {backendWallets?.map((wallet) => (
                   <option key={wallet.address} value={wallet.address}>
-                    {shortenString(wallet.address, false)}
+                    {shortenAddress(wallet.address)}
                     {wallet.label && ` (${wallet.label})`}
                   </option>
                 ))}

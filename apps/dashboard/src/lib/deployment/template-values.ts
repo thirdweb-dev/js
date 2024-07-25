@@ -1,4 +1,4 @@
-import type { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import type { SUPPORTED_CHAIN_ID } from "constants/chains";
 import type { SolidityType } from "lib/solidity-types";
 
 interface ReplacementProps {

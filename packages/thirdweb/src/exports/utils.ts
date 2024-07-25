@@ -169,3 +169,5 @@ export {
   getClaimParams,
   type GetClaimParamsOptions,
 } from "../utils/extensions/drops/get-claim-params.js";
+
+export type { NFTMetadata, NFTInput } from "../utils/nft/parseNft.js";
