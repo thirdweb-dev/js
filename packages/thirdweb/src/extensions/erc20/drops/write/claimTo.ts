@@ -6,6 +6,7 @@ import { decimals } from "../../read/decimals.js";
 
 /**
  * Represents the parameters for claiming an ERC20 token.
+ * @extension ERC20
  */
 export type ClaimToParams = {
   to: Address;

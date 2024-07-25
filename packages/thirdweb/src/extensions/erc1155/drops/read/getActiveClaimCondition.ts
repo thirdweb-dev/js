@@ -13,7 +13,7 @@ export type GetActiveClaimConditionParams = GetActiveClaimConditionIdParams;
  * @param options - The transaction options.
  * @returns A promise that resolves to the active claim condition.
  * @throws An error if the claim condition is unsupported.
- * @extension
+ * @extension ERC1155
  * @example
  * ```ts
  * import { getActiveClaimCondition } from "thirdweb/extensions/erc1155";

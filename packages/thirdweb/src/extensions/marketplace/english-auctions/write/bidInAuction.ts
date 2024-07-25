@@ -5,6 +5,9 @@ import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEngl
 import { getAuction } from "../read/getAuction.js";
 import { getWinningBid } from "../read/getWinningBid.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type BidInAuctionParams = {
   auctionId: bigint;
 } & (

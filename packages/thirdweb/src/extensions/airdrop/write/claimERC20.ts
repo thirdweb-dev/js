@@ -8,6 +8,9 @@ import { fetchProofsERC20 } from "../../../utils/extensions/airdrop/fetch-proofs
 import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.js";
 import { claimERC20 as generatedClaimERC20 } from "../__generated__/Airdrop/write/claimERC20.js";
 
+/**
+ * @extension Airdrop
+ */
 export type ClaimERC20Params = {
   tokenAddress: string;
   recipient: string;

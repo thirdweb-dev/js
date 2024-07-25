@@ -12,6 +12,9 @@ import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type CreateListingParams = {
   /**
    * The contract address of the asset being listed

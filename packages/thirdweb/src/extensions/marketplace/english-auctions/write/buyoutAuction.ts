@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
 import { getAuction } from "../read/getAuction.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type BuyoutAuctionParams = {
   auctionId: bigint;
 };

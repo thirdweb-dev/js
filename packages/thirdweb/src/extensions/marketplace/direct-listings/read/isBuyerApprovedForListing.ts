@@ -2,6 +2,9 @@ import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getListing } from "./getListing.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type IsBuyerApprovedForListingParams = {
   listingId: bigint;
   buyer: Address;

@@ -25,7 +25,7 @@ const chain = ANVIL_CHAIN;
  * The ClaimButton uses TransactionButton under the hood
  * So all we need to test is whether it gives the correct PreparedTransaction to the TransactionButton
  */
-describe("ClaimButton", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("ClaimButton", () => {
   // ERC721
   it("should throw an error if not an ERC721 contract", async () => {
     const contract = USDT_CONTRACT;

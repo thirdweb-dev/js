@@ -7,6 +7,9 @@ import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
 import { LENS_HUB_ADDRESS } from "../consts.js";
 import type { LensProfileSchema } from "./type.js";
 
+/**
+ * @extension LENS
+ */
 export type GetProfileMetadataParams = {
   profileId: bigint;
   client: ThirdwebClient;

@@ -1,6 +1,11 @@
 import { concat } from "viem";
 import type { Chain } from "../../../chains/types.js";
-import type { ThirdwebContract } from "../../../contract/contract.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import {
+  type ThirdwebContract,
+  getContract,
+} from "../../../contract/contract.js";
+import { getNonce } from "../../../extensions/erc4337/__generated__/IEntryPoint/read/getNonce.js";
 import { getDefaultGasOverrides } from "../../../gas/fee-data.js";
 import { encode } from "../../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
@@ -30,7 +35,7 @@ import {
   getDefaultBundlerUrl,
 } from "./constants.js";
 import { getPaymasterAndData } from "./paymaster.js";
-import { randomNonce } from "./utils.js";
+import { generateRandomUint192 } from "./utils.js";
 
 /**
  * Wait for the user operation to be mined.
@@ -156,8 +161,13 @@ export async function createUnsignedUserOp(args: {
     }
   }
 
-  // const nonce = BigInt(transaction.nonce || randomNonce());
-  const nonce = randomNonce(); // FIXME getNonce should be overrideable by the wallet
+  const nonce = await getAccountNonce({
+    accountContract,
+    chain,
+    client,
+    entrypointAddress: overrides?.entrypointAddress,
+    getNonceOverride: overrides?.getAccountNonce,
+  });
 
   const partialOp: UserOperation = {
     sender: accountContract.address,
@@ -297,6 +307,34 @@ async function getAccountInitCode(options: {
     createAccountOverride,
   });
   return concat([factoryContract.address as Hex, await encode(deployTx)]);
+}
+
+async function getAccountNonce(options: {
+  accountContract: ThirdwebContract;
+  chain: Chain;
+  client: ThirdwebClient;
+  entrypointAddress?: string;
+  getNonceOverride?: (accountContract: ThirdwebContract) => Promise<bigint>;
+}) {
+  const {
+    accountContract,
+    chain,
+    client,
+    entrypointAddress,
+    getNonceOverride,
+  } = options;
+  if (getNonceOverride) {
+    return getNonceOverride(accountContract);
+  }
+  return getNonce({
+    contract: getContract({
+      address: entrypointAddress || ENTRYPOINT_ADDRESS_v0_6,
+      chain,
+      client,
+    }),
+    key: generateRandomUint192(),
+    sender: accountContract.address,
+  });
 }
 
 /**

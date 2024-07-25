@@ -2,6 +2,9 @@ import type { Abi } from "abitype";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
 
+/**
+ * @contract
+ */
 export type ContractOptions<abi extends Abi = []> = {
   client: ThirdwebClient;
   address: string;
@@ -9,6 +12,9 @@ export type ContractOptions<abi extends Abi = []> = {
   readonly abi?: abi;
 };
 
+/**
+ * @contract
+ */
 export type ThirdwebContract<abi extends Abi = []> = Readonly<
   ContractOptions<abi>
 >;

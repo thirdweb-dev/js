@@ -8,6 +8,9 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { NFT, NFTInput } from "../../../../utils/nft/parseNft.js";
 
+/**
+ * @extension ERC1155
+ */
 export type UpdateMetadataParams = {
   targetTokenId: bigint;
   newMetadata: NFTInput;

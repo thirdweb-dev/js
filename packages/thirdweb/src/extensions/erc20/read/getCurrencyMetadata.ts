@@ -4,6 +4,9 @@ import { name } from "../../common/read/name.js";
 import { symbol } from "../../common/read/symbol.js";
 import { decimals } from "../__generated__/IERC20/read/decimals.js";
 
+/**
+ * @extension ERC20
+ */
 export type GetCurrencyMetadataResult = {
   name: string;
   symbol: string;

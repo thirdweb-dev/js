@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const mantaPacific = /* @__PURE__ */ defineChain({
   id: 169,
   name: "Manta Pacific Mainnet",

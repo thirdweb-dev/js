@@ -4,6 +4,9 @@ import type { ClaimConditionsInput } from "../../../../utils/extensions/drops/ty
 import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
 import { decimals } from "../../read/decimals.js";
 
+/**
+ * @extension ERC20
+ */
 export type SetClaimConditionsParams = {
   phases: ClaimConditionsInput[];
   resetClaimEligibility?: boolean;

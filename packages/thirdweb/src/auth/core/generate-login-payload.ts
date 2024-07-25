@@ -5,6 +5,9 @@ import {
 } from "./constants.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
+/**
+ * @auth
+ */
 export type GenerateLoginPayloadParams = {
   address: string;
   chainId?: number;

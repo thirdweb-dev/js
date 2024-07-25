@@ -8,6 +8,7 @@ import { getPayBuyWithFiatStatusEndpoint } from "../utils/definitions.js";
 
 /**
  * Parameters for the [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
+ * @buyCrypto
  */
 export type GetBuyWithFiatStatusParams = {
   /**
@@ -32,6 +33,7 @@ export type ValidBuyWithFiatStatus = Exclude<
  * The returned object from [`getBuyWithFiatStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatStatus) function
  *
  * If the in invalid intentId is provided, the object will have a status of "NOT_FOUND" and no other fields.
+ * @buyCrypto
  */
 export type BuyWithFiatStatus =
   | {
