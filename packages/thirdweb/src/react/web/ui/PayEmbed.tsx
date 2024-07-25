@@ -208,6 +208,7 @@ export function PayEmbed(props: PayEmbedProps) {
             connectOptions={props.connectOptions}
             buyForTx={undefined}
             onBack={undefined}
+            socialLoginMode={props.connectOptions?.socialLoginMode || "popup"}
           />
         </div>
         {/* this does not need to persist so we can just show-hide it with JS */}
@@ -362,4 +363,9 @@ export type PayEmbedConnectOptions = {
    * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
    */
   auth?: SiweAuthOptions;
+
+  /**
+   * Determines how OAuth login pages are opened, defaults to 'popup'
+   */
+  socialLoginMode?: "popup" | "redirect";
 };

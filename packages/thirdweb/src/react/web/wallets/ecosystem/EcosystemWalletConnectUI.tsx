@@ -35,6 +35,7 @@ function EcosystemWalletConnectUI(props: {
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
   };
+  socialLoginMode: "popup" | "redirect";
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
@@ -99,6 +100,7 @@ function EcosystemWalletConnectUI(props: {
         chain={props.chain}
         client={props.client}
         size={props.size}
+        socialLoginMode={props.socialLoginMode}
       />
     );
   }
@@ -115,6 +117,7 @@ function EcosystemWalletConnectUI(props: {
       size={props.size}
       connectLocale={props.connectLocale}
       meta={props.meta}
+      socialLoginMode={props.socialLoginMode}
     />
   );
 }

@@ -25,6 +25,7 @@ function InAppWalletSelectionUI(props: {
   recommendedWallets: Wallet[] | undefined;
   chain: Chain | undefined;
   size: "compact" | "wide";
+  socialLoginMode: "popup" | "redirect";
 }) {
   const { screen } = useScreenContext();
   const setData = useSetSelectionData();
@@ -59,6 +60,7 @@ function InAppWalletSelectionUI(props: {
 
   return (
     <ConnectWalletSocialOptions
+      socialLoginMode={props.socialLoginMode}
       locale={locale}
       wallet={props.wallet}
       done={props.done}

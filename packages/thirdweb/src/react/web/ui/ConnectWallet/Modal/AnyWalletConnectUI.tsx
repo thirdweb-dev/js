@@ -64,6 +64,7 @@ export function AnyWalletConnectUI(props: {
       }
     | undefined;
   connectLocale: ConnectLocale;
+  socialLoginMode: "popup" | "redirect";
 }) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const { wallet } = props;
@@ -267,6 +268,7 @@ export function AnyWalletConnectUI(props: {
           size={props.size}
           connectLocale={props.connectLocale}
           meta={props.meta}
+          socialLoginMode={props.socialLoginMode}
         />
       </Suspense>
     );
@@ -276,6 +278,7 @@ export function AnyWalletConnectUI(props: {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <EcosystemWalletConnectUI
+          socialLoginMode={props.socialLoginMode}
           wallet={props.wallet as Wallet<EcosystemWalletId>}
           done={props.done}
           goBack={props.onBack}

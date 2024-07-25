@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
+import { getUrlToken } from "../../../../wallets/in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   type ConnectionManager,
@@ -7,6 +8,7 @@ import {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "../../../../wallets/manager/index.js";
+import { setLastAuthProvider } from "../../utils/storage.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
 import type { AutoConnectProps } from "../connection/types.js";
 import { useConnectCore } from "./useConnect.js";
@@ -32,12 +34,23 @@ export function useAutoConnectCore(
   const autoConnect = async (): Promise<boolean> => {
     let autoConnected = false;
     isAutoConnecting.setValue(true);
-    const [lastConnectedWalletIds, lastActiveWalletId] = await Promise.all([
+    let [lastConnectedWalletIds, lastActiveWalletId] = await Promise.all([
       getStoredConnectedWalletIds(storage),
       getStoredActiveWalletId(storage),
     ]);
 
-    // if no wallets were last connected
+    const { authResult, walletId, authProvider } = getUrlToken();
+    if (authResult && walletId) {
+      lastActiveWalletId = walletId;
+      lastConnectedWalletIds = lastConnectedWalletIds?.includes(walletId)
+        ? lastConnectedWalletIds
+        : [walletId, ...(lastConnectedWalletIds || [])];
+    }
+    if (authProvider) {
+      await setLastAuthProvider(authProvider, storage);
+    }
+
+    // if no wallets were last connected or we didn't receive an auth token
     if (!lastConnectedWalletIds) {
       return autoConnected;
     }
@@ -48,6 +61,7 @@ export function useAutoConnectCore(
       return wallet.autoConnect({
         client: props.client,
         chain: lastConnectedChain ?? undefined,
+        authResult,
       });
     }
 
@@ -61,7 +75,7 @@ export function useAutoConnectCore(
         setConnectionStatus("connecting"); // only set connecting status if we are connecting the last active EOA
         await timeoutPromise(handleWalletConnection(activeWallet), {
           ms: timeout,
-          message: `AutoConnect timeout : ${timeout}ms limit exceeded.`,
+          message: `AutoConnect timeout: ${timeout}ms limit exceeded.`,
         });
 
         // connected wallet could be activeWallet or smart wallet

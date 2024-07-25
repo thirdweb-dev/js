@@ -70,6 +70,7 @@ export type WalletSelectorProps = {
   };
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
+  socialLoginMode: "popup" | "redirect";
   recommendedWallets: Wallet[] | undefined;
   isEmbed: boolean;
   chain: Chain | undefined;
@@ -114,6 +115,7 @@ export function WalletSelector(props: WalletSelectorProps) {
         client={props.client}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
+        socialLoginMode={props.socialLoginMode}
       />
     );
   }
@@ -267,6 +269,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   if (!isCompact) {
     topSection = (
       <WalletSelection
+        socialLoginMode={props.socialLoginMode}
         wallets={nonLocalWalletConfigs}
         selectWallet={handleSelect}
         done={props.done}
@@ -294,6 +297,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     if (socialWallets.length === 0) {
       topSection = (
         <WalletSelection
+          socialLoginMode={props.socialLoginMode}
           wallets={nonLocalWalletConfigs}
           selectWallet={handleSelect}
           done={props.done}
@@ -338,6 +342,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         topSection = (
           <Container px="xs">
             <WalletSelection
+              socialLoginMode={props.socialLoginMode}
               wallets={socialWallets}
               selectWallet={handleSelect}
               done={props.done}
@@ -418,6 +423,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                     recommendedWallets={props.recommendedWallets}
                     chain={props.chain}
                     showAllWallets={props.showAllWallets}
+                    socialLoginMode={props.socialLoginMode}
                   />
                 </Container>
 
@@ -445,6 +451,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
       else {
         topSection = (
           <WalletSelection
+            socialLoginMode={props.socialLoginMode}
             wallets={eoaWallets}
             selectWallet={handleSelect}
             done={props.done}
@@ -578,6 +585,7 @@ const WalletSelection: React.FC<{
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   chain: Chain | undefined;
+  socialLoginMode: "popup" | "redirect";
 }> = (props) => {
   const wallets = sortWallets(props.wallets, props.recommendedWallets);
   const { screen } = useScreenContext();
@@ -600,6 +608,7 @@ const WalletSelection: React.FC<{
             {wallet.id === "inApp" && props.size === "compact" ? (
               <Suspense fallback={<LoadingScreen height="195px" />}>
                 <InAppWalletSelectionUI
+                  socialLoginMode={props.socialLoginMode}
                   done={() => props.done(wallet)}
                   select={() => props.selectWallet(wallet)}
                   wallet={wallet as Wallet<"inApp">}

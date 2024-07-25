@@ -89,6 +89,7 @@ export type BuyScreenProps = {
   onDone: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
   isEmbed: boolean;
+  socialLoginMode: "popup" | "redirect";
 };
 
 /**
@@ -125,6 +126,7 @@ type BuyScreenContentProps = {
   onDone: () => void;
   connectOptions: PayEmbedConnectOptions | undefined;
   isEmbed: boolean;
+  socialLoginMode: "popup" | "redirect";
 };
 
 /**
@@ -208,6 +210,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         connectLocale={props.connectLocale}
         isEmbed={props.isEmbed}
         onBack={() => setScreen(screen.backScreen)}
+        socialLoginMode={props.socialLoginMode}
         onSelect={(w) => {
           const account = w.getAccount();
           const chain = w.getChain();

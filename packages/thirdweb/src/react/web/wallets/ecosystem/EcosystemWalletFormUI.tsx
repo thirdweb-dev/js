@@ -30,6 +30,7 @@ export type EcosystemWalletFormUIProps = {
   client: ThirdwebClient;
   chain: Chain | undefined;
   connectLocale: ConnectLocale;
+  socialLoginMode: "popup" | "redirect";
 };
 
 /**
@@ -67,7 +68,10 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
         center="y"
         p={isCompact ? undefined : "lg"}
       >
-        <ConnectWalletSocialOptions {...props} />
+        <ConnectWalletSocialOptions
+          {...props}
+          socialLoginMode={props.socialLoginMode}
+        />
       </Container>
 
       {isCompact &&

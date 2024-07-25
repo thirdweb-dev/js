@@ -161,6 +161,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           className={props.className}
           modalSize={modalSize}
           style={props.style}
+          socialLoginMode={props.socialLoginMode || "popup"}
         />
         {autoConnectComp}
       </WalletUIStatesProvider>
@@ -197,6 +198,7 @@ const ConnectEmbedContent = (props: {
   onConnect: ((wallet: Wallet) => void) | undefined;
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
+  socialLoginMode: "popup" | "redirect";
   walletConnect:
     | {
         projectId?: string;
@@ -235,6 +237,7 @@ const ConnectEmbedContent = (props: {
   } else {
     content = (
       <ConnectModalContent
+        socialLoginMode={props.socialLoginMode}
         shouldSetActive={true}
         screenSetup={screenSetup}
         isOpen={true}

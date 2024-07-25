@@ -31,6 +31,7 @@ export type InAppWalletFormUIProps = {
   };
   client: ThirdwebClient;
   chain: Chain | undefined;
+  socialLoginMode: "popup" | "redirect";
 };
 
 /**
@@ -92,6 +93,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
       >
         <ConnectWalletSocialOptions
           {...props}
+          socialLoginMode={props.socialLoginMode}
           locale={props.inAppWalletLocale}
         />
       </Container>

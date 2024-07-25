@@ -27,6 +27,7 @@ export type SingleStepAuthArgsType =
       strategy: SocialAuthOption;
       openedWindow?: Window;
       closeOpenedWindow?: (window: Window) => void;
+      // @deprecated - Use redirect
       redirectUrl?: string;
     }
   | { strategy: "jwt"; jwt: string; encryptionKey: string }

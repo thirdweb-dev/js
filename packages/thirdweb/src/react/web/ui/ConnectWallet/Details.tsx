@@ -117,6 +117,7 @@ export const ConnectedWalletDetails: React.FC<{
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   connectOptions: DetailsModalConnectOptions | undefined;
+  socialLoginMode: "popup" | "redirect";
 }> = (props) => {
   const { connectLocale: locale, client } = props;
 
@@ -151,6 +152,7 @@ export const ConnectedWalletDetails: React.FC<{
         chains={props.chains}
         displayBalanceToken={props.detailsButton?.displayBalanceToken}
         connectOptions={props.connectOptions}
+        socialLoginMode={props.socialLoginMode}
       />,
     );
   }
@@ -254,6 +256,7 @@ function DetailsModal(props: {
   chains: Chain[];
   displayBalanceToken?: Record<number, string>;
   connectOptions: DetailsModalConnectOptions | undefined;
+  socialLoginMode: "popup" | "redirect";
 }) {
   const [screen, setScreen] = useState<WalletDetailsModalScreen>("main");
   const { disconnect } = useDisconnect();
@@ -671,6 +674,7 @@ function DetailsModal(props: {
         activeAccount={activeAccount}
         activeChain={walletChain}
         activeWallet={activeWallet}
+        socialLoginMode={props.socialLoginMode}
       />
     );
   }
@@ -823,6 +827,7 @@ function DetailsModal(props: {
         onDone={closeModal}
         connectOptions={undefined}
         buyForTx={undefined}
+        socialLoginMode={props.socialLoginMode}
       />
     );
   }
@@ -1060,6 +1065,7 @@ export type DetailsModalConnectOptions = {
   chains?: Chain[];
   recommendedWallets?: Wallet[];
   showAllWallets?: boolean;
+  socialLoginMode?: "popup" | "redirect";
 };
 
 export type UseWalletDetailsModalOptions = {
@@ -1328,6 +1334,7 @@ export function useWalletDetailsModal() {
             }}
             chains={props.chains || []}
             connectOptions={props.connectOptions}
+            socialLoginMode={props.connectOptions?.socialLoginMode || "popup"}
           />,
         );
       })

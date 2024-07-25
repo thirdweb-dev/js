@@ -47,6 +47,7 @@ export function SmartConnectUI(props: {
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   connectLocale: ConnectLocale;
+  socialLoginMode: "popup" | "redirect";
   walletConnect:
     | {
         projectId?: string;
@@ -77,6 +78,7 @@ export function SmartConnectUI(props: {
         size={props.size}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
+        socialLoginMode={props.socialLoginMode}
       />
     );
   }

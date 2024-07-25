@@ -7,6 +7,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   type AuthOption,
@@ -37,7 +38,7 @@ import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import type { InAppWalletLocale } from "./locale/types.js";
-import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { openOauthSignInWindow } from "./oauthSignIn.js";
 
 export type ConnectWalletSelectUIState =
   | undefined
@@ -69,6 +70,7 @@ export type ConnectWalletSocialOptionsProps = {
   chain: Chain | undefined;
   client: ThirdwebClient;
   size: "compact" | "wide";
+  socialLoginMode: "popup" | "redirect";
 };
 
 /**
@@ -164,6 +166,14 @@ export const ConnectWalletSocialOptions = (
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
+    if (props.socialLoginMode === "redirect") {
+      return loginWithOauthRedirect({
+        authOption: strategy,
+        client: props.client,
+        ecosystem: ecosystemInfo,
+      });
+    }
+
     try {
       const socialLoginWindow = openOauthSignInWindow({
         authOption: strategy,
@@ -208,7 +218,7 @@ export const ConnectWalletSocialOptions = (
       // Note: do not call done() here, it will be called InAppWalletSocialLogin component
       // we simply trigger the connect and save promise here - its resolution is handled in InAppWalletSocialLogin
     } catch (e) {
-      console.error(`Error sign in with ${strategy}`, e);
+      console.error(`Error signing in with ${strategy}`, e);
     }
   };
 

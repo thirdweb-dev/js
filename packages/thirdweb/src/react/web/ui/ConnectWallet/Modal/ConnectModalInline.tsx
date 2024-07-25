@@ -64,6 +64,7 @@ export type ConnectModalInlineProps = {
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
   wallets: Wallet[];
+  socialLoginMode: "popup" | "redirect";
   walletConnect:
     | {
         projectId?: string;
@@ -97,6 +98,7 @@ export const ConnectModalInline = (props: ConnectModalInlineProps) => {
         recommendedWallets={props.recommendedWallets}
         showAllWallets={props.showAllWallets}
         chains={props.chains}
+        socialLoginMode={props.socialLoginMode}
         walletConnect={props.walletConnect}
       />
     </WalletUIStatesProvider>
@@ -127,6 +129,7 @@ function ConnectModalInlineContent(props: {
   recommendedWallets: Wallet[] | undefined;
   showAllWallets: boolean | undefined;
   wallets: Wallet[];
+  socialLoginMode: "popup" | "redirect";
   walletConnect:
     | {
         projectId?: string;
@@ -168,6 +171,7 @@ function ConnectModalInlineContent(props: {
         walletConnect={props.walletConnect}
         modalHeader={undefined}
         walletIdsToHide={undefined}
+        socialLoginMode={props.socialLoginMode}
       />
 
       {/* close icon */}

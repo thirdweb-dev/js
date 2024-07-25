@@ -145,6 +145,7 @@ function Modal(
         wallets={wallets}
         chains={props.chains}
         walletConnect={props.walletConnect}
+        socialLoginMode={props.socialLoginMode || "popup"}
       />
     </WalletUIStatesProvider>
   );
@@ -433,4 +434,9 @@ export type UseConnectModalOptions = {
    * If you want to hide the branding, set this prop to `false`
    */
   showThirdwebBranding?: boolean;
+
+  /**
+   * How OAuth pages should open on web, defaults to popup.
+   */
+  socialLoginMode?: "popup" | "redirect";
 };

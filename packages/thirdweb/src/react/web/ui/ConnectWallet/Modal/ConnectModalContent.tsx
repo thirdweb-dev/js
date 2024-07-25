@@ -51,6 +51,7 @@ export const ConnectModalContent = (props: {
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
   };
+  socialLoginMode: "popup" | "redirect";
   welcomeScreen: WelcomeScreen | undefined;
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
@@ -157,6 +158,7 @@ export const ConnectModalContent = (props: {
       size={props.size}
       modalHeader={props.modalHeader}
       walletIdsToHide={props.walletIdsToHide}
+      socialLoginMode={props.socialLoginMode}
     />
   );
 
@@ -204,6 +206,7 @@ export const ConnectModalContent = (props: {
           client={props.client}
           walletConnect={props.walletConnect}
           connectLocale={props.connectLocale}
+          socialLoginMode={props.socialLoginMode}
         />
       );
     }
@@ -222,6 +225,7 @@ export const ConnectModalContent = (props: {
         client={props.client}
         meta={props.meta}
         size={props.size}
+        socialLoginMode={props.socialLoginMode}
         walletConnect={props.walletConnect}
         connectLocale={props.connectLocale}
       />

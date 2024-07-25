@@ -141,6 +141,7 @@ export function ConnectButton(props: ConnectButtonProps) {
         showAllWallets={props.showAllWallets}
         walletConnect={props.walletConnect}
         wallets={wallets}
+        socialLoginMode={props.socialLoginMode || "popup"}
       />
       {autoConnectComp}
     </WalletUIStatesProvider>
@@ -326,6 +327,7 @@ function ConnectButtonInner(
         walletConnect: props.walletConnect,
         wallets: props.wallets,
       }}
+      socialLoginMode={props.socialLoginMode || "popup"}
     />
   );
 }

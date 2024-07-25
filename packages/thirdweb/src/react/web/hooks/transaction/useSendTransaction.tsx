@@ -229,6 +229,7 @@ function ModalContent(props: ModalProps) {
       }}
       connectOptions={undefined}
       onBack={undefined}
+      socialLoginMode={"popup"}
     />
   );
 }

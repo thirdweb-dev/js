@@ -32,6 +32,7 @@ function InAppWalletConnectUI(props: {
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
   };
+  socialLoginMode: "popup" | "redirect";
   client: ThirdwebClient;
   chain: Chain | undefined;
   connectLocale: ConnectLocale;
@@ -102,12 +103,14 @@ function InAppWalletConnectUI(props: {
         chain={props.chain}
         client={props.client}
         size={props.size}
+        socialLoginMode={props.socialLoginMode}
       />
     );
   }
 
   return (
     <InAppWalletFormUIScreen
+      socialLoginMode={props.socialLoginMode}
       select={() => {}}
       connectLocale={props.connectLocale}
       inAppWalletLocale={locale}

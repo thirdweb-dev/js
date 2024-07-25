@@ -48,6 +48,7 @@ type ConnectModalOptions = {
         projectId?: string;
       }
     | undefined;
+  socialLoginMode: "popup" | "redirect";
 };
 
 /**
@@ -130,6 +131,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
       }}
     >
       <ConnectModalContent
+        socialLoginMode={props.socialLoginMode}
         shouldSetActive={props.shouldSetActive}
         screenSetup={screenSetup}
         setModalVisibility={setModalVisibility}

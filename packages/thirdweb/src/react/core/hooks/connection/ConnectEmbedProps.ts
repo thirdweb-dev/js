@@ -282,4 +282,9 @@ export type ConnectEmbedProps = {
    * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
    */
   auth?: SiweAuthOptions;
+
+  /**
+   * How the OAuth login page opens, defaults to 'popup'
+   */
+  socialLoginMode?: "popup" | "redirect";
 };

@@ -26,6 +26,7 @@ export type WalletSwitcherConnectionScreenProps = {
         projectId?: string;
       }
     | undefined;
+  socialLoginMode: "popup" | "redirect";
   onBack: () => void;
 };
 
@@ -77,6 +78,7 @@ export function WalletSwitcherConnectionScreen(
         title: "Connect",
         onBack: props.onBack,
       }}
+      socialLoginMode={props.socialLoginMode}
       walletIdsToHide={connectedWallets.map((x) => x.id)}
     />
   );

@@ -41,7 +41,6 @@ function getOauthLoginPath(
 }
 
 /**
- *
  * @internal
  */
 export function openOauthSignInWindow({
@@ -56,12 +55,13 @@ export function openOauthSignInWindow({
   ecosystem?: Ecosystem;
 }) {
   // open the popup in the center of the screen
+  // c
   const { height, width } = getWidthAndHeight(authOption);
   const top = (window.innerHeight - height) / 2;
   const left = (window.innerWidth - width) / 2;
 
   const win = window.open(
-    getOauthLoginPath(authOption, client, ecosystem),
+    `${getOauthLoginPath(authOption, client, ecosystem)}&redirectUrl=${encodeURIComponent("tg://msg")}`,
     undefined,
     `width=${width}, height=${height}, top=${top}, left=${left}`,
   );
@@ -137,7 +137,7 @@ const spinnerWindowHtml = `
   @keyframes spin {
     100% {
       transform: rotate(360deg);
-    }
+        }
   }
 </style>
 `;
