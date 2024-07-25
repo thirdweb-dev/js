@@ -2466,14 +2466,26 @@ export class ContractDeployer extends RPCConnectionHandler {
           addresses: [create2FactoryAddress],
         });
 
-        const deploymentInfo = await getDeploymentInfo(
-          publishMetadataUri,
-          this.storage,
-          this.getProvider(),
-          create2FactoryAddress,
-          this.options.clientId,
-          this.options.secretKey,
-        );
+        let deploymentInfo
+        if(extendedMetadata.routerType === "modular") {
+          deploymentInfo = await getModularDeploymentInfo(
+            publishMetadataUri,
+            this.storage,
+            this.getProvider(),
+            create2FactoryAddress,
+            this.options.clientId,
+            this.options.secretKey,
+          );
+        } else {
+          deploymentInfo = await getDeploymentInfo(
+            publishMetadataUri,
+            this.storage,
+            this.getProvider(),
+            create2FactoryAddress,
+            this.options.clientId,
+            this.options.secretKey,
+          );
+        }
 
         const transactionsToSend = deploymentInfo.filter(
           (i) => i.transaction.data && i.transaction.data.length > 0,
