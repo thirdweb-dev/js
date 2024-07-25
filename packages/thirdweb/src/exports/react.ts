@@ -146,3 +146,7 @@ export {
  */
 export { ClaimButton } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/index.js";
 export type { ClaimButtonProps } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/types.js";
+export {
+  EnsAvatar,
+  type EnsAvatarProps,
+} from "../react/web/ui/prebuilt/EnsAvatar/index.js";
