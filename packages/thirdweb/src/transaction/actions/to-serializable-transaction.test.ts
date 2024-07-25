@@ -4,6 +4,8 @@ import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 
+import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
+import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { toWei } from "../../utils/units.js";
 import {
   type PreparedTransaction,
@@ -399,5 +401,20 @@ describe("toSerializableTransaction", () => {
         }),
       ).not.toThrow();
     });
+  });
+
+  test("should respect 0 maxPriorityFeePerGas chains", async () => {
+    const serializableTransaction = await toSerializableTransaction({
+      transaction: prepareTransaction({
+        to: TEST_WALLET_B,
+        chain: arbitrumSepolia,
+        value: toWei("0.000001"),
+        client: TEST_CLIENT,
+      }),
+      from: ZERO_ADDRESS,
+    });
+
+    // gasPrice should be undefined for arbSepolia which has 0 maxPriorityFeePerGas
+    expect(serializableTransaction.gasPrice).toBe(undefined);
   });
 });
