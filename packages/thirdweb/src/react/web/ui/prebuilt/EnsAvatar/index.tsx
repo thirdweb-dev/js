@@ -1,7 +1,7 @@
 import { MediaRenderer } from "src/exports/react.js";
 import {
-  resolveAvatar,
   type ResolveAvatarOptions,
+  resolveAvatar,
 } from "../../../../../extensions/ens/resolve-avatar.js";
 import type { MediaRendererProps } from "../../MediaRenderer/types.js";
 
