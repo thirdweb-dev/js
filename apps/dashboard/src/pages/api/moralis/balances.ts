@@ -1,4 +1,4 @@
-import type { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import type { SUPPORTED_CHAIN_ID } from "constants/chains";
 import { utils } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ZERO_ADDRESS, createThirdwebClient, isAddress } from "thirdweb";
