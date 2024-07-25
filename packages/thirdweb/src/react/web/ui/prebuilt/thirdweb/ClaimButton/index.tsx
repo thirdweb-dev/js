@@ -87,6 +87,7 @@ export function ClaimButton(props: ClaimButtonProps) {
     chain,
   });
   const account = useActiveAccount();
+  // TODO (pay): fetch nft metadata and set it as the payOptions metadata
   return (
     <TransactionButton
       transaction={async () =>
