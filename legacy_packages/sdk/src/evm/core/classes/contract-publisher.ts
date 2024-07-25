@@ -197,11 +197,13 @@ export class ContractPublisher extends RPCConnectionHandler {
         `Could not resolve published metadata URI from ${compilerMetadataUri}`,
       );
     }
-    return await Promise.all(
+    const res = await Promise.allSettled(
       publishedMetadataUri
         .filter((uri) => uri.length > 0)
         .map((uri) => this.fetchFullPublishMetadata(uri)),
-    );
+    )
+
+    return res.filter((r) => r.status === "fulfilled").map((r) => r.value);
   }
 
   /**

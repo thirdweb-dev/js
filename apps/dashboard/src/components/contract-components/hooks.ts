@@ -54,6 +54,7 @@ import {
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import type { z } from "zod";
+import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import {
   getStepAddToRegistry,
   getStepDeploy,
@@ -61,7 +62,6 @@ import {
   useDeployContextModal,
 } from "./contract-deploy-form/deploy-context-modal";
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
-import type { Recipient } from "./contract-deploy-form/split-fieldset";
 import type { ContractId } from "./types";
 import { addContractToMultiChainRegistry } from "./utils";
 
@@ -554,21 +554,10 @@ export function useEditProfileMutation() {
   );
 }
 
-interface ContractDeployMutationParams {
-  recipients?: Recipient[];
-  deployParams: Record<string, string>;
-  contractMetadata?: {
-    name: string;
-    description: string;
-    image: string;
-    symbol: string;
-  };
-  address?: string;
-  addToDashboard?: boolean;
-  deployDeterministic?: boolean;
-  saltForCreate2?: string;
-  signerAsSalt?: boolean;
-}
+type ContractDeployMutationParams = CustomContractDeploymentFormData & {
+  address: string | undefined;
+  addToDashboard: boolean;
+};
 
 export function useCustomContractDeployMutation(
   ipfsHash: string,
@@ -602,7 +591,9 @@ export function useCustomContractDeployMutation(
   const walletId = useActiveWallet()?.id;
 
   return useMutation(
-    async (data: ContractDeployMutationParams) => {
+    async (_data: ContractDeployMutationParams) => {
+      const data = { ..._data };
+
       invariant(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",

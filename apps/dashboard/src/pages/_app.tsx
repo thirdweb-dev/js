@@ -1,4 +1,6 @@
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
+
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import type { DehydratedState } from "@tanstack/react-query";
@@ -276,6 +278,7 @@ const ConsoleApp = memo(function ConsoleApp({
             ? Component.fallback
             : getLayout(<Component {...pageProps} />, pageProps)}
           <Toaster />
+          <SonnerToaster />
         </TailwindTheme>
       </ChakraProvider>
     </PlausibleProvider>

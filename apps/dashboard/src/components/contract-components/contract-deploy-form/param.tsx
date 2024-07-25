@@ -11,10 +11,14 @@ import {
 
 interface ParamProps {
   paramKey: string;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  extraMetadataParam: any;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  deployParam: any;
+  extraMetadataParam?: {
+    displayName?: string;
+    description?: string;
+  };
+  deployParam?: {
+    type: string;
+    name: string;
+  };
 }
 
 export const Param: React.FC<ParamProps> = ({

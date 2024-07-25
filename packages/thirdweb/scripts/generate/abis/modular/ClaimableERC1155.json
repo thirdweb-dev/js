@@ -1,0 +1,356 @@
+[
+    {
+      "type": "function",
+      "name": "beforeMintERC1155",
+      "inputs": [
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_id", "type": "uint256", "internalType": "uint256" },
+        { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
+        { "name": "_data", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "eip712Domain",
+      "inputs": [],
+      "outputs": [
+        { "name": "fields", "type": "bytes1", "internalType": "bytes1" },
+        { "name": "name", "type": "string", "internalType": "string" },
+        { "name": "version", "type": "string", "internalType": "string" },
+        { "name": "chainId", "type": "uint256", "internalType": "uint256" },
+        {
+          "name": "verifyingContract",
+          "type": "address",
+          "internalType": "address"
+        },
+        { "name": "salt", "type": "bytes32", "internalType": "bytes32" },
+        {
+          "name": "extensions",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "encodeBytesBeforeMintERC1155",
+      "inputs": [
+        {
+          "name": "params",
+          "type": "tuple",
+          "internalType": "struct ClaimableERC1155.ClaimParamsERC1155",
+          "components": [
+            {
+              "name": "request",
+              "type": "tuple",
+              "internalType": "struct ClaimableERC1155.ClaimRequestERC1155",
+              "components": [
+                {
+                  "name": "tokenId",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "startTimestamp",
+                  "type": "uint48",
+                  "internalType": "uint48"
+                },
+                {
+                  "name": "endTimestamp",
+                  "type": "uint48",
+                  "internalType": "uint48"
+                },
+                {
+                  "name": "recipient",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "quantity",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "currency",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "pricePerUnit",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+              ]
+            },
+            { "name": "signature", "type": "bytes", "internalType": "bytes" },
+            {
+              "name": "currency",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "pricePerUnit",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "recipientAllowlistProof",
+              "type": "bytes32[]",
+              "internalType": "bytes32[]"
+            }
+          ]
+        }
+      ],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "encodeBytesOnInstall",
+      "inputs": [
+        {
+          "name": "primarySaleRecipient",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "encodeBytesOnUninstall",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "getClaimConditionByTokenId",
+      "inputs": [
+        { "name": "_id", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [
+        {
+          "name": "claimCondition",
+          "type": "tuple",
+          "internalType": "struct ClaimableERC1155.ClaimCondition",
+          "components": [
+            {
+              "name": "availableSupply",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "allowlistMerkleRoot",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "pricePerUnit",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "currency",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "startTimestamp",
+              "type": "uint48",
+              "internalType": "uint48"
+            },
+            {
+              "name": "endTimestamp",
+              "type": "uint48",
+              "internalType": "uint48"
+            },
+            { "name": "auxData", "type": "string", "internalType": "string" }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getExtensionConfig",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "config",
+          "type": "tuple",
+          "internalType": "struct IExtensionConfig.ExtensionConfig",
+          "components": [
+            {
+              "name": "registerInstallationCallback",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "requiredInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "supportedInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "callbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IExtensionConfig.CallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                }
+              ]
+            },
+            {
+              "name": "fallbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IExtensionConfig.FallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                },
+                {
+                  "name": "permissionBits",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "getSaleConfig",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "primarySaleRecipient",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "onInstall",
+      "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "onUninstall",
+      "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setClaimConditionByTokenId",
+      "inputs": [
+        { "name": "_id", "type": "uint256", "internalType": "uint256" },
+        {
+          "name": "_claimCondition",
+          "type": "tuple",
+          "internalType": "struct ClaimableERC1155.ClaimCondition",
+          "components": [
+            {
+              "name": "availableSupply",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "allowlistMerkleRoot",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            {
+              "name": "pricePerUnit",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "currency",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "startTimestamp",
+              "type": "uint48",
+              "internalType": "uint48"
+            },
+            {
+              "name": "endTimestamp",
+              "type": "uint48",
+              "internalType": "uint48"
+            },
+            { "name": "auxData", "type": "string", "internalType": "string" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setSaleConfig",
+      "inputs": [
+        {
+          "name": "_primarySaleRecipient",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "error",
+      "name": "BeforeMintCallbackERC1155NotImplemented",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ClaimableIncorrectNativeTokenSent",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ClaimableIncorrectPriceOrCurrency",
+      "inputs": []
+    },
+    { "type": "error", "name": "ClaimableNotInAllowlist", "inputs": [] },
+    { "type": "error", "name": "ClaimableOutOfSupply", "inputs": [] },
+    { "type": "error", "name": "ClaimableOutOfTimeWindow", "inputs": [] },
+    { "type": "error", "name": "ClaimableRequestInvalidToken", "inputs": [] },
+    { "type": "error", "name": "ClaimableRequestMismatch", "inputs": [] },
+    {
+      "type": "error",
+      "name": "ClaimableRequestOutOfTimeWindow",
+      "inputs": []
+    },
+    { "type": "error", "name": "ClaimableRequestUidReused", "inputs": [] },
+    {
+      "type": "error",
+      "name": "ClaimableRequestUnauthorizedSignature",
+      "inputs": []
+    }
+  ]

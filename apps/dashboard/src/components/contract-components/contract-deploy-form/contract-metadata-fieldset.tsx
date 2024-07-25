@@ -1,13 +1,12 @@
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import type { UseFormReturn } from "react-hook-form";
 import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
 import type { useContractPublishMetadataFromURI } from "../hooks";
+import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface ContractMetadataFieldsetProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<any, any>;
+  form: CustomContractDeploymentForm;
   metadata: ReturnType<typeof useContractPublishMetadataFromURI>;
 }
 
@@ -74,7 +73,7 @@ export const ContractMetadataFieldset: React.FC<
               />
               <FormErrorMessage>
                 {
-                  form.getFieldState("contractMetadata..name", form.formState)
+                  form.getFieldState("contractMetadata.name", form.formState)
                     .error?.message
                 }
               </FormErrorMessage>
@@ -105,7 +104,10 @@ export const ContractMetadataFieldset: React.FC<
           <FormControl
             isDisabled={!metadata.isSuccess}
             isInvalid={
-              !!form.getFieldState("description", form.formState).error
+              !!form.getFieldState(
+                "contractMetadata.description",
+                form.formState,
+              ).error
             }
           >
             <FormLabel>Description</FormLabel>
