@@ -2,24 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
-  type ConnectionManager,
   getLastConnectedChain,
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "../../../../wallets/manager/index.js";
+import { useConnectionManager } from "../../providers/connection-manager.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
 import type { AutoConnectProps } from "../connection/types.js";
-import { useConnectCore } from "./useConnect.js";
-import { useSetActiveWalletConnectionStatusCore } from "./useSetActiveWalletConnectionStatus.js";
+import { useConnect } from "./useConnect.js";
+import { useSetActiveWalletConnectionStatus } from "./useSetActiveWalletConnectionStatus.js";
 
 export function useAutoConnectCore(
-  manager: ConnectionManager,
   storage: AsyncStorage,
   props: AutoConnectProps & { wallets: Wallet[] },
   getInstalledWallets?: () => Wallet[],
 ) {
-  const setConnectionStatus = useSetActiveWalletConnectionStatusCore(manager);
-  const { connect } = useConnectCore(manager, {
+  const manager = useConnectionManager();
+  const setConnectionStatus = useSetActiveWalletConnectionStatus();
+  const { connect } = useConnect({
     client: props.client,
     accountAbstraction: props.accountAbstraction,
   });

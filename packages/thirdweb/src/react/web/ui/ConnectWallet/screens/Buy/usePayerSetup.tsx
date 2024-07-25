@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../../../hooks/wallets/useActiveWalletChain.js";
+import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import type { PayerInfo } from "./types.js";
 
 export function usePayerSetup() {

@@ -32,9 +32,9 @@ import {
   useChainName,
   useChainsQuery,
 } from "../../../core/hooks/others/useChainQuery.js";
+import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
-import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
-import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";

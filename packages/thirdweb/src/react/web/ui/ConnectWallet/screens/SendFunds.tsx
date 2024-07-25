@@ -7,13 +7,13 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useSendToken } from "../../../../core/hooks/wallets/useSendToken.js";
 import {
   type SupportedTokens,
   defaultTokens,
 } from "../../../../core/utils/defaultTokens.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
-import { useSendToken } from "../../../hooks/wallets/useSendToken.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";

@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../../wallets/types.js";
-import { useConnectedWallets } from "../../../hooks/wallets/useConnectedWallets.js";
+import { useConnectedWallets } from "../../../../core/hooks/wallets/useConnectedWallets.js";
 import { getDefaultWallets } from "../../../wallets/defaultWallets.js";
 import { ConnectModalContent } from "../Modal/ConnectModalContent.js";
 import { useSetupScreen } from "../Modal/screen.js";

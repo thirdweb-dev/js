@@ -1,14 +1,40 @@
 import { useCallback, useState } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type {
-  ConnectManagerOptions,
-  ConnectionManager,
-} from "../../../../wallets/manager/index.js";
+import type { ConnectManagerOptions } from "../../../../wallets/manager/index.js";
+import { useConnectionManager } from "../../providers/connection-manager.js";
 
-export function useConnectCore(
-  manager: ConnectionManager,
-  options?: ConnectManagerOptions,
-) {
+/**
+ * A hook to set a wallet as active wallet
+ * @returns A function that lets you connect a wallet.
+ * @example
+ * ```jsx
+ * import { useConnect } from "thirdweb/react";
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * function Example() {
+ *   const { connect, isConnecting, error } = useConnect();
+ *   return (
+ *     <button
+ *       onClick={() =>
+ *         connect(async () => {
+ *           // instantiate wallet
+ *           const wallet = createWallet("io.metamask");
+ *           // connect wallet
+ *           await wallet.connect();
+ *           // return the wallet
+ *           return wallet;
+ *         })
+ *       }
+ *     >
+ *       Connect
+ *     </button>
+ *   );
+ * }
+ * ```
+ * @walletConnection
+ */
+export function useConnect(options?: ConnectManagerOptions) {
+  const manager = useConnectionManager();
   const { connect } = manager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);

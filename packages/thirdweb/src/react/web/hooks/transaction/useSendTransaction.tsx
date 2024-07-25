@@ -14,6 +14,8 @@ import {
   type SendTransactionConfig,
   useSendTransactionCore,
 } from "../../../core/hooks/transaction/useSendTransaction.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import type { SupportedTokens } from "../../../core/utils/defaultTokens.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
@@ -28,8 +30,6 @@ import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import type { LocaleId } from "../../ui/types.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
-import { useActiveWallet } from "../wallets/useActiveWallet.js";
-import { useSwitchActiveWalletChain } from "../wallets/useSwitchActiveWalletChain.js";
 
 /**
  * A hook to send a transaction.

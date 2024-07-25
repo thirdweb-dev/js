@@ -12,9 +12,9 @@ import {
   spacing,
 } from "../../../../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../../../core/hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
