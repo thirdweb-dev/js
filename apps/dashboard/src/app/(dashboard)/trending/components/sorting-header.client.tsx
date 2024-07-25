@@ -1,7 +1,7 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Button } from "../../../@/components/ui/button";
 
 export type SortingHeaderProps = {
   sortBy: string;
