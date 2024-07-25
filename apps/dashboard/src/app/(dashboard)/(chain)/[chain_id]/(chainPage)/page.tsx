@@ -6,7 +6,7 @@ import {
   type TimeRange,
   fetchTopContracts,
 } from "../../../../../lib/search";
-import { TrendingContractSection } from "../../../../trending/components/trending-table";
+import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain } from "../../utils";
 import { InfoCard } from "./components/server/info-card";
 import twPublisherImage from "./tw-publisher.png";
