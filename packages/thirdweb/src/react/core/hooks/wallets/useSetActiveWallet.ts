@@ -1,5 +1,20 @@
-import type { ConnectionManager } from "../../../../wallets/manager/index.js";
+import { useConnectionManager } from "../../providers/connection-manager.js";
 
-export function useSetActiveWalletCore(manager: ConnectionManager) {
+/**
+ * A hook that lets you set the active wallet.
+ * @returns A function that lets you set the active wallet.
+ * @example
+ * ```jsx
+ * import { useSetActiveWallet } from "thirdweb/react";
+ *
+ * const setActiveAccount = useSetActiveWallet();
+ *
+ * // later in your code
+ * await setActiveAccount(account);
+ * ```
+ * @walletConnection
+ */
+export function useSetActiveWallet() {
+  const manager = useConnectionManager();
   return manager.setActiveWallet;
 }

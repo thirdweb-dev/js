@@ -4,10 +4,10 @@ import {
   type ShowModalData,
   useSendTransactionCore,
 } from "../../../core/hooks/transaction/useSendTransaction.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import { TransactionModal } from "../../ui/TransactionButton/TransactionModal.js";
-import { useActiveWallet } from "../wallets/useActiveWallet.js";
-import { useSwitchActiveWalletChain } from "../wallets/useSwitchActiveWalletChain.js";
 
 /**
  * A hook to send a transaction.

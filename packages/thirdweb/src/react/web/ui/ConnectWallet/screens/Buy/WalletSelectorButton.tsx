@@ -8,8 +8,8 @@ import {
   radius,
   spacing,
 } from "../../../../../core/design-system/index.js";
+import { useConnectedWallets } from "../../../../../core/hooks/wallets/useConnectedWallets.js";
 import { useEnsAvatar, useEnsName } from "../../../../../core/utils/wallet.js";
-import { useConnectedWallets } from "../../../../hooks/wallets/useConnectedWallets.js";
 import { Img } from "../../../components/Img.js";
 import { WalletImage } from "../../../components/WalletImage.js";
 import { Container } from "../../../components/basic.js";

@@ -1,8 +1,8 @@
 "use client";
 import { useEffect } from "react";
 import type { AutoConnectProps } from "../../../core/hooks/connection/types.js";
+import { useSetActiveWalletConnectionStatus } from "../../../core/hooks/wallets/useSetActiveWalletConnectionStatus.js";
 import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
-import { useSetActiveWalletConnectionStatus } from "../../hooks/wallets/useSetActiveWalletConnectionStatus.js";
 
 /**
  * AutoConnect last connected wallet on page reload or revisit.

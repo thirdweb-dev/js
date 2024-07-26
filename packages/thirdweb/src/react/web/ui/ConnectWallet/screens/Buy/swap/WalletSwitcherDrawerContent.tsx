@@ -7,7 +7,7 @@ import {
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useConnectedWallets } from "../../../../../hooks/wallets/useConnectedWallets.js";
+import { useConnectedWallets } from "../../../../../../core/hooks/wallets/useConnectedWallets.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";

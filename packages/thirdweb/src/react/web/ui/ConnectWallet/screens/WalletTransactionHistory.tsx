@@ -14,7 +14,7 @@ import {
   useChainExplorers,
   useChainIconUrl,
 } from "../../../../core/hooks/others/useChainQuery.js";
-import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
+import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { ChainIcon } from "../../components/ChainIcon.js";
 import { ChainName } from "../../components/ChainName.js";
 import { Spacer } from "../../components/Spacer.js";

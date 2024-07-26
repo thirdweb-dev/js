@@ -19,8 +19,8 @@ import type {
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
+import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
-import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainName } from "../../../components/ChainName.js";

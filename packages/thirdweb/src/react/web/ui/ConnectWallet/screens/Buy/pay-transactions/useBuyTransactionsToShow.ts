@@ -10,7 +10,7 @@ import {
   getBuyWithFiatStatus,
 } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { useBuyHistory } from "../../../../../../core/hooks/pay/useBuyHistory.js";
-import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
 import { pendingTransactions } from "../swap/pendingSwapTx.js";
 
 export type TxStatusInfo =

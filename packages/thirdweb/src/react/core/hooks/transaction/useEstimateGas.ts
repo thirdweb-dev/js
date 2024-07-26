@@ -4,11 +4,27 @@ import {
   estimateGas,
 } from "../../../../transaction/actions/estimate-gas.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
-import type { Account } from "../../../../wallets/interfaces/wallet.js";
+import { useActiveAccount } from "../wallets/useActiveAccount.js";
 
-export function useEstimateGasCore(
-  account: Account | undefined,
-): UseMutationResult<EstimateGasResult, Error, PreparedTransaction> {
+/**
+ * A hook to estimate the gas for a given transaction.
+ * @returns A mutation object to estimate gas.
+ * @example
+ * ```jsx
+ * import { useEstimateGas } from "thirdweb/react";
+ * const { mutate: estimateGas, data: gasEstimate } = useEstimateGas();
+ *
+ * // later
+ * const estimatedGas = await estimateGas(tx);
+ * ```
+ * @transaction
+ */
+export function useEstimateGas(): UseMutationResult<
+  EstimateGasResult,
+  Error,
+  PreparedTransaction
+> {
+  const account = useActiveAccount();
   return useMutation({
     mutationFn: (transaction) => estimateGas({ transaction, account }),
   });

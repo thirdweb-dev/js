@@ -1,5 +1,21 @@
-import type { ConnectionManager } from "../../../../wallets/manager/index.js";
+import { useConnectionManager } from "../../providers/connection-manager.js";
 
-export function useSwitchActiveWalletChainCore(manager: ConnectionManager) {
+/**
+ * Switch to blockchain with given chain id in the active wallet.
+ * @returns A function to switch to blockchain with given chain id in the active wallet.
+ * @example
+ * ```jsx
+ * import { useSwitchActiveWalletChain } from "thirdweb/react";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const switchChain = useSwitchActiveWalletChain();
+ *
+ * // later in your code
+ * <button onClick={() => switchChain(sepolia)}>Switch Chain</button>
+ * ```
+ * @walletConnection
+ */
+export function useSwitchActiveWalletChain() {
+  const manager = useConnectionManager();
   return manager.switchActiveWalletChain;
 }

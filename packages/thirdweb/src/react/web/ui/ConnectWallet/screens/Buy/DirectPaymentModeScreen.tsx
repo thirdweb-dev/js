@@ -12,9 +12,9 @@ import { useCustomTheme } from "../../../../../core/design-system/CustomThemePro
 import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainQuery } from "../../../../../core/hooks/others/useChainQuery.js";
+import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
 import type { TokenInfo } from "../../../../../core/utils/defaultTokens.js";
 import { useEnsName } from "../../../../../core/utils/wallet.js";
-import { useActiveWallet } from "../../../../hooks/wallets/useActiveWallet.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
 import { ChainIcon } from "../../../components/ChainIcon.js";

@@ -5,7 +5,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
 import type { SiweAuthOptions } from "../../../../core/hooks/auth/useSiweAuth.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import {
   useIsWalletModalOpen,
   useSetIsWalletModalOpen,

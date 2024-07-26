@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import type { RenderOptions } from "@testing-library/react";
 import type { ReactElement } from "react";
-import { ThirdwebProvider } from "../../src/react/core/providers/thirdweb-provider.js";
+import { ThirdwebProvider } from "../../src/react/web/providers/thirdweb-provider.js";
 import { SetConnectedWallet } from "./SetConnectedWallet.js";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
@@ -12,14 +12,14 @@ const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper"> & {
     setConnectedWallet?: boolean;
-  }
+  },
 ) => {
   return render(
     <div>
       {options?.setConnectedWallet ? <SetConnectedWallet /> : null}
       {ui}
     </div>,
-    { wrapper: Providers, ...options }
+    { wrapper: Providers, ...options },
   );
 };
 

@@ -14,10 +14,10 @@ import {
   spacing,
 } from "../../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveWallet } from "../../../../hooks/wallets/useActiveWallet.js";
-import { useConnectedWallets } from "../../../../hooks/wallets/useConnectedWallets.js";
-import { useDisconnect } from "../../../../hooks/wallets/useDisconnect.js";
-import { useSetActiveWallet } from "../../../../hooks/wallets/useSetActiveWallet.js";
+import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
+import { useConnectedWallets } from "../../../../../core/hooks/wallets/useConnectedWallets.js";
+import { useDisconnect } from "../../../../../core/hooks/wallets/useDisconnect.js";
+import { useSetActiveWallet } from "../../../../../core/hooks/wallets/useSetActiveWallet.js";
 import { Skeleton } from "../../../components/Skeleton.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { ToolTip } from "../../../components/Tooltip.js";

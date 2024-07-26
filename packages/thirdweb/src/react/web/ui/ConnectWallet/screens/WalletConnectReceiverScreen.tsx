@@ -11,7 +11,7 @@ import {
   getActiveWalletConnectSessions,
 } from "../../../../../wallets/wallet-connect/receiver/index.js";
 import { iconSize, spacing } from "../../../../core/design-system/index.js";
-import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
+import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { InputSelectionUI } from "../../../wallets/in-app/InputSelectionUI.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
