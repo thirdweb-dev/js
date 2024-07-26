@@ -43,10 +43,9 @@ export function FiatFlow(props: {
   client: ThirdwebClient;
   testMode: boolean;
   theme: "light" | "dark";
-  onViewPendingTx: () => void;
   openedWindow: Window | null;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
 }) {
@@ -93,7 +92,6 @@ export function FiatFlow(props: {
         client={props.client}
         intentId={props.quote.intentId}
         onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
         hasTwoSteps={hasTwoSteps}
         openedWindow={popupWindow}
         quote={props.quote}
@@ -101,7 +99,7 @@ export function FiatFlow(props: {
         onShowSwapFlow={(_status) => {
           setScreen({ id: "postonramp-swap", data: _status });
         }}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
       />
     );
@@ -115,12 +113,11 @@ export function FiatFlow(props: {
         quote={fiatQuoteToPartialQuote(props.quote)}
         client={props.client}
         onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
         onSwapFlowStarted={() => {
           // no op
         }}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={props.payer}
       />

@@ -1,5 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -10,10 +12,88 @@ import type { Theme } from "../../design-system/index.js";
 import type {
   SupportedNFTs,
   SupportedTokens,
+  TokenInfo,
 } from "../../utils/defaultTokens.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
 
-export type PayUIOptions = {
+export type PaymentInfo = {
+  /**
+   * The chain to receive the payment on.
+   */
+  chain: Chain;
+  /**
+   * The address of the seller wallet to receive the payment on.
+   */
+  sellerAddress: string;
+  /**
+   * Optional ERC20 token to receive the payment on.
+   * If not provided, the native token will be used.
+   */
+  token?: TokenInfo;
+} & (
+  | {
+      /**
+       * The amount of tokens to receive in ETH or tokens.
+       * ex: 0.1 ETH or 100 USDC
+       */
+      amount: string;
+    }
+  | {
+      /**
+       * The amount of tokens to receive in wei.
+       * ex: 1000000000000000000 wei
+       */
+      amountWei: bigint;
+    }
+);
+
+export type PayUIOptions = Prettify<
+  {
+    /**
+     * Configure options for buying tokens using other token ( aka Swap )
+     *
+     * By default, the "Crypto" option is enabled. You can disable it by setting `buyWithCrypto` to `false`
+     *
+     * You can prefill the source token and chain using `prefillSource`
+     * You can also disable the edits for the prefilled values by setting `prefillSource.allowEdits` - By default all are editable
+     *
+     * For example, if you want to allow selecting chain and but disable selecting token, you can set `allowEdits` to `{ token: false, chain: true }`
+     */
+    buyWithCrypto?:
+      | false
+      | {
+          prefillSource?: {
+            chain: Chain;
+            token?: TokenInfo;
+            allowEdits?: {
+              token: boolean;
+              chain: boolean;
+            };
+          };
+        };
+
+    /**
+     * By default "Credit card" option is enabled. you can disable it by setting `buyWithFiat` to `false`
+     *
+     * You can also enable the test mode for the on-ramp provider to test on-ramp without using real credit card.
+     */
+    buyWithFiat?:
+      | {
+          testMode?: boolean;
+        }
+      | false;
+
+    /**
+     * Extra details to store with the purchase.
+     *
+     * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
+     */
+    purchaseData?: object;
+  } & (FundWalletOptions | DirectPaymentOptions | TranasctionOptions)
+>;
+
+export type FundWalletOptions = {
+  mode?: "fund_wallet";
   /**
    * Prefill the Buy Token amount, chain and/or token.
    * You can also disable the edits for the prefilled values using `allowEdits` - By default all are editable
@@ -25,12 +105,7 @@ export type PayUIOptions = {
    */
   prefillBuy?: {
     chain: Chain;
-    token?: {
-      name: string;
-      symbol: string;
-      address: string;
-      icon?: string;
-    };
+    token?: TokenInfo;
     amount?: string;
     allowEdits?: {
       amount: boolean;
@@ -38,59 +113,36 @@ export type PayUIOptions = {
       chain: boolean;
     };
   };
+};
 
+export type DirectPaymentOptions = {
+  mode: "direct_payment";
   /**
-   * Configure options for buying tokens using other token ( aka Swap )
-   *
-   * By default, the "Crypto" option is enabled. You can disable it by setting `buyWithCrypto` to `false`
-   *
-   * You can prefill the source token and chain using `prefillSource`
-   * You can also disable the edits for the prefilled values by setting `prefillSource.allowEdits` - By default all are editable
-   *
-   * For example, if you want to allow selecting chain and but disable selecting token, you can set `allowEdits` to `{ token: false, chain: true }`
+   * The payment information
    */
-  buyWithCrypto?:
-    | false
-    | {
-        prefillSource?: {
-          chain: Chain;
-          token?: {
-            name: string;
-            symbol: string;
-            address: string;
-            icon?: string;
-          };
-          allowEdits?: {
-            token: boolean;
-            chain: boolean;
-          };
-        };
-      };
+  paymentInfo: PaymentInfo;
+  /**
+   * Customize the display of the PayEmbed UI.
+   */
+  metadata?: {
+    name?: string;
+    image?: string;
+  };
+};
 
+export type TranasctionOptions = {
+  mode: "transaction";
   /**
-   * By default "Credit card" option is enabled. you can disable it by setting `buyWithFiat` to `false`
-   *
-   * You can also enable the test mode for the on-ramp provider to test on-ramp without using real credit card.
+   * The transaction to be executed.
    */
-  buyWithFiat?:
-    | {
-        testMode?: boolean;
-      }
-    | false;
-
+  transaction: PreparedTransaction;
   /**
-   * Extra details to store with the purchase.
-   *
-   * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
+   * Customize the display of the PayEmbed UI.
    */
-  purchaseData?: object;
-
-  /**
-   * The address of the recipient of the purchase.
-   *
-   * This address will be used to send the purchased tokens to.
-   */
-  recipientAddress?: string;
+  metadata?: {
+    name?: string;
+    image?: string;
+  };
 };
 
 /**
@@ -192,7 +244,7 @@ export type ConnectButton_detailsModalOptions = {
    *
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
-  payOptions?: PayUIOptions;
+  payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
 };
 
 /**

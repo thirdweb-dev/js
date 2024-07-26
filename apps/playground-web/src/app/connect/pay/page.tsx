@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { CodeExample } from "../../../components/code/code-example";
+import { BuyMerchPreview } from "../../../components/pay/direct-payment";
 import { StyledPayEmbedPreview } from "../../../components/pay/embed";
 import { PayTransactionButtonPreview } from "../../../components/pay/transaction-button";
 
@@ -63,7 +64,10 @@ export default function Page() {
         <StyledPayEmbed />
       </section>
       <section className="container px-4 md:px-6 space-y-8">
-        <PayTransactionButton />
+        <BuyMerch />
+      </section>
+      <section className="container px-4 md:px-6 space-y-8">
+        <BuyOnchainAsset />
       </section>
     </main>
   );
@@ -74,7 +78,7 @@ function StyledPayEmbed() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Embed component
+          Fund wallets
         </h2>
         <p className="max-w-[600px]">
           Inline component that allows users to buy any currency.
@@ -101,44 +105,99 @@ function StyledPayEmbed() {
   );
 }
 
-function PayTransactionButton() {
+function BuyMerch() {
   return (
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Transaction Button
+          Direct Payments
         </h2>
         <p className="max-w-[600px]">
-          Transaction Button is a handy component that handles transactions.
+          Take paymets from Fiat or Crypto directly to your seller wallet.
           <br />
-          If your user doesn&apos;t have enough funds for that transaction, a
-          pre-filled pay modal will appear with the exact amount needed.
+          Get notified for every sale through webhooks, which lets you trigger
+          any action you want like shipping physical goods, activating services
+          or doing onchain actions.
+        </p>
+      </div>
+
+      <CodeExample
+        preview={<BuyMerchPreview />}
+        code={`import { PayEmbed, getDefaultToken } from "thirdweb/react";
+          import { base } from "thirdweb/chains";
+
+        function App() {
+          return (
+            <PayEmbed
+              client={client}
+              theme={"light"}
+              payOptions={{
+                mode: "direct_payment",
+                paymentInfo: {
+                  amount: "35",
+                  chain: base,
+                  token: getDefaultToken(base, "USDC"),
+                  sellerAddress: "0xEb0effdFB4dC5b3d5d3aC6ce29F3ED213E95d675",
+                },
+                metadata: {
+                  name: "Black Hoodie (Size L)",
+                  image: "/drip-hoodie.png",
+                },
+              }}
+            />
+          );
+        };`}
+        lang="tsx"
+      />
+    </>
+  );
+}
+
+function BuyOnchainAsset() {
+  return (
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+          Onchain Payments
+        </h2>
+        <p className="max-w-[600px]">
+          Let your users pay for onchain transactions with fiat or crypto on any
+          chain.
+          <br />
+          Amounts are calculated automatically from the transaction, and will
+          get executed after the user has obtained the necessary funds via
+          onramp or swap.
         </p>
       </div>
 
       <CodeExample
         preview={<PayTransactionButtonPreview />}
         code={`import { claimTo } from "thirdweb/extensions/erc1155";
-        import { TransactionButton, useActiveAccount } from "thirdweb/react";
+          import { PayEmbed, useActiveAccount } from "thirdweb/react";
 
 
         function App() {
           const account = useActiveAccount();
+          const { data: nft } = useReadContract(getNFT, {
+            contract: nftContract,
+            tokenId: 0n,
+          });
+
         
           return (
-            <TransactionButton
-              transaction={() => {
-                // any transaction works
-                return claimTo({
-                  contract,
+            <PayEmbed
+              client={client}
+              payOptions={{
+                mode: "transaction",
+                transaction: claimTo({
+                  contract: nftContract,
                   quantity: 1n,
                   tokenId: 0n,
-                  to: account.address,
-                });
+                  to: account?.address,
+                }),
+                metadata: nft?.metadata,
               }}
-            >
-              Buy for 10 MATIC
-            </TransactionButton>
+            />
           );
         };`}
         lang="tsx"

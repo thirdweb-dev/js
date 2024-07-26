@@ -8,12 +8,14 @@ import {
   radius,
   spacing,
 } from "../../../../../core/design-system/index.js";
+import { useEnsAvatar, useEnsName } from "../../../../../core/utils/wallet.js";
 import { useConnectedWallets } from "../../../../hooks/wallets/useConnectedWallets.js";
+import { Img } from "../../../components/Img.js";
 import { WalletImage } from "../../../components/WalletImage.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { GenericWalletIcon } from "../../icons/GenericWalletIcon.js";
+import { SmartWalletBadgeIcon } from "../../icons/SmartAccountBadgeIcon.js";
 
 export function WalletSelectorButton(props: {
   address: string;
@@ -26,11 +28,6 @@ export function WalletSelectorButton(props: {
   checked?: boolean;
 }) {
   const theme = useCustomTheme();
-  const connectedWallets = useConnectedWallets();
-  const walletId =
-    props.walletId ||
-    connectedWallets.find((x) => x.getAccount()?.address === props.address)?.id;
-
   return (
     <Container
       bg="tertiaryBg"
@@ -52,21 +49,7 @@ export function WalletSelectorButton(props: {
         }}
         gap="sm"
       >
-        <Container flex="row" center="y" gap="sm" color="secondaryText">
-          {walletId ? (
-            <WalletImage
-              id={walletId}
-              size={iconSize.md}
-              client={props.client}
-            />
-          ) : (
-            <GenericWalletIcon size={iconSize.md} />
-          )}
-
-          <Text size="sm" color="primaryText">
-            {shortenAddress(props.address)}
-          </Text>
-        </Container>
+        <WalletRow client={props.client} address={props.address} />
         {!props.disableChevron && (
           <ChevronDownIcon
             width={iconSize.sm}
@@ -81,6 +64,54 @@ export function WalletSelectorButton(props: {
           <CheckIcon width={iconSize.md} height={iconSize.md} />
         )}
       </Button>
+    </Container>
+  );
+}
+
+export function WalletRow(props: {
+  client: ThirdwebClient;
+  address: string;
+  walletId?: WalletId;
+}) {
+  const { client, address } = props;
+  const connectedWallets = useConnectedWallets();
+  const wallet = connectedWallets.find(
+    (x) => x.getAccount()?.address === props.address,
+  );
+  const walletId = props.walletId || wallet?.id;
+  const ensNameQuery = useEnsName({
+    client,
+    address,
+  });
+  const addressOrENS = ensNameQuery.data || shortenAddress(address);
+  const ensAvatarQuery = useEnsAvatar({
+    client,
+    ensName: ensNameQuery.data,
+  });
+  return (
+    <Container flex="row" center="y" gap="sm" color="secondaryText">
+      {ensAvatarQuery.data ? (
+        <Img
+          src={ensAvatarQuery.data}
+          width={iconSize.md}
+          height={iconSize.md}
+          style={{
+            borderRadius: radius.sm,
+          }}
+          client={props.client}
+        />
+      ) : walletId ? (
+        <WalletImage id={walletId} size={iconSize.md} client={props.client} />
+      ) : null}
+
+      <Text size="sm" color="primaryText">
+        {addressOrENS || shortenAddress(props.address)}
+      </Text>
+      {walletId === "smart" && (
+        <Container color="accentText" center="both">
+          <SmartWalletBadgeIcon size={iconSize.sm} />
+        </Container>
+      )}
     </Container>
   );
 }

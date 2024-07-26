@@ -1,3 +1,4 @@
+import type { Chain } from "../../../chains/types.js";
 import type { Address } from "../../../utils/address.js";
 
 export type TokenInfo = {
@@ -34,31 +35,8 @@ const fantomIcon =
 export type SupportedTokens = Record<number, TokenInfo[]>;
 export type SupportedNFTs = Record<number, Address[]>;
 
-/**
- * Default tokens shown in [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton)'s SendFunds screen for each network.
- *
- * You can use the default tokens as a starting point for your own list of tokens and override tokens for specific networks.
- * @example
- * Below example shows adding a custom token for the Ethereum mainnet at start of the list of default tokens for the Ethereum mainnet. Here the `1` represents the chainId of Ethereum mainnet.
- *
- * ```tsx
- * const ethereumChainId = 1;
- *
- * <ConnectButton supportedTokens={{
- *  ...defaultTokens,
- *  [ethereumChainId]: [
- *    {
- *      address: 'YOUR_TOKEN_ADDRESS',
- *      name: 'YOUR_TOKEN_NAME',
- *      symbol: 'YOUR_TOKEN_SYMBOL',
- *      icon: 'YOUR_TOKEN_ICON_URL'
- *    },
- *    ...defaultTokens[ethereumChainId],
- *  ]
- * }} />
- * ```
- */
-export const defaultTokens: SupportedTokens = {
+// TODO these should be moved to chain definitions
+const DEFAULT_TOKENS = {
   "1": [
     {
       address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -333,4 +311,38 @@ export const defaultTokens: SupportedTokens = {
       icon: usdcIcon,
     },
   ],
-};
+} as const;
+
+/**
+ * Default tokens shown in [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton)'s SendFunds screen for each network.
+ *
+ * You can use the default tokens as a starting point for your own list of tokens and override tokens for specific networks.
+ * @example
+ * Below example shows adding a custom token for the Ethereum mainnet at start of the list of default tokens for the Ethereum mainnet. Here the `1` represents the chainId of Ethereum mainnet.
+ *
+ * ```tsx
+ * const ethereumChainId = 1;
+ *
+ * <ConnectButton supportedTokens={{
+ *  ...defaultTokens,
+ *  [ethereumChainId]: [
+ *    {
+ *      address: 'YOUR_TOKEN_ADDRESS',
+ *      name: 'YOUR_TOKEN_NAME',
+ *      symbol: 'YOUR_TOKEN_SYMBOL',
+ *      icon: 'YOUR_TOKEN_ICON_URL'
+ *    },
+ *    ...defaultTokens[ethereumChainId],
+ *  ]
+ * }} />
+ * ```
+ */
+export const defaultTokens = DEFAULT_TOKENS as unknown as SupportedTokens;
+
+type SupportedSymbol =
+  (typeof DEFAULT_TOKENS)[keyof typeof DEFAULT_TOKENS][number]["symbol"];
+
+export function getDefaultToken(chain: Chain, symbol: SupportedSymbol) {
+  const tokens = defaultTokens[chain.id];
+  return tokens?.find((t) => t.symbol === symbol);
+}

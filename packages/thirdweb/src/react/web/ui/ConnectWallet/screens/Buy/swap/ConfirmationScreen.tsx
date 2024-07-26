@@ -13,6 +13,7 @@ import {
   iconSize,
 } from "../../../../../../core/design-system/index.js";
 import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useEnsName } from "../../../../../../core/utils/wallet.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -61,6 +62,9 @@ export function SwapConfirmationScreen(props: {
 
   const receiver = props.quote.swapDetails.toAddress;
   const sender = props.quote.swapDetails.fromAddress;
+  const isDifferentRecipient = receiver.toLowerCase() !== sender.toLowerCase();
+
+  const ensName = useEnsName({ client: props.client, address: receiver });
 
   return (
     <Container p="lg">
@@ -93,15 +97,17 @@ export function SwapConfirmationScreen(props: {
       </ConfirmItem>
 
       {/* Receive */}
-      <ConfirmItem label="Receive">
-        <RenderTokenInfo
-          chain={props.toChain}
-          amount={String(formatNumber(Number(props.toAmount), 6))}
-          symbol={props.toTokenSymbol}
-          token={props.toToken}
-          client={props.client}
-        />
-      </ConfirmItem>
+      {!isDifferentRecipient && (
+        <ConfirmItem label="Receive">
+          <RenderTokenInfo
+            chain={props.toChain}
+            amount={String(formatNumber(Number(props.toAmount), 6))}
+            symbol={props.toTokenSymbol}
+            token={props.toToken}
+            client={props.client}
+          />
+        </ConfirmItem>
+      )}
 
       {/* Fees  */}
       <ConfirmItem label="Fees">
@@ -110,7 +116,7 @@ export function SwapConfirmationScreen(props: {
 
       {/* Time  */}
       <ConfirmItem label="Time">
-        <Text color="primaryText">
+        <Text size="sm" color="primaryText">
           ~
           {formatSeconds(
             props.quote.swapDetails.estimated.durationSeconds || 0,
@@ -119,9 +125,11 @@ export function SwapConfirmationScreen(props: {
       </ConfirmItem>
 
       {/* Send to  */}
-      {receiver !== sender && (
-        <ConfirmItem label="Send to">
-          <Text color="primaryText">{shortenAddress(receiver)}</Text>
+      {isDifferentRecipient && (
+        <ConfirmItem label="Seller">
+          <Text color="primaryText" size="sm">
+            {ensName.data || shortenAddress(receiver)}
+          </Text>
         </ConfirmItem>
       )}
 
@@ -252,7 +260,7 @@ export function SwapConfirmationScreen(props: {
   );
 }
 
-const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
+export const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     height: "4px",
@@ -278,21 +286,21 @@ function RenderTokenInfo(props: {
       }}
     >
       <Container flex="row" center="y" gap="xs">
-        <Text color="primaryText" size="md">
+        <Text color="primaryText" size="sm">
           {props.amount} {props.symbol}
         </Text>
         <PayTokenIcon
           token={props.token}
           chain={props.chain}
-          size="sm"
+          size="xs"
           client={props.client}
         />
       </Container>
 
       {name ? (
-        <Text size="sm">{name}</Text>
+        <Text size="xs">{name}</Text>
       ) : (
-        <Skeleton width={"100px"} height={fontSize.sm} />
+        <Skeleton width={"100px"} height={fontSize.xs} />
       )}
     </Container>
   );
@@ -312,7 +320,7 @@ function ConfirmItem(props: {
           justifyContent: "space-between",
         }}
       >
-        <Text size="md" color="secondaryText">
+        <Text size="sm" color="secondaryText">
           {props.label}
         </Text>
         {props.children}

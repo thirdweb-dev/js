@@ -1,76 +1,171 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { toEther } from "../../../../../../../utils/units.js";
+import { getChainMetadata } from "../../../../../../../chains/utils.js";
+import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
+import { getContract } from "../../../../../../../contract/contract.js";
+import { getCurrencyMetadata } from "../../../../../../../extensions/erc20/read/getCurrencyMetadata.js";
+import { getGasPrice } from "../../../../../../../gas/get-gas-price.js";
+import { encode } from "../../../../../../../transaction/actions/encode.js";
+import { estimateGasCost } from "../../../../../../../transaction/actions/estimate-gas-cost.js";
+import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { Hex } from "../../../../../../../utils/encoding/hex.js";
+import { resolvePromisedValue } from "../../../../../../../utils/promise/resolve-promised-value.js";
 import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
-import { getTotalTxCostForBuy } from "../../../../../../core/hooks/transaction/useSendTransaction.js";
-import { wait } from "../../../../../../core/utils/wait.js";
-import type { BuyForTx } from "./types.js";
+import { getWalletBalance } from "../../../../../../../wallets/utils/getWalletBalance.js";
+import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
+import type { TransactionCostAndData } from "./types.js";
 
-export function useBuyTxStates(options: {
-  setTokenAmount: (value: string) => void;
-  buyForTx: BuyForTx | null;
-  hasEditedAmount: boolean;
-  account: Account | null;
+export function useTransactionCostAndData(args: {
+  transaction: PreparedTransaction;
+  account: Account | undefined;
+  supportedDestinations: SupportedChainAndTokens;
 }) {
-  const { buyForTx, hasEditedAmount, setTokenAmount, account } = options;
-  const shouldRefreshTokenAmount = !hasEditedAmount;
-
-  const [amountNeeded, setAmountNeeded] = useState<bigint | undefined>(
-    buyForTx?.cost,
-  );
-
-  // update amount needed every 30 seconds
-  // also update the token amount if allowed
-  // ( Can't use useQuery because tx can't be added to queryKey )
+  const { transaction, account, supportedDestinations } = args;
+  // Compute query key of the transaction first
+  const [txQueryKey, setTxQueryKey] = useState<
+    | {
+        value: string | undefined;
+        erc20Value: string | undefined;
+        erc20Currency: string | undefined;
+        to: string | undefined;
+        data: Hex | undefined;
+      }
+    | undefined
+  >();
   useEffect(() => {
-    if (!buyForTx) {
-      return;
-    }
+    Promise.all([
+      resolvePromisedValue(transaction.value),
+      resolvePromisedValue(transaction.erc20Value),
+      resolvePromisedValue(transaction.to),
+      encode(transaction),
+    ]).then(([value, erc20Value, to, data]) => {
+      setTxQueryKey({
+        value: value?.toString(),
+        erc20Value: erc20Value?.amountWei?.toString(),
+        erc20Currency: erc20Value?.tokenAddress,
+        to,
+        data,
+      });
+    });
+  }, [transaction]);
 
-    let mounted = true;
-
-    if (buyForTx.tx.erc20Value) {
-      // if erc20 value is set, we don't need to poll
-      return;
-    }
-
-    async function pollTxCost() {
-      if (!buyForTx || !mounted) {
-        return;
+  return useQuery({
+    queryKey: [
+      "transaction-cost",
+      transaction.chain.id,
+      account?.address,
+      txQueryKey,
+    ],
+    queryFn: async () => {
+      if (!account) {
+        throw new Error("No account");
       }
 
-      try {
-        const totalCost = await getTotalTxCostForBuy(
-          buyForTx.tx,
-          account?.address,
-        );
-
-        if (!mounted) {
-          return;
-        }
-
-        setAmountNeeded(totalCost);
-
-        if (shouldRefreshTokenAmount) {
-          if (totalCost > buyForTx.balance) {
-            setTokenAmount(toEther(totalCost - buyForTx.balance));
-          }
-        }
-      } catch (error) {
-        // no op
+      const erc20Value = await resolvePromisedValue(transaction.erc20Value);
+      if (erc20Value) {
+        const [tokenBalance, tokenMeta, gasCostWei] = await Promise.all([
+          getWalletBalance({
+            address: account.address,
+            chain: transaction.chain,
+            client: transaction.client,
+            tokenAddress: erc20Value.tokenAddress,
+          }),
+          getCurrencyMetadata({
+            contract: getContract({
+              address: erc20Value.tokenAddress,
+              chain: transaction.chain,
+              client: transaction.client,
+            }),
+          }),
+          getTransactionGasCost(transaction, account?.address),
+        ]);
+        const transactionValueWei = erc20Value.amountWei;
+        const walletBalance = tokenBalance;
+        const currency = {
+          address: erc20Value.tokenAddress,
+          name: tokenMeta.name,
+          symbol: tokenMeta.symbol,
+          icon: supportedDestinations
+            .find((c) => c.chain.id === transaction.chain.id)
+            ?.tokens.find(
+              (t) =>
+                t.address.toLowerCase() ===
+                erc20Value.tokenAddress.toLowerCase(),
+            )?.icon,
+        };
+        return {
+          token: currency,
+          decimals: tokenMeta.decimals,
+          walletBalance,
+          gasCostWei,
+          transactionValueWei,
+        } satisfies TransactionCostAndData;
       }
 
-      await wait(30000);
-      pollTxCost();
+      const [nativeWalletBalance, chainMetadata, gasCostWei] =
+        await Promise.all([
+          getWalletBalance({
+            address: account.address,
+            chain: transaction.chain,
+            client: transaction.client,
+          }),
+          getChainMetadata(transaction.chain),
+          getTransactionGasCost(transaction, account?.address),
+        ]);
+
+      const walletBalance = nativeWalletBalance;
+      const transactionValueWei =
+        (await resolvePromisedValue(transaction.value)) || 0n;
+      return {
+        token: {
+          address: NATIVE_TOKEN_ADDRESS,
+          name: chainMetadata.nativeCurrency.name,
+          symbol: chainMetadata.nativeCurrency.symbol,
+          icon: chainMetadata.icon?.url,
+        },
+        decimals: 18,
+        walletBalance,
+        gasCostWei,
+        transactionValueWei,
+      } satisfies TransactionCostAndData;
+    },
+    enabled: !!transaction && !!account && !!txQueryKey,
+    refetchInterval: () => {
+      if (transaction.erc20Value) {
+        // if erc20 value is set, we don't need to poll
+        return undefined;
+      }
+      return 30_000;
+    },
+  });
+}
+
+export async function getTransactionGasCost(
+  tx: PreparedTransaction,
+  from?: string,
+) {
+  try {
+    const gasCost = await estimateGasCost({
+      transaction: tx,
+      from,
+    });
+
+    const bufferCost = gasCost.wei / 10n;
+
+    // Note: get tx.value AFTER estimateGasCost
+    // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
+    return gasCost.wei + bufferCost;
+  } catch (e) {
+    if (from) {
+      // try again without passing from
+      return await getTransactionGasCost(tx);
     }
+    // fallback if both fail, use the tx value + 2M * gas price
+    const gasPrice = await getGasPrice({
+      client: tx.client,
+      chain: tx.chain,
+    });
 
-    pollTxCost();
-
-    return () => {
-      mounted = false;
-    };
-  }, [buyForTx, shouldRefreshTokenAmount, setTokenAmount, account]);
-
-  return {
-    amountNeeded,
-  };
+    return 2_000_000n * gasPrice;
+  }
 }

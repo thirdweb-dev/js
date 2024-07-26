@@ -1,22 +1,23 @@
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
-import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { GetWalletBalanceResult } from "../../../../../../../wallets/utils/getWalletBalance.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 
-export type BuyForTx = {
-  cost: bigint;
-  balance: bigint;
-  tx: PreparedTransaction;
-  tokenSymbol: string;
-  tokenDecimals: number;
+export type TransactionCostAndData = {
+  token: TokenInfo;
+  decimals: number;
+  walletBalance: GetWalletBalanceResult;
+  transactionValueWei: bigint;
+  gasCostWei: bigint;
 };
 
 export type SelectedScreen =
   | {
-      id:
-        | "main"
-        | "select-payment-method"
-        | "buy-with-fiat"
-        | "buy-with-crypto";
+      id: "main" | "select-payment-method" | "buy-with-fiat" | "select-wallet";
+    }
+  | {
+      id: "buy-with-crypto";
+      payDisabled?: boolean;
     }
   | {
       id: "select-from-token";
@@ -38,6 +39,9 @@ export type SelectedScreen =
       id: "fiat-flow";
       quote: BuyWithFiatQuote;
       openedWindow: Window | null;
+    }
+  | {
+      id: "transfer-flow";
     }
   | {
       id: "connect-payer-wallet";

@@ -816,13 +816,15 @@ function DetailsModal(props: {
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
-        onViewPendingTx={() => setScreen("transactions")}
         connectLocale={locale}
-        payOptions={props.detailsModal?.payOptions || {}}
+        payOptions={
+          props.detailsModal?.payOptions || {
+            mode: "fund_wallet",
+          }
+        }
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
-        buyForTx={undefined}
       />
     );
   }
@@ -1246,7 +1248,7 @@ export type UseWalletDetailsModalOptions = {
    *
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
-  payOptions?: PayUIOptions;
+  payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
 
   /**
    * Display the balance of a token instead of the native token
