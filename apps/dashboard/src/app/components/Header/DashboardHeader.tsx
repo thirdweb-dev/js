@@ -11,7 +11,7 @@ import { headerLinks } from "./headerLinks";
 export function DashboardHeader() {
   return (
     // the "h-24" avoids layout shift when connecting wallet (connected wallet button is taller than disconnected...)
-    <header className="flex flex-row items-center justify-between flex-shrink-0 h-20 border-b border-border bg-background md:h-24 py-4 px-4 md:px-6">
+    <header className="flex flex-row items-center justify-between flex-shrink-0 h-20 border-b border-border bg-background md:h-24 py-4 px-4 lg:px-6">
       {/* Left */}
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">

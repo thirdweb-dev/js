@@ -1,0 +1,97 @@
+import { ArrowLeftIcon } from "lucide-react";
+import Link from "next/link";
+import { Button } from "../../../../../../@/components/ui/button";
+import { NavLink } from "./nav-link.client";
+
+export type SidebarContentProps = {
+  isPaySupported: boolean;
+  hasFaucet: boolean;
+  slug: string;
+};
+
+export function SidebarContent(props: SidebarContentProps) {
+  return (
+    <>
+      <Button
+        size="sm"
+        className="gap-1.5 w-full justify-start text-secondary-foreground mb-2"
+        variant="ghost"
+        asChild
+      >
+        <Link href="/chainlist">
+          <ArrowLeftIcon className="size-4" />
+          <span>Back to Chainlist</span>
+        </Link>
+      </Button>
+      <Button
+        size="sm"
+        className="gap-1.5 w-full justify-start text-secondary-foreground"
+        variant="ghost"
+        asChild
+      >
+        <NavLink
+          href={`/${props.slug}`}
+          activeClassName="bg-accent text-accent-foreground"
+        >
+          Overview
+        </NavLink>
+      </Button>
+      {props.isPaySupported && (
+        <Button
+          size="sm"
+          className="gap-1.5 w-full justify-start text-secondary-foreground"
+          variant="ghost"
+          asChild
+        >
+          <NavLink
+            href={`/${props.slug}/bridge`}
+            activeClassName="bg-accent text-accent-foreground"
+          >
+            Bridge
+          </NavLink>
+        </Button>
+      )}
+      {props.hasFaucet && (
+        <Button
+          size="sm"
+          className="gap-1.5 w-full justify-start text-secondary-foreground"
+          variant="ghost"
+          asChild
+        >
+          <NavLink
+            href={`/${props.slug}/faucet`}
+            activeClassName="bg-accent text-accent-foreground"
+          >
+            Faucet
+          </NavLink>
+        </Button>
+      )}
+      <Button
+        size="sm"
+        className="gap-1.5 w-full justify-start text-secondary-foreground"
+        variant="ghost"
+        asChild
+      >
+        <NavLink
+          href={`/${props.slug}/trending`}
+          activeClassName="bg-accent text-accent-foreground"
+        >
+          Trending Contracts
+        </NavLink>
+      </Button>
+      <Button
+        size="sm"
+        className="gap-1.5 w-full justify-start text-secondary-foreground"
+        variant="ghost"
+        asChild
+      >
+        <NavLink
+          href={`/${props.slug}/deploy`}
+          activeClassName="bg-accent text-accent-foreground"
+        >
+          Deploy Contracts
+        </NavLink>
+      </Button>
+    </>
+  );
+}

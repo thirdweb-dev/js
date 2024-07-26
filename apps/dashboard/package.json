@@ -113,6 +113,7 @@
     "thirdweb": "workspace:*",
     "tiny-invariant": "^1.3.3",
     "use-debounce": "^10.0.1",
+    "vaul": "^0.9.1",
     "zksync-ethers": "5.9.0",
     "zod": "3.23.8"
   },

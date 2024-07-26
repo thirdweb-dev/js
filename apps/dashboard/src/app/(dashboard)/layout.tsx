@@ -6,7 +6,10 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
     <>
       <div className="flex flex-col h-full">
         <DashboardHeader />
-        <main className="grow">{props.children}</main>
+        {/* min height: 100vh minus header */}
+        <main className="grow min-h-[calc(100vh-80px)] lg:min-h-[calc(100vh-96px)]">
+          {props.children}
+        </main>
         <AppFooter />
       </div>
     </>
