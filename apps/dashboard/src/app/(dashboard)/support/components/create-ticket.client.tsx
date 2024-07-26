@@ -115,7 +115,8 @@ export function CreateTicket() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px]">
+      {/* Check this */}
+      <DialogContent>
         <form ref={formRef} action={formAction}>
           <DialogHeader>
             <DialogTitle>Get in touch</DialogTitle>
@@ -128,7 +129,7 @@ export function CreateTicket() {
           {/* render the form */}
           {user?.jwt ? (
             <>
-              <div className="py-4 flex flex-col gap-4">
+              <div className="py-4 flex flex-col gap-4 mt-3">
                 <SupportForm_SelectInput
                   formLabel="What do you need help with?"
                   name="product"

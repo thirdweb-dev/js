@@ -245,23 +245,23 @@ function ExtensionRow(props: {
         open={isUninstallModalOpen}
         onOpenChange={setIsUninstallModalOpen}
       >
-        <DialogContent className="border-border max-w-[calc(100vw-20px)] md:max-w-[450px] rounded-lg">
+        <DialogContent>
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleRemove();
             }}
           >
-            <DialogHeader className="text-xl tracking-tight font-semibold text-left mb-3">
+            <DialogHeader>
               <DialogTitle>Uninstall Extension</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to uninstall{" "}
+                <span className="text-foreground font-medium ">
+                  {contractInfo.name}
+                </span>{" "}
+                ?
+              </DialogDescription>
             </DialogHeader>
-            <DialogDescription>
-              Are you sure you want to uninstall{" "}
-              <span className="text-foreground font-medium ">
-                {contractInfo.name}
-              </span>{" "}
-              ?
-            </DialogDescription>
 
             <DialogFooter className="mt-10 gap-3 md:gap-1 flex-row justify-end">
               <Button
