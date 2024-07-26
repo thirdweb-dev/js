@@ -1,3 +1,4 @@
+import { maxUint256 } from "viem";
 import { getContract } from "../../../contract/contract.js";
 import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
 import { getAddress } from "../../../utils/address.js";
@@ -9,12 +10,22 @@ import { approve } from "../__generated__/IERC20/write/approve.js";
 export type GetApprovalForTransactionParams = {
   transaction: PreparedTransaction;
   account: Account;
+
+  /**
+   * By default, this extension only asks to approve the allowance by an exactly needed amount.
+   *
+   * Which means the next time users will likely have to do it again.
+   *
+   * If `approveInfinite` is set to `true`, this method will return a transaction for approving an infinite amount of ERC20 (aka. max unit256).
+   * This option can potentially make the UX better since users don't have to approve every time.
+   */
+  approveInfinite?: boolean;
 };
 
 export async function getApprovalForTransaction(
   options: GetApprovalForTransactionParams,
 ): Promise<PreparedTransaction | null> {
-  const { transaction, account } = options;
+  const { transaction, account, approveInfinite } = options;
   if (!account) {
     return null;
   }
@@ -49,7 +60,7 @@ export async function getApprovalForTransaction(
 
     return approve({
       contract,
-      value: erc20Value.amountWei,
+      value: approveInfinite ? maxUint256 : erc20Value.amountWei,
       spender: target,
     });
   }
