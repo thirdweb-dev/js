@@ -1,3 +1,4 @@
+import { AppFooter } from "@/components/blocks/app-footer";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   ButtonGroup,
@@ -20,7 +21,6 @@ import {
   Button,
   Link,
   LinkButton,
-  Text,
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
@@ -83,7 +83,8 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         )}
       </GridItem>
 
-      <AppFooter />
+      {/* the z index is necessary to "overlay" the dashboard sidebar tunnel */}
+      <AppFooter className="col-span-2 z-[10000]" />
     </Grid>
   );
 };
@@ -239,62 +240,6 @@ const AppHeader: React.FC = () => {
           </LinkButton>
         </ButtonGroup>
       </Container>
-    </GridItem>
-  );
-};
-
-const AppFooter: React.FC = () => {
-  return (
-    <GridItem
-      display="flex"
-      colSpan={2}
-      rowSpan={1}
-      as="footer"
-      w="full"
-      py={4}
-      gap={4}
-      alignItems="center"
-      flexDir={{ base: "column", md: "row" }}
-      justifyContent="center"
-      bg="backgroundHighlight"
-      zIndex="sticky"
-    >
-      <TrackedLink
-        isExternal
-        href="https://feedback.thirdweb.com"
-        category="footer"
-        label="feedback"
-      >
-        <Text>Feedback</Text>
-      </TrackedLink>
-      <TrackedLink isExternal href="/privacy" category="footer" label="privacy">
-        <Text>Privacy Policy</Text>
-      </TrackedLink>
-      <TrackedLink isExternal href="/tos" category="footer" label="terms">
-        <Text>Terms of Service</Text>
-      </TrackedLink>
-
-      <TrackedLink
-        href="/gas"
-        bg="transparent"
-        category="footer"
-        display={{ base: "none", md: "flex" }}
-        label="gas-estimator"
-      >
-        <Text>Gas Estimator</Text>
-      </TrackedLink>
-      <TrackedLink
-        href="/chainlist"
-        bg="transparent"
-        category="footer"
-        display={{ base: "none", md: "flex" }}
-        label="chains"
-      >
-        <Text>Chainlist</Text>
-      </TrackedLink>
-      <Text alignSelf="center" order={{ base: 2, md: 0 }} opacity={0.5}>
-        Copyright &copy; {new Date().getFullYear()} thirdweb
-      </Text>
     </GridItem>
   );
 };
