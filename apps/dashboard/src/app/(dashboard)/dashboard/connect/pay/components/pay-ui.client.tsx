@@ -12,6 +12,7 @@ import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { PayAnalytics } from "components/pay/PayAnalytics/PayAnalytics";
 import { PayConfig } from "components/pay/PayConfig";
 import { useMemo, useState } from "react";
+import { WebhooksPage } from "./webhooks.client";
 
 export function PayUI(props: {
   apiKeys: ApiKey[];
@@ -19,9 +20,9 @@ export function PayUI(props: {
   const [selectedKeyId, setSelectedKeyId] = useState<string>(
     props.apiKeys[0].key,
   );
-  const [activeTab, setActiveTab] = useState<"settings" | "analytics">(
-    "analytics",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "settings" | "analytics" | "webhooks"
+  >("analytics");
 
   const selectedKey = useMemo(() => {
     // biome-ignore lint/style/noNonNullAssertion: This is a valid use case for non-null assertion
@@ -38,6 +39,12 @@ export function PayUI(props: {
               name: "Analytics",
               isActive: activeTab === "analytics",
               onClick: () => setActiveTab("analytics"),
+              isEnabled: true,
+            },
+            {
+              name: "Webhooks",
+              isActive: activeTab === "webhooks",
+              onClick: () => setActiveTab("webhooks"),
               isEnabled: true,
             },
             {
@@ -69,6 +76,7 @@ export function PayUI(props: {
       {/* TODO: split this into sub-pages */}
       {activeTab === "analytics" && <PayAnalytics apiKey={selectedKey} />}
       {activeTab === "settings" && <PayConfig apiKey={selectedKey} />}
+      {activeTab === "webhooks" && <WebhooksPage apiKey={selectedKey} />}
     </>
   );
 }

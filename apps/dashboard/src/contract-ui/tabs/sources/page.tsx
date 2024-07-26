@@ -13,19 +13,22 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import { toast } from "sonner";
 import { Badge, Button, Card, Heading } from "tw-components";
 
 interface ContractSourcesPageProps {
   contractAddress?: string;
 }
 
-type VerifyContractParams = {
+type ContractParams = {
   contractAddress: string;
   chainId: number;
 };
@@ -40,7 +43,7 @@ interface VerificationResult {
 export async function verifyContract({
   contractAddress,
   chainId,
-}: VerifyContractParams) {
+}: ContractParams) {
   try {
     const response = await fetch(
       "https://contract.thirdweb.com/verify/contract",
@@ -176,13 +179,15 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
   contractAddress,
 }) => {
   const [resetSignal, setResetSignal] = useState(0);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const handleClose = () => {
     onClose();
     // Increment to reset the query in the child component
     setResetSignal((prev: number) => prev + 1);
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const contractSourcesQuery = useContractSources(contractAddress);
 
   const { contract } = useContract(contractAddress);
@@ -205,7 +210,7 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
       .reverse();
   }, [contractSourcesQuery.data]);
 
-  if (!contractAddress) {
+  if (!contractAddress || !contract) {
     return <div>No contract address provided</div>;
   }
 
@@ -222,16 +227,20 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
     <>
       <VerifyContractModal
         isOpen={isOpen}
-        onClose={handleClose}
+        onClose={() => handleClose()}
         contractAddress={contractAddress}
         resetSignal={resetSignal}
       />
+
       <Flex direction="column" gap={8}>
         <Flex direction="row" alignItems="center" gap={2}>
           <Heading size="title.sm" flex={1}>
             Sources
           </Heading>
-
+          <RefreshContractMetadataButton
+            chainId={contract.chainId}
+            contractAddress={contract.getAddress()}
+          />
           <Button variant="solid" colorScheme="purple" onClick={onOpen}>
             Verify contract
           </Button>
@@ -243,3 +252,58 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
     </>
   );
 };
+
+function RefreshContractMetadataButton(props: {
+  chainId: number;
+  contractAddress: string;
+}) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const contractCacheMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        `https://contract.thirdweb.com/metadata/${props.chainId}/${props.contractAddress}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (!response.ok) {
+        const errorMsg = await response.json();
+        console.error(`Failed to purge contract cache: ${response.statusText}`);
+
+        throw new Error(
+          errorMsg.message ||
+            errorMsg.error ||
+            "Failed to refresh contract data.",
+        );
+      }
+      // successful response
+      return true;
+    },
+    onSuccess: async () => {
+      // invalidate _all_ queries
+      await queryClient.invalidateQueries();
+      // refresh the page
+      setTimeout(() => {
+        router.refresh();
+      }, 1000);
+    },
+  });
+
+  return (
+    <Button
+      isLoading={contractCacheMutation.isLoading}
+      variant="outline"
+      onClick={() => {
+        toast.promise(contractCacheMutation.mutateAsync(), {
+          duration: 5000,
+          loading: "Refreshing contract data...",
+          success: () => "Contract data refreshed!",
+          error: (e) => e?.message || "Failed to refresh contract data.",
+        });
+      }}
+    >
+      Refresh Contract Data
+    </Button>
+  );
+}
