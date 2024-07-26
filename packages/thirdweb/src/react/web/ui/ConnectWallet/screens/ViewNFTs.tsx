@@ -16,6 +16,7 @@ import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
+import type { ConnectLocale } from "../locale/types.js";
 
 const fetchNFTs = async (
   client: ThirdwebClient,
@@ -69,6 +70,7 @@ export function ViewNFTs(props: {
   theme: Theme | "light" | "dark";
   onBack: () => void;
   client: ThirdwebClient;
+  connectLocale: ConnectLocale;
 }) {
   const activeAccount = useActiveAccount();
   const activeChain = useActiveWalletChain();
@@ -76,6 +78,8 @@ export function ViewNFTs(props: {
   if (!activeChain?.id || !activeAccount?.address) {
     return null;
   }
+
+  const { connectLocale } = props;
 
   const nftList = useMemo(() => {
     const nfts = [];
@@ -108,7 +112,10 @@ export function ViewNFTs(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader title="View NFTs" onBack={props.onBack} />
+        <ModalHeader
+          title={connectLocale.viewFunds.viewNFTs}
+          onBack={props.onBack}
+        />
       </Container>
       <Line />
       <Container

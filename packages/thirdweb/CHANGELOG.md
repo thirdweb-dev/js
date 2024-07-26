@@ -1,5 +1,251 @@
 # thirdweb
 
+## 5.40.0
+
+### Minor Changes
+
+- [#3750](https://github.com/thirdweb-dev/js/pull/3750) [`4a4a061`](https://github.com/thirdweb-dev/js/commit/4a4a0612ed6976268d35605b6cd94b077e40c25a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New PayEmbed modes and revamp TransactionButton flow
+
+  You can now configure the PayEmbed component to build 3 different flows:
+
+  - Fund wallets: Inline component that allows users to buy any currency. (default)
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "fund_wallet",
+    }}
+  />
+  ```
+
+  - Direct payments: Take payments from Fiat or Crypto directly to your seller wallet.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x...",
+        chain: base,
+        amount: "0.1",
+      },
+      metadata: {
+        name: "Black Hoodie (Size L)",
+        image: "https://example.com/image.png",
+      },
+    }}
+  />
+  ```
+
+  - Transaction payments: Let your users pay for onchain transactions with fiat or crypto on any chain.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "transaction",
+      transaction: claimTo({
+        contract,
+        tokenId: 0n,
+        to: toAddress,
+      }),
+      metadata: nft?.metadata,
+    }}
+  />
+  ```
+
+  You can also configure the TransactionButton component to show metadata to personalize the transaction payment flow:
+
+  ```tsx
+  <TransactionButton
+    transaction={() => {
+      return transfer({
+        contract,
+        amount: 10n,
+        to: toAddress,
+      });
+    }}
+    payModal={{
+      metadata: {
+        name: "Buy me a coffee",
+        image: "https://example.com/image.png",
+      },
+    }}
+  />
+  ```
+
+- [#3822](https://github.com/thirdweb-dev/js/pull/3822) [`3848327`](https://github.com/thirdweb-dev/js/commit/3848327373e49aa83c5902e6a16d5b8e96cf1eeb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to open OAuth windows as a redirect. This is useful for embedded applications such as telegram web apps.
+
+  Be sure to include your domain in the allowlisted domains for your client ID.
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    auth: {
+      mode: "redirect",
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3813](https://github.com/thirdweb-dev/js/pull/3813) [`6081ac7`](https://github.com/thirdweb-dev/js/commit/6081ac7b18878812d55d945caaf0d9c3dd884b8b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose types: NFTInput and NFTMetadata
+
+- [#3815](https://github.com/thirdweb-dev/js/pull/3815) [`87dc9a5`](https://github.com/thirdweb-dev/js/commit/87dc9a5f90685b0c1015bd4d07ab356c104a2726) Thanks [@MananTank](https://github.com/MananTank)! - Allow clicking on other wallet when a wallet is connected and sign in is required in `ConnectEmbed` component.
+
+## 5.39.0
+
+### Minor Changes
+
+- [#3785](https://github.com/thirdweb-dev/js/pull/3785) [`105e523`](https://github.com/thirdweb-dev/js/commit/105e523ce4cddbd343ac8c06fb9f234fb3a8b4f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ClaimButton for claiming tokens from all thirdweb Drop contracts
+
+  Higher level abstraction to claim tokens from all thirdweb Drop contracts
+
+  ```tsx
+  import { ClaimButton } from "thirdweb/react";
+  import { ethereum } from "thirdweb/chains";
+
+  <ClaimButton
+    contractAddress="0x..."
+    chain={ethereum}
+    client={client}
+    claimParams={{
+      type: "ERC721",
+      quantity: 1n,
+    }}
+  >
+    Claim now
+  </ClaimButton>;
+  ```
+
+### Patch Changes
+
+- [#3792](https://github.com/thirdweb-dev/js/pull/3792) [`5fabe66`](https://github.com/thirdweb-dev/js/commit/5fabe6661399615b393d1055a722b9de59bf19bb) Thanks [@MananTank](https://github.com/MananTank)! - handle `null` value of `effectiveGasPrice` in `sendTransaction` method of `toEthersSigner` adapter that throws error when trying to convert to BigNumber. This is causing issue in XDC Network (chain Id 50) and XDC Apothem testnet (chain id 51)
+
+- [#3804](https://github.com/thirdweb-dev/js/pull/3804) [`cb616f7`](https://github.com/thirdweb-dev/js/commit/cb616f75ed38fac2be243163f0139e5cbb9892be) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimation on arbitrum sepolia
+
+- [#3524](https://github.com/thirdweb-dev/js/pull/3524) [`8599fbf`](https://github.com/thirdweb-dev/js/commit/8599fbf4e008de64c6118193c411b6d3b0810790) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Modular contracts deployment setup
+
+- [#3782](https://github.com/thirdweb-dev/js/pull/3782) [`c82c524`](https://github.com/thirdweb-dev/js/commit/c82c524e139d7960794e08bca838a1a1b78a3532) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding nonce for smart accounts
+
+- [#3801](https://github.com/thirdweb-dev/js/pull/3801) [`a51f53f`](https://github.com/thirdweb-dev/js/commit/a51f53f531adedc355624fb89d2d50767a9fb1a1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix RPC URL construction for chains
+
+- [#3805](https://github.com/thirdweb-dev/js/pull/3805) [`5c9af85`](https://github.com/thirdweb-dev/js/commit/5c9af853fa7a58ee8c0572e235a5b20f8247297c) Thanks [@jnsdls](https://github.com/jnsdls)! - [performance] - fix rpc client reuse
+
+- [#3796](https://github.com/thirdweb-dev/js/pull/3796) [`c51f785`](https://github.com/thirdweb-dev/js/commit/c51f7857e2363e01371f21487f4a5aa74f6f89f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle polygon amoy gas station
+
+- [#3800](https://github.com/thirdweb-dev/js/pull/3800) [`b15118a`](https://github.com/thirdweb-dev/js/commit/b15118a34fcfb3ed7b81d6ffea733a2499e5a895) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Minor style fixes on the Connect UI Send Funds page
+
+- [#3791](https://github.com/thirdweb-dev/js/pull/3791) [`9cc9f05`](https://github.com/thirdweb-dev/js/commit/9cc9f05f68654f12ef8f9434a3d7af6fc40ecb18) Thanks [@keyding](https://github.com/keyding)! - Fix bun detection
+
+## 5.38.0
+
+### Minor Changes
+
+- [#3766](https://github.com/thirdweb-dev/js/pull/3766) [`9f555ca`](https://github.com/thirdweb-dev/js/commit/9f555cab0d96f5094ea35efec14a1622a63379af) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add more chains: Astria EVM Dusknet (912559), Blast Sepolia (168587773), Celo (42220), Cronos (25), Degen (666666666), Fantom Testnet (4002), Fantom (250), Frame Tesnet (68840142), Gnosis Chiado Testnet (10200), Gnosis (100), GodWoken (71402), GodWoken Testnet (71401), Hokum Testnet (20482050), Localhost (1337), Loot chain (5151706), Manta Pacific (169), Manta Pacific Testnet (3441005), Moonbeam (1284), Palm Testnet (11297108099), Palm (11297108109), Polygon zkEvm Testnet (1442), Polygon zkEVM (1101), Rari Testnet (1918988905), Rari chain (1380012617), Scroll Alpha Testnet (534353), Scroll Sepolia Testnet (534353), Scroll (534352), Xai Sepolia (37714555429), Xai Mainnet(660279), zk Candy Sepolia (302)
+
+### Patch Changes
+
+- [#3767](https://github.com/thirdweb-dev/js/pull/3767) [`11b2ad0`](https://github.com/thirdweb-dev/js/commit/11b2ad05ad2bd42ecb1e2840796950ec93d6264a) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose roleMap and getRoleHash
+
+- [#3764](https://github.com/thirdweb-dev/js/pull/3764) [`26d825b`](https://github.com/thirdweb-dev/js/commit/26d825bc4f0475523ea761aa18ab979557295c28) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add extension support for Lens Protocol
+
+- [#3779](https://github.com/thirdweb-dev/js/pull/3779) [`d3c8302`](https://github.com/thirdweb-dev/js/commit/d3c83023f8d802d0cae54a27239d5c98668bf4d5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improved in-app wallet sign-in speed
+
+- [#3769](https://github.com/thirdweb-dev/js/pull/3769) [`a9a3f0f`](https://github.com/thirdweb-dev/js/commit/a9a3f0f423c1ec78c2cc72507f21c5b3ca0d1dbd) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix deterministic deploys with specified versions
+
+- [#3687](https://github.com/thirdweb-dev/js/pull/3687) [`f082af0`](https://github.com/thirdweb-dev/js/commit/f082af0403befffa37a448d41864f1462ede3312) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Fix proxy resolution. Use implementation call in case of beacon.
+
+## 5.37.0
+
+### Minor Changes
+
+- [#3678](https://github.com/thirdweb-dev/js/pull/3678) [`31ee4e5`](https://github.com/thirdweb-dev/js/commit/31ee4e53e2e42ecda3790c7a4bd08f4d5e2c1aaa) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Add discord login as an option of thirdweb in app wallet and ecosystem wallet logins
+
+  ```typescript
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet();
+  const account = await wallet.connect({
+    client,
+    chain,
+    strategy: "discord",
+  });
+  ```
+
+- [#3716](https://github.com/thirdweb-dev/js/pull/3716) [`ec3405b`](https://github.com/thirdweb-dev/js/commit/ec3405b307b95dadd0abe3b40e8cbfe223c48a6b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds Discord login to the React Native SDK
+
+### Patch Changes
+
+- [#3746](https://github.com/thirdweb-dev/js/pull/3746) [`870be08`](https://github.com/thirdweb-dev/js/commit/870be083f747417d437e3b173e92e614b43c5b13) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update Connect UI tabs styling
+
+- [#3751](https://github.com/thirdweb-dev/js/pull/3751) [`aba1266`](https://github.com/thirdweb-dev/js/commit/aba1266431d020ee7bb8c8c8f2728a97d1161ad5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle minimum amount in buy to crypto flow
+
+- [#3762](https://github.com/thirdweb-dev/js/pull/3762) [`6a94696`](https://github.com/thirdweb-dev/js/commit/6a94696c7e7db3d4e0920e039bdc187ab42e3c50) Thanks [@MananTank](https://github.com/MananTank)! - Fix Wallet switcher icon position in wallet details modal
+
+- [#3661](https://github.com/thirdweb-dev/js/pull/3661) [`c6741b4`](https://github.com/thirdweb-dev/js/commit/c6741b42cd6dcb01bceaf7fc2c2e1c71bd93abd1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle ERC20 transaction value in Pay components
+
+- [#3748](https://github.com/thirdweb-dev/js/pull/3748) [`24bcee2`](https://github.com/thirdweb-dev/js/commit/24bcee24ead355c79c62421353f70c83c3e2f9dc) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix disconnect button color in light mode SIWE react native
+
+- [#3676](https://github.com/thirdweb-dev/js/pull/3676) [`56b34ce`](https://github.com/thirdweb-dev/js/commit/56b34ce197b4e9003d4d8625f0453532137ae8d2) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Allow to add extra call data to `prepareContractCall`
+
+## 5.36.0
+
+### Minor Changes
+
+- [#3718](https://github.com/thirdweb-dev/js/pull/3718) [`6bda057`](https://github.com/thirdweb-dev/js/commit/6bda0573067162384bb2cade88fa2d0bc732be04) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds transaction history page to connect modal UI
+
+### Patch Changes
+
+- [#3730](https://github.com/thirdweb-dev/js/pull/3730) [`db2cadf`](https://github.com/thirdweb-dev/js/commit/db2cadfc4b4838bf3daf6894e437fc32b6300262) Thanks [@MananTank](https://github.com/MananTank)! - Update buffer calculation of transaction if gas estimation fails for Pay Modal
+
+- [#3735](https://github.com/thirdweb-dev/js/pull/3735) [`6cc3038`](https://github.com/thirdweb-dev/js/commit/6cc3038298cb562372dee114cc7e80e65248b09e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add optional 'from' in readContract()
+
+- [#3719](https://github.com/thirdweb-dev/js/pull/3719) [`05df89c`](https://github.com/thirdweb-dev/js/commit/05df89cb614cb40903f27b8904995c9847fd620c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for ERC20 paymaster for smart accounts
+
+- [#3728](https://github.com/thirdweb-dev/js/pull/3728) [`0a5af48`](https://github.com/thirdweb-dev/js/commit/0a5af48f70a76fc060909b853e20c927328c31c3) Thanks [@MananTank](https://github.com/MananTank)! - Fix chain with custom RPC not used if the chain object is passed in the `chains` prop to `ConnectButton`, `ConnectEmbed` or `PayEmbed` components.
+
+  This also fixes dashboard not using custom chain's RPC since it passes the chain object via `chains` prop
+
+## 5.35.0
+
+### Minor Changes
+
+- [#3709](https://github.com/thirdweb-dev/js/pull/3709) [`73c74f1`](https://github.com/thirdweb-dev/js/commit/73c74f11d4d3fa1e67f8171228962e6474ae4602) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds fetchProofsERCXX methods
+
+### Patch Changes
+
+- [#3677](https://github.com/thirdweb-dev/js/pull/3677) [`a3fb673`](https://github.com/thirdweb-dev/js/commit/a3fb673e508f2236ebd71e4b50599e542f2ad763) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle universal links on ios for coinbase wallet connection
+
+- [#3708](https://github.com/thirdweb-dev/js/pull/3708) [`1a09f46`](https://github.com/thirdweb-dev/js/commit/1a09f46f246dbcb322fcde84c78895943ecc04f1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support auth in React Native
+
+- [#3689](https://github.com/thirdweb-dev/js/pull/3689) [`6ad65e2`](https://github.com/thirdweb-dev/js/commit/6ad65e234c6ce071c27e18af76720533dbf04a4a) Thanks [@MananTank](https://github.com/MananTank)! - Add `type` prop for `TransactionButton`
+
+- [#3662](https://github.com/thirdweb-dev/js/pull/3662) [`8e1a24a`](https://github.com/thirdweb-dev/js/commit/8e1a24a60eac74923b323f15b73249c4f4f40e7d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add recipient address to PayEmbed
+
+- [#3673](https://github.com/thirdweb-dev/js/pull/3673) [`9f3fb7d`](https://github.com/thirdweb-dev/js/commit/9f3fb7d1eeae91c301745647279c24d451989cc9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix account address override in smart wallet
+
+- [#3694](https://github.com/thirdweb-dev/js/pull/3694) [`817a778`](https://github.com/thirdweb-dev/js/commit/817a778a17d4ccae8a5c46049deb24ed49c92d4b) Thanks [@MananTank](https://github.com/MananTank)! - Fix Network Switcher only showing 1 search result
+
+- [#3681](https://github.com/thirdweb-dev/js/pull/3681) [`3479117`](https://github.com/thirdweb-dev/js/commit/3479117b286ddcd629cf6417eec4e38807317fe9) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add Vietnamese locale for ConnectButton components
+
+- [#3707](https://github.com/thirdweb-dev/js/pull/3707) [`f8f6790`](https://github.com/thirdweb-dev/js/commit/f8f6790da7f9a7747a4d4e67eee455f1f045c6b5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix in-app wallet typed data signatures
+
+- [#3706](https://github.com/thirdweb-dev/js/pull/3706) [`aadbd33`](https://github.com/thirdweb-dev/js/commit/aadbd33e9d696bd7dd77561fa3f3a0a0fa7747f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make client and chain mandatory in useWalletBalance
+
+- [#3688](https://github.com/thirdweb-dev/js/pull/3688) [`7e416c0`](https://github.com/thirdweb-dev/js/commit/7e416c0f6b0c9ae42d615ca78aa49e13ae54501c) Thanks [@MananTank](https://github.com/MananTank)! - Add queryOptions for `useWalletBalance` hook
+
+- [#3659](https://github.com/thirdweb-dev/js/pull/3659) [`eabb215`](https://github.com/thirdweb-dev/js/commit/eabb2150a93bdd5a6a1aacae141994f1b148232e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add support for Zora1155 in ERC1155 > getOwned
+
+- [#3690](https://github.com/thirdweb-dev/js/pull/3690) [`81751d3`](https://github.com/thirdweb-dev/js/commit/81751d3e0882a79611a9b2f2d9e7fbd8c60afbcd) Thanks [@MananTank](https://github.com/MananTank)! - Fix "add custom network" button not closing details modal
+
+- [#3685](https://github.com/thirdweb-dev/js/pull/3685) [`aee7aef`](https://github.com/thirdweb-dev/js/commit/aee7aef76fd23eceed8b83badad5853a23d15b48) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export utils method: getClaimParams for thirdweb Drop contracts
+
+- [#3712](https://github.com/thirdweb-dev/js/pull/3712) [`c5b9740`](https://github.com/thirdweb-dev/js/commit/c5b97407b06c7255880e2ae483a62d961b7eb065) Thanks [@farhanW3](https://github.com/farhanW3)! - updated getUserOpReceipt & waitForUserOpReceipt to use a decodeRevertReason flag. Updated example for createUnsignedUserOp & signUserOp. Exposed getPaymasterAndData for Paymaster
+
+- [#3704](https://github.com/thirdweb-dev/js/pull/3704) [`baec85f`](https://github.com/thirdweb-dev/js/commit/baec85f6b4f2bbc76aca9e2e0e3624f6aef16437) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix error message not showing on reverts
+
 ## 5.34.3
 
 ### Patch Changes

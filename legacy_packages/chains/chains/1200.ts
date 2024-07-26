@@ -5,7 +5,7 @@ export default {
   "explorers": [
     {
       "name": "Cuckoo Chain Explorer",
-      "url": "https://mainnet-scan.cuckoo.network",
+      "url": "https://scan.cuckoo.network",
       "standard": "EIP3091"
     }
   ],

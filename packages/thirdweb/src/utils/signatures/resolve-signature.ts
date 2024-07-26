@@ -18,7 +18,6 @@ async function resolveFunctionSignature(
   );
   if (!res.ok) {
     res.body?.cancel();
-    console.log(res.statusText);
     return null;
   }
   const data = await res.json();
@@ -41,7 +40,6 @@ async function resolveEventSignature(
   );
   if (!res.ok) {
     res.body?.cancel();
-    console.log(res.statusText);
     return null;
   }
   const data = await res.json();

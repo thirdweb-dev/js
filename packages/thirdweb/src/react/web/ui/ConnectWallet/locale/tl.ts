@@ -16,7 +16,9 @@ const connectWalletLocalTl: ConnectLocale = {
   getStarted: "Simulan",
   guest: "Guest",
   buy: "Buy", // TODO
-  transactions: "Transactions", // TODO
+  transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions", // TODO
   send: "Ipadala",
   receive: "Matanggap",
@@ -99,6 +101,17 @@ const connectWalletLocalTl: ConnectLocale = {
       failedToSignIn: "Hindi nagawa ang pagsisign-in",
       inProgress: "Naghihintay ng Kumpirmasyon",
     },
+  },
+  manageWallet: {
+    title: "Manage Wallet",
+    connectAnApp: "Connect an App",
+    exportPrivateKey: "Export Private Key",
+  },
+  viewFunds: {
+    title: "View Funds",
+    viewNFTs: "View NFTs",
+    viewTokens: "View Tokens",
+    viewAssets: "View Assets",
   },
 };
 

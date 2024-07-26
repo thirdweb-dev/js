@@ -141,7 +141,7 @@ export const IconButton = /* @__PURE__ */ StyledButton((_) => {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: radius.md,
+    borderRadius: radius.sm,
     WebkitTapHighlightColor: "transparent",
     color: theme.colors.secondaryIconColor,
     padding: "2px",

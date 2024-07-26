@@ -1,0 +1,410 @@
+[
+    {
+      "type": "function",
+      "name": "beforeMintERC20",
+      "inputs": [
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
+        { "name": "_data", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "cancelOwnershipHandover",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "completeOwnershipHandover",
+      "inputs": [
+        { "name": "pendingOwner", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "eip712Domain",
+      "inputs": [],
+      "outputs": [
+        { "name": "fields", "type": "bytes1", "internalType": "bytes1" },
+        { "name": "name", "type": "string", "internalType": "string" },
+        { "name": "version", "type": "string", "internalType": "string" },
+        { "name": "chainId", "type": "uint256", "internalType": "uint256" },
+        {
+          "name": "verifyingContract",
+          "type": "address",
+          "internalType": "address"
+        },
+        { "name": "salt", "type": "bytes32", "internalType": "bytes32" },
+        {
+          "name": "extensions",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "encodeBytesBeforeMintERC20",
+      "inputs": [
+        {
+          "name": "params",
+          "type": "tuple",
+          "internalType": "struct MintableERC20.MintParamsERC20",
+          "components": [
+            {
+              "name": "request",
+              "type": "tuple",
+              "internalType": "struct MintableERC20.MintRequestERC20",
+              "components": [
+                {
+                  "name": "startTimestamp",
+                  "type": "uint48",
+                  "internalType": "uint48"
+                },
+                {
+                  "name": "endTimestamp",
+                  "type": "uint48",
+                  "internalType": "uint48"
+                },
+                {
+                  "name": "recipient",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "quantity",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "currency",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "pricePerUnit",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+              ]
+            },
+            { "name": "signature", "type": "bytes", "internalType": "bytes" }
+          ]
+        }
+      ],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "encodeBytesOnInstall",
+      "inputs": [
+        {
+          "name": "primarySaleRecipient",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "encodeBytesOnUninstall",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "getExtensionConfig",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "config",
+          "type": "tuple",
+          "internalType": "struct IExtensionConfig.ExtensionConfig",
+          "components": [
+            {
+              "name": "registerInstallationCallback",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "requiredInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "supportedInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "callbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IExtensionConfig.CallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                }
+              ]
+            },
+            {
+              "name": "fallbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IExtensionConfig.FallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                },
+                {
+                  "name": "permissionBits",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "getSaleConfig",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "primarySaleRecipient",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "grantRoles",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "roles", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "hasAllRoles",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "roles", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "hasAnyRole",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "roles", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "onInstall",
+      "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "onUninstall",
+      "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        { "name": "result", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "ownershipHandoverExpiresAt",
+      "inputs": [
+        { "name": "pendingOwner", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [
+        { "name": "result", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "renounceRoles",
+      "inputs": [
+        { "name": "roles", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "requestOwnershipHandover",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "revokeRoles",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "roles", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "rolesOf",
+      "inputs": [
+        { "name": "user", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [
+        { "name": "roles", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setSaleConfig",
+      "inputs": [
+        {
+          "name": "_primarySaleRecipient",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        { "name": "newOwner", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "event",
+      "name": "OwnershipHandoverCanceled",
+      "inputs": [
+        {
+          "name": "pendingOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipHandoverRequested",
+      "inputs": [
+        {
+          "name": "pendingOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "name": "oldOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "RolesUpdated",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "roles",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "AlreadyInitialized", "inputs": [] },
+    {
+      "type": "error",
+      "name": "BeforeMintCallbackERC20NotImplemented",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "MintableIncorrectNativeTokenSent",
+      "inputs": []
+    },
+    { "type": "error", "name": "MintableRequestMismatch", "inputs": [] },
+    { "type": "error", "name": "MintableRequestOutOfTimeWindow", "inputs": [] },
+    { "type": "error", "name": "MintableRequestUidReused", "inputs": [] },
+    { "type": "error", "name": "MintableRequestUnauthorized", "inputs": [] },
+    { "type": "error", "name": "NewOwnerIsZeroAddress", "inputs": [] },
+    { "type": "error", "name": "NoHandoverRequest", "inputs": [] },
+    { "type": "error", "name": "Unauthorized", "inputs": [] }
+  ]

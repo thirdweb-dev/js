@@ -14,6 +14,7 @@ import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
  * It includes information about which tokens to swap, the amount of tokens to swap, slippage, etc.
+ * @buyCrypto
  */
 export type GetBuyWithCryptoQuoteParams = {
   /**
@@ -103,6 +104,9 @@ export type GetBuyWithCryptoQuoteParams = {
     }
 );
 
+/**
+ * @buyCrypto
+ */
 export type QuoteTokenInfo = {
   chainId: number;
   tokenAddress: string;
@@ -169,8 +173,14 @@ type BuyWithCryptoQuoteRouteResponse = {
   bridge?: string;
 };
 
+/**
+ * @buyCrypto
+ */
 export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoQuote = {
   transactionRequest: PrepareTransactionOptions;
   approval?: PrepareTransactionOptions;
@@ -265,13 +275,8 @@ export async function getBuyWithCryptoQuote(
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
       const errorObj = await response.json();
-      if (
-        errorObj &&
-        "error" in errorObj &&
-        typeof errorObj.error === "object" &&
-        "message" in errorObj.error
-      ) {
-        throw new Error(errorObj.error.message);
+      if (errorObj && "error" in errorObj) {
+        throw errorObj;
       }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -327,7 +332,7 @@ export async function getBuyWithCryptoQuote(
 
     return swapRoute;
   } catch (error) {
-    console.error("Fetch error:", error);
-    throw new Error(`Fetch failed: ${error}`);
+    console.error("Error getting buy with crypto quote", error);
+    throw error;
   }
 }

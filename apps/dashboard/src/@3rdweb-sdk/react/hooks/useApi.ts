@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import type { Chain } from "@thirdweb-dev/chains";
+import type { ChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
@@ -925,7 +925,7 @@ export async function fetchChainsFromApi() {
     throw new Error(json.error.message);
   }
 
-  return json.data as Chain[];
+  return json.data as ChainMetadata[];
 }
 
 export function useApiChains() {

@@ -3,6 +3,9 @@ import type { NFT } from "../../../utils/nft/parseNft.js";
 import type { GetBalanceResult } from "../../erc20/read/getBalance.js";
 import type { ListingStatus } from "../types.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type EnglishAuction = {
   id: bigint;
   creatorAddress: Address;

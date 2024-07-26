@@ -13,6 +13,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
       contract: USDT_CONTRACT,
       method: "function balanceOf(address) returns (uint256)",
       params: [VITALIK_WALLET],
+      from: VITALIK_WALLET,
     });
     expect(result).toMatchInlineSnapshot("1544900798n");
   });

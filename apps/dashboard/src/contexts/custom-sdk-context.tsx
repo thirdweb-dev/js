@@ -11,7 +11,24 @@ import {
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
+import { ethereum } from "thirdweb/chains";
 import type { ComponentWithChildren } from "types/component-with-children";
+import type { StoredChain } from "./configured-chains";
+
+const PLACEHOLDER_CHAIN: StoredChain = {
+  chainId: 1,
+  chain: "ETH",
+  name: "Ethereum",
+  rpc: [ethereum.rpc],
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  shortName: "eth",
+  slug: "ethereum",
+  testnet: false,
+};
 
 export const CustomSDKContext: ComponentWithChildren<{
   desiredChainId?: number;
@@ -27,7 +44,9 @@ export const CustomSDKContext: ComponentWithChildren<{
       activeChain={desiredChainId}
       signer={signer}
       queryClient={queryClient}
-      supportedChains={configuredChains}
+      supportedChains={
+        configuredChains.length ? configuredChains : [PLACEHOLDER_CHAIN]
+      }
       sdkOptions={{
         gasSettings: {
           maxPriceInGwei: 650,
@@ -36,7 +55,7 @@ export const CustomSDKContext: ComponentWithChildren<{
           networkInfo && desiredChainId
             ? {
                 chainId: desiredChainId,
-                rpcUrl: getDashboardChainRpc(networkInfo),
+                rpcUrl: getDashboardChainRpc(desiredChainId),
               }
             : undefined,
         ...options,

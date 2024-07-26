@@ -277,3 +277,8 @@ export {
 
 // re-exports of types
 export type { AbiParameterToPrimitiveType } from "abitype";
+
+export {
+  type VerifyTypedDataParams,
+  verifyTypedData,
+} from "../auth/verify-typed-data.js";

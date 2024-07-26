@@ -190,6 +190,9 @@ const GET_PUBLISHED_CONTRACT_VERSIONS_ABI = {
   type: "function",
 } as const;
 
+/**
+ * @contract
+ */
 type FetchPublishedContractOptions = {
   publisherAddress: string;
   contractId: string;

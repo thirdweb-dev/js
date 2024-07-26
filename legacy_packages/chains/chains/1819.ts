@@ -12,6 +12,12 @@ export default {
   "faucets": [
     "https://faucet.cube.network"
   ],
+  "icon": {
+    "url": "ipfs://QmbENgHTymTUUArX5MZ2XXH69WGenirU3oamkRD448hYdz",
+    "width": 282,
+    "height": 250,
+    "format": "png"
+  },
   "infoURL": "https://www.cube.network",
   "name": "Cube Chain Testnet",
   "nativeCurrency": {

@@ -6,6 +6,7 @@ export type ChainSupportedService =
   | "engine"
   | "account-abstraction"
   | "pay"
+  | "faucet"
   | "rpc-edge";
 
 export type ChainService = {

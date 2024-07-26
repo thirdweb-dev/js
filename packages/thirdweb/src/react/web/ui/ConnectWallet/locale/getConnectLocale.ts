@@ -12,6 +12,9 @@ export async function getConnectLocale(localeId: LocaleId) {
     case "tl_PH": {
       return (await import("./tl.js")).default;
     }
+    case "vi_VN": {
+      return (await import("./vi.js")).default;
+    }
     default: {
       return (await import("./en.js")).default;
     }

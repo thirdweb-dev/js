@@ -12,6 +12,9 @@ import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { createAuction as generatedCreateAuction } from "../../__generated__/IEnglishAuctions/write/createAuction.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 type MinimumBidAmount =
   | {
       /**
@@ -26,6 +29,9 @@ type MinimumBidAmount =
       minimumBidAmountWei: bigint;
     };
 
+/**
+ * @extension MARKETPLACE
+ */
 type BuyoutBidAmount =
   | {
       /**
@@ -40,6 +46,9 @@ type BuyoutBidAmount =
       buyoutBidAmountWei: bigint;
     };
 
+/**
+ * @extension MARKETPLACE
+ */
 export type CreateAuctionParams = {
   /**
    * The contract address of the asset being listed

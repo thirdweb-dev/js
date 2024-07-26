@@ -7,10 +7,12 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
-import type {
-  AuthOption,
-  SocialAuthOption,
+import {
+  type AuthOption,
+  type SocialAuthOption,
+  socialAuthOptions,
 } from "../../../../wallets/types.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -36,7 +38,7 @@ import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import type { InAppWalletLocale } from "./locale/types.js";
-import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { openOauthSignInWindow } from "./oauthSignIn.js";
 
 export type ConnectWalletSelectUIState =
   | undefined
@@ -88,6 +90,7 @@ export const ConnectWalletSocialOptions = (
     google: locale.signInWithGoogle,
     facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
+    discord: locale.signInWithDiscord,
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({
@@ -148,16 +151,40 @@ export const ConnectWalletSocialOptions = (
     type = "tel";
   }
 
-  const socialLogins = authOptions.filter(
-    (x) => x === "google" || x === "apple" || x === "facebook",
+  const socialLogins = authOptions.filter((o) =>
+    socialAuthOptions.includes(o as SocialAuthOption),
   );
 
   const hasSocialLogins = socialLogins.length > 0;
+  const ecosystemInfo = isEcosystemWallet(wallet)
+    ? {
+        id: wallet.id,
+        partnerId: wallet.getConfig()?.partnerId,
+      }
+    : undefined;
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
+    const walletConfig = wallet.getConfig();
+    if (
+      walletConfig &&
+      "auth" in walletConfig &&
+      walletConfig?.auth?.mode === "redirect"
+    ) {
+      return loginWithOauthRedirect({
+        authOption: strategy,
+        client: props.client,
+        ecosystem: ecosystemInfo,
+      });
+    }
+
     try {
-      const socialLoginWindow = openOauthSignInWindow(strategy, themeObj);
+      const socialLoginWindow = openOauthSignInWindow({
+        authOption: strategy,
+        themeObj,
+        client: props.client,
+        ecosystem: ecosystemInfo,
+      });
       if (!socialLoginWindow) {
         throw new Error("Failed to open login window");
       }
@@ -192,10 +219,10 @@ export const ConnectWalletSocialOptions = (
 
       props.select(); // show Connect UI
 
-      // Note: do not call done() here, it will be called InAppWalletSocialLogin component
-      // we simply trigger the connect and save promise here - its resolution is handled in InAppWalletSocialLogin
+      // Note: do not call done() here, it will be called SocialLogin component
+      // we simply trigger the connect and save promise here - its resolution is handled in SocialLogin
     } catch (e) {
-      console.error(`Error sign in with ${strategy}`, e);
+      console.error(`Error signing in with ${strategy}`, e);
     }
   };
 
@@ -236,16 +263,17 @@ export const ConnectWalletSocialOptions = (
                 variant={"outline"}
                 fullWidth={!showOnlyIcons}
                 onClick={() => {
-                  handleSocialLogin(loginMethod);
+                  handleSocialLogin(loginMethod as SocialAuthOption);
                 }}
               >
                 <Img
-                  src={socialIcons[loginMethod]}
+                  src={socialIcons[loginMethod as SocialAuthOption]}
                   width={imgIconSize}
                   height={imgIconSize}
                   client={props.client}
                 />
-                {!showOnlyIcons && loginMethodsLabel[loginMethod]}
+                {!showOnlyIcons &&
+                  loginMethodsLabel[loginMethod as SocialAuthOption]}
               </SocialButton>
             );
           })}

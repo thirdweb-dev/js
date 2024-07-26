@@ -4,6 +4,9 @@ import { isERC721 } from "../erc721/read/isERC721.js";
 import { isERC1155 } from "../erc1155/read/isERC1155.js";
 import type { ListingStatus } from "./types.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 type GetAssetParams = {
   tokenId: bigint;
 };
@@ -12,6 +15,7 @@ type GetAssetParams = {
  * Retrieves the NFT asset based on the provided options.
  * @param options The transaction options.
  * @returns A promise that resolves to the NFT asset.
+ * @extension MARKETPLACE
  * @example
  * ```ts
  * import { getNFTAsset } from "thirdweb/extensions/marketplace";

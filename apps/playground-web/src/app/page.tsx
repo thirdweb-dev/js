@@ -43,14 +43,12 @@ function WalletsSection() {
           href="/connect/in-app-wallet"
           icon={WalletsInAppIcon}
         />
-        <ComingSoonWrapper>
-          <ArticleCardIndex
-            href="/connect/auth"
-            title="Auth"
-            description="Authenticate users with their wallets"
-            icon={WalletsAuthIcon}
-          />
-        </ComingSoonWrapper>
+        <ArticleCardIndex
+          href="/connect/auth"
+          title="Auth"
+          description="Authenticate users with their wallets"
+          icon={WalletsAuthIcon}
+        />
         <ArticleCardIndex
           href="/connect/pay"
           title="Pay"

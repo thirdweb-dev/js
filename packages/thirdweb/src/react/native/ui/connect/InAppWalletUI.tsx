@@ -23,6 +23,7 @@ import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import {
   APPLE_ICON,
+  DISCORD_ICON,
   EMAIL_ICON,
   FACEBOOK_ICON,
   GOOGLE_ICON,
@@ -42,6 +43,7 @@ const socialIcons = {
   google: GOOGLE_ICON,
   facebook: FACEBOOK_ICON,
   apple: APPLE_ICON,
+  discord: DISCORD_ICON,
 };
 
 type InAppWalletFormUIProps = {
@@ -61,7 +63,8 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
   const config = wallet.getConfig();
   const authOptions = config?.auth?.options || defaultAuthOptions;
   const socialLogins = authOptions.filter(
-    (x) => x === "google" || x === "apple" || x === "facebook",
+    (x) =>
+      x === "google" || x === "apple" || x === "facebook" || x === "discord",
   ) as InAppWalletSocialAuth[];
 
   const [inputMode, setInputMode] = useState<"email" | "phone">("email");
@@ -123,16 +126,16 @@ function SocialLogin(
   }, [connector, auth, wallet, client]);
 
   return (
-    <View
+    <TouchableOpacity
       style={[
         styles.socialIconContainer,
         { borderColor: theme.colors.borderColor },
       ]}
+      key={strategy}
+      onPress={connectInAppWallet}
     >
-      <TouchableOpacity key={strategy} onPress={connectInAppWallet}>
-        <RNImage theme={theme} size={38} data={socialIcons[auth]} />
-      </TouchableOpacity>
-    </View>
+      <RNImage theme={theme} size={38} data={socialIcons[auth]} />
+    </TouchableOpacity>
   );
 }
 

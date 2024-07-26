@@ -1,12 +1,11 @@
 import { Flex, FormControl } from "@chakra-ui/react";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import type { UseFormReturn } from "react-hook-form";
 import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
+import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface PlatformFeeFieldsetProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<any, any>;
+  form: CustomContractDeploymentForm;
 }
 
 export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
@@ -59,9 +58,9 @@ export const PlatformFeeFieldset: React.FC<PlatformFeeFieldsetProps> = ({
           <FormLabel>Percentage</FormLabel>
           <BasisPointsInput
             variant="filled"
-            value={form.watch("deployParams._platformFeeBps")}
+            value={Number(form.watch("deployParams._platformFeeBps"))}
             onChange={(value) =>
-              form.setValue("deployParams._platformFeeBps", value, {
+              form.setValue("deployParams._platformFeeBps", value.toString(), {
                 shouldTouch: true,
               })
             }

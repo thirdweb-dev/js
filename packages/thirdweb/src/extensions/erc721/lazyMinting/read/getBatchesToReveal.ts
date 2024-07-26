@@ -9,6 +9,9 @@ import { encryptedData } from "../../__generated__/IDelayedReveal/read/encrypted
 import { baseURIIndices } from "../../__generated__/IDrop/read/baseURIIndices.js";
 import { tokenURI } from "../../__generated__/IERC721A/read/tokenURI.js";
 
+/**
+ * @extension ERC721
+ */
 export interface BatchToReveal {
   batchId: bigint;
   batchUri: string;
@@ -102,9 +105,9 @@ export async function getBatchesToReveal(
         ],
         data,
       )[0];
-    } else {
-      return data;
     }
+
+    return data;
   });
 
   return tokenMetadatas

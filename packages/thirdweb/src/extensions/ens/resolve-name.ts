@@ -9,6 +9,9 @@ import { withCache } from "../../utils/promise/withCache.js";
 import { reverse } from "./__generated__/UniversalResolver/read/reverse.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
+/**
+ * @extension ENS
+ */
 export type ResolveNameOptions = {
   client: ThirdwebClient;
   address: Address;

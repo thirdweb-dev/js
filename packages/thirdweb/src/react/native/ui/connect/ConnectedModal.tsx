@@ -5,6 +5,7 @@ import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
+import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useChainName } from "../../../core/hooks/others/useChainQuery.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
@@ -243,6 +244,8 @@ const WalletMenu = (props: ConnectedModalPropsInner) => {
   return (
     <View style={styles.walletMenuContainer}>
       <ChainSwitcher {...props} />
+      {/* TODO (rn) implement transactions screen */}
+      {/* <Transactions {...props} /> */}
       <ViewFunds {...props} />
       <DisconnectWallet {...props} />
     </View>
@@ -267,6 +270,25 @@ const ChainSwitcher = (props: ConnectedModalPropsInner) => {
   );
 };
 
+/** TODO (rn) implement transactions screen
+const Transactions = (props: ConnectedModalPropsInner) => {
+  const { client, wallet, theme } = props;
+  return (
+    <TouchableOpacity style={styles.walletMenuRow} onPress={() => {}}>
+      <RNImage
+        theme={theme}
+        size={32}
+        data={TRANSACTIONS_ICON}
+        color={theme.colors.secondaryIconColor}
+      />
+      <ThemedText theme={theme} type="defaultSemiBold">
+        Transactions
+      </ThemedText>
+    </TouchableOpacity>
+  );
+};
+ */
+
 const ViewFunds = (props: ConnectedModalPropsInner) => {
   const { theme, setModalState } = props;
   return (
@@ -290,12 +312,16 @@ const ViewFunds = (props: ConnectedModalPropsInner) => {
 const DisconnectWallet = (props: ConnectedModalProps) => {
   const { wallet, theme, onClose } = props;
   const { disconnect } = useDisconnect();
+  const siweAuth = useSiweAuth(wallet, props.auth);
   return (
     <TouchableOpacity
       style={styles.walletMenuRow}
       onPress={() => {
         onClose?.();
         disconnect(wallet);
+        if (siweAuth.isLoggedIn) {
+          siweAuth.doLogout();
+        }
       }}
     >
       <RNImage

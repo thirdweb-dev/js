@@ -4,13 +4,13 @@ export default {
   "chainId": 46,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://darwinia.subscan.io",
+      "name": "blockscout",
+      "url": "https://explorer.darwinia.network",
       "standard": "EIP3091"
     }
   ],
   "faucets": [],
-  "infoURL": "https://darwinia.network/",
+  "infoURL": "https://darwinia.network",
   "name": "Darwinia Network",
   "nativeCurrency": {
     "name": "Darwinia Network Native Token",
@@ -21,7 +21,7 @@ export default {
   "rpc": [
     "https://46.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.darwinia.network",
-    "https://darwinia-rpc.darwiniacommunitydao.xyz",
+    "https://darwinia-rpc.dcdao.box",
     "https://darwinia-rpc.dwellir.com"
   ],
   "shortName": "darwinia",

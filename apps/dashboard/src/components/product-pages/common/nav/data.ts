@@ -355,6 +355,38 @@ export const DEVELOPER_RESOURCES: SectionItemProps[] = [
     icon: require("../../../../../public/assets/product-icons/cli.svg"),
     section: "tools",
   },
+  {
+    name: "Wei Converter",
+    label: "wei-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/wei-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
+    name: "Hex Converter",
+    label: "hex-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/hex-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
+    name: "Unix Time Converter",
+    label: "unixtime-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/unixtime-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
+  {
+    name: "Keccak-256 Converter",
+    label: "keccak256-converter",
+    description: "",
+    link: "https://thirdweb.com/tools/keccak256-converter",
+    icon: require("../../../../../public/assets/product-icons/dashboard.svg"),
+    section: "tools",
+  },
 ];
 
 export const metrics = [

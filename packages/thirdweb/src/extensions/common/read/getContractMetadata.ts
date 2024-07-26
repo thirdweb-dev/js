@@ -8,7 +8,7 @@ import { symbol } from "./symbol.js";
  * Retrieves the contract metadata including name and symbol.
  * @param options The transaction options.
  * @returns A promise that resolves to an object containing the resolved metadata, name, and symbol.
- * @extension
+ * @extension COMMON
  * @example
  * ```ts
  * import { getContractMetadata } from "thirdweb/extensions/common";

@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { eth_sendRawTransaction } from "../../../../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../../../../rpc/rpc.js";
 import { getAddress } from "../../../../utils/address.js";
+import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
@@ -231,6 +232,7 @@ export class IFrameWallet {
         transaction.gasPrice = tx.gasPrice;
         transaction.type = 0;
       }
+      const RPC_URL = getThirdwebDomains().rpc;
       const { signedTransaction } =
         await querier.call<SignTransactionReturnType>({
           procedureName: "signTransaction",
@@ -238,7 +240,7 @@ export class IFrameWallet {
             transaction,
             chainId: tx.chainId,
             partnerId,
-            rpcEndpoint: `https://${tx.chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
+            rpcEndpoint: `https://${tx.chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
           },
           // Can hide the iframe if the partner has full control (no user approvals)
           showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")
@@ -307,25 +309,30 @@ export class IFrameWallet {
           parsedTypedData.types.EIP712Domain = undefined;
         }
         const domain = parsedTypedData.domain as TypedDataDefinition["domain"];
-        const chainId = domain?.chainId || 1;
+        const chainId = domain?.chainId;
+        const domainData = {
+          verifyingContract: domain?.verifyingContract,
+          name: domain?.name,
+          version: domain?.version,
+        };
+        // chain id can't be included if it wasn't explicitly specified
+        if (chainId) {
+          (domainData as Record<string, unknown>).chainId = chainId;
+        }
 
+        const RPC_URL = getThirdwebDomains().rpc;
         const { signedTypedData } =
           await querier.call<SignedTypedDataReturnType>({
             procedureName: "signTypedDataV4",
             params: {
-              domain: {
-                chainId: chainId,
-                verifyingContract: domain?.verifyingContract,
-                name: domain?.name,
-                version: domain?.version,
-              },
+              domain: domainData,
               types:
                 parsedTypedData.types as SignerProcedureTypes["signTypedDataV4"]["types"],
               message:
                 parsedTypedData.message as SignerProcedureTypes["signTypedDataV4"]["message"],
-              chainId,
+              chainId: chainId || 1,
               partnerId,
-              rpcEndpoint: `https://${chainId}.rpc.thirdweb.com`, // TODO (ew) shouldnt be needed
+              rpcEndpoint: `https://${chainId}.${RPC_URL}`, // TODO (ew) shouldnt be needed
             },
             // Can hide the iframe if the partner has full control (no user approvals)
             showIframe: permissions?.permissions.includes("FULL_CONTROL_V1")

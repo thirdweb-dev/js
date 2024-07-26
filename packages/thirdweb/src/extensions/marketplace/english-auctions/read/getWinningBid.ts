@@ -6,6 +6,9 @@ import {
   getWinningBid as getWinningBidGenerated,
 } from "../../__generated__/IEnglishAuctions/read/getWinningBid.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetWinningBidParams = GeneratedWinningBidParams;
 
 /**

@@ -330,8 +330,6 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
             chains: [c],
           });
         }
-
-        return filteredChainSectionsValue;
       }
 
       return filteredChainSectionsValue;
@@ -464,6 +462,7 @@ export function NetworkSelectorContent(props: NetworkSelectorContentProps) {
               variant="link"
               onClick={() => {
                 onCustomClick();
+                props.closeModal();
               }}
               style={{
                 display: "flex",
@@ -898,6 +897,7 @@ export type UseNetworkSwitcherModalOptions = {
  *   return <button onClick={handleClick}> Switch Network </button>
  * }
  * ```
+ * @wallet
  */
 export function useNetworkSwitcherModal() {
   const activeChain = useActiveWalletChain();

@@ -67,6 +67,9 @@ export async function mapDirectListing(
   };
 }
 
+/**
+ * @extension MARKETPLACE
+ */
 export type IsListingValidParams = {
   listing: DirectListing;
   quantity?: bigint;

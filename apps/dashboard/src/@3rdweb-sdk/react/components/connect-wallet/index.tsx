@@ -41,7 +41,7 @@ export const CustomConnectWallet: React.FC = () => {
       },
       {
         label: "Popular",
-        chains: popularChains.map(defineChain),
+        chains: popularChains,
       },
       {
         label: "Recent",
@@ -70,7 +70,9 @@ export const CustomConnectWallet: React.FC = () => {
     return (
       <>
         <Button asChild variant="default" className="gap-2" size="lg">
-          <Link href={`/login${pathname ? `?next=${pathname}` : ""}`}>
+          <Link
+            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
+          >
             Sign In
           </Link>
         </Button>

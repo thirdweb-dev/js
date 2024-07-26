@@ -12,6 +12,9 @@ import {
   tokenOfOwnerByIndex,
 } from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
 
+/**
+ * @extension ERC721
+ */
 export type GetOwnedTokenIdsParams = BalanceOfParams;
 
 /**

@@ -26,7 +26,6 @@ import {
 } from "@chakra-ui/react";
 import { type ClaimCondition, resolveAddress } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
-import { utils } from "ethers";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
@@ -40,6 +39,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
+import { isAddress } from "thirdweb";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
@@ -126,7 +126,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     [],
   );
 
-  // FIXME: this can be a mutation or query insead!
+  // FIXME: this can be a mutation or query instead!
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (validSnapshot.length === 0) {
@@ -140,7 +140,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           let resolvedAddress = address;
 
           try {
-            resolvedAddress = utils.isAddress(address)
+            resolvedAddress = isAddress(address)
               ? address
               : await resolveAddress(address);
             isValid = !!resolvedAddress;

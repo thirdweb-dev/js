@@ -35,7 +35,7 @@ export default async function DashboardConnectPayPage() {
 
   if (!authToken) {
     // redirect to login page
-    redirect("/login?next=/dashboard/connect/pay");
+    redirect(`/login?next=${encodeURIComponent("/dashboard/connect/pay")}`);
   }
 
   const apiKeys = await getApiKeys(authToken).catch((err) => {

@@ -6,7 +6,7 @@ import {
   useRoleMembers,
 } from "@thirdweb-dev/react";
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { constants } from "ethers";
+import { ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 
 function isContractWithRoles(
@@ -30,7 +30,7 @@ function useIsAccountRole<TContract extends ContractWithRoles>(
     return false;
   }
 
-  if (data?.includes(constants.AddressZero)) {
+  if (data?.includes(ZERO_ADDRESS)) {
     return true;
   }
 

@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { processSnapshotERC1155 } from "../../../utils/extensions/airdrop/process-snapshot-erc1155.js";
 import type { SnapshotEntryERC1155 } from "../../../utils/extensions/airdrop/types.js";
 
+/**
+ * @extension Airdrop
+ */
 export type GenerateMerkleTreeInfoERC1155Params = {
   snapshot: SnapshotEntryERC1155[];
   tokenAddress: string;

@@ -22,8 +22,9 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { FiHelpCircle } from "react-icons/fi";
+import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import {
   Card,
@@ -34,6 +35,7 @@ import {
   Text,
   TrackedLink,
 } from "tw-components";
+import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
 import {
   useConstructorParamsFromABI,
   useContractEnabledExtensions,
@@ -46,6 +48,10 @@ import {
   useTransactionsForDeploy,
 } from "../hooks";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
+import {
+  ModularContractDefaultExtensionsFieldset,
+  useModularContractsDefaultExtensionsInstallParams,
+} from "./modular-contract-default-extensions-fieldset";
 import { Param } from "./param";
 import { PlatformFeeFieldset } from "./platform-fee-fieldset";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
@@ -62,6 +68,25 @@ interface CustomContractFormProps {
   onSuccessCallback?: (contractAddress: string) => void;
   walletAddress: string | undefined;
 }
+
+export type CustomContractDeploymentFormData = {
+  addToDashboard: boolean;
+  deployDeterministic: boolean;
+  saltForCreate2: string;
+  signerAsSalt: boolean;
+  deployParams: Record<string, string>;
+  modularContractDefaultExtensionsInstallParams: Record<string, string>[];
+  contractMetadata?: {
+    name: string;
+    description: string;
+    symbol: string;
+    image: File;
+  };
+  recipients?: Recipient[];
+};
+
+export type CustomContractDeploymentForm =
+  UseFormReturn<CustomContractDeploymentFormData>;
 
 const CustomContractForm: React.FC<CustomContractFormProps> = ({
   ipfsHash,
@@ -112,6 +137,15 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       !isImplementationDeploy) ||
     fullPublishMetadata.data?.deployType === "autoFactory" ||
     fullPublishMetadata.data?.deployType === "customFactory";
+
+  const isModular = fullPublishMetadata.data?.routerType === "modular";
+  const defaultExtensions = fullPublishMetadata.data?.defaultExtensions;
+
+  const modularContractDefaultExtensionsInstallParams =
+    useModularContractsDefaultExtensionsInstallParams({
+      defaultExtensions,
+      isQueryEnabled: isModular,
+    });
 
   const deployParams = isFactoryDeployment
     ? initializerParams
@@ -164,24 +198,12 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       signerAsSalt: true,
       deployParams: parsedDeployParams,
       recipients: [{ address: connectedWallet || "", sharesBps: 10000 }],
+      modularContractDefaultExtensionsInstallParams: [],
     }),
     [parsedDeployParams, isAccountFactory, connectedWallet],
   );
 
-  const form = useForm<{
-    addToDashboard: boolean;
-    deployDeterministic: boolean;
-    saltForCreate2: string;
-    signerAsSalt: boolean;
-    deployParams: Record<string, string>;
-    contractMetadata?: {
-      name: string;
-      description: string;
-      symbol: string;
-      image: string;
-    };
-    recipients?: Recipient[];
-  }>({
+  const form = useForm<CustomContractDeploymentFormData>({
     defaultValues: transformedQueryData,
     values: transformedQueryData,
     resetOptions: {
@@ -189,7 +211,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       keepDirtyValues: true,
     },
   });
-
   const formDeployParams = form.watch("deployParams");
 
   const anyHiddenParams = Object.keys(formDeployParams).some((paramKey) => {
@@ -282,21 +303,21 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         direction="column"
         id="custom-contract-form"
         as="form"
-        onSubmit={form.handleSubmit(async (d) => {
+        onSubmit={form.handleSubmit(async (formData) => {
           if (!selectedChain) {
             return;
           }
           const deployData = {
             ipfsHash,
-            constructorParams: d.deployParams,
-            contractMetadata: d,
+            constructorParams: formData.deployParams,
+            contractMetadata: formData,
             publishMetadata: compilerMetadata.data,
             chainId: selectedChain,
             is_proxy: fullPublishMetadata.data?.isDeployableViaProxy,
             is_factory: fullPublishMetadata.data?.isDeployableViaProxy,
           };
           // always respect this since even factory deployments cannot auto-add to registry anymore
-          const addToDashboard = d.addToDashboard;
+          const addToDashboard = formData.addToDashboard;
           trackEvent({
             category: "custom-contract",
             action: "deploy",
@@ -304,11 +325,36 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             deployData,
           });
 
+          const deployParams = { ...formData.deployParams };
+
+          // if Modular contract has extensions
+          if (isModular && modularContractDefaultExtensionsInstallParams.data) {
+            const extensionInstallData: string[] =
+              modularContractDefaultExtensionsInstallParams.data.map(
+                (ext, extIndex) => {
+                  return encodeAbiParameters(
+                    // param name+type []
+                    ext.params.map((p) => ({ name: p.name, type: p.type })),
+                    // value []
+                    Object.values(
+                      formData.modularContractDefaultExtensionsInstallParams[
+                        extIndex
+                      ] || {},
+                    ),
+                  );
+                },
+              );
+
+            deployParams._extensionInstallData =
+              JSON.stringify(extensionInstallData);
+          }
+
           deploy.mutate(
             {
-              ...d,
+              ...formData,
               address: walletAddress,
               addToDashboard,
+              deployParams,
             },
             {
               onSuccess: (deployedContractAddress) => {
@@ -377,6 +423,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       >
         {Object.keys(formDeployParams).length > 0 && (
           <>
+            {/* Info */}
             <Flex direction="column">
               <Heading size="subtitle.md">Contract Parameters</Heading>
               <Text size="body.md">
@@ -384,6 +431,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 deployment.
               </Text>
             </Flex>
+
             <Flex gap={4} flexDir="column">
               {hasContractURI && (
                 <ContractMetadataFieldset
@@ -397,28 +445,58 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               {hasTrustedForwarders && (
                 <TrustedForwardersFieldset form={form} />
               )}
-              {Object.keys(formDeployParams).map((paramKey) => {
-                const deployParam = deployParams.find(
-                  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-                  (p: any) => p.name === paramKey,
-                );
-                const contructorParams =
-                  fullPublishMetadata.data?.constructorParams || {};
-                const extraMetadataParam = contructorParams[paramKey];
 
-                if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
-                  return null;
-                }
+              {Object.keys(formDeployParams)
+                .filter((paramName) => {
+                  if (
+                    isModular &&
+                    (paramName === "_extensionInstallData" ||
+                      paramName === "_extensions")
+                  ) {
+                    return false;
+                  }
 
-                return (
-                  <Param
-                    key={paramKey}
-                    paramKey={paramKey}
-                    deployParam={deployParam}
-                    extraMetadataParam={extraMetadataParam}
-                  />
-                );
-              })}
+                  return true;
+                })
+                .map((paramKey) => {
+                  const deployParam = deployParams.find(
+                    (p) => p.name === paramKey,
+                  );
+                  const contructorParams =
+                    fullPublishMetadata.data?.constructorParams || {};
+                  const extraMetadataParam = contructorParams[paramKey];
+
+                  if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
+                    return null;
+                  }
+
+                  return (
+                    <Param
+                      key={paramKey}
+                      paramKey={paramKey}
+                      deployParam={deployParam}
+                      extraMetadataParam={extraMetadataParam}
+                    />
+                  );
+                })}
+
+              {isModular && (
+                <>
+                  {modularContractDefaultExtensionsInstallParams.data ? (
+                    <ModularContractDefaultExtensionsFieldset
+                      form={form}
+                      installParams={
+                        modularContractDefaultExtensionsInstallParams.data
+                      }
+                    />
+                  ) : (
+                    <div className="min-h-[250px] flex justify-center items-center">
+                      <Spinner className="size-8" />
+                    </div>
+                  )}
+                </>
+              )}
+
               {(anyHiddenParams || hasPlatformFee) && (
                 <Accordion allowToggle>
                   <AccordionItem borderColor="borderColor" borderBottom="none">
@@ -440,8 +518,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       {hasPlatformFee && <PlatformFeeFieldset form={form} />}
                       {Object.keys(formDeployParams).map((paramKey) => {
                         const deployParam = deployParams.find(
-                          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-                          (p: any) => p.name === paramKey,
+                          (p) => p.name === paramKey,
                         );
                         const contructorParams =
                           fullPublishMetadata.data?.constructorParams || {};

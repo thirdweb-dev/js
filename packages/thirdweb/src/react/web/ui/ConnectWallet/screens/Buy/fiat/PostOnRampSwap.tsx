@@ -15,12 +15,12 @@ import { SwapFlow } from "../swap/SwapFlow.js";
 import type { PayerInfo } from "../types.js";
 
 export function PostOnRampSwap(props: {
+  title: string;
   client: ThirdwebClient;
   buyWithFiatStatus: BuyWithFiatStatus;
   onBack?: () => void;
-  onViewPendingTx: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
 }) {
@@ -59,7 +59,7 @@ export function PostOnRampSwap(props: {
     return (
       <Container fullHeight>
         <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
+          <ModalHeader title={props.title} onBack={props.onBack} />
         </Container>
 
         <Container
@@ -95,7 +95,7 @@ export function PostOnRampSwap(props: {
     return (
       <Container fullHeight>
         <Container p="lg">
-          <ModalHeader title="Buy" onBack={props.onBack} />
+          <ModalHeader title={props.title} onBack={props.onBack} />
         </Container>
 
         <Container
@@ -117,18 +117,18 @@ export function PostOnRampSwap(props: {
 
   return (
     <SwapFlow
+      title={props.title}
       payer={props.payer}
       buyWithCryptoQuote={lockedOnRampQuote}
       client={props.client}
       onBack={props.onBack}
-      onViewPendingTx={props.onViewPendingTx}
       isFiatFlow={true}
       onDone={props.onDone}
       onTryAgain={() => {
         setLockedOnRampQuote(undefined);
         postOnRampQuoteQuery.refetch();
       }}
-      isBuyForTx={props.isBuyForTx}
+      transactionMode={props.transactionMode}
       isEmbed={props.isEmbed}
     />
   );

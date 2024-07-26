@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
-import { shortenAddress } from "@thirdweb-dev/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns";
@@ -31,6 +30,7 @@ import { thirdwebClient } from "lib/thirdweb-client";
 import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
 import { eth_getBlockByNumber, getRpcClient } from "thirdweb";
+import { shortenAddress } from "thirdweb/utils";
 import { Button, Card, FormLabel, LinkButton, Text } from "tw-components";
 import { defineDashboardChain } from "../../../lib/v5-adapter";
 import { AddressCopyButton } from "../../../tw-components/AddressCopyButton";
@@ -94,7 +94,7 @@ export const ContractSubscriptionTable: React.FC<
             href={explorer ? `${explorer.url}/address/${cell.getValue()}` : "#"}
             fontFamily="mono"
           >
-            {shortenAddress(cell.getValue(), false)}
+            {shortenAddress(cell.getValue())}
           </LinkButton>
         );
       },

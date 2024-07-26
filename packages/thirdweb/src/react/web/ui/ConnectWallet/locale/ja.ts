@@ -21,7 +21,9 @@ const connectWalletLocalJa: ConnectLocale = {
   switchAccount: "アカウントを切り替える",
   requestTestnetFunds: "テストネットの資金をリクエストする",
   buy: "Buy", // TODO
-  transactions: "Transactions", // TODO
+  transactions: "Transactions",
+  payTransactions: "Fiat Transactions",
+  walletTransactions: "Wallet Transactions",
   viewAllTransactions: "View All Transactions", // TODO
   backupWallet: "ウォレットのバックアップ",
   guestWalletWarning:
@@ -99,6 +101,17 @@ const connectWalletLocalJa: ConnectLocale = {
       failedToSignIn: "サインインに失敗しました",
       inProgress: "確認待ち",
     },
+  },
+  manageWallet: {
+    title: "Manage Wallet",
+    connectAnApp: "Connect an App",
+    exportPrivateKey: "Export Private Key",
+  },
+  viewFunds: {
+    title: "View Funds",
+    viewNFTs: "View NFTs",
+    viewTokens: "View Tokens",
+    viewAssets: "View Assets",
   },
 };
 

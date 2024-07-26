@@ -6,7 +6,6 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
-  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -73,16 +72,17 @@ import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
 } from "./NetworkSelector.js";
+import { TransactionsScreen } from "./TransactionsScreen.js";
 import { onModalUnmount } from "./constants.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
 import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
+import { ShuffleIconLucide } from "./icons/ShuffleIconLucide.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
-import { BuyTxHistory } from "./screens/Buy/tx-history/BuyTxHistory.js";
 import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
 import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
@@ -344,15 +344,25 @@ function DetailsModal(props: {
       <IconButton
         style={{
           position: "absolute",
-          top: `${spacing.lg}`,
-          left: `${spacing.sm}`,
-          padding: "3px",
+          top: spacing.lg,
+          left: spacing.lg,
+          transform: "translateX(-6px)",
         }}
         onClick={() => {
           setScreen("wallet-manager");
         }}
       >
-        <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+        <div
+          style={{
+            width: `${iconSize.md}px`,
+            height: `${iconSize.md}px`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ShuffleIconLucide size="20" />
+        </div>
       </IconButton>
 
       <Container px="lg" flex="column" center="x">
@@ -513,7 +523,7 @@ function DetailsModal(props: {
           {/* Transactions */}
           <MenuButton
             onClick={() => {
-              setScreen("pending-tx");
+              setScreen("transactions");
             }}
             style={{
               fontSize: fontSize.sm,
@@ -536,7 +546,9 @@ function DetailsModal(props: {
           >
             <CoinsIcon size={iconSize.md} />
             <Text color="primaryText">
-              {props.supportedNFTs ? "View Assets" : "View Funds"}
+              {props.supportedNFTs
+                ? locale.viewFunds.viewAssets
+                : locale.viewFunds.title}
             </Text>
           </MenuButton>
 
@@ -550,7 +562,7 @@ function DetailsModal(props: {
             }}
           >
             <OutlineWalletIcon size={iconSize.md} />
-            <Text color="primaryText">Manage Wallet</Text>
+            <Text color="primaryText">{props.locale.manageWallet.title}</Text>
           </MenuButton>
 
           {/* Switch to Personal Wallet  */}
@@ -621,27 +633,18 @@ function DetailsModal(props: {
           <Spacer y="sm" />
         </Container>
       )}
-      {/* {activeWallet?.id === "local" && (
-        <>
-          <Line />
-          <Container py="md">
-            <Text size="xs" center multiline color="danger" balance>
-              {locale.guestWalletWarning}
-            </Text>
-          </Container>
-        </>
-      )} */}
     </div>
   );
 
-  if (screen === "pending-tx") {
+  if (screen === "transactions") {
     content = (
-      <BuyTxHistory
-        isBuyForTx={false}
-        isEmbed={false}
+      <TransactionsScreen
+        title="Buy"
         onBack={() => setScreen("main")}
+        closeModal={closeModal}
+        locale={locale}
+        setScreen={setScreen}
         client={client}
-        onDone={closeModal}
       />
     );
   }
@@ -702,6 +705,7 @@ function DetailsModal(props: {
           }}
           setScreen={setScreen}
           client={client}
+          connectLocale={locale}
         />
       );
     } else {
@@ -713,6 +717,7 @@ function DetailsModal(props: {
             setScreen("main");
           }}
           client={client}
+          connectLocale={locale}
         />
       );
     }
@@ -725,6 +730,7 @@ function DetailsModal(props: {
           setScreen("main");
         }}
         client={client}
+        connectLocale={locale}
       />
     );
   } else if (screen === "view-tokens") {
@@ -735,6 +741,7 @@ function DetailsModal(props: {
           setScreen("main");
         }}
         client={client}
+        connectLocale={locale}
       />
     );
   } else if (screen === "private-key") {
@@ -804,17 +811,20 @@ function DetailsModal(props: {
   else if (screen === "buy") {
     content = (
       <LazyBuyScreen
+        title="Buy"
         isEmbed={false}
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
-        onViewPendingTx={() => setScreen("pending-tx")}
         connectLocale={locale}
-        payOptions={props.detailsModal?.payOptions || {}}
+        payOptions={
+          props.detailsModal?.payOptions || {
+            mode: "fund_wallet",
+          }
+        }
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
-        buyForTx={undefined}
       />
     );
   }
@@ -1238,7 +1248,7 @@ export type UseWalletDetailsModalOptions = {
    *
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
-  payOptions?: PayUIOptions;
+  payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
 
   /**
    * Display the balance of a token instead of the native token

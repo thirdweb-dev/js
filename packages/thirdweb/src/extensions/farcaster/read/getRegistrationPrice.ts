@@ -5,6 +5,9 @@ import { withCache } from "../../../utils/promise/withCache.js";
 import { price } from "../__generated__/IIdGateway/read/price.js";
 import { getIdGateway } from "../contracts/getIdGateway.js";
 
+/**
+ * @extension FARCASTER
+ */
 export type GetRegistrationPriceParams = {
   client: ThirdwebClient;
   chain?: Chain;

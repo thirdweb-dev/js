@@ -29,7 +29,7 @@ async function main() {
       const isBunAvailable = (() => {
         try {
           const res = execSync("bun --version", {
-            stdio: "ignore",
+            // stdio: "ignore",
             encoding: "utf-8",
           });
           if (typeof res === "string" && res.indexOf(".") > -1) {
@@ -43,7 +43,7 @@ async function main() {
 
       switch (true) {
         case isBunAvailable:
-          runner = "bun";
+          runner = "bunx";
           break;
         case isWindows:
           runner = "npx.cmd";

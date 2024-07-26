@@ -37,6 +37,7 @@ export type InAppWalletLocale = {
   or: string;
   invalidEmail: string;
   signIn: string;
+  signInWithDiscord: string;
   signInWithApple: string;
   signInWithFacebook: string;
   signInWithGoogle: string;

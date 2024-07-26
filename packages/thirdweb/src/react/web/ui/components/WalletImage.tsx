@@ -9,6 +9,7 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
 import {
   appleIconUri,
+  discordIconUri,
   emailIcon,
   facebookIconUri,
   genericWalletIcon,
@@ -20,8 +21,6 @@ import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import { useWalletImage } from "../../../core/utils/wallet.js";
 import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { Img } from "./Img.js";
-
-// Note: Must not use useConnectUI here
 
 /**
  * @internal
@@ -74,6 +73,9 @@ export function WalletImage(props: {
             break;
           case "passkey":
             image = passkeyIcon;
+            break;
+          case "discord":
+            image = discordIconUri;
             break;
         }
       } else {

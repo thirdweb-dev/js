@@ -30,11 +30,17 @@ module.exports = {
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
+          // destructive-foreground should only be used on destructive bg
           foreground: "hsl(var(--destructive-foreground))",
+          // destructive-text can be used on neutral bg - it's red-ish
+          text: "hsl(var(--destructive-text))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
+          // success-foreground should only be used on success bg
           foreground: "hsl(var(--success-foreground))",
+          // success-text can be used on neutral bg, it's green-ish
+          text: "hsl(var(--success-text))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

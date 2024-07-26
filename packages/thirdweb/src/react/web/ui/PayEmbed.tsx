@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Chain } from "../../../chains/types.js";
+import { cacheChains } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
@@ -17,7 +18,7 @@ import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
 import BuyScreen from "./ConnectWallet/screens/Buy/BuyScreen.js";
-import { BuyTxHistory } from "./ConnectWallet/screens/Buy/tx-history/BuyTxHistory.js";
+import { ExecutingTxScreen } from "./TransactionButton/ExecutingScreen.js";
 import { DynamicHeight } from "./components/DynamicHeight.js";
 import { Spinner } from "./components/Spinner.js";
 import type { LocaleId } from "./types.js";
@@ -151,10 +152,23 @@ export type PayEmbedProps = {
  */
 export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
-  const [screen, setScreen] = useState<"buy" | "tx-history">("buy");
+  const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
 
+  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
+  if (props.connectOptions?.chains) {
+    cacheChains(props.connectOptions?.chains);
+  }
+
+  if (props.connectOptions?.chain) {
+    cacheChains([props.connectOptions?.chain]);
+  }
+
   let content = null;
+  const metadata =
+    props.payOptions && "metadata" in props.payOptions
+      ? props.payOptions.metadata
+      : null;
 
   if (!localeQuery.data) {
     content = (
@@ -173,39 +187,43 @@ export function PayEmbed(props: PayEmbedProps) {
     // show and hide screens with CSS to not lose state when switching between them
     content = (
       <>
-        <div style={{ display: screen === "tx-history" ? "none" : "inherit" }}>
+        <div style={{ display: screen === "buy" ? "inherit" : "none" }}>
           <BuyScreen
+            title={metadata?.name || "Buy"}
             isEmbed={true}
             supportedTokens={props.supportedTokens}
             theme={theme}
             client={props.client}
             connectLocale={localeQuery.data}
-            onViewPendingTx={() => {
-              setScreen("tx-history");
-            }}
-            payOptions={props.payOptions || {}}
+            payOptions={
+              props.payOptions || {
+                mode: "fund_wallet",
+              }
+            }
             onDone={() => {
-              // noop
+              if (props.payOptions?.mode === "transaction") {
+                setScreen("execute-tx");
+              }
             }}
             connectOptions={props.connectOptions}
-            buyForTx={undefined}
             onBack={undefined}
           />
         </div>
-        {/* this does not need to persist so we can just show-hide it with JS */}
-        {screen === "tx-history" && (
-          <BuyTxHistory
-            client={props.client}
-            onBack={() => {
-              setScreen("buy");
-            }}
-            onDone={() => {
-              // noop
-            }}
-            isBuyForTx={false}
-            isEmbed={true}
-          />
-        )}
+
+        {screen === "execute-tx" &&
+          props.payOptions?.mode === "transaction" &&
+          props.payOptions.transaction && (
+            <ExecutingTxScreen
+              tx={props.payOptions.transaction}
+              closeModal={() => {
+                setScreen("buy");
+              }}
+              onBack={() => {
+                setScreen("buy");
+              }}
+              onTxSent={() => {}}
+            />
+          )}
       </>
     );
   }

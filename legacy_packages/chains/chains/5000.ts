@@ -4,6 +4,11 @@ export default {
   "chainId": 5000,
   "explorers": [
     {
+      "name": "mantlescan",
+      "url": "https://mantlescan.xyz",
+      "standard": "EIP3091"
+    },
+    {
       "name": "Mantle Explorer",
       "url": "https://explorer.mantle.xyz",
       "standard": "EIP3091"

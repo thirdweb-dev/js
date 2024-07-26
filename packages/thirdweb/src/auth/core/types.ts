@@ -1,6 +1,9 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 
+/**
+ * @auth
+ */
 export type AuthOptions = {
   domain: string;
   client?: ThirdwebClient;
@@ -25,6 +28,9 @@ export type AuthOptions = {
   };
 };
 
+/**
+ * @auth
+ */
 export type LoginPayload = {
   domain: string;
   address: string;

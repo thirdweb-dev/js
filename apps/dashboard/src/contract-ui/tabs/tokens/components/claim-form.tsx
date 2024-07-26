@@ -13,10 +13,10 @@ import {
   useTokenDecimals,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,
@@ -60,7 +60,7 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>To Address</FormLabel>
               <Input
-                placeholder={constants.AddressZero}
+                placeholder={ZERO_ADDRESS}
                 {...register("to", { required: true })}
               />
               <FormHelperText>Enter the address to claim to.</FormHelperText>

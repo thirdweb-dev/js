@@ -35,7 +35,7 @@ export default {
     "chain": "eip155-1",
     "bridges": [
       {
-        "url": "https://portral.zkbase.app/"
+        "url": "https://portal.zkbase.app/"
       }
     ]
   },

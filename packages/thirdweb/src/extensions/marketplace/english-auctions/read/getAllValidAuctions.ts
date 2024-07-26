@@ -10,6 +10,9 @@ import { mapEnglishAuction } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetAllValidAuctionParams = {
   /**
    * The start index of the listings to retrieve.

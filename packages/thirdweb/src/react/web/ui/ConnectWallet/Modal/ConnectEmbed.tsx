@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo } from "react";
 import type { Chain } from "../../../../../chains/types.js";
+import { cacheChains } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
@@ -61,6 +62,15 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const siweAuth = useSiweAuth(activeWallet, props.auth);
   const show =
     !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
+
+  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
+  if (props.chains) {
+    cacheChains(props.chains);
+  }
+
+  if (props.chain) {
+    cacheChains([props.chain]);
+  }
 
   const wallets = useMemo(
     () =>
@@ -200,7 +210,7 @@ const ConnectEmbedContent = (props: {
     welcomeScreen: undefined,
     wallets: props.wallets,
   });
-  const { setScreen, initialScreen } = screenSetup;
+  const { setScreen, initialScreen, screen } = screenSetup;
   const activeWallet = useActiveWallet();
   const siweAuth = useSiweAuth(activeWallet, props.auth);
   const activeAccount = useActiveAccount();
@@ -209,11 +219,17 @@ const ConnectEmbedContent = (props: {
 
   let content = null;
 
+  // if sign in is required but connect embed is showing the initial screen - change to sign in screen
   useEffect(() => {
-    if (siweAuth.requiresAuth && !siweAuth.isLoggedIn && activeAccount) {
+    if (
+      siweAuth.requiresAuth &&
+      !siweAuth.isLoggedIn &&
+      activeAccount &&
+      screen === initialScreen
+    ) {
       setScreen(reservedScreens.signIn);
     }
-  }, [siweAuth, setScreen, activeAccount]);
+  }, [siweAuth, setScreen, activeAccount, screen, initialScreen]);
 
   const modalSize = !canFitWideModal()
     ? "compact"

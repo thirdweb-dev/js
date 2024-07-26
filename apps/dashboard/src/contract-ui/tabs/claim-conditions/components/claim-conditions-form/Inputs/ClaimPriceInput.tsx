@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
+import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { useClaimConditionsFormContext } from "..";
 import { PriceInput } from "../../price-input";
 import { CustomFormControl } from "../common";

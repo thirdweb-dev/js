@@ -5,18 +5,40 @@ import { getOrDeployInfraForPublishedContract } from "../../../../contract/deplo
 import type { Account } from "../../../../wallets/interfaces/wallet.js";
 import { installExtension } from "../../__generated__/ModularCore/write/installExtension.js";
 
+/**
+ * @extension MODULAR
+ */
 export type InstallPublishedExtensionOptions = {
   client: ThirdwebClient;
   chain: Chain;
   account: Account;
   contract: ThirdwebContract;
   extensionName: string;
-  publisherAddress: string;
+  publisherAddress?: string;
   version?: string;
   constructorParams?: unknown[];
   extensionData?: `0x${string}`;
 };
 
+/**
+ * Install a published extension on a modular contract
+ * @param options - The options for installing a published extension
+ * @returns A prepared transaction to send
+ * @extension MODULAR
+ * @example
+ * ```ts
+ * import { installPublishedExtension } from "thirdweb/extensions/modular";
+ * const transaction = installPublishedExtension({
+ *  client,
+ *  chain,
+ *  account,
+ *  contract,
+ *  extensionName: "MyExtension",
+ *  publisherAddress: "0x...",
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
 export function installPublishedExtension(
   options: InstallPublishedExtensionOptions,
 ) {

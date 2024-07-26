@@ -25,6 +25,7 @@ export function ReadContractRawPreview() {
     contract: onChainCryptoPunks,
     method: "function punkImageSvg(uint16 index) view returns (string svg)",
     params: [1],
+    from: "0x16F5A35647D6F03D5D3da7b35409D65ba03aF3B2",
   });
 
   return (

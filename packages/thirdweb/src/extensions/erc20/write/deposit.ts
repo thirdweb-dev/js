@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toWei } from "../../../utils/units.js";
 import { FN_SELECTOR } from "../__generated__/IWETH/write/deposit.js";
 
+/**
+ * @extension ERC20
+ */
 export type DepositParams =
   | {
       amount: string;
@@ -25,9 +28,15 @@ export type DepositParams =
  * ```
  */
 export function deposit(options: BaseTransactionOptions<DepositParams>) {
+  const value =
+    "amountWei" in options ? options.amountWei : toWei(options.amount);
   return prepareContractCall({
     contract: options.contract,
     method: [FN_SELECTOR, [], []] as const,
-    value: "amountWei" in options ? options.amountWei : toWei(options.amount),
+    value,
+    erc20Value: {
+      amountWei: value,
+      tokenAddress: options.contract.address,
+    },
   });
 }

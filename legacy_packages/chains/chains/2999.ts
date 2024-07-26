@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmUmJVof2m5e4HUXb3GmijWUFsLUNhrQiwwQG3CqcXEtHt",
+    "width": 91,
+    "height": 24,
+    "format": "png"
+  },
   "infoURL": "https://www.bityuan.com",
   "name": "BitYuan Mainnet",
   "nativeCurrency": {

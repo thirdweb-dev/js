@@ -5,7 +5,6 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { Polygon } from "@thirdweb-dev/chains";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ensQuery,
@@ -31,6 +30,7 @@ import { useRouter } from "next/router";
 import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useEffect, useMemo } from "react";
+import { polygon } from "thirdweb/chains";
 import { useActiveAccount } from "thirdweb/react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
@@ -223,8 +223,8 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   const queryClient = new QueryClient();
 
   const polygonSdk = getThirdwebSDK(
-    Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    polygon.id,
+    getDashboardChainRpc(polygon.id),
   );
 
   const profileAddress = getSingleQueryValue(

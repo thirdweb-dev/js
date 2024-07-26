@@ -1,12 +1,12 @@
-import type { Chain } from "@thirdweb-dev/chains";
 import { useContract, useContractMetadata } from "@thirdweb-dev/react";
 import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { useEffect, useState } from "react";
+import type { ChainMetadata } from "thirdweb/chains";
 import { MetadataHeader } from "./metadata-header";
 
 interface ContractMetadataProps {
   contractAddress: string;
-  chain: Chain | undefined;
+  chain: ChainMetadata | undefined;
 }
 
 export const ContractMetadata: React.FC<ContractMetadataProps> = ({

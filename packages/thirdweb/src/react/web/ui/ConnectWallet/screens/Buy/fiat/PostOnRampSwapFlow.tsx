@@ -12,14 +12,14 @@ import { PostOnRampSwap } from "./PostOnRampSwap.js";
  * - Show swap flow
  */
 export function PostOnRampSwapFlow(props: {
+  title: string;
   status: BuyWithFiatStatus;
   quote: BuyWithFiatPartialQuote;
   client: ThirdwebClient;
   onBack: () => void;
-  onViewPendingTx: () => void;
   onDone: () => void;
   onSwapFlowStarted: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
 }) {
@@ -31,11 +31,11 @@ export function PostOnRampSwapFlow(props: {
   if (statusForSwap) {
     return (
       <PostOnRampSwap
+        title={props.title}
         buyWithFiatStatus={statusForSwap}
         client={props.client}
-        onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={props.payer}
       />
@@ -45,6 +45,7 @@ export function PostOnRampSwapFlow(props: {
   // show step 1 and step 2 details
   return (
     <FiatSteps
+      title={props.title}
       client={props.client}
       onBack={props.onBack}
       partialQuote={props.quote}

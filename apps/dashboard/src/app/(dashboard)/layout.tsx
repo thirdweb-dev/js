@@ -1,4 +1,4 @@
-import { DashboardFooter } from "../components/DashboardFooter";
+import { AppFooter } from "@/components/blocks/app-footer";
 import { DashboardHeader } from "../components/Header/DashboardHeader";
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
@@ -7,7 +7,7 @@ export default function DashboardLayout(props: { children: React.ReactNode }) {
       <div className="flex flex-col h-full">
         <DashboardHeader />
         <main className="grow">{props.children}</main>
-        <DashboardFooter />
+        <AppFooter />
       </div>
     </>
   );
