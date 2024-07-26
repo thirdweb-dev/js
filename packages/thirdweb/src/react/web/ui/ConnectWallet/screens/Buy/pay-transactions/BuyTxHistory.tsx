@@ -36,10 +36,11 @@ import {
  * @internal
  */
 export function PayTxHistoryScreen(props: {
+  title: string;
   onBack?: () => void;
   client: ThirdwebClient;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
@@ -60,11 +61,12 @@ export function PayTxHistoryScreen(props: {
   if (selectedTx) {
     return (
       <TxDetailsScreen
+        title={props.title}
         client={props.client}
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={payer}
       />
@@ -123,11 +125,12 @@ export function PayTxHistoryList(props: {
       flex="column"
       fullHeight
       style={{
+        width: "100%",
         minHeight: "250px",
         maxHeight: "370px",
       }}
     >
-      <Container flex="column" gap="xs" px="lg" expand>
+      <Container flex="column" gap="xs" expand>
         {noTransactions && !isLoading && (
           <Container
             flex="column"
@@ -183,7 +186,7 @@ export function PayTxHistoryList(props: {
         )}
       </Container>
 
-      <Container p="lg">
+      <Container py="lg">
         {pagination && !hidePagination && (
           <div
             style={{

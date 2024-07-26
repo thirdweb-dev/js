@@ -21,12 +21,11 @@ import {
   type useCreateDirectListing,
   useOwnedNFTs,
 } from "@thirdweb-dev/react";
-import {
-  type Marketplace,
-  type MarketplaceV3,
-  NATIVE_TOKEN_ADDRESS,
-  type NewAuctionListing,
-  type NewDirectListing,
+import type {
+  Marketplace,
+  MarketplaceV3,
+  NewAuctionListing,
+  NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -40,6 +39,7 @@ import type { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
+import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,

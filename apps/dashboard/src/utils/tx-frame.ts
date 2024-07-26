@@ -1,20 +1,20 @@
 import type { FrameValidationData } from "@coinbase/onchainkit";
-import { Base } from "@thirdweb-dev/chains";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import { type BaseContract, Wallet } from "ethers";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
+import { base } from "thirdweb/chains";
 
 export const getContractForErc721OpenEdition = async (
   contractAddress: string,
 ) => {
-  // Create a reandom signer. This is required to encode erc721 tx data
+  // Create a random signer. This is required to encode erc721 tx data
   const signer = Wallet.createRandom();
 
-  // Initalize sdk
+  // Initialize sdk
   const sdk = getThirdwebSDK(
-    Base.chainId,
-    getDashboardChainRpc(Base),
+    base.id,
+    getDashboardChainRpc(base.id),
     undefined,
     signer,
   );

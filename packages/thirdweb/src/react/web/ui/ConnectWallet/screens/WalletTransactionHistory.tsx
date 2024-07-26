@@ -46,43 +46,39 @@ export function WalletTransactionHistory(props: {
       fullHeight
       style={{
         minHeight: "250px",
-        maxHeight: "370px",
+        maxHeight: "350px",
+        paddingBottom: spacing.lg,
       }}
     >
-      <Container
-        flex="column"
-        gap="xs"
-        style={{ paddingBottom: "24px" }}
-        expand
-      >
-        {transactions.length === 0 && (
+      <Container flex="column" gap="xs" expand>
+        {transactions.length === 0 ? (
           <Container
             flex="column"
             gap="md"
             center="both"
             color="secondaryText"
             style={{
-              minHeight: "250px",
+              flex: "1",
             }}
           >
             <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
             <Text>No Transactions</Text>
           </Container>
+        ) : (
+          <Container animate="fadein" flex="column" gap="xs">
+            {transactions.map((tx) => {
+              return (
+                <TransactionButton
+                  key={tx.transactionHash}
+                  explorerUrl={chainExplorers.explorers[0]?.url}
+                  client={props.client}
+                  hash={tx.transactionHash}
+                  chainId={tx.chainId}
+                />
+              );
+            })}
+          </Container>
         )}
-
-        <Container animate="fadein" flex="column" gap="xs">
-          {transactions.map((tx) => {
-            return (
-              <TransactionButton
-                key={tx.transactionHash}
-                explorerUrl={chainExplorers.explorers[0]?.url}
-                client={props.client}
-                hash={tx.transactionHash}
-                chainId={tx.chainId}
-              />
-            );
-          })}
-        </Container>
       </Container>
     </Container>
   );

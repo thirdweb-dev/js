@@ -6,7 +6,6 @@ import {
   PaperPlaneIcon,
   PinBottomIcon,
   PlusIcon,
-  ShuffleIcon,
   TextAlignJustifyIcon,
 } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -79,6 +78,7 @@ import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
 import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
+import { ShuffleIconLucide } from "./icons/ShuffleIconLucide.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
@@ -344,15 +344,25 @@ function DetailsModal(props: {
       <IconButton
         style={{
           position: "absolute",
-          top: `${spacing.lg}`,
-          left: `${spacing.sm}`,
-          padding: "3px",
+          top: spacing.lg,
+          left: spacing.lg,
+          transform: "translateX(-6px)",
         }}
         onClick={() => {
           setScreen("wallet-manager");
         }}
       >
-        <ShuffleIcon width={iconSize.md} height={iconSize.md} />
+        <div
+          style={{
+            width: `${iconSize.md}px`,
+            height: `${iconSize.md}px`,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ShuffleIconLucide size="20" />
+        </div>
       </IconButton>
 
       <Container px="lg" flex="column" center="x">
@@ -629,6 +639,7 @@ function DetailsModal(props: {
   if (screen === "transactions") {
     content = (
       <TransactionsScreen
+        title="Buy"
         onBack={() => setScreen("main")}
         closeModal={closeModal}
         locale={locale}
@@ -805,13 +816,15 @@ function DetailsModal(props: {
         client={client}
         onBack={() => setScreen("main")}
         supportedTokens={props.supportedTokens}
-        onViewPendingTx={() => setScreen("transactions")}
         connectLocale={locale}
-        payOptions={props.detailsModal?.payOptions || {}}
+        payOptions={
+          props.detailsModal?.payOptions || {
+            mode: "fund_wallet",
+          }
+        }
         theme={typeof props.theme === "string" ? props.theme : props.theme.type}
         onDone={closeModal}
         connectOptions={undefined}
-        buyForTx={undefined}
       />
     );
   }
@@ -1235,7 +1248,7 @@ export type UseWalletDetailsModalOptions = {
    *
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
-  payOptions?: PayUIOptions;
+  payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
 
   /**
    * Display the balance of a token instead of the native token

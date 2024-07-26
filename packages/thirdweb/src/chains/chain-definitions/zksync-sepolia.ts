@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const zkSyncSepolia = /*@__PURE__*/ defineChain({
   id: 300,
   name: "ZkSync Sepolia",

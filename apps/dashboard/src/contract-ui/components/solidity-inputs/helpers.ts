@@ -1,5 +1,6 @@
-import { BigNumber, utils } from "ethers";
+import { BigNumber } from "ethers";
 import { isBytesLike } from "ethers/lib/utils";
+import { isAddress } from "thirdweb/utils";
 
 // int and uint
 const calculateIntMinValues = (solidityType: string) => {
@@ -148,7 +149,7 @@ export const validateBytes = (value: string, solidityType: string) => {
 
 // address
 export const validateAddress = (value: string) => {
-  if (!utils.isAddress(value) && !value.endsWith(".eth")) {
+  if (!isAddress(value) && !value.endsWith(".eth")) {
     return {
       type: "pattern",
       message: "Input is not a valid address or ENS name.",

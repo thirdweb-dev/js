@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const lineaSepolia = /* @__PURE__ */ defineChain({
   id: 59141,
   name: "Linea Sepolia",

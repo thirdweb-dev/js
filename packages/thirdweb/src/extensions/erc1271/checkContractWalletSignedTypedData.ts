@@ -3,6 +3,9 @@ import type { ThirdwebContract } from "../../contract/contract.js";
 import { isHex } from "../../utils/encoding/hex.js";
 import { isValidSignature } from "./__generated__/isValidSignature/read/isValidSignature.js";
 
+/**
+ * @extension ERC1271
+ */
 export type CheckContractWalletSignTypedDataOptions<
   typedData extends TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,

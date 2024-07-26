@@ -9,11 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import type { ThirdwebContract } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { decimals, transfer } from "thirdweb/extensions/erc20";
 import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
@@ -60,7 +59,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
               <SolidityInput
                 formContext={form}
                 solidityType="address"
-                placeholder={constants.AddressZero}
+                placeholder={ZERO_ADDRESS}
                 {...form.register("to")}
               />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>

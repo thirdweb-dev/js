@@ -1,8 +1,8 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { DownloadIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export function ExportToCSVButton(props: {
   getData: () => Promise<{ header: string[]; rows: string[][] }>;
@@ -14,20 +14,14 @@ export function ExportToCSVButton(props: {
       exportToCSV(props.fileName, data);
     },
     onError: () => {
-      toast({
-        title: "Failed to download CSV",
-        variant: "destructive",
-      });
+      toast.error("Failed to download CSV");
     },
     onSuccess: () => {
-      toast({
-        title: "Exported Successfully",
+      toast("Exported Successfully", {
         description: "CSV file has been downloaded",
       });
     },
   });
-
-  const { toast } = useToast();
 
   return (
     <Button

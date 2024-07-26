@@ -3,8 +3,10 @@ import type { Prettify } from "../../../utils/type-utils.js";
 import { toUnits } from "../../../utils/units.js";
 import { multicall } from "../../common/__generated__/IMulticall/write/multicall.js";
 import { encodeTransfer } from "../__generated__/IERC20/write/transfer.js";
+
 /**
  * Represents the parameters for a batch transfer operation.
+ * @extension ERC20
  */
 export type TransferBatchParams = Prettify<{
   batch: Array<
@@ -69,6 +71,12 @@ export function transferBatch(
             return encodeTransfer({
               to: transfer.to,
               value: amount,
+              overrides: {
+                erc20Value: {
+                  amountWei: amount,
+                  tokenAddress: options.contract.address,
+                },
+              },
             });
           }),
         ),

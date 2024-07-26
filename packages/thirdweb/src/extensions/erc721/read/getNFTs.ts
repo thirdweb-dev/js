@@ -10,6 +10,7 @@ const DEFAULT_QUERY_ALL_COUNT = 100n;
 
 /**
  * Parameters for retrieving NFTs.
+ * @extension ERC721
  */
 export type GetNFTsParams = {
   /**

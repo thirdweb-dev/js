@@ -6,7 +6,6 @@ import {
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Chain } from "@thirdweb-dev/chains";
 import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
@@ -19,6 +18,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import { type ChainMetadata, ethereum } from "thirdweb/chains";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -26,6 +26,22 @@ import {
 } from "thirdweb/react";
 import { setThirdwebDomains } from "thirdweb/utils";
 import type { ComponentWithChildren } from "types/component-with-children";
+import type { StoredChain } from "../../contexts/configured-chains";
+
+const PLACEHOLDER_CHAIN: StoredChain = {
+  chainId: 1,
+  chain: "ETH",
+  name: "Ethereum",
+  rpc: [ethereum.rpc],
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  shortName: "eth",
+  slug: "ethereum",
+  testnet: false,
+};
 
 const THIRDWEB_API_HOST = new URL(
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com",
@@ -44,7 +60,7 @@ setThirdwebDomains({
 
 export interface DashboardThirdwebProviderProps {
   contractInfo?: EVMContractInfo;
-  activeChain?: Chain;
+  activeChain?: ChainMetadata;
 }
 
 export const DashboardThirdwebProviderSetup: ComponentWithChildren<
@@ -59,7 +75,7 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
     if (!chain) {
       return undefined;
     }
-    const rpcUrl = getDashboardChainRpc(chain);
+    const rpcUrl = getDashboardChainRpc(chain.chainId);
     if (!rpcUrl) {
       return undefined;
     }
@@ -76,7 +92,9 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
       queryClient={queryClient}
       signer={ethersSigner}
       activeChain={activeChain}
-      supportedChains={supportedChains}
+      supportedChains={
+        supportedChains.length ? supportedChains : [PLACEHOLDER_CHAIN]
+      }
       sdkOptions={{
         gasSettings: { maxPriceInGwei: 650 },
         readonlySettings,

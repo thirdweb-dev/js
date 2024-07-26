@@ -1,8 +1,8 @@
 import { LOGGED_IN_ONLY_PATHS } from "@/constants/auth";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
-// middleware.ts
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
+import { defineChain, getChainMetadata } from "thirdweb/chains";
 
 // ignore assets, api - only intercept page routes
 export const config = {
@@ -19,7 +19,7 @@ export const config = {
   ],
 };
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const activeAccount = request.cookies.get(COOKIE_ACTIVE_ACCOUNT)?.value;
   const authCookie = activeAccount
@@ -48,6 +48,23 @@ export function middleware(request: NextRequest) {
 
   // remove '/' in front and then split by '/'
   const paths = pathname.slice(1).split("/");
+
+  // if the first section of the path is a number, check if it's a valid chain_id and re-write it to the slug
+  const possibleChainId = Number(paths[0]);
+  if (Number.isInteger(possibleChainId) && possibleChainId !== 404) {
+    const possibleChain = defineChain(possibleChainId);
+    try {
+      const chainMetadata = await getChainMetadata(possibleChain);
+      if (chainMetadata.slug) {
+        return redirect(
+          request,
+          `/${chainMetadata.slug}/${paths.slice(1).join("/")}`,
+        );
+      }
+    } catch {
+      // no-op, we continue with the default routing
+    }
+  }
 
   // DIFFERENT DYNAMIC ROUTING CASES
 

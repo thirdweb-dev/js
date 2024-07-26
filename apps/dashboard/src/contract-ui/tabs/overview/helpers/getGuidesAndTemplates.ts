@@ -1,4 +1,5 @@
-import type { ContractType, FeatureName } from "@thirdweb-dev/sdk";
+import type { FeatureName } from "@thirdweb-dev/sdk";
+import type { ContractType } from "constants/contracts";
 
 type Item = {
   title: string;

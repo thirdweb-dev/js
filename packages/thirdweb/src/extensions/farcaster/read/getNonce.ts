@@ -5,6 +5,9 @@ import { withCache } from "../../../utils/promise/withCache.js";
 import { nonces } from "../__generated__/IKeyGateway/read/nonces.js";
 import { getKeyGateway } from "../contracts/getKeyGateway.js";
 
+/**
+ * @extension FARCASTER
+ */
 export type GetNonceParams = {
   client: ThirdwebClient;
   address: Address;

@@ -1,6 +1,5 @@
 import { type BillingCredit, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Alert, AlertDescription, AlertIcon, Flex } from "@chakra-ui/react";
-import { Optimism } from "@thirdweb-dev/chains";
 import { ChakraNextImage } from "components/Image";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { formatDistance } from "date-fns";
@@ -48,7 +47,13 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
       <Flex flexDir="column" gap={4}>
         <Flex gap={2}>
           {isOpCredit ? (
-            <ChainIcon ipfsSrc={Optimism.icon.url} size={24} />
+            <ChainIcon
+              ipfsSrc={
+                // Hard-coded here to remove @thirdweb dev/chains
+                "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png"
+              }
+              size={24}
+            />
           ) : isTwCredit ? (
             <ChakraNextImage
               src={require("../../../../../public/brand/thirdweb-icon.svg")}

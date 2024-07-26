@@ -1,4 +1,3 @@
-import { Polygon } from "@thirdweb-dev/chains";
 import {
   type Abi,
   type AddContractInput,
@@ -46,8 +45,8 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
 
 export function getGaslessPolygonSDK(signer?: Signer) {
   const polygonSDK = getThirdwebSDK(
-    Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    polygon.id,
+    getDashboardChainRpc(polygon.id),
     {
       gasless: {
         engine: {
@@ -73,6 +72,7 @@ const registry = getContract({
 export async function addContractToMultiChainRegistry(
   contractData: AddContractInput,
   account: Account,
+  gasOverride?: bigint,
 ) {
   const transaction = prepareContractCall({
     contract: registry,
@@ -86,7 +86,10 @@ export async function addContractToMultiChainRegistry(
   });
 
   await sendAndConfirmTransaction({
-    transaction,
+    transaction: {
+      ...transaction,
+      gas: gasOverride || transaction.gas,
+    },
     account,
     gasless: {
       experimentalChainlessSupport: true,

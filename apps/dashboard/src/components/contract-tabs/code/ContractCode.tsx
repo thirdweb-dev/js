@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
-import { constants } from "ethers";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
+import { ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
 import { CodeSegment } from "./CodeSegment";
@@ -60,7 +60,7 @@ const INSTALL_COMMANDS = {
 const CREATE_APP_COMMAND = "npx thirdweb create app";
 
 export const ContractCode: React.FC<ContractCodeProps> = ({
-  contractAddress = constants.AddressZero,
+  contractAddress = ZERO_ADDRESS,
   contractType,
 }) => {
   const { data, isLoading } = useContractCodeSnippetQuery();

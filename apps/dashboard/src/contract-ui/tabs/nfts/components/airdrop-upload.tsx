@@ -23,9 +23,8 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { resolveAddress } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
-import { utils } from "ethers";
+import { thirdwebClient } from "lib/thirdweb-client";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type DropzoneOptions, useDropzone } from "react-dropzone";
@@ -38,6 +37,8 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
+import { resolveAddress } from "thirdweb/extensions/ens";
+import { isAddress } from "thirdweb/utils";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
@@ -110,7 +111,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     [],
   );
 
-  // FIXME: this can be a mutation or query insead!
+  // FIXME: this can be a mutation or query instead!
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (validAirdrop.length === 0) {
@@ -124,9 +125,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           let resolvedAddress = address;
 
           try {
-            resolvedAddress = utils.isAddress(address)
+            resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress(address);
+              : await resolveAddress({ name: address, client: thirdwebClient });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;

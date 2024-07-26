@@ -18,11 +18,11 @@ import {
 } from "@chakra-ui/react";
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
-import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";
 import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
+import { ZERO_ADDRESS, isAddress } from "thirdweb";
 import { Button, FormErrorMessage, Text } from "tw-components";
 
 interface PermissionEditorProps {
@@ -46,7 +46,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
   const [address, setAddress] = useState("");
 
   const members = watch(role) || [];
-  const isDisabled = !utils.isAddress(address) || members.includes(address);
+  const isDisabled = !isAddress(address) || members.includes(address);
 
   const addAddress = () => {
     if (isDisabled) {
@@ -125,7 +125,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
               fontFamily="mono"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder={constants.AddressZero}
+              placeholder={ZERO_ADDRESS}
               px={2}
             />
             <InputRightAddon p={0} border="none">
@@ -149,7 +149,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
           <FormErrorMessage>
             {members.includes(address)
               ? "Address already has this role"
-              : !utils.isAddress(address)
+              : !isAddress(address)
                 ? "Not a valid address"
                 : ""}
           </FormErrorMessage>

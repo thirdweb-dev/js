@@ -11,7 +11,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
-import type { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
@@ -19,6 +18,7 @@ import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useState } from "react";
 import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
+import type { ChainMetadata } from "thirdweb/chains";
 import {
   Badge,
   Button,
@@ -309,7 +309,7 @@ const TransactionDetailsDrawer = ({
     return null;
   }
 
-  const chain: Chain | undefined =
+  const chain: ChainMetadata | undefined =
     chainIdToChainRecord[Number.parseInt(transaction.chainId)];
   const explorer = chain?.explorers?.[0];
 

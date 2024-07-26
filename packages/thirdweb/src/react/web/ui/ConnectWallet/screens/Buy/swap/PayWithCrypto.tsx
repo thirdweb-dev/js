@@ -6,6 +6,7 @@ import type { Account } from "../../../../../../../wallets/interfaces/wallet.js"
 import {
   fontSize,
   iconSize,
+  radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
 import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
@@ -36,6 +37,7 @@ export function PayWithCrypto(props: {
   client: ThirdwebClient;
   freezeChainAndTokenSelection?: boolean;
   payerAccount: Account;
+  swapRequired: boolean;
 }) {
   const { name } = useChainName(props.chain);
 
@@ -55,11 +57,16 @@ export function PayWithCrypto(props: {
         borderWidth: "1px",
         borderTopWidth: 0,
         borderStyle: "solid",
-        borderBottom: "none",
         flexWrap: "nowrap",
         justifyContent: "space-between",
         minHeight: "64px",
         alignItems: "center",
+        ...(props.swapRequired
+          ? { borderBottom: "none" }
+          : {
+              borderBottomLeftRadius: radius.md,
+              borderBottomRightRadius: radius.md,
+            }),
       }}
     >
       {/* Left */}
@@ -81,13 +88,13 @@ export function PayWithCrypto(props: {
           size="md"
           client={props.client}
         />
-        <Container flex="column" gap="xxs">
+        <Container flex="column" gap="3xs">
           <Container flex="row" gap="xs" center="y" color="primaryText">
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
           {name ? (
-            <Text size="xs"> {name}</Text>
+            <Text size="xs">{name}</Text>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
@@ -118,7 +125,7 @@ export function PayWithCrypto(props: {
             color={props.value ? "primaryText" : "secondaryText"}
             style={{}}
           >
-            {formatNumber(Number(props.value), 6) || "--"}
+            {formatNumber(Number(props.value), 6) || ""}
           </Text>
         )}
 
@@ -126,7 +133,7 @@ export function PayWithCrypto(props: {
           <GenericWalletIcon size={fontSize.xs} />
           {balanceQuery.data ? (
             <Text size="xs" color="secondaryText" weight={500}>
-              {formatTokenBalance(balanceQuery.data, true)}
+              {formatTokenBalance(balanceQuery.data, false)}
             </Text>
           ) : (
             <Skeleton width="70px" height={fontSize.xs} />

@@ -12,11 +12,12 @@ import type { PayerInfo } from "../types.js";
 import { getBuyWithFiatStatusMeta } from "./statusMeta.js";
 
 export function FiatDetailsScreen(props: {
+  title: string;
   status: ValidBuyWithFiatStatus;
   onBack: () => void;
   client: ThirdwebClient;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
 }) {
@@ -43,12 +44,11 @@ export function FiatDetailsScreen(props: {
     const fiatQuote = status.quote;
     return (
       <PostOnRampSwapFlow
-        title="Buy"
+        title={props.title}
         client={props.client}
         status={status}
         onBack={props.onBack}
-        onViewPendingTx={props.onBack}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         quote={{
           fromCurrencyAmount: fiatQuote.fromCurrencyWithFees.amount,

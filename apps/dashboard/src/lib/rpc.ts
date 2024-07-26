@@ -1,14 +1,14 @@
-import { type Chain, getValidChainRPCs } from "@thirdweb-dev/chains";
-import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
+import { thirdwebClient } from "@/constants/client";
+import { isProd } from "constants/rpc";
+import { defineChain, getRpcUrlForChain } from "thirdweb/chains";
 import { hostnameEndsWith } from "../utils/url";
 
-export function getDashboardChainRpc(chain: Chain) {
+export function getDashboardChainRpc(chainId: number) {
   try {
-    const rpcUrl = getValidChainRPCs(
-      chain,
-      DASHBOARD_THIRDWEB_CLIENT_ID,
-      "http",
-    )[0];
+    const rpcUrl = getRpcUrlForChain({
+      chain: defineChain(chainId),
+      client: thirdwebClient,
+    });
     // based on the environment hit dev or production
     if (hostnameEndsWith(rpcUrl, "rpc.thirdweb.com")) {
       if (!isProd) {

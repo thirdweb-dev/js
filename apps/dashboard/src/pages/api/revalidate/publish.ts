@@ -1,5 +1,4 @@
 import { QueryClient } from "@tanstack/react-query";
-import { Polygon } from "@thirdweb-dev/chains";
 import {
   ensQuery,
   fetchPublishedContracts,
@@ -8,6 +7,7 @@ import type { ENSResolveResult } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { polygon } from "thirdweb/chains";
 import { getSingleQueryValue } from "utils/router";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -44,8 +44,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // if we don't have a specific contractName we have to actually fetch all the contracts for the address
   if (!contractName) {
     const polygonSdk = getThirdwebSDK(
-      Polygon.chainId,
-      getDashboardChainRpc(Polygon),
+      polygon.id,
+      getDashboardChainRpc(polygon.id),
     );
     const publishedContracts = await fetchPublishedContracts(
       polygonSdk,

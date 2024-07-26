@@ -4,7 +4,6 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { Polygon } from "@thirdweb-dev/chains";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ensQuery,
@@ -23,6 +22,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
+import { polygon } from "thirdweb/chains";
 import type { ThirdwebNextPage } from "utils/types";
 
 type PublishPageProps = {
@@ -68,8 +68,8 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
   }
 
   const polygonSdk = getThirdwebSDK(
-    Polygon.chainId,
-    getDashboardChainRpc(Polygon),
+    polygon.id,
+    getDashboardChainRpc(polygon.id),
   );
 
   const lowercaseAddress = authorAddress.toLowerCase();

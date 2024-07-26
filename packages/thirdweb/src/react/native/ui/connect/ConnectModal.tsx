@@ -407,12 +407,12 @@ function WalletLoadingView({
           <View
             style={{
               borderRadius: spacing.md,
-              padding: spacing.xs,
+              padding: spacing.sm,
             }}
           >
             <RNImage
               theme={theme}
-              size={90}
+              size={80}
               data={getAuthProviderImage(authProvider)}
               color={theme.colors.accentButtonBg}
             />
@@ -502,7 +502,7 @@ function SignInView({
               color: theme.colors.accentButtonText,
             }}
           >
-            Sign Login Request
+            Sign login request
           </ThemedText>
         </ThemedButton>
         <Spacer size="md" />
@@ -521,7 +521,7 @@ function SignInView({
             theme={theme}
             type="defaultSemiBold"
             style={{
-              color: theme.colors.accentButtonText,
+              color: theme.colors.secondaryButtonText,
             }}
           >
             Disconnect

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Box,
   Container,
@@ -14,6 +15,8 @@ import { LandingFAQ } from "components/landing-pages/faq";
 import { LandingLayout } from "components/landing-pages/layout";
 import { useTrack } from "hooks/analytics/useTrack";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { ArrowRightIcon, ChevronRight } from "lucide-react";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { AiOutlineDollarCircle } from "react-icons/ai";
@@ -28,8 +31,9 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
-import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "utils/pricing";
-import type { ThirdwebNextPage } from "utils/types";
+import { EcosystemWalletPricingCard } from "../app/(dashboard)/dashboard/connect/ecosystem/create/components/pricing-card";
+import { FAQ_GENERAL, FAQ_PRICING, PRICING_SECTIONS } from "../utils/pricing";
+import type { ThirdwebNextPage } from "../utils/types";
 
 const TRACKING_CATEGORY = "pricing-page";
 
@@ -204,7 +208,7 @@ const Pricing: ThirdwebNextPage = () => {
           ))}
         </Flex>
 
-        <Flex gap={4} flexDir="column" alignItems="center">
+        <Flex gap={{ base: 4, lg: 6 }} flexDir="column" alignItems="center">
           <Heading as="h2" size="title.xl" color="white">
             Add-ons
           </Heading>
@@ -214,6 +218,8 @@ const Pricing: ThirdwebNextPage = () => {
             </Heading>
             <EnginePricing isMobile={isMobile} />
           </Flex>
+
+          <EcosystemPricing />
         </Flex>
 
         <Flex gap={4} flexDir="column" alignItems="center">
@@ -394,6 +400,49 @@ const EnginePricing = ({ isMobile }: { isMobile: boolean }) => {
         />
       </SimpleGrid>
     </Flex>
+  );
+};
+
+const EcosystemPricing = () => {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
+      <h3 className="font-medium text-3xl col-span-1 lg:col-span-2 row-start-1 flex lg:hidden order-1">
+        Ecosystem Wallets
+      </h3>
+      <div className="col-span-1 lg:col-span-2 flex flex-col gap-4 order-3 lg:order-2">
+        <h3 className="font-medium text-3xl col-span-1 lg:col-span-2 row-start-1 hidden lg:flex">
+          Ecosystem Wallets
+        </h3>
+        <p>
+          Your own managed in-app wallet service that allows you to create a
+          branded wallet and login system, and allow any number of partners to
+          spin up in-app wallets.
+        </p>
+        <p>
+          Ecosystem Wallets start at $250/mo per instance. Instances allow for
+          up to 30,000 monthly active in-app wallets and $0.02 per additional
+          monthly active in-app wallet.
+        </p>
+        <div className="flex flex-row gap-4">
+          <Button size="lg" asChild className="gap-2">
+            <NextLink href="/dashboard/connect/ecosystem/create">
+              <span>Get Started</span>
+              <ChevronRight className="size-4" />
+            </NextLink>
+          </Button>
+          <Button size="lg" variant="outline" className="gap-2" asChild>
+            <NextLink
+              href="https://portal.thirdweb.com/connect/ecosystems/overview"
+              target="_blank"
+            >
+              <span>Learn More</span>
+              <ArrowRightIcon className="size-4 opacity-50 -rotate-45" />
+            </NextLink>
+          </Button>
+        </div>
+      </div>
+      <EcosystemWalletPricingCard className="col-span-1 order-2 lg:order-3" />
+    </div>
   );
 };
 

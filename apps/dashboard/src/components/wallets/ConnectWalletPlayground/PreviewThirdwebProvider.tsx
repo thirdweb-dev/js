@@ -1,4 +1,3 @@
-import { defaultChains } from "@thirdweb-dev/chains";
 import {
   ThirdwebProvider,
   type WalletConfig,
@@ -6,7 +5,7 @@ import {
   es,
   ja,
 } from "@thirdweb-dev/react";
-import { DASHBOARD_THIRDWEB_CLIENT_ID, isProd } from "constants/rpc";
+import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "constants/urls";
 import { StorageSingleton } from "lib/sdk";
 
@@ -29,18 +28,6 @@ export function PreviewThirdwebProvider(props: {
       activeChain="sepolia"
       supportedWallets={
         props.supportedWallets.length > 0 ? props.supportedWallets : undefined
-      }
-      supportedChains={
-        isProd
-          ? defaultChains
-          : defaultChains.map((chain) => {
-              return {
-                ...chain,
-                rpc: chain.rpc.map((rpc) =>
-                  rpc.replace("rpc.thirdweb.com", "rpc.thirdweb-dev.com"),
-                ),
-              };
-            })
       }
       clientId={DASHBOARD_THIRDWEB_CLIENT_ID}
       storageInterface={StorageSingleton}

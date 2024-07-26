@@ -4,7 +4,7 @@ import { THIRDWEB_CLIENT } from "../../lib/client";
 
 export const chain = baseSepolia;
 export const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";
-export const editionDropTokenId = 0n;
+export const editionDropTokenId = 1n;
 
 export const editionDropContract = getContract({
   address: editionDropAddress,

@@ -3,6 +3,9 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { signPermissionRequest, toContractPermissions } from "./common.js";
 
+/**
+ * @extension ERC4337
+ */
 export type RemoveSessionKeyOptions = {
   /**
    * The account that will perform the operation.

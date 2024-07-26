@@ -136,9 +136,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
               },
               {
                 label: "Popular",
-                chains: (networksEnabled ? [] : popularChains).map(
-                  mapStoredChainTov5Chain,
-                ),
+                chains: networksEnabled ? [] : popularChains,
               },
               {
                 label: "All Networks",

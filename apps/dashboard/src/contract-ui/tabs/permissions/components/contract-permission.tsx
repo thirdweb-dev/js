@@ -1,9 +1,9 @@
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { constants } from "ethers";
 import { useFormContext } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
+import { ZERO_ADDRESS } from "thirdweb";
 import { Card, Heading, Text } from "tw-components";
 import { PermissionEditor } from "./permissions-editor";
 
@@ -30,7 +30,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
 
   const roleMembers: string[] = watch()?.[role] || [];
   const isRestricted =
-    !roleMembers.includes(constants.AddressZero) ||
+    !roleMembers.includes(ZERO_ADDRESS) ||
     (role !== "transfer" && role !== "lister" && role !== "asset");
 
   const isAdmin = useIsAdmin(contract as ValidContractInstance);
@@ -64,18 +64,14 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                         setValue(
                           role,
                           roleMembers.filter(
-                            (address) => address !== constants.AddressZero,
+                            (address) => address !== ZERO_ADDRESS,
                           ),
                           { shouldDirty: true },
                         );
                       } else {
-                        setValue(
-                          role,
-                          [constants.AddressZero, ...roleMembers],
-                          {
-                            shouldDirty: true,
-                          },
-                        );
+                        setValue(role, [ZERO_ADDRESS, ...roleMembers], {
+                          shouldDirty: true,
+                        });
                       }
                     }}
                   >
@@ -103,18 +99,14 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                         setValue(
                           role,
                           roleMembers.filter(
-                            (address) => address !== constants.AddressZero,
+                            (address) => address !== ZERO_ADDRESS,
                           ),
                           { shouldDirty: true },
                         );
                       } else {
-                        setValue(
-                          role,
-                          [constants.AddressZero, ...roleMembers],
-                          {
-                            shouldDirty: true,
-                          },
-                        );
+                        setValue(role, [ZERO_ADDRESS, ...roleMembers], {
+                          shouldDirty: true,
+                        });
                       }
                     }}
                   >
@@ -142,18 +134,14 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
                         setValue(
                           role,
                           roleMembers.filter(
-                            (address) => address !== constants.AddressZero,
+                            (address) => address !== ZERO_ADDRESS,
                           ),
                           { shouldDirty: true },
                         );
                       } else {
-                        setValue(
-                          role,
-                          [constants.AddressZero, ...roleMembers],
-                          {
-                            shouldDirty: true,
-                          },
-                        );
+                        setValue(role, [ZERO_ADDRESS, ...roleMembers], {
+                          shouldDirty: true,
+                        });
                       }
                     }}
                   >

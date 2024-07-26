@@ -5,9 +5,9 @@ import {
   Skeleton,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import type { Chain } from "@thirdweb-dev/chains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import Link from "next/link";
+import type { ChainMetadata } from "thirdweb/chains";
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -25,7 +25,7 @@ interface MetadataHeaderProps {
     description?: string | null;
     image?: string | null;
   };
-  chain?: Chain;
+  chain?: ChainMetadata;
   externalLinks?: ExternalLink[];
 }
 

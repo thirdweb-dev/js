@@ -134,6 +134,10 @@ export {
 // abi
 // ------------------------------------------------
 export { encodeAbiParameters } from "../utils/abi/encodeAbiParameters.js";
+
+/**
+ * @utils
+ */
 export { encodePacked } from "viem";
 
 // Useful helpers
@@ -165,3 +169,5 @@ export {
   getClaimParams,
   type GetClaimParamsOptions,
 } from "../utils/extensions/drops/get-claim-params.js";
+
+export type { NFTMetadata, NFTInput } from "../utils/nft/parseNft.js";

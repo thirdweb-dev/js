@@ -1,6 +1,11 @@
-import type { Prettify } from "../utils/type-utils.js";
-export type Chain = Prettify<Readonly<ChainOptions & { rpc: string }>>;
+/**
+ * @chain
+ */
+export type Chain = Readonly<ChainOptions & { rpc: string }>;
 
+/**
+ * @chain
+ */
 export type ChainOptions = {
   id: number;
   name?: string;
@@ -23,6 +28,9 @@ export type ChainOptions = {
   faucets?: Array<string>;
 };
 
+/**
+ * @chain
+ */
 type Icon = {
   url: string;
   width: number;
@@ -30,6 +38,9 @@ type Icon = {
   format: string;
 };
 
+/**
+ * @chain
+ */
 type ChainExplorer = {
   name: string;
   url: string;
@@ -37,6 +48,9 @@ type ChainExplorer = {
   standard: string;
 };
 
+/**
+ * @chain
+ */
 export type ChainMetadata = {
   name: string;
   title?: string;
@@ -70,7 +84,9 @@ export type ChainMetadata = {
   };
 };
 
-// legacy chain type
+/**
+ * @chain
+ */
 export type LegacyChain = {
   name: string;
   title?: string;

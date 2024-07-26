@@ -1,4 +1,3 @@
-import type { Chain } from "@thirdweb-dev/chains";
 import {
   createContext,
   useCallback,
@@ -6,11 +5,12 @@ import {
   useEffect,
   useState,
 } from "react";
+import type { ChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 
 export type EVMContractInfo = {
   // using null instead of undefined here so that this type can be JSON stringified
-  chain: Chain | null;
+  chain: ChainMetadata | null;
   chainSlug: string;
   contractAddress: string;
 };

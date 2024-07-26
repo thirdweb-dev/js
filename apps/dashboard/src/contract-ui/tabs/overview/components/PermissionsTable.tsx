@@ -14,10 +14,10 @@ import {
 import { useAllRoleMembers } from "@thirdweb-dev/react";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import { useTabHref } from "contract-ui/utils";
-import { constants } from "ethers";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
+import { ZERO_ADDRESS } from "thirdweb";
 import {
   Button,
   Card,
@@ -55,7 +55,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
         },
         [] as { member: string; roles: string[] }[],
       ) || []
-    ).filter((m) => m.member !== constants.AddressZero);
+    ).filter((m) => m.member !== ZERO_ADDRESS);
   }, [allRoleMembers.data]);
 
   return (

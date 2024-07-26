@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { reveal as generatedReveal } from "../../__generated__/IDelayedReveal/write/reveal.js";
 import { hashDelayedRevealPassword } from "../helpers/hashDelayedRevealBatch.js";
 
+/**
+ * @extension ERC721
+ */
 export type RevealParams = {
   batchId: bigint;
   password: string;

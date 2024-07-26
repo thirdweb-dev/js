@@ -26,7 +26,7 @@ export function MobileBurgerMenu() {
   return (
     <>
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         className="md:hidden"
         onClick={() => setShowBurgerMenu(!showBurgerMenu)}

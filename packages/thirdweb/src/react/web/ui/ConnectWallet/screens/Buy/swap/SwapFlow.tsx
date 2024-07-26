@@ -14,12 +14,11 @@ type SwapFlowProps = {
   onBack?: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
   payer: PayerInfo;
-  onViewPendingTx: () => void;
   client: ThirdwebClient;
   isFiatFlow: boolean;
   onDone: () => void;
   onTryAgain: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 };
 
@@ -79,11 +78,10 @@ export function SwapFlow(props: SwapFlowProps) {
         title={props.title}
         onBack={props.onBack}
         onTryAgain={props.onTryAgain}
-        onViewPendingTx={props.onViewPendingTx}
         swapTxHash={swapTxHash}
         client={props.client}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         quote={quote}
       />

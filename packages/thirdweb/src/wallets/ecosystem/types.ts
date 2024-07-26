@@ -6,6 +6,9 @@ import type { Ecosystem } from "../in-app/web/types.js";
 
 export type EcosystemWalletCreationOptions = {
   partnerId?: string;
+  auth?: {
+    mode?: "popup" | "redirect";
+  };
 };
 
 export type EcosystemWalletConnectionOptions = InAppWalletConnectionOptions & {

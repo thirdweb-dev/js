@@ -4,6 +4,7 @@ export default {
   signInWithGoogle: "Google",
   signInWithFacebook: "Facebook",
   signInWithApple: "Apple",
+  signInWithDiscord: "Discord",
   emailPlaceholder: "Địa chỉ email",
   submitEmail: "Tiếp tục",
   signIn: "Đăng nhập",

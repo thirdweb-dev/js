@@ -9,6 +9,7 @@ import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
 import {
   appleIconUri,
+  discordIconUri,
   emailIcon,
   facebookIconUri,
   genericWalletIcon,
@@ -72,6 +73,9 @@ export function WalletImage(props: {
             break;
           case "passkey":
             image = passkeyIcon;
+            break;
+          case "discord":
+            image = discordIconUri;
             break;
         }
       } else {
