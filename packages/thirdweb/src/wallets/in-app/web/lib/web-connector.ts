@@ -1,8 +1,10 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
 import {
   type AuthLoginReturnType,
+  type AuthStoredTokenWithCookieReturnType,
   type GetUser,
   type LogoutReturnType,
   type MultiStepAuthArgsType,
@@ -15,7 +17,7 @@ import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
-import { loginWithOauth } from "./auth/oauth.js";
+import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
 import { loginWithPasskey, registerPasskey } from "./auth/passkeys.js";
 import { IFrameWallet } from "./in-app-account.js";
 
@@ -151,6 +153,18 @@ export class InAppWebConnector implements InAppConnector {
     }
   }
 
+  authenticateWithRedirect(strategy: SocialAuthOption): void {
+    loginWithOauthRedirect({
+      authOption: strategy,
+      client: this.wallet.client,
+      ecosystem: this.wallet.ecosystem,
+    });
+  }
+
+  async loginWithAuthToken(authResult: AuthStoredTokenWithCookieReturnType) {
+    return this.auth.loginWithAuthToken(authResult);
+  }
+
   async authenticate(
     args: MultiStepAuthArgsType | SingleStepAuthArgsType,
   ): Promise<AuthLoginReturnType> {
@@ -196,14 +210,14 @@ export class InAppWebConnector implements InAppConnector {
             authenticatorType: args.authenticatorType,
             username: args.passkeyName,
           });
-          return this.auth.loginWithAuthToken(authToken);
+          return this.loginWithAuthToken(authToken);
         }
         const authToken = await loginWithPasskey({
           client: this.wallet.client,
           ecosystem: this.wallet.ecosystem,
           authenticatorType: args.authenticatorType,
         });
-        return this.auth.loginWithAuthToken(authToken);
+        return this.loginWithAuthToken(authToken);
       }
       case "apple":
       case "facebook":
@@ -216,7 +230,7 @@ export class InAppWebConnector implements InAppConnector {
           closeOpenedWindow: args.closeOpenedWindow,
           openedWindow: args.openedWindow,
         });
-        return this.auth.loginWithAuthToken(authToken);
+        return this.loginWithAuthToken(authToken);
       }
 
       default:

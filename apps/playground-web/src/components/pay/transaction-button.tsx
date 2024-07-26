@@ -4,8 +4,13 @@ import { useTheme } from "next-themes";
 import { getContract } from "thirdweb";
 import { base, polygon } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
-import { claimTo } from "thirdweb/extensions/erc1155";
-import { TransactionButton, useActiveAccount } from "thirdweb/react";
+import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
+import {
+  PayEmbed,
+  TransactionButton,
+  useActiveAccount,
+  useReadContract,
+} from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
@@ -24,44 +29,50 @@ const usdcContract = getContract({
 export function PayTransactionButtonPreview() {
   const account = useActiveAccount();
   const { theme } = useTheme();
+  const { data: nft } = useReadContract(getNFT, {
+    contract: nftContract,
+    tokenId: 0n,
+  });
 
   return (
     <>
       <StyledConnectButton />
       <div className="h-10" />
-      <TransactionButton
-        transaction={() => {
-          if (!account) throw new Error("No active account");
-          return transfer({
-            contract: usdcContract,
-            amount: "15",
-            to: account?.address,
-          });
-        }}
-        payModal={{
-          theme: theme === "light" ? "light" : "dark",
-        }}
-      >
-        Pay 15 USDC
-      </TransactionButton>
-      <div className="h-10" />
-
-      <TransactionButton
-        transaction={() => {
-          if (!account) throw new Error("No active account");
-          return claimTo({
-            contract: nftContract,
-            quantity: 1n,
-            tokenId: 0n,
-            to: account?.address,
-          });
-        }}
-        payModal={{
-          theme: theme === "light" ? "light" : "dark",
-        }}
-      >
-        Buy NFT for 10 MATIC
-      </TransactionButton>
+      {account && (
+        <>
+          <PayEmbed
+            client={THIRDWEB_CLIENT}
+            theme={theme === "light" ? "light" : "dark"}
+            payOptions={{
+              mode: "transaction",
+              transaction: claimTo({
+                contract: nftContract,
+                quantity: 1n,
+                tokenId: 0n,
+                to: account?.address || "",
+              }),
+              metadata: nft?.metadata,
+            }}
+          />
+          <div className="h-10" />
+          <h4 className="font-bold py-4">ERC20 Transfer (no metadata)</h4>
+          <TransactionButton
+            transaction={() => {
+              if (!account) throw new Error("No active account");
+              return transfer({
+                contract: usdcContract,
+                amount: "50",
+                to: account?.address || "",
+              });
+            }}
+            payModal={{
+              theme: theme === "light" ? "light" : "dark",
+            }}
+          >
+            Buy NFT
+          </TransactionButton>
+        </>
+      )}
     </>
   );
 }

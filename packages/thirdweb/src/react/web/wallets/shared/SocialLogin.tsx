@@ -5,6 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
+import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
@@ -15,7 +16,7 @@ import { Button } from "../../ui/components/buttons.js";
 import { Text } from "../../ui/components/text.js";
 import type { ConnectWalletSelectUIState } from "./ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "./locale/types.js";
-import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { openOauthSignInWindow } from "./oauthSignIn.js";
 
 /**
  * @internal
@@ -42,6 +43,24 @@ export function SocialLogin(props: {
   );
 
   const handleSocialLogin = async () => {
+    const walletConfig = wallet.getConfig();
+    if (
+      walletConfig &&
+      "auth" in walletConfig &&
+      walletConfig?.auth?.mode === "redirect"
+    ) {
+      return loginWithOauthRedirect({
+        authOption: props.socialAuth,
+        client: props.client,
+        ecosystem: isEcosystemWallet(wallet)
+          ? {
+              id: wallet.id,
+              partnerId: wallet.getConfig()?.partnerId,
+            }
+          : undefined,
+      });
+    }
+
     try {
       const socialWindow = openOauthSignInWindow({
         authOption: props.socialAuth,

@@ -1,7 +1,6 @@
 "use client";
 
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
-import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
@@ -157,38 +157,49 @@ export function TestnetSpinWheel({
 
   return (
     <>
-      {isLoading ?? <Spinner />}
-      {faucetMessage}
-      <Dialog>
-        <DialogTrigger asChild>
-          {!isFaucetEmpty && (
-            <Button className="min-w-48" disabled={ttlSeconds > 0}>
-              {claimButtonCta}
-            </Button>
-          )}
-        </DialogTrigger>
-        <DialogContent className="w-auto h-fit max-w-none">
-          {claimMutation.isSuccess && <Confetti className="w-full h-full" />}
-          <DialogHeader>
-            <DialogTitle>
-              Spin to claim {chain.nativeCurrency.symbol} on {chain.name}
-            </DialogTitle>
-            <DialogDescription>
-              <p className="py-2">Click the wheel to get your claim amount.</p>
-              <div className="p-4">
-                <SpinWheel {...spinWheelProps} />
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex justify-between">
-            <DialogClose asChild>
-              <Button variant="outline">
-                <span className="text-muted-foreground">{closeButtonCta}</span>
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {isLoading ? (
+        <Skeleton className="h-20" />
+      ) : (
+        <>
+          <div className="mb-3">{faucetMessage}</div>
+          <Dialog>
+            <DialogTrigger asChild>
+              {!isFaucetEmpty && (
+                <Button className="min-w-48" disabled={ttlSeconds > 0}>
+                  {claimButtonCta}
+                </Button>
+              )}
+            </DialogTrigger>
+            <DialogContent className="w-auto h-fit max-w-none">
+              {claimMutation.isSuccess && (
+                <Confetti className="w-full h-full" />
+              )}
+              <DialogHeader>
+                <DialogTitle>
+                  Spin to claim {chain.nativeCurrency.symbol} on {chain.name}
+                </DialogTitle>
+                <DialogDescription>
+                  <p className="py-2">
+                    Click the wheel to get your claim amount.
+                  </p>
+                  <div className="p-4">
+                    <SpinWheel {...spinWheelProps} />
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="flex justify-between">
+                <DialogClose asChild>
+                  <Button variant="outline">
+                    <span className="text-muted-foreground">
+                      {closeButtonCta}
+                    </span>
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </>
   );
 }

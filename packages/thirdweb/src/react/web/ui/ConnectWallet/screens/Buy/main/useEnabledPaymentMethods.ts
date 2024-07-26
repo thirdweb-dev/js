@@ -7,13 +7,18 @@ import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js"
 // Based on what toToken, toChain, and supportedDestinations are, determine which payment methods should be enabled
 // change the current method if it should be disabled
 // return whether the payment selection should be shown or not ( if only one payment method is enabled, don't show the selection )
+export type PaymentMethods = {
+  showPaymentSelection: boolean;
+  buyWithFiatEnabled: boolean;
+  buyWithCryptoEnabled: boolean;
+};
 
 export function useEnabledPaymentMethods(options: {
   payOptions: PayUIOptions;
   supportedDestinations: SupportedChainAndTokens;
   toChain: Chain;
   toToken: ERC20OrNativeToken;
-}) {
+}): PaymentMethods {
   const { payOptions, supportedDestinations, toChain, toToken } = options;
 
   function getEnabledPayMethodsForSelectedToken(): {
@@ -23,8 +28,8 @@ export function useEnabledPaymentMethods(options: {
     const chain = supportedDestinations.find((c) => c.chain.id === toChain.id);
     if (!chain) {
       return {
-        fiat: true,
-        swap: true,
+        fiat: false,
+        swap: false,
       };
     }
 

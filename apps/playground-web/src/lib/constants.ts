@@ -16,6 +16,7 @@ export const WALLETS = [
         "passkey",
         "phone",
       ],
+      mode: "redirect",
     },
   }),
   createWallet("io.metamask"),

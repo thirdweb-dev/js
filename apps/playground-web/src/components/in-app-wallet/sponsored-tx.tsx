@@ -45,7 +45,7 @@ export function SponsoredInAppTxPreview() {
             <MediaRenderer
               client={THIRDWEB_CLIENT}
               src={nft.metadata.image}
-              style={{ width: "100%", marginTop: "10px" }}
+              style={{ width: "400px", marginTop: "10px" }}
             />
           ) : null}
           {smartAccount ? (
@@ -77,7 +77,7 @@ export function SponsoredInAppTxPreview() {
             <p
               style={{
                 textAlign: "center",
-                width: "100%",
+                width: "400px",
                 marginTop: "10px",
               }}
             >

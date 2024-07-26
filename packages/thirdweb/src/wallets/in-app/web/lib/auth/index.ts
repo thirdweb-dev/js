@@ -1,7 +1,8 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { OneOf } from "../../../../../utils/type-utils.js";
+import type { SocialAuthOption } from "../../../../../wallets/types.js";
 import {
   type AuthArgsType,
-  type AuthLoginReturnType,
   type GetAuthenticatedUserParams,
   type PreAuthArgsType,
   UserWalletStatus,
@@ -143,8 +144,18 @@ export async function preAuthenticate(args: PreAuthArgsType) {
  * @wallet
  */
 export async function authenticate(
-  args: AuthArgsType,
-): Promise<AuthLoginReturnType> {
+  args: OneOf<
+    | AuthArgsType
+    | {
+        strategy: SocialAuthOption;
+        client: ThirdwebClient;
+        ecosystem?: Ecosystem;
+        redirect: boolean;
+      }
+  >,
+) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
+  if (args.redirect && connector.authenticateWithRedirect)
+    return connector.authenticateWithRedirect(args.strategy);
   return connector.authenticate(args);
 }

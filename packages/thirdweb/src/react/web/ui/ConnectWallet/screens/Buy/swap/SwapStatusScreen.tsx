@@ -19,12 +19,11 @@ type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 export function SwapStatusScreen(props: {
   title: string;
   onBack?: () => void;
-  onViewPendingTx: () => void;
   swapTxHash: string;
   client: ThirdwebClient;
   onTryAgain: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   quote: BuyWithCryptoQuote;
 }) {
@@ -91,7 +90,7 @@ export function SwapStatusScreen(props: {
               />
               <Spacer y="sm" />
               <Text color={"primaryText"} size="lg">
-                Buy Success
+                Buy Complete
               </Text>
             </Container>
 
@@ -100,7 +99,7 @@ export function SwapStatusScreen(props: {
             <Spacer y="sm" />
             {!props.isEmbed && (
               <Button variant="accent" fullWidth onClick={props.onDone}>
-                {props.isBuyForTx ? "Continue Transaction" : "Done"}
+                {props.transactionMode ? "Continue Transaction" : "Done"}
               </Button>
             )}
           </>

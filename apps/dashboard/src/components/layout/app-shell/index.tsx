@@ -1,3 +1,4 @@
+import { AppFooter } from "@/components/blocks/app-footer";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   ButtonGroup,
@@ -20,7 +21,6 @@ import {
   Button,
   Link,
   LinkButton,
-  Text,
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
@@ -40,51 +40,51 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   noOverflowX,
 }) => {
   return (
-    <Grid
-      minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-      templateColumns={"auto 1fr"}
-      templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
-      backgroundColor="backgroundBody"
-    >
-      <AppHeader />
-
-      <GridItem
-        id={SIDEBAR_TUNNEL_ID}
-        colSpan={{ base: 2, md: 1 }}
-        rowSpan={{ base: 1, md: 2 }}
-        as="aside"
-        position="sticky"
-        top={0}
-        zIndex="sticky"
-        borderRight="1px solid"
-        borderColor="borderColor"
-        boxShadow="sm"
-        w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
+    <div>
+      <Grid
+        minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
+        templateColumns={"auto 1fr"}
+        templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
+        backgroundColor="backgroundBody"
       >
-        {" "}
-      </GridItem>
-      <GridItem
-        minH={{ base: "100vh", md: "unset" }}
-        pt={{ base: 6, md: 10 }}
-        pb={{ base: 6, md: 20 }}
-        as="main"
-        colSpan={{ base: 2, md: 1 }}
-        rowSpan={1}
-        overflowX={noOverflowX ? undefined : "auto"}
-      >
-        <Container maxW="container.page">
-          <BillingAlerts />
-        </Container>
+        <AppHeader />
 
-        {layout === "custom-contract" ? (
-          children
-        ) : (
-          <Container maxW="container.page">{children}</Container>
-        )}
-      </GridItem>
+        <GridItem
+          id={SIDEBAR_TUNNEL_ID}
+          colSpan={{ base: 2, md: 1 }}
+          rowSpan={{ base: 1, md: 2 }}
+          as="aside"
+          position="sticky"
+          top={0}
+          borderRight="1px solid"
+          borderColor="borderColor"
+          boxShadow="sm"
+          w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
+        >
+          {" "}
+        </GridItem>
+        <GridItem
+          minH={{ base: "100vh", md: "unset" }}
+          pt={{ base: 6, md: 10 }}
+          pb={{ base: 6, md: 20 }}
+          as="main"
+          colSpan={{ base: 2, md: 1 }}
+          rowSpan={1}
+          overflowX={noOverflowX ? undefined : "auto"}
+        >
+          <Container maxW="container.page">
+            <BillingAlerts />
+          </Container>
 
-      <AppFooter />
-    </Grid>
+          {layout === "custom-contract" ? (
+            children
+          ) : (
+            <Container maxW="container.page">{children}</Container>
+          )}
+        </GridItem>
+      </Grid>
+      <AppFooter className="col-span-2" />
+    </div>
   );
 };
 
@@ -239,62 +239,6 @@ const AppHeader: React.FC = () => {
           </LinkButton>
         </ButtonGroup>
       </Container>
-    </GridItem>
-  );
-};
-
-const AppFooter: React.FC = () => {
-  return (
-    <GridItem
-      display="flex"
-      colSpan={2}
-      rowSpan={1}
-      as="footer"
-      w="full"
-      py={4}
-      gap={4}
-      alignItems="center"
-      flexDir={{ base: "column", md: "row" }}
-      justifyContent="center"
-      bg="backgroundHighlight"
-      zIndex="sticky"
-    >
-      <TrackedLink
-        isExternal
-        href="https://feedback.thirdweb.com"
-        category="footer"
-        label="feedback"
-      >
-        <Text>Feedback</Text>
-      </TrackedLink>
-      <TrackedLink isExternal href="/privacy" category="footer" label="privacy">
-        <Text>Privacy Policy</Text>
-      </TrackedLink>
-      <TrackedLink isExternal href="/tos" category="footer" label="terms">
-        <Text>Terms of Service</Text>
-      </TrackedLink>
-
-      <TrackedLink
-        href="/gas"
-        bg="transparent"
-        category="footer"
-        display={{ base: "none", md: "flex" }}
-        label="gas-estimator"
-      >
-        <Text>Gas Estimator</Text>
-      </TrackedLink>
-      <TrackedLink
-        href="/chainlist"
-        bg="transparent"
-        category="footer"
-        display={{ base: "none", md: "flex" }}
-        label="chains"
-      >
-        <Text>Chainlist</Text>
-      </TrackedLink>
-      <Text alignSelf="center" order={{ base: 2, md: 0 }} opacity={0.5}>
-        Copyright &copy; {new Date().getFullYear()} thirdweb
-      </Text>
     </GridItem>
   );
 };

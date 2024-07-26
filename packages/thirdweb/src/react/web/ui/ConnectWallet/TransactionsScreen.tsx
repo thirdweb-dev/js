@@ -61,7 +61,7 @@ export function TransactionsScreen(props: {
         onBack={() => setSelectedTx(null)}
         onDone={() => setSelectedTx(null)}
         payer={payer}
-        isBuyForTx={false}
+        transactionMode={false}
         isEmbed={false}
       />
     );

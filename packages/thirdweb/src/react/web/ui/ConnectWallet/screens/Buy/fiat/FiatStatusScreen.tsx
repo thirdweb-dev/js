@@ -34,13 +34,12 @@ export function OnrampStatusScreen(props: {
   client: ThirdwebClient;
   onBack: () => void;
   intentId: string;
-  onViewPendingTx: () => void;
   hasTwoSteps: boolean;
   openedWindow: Window | null;
   quote: BuyWithFiatQuote;
   onDone: () => void;
   onShowSwapFlow: (status: BuyWithFiatStatus) => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 }) {
   const queryClient = useQueryClient();
@@ -117,7 +116,7 @@ export function OnrampStatusScreen(props: {
         onDone={props.onDone}
         fiatStatus={statusQuery.data}
         client={props.client}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         quote={props.quote}
         isEmbed={props.isEmbed}
       />
@@ -130,7 +129,7 @@ function OnrampStatusScreenUI(props: {
   fiatStatus?: BuyWithFiatStatus;
   onDone: () => void;
   client: ThirdwebClient;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   quote: BuyWithFiatQuote;
 }) {
@@ -189,7 +188,7 @@ function OnrampStatusScreenUI(props: {
         <>
           <Spacer y="md" />
           <Container flex="row" center="x">
-            <Spinner size="3xl" color="accentText" />
+            <Spinner size="xxl" color="accentText" />
           </Container>
           <Spacer y="md" />
           <Text color="primaryText" size="lg" center>
@@ -240,7 +239,7 @@ function OnrampStatusScreenUI(props: {
 
           {!props.isEmbed && (
             <Button variant="accent" fullWidth onClick={props.onDone}>
-              {props.isBuyForTx ? "Continue Transaction" : "Done"}
+              {props.transactionMode ? "Continue Transaction" : "Done"}
             </Button>
           )}
         </>

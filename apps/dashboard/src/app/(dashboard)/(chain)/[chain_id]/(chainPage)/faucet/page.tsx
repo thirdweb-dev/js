@@ -5,8 +5,8 @@ import { getIpAddress } from "lib/ip";
 import { cacheTtl } from "lib/redis";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next/types";
-import { InfoCard } from "../(chainPage)/components/server/info-card";
-import { getChain } from "../../utils";
+import { getChain } from "../../../utils";
+import { InfoCard } from "../components/server/info-card";
 import { TestnetSpinWheel } from "./components/SpinWheel";
 
 export async function generateMetadata({
@@ -36,16 +36,15 @@ export default async function Page(props: { params: { chain_id: string } }) {
   return (
     <>
       <div className="items-center">
-        <InfoCard title="Faucet">
-          <ClientOnly ssr={null}>
-            <TestnetSpinWheel chain={chain} ttlSeconds={ttlSeconds} />
-          </ClientOnly>
-        </InfoCard>
+        <h3 className="mb-3 text-lg font-semibold"> Faucet </h3>
+        <ClientOnly ssr={null}>
+          <TestnetSpinWheel chain={chain} ttlSeconds={ttlSeconds} />
+        </ClientOnly>
 
         <div className="h-10" />
 
         <InfoCard title="Resources">
-          <h3>What is a faucet?</h3>
+          <h3 className="mb-2 text-lg font-semibold">What is a faucet?</h3>
           <p>
             An testnet faucet is an online service that provides free testnet
             currency to web3 app and blockchain developers. This allows them to
@@ -57,7 +56,9 @@ export default async function Page(props: { params: { chain_id: string } }) {
           <h2>How often can I claim from the faucet?</h2>
           <p>You may claim funds once per testnet chain every 24 hours.</p>
 
-          <h3>How can I refill the faucet?</h3>
+          <h3 className="mb-2 text-lg font-semibold">
+            How can I refill the faucet?
+          </h3>
           <p>Please send funds the following address:</p>
           <div>
             <CopyTextButton
@@ -69,7 +70,9 @@ export default async function Page(props: { params: { chain_id: string } }) {
             />
           </div>
 
-          <h3>How does the faucet work?</h3>
+          <h3 className="mb-2 text-lg font-semibold">
+            How does the faucet work?
+          </h3>
           <p>
             When you request testnet funds, a multi-chain backend wallet
             transfers a small amount of {chain.nativeCurrency.symbol} on{" "}

@@ -6,7 +6,7 @@ import {
 } from "../../../../../../contract/contract.js";
 import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
-import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
+import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { TransactionButton } from "../../../TransactionButton/index.js";
 import type {
   ClaimButtonProps,

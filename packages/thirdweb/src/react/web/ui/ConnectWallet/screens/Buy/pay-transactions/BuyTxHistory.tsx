@@ -40,7 +40,7 @@ export function PayTxHistoryScreen(props: {
   onBack?: () => void;
   client: ThirdwebClient;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
@@ -66,7 +66,7 @@ export function PayTxHistoryScreen(props: {
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={payer}
       />
