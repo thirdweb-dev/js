@@ -1,23 +1,27 @@
+"use client";
+
 import Link from "next/link";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "../../lib/utils";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
 
+export type TabLink = {
+  name: string;
+  href: string;
+  isActive: boolean;
+  isEnabled?: boolean;
+};
+
 export function TabLinks(props: {
-  links: {
-    name: string;
-    href: string;
-    isActive: boolean;
-    isEnabled?: boolean;
-  }[];
+  links: TabLink[];
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLAnchorElement>();
 
   return (
-    <div className="relative">
-      <ScrollShadow scrollableClassName="pb-[8px] relative">
+    <div className="relative px-6">
+      <ScrollShadow scrollableClassName="pb-1 relative">
         <div className="flex" ref={containerRef}>
           {props.links.map((tab) => {
             return (
@@ -33,7 +37,7 @@ export function TabLinks(props: {
                   href={tab.href}
                   aria-disabled={!tab.isEnabled}
                   className={cn(
-                    "rounded-lg hover:bg-muted px-3 font-medium text-sm lg:text-base relative h-auto",
+                    "rounded-lg hover:bg-muted px-3 font-normal text-sm lg:text-sm relative h-auto",
                     !tab.isActive &&
                       tab.isEnabled &&
                       "opacity-50 hover:opacity-100",
@@ -50,11 +54,11 @@ export function TabLinks(props: {
         {/* Active line */}
         <div
           ref={lineRef}
-          className="absolute left-0 bottom-0 z-10 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
+          className="absolute left-0 bottom-0 z-10 h-[2px] bg-foreground rounded-lg"
         />
       </ScrollShadow>
       {/* Bottom line */}
-      <div className="h-[1px] bg-border -translate-y-[2px]" />
+      <div className="h-[1px] bg-border -translate-y-[2px] -mx-6" />
     </div>
   );
 }
@@ -77,7 +81,7 @@ export function TabButtons(props: {
 
   return (
     <div className={cn("relative", props.containerClassName)}>
-      <ScrollShadow scrollableClassName="pb-[8px] relative">
+      <ScrollShadow scrollableClassName="pb-1 relative">
         <div
           className={cn("flex", props.tabContainerClassName)}
           ref={containerRef}

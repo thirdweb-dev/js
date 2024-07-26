@@ -49,13 +49,19 @@ const THIRDWEB_API_HOST = new URL(
   .toString()
   .slice(0, -1);
 
+const isLocalHost = THIRDWEB_API_HOST.includes("localhost");
+
+const DOMAIN = isLocalHost
+  ? "thirdweb-dev.com"
+  : THIRDWEB_API_HOST.replace("https://api.", "");
+
 // do this upfront
 setThirdwebDomains({
-  bundler: `bundler.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
-  inAppWallet: `embedded-wallet.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
-  pay: `pay.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
-  rpc: `rpc.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
-  storage: `storage.${THIRDWEB_API_HOST.replace("https://api.", "")}`,
+  bundler: `bundler.${DOMAIN}`,
+  inAppWallet: `embedded-wallet.${DOMAIN}`,
+  pay: `pay.${DOMAIN}`,
+  rpc: `rpc.${DOMAIN}`,
+  storage: `storage.${DOMAIN}`,
 });
 
 export interface DashboardThirdwebProviderProps {

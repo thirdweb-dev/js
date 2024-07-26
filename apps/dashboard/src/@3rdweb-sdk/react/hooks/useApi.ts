@@ -664,7 +664,7 @@ export function useCreateApiKey() {
 
   return useMutation(
     async (input: CreateKeyInput) => {
-      invariant(user?.address, "walletAddress is required");
+      // invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/keys`, {
         method: "POST",
