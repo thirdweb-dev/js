@@ -29,7 +29,7 @@ import type { LocaleId } from "./types.js";
 export type PayEmbedProps = {
   /**
    * Override the default tokens shown in PayEmbed uI
-   *
+   * @component
    * By default, PayEmbed shows a few popular tokens for Pay supported chains
    * @example
    *

@@ -27,7 +27,8 @@ import type {
  * For custom contract, please use [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton)
  * @param props
  * @returns A wrapper for TransactionButton
- *
+ * 
+ * @component
  * @example
  *
  * ```tsx
