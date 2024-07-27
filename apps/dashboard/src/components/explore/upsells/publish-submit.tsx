@@ -1,9 +1,10 @@
-import { ButtonGroup, Flex, useColorMode } from "@chakra-ui/react";
+import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { useTheme } from "next-themes";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
 export const PublishUpsellCard: React.FC = () => {
-  const { colorMode } = useColorMode();
+  const { theme } = useTheme();
 
   return (
     <Flex
@@ -12,7 +13,7 @@ export const PublishUpsellCard: React.FC = () => {
       p={{ base: 8, md: 10 }}
       gap={12}
       bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-      bgColor={colorMode === "dark" ? "transparent" : "backgroundHighlight"}
+      bgColor={theme === "dark" ? "transparent" : "backgroundHighlight"}
     >
       <Flex flexDir="column" gap={6}>
         <Heading>Accelerate your protocol&apos;s growth.</Heading>
@@ -87,7 +88,7 @@ export const PublishUpsellCard: React.FC = () => {
         </ButtonGroup>
       </Flex>
       <ChakraNextImage
-        display={{ base: "none", md: colorMode === "dark" ? "block" : "none" }}
+        display={{ base: "none", md: theme === "dark" ? "block" : "none" }}
         w="40%"
         src={require("../../../../public/assets/landingpage/explore-featured.png")}
         alt=""

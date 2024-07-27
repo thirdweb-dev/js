@@ -1,5 +1,4 @@
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
-import { useColorMode } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import type { StoredChain } from "contexts/configured-chains";
 import {
@@ -11,6 +10,7 @@ import {
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
+import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import type { Chain } from "thirdweb";
@@ -37,7 +37,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   const recentlyUsedChains = useRecentlyUsedChains();
   const addRecentlyUsedChains = useAddRecentlyUsedChainId();
   const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
-  const { colorMode } = useColorMode();
+  const { theme } = useTheme();
   const supportedChains = useSupportedChains();
   const supportedChainsRecord = useSupportedChainsRecord();
   const favoriteChainsQuery = useFavoriteChains();
@@ -120,7 +120,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
         }}
         onClick={() => {
           networkSwitcherModal.open({
-            theme: colorMode === "dark" ? "dark" : "light",
+            theme: theme === "dark" ? "dark" : "light",
             sections: [
               {
                 label: "Recently Used",

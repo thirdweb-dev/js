@@ -19,13 +19,7 @@ export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
   ssr,
   style,
 }) => {
-  const [hasMounted, setHasMounted] = useState(false);
-
-  // FIXME: legitimate usecase - however ideally we wouldn't need this entire file
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  const hasMounted = useIsClientMounted();
 
   if (!hasMounted) {
     return <> {ssr} </>;
@@ -44,3 +38,14 @@ export const ClientOnly: ComponentWithChildren<ClientOnlyProps> = ({
     </div>
   );
 };
+
+export function useIsClientMounted() {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  return hasMounted;
+}
