@@ -44,9 +44,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     return newContracts.includes(`${publisher}/${contractId}`);
   }, [publisher, contractId]);
 
-  const showSkeleton =
-    publishedContractResult.isLoading ||
-    publishedContractResult.isPlaceholderData;
+  const showSkeleton = publishedContractResult.isLoading;
 
   const href = useMemo(() => {
     let h: string;
@@ -113,10 +111,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
         {/* Tags */}
         {isBeta ? (
-          <Badge
-            variant="destructive"
-            className="border-destructive-foreground/20"
-          >
+          <Badge className="border-[#a21caf] dark:border-[#86198f] text-white  dark:bg-[linear-gradient(154deg,#4a044e,#2e1065)] bg-[linear-gradient(154deg,#d946ef,#9333ea)] py-[3px] px-[8px]">
             Beta
           </Badge>
         ) : isNewContract ? (
@@ -223,24 +218,8 @@ export function publishedContractQuery(
     queryFn: () =>
       publishedContractQueryFn(publisher, contractId, version, queryClient),
     enabled: !!publisher || !!contractId,
-    placeholderData: {
-      publishedContractId,
-      version: "0.0.0",
-      name: "Loading...",
-      description: "Loading...",
-      publisher: "",
-      audit: "",
-      logo: "",
-      extensions: [],
-      id: "",
-      metadataUri: "",
-      timestamp: "",
-      bytecodeUri: "",
-    } as PublishedContract,
   };
 }
-
-type PublishedContract = Awaited<ReturnType<typeof publishedContractQueryFn>>;
 
 function usePublishedContract(publishedContractId: PublishedContractId) {
   const queryClient = useQueryClient();
