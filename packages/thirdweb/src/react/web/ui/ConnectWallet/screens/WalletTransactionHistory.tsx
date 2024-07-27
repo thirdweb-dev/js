@@ -46,7 +46,7 @@ export function WalletTransactionHistory(props: {
       fullHeight
       style={{
         minHeight: "250px",
-        maxHeight: "350px",
+        maxHeight: "370px",
         paddingBottom: spacing.lg,
       }}
     >
@@ -59,13 +59,19 @@ export function WalletTransactionHistory(props: {
             color="secondaryText"
             style={{
               flex: "1",
+              minHeight: "250px",
             }}
           >
             <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
             <Text>No Transactions</Text>
           </Container>
         ) : (
-          <Container animate="fadein" flex="column" gap="xs">
+          <Container
+            animate="fadein"
+            flex="column"
+            gap="xs"
+            style={{ minHeight: "250px" }}
+          >
             {transactions.map((tx) => {
               return (
                 <TransactionButton

@@ -128,6 +128,7 @@ export function PayTxHistoryList(props: {
         width: "100%",
         minHeight: "250px",
         maxHeight: "370px",
+        paddingBottom: spacing.lg,
       }}
     >
       <Container flex="column" gap="xs" expand>
@@ -158,24 +159,26 @@ export function PayTxHistoryList(props: {
           </Container>
         )}
 
-        <Container animate="fadein" flex="column" gap="xs">
-          {txInfosToShow.map((txInfo) => {
-            return (
-              <BuyTxHistoryButton
-                key={
-                  txInfo.type === "swap"
-                    ? txInfo.status.source?.transactionHash
-                    : txInfo.status.intentId
-                }
-                txInfo={txInfo}
-                client={props.client}
-                onClick={() => {
-                  props.onSelectTx(txInfo);
-                }}
-              />
-            );
-          })}
-        </Container>
+        {txInfosToShow.length > 0 && (
+          <Container animate="fadein" flex="column" gap="xs">
+            {txInfosToShow.map((txInfo) => {
+              return (
+                <BuyTxHistoryButton
+                  key={
+                    txInfo.type === "swap"
+                      ? txInfo.status.source?.transactionHash
+                      : txInfo.status.intentId
+                  }
+                  txInfo={txInfo}
+                  client={props.client}
+                  onClick={() => {
+                    props.onSelectTx(txInfo);
+                  }}
+                />
+              );
+            })}
+          </Container>
+        )}
 
         {isLoading && txInfosToShow.length > 0 && (
           <>
@@ -186,8 +189,8 @@ export function PayTxHistoryList(props: {
         )}
       </Container>
 
-      <Container py="lg">
-        {pagination && !hidePagination && (
+      {pagination && !hidePagination && (
+        <Container py="md">
           <div
             style={{
               display: "grid",
@@ -234,8 +237,8 @@ export function PayTxHistoryList(props: {
               <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
             </Button>
           </div>
-        )}
-      </Container>
+        </Container>
+      )}
     </Container>
   );
 }

@@ -13,6 +13,8 @@ import { Spacer } from "../components/Spacer.js";
 import Tabs from "../components/Tabs.js";
 import { Container, Line, ModalHeader } from "../components/basic.js";
 import { ButtonLink } from "../components/buttons.js";
+import { CoinsIcon } from "./icons/CoinsIcon.js";
+import { FundsIcon } from "./icons/FundsIcon.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { PayTxHistoryList } from "./screens/Buy/pay-transactions/BuyTxHistory.js";
 import { TxDetailsScreen } from "./screens/Buy/pay-transactions/TxDetailsScreen.js";
@@ -82,7 +84,24 @@ export function TransactionsScreen(props: {
       >
         <Spacer y="md" />
         <Tabs
-          options={["Transactions", "Purchases"]}
+          options={[
+            {
+              label: (
+                <span className="flex gap-2">
+                  <CoinsIcon size={iconSize.sm} /> Transactions
+                </span>
+              ),
+              value: "Transactions",
+            },
+            {
+              label: (
+                <span className="flex gap-2">
+                  <FundsIcon size={iconSize.sm} /> Purchases
+                </span>
+              ),
+              value: "Purchases",
+            },
+          ]}
           selected={activeTab}
           onSelect={setActiveTab}
         >
