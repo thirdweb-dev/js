@@ -269,42 +269,31 @@ const ConsoleApp = memo(function ConsoleApp({
         transitionTimingFunction="ease"
       />
 
-      <ChakraProvider theme={chakraThemeWithFonts}>
-        <AnnouncementBanner />
-        <TailwindTheme>
+      <TailwindTheme>
+        <ChakraProvider theme={chakraThemeWithFonts}>
+          <AnnouncementBanner />
           {isFallback && Component.fallback
             ? Component.fallback
             : getLayout(<Component {...pageProps} />, pageProps)}
           <Toaster />
-        </TailwindTheme>
-      </ChakraProvider>
+          <SyncTheme />
+        </ChakraProvider>
+      </TailwindTheme>
     </PlausibleProvider>
   );
 });
 
 function TailwindTheme(props: { children: React.ReactNode }) {
-  const { colorMode } = useColorMode();
-
-  return (
-    <ThemeProvider
-      attribute="class"
-      // this sets the initial theme
-      forcedTheme={colorMode === "light" ? "light" : "dark"}
-    >
-      {/* this keeps the theme in sync! */}
-      <SyncTheme currentTheme={colorMode === "light" ? "light" : "dark"} />
-      {props.children}
-    </ThemeProvider>
-  );
+  return <ThemeProvider attribute="class">{props.children}</ThemeProvider>;
 }
-const SyncTheme: React.FC<{ currentTheme: "light" | "dark" }> = ({
-  currentTheme,
-}) => {
-  const { setTheme } = useTheme();
+
+const SyncTheme: React.FC = () => {
+  const { theme } = useTheme();
+  const { setColorMode } = useColorMode();
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    setTheme(currentTheme);
-  }, [currentTheme, setTheme]);
+    setColorMode(theme === "light" ? "light" : "dark");
+  }, [setColorMode, theme]);
   return null;
 };
 

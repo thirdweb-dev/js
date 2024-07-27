@@ -9,9 +9,9 @@ import {
   PopoverContent,
   PopoverTrigger,
   Tooltip,
-  useColorMode,
 } from "@chakra-ui/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
+import { useTheme } from "next-themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
@@ -60,7 +60,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   onChainSelect,
   ...restButtonProps
 }) => {
-  const colorMode = useColorMode();
+  const { theme } = useTheme();
   const activeWallet = useActiveWallet();
   const walletRequiresExternalConfirmation =
     useWalletRequiresExternalConfirmation();
@@ -72,7 +72,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     [chain],
   );
 
-  const ColorModeComp = colorMode.colorMode === "dark" ? DarkMode : Fragment;
+  const ColorModeComp = theme === "dark" ? DarkMode : Fragment;
 
   const numberWidth = useMemo(() => {
     // for each digit of transaction count add 8.3px
