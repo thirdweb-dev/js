@@ -1,7 +1,6 @@
-import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import type { ExploreCategory } from "data/explore";
-import { FiArrowRight } from "react-icons/fi";
-import { Heading, Link, LinkButton } from "tw-components";
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 import { ContractCard } from "../contract-card";
 
 interface ContractRowProps {
@@ -10,60 +9,44 @@ interface ContractRowProps {
 
 export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
   return (
-    <Flex gap={5} direction="column" as="section">
-      <Flex align="center" justify="space-between" gap={4}>
-        <Flex gap={2} direction="column" as="header">
+    <section>
+      {/* Title, Description + View all link */}
+      <div className="flex items-center justify-between gap-4">
+        <header className="flex flex-col gap-1.5">
           <Link href={`/explore/${category.id}`}>
-            <Heading as="h2" size="label.xl">
+            <h2 className="text-2xl font-semibold tracking-tight">
               {category.displayName || category.name}
-            </Heading>
+            </h2>
           </Link>
-          <Flex align="center" gap={1}>
-            <Heading as="h3" size="label.md" fontWeight={400}>
-              {category.description}{" "}
-              {category.learnMore && (
-                <Link
-                  _light={{
-                    color: "blue.500",
-                    _hover: { color: "blue.500" },
-                  }}
-                  _dark={{ color: "blue.400", _hover: { color: "blue.500" } }}
-                  isExternal
-                  href={category.learnMore}
-                >
-                  Learn more
-                </Link>
-              )}
-            </Heading>
-          </Flex>
-        </Flex>
+
+          <p className="text-secondary-foreground">
+            {category.description}{" "}
+            {category.learnMore && (
+              <Link
+                target="_blank"
+                href={category.learnMore}
+                className="text-link-foreground inline"
+              >
+                Learn more
+              </Link>
+            )}
+          </p>
+        </header>
+
         {category.contracts.length > 6 && (
-          <LinkButton
-            flexShrink={0}
-            size="sm"
-            rightIcon={<Icon as={FiArrowRight} />}
-            variant="link"
+          <Link
             href={`/explore/${category.id}`}
-            fontWeight={500}
-            _dark={{
-              color: "blue.400",
-              _hover: {
-                color: "blue.500",
-              },
-            }}
-            _light={{
-              color: "blue.500",
-              _hover: {
-                color: "blue.500",
-              },
-            }}
+            className="shrink-0 text-link-foreground flex gap-1 items-center text-base hover:text-foreground"
           >
             View all
-          </LinkButton>
+            <ArrowRightIcon className="size-4" />
+          </Link>
         )}
-      </Flex>
+      </div>
 
-      <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
+      <div className="h-5" />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 z-0 relative">
         {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
           const [publisher, contractId] = publishedContractId.split("/");
           return (
@@ -75,10 +58,11 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
                 source: category.id,
                 itemIndex: `${idx}`,
               }}
+              isBeta={category.isBeta}
             />
           );
         })}
-      </SimpleGrid>
-    </Flex>
+      </div>
+    </section>
   );
 };

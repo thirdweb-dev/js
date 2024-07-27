@@ -55,11 +55,9 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           rowSpan={{ base: 1, md: 2 }}
           as="aside"
           position="sticky"
-          top={0}
-          borderRight="1px solid"
-          borderColor="borderColor"
-          boxShadow="sm"
+          zIndex="sticky"
           w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
+          className="top-0 bg-background border-b md:border-r border-border"
         >
           {" "}
         </GridItem>
