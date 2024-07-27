@@ -9,12 +9,12 @@ export const WALLETS = [
     auth: {
       options: [
         "google",
-        "facebook",
         "discord",
         "apple",
         "email",
         "passkey",
         "phone",
+        "farcaster",
       ],
       mode: "redirect",
     },

@@ -13,6 +13,7 @@ import {
   discordIconUri,
   emailIcon,
   facebookIconUri,
+  farcasterIconUri,
   genericWalletIcon,
   googleIconUri,
   passkeyIcon,
@@ -76,6 +77,9 @@ export function WalletImage(props: {
             break;
           case "discord":
             image = discordIconUri;
+            break;
+          case "farcaster":
+            image = farcasterIconUri;
             break;
         }
       } else {

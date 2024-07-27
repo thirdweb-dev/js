@@ -222,6 +222,7 @@ export class InAppWebConnector implements InAppConnector {
       case "apple":
       case "facebook":
       case "google":
+      case "farcaster":
       case "discord": {
         const authToken = await loginWithOauth({
           authOption: strategy,

@@ -13,6 +13,10 @@ import type {
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import { preAuthenticate } from "../../../../wallets/in-app/native/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import {
+  type SocialAuthOption,
+  socialAuthOptions,
+} from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { radius, spacing } from "../../design-system/index.js";
@@ -26,6 +30,7 @@ import {
   DISCORD_ICON,
   EMAIL_ICON,
   FACEBOOK_ICON,
+  FARCASTER_ICON,
   GOOGLE_ICON,
   PHONE_ICON,
 } from "../icons/svgs.js";
@@ -44,6 +49,7 @@ const socialIcons = {
   facebook: FACEBOOK_ICON,
   apple: APPLE_ICON,
   discord: DISCORD_ICON,
+  farcaster: FARCASTER_ICON,
 };
 
 type InAppWalletFormUIProps = {
@@ -62,9 +68,8 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
   const { wallet, theme } = props;
   const config = wallet.getConfig();
   const authOptions = config?.auth?.options || defaultAuthOptions;
-  const socialLogins = authOptions.filter(
-    (x) =>
-      x === "google" || x === "apple" || x === "facebook" || x === "discord",
+  const socialLogins = authOptions.filter((x) =>
+    socialAuthOptions.includes(x as SocialAuthOption),
   ) as InAppWalletSocialAuth[];
 
   const [inputMode, setInputMode] = useState<"email" | "phone">("email");
