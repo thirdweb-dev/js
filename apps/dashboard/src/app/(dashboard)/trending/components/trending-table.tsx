@@ -17,7 +17,6 @@ import type {
 } from "../../../../lib/search";
 import { TablePagination } from "./pagination.client";
 import { SortingHeader } from "./sorting-header.client";
-import { TimeRangeSwitcher } from "./time-range-switcher.client";
 
 export async function TrendingContractSection(props: {
   topContracts: TrendingContract[];
@@ -32,9 +31,6 @@ export async function TrendingContractSection(props: {
   return (
     props.topContracts.length > 0 && (
       <div className="flex flex-col gap-4 w-full">
-        <div className="w-full flex flex-row gap-4 justify-center md:justify-end py-4">
-          <TimeRangeSwitcher />
-        </div>
         <Table
           className={`border-white ${isLandingPage && "border-b-[1px] font-mono text-xs md:text-sm mb-4"}`}
         >
