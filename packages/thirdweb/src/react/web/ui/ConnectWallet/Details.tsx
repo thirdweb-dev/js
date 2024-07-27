@@ -88,7 +88,7 @@ import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
-import { ViewFunds } from "./screens/ViewFunds.js";
+import { ViewAssets } from "./screens/ViewAssets.js";
 import { ViewNFTs } from "./screens/ViewNFTs.js";
 import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
@@ -538,7 +538,7 @@ function DetailsModal(props: {
           {/* View Funds */}
           <MenuButton
             onClick={() => {
-              setScreen("view-funds");
+              setScreen("view-assets");
             }}
             style={{
               fontSize: fontSize.sm,
@@ -694,15 +694,16 @@ function DetailsModal(props: {
         client={client}
       />
     );
-  } else if (screen === "view-funds") {
+  } else if (screen === "view-assets") {
     if (props.supportedNFTs) {
       content = (
-        <ViewFunds
+        <ViewAssets
           supportedTokens={props.supportedTokens}
           supportedNFTs={props.supportedNFTs}
           onBack={() => {
             setScreen("main");
           }}
+          theme={props.theme}
           setScreen={setScreen}
           client={client}
           connectLocale={locale}

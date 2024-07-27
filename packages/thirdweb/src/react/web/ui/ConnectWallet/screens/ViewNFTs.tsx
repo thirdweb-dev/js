@@ -72,14 +72,45 @@ export function ViewNFTs(props: {
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
 }) {
+  return (
+    <Container
+      style={{
+        minHeight: "300px",
+      }}
+    >
+      <Container p="lg">
+        <ModalHeader
+          title={props.connectLocale.viewFunds.viewNFTs}
+          onBack={props.onBack}
+        />
+      </Container>
+      <Line />
+      <Container
+        px="sm"
+        scrollY
+        style={{
+          maxHeight: "500px",
+        }}
+      >
+        <Spacer y="md" />
+        <ViewNFTsContent {...props} />
+      </Container>
+    </Container>
+  );
+}
+
+export function ViewNFTsContent(props: {
+  supportedNFTs?: SupportedNFTs;
+  client: ThirdwebClient;
+  theme: Theme | "light" | "dark";
+  connectLocale: ConnectLocale;
+}) {
   const activeAccount = useActiveAccount();
   const activeChain = useActiveWalletChain();
 
   if (!activeChain?.id || !activeAccount?.address) {
     return null;
   }
-
-  const { connectLocale } = props;
 
   const nftList = useMemo(() => {
     const nfts = [];
@@ -106,60 +137,40 @@ export function ViewNFTs(props: {
   });
 
   return (
-    <Container
-      style={{
-        minHeight: "300px",
-      }}
-    >
-      <Container p="lg">
-        <ModalHeader
-          title={connectLocale.viewFunds.viewNFTs}
-          onBack={props.onBack}
-        />
-      </Container>
-      <Line />
+    <>
       <Container
-        px="sm"
-        scrollY
         style={{
-          maxHeight: "500px",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "12px",
         }}
       >
-        <Spacer y="md" />
-        <Container
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "12px",
-          }}
-        >
-          {results.map((result, index) => {
-            if (result.error) {
-              console.error(result.error);
-              return null;
-            }
-            return result.isLoading || !result.data ? (
-              <Skeleton
-                key={`${nftList[index]?.chain?.id}:${nftList[index]?.address}`}
-                height="160px"
-                width="160px"
+        {results.map((result, index) => {
+          if (result.error) {
+            console.error(result.error);
+            return null;
+          }
+          return result.isLoading || !result.data ? (
+            <Skeleton
+              key={`${nftList[index]?.chain?.id}:${nftList[index]?.address}`}
+              height="150px"
+              width="150px"
+            />
+          ) : (
+            result.data.map((nft) => (
+              <NftCard
+                key={`${nft.chain.id}:${nft.address}:${nft.id}`}
+                {...nft}
+                client={props.client}
+                chain={nft.chain}
+                theme={props.theme}
               />
-            ) : (
-              result.data.map((nft) => (
-                <NftCard
-                  key={`${nft.chain.id}:${nft.address}:${nft.id}`}
-                  {...nft}
-                  client={props.client}
-                  chain={nft.chain}
-                  theme={props.theme}
-                />
-              ))
-            );
-          })}
-        </Container>
-        <Spacer y="lg" />
+            ))
+          );
+        })}
       </Container>
-    </Container>
+      <Spacer y="lg" />
+    </>
   );
 }
 
@@ -188,8 +199,8 @@ function NftCard(
           display: "flex",
           flexShrink: 0,
           alignItems: "center",
-          width: "160px",
-          height: "160px",
+          width: "150px",
+          height: "150px",
           borderRadius: "8px",
           overflow: "hidden",
           background:
