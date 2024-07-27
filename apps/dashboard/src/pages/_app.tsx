@@ -284,7 +284,11 @@ const ConsoleApp = memo(function ConsoleApp({
 });
 
 function TailwindTheme(props: { children: React.ReactNode }) {
-  return <ThemeProvider attribute="class">{props.children}</ThemeProvider>;
+  return (
+    <ThemeProvider attribute="class" disableTransitionOnChange>
+      {props.children}
+    </ThemeProvider>
+  );
 }
 
 const SyncTheme: React.FC = () => {

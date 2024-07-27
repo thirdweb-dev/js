@@ -1043,7 +1043,7 @@ export const ConnectWalletPlayground: React.FC<{
             theme="dark"
             isSelected={selectedTheme === "dark"}
             onClick={() => {
-              setTheme("light");
+              setTheme("dark");
             }}
           />
 
@@ -1052,7 +1052,7 @@ export const ConnectWalletPlayground: React.FC<{
             theme="light"
             isSelected={selectedTheme === "light"}
             onClick={() => {
-              setTheme("dark");
+              setTheme("light");
             }}
           />
         </Flex>
