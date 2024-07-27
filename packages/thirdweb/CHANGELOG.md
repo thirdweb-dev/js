@@ -1,5 +1,26 @@
 # thirdweb
 
+## 5.41.0
+
+### Minor Changes
+
+- [#3827](https://github.com/thirdweb-dev/js/pull/3827) [`b0a303d`](https://github.com/thirdweb-dev/js/commit/b0a303d5ef7cf7a74d5aadc9c04d0b6161806f8b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds SIWF for in-app wallets
+
+  ```ts
+  await wallet.connect({
+    strategy: "farcaster",
+    client: CLIENT,
+  });
+  ```
+
+### Patch Changes
+
+- [#3831](https://github.com/thirdweb-dev/js/pull/3831) [`d775333`](https://github.com/thirdweb-dev/js/commit/d775333b40dbcfab18702019b40ff54e6fed1a79) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose ERC20 extension: getApprovalForTransaction
+
+- [#3845](https://github.com/thirdweb-dev/js/pull/3845) [`b551b69`](https://github.com/thirdweb-dev/js/commit/b551b692914b8c35cf365c46e63c17cce66c018e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Restyles the View Assets Connect UI page
+
+- [#3817](https://github.com/thirdweb-dev/js/pull/3817) [`b128530`](https://github.com/thirdweb-dev/js/commit/b128530355f0dc47d897bd2ef7c3823752ea9b6c) Thanks [@MananTank](https://github.com/MananTank)! - Move connection manager creation to context instead of global singleton
+
 ## 5.40.0
 
 ### Minor Changes
