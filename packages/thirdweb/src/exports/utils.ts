@@ -163,11 +163,11 @@ export { refreshJWT, type RefreshJWTParams } from "../utils/jwt/refresh-jwt.js";
 export type { JWTPayload } from "../utils/jwt/types.js";
 
 // ------------------------------------------------
-// thirdweb Drop contracts
+// thirdweb contracts
 // ------------------------------------------------
 export {
   getClaimParams,
   type GetClaimParamsOptions,
 } from "../utils/extensions/drops/get-claim-params.js";
-
 export type { NFTMetadata, NFTInput } from "../utils/nft/parseNft.js";
+export { fetchContractMetadata } from "../utils/contract/fetchContractMetadata.js";

@@ -14,7 +14,16 @@ export type FetchContractMetadata = {
  *
  * @param options - The options for fetching the token metadata.
  * @returns The token metadata.
- * @internal
+ * 
+ * @example
+ * ```ts
+ * import { fetchContractMetadata } from "thirdweb/utils";
+ * 
+ * const metadata = await fetchContractMetadata({
+ *   client, 
+ *   uri: "..."
+ * });
+ * ```
  */
 export async function fetchContractMetadata(
   options: FetchContractMetadata,
