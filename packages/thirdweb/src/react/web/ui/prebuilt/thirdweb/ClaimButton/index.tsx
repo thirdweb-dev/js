@@ -28,6 +28,7 @@ import type {
  * @param props
  * @returns A wrapper for TransactionButton
  *
+ * @component
  * @example
  *
  * ```tsx
