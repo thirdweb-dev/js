@@ -1,2 +1,8 @@
 // valid combinations of ISO language code and ISO country code
-export type LocaleId = "en_US" | "es_ES" | "ja_JP" | "tl_PH" | "vi_VN";
+export type LocaleId =
+  | "en_US" // English
+  | "es_ES" // Spanish
+  | "ja_JP" // Japanese
+  | "tl_PH" // Tagalog
+  | "vi_VN" // Vietnamese
+  | "hi_IN"; // Hindi
