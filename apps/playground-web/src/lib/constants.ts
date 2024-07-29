@@ -15,6 +15,7 @@ export const WALLETS = [
         "passkey",
         "phone",
         "farcaster",
+        "facebook",
       ],
       mode: "redirect",
     },
