@@ -44,10 +44,9 @@ export async function connectInAppWallet(
     connector.authenticateWithRedirect
   ) {
     const strategy = options.strategy;
-    if (!socialAuthOptions.includes(strategy as SocialAuthOption)) {
-      throw new Error("This authentication method does not support redirects");
+    if (socialAuthOptions.includes(strategy as SocialAuthOption)) {
+      connector.authenticateWithRedirect(strategy as SocialAuthOption);
     }
-    connector.authenticateWithRedirect(strategy as SocialAuthOption);
   }
   // If we don't have authenticateWithRedirect then it's likely react native, so the default is to redirect and we can carry on
   // IF WE EVER ADD MORE CONNECTOR TYPES, this could cause redirect to be ignored despite being specified
