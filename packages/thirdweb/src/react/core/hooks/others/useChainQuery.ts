@@ -1,6 +1,10 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import {
+  type UseQueryResult,
+  useQueries,
+  useQuery,
+} from "@tanstack/react-query";
 import { useMemo } from "react";
-import type { Chain } from "../../../../chains/types.js";
+import type { Chain, ChainMetadata } from "../../../../chains/types.js";
 import {
   convertApiChainToChain,
   getChainMetadata,
@@ -140,9 +144,25 @@ function getQueryOptions(chain?: Chain) {
 }
 
 /**
- * @internal
+ * @description Retrieves metadata for a chain such as name, icon, available faucets, block explorers, etc.
+ *
+ * @param chain - Chain to retrieve metadata for, see [defineChain](https://portal.thirdweb.com/references/typescript/v5/defineChain) for how to create a chain from a chain ID.
+ * @returns A React Query result containing the chain metadata, @see {@link ChainMetadata}.
+ *
+ * @example
+ * ```jsx
+ * import { useChainMetadata } from "thirdweb/react";
+ *
+ * const { data: chainMetadata } = useChainMetadata(defineChain(11155111));
+ *
+ * console.log("Name:", chainMetadata.name); // Sepolia
+ * console.log("Faucets:", chainMetadata.faucets); // ["https://thirdweb.com/sepolia/faucet"]
+ * console.log("Explorers:", chainMetadata.explorers); // ["https://sepolia.etherscan.io/"]
+ * ```
+ *
+ * @chain
  */
-export function useChainQuery(chain?: Chain) {
+export function useChainMetadata(chain?: Chain): UseQueryResult<ChainMetadata> {
   return useQuery({
     ...getQueryOptions(chain),
     queryFn: async () => {

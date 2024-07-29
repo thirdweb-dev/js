@@ -56,6 +56,9 @@ export { useSwitchActiveWalletChain } from "../react/core/hooks/wallets/useSwitc
 export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
+// chain hooks
+export { useChainMetadata } from "../react/core/hooks/others/useChainQuery.js";
+
 export type { ConnectManagerOptions } from "../wallets/manager/index.js";
 
 // contract

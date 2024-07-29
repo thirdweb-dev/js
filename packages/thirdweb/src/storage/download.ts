@@ -9,13 +9,12 @@ export type DownloadOptions = Prettify<
 >;
 
 /**
- * @import { createThirdwebClient } from "../client/client.js"
- * Downloads a file from the specified IPFS, Arweave, or HTTP URI.
+ * @description Downloads a file from the specified IPFS, Arweave, or HTTP URI.
  *
  * `download` will parse the provided URI based on its scheme (ipfs://, ar://, https://) and convert it to a URL to fetch the file from thirdweb's storage service.
  *
  * @param options - The download options.
- * @param options.client - The Thirdweb client. @see {@link createThirdwebClient}
+ * @param options.client - The Thirdweb client. See [createThirdwebClient](https://portal.thirdweb.com/references/typescript/v5/createThirdwebClient).
  * @param options.uri - The URI of the file to download. Can be IPFS, Arweave, or HTTP.
  * @param [options.requestTimeoutMs] - The maximum time in milliseconds to wait for the request to complete. Defaults to 60 seconds (60,000 milliseconds).
  *

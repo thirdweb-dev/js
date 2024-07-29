@@ -7,7 +7,7 @@ import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
-import { useChainQuery } from "../../../../../core/hooks/others/useChainQuery.js";
+import { useChainMetadata } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
 import { hasSponsoredTransactionsEnabled } from "../../../../../core/utils/wallet.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
@@ -44,7 +44,7 @@ export function TransactionModeScreen(props: {
     supportedDestinations,
     onContinue,
   } = props;
-  const { data: chainData } = useChainQuery(payUiOptions.transaction.chain);
+  const { data: chainData } = useChainMetadata(payUiOptions.transaction.chain);
   const metadata = payUiOptions.metadata;
   const { data: transactionCostAndData } = useTransactionCostAndData({
     transaction: payUiOptions.transaction,

@@ -11,7 +11,7 @@ import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../../../core/design-system/CustomThemeProvider.js";
 import { iconSize, spacing } from "../../../../../core/design-system/index.js";
 import type { PayUIOptions } from "../../../../../core/hooks/connection/ConnectButtonProps.js";
-import { useChainQuery } from "../../../../../core/hooks/others/useChainQuery.js";
+import { useChainMetadata } from "../../../../../core/hooks/others/useChainQuery.js";
 import { useActiveWallet } from "../../../../../core/hooks/wallets/useActiveWallet.js";
 import type { TokenInfo } from "../../../../../core/utils/defaultTokens.js";
 import { useEnsName } from "../../../../../core/utils/wallet.js";
@@ -52,7 +52,7 @@ export function DirectPaymentModeScreen(props: {
   const activeWallet = useActiveWallet();
   const metadata = payUiOptions.metadata;
   const paymentInfo = payUiOptions.paymentInfo;
-  const { data: chainData } = useChainQuery(paymentInfo.chain);
+  const { data: chainData } = useChainMetadata(paymentInfo.chain);
   const { data: sellerEns } = useEnsName({
     client,
     address: paymentInfo.sellerAddress,
