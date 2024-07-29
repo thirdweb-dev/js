@@ -1015,8 +1015,8 @@ importers:
         specifier: 5.0.7
         version: 5.0.7
       solc:
-        specifier: 0.8.25
-        version: 0.8.25
+        specifier: 0.8.26
+        version: 0.8.26
       tar:
         specifier: ^6.2.1
         version: 6.2.1
@@ -11290,6 +11290,7 @@ packages:
 
   ethereum-bloom-filters@1.1.0:
     resolution: {integrity: sha512-J1gDRkLpuGNvWYzWslBQR9cDV4nd4kfvVTE/Wy4Kkm4yb3EYRSlyi0eB/inTsSTTVyA0+HyzHgbr95Fn/Z1fSw==}
+    deprecated: do not use this package use package versions above as this can miss some topics
 
   ethereum-cryptography@0.1.3:
     resolution: {integrity: sha512-w8/4x1SGGzc+tO97TASLja6SLd3fRIK2tLVcV2Gx4IB21hE19atll5Cq9o3d0ZmAYC/8aw0ipieTSiekAea4SQ==}
@@ -16279,8 +16280,8 @@ packages:
     engines: {node: '>=8.0.0'}
     hasBin: true
 
-  solc@0.8.25:
-    resolution: {integrity: sha512-7P0TF8gPeudl1Ko3RGkyY6XVCxe2SdD/qQhtns1vl3yAbK/PDifKDLHGtx1t7mX3LgR7ojV7Fg/Kc6Q9D2T8UQ==}
+  solc@0.8.26:
+    resolution: {integrity: sha512-yiPQNVf5rBFHwN6SIf3TUUvVAFKcQqmSUFeq+fb6pNRCo0ZCgpYOZDi3BVoezCPIAcKrVYd/qXlBLUP9wVrZ9g==}
     engines: {node: '>=10.0.0'}
     hasBin: true
 
@@ -39259,7 +39260,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  solc@0.8.25:
+  solc@0.8.26:
     dependencies:
       command-exists: 1.2.9
       commander: 8.3.0
