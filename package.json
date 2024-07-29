@@ -52,7 +52,7 @@
     "yalc": "1.0.0-pre.53",
     "@babel/plugin-transform-flow-strip-types": "^7.24.7",
     "@babel/plugin-transform-private-methods": "^7.24.7",
-    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-env": "^7.25.0",
     "@babel/preset-typescript": "^7.24.7",
     "@biomejs/biome": "1.8.3",
     "@codspeed/vitest-plugin": "3.1.0",
