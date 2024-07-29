@@ -1,6 +1,5 @@
 import {
   type ContractWithRoles,
-  type RequiredParam,
   type RolesForContract,
   useContractType,
   useRoleMembers,
@@ -8,6 +7,7 @@ import {
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import type { RequiredParam } from "utils/types";
 
 function isContractWithRoles(
   contract: RequiredParam<ValidContractInstance>,

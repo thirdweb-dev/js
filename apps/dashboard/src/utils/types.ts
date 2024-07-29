@@ -10,3 +10,9 @@ export type ThirdwebNextPage = NextPage<any> & {
   pageId: PageId | ((pageProps: any) => PageId);
   fallback?: React.ReactNode;
 };
+
+/**
+ * Makes a parameter required to be passed, but still allows it to be null or undefined.
+ * @internal
+ */
+export type RequiredParam<T> = T | null | undefined;

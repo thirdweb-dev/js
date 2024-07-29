@@ -1,12 +1,8 @@
-import {
-  type RequiredParam,
-  useContract,
-  useContractMetadata,
-  useSDK,
-} from "@thirdweb-dev/react";
+import { useContract, useContractMetadata, useSDK } from "@thirdweb-dev/react";
 import type { Vote, VoteType } from "@thirdweb-dev/sdk";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
+import type { RequiredParam } from "utils/types";
 import { voteKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
