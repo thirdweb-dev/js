@@ -285,19 +285,33 @@ const ConsoleApp = memo(function ConsoleApp({
 
 function TailwindTheme(props: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange>
+    <ThemeProvider
+      attribute="class"
+      disableTransitionOnChange
+      enableSystem={false}
+    >
       {props.children}
     </ThemeProvider>
   );
 }
 
 const SyncTheme: React.FC = () => {
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { setColorMode } = useColorMode();
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     setColorMode(theme === "light" ? "light" : "dark");
   }, [setColorMode, theme]);
+
+  // handle dashboard with now old "system" set
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (theme === "system") {
+      setTheme("dark");
+      setColorMode("dark");
+    }
+  }, [theme, setTheme, setColorMode]);
+
   return null;
 };
 
