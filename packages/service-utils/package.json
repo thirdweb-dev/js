@@ -39,7 +39,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "aws4fetch": "1.0.18",
+    "aws4fetch": "1.0.19",
     "zod": "3.23.8"
   },
   "devDependencies": {
