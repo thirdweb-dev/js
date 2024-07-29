@@ -171,3 +171,5 @@ export {
 } from "../utils/extensions/drops/get-claim-params.js";
 
 export type { NFTMetadata, NFTInput } from "../utils/nft/parseNft.js";
+
+export { parseAbiParams } from "../utils/contract/parse-abi-params.js";
