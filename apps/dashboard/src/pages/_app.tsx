@@ -296,12 +296,22 @@ function TailwindTheme(props: { children: React.ReactNode }) {
 }
 
 const SyncTheme: React.FC = () => {
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { setColorMode } = useColorMode();
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     setColorMode(theme === "light" ? "light" : "dark");
   }, [setColorMode, theme]);
+
+  // handle dashboard with now old "system" set
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (theme === "system") {
+      setTheme("dark");
+      setColorMode("dark");
+    }
+  }, [theme, setTheme, setColorMode]);
+
   return null;
 };
 
