@@ -1,6 +1,4 @@
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
-import { useAirdropNFT } from "@thirdweb-dev/react";
-import type { Erc1155 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   type AirdropAddressInput,
@@ -8,18 +6,36 @@ import {
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
-import { useActiveAccount } from "thirdweb/react";
+import { defineChain, getContract } from "thirdweb";
+import { multicall } from "thirdweb/extensions/common";
+import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
 
 interface AirdropTabProps {
-  contract: Erc1155;
+  contractAddress: string;
   tokenId: string;
+  chainId: number;
 }
 
-const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
+/**
+ * This component must only take in ERC1155 contracts
+ */
+const AirdropTab: React.FC<AirdropTabProps> = ({
+  contractAddress,
+  tokenId,
+  chainId,
+}) => {
+  const account = useActiveAccount();
+  const contract = getContract({
+    address: contractAddress,
+    chain: defineChain(chainId),
+    client: thirdwebClient,
+  });
   const address = useActiveAccount()?.address;
   const { handleSubmit, setValue, watch, reset, formState } = useForm<{
     addresses: AirdropAddressInput[];
@@ -30,7 +46,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const airdrop = useAirdropNFT(contract);
+  const { mutate, isPending } = useSendAndConfirmTransaction();
 
   const { onSuccess, onError } = useTxNotifications(
     "Airdrop successful",
@@ -43,44 +59,64 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   return (
     <Stack w="full">
       <form
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit(async (_data) => {
           trackEvent({
             category: "nft",
             action: "airdrop",
             label: "attempt",
-            contractAddress: contract?.getAddress(),
+            contractAddress,
             token_id: tokenId,
           });
-          airdrop.mutate(
-            {
-              tokenId,
-              addresses: data.addresses,
-            },
-            {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "airdrop",
-                  label: "success",
-                  contract_address: contract?.getAddress(),
-                  token_id: tokenId,
-                });
-                onSuccess();
-                reset();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "airdrop",
-                  label: "success",
-                  contract_address: contract?.getAddress(),
-                  token_id: tokenId,
-                  error,
-                });
-                onError(error);
-              },
-            },
+          const totalOwned = await balanceOf({
+            contract,
+            tokenId: BigInt(tokenId),
+            owner: account?.address ?? "",
+          });
+          // todo: make a batch-transfer extension for erc1155?
+          const totalToAirdrop = _data.addresses.reduce((prev, curr) => {
+            return BigInt(prev) + BigInt(curr?.quantity || 1);
+          }, 0n);
+          if (totalOwned < totalToAirdrop) {
+            return onError(
+              new Error(
+                `The caller owns ${totalOwned.toString()} NFTs, but wants to airdrop ${totalToAirdrop.toString()} NFTs.`,
+              ),
+            );
+          }
+          const data = _data.addresses.map(({ address: to, quantity }) =>
+            encodeSafeTransferFrom({
+              from: account?.address ?? "",
+              to,
+              value: BigInt(quantity),
+              data: "0x",
+              tokenId: BigInt(tokenId),
+            }),
           );
+          const transaction = multicall({ contract, data });
+          mutate(transaction, {
+            onSuccess: () => {
+              trackEvent({
+                category: "nft",
+                action: "airdrop",
+                label: "success",
+                contract_address: contractAddress,
+                token_id: tokenId,
+              });
+              onSuccess();
+              reset();
+            },
+            onError: (error) => {
+              trackEvent({
+                category: "nft",
+                action: "airdrop",
+                label: "success",
+                contract_address: contractAddress,
+                token_id: tokenId,
+                error,
+              });
+              onError(error);
+            },
+          });
         })}
       >
         <Stack>
@@ -132,7 +168,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
           </Text>
           <TransactionButton
             transactionCount={1}
-            isLoading={airdrop.isLoading}
+            isLoading={isPending}
             type="submit"
             colorScheme="primary"
             disabled={!!address && addresses.length === 0}

@@ -1,7 +1,19 @@
 import { useSyncExternalStore } from "react";
-import type { ConnectionManager } from "../../../../wallets/manager/index.js";
+import { useConnectionManager } from "../../providers/connection-manager.js";
 
-export function useActiveAccountCore(manager: ConnectionManager) {
+/**
+ * A hook that returns the active account
+ * @returns The active `Account` or `undefined` if no active account is set.
+ * @example
+ * ```jsx
+ * import { useActiveAccount } from "thirdweb/react";
+ *
+ * const activeAccount = useActiveAccount();
+ * ```
+ * @walletConnection
+ */
+export function useActiveAccount() {
+  const manager = useConnectionManager();
   const store = manager.activeAccountStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }

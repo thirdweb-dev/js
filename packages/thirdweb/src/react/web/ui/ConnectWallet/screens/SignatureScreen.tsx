@@ -11,9 +11,9 @@ import {
 } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
+import { useDisconnect } from "../../../../core/hooks/wallets/useDisconnect.js";
 import { wait } from "../../../../core/utils/wait.js";
-import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
-import { useDisconnect } from "../../../hooks/wallets/useDisconnect.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";

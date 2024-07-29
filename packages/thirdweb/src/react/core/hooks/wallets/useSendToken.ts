@@ -7,13 +7,31 @@ import { sendTransaction } from "../../../../transaction/actions/send-transactio
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { isAddress } from "../../../../utils/address.js";
 import { toWei } from "../../../../utils/units.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useActiveWallet } from "./useActiveWallet.js";
 
 /**
  * Send Native or ERC20 tokens from active wallet to given address.
- * @internal
+ * @example
+ * ```tsx
+ * const { mutate: sendToken } = useSendToken(client);
+ *
+ * // send native currency
+ * sendToken({
+ *    receiverAddress: "0x...",
+ *    amount: "0.1",
+ * });
+ *
+ * // send ERC20
+ * sendToken({
+ *   tokenAddress,
+ *   receiverAddress: "0x...",
+ *   amount: "0.5",
+ * });
+ * ```
+ * @wallet
  */
-export function useSendTokenCore(client: ThirdwebClient, wallet?: Wallet) {
+export function useSendToken(client: ThirdwebClient) {
+  const wallet = useActiveWallet();
   return useMutation({
     async mutationFn(option: {
       tokenAddress?: string;

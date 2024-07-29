@@ -20,6 +20,7 @@ export default async function DashboardContractTrendingPage(props: {
 }) {
   const topContracts = await fetchTopContracts({
     ...props.searchParams,
+    timeRange: "month",
   });
   return (
     <div>

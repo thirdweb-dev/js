@@ -50,7 +50,7 @@ export function TabLinks(props: {
         {/* Active line */}
         <div
           ref={lineRef}
-          className="absolute left-0 bottom-0 z-10 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
+          className="absolute left-0 bottom-0 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
         />
       </ScrollShadow>
       {/* Bottom line */}
@@ -108,7 +108,7 @@ export function TabButtons(props: {
         {/* Active line */}
         <div
           ref={lineRef}
-          className="absolute left-0 bottom-0 z-10 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
+          className="absolute left-0 bottom-0 h-[2px] bg-foreground rounded-lg fade-in-0 animate-in"
         />
       </ScrollShadow>
       {/* Bottom line */}

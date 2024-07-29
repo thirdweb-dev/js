@@ -1,11 +1,12 @@
 import { accountKeys } from "@3rdweb-sdk/react/cache-keys";
 import { useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { Flex, FocusLock, useColorMode } from "@chakra-ui/react";
+import { Flex, FocusLock } from "@chakra-ui/react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTheme } from "next-themes";
 import { OnboardingPaymentForm } from "./PaymentForm";
 import { OnboardingTitle } from "./Title";
 
@@ -23,7 +24,7 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   onSave,
   onCancel,
 }) => {
-  const { colorMode } = useColorMode();
+  const { theme } = useTheme();
   const trackEvent = useTrack();
   const queryClient = useQueryClient();
   const { user } = useLoggedInUser();
@@ -80,7 +81,7 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
               paymentMethodConfiguration:
                 process.env.NEXT_PUBLIC_STRIPE_PAYMENT_METHOD_CFG_ID,
               appearance: {
-                theme: colorMode === "dark" ? "night" : "stripe",
+                theme: theme === "dark" ? "night" : "stripe",
                 ...appearance,
               },
             }}

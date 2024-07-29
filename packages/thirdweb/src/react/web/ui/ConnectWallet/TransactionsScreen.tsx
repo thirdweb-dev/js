@@ -5,14 +5,16 @@ import { useState } from "react";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../core/hooks/others/useChainQuery.js";
-import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";
 import { Spacer } from "../components/Spacer.js";
 import Tabs from "../components/Tabs.js";
 import { Container, Line, ModalHeader } from "../components/basic.js";
 import { ButtonLink } from "../components/buttons.js";
+import { CoinsIcon } from "./icons/CoinsIcon.js";
+import { FundsIcon } from "./icons/FundsIcon.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { PayTxHistoryList } from "./screens/Buy/pay-transactions/BuyTxHistory.js";
 import { TxDetailsScreen } from "./screens/Buy/pay-transactions/TxDetailsScreen.js";
@@ -82,7 +84,24 @@ export function TransactionsScreen(props: {
       >
         <Spacer y="md" />
         <Tabs
-          options={["Transactions", "Purchases"]}
+          options={[
+            {
+              label: (
+                <span className="flex gap-2">
+                  <CoinsIcon size={iconSize.sm} /> Transactions
+                </span>
+              ),
+              value: "Transactions",
+            },
+            {
+              label: (
+                <span className="flex gap-2">
+                  <FundsIcon size={iconSize.sm} /> Purchases
+                </span>
+              ),
+              value: "Purchases",
+            },
+          ]}
           selected={activeTab}
           onSelect={setActiveTab}
         >

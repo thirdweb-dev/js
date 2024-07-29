@@ -1,11 +1,18 @@
+import { thirdwebClient } from "@/constants/client";
 import { FormControl, Input, Stack } from "@chakra-ui/react";
-import { type NFTContract, useBurnNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { detectFeatures } from "components/contract-components/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { useInvalidateContractQuery } from "thirdweb/react";
+import { defineChain, getContract } from "thirdweb";
+import { burn as burn721, isERC721 } from "thirdweb/extensions/erc721";
+import { burn as burn1155, isERC1155 } from "thirdweb/extensions/erc1155";
+import {
+  useActiveAccount,
+  useInvalidateContractQuery,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -14,11 +21,17 @@ import {
 } from "tw-components";
 
 interface BurnTabProps {
-  contract: NFTContract;
   tokenId: string;
+  contractAddress: string;
+  chainId: number;
 }
 
-const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
+const BurnTab: React.FC<BurnTabProps> = ({
+  contractAddress,
+  chainId,
+  tokenId,
+}) => {
+  const account = useActiveAccount();
   const trackEvent = useTrack();
   const {
     register,
@@ -30,16 +43,23 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
     defaultValues: { amount: "1" },
   });
   const invalidateContractQuery = useInvalidateContractQuery();
-
-  const burn = useBurnNFT(contract);
-
+  const contract = getContract({
+    address: contractAddress,
+    chain: defineChain(chainId),
+    client: thirdwebClient,
+  });
   const { onSuccess, onError } = useTxNotifications(
     "Burn successful",
     "Error burning",
   );
-
-  const isErc721 = detectFeatures(contract, ["ERC721"]);
-  const isErc1155 = detectFeatures(contract, ["ERC1155"]);
+  const { data: isErc721, isLoading: checking721 } = useReadContract(isERC721, {
+    contract,
+  });
+  const { data: isErc1155, isLoading: checking1155 } = useReadContract(
+    isERC1155,
+    { contract },
+  );
+  const { mutate, isPending } = useSendAndConfirmTransaction();
 
   return (
     <Stack w="full">
@@ -50,38 +70,40 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
             action: "burn",
             label: "attempt",
           });
-          burn.mutate(
-            {
-              tokenId,
-              amount: data.amount,
-            },
-            {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "burn",
-                  label: "success",
+          const transaction = isErc721
+            ? burn721({ contract, tokenId: BigInt(tokenId) })
+            : burn1155({
+                contract,
+                id: BigInt(tokenId),
+                value: BigInt(data.amount),
+                account: account?.address ?? "",
+              });
+          mutate(transaction, {
+            onSuccess: () => {
+              trackEvent({
+                category: "nft",
+                action: "burn",
+                label: "success",
+              });
+              onSuccess();
+              if (contract) {
+                invalidateContractQuery({
+                  chainId,
+                  contractAddress,
                 });
-                onSuccess();
-                if (contract) {
-                  invalidateContractQuery({
-                    chainId: contract.chainId,
-                    contractAddress: contract.getAddress(),
-                  });
-                }
-                reset();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "burn",
-                  label: "error",
-                  error,
-                });
-                onError(error);
-              },
+              }
+              reset();
             },
-          );
+            onError: (error) => {
+              trackEvent({
+                category: "nft",
+                action: "burn",
+                label: "error",
+                error,
+              });
+              onError(error);
+            },
+          });
         })}
       >
         <Stack gap={3}>
@@ -120,7 +142,8 @@ const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
           )}
           <TransactionButton
             transactionCount={1}
-            isLoading={burn.isLoading}
+            isLoading={isPending}
+            isDisabled={checking1155 || checking721 || isPending || !account}
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"

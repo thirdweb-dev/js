@@ -2,6 +2,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../../../wallets/in-app/core/authentication/type.js";
 import type { SocialAuthOption } from "../../../../../wallets/types.js";
+import { getSocialAuthLoginPath } from "../../../core/authentication/getLoginPath.js";
 import type { Ecosystem } from "../../types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
 
@@ -25,30 +26,15 @@ const closeWindow = ({
   }
 };
 
-export const getSocialAuthLoginPath = (
-  authOption: SocialAuthOption,
-  client: ThirdwebClient,
-  ecosystem?: Ecosystem,
-) => {
-  const baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
-  if (ecosystem?.partnerId) {
-    return `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
-  }
-  if (ecosystem) {
-    return `${baseUrl}&ecosystemId=${ecosystem.id}`;
-  }
-  return baseUrl;
-};
-
 export const loginWithOauthRedirect = (options: {
   authOption: SocialAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 }): void => {
-  const redirectUrl = new URL(window.location.href);
-  redirectUrl.searchParams.set("walletId", options.ecosystem?.id || "inApp");
-  redirectUrl.searchParams.set("authProvider", options.authOption);
-  const loginUrl = `${getSocialAuthLoginPath(options.authOption, options.client, options.ecosystem)}&redirectUrl=${encodeURIComponent(redirectUrl.toString())}`;
+  const loginUrl = getSocialAuthLoginPath({
+    ...options,
+    mode: "redirect",
+  });
   window.location.href = loginUrl;
 };
 
@@ -63,11 +49,7 @@ export const loginWithOauth = async (options: {
   let isWindowOpenedByFn = false;
   if (!win) {
     win = window.open(
-      getSocialAuthLoginPath(
-        options.authOption,
-        options.client,
-        options.ecosystem,
-      ),
+      getSocialAuthLoginPath({ ...options, mode: "popup" }),
       `Login to ${options.authOption}`,
       DEFAULT_POP_UP_SIZE,
     );

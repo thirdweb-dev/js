@@ -4,8 +4,8 @@ import {
   type TransactionButtonProps,
   useTransactionButtonMutation,
 } from "../../../core/hooks/transaction/transaction-button-utils.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
-import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedSpinner } from "../components/spinner.js";
 

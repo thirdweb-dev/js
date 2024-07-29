@@ -40,52 +40,49 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   noOverflowX,
 }) => {
   return (
-    <Grid
-      minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-      templateColumns={"auto 1fr"}
-      templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
-      backgroundColor="backgroundBody"
-    >
-      <AppHeader />
-
-      <GridItem
-        id={SIDEBAR_TUNNEL_ID}
-        colSpan={{ base: 2, md: 1 }}
-        rowSpan={{ base: 1, md: 2 }}
-        as="aside"
-        position="sticky"
-        top={0}
-        zIndex="sticky"
-        borderRight="1px solid"
-        borderColor="borderColor"
-        boxShadow="sm"
-        w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
+    <div>
+      <Grid
+        minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
+        templateColumns={"auto 1fr"}
+        templateRows={{ base: "auto auto 1fr auto", md: "auto 1fr auto" }}
+        backgroundColor="backgroundBody"
       >
-        {" "}
-      </GridItem>
-      <GridItem
-        minH={{ base: "100vh", md: "unset" }}
-        pt={{ base: 6, md: 10 }}
-        pb={{ base: 6, md: 20 }}
-        as="main"
-        colSpan={{ base: 2, md: 1 }}
-        rowSpan={1}
-        overflowX={noOverflowX ? undefined : "auto"}
-      >
-        <Container maxW="container.page">
-          <BillingAlerts />
-        </Container>
+        <AppHeader />
 
-        {layout === "custom-contract" ? (
-          children
-        ) : (
-          <Container maxW="container.page">{children}</Container>
-        )}
-      </GridItem>
+        <GridItem
+          id={SIDEBAR_TUNNEL_ID}
+          colSpan={{ base: 2, md: 1 }}
+          rowSpan={{ base: 1, md: 2 }}
+          as="aside"
+          position="sticky"
+          zIndex="sticky"
+          w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
+          className="top-0 bg-background border-b md:border-r border-border"
+        >
+          {" "}
+        </GridItem>
+        <GridItem
+          minH={{ base: "100vh", md: "unset" }}
+          pt={{ base: 6, md: 10 }}
+          pb={{ base: 6, md: 20 }}
+          as="main"
+          colSpan={{ base: 2, md: 1 }}
+          rowSpan={1}
+          overflowX={noOverflowX ? undefined : "auto"}
+        >
+          <Container maxW="container.page">
+            <BillingAlerts />
+          </Container>
 
-      {/* the z index is necessary to "overlay" the dashboard sidebar tunnel */}
-      <AppFooter className="col-span-2 z-[10000]" />
-    </Grid>
+          {layout === "custom-contract" ? (
+            children
+          ) : (
+            <Container maxW="container.page">{children}</Container>
+          )}
+        </GridItem>
+      </Grid>
+      <AppFooter className="col-span-2" />
+    </div>
   );
 };
 

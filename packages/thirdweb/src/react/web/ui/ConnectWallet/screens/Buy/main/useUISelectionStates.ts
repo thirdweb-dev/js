@@ -5,7 +5,7 @@ import type {
   FundWalletOptions,
   PayUIOptions,
 } from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
-import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { defaultSelectedCurrency } from "../fiat/currencies.js";

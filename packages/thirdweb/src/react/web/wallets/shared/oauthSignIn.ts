@@ -33,8 +33,9 @@ function getOauthLoginPath(
     case "apple":
     case "facebook":
     case "google":
+    case "farcaster":
     case "discord":
-      return getSocialAuthLoginPath(authOption, client, ecosystem);
+      return getSocialAuthLoginPath({ authOption, client, ecosystem });
     default:
       return "";
   }

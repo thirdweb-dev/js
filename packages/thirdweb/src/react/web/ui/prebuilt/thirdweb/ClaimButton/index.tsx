@@ -4,9 +4,14 @@ import {
   type ThirdwebContract,
   getContract,
 } from "../../../../../../contract/contract.js";
+import { getContractMetadata } from "../../../../../../extensions/common/read/getContractMetadata.js";
+import { getNFT } from "../../../../../../extensions/erc1155/read/getNFT.js";
 import type { PreparedTransaction } from "../../../../../../transaction/prepare-transaction.js";
+import type { BaseTransactionOptions } from "../../../../../../transaction/types.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
-import { useActiveAccount } from "../../../../hooks/wallets/useActiveAccount.js";
+import { useReadContract } from "../../../../../core/hooks/contract/useReadContract.js";
+import { useSendAndConfirmTransaction } from "../../../../../core/hooks/transaction/useSendAndConfirmTransaction.js";
+import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
 import { TransactionButton } from "../../../TransactionButton/index.js";
 import type {
   ClaimButtonProps,
@@ -28,6 +33,7 @@ import type {
  * @param props
  * @returns A wrapper for TransactionButton
  *
+ * @component
  * @example
  *
  * ```tsx
@@ -77,27 +83,94 @@ import type {
  *   Claim now
  * </ClaimButton>
  *
+ * // Attach custom Pay metadata
+ * <ClaimButton
+ *   payModal={{
+ *     metadata: {
+ *       name: "Van Gogh Starry Night",
+ *       image: "https://unsplash.com/starry-night.png"
+ *     }
+ *   }}
+ * >...</ClaimButton>
+ *
  * ```
  */
 export function ClaimButton(props: ClaimButtonProps) {
-  const { children, contractAddress, client, chain, claimParams } = props;
+  const { children, contractAddress, client, chain, claimParams, payModal } =
+    props;
+  const defaultPayModalMetadata = payModal ? payModal.metadata : undefined;
   const contract = getContract({
     address: contractAddress,
     client,
     chain,
   });
+
+  const { data: payMetadata } = useReadContract(getPayMetadata, {
+    contract,
+    tokenId: claimParams.type === "ERC1155" ? claimParams.tokenId : undefined,
+    queryOptions: {
+      enabled: !defaultPayModalMetadata,
+    },
+  });
   const account = useActiveAccount();
-  // TODO (pay): fetch nft metadata and set it as the payOptions metadata
+  const { mutateAsync } = useSendAndConfirmTransaction();
   return (
     <TransactionButton
-      transaction={async () =>
-        await getClaimTransaction({ contract, account, claimParams })
-      }
+      payModal={{
+        metadata: defaultPayModalMetadata || payMetadata,
+        ...payModal,
+      }}
+      transaction={async () => {
+        if (!account) {
+          throw new Error("No account detected");
+        }
+        const [claimTx, { getApprovalForTransaction }] = await Promise.all([
+          getClaimTransaction({
+            contract,
+            account,
+            claimParams,
+          }),
+          import(
+            "../../../../../../extensions/erc20/write/getApprovalForTransaction.js"
+          ),
+        ]);
+        const approveTx = await getApprovalForTransaction({
+          transaction: claimTx,
+          account,
+        });
+        if (approveTx) {
+          await mutateAsync(approveTx);
+        }
+        return claimTx;
+      }}
       {...props}
     >
       {children}
     </TransactionButton>
   );
+}
+
+/**
+ * @internal
+ */
+export async function getPayMetadata(
+  options: BaseTransactionOptions<{ tokenId?: bigint }>,
+): Promise<{ name?: string; image?: string }> {
+  const { contract, tokenId } = options;
+  const [contractMetadata, nft] = await Promise.all([
+    getContractMetadata(options),
+    tokenId ? getNFT({ contract, tokenId }) : undefined,
+  ]);
+  if (tokenId) {
+    return {
+      image: nft?.metadata?.image,
+      name: nft?.metadata?.name,
+    };
+  }
+  return {
+    image: contractMetadata?.image,
+    name: contractMetadata?.name,
+  };
 }
 
 /**

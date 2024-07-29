@@ -62,6 +62,7 @@ export enum AuthProvider {
   APPLE = "Apple",
   PASSKEY = "Passkey",
   DISCORD = "Discord",
+  FARCASTER = "Farcaster",
 }
 
 export type OauthOption = {

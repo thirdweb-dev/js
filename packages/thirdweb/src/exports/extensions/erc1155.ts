@@ -54,6 +54,7 @@ export {
 } from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
 export {
   safeTransferFrom,
+  encodeSafeTransferFrom,
   type SafeTransferFromParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/write/safeTransferFrom.js";
 export {

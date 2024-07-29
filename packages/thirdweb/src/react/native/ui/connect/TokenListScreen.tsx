@@ -3,14 +3,14 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
 import {
   type SupportedTokens,
   type TokenInfo,
   defaultTokens,
 } from "../../../core/utils/defaultTokens.js";
 import { spacing } from "../../design-system/index.js";
-import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
 import { RNImage } from "../components/RNImage.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { TokenIcon } from "../components/TokenIcon.js";

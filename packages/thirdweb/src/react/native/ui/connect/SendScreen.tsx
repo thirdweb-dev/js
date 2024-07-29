@@ -3,14 +3,14 @@ import { StyleSheet, View } from "react-native";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useChainSymbol } from "../../../core/hooks/others/useChainQuery.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useSendToken } from "../../../core/hooks/wallets/useSendToken.js";
 import type {
   SupportedTokens,
   TokenInfo,
 } from "../../../core/utils/defaultTokens.js";
 import { radius, spacing } from "../../design-system/index.js";
-import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
-import { useSendToken } from "../../hooks/wallets/useSendToken.js";
 import { type ContainerType, Header } from "../components/Header.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedInput } from "../components/input.js";

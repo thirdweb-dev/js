@@ -108,3 +108,8 @@ export {
   tokensMintedWithSignatureEvent,
   type TokensMintedWithSignatureEventFilters,
 } from "../../extensions/erc20/__generated__/ISignatureMintERC20/events/TokensMintedWithSignature.js";
+
+export {
+  getApprovalForTransaction,
+  type GetApprovalForTransactionParams,
+} from "../../extensions/erc20/write/getApprovalForTransaction.js";

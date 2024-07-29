@@ -3,6 +3,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
+import type { WelcomeScreen } from "../../../web/ui/ConnectWallet/screens/types.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
 import type { SiweAuthOptions } from "../auth/useSiweAuth.js";
@@ -282,4 +283,32 @@ export type ConnectEmbedProps = {
    * Refer to the [`SiweAuthOptions`](https://portal.thirdweb.com/references/typescript/v5/SiweAuthOptions) for more details
    */
   auth?: SiweAuthOptions;
+
+  /**
+   * Customize the welcome screen. This prop is only applicable when modalSize prop is set to "wide". On "wide" Modal size, a welcome screen is shown on the right side of the modal.
+   *
+   * This screen can be customized in two ways
+   *
+   * #### 1. Customize Metadata and Image
+   * ```tsx
+   * const welcomeScreen = {
+   *  title: "your title",
+   *  subtitle: "your subtitle",
+   *  img: {
+   *   src: "https://your-image-url.png",
+   *   width: 300,
+   *   height: 50,
+   *  },
+   * }
+   *
+   * <ConnectEmbed welcomeScreen={welcomeScreen} />
+   * ```
+   *
+   * #### 2. Render Custom Component
+   *
+   * ```tsx
+   * <ConnectEmbed welcomeScreen={() => <YourComponent />} />
+   * ```
+   */
+  welcomeScreen?: WelcomeScreen;
 };

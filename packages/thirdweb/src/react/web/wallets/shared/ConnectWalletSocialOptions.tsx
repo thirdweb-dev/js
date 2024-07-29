@@ -91,6 +91,7 @@ export const ConnectWalletSocialOptions = (
     facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
     discord: locale.signInWithDiscord,
+    farcaster: "Farcaster",
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({

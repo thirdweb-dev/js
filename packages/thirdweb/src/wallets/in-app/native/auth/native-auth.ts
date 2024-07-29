@@ -208,7 +208,11 @@ export async function socialLogin(
   auth: OauthOption,
   client: ThirdwebClient,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
-  const loginUrl = `${getSocialAuthLoginPath(auth.strategy, client)}&redirectUrl=${encodeURIComponent(auth.redirectUrl)}`;
+  const loginUrl = getSocialAuthLoginPath({
+    authOption: auth.strategy,
+    client,
+    mode: "popup",
+  });
 
   const result = await WebBrowser.openAuthSessionAsync(
     loginUrl,

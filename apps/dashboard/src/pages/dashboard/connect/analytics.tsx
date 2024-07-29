@@ -12,7 +12,6 @@ import {
   StatLabel,
   StatNumber,
   useBreakpointValue,
-  useColorMode,
 } from "@chakra-ui/react";
 import {
   AutoBarChart,
@@ -24,6 +23,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
+import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
@@ -43,7 +43,7 @@ const RADIAN = Math.PI / 180;
 const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultClientId = router.query.clientId?.toString();
-  const { colorMode } = useColorMode();
+  const { theme } = useTheme();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { isLoading } = useLoggedInUser();
   const keysQuery = useApiKeys();
@@ -72,8 +72,8 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const statsQuery = useWalletStats(selectedKey?.key);
 
   const barColors = useMemo(
-    () => (colorMode === "light" ? BAR_COLORS_LIGHT : BAR_COLORS_DARK),
-    [colorMode],
+    () => (theme === "light" ? BAR_COLORS_LIGHT : BAR_COLORS_DARK),
+    [theme],
   );
 
   const pieChartData = useMemo(() => {

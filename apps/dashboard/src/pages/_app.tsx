@@ -269,42 +269,49 @@ const ConsoleApp = memo(function ConsoleApp({
         transitionTimingFunction="ease"
       />
 
-      <ChakraProvider theme={chakraThemeWithFonts}>
-        <AnnouncementBanner />
-        <TailwindTheme>
+      <TailwindTheme>
+        <ChakraProvider theme={chakraThemeWithFonts}>
+          <AnnouncementBanner />
           {isFallback && Component.fallback
             ? Component.fallback
             : getLayout(<Component {...pageProps} />, pageProps)}
           <Toaster />
-        </TailwindTheme>
-      </ChakraProvider>
+          <SyncTheme />
+        </ChakraProvider>
+      </TailwindTheme>
     </PlausibleProvider>
   );
 });
 
 function TailwindTheme(props: { children: React.ReactNode }) {
-  const { colorMode } = useColorMode();
-
   return (
     <ThemeProvider
       attribute="class"
-      // this sets the initial theme
-      forcedTheme={colorMode === "light" ? "light" : "dark"}
+      disableTransitionOnChange
+      enableSystem={false}
     >
-      {/* this keeps the theme in sync! */}
-      <SyncTheme currentTheme={colorMode === "light" ? "light" : "dark"} />
       {props.children}
     </ThemeProvider>
   );
 }
-const SyncTheme: React.FC<{ currentTheme: "light" | "dark" }> = ({
-  currentTheme,
-}) => {
-  const { setTheme } = useTheme();
+
+const SyncTheme: React.FC = () => {
+  const { theme, setTheme } = useTheme();
+  const { setColorMode } = useColorMode();
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
-    setTheme(currentTheme);
-  }, [currentTheme, setTheme]);
+    setColorMode(theme === "light" ? "light" : "dark");
+  }, [setColorMode, theme]);
+
+  // handle dashboard with now old "system" set
+  // eslint-disable-next-line no-restricted-syntax
+  useEffect(() => {
+    if (theme === "system") {
+      setTheme("dark");
+      setColorMode("dark");
+    }
+  }, [theme, setTheme, setColorMode]);
+
   return null;
 };
 

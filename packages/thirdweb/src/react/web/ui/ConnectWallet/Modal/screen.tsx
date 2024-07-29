@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { reservedScreens } from "../constants.js";
 import type { WelcomeScreen } from "../screens/types.js";
 

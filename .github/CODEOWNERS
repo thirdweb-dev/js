@@ -1,7 +1,6 @@
 # Order is important; the last matching pattern takes the most precedence.
 
-# Platform team owns everything by default
-
+# default ownership group
 - @jnsdls @joaquim-verges @MananTank @gregfromstl
 
 # legacy packages
@@ -28,26 +27,29 @@ legacy_packages/wallets/ @MananTank @jnsdls
 legacy_e2e/ @jnsdls
 
 # packages
+packages/thirdweb/ @joaquim-verges @gregfromstl
 
 ## specific thirdweb pieces
-
-packages/thirdweb/src/react/ @MananTank
-packages/thirdweb/src/reactive/ @MananTank
+packages/thirdweb/src/react/ @joaquim-verges @gregfromstl @MananTank
+packages/thirdweb/src/reactive/ @joaquim-verges @gregfromstl @MananTank
 packages/thirdweb/src/gas/ @joaquim-verges
-packages/thirdweb/src/pay/ @MananTank @IDubuque
-
+packages/thirdweb/src/pay/ @joaquim-verges @gregfromstl @MananTank
 packages/typedoc-gen/ @MananTank
-
-# owned by phil for now
-
 packages/service-utils/ @arcoraven
 packages/eslint-config-thirdweb/ @jnsdls
 packages/tw-tsconfig/ @jnsdls
 packages/unity-js-bridge/ @joaquim-verges @0xFirekeeper
 
-# .github folder + .changeset + turbo config is owned by jonas for now
+# apps
+apps/ @jnsdls
+apps/dashboard/ @jnsdls @MananTank
+apps/playground-web/ @joaquim-verges @gregfromstl
+apps/wallet-ui/ @gregfromstl
 
+# .github folder + .changeset + turbo config is owned by jonas for now
 scripts/ @jnsdls
 .github/ @jnsdls
 .changeset/config.json @jnsdls
 turbo.json @jnsdls
+.vscode/ @jnsdls
+

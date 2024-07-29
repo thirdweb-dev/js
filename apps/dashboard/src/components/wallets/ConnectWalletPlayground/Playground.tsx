@@ -14,13 +14,13 @@ import {
   Spacer,
   Switch,
   useBreakpointValue,
-  useColorMode,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useTheme } from "next-themes";
 import parserBabel from "prettier/plugins/babel";
 import estree from "prettier/plugins/estree";
 import { format } from "prettier/standalone";
@@ -111,8 +111,8 @@ export const ConnectWalletPlayground: React.FC<{
     }
   }, [welcomeScreen]);
 
-  const { colorMode, toggleColorMode } = useColorMode();
-  const selectedTheme = colorMode === "light" ? "light" : "dark";
+  const { theme, setTheme } = useTheme();
+  const selectedTheme = theme === "light" ? "light" : "dark";
   const [locale, setLocale] = useState<LocaleId>("en-US");
 
   const { colorOverrides, themeObj, setColorOverrides } =
@@ -1043,9 +1043,7 @@ export const ConnectWalletPlayground: React.FC<{
             theme="dark"
             isSelected={selectedTheme === "dark"}
             onClick={() => {
-              if (selectedTheme !== "dark") {
-                toggleColorMode();
-              }
+              setTheme("dark");
             }}
           />
 
@@ -1054,9 +1052,7 @@ export const ConnectWalletPlayground: React.FC<{
             theme="light"
             isSelected={selectedTheme === "light"}
             onClick={() => {
-              if (selectedTheme !== "light") {
-                toggleColorMode();
-              }
+              setTheme("light");
             }}
           />
         </Flex>

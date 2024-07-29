@@ -41,6 +41,11 @@ import {
   useChainIconUrl,
   useChainName,
 } from "../../../core/hooks/others/useChainQuery.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
+import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitchActiveWalletChain.js";
 import { SetRootElementContext } from "../../../core/providers/RootElementContext.js";
 import type {
   SupportedNFTs,
@@ -48,11 +53,6 @@ import type {
 } from "../../../core/utils/defaultTokens.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
-import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../hooks/wallets/useActiveWalletChain.js";
-import { useDisconnect } from "../../hooks/wallets/useDisconnect.js";
-import { useSwitchActiveWalletChain } from "../../hooks/wallets/useSwitchActiveWalletChain.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { Img } from "../components/Img.js";
@@ -88,7 +88,7 @@ import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
 import { SendFunds } from "./screens/SendFunds.js";
-import { ViewFunds } from "./screens/ViewFunds.js";
+import { ViewAssets } from "./screens/ViewAssets.js";
 import { ViewNFTs } from "./screens/ViewNFTs.js";
 import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
@@ -538,7 +538,7 @@ function DetailsModal(props: {
           {/* View Funds */}
           <MenuButton
             onClick={() => {
-              setScreen("view-funds");
+              setScreen("view-assets");
             }}
             style={{
               fontSize: fontSize.sm,
@@ -694,15 +694,16 @@ function DetailsModal(props: {
         client={client}
       />
     );
-  } else if (screen === "view-funds") {
+  } else if (screen === "view-assets") {
     if (props.supportedNFTs) {
       content = (
-        <ViewFunds
+        <ViewAssets
           supportedTokens={props.supportedTokens}
           supportedNFTs={props.supportedNFTs}
           onBack={() => {
             setScreen("main");
           }}
+          theme={props.theme}
           setScreen={setScreen}
           client={client}
           connectLocale={locale}

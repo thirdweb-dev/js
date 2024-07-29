@@ -163,7 +163,7 @@ const chainMetaRecord = {
       buttonLink: "https://docs.vanarchain.com",
       buttonText: "Learn more",
       backgroundImageUrl: vanarCTABG.src,
-      title: "",
+      title: "Fully EVM compatible L1 for Entertainment",
     },
   },
 } satisfies Record<number, ChainMetadata>;

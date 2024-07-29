@@ -15,9 +15,9 @@ import {
   useSiweAuth,
 } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectEmbedProps } from "../../../../core/hooks/connection/ConnectEmbedProps.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
-import { useIsAutoConnecting } from "../../../hooks/wallets/useIsAutoConnecting.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
+import { useIsAutoConnecting } from "../../../../core/hooks/wallets/useIsAutoConnecting.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
@@ -35,6 +35,7 @@ import {
 } from "../constants.js";
 import { useConnectLocale } from "../locale/getConnectLocale.js";
 import type { ConnectLocale } from "../locale/types.js";
+import type { WelcomeScreen } from "../screens/types.js";
 import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
@@ -148,8 +149,6 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           client={props.client}
           connectLocale={localeQuery.data}
           size={modalSize}
-          // TODO: no welcome screen for embed right now?
-          // welcomeScreen={undefined}
           meta={meta}
           isEmbed={true}
           localeId={props.locale || "en_US"}
@@ -161,6 +160,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           className={props.className}
           modalSize={modalSize}
           style={props.style}
+          welcomeScreen={props.welcomeScreen}
         />
         {autoConnectComp}
       </WalletUIStatesProvider>
@@ -203,6 +203,7 @@ const ConnectEmbedContent = (props: {
       }
     | undefined;
   wallets: Wallet[];
+  welcomeScreen: WelcomeScreen | undefined;
 }) => {
   // const requiresSignIn = false;
   const screenSetup = useSetupScreen({
@@ -258,9 +259,7 @@ const ConnectEmbedContent = (props: {
         connectLocale={props.connectLocale}
         meta={props.meta}
         size={props.size}
-        // TODO: no welcome screen for embed right now?
-        // welcomeScreen={undefined}
-        welcomeScreen={undefined}
+        welcomeScreen={props.welcomeScreen}
         isEmbed={props.isEmbed}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}

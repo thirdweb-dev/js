@@ -1,5 +1,121 @@
 # thirdweb
 
+## 5.41.0
+
+### Minor Changes
+
+- [#3827](https://github.com/thirdweb-dev/js/pull/3827) [`b0a303d`](https://github.com/thirdweb-dev/js/commit/b0a303d5ef7cf7a74d5aadc9c04d0b6161806f8b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds SIWF for in-app wallets
+
+  ```ts
+  await wallet.connect({
+    strategy: "farcaster",
+    client: CLIENT,
+  });
+  ```
+
+### Patch Changes
+
+- [#3831](https://github.com/thirdweb-dev/js/pull/3831) [`d775333`](https://github.com/thirdweb-dev/js/commit/d775333b40dbcfab18702019b40ff54e6fed1a79) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose ERC20 extension: getApprovalForTransaction
+
+- [#3845](https://github.com/thirdweb-dev/js/pull/3845) [`b551b69`](https://github.com/thirdweb-dev/js/commit/b551b692914b8c35cf365c46e63c17cce66c018e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Restyles the View Assets Connect UI page
+
+- [#3817](https://github.com/thirdweb-dev/js/pull/3817) [`b128530`](https://github.com/thirdweb-dev/js/commit/b128530355f0dc47d897bd2ef7c3823752ea9b6c) Thanks [@MananTank](https://github.com/MananTank)! - Move connection manager creation to context instead of global singleton
+
+## 5.40.0
+
+### Minor Changes
+
+- [#3750](https://github.com/thirdweb-dev/js/pull/3750) [`4a4a061`](https://github.com/thirdweb-dev/js/commit/4a4a0612ed6976268d35605b6cd94b077e40c25a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New PayEmbed modes and revamp TransactionButton flow
+
+  You can now configure the PayEmbed component to build 3 different flows:
+
+  - Fund wallets: Inline component that allows users to buy any currency. (default)
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "fund_wallet",
+    }}
+  />
+  ```
+
+  - Direct payments: Take payments from Fiat or Crypto directly to your seller wallet.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x...",
+        chain: base,
+        amount: "0.1",
+      },
+      metadata: {
+        name: "Black Hoodie (Size L)",
+        image: "https://example.com/image.png",
+      },
+    }}
+  />
+  ```
+
+  - Transaction payments: Let your users pay for onchain transactions with fiat or crypto on any chain.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "transaction",
+      transaction: claimTo({
+        contract,
+        tokenId: 0n,
+        to: toAddress,
+      }),
+      metadata: nft?.metadata,
+    }}
+  />
+  ```
+
+  You can also configure the TransactionButton component to show metadata to personalize the transaction payment flow:
+
+  ```tsx
+  <TransactionButton
+    transaction={() => {
+      return transfer({
+        contract,
+        amount: 10n,
+        to: toAddress,
+      });
+    }}
+    payModal={{
+      metadata: {
+        name: "Buy me a coffee",
+        image: "https://example.com/image.png",
+      },
+    }}
+  />
+  ```
+
+- [#3822](https://github.com/thirdweb-dev/js/pull/3822) [`3848327`](https://github.com/thirdweb-dev/js/commit/3848327373e49aa83c5902e6a16d5b8e96cf1eeb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to open OAuth windows as a redirect. This is useful for embedded applications such as telegram web apps.
+
+  Be sure to include your domain in the allowlisted domains for your client ID.
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    auth: {
+      mode: "redirect",
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3813](https://github.com/thirdweb-dev/js/pull/3813) [`6081ac7`](https://github.com/thirdweb-dev/js/commit/6081ac7b18878812d55d945caaf0d9c3dd884b8b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose types: NFTInput and NFTMetadata
+
+- [#3815](https://github.com/thirdweb-dev/js/pull/3815) [`87dc9a5`](https://github.com/thirdweb-dev/js/commit/87dc9a5f90685b0c1015bd4d07ab356c104a2726) Thanks [@MananTank](https://github.com/MananTank)! - Allow clicking on other wallet when a wallet is connected and sign in is required in `ConnectEmbed` component.
+
 ## 5.39.0
 
 ### Minor Changes

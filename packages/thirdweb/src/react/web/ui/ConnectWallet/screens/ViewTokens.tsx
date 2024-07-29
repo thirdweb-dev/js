@@ -2,12 +2,12 @@ import type { Chain } from "../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { fontSize } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
 import {
   type SupportedTokens,
   defaultTokens,
 } from "../../../../core/utils/defaultTokens.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { TokenIcon } from "../../components/TokenIcon.js";
@@ -30,17 +30,6 @@ export function ViewTokens(props: {
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
 }) {
-  const activeChain = useActiveWalletChain();
-  const supportedTokens = props.supportedTokens || defaultTokens;
-
-  if (!activeChain) {
-    return null;
-  }
-
-  const tokenList =
-    (activeChain?.id ? supportedTokens[activeChain.id] : undefined) || [];
-  const { connectLocale } = props;
-
   return (
     <Container
       style={{
@@ -49,7 +38,7 @@ export function ViewTokens(props: {
     >
       <Container p="lg">
         <ModalHeader
-          title={connectLocale.viewFunds.title}
+          title={props.connectLocale.viewFunds.title}
           onBack={props.onBack}
         />
       </Container>
@@ -62,26 +51,46 @@ export function ViewTokens(props: {
         }}
       >
         <Spacer y="md" />
-
-        <TokenInfo
-          token={NATIVE_TOKEN}
-          chain={activeChain}
-          client={props.client}
-        />
-
-        {tokenList.map((token) => {
-          return (
-            <TokenInfo
-              token={token}
-              key={token.address}
-              chain={activeChain}
-              client={props.client}
-            />
-          );
-        })}
+        <ViewTokensContent {...props} />
         <Spacer y="lg" />
       </Container>
     </Container>
+  );
+}
+
+export function ViewTokensContent(props: {
+  supportedTokens?: SupportedTokens;
+  client: ThirdwebClient;
+  connectLocale: ConnectLocale;
+}) {
+  const activeChain = useActiveWalletChain();
+  if (!activeChain) {
+    return null;
+  }
+  const supportedTokens = props.supportedTokens || defaultTokens;
+
+  const tokenList =
+    (activeChain?.id ? supportedTokens[activeChain.id] : undefined) || [];
+
+  return (
+    <>
+      <TokenInfo
+        token={NATIVE_TOKEN}
+        chain={activeChain}
+        client={props.client}
+      />
+
+      {tokenList.map((token) => {
+        return (
+          <TokenInfo
+            token={token}
+            key={token.address}
+            chain={activeChain}
+            client={props.client}
+          />
+        );
+      })}
+    </>
   );
 }
 
