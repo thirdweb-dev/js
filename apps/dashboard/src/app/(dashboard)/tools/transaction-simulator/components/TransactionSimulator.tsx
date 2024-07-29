@@ -26,6 +26,7 @@ import {
 } from "thirdweb";
 import { resolveContractAbi } from "thirdweb/contract";
 import { useActiveAccount } from "thirdweb/react";
+import { parseAbiParams } from "thirdweb/utils";
 import { ShareButton } from "../../components/share";
 
 export type SimulateTransactionForm = {
@@ -42,66 +43,6 @@ type State = {
   message: string;
   codeExample: string;
   shareUrl: string;
-};
-
-// Generate code example with input values.
-const getCodeExample = (
-  parsedData: SimulateTransactionForm,
-  params: unknown[],
-) =>
-  `import { 
-  getContract,
-  defineChain,
-  prepareContractCall,
-  createThirdwebClient 
-} from "thirdweb";
-
-const client = createThirdwebClient({
-  // use secretKey instead of clientId in backend environment
-  clientId: "your-client-id",
-});
-
-const contract = getContract({
-  client,
-  chain: defineChain(${parsedData.chainId}),
-  address: "${parsedData.to}",
-});
-
-const transaction = prepareContractCall({
-  contract,
-  method: resolveMethod("${parsedData.functionName}"),
-  params: [${params
-    .map((item) => {
-      if (typeof item === "string") {
-        return `"${item}"`;
-      }
-      if (typeof item === "bigint") {
-        return `${item}n`;
-      }
-      return item;
-    })
-    .join(",")}],
-  value: ${parsedData.value ? `${parsedData.value}n` : ""},
-});
-
-const result = await simulateTransaction({
-  from: "${parsedData.from}",
-  transaction,
-});`;
-
-// Generate share link from input values.
-const getShareUrl = (parsedData: SimulateTransactionForm) => {
-  const url = new URL(`${window.location.origin}/tools/transaction-simulator`);
-  url.searchParams.set("chainId", parsedData.chainId.toString());
-  url.searchParams.set("from", parsedData.from);
-  url.searchParams.set("to", parsedData.to);
-  url.searchParams.set("functionName", parsedData.functionName);
-  url.searchParams.set(
-    "functionArgs",
-    encodeURIComponent(parsedData.functionArgs),
-  );
-  url.searchParams.set("value", parsedData.value);
-  return url.href;
 };
 
 export const TransactionSimulator = (props: {
@@ -149,23 +90,9 @@ export const TransactionSimulator = (props: {
           }`,
         );
       }
-      // Parse
-      const params: unknown[] = [];
-      abiItem.inputs.forEach((item, index) => {
-        const inputType = item.type;
-        const value = inputParams[index];
-        if (inputType.startsWith("uint") || inputType.startsWith("int")) {
-          return params.push(BigInt(value));
-        }
-        if (inputType === "bool") {
-          return params.push(value === "true");
-        }
-        try {
-          params.push(JSON.parse(value));
-        } catch (e) {
-          params.push(value);
-        }
-      });
+      // Parse to proper types
+      const types = abiItem.inputs.map((o) => o.type);
+      const params = parseAbiParams(types, inputParams);
       const codeExample = getCodeExample(
         {
           chainId: chain.id,
@@ -387,4 +314,72 @@ ${Object.keys(populatedTransaction)
       )}
     </div>
   );
+};
+
+// Generate code example with input values.
+const getCodeExample = (
+  parsedData: SimulateTransactionForm,
+  params: unknown[],
+) => {
+  const displayParams = params.map((item) => {
+    if (typeof item === "bigint") {
+      return `${item.toString()}n`;
+    }
+    if (typeof item === "string") {
+      return `"${item}"`;
+    }
+    if (
+      typeof item === "object" &&
+      item !== null &&
+      !Array.isArray(item) &&
+      Object.prototype.toString.call(item) === "[object Object]"
+    ) {
+      return JSON.stringify(item);
+    }
+    return item;
+  });
+  return `import { 
+  getContract,
+  defineChain,
+  prepareContractCall,
+  createThirdwebClient 
+} from "thirdweb";
+
+const client = createThirdwebClient({
+  // use secretKey instead of clientId in backend environment
+  clientId: "your-client-id",
+});
+
+const contract = getContract({
+  client,
+  chain: defineChain(${parsedData.chainId}),
+  address: "${parsedData.to}",
+});
+
+const transaction = prepareContractCall({
+  contract,
+  method: resolveMethod("${parsedData.functionName}"),
+  params: [${displayParams.join(", ")}],
+  value: ${parsedData.value ? `${parsedData.value}n` : ""},
+});
+
+const result = await simulateTransaction({
+  from: "${parsedData.from}",
+  transaction,
+});`;
+};
+
+// Generate share link from input values.
+const getShareUrl = (parsedData: SimulateTransactionForm) => {
+  const url = new URL(`${window.location.origin}/tools/transaction-simulator`);
+  url.searchParams.set("chainId", parsedData.chainId.toString());
+  url.searchParams.set("from", parsedData.from);
+  url.searchParams.set("to", parsedData.to);
+  url.searchParams.set("functionName", parsedData.functionName);
+  url.searchParams.set(
+    "functionArgs",
+    encodeURIComponent(parsedData.functionArgs),
+  );
+  url.searchParams.set("value", parsedData.value);
+  return url.href;
 };
