@@ -60,7 +60,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   return (
     <article
       className={cn(
-        "h-full min-h-[200px] p-4 border border-border relative rounded-lg flex flex-col",
+        "min-h-[200px] p-4 border border-border relative rounded-lg flex flex-col",
         !showSkeleton ? "bg-secondary hover:bg-muted" : "pointer-events-none",
       )}
     >
