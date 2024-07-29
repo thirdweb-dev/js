@@ -285,7 +285,11 @@ const ConsoleApp = memo(function ConsoleApp({
 
 function TailwindTheme(props: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange>
+    <ThemeProvider
+      attribute="class"
+      disableTransitionOnChange
+      enableSystem={false}
+    >
       {props.children}
     </ThemeProvider>
   );
