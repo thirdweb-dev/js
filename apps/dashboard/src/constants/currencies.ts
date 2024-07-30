@@ -1,5 +1,19 @@
-import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
-import { arbitrumSepolia } from "thirdweb/chains";
+import {
+  arbitrum,
+  arbitrumSepolia,
+  avalanche,
+  avalancheFuji,
+  bsc,
+  bscTestnet,
+  ethereum,
+  fantom,
+  fantomTestnet,
+  hardhat,
+  localhost,
+  optimism,
+  polygon,
+  sepolia,
+} from "thirdweb/chains";
 
 export interface CurrencyMetadata {
   address: string;
@@ -7,9 +21,160 @@ export interface CurrencyMetadata {
   symbol: string;
 }
 
+const NATIVE_TOKENS: Record<
+  number,
+  {
+    name: string;
+    symbol: string;
+    decimals: number;
+    wrapped: CurrencyMetadata;
+  }
+> = /* @__PURE__ */ {
+  [ethereum.id]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [sepolia.id]: {
+    name: "Sepolia Ether",
+    symbol: "SEP",
+    decimals: 18,
+    wrapped: {
+      address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [polygon.id]: {
+    name: "Matic",
+    symbol: "MATIC",
+    decimals: 18,
+    wrapped: {
+      address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      name: "Wrapped Matic",
+      symbol: "WMATIC",
+    },
+  },
+  [avalanche.id]: {
+    name: "Avalanche",
+    symbol: "AVAX",
+    decimals: 18,
+    wrapped: {
+      address: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+      name: "Wrapped AVAX",
+      symbol: "WAVAX",
+    },
+  },
+  [avalancheFuji.id]: {
+    name: "Avalanche",
+    symbol: "AVAX",
+    decimals: 18,
+    wrapped: {
+      address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
+      name: "Wrapped AVAX",
+      symbol: "WAVAX",
+    },
+  },
+  [fantom.id]: {
+    name: "Fantom",
+    symbol: "FTM",
+    decimals: 18,
+    wrapped: {
+      address: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+      name: "Wrapped Fantom",
+      symbol: "WFTM",
+    },
+  },
+  [fantomTestnet.id]: {
+    name: "Fantom",
+    symbol: "FTM",
+    decimals: 18,
+    wrapped: {
+      address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
+      name: "Wrapped Fantom",
+      symbol: "WFTM",
+    },
+  },
+  [arbitrum.id]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [optimism.id]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [bsc.id]: {
+    name: "Binance Chain Native Token",
+    symbol: "BNB",
+    decimals: 18,
+    wrapped: {
+      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      name: "Wrapped Binance Chain Token",
+      symbol: "WBNB",
+    },
+  },
+  [bscTestnet.id]: {
+    name: "Binance Chain Native Token",
+    symbol: "TBNB",
+    decimals: 18,
+    wrapped: {
+      address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+      name: "Wrapped Binance Chain Testnet Token",
+      symbol: "WBNB",
+    },
+  },
+  [hardhat.id]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [localhost.id]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [280]: {
+    name: "zkSync Era Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+};
+
 const Ethereum: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.Mainnet].wrapped,
+    ...NATIVE_TOKENS[ethereum.id].wrapped,
   },
   {
     address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
@@ -35,7 +200,7 @@ const Ethereum: CurrencyMetadata[] = [
 
 const Polygon: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.Polygon].wrapped,
+    ...NATIVE_TOKENS[polygon.id].wrapped,
   },
   {
     address: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
@@ -66,45 +231,9 @@ const Polygon: CurrencyMetadata[] = [
   },
 ];
 
-const Mumbai: CurrencyMetadata[] = [
-  {
-    ...NATIVE_TOKENS[ChainId.Mumbai].wrapped,
-  },
-  {
-    name: "Wrapped Ether",
-    address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
-    symbol: "WETH",
-  },
-  {
-    address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
-    name: "USD Coin",
-    symbol: "USDC",
-  },
-  {
-    address: "0x0FA8781a83E46826621b3BC094Ea2A0212e71B23",
-    name: "USD Coin (Bridged)",
-    symbol: "USDC.e",
-  },
-  {
-    name: "Tether USD",
-    address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
-    symbol: "USDT",
-  },
-  {
-    name: "DERC20",
-    address: "0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1",
-    symbol: "DERC20",
-  },
-  {
-    name: "CDOL",
-    address: "0x4E0068513994fD4526AEc7f558Ee572234AeeFB8",
-    symbol: "CDOL",
-  },
-];
-
 const Fantom: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.Fantom].wrapped,
+    ...NATIVE_TOKENS[fantom.id].wrapped,
   },
   {
     name: "Wrapped Ether",
@@ -125,13 +254,13 @@ const Fantom: CurrencyMetadata[] = [
 
 const FantomTestnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.FantomTestnet].wrapped,
+    ...NATIVE_TOKENS[fantomTestnet.id].wrapped,
   },
 ];
 
 const Avalanche: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.Avalanche].wrapped,
+    ...NATIVE_TOKENS[avalanche.id].wrapped,
   },
   {
     address: "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
@@ -162,7 +291,7 @@ const Avalanche: CurrencyMetadata[] = [
 
 const AvalancheFujiTestnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.AvalancheFujiTestnet].wrapped,
+    ...NATIVE_TOKENS[avalancheFuji.id].wrapped,
   },
   // Source: https://developers.circle.com/stablecoins/docs/usdc-on-testing-networks#usdc-on-avalanche-testnet
   {
@@ -174,7 +303,7 @@ const AvalancheFujiTestnet: CurrencyMetadata[] = [
 
 const Optimism: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.Optimism].wrapped,
+    ...NATIVE_TOKENS[optimism.id].wrapped,
   },
   // Source: https://www.circle.com/blog/now-available-usdc-on-op-mainnet
   {
@@ -192,7 +321,7 @@ const Optimism: CurrencyMetadata[] = [
 
 const Arbitrum: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.Arbitrum].wrapped,
+    ...NATIVE_TOKENS[arbitrum.id].wrapped,
   },
   // Source: https://www.circle.com/blog/arbitrum-usdc-now-available
   {
@@ -210,7 +339,7 @@ const Arbitrum: CurrencyMetadata[] = [
 
 const BinanceMainnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].wrapped,
+    ...NATIVE_TOKENS[bsc.id].wrapped,
   },
   {
     address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
@@ -231,7 +360,7 @@ const BinanceMainnet: CurrencyMetadata[] = [
 
 const BinanceTestnet: CurrencyMetadata[] = [
   {
-    ...NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].wrapped,
+    ...NATIVE_TOKENS[bscTestnet.id].wrapped,
   },
   {
     address: "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",
@@ -254,16 +383,15 @@ const ArbitrumSepolia: CurrencyMetadata[] = [
 ];
 
 export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
-  [ChainId.Mainnet]: Ethereum,
-  [ChainId.Polygon]: Polygon,
-  [ChainId.Mumbai]: Mumbai,
-  [ChainId.Fantom]: Fantom,
-  [ChainId.FantomTestnet]: FantomTestnet,
-  [ChainId.Avalanche]: Avalanche,
-  [ChainId.AvalancheFujiTestnet]: AvalancheFujiTestnet,
-  [ChainId.Optimism]: Optimism,
-  [ChainId.Arbitrum]: Arbitrum,
-  [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
-  [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
+  [ethereum.id]: Ethereum,
+  [polygon.id]: Polygon,
+  [fantom.id]: Fantom,
+  [fantomTestnet.id]: FantomTestnet,
+  [avalanche.id]: Avalanche,
+  [avalancheFuji.id]: AvalancheFujiTestnet,
+  [optimism.id]: Optimism,
+  [arbitrum.id]: Arbitrum,
+  [bsc.id]: BinanceMainnet,
+  [bscTestnet.id]: BinanceTestnet,
   [arbitrumSepolia.id]: ArbitrumSepolia,
 } as const;

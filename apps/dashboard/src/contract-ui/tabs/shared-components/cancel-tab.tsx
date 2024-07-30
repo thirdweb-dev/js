@@ -1,38 +1,54 @@
+import { thirdwebClient } from "@/constants/client";
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Stack } from "@chakra-ui/react";
-import type { UseMutationResult } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import type { BigNumberish } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { defineChain, getContract } from "thirdweb";
+import { cancelAuction, cancelListing } from "thirdweb/extensions/marketplace";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
 
 interface CancelTabProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  cancelQuery: UseMutationResult<any, unknown, BigNumberish, unknown>;
   id: string;
+  contractAddress: string;
+  chainId: number;
+  isAuction?: boolean;
 }
 
-export const CancelTab: React.FC<CancelTabProps> = ({ cancelQuery, id }) => {
+export const CancelTab: React.FC<CancelTabProps> = ({
+  id,
+  contractAddress,
+  chainId,
+  isAuction,
+}) => {
   const trackEvent = useTrack();
   const network = useEVMContractInfo()?.chain;
-
+  const contract = getContract({
+    address: contractAddress,
+    chain: defineChain(chainId),
+    client: thirdwebClient,
+  });
+  const transaction = isAuction
+    ? cancelAuction({ contract, auctionId: BigInt(id) })
+    : cancelListing({ contract, listingId: BigInt(id) });
   const { onSuccess, onError } = useTxNotifications(
     "Listing cancelled",
     "Error cancelling listing",
   );
+  const cancelQuery = useSendAndConfirmTransaction();
   return (
     <Stack pt={3} gap={3}>
       {/* maybe some text? */}
       <TransactionButton
         transactionCount={1}
-        isLoading={cancelQuery.isLoading}
+        isLoading={cancelQuery.isPending}
         onClick={() => {
           trackEvent({
             category: "marketplace",
             action: "cancel-listing",
             label: "attempt",
           });
-          cancelQuery.mutate(id, {
+          cancelQuery.mutate(transaction, {
             onSuccess: () => {
               trackEvent({
                 category: "marketplace",

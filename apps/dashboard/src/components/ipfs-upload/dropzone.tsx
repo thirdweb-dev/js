@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   AspectRatio,
   Box,
@@ -15,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { MediaRenderer, useStorageUpload } from "@thirdweb-dev/react";
+import { useStorageUpload } from "@thirdweb-dev/react";
 import type { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
@@ -25,6 +26,7 @@ import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { BsFillCloudUploadFill } from "react-icons/bs";
 import { FiExternalLink, FiTrash2, FiUploadCloud } from "react-icons/fi";
+import { MediaRenderer } from "thirdweb/react";
 import { useActiveAccount } from "thirdweb/react";
 import {
   Button,
@@ -241,6 +243,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         src={URL.createObjectURL(file)}
                         mimeType={file.type}
                         requireInteraction
+                        client={thirdwebClient}
                       />
                     </Box>
                   </AspectRatio>

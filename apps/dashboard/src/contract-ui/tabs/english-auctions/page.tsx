@@ -35,7 +35,10 @@ export const ContractEnglishAuctionsPage: React.FC<
         </Flex>
       </Flex>
 
-      <EnglishAuctionsTable contract={contractQuery.contract} />
+      <EnglishAuctionsTable
+        contractAddress={contractQuery.contract.getAddress()}
+        chainId={contractQuery.contract.chainId}
+      />
     </Flex>
   );
 };

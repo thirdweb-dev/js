@@ -1,9 +1,6 @@
-import {
-  CONTRACTS_MAP,
-  type FullPublishMetadata,
-  type Role,
-} from "@thirdweb-dev/sdk";
+import { CONTRACTS_MAP, type FullPublishMetadata } from "@thirdweb-dev/sdk";
 import type { StaticImageData } from "next/image";
+import type { roleMap } from "thirdweb/extensions/permissions";
 import type { ContractType } from "./contracts";
 
 const FeatureIconMap: Record<ContractType, StaticImageData> = {
@@ -32,7 +29,7 @@ export interface BuiltinContractDetails {
   comingSoon?: boolean;
   contractType: ContractType;
   erc?: "ERC721" | "ERC20" | "ERC1155" | "ERC721A";
-  roles?: readonly Role[];
+  roles?: readonly (keyof typeof roleMap)[];
   metadata: Omit<FullPublishMetadata, "logo"> & { logo: StaticImageData };
 }
 
@@ -135,7 +132,10 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
     }),
   };
 
-export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
+export const ROLE_DESCRIPTION_MAP: Record<
+  keyof typeof roleMap | string,
+  string
+> = {
   admin:
     "Determine who can grant or revoke roles and modify settings on this contract.",
   minter: "Determine who can mint / create new tokens on this contract.",
