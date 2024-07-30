@@ -22,36 +22,42 @@ export type { LocaleId } from "../react/web/ui/types.js";
 export { TransactionButton } from "../react/web/ui/TransactionButton/index.js";
 export type { TransactionButtonProps } from "../react/core/hooks/transaction/transaction-button-utils.js";
 
-export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
+export { ThirdwebProvider } from "../react/web/providers/thirdweb-provider.js";
 
 // tokens
 export type {
   SupportedTokens,
   TokenInfo,
 } from "../react/core/utils/defaultTokens.js";
-export { defaultTokens } from "../react/core/utils/defaultTokens.js";
+export {
+  defaultTokens,
+  getDefaultToken,
+} from "../react/core/utils/defaultTokens.js";
 
 // Media Renderer
 export { MediaRenderer } from "../react/web/ui/MediaRenderer/MediaRenderer.js";
 export type { MediaRendererProps } from "../react/web/ui/MediaRenderer/types.js";
 
 // wallet hooks
-export { useActiveWallet } from "../react/web/hooks/wallets/useActiveWallet.js";
-export { useActiveWalletChain } from "../react/web/hooks/wallets/useActiveWalletChain.js";
-export { useActiveWalletConnectionStatus } from "../react/web/hooks/wallets/useActiveWalletConnectionStatus.js";
-export { useActiveAccount } from "../react/web/hooks/wallets/useActiveAccount.js";
+export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
+export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
+export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
+export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
 export { useAutoConnect } from "../react/web/hooks/wallets/useAutoConnect.js";
-export { useCapabilities } from "../react/web/hooks/wallets/useCapabilities.js";
-export { useConnect } from "../react/web/hooks/wallets/useConnect.js";
-export { useConnectedWallets } from "../react/web/hooks/wallets/useConnectedWallets.js";
-export { useDisconnect } from "../react/web/hooks/wallets/useDisconnect.js";
-export { useIsAutoConnecting } from "../react/web/hooks/wallets/useIsAutoConnecting.js";
-export { useSetActiveWallet } from "../react/web/hooks/wallets/useSetActiveWallet.js";
-export { useSetActiveWalletConnectionStatus } from "../react/web/hooks/wallets/useSetActiveWalletConnectionStatus.js";
-export { useSendCalls } from "../react/web/hooks/wallets/useSendCalls.js";
-export { useSwitchActiveWalletChain } from "../react/web/hooks/wallets/useSwitchActiveWalletChain.js";
-export { useCallsStatus } from "../react/web/hooks/wallets/useCallsStatus.js";
+export { useCapabilities } from "../react/core/hooks/wallets/useCapabilities.js";
+export { useConnect } from "../react/core/hooks/wallets/useConnect.js";
+export { useConnectedWallets } from "../react/core/hooks/wallets/useConnectedWallets.js";
+export { useDisconnect } from "../react/core/hooks/wallets/useDisconnect.js";
+export { useIsAutoConnecting } from "../react/core/hooks/wallets/useIsAutoConnecting.js";
+export { useSetActiveWallet } from "../react/core/hooks/wallets/useSetActiveWallet.js";
+export { useSetActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useSetActiveWalletConnectionStatus.js";
+export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
+export { useSwitchActiveWalletChain } from "../react/core/hooks/wallets/useSwitchActiveWalletChain.js";
+export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
+
+// chain hooks
+export { useChainMetadata } from "../react/core/hooks/others/useChainQuery.js";
 
 export type { ConnectManagerOptions } from "../wallets/manager/index.js";
 
@@ -67,10 +73,10 @@ export {
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
 export { useSendTransaction } from "../react/web/hooks/transaction/useSendTransaction.js";
-export { useSendBatchTransaction } from "../react/web/hooks/transaction/useSendBatchTransaction.js";
-export { useSendAndConfirmTransaction } from "../react/web/hooks/transaction/useSendAndConfirmTransaction.js";
-export { useEstimateGas } from "../react/web/hooks/transaction/useEstimateGas.js";
-export { useEstimateGasCost } from "../react/web/hooks/transaction/useEstimateGasCost.js";
+export { useSendBatchTransaction } from "../react/core/hooks/transaction/useSendBatchTransaction.js";
+export { useSendAndConfirmTransaction } from "../react/core/hooks/transaction/useSendAndConfirmTransaction.js";
+export { useEstimateGas } from "../react/core/hooks/transaction/useEstimateGas.js";
+export { useEstimateGasCost } from "../react/core/hooks/transaction/useEstimateGasCost.js";
 
 // rpc related
 export {
@@ -121,7 +127,13 @@ export {
   type PayEmbedProps,
   type PayEmbedConnectOptions,
 } from "../react/web/ui/PayEmbed.js";
-export type { PayUIOptions } from "../react/core/hooks/connection/ConnectButtonProps.js";
+export type {
+  PayUIOptions,
+  PaymentInfo,
+  DirectPaymentOptions,
+  FundWalletOptions,
+  TranasctionOptions,
+} from "../react/core/hooks/connection/ConnectButtonProps.js";
 
 export {
   useConnectModal,
@@ -140,3 +152,22 @@ export {
   useNetworkSwitcherModal,
   type UseNetworkSwitcherModalOptions,
 } from "../react/web/ui/ConnectWallet/NetworkSelector.js";
+
+// ens
+export { useEnsName, useEnsAvatar } from "../react/core/utils/wallet.js";
+
+/**
+ * Prebuilt UI components for thirdweb contracts
+ */
+export { ClaimButton } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/index.js";
+export type { ClaimButtonProps } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/types.js";
+export {
+  BuyDirectListingButton,
+  type BuyDirectListingButtonProps,
+} from "../react/web/ui/prebuilt/thirdweb/BuyDirectListingButton/index.js";
+export {
+  CreateDirectListingButton,
+  type CreateDirectListingButtonProps,
+} from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
+
+export { useConnectionManager } from "../react/core/providers/connection-manager.js";

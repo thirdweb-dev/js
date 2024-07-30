@@ -5,6 +5,9 @@ import { withCache } from "../../../utils/promise/withCache.js";
 import { idOf } from "../__generated__/IIdRegistry/read/idOf.js";
 import { getIdRegistry } from "../contracts/getIdRegistry.js";
 
+/**
+ * @extension FARCASTER
+ */
 export type GetFidParams = {
   client: ThirdwebClient;
   address: Address;

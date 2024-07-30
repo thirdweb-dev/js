@@ -103,10 +103,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <>
           {isErc721Claimable && contract && <SupplyCards contract={contract} />}
           {contract && contractQuery.contract && (
-            <NFTGetAllTable
-              contract={contract}
-              oldContract={contractQuery.contract}
-            />
+            <NFTGetAllTable contract={contract} />
           )}
         </>
       )}

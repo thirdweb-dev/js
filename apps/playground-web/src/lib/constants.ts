@@ -9,13 +9,15 @@ export const WALLETS = [
     auth: {
       options: [
         "google",
-        "facebook",
         "discord",
         "apple",
         "email",
         "passkey",
         "phone",
+        "farcaster",
+        "facebook",
       ],
+      mode: "redirect",
     },
   }),
   createWallet("io.metamask"),

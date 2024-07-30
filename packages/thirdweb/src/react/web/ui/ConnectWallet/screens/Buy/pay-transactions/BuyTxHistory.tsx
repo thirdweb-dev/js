@@ -12,9 +12,9 @@ import {
   spacing,
 } from "../../../../../../core/design-system/index.js";
 import { useChainExplorers } from "../../../../../../core/hooks/others/useChainQuery.js";
-import { useActiveAccount } from "../../../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../../../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletChain } from "../../../../../hooks/wallets/useActiveWalletChain.js";
+import { useActiveAccount } from "../../../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../../../../core/hooks/wallets/useActiveWallet.js";
+import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { LoadingScreen } from "../../../../../wallets/shared/LoadingScreen.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spinner } from "../../../../components/Spinner.js";
@@ -40,7 +40,7 @@ export function PayTxHistoryScreen(props: {
   onBack?: () => void;
   client: ThirdwebClient;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 }) {
   const [selectedTx, setSelectedTx] = useState<TxStatusInfo | null>(null);
@@ -66,7 +66,7 @@ export function PayTxHistoryScreen(props: {
         statusInfo={selectedTx}
         onBack={() => setSelectedTx(null)}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={payer}
       />
@@ -128,6 +128,7 @@ export function PayTxHistoryList(props: {
         width: "100%",
         minHeight: "250px",
         maxHeight: "370px",
+        paddingBottom: spacing.lg,
       }}
     >
       <Container flex="column" gap="xs" expand>
@@ -158,24 +159,26 @@ export function PayTxHistoryList(props: {
           </Container>
         )}
 
-        <Container animate="fadein" flex="column" gap="xs">
-          {txInfosToShow.map((txInfo) => {
-            return (
-              <BuyTxHistoryButton
-                key={
-                  txInfo.type === "swap"
-                    ? txInfo.status.source?.transactionHash
-                    : txInfo.status.intentId
-                }
-                txInfo={txInfo}
-                client={props.client}
-                onClick={() => {
-                  props.onSelectTx(txInfo);
-                }}
-              />
-            );
-          })}
-        </Container>
+        {txInfosToShow.length > 0 && (
+          <Container animate="fadein" flex="column" gap="xs">
+            {txInfosToShow.map((txInfo) => {
+              return (
+                <BuyTxHistoryButton
+                  key={
+                    txInfo.type === "swap"
+                      ? txInfo.status.source?.transactionHash
+                      : txInfo.status.intentId
+                  }
+                  txInfo={txInfo}
+                  client={props.client}
+                  onClick={() => {
+                    props.onSelectTx(txInfo);
+                  }}
+                />
+              );
+            })}
+          </Container>
+        )}
 
         {isLoading && txInfosToShow.length > 0 && (
           <>
@@ -186,8 +189,8 @@ export function PayTxHistoryList(props: {
         )}
       </Container>
 
-      <Container py="lg">
-        {pagination && !hidePagination && (
+      {pagination && !hidePagination && (
+        <Container py="md">
           <div
             style={{
               display: "grid",
@@ -234,8 +237,8 @@ export function PayTxHistoryList(props: {
               <ArrowRightIcon width={iconSize.sm} height={iconSize.sm} />
             </Button>
           </div>
-        )}
-      </Container>
+        </Container>
+      )}
     </Container>
   );
 }

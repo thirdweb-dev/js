@@ -12,6 +12,9 @@ import { isERC721 } from "../../../erc721/read/isERC721.js";
 import { isERC1155 } from "../../../erc1155/read/isERC1155.js";
 import { createListing as generatedCreateListing } from "../../__generated__/IDirectListings/write/createListing.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type CreateListingParams = {
   /**
    * The contract address of the asset being listed
@@ -73,7 +76,11 @@ export type CreateListingParams = {
  * import { createListing } from "thirdweb/extensions/marketplace";
  * import { sendTransaction } from "thirdweb";
  *
- * const transaction = createListing({...});
+ * const transaction = createListing({
+ *   assetContractAddress: "0x...", // the NFT contract address that you want to sell
+ *   tokenId={0n}, // the token id you want to sell
+ *   pricePerToken="0.1" // sell for 0.1 <native token>
+ * });
  *
  * await sendTransaction({ transaction, account });
  * ```

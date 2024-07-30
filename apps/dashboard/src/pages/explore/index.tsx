@@ -1,4 +1,3 @@
-import { Flex } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractRow } from "components/explore/contract-row";
@@ -13,10 +12,8 @@ import {
 } from "data/explore";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
-// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Fragment } from "react";
-import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const ExplorePage: ThirdwebNextPage = (
@@ -42,27 +39,30 @@ const ExplorePage: ThirdwebNextPage = (
         }}
       />
 
-      <Flex direction="column" gap={{ base: 12, md: 16 }}>
-        <Flex direction="column" gap={2}>
-          <Heading as="h1" size="display.md">
-            Explore
-          </Heading>
-          <Text size="body.xl" maxW="container.md">
-            The best place for web3 developers to explore smart contracts from
-            world-class web3 protocols & engineers — all deployable with one
-            click.
-          </Text>
-        </Flex>
-        {props.categories.map((category, idx) => (
-          <Fragment key={category.id}>
-            {Math.floor(props.categories.length / 2) === idx && (
-              <PublishUpsellCard />
-            )}
-            <ContractRow category={category} />
-          </Fragment>
-        ))}
+      <div>
+        <h1 className="mb-3 text-5xl font-bold tracking-tighter">Explore</h1>
+        <p className="text-lg text-secondary-foreground max-w-screen-md">
+          The best place for web3 developers to explore smart contracts from
+          world-class web3 protocols & engineers — all deployable with one
+          click.
+        </p>
+
+        <div className="h-10" />
+
+        <div className="flex flex-col gap-14">
+          {props.categories.map((category, idx) => (
+            <Fragment key={category.id}>
+              {Math.floor(props.categories.length / 2) === idx && (
+                <PublishUpsellCard />
+              )}
+              <ContractRow category={category} />
+            </Fragment>
+          ))}
+        </div>
+
+        <div className="h-16" />
         <DeployUpsellCard />
-      </Flex>
+      </div>
     </>
   );
 };
@@ -72,7 +72,7 @@ const ExplorePage: ThirdwebNextPage = (
 // );
 
 ExplorePage.getLayout = (page, props) => (
-  <AppLayout {...props} noSEOOverride>
+  <AppLayout {...props} noSEOOverride hasSidebar>
     <ContractsSidebar activePage="explore" />
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>

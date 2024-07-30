@@ -248,7 +248,7 @@ export const templates: TemplateCardProps[] = [
   {
     id: "vite-starter",
     title: "Vite Starter",
-    homepage: "vite-starter.thirdweb-example.com",
+    homepage: "https://vite-starter.thirdweb-example.com",
     repo: "https://github.com/thirdweb-example/vite-starter",
     description:
       "Starter kit to build with Vite and thirdweb without additional initial configuration.",
@@ -261,7 +261,7 @@ export const templates: TemplateCardProps[] = [
   {
     id: "next-starter",
     title: "Next Starter",
-    homepage: "next-starter.thirdweb-example.com",
+    homepage: "https://next-starter.thirdweb-example.com",
     repo: "https://github.com/thirdweb-example/next-starter",
     description:
       "Starter kit to build with Next and thirdweb without additional initial configuration.",

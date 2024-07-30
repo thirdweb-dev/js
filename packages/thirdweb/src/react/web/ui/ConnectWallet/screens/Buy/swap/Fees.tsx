@@ -25,15 +25,19 @@ export function SwapFees(props: {
         return (
           <Container
             key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
-            flex="row"
+            flex="column"
             gap="xxs"
           >
-            <Text color="primaryText" size="sm">
+            <Text color="primaryText" size="sm" style={{ textAlign: "right" }}>
               {feeAmount === 0 ? "~" : ""}
               {feeAmount} {fee.token.symbol}
             </Text>
-            <Text color="secondaryText" size="sm">
-              (${(fee.amountUSDCents / 100).toFixed(2)})
+            <Text
+              color="secondaryText"
+              size="xs"
+              style={{ textAlign: "right" }}
+            >
+              ${(fee.amountUSDCents / 100).toFixed(2)}
             </Text>
           </Container>
         );

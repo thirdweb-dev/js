@@ -1,17 +1,32 @@
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
+import {
+  getOrDeployInfraContract,
+  getOrDeployInfraForPublishedContract,
+} from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
+import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js"; // FIXME
 import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
 import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/initialize.js";
 
-export type ERC20ContractType = "DropERC20" | "TokenERC20" | "ERC20Core";
+export type ERC20ContractType =
+  | "DropERC20"
+  | "TokenERC20"
+  | "ModularTokenERC20"
+  | "ModularDropERC20";
 
+/**
+ * @extension DEPLOY
+ */
 export type ERC20ContractParams = {
   name: string;
   description?: string;
@@ -27,6 +42,9 @@ export type ERC20ContractParams = {
   trustedForwarders?: string[];
 };
 
+/**
+ * @extension DEPLOY
+ */
 export type DeployERC20ContractOptions = Prettify<
   ClientAndChainAndAccount & {
     type: ERC20ContractType;
@@ -69,6 +87,8 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
     });
   const initializeTransaction = await getInitializeTransaction({
     client,
+    chain,
+    account,
     implementationContract,
     type,
     params,
@@ -86,13 +106,22 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
 
 async function getInitializeTransaction(options: {
   client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
   implementationContract: ThirdwebContract;
   type: ERC20ContractType;
   params: ERC20ContractParams;
   accountAddress: string;
 }) {
-  const { client, implementationContract, type, params, accountAddress } =
-    options;
+  const {
+    client,
+    chain,
+    account,
+    implementationContract,
+    type,
+    params,
+    accountAddress,
+  } = options;
   const contractURI =
     options.params.contractURI ||
     (await upload({
@@ -134,16 +163,45 @@ async function getInitializeTransaction(options: {
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
         trustedForwarders: params.trustedForwarders || [],
       });
-    case "ERC20Core":
-    case "ERC20CoreInitializable": // FIXME
+    case "ModularTokenERC20":
+    case "ModularDropERC20": {
+      const { extendedMetadata } = await fetchPublishedContractMetadata({
+        client,
+        contractId: type,
+      });
+      const extensionNames =
+        extendedMetadata?.defaultExtensions?.map((e) => e.extensionName) || [];
+      // can't promise all this unfortunately, needs to be sequential because of nonces
+      const extensions: string[] = [];
+      const extensionInstallData: Hex[] = [];
+      console.log("EXTENSIONS", extensionNames);
+      for (const extension of extensionNames) {
+        const contract = await getOrDeployInfraContract({
+          client,
+          chain,
+          account,
+          contractId: extension,
+          constructorParams: [],
+        });
+        extensions.push(contract.address);
+        // TODO (modular) this should be dynamic based on the extension using the onInstall ABI
+        extensionInstallData.push(
+          encodeAbiParameters(
+            [{ type: "address" }],
+            [params.saleRecipient || accountAddress],
+          ),
+        );
+      }
+
       return initCoreERC20({
         contract: implementationContract,
         owner: params.defaultAdmin || accountAddress,
         name: params.name || "",
         symbol: params.symbol || "",
         contractURI,
-        extensions: [],
-        extensionInstallData: [],
+        extensions,
+        extensionInstallData,
       });
+    }
   }
 }

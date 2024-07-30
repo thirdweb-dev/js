@@ -14,16 +14,18 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type SetSaleConfigParams = WithOverrides<{
   primarySaleRecipient: AbiParameterToPrimitiveType<{
-    type: "address";
     name: "_primarySaleRecipient";
+    type: "address";
+    internalType: "address";
   }>;
 }>;
 
 export const FN_SELECTOR = "0xd29a3628" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "_primarySaleRecipient",
+    type: "address",
+    internalType: "address",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

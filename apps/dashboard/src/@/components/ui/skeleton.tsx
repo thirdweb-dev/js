@@ -25,14 +25,14 @@ function SkeletonContainer<T>(props: {
       style={props.style}
       aria-hidden={isLoading ? "true" : "false"}
       className={cn(
-        isLoading && "animate-pulse rounded-lg bg-muted",
+        isLoading && "animate-pulse rounded-lg bg-muted inline-block",
         props.className,
       )}
     >
       <div className={cn(isLoading && "invisible")}>
         <div
           className={cn(
-            "transitino-opacity duration-300",
+            "transition-opacity duration-300",
             isLoading ? "opacity-0" : "opacity-100",
           )}
         >

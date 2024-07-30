@@ -5,12 +5,16 @@ import { UniswapFee } from "../types.js";
 
 /**
  * Represents the parameters for the `findUniswapV3Pool` function.
+ * @extension UNISWAP
  */
 export type GetUniswapV3PoolParams = {
   tokenA: Address;
   tokenB: Address;
 };
 
+/**
+ * @extension UNISWAP
+ */
 export type GetUniswapV3PoolResult = {
   poolFee: UniswapFee;
   poolAddress: Address;

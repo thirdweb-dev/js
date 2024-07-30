@@ -1,6 +1,6 @@
-import type { RequiredParam } from "@thirdweb-dev/react";
 import type { DropContract } from "@thirdweb-dev/react/evm";
 import { detectFeatures } from "components/contract-components/utils";
+import type { RequiredParam } from "utils/types";
 
 export function hasMultiphaseClaimConditions(
   contract: RequiredParam<DropContract>,

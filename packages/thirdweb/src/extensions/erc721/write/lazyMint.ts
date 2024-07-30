@@ -10,6 +10,7 @@ import { lazyMint as generatedLazyMint } from "../__generated__/ILazyMint/write/
 
 /**
  * Represents the input data for creating an NFT (Non-Fungible Token).
+ * @extension ERC721
  */
 type NFTInput = Prettify<
   {
@@ -24,6 +25,9 @@ type NFTInput = Prettify<
   } & Record<string, unknown>
 >;
 
+/**
+ * @extension ERC721
+ */
 export type LazyMintParams = {
   nfts: (NFTInput | string)[];
 };

@@ -1,5 +1,5 @@
+import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import { useBalanceForAddress } from "@3rdweb-sdk/react/hooks/useBalanceForAddress";
 import {
   useSplitBalances,
   useSplitData,
@@ -17,9 +17,10 @@ import {
 import { useContract } from "@thirdweb-dev/react";
 import { BigNumber, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { defineDashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { ZERO_ADDRESS } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { useActiveAccount, useWalletBalance } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { DistributeButton } from "./components/distribute-button";
@@ -44,9 +45,16 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
   const configuredChainsRecord = useSupportedChainsRecord();
   const chainId = useDashboardEVMChainId();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
-
   const splitQuery = useSplitData(contractQuery.contract);
-  const nativeBalanceQuery = useBalanceForAddress(contractAddress);
+
+  const convertedChain = chainId
+    ? defineDashboardChain(chainId, chain)
+    : undefined;
+  const nativeBalanceQuery = useWalletBalance({
+    address: contractAddress,
+    client: thirdwebClient,
+    chain: convertedChain,
+  });
   const balanceQuery = useSplitBalances(contractAddress);
 
   const balances = useMemo(() => {

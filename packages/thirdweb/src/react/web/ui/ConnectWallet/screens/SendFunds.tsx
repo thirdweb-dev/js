@@ -7,13 +7,13 @@ import {
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useSendToken } from "../../../../core/hooks/wallets/useSendToken.js";
 import {
   type SupportedTokens,
   defaultTokens,
 } from "../../../../core/utils/defaultTokens.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../../hooks/wallets/useActiveWalletChain.js";
-import { useSendToken } from "../../../hooks/wallets/useSendToken.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -181,7 +181,9 @@ function SendFundsForm(props: {
           color="danger"
         >
           <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-          <Text color="danger">{getErrorMessage(sendTokenMutation.error)}</Text>
+          <Text center multiline color="danger">
+            {getErrorMessage(sendTokenMutation.error)}
+          </Text>
         </Container>
       </Container>
     );
@@ -336,10 +338,10 @@ function SendFundsForm(props: {
             padding: spacing.md,
           }}
         >
-          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
           {sendTokenMutation.isPending && (
             <Spinner size="sm" color="accentButtonText" />
           )}
+          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
         </Button>
       </form>
     </Container>

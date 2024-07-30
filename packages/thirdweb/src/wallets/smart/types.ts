@@ -34,6 +34,7 @@ export type SmartWalletOptions = Prettify<
         accountContract: ThirdwebContract,
         transactions: SendTransactionOption[],
       ) => PreparedTransaction;
+      getAccountNonce?: (accountContract: ThirdwebContract) => Promise<bigint>;
     };
   } & (
     | {

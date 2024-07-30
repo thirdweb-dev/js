@@ -1,5 +1,219 @@
 # thirdweb
 
+## 5.42.0
+
+### Minor Changes
+
+- [#3847](https://github.com/thirdweb-dev/js/pull/3847) [`e27ebef`](https://github.com/thirdweb-dev/js/commit/e27ebef85bb61342c3de53f85e134cf4a29f787c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add prebuilt component: BuyDirectListingButton for Marketplace v3
+
+  ```tsx
+  import { BuyDirectListingButton } from "thirdweb/react";
+
+  <BuyDirectListingButton
+    contractAddress="0x..." // contract address of the marketplace v3
+    chain={...} // the chain which the marketplace contract is deployed on
+    client={...} // thirdweb client
+    listingId={100n} // the listingId or the item you want to buy
+    quantity={1n} // optional - see the docs to learn more
+  >
+    Buy NFT
+  </BuyDirectListingButton>
+  ```
+
+- [#3857](https://github.com/thirdweb-dev/js/pull/3857) [`d5e5467`](https://github.com/thirdweb-dev/js/commit/d5e546726ab388e642d144c494853c23e3b24aba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds useChainMetadata to retrieve metadata for a chain such as name, icon, available faucets, block explorers, etc.
+
+  ```jsx
+  import { useChainMetadata } from "thirdweb/react";
+
+  const { data: chainMetadata } = useChainMetadata(defineChain(11155111));
+
+  console.log("Name:", chainMetadata.name); // Sepolia
+  console.log("Faucets:", chainMetadata.faucets); // ["https://thirdweb.com/sepolia/faucet"]
+  console.log("Explorers:", chainMetadata.explorers); // ["https://sepolia.etherscan.io/"]
+  ```
+
+### Patch Changes
+
+- [#3846](https://github.com/thirdweb-dev/js/pull/3846) [`cdb2970`](https://github.com/thirdweb-dev/js/commit/cdb29708061d52f576617e6a91518465d9894157) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Handle ERC20 approval for the ClaimButton
+
+- [#3843](https://github.com/thirdweb-dev/js/pull/3843) [`91edae5`](https://github.com/thirdweb-dev/js/commit/91edae58a771722b3818f855acd37993e2be5145) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose multicall & erc1155:encodeSafeTransferFrom extension
+
+- [#3867](https://github.com/thirdweb-dev/js/pull/3867) [`109575e`](https://github.com/thirdweb-dev/js/commit/109575eba5285b5c4022839e98ff5dc41064dc93) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix wallet social login button styling
+
+- [#3854](https://github.com/thirdweb-dev/js/pull/3854) [`7ec421f`](https://github.com/thirdweb-dev/js/commit/7ec421f0e7c87a93a5a1d80d561c8082f75620ce) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add util function: parseAbiParams
+
+  ```ts
+  import { parseAbiParams } from "thirdweb/utils";
+
+  const example1 = parseAbiParams(
+    ["address", "uint256"],
+    ["0x.....", "1200000"],
+  ); // result: ["0x......", 1200000n]
+  ```
+
+- [#3869](https://github.com/thirdweb-dev/js/pull/3869) [`bd44ce9`](https://github.com/thirdweb-dev/js/commit/bd44ce935e6857811a865b2c8ed8e0b9eb61e625) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export more wallet creation and connection types
+
+## 5.41.0
+
+### Minor Changes
+
+- [#3827](https://github.com/thirdweb-dev/js/pull/3827) [`b0a303d`](https://github.com/thirdweb-dev/js/commit/b0a303d5ef7cf7a74d5aadc9c04d0b6161806f8b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds SIWF for in-app wallets
+
+  ```ts
+  await wallet.connect({
+    strategy: "farcaster",
+    client: CLIENT,
+  });
+  ```
+
+### Patch Changes
+
+- [#3831](https://github.com/thirdweb-dev/js/pull/3831) [`d775333`](https://github.com/thirdweb-dev/js/commit/d775333b40dbcfab18702019b40ff54e6fed1a79) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose ERC20 extension: getApprovalForTransaction
+
+- [#3845](https://github.com/thirdweb-dev/js/pull/3845) [`b551b69`](https://github.com/thirdweb-dev/js/commit/b551b692914b8c35cf365c46e63c17cce66c018e) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Restyles the View Assets Connect UI page
+
+- [#3817](https://github.com/thirdweb-dev/js/pull/3817) [`b128530`](https://github.com/thirdweb-dev/js/commit/b128530355f0dc47d897bd2ef7c3823752ea9b6c) Thanks [@MananTank](https://github.com/MananTank)! - Move connection manager creation to context instead of global singleton
+
+## 5.40.0
+
+### Minor Changes
+
+- [#3750](https://github.com/thirdweb-dev/js/pull/3750) [`4a4a061`](https://github.com/thirdweb-dev/js/commit/4a4a0612ed6976268d35605b6cd94b077e40c25a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New PayEmbed modes and revamp TransactionButton flow
+
+  You can now configure the PayEmbed component to build 3 different flows:
+
+  - Fund wallets: Inline component that allows users to buy any currency. (default)
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "fund_wallet",
+    }}
+  />
+  ```
+
+  - Direct payments: Take payments from Fiat or Crypto directly to your seller wallet.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "direct_payment",
+      paymentInfo: {
+        sellerAddress: "0x...",
+        chain: base,
+        amount: "0.1",
+      },
+      metadata: {
+        name: "Black Hoodie (Size L)",
+        image: "https://example.com/image.png",
+      },
+    }}
+  />
+  ```
+
+  - Transaction payments: Let your users pay for onchain transactions with fiat or crypto on any chain.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      mode: "transaction",
+      transaction: claimTo({
+        contract,
+        tokenId: 0n,
+        to: toAddress,
+      }),
+      metadata: nft?.metadata,
+    }}
+  />
+  ```
+
+  You can also configure the TransactionButton component to show metadata to personalize the transaction payment flow:
+
+  ```tsx
+  <TransactionButton
+    transaction={() => {
+      return transfer({
+        contract,
+        amount: 10n,
+        to: toAddress,
+      });
+    }}
+    payModal={{
+      metadata: {
+        name: "Buy me a coffee",
+        image: "https://example.com/image.png",
+      },
+    }}
+  />
+  ```
+
+- [#3822](https://github.com/thirdweb-dev/js/pull/3822) [`3848327`](https://github.com/thirdweb-dev/js/commit/3848327373e49aa83c5902e6a16d5b8e96cf1eeb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to open OAuth windows as a redirect. This is useful for embedded applications such as telegram web apps.
+
+  Be sure to include your domain in the allowlisted domains for your client ID.
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+  const wallet = inAppWallet({
+    auth: {
+      mode: "redirect",
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#3813](https://github.com/thirdweb-dev/js/pull/3813) [`6081ac7`](https://github.com/thirdweb-dev/js/commit/6081ac7b18878812d55d945caaf0d9c3dd884b8b) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose types: NFTInput and NFTMetadata
+
+- [#3815](https://github.com/thirdweb-dev/js/pull/3815) [`87dc9a5`](https://github.com/thirdweb-dev/js/commit/87dc9a5f90685b0c1015bd4d07ab356c104a2726) Thanks [@MananTank](https://github.com/MananTank)! - Allow clicking on other wallet when a wallet is connected and sign in is required in `ConnectEmbed` component.
+
+## 5.39.0
+
+### Minor Changes
+
+- [#3785](https://github.com/thirdweb-dev/js/pull/3785) [`105e523`](https://github.com/thirdweb-dev/js/commit/105e523ce4cddbd343ac8c06fb9f234fb3a8b4f6) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add ClaimButton for claiming tokens from all thirdweb Drop contracts
+
+  Higher level abstraction to claim tokens from all thirdweb Drop contracts
+
+  ```tsx
+  import { ClaimButton } from "thirdweb/react";
+  import { ethereum } from "thirdweb/chains";
+
+  <ClaimButton
+    contractAddress="0x..."
+    chain={ethereum}
+    client={client}
+    claimParams={{
+      type: "ERC721",
+      quantity: 1n,
+    }}
+  >
+    Claim now
+  </ClaimButton>;
+  ```
+
+### Patch Changes
+
+- [#3792](https://github.com/thirdweb-dev/js/pull/3792) [`5fabe66`](https://github.com/thirdweb-dev/js/commit/5fabe6661399615b393d1055a722b9de59bf19bb) Thanks [@MananTank](https://github.com/MananTank)! - handle `null` value of `effectiveGasPrice` in `sendTransaction` method of `toEthersSigner` adapter that throws error when trying to convert to BigNumber. This is causing issue in XDC Network (chain Id 50) and XDC Apothem testnet (chain id 51)
+
+- [#3804](https://github.com/thirdweb-dev/js/pull/3804) [`cb616f7`](https://github.com/thirdweb-dev/js/commit/cb616f75ed38fac2be243163f0139e5cbb9892be) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix gas estimation on arbitrum sepolia
+
+- [#3524](https://github.com/thirdweb-dev/js/pull/3524) [`8599fbf`](https://github.com/thirdweb-dev/js/commit/8599fbf4e008de64c6118193c411b6d3b0810790) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Modular contracts deployment setup
+
+- [#3782](https://github.com/thirdweb-dev/js/pull/3782) [`c82c524`](https://github.com/thirdweb-dev/js/commit/c82c524e139d7960794e08bca838a1a1b78a3532) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow overriding nonce for smart accounts
+
+- [#3801](https://github.com/thirdweb-dev/js/pull/3801) [`a51f53f`](https://github.com/thirdweb-dev/js/commit/a51f53f531adedc355624fb89d2d50767a9fb1a1) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix RPC URL construction for chains
+
+- [#3805](https://github.com/thirdweb-dev/js/pull/3805) [`5c9af85`](https://github.com/thirdweb-dev/js/commit/5c9af853fa7a58ee8c0572e235a5b20f8247297c) Thanks [@jnsdls](https://github.com/jnsdls)! - [performance] - fix rpc client reuse
+
+- [#3796](https://github.com/thirdweb-dev/js/pull/3796) [`c51f785`](https://github.com/thirdweb-dev/js/commit/c51f7857e2363e01371f21487f4a5aa74f6f89f5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle polygon amoy gas station
+
+- [#3800](https://github.com/thirdweb-dev/js/pull/3800) [`b15118a`](https://github.com/thirdweb-dev/js/commit/b15118a34fcfb3ed7b81d6ffea733a2499e5a895) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Minor style fixes on the Connect UI Send Funds page
+
+- [#3791](https://github.com/thirdweb-dev/js/pull/3791) [`9cc9f05`](https://github.com/thirdweb-dev/js/commit/9cc9f05f68654f12ef8f9434a3d7af6fc40ecb18) Thanks [@keyding](https://github.com/keyding)! - Fix bun detection
+
 ## 5.38.0
 
 ### Minor Changes

@@ -1,26 +1,41 @@
 import { FormControl, Input, Stack } from "@chakra-ui/react";
-import { type NFTContract, useTransferNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { detectFeatures } from "components/contract-components/utils";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
 import { useForm } from "react-hook-form";
-import { ZERO_ADDRESS } from "thirdweb";
+import { ZERO_ADDRESS, defineChain, getContract } from "thirdweb";
+import { transferFrom } from "thirdweb/extensions/erc721";
+import { isERC1155, safeTransferFrom } from "thirdweb/extensions/erc1155";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TransferTabProps {
-  contract: NFTContract;
+  contractAddress: string;
+  chainId: number;
   tokenId: string;
 }
 
-const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
+const TransferTab: React.FC<TransferTabProps> = ({
+  contractAddress,
+  chainId,
+  tokenId,
+}) => {
+  const account = useActiveAccount();
+  const contract = getContract({
+    address: contractAddress,
+    chain: defineChain(chainId),
+    client: thirdwebClient,
+  });
   const trackEvent = useTrack();
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { to: "", amount: "1" },
   });
-
-  const transfer = useTransferNFT(contract);
 
   const { onSuccess, onError } = useTxNotifications(
     "Transfer successful",
@@ -28,7 +43,12 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
     contract,
   );
 
-  const isErc1155 = detectFeatures(contract, ["ERC1155"]);
+  const { data: isErc1155, isLoading: checking1155 } = useReadContract(
+    isERC1155,
+    { contract },
+  );
+
+  const { mutate, isPending } = useSendAndConfirmTransaction();
 
   return (
     <Stack w="full">
@@ -39,33 +59,41 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
             action: "transfer",
             label: "attempt",
           });
-          transfer.mutate(
-            {
-              tokenId,
-              to: data.to,
-              amount: data.amount,
+          const transaction = isErc1155
+            ? safeTransferFrom({
+                contract,
+                to: data.to,
+                tokenId: BigInt(tokenId),
+                value: BigInt(data.amount),
+                data: "0x",
+                from: account?.address ?? "",
+              })
+            : transferFrom({
+                contract,
+                to: data.to,
+                tokenId: BigInt(tokenId),
+                from: account?.address ?? "",
+              });
+          mutate(transaction, {
+            onSuccess: () => {
+              trackEvent({
+                category: "nft",
+                action: "transfer",
+                label: "success",
+              });
+              onSuccess();
+              form.reset();
             },
-            {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "transfer",
-                  label: "success",
-                });
-                onSuccess();
-                form.reset();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "transfer",
-                  label: "error",
-                  error,
-                });
-                onError(error);
-              },
+            onError: (error) => {
+              trackEvent({
+                category: "nft",
+                action: "transfer",
+                label: "error",
+                error,
+              });
+              onError(error);
             },
-          );
+          });
         })}
       >
         <Stack gap={3}>
@@ -101,11 +129,13 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
           </Stack>
           <TransactionButton
             transactionCount={1}
-            isLoading={transfer.isLoading}
+            isLoading={isPending || checking1155}
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
-            isDisabled={!form.formState.isDirty}
+            isDisabled={
+              !form.formState.isDirty || checking1155 || isPending || !account
+            }
           >
             Transfer
           </TransactionButton>

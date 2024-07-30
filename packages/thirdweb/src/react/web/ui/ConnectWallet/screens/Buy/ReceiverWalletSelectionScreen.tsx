@@ -3,7 +3,7 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { isAddress } from "../../../../../../utils/address.js";
 import { iconSize } from "../../../../../core/design-system/index.js";
-import { connectionManager } from "../../../../index.js";
+import { useConnectionManager } from "../../../../../core/providers/connection-manager.js";
 import { Spacer } from "../../../components/Spacer.js";
 import { TextDivider } from "../../../components/TextDivider.js";
 import { ToolTip } from "../../../components/Tooltip.js";
@@ -22,6 +22,7 @@ export function ReceiverWalletDrawerScreen(props: {
   const [address, setAddress] = useState<string>("");
   const isValidAddress = useMemo(() => isAddress(address), [address]);
   const showError = !!address && !isValidAddress;
+  const connectionManager = useConnectionManager();
   const connectedWallets = useSyncExternalStore(
     connectionManager.connectedWallets.subscribe,
     connectionManager.connectedWallets.getValue,

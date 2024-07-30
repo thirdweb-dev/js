@@ -1,12 +1,11 @@
 import { Flex, FormControl } from "@chakra-ui/react";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import type { UseFormReturn } from "react-hook-form";
 import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
+import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface RoyaltyFieldsetProps {
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<any, any>;
+  form: CustomContractDeploymentForm;
 }
 
 export const RoyaltyFieldset: React.FC<RoyaltyFieldsetProps> = ({ form }) => {
@@ -54,9 +53,9 @@ export const RoyaltyFieldset: React.FC<RoyaltyFieldsetProps> = ({ form }) => {
           <FormLabel>Percentage</FormLabel>
           <BasisPointsInput
             variant="filled"
-            value={form.watch("deployParams._royaltyBps")}
+            value={Number.parseInt(form.watch("deployParams._royaltyBps"))}
             onChange={(value) =>
-              form.setValue("deployParams._royaltyBps", value, {
+              form.setValue("deployParams._royaltyBps", value.toString(), {
                 shouldTouch: true,
               })
             }

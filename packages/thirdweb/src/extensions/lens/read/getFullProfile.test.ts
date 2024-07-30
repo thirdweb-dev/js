@@ -11,7 +11,7 @@ import { getFullProfile } from "./getFullProfile.js";
 const profileId = 1000n;
 const client = TEST_CLIENT;
 
-describe("lens/getFullProfile", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("lens/getFullProfile", () => {
   it("should return a full profile with handle and (maybe) profile metadata", async () => {
     const profile = await getFullProfile({ profileId, client });
 

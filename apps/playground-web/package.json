@@ -20,14 +20,14 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.399.0",
-    "next": "14.2.4",
+    "next": "14.2.5",
     "next-themes": "^0.3.0",
     "prettier": "^3.3.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "server-only": "^0.0.1",
     "shiki": "^1.10.0",
-    "tailwind-merge": "^2.3.0",
+    "tailwind-merge": "^2.4.0",
     "thirdweb": "workspace:*"
   },
   "devDependencies": {

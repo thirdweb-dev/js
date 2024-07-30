@@ -3,17 +3,30 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Ecosystem } from "../../web/types.js";
 
-export const getSocialAuthLoginPath = (
-  authOption: SocialAuthOption,
-  client: ThirdwebClient,
-  ecosystem?: Ecosystem,
-) => {
-  const baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
+export const getSocialAuthLoginPath = ({
+  authOption,
+  client,
+  ecosystem,
+  mode = "popup",
+}: {
+  authOption: SocialAuthOption;
+  client: ThirdwebClient;
+  ecosystem?: Ecosystem;
+  mode?: "popup" | "redirect";
+}) => {
+  let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
-    return `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
+    baseUrl = `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
+  } else if (ecosystem) {
+    baseUrl = `${baseUrl}&ecosystemId=${ecosystem.id}`;
   }
-  if (ecosystem) {
-    return `${baseUrl}&ecosystemId=${ecosystem.id}`;
+
+  if (mode === "redirect") {
+    const redirectUrl = new URL(window.location.href);
+    redirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
+    redirectUrl.searchParams.set("authProvider", authOption);
+    baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(redirectUrl.toString())}`;
   }
+
   return baseUrl;
 };

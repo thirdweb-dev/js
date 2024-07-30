@@ -19,17 +19,35 @@ async function main() {
       } else {
         await generate(chainIdPlusContract);
       }
+      break;
+    }
 
+    case "login": {
+      // Not implemented yet
+      console.info(
+        "Please instead pass a secret key to the command directly, learn more: https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
+      );
+      process.exit(1);
       break;
     }
 
     default: {
+      // check several commands for missing -k flag
+      const commands = ["create", "deploy", "publish", "generate", "upload"];
+      if (commands.includes(command) && !rest.includes("-k")) {
+        console.info(
+          "Please include the -k flag with your secret key, learn more: https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
+        );
+        process.exit(1);
+        return;
+      }
+
       const isWindows = /^win/.test(process.platform);
 
       const isBunAvailable = (() => {
         try {
           const res = execSync("bun --version", {
-            stdio: "ignore",
+            // stdio: "ignore",
             encoding: "utf-8",
           });
           if (typeof res === "string" && res.indexOf(".") > -1) {
@@ -43,7 +61,7 @@ async function main() {
 
       switch (true) {
         case isBunAvailable:
-          runner = "bun";
+          runner = "bunx";
           break;
         case isWindows:
           runner = "npx.cmd";

@@ -24,6 +24,7 @@ export const socialAuthOptions = [
   "apple",
   "facebook",
   "discord",
+  "farcaster",
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
 

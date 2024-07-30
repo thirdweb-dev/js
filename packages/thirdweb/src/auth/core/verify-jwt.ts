@@ -3,10 +3,16 @@ import type { JWTPayload } from "../../utils/jwt/types.js";
 import { verifyEOASignature } from "../verify-signature.js";
 import type { AuthOptions } from "./types.js";
 
+/**
+ * @auth
+ */
 export type VerifyJWTParams = {
   jwt: string;
 };
 
+/**
+ * @auth
+ */
 export type VerifyJWTResult =
   | {
       valid: true;

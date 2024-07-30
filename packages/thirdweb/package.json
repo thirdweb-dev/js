@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.38.0",
+  "version": "5.42.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -178,7 +178,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.16.5"
+    "viem": "2.17.10"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -284,7 +284,7 @@
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-clipboard/clipboard": "1.14.1",
-    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/jest-dom": "^6.4.7",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/cross-spawn": "^6.0.6",

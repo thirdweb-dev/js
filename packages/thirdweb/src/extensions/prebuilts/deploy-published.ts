@@ -9,6 +9,9 @@ import { prepareContractCall } from "../../transaction/prepare-contract-call.js"
 import { resolveMethod } from "../../transaction/resolve-method.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 
+/**
+ * @extension DEPLOY
+ */
 export type DeployPublishedContractOptions = {
   client: ThirdwebClient;
   chain: Chain;

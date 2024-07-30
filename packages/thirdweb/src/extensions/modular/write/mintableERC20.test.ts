@@ -14,47 +14,35 @@ import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
 import { getInstalledExtensions } from "../__generated__/ModularCore/read/getInstalledExtensions.js";
 import { grantMinterRole } from "./grantMinterRole.js";
-import { installPublishedExtension } from "./installPublishedExtension.js";
 import {
   generateMintSignature,
   mintWithPermissions,
   mintWithSignature,
 } from "./mintableERC20.js";
 
-describe("MintableERC20", () => {
+describe("ModularTokenERC20", () => {
   let contract: ThirdwebContract;
   beforeAll(async () => {
     const address = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
-      type: "ERC20CoreInitializable", // FIXME
+      type: "ModularTokenERC20",
       params: {
-        name: "TestCoreERC20",
+        name: "TestTokenERC20",
         symbol: "TT",
       },
-      publisher: "0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264", // FIXME
     });
     contract = getContract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       address,
     });
-    // add mintERC20 extension
-    const transaction = installPublishedExtension({
-      account: TEST_ACCOUNT_A,
-      chain: ANVIL_CHAIN,
-      client: TEST_CLIENT,
-      contract,
-      extensionName: "MintableERC20",
-      publisherAddress: "0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264", // FIXME
-    });
-    await sendAndConfirmTransaction({ transaction, account: TEST_ACCOUNT_A });
   }, 120000);
 
   it("should have erc20 extension", async () => {
     const extensions = await getInstalledExtensions({ contract });
-    expect(extensions.length).toBe(1);
+    expect(extensions.length).toBe(2);
   });
 
   it("should not mint without signature", async () => {
@@ -68,12 +56,7 @@ describe("MintableERC20", () => {
         }),
         account: TEST_ACCOUNT_A,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      [TransactionError: MintableRequestUnauthorized
-
-      contract: 0x25abe7056BcFC14d8D1901e554b8730d7772dEFc
-      chainId: 31337]
-    `);
+    ).rejects.toThrowError(/MintableRequestUnauthorized/);
   });
 
   it("should mint tokens with permissions", async () => {

@@ -131,7 +131,13 @@ export function useNFTDrawerTabs({
           disabledText: erc1155
             ? "You don't own any copy of this NFT"
             : "You don't own this NFT",
-          children: <TransferTab contract={oldContract} tokenId={tokenId} />,
+          children: (
+            <TransferTab
+              contractAddress={oldContract.getAddress()}
+              chainId={oldContract.chainId}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }
@@ -141,17 +147,29 @@ export function useNFTDrawerTabs({
           title: "Airdrop",
           isDisabled: !isOwner,
           disabledText: "You don't own any copy of this NFT",
-          children: <AirdropTab contract={erc1155} tokenId={tokenId} />,
+          children: (
+            <AirdropTab
+              contractAddress={erc1155.getAddress()}
+              chainId={erc1155.chainId}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }
-    if (isBurnable) {
+    if (isBurnable && oldContract) {
       tabs = tabs.concat([
         {
           title: "Burn",
           isDisabled: !isOwner,
           disabledText: "You don't own this NFT",
-          children: <BurnTab contract={oldContract} tokenId={tokenId} />,
+          children: (
+            <BurnTab
+              contractAddress={oldContract?.getAddress()}
+              chainId={oldContract?.chainId}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }
@@ -161,7 +179,13 @@ export function useNFTDrawerTabs({
           title: "Mint",
           isDisabled: false,
           disabledText: "You don't have minter permissions",
-          children: <MintSupplyTab contract={erc1155} tokenId={tokenId} />,
+          children: (
+            <MintSupplyTab
+              contractAddress={erc1155.getAddress()}
+              chainId={erc1155.chainId}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }

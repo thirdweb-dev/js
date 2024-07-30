@@ -6,17 +6,29 @@ import {
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getCallsStatus } from "../../../../wallets/eip5792/get-calls-status.js";
 import type { GetCallsStatusResponse } from "../../../../wallets/eip5792/types.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { useActiveWallet } from "./useActiveWallet.js";
 
-export function useCallsStatusCore(
-  options: {
-    bundleId: string;
-    client: ThirdwebClient;
-    queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
-  },
-  wallet?: Wallet,
-): UseQueryResult<GetCallsStatusResponse> {
+/**
+ * A hook to get a call bundle's current status according to [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792).
+ *
+ * @note This function is dependent on the wallet's support for EIP-5792 and could throw an error if it's not supported.
+ *
+ * @returns a React Query object.
+ * @beta
+ * @example
+ * ```tsx
+ * import { useCallsStatus } from "thirdweb/react";
+ * const { data: status, isLoading } = useCallsStatus({ bundleId, client });
+ * ```
+ * @extension EIP5792
+ */
+export function useCallsStatus(options: {
+  bundleId: string;
+  client: ThirdwebClient;
+  queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
+}): UseQueryResult<GetCallsStatusResponse> {
   const { client, bundleId } = options;
+  const wallet = useActiveWallet();
 
   return useQuery({
     queryKey: [

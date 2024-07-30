@@ -5,7 +5,7 @@ import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem
 import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
-import { useActiveWallet } from "../../../hooks/wallets/useActiveWallet.js";
+import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";

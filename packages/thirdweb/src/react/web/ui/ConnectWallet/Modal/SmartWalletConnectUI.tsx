@@ -12,8 +12,8 @@ import {
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
+import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
-import { connectionManager } from "../../../index.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import { getSmartWalletLocale } from "../../../wallets/smartWallet/locale/getSmartWalletLocale.js";
 import type { SmartWalletLocale } from "../../../wallets/smartWallet/locale/types.js";
@@ -135,6 +135,7 @@ function SmartWalletConnecting(props: {
     useState<"connecting" | "connect-error" | "idle">("idle");
   const [personalWalletChainSwitchStatus, setPersonalWalletChainSwitchStatus] =
     useState<"switching" | "switch-error" | "idle">("idle");
+  const connectionManager = useConnectionManager();
 
   const handleConnect = useCallback(async () => {
     if (!personalWallet) {
@@ -157,7 +158,13 @@ function SmartWalletConnecting(props: {
       console.error(e);
       setSmartWalletConnectionStatus("connect-error");
     }
-  }, [done, personalWallet, props.client, props.accountAbstraction]);
+  }, [
+    done,
+    personalWallet,
+    props.client,
+    props.accountAbstraction,
+    connectionManager,
+  ]);
 
   const connectStarted = useRef(false);
   useEffect(() => {

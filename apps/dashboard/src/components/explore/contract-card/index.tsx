@@ -1,11 +1,7 @@
-import {
-  Flex,
-  Icon,
-  LinkBox,
-  LinkOverlay,
-  Skeleton,
-  SkeletonText,
-} from "@chakra-ui/react";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { cn } from "@/lib/utils";
 import {
   type QueryClient,
   useQuery,
@@ -14,11 +10,11 @@ import {
 import { ensQuery } from "components/contract-components/hooks";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
+import { ShieldCheckIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
-import { BsShieldCheck } from "react-icons/bs";
 import { polygon } from "thirdweb/chains";
 import invariant from "tiny-invariant";
-import { Badge, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
@@ -29,6 +25,7 @@ interface ContractCardProps {
     source: string;
     itemIndex: `${number}`;
   };
+  isBeta?: boolean;
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({
@@ -36,6 +33,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   contractId,
   version = "latest",
   tracking,
+  isBeta,
 }) => {
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
@@ -46,9 +44,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     return newContracts.includes(`${publisher}/${contractId}`);
   }, [publisher, contractId]);
 
-  const showSkeleton =
-    publishedContractResult.isLoading ||
-    publishedContractResult.isPlaceholderData;
+  const showSkeleton = publishedContractResult.isLoading;
 
   const href = useMemo(() => {
     let h: string;
@@ -61,138 +57,107 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     return replaceDeployerAddress(h);
   }, [contractId, publisher, version]);
 
-  return !publishedContractResult.isLoading &&
-    !publishedContractResult.data?.id ? null : (
-    <LinkBox as="article">
-      <Card
-        h="full"
-        p={4}
-        role="group"
-        as={Flex}
-        flexDirection="column"
-        borderColor="borderColor"
-        transition="150ms border-color ease-in-out"
-        _hover={{
-          _dark: {
-            borderColor: "blue.400",
-          },
-          _light: {
-            borderColor: "blue.600",
-          },
+  return (
+    <article
+      className={cn(
+        "min-h-[200px] p-4 border border-border relative rounded-lg flex flex-col",
+        !showSkeleton ? "bg-secondary hover:bg-muted" : "pointer-events-none",
+      )}
+    >
+      <TrackedLinkTW
+        className="absolute inset-0 z-0 cursor-pointer"
+        href={href}
+        category="contract_card"
+        label={contractId}
+        trackingProps={{
+          publisher,
+          contractId,
+          version,
+          ...(tracking || {}),
         }}
-        overflow="hidden"
-        bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-        gap={3}
-        flexDir="column"
-      >
-        <Flex justifyContent="space-between">
-          <Flex
-            align="center"
-            gap={1}
-            color="rgba(255,255,255,.7)"
-            _light={{ color: "rgba(0,0,0,.6)" }}
-          >
-            {(showSkeleton || publishedContractResult.data?.audit) && (
-              <Flex
-                isExternal
-                as={Link}
-                align="center"
-                gap={1}
+      />
+
+      {/* Audited + Version  + Tags */}
+      <div className="flex justify-between">
+        <div className="flex items-center gap-1.5">
+          {/* Audited */}
+          {publishedContractResult.data?.audit && (
+            <>
+              <Link
+                target="_blank"
+                className="text-success-text flex items-center gap-1 text-sm z-1 hover:underline font-medium relative"
                 href={replaceIpfsUrl(publishedContractResult.data?.audit || "")}
-                _dark={{
-                  color: "green.300",
-                }}
-                _light={{
-                  color: "green.600",
-                }}
               >
-                <Icon as={BsShieldCheck} />
-                <Text color="inherit" size="label.sm" fontWeight={500}>
-                  Audited
-                </Text>
-              </Flex>
-            )}
-            {showSkeleton ||
-              (publishedContractResult.data?.version &&
-                publishedContractResult.data?.audit && (
-                  <Text size="label.sm">·</Text>
-                ))}
-            {(showSkeleton || publishedContractResult.data?.version) && (
-              <Flex align="center" gap={0.5}>
-                <Skeleton isLoaded={!showSkeleton}>
-                  <Text color="inherit" size="label.sm" fontWeight={500}>
-                    v{publishedContractResult.data?.version}
-                  </Text>
-                </Skeleton>
-              </Flex>
-            )}
-          </Flex>
-          {isNewContract && (
-            <Flex>
-              <Badge
-                alignSelf="center"
-                borderRadius="xl"
-                px={2}
-                py={1.5}
-                textTransform="capitalize"
-              >
-                New
-              </Badge>
-            </Flex>
+                <ShieldCheckIcon className="size-4" />
+                Audited
+              </Link>
+              <div className="size-1 bg-secondary-foreground/40 rounded-full" />
+            </>
           )}
-        </Flex>
 
-        <Flex direction="column" gap={4}>
-          <Skeleton
-            noOfLines={1}
-            isLoaded={!showSkeleton}
-            w={showSkeleton ? "50%" : "auto"}
-          >
-            <LinkOverlay
-              as={TrackedLink}
-              category="contract_card"
-              label={contractId}
-              href={href}
-              trackingProps={{
-                publisher,
-                contractId,
-                version,
-                ...(tracking || {}),
-              }}
-              _hover={{ textDecor: "none" }}
-            >
-              <Heading as="h3" noOfLines={1} size="label.lg">
-                {publishedContractResult.data?.displayName ||
-                  publishedContractResult.data?.name}
-              </Heading>
-            </LinkOverlay>
-          </Skeleton>
-
-          <SkeletonText
-            isLoaded={!showSkeleton}
-            spacing={3}
-            noOfLines={2}
-            my={showSkeleton ? 2 : 0}
-          >
-            <Text size="body.md" noOfLines={2}>
-              {publishedContractResult.data?.description}
-            </Text>
-          </SkeletonText>
-        </Flex>
-        <Flex
-          pt={3}
-          mt="auto"
-          justify="space-between"
-          align="center"
-          as="footer"
-        >
-          <ContractPublisher
-            addressOrEns={publishedContractResult.data?.publisher}
-            showSkeleton={showSkeleton}
+          {/* Version */}
+          <SkeletonContainer
+            skeletonData={"0.0.0"}
+            loadedData={publishedContractResult.data?.version}
+            render={(v) => {
+              return (
+                <p className="text-secondary-foreground text-sm font-medium">
+                  v{v}
+                </p>
+              );
+            }}
           />
-        </Flex>
-      </Card>
-    </LinkBox>
+        </div>
+
+        {/* Tags */}
+        {isBeta ? (
+          <Badge className="border-[#a21caf] dark:border-[#86198f] text-white  dark:bg-[linear-gradient(154deg,#4a044e,#2e1065)] bg-[linear-gradient(154deg,#d946ef,#9333ea)] py-[3px] px-[8px]">
+            Beta
+          </Badge>
+        ) : isNewContract ? (
+          <Badge variant="outline">New</Badge>
+        ) : null}
+      </div>
+
+      <div className="h-3.5" />
+
+      <SkeletonContainer
+        className="inline-block"
+        skeletonData="Edition Drop"
+        loadedData={
+          publishedContractResult.data?.displayName ||
+          publishedContractResult.data?.name
+        }
+        render={(v) => {
+          return (
+            <h3 className="text-lg font-semibold tracking-tight">
+              {v.replace("[Beta]", "")}
+            </h3>
+          );
+        }}
+      />
+
+      <div className="h-1" />
+
+      {publishedContractResult.data?.description ? (
+        <p className="text-sm text-secondary-foreground leading-5">
+          {publishedContractResult.data?.description}
+        </p>
+      ) : (
+        <div>
+          <Skeleton className="h-4 w-[80%]" />
+          <div className="h-1" />
+          <Skeleton className="h-4 w-[60%]" />
+        </div>
+      )}
+
+      <div className="mt-auto pt-3 relative z-1 flex">
+        <ContractPublisher
+          addressOrEns={publishedContractResult.data?.publisher}
+          showSkeleton={showSkeleton}
+        />
+      </div>
+    </article>
   );
 };
 
@@ -253,24 +218,8 @@ export function publishedContractQuery(
     queryFn: () =>
       publishedContractQueryFn(publisher, contractId, version, queryClient),
     enabled: !!publisher || !!contractId,
-    placeholderData: {
-      publishedContractId,
-      version: "0.0.0",
-      name: "Loading...",
-      description: "Loading...",
-      publisher: "",
-      audit: "",
-      logo: "",
-      extensions: [],
-      id: "",
-      metadataUri: "",
-      timestamp: "",
-      bytecodeUri: "",
-    } as PublishedContract,
   };
 }
-
-type PublishedContract = Awaited<ReturnType<typeof publishedContractQueryFn>>;
 
 function usePublishedContract(publishedContractId: PublishedContractId) {
   const queryClient = useQueryClient();

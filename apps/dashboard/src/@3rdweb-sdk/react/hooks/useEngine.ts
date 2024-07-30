@@ -3,6 +3,7 @@ import { THIRDWEB_API_HOST } from "constants/urls";
 import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
+import type { ResultItem } from "../../../components/engine/system-metrics/components/StatusCodes";
 import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";
@@ -121,7 +122,10 @@ export interface EngineSystemHealth {
   features?: string[];
 }
 
-export function useEngineSystemHealth(instanceUrl: string) {
+export function useEngineSystemHealth(
+  instanceUrl: string,
+  pollInterval: number | false = false,
+) {
   return useQuery(
     engineKeys.health(instanceUrl),
     async () => {
@@ -134,7 +138,10 @@ export function useEngineSystemHealth(instanceUrl: string) {
       const json = (await res.json()) as EngineSystemHealth;
       return json;
     },
-    { enabled: !!instanceUrl },
+    {
+      enabled: !!instanceUrl,
+      refetchInterval: pollInterval,
+    },
   );
 }
 
@@ -1449,6 +1456,9 @@ export interface EngineResourceMetrics {
   data: {
     cpu: number;
     memory: number;
+    errorRate: ResultItem[];
+    statusCodes: ResultItem[];
+    requestVolume: ResultItem[];
   };
 }
 
@@ -1460,9 +1470,6 @@ export function useEngineResourceMetrics(engineId: string) {
     async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,
-        {
-          method: "GET",
-        },
       );
       if (!res.ok) {
         setEnabled(false);

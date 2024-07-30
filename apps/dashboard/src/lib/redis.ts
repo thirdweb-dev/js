@@ -1,20 +1,34 @@
 import "server-only";
 import Redis from "ioredis";
 
-const REDIS_URL = process.env.REDIS_URL || "";
+// wrapped in a function to avoid calling this during build
+let redis_: Redis;
+function getRedis() {
+  if (redis_) {
+    return redis_;
+  }
+  const REDIS_URL = process.env.REDIS_URL || "";
 
-const _redis = new Redis(REDIS_URL);
+  redis_ = new Redis(REDIS_URL);
+  return redis_;
+}
 
-export const cacheSet = async (
-  key: string,
-  value: string,
-  ttlSeconds: number,
-) => await _redis.setex(key, ttlSeconds, value);
+export async function cacheSet(key: string, value: string, ttlSeconds: number) {
+  return await getRedis().setex(key, ttlSeconds, value);
+}
 
-export const cacheGet = async (key: string) => await _redis.get(key);
+export async function cacheGet(key: string) {
+  return await getRedis().get(key);
+}
 
-export const cacheExists = async (key: string) => await _redis.exists(key);
+export async function cacheExists(key: string) {
+  return await getRedis().exists(key);
+}
 
-export const cacheTtl = async (key: string) => await _redis.ttl(key);
+export async function cacheTtl(key: string) {
+  return await getRedis().ttl(key);
+}
 
-export const cacheDeleteKey = async (key: string) => await _redis.del(key);
+export async function cacheDeleteKey(key: string) {
+  return await getRedis().del(key);
+}

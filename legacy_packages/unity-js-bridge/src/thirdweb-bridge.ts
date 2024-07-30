@@ -121,6 +121,7 @@ interface TWBridge {
   resolveENSFromAddress: (address: string) => Promise<string>;
   resolveAddressFromENS: (ens: string) => Promise<string>;
   copyBuffer: (text: string) => Promise<void>;
+  getNonce: (address: string, blockTag: string) => Promise<string>;
 }
 
 const w = window;
@@ -173,7 +174,7 @@ class ThirdwebBridge implements TWBridge {
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
-      (globalThis as any).X_SDK_VERSION = "4.16.7";
+      (globalThis as any).X_SDK_VERSION = "4.17.0";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
@@ -656,6 +657,15 @@ class ThirdwebBridge implements TWBridge {
           const result = await tx.getGasPrice();
           return JSON.stringify({ result: result }, bigNumberReplacer);
         }
+        if (routeArgs[2].includes("getGasFees")) {
+          const fees = await this.activeSDK.getProvider().getFeeData();
+          const result = {
+            maxFeePerGas: fees.maxFeePerGas ?? fees.gasPrice ?? 0,
+            maxPriorityFeePerGas:
+              fees.maxPriorityFeePerGas ?? fees.gasPrice ?? 0,
+          };
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        }
       }
 
       // call
@@ -980,6 +990,16 @@ class ThirdwebBridge implements TWBridge {
     navigator.clipboard.writeText(text).catch((err) => {
       console.error("Could not copy text: ", err);
     });
+  }
+
+  public async getNonce(address: string, blockTag: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK
+      .getProvider()
+      .getTransactionCount(address, blockTag);
+    return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
   public openPopupWindow() {

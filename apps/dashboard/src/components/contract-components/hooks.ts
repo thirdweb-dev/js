@@ -34,7 +34,6 @@ import {
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
-import { utils } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -52,8 +51,10 @@ import {
   useActiveWallet,
   useActiveWalletChain,
 } from "thirdweb/react";
+import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import type { z } from "zod";
+import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import {
   getStepAddToRegistry,
   getStepDeploy,
@@ -61,7 +62,6 @@ import {
   useDeployContextModal,
 } from "./contract-deploy-form/deploy-context-modal";
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
-import type { Recipient } from "./contract-deploy-form/split-fieldset";
 import type { ContractId } from "./types";
 import { addContractToMultiChainRegistry } from "./utils";
 
@@ -554,21 +554,10 @@ export function useEditProfileMutation() {
   );
 }
 
-interface ContractDeployMutationParams {
-  recipients?: Recipient[];
-  deployParams: Record<string, string>;
-  contractMetadata?: {
-    name: string;
-    description: string;
-    image: string;
-    symbol: string;
-  };
-  address?: string;
-  addToDashboard?: boolean;
-  deployDeterministic?: boolean;
-  saltForCreate2?: string;
-  signerAsSalt?: boolean;
-}
+type ContractDeployMutationParams = CustomContractDeploymentFormData & {
+  address: string | undefined;
+  addToDashboard: boolean;
+};
 
 export function useCustomContractDeployMutation(
   ipfsHash: string,
@@ -602,7 +591,9 @@ export function useCustomContractDeployMutation(
   const walletId = useActiveWallet()?.id;
 
   return useMutation(
-    async (data: ContractDeployMutationParams) => {
+    async (_data: ContractDeployMutationParams) => {
+      const data = { ..._data };
+
       invariant(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
@@ -1038,7 +1029,7 @@ export function ensQuery(addressOrEnsName?: string) {
     addressOrEnsName = "deployer.thirdweb.eth";
   }
   const placeholderData = {
-    address: utils.isAddress(addressOrEnsName || "")
+    address: isAddress(addressOrEnsName || "")
       ? addressOrEnsName || null
       : null,
     ensName: null,
@@ -1050,13 +1041,13 @@ export function ensQuery(addressOrEnsName?: string) {
         return placeholderData;
       }
       // if it is neither an address or an ens name then return the placeholder data only
-      if (!utils.isAddress(addressOrEnsName) && !isEnsName(addressOrEnsName)) {
+      if (!isAddress(addressOrEnsName) && !isEnsName(addressOrEnsName)) {
         throw new Error("Invalid address or ENS name.");
       }
 
       const { address, ensName } = await resolveEns(addressOrEnsName).catch(
         () => ({
-          address: utils.isAddress(addressOrEnsName || "")
+          address: isAddress(addressOrEnsName || "")
             ? addressOrEnsName || null
             : null,
           ensName: null,
@@ -1074,7 +1065,7 @@ export function ensQuery(addressOrEnsName?: string) {
     },
     enabled:
       !!addressOrEnsName &&
-      (utils.isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
+      (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
     // 24h
     cacheTime: 60 * 60 * 24 * 1000,
     // 1h

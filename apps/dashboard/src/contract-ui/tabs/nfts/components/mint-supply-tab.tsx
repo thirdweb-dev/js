@@ -1,19 +1,25 @@
+import { thirdwebClient } from "@/constants/client";
 import { FormControl, Input, Stack } from "@chakra-ui/react";
-import { useMintNFTSupply } from "@thirdweb-dev/react";
-import type { Erc1155 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { useActiveAccount } from "thirdweb/react";
+import { defineChain, getContract } from "thirdweb";
+import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface MintSupplyTabProps {
-  contract: Erc1155;
+  contractAddress: string;
+  chainId: number;
   tokenId: string;
 }
 
-const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
+const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
+  contractAddress,
+  chainId,
+  tokenId,
+}) => {
   const trackEvent = useTrack();
   const {
     register,
@@ -23,10 +29,13 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
   } = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1" },
   });
-
+  const contract = getContract({
+    address: contractAddress,
+    chain: defineChain(chainId),
+    client: thirdwebClient,
+  });
   const address = useActiveAccount()?.address;
-  const mintSupply = useMintNFTSupply(contract);
-
+  const { mutate, isPending } = useSendAndConfirmTransaction();
   const { onSuccess, onError } = useTxNotifications(
     "Mint successful",
     "Error minting additional supply",
@@ -43,33 +52,32 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
               action: "mint-supply",
               label: "attempt",
             });
-            mintSupply.mutate(
-              {
-                tokenId,
-                additionalSupply: data.amount,
-                to: address,
+            const transaction = mintAdditionalSupplyTo({
+              contract,
+              to: address,
+              tokenId: BigInt(tokenId),
+              supply: BigInt(data.amount),
+            });
+            mutate(transaction, {
+              onSuccess: () => {
+                trackEvent({
+                  category: "nft",
+                  action: "mint-supply",
+                  label: "success",
+                });
+                onSuccess();
+                reset();
               },
-              {
-                onSuccess: () => {
-                  trackEvent({
-                    category: "nft",
-                    action: "mint-supply",
-                    label: "success",
-                  });
-                  onSuccess();
-                  reset();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "nft",
-                    action: "mint-supply",
-                    label: "error",
-                    error,
-                  });
-                  onError(error);
-                },
+              onError: (error) => {
+                trackEvent({
+                  category: "nft",
+                  action: "mint-supply",
+                  label: "error",
+                  error,
+                });
+                onError(error);
               },
-            );
+            });
           }
         })}
       >
@@ -85,7 +93,7 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ contract, tokenId }) => {
 
           <TransactionButton
             transactionCount={1}
-            isLoading={mintSupply.isLoading}
+            isLoading={isPending}
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"

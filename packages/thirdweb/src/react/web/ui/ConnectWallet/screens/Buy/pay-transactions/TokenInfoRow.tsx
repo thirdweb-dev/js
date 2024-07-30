@@ -28,7 +28,7 @@ export function TokenInfoRow(props: {
         justifyContent: "space-between",
       }}
     >
-      <Text>{props.label}</Text>
+      <Text size="sm">{props.label}</Text>
       <Container
         flex="column"
         gap="xxs"

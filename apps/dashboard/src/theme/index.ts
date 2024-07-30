@@ -371,16 +371,10 @@ const chakraTheme: Theme = extendTheme({
 
       // other
       badgeBg: { default: "blackAlpha.50", _dark: "whiteAlpha.50" },
-
-      // backgroundBody: "accent.100",
-      // backgroundHighlight: { default: "white", _dark: "accent.200" },
-      // backgroundCardHighlight: { default: "white", _dark: "accent.100" },
-      // backgroundNavbar: { default: "white", _dark: "accent.200" },
-      // wordmark: { default: "#262A36", _dark: "whiteAlpha.900" },
-      // heading: { default: "black", _dark: "white" },
-      // paragraph: "accent.800",
-
-      // borderColor: { default: "accent.200", _dark: "accent.300" },
+      backgroundCardHighlight: {
+        default: "hsl(var(--secondary))",
+        _dark: "hsl(var(--secondary))",
+      },
       bgBlack: { default: "black", _dark: "white" },
       bgWhite: { default: "#fff", _dark: "black" },
       backgroundBody: {

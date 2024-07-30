@@ -44,6 +44,7 @@ export type TransactionButtonProps = {
   onError?: (error: Error) => void;
   /**
    * Callback to be called when the button is clicked
+   * This function is provoked before the transaction is sent
    */
   onClick?: () => void;
   /**

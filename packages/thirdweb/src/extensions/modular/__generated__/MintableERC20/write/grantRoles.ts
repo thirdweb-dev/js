@@ -13,19 +13,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "grantRoles" function.
  */
 export type GrantRolesParams = WithOverrides<{
-  user: AbiParameterToPrimitiveType<{ type: "address"; name: "user" }>;
-  roles: AbiParameterToPrimitiveType<{ type: "uint256"; name: "roles" }>;
+  user: AbiParameterToPrimitiveType<{
+    name: "user";
+    type: "address";
+    internalType: "address";
+  }>;
+  roles: AbiParameterToPrimitiveType<{
+    name: "roles";
+    type: "uint256";
+    internalType: "uint256";
+  }>;
 }>;
 
 export const FN_SELECTOR = "0x1c10893f" as const;
 const FN_INPUTS = [
   {
-    type: "address",
     name: "user",
+    type: "address",
+    internalType: "address",
   },
   {
-    type: "uint256",
     name: "roles",
+    type: "uint256",
+    internalType: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

@@ -107,7 +107,10 @@ export async function getDefaultGasOverrides(
   // if chain is in the force gas price list, always use gas price
   if (!FORCE_GAS_PRICE_CHAIN_IDS.includes(chain.id)) {
     const feeData = await getDynamicFeeData(client, chain);
-    if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+    if (
+      feeData.maxFeePerGas !== null &&
+      feeData.maxPriorityFeePerGas !== null
+    ) {
       return {
         maxFeePerGas: feeData.maxFeePerGas,
         maxPriorityFeePerGas: feeData.maxPriorityFeePerGas,
@@ -153,12 +156,12 @@ async function getDynamicFeeData(
   if (chainId === 80002 || chainId === 137) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas_ = await getPolygonGasPriorityFee(chainId);
-  } else if (maxPriorityFeePerGas) {
+  } else if (maxPriorityFeePerGas !== null) {
     // prioritize fee from eth_maxPriorityFeePerGas
     maxPriorityFeePerGas_ = maxPriorityFeePerGas;
   }
 
-  if (!maxPriorityFeePerGas_) {
+  if (maxPriorityFeePerGas_ == null) {
     // chain does not support eip-1559, return null for both
     return { maxFeePerGas: null, maxPriorityFeePerGas: null };
   }

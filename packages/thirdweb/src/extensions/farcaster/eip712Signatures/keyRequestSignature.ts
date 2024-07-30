@@ -48,6 +48,9 @@ export const SIGNED_KEY_REQUEST_METADATA_ABI = [
   },
 ] as const;
 
+/**
+ * @extension FARCASTER
+ */
 export type SignedKeyRequestMessage = {
   /** FID of user or app requesting key */
   requestFid: bigint;
@@ -57,6 +60,9 @@ export type SignedKeyRequestMessage = {
   deadline: bigint;
 };
 
+/**
+ * @extension FARCASTER
+ */
 export type SignKeyRequestOptions = {
   account: Account;
   message: SignedKeyRequestMessage;
@@ -110,6 +116,9 @@ export async function signKeyRequest(
   return options.account.signTypedData(data);
 }
 
+/**
+ * @extension FARCASTER
+ */
 export type SignedKeyRequestMetadataOptions = Prettify<
   {
     message: SignedKeyRequestMessage;

@@ -4,6 +4,9 @@ import { encodeCollectAuctionPayout } from "../../__generated__/IEnglishAuctions
 import { encodeCollectAuctionTokens } from "../../__generated__/IEnglishAuctions/write/collectAuctionTokens.js";
 import { getWinningBid } from "../read/getWinningBid.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type ExecuteSaleParams = {
   auctionId: bigint;
 };

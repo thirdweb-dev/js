@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { isCurrencyApprovedForListing } from "../../__generated__/IDirectListings/read/isCurrencyApprovedForListing.js";
 import { getListing } from "./getListing.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type CurrencyPriceForListingParams = {
   listingId: bigint;
   currency: Address;

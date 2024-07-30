@@ -1,4 +1,3 @@
-import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
 import { useState } from "react";
 import { getContract } from "thirdweb";
@@ -12,19 +11,21 @@ import { thirdwebClient } from "../../../../lib/thirdweb-client";
 import { defineDashboardChain } from "../../../../lib/v5-adapter";
 
 interface EnglishAuctionsTableProps {
-  contract: MarketplaceV3;
+  contractAddress: string;
+  chainId: number;
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
-  contract: v4Contract,
+  contractAddress,
+  chainId,
 }) => {
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
   const contract = getContract({
     client: thirdwebClient,
-    address: v4Contract.getAddress(),
-    chain: defineDashboardChain(v4Contract.chainId),
+    address: contractAddress,
+    chain: defineDashboardChain(chainId),
   });
   const getAllQueryResult = useReadContract(getAllAuctions, {
     contract,
@@ -40,7 +41,8 @@ export const EnglishAuctionsTable: React.FC<EnglishAuctionsTableProps> = ({
 
   return (
     <MarketplaceTable
-      contract={v4Contract}
+      contractAddress={contractAddress}
+      chainId={chainId}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
       totalCountQuery={totalCountQuery}

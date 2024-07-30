@@ -6,10 +6,10 @@ import { cacheChains } from "../../../../chains/utils.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
+import { useActiveWalletConnectionStatus } from "../../../core/hooks/wallets/useActiveWalletConnectionStatus.js";
 import { defaultTokens } from "../../../core/utils/defaultTokens.js";
-import { useActiveAccount } from "../../hooks/wallets/useActiveAccount.js";
-import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
-import { useActiveWalletConnectionStatus } from "../../hooks/wallets/useActiveWalletConnectionStatus.js";
 import {
   WalletUIStatesProvider,
   useSetIsWalletModalOpen,
@@ -33,18 +33,212 @@ import { SignatureScreen } from "./screens/SignatureScreen.js";
 const TW_CONNECT_WALLET = "tw-connect-wallet";
 
 /**
- * A component that allows the user to connect their wallet.
- * It renders a button which when clicked opens a modal to allow users to connect to wallets specified in `wallets` prop.
+ * A fully featured wallet connection component that allows to:
+ *
+ * - Connect to 350+ external wallets
+ * - Connect with email, phone, passkey or socials
+ * - Convert any wallet to a ERC4337 smart wallet for gasless transactions
+ * - Sign in with ethereum (Auth)
+ *
+ * Once connected, the component allows to:
+ *
+ * - Reolve ENS names and avatars
+ * - Manage multipple connected wallets
+ * - Send and receive native tokens and ERC20 tokens
+ * - View ERC20 tokens and NFTs
+ * - Onramp, bridge and swap tokens
+ * - Switch chains
+ * - Connect to another app with WalletConnect
+ *
  * @example
+ *
+ * ## Default setup
+ *
  * ```tsx
+ * import { createThirdwebClient } from "thirdweb";
+ * import { ConnectButton } from "thirdweb/react";
+ *
+ * const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
+ *
  * <ConnectButton
  *    client={client}
  * />
  * ```
+ *
+ * [View all available config options](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps)
+ *
+ * ## Customization options
+ *
+ * ### Customizing wallet options
+ *
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ *    wallets={[
+ *      createWallet("io.metamask"),
+ *      createWallet("com.coinbase.wallet"),
+ *      createWallet("me.rainbow"),
+ *    ]}
+ * />
+ * ```
+ *
+ * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+ *
+ * ### Customizing the default chain to connect to
+ *
+ * ```tsx
+ * import { base } from "thirdweb/chains";
+ *
+ * <ConnectButton
+ *   client={client}
+ *   chain={base}
+ * />
+ * ```
+ *
+ * ### Enabling sign in with ethereum (Auth)
+ *
+ * ```tsx
+ * <ConnectButton
+ * client={client}
+ * auth={{
+ *   isLoggedIn: async (address) => {
+ *     console.log("checking if logged in!", { address });
+ *     return await isLoggedIn();
+ *   },
+ *   doLogin: async (params) => {
+ *     console.log("logging in!");
+ *     await login(params);
+ *   },
+ *   getLoginPayload: async ({ address }) =>
+ *     generatePayload({ address }),
+ *   doLogout: async () => {
+ *     console.log("logging out!");
+ *     await logout();
+ *   },
+ * }}
+ * />;
+ * ```
+ *
+ * ### Customizing the theme
+ *
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ *    theme="light"
+ * />
+ * ```
+ *
+ * For more granular control, you can also pass a custom theme object:
+ *
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ *    theme={lightTheme({
+ *      colors: {
+ *        modalBg: "red",
+ *      },
+ *    })}
+ * />
+ * ```
+ *
+ * [View all available themes properties](https://portal.thirdweb.com/references/typescript/v5/Theme)
+ *
+ * ### Changing the display language
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *    client={client}
+ *    locale="ja_JP"
+ * />
+ * ```
+ *
+ * [View all available locales](https://portal.thirdweb.com/references/typescript/v5/LocaleId)
+ *
+ * ### Customizing the connect button UI
+ *
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ *    connectButton={{
+ *      label: "Sign in to MyApp",
+ *    }}
+ * />
+ * ```
+ *
+ * ### Customizing the modal UI
+ *
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ *    connectModal={{
+ *      title: "Sign in to MyApp",
+ *      titleIcon: https://example.com/logo.png,
+ *      size: "compact",
+ *    }}
+ * />
+ * ```
+ *
+ * ### Customizing details button UI (after connecting)
+ *
+ * ```tsx
+ * <ConnectButton
+ *    client={client}
+ *    detailsButton={{
+ *      displayBalanceToken: {
+ *        [sepolia.id]: "0x...", // token address to display balance for
+ *        [ethereum.id]: "0x...", // token address to display balance for
+ *      },
+ *    }}
+ * />
+ * ```
+ *
+ * [View all available auth helper functions](https://portal.thirdweb.com/references/typescript/v5/createAuth)
+ *
+ * ### Customizing the Auth sign in button (after connecting, but before authenticating)
+ *
+ * ```tsx
+ * <ConnectButton
+ *   client={client}
+ *   auth={{ ... }}
+ *   signInButton: {
+ *     label: "Authenticate with MyApp",
+ *   },
+ * }}
+ * />;
+ * ```
+ *
+ * ### Customizing supported Tokens and NFTs
+ *
+ * These tokens and NFTs will be shown in the modal when the user clicks "View Assets", as well as the send token screen.
+ *
+ * ```tsx
+ * <ConnectButton
+ *   client={client}
+ *   supportedTokens={{
+ *     [ethereum.id]: [
+ *       {
+ *         address: "0x...",
+ *         name: "MyToken",
+ *         symbol: "MT",
+ *         icon: "https://example.com/icon.png",
+ *       },
+ *     ],
+ *   }}
+ *   supportedNFTs={{
+ *     [ethereum.id]: [
+ *       "0x...", // nft contract address
+ *     ],
+ *   }}
+ * />
+ * ```
+ *
  * @param props
  * Props for the `ConnectButton` component
  *
  * Refer to [ConnectButtonProps](https://portal.thirdweb.com/references/typescript/v5/ConnectButtonProps) to see the available props.
+ *
+ * @returns A JSX element that renders the <ConnectButton> component.
+ *
  * @component
  */
 export function ConnectButton(props: ConnectButtonProps) {

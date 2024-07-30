@@ -4,6 +4,7 @@ import { getPayBuyWithFiatQuoteEndpoint } from "../utils/definitions.js";
 
 /**
  * Parameters for [`getBuyWithFiatQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithFiatQuote) function
+ * @buyCrypto
  */
 export type GetBuyWithFiatQuoteParams = {
   /**
@@ -84,6 +85,8 @@ export type GetBuyWithFiatQuoteParams = {
  * - The estimated time for the transaction to complete.
  * - The on-ramp and destination token information.
  * - Processing fees
+ *
+ * @buyCrypto
  */
 export type BuyWithFiatQuote = {
   /**

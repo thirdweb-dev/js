@@ -21,6 +21,11 @@ export {
   type SetContractMetadataParams,
 } from "../../extensions/common/write/setContractMetadata.js";
 
+export {
+  multicall,
+  type MulticallParams,
+} from "../../extensions/common/__generated__/IMulticall/write/multicall.js";
+
 // events
 
 export {

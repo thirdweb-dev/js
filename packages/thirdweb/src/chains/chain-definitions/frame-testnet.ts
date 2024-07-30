@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const frameTestnet = /*@__PURE__*/ defineChain({
   id: 68840142,
   name: "Frame Testnet",

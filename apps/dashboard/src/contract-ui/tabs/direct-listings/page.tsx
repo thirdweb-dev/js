@@ -36,7 +36,10 @@ export const ContractDirectListingsPage: React.FC<
         </Flex>
       </Flex>
 
-      <DirectListingsTable contract={contractQuery.contract} />
+      <DirectListingsTable
+        contractAddress={contractQuery.contract.getAddress()}
+        chainId={contractQuery.contract.chainId}
+      />
     </Flex>
   );
 };

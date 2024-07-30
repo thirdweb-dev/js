@@ -39,7 +39,7 @@ export type GetWalletBalanceResult = {
  * @example
  * ```ts
  * import { getWalletBalance } from "thirdweb/wallets";
- * const balance = await getWalletBalance({ account, client, chain, tokenAddress });
+ * const balance = await getWalletBalance({ address, client, chain, tokenAddress });
  * ```
  * @walletUtils
  */

@@ -7,6 +7,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   type AuthOption,
@@ -37,7 +38,7 @@ import { InputSelectionUI } from "../in-app/InputSelectionUI.js";
 import { validateEmail } from "../in-app/validateEmail.js";
 import { LoadingScreen } from "./LoadingScreen.js";
 import type { InAppWalletLocale } from "./locale/types.js";
-import { openOauthSignInWindow } from "./openOauthSignInWindow.js";
+import { openOauthSignInWindow } from "./oauthSignIn.js";
 
 export type ConnectWalletSelectUIState =
   | undefined
@@ -90,6 +91,7 @@ export const ConnectWalletSocialOptions = (
     facebook: locale.signInWithFacebook,
     apple: locale.signInWithApple,
     discord: locale.signInWithDiscord,
+    farcaster: "Farcaster",
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({
@@ -164,6 +166,19 @@ export const ConnectWalletSocialOptions = (
 
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
+    const walletConfig = wallet.getConfig();
+    if (
+      walletConfig &&
+      "auth" in walletConfig &&
+      walletConfig?.auth?.mode === "redirect"
+    ) {
+      return loginWithOauthRedirect({
+        authOption: strategy,
+        client: props.client,
+        ecosystem: ecosystemInfo,
+      });
+    }
+
     try {
       const socialLoginWindow = openOauthSignInWindow({
         authOption: strategy,
@@ -205,10 +220,10 @@ export const ConnectWalletSocialOptions = (
 
       props.select(); // show Connect UI
 
-      // Note: do not call done() here, it will be called InAppWalletSocialLogin component
-      // we simply trigger the connect and save promise here - its resolution is handled in InAppWalletSocialLogin
+      // Note: do not call done() here, it will be called SocialLogin component
+      // we simply trigger the connect and save promise here - its resolution is handled in SocialLogin
     } catch (e) {
-      console.error(`Error sign in with ${strategy}`, e);
+      console.error(`Error signing in with ${strategy}`, e);
     }
   };
 
@@ -219,7 +234,7 @@ export const ConnectWalletSocialOptions = (
     props.select();
   }
 
-  const showOnlyIcons = socialLogins.length > 1;
+  const showOnlyIcons = socialLogins.length > 2;
 
   return (
     <Container
@@ -232,22 +247,33 @@ export const ConnectWalletSocialOptions = (
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
-          flex={showOnlyIcons ? "row" : "column"}
+          flex="row"
           center="x"
-          gap="sm"
+          gap={socialLogins.length > 4 ? "xs" : "sm"}
           style={{
             justifyContent: "space-between",
+            display: "grid",
+            gridTemplateColumns: `repeat(${socialLogins.length}, 1fr)`,
           }}
         >
           {socialLogins.map((loginMethod) => {
-            const imgIconSize = showOnlyIcons ? iconSize.lg : iconSize.md;
+            const imgIconSize = (() => {
+              if (!showOnlyIcons) {
+                return iconSize.md;
+              } else {
+                if (socialLogins.length > 4) {
+                  return iconSize.md;
+                }
+                return iconSize.lg;
+              }
+            })();
+
             return (
               <SocialButton
                 aria-label={`Login with ${loginMethod}`}
                 data-variant={showOnlyIcons ? "icon" : "full"}
                 key={loginMethod}
                 variant={"outline"}
-                fullWidth={!showOnlyIcons}
                 onClick={() => {
                   handleSocialLogin(loginMethod as SocialAuthOption);
                 }}
@@ -259,7 +285,7 @@ export const ConnectWalletSocialOptions = (
                   client={props.client}
                 />
                 {!showOnlyIcons &&
-                  loginMethodsLabel[loginMethod as SocialAuthOption]}
+                  `${socialLogins.length === 1 ? "Continue with " : ""}${loginMethodsLabel[loginMethod as SocialAuthOption]}`}
               </SocialButton>
             );
           })}
@@ -364,11 +390,12 @@ export const ConnectWalletSocialOptions = (
 };
 
 const SocialButton = /* @__PURE__ */ styled(Button)({
+  flexGrow: 1,
   "&[data-variant='full']": {
     display: "flex",
     justifyContent: "flex-start",
     padding: spacing.md,
-    gap: spacing.md,
+    gap: spacing.sm,
     fontSize: fontSize.md,
     fontWeight: 500,
     transition: "background-color 0.2s ease",
@@ -378,6 +405,5 @@ const SocialButton = /* @__PURE__ */ styled(Button)({
   },
   "&[data-variant='icon']": {
     padding: spacing.sm,
-    flexGrow: 1,
   },
 });

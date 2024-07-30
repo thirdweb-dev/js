@@ -1,4 +1,4 @@
-export { ThirdwebProvider } from "../react/core/providers/thirdweb-provider.js";
+export { ThirdwebProvider } from "../react/native/providers/thirdweb-provider.js";
 
 // theme
 export { darkTheme, lightTheme } from "../react/core/design-system/index.js";
@@ -8,21 +8,21 @@ export type {
 } from "../react/core/design-system/index.js";
 
 // wallet hooks
-export { useActiveWallet } from "../react/native/hooks/wallets/useActiveWallet.js";
-export { useActiveWalletChain } from "../react/native/hooks/wallets/useActiveWalletChain.js";
-export { useActiveWalletConnectionStatus } from "../react/native/hooks/wallets/useActiveWalletConnectionStatus.js";
-export { useActiveAccount } from "../react/native/hooks/wallets/useActiveAccount.js";
+export { useActiveWallet } from "../react/core/hooks/wallets/useActiveWallet.js";
+export { useActiveWalletChain } from "../react/core/hooks/wallets/useActiveWalletChain.js";
+export { useActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useActiveWalletConnectionStatus.js";
+export { useActiveAccount } from "../react/core/hooks/wallets/useActiveAccount.js";
 export { useAutoConnect } from "../react/native/hooks/wallets/useAutoConnect.js";
-export { useCapabilities } from "../react/native/hooks/wallets/useCapabilities.js";
-export { useConnect } from "../react/native/hooks/wallets/useConnect.js";
-export { useConnectedWallets } from "../react/native/hooks/wallets/useConnectedWallets.js";
-export { useDisconnect } from "../react/native/hooks/wallets/useDisconnect.js";
-export { useIsAutoConnecting } from "../react/native/hooks/wallets/useIsAutoConnecting.js";
-export { useSetActiveWallet } from "../react/native/hooks/wallets/useSetActiveWallet.js";
-export { useSetActiveWalletConnectionStatus } from "../react/native/hooks/wallets/useSetActiveWalletConnectionStatus.js";
-export { useSendCalls } from "../react/native/hooks/wallets/useSendCalls.js";
-export { useSwitchActiveWalletChain } from "../react/native/hooks/wallets/useSwitchActiveWalletChain.js";
-export { useCallsStatus } from "../react/native/hooks/wallets/useCallsStatus.js";
+export { useCapabilities } from "../react/core/hooks/wallets/useCapabilities.js";
+export { useConnect } from "../react/core/hooks/wallets/useConnect.js";
+export { useConnectedWallets } from "../react/core/hooks/wallets/useConnectedWallets.js";
+export { useDisconnect } from "../react/core/hooks/wallets/useDisconnect.js";
+export { useIsAutoConnecting } from "../react/core/hooks/wallets/useIsAutoConnecting.js";
+export { useSetActiveWallet } from "../react/core/hooks/wallets/useSetActiveWallet.js";
+export { useSetActiveWalletConnectionStatus } from "../react/core/hooks/wallets/useSetActiveWalletConnectionStatus.js";
+export { useSendCalls } from "../react/core/hooks/wallets/useSendCalls.js";
+export { useSwitchActiveWalletChain } from "../react/core/hooks/wallets/useSwitchActiveWalletChain.js";
+export { useCallsStatus } from "../react/core/hooks/wallets/useCallsStatus.js";
 export { useWalletBalance } from "../react/core/hooks/others/useWalletBalance.js";
 
 // contract
@@ -37,10 +37,10 @@ export {
 } from "../react/core/hooks/transaction/useSendTransaction.js";
 export { useSimulateTransaction } from "../react/core/hooks/transaction/useSimulateTransaction.js";
 export { useSendTransaction } from "../react/native/hooks/transaction/useSendTransaction.js";
-export { useSendBatchTransaction } from "../react/native/hooks/transaction/useSendBatchTransaction.js";
-export { useSendAndConfirmTransaction } from "../react/native/hooks/transaction/useSendAndConfirmTransaction.js";
-export { useEstimateGas } from "../react/native/hooks/transaction/useEstimateGas.js";
-export { useEstimateGasCost } from "../react/native/hooks/transaction/useEstimateGasCost.js";
+export { useSendBatchTransaction } from "../react/core/hooks/transaction/useSendBatchTransaction.js";
+export { useSendAndConfirmTransaction } from "../react/core/hooks/transaction/useSendAndConfirmTransaction.js";
+export { useEstimateGas } from "../react/core/hooks/transaction/useEstimateGas.js";
+export { useEstimateGasCost } from "../react/core/hooks/transaction/useEstimateGasCost.js";
 
 // rpc related
 export {
@@ -99,3 +99,5 @@ export { ConnectEmbed } from "../react/native/ui/connect/ConnectModal.js";
 
 // wallet info
 export { useWalletInfo, useWalletImage } from "../react/core/utils/wallet.js";
+
+export { useConnectionManager } from "../react/core/providers/connection-manager.js";

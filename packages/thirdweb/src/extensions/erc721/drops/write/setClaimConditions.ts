@@ -3,6 +3,9 @@ import { getMulticallSetClaimConditionTransactions } from "../../../../utils/ext
 import type { ClaimConditionsInput } from "../../../../utils/extensions/drops/types.js";
 import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
 
+/**
+ * @extension ERC721
+ */
 export type SetClaimConditionsParams = {
   phases: ClaimConditionsInput[];
   resetClaimEligibility?: boolean;

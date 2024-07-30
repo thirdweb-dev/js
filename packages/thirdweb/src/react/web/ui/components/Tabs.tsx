@@ -1,3 +1,4 @@
+import type React from "react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { radius, spacing } from "../../../core/design-system/index.js";
 import { Text } from "../components/text.js";
@@ -13,7 +14,7 @@ export default function Tabs({
 }: {
   selected: string;
   onSelect: (selected: string) => void;
-  options: string[];
+  options: { label: React.ReactNode; value: string }[];
   children: React.ReactNode;
 }) {
   const theme = useCustomTheme();
@@ -30,8 +31,8 @@ export default function Tabs({
           <Button
             variant="accent"
             type="button"
-            key={option}
-            onClick={() => onSelect(option)}
+            key={option.value}
+            onClick={() => onSelect(option.value)}
             style={{
               flex: 1,
               paddingBlock: spacing.sm,
@@ -41,15 +42,19 @@ export default function Tabs({
               position: "relative",
               borderRadius: radius.md,
               backgroundColor:
-                option === selected ? theme.colors.modalBg : "transparent",
+                option.value === selected
+                  ? theme.colors.modalBg
+                  : "transparent",
             }}
           >
             <Text
-              color={option === selected ? "primaryText" : "secondaryText"}
+              color={
+                option.value === selected ? "primaryText" : "secondaryText"
+              }
               style={{ textAlign: "center" }}
               size="sm"
             >
-              {option}
+              {option.label}
             </Text>
           </Button>
         ))}

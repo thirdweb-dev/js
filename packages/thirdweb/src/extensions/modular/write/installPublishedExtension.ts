@@ -5,6 +5,9 @@ import { getOrDeployInfraForPublishedContract } from "../../../contract/deployme
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { installExtension } from "../__generated__/ModularCore/write/installExtension.js";
 
+/**
+ * @extension MODULAR
+ */
 export type InstallPublishedExtensionOptions = {
   client: ThirdwebClient;
   chain: Chain;

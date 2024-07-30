@@ -12,9 +12,9 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import type { ContractType } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { replaceDeployerAddress } from "components/explore/publisher";
+import type { ContractType } from "constants/contracts";
 import type { BuiltinContractDetails } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";

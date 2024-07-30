@@ -17,8 +17,8 @@ import {
   useChainName,
 } from "../../../../core/hooks/others/useChainQuery.js";
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
-import { useActiveAccount } from "../../../hooks/wallets/useActiveAccount.js";
 import { ChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";

@@ -7,11 +7,13 @@ import { getInstalledWalletProviders } from "../../../../wallets/injected/mipdSt
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
+import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import {
   appleIconUri,
   discordIconUri,
   emailIcon,
   facebookIconUri,
+  farcasterIconUri,
   genericWalletIcon,
   googleIconUri,
   passkeyIcon,
@@ -19,7 +21,6 @@ import {
 } from "../../../core/utils/socialIcons.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import { useWalletImage } from "../../../core/utils/wallet.js";
-import { useActiveWallet } from "../../hooks/wallets/useActiveWallet.js";
 import { Img } from "./Img.js";
 
 /**
@@ -76,6 +77,9 @@ export function WalletImage(props: {
             break;
           case "discord":
             image = discordIconUri;
+            break;
+          case "farcaster":
+            image = farcasterIconUri;
             break;
         }
       } else {

@@ -2,6 +2,9 @@ import { ed25519 } from "@noble/curves/ed25519";
 import { fromBytes } from "../../utils/encoding/from-bytes.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 
+/**
+ * @extension FARCASTER
+ */
 export type Ed25519Keypair = {
   publicKey: Hex;
   privateKey: Hex;

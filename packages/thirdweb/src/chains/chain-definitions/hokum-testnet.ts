@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const hokumTestnet = /*@__PURE__*/ defineChain({
   id: 20482050,
   name: "Hokum Testnet",

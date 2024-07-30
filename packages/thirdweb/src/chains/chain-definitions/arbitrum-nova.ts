@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const arbitrumNova = /* @__PURE__ */ defineChain({
   id: 42170,
   name: "Arbitrum Nova",

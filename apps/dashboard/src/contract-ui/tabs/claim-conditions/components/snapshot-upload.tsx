@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   AspectRatio,
   Box,
@@ -24,7 +25,6 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { type ClaimCondition, resolveAddress } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -40,6 +40,7 @@ import {
 } from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
 import { isAddress } from "thirdweb";
+import { resolveAddress } from "thirdweb/extensions/ens";
 import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
@@ -54,7 +55,14 @@ interface SnapshotUploadProps {
   setSnapshot: (snapshot: SnapshotAddressInput[]) => void;
   isOpen: boolean;
   onClose: () => void;
-  value?: ClaimCondition["snapshot"];
+  value?:
+    | {
+        address: string;
+        maxClaimable: string;
+        price?: string | undefined;
+        currencyAddress?: string | undefined;
+      }[]
+    | null;
   dropType: "specific" | "any" | "overrides";
   isV1ClaimCondition: boolean;
   isDisabled: boolean;
@@ -142,7 +150,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           try {
             resolvedAddress = isAddress(address)
               ? address
-              : await resolveAddress(address);
+              : await resolveAddress({ client: thirdwebClient, name: address });
             isValid = !!resolvedAddress;
           } catch {
             isValid = false;

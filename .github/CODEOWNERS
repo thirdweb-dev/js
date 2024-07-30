@@ -1,53 +1,55 @@
 # Order is important; the last matching pattern takes the most precedence.
 
-# Platform team owns everything by default
-
+# default ownership group
 - @jnsdls @joaquim-verges @MananTank @gregfromstl
 
 # legacy packages
 
-legacy_packages/auth/ @jnsdls
-legacy_packages/chains/ @jnsdls
-legacy_packages/cli/ @jnsdls
-legacy_packages/contracts-js/ @jnsdls
-legacy_packages/crypto/ @jnsdls
-legacy_packages/generated-abis/ @jnsdls
-legacy_packages/merkletree/ @jnsdls
-legacy_packages/pay/ @jnsdls
-legacy_packages/payments/ @jnsdls
-legacy_packages/react/ @MananTank @jnsdls
-legacy_packages/react-core/ @MananTank @jnsdls
-legacy_packages/react-native/ @jnsdls
-legacy_packages/react-native-compat/ @jnsdls
+legacy_packages/auth/ @jnsdls @joaquim-verges
+legacy_packages/chains/ @jnsdls @joaquim-verges
+legacy_packages/cli/ @jnsdls @joaquim-verges
+legacy_packages/contracts-js/ @jnsdls @joaquim-verges
+legacy_packages/crypto/ @jnsdls @joaquim-verges
+legacy_packages/generated-abis/ @jnsdls @joaquim-verges
+legacy_packages/merkletree/ @jnsdls @joaquim-verges
+legacy_packages/pay/ @jnsdls @joaquim-verges
+legacy_packages/payments/ @jnsdls @joaquim-verges
+legacy_packages/react/ @MananTank @jnsdls @joaquim-verges
+legacy_packages/react-core/ @MananTank @jnsdls @joaquim-verges
+legacy_packages/react-native/ @jnsdls @joaquim-verges
+legacy_packages/react-native-compat/ @jnsdls @joaquim-verges
 legacy_packages/sdk/ @joaquim-verges @jnsdls
-legacy_packages/storage/ @jnsdls
-legacy_packages/wallets/ @MananTank @jnsdls
+legacy_packages/storage/ @jnsdls @joaquim-verges
+legacy_packages/wallets/ @MananTank @jnsdls @joaquim-verges
 
 # legacy e2e
 
 legacy_e2e/ @jnsdls
 
 # packages
+packages/thirdweb/ @joaquim-verges @gregfromstl @jnsdls
 
 ## specific thirdweb pieces
+packages/thirdweb/src/react/ @joaquim-verges @gregfromstl @MananTank @jnsdls
+packages/thirdweb/src/reactive/ @joaquim-verges @gregfromstl @MananTank @jnsdls
+packages/thirdweb/src/gas/ @joaquim-verges @jnsdls
+packages/thirdweb/src/pay/ @joaquim-verges @gregfromstl @MananTank @jnsdls
+packages/typedoc-gen/ @MananTank @jnsdls @joaquim-verges
+packages/service-utils/ @arcoraven @jnsdls @joaquim-verges
+packages/eslint-config-thirdweb/ @jnsdls @joaquim-verges
+packages/tw-tsconfig/ @jnsdls @joaquim-verges
+packages/unity-js-bridge/ @joaquim-verges @0xFirekeeper @jnsdls
 
-packages/thirdweb/src/react/ @MananTank
-packages/thirdweb/src/reactive/ @MananTank
-packages/thirdweb/src/gas/ @joaquim-verges
-packages/thirdweb/src/pay/ @MananTank @IDubuque
-
-packages/typedoc-gen/ @MananTank
-
-# owned by phil for now
-
-packages/service-utils/ @arcoraven
-packages/eslint-config-thirdweb/ @jnsdls
-packages/tw-tsconfig/ @jnsdls
-packages/unity-js-bridge/ @joaquim-verges @0xFirekeeper
+# apps
+apps/ @jnsdls @joaquim-verges
+apps/dashboard/ @jnsdls @MananTank @joaquim-verges
+apps/playground-web/ @joaquim-verges @gregfromstl @jnsdls @joaquim-verges
+apps/wallet-ui/ @gregfromstl @jnsdls @joaquim-verges
 
 # .github folder + .changeset + turbo config is owned by jonas for now
+scripts/ @jnsdls @joaquim-verges
+.github/ @jnsdls @joaquim-verges
+.changeset/config.json @jnsdls @joaquim-verges
+turbo.json @jnsdls @joaquim-verges
+.vscode/ @jnsdls @joaquim-verges
 
-scripts/ @jnsdls
-.github/ @jnsdls
-.changeset/config.json @jnsdls
-turbo.json @jnsdls
