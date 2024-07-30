@@ -13,12 +13,12 @@ import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef } from "react";
 import { BiChevronDown } from "react-icons/bi";
-import type { Chain } from "thirdweb";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
 import { Button } from "tw-components";
 import { thirdwebClient } from "../../@/constants/client";
 import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
+import { mapStoredChainTov5Chain } from "../../contexts/map-chains";
 import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 
 interface NetworkSelectorButtonProps {
@@ -174,20 +174,3 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
     </>
   );
 };
-
-function mapStoredChainTov5Chain(v4Chain: StoredChain) {
-  const chain: Chain = {
-    id: v4Chain.chainId,
-    rpc: v4Chain.rpc[0],
-    // TypeScript shenanigans, just avoiding as string assertion here
-    blockExplorers: v4Chain.explorers?.map((x) => x),
-    // TypeScript shenanigans, just avoiding as string assertion here
-    faucets: v4Chain.faucets?.map((x) => x),
-    name: v4Chain.name,
-    icon: v4Chain.icon,
-    testnet: v4Chain.testnet === true ? true : undefined,
-    nativeCurrency: v4Chain.nativeCurrency,
-  };
-
-  return chain;
-}
