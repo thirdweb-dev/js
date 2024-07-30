@@ -165,5 +165,9 @@ export {
   BuyDirectListingButton,
   type BuyDirectListingButtonProps,
 } from "../react/web/ui/prebuilt/thirdweb/BuyDirectListingButton/index.js";
+export {
+  CreateDirectListingButton,
+  type CreateDirectListingButtonProps,
+} from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";

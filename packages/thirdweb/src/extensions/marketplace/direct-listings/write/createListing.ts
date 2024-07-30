@@ -76,7 +76,11 @@ export type CreateListingParams = {
  * import { createListing } from "thirdweb/extensions/marketplace";
  * import { sendTransaction } from "thirdweb";
  *
- * const transaction = createListing({...});
+ * const transaction = createListing({
+ *   assetContractAddress: "0x...", // the NFT contract address that you want to sell
+ *   tokenId={0n}, // the token id you want to sell
+ *   pricePerToken="0.1" // sell for 0.1 <native token>
+ * });
  *
  * await sendTransaction({ transaction, account });
  * ```
