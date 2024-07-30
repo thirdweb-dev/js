@@ -40,21 +40,127 @@ import { ConnectModalContent } from "./ConnectModalContent.js";
 import { useSetupScreen } from "./screen.js";
 
 /**
- * A component that allows the user to connect their wallet.
+ * An inline wallet connection component that allows to:
  *
- * it renders the same UI as the [`ConnectButton`](https://portal.thirdweb.com/react/v4/components/ConnectButton) component's modal - but directly on the page instead of being in a modal.
+ * - Connect to 350+ external wallets
+ * - Connect with email, phone, passkey or socials
+ * - Convert any wallet to a ERC4337 smart wallet for gasless transactions
+ * - Sign in with ethereum (Auth)
  *
- * It only renders UI if wallet is not connected
+ * It renders the same UI as the [`ConnectButton`](https://portal.thirdweb.com/react/v5/ConnectButton) component's modal - but directly inline in the page instead of being in a modal.
+ *
+ * Once connected, the component does not render any UI. It only renders UI if wallet is not connected.
+ *
  * @example
+ *
+ * ## Default setup
+ *
  * ```tsx
+ * import { createThirdwebClient } from "thirdweb";
+ * import { ConnectEmbed } from "thirdweb/react";
+ *
+ * const client = createThirdwebClient({ clientId: "YOUR_CLIENT_ID" });
+ *
  * <ConnectEmbed
  *    client={client}
  * />
  * ```
+ *
+ * [View all available config options](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbedProps)
+ *
+ *  ## Customization options
+ *
+ * ### Customizing wallet options
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *    client={client}
+ *    wallets={[
+ *      createWallet("io.metamask"),
+ *      createWallet("com.coinbase.wallet"),
+ *      createWallet("me.rainbow"),
+ *    ]}
+ * />
+ * ```
+ *
+ * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+ *
+ *  ### Customizing the default chain to connect to
+ *
+ * ```tsx
+ * import { base } from "thirdweb/chains";
+ *
+ * <ConnectEmbed
+ *   client={client}
+ *   chain={base}
+ * />
+ * ```
+ *
+ * ### Enabling sign in with ethereum (Auth)
+ *
+ * ```tsx
+ * <ConnectEmbed
+ * client={client}
+ * auth={{
+ *   isLoggedIn: async (address) => {
+ *     console.log("checking if logged in!", { address });
+ *     return await isLoggedIn();
+ *   },
+ *   doLogin: async (params) => {
+ *     console.log("logging in!");
+ *     await login(params);
+ *   },
+ *   getLoginPayload: async ({ address }) =>
+ *     generatePayload({ address }),
+ *   doLogout: async () => {
+ *     console.log("logging out!");
+ *     await logout();
+ *   },
+ * }}
+ * />;
+ * ```
+ *
+ * ### Customizing the theme
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *    client={client}
+ *    theme="light"
+ * />
+ * ```
+ *
+ * For more granular control, you can also pass a custom theme object:
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *    client={client}
+ *    theme={lightTheme({
+ *      colors: {
+ *        modalBg: "red",
+ *      },
+ *    })}
+ * />
+ * ```
+ *
+ * [View all available themes properties](https://portal.thirdweb.com/references/typescript/v5/Theme)
+ *
+ * ### Changing the display language
+ *
+ * ```tsx
+ * <ConnectEmbed
+ *    client={client}
+ *    locale="ja_JP"
+ * />
+ * ```
+ *
+ * [View all available locales](https://portal.thirdweb.com/references/typescript/v5/LocaleId)
+ *
  * @param props -
  * The props for the `ConnectEmbed` component.
  *
  * Refer to the [`ConnectEmbedProps`](https://portal.thirdweb.com/references/typescript/v5/ConnectEmbedProps) type for more details
+ *
+ * @returns A JSX element that renders the <ConnectEmbed> component.
  * @component
  */
 export function ConnectEmbed(props: ConnectEmbedProps) {

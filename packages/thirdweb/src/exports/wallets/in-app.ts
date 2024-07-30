@@ -10,6 +10,12 @@ export {
 } from "../../wallets/in-app/web/lib/auth/index.js";
 
 export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/type.js";
+export type {
+  InAppWalletCreationOptions,
+  InAppWalletAuth,
+  InAppWalletSocialAuth,
+  InAppWalletConnectionOptions,
+} from "../../wallets/in-app/core/wallet/types.js";
 
 export { hasStoredPasskey } from "../../wallets/in-app/web/lib/auth/passkeys.js";
 

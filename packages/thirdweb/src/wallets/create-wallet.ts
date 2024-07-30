@@ -30,9 +30,31 @@ import { createWalletEmitter } from "./wallet-emitter.js";
 
 /**
  * Creates a wallet based on the provided ID and arguments.
+ *
+ * - Supports 350+ wallets
+ * - Handles both injected browser wallets and WalletConnect sessions
+ *
+ * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+ *
  * @param args - The arguments for creating the wallet.
+ * @param args.id - The ID of the wallet to create, this will be autocompleted by your IDE.
+ * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+ * @param args.createOptions - The options for creating the wallet.
+ * The arguments are different for each wallet type.
+ * Refer to the [WalletCreationOptions](https://portal.thirdweb.com/references/typescript/v5/WalletCreationOptions) type for more details.
  * @returns - The created wallet.
  * @example
+ *
+ * ## Connecting the wallet
+ *
+ * Once created, you can connect the wallet to your app by calling the `connect` method.
+ *
+ * The `connect` method returns a promise that resolves to the connected account.
+ *
+ * Each wallet type can have different connect options. [View the different connect options](https://portal.thirdweb.com/references/typescript/v5/WalletConnectionOption)
+ *
+ * ## Connecting to an injected wallet
+ *
  * ```ts
  * import { createWallet } from "thirdweb/wallets";
  *
@@ -42,6 +64,57 @@ import { createWalletEmitter } from "./wallet-emitter.js";
  *  client,
  * });
  * ```
+ *
+ * You can check if a wallet is installed by calling the [injectedProvider](https://portal.thirdweb.com/references/typescript/v5/injectedProvider) method.
+ *
+ * ## Connecting via WalletConnect modal
+ *
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const metamaskWallet = createWallet("io.metamask");
+ *
+ * await metamask.connect({
+ *   client,
+ *   walletConnect: {
+ *     projectId: "YOUR_PROJECT_ID",
+ *     showQrModal: true,
+ *     appMetadata: {
+ *       name: "My App",
+ *       url: "https://my-app.com",
+ *       description: "my app description",
+ *       logoUrl: "https://path/to/my-app/logo.svg",
+ *     },
+ *   },
+ * });
+ * ```
+ * [View ConnectWallet connection options](https://portal.thirdweb.com/references/typescript/v5/WCConnectOptions)
+ *
+ * ## Connecting with coinbase wallet
+ *
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const cbWallet = createWallet("com.coinbase.wallet", {
+ *   appMetadata: {
+ *     name: "My App",
+ *     url: "https://my-app.com",
+ *     description: "my app description",
+ *     logoUrl: "https://path/to/my-app/logo.svg",
+ *   },
+ *   walletConfig: {
+ *     // options: 'all' | 'smartWalletOnly' | 'eoaOnly'
+ *     options: 'all',
+ *   },
+ * });
+ *
+ * const account = await cbWallet.connect({
+ *  client,
+ * });
+ * ```
+ *
+ * [View Coinbase wallet creation options](https://portal.thirdweb.com/references/typescript/v5/CoinbaseWalletCreationOptions)
+ *
  * @wallet
  */
 export function createWallet<const ID extends WalletId>(

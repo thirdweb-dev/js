@@ -42,6 +42,9 @@ export type {
   WalletCreationOptions,
   WalletConnectionOption,
   CreateWalletArgs,
+  InjectedConnectOptions,
+  DeepLinkSupportedWalletCreationOptions,
+  StandaloneWCConnectOptions,
 } from "../wallets/wallet-types.js";
 
 export type {
@@ -82,7 +85,10 @@ export type {
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
 } from "../wallets/in-app/core/wallet/types.js";
 
-export type { CoinbaseSDKWalletConnectionOptions } from "../wallets/coinbase/coinbaseWebSDK.js";
+export type {
+  CoinbaseWalletCreationOptions,
+  CoinbaseSDKWalletConnectionOptions,
+} from "../wallets/coinbase/coinbaseWebSDK.js";
 
 export type {
   WalletEmitter,
@@ -94,6 +100,7 @@ export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
 export { type WalletInfo } from "../wallets/wallet-info.js";
 
 export { createWalletAdapter } from "../adapters/wallet-adapter.js";
+export type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
 
 // wallet connect
 export {
