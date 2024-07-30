@@ -6,11 +6,24 @@ export const ConnectionManagerCtx = createContext<
 >(undefined);
 
 export function useConnectionManager() {
-  const connectionManager = useContext(ConnectionManagerCtx);
+  const connectionManager = useConnectionManagerCtx("useConnectionManager");
   if (!connectionManager) {
     throw new Error(
-      "useConnectionManager must be used within a ConnectionManager Provider",
+      "useConnectionManager must be used within a <ThirdwebProvider> Provider",
     );
   }
   return connectionManager;
+}
+
+/**
+ * Use this instead of `useConnectionManager` to throw a more specific error message when used outside of a provider.
+ * @internal
+ */
+export function useConnectionManagerCtx(hookname: string) {
+  const manager = useContext(ConnectionManagerCtx);
+  if (!manager) {
+    throw new Error(`${hookname} must be used within <ThirdwebProvider>`);
+  }
+
+  return manager;
 }

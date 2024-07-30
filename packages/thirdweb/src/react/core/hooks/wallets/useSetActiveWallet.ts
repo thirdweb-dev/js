@@ -1,4 +1,4 @@
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * A hook that lets you set the active wallet.
@@ -15,6 +15,6 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @walletConnection
  */
 export function useSetActiveWallet() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useSetActiveWallet");
   return manager.setActiveWallet;
 }

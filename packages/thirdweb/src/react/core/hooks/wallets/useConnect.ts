@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { ConnectManagerOptions } from "../../../../wallets/manager/index.js";
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * A hook to set a wallet as active wallet
@@ -34,7 +34,7 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @walletConnection
  */
 export function useConnect(options?: ConnectManagerOptions) {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useConnect");
   const { connect } = manager;
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);

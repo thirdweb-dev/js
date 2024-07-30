@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * A hook to check if the auto connect is in progress.
@@ -15,7 +15,7 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @walletConnection
  */
 export function useIsAutoConnecting() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useIsAutoConnecting");
   const store = manager.isAutoConnecting;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }

@@ -1,4 +1,4 @@
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * Switch to blockchain with given chain id in the active wallet.
@@ -16,6 +16,6 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @walletConnection
  */
 export function useSwitchActiveWalletChain() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useSwitchActiveWalletChain");
   return manager.switchActiveWalletChain;
 }

@@ -8,7 +8,7 @@ import {
   getStoredActiveWalletId,
   getStoredConnectedWalletIds,
 } from "../../../../wallets/manager/index.js";
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 import { setLastAuthProvider } from "../../utils/storage.js";
 import { timeoutPromise } from "../../utils/timeoutPromise.js";
 import type { AutoConnectProps } from "../connection/types.js";
@@ -20,7 +20,7 @@ export function useAutoConnectCore(
   props: AutoConnectProps & { wallets: Wallet[] },
   getInstalledWallets?: () => Wallet[],
 ) {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useAutoConnect");
   const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const { connect } = useConnect({
     client: props.client,

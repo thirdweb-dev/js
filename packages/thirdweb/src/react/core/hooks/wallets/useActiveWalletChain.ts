@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * A hook that returns the chain the active wallet is connected to
@@ -13,7 +13,7 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @walletConnection
  */
 export function useActiveWalletChain() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useActiveWalletChain");
   const store = manager.activeWalletChainStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }
