@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
+import { createWallet } from "../../../../wallets/create-wallet.js";
 import { getUrlToken } from "../../../../wallets/in-app/web/lib/get-url-token.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -68,7 +69,8 @@ export function useAutoConnectCore(
     const availableWallets = [...wallets, ...(getInstalledWallets?.() ?? [])];
     const activeWallet =
       lastActiveWalletId &&
-      availableWallets.find((w) => w.id === lastActiveWalletId);
+      (availableWallets.find((w) => w.id === lastActiveWalletId) ||
+        createWallet(lastActiveWalletId));
 
     if (activeWallet) {
       try {
