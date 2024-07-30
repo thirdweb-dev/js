@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SiDiscord } from "react-icons/si";
@@ -18,6 +19,12 @@ import miscIcon from "../../../../public/assets/support/misc.svg";
 import connectIcon from "../../../../public/assets/support/wallets.png";
 import { CreateTicket } from "./components/create-ticket.client";
 
+export const metadata: Metadata = {
+  title: "thirdweb Support",
+  openGraph: {
+    title: "thirdweb Support",
+  },
+};
 const HELP_PRODUCTS = [
   {
     title: "Connect",
