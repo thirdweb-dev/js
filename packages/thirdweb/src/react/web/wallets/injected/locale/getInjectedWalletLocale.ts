@@ -16,6 +16,8 @@ export async function getInjectedWalletLocale(
       return (await import("./tl.js")).default;
     case "vi_VN":
       return (await import("./vi.js")).default;
+    case "de_DE":
+      return (await import("./de.js")).default;
     default:
       return (await import("./en.js")).default;
   }

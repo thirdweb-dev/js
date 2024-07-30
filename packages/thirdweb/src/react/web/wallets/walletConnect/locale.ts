@@ -29,4 +29,8 @@ export const walletConnectLocales: Record<LocaleId, WalletConnectLocale> = {
     scanInstruction: "Quét mã QR bằng ứng dụng ví để kết nối",
     openWCModal: "Mở giao diện WalletConnect",
   },
+  de_DE: {
+    scanInstruction: "Scanne dies mit deiner Wallet-App, um zu verbinden",
+    openWCModal: "Offizielles WalletConnect-Modal öffnen",
+  },
 };
