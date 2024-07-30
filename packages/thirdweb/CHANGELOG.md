@@ -1,5 +1,58 @@
 # thirdweb
 
+## 5.42.0
+
+### Minor Changes
+
+- [#3847](https://github.com/thirdweb-dev/js/pull/3847) [`e27ebef`](https://github.com/thirdweb-dev/js/commit/e27ebef85bb61342c3de53f85e134cf4a29f787c) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add prebuilt component: BuyDirectListingButton for Marketplace v3
+
+  ```tsx
+  import { BuyDirectListingButton } from "thirdweb/react";
+
+  <BuyDirectListingButton
+    contractAddress="0x..." // contract address of the marketplace v3
+    chain={...} // the chain which the marketplace contract is deployed on
+    client={...} // thirdweb client
+    listingId={100n} // the listingId or the item you want to buy
+    quantity={1n} // optional - see the docs to learn more
+  >
+    Buy NFT
+  </BuyDirectListingButton>
+  ```
+
+- [#3857](https://github.com/thirdweb-dev/js/pull/3857) [`d5e5467`](https://github.com/thirdweb-dev/js/commit/d5e546726ab388e642d144c494853c23e3b24aba) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds useChainMetadata to retrieve metadata for a chain such as name, icon, available faucets, block explorers, etc.
+
+  ```jsx
+  import { useChainMetadata } from "thirdweb/react";
+
+  const { data: chainMetadata } = useChainMetadata(defineChain(11155111));
+
+  console.log("Name:", chainMetadata.name); // Sepolia
+  console.log("Faucets:", chainMetadata.faucets); // ["https://thirdweb.com/sepolia/faucet"]
+  console.log("Explorers:", chainMetadata.explorers); // ["https://sepolia.etherscan.io/"]
+  ```
+
+### Patch Changes
+
+- [#3846](https://github.com/thirdweb-dev/js/pull/3846) [`cdb2970`](https://github.com/thirdweb-dev/js/commit/cdb29708061d52f576617e6a91518465d9894157) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Handle ERC20 approval for the ClaimButton
+
+- [#3843](https://github.com/thirdweb-dev/js/pull/3843) [`91edae5`](https://github.com/thirdweb-dev/js/commit/91edae58a771722b3818f855acd37993e2be5145) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose multicall & erc1155:encodeSafeTransferFrom extension
+
+- [#3867](https://github.com/thirdweb-dev/js/pull/3867) [`109575e`](https://github.com/thirdweb-dev/js/commit/109575eba5285b5c4022839e98ff5dc41064dc93) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix wallet social login button styling
+
+- [#3854](https://github.com/thirdweb-dev/js/pull/3854) [`7ec421f`](https://github.com/thirdweb-dev/js/commit/7ec421f0e7c87a93a5a1d80d561c8082f75620ce) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add util function: parseAbiParams
+
+  ```ts
+  import { parseAbiParams } from "thirdweb/utils";
+
+  const example1 = parseAbiParams(
+    ["address", "uint256"],
+    ["0x.....", "1200000"],
+  ); // result: ["0x......", 1200000n]
+  ```
+
+- [#3869](https://github.com/thirdweb-dev/js/pull/3869) [`bd44ce9`](https://github.com/thirdweb-dev/js/commit/bd44ce935e6857811a865b2c8ed8e0b9eb61e625) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Export more wallet creation and connection types
+
 ## 5.41.0
 
 ### Minor Changes
