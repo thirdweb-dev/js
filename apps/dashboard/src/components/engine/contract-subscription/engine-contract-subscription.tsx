@@ -1,11 +1,7 @@
-import {
-  useEngineContractSubscription,
-  useEngineSystemHealth,
-} from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, FormControl, Icon, Stack, Switch } from "@chakra-ui/react";
+import { useEngineContractSubscription } from "@3rdweb-sdk/react/hooks/useEngine";
+import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { useState } from "react";
-import { IoMdBeaker } from "react-icons/io";
-import { Card, FormLabel, Heading, Text, TrackedLink } from "tw-components";
+import { FormLabel, Heading, Text, TrackedLink } from "tw-components";
 import { AddContractSubscriptionButton } from "./add-contract-subscription-button";
 import { ContractSubscriptionTable } from "./contract-subscriptions-table";
 
@@ -18,14 +14,6 @@ export const EngineContractSubscriptions: React.FC<
 > = ({ instanceUrl }) => {
   const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
   const contractSubscriptionsQuery = useEngineContractSubscription(instanceUrl);
-  const health = useEngineSystemHealth(instanceUrl);
-
-  const hasFeatureContractSubscriptions = health.data?.features?.includes(
-    "CONTRACT_SUBSCRIPTIONS",
-  );
-  if (!hasFeatureContractSubscriptions) {
-    return <EarlyAccess />;
-  }
 
   return (
     <Flex flexDir="column" gap={4}>
@@ -68,33 +56,5 @@ export const EngineContractSubscriptions: React.FC<
       />
       <AddContractSubscriptionButton instanceUrl={instanceUrl} />
     </Flex>
-  );
-};
-
-const EarlyAccess = () => {
-  return (
-    <Card p={8}>
-      <Stack spacing={4}>
-        <Flex gap={2} align="center">
-          <Icon as={IoMdBeaker} />
-          <Heading size="title.xs">
-            Contract Subscriptions is in Early Access
-          </Heading>
-        </Flex>
-        <Text>
-          Please{" "}
-          <TrackedLink
-            href="https://thirdweb.com/contact-us"
-            isExternal
-            color="blue.500"
-            category="engine"
-            label="contact-us-contract-subscriptions"
-          >
-            contact us
-          </TrackedLink>{" "}
-          to enable this feature.
-        </Text>
-      </Stack>
-    </Card>
   );
 };
