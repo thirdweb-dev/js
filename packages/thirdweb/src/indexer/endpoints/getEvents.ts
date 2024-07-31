@@ -1,6 +1,53 @@
-// TODO clarify the types, no need to sanitize here because we are already doing it server-side?
-export async function getEvents(client: any, params: any) {
-  const blocksResponse = await client(params);
-  // TODO: Calrify structured return type through the indexer
-  return await blocksResponse.json();
+import type { ThirdwebClient } from "src/client/client.js";
+import type { Address } from "src/utils/address.js";
+import { getClientFetch } from "src/utils/fetch.js";
+import { addPagingToRequest } from "../paging.js";
+import type {
+  ChainsawPagingParams,
+  ChainsawResponse,
+  Events,
+} from "../types.d.ts";
+import { getEventsEndpoint } from "../urls.js";
+
+export type GetEventsInterval = "hour" | "day" | "week" | "month";
+export type GetEventsGroupBy = "time" | "chainId" | "contractAddress";
+
+export type GetEventsParams = {
+  client: ThirdwebClient;
+  contractAddresses: Address[];
+  chainIds?: number[];
+  startDate?: Date;
+  endDate?: Date;
+  interval?: GetEventsInterval;
+  groupBy?: GetEventsGroupBy[];
+} & ChainsawPagingParams;
+
+export async function getEvents(
+  params: GetEventsParams,
+): Promise<ChainsawResponse<Events>> {
+  try {
+    const queryParams = addPagingToRequest(
+      new URLSearchParams({
+        contractAddresses: params.contractAddresses.toString(),
+        ...(params.chainIds && { chainIds: params.chainIds.toString() }),
+        ...(params.startDate && { startDate: params.startDate.toISOString() }),
+        ...(params.endDate && { endDate: params.endDate.toISOString() }),
+        ...(params.interval && { interval: params.interval }),
+        ...(params.groupBy && { groupBy: params.groupBy.toString() }),
+      }),
+      params,
+    );
+    const url = `${getEventsEndpoint()}?${queryParams.toString()}`;
+
+    const response = await getClientFetch(params.client)(url);
+    if (!response.ok) {
+      response.body?.cancel();
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ChainsawResponse<Events> = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(`Fetch failed: ${error}`);
+  }
 }

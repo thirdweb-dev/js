@@ -4,6 +4,11 @@ export type ChainsawResponse<T> = {
   page?: number;
 };
 
+export type ChainsawPagingParams = {
+  pageSize?: number;
+  page?: number;
+};
+
 export type Block = {
   hash: string;
   blockNumber: number;
@@ -18,3 +23,13 @@ export type Block = {
   chainId: number;
   version: number;
 };
+
+export type Event = {
+  name: string;
+  count: number;
+  time?: string;
+  chainId?: number;
+  contractAddress?: string;
+};
+
+export type Events = Event[];
