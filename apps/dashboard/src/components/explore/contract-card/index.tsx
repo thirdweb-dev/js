@@ -25,7 +25,7 @@ interface ContractCardProps {
     source: string;
     itemIndex: `${number}`;
   };
-  isBeta?: boolean;
+  isBeta: boolean | undefined;
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({
