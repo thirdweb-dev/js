@@ -211,7 +211,8 @@ export async function socialLogin(
   const loginUrl = getSocialAuthLoginPath({
     authOption: auth.strategy,
     client,
-    mode: "popup",
+    mode: "mobile",
+    redirectUrl: auth.redirectUrl,
   });
 
   const result = await WebBrowser.openAuthSessionAsync(
