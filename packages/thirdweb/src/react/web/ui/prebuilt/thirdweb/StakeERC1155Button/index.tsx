@@ -21,7 +21,7 @@ export type StakeERC1155ButtonProps = Omit<
 } & StakeParams;
 
 /**
- * This button is used for staking ERC1155 tokens into a [thirdweb StakeERC1155 contract](https://thirdweb.com/thirdweb.eth/NFTStake)
+ * This button is used for staking ERC1155 tokens into a [thirdweb StakeERC1155 contract](https://thirdweb.com/thirdweb.eth/EditionStake)
  *
  * Users only need to pass the tokenIds and _not_ the NFT contract address, since each StakeERC1155 contract only
  * supports 1 NFT asset, and the NFT address can be accessed by calling the "stakingToken" method.
@@ -37,7 +37,8 @@ export type StakeERC1155ButtonProps = Omit<
  *   contractAddress="0x..." // the StakeERC1155 contract address
  *   chain={...} // the chain which the stake contract is deployed on
  *   client={...} // thirdweb Client
- *   tokenIds={[0n, 1n, 2n, ...]} // the IDs of the NFTs you want to stake
+ *   tokenId={0n} // the ID of the NFT (Edition) you want to stake
+ *   amount={100n} // amount to stake
  * >
  *   Stake NFT
  * </StakeERC1155Button>
