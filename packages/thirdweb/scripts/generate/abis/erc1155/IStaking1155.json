@@ -10,5 +10,6 @@
   "function getStakeInfo(address staker) view returns (uint256[] _tokensStaked, uint256[] _tokenAmounts, uint256 _totalRewards)",
   "function getStakeInfoForToken(uint256 tokenId, address staker) view returns (uint256 _tokensStaked, uint256 _rewards)",
   "function stake(uint256 tokenId, uint64 amount)",
-  "function withdraw(uint256 tokenId, uint64 amount)"
+  "function withdraw(uint256 tokenId, uint64 amount)",
+  "function stakingToken() view returns (address)"
 ]
