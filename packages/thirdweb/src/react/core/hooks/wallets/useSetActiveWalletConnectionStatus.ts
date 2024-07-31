@@ -1,4 +1,4 @@
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * A hook that returns the active wallet's connection status.
@@ -15,6 +15,6 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @internal
  */
 export function useSetActiveWalletConnectionStatus() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useSetActiveWalletConnectionStatus");
   return manager.activeWalletConnectionStatusStore.setValue;
 }

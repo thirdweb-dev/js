@@ -11,23 +11,89 @@ import type {
 import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
 
 /**
- * Creates a smart wallet.
+ * Creates a ERC4337 smart wallet based on a admin account.
+ *
+ * Smart wallets are smart contract wallets that enable multiple benefits for users:
+ *
+ * - Sponsor gas fees for transactions
+ * - Multiple owners
+ * - Session keys
+ * - Batch transactions
+ * - Predictable addresses
+ * - Programmable features
+ *
+ * [Learn more about account abstraction](https://portal.thirdweb.com/connect/account-abstraction/how-it-works)
+ *
  * @param createOptions - The options for creating the wallet.
+ * Refer to [SmartWalletCreationOptions](https://portal.thirdweb.com/references/typescript/v5/SmartWalletCreationOptions) for more details.
  * @returns The created smart wallet.
  * @example
+ *
+ * ## Connect to a smart wallet
+ *
+ * To connect to a smart wallet, you need to provide an admin account as the `personalAccount` option.
+ *
+ * Any wallet can be used as an admin account, including an in-app wallets.
+ *
+ * The `sponsorGas` option is used to enable sponsored gas for transactions automatically.
+ *
  * ```ts
- * import { smartWallet } from "thirdweb/wallets";
+ * import { smartWalletm inAppWallet } from "thirdweb/wallets";
+ * import { sepolia } from "thirdweb/chains";
+ * import { sendTransaction } from "thirdweb";
  *
  * const wallet = smartWallet({
  *  chain: sepolia,
- *  gasless: true,
+ *  sponsorGas: true, // enable sponsored transactions
  * });
  *
- * const account = await wallet.connect({
+ * // any wallet can be used as an admin account
+ * // in this example we use an in-app wallet
+ * const adminWallet = inAppWallet();
+ * const personalAccount = await adminWallet.connect({
  *   client,
- *   personalAccount: account,
+ *   chain: sepolia,
+ *   strategy: "google",
+ * });
+ *
+ * const smartAccount = await wallet.connect({
+ *   client,
+ *   personalAccount, // pass the admin account
+ * });
+ *
+ * // sending sponsored transactions with the smartAccount
+ * await sendTransaction({
+ *   account: smartAccount,
+ *   transaction,
  * });
  * ```
+ *
+ * ## Configuring the smart wallet
+ *
+ * You can pass options to the `smartWallet` function to configure the smart wallet.
+ *
+ * ```ts
+ * import { smartWallet } from "thirdweb/wallets";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const wallet = smartWallet({
+ *  chain: sepolia,
+ *  sponsorGas: true, // enable sponsored transactions
+ *  factoryAddress: "0x...", // custom factory address
+ *  overrides: {
+ *    accountAddress: "0x...", // override account address
+ *    accountSalt: "0x...", // override account salt
+ *    entrypointAddress: "0x...", // override entrypoint address
+ *    erc20Paymaster: { ... }, // enable erc20 paymaster
+ *    bundlerUrl: "https://...", // override bundler url
+ *    paymaster: (userOp) => { ... }, // override paymaster
+ *    ...
+ *  }
+ * });
+ * ```
+ *
+ * Refer to [SmartWalletOptions](https://portal.thirdweb.com/references/typescript/v5/SmartWalletOptions) for more details.
+ *
  * @wallet
  */
 export function smartWallet(

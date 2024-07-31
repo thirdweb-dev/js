@@ -8,11 +8,13 @@ export const getSocialAuthLoginPath = ({
   client,
   ecosystem,
   mode = "popup",
+  redirectUrl,
 }: {
   authOption: SocialAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
-  mode?: "popup" | "redirect";
+  mode?: "popup" | "redirect" | "mobile";
+  redirectUrl?: string;
 }) => {
   let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
@@ -22,10 +24,17 @@ export const getSocialAuthLoginPath = ({
   }
 
   if (mode === "redirect") {
-    const redirectUrl = new URL(window.location.href);
-    redirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
-    redirectUrl.searchParams.set("authProvider", authOption);
-    baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(redirectUrl.toString())}`;
+    const formattedRedirectUrl = new URL(redirectUrl || window.location.href);
+    formattedRedirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
+    formattedRedirectUrl.searchParams.set("authProvider", authOption);
+    baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(formattedRedirectUrl.toString())}`;
+  }
+
+  if (mode === "mobile") {
+    if (!redirectUrl) {
+      throw new Error("Redirect URL is required for mobile authentication");
+    }
+    baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(redirectUrl)}`;
   }
 
   return baseUrl;

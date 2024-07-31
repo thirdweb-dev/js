@@ -16,7 +16,6 @@ import {
   Tr,
   usePrevious,
 } from "@chakra-ui/react";
-import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
 import { BigNumber } from "ethers";
@@ -88,7 +87,8 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
 ];
 
 interface MarketplaceTableProps {
-  contract: MarketplaceV3;
+  contractAddress: string;
+  chainId: number;
   getAllQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
   getValidQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
   totalCountQuery: UseQueryResult<bigint>;
@@ -108,7 +108,8 @@ interface MarketplaceTableProps {
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
-  contract,
+  contractAddress,
+  chainId,
   getAllQueryResult,
   getValidQueryResult,
   totalCountQuery,
@@ -212,7 +213,8 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           />
         )}
         <ListingDrawer
-          contract={contract}
+          contractAddress={contractAddress}
+          chainId={chainId}
           data={tokenRow}
           isOpen={!!tokenRow}
           onClose={() => setTokenRow(null)}

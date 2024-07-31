@@ -161,5 +161,13 @@ export { useEnsName, useEnsAvatar } from "../react/core/utils/wallet.js";
  */
 export { ClaimButton } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/index.js";
 export type { ClaimButtonProps } from "../react/web/ui/prebuilt/thirdweb/ClaimButton/types.js";
+export {
+  BuyDirectListingButton,
+  type BuyDirectListingButtonProps,
+} from "../react/web/ui/prebuilt/thirdweb/BuyDirectListingButton/index.js";
+export {
+  CreateDirectListingButton,
+  type CreateDirectListingButtonProps,
+} from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";

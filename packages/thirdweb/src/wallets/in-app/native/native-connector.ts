@@ -113,7 +113,7 @@ export class InAppNativeConnector implements InAppConnector {
       case "apple": {
         const ExpoLinking = require("expo-linking");
         const redirectUrl =
-          params.redirectUrl || (ExpoLinking.createURL("") as string);
+          params.redirectUrl || (ExpoLinking.createURL("") as string); // Will default to the app scheme
         return this.socialLogin({
           strategy,
           redirectUrl,
@@ -167,7 +167,7 @@ export class InAppNativeConnector implements InAppConnector {
         },
       };
     } catch (error) {
-      console.error(`Error while validating otp: ${error}`);
+      console.error(`Error while validating OTP: ${error}`);
       if (error instanceof Error) {
         throw new Error(`Error while validating otp: ${error.message}`);
       }

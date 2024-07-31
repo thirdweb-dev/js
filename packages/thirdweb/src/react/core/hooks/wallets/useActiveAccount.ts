@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * A hook that returns the active account
@@ -13,7 +13,7 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @walletConnection
  */
 export function useActiveAccount() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useActiveAccount");
   const store = manager.activeAccountStore;
   return useSyncExternalStore(store.subscribe, store.getValue, store.getValue);
 }

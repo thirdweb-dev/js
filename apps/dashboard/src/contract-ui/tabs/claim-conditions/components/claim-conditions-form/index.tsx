@@ -23,7 +23,6 @@ import {
 import {
   type ClaimConditionInput,
   ClaimConditionInputSchema,
-  NATIVE_TOKEN_ADDRESS,
   type SnapshotEntry,
   type ValidContractInstance,
 } from "@thirdweb-dev/sdk";
@@ -45,7 +44,7 @@ import {
   useForm,
 } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { ZERO_ADDRESS } from "thirdweb";
+import { NATIVE_TOKEN_ADDRESS, ZERO_ADDRESS } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { Button, Heading, MenuItem, Text } from "tw-components";

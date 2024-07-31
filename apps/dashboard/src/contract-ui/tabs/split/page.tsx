@@ -51,7 +51,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
     ? defineDashboardChain(chainId, chain)
     : undefined;
   const nativeBalanceQuery = useWalletBalance({
-    address,
+    address: contractAddress,
     client: thirdwebClient,
     chain: convertedChain,
   });

@@ -20,7 +20,6 @@ import {
   type UseDisclosureReturn,
   useDisclosure,
 } from "@chakra-ui/react";
-import { shortenString } from "@thirdweb-dev/react";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { isAddress } from "ethers/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -28,6 +27,7 @@ import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { shortenAddress } from "thirdweb/utils";
 import { Button, FormHelperText, FormLabel } from "tw-components";
 
 interface AddRelayerButtonProps {
@@ -148,7 +148,7 @@ const AddModal = ({
                 </option>
                 {backendWallets?.map((wallet) => (
                   <option key={wallet.address} value={wallet.address}>
-                    {shortenString(wallet.address, false)}
+                    {shortenAddress(wallet.address)}
                     {wallet.label && ` (${wallet.label})`}
                   </option>
                 ))}

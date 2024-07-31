@@ -151,6 +151,8 @@ export function ClaimButton(props: ClaimButtonProps) {
 }
 
 /**
+ * We can only get the image and name for Edition Drop
+ * For NFT Drop and Token Drop we fall back to the name & image of the contract
  * @internal
  */
 export async function getPayMetadata(

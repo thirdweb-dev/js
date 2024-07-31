@@ -59,7 +59,15 @@ export const AccountPage: React.FC<AccountPageProps> = ({
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Deposit {symbol}</Heading>
       </Flex>
-      <DepositNative address={contractAddress || ""} symbol={symbol} />
+
+      {chain && contractAddress && (
+        <DepositNative
+          address={contractAddress}
+          symbol={symbol}
+          chain={chain}
+        />
+      )}
+
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">NFTs owned</Heading>
       </Flex>

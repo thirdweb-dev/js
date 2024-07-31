@@ -53,7 +53,8 @@ export type BuyWithCryptoSubStatuses =
   | "REVERTED_ON_CHAIN"
   | "SUCCESS"
   | "PARTIAL_SUCCESS"
-  | "UNKNOWN_ERROR";
+  | "UNKNOWN_ERROR"
+  | "REFUNDED";
 
 export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 

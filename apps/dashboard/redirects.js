@@ -275,6 +275,13 @@ function redirects() {
       destination: "/dashboard/connect/ecosystem/:slug/permissions",
       permanent: false,
     },
+    // temporarily redirect cli login to support page
+    {
+      source: "/cli/login",
+      destination:
+        "https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
+      permanent: false,
+    },
   ];
 }
 

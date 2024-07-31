@@ -21,6 +21,7 @@ import { EngineOverview } from "./overview/engine-overview";
 import { EngineAccessTokens } from "./permissions/engine-access-tokens";
 import { EngineAdmins } from "./permissions/engine-admins";
 import { EngineRelayer } from "./relayer/engine-relayer";
+import { EngineSystemMetrics } from "./system-metrics";
 
 interface EngineNavigationProps {
   instance: EngineInstance;
@@ -103,6 +104,12 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
           name: "configuration",
           onClick: () => handleClick("configuration"),
         },
+        {
+          path: "/dashboard/engine/metrics",
+          title: "Metrics",
+          name: "metrics",
+          onClick: () => handleClick("metrics"),
+        },
       ] satisfies Route[],
     [handleClick],
   );
@@ -119,6 +126,7 @@ export const EngineNavigation: React.FC<EngineNavigationProps> = ({
       "access-tokens": <EngineAccessTokens instanceUrl={instance.url} />,
       webhooks: <EngineWebhooks instanceUrl={instance.url} />,
       configuration: <EngineConfiguration instance={instance} />,
+      metrics: <EngineSystemMetrics instance={instance} />,
     };
     return tabs[activePage as keyof typeof tabs];
   }, [instance, activePage]);

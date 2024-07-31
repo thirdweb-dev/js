@@ -1,3 +1,4 @@
+import type { Prettify } from "../../utils/type-utils.js";
 import type {
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
@@ -11,8 +12,11 @@ export type EcosystemWalletCreationOptions = {
   };
 };
 
-export type EcosystemWalletConnectionOptions = InAppWalletConnectionOptions & {
-  ecosystem: Ecosystem;
-};
-export type EcosystemWalletAutoConnectOptions =
-  InAppWalletAutoConnectOptions & { ecosystem: Ecosystem };
+export type EcosystemWalletConnectionOptions = Prettify<
+  InAppWalletConnectionOptions & {
+    ecosystem: Ecosystem;
+  }
+>;
+export type EcosystemWalletAutoConnectOptions = Prettify<
+  InAppWalletAutoConnectOptions & { ecosystem: Ecosystem }
+>;

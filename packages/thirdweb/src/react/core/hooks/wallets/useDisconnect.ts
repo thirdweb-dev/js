@@ -1,4 +1,4 @@
-import { useConnectionManager } from "../../providers/connection-manager.js";
+import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 
 /**
  * Disconnect from given account
@@ -21,7 +21,7 @@ import { useConnectionManager } from "../../providers/connection-manager.js";
  * @returns An object with a function to disconnect an account
  */
 export function useDisconnect() {
-  const manager = useConnectionManager();
+  const manager = useConnectionManagerCtx("useDisconnect");
   const disconnect = manager.disconnectWallet;
   return { disconnect };
 }
