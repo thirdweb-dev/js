@@ -9,7 +9,7 @@ const client = TEST_CLIENT;
 // marketplace v3 on sepolia
 const marketplaceAddress = "0xe0eFD6fb388405b67b3E9FaFc02649c70E749f03";
 
-describe.runIf(process.env.TW_SECRET_KEY)("BuyDirectListingButton", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("CreateDirectListingButton", () => {
   it("should render", () => {
     render(
       <CreateDirectListingButton

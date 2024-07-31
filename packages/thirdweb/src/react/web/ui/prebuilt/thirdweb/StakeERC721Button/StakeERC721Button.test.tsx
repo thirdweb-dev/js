@@ -9,7 +9,7 @@ const client = TEST_CLIENT;
 // stake erc721 contract on avax fuji
 const stakeAddress = "0x63d4a5eA439e2CcFeEd8e630774AAf4B525677B1";
 
-describe.runIf(process.env.TW_SECRET_KEY)("BuyDirectListingButton", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("StakeERC721Button", () => {
   it("should render", () => {
     render(
       <StakeERC721Button
