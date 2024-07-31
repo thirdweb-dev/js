@@ -5,6 +5,7 @@ import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { getContract } from "../../../../../../contract/contract.js";
 import { stakingToken } from "../../../../../../extensions/erc721/__generated__/IStaking721/read/stakingToken.js";
+import type { StakeParams } from "../../../../../../extensions/erc721/__generated__/IStaking721/write/stake.js";
 import type { TransactionButtonProps } from "../../../../../core/hooks/transaction/transaction-button-utils.js";
 import { useSendAndConfirmTransaction } from "../../../../../core/hooks/transaction/useSendAndConfirmTransaction.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
@@ -15,10 +16,9 @@ export type StakeERC721ButtonProps = Omit<
   "transaction"
 > & {
   contractAddress: string;
-  tokenIds: bigint[];
   chain: Chain;
   client: ThirdwebClient;
-};
+} & StakeParams;
 
 /**
  * This button is used for staking ERC721 tokens into a [thirdweb StakeERC721 contract](https://thirdweb.com/thirdweb.eth/NFTStake)
