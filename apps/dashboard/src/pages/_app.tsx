@@ -289,6 +289,7 @@ function TailwindTheme(props: { children: React.ReactNode }) {
       attribute="class"
       disableTransitionOnChange
       enableSystem={false}
+      defaultTheme="dark"
     >
       {props.children}
     </ThemeProvider>
