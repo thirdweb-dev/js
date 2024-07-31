@@ -1,6 +1,6 @@
-import type { ThirdwebClient } from "src/client/client.js";
-import type { Address } from "src/utils/address.js";
-import { getClientFetch } from "src/utils/fetch.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import type { Address } from "../../utils/address.js";
+import { getClientFetch } from "../../utils/fetch.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
   ChainsawPagingParams,
