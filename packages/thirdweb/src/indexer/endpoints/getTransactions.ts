@@ -9,9 +9,6 @@ import type {
 } from "../types.d.ts";
 import { getTransactionsEndpoint } from "../urls.js";
 
-export type GetEventsInterval = "hour" | "day" | "week" | "month";
-export type GetEventsGroupBy = "time" | "chainId" | "contractAddress";
-
 export type GetTransactionsParams = {
   client: ThirdwebClient;
   to: Address;
