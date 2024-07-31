@@ -53,3 +53,16 @@ export type Transaction = {
 };
 
 export type Transactions = Transaction[];
+
+export type NFTData = {
+  chainId: number;
+  collectionAddress: string;
+  tokenId: string;
+  latestTransferTime: string;
+  collectionName: string;
+  uri: string;
+  ownerAddress?: string;
+  currentBalance?: number;
+};
+
+export type NFTsData = NFTData[];
