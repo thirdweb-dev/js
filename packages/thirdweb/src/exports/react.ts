@@ -169,5 +169,9 @@ export {
   CreateDirectListingButton,
   type CreateDirectListingButtonProps,
 } from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
+export {
+  StakeERC721Button,
+  type StakeERC721ButtonProps,
+} from "../react/web/ui/prebuilt/thirdweb/StakeERC721Button/index.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
