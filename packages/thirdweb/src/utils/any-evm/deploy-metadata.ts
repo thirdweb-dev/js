@@ -51,7 +51,10 @@ async function fetchCompilerMetadata(
   const rawMeta: RawCompilerMetadata = await download({
     uri: options.uri,
     client: options.client,
-  }).then((r) => r.json());
+  }).then((r) => {
+    console.log("result", r);
+    return r.json()
+  });
   const [deployBytecode, parsedMeta] = await Promise.all([
     download({ uri: rawMeta.bytecodeUri, client: options.client }).then(
       (res) => res.text() as Promise<Hex>,
@@ -81,6 +84,7 @@ async function fetchAndParseCompilerMetadata(
       requestTimeoutMs: CONTRACT_METADATA_TIMEOUT_SEC,
     })
   ).json();
+  console.log(metadata);
   if (!metadata || !metadata.output) {
     throw new Error(
       `Could not resolve metadata for contract at ${options.uri}`,
@@ -156,12 +160,12 @@ export type ExtendedMetadata = {
   bytecodeUri: string;
   description?: string | undefined;
   defaultExtensions?:
-    | {
-        extensionName: string;
-        extensionVersion: string;
-        publisherAddress: string;
-      }[]
-    | undefined;
+  | {
+    extensionName: string;
+    extensionVersion: string;
+    publisherAddress: string;
+  }[]
+  | undefined;
   publisher?: string | undefined;
   audit?: string | undefined;
   logo?: string | undefined;
@@ -172,20 +176,20 @@ export type ExtendedMetadata = {
   isDeployableViaFactory?: boolean | undefined;
   isDeployableViaProxy?: boolean | undefined;
   factoryDeploymentData?:
-    | {
-        implementationAddresses: Record<string, string>;
-        implementationInitializerFunction: string;
-        customFactoryInput?: {
-          factoryFunction: string;
-          params: Array<{ name: string; type: string }>;
-          customFactoryAddresses: Record<string, string>;
-        };
-        modularFactoryInput?: {
-          hooksParamName: string;
-        };
-        factoryAddresses?: Record<string, string>;
-      }
-    | undefined;
+  | {
+    implementationAddresses: Record<string, string>;
+    implementationInitializerFunction: string;
+    customFactoryInput?: {
+      factoryFunction: string;
+      params: Array<{ name: string; type: string }>;
+      customFactoryAddresses: Record<string, string>;
+    };
+    modularFactoryInput?: {
+      hooksParamName: string;
+    };
+    factoryAddresses?: Record<string, string>;
+  }
+  | undefined;
   deployType?: "standard" | "autoFactory" | "customFactory";
   routerType?: "none" | "plugin" | "dynamic" | "modular";
   networksForDeployment?: {

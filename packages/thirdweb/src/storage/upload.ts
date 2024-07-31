@@ -19,7 +19,7 @@ export type UploadOptions<TFiles extends UploadableFile[]> =
     client: ThirdwebClient;
   };
 
-type UploadReturnType<TFiles extends UploadableFile[]> = TFiles extends {
+export type UploadReturnType<TFiles extends UploadableFile[]> = TFiles extends {
   length: 0;
 }
   ? null

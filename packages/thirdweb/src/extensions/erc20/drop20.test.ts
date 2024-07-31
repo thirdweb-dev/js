@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { VITALIK_WALLET } from "../../../test/src/addresses.js";
 import { ANVIL_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
@@ -16,6 +16,35 @@ import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { claimTo } from "./drops/write/claimTo.js";
 import { setClaimConditions } from "./drops/write/setClaimConditions.js";
 import { getBalance } from "./read/getBalance.js";
+import * as upload_ from "../../storage/upload.js";
+import * as download_ from "../../storage/download.js";
+import type { UploadOptions } from "src/storage/upload/types.js";
+
+const promisedStorage = vi.hoisted(async () => {
+  const { getMockIpfsStorage } = await import("~test/ipfs.js");
+  return getMockIpfsStorage();
+});
+
+vi.spyOn(upload_, 'upload');
+vi.mock("../../storage/upload.js", async () => {
+  // we dynamically import since mocks are hoisted above the normal imports
+  const { uploadMock } = await import("~test/ipfs.js");
+  const storage = await promisedStorage;
+  return {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    upload: (a: any) => uploadMock(a, storage)
+  }
+});
+vi.spyOn(download_, 'download');
+vi.mock("../../storage/download.js", async () => {
+  const { downloadMock } = await import("~test/ipfs.js");
+  const storage = await promisedStorage;
+  return {
+    // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    download: (a: any) => downloadMock(a, storage)
+  }
+});
+
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "DropERC20",
