@@ -1,5 +1,40 @@
 # thirdweb
 
+## 5.43.0
+
+### Minor Changes
+
+- [#3875](https://github.com/thirdweb-dev/js/pull/3875) [`337c8c9`](https://github.com/thirdweb-dev/js/commit/337c8c953e6fd70145a10ddd0aadbf2eb1c6e5aa) Thanks [@jnsdls](https://github.com/jnsdls)! - add German localization
+
+- [#3881](https://github.com/thirdweb-dev/js/pull/3881) [`e7d6161`](https://github.com/thirdweb-dev/js/commit/e7d616181900542c934a49695f2381fd6d70e1d0) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add CreateDirectListing button for Marketplace v3
+
+  ```tsx
+  import { CreateDirectListingButton } from "thirdweb/react";
+
+  <CreateDirectListingButton
+    contractAddress="0x..." // contract address for the marketplace-v3
+    chain={...} // the chain which the marketplace contract is deployed on
+
+    // These props below are the same props for `createListing`
+    // to get the full list, check the docs link above
+    tokenId={0n}
+    assetContractAddress="0x..." // The NFT contract address whose NFT(s) you want to sell
+    pricePerToken={"0.1"} // sell for 0.1 <native token>
+  >
+    Sell NFT
+  </CreateDirectListingButton>
+  ```
+
+### Patch Changes
+
+- [#3885](https://github.com/thirdweb-dev/js/pull/3885) [`6cd279b`](https://github.com/thirdweb-dev/js/commit/6cd279bc49bc7c748d6cb832ab2d96089767f59a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix ethers5adapter transaction result nonces
+
+- [#3871](https://github.com/thirdweb-dev/js/pull/3871) [`f702cf7`](https://github.com/thirdweb-dev/js/commit/f702cf7216aec61de0b335e5745a9b79b90edec3) Thanks [@jnsdls](https://github.com/jnsdls)! - temporarily disable CLI login
+
+- [#3882](https://github.com/thirdweb-dev/js/pull/3882) [`4171f15`](https://github.com/thirdweb-dev/js/commit/4171f1536dea288cea77729ff94b17c48af21d23) Thanks [@MananTank](https://github.com/MananTank)! - Improved error messages when connection management hooks used outside ThirdwebProvider
+
+- [#3880](https://github.com/thirdweb-dev/js/pull/3880) [`5eb4955`](https://github.com/thirdweb-dev/js/commit/5eb495581d236f36708f849de9ee2a001a224db4) Thanks [@MananTank](https://github.com/MananTank)! - Fix autoConnect for wallets that are connected from "All wallets" screen
+
 ## 5.42.0
 
 ### Minor Changes
