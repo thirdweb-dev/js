@@ -4,8 +4,6 @@ import { Button } from "../../../../../../@/components/ui/button";
 import { NavLink } from "./nav-link.client";
 
 export type SidebarContentProps = {
-  isPaySupported: boolean;
-  hasFaucet: boolean;
   slug: string;
 };
 
@@ -36,36 +34,7 @@ export function SidebarContent(props: SidebarContentProps) {
           Overview
         </NavLink>
       </Button>
-      {props.isPaySupported && (
-        <Button
-          size="sm"
-          className="gap-1.5 w-full justify-start text-secondary-foreground"
-          variant="ghost"
-          asChild
-        >
-          <NavLink
-            href={`/${props.slug}/bridge`}
-            activeClassName="bg-accent text-accent-foreground"
-          >
-            Bridge
-          </NavLink>
-        </Button>
-      )}
-      {props.hasFaucet && (
-        <Button
-          size="sm"
-          className="gap-1.5 w-full justify-start text-secondary-foreground"
-          variant="ghost"
-          asChild
-        >
-          <NavLink
-            href={`/${props.slug}/faucet`}
-            activeClassName="bg-accent text-accent-foreground"
-          >
-            Faucet
-          </NavLink>
-        </Button>
-      )}
+
       <Button
         size="sm"
         className="gap-1.5 w-full justify-start text-secondary-foreground"
@@ -79,6 +48,7 @@ export function SidebarContent(props: SidebarContentProps) {
           Trending Contracts
         </NavLink>
       </Button>
+
       <Button
         size="sm"
         className="gap-1.5 w-full justify-start text-secondary-foreground"

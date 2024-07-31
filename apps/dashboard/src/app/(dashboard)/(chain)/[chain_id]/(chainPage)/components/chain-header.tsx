@@ -16,17 +16,16 @@ export function ChainHeader(props: ChainHeaderProps) {
         ratio={props.headerImageUrl ? 4 : 8}
         className="border-b border-border -mx-4 lg:-mx-6"
       >
-        {props.headerImageUrl ? (
+        {props.headerImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={props.headerImageUrl}
             alt=""
             className="object-cover object-center h-full w-full"
           />
-        ) : (
-          <div className="bg-background h-full w-full" />
         )}
       </AspectRatio>
+
       {/* below header */}
       <div className="relative flex flex-row justify-end items-end">
         {/* chain logo */}
@@ -39,8 +38,7 @@ export function ChainHeader(props: ChainHeaderProps) {
         {/* action group */}
         <div className="pt-3 lg:pt-6">
           <div className="hidden lg:flex flex-row gap-2">
-            <Button variant="outline">Get Funds</Button>
-            <Button variant="primary">Start with thirdweb</Button>
+            <Button variant="primary">Get started with thirdweb</Button>
           </div>
           {props.mobileButton}
         </div>
