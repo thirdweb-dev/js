@@ -165,15 +165,7 @@ ProviderInterface,
 
   async getProvider() {
     if (!this._provider) {
-      const client = new CoinbaseWalletSDK({
-        appName: this.options?.appMetadata?.appName || "Thirdweb App",
-        appChainIds: this.options?.chainId
-          ? [this.options.chainId]
-          : undefined,
-        appLogoUrl:
-          this.options?.appMetadata?.appLogoUrl,
-      });
-
+      const client = new CoinbaseWalletSDK({ ...this.options.appMetadata }); 
       this._provider = client.makeWeb3Provider(this.options?.walletConfig)
     }
     return this._provider;
