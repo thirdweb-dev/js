@@ -13,7 +13,7 @@ export type GetNFTsGroupBy = "ownerAddress";
 
 export type GetNFTsByOwnerParams = {
   client: ThirdwebClient;
-  collectionAddresses: Address[];
+  contractAddresses: Address[];
   chainIds?: number[];
   groupBy?: GetNFTsGroupBy;
 } & ChainsawPagingParams;
@@ -24,7 +24,7 @@ export async function getNFTsByOwner(
   try {
     const queryParams = addPagingToRequest(
       new URLSearchParams({
-        collectionAddresses: params.collectionAddresses.toString(),
+        contractAddresses: params.contractAddresses.toString(),
         ...(params.chainIds && { chainIds: params.chainIds.toString() }),
         ...(params.groupBy && { groupBy: params.groupBy.toString() }),
       }),

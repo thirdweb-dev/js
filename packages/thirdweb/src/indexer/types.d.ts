@@ -16,10 +16,10 @@ export type Block = {
   parentHash: string;
   miner: string;
   nonce: string;
-  baseFeePerGas?: number;
+  baseFeePerGas?: string;
   difficulty: number;
-  gasLimit: number;
-  gasUsed: number;
+  gasLimit: string;
+  gasUsed: string;
   chainId: number;
   version: number;
 };
@@ -34,6 +34,11 @@ export type Event = {
 
 export type Events = Event[];
 
+export type DecodedTransaction = {
+  functionName: string;
+  args?: string;
+};
+
 export type Transaction = {
   time: Date;
   to: string;
@@ -41,15 +46,14 @@ export type Transaction = {
   hash: string;
   blockNumber: number;
   data?: string;
-  functionName?: string;
-  args?: string;
-  value: number;
-  gasLimit: number;
-  gasPrice: number;
-  gasUsed: number;
-  maxPriorityFeePerGas: number;
+  value: string;
+  gasLimit: string;
+  gasPrice: string;
+  gasUsed: string;
+  maxPriorityFeePerGas: string;
   success: boolean;
   type: number;
+  decoded?: DecodedTransaction;
 };
 
 export type Transactions = Transaction[];
