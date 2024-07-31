@@ -11,7 +11,7 @@ import { getNftsByCollectionEndpoint } from "../urls.js";
 
 export type GetNFTsGroupBy = "ownerAddress";
 
-export type GetNFTsByOwnerParams = {
+export type GetNFTsByCollectionParams = {
   client: ThirdwebClient;
   contractAddresses: Address[];
   chainIds?: number[];
@@ -19,12 +19,12 @@ export type GetNFTsByOwnerParams = {
 } & ChainsawPagingParams;
 
 /**
- * Get NFTs by owner address(es)
+ * Get NFTs for a collection
  *
  * @beta
  */
-export async function getNFTsByOwner(
-  params: GetNFTsByOwnerParams,
+export async function getNFTsByCollection(
+  params: GetNFTsByCollectionParams,
 ): Promise<ChainsawResponse<NFTsData>> {
   try {
     const queryParams = addPagingToRequest(
