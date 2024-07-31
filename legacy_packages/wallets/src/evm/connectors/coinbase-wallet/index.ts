@@ -91,7 +91,7 @@ ProviderInterface,
       this.emit("message", { type: "connecting" });
 
       const accounts = (await provider.request({
-        method: "eth_accounts",
+        method: "eth_requestAccounts",
       })) as string[];
       const account = utils.getAddress(accounts[0] as string);
       // Switch to chain if provided
