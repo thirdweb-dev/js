@@ -9,6 +9,11 @@ export type GetBlockParams = {
   chainId: number;
 };
 
+/**
+ * Get data for a single block
+ *
+ * @beta
+ */
 export async function getBlock(
   params: GetBlockParams,
 ): Promise<ChainsawResponse<Block>> {

@@ -8,6 +8,11 @@ export type GetLatestBlockNumberParams = {
   chainId: number;
 };
 
+/**
+ * Get latest block number for a chain
+ *
+ * @beta
+ */
 export async function getLatestBlockNumber(
   params: GetLatestBlockNumberParams,
 ): Promise<ChainsawResponse<number>> {

@@ -20,6 +20,11 @@ export type GetTransactionsParams = {
   endDate?: Date;
 } & ChainsawPagingParams;
 
+/**
+ * Get transactions
+ *
+ * @beta
+ */
 export async function getTransactions(
   params: GetTransactionsParams,
 ): Promise<ChainsawResponse<Transactions>> {

@@ -22,6 +22,11 @@ export type GetEventsParams = {
   groupBy?: GetEventsGroupBy[];
 } & ChainsawPagingParams;
 
+/**
+ * Get events
+ *
+ * @beta
+ */
 export async function getEvents(
   params: GetEventsParams,
 ): Promise<ChainsawResponse<Events>> {

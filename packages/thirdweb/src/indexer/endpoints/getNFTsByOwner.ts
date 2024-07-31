@@ -15,6 +15,11 @@ export type GetNFTsByOwnerParams = {
   chainIds?: number[];
 } & ChainsawPagingParams;
 
+/**
+ * Get NFTs by owner address(es)
+ *
+ * @beta
+ */
 export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
 ): Promise<ChainsawResponse<NFTsData>> {

@@ -18,6 +18,11 @@ export type GetNFTsByOwnerParams = {
   groupBy?: GetNFTsGroupBy;
 } & ChainsawPagingParams;
 
+/**
+ * Get NFTs by owner address(es)
+ *
+ * @beta
+ */
 export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
 ): Promise<ChainsawResponse<NFTsData>> {
