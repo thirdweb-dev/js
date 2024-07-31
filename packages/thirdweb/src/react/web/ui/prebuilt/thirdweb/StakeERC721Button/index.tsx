@@ -65,7 +65,7 @@ export function StakeERC721Button(props: StakeERC721ButtonProps) {
       { setApprovalForAll },
       { stake },
     ] = await Promise.all([
-      stakingToken({ contract: stakeContract }),
+      stakingToken({ contract: stakeContract }).catch(() => ""),
       import(
         "../../../../../../extensions/erc721/__generated__/IERC721A/read/isApprovedForAll.js"
       ),
