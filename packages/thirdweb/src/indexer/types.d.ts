@@ -33,3 +33,23 @@ export type Event = {
 };
 
 export type Events = Event[];
+
+export type Transaction = {
+  time: Date;
+  to: string;
+  from: string;
+  hash: string;
+  blockNumber: number;
+  data?: string;
+  functionName?: string;
+  args?: string;
+  value: number;
+  gasLimit: number;
+  gasPrice: number;
+  gasUsed: number;
+  maxPriorityFeePerGas: number;
+  success: boolean;
+  type: number;
+};
+
+export type Transactions = Transaction[];
