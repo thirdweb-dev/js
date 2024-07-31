@@ -1,5 +1,7 @@
+import type { GetBlockReturnType } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import { formatChainsawBlock } from "../formatter.js";
 import type { Block, ChainsawResponse } from "../types.d.ts";
 import { getBlockEndpoint } from "../urls.js";
 
@@ -16,7 +18,7 @@ export type GetBlockParams = {
  */
 export async function getBlock(
   params: GetBlockParams,
-): Promise<ChainsawResponse<Block>> {
+): Promise<ChainsawResponse<GetBlockReturnType<undefined, false>>> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("chainId", params.chainId.toString());
@@ -29,7 +31,7 @@ export async function getBlock(
     }
 
     const data: ChainsawResponse<Block> = await response.json();
-    return data;
+    return { ...data, data: formatChainsawBlock(data.data) };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
   }

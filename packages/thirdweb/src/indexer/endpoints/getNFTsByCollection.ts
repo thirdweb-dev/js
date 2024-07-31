@@ -1,6 +1,8 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import type { NFT } from "../../utils/nft/parseNft.js";
+import { formatChainsawNFTs } from "../formatter.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
   ChainsawPagingParams,
@@ -25,7 +27,7 @@ export type GetNFTsByCollectionParams = {
  */
 export async function getNFTsByCollection(
   params: GetNFTsByCollectionParams,
-): Promise<ChainsawResponse<NFTsData>> {
+): Promise<ChainsawResponse<NFT[]>> {
   try {
     const queryParams = addPagingToRequest(
       new URLSearchParams({
@@ -44,7 +46,10 @@ export async function getNFTsByCollection(
     }
 
     const data: ChainsawResponse<NFTsData> = await response.json();
-    return data;
+    return {
+      ...data,
+      data: formatChainsawNFTs(data.data),
+    };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
   }

@@ -1,3 +1,5 @@
+import type { Hex } from "../utils/encoding/hex.ts";
+
 export type ChainsawResponse<T> = {
   data?: T;
   error?: string;
@@ -10,14 +12,14 @@ export type ChainsawPagingParams = {
 };
 
 export type Block = {
-  hash: string;
+  hash: Hex;
   blockNumber: number;
   time: Date;
-  parentHash: string;
+  parentHash: Hex;
   miner: string;
-  nonce: string;
+  nonce: Hex;
   baseFeePerGas?: string;
-  difficulty: number;
+  difficulty: string;
   gasLimit: string;
   gasUsed: string;
   chainId: number;
@@ -29,7 +31,7 @@ export type Event = {
   count: number;
   time?: string;
   chainId?: number;
-  contractAddress?: string;
+  contractAddress?: Hex;
 };
 
 export type Events = Event[];
@@ -43,7 +45,7 @@ export type Transaction = {
   time: Date;
   to: string;
   from: string;
-  hash: string;
+  hash: Hex;
   blockNumber: number;
   data?: string;
   value: string;
@@ -60,13 +62,14 @@ export type Transactions = Transaction[];
 
 export type NFTData = {
   chainId: number;
-  collectionAddress: string;
+  contractAddress: Hex;
   tokenId: string;
   latestTransferTime: string;
   collectionName: string;
   uri: string;
-  ownerAddress?: string;
-  currentBalance?: number;
+  ownerAddress?: Hex;
+  balance?: number;
+  type: string;
 };
 
 export type NFTsData = NFTData[];
