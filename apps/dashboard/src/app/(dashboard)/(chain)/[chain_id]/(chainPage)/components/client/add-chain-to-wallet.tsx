@@ -41,13 +41,13 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
         !address || debouncedLoading || activeWalletChainId === props.chain?.id
       }
       className={cn(
-        "w-full md:min-w-40",
+        "w-full md:min-w-40 gap-2",
         props.hasBackground && "invert dark:invert-0",
       )}
       onClick={() => switchChainMutation.mutate()}
     >
-      {debouncedLoading && <Spinner />}
       <span>Add to wallet</span>
+      {debouncedLoading && <Spinner className="size-3" />}
     </Button>
   );
 
