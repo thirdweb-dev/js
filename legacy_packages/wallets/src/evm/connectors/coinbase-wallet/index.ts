@@ -90,7 +90,9 @@ ProviderInterface,
 
       this.emit("message", { type: "connecting" });
 
-      const accounts = await provider.enable();
+      const accounts = (await provider.request({
+        method: "eth_accounts",
+      })) as string[];
       const account = utils.getAddress(accounts[0] as string);
       // Switch to chain if provided
       let id = await this.getChainId();
@@ -136,8 +138,7 @@ ProviderInterface,
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
-    provider.disconnect();
-    provider.close();
+    await provider.disconnect();
   }
 
   async getAccount() {
@@ -155,14 +156,22 @@ ProviderInterface,
 
   async getChainId() {
     const provider = await this.getProvider();
-    const chainId = normalizeChainId(provider.chainId);
+    const connectedChainId = (await provider.request({
+      method: "eth_chainId",
+    })) as string | number;
+    const chainId = normalizeChainId(connectedChainId);
     return chainId;
   }
 
   async getProvider() {
     if (!this._provider) {
       const client = new CoinbaseWalletSDK({
-        ...this.options?.appMetadata,
+        appName: this.options?.appMetadata?.appName || "Thirdweb App",
+        appChainIds: this.options?.chainId
+          ? [this.options.chainId]
+          : undefined,
+        appLogoUrl:
+          this.options?.appMetadata?.appLogoUrl,
       });
 
       this._provider = client.makeWeb3Provider(this.options?.walletConfig)
@@ -283,6 +292,6 @@ ProviderInterface,
     if (!this._client) {
       throw new Error("Coinbase Wallet SDK not initialized");
     }
-    return this._client.getQrUrl();
+    return ""; // TODO: implement in connect SDK
   }
 }
