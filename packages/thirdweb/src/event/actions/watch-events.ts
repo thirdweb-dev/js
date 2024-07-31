@@ -5,6 +5,7 @@ import {
 } from "./get-events.js";
 
 import { watchBlockNumber } from "../../rpc/watchBlockNumber.js";
+import { retry } from "../../utils/retry.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { PreparedEvent } from "../prepare-event.js";
 import type { ParseEventLogsResult } from "./parse-logs.js";
@@ -68,13 +69,20 @@ export function watchContractEvents<
      * @internal
      */
     onNewBlockNumber: async (blockNumber) => {
-      const logs = await getContractEvents({
-        ...options,
-        // fromBlock is inclusive
-        fromBlock: blockNumber,
-        // toBlock is inclusive
-        toBlock: blockNumber,
-      });
+      const logs = await retry(
+        async () =>
+          getContractEvents({
+            ...options,
+            // fromBlock is inclusive
+            fromBlock: blockNumber,
+            // toBlock is inclusive
+            toBlock: blockNumber,
+          }),
+        {
+          retries: 3,
+          delay: 500,
+        },
+      );
       // if there were any logs associated with our event(s)
       if (logs.length) {
         options.onEvents(logs);

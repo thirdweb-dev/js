@@ -21,19 +21,23 @@ export function SwapFees(props: {
       }}
     >
       {props.quote.processingFees.map((fee) => {
-        const feeAmount = formatNumber(Number(fee.amount), 4);
+        const feeAmount = formatNumber(Number(fee.amount), 6);
         return (
           <Container
             key={`${fee.token.chainId}_${fee.token.tokenAddress}_${feeAmount}`}
-            flex="row"
+            flex="column"
             gap="xxs"
           >
-            <Text color="primaryText" size="sm">
+            <Text color="primaryText" size="sm" style={{ textAlign: "right" }}>
               {feeAmount === 0 ? "~" : ""}
               {feeAmount} {fee.token.symbol}
             </Text>
-            <Text color="secondaryText" size="sm">
-              (${(fee.amountUSDCents / 100).toFixed(2)})
+            <Text
+              color="secondaryText"
+              size="xs"
+              style={{ textAlign: "right" }}
+            >
+              ${(fee.amountUSDCents / 100).toFixed(2)}
             </Text>
           </Container>
         );
@@ -61,14 +65,14 @@ export function FiatFees(props: {
           Amount
         </Text>
         <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.fromCurrency.amount), 4)}{" "}
+          {formatNumber(Number(props.quote.fromCurrency.amount), 2)}{" "}
           {props.quote.fromCurrency.currencySymbol}
         </Text>
       </div>
 
       {/* Processing Fees */}
       {props.quote.processingFees.map((fee, i) => {
-        const feeAmount = formatNumber(Number(fee.amount), 4);
+        const feeAmount = formatNumber(Number(fee.amount), 6);
 
         return (
           <div
@@ -106,7 +110,7 @@ export function FiatFees(props: {
           Total
         </Text>
         <Text color="primaryText" inline>
-          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 4)}{" "}
+          {formatNumber(Number(props.quote.fromCurrencyWithFees.amount), 6)}{" "}
           {props.quote.fromCurrencyWithFees.currencySymbol}
         </Text>
       </div>

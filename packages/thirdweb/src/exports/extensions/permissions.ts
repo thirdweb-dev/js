@@ -57,3 +57,8 @@ export {
   getAllRoleMembers,
   type GetAllRoleMembersParams,
 } from "../../extensions/permissions/read/getAllMembers.js";
+
+// --------------------------------------------------------
+// Utils
+// --------------------------------------------------------
+export { roleMap, getRoleHash } from "../../extensions/permissions/utils.js";

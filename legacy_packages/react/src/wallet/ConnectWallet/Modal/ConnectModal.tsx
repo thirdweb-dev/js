@@ -289,7 +289,8 @@ export const ConnectModal = () => {
   );
 };
 
-const LeftContainer = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const LeftContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     display: "flex",

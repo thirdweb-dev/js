@@ -2,25 +2,25 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
+import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
 import {
   fontSize,
   iconSize,
   radius,
   spacing,
 } from "../../../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { useWalletBalance } from "../../../../../../core/hooks/others/useWalletBalance.js";
-import { useActiveAccount } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { TokenSymbol } from "../../../../components/token/TokenSymbol.js";
-import type { TokenInfo } from "../../../defaultTokens.js";
-import { WalletIcon } from "../../../icons/WalletIcon.js";
+import { GenericWalletIcon } from "../../../icons/GenericWalletIcon.js";
 import { formatTokenBalance } from "../../formatTokenBalance.js";
 import { type NativeToken, isNativeToken } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 
 /**
  * Shows an amount "value" and renders the selected token and chain
@@ -36,12 +36,13 @@ export function PayWithCrypto(props: {
   isLoading: boolean;
   client: ThirdwebClient;
   freezeChainAndTokenSelection?: boolean;
+  payerAccount: Account;
+  swapRequired: boolean;
 }) {
-  const chainQuery = useChainQuery(props.chain);
-  const activeAccount = useActiveAccount();
+  const { name } = useChainName(props.chain);
 
   const balanceQuery = useWalletBalance({
-    address: activeAccount?.address,
+    address: props.payerAccount.address,
     chain: props.chain,
     tokenAddress: isNativeToken(props.token) ? undefined : props.token.address,
     client: props.client,
@@ -53,16 +54,19 @@ export function PayWithCrypto(props: {
       borderColor="borderColor"
       flex="row"
       style={{
-        borderRadius: radius.md,
-        borderBottomRightRadius: 0,
-        borderBottomLeftRadius: 0,
         borderWidth: "1px",
+        borderTopWidth: 0,
         borderStyle: "solid",
-        borderBottom: "none",
         flexWrap: "nowrap",
         justifyContent: "space-between",
         minHeight: "64px",
         alignItems: "center",
+        ...(props.swapRequired
+          ? { borderBottom: "none" }
+          : {
+              borderBottomLeftRadius: radius.md,
+              borderBottomRightRadius: radius.md,
+            }),
       }}
     >
       {/* Left */}
@@ -78,19 +82,19 @@ export function PayWithCrypto(props: {
         }}
         disabled={props.freezeChainAndTokenSelection}
       >
-        <TokenIcon
+        <PayTokenIcon
           token={props.token}
           chain={props.chain}
           size="md"
           client={props.client}
         />
-        <Container flex="column" gap="xxs">
+        <Container flex="column" gap="3xs">
           <Container flex="row" gap="xs" center="y" color="primaryText">
             <TokenSymbol token={props.token} chain={props.chain} size="sm" />
             <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
           </Container>
-          {chainQuery.data?.name ? (
-            <Text size="xs"> {chainQuery.data.name}</Text>
+          {name ? (
+            <Text size="xs">{name}</Text>
           ) : (
             <Skeleton width="90px" height={fontSize.xs} />
           )}
@@ -121,15 +125,15 @@ export function PayWithCrypto(props: {
             color={props.value ? "primaryText" : "secondaryText"}
             style={{}}
           >
-            {formatNumber(Number(props.value), 4) || "--"}
+            {formatNumber(Number(props.value), 6) || ""}
           </Text>
         )}
 
         <Container flex="row" gap="xxs" center="y" color="secondaryText">
-          <WalletIcon size={fontSize.xs} />
+          <GenericWalletIcon size={fontSize.xs} />
           {balanceQuery.data ? (
             <Text size="xs" color="secondaryText" weight={500}>
-              {formatTokenBalance(balanceQuery.data, true)}
+              {formatTokenBalance(balanceQuery.data, false)}
             </Text>
           ) : (
             <Skeleton width="70px" height={fontSize.xs} />

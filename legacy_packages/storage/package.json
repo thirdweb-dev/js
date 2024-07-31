@@ -15,7 +15,7 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "scripts": {
-    "format": "prettier --write 'src/**/*'",
+    "format": "biome format ./src --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
@@ -31,20 +31,20 @@
     "exports": true
   },
   "devDependencies": {
-    "@microsoft/api-documenter": "^7.24.5",
-    "@microsoft/api-extractor": "^7.43.0",
-    "@microsoft/tsdoc": "^0.14.2",
+    "@microsoft/api-documenter": "^7.25.4",
+    "@microsoft/api-extractor": "^7.47.0",
+    "@microsoft/tsdoc": "^0.15.0",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.9.0",
+    "@swc-node/register": "^1.10.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "eslint-plugin-tsdoc": "^0.2.17",
+    "eslint-plugin-tsdoc": "^0.3.0",
     "esm": "^3.2.25",
-    "rimraf": "5.0.5",
+    "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/service-utils",
-  "version": "0.4.30",
+  "version": "0.4.37",
   "main": "dist/thirdweb-dev-service-utils.cjs.js",
   "module": "dist/thirdweb-dev-service-utils.esm.js",
   "exports": {
@@ -40,19 +40,19 @@
   "sideEffects": false,
   "dependencies": {
     "aws4fetch": "1.0.18",
-    "zod": "3.22.4"
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20240405.0",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
-    "@types/node": "20.12.7",
-    "typescript": "5.4.4"
+    "@types/node": "20.14.9",
+    "typescript": "5.5.2"
   },
   "scripts": {
-    "format": "biome format --write 'src/**/*'",
-    "lint": "biome check src/",
-    "fix": "biome check src/ --apply",
+    "format": "biome format ./src --write",
+    "lint": "biome check ./src",
+    "fix": "biome check ./src --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "push": "yalc push",

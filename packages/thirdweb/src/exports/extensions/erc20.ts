@@ -34,6 +34,10 @@ export {
   type TransferFromParams,
 } from "../../extensions/erc20/write/transferFrom.js";
 export {
+  transferBatch,
+  type TransferBatchParams,
+} from "../../extensions/erc20/write/transferBatch.js";
+export {
   approve,
   type ApproveParams,
 } from "../../extensions/erc20/write/approve.js";
@@ -104,3 +108,8 @@ export {
   tokensMintedWithSignatureEvent,
   type TokensMintedWithSignatureEventFilters,
 } from "../../extensions/erc20/__generated__/ISignatureMintERC20/events/TokensMintedWithSignature.js";
+
+export {
+  getApprovalForTransaction,
+  type GetApprovalForTransactionParams,
+} from "../../extensions/erc20/write/getApprovalForTransaction.js";

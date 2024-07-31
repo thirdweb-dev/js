@@ -117,6 +117,7 @@ export const ThirdwebProviderCore = <TChains extends Chain[]>(
   const [supportedChainsWithKey, activeChainIdOrObjWithKey] =
     useUpdateChainsWithClientId(
       supportedChainsNonNull,
+      // @ts-expect-error - TODO: fix unchecked access
       props.activeChain || supportedChainsNonNull[0],
       props.clientId,
     );

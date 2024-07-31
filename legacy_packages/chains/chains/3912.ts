@@ -20,6 +20,12 @@ export default {
       "name": "EIP1559"
     }
   ],
+  "icon": {
+    "url": "ipfs://QmXbsQe7QsVFZJZdBmbZVvS6LgX9ZFoaTMBs9MiQXUzJTw",
+    "width": 256,
+    "height": 256,
+    "format": "png"
+  },
   "infoURL": "https://drac.io/",
   "name": "DRAC Network",
   "nativeCurrency": {

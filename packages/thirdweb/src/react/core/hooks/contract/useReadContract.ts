@@ -6,8 +6,8 @@ import {
 } from "@tanstack/react-query";
 import type { Abi, AbiFunction, ExtractAbiFunctionNames } from "abitype";
 import type { ThirdwebContract } from "../../../../contract/contract.js";
-import type { PrepareContractCallOptions } from "../../../../transaction/prepare-contract-call.js";
 import {
+  type ReadContractOptions,
   type ReadContractResult,
   readContract,
 } from "../../../../transaction/read-contract.js";
@@ -18,8 +18,14 @@ import type {
 import type { PreparedMethod } from "../../../../utils/abi/prepare-method.js";
 import { getFunctionId } from "../../../../utils/function-id.js";
 import { stringify } from "../../../../utils/json.js";
+import type { Prettify } from "../../../../utils/type-utils.js";
 
-type PickedQueryOptions = Pick<UseQueryOptions, "enabled">;
+type PickedQueryOptions = Prettify<
+  Pick<UseQueryOptions, "enabled"> & {
+    refetchInterval?: number;
+    retry?: number;
+  }
+>;
 
 /**
  * A hook to read from a contract.
@@ -38,7 +44,7 @@ export function useReadContract<
     ? AbiFunction | string
     : ExtractAbiFunctionNames<abi>,
 >(
-  options: PrepareContractCallOptions<abi, method> & {
+  options: ReadContractOptions<abi, method> & {
     queryOptions?: PickedQueryOptions;
   },
 ): UseQueryResult<
@@ -82,7 +88,7 @@ export function useReadContract<
 >(
   extensionOrOptions:
     | ((options: BaseTransactionOptions<params, abi>) => Promise<result>)
-    | (PrepareContractCallOptions<abi, method> & {
+    | (ReadContractOptions<abi, method> & {
         queryOptions?: PickedQueryOptions;
       }),
   options?: BaseTransactionOptions<params, abi> & {

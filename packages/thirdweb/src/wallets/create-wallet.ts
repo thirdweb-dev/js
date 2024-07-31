@@ -6,19 +6,23 @@ import type {
 import type { Account, Wallet } from "./interfaces/wallet.js";
 import type {
   CreateWalletArgs,
+  EcosystemWalletId,
   InjectedConnectOptions,
   WalletAutoConnectionOption,
-  WalletConnectionOption,
   WalletId,
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
-import type { ThirdwebClient } from "../client/client.js";
-import { getContract } from "../contract/contract.js";
-import { isContractDeployed } from "../utils/bytecode/is-contract-deployed.js";
+import { webLocalStorage } from "../utils/storage/webStorage.js";
+import { isMobile } from "../utils/web/isMobile.js";
+import { openWindow } from "../utils/web/openWindow.js";
+import { coinbaseWalletSDK } from "./coinbase/coinbase-wallet.js";
+import { getCoinbaseWebProvider } from "./coinbase/coinbaseWebSDK.js";
 import { COINBASE } from "./constants.js";
-import { logoutAuthenticatedUser } from "./in-app/core/authentication/index.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "./smart/lib/constants.js";
+import { isEcosystemWallet } from "./ecosystem/is-ecosystem-wallet.js";
+import { ecosystemWallet } from "./in-app/web/ecosystem.js";
+import { inAppWallet } from "./in-app/web/in-app.js";
+import { smartWallet } from "./smart/smart-wallet.js";
 import type { WCConnectOptions } from "./wallet-connect/types.js";
 import { createWalletEmitter } from "./wallet-emitter.js";
 
@@ -26,9 +30,31 @@ import { createWalletEmitter } from "./wallet-emitter.js";
 
 /**
  * Creates a wallet based on the provided ID and arguments.
+ *
+ * - Supports 350+ wallets
+ * - Handles both injected browser wallets and WalletConnect sessions
+ *
+ * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+ *
  * @param args - The arguments for creating the wallet.
+ * @param args.id - The ID of the wallet to create, this will be autocompleted by your IDE.
+ * [View all available wallets](https://portal.thirdweb.com/typescript/v5/supported-wallets)
+ * @param args.createOptions - The options for creating the wallet.
+ * The arguments are different for each wallet type.
+ * Refer to the [WalletCreationOptions](https://portal.thirdweb.com/references/typescript/v5/WalletCreationOptions) type for more details.
  * @returns - The created wallet.
  * @example
+ *
+ * ## Connecting the wallet
+ *
+ * Once created, you can connect the wallet to your app by calling the `connect` method.
+ *
+ * The `connect` method returns a promise that resolves to the connected account.
+ *
+ * Each wallet type can have different connect options. [View the different connect options](https://portal.thirdweb.com/references/typescript/v5/WalletConnectionOption)
+ *
+ * ## Connecting to an injected wallet
+ *
  * ```ts
  * import { createWallet } from "thirdweb/wallets";
  *
@@ -38,6 +64,57 @@ import { createWalletEmitter } from "./wallet-emitter.js";
  *  client,
  * });
  * ```
+ *
+ * You can check if a wallet is installed by calling the [injectedProvider](https://portal.thirdweb.com/references/typescript/v5/injectedProvider) method.
+ *
+ * ## Connecting via WalletConnect modal
+ *
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const metamaskWallet = createWallet("io.metamask");
+ *
+ * await metamask.connect({
+ *   client,
+ *   walletConnect: {
+ *     projectId: "YOUR_PROJECT_ID",
+ *     showQrModal: true,
+ *     appMetadata: {
+ *       name: "My App",
+ *       url: "https://my-app.com",
+ *       description: "my app description",
+ *       logoUrl: "https://path/to/my-app/logo.svg",
+ *     },
+ *   },
+ * });
+ * ```
+ * [View ConnectWallet connection options](https://portal.thirdweb.com/references/typescript/v5/WCConnectOptions)
+ *
+ * ## Connecting with coinbase wallet
+ *
+ * ```ts
+ * import { createWallet } from "thirdweb/wallets";
+ *
+ * const cbWallet = createWallet("com.coinbase.wallet", {
+ *   appMetadata: {
+ *     name: "My App",
+ *     url: "https://my-app.com",
+ *     description: "my app description",
+ *     logoUrl: "https://path/to/my-app/logo.svg",
+ *   },
+ *   walletConfig: {
+ *     // options: 'all' | 'smartWalletOnly' | 'eoaOnly'
+ *     options: 'all',
+ *   },
+ * });
+ *
+ * const account = await cbWallet.connect({
+ *  client,
+ * });
+ * ```
+ *
+ * [View Coinbase wallet creation options](https://portal.thirdweb.com/references/typescript/v5/CoinbaseWalletCreationOptions)
+ *
  * @wallet
  */
 export function createWallet<const ID extends WalletId>(
@@ -45,11 +122,11 @@ export function createWallet<const ID extends WalletId>(
 ): Wallet<ID> {
   const [id, creationOptions] = args;
 
-  switch (id) {
+  switch (true) {
     /**
      * SMART WALLET
      */
-    case "smart": {
+    case id === "smart": {
       return smartWallet(
         creationOptions as CreateWalletArgs<"smart">[1],
       ) as Wallet<ID>;
@@ -57,8 +134,7 @@ export function createWallet<const ID extends WalletId>(
     /**
      * IN-APP WALLET
      */
-    case "embedded":
-    case "inApp": {
+    case id === "embedded" || id === "inApp": {
       return inAppWallet(
         creationOptions as CreateWalletArgs<"inApp">[1],
       ) as Wallet<ID>;
@@ -68,11 +144,25 @@ export function createWallet<const ID extends WalletId>(
      * COINBASE WALLET VIA SDK
      * -> if no injected coinbase found, we'll use the coinbase SDK
      */
-    case COINBASE: {
-      return coinbaseWalletSDK(
-        creationOptions as CreateWalletArgs<typeof COINBASE>[1],
-      ) as Wallet<ID>;
+    case id === COINBASE: {
+      const options = creationOptions as CreateWalletArgs<typeof COINBASE>[1];
+      return coinbaseWalletSDK({
+        createOptions: options,
+        providerFactory: () => getCoinbaseWebProvider(options),
+        onConnectRequested: async (provider) => {
+          // on the web, make sure to show the coinbase popup IMMEDIATELY on connection requested
+          // otherwise the popup might get blocked in safari
+          // TODO awaiting the provider is fast only thanks to preloading that happens in our components
+          // these probably need to actually imported / created synchronously to be used headless properly
+          const { showCoinbasePopup } = await import("./coinbase/utils.js");
+          return showCoinbasePopup(provider);
+        },
+      }) as Wallet<ID>;
     }
+    case isEcosystemWallet(id):
+      return ecosystemWallet(
+        ...(args as CreateWalletArgs<EcosystemWalletId>),
+      ) as Wallet<ID>;
 
     /**
      * WALLET CONNECT AND INJECTED WALLETS + walletConnect standalone
@@ -106,6 +196,11 @@ export function createWallet<const ID extends WalletId>(
       let handleSwitchChain: (chain: Chain) => Promise<void> = async () => {
         throw new Error("Not implemented yet");
       };
+
+      // on mobile, deeplink to the wallet app for session handling
+      const sessionHandler = isMobile()
+        ? (uri: string) => openWindow(uri)
+        : undefined;
 
       const wallet: Wallet<ID> = {
         id,
@@ -163,6 +258,8 @@ export function createWallet<const ID extends WalletId>(
               options,
               emitter,
               wallet.id as WCSupportedWalletIds,
+              webLocalStorage,
+              sessionHandler,
             );
             // set the states
             account = connectedAccount;
@@ -194,6 +291,8 @@ export function createWallet<const ID extends WalletId>(
               wcOptions,
               emitter,
               wallet.id as WCSupportedWalletIds | "walletConnect",
+              webLocalStorage,
+              sessionHandler,
             );
             // set the states
             account = connectedAccount;
@@ -288,354 +387,4 @@ export function createWallet<const ID extends WalletId>(
  */
 export function walletConnect() {
   return createWallet("walletConnect");
-}
-
-/**
- * Creates a smart wallet.
- * @param createOptions - The options for creating the wallet.
- * @returns The created smart wallet.
- * @example
- * ```ts
- * import { smartWallet } from "thirdweb/wallets";
- *
- * const wallet = smartWallet({
- *  chain: sepolia,
- *  gasless: true,
- * });
- *
- * const account = await wallet.connect({
- *   client,
- *   personalAccount: account,
- * });
- * ```
- * @wallet
- */
-export function smartWallet(
-  createOptions: CreateWalletArgs<"smart">[1],
-): Wallet<"smart"> {
-  const emitter = createWalletEmitter<"smart">();
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
-  let lastConnectOptions: WalletConnectionOption<"smart"> | undefined;
-
-  const _smartWallet: Wallet<"smart"> = {
-    id: "smart",
-    subscribe: emitter.subscribe,
-    getChain: () => chain,
-    getConfig: () => createOptions,
-    getAccount: () => account,
-    autoConnect: async (options) => {
-      const { connectSmartWallet } = await import("./smart/index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
-        options,
-        createOptions,
-      );
-      // set the states
-      lastConnectOptions = options;
-      account = connectedAccount;
-      chain = connectedChain;
-      trackConnect({
-        client: options.client,
-        walletType: "smart",
-        walletAddress: account.address,
-      });
-      // return account
-      return account;
-    },
-    connect: async (options) => {
-      const { connectSmartWallet } = await import("./smart/index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
-        options,
-        createOptions,
-      );
-      // set the states
-      lastConnectOptions = options;
-      account = connectedAccount;
-      chain = connectedChain;
-      trackConnect({
-        client: options.client,
-        walletType: "smart",
-        walletAddress: account.address,
-      });
-      // return account
-      emitter.emit("accountChanged", account);
-      return account;
-    },
-    disconnect: async () => {
-      account = undefined;
-      chain = undefined;
-      const { disconnectSmartWallet } = await import("./smart/index.js");
-      await disconnectSmartWallet(_smartWallet);
-      emitter.emit("disconnect", undefined);
-    },
-    switchChain: async (newChain: Chain) => {
-      if (!lastConnectOptions) {
-        throw new Error("Cannot switch chain without a previous connection");
-      }
-      // check if factory is deployed
-      const factory = getContract({
-        address: createOptions.factoryAddress || DEFAULT_ACCOUNT_FACTORY,
-        chain: newChain,
-        client: lastConnectOptions.client,
-      });
-      const isDeployed = await isContractDeployed(factory);
-      if (!isDeployed) {
-        throw new Error(
-          `Factory contract not deployed on chain: ${newChain.id}`,
-        );
-      }
-      const { connectSmartWallet } = await import("./smart/index.js");
-      const [connectedAccount, connectedChain] = await connectSmartWallet(
-        _smartWallet,
-        { ...lastConnectOptions, chain: newChain },
-        createOptions,
-      );
-      // set the states
-      account = connectedAccount;
-      chain = connectedChain;
-      emitter.emit("chainChanged", newChain);
-    },
-  };
-
-  return _smartWallet;
-}
-
-/**
- * Creates an in-app wallet.
- * @param createOptions - configuration options
- * @returns The created in-app wallet.
- * @example
- * ```ts
- * import { inAppWallet } from "thirdweb/wallets";
- *
- * const wallet = inAppWallet();
- *
- * const account = await wallet.connect({
- *   client,
- *   chain,
- *   strategy: "google",
- * });
- * ```
- *
- * Enable smart accounts and sponsor gas for your users:
- * ```ts
- * import { inAppWallet } from "thirdweb/wallets";
- * const wallet = inAppWallet({
- *  smartAccount: {
- *   chain: sepolia,
- *   sponsorGas: true,
- * },
- * });
- * ```
- *
- * Specify a logo for your login page
- * ```ts
- * import { inAppWallet } from "thirdweb/wallets";
- * const wallet = inAppWallet({
- *  metadata: {
- *   image: {
- *    src: "https://example.com/logo.png",
- *    alt: "My logo",
- *    width: 100,
- *    height: 100,
- *   },
- *  },
- * });
- * ```
- *
- * Hide the ability to export the private key within the Connect Modal
- * ```ts
- * import { inAppWallet } from "thirdweb/wallets";
- * const wallet = inAppWallet({
- *  hidePrivateKeyExport: true
- * });
- * ```
- * @wallet
- */
-export function inAppWallet(
-  createOptions?: CreateWalletArgs<"inApp">[1],
-): Wallet<"inApp"> {
-  const emitter = createWalletEmitter<"inApp">();
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
-  let client: ThirdwebClient | undefined;
-
-  return {
-    id: "inApp",
-    subscribe: emitter.subscribe,
-    getChain: () => chain,
-    getConfig: () => createOptions,
-    getAccount: () => account,
-    autoConnect: async (options) => {
-      const { autoConnectInAppWallet } = await import(
-        "./in-app/core/wallet/index.js"
-      );
-
-      const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
-        options,
-        createOptions,
-      );
-      // set the states
-      client = options.client;
-      account = connectedAccount;
-      chain = connectedChain;
-      trackConnect({
-        client: options.client,
-        walletType: "inApp",
-        walletAddress: account.address,
-      });
-      // return only the account
-      return account;
-    },
-    connect: async (options) => {
-      const { connectInAppWallet } = await import(
-        "./in-app/core/wallet/index.js"
-      );
-
-      const [connectedAccount, connectedChain] = await connectInAppWallet(
-        options,
-        createOptions,
-      );
-      // set the states
-      client = options.client;
-      account = connectedAccount;
-      chain = connectedChain;
-      trackConnect({
-        client: options.client,
-        walletType: "inApp",
-        walletAddress: account.address,
-      });
-      // return only the account
-      return account;
-    },
-    disconnect: async () => {
-      // If no client is assigned, we should be fine just unsetting the states
-      if (client) {
-        const result = await logoutAuthenticatedUser({ client });
-        if (!result.success) {
-          throw new Error("Failed to logout");
-        }
-      }
-      account = undefined;
-      chain = undefined;
-      emitter.emit("disconnect", undefined);
-    },
-    switchChain: async (newChain) => {
-      if (createOptions?.smartAccount && client && account) {
-        // if account abstraction is enabled, reconnect to smart account on the new chain
-        const { autoConnectInAppWallet } = await import(
-          "./in-app/core/wallet/index.js"
-        );
-        const [connectedAccount, connectedChain] = await autoConnectInAppWallet(
-          {
-            chain: newChain,
-            client,
-          },
-          createOptions,
-        );
-        account = connectedAccount;
-        chain = connectedChain;
-      } else {
-        // if not, simply set the new chain
-        chain = newChain;
-      }
-      emitter.emit("chainChanged", newChain);
-    },
-  };
-}
-
-/**
- * internal helper functions
- */
-
-function coinbaseWalletSDK(
-  createOptions?: CreateWalletArgs<typeof COINBASE>[1],
-): Wallet<typeof COINBASE> {
-  const emitter = createWalletEmitter<typeof COINBASE>();
-  let account: Account | undefined = undefined;
-  let chain: Chain | undefined = undefined;
-
-  function reset() {
-    account = undefined;
-    chain = undefined;
-  }
-
-  let handleDisconnect = async () => {};
-
-  let handleSwitchChain = async (newChain: Chain) => {
-    chain = newChain;
-  };
-
-  const unsubscribeChainChanged = emitter.subscribe(
-    "chainChanged",
-    (newChain) => {
-      chain = newChain;
-    },
-  );
-
-  const unsubscribeDisconnect = emitter.subscribe("disconnect", () => {
-    reset();
-    unsubscribeChainChanged();
-    unsubscribeDisconnect();
-  });
-
-  emitter.subscribe("accountChanged", (_account) => {
-    account = _account;
-  });
-
-  return {
-    id: COINBASE,
-    subscribe: emitter.subscribe,
-    getChain: () => chain,
-    getConfig: () => createOptions,
-    getAccount: () => account,
-    autoConnect: async (options) => {
-      const { autoConnectCoinbaseWalletSDK } = await import(
-        "./coinbase/coinbaseSDKWallet.js"
-      );
-      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await autoConnectCoinbaseWalletSDK(options, createOptions, emitter);
-      // set the states
-      account = connectedAccount;
-      chain = connectedChain;
-      handleDisconnect = doDisconnect;
-      handleSwitchChain = doSwitchChain;
-      trackConnect({
-        client: options.client,
-        walletType: COINBASE,
-        walletAddress: account.address,
-      });
-      // return account
-      return account;
-    },
-    connect: async (options) => {
-      const { connectCoinbaseWalletSDK } = await import(
-        "./coinbase/coinbaseSDKWallet.js"
-      );
-      const [connectedAccount, connectedChain, doDisconnect, doSwitchChain] =
-        await connectCoinbaseWalletSDK(options, createOptions, emitter);
-
-      // set the states
-      account = connectedAccount;
-      chain = connectedChain;
-      handleDisconnect = doDisconnect;
-      handleSwitchChain = doSwitchChain;
-      trackConnect({
-        client: options.client,
-        walletType: COINBASE,
-        walletAddress: account.address,
-      });
-      // return account
-      return account;
-    },
-    disconnect: async () => {
-      reset();
-      await handleDisconnect();
-    },
-    switchChain: async (newChain) => {
-      await handleSwitchChain(newChain);
-    },
-  };
 }

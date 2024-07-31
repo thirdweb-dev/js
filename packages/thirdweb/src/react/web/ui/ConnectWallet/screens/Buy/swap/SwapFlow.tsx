@@ -3,22 +3,22 @@ import { getCachedChain } from "../../../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
-import type { Account } from "../../../../../../../wallets/interfaces/wallet.js";
-import type { TokenInfo } from "../../../defaultTokens.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
+import type { PayerInfo } from "../types.js";
 import { SwapConfirmationScreen } from "./ConfirmationScreen.js";
 import { SwapStatusScreen } from "./SwapStatusScreen.js";
 
 type SwapFlowProps = {
+  title: string;
   onBack?: () => void;
   buyWithCryptoQuote: BuyWithCryptoQuote;
-  account: Account;
-  onViewPendingTx: () => void;
+  payer: PayerInfo;
   client: ThirdwebClient;
   isFiatFlow: boolean;
   onDone: () => void;
   onTryAgain: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
 };
 
@@ -75,13 +75,13 @@ export function SwapFlow(props: SwapFlowProps) {
   if (swapTxHash) {
     return (
       <SwapStatusScreen
+        title={props.title}
         onBack={props.onBack}
         onTryAgain={props.onTryAgain}
-        onViewPendingTx={props.onViewPendingTx}
         swapTxHash={swapTxHash}
         client={props.client}
         onDone={props.onDone}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         quote={quote}
       />
@@ -90,6 +90,7 @@ export function SwapFlow(props: SwapFlowProps) {
 
   return (
     <SwapConfirmationScreen
+      title={props.title}
       setSwapTxHash={setSwapTxHash}
       toChain={toChain}
       toAmount={toAmount}
@@ -104,6 +105,7 @@ export function SwapFlow(props: SwapFlowProps) {
       onTryAgain={props.onTryAgain}
       quote={quote}
       isFiatFlow={props.isFiatFlow}
+      payer={props.payer}
     />
   );
 }

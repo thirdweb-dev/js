@@ -8,9 +8,9 @@ export default {
       "url": "https://scan.test.btcs.network",
       "standard": "EIP3091",
       "icon": {
-        "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
-        "width": 200,
-        "height": 217,
+        "url": "ipfs://QmdUgiGaD6fGjhb9x1NvfccvEBBFq2YHSm9yb8FNhpwHkW",
+        "width": 512,
+        "height": 512,
         "format": "png"
       }
     }
@@ -19,9 +19,9 @@ export default {
     "https://scan.test.btcs.network/faucet"
   ],
   "icon": {
-    "url": "ipfs://QmeTQaBCkpbsxNNWTpoNrMsnwnAEf1wYTcn7CiiZGfUXD2",
-    "width": 200,
-    "height": 217,
+    "url": "ipfs://QmdUgiGaD6fGjhb9x1NvfccvEBBFq2YHSm9yb8FNhpwHkW",
+    "width": 512,
+    "height": 512,
     "format": "png"
   },
   "infoURL": "https://www.coredao.org",

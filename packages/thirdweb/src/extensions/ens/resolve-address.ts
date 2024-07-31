@@ -11,6 +11,9 @@ import { encodeAddr } from "./__generated__/AddressResolver/read/addr.js";
 import { resolve } from "./__generated__/UniversalResolver/read/resolve.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
+/**
+ * @extension ENS
+ */
 export type ResolveAddressOptions = {
   client: ThirdwebClient;
   name: string;

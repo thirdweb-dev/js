@@ -5,7 +5,7 @@ import { fontSize, iconSize } from "../../../core/design-system/index.js";
 import { StyledH2 } from "../design-system/elements.js";
 import { IconButton } from "./buttons.js";
 
-export const ModalTitle = /* @__PURE__ */ StyledH2(() => {
+export const ModalTitle = /* @__PURE__ */ StyledH2((_) => {
   const theme = useCustomTheme();
   return {
     margin: 0,

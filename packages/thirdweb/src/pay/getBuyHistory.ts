@@ -6,6 +6,7 @@ import { getPayBuyHistoryEndpoint } from "./utils/definitions.js";
 
 /**
  * The parameters for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyHistory) function
+ * @buyCrypto
  */
 export type BuyHistoryParams = {
   /**
@@ -35,6 +36,8 @@ export type BuyHistoryParams = {
  * The result for [`getBuyHistory`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoHistory) function
  *
  * It includes both "Buy with Crypto" and "Buy with Fiat" transactions
+ *
+ * @buyCrypto
  */
 export type BuyHistoryData = {
   /**
@@ -72,6 +75,7 @@ export type BuyHistoryData = {
  *  walletAddress: "0x...",
  * })
  * ```
+ * @buyCrypto
  */
 export async function getBuyHistory(
   params: BuyHistoryParams,

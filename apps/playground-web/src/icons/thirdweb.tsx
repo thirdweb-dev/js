@@ -25,11 +25,11 @@ export function ThirdwebIcon(props: { className?: string }) {
           y2="164.437"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#F213A4"></stop>
-          <stop offset="0.1517" stopColor="#E011A7"></stop>
-          <stop offset="0.4554" stopColor="#B20DAF"></stop>
-          <stop offset="0.8789" stopColor="#6806BB"></stop>
-          <stop offset="1" stopColor="#5204BF"></stop>
+          <stop stopColor="#F213A4" />
+          <stop offset="0.1517" stopColor="#E011A7" />
+          <stop offset="0.4554" stopColor="#B20DAF" />
+          <stop offset="0.8789" stopColor="#6806BB" />
+          <stop offset="1" stopColor="#5204BF" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_3:35"
@@ -39,11 +39,11 @@ export function ThirdwebIcon(props: { className?: string }) {
           y2="148.471"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#F213A4"></stop>
-          <stop offset="0.1517" stopColor="#E011A7"></stop>
-          <stop offset="0.4554" stopColor="#B20DAF"></stop>
-          <stop offset="0.8789" stopColor="#6806BB"></stop>
-          <stop offset="1" stopColor="#5204BF"></stop>
+          <stop stopColor="#F213A4" />
+          <stop offset="0.1517" stopColor="#E011A7" />
+          <stop offset="0.4554" stopColor="#B20DAF" />
+          <stop offset="0.8789" stopColor="#6806BB" />
+          <stop offset="1" stopColor="#5204BF" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_3:35"
@@ -53,14 +53,14 @@ export function ThirdwebIcon(props: { className?: string }) {
           y2="164.437"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#F213A4"></stop>
-          <stop offset="0.1517" stopColor="#E011A7"></stop>
-          <stop offset="0.4554" stopColor="#B20DAF"></stop>
-          <stop offset="0.8789" stopColor="#6806BB"></stop>
-          <stop offset="1" stopColor="#5204BF"></stop>
+          <stop stopColor="#F213A4" />
+          <stop offset="0.1517" stopColor="#E011A7" />
+          <stop offset="0.4554" stopColor="#B20DAF" />
+          <stop offset="0.8789" stopColor="#6806BB" />
+          <stop offset="1" stopColor="#5204BF" />
         </linearGradient>
         <clipPath id="clip0_3:35">
-          <rect width="516" height="321" fill="white"></rect>
+          <rect width="516" height="321" fill="white" />
         </clipPath>
       </defs>
     </svg>

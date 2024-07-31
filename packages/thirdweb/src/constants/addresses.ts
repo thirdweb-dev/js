@@ -14,4 +14,9 @@ export function isNativeTokenAddress(address: string) {
 /**
  * The zero address in Ethereum, represented as a hexadecimal string.
  */
-export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
+export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+
+/**
+ * @deprecated Use {@link ZERO_ADDRESS}.
+ */
+export const ADDRESS_ZERO = ZERO_ADDRESS;

@@ -18,7 +18,6 @@ import { computeEOAForwarderAddress } from "../../../common/any-evm-utils/comput
 import { computeForwarderAddress } from "../../../common/any-evm-utils/computeForwarderAddress";
 import { TransactionError, parseRevertReason } from "../../../common/error";
 import { extractFunctionsFromAbi } from "../../../common/feature-detection/extractFunctionsFromAbi";
-import { fetchSourceFilesFromMetadata } from "../../../common/fetchSourceFilesFromMetadata";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -26,13 +25,16 @@ import {
   getAndIncrementNonce,
 } from "../../../common/forwarder";
 import { getDefaultGasOverrides } from "../../../common/gas-price";
-import { fetchContractMetadataFromAddress } from "../../../common/metadata-resolver";
+import {
+  fetchContractMetadataFromAddress,
+  getContractMetadataFromCache,
+} from "../../../common/metadata-resolver";
 import { signEIP2612Permit } from "../../../common/permit";
 import { signTypedDataInternal } from "../../../common/sign";
 import { CONTRACT_ADDRESSES } from "../../../constants/addresses/CONTRACT_ADDRESSES";
 import { getContractAddressByChainId } from "../../../constants/addresses/getContractAddressByChainId";
 import { EventType } from "../../../constants/events";
-import { AbiSchema, ContractSource } from "../../../schema/contracts/custom";
+import { AbiSchema } from "../../../schema/contracts/custom";
 import { SDKOptions } from "../../../schema/sdk-options";
 import { Address } from "../../../schema/shared/Address";
 import { CallOverrideSchema } from "../../../schema/shared/CallOverrideSchema";
@@ -433,8 +435,8 @@ export class ContractWrapper<
             ...args,
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
-        } catch (err: any) {
-          throw await this.formatError(err, fn, args, callOverrides);
+        } catch (staticErr: any) {
+          throw await this.formatError(staticErr, fn, args, callOverrides);
         }
       }
     }
@@ -495,23 +497,14 @@ export class ContractWrapper<
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
-    // Get contract sources for stack trace
-    let sources: ContractSource[] | undefined = undefined;
+    // Get contract metadata for contract name if cached
     let contractName: string | undefined = undefined;
     try {
-      const metadata = await fetchContractMetadataFromAddress(
-        this.address,
-        this.getProvider(),
-        this.storage,
-        this.options,
-      );
+      const chainId = (await provider.getNetwork()).chainId;
+      const metadata = getContractMetadataFromCache(this.address, chainId);
 
-      if (metadata.name) {
+      if (metadata?.name) {
         contractName = metadata.name;
-      }
-
-      if (metadata.metadata.sources) {
-        sources = await fetchSourceFilesFromMetadata(metadata, this.storage);
       }
     } catch (err) {
       // no-op
@@ -529,7 +522,6 @@ export class ContractWrapper<
         value,
         hash,
         contractName,
-        sources,
       },
       error,
     );

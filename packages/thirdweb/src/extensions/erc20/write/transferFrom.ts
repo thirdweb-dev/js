@@ -4,8 +4,10 @@ import { toUnits } from "../../../utils/units.js";
 
 import type { Prettify } from "../../../utils/type-utils.js";
 import { transferFrom as generatedTransferFrom } from "../__generated__/IERC20/write/transferFrom.js";
+
 /**
  * Represents the parameters for the `transferFrom` function.
+ * @extension ERC20
  */
 export type TransferFromParams = Prettify<
   { to: Address; from: Address } & (
@@ -26,6 +28,7 @@ export type TransferFromParams = Prettify<
  * @example
  * ```ts
  * import { transferFrom } from "thirdweb/extensions/erc20";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = transferFrom({
  *  contract: USDC_CONTRACT,
@@ -33,6 +36,8 @@ export type TransferFromParams = Prettify<
  *  to: "0x5678...",
  *  amount: 100,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function transferFrom(
@@ -56,6 +61,12 @@ export function transferFrom(
         from: options.from,
         to: options.to,
         value: amount,
+        overrides: {
+          erc20Value: {
+            amountWei: amount,
+            tokenAddress: options.contract.address,
+          },
+        },
       } as const;
     },
   });

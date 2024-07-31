@@ -2,8 +2,10 @@ import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
 import { claim } from "../../__generated__/IDrop/write/claim.js";
+
 /**
  * Represents the parameters for claiming an ERC721 token.
+ * @extension ERC721
  */
 export type ClaimToParams = {
   to: Address;
@@ -18,11 +20,15 @@ export type ClaimToParams = {
  * @example
  * ```ts
  * import { claimTo } from "thirdweb/extensions/erc721";
- * const tx = await claimTo({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = claimTo({
  *   contract,
  *   to: "0x...",
  *   quantity: 1n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  * @throws If no claim condition is set
  * @returns A promise that resolves with the submitted transaction hash.

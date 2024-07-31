@@ -16,7 +16,7 @@ import { waitForReceipt } from "./wait-for-tx-receipt.js";
  * import { sendAndConfirmTransaction } from "thirdweb";
  *
  * const transactionReceipt = await sendAndConfirmTransaction({
- *  wallet,
+ *  account,
  *  transaction
  * });
  * ```

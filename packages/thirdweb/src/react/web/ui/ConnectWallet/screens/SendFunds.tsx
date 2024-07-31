@@ -1,17 +1,19 @@
 import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { isAddress } from "../../../../../utils/address.js";
 import {
   fontSize,
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../../core/hooks/others/useWalletBalance.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
+import { useSendToken } from "../../../../core/hooks/wallets/useSendToken.js";
 import {
-  useActiveAccount,
-  useActiveWalletChain,
-} from "../../../../core/hooks/wallets/wallet-hooks.js";
+  type SupportedTokens,
+  defaultTokens,
+} from "../../../../core/utils/defaultTokens.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Spinner } from "../../components/Spinner.js";
@@ -21,8 +23,6 @@ import { Button } from "../../components/buttons.js";
 import { Input, Label } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { StyledDiv } from "../../design-system/elements.js";
-import { useSendToken } from "../../hooks/useSendToken.js";
-import { type SupportedTokens, defaultTokens } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { TokenSelector } from "./TokenSelector.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
@@ -136,23 +136,6 @@ function SendFundsForm(props: {
   });
 
   const { receiverAddress, setReceiverAddress, amount, setAmount } = props;
-
-  // Ethereum or Rinkeby or Goerli
-  // TODO support ens
-  const isENSSupported = false;
-
-  const isValidReceiverAddress = useMemo(() => {
-    const isENS = receiverAddress.endsWith(".eth");
-
-    if (!isENSSupported && isENS) {
-      return false;
-    }
-
-    return isENS || isAddress(receiverAddress);
-  }, [receiverAddress]);
-
-  const showInvalidAddressError = receiverAddress && !isValidReceiverAddress;
-
   const sendTokenMutation = useSendToken(props.client);
 
   function getErrorMessage(error?: TXError) {
@@ -170,7 +153,7 @@ function SendFundsForm(props: {
       return locale.insufficientFunds;
     }
 
-    return locale.transactionFailed;
+    return message;
   }
 
   if (!activeChain) {
@@ -198,7 +181,9 @@ function SendFundsForm(props: {
           color="danger"
         >
           <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
-          <Text color="danger">{getErrorMessage(sendTokenMutation.error)}</Text>
+          <Text center multiline color="danger">
+            {getErrorMessage(sendTokenMutation.error)}
+          </Text>
         </Container>
       </Container>
     );
@@ -296,25 +281,15 @@ function SendFundsForm(props: {
         </Label>
         <Spacer y="sm" />
         <Input
-          data-error={showInvalidAddressError}
           required
           id="receiver"
-          placeholder={isENSSupported ? "0x... / ENS name" : "0x..."}
+          placeholder={"0x... or ENS name"}
           variant="outline"
           value={receiverAddress}
           onChange={(e) => {
             setReceiverAddress(e.target.value);
           }}
         />
-
-        {showInvalidAddressError && (
-          <>
-            <Spacer y="xs" />
-            <Text color="danger" size="sm">
-              {locale.invalidAddress}
-            </Text>
-          </>
-        )}
 
         <Spacer y="lg" />
 
@@ -363,10 +338,10 @@ function SendFundsForm(props: {
             padding: spacing.md,
           }}
         >
-          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
           {sendTokenMutation.isPending && (
             <Spinner size="sm" color="accentButtonText" />
           )}
+          {sendTokenMutation.isPending ? locale.sending : locale.submitButton}
         </Button>
       </form>
     </Container>

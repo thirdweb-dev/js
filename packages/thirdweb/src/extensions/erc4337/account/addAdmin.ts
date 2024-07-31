@@ -3,6 +3,9 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { defaultPermissionsForAdmin, signPermissionRequest } from "./common.js";
 
+/**
+ * @extension ERC4337
+ */
 export type AddAdminOptions = {
   /**
    * The admin account that will perform the operation.
@@ -21,12 +24,14 @@ export type AddAdminOptions = {
  * @example
  * ```ts
  * import { addAdmin } from 'thirdweb/extensions/erc4337';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = addAdmin({
  * contract,
  * account,
  * adminAddress: '0x...'
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC4337

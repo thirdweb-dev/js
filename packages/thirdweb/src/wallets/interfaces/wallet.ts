@@ -26,6 +26,16 @@ export type SendRawTransactionOptions = {
   chainId: number;
 };
 
+export type WatchAssetParams = {
+  type: "ERC20";
+  options: {
+    address: Address;
+    symbol: string;
+    decimals: number;
+    image?: string | undefined;
+  };
+};
+
 /**
  * Wallet interface
  */
@@ -123,6 +133,13 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
    * ```
    */
   getConfig: () => CreateWalletArgs<TWalletId>[1];
+
+  // OPTIONAL
+
+  /**
+   * Can be used to execute any pre-connection actions like showing a modal, etc.
+   */
+  onConnectRequested?: () => Promise<void>;
 };
 
 /**
@@ -186,7 +203,7 @@ export type Account = {
   /**
    * Sign the given transaction and return the signature
    *
-   * This method is not available for on all wallets. This method will be `undefined` if the wallet does not support it.
+   * This method is not available on all wallets. This method will be `undefined` if the wallet does not support it.
    * @example
    * ```ts
    * if (account.signTransaction) {
@@ -223,4 +240,24 @@ export type Account = {
   sendRawTransaction?: (
     tx: SendRawTransactionOptions,
   ) => Promise<SendTransactionResult>;
+  /**
+   * Used to do any pre-transaction actions like showing a confirmation modal, etc.
+   * @returns
+   */
+  onTransactionRequested?: (
+    // biome-ignore lint/suspicious/noExplicitAny: any transaction type is allowed here
+    transaction: PreparedTransaction<any>,
+  ) => Promise<void>;
+  /**
+   * Add an asset to the wallet's watchlist.
+   * @param asset - The asset to watch.
+   *
+   * @example
+   * ```ts
+   * if (account.watchAsset) {
+   *  const success = await account.watchAsset({ type: "ERC20", options: { address: "0x...", symbol: "...", decimals: 18 } });
+   * }
+   * ```
+   */
+  watchAsset?: (asset: WatchAssetParams) => Promise<boolean>;
 };

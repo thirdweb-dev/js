@@ -12,7 +12,6 @@ import {
   useReadContract,
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { CodeExample } from "../code/code-example";
 import { editionDropContract, editionDropTokenId } from "./constants";
 
 export function SponsoredTxPreview() {
@@ -46,11 +45,11 @@ export function SponsoredTxPreview() {
             <MediaRenderer
               client={THIRDWEB_CLIENT}
               src={nft.metadata.image}
-              style={{ width: "100%", marginTop: "10px" }}
+              style={{ width: "400px", marginTop: "10px" }}
             />
           ) : null}
           {smartAccount ? (
-            <>
+            <div className="flex flex-col justify-center p-8">
               <p className="font-semibold text-center mb-2">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
@@ -64,6 +63,9 @@ export function SponsoredTxPreview() {
                     quantity: 1n,
                   })
                 }
+                payModal={{
+                  metadata: nft?.metadata,
+                }}
                 onError={(error) => {
                   alert(`Error: ${error.message}`);
                 }}
@@ -73,12 +75,12 @@ export function SponsoredTxPreview() {
               >
                 Mint
               </TransactionButton>
-            </>
+            </div>
           ) : (
             <p
               style={{
                 textAlign: "center",
-                width: "100%",
+                width: "400px",
                 marginTop: "10px",
               }}
             >

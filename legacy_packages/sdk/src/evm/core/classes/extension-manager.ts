@@ -189,9 +189,8 @@ export class ExtensionManager implements DetectableFeature {
           const parsedMetadata = await CommonContractSchema.parseAsync(
             inputArgs.extensionMetadata,
           );
-          extensionMetadataUri = await this.contractWrapper.storage.upload(
-            parsedMetadata,
-          );
+          extensionMetadataUri =
+            await this.contractWrapper.storage.upload(parsedMetadata);
         }
       }
 
@@ -316,9 +315,8 @@ export class ExtensionManager implements DetectableFeature {
           const parsedMetadata = await CommonContractSchema.parseAsync(
             inputArgs.extensionMetadata,
           );
-          extensionMetadataUri = await this.contractWrapper.storage.upload(
-            parsedMetadata,
-          );
+          extensionMetadataUri =
+            await this.contractWrapper.storage.upload(parsedMetadata);
         }
       }
 

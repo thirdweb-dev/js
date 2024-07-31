@@ -255,7 +255,8 @@ const main = async () => {
     .option("--extension", "Create a smart contract extension.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
-    .option("--react-native", "Initialize as a React Native project.")
+    .option("--react-native", "Initialize as a React Native (Expo) project.")
+    .option("--expo", "Initialize as an Expo project.")
     .option("--node", "Initialize as a Node project.")
     .option(
       "--use-npm",
@@ -373,6 +374,7 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .option("--zksync", "Publish with ZKSync settings")
+    .option("--customid", "Override contract name with a custom ID")
     .option(
       "--link-lib <library:address...>",
       "Specify library names and addresses",

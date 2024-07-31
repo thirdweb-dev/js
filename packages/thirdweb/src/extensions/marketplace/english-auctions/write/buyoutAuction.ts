@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { bidInAuction as generatedBidInAuction } from "../../__generated__/IEnglishAuctions/write/bidInAuction.js";
 import { getAuction } from "../read/getAuction.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type BuyoutAuctionParams = {
   auctionId: bigint;
 };
@@ -15,11 +18,14 @@ export type BuyoutAuctionParams = {
  * @example
  * ```ts
  * import { buyoutAuction } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = buyoutAuction({
  *  contract,
  *  auctionId: 0n
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function buyoutAuction(

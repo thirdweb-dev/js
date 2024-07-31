@@ -15,6 +15,7 @@ export const CopyIcon: React.FC<{
   hasCopied?: boolean;
 }> = (props) => {
   const { hasCopied, onCopy } = useClipboard(props.text);
+  const showCheckIcon = props.hasCopied || hasCopied;
 
   return (
     <div
@@ -31,13 +32,15 @@ export const CopyIcon: React.FC<{
       }}
     >
       <ToolTip tip={props.tip} side={props.side} align={props.align}>
-        {props.hasCopied || hasCopied ? (
-          <Container color="success">
-            <CheckIcon />
+        <div>
+          <Container
+            color={showCheckIcon ? "success" : undefined}
+            flex="row"
+            center="both"
+          >
+            {showCheckIcon ? <CheckIcon /> : <CopyIconSVG />}
           </Container>
-        ) : (
-          <CopyIconSVG />
-        )}
+        </div>
       </ToolTip>
     </div>
   );

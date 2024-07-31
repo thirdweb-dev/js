@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const ethereum = /* @__PURE__ */ defineChain({
   id: 1,
   name: "Ethereum",
@@ -18,5 +21,6 @@ export const ethereum = /* @__PURE__ */ defineChain({
 
 /**
  * @alias ethereum
+ * @chain
  */
 export const mainnet = ethereum;

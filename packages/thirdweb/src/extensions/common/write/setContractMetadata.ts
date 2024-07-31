@@ -2,6 +2,9 @@ import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { setContractURI } from "../__generated__/IContractMetadata/write/setContractURI.js";
 
+/**
+ * @extension COMMON
+ */
 export type SetContractMetadataParams = Record<string, unknown>;
 
 /**
@@ -13,6 +16,7 @@ export type SetContractMetadataParams = Record<string, unknown>;
  * @example
  * ```ts
  * import { setContractMetadata } from '@thirdweb/extensions/common';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = setContractMetadata({
  *  contract,

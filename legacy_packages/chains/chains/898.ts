@@ -21,7 +21,7 @@ export default {
     }
   ],
   "icon": {
-    "url": "ipfs://QmXMLcCaNPMyWCEYX2MZDJHNvj5cpj2cR5dRQtedBRNypT",
+    "url": "ipfs://QmcwqTBqA8ayxizG4XwLUSyg3xkQbpzUEvqQmWzyMSjnCo",
     "width": 512,
     "height": 512,
     "format": "png"
@@ -29,8 +29,8 @@ export default {
   "infoURL": "https://maxi.network",
   "name": "MAXI Chain Testnet",
   "nativeCurrency": {
-    "name": "MAXICOIN",
-    "symbol": "MAXI",
+    "name": "MAXI GAS",
+    "symbol": "MGAS",
     "decimals": 18
   },
   "networkId": 898,

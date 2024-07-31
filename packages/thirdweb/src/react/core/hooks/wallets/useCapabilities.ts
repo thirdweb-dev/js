@@ -7,7 +7,7 @@ import {
   type GetCapabilitiesResult,
   getCapabilities,
 } from "../../../../wallets/eip5792/get-capabilities.js";
-import { useActiveWallet } from "./wallet-hooks.js";
+import { useActiveWallet } from "./useActiveWallet.js";
 
 /**
  * A hook to get the current wallet's capabilities according to [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792).
@@ -28,7 +28,6 @@ export function useCapabilities(options?: {
   queryOptions?: Pick<UseQueryOptions, "enabled" | "retry">;
 }): UseQueryResult<GetCapabilitiesResult> {
   const wallet = useActiveWallet();
-
   return useQuery({
     queryKey: [
       "getCapabilities",

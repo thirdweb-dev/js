@@ -13,10 +13,6 @@ on:
       - "legacy_packages/**"
       - "legacy_e2e/**"
       - "package.json"
-  # trigger on merge group as well (merge queue)
-  merge_group:
-    types: [checks_requested]
-    branches: ["main"]
   workflow_dispatch:
 
 concurrency:
@@ -32,7 +28,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     name: Build Packages
     steps:
       - name: Check out the code
@@ -60,7 +56,7 @@ jobs:
   test:
     timeout-minutes: 15
     name: Unit Tests
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4
@@ -80,7 +76,7 @@ jobs:
   e2e:
     timeout-minutes: 15
     name: E2E Tests
-    runs-on: ubuntu-latest-16
+    runs-on: ubuntu-latest
     steps:
       - name: Check out the code
         uses: actions/checkout@v4

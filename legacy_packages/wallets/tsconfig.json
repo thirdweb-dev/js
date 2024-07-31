@@ -1,8 +1,4 @@
 {
   "extends": "@thirdweb-dev/tsconfig/sdk.json",
-  "include": ["src", "types", "test"],
-  "exclude": ["dist", "build", "node_modules"],
-  "compilerOptions": {
-    "noUncheckedIndexedAccess": true
-  }
+  "include": ["src", "test"]
 }

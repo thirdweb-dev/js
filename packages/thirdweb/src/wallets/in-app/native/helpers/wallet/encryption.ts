@@ -131,11 +131,11 @@ export async function decryptShareWeb(
   // biome-ignore lint/style/noNonNullAssertion: it's there
   const ivBufferHex = uint8ArrayToHex(base64ToUint8Array(ivBase64!));
 
-  // @ts-ignore - default import buils but ts doesn't like it
+  // @ts-ignore - default import builds but ts doesn't like it
   const normalizedShare = await AesGcmCrypto.decrypt(
     originalBase64CipherText,
     key,
-    ivBufferHex.slice(2), // lib expects hex with no
+    ivBufferHex.slice(2), // lib expects hex with no 0x prefix
     hexStringTag.slice(2),
     false,
   );

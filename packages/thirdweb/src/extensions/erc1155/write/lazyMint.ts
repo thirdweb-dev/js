@@ -10,6 +10,7 @@ import { lazyMint as generatedLazyMint } from "../__generated__/ILazyMint/write/
 
 /**
  * Represents the input data for creating an NFT (Non-Fungible Token).
+ * @extension ERC1155
  */
 type NFTInput = Prettify<
   {
@@ -24,6 +25,9 @@ type NFTInput = Prettify<
   } & Record<string, unknown>
 >;
 
+/**
+ * @extension ERC1155
+ */
 export type LazyMintParams = {
   nfts: (NFTInput | string)[];
 };
@@ -36,8 +40,9 @@ export type LazyMintParams = {
  * @example
  * ```ts
  * import { lazyMint } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
  *
- * const tx = await lazyMint({
+ * const transaction = lazyMint({
  * contract,
  * nfts: [
  *    {
@@ -47,6 +52,8 @@ export type LazyMintParams = {
  *    },
  *  ],
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function lazyMint(options: BaseTransactionOptions<LazyMintParams>) {

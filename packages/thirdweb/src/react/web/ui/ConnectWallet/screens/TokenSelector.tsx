@@ -12,9 +12,13 @@ import {
   iconSize,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
+import {
+  useChainIconUrl,
+  useChainName,
+} from "../../../../core/hooks/others/useChainQuery.js";
 import { useTokenInfo } from "../../../../core/hooks/others/useTokenInfo.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
+import type { TokenInfo } from "../../../../core/utils/defaultTokens.js";
 import { ChainIcon } from "../../components/ChainIcon.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
@@ -25,7 +29,6 @@ import { Button } from "../../components/buttons.js";
 import { Input } from "../../components/formElements.js";
 import { Text } from "../../components/text.js";
 import { ChainButton, NetworkSelectorContent } from "../NetworkSelector.js";
-import type { TokenInfo } from "../defaultTokens.js";
 import type { ConnectLocale } from "../locale/types.js";
 import { formatTokenBalance } from "./formatTokenBalance.js";
 import {
@@ -34,7 +37,6 @@ import {
   isNativeToken,
 } from "./nativeToken.js";
 
-// NOTE: MUST NOT USE useConnectUI here because this UI can be used outside connect ui
 // Note: TokenSelector can be used when wallet may or may not be connected
 
 /**
@@ -52,11 +54,14 @@ export function TokenSelector(props: {
   };
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
+  modalTitle?: string;
 }) {
   const [screen, setScreen] = useState<"base" | "select-chain">("base");
   const [input, setInput] = useState("");
   const chain = props.chain;
-  const chainQuery = useChainQuery(chain);
+
+  const chainNameQuery = useChainName(chain);
+  const chainIconQuery = useChainIconUrl(chain);
 
   // if input is undefined, it loads the native token
   // otherwise it loads the token with given address
@@ -132,7 +137,10 @@ export function TokenSelector(props: {
       }}
     >
       <Container p="lg">
-        <ModalHeader onBack={props.onBack} title={locale.selectTokenTitle} />
+        <ModalHeader
+          onBack={props.onBack}
+          title={props.modalTitle || locale.selectTokenTitle}
+        />
       </Container>
 
       <Line />
@@ -158,15 +166,14 @@ export function TokenSelector(props: {
                 }}
               >
                 <ChainIcon
-                  chainIcon={chainQuery.data?.icon}
+                  chainIconUrl={chainIconQuery.url}
                   size={iconSize.lg}
                   client={props.client}
                 />
 
-                {chainQuery.data ? (
+                {chainNameQuery.name ? (
                   <Text color="primaryText" size="sm">
-                    {" "}
-                    {chainQuery.data.name}
+                    {chainNameQuery.name}
                   </Text>
                 ) : (
                   <Skeleton height={fontSize.md} />

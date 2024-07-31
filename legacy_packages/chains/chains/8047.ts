@@ -16,6 +16,7 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
     "url": "ipfs://bafkreibqgh23s7yt7rikybybiwfivwtoh32n24scjykvgbgewo3ecbrcye",
     "width": 512,
@@ -30,8 +31,10 @@ export default {
     "decimals": 18
   },
   "networkId": 8047,
+  "redFlags": [],
   "rpc": [
     "https://8047.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc0.come.boats/",
     "https://rpc0.come.boat/"
   ],
   "shortName": "boat",

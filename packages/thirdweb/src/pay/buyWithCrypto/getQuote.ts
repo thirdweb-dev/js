@@ -11,11 +11,10 @@ import type { BaseTransactionOptions } from "../../transaction/types.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
 
-// TODO: add JSDoc description for all properties
-
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
  * It includes information about which tokens to swap, the amount of tokens to swap, slippage, etc.
+ * @buyCrypto
  */
 export type GetBuyWithCryptoQuoteParams = {
   /**
@@ -37,9 +36,14 @@ export type GetBuyWithCryptoQuoteParams = {
   intentId?: string;
 
   /**
-   * The address of the wallet from which the tokens will be sent.
+   * The address of wallet that pays for the tokens.
    */
   fromAddress: string;
+
+  /**
+   * The address of the wallet where the tokens are sent
+   */
+  toAddress: string;
 
   // source token
 
@@ -64,6 +68,13 @@ export type GetBuyWithCryptoQuoteParams = {
    * The token address of the destination token.
    */
   toTokenAddress: string;
+
+  /**
+   * Extra details to store with the purchase.
+   *
+   * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
+   */
+  purchaseData?: object;
 
   /**
    * The maximum slippage in basis points (bps) allowed for the swap.
@@ -93,6 +104,9 @@ export type GetBuyWithCryptoQuoteParams = {
     }
 );
 
+/**
+ * @buyCrypto
+ */
 export type QuoteTokenInfo = {
   chainId: number;
   tokenAddress: string;
@@ -159,8 +173,14 @@ type BuyWithCryptoQuoteRouteResponse = {
   bridge?: string;
 };
 
+/**
+ * @buyCrypto
+ */
 export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoQuote = {
   transactionRequest: PrepareTransactionOptions;
   approval?: PrepareTransactionOptions;
@@ -229,45 +249,34 @@ export async function getBuyWithCryptoQuote(
   params: GetBuyWithCryptoQuoteParams,
 ): Promise<BuyWithCryptoQuote> {
   try {
-    const queryParams = new URLSearchParams({
-      fromAddress: params.fromAddress,
-      fromChainId: params.fromChainId.toString(),
-      fromTokenAddress: params.fromTokenAddress.toLowerCase(),
-      toChainId: params.toChainId.toString(),
-      toTokenAddress: params.toTokenAddress.toLowerCase(),
+    const clientFetch = getClientFetch(params.client);
+
+    const response = await clientFetch(getPayBuyWithCryptoQuoteEndpoint(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fromAddress: params.fromAddress,
+        toAddress: params.toAddress,
+        fromChainId: params.fromChainId.toString(),
+        fromTokenAddress: params.fromTokenAddress,
+        toChainId: params.toChainId.toString(),
+        toTokenAddress: params.toTokenAddress,
+        fromAmount: params.fromAmount,
+        toAmount: params.toAmount,
+        maxSlippageBPS: params.maxSlippageBPS,
+        intentId: params.intentId,
+        purchaseData: params.purchaseData,
+      }),
     });
-
-    if ("fromAmount" in params && params.fromAmount) {
-      queryParams.append("fromAmount", params.fromAmount);
-    }
-
-    if ("toAmount" in params && params.toAmount) {
-      queryParams.append("toAmount", params.toAmount);
-    }
-
-    if (params.maxSlippageBPS) {
-      queryParams.append("maxSlippageBPS", params.maxSlippageBPS.toString());
-    }
-
-    if (params.intentId) {
-      queryParams.append("intentId", params.intentId);
-    }
-
-    const queryString = queryParams.toString();
-    const url = `${getPayBuyWithCryptoQuoteEndpoint()}?${queryString}`;
-
-    const response = await getClientFetch(params.client)(url);
 
     // Assuming the response directly matches the SwapResponse interface
     if (!response.ok) {
       const errorObj = await response.json();
-      if (
-        errorObj &&
-        "error" in errorObj &&
-        typeof errorObj.error === "object" &&
-        "message" in errorObj.error
-      ) {
-        throw new Error(errorObj.error.message);
+      if (errorObj && "error" in errorObj) {
+        throw errorObj;
       }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -323,7 +332,7 @@ export async function getBuyWithCryptoQuote(
 
     return swapRoute;
   } catch (error) {
-    console.error("Fetch error:", error);
-    throw new Error(`Fetch failed: ${error}`);
+    console.error("Error getting buy with crypto quote", error);
+    throw error;
   }
 }

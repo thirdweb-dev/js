@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
   "chainId": 987,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "BinaryChain Explorer",
+      "url": "https://explorer.binarychain.org",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -22,7 +28,8 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://987.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/orangetest/testnet/rpc"
+    "https://subnets.avax.network/orangetest/testnet/rpc",
+    "https://rpc.binarychain.org"
   ],
   "shortName": "Orange Testnet",
   "slug": "orange-testnet",

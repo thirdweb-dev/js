@@ -10,10 +10,10 @@ import { StyledButton } from "../design-system/elements.js";
 
 export type ButtonProps = {
   variant: "primary" | "secondary" | "link" | "accent" | "outline" | "ghost";
-  theme?: Theme;
   unstyled?: boolean;
   fullWidth?: boolean;
   gap?: keyof typeof spacing;
+  bg?: keyof Theme["colors"];
 };
 
 export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
@@ -41,6 +41,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     textAlign: "center",
     maxWidth: "100%",
     background: (() => {
+      if (props.bg) {
+        return theme.colors[props.bg];
+      }
       switch (props.variant) {
         case "primary":
           return theme.colors.primaryButtonBg;
@@ -60,6 +63,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
           return theme.colors.accentButtonText;
         case "secondary":
           return theme.colors.secondaryButtonText;
+        case "ghost":
         case "outline":
           return theme.colors.secondaryButtonText;
         case "link":
@@ -88,6 +92,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
         return {
           border: `1.5px solid ${theme.colors.borderColor}`,
           "&:hover": {
+            borderColor: theme.colors.accentText,
+          },
+          '&[aria-selected="true"]': {
             borderColor: theme.colors.accentText,
           },
         };
@@ -126,7 +133,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
 
 export const ButtonLink = /* @__PURE__ */ (() => Button.withComponent("a"))();
 
-export const IconButton = /* @__PURE__ */ StyledButton(() => {
+export const IconButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -134,7 +141,7 @@ export const IconButton = /* @__PURE__ */ StyledButton(() => {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: radius.lg,
+    borderRadius: radius.sm,
     WebkitTapHighlightColor: "transparent",
     color: theme.colors.secondaryIconColor,
     padding: "2px",
@@ -143,10 +150,13 @@ export const IconButton = /* @__PURE__ */ StyledButton(() => {
       background: theme.colors.secondaryIconHoverBg,
       color: theme.colors.secondaryIconHoverColor,
     },
+    "&[disabled]": {
+      cursor: "not-allowed",
+    },
   };
 });
 
-export const InputButton = /* @__PURE__ */ StyledButton(() => {
+export const InputButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

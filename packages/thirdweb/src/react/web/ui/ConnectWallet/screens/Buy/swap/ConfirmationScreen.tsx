@@ -3,31 +3,30 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import { sendTransaction } from "../../../../../../../transaction/actions/send-transaction.js";
 import { waitForReceipt } from "../../../../../../../transaction/actions/wait-for-tx-receipt.js";
+import { shortenAddress } from "../../../../../../../utils/address.js";
 import { formatNumber } from "../../../../../../../utils/formatNumber.js";
 import { useCustomTheme } from "../../../../../../core/design-system/CustomThemeProvider.js";
 import {
   fontSize,
   iconSize,
 } from "../../../../../../core/design-system/index.js";
-import { useSendTransactionCore } from "../../../../../../core/hooks/contract/useSendTransaction.js";
-import { useChainQuery } from "../../../../../../core/hooks/others/useChainQuery.js";
-import {
-  useActiveWallet,
-  useActiveWalletChain,
-} from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import { useChainName } from "../../../../../../core/hooks/others/useChainQuery.js";
+import { useEnsName } from "../../../../../../core/utils/wallet.js";
 import { Skeleton } from "../../../../components/Skeleton.js";
 import { Spacer } from "../../../../components/Spacer.js";
 import { Spinner } from "../../../../components/Spinner.js";
 import { StepBar } from "../../../../components/StepBar.js";
 import { SwitchNetworkButton } from "../../../../components/SwitchNetwork.js";
-import { TokenIcon } from "../../../../components/TokenIcon.js";
 import { Container, Line, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { StyledDiv } from "../../../../design-system/elements.js";
 import type { ERC20OrNativeToken } from "../../nativeToken.js";
+import { PayTokenIcon } from "../PayTokenIcon.js";
 import { Step } from "../Stepper.js";
+import type { PayerInfo } from "../types.js";
 import { SwapFees } from "./Fees.js";
 import { formatSeconds } from "./formatSeconds.js";
 import { addPendingTx } from "./pendingSwapTx.js";
@@ -36,6 +35,7 @@ import { addPendingTx } from "./pendingSwapTx.js";
  * @internal
  */
 export function SwapConfirmationScreen(props: {
+  title: string;
   onBack?: () => void;
   client: ThirdwebClient;
   quote: BuyWithCryptoQuote;
@@ -50,11 +50,8 @@ export function SwapConfirmationScreen(props: {
   fromToken: ERC20OrNativeToken;
   fromTokenSymbol: string;
   isFiatFlow: boolean;
+  payer: PayerInfo;
 }) {
-  const sendTransactionMutation = useSendTransactionCore();
-  const activeChain = useActiveWalletChain();
-  const activeWallet = useActiveWallet();
-
   const isApprovalRequired = props.quote.approval !== undefined;
   const initialStep = isApprovalRequired ? "approval" : "swap";
 
@@ -63,9 +60,15 @@ export function SwapConfirmationScreen(props: {
     "pending" | "success" | "error" | "idle"
   >("idle");
 
+  const receiver = props.quote.swapDetails.toAddress;
+  const sender = props.quote.swapDetails.fromAddress;
+  const isDifferentRecipient = receiver.toLowerCase() !== sender.toLowerCase();
+
+  const ensName = useEnsName({ client: props.client, address: receiver });
+
   return (
     <Container p="lg">
-      <ModalHeader title="Buy" onBack={props.onBack} />
+      <ModalHeader title={props.title} onBack={props.onBack} />
 
       {props.isFiatFlow ? (
         <>
@@ -82,27 +85,29 @@ export function SwapConfirmationScreen(props: {
         <Spacer y="lg" />
       )}
 
-      {/* Receive */}
-      <ConfirmItem label="Receive">
-        <RenderTokenInfo
-          chain={props.toChain}
-          amount={String(formatNumber(Number(props.toAmount), 4))}
-          symbol={props.toTokenSymbol}
-          token={props.toToken}
-          client={props.client}
-        />
-      </ConfirmItem>
-
       {/* Pay */}
       <ConfirmItem label="Pay">
         <RenderTokenInfo
           chain={props.fromChain}
-          amount={String(formatNumber(Number(props.fromAmount), 4))}
+          amount={String(formatNumber(Number(props.fromAmount), 6))}
           symbol={props.fromTokenSymbol || ""}
           token={props.fromToken}
           client={props.client}
         />
       </ConfirmItem>
+
+      {/* Receive */}
+      {!isDifferentRecipient && (
+        <ConfirmItem label="Receive">
+          <RenderTokenInfo
+            chain={props.toChain}
+            amount={String(formatNumber(Number(props.toAmount), 6))}
+            symbol={props.toTokenSymbol}
+            token={props.toToken}
+            client={props.client}
+          />
+        </ConfirmItem>
+      )}
 
       {/* Fees  */}
       <ConfirmItem label="Fees">
@@ -111,13 +116,22 @@ export function SwapConfirmationScreen(props: {
 
       {/* Time  */}
       <ConfirmItem label="Time">
-        <Text color="primaryText">
+        <Text size="sm" color="primaryText">
           ~
           {formatSeconds(
             props.quote.swapDetails.estimated.durationSeconds || 0,
           )}
         </Text>
       </ConfirmItem>
+
+      {/* Send to  */}
+      {isDifferentRecipient && (
+        <ConfirmItem label="Seller">
+          <Text color="primaryText" size="sm">
+            {ensName.data || shortenAddress(receiver)}
+          </Text>
+        </ConfirmItem>
+      )}
 
       <Spacer y="xl" />
 
@@ -159,11 +173,13 @@ export function SwapConfirmationScreen(props: {
         </>
       )}
 
-      {activeChain && activeChain.id !== props.fromChain.id ? (
+      {props.payer.chain.id !== props.fromChain.id ? (
         <SwitchNetworkButton
           fullWidth
-          chain={props.fromChain}
           variant="accent"
+          switchChain={async () => {
+            await props.payer.wallet.switchChain(props.fromChain);
+          }}
         />
       ) : (
         <Button
@@ -175,9 +191,10 @@ export function SwapConfirmationScreen(props: {
               try {
                 setStatus("pending");
 
-                const tx = await sendTransactionMutation.mutateAsync(
-                  props.quote.approval,
-                );
+                const tx = await sendTransaction({
+                  account: props.payer.account,
+                  transaction: props.quote.approval,
+                });
 
                 await waitForReceipt({ ...tx, maxBlocksWaitTime: 50 });
                 // props.onQuoteFinalized(props.quote);
@@ -198,8 +215,8 @@ export function SwapConfirmationScreen(props: {
                 // Fix for inApp wallet
                 // Ideally - the pay server sends a non-legacy transaction to avoid this issue
                 if (
-                  activeWallet?.id === "inApp" ||
-                  activeWallet?.id === "embedded"
+                  props.payer.wallet.id === "inApp" ||
+                  props.payer.wallet.id === "embedded"
                 ) {
                   tx = {
                     ...props.quote.transactionRequest,
@@ -207,7 +224,10 @@ export function SwapConfirmationScreen(props: {
                   };
                 }
 
-                const _swapTx = await sendTransactionMutation.mutateAsync(tx);
+                const _swapTx = await sendTransaction({
+                  account: props.payer.account,
+                  transaction: tx,
+                });
 
                 await waitForReceipt({ ..._swapTx, maxBlocksWaitTime: 50 });
 
@@ -240,7 +260,7 @@ export function SwapConfirmationScreen(props: {
   );
 }
 
-const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
+export const ConnectorLine = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     height: "4px",
@@ -256,7 +276,7 @@ function RenderTokenInfo(props: {
   symbol: string;
   client: ThirdwebClient;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const { name } = useChainName(props.chain);
   return (
     <Container
       flex="column"
@@ -266,27 +286,30 @@ function RenderTokenInfo(props: {
       }}
     >
       <Container flex="row" center="y" gap="xs">
-        <Text color="primaryText" size="md">
+        <Text color="primaryText" size="sm">
           {props.amount} {props.symbol}
         </Text>
-        <TokenIcon
+        <PayTokenIcon
           token={props.token}
           chain={props.chain}
-          size="sm"
+          size="xs"
           client={props.client}
         />
       </Container>
 
-      {chainQuery.data ? (
-        <Text size="sm">{chainQuery.data.name}</Text>
+      {name ? (
+        <Text size="xs">{name}</Text>
       ) : (
-        <Skeleton width={"100px"} height={fontSize.sm} />
+        <Skeleton width={"100px"} height={fontSize.xs} />
       )}
     </Container>
   );
 }
 
-function ConfirmItem(props: { label: string; children: React.ReactNode }) {
+function ConfirmItem(props: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Container
@@ -297,7 +320,7 @@ function ConfirmItem(props: { label: string; children: React.ReactNode }) {
           justifyContent: "space-between",
         }}
       >
-        <Text size="md" color="secondaryText">
+        <Text size="sm" color="secondaryText">
           {props.label}
         </Text>
         {props.children}

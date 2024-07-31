@@ -19,6 +19,8 @@ import { getFid } from "../read/getFid.js";
  * If the `userAccount` is not provided, the `addSignature`, `userAddress`, and `deadline` must be provided.
  * If the `appAccount` is not provided, the `signedKeyRequestMetadata`, `appAccountAddress` and `deadline` must be provided.
  * `deadline` must match the one used to generate the signatures.
+ *
+ * @extension FARCASTER
  */
 export type AddSignerForParams = Prettify<
   {
@@ -56,12 +58,16 @@ export type AddSignerForParams = Prettify<
  * @example
  * ```ts
  * import { addSignerFor } from "thirdweb/extensions/farcaster";
- * const tx = await addSignerFor({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = addSignerFor({
  *  client,
  * 	appAccount,
  * 	userAccount,
  *  signerPublicKey
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function addSignerFor(options: AddSignerForParams) {

@@ -3,7 +3,9 @@ import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
+import type { EcosystemWalletId } from "../../../../wallet-types.js";
 import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/type.js";
+import type { Ecosystem } from "../../types.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 
 function getVerificationPath() {
@@ -21,6 +23,7 @@ function getChallengePath(type: "sign-in" | "sign-up", username?: string) {
 
 export async function registerPasskey(options: {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
   authenticatorType?: AuthType;
   username?: string;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
@@ -28,9 +31,12 @@ export async function registerPasskey(options: {
     throw new Error("Passkeys are not available on this device");
   }
   // TODO inject this
-  const storage = new LocalStorage({ clientId: options.client.clientId });
-  const fetchWithId = getClientFetch(options.client);
-  const generatedName = options.username ?? generateUsername();
+  const storage = new LocalStorage({
+    clientId: options.client.clientId,
+    ecosystemId: options.ecosystem?.id,
+  });
+  const fetchWithId = getClientFetch(options.client, options.ecosystem);
+  const generatedName = options.username ?? generateUsername(options.ecosystem);
   // 1. request challenge from  server
   const res = await fetchWithId(getChallengePath("sign-up", generatedName));
   const challengeData = await res.json();
@@ -48,11 +54,20 @@ export async function registerPasskey(options: {
   // 3. store the credentialId in local storage
   await storage.savePasskeyCredentialId(registration.credential.id);
 
+  const customHeaders: Record<string, string> = {};
+  if (options.ecosystem?.partnerId) {
+    customHeaders["x-ecosystem-partner-id"] = options.ecosystem.partnerId;
+  }
+  if (options.ecosystem?.id) {
+    customHeaders["x-ecosystem-id"] = options.ecosystem.id;
+  }
+
   // 4. send the registration object to the server
   const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...customHeaders,
     },
     body: JSON.stringify({
       type: "sign-up",
@@ -78,14 +93,18 @@ export async function registerPasskey(options: {
 
 export async function loginWithPasskey(options: {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
   authenticatorType?: AuthType;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
   if (!client.isAvailable()) {
     throw new Error("Passkeys are not available on this device");
   }
   // TODO inject this
-  const storage = new LocalStorage({ clientId: options.client.clientId });
-  const fetchWithId = getClientFetch(options.client);
+  const storage = new LocalStorage({
+    clientId: options.client.clientId,
+    ecosystemId: options.ecosystem?.id,
+  });
+  const fetchWithId = getClientFetch(options.client, options.ecosystem);
   // 1. request challenge from  server/iframe
   const res = await fetchWithId(getChallengePath("sign-in"));
   const challengeData = await res.json();
@@ -101,11 +120,21 @@ export async function loginWithPasskey(options: {
     authenticatorType: options.authenticatorType ?? "auto",
     userVerification: "required",
   });
+
+  const customHeaders: Record<string, string> = {};
+  if (options.ecosystem?.partnerId) {
+    customHeaders["x-ecosystem-partner-id"] = options.ecosystem.partnerId;
+  }
+  if (options.ecosystem?.id) {
+    customHeaders["x-ecosystem-id"] = options.ecosystem.id;
+  }
+
   // 3. send the authentication object to the server/iframe
   const verifRes = await fetchWithId(getVerificationPath(), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...customHeaders,
     },
     body: JSON.stringify({
       type: "sign-in",
@@ -132,14 +161,20 @@ export async function loginWithPasskey(options: {
  * Returns whether this device has a stored passkey ready to be used for sign-in
  * @param client - the thirdweb client
  * @returns whether the device has a stored passkey
- * @wallet
+ * @walletUtils
  */
-export async function hasStoredPasskey(client: ThirdwebClient) {
-  const storage = new LocalStorage({ clientId: client.clientId });
+export async function hasStoredPasskey(
+  client: ThirdwebClient,
+  ecosystemId?: EcosystemWalletId,
+) {
+  const storage = new LocalStorage({
+    clientId: client.clientId,
+    ecosystemId: ecosystemId,
+  });
   const credId = await storage.getPasskeyCredentialId();
   return !!credId;
 }
 
-function generateUsername() {
-  return `wallet-${new Date().toISOString()}`;
+function generateUsername(ecosystem?: Ecosystem) {
+  return `${ecosystem?.id ?? "wallet"}-${new Date().toISOString()}`;
 }

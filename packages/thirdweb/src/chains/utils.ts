@@ -17,9 +17,15 @@ const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
  * @param options The options for the chain.
  * @returns The defined chain.
  * @example
+ * Just pass the chain ID to connect to:
+ * ```ts
+ * const chain = defineChain(1);
+ * ```
+ * Or pass your own RPC or custom values:
  * ```ts
  * const chain = defineChain({
  *  id: 1,
+ *  rpc: "https://my-rpc.com",
  *  nativeCurrency: {
  *    name: "Ether",
  *    symbol: "ETH",
@@ -32,10 +38,11 @@ const CUSTOM_CHAIN_MAP = new Map<number, Chain>();
 export function defineChain(
   options: number | ChainOptions | ViemChain | LegacyChain,
 ): Chain {
+  const RPC_URL = getThirdwebDomains().rpc;
   if (typeof options === "number") {
     return {
       id: options,
-      rpc: `https://${options}.rpc.thirdweb.com`,
+      rpc: `https://${options}.${RPC_URL}`,
     } as const;
   }
   if (isViemChain(options)) {
@@ -47,7 +54,7 @@ export function defineChain(
   // otherwise if it's not a viem chain, continue
   let rpc = options.rpc;
   if (!rpc) {
-    rpc = `https://${options.id}.rpc.thirdweb.com`;
+    rpc = `https://${options.id}.${RPC_URL}`;
   }
   const chain = { ...options, rpc } as const;
   CUSTOM_CHAIN_MAP.set(options.id, chain);
@@ -57,13 +64,23 @@ export function defineChain(
 /**
  * @internal
  */
+export function cacheChains(chains: Chain[]) {
+  for (const chain of chains) {
+    CUSTOM_CHAIN_MAP.set(chain.id, chain);
+  }
+}
+
+/**
+ * @internal
+ */
 export function getCachedChain(id: number) {
   if (CUSTOM_CHAIN_MAP.has(id)) {
     return CUSTOM_CHAIN_MAP.get(id) as Chain;
   }
+  const RPC_URL = getThirdwebDomains().rpc;
   const chain = {
     id: id,
-    rpc: `https://${id}.rpc.thirdweb.com`,
+    rpc: `https://${id}.${RPC_URL}`,
   } as const;
   return chain;
 }
@@ -75,11 +92,11 @@ function isLegacyChain(
 }
 
 function convertLegacyChain(legacyChain: LegacyChain): Chain {
-  const c: Chain = {
+  const RPC_URL = getThirdwebDomains().rpc;
+  return {
     id: legacyChain.chainId,
     name: legacyChain.name,
-    rpc:
-      legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.rpc.thirdweb.com`,
+    rpc: legacyChain.rpc[0] ?? `https://${legacyChain.chainId}.${RPC_URL}`,
     blockExplorers: legacyChain?.explorers?.map((explorer) => ({
       name: explorer.name,
       url: explorer.url,
@@ -90,11 +107,10 @@ function convertLegacyChain(legacyChain: LegacyChain): Chain {
       symbol: legacyChain.nativeCurrency.symbol,
       decimals: legacyChain.nativeCurrency.decimals,
     },
+    faucets: legacyChain.faucets ? [...legacyChain.faucets] : undefined,
+    icon: legacyChain.icon,
+    testnet: legacyChain.testnet ? true : undefined,
   };
-  if (legacyChain.testnet) {
-    return { ...c, testnet: true };
-  }
-  return c;
 }
 
 function isViemChain(
@@ -104,7 +120,8 @@ function isViemChain(
 }
 
 function convertViemChain(viemChain: ViemChain): Chain {
-  return defineChain({
+  const RPC_URL = getThirdwebDomains().rpc;
+  return {
     id: viemChain.id,
     name: viemChain.name,
     nativeCurrency: {
@@ -113,8 +130,7 @@ function convertViemChain(viemChain: ViemChain): Chain {
       decimals: viemChain.nativeCurrency.decimals,
     },
     rpc:
-      viemChain.rpcUrls.default.http[0] ??
-      `https://${viemChain.id}.rpc.thirdweb.com`,
+      viemChain.rpcUrls.default.http[0] ?? `https://${viemChain.id}.${RPC_URL}`,
     blockExplorers: viemChain?.blockExplorers
       ? Object.values(viemChain?.blockExplorers).map((explorer) => {
           return {
@@ -124,7 +140,8 @@ function convertViemChain(viemChain: ViemChain): Chain {
           };
         })
       : [],
-  });
+    testnet: viemChain.testnet ? true : undefined,
+  };
 }
 
 type GetRpcUrlForChainOptions = {
@@ -304,6 +321,8 @@ export function convertApiChainToChain(apiChain: ChainMetadata): Chain {
         apiUrl: explorer.url,
       };
     }),
+    faucets: apiChain.faucets ? [...apiChain.faucets] : undefined,
+    icon: apiChain.icon,
   };
 }
 

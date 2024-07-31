@@ -1,3 +1,4 @@
+import type { EcosystemWalletId } from "../../../../wallet-types.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
@@ -13,13 +14,19 @@ const data = new Map<string, string>();
  */
 export class LocalStorage {
   protected isSupported: boolean;
-  protected clientId: string;
+  protected key: string;
   /**
    * @internal
    */
-  constructor({ clientId }: { clientId: string }) {
+  constructor({
+    clientId,
+    ecosystemId,
+  }: {
+    clientId: string;
+    ecosystemId?: EcosystemWalletId;
+  }) {
     this.isSupported = typeof window !== "undefined" && !!window.localStorage;
-    this.clientId = clientId;
+    this.key = getLocalStorageKey(clientId, ecosystemId);
   }
 
   protected async getItem(key: string): Promise<string | null> {
@@ -49,9 +56,7 @@ export class LocalStorage {
    * @internal
    */
   async getWalletConnectSessions(): Promise<string | null> {
-    return this.getItem(
-      WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME(this.clientId),
-    );
+    return this.getItem(WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME(this.key));
   }
 
   /**
@@ -59,7 +64,7 @@ export class LocalStorage {
    */
   async saveWalletConnectSessions(stringifiedSessions: string): Promise<void> {
     await this.setItem(
-      WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME(this.clientId),
+      WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME(this.key),
       stringifiedSessions,
     );
   }
@@ -68,38 +73,33 @@ export class LocalStorage {
    * @internal
    */
   async savePasskeyCredentialId(id: string): Promise<void> {
-    await this.setItem(
-      PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME(this.clientId),
-      id,
-    );
+    await this.setItem(PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME(this.key), id);
   }
 
   /**
    * @internal
    */
   async getPasskeyCredentialId(): Promise<string | null> {
-    return this.getItem(
-      PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME(this.clientId),
-    );
+    return this.getItem(PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME(this.key));
   }
 
   /**
    * @internal
    */
   async saveAuthCookie(cookie: string): Promise<void> {
-    await this.setItem(AUTH_TOKEN_LOCAL_STORAGE_NAME(this.clientId), cookie);
+    await this.setItem(AUTH_TOKEN_LOCAL_STORAGE_NAME(this.key), cookie);
   }
   /**
    * @internal
    */
   async getAuthCookie(): Promise<string | null> {
-    return this.getItem(AUTH_TOKEN_LOCAL_STORAGE_NAME(this.clientId));
+    return this.getItem(AUTH_TOKEN_LOCAL_STORAGE_NAME(this.key));
   }
   /**
    * @internal
    */
   async removeAuthCookie(): Promise<boolean> {
-    return this.removeItem(AUTH_TOKEN_LOCAL_STORAGE_NAME(this.clientId));
+    return this.removeItem(AUTH_TOKEN_LOCAL_STORAGE_NAME(this.key));
   }
 
   /**
@@ -108,7 +108,7 @@ export class LocalStorage {
   async saveDeviceShare(share: string, userId: string): Promise<void> {
     await this.saveWalletUserId(userId);
     await this.setItem(
-      DEVICE_SHARE_LOCAL_STORAGE_NAME(this.clientId, userId),
+      DEVICE_SHARE_LOCAL_STORAGE_NAME(this.key, userId),
       share,
     );
   }
@@ -118,9 +118,7 @@ export class LocalStorage {
   async getDeviceShare(): Promise<string | null> {
     const userId = await this.getWalletUserId();
     if (userId) {
-      return this.getItem(
-        DEVICE_SHARE_LOCAL_STORAGE_NAME(this.clientId, userId),
-      );
+      return this.getItem(DEVICE_SHARE_LOCAL_STORAGE_NAME(this.key, userId));
     }
     return null;
   }
@@ -130,9 +128,7 @@ export class LocalStorage {
   async removeDeviceShare(): Promise<boolean> {
     const userId = await this.getWalletUserId();
     if (userId) {
-      return this.removeItem(
-        DEVICE_SHARE_LOCAL_STORAGE_NAME(this.clientId, userId),
-      );
+      return this.removeItem(DEVICE_SHARE_LOCAL_STORAGE_NAME(this.key, userId));
     }
     return false;
   }
@@ -141,21 +137,22 @@ export class LocalStorage {
    * @internal
    */
   async getWalletUserId(): Promise<string | null> {
-    return this.getItem(WALLET_USER_ID_LOCAL_STORAGE_NAME(this.clientId));
+    return this.getItem(WALLET_USER_ID_LOCAL_STORAGE_NAME(this.key));
   }
   /**
    * @internal
    */
   async saveWalletUserId(userId: string): Promise<void> {
-    await this.setItem(
-      WALLET_USER_ID_LOCAL_STORAGE_NAME(this.clientId),
-      userId,
-    );
+    await this.setItem(WALLET_USER_ID_LOCAL_STORAGE_NAME(this.key), userId);
   }
   /**
    * @internal
    */
   async removeWalletUserId(): Promise<boolean> {
-    return this.removeItem(WALLET_USER_ID_LOCAL_STORAGE_NAME(this.clientId));
+    return this.removeItem(WALLET_USER_ID_LOCAL_STORAGE_NAME(this.key));
   }
 }
+
+const getLocalStorageKey = (clientId: string, ecosystemId?: string) => {
+  return `${clientId}${ecosystemId ? `-${ecosystemId}` : ""}`;
+};

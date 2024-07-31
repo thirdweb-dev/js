@@ -1,4 +1,4 @@
-import { isCoinbaseSDKWallet } from "../coinbase/coinbaseSDKWallet.js";
+import { isCoinbaseSDKWallet } from "../coinbase/coinbaseWebSDK.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -51,7 +51,7 @@ export async function showCallsStatus({
 
   if (isCoinbaseSDKWallet(wallet)) {
     const { coinbaseSDKWalletShowCallsStatus } = await import(
-      "../coinbase/coinbaseSDKWallet.js"
+      "../coinbase/coinbaseWebSDK.js"
     );
     await coinbaseSDKWalletShowCallsStatus({ wallet, bundleId });
     return;

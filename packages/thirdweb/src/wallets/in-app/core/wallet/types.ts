@@ -1,7 +1,9 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { SmartWalletOptions } from "../../../smart/types.js";
+import type { AuthOption, SocialAuthOption } from "../../../types.js";
 import type {
+  AuthStoredTokenWithCookieReturnType,
   MultiStepAuthArgsType,
   SingleStepAuthArgsType,
 } from "../authentication/type.js";
@@ -12,25 +14,23 @@ export type InAppWalletConnectionOptions = (
 ) & {
   client: ThirdwebClient;
   chain?: Chain;
+  redirect?: boolean;
 };
 
 export type InAppWalletAutoConnectOptions = {
   client: ThirdwebClient;
+  authResult?: AuthStoredTokenWithCookieReturnType;
   chain?: Chain;
 };
 
-export type InAppWalletSocialAuth = "google" | "apple" | "facebook";
-
-export type InAppWalletAuth =
-  | "email"
-  | "phone"
-  | "passkey"
-  | InAppWalletSocialAuth;
+export type InAppWalletSocialAuth = SocialAuthOption;
+export type InAppWalletAuth = AuthOption;
 
 export type InAppWalletCreationOptions =
   | {
       auth?: {
         options: InAppWalletAuth[];
+        mode?: "popup" | "redirect";
       };
       metadata?: {
         image?: {
@@ -40,6 +40,7 @@ export type InAppWalletCreationOptions =
           alt?: string;
         };
       };
+      partnerId?: string;
       smartAccount?: SmartWalletOptions;
       hidePrivateKeyExport?: boolean;
     }

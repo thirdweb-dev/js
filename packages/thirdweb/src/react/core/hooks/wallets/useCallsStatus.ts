@@ -6,7 +6,7 @@ import {
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getCallsStatus } from "../../../../wallets/eip5792/get-calls-status.js";
 import type { GetCallsStatusResponse } from "../../../../wallets/eip5792/types.js";
-import { useActiveWallet } from "./wallet-hooks.js";
+import { useActiveWallet } from "./useActiveWallet.js";
 
 /**
  * A hook to get a call bundle's current status according to [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792).

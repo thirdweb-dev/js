@@ -4,6 +4,7 @@ import { balanceOf } from "../__generated__/IERC20/read/balanceOf.js";
 import { getCurrencyMetadata } from "./getCurrencyMetadata.js";
 /**
  * Represents the parameters for retrieving the balance of an address.
+ * @extension ERC20
  */
 export type GetBalanceParams = {
   /**
@@ -14,6 +15,7 @@ export type GetBalanceParams = {
 
 /**
  * Represents the result of a balance query for an ERC20 token.
+ * @extension ERC20
  */
 export type GetBalanceResult = {
   value: bigint;

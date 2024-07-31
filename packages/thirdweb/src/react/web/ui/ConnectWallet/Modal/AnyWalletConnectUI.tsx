@@ -1,5 +1,8 @@
 "use client";
-import { Suspense, lazy, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Suspense, lazy, useState } from "react";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import { isMobile } from "../../../../../utils/web/isMobile.js";
 import type {
   DeepLinkSupportedWalletIds,
@@ -7,18 +10,25 @@ import type {
   WCSupportedWalletIds,
 } from "../../../../../wallets/__generated__/wallet-ids.js";
 import { COINBASE } from "../../../../../wallets/constants.js";
+import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { getInstalledWalletProviders } from "../../../../../wallets/injected/mipdStore.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
+import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
+import { iconSize } from "../../../../core/design-system/index.js";
+import { useWalletInfo } from "../../../../core/utils/wallet.js";
+import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
-import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
 import {
   WalletConnectConnection,
   WalletConnectStandaloneConnection,
 } from "../../../wallets/shared/WalletConnectConnection.js";
-import { useWalletInfo } from "../../hooks/useWalletInfo.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Container, ModalHeader } from "../../components/basic.js";
+import { Text } from "../../components/text.js";
+import { AccentFailIcon } from "../icons/AccentFailIcon.js";
+import type { ConnectLocale } from "../locale/types.js";
 import { DeepLinkConnectUI } from "./DeepLinkConnectUI.js";
 import { InjectedConnectUI } from "./InjectedConnectUI.js";
 
@@ -37,25 +47,93 @@ export function AnyWalletConnectUI(props: {
   done: () => void;
   onBack?: () => void;
   setModalVisibility: (value: boolean) => void;
+  chain: Chain | undefined;
+  chains: Chain[] | undefined;
+  client: ThirdwebClient;
+  size: "compact" | "wide";
+  meta: {
+    title?: string;
+    titleIconUrl?: string;
+    showThirdwebBranding?: boolean;
+    termsOfServiceUrl?: string;
+    privacyPolicyUrl?: string;
+  };
+  walletConnect:
+    | {
+        projectId?: string;
+      }
+    | undefined;
+  connectLocale: ConnectLocale;
 }) {
   const [screen, setScreen] = useState<"main" | "get-started">("main");
   const { wallet } = props;
   const walletInfo = useWalletInfo(props.wallet.id);
-  const localeId = useConnectUI().locale;
-  const [locale, setLocale] = useState<InjectedWalletLocale | null>(null);
 
-  useEffect(() => {
-    if (!walletInfo.data) {
-      return;
-    }
-    getInjectedWalletLocale(localeId).then((w) => {
-      setLocale(w(walletInfo.data.name));
-    });
-  }, [localeId, walletInfo.data]);
+  const localeId = props.connectLocale.id;
+  const localeFnQuery = useQuery({
+    queryKey: ["injectedWalletLocale", localeId, walletInfo.data?.name],
+    queryFn: async () => {
+      return getInjectedWalletLocale(localeId);
+    },
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
-  if (!walletInfo.data || !locale) {
+  if (walletInfo.isLoading || !localeFnQuery.data) {
     return <LoadingScreen />;
   }
+
+  const localeFn = localeFnQuery.data;
+
+  if (!walletInfo.data) {
+    const injectedProvider = getInstalledWalletProviders().find(
+      (w) => w.info.rdns === wallet.id,
+    );
+
+    // Unknown wallet id but it's injected
+    if (injectedProvider) {
+      return (
+        <InjectedConnectUI
+          wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
+          walletName={injectedProvider.info.name}
+          done={props.done}
+          locale={localeFn(injectedProvider.info.name)}
+          onBack={props.onBack}
+          chain={props.chain}
+          client={props.client}
+          size={props.size}
+        />
+      );
+    }
+
+    // This will only happen if developer passes a wallet with unknown id and it's not injected
+    // Adding a fallback UI just in case
+    return (
+      <Container animate="fadein" fullHeight flex="column">
+        <Container p="lg">
+          <ModalHeader title="Not Supported" onBack={props.onBack} />
+        </Container>
+        <Container
+          flex="column"
+          expand
+          center="both"
+          p="lg"
+          style={{
+            minHeight: "300px",
+          }}
+        >
+          <AccentFailIcon size={iconSize["3xl"]} />
+          <Spacer y="lg" />
+          <Text color="primaryText" center>
+            Wallet is not supported
+          </Text>
+          <Spacer y="xxl" />
+        </Container>
+      </Container>
+    );
+  }
+
+  const locale = localeFn(walletInfo.data.name);
 
   // if wallet can connect to injected wallet + wallet is injected
   const isInstalled = getInstalledWalletProviders().find(
@@ -71,6 +149,7 @@ export function AnyWalletConnectUI(props: {
         onBack={() => {
           setScreen("main");
         }}
+        client={props.client}
       />
     );
   }
@@ -92,6 +171,7 @@ export function AnyWalletConnectUI(props: {
           setScreen("get-started");
         }}
         onBack={props.onBack}
+        client={props.client}
       />
     );
   }
@@ -100,13 +180,16 @@ export function AnyWalletConnectUI(props: {
     return (
       <InjectedConnectUI
         wallet={props.wallet as Wallet<InjectedSupportedWalletIds>}
-        walletInfo={walletInfo.data}
+        walletName={walletInfo.data.name}
         done={props.done}
         locale={locale}
         onGetStarted={() => {
           setScreen("get-started");
         }}
         onBack={props.onBack}
+        chain={props.chain}
+        client={props.client}
+        size={props.size}
       />
     );
   }
@@ -124,6 +207,9 @@ export function AnyWalletConnectUI(props: {
           done={props.done}
           wallet={props.wallet as Wallet<typeof COINBASE>}
           walletInfo={walletInfo.data}
+          chain={props.chain}
+          client={props.client}
+          size={props.size}
         />
       </Suspense>
     );
@@ -141,6 +227,11 @@ export function AnyWalletConnectUI(props: {
         done={props.done}
         wallet={props.wallet as Wallet<WCSupportedWalletIds>}
         walletInfo={walletInfo.data}
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        size={props.size}
+        walletConnect={props.walletConnect}
       />
     );
   }
@@ -155,6 +246,11 @@ export function AnyWalletConnectUI(props: {
         wallet={props.wallet as Wallet<"walletConnect">}
         walletInfo={walletInfo.data}
         setModalVisibility={props.setModalVisibility}
+        chain={props.chain}
+        chains={props.chains}
+        client={props.client}
+        size={props.size}
+        walletConnect={props.walletConnect}
       />
     );
   }
@@ -166,6 +262,28 @@ export function AnyWalletConnectUI(props: {
           wallet={props.wallet as Wallet<"inApp">}
           done={props.done}
           goBack={props.onBack}
+          chain={props.chain}
+          client={props.client}
+          size={props.size}
+          connectLocale={props.connectLocale}
+          meta={props.meta}
+        />
+      </Suspense>
+    );
+  }
+
+  if (isEcosystemWallet(props.wallet.id)) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <EcosystemWalletConnectUI
+          wallet={props.wallet as Wallet<EcosystemWalletId>}
+          done={props.done}
+          goBack={props.onBack}
+          chain={props.chain}
+          client={props.client}
+          size={props.size}
+          meta={props.meta}
+          connectLocale={props.connectLocale}
         />
       </Suspense>
     );
@@ -180,6 +298,7 @@ export function AnyWalletConnectUI(props: {
       onBack={() => {
         setScreen("main");
       }}
+      client={props.client}
     />
   );
 }

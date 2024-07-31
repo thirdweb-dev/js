@@ -599,7 +599,9 @@ export class MarketplaceAuction {
     const minimumNextBid = currentBidOrReservePrice.add(
       // the addition of the current bid and the buffer
       // (have to divide by 10000 to get the fraction of the buffer (since it's in basis points))
-      currentBidOrReservePrice.mul(currentBidBufferBps).div(10000),
+      currentBidOrReservePrice
+        .mul(currentBidBufferBps)
+        .div(10000),
     );
 
     // it's more useful to return a currency value here

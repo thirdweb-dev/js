@@ -21,6 +21,13 @@ export {
   checkVerificationStatus,
 } from "../contract/verification/index.js";
 
+// publisher
+export {
+  fetchPublishedContract,
+  fetchPublishedContractMetadata,
+  fetchDeployBytecodeFromPublishedContractMetadata,
+} from "../contract/deployment/publisher.js";
+
 // deployment - TODO: these end up looking more like extensions -> should they be?
 export {
   prepareDirectDeployTransaction,

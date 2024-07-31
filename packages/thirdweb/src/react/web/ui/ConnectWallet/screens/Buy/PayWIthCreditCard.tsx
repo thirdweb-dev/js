@@ -26,7 +26,6 @@ export function PayWithCreditCard(props: {
   client: ThirdwebClient;
   currency: CurrencyMeta;
   onSelectCurrency: () => void;
-  disableCurrencySelection?: boolean;
 }) {
   return (
     <Container
@@ -47,7 +46,6 @@ export function PayWithCreditCard(props: {
     >
       {/* Left */}
       <CurrencyButton
-        disabled={props.disableCurrencySelection}
         variant="ghost"
         onClick={props.onSelectCurrency}
         style={{
@@ -58,11 +56,9 @@ export function PayWithCreditCard(props: {
         gap="sm"
       >
         <props.currency.icon size={iconSize.md} />
-        <Container flex="row" center="y" gap="xxs">
+        <Container flex="row" center="y" gap="xxs" color="secondaryText">
           <Text color="primaryText">{props.currency.shorthand}</Text>
-          {!props.disableCurrencySelection && (
-            <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
-          )}
+          <ChevronDownIcon width={iconSize.sm} height={iconSize.sm} />
         </Container>
       </CurrencyButton>
 
@@ -86,7 +82,7 @@ export function PayWithCreditCard(props: {
           <Skeleton width="100px" height={fontSize.lg} />
         ) : (
           <Text size="lg" color={props.value ? "primaryText" : "secondaryText"}>
-            {props.value ? `${formatNumber(Number(props.value), 4)}` : "--"}
+            {props.value ? `${formatNumber(Number(props.value), 6)}` : "--"}
           </Text>
         )}
       </div>

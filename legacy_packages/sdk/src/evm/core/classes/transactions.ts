@@ -216,6 +216,14 @@ abstract class TransactionContext {
     if (isBrowser()) {
       return {};
     }
+    // if we already have a gasLimit set, don't override it
+    if (this.overrides.gasLimit) {
+     return {};
+    }
+    // if we already have maxFeePerGas && maxPriorityFeePerGas set, don't override it
+    if (this.overrides.maxFeePerGas && this.overrides.maxPriorityFeePerGas) {
+      return {};
+    }
     return getDefaultGasOverrides(this.provider);
   }
 }
@@ -663,7 +671,7 @@ export class Transaction<
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
-    // Get contract sources for stack trace
+    // Get contract metadata for contract name if cached
     let contractName: string | undefined = undefined;
     try {
       const chainId = (await provider.getNetwork()).chainId;

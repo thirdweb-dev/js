@@ -10,7 +10,7 @@ export const wallet = {
     browser: "https://keyring.app/",
     ios: "https://apps.apple.com/us/app/keyring-pro-wallet-management/id1546824976",
     android: "https://play.google.com/store/apps/details?id=co.bacoor.keyring",
-    mac: "",
+    mac: null,
     windows: null,
     linux: null,
     chrome: null,

@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
 import { claim } from "../../__generated__/IDrop1155/write/claim.js";
 
+/**
+ * @extension ERC1155
+ */
 export type ClaimToParams = {
   to: Address;
   tokenId: bigint;
@@ -17,13 +20,16 @@ export type ClaimToParams = {
  * @example
  * ```ts
  * import { claimTo } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
  *
- * const tx = await claimTo({
+ * const transaction = claimTo({
  *   contract,
  *   to: "0x...",
  *   tokenId: 0n,
  *   quantity: 1n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  * @throws If no claim condition is set
  * @returns The prepared transaction

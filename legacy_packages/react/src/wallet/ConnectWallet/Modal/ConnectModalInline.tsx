@@ -131,7 +131,8 @@ function ConnectModalInlineContent(props: {
   );
 }
 
-const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ConnectModalInlineContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     background: theme.colors.modalBg,

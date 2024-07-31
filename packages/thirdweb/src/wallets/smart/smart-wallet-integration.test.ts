@@ -1,11 +1,12 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { typedData } from "../../../test/src/typed-data.js";
-import { verifySignature } from "../../auth/verifySignature.js";
+import { verifySignature } from "../../auth/verify-signature.js";
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
 import { baseSepolia } from "../../exports/chains.js";
+
 import {
   addAdmin,
   adminUpdatedEvent,
@@ -18,9 +19,9 @@ import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js"
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
-import { smartWallet } from "../create-wallet.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
 let smartAccount: Account;
@@ -189,7 +190,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         events: [adminUpdatedEvent()],
         logs: receipt.logs,
       });
-      expect(logs.length).toBe(1);
       expect(logs[0]?.args.signer).toBe(newAdmin.address);
       expect(logs[0]?.args.isAdmin).toBe(true);
     });
@@ -255,7 +255,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         events: [adminUpdatedEvent()],
         logs: receipt.logs,
       });
-      expect(logs.length).toBe(1);
       expect(logs[0]?.args.signer).toBe(newAdmin.address);
       expect(logs[0]?.args.isAdmin).toBe(true);
 

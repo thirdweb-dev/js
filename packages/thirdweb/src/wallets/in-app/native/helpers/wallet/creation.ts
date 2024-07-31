@@ -1,13 +1,7 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { split } from "shamir-secret-sharing";
 import { publicKeyToAddress } from "viem/utils";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import {
-  hexToUint8Array,
-  stringToHex,
-  toHex,
-  uint8ArrayToHex,
-} from "../../../../../utils/encoding/hex.js";
+import { stringToHex, toHex } from "../../../../../utils/encoding/hex.js";
 import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type.js";
 import { storeUserShares } from "../api/fetchers.js";
 import { logoutUser } from "../auth/logout.js";
@@ -83,11 +77,17 @@ async function createWalletShares(): Promise<{
   shares: [string, string, string];
 }> {
   const privateKey = toHex(secp256k1.utils.randomPrivateKey());
-  const privateKeyHex = hexToUint8Array(stringToHex(`thirdweb_${privateKey}`));
+  const privateKeyHex = stringToHex(`thirdweb_${privateKey}`).slice(2);
   const publicKey = toHex(secp256k1.getPublicKey(privateKey.slice(2), false));
-  const address = publicKeyToAddress(publicKey); // TODO: Implement publicKeyToAddress natively (will need checksumAddress downstream)
+  const address = publicKeyToAddress(publicKey);
 
-  const [share1, share2, share3] = await split(privateKeyHex, 3, 2);
+  const sss = await import("./sss.js");
+  const [share1, share2, share3] = sss.secrets.share(
+    privateKeyHex,
+    3,
+    2,
+    undefined, // default pad length
+  );
 
   if (!share1 || !share2 || !share3) {
     throw new Error("Error splitting private key into shares");
@@ -95,11 +95,7 @@ async function createWalletShares(): Promise<{
 
   return {
     publicAddress: address,
-    shares: [
-      uint8ArrayToHex(share1),
-      uint8ArrayToHex(share2),
-      uint8ArrayToHex(share3),
-    ],
+    shares: [share1, share2, share3],
   };
 }
 

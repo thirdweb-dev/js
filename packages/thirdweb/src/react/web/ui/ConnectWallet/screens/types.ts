@@ -58,3 +58,19 @@ export type WelcomeScreen =
       };
     }
   | (() => React.ReactNode);
+
+export type WalletDetailsModalScreen =
+  | "main"
+  | "export"
+  | "send"
+  | "receive"
+  | "buy"
+  | "network-switcher"
+  | "transactions"
+  | "view-assets"
+  | "view-tokens"
+  | "view-nfts"
+  | "private-key"
+  | "manage-wallet"
+  | "wallet-connect-receiver"
+  | "wallet-manager";

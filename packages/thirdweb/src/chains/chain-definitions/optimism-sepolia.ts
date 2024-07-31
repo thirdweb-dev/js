@@ -1,5 +1,8 @@
 import { defineChain } from "../utils.js";
 
+/**
+ * @chain
+ */
 export const optimismSepolia = /* @__PURE__ */ defineChain({
   id: 11155420,
   name: "OP Sepolia",

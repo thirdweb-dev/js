@@ -2,6 +2,7 @@
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
+import { baseSepolia } from "thirdweb/chains";
 import { ConnectButton } from "thirdweb/react";
 import type { ConnectButtonProps } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets/in-app";
@@ -18,6 +19,9 @@ export function InAppConnectButton(
       theme={theme === "light" ? "light" : "dark"}
       connectButton={{
         label: "Sign in",
+      }}
+      supportedNFTs={{
+        "84532": ["0x638263e3eAa3917a53630e61B1fBa685308024fa"],
       }}
       wallets={[
         inAppWallet({

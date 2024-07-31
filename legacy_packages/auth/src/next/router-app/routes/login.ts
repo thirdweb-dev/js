@@ -25,10 +25,7 @@ export default async function handler(
 
   // Get signed login payload from the frontend
   if (!parsedPayload.success) {
-    return Response.json(
-      { error: "Invalid login payload" },
-      { status: 400 },
-    );
+    return Response.json({ error: "Invalid login payload" }, { status: 400 });
   }
 
   const payload = parsedPayload.data.payload;
@@ -68,20 +65,11 @@ export default async function handler(
     token = await ctx.auth.generate(payload, generateOptions);
   } catch (err: any) {
     if (err.message) {
-      return Response.json(
-        { error: err.message },
-        { status: 400 },
-      );
+      return Response.json({ error: err.message }, { status: 400 });
     } else if (typeof err === "string") {
-      return Response.json(
-        { error: err },
-        { status: 400 },
-      );
+      return Response.json({ error: err }, { status: 400 });
     } else {
-      return Response.json(
-        { error: "Invalid login payload" },
-        { status: 400 },
-      );
+      return Response.json({ error: "Invalid login payload" }, { status: 400 });
     }
   }
 

@@ -37,11 +37,18 @@ const mocks = vi.hoisted(() => {
 
 describe.sequential("TransactionButton", () => {
   beforeAll(() => {
-    vi.mock("../../../core/hooks/wallets/wallet-hooks.js", () => ({
+    vi.mock("../../../core/hooks/wallets/useActiveAccount.js", () => ({
       useActiveAccount: mocks.activeAccount,
-      useActiveWallet: mocks.activeWallet,
-      useSwitchActiveWalletChain: mocks.switchActiveWalletChain,
     }));
+    vi.mock("../../../core/hooks/wallets/useActiveWallet.js", () => ({
+      useActiveWallet: mocks.activeWallet,
+    }));
+    vi.mock(
+      "../../../core/hooks/wallets/useSwitchActiveWalletChain.js",
+      () => ({
+        useSwitchActiveWalletChain: mocks.switchActiveWalletChain,
+      }),
+    );
   });
 
   afterAll(() => {

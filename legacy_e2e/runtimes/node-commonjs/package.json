@@ -15,6 +15,6 @@
     "e2e": "bun run.ts"
   },
   "devDependencies": {
-    "ora": "^6.3.1"
+    "ora": "^8.0.1"
   }
 }

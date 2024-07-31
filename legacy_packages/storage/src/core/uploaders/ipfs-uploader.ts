@@ -139,6 +139,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }
 
       // add it to the map so that we can check for duplicates
+      // @ts-expect-error - TODO: should check index access
       fileNameToFileMap.set(fileName, file);
       // add it to the filenames array so that we can return the correct number of urls
       fileNames.push(fileName);

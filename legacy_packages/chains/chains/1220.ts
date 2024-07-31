@@ -20,11 +20,9 @@ export default {
   },
   "networkId": 1220,
   "redFlags": [],
-  "rpc": [
-    "https://1220.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://testnet.flagscan.io"
-  ],
+  "rpc": [],
   "shortName": "Flag",
   "slug": "flag-testnet-flag",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

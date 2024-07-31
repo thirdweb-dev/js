@@ -6,7 +6,7 @@ import {
   radius,
   spacing,
 } from "../../../../core/design-system/index.js";
-import { useActiveAccount } from "../../../../core/hooks/wallets/wallet-hooks.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { shortenString } from "../../../../core/utils/addresses.js";
 import { CopyIcon } from "../../components/CopyIcon.js";
 import { QRCode } from "../../components/QRCode.js";
@@ -77,7 +77,7 @@ export function ReceiveFunds(props: {
   );
 }
 
-const WalletAddressContainer = /* @__PURE__ */ StyledButton(() => {
+const WalletAddressContainer = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",

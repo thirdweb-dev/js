@@ -1,9 +1,12 @@
 import { getCachedChain } from "../../chains/utils.js";
-import { verifySignature } from "../verifySignature.js";
+import { verifySignature } from "../verify-signature.js";
 import { DEFAULT_LOGIN_STATEMENT, DEFAULT_LOGIN_VERSION } from "./constants.js";
 import { createLoginMessage } from "./create-login-message.js";
 import type { AuthOptions, LoginPayload } from "./types.js";
 
+/**
+ * @auth
+ */
 export type VerifyLoginPayloadParams = {
   payload: LoginPayload;
   signature: string;
@@ -12,10 +15,16 @@ export type VerifyLoginPayloadParams = {
 // we use this symbol to tag the payload as verified so that developers don't accidentally pass an unverified payload to other functions
 const VERIFIED_SYMBOL = /* @__PURE__ */ Symbol("verified_login_payload");
 
+/**
+ * @auth
+ */
 export type VerifiedLoginPayload = LoginPayload & {
   [VERIFIED_SYMBOL]: true;
 };
 
+/**
+ * @auth
+ */
 export type VerifyLoginPayloadResult =
   | {
       valid: true;

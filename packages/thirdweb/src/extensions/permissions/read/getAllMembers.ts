@@ -3,6 +3,9 @@ import { getRoleMember } from "../__generated__/IPermissionsEnumerable/read/getR
 import { getRoleMemberCount } from "../__generated__/IPermissionsEnumerable/read/getRoleMemberCount.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type GetAllRoleMembersParams = {
   role: RoleInput;
 };

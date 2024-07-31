@@ -9,8 +9,13 @@ import type {
 import type {
   CoinbaseSDKWalletConnectionOptions,
   CoinbaseWalletCreationOptions,
-} from "./coinbase/coinbaseSDKWallet.js";
+} from "./coinbase/coinbaseWebSDK.js";
 import type { COINBASE } from "./constants.js";
+import type {
+  EcosystemWalletAutoConnectOptions,
+  EcosystemWalletConnectionOptions,
+  EcosystemWalletCreationOptions,
+} from "./ecosystem/types.js";
 import type {
   InAppWalletAutoConnectOptions,
   InAppWalletConnectionOptions,
@@ -31,8 +36,11 @@ export type WalletId =
   | "embedded" // deprecated
   | "smart"
   | "adapter"
+  | EcosystemWalletId
   | WCSupportedWalletIds
   | InjectedSupportedWalletIds;
+
+export type EcosystemWalletId = `ecosystem.${string}`;
 
 export type DeepLinkSupportedWalletCreationOptions =
   | {
@@ -89,8 +97,10 @@ export type WalletConnectionOption<T extends WalletId> =
             : // injected only
               T extends InjectedSupportedWalletIds
               ? InjectedConnectOptions
-              : // wc only
-                WCConnectOptions;
+              : T extends EcosystemWalletId
+                ? EcosystemWalletConnectionOptions
+                : // wc only
+                  WCConnectOptions;
 
 /**
  * Generic type for getting the type of object that the `wallet.autoConnect` method takes as the first argument.
@@ -115,8 +125,10 @@ export type WalletAutoConnectionOption<T extends WalletId> =
             : // injected only
               T extends InjectedSupportedWalletIds
               ? InjectedConnectOptions
-              : // wc only
-                WCAutoConnectOptions;
+              : T extends EcosystemWalletId
+                ? EcosystemWalletAutoConnectOptions
+                : // wc only
+                  WCAutoConnectOptions;
 /**
  * Generic type for getting the type of object that the `createWallet` function takes as the second argument. ( the first argument being the wallet id )
  * @example
@@ -134,7 +146,9 @@ export type WalletCreationOptions<T extends WalletId> = T extends "smart"
         ? AdapterWalletOptions
         : T extends DeepLinkSupportedWalletIds
           ? DeepLinkSupportedWalletCreationOptions
-          : undefined;
+          : T extends EcosystemWalletId
+            ? EcosystemWalletCreationOptions | undefined
+            : undefined;
 
 /**
  * Generic type for getting the tuple type of arguments that the `createWallet` function takes.

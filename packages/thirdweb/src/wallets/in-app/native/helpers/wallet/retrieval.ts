@@ -1,10 +1,9 @@
-import { combine } from "shamir-secret-sharing";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import {
   type Hex,
-  hexToUint8Array,
+  hexToString,
+  isHex,
 } from "../../../../../utils/encoding/hex.js";
-import { uint8ArrayToString } from "../../../../../utils/uint8-array.js";
 import type { Account } from "../../../../interfaces/wallet.js";
 import { privateKeyToAccount } from "../../../../private-key.js";
 import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type.js";
@@ -36,12 +35,16 @@ export async function getExistingUserAccount(args: { client: ThirdwebClient }) {
 }
 
 async function getWalletPrivateKeyFromShares(shares: string[]) {
-  const sharesData = shares.map((share) => hexToUint8Array(share as Hex));
-  const privateKeyHex = uint8ArrayToString(await combine(sharesData));
-  if (!privateKeyHex.startsWith("thirdweb_")) {
+  const sss = await import("./sss.js");
+  let privateKeyHex = sss.secrets.combine(shares, 0);
+  if (!isHex(privateKeyHex)) {
+    privateKeyHex = `0x${privateKeyHex}`;
+  }
+  const prefixPrivateKey = hexToString(privateKeyHex as Hex);
+  if (!prefixPrivateKey.startsWith("thirdweb_")) {
     throw new Error("Invalid private key reconstructed from shares");
   }
-  const privateKey = privateKeyHex.replace("thirdweb_", "");
+  const privateKey = prefixPrivateKey.replace("thirdweb_", "");
   return privateKey;
 }
 

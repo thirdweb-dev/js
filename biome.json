@@ -1,15 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
   "organizeImports": {
     "enabled": true
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "style": {
-        "noUselessElse": "off"
-      }
+      "recommended": true
     }
   },
   "formatter": {
@@ -22,7 +19,9 @@
       "packages/thirdweb/src/crypto/aes/lib/md5.ts",
       "packages/thirdweb/src/utils/promise/p-limit.ts",
       "packages/thirdweb/src/utils/bytecode/cbor-decode.ts",
-      "packages/thirdweb/src/**/__generated__/**"
+      "packages/thirdweb/src/wallets/in-app/native/helpers/wallet/sss.ts",
+      "packages/thirdweb/src/**/__generated__/**",
+      "apps/dashboard/src/graphql/**"
     ]
   },
   "overrides": [

@@ -9,7 +9,7 @@ const CustomThemeCtx = /* @__PURE__ */ createContext(darkThemeObj);
  */
 export function CustomThemeProvider(props: {
   children: React.ReactNode;
-  theme: "light" | "dark" | Theme;
+  theme: "light" | "dark" | Theme | undefined;
 }) {
   const { theme, children } = props;
   const themeObj = parseTheme(theme);
@@ -22,7 +22,7 @@ export function CustomThemeProvider(props: {
 }
 
 export function parseTheme(theme: "light" | "dark" | Theme | undefined): Theme {
-  if (!theme) {
+  if (!theme || !isValidTheme(theme)) {
     return darkThemeObj;
   }
 
@@ -35,6 +35,14 @@ export function parseTheme(theme: "light" | "dark" | Theme | undefined): Theme {
   }
 
   return themeObj;
+}
+
+export function isValidTheme(theme: unknown): theme is Theme {
+  return (
+    theme === "dark" ||
+    theme === "light" ||
+    (typeof theme === "object" && theme !== null && "colors" in theme)
+  );
 }
 
 /**

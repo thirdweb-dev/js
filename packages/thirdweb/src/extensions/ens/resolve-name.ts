@@ -9,6 +9,9 @@ import { withCache } from "../../utils/promise/withCache.js";
 import { reverse } from "./__generated__/UniversalResolver/read/reverse.js";
 import { UNIVERSAL_RESOLVER_ADDRESS } from "./constants.js";
 
+/**
+ * @extension ENS
+ */
 export type ResolveNameOptions = {
   client: ThirdwebClient;
   address: Address;
@@ -45,7 +48,15 @@ export async function resolveName(options: ResolveNameOptions) {
         packetToBytes(`${address.toLowerCase().substring(2)}.addr.reverse`),
       );
 
-      const [name, resolvedAddress] = await reverse({ contract, reverseName });
+      const [name, resolvedAddress] = await reverse({
+        contract,
+        reverseName,
+      }).catch((e) => {
+        if ("data" in e && e.data === "0x7199966d") {
+          return [null, address] as const;
+        }
+        throw e;
+      });
 
       if (address.toLowerCase() !== resolvedAddress.toLowerCase()) {
         return null;

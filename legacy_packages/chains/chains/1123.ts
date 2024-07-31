@@ -36,7 +36,9 @@ export default {
   },
   "rpc": [
     "https://1123.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://b2-testnet.alt.technology"
+    "https://b2-testnet.alt.technology",
+    "https://rpc.ankr.com/b2_testnet",
+    "https://testnet-rpc.bsquared.network"
   ],
   "shortName": "B2-testnet",
   "slug": "b2-testnet",

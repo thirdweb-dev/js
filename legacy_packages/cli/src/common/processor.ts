@@ -28,6 +28,7 @@ import {
   ExtensionFunction,
   ExtensionMetadata,
 } from "../core/interfaces/Extension";
+import prompts from "prompts";
 
 export async function processProject(
   options: any,
@@ -250,6 +251,23 @@ export async function processProject(
     );
     process.exit(1);
   }
+
+  if(options.customid) {
+    for (const contract of selectedContracts) {
+      const modifyResponse = await prompts({
+          type: 'text',
+          name: 'contractId',
+          message: `Enter contractId for ${contract.name} (or press enter to use current name):`,
+          initial: contract.name,
+          validate: name => /^[\w-]+$/.test(name) ? true : 'Name must only contain letters, numbers, underscores, or hyphens'
+      });
+    
+      if (modifyResponse.contractId) {
+        contract.name = modifyResponse.contractId;
+      }
+    }
+  }
+
 
   let zkSelectedContracts: ContractPayload[] = [];
   if (options.zksync) {

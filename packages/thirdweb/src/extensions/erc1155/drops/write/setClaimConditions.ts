@@ -3,6 +3,9 @@ import { getMulticallSetClaimConditionTransactions } from "../../../../utils/ext
 import type { ClaimConditionsInput } from "../../../../utils/extensions/drops/types.js";
 import { multicall } from "../../../common/__generated__/IMulticall/write/multicall.js";
 
+/**
+ * @extension ERC1155
+ */
 export type SetClaimConditionsParams = {
   tokenId: bigint;
   phases: ClaimConditionsInput[];
@@ -17,8 +20,9 @@ export type SetClaimConditionsParams = {
  * @example
  * ```ts
  * import { setClaimConditions } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
  *
- * const tx = setClaimConditions({
+ * const transaction = setClaimConditions({
  *  contract,
  *  tokenId: 0n,
  *  phases: [
@@ -31,6 +35,8 @@ export type SetClaimConditionsParams = {
  *    },
  *   ],
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setClaimConditions(

@@ -52,7 +52,9 @@ export async function computeCreate2FactoryTransaction(
   const allBinsInfo = [
     ...CUSTOM_GAS_BINS.map((b) =>
       // to generate EIP-155 transaction
-      getCreate2FactoryDeploymentInfo(networkId, { gasPrice: BigNumber.from(b) }),
+      getCreate2FactoryDeploymentInfo(networkId, {
+        gasPrice: BigNumber.from(b),
+      }),
     ),
     // to generate pre-EIP-155 transaction, hence chainId 0
     ...CUSTOM_GAS_BINS.map((b) =>

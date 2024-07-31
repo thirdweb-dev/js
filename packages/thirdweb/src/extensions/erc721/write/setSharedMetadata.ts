@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { setSharedMetadata as generatedSharedMetadata } from "../__generated__/ISharedMetadata/write/setSharedMetadata.js";
 
+/**
+ * @extension ERC721
+ */
 export type SetSharedMetadataParams = {
   nft: NFTInput;
 };

@@ -7,10 +7,10 @@ import type { Chain } from "../chains/types.js";
 import { getRpcUrlForChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { type ThirdwebContract, getContract } from "../contract/contract.js";
-import { sendTransaction } from "../transaction/actions/send-transaction.js";
+import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import { waitForReceipt } from "../transaction/actions/wait-for-tx-receipt.js";
-import { prepareTransaction } from "../transaction/prepare-transaction.js";
-import { toHex, uint8ArrayToHex } from "../utils/encoding/hex.js";
+import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
+import { toHex } from "../utils/encoding/hex.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 
 type Ethers5 = typeof ethers5;
@@ -306,8 +306,7 @@ export async function toEthersSigner(
         throw new Error("Account not found");
       }
       return account.signMessage({
-        message:
-          typeof message === "string" ? message : uint8ArrayToHex(message),
+        message: typeof message === "string" ? message : { raw: message },
       });
     }
     /**
@@ -323,9 +322,17 @@ export async function toEthersSigner(
         throw new Error("Account does not support signTransaction");
       }
       const awaitedTx = await ethers.utils.resolveProperties(transaction);
-      return account.signTransaction(
-        await alignTxFromEthers(awaitedTx, ethers),
+      const alignedTx = await alignTxFromEthers(
+        client,
+        chain,
+        awaitedTx,
+        ethers,
       );
+      const serialized = await toSerializableTransaction({
+        transaction: alignedTx,
+        from: account.address,
+      });
+      return account.signTransaction(serialized);
     }
 
     /**
@@ -341,38 +348,43 @@ export async function toEthersSigner(
         throw new Error("Account does not support sendTransaction");
       }
       const awaitedTx = await ethers.utils.resolveProperties(transaction);
-      const alignedTx = await alignTxFromEthers(awaitedTx, ethers);
-      const tx = prepareTransaction({
-        client: client,
-        chain: chain,
-        accessList: alignedTx.accessList,
-        data: alignedTx.data,
-        gas: alignedTx.gas,
-        maxFeePerGas: alignedTx.maxFeePerGas,
-        gasPrice: alignedTx.gasPrice,
-        maxFeePerBlobGas: alignedTx.maxFeePerGas,
-        maxPriorityFeePerGas: alignedTx.maxPriorityFeePerGas,
-        nonce: alignedTx.nonce,
-        to: alignedTx.to ?? undefined,
-        value: alignedTx.value,
+      const alignedTx = await alignTxFromEthers(
+        client,
+        chain,
+        awaitedTx,
+        ethers,
+      );
+      const serialized = await toSerializableTransaction({
+        transaction: alignedTx,
+        from: account.address,
       });
-      const result = await sendTransaction({
-        transaction: tx,
-        account: account,
-      });
+      const result = await account.sendTransaction(serialized);
 
       const response: ethers5.ethers.providers.TransactionResponse = {
-        chainId: tx.chain.id,
+        ...serialized,
+        nonce: serialized.nonce ?? 0,
         from: account.address,
-        data: alignedTx.data ?? "0x",
-        nonce: alignedTx.nonce ?? -1,
+        maxFeePerGas: serialized.maxFeePerGas
+          ? ethers.BigNumber.from(serialized.maxFeePerGas)
+          : undefined,
+        maxPriorityFeePerGas: serialized.maxPriorityFeePerGas
+          ? ethers.BigNumber.from(serialized.maxPriorityFeePerGas)
+          : undefined,
+        gasPrice: serialized.gasPrice
+          ? ethers.BigNumber.from(serialized.gasPrice)
+          : undefined,
+        accessList: serialized.accessList as ethers5.ethers.utils.AccessList,
         value: ethers.BigNumber.from(alignedTx.value ?? 0),
         gasLimit: ethers.BigNumber.from(alignedTx.gas ?? 0),
         // biome-ignore lint/style/noNonNullAssertion: TODO: fix later
         hash: result.transactionHash!,
         confirmations: 0,
         wait: async () => {
-          const receipt = await waitForReceipt(result);
+          const receipt = await waitForReceipt({
+            transactionHash: result.transactionHash,
+            chain,
+            client,
+          });
           return {
             ...receipt,
             type:
@@ -397,7 +409,10 @@ export async function toEthersSigner(
               blockNumber: Number(log.blockNumber),
             })),
             cumulativeGasUsed: ethers.BigNumber.from(receipt.cumulativeGasUsed),
-            effectiveGasPrice: ethers.BigNumber.from(receipt.effectiveGasPrice),
+            effectiveGasPrice:
+              receipt.effectiveGasPrice !== null
+                ? ethers.BigNumber.from(receipt.effectiveGasPrice)
+                : receipt.effectiveGasPrice,
             byzantium: true,
           };
         },
@@ -484,13 +499,21 @@ function alignTxToEthers(
     }
   }
 
-  return { ...rest, gasLimit: gas, to, type };
+  return {
+    ...rest,
+    gasLimit: gas,
+    to,
+    type,
+    accessList: tx.accessList as ethers5.utils.AccessListish | undefined,
+  };
 }
 
 async function alignTxFromEthers(
+  client: ThirdwebClient,
+  chain: Chain,
   tx: ethers5.ethers.providers.TransactionRequest,
   ethers: Ethers5,
-): Promise<TransactionSerializable> {
+): Promise<PreparedTransaction> {
   const {
     type: ethersType,
     accessList,
@@ -511,8 +534,8 @@ async function alignTxFromEthers(
         throw new Error("ChainId is required for EIP-2930 transactions");
       }
       return {
-        type: "eip2930",
-        chainId,
+        client,
+        chain,
         to,
         data: (data ?? undefined) as Hex | undefined,
         nonce: nonce ? ethers.BigNumber.from(nonce).toNumber() : undefined,
@@ -529,8 +552,8 @@ async function alignTxFromEthers(
         throw new Error("ChainId is required for EIP-1559 transactions");
       }
       return {
-        type: "eip1559",
-        chainId,
+        client,
+        chain,
         to,
         data: (data ?? undefined) as Hex | undefined,
         nonce: nonce ? ethers.BigNumber.from(nonce).toNumber() : undefined,
@@ -546,8 +569,8 @@ async function alignTxFromEthers(
     }
     default: {
       return {
-        type: "legacy",
-        chainId,
+        client,
+        chain,
         to,
         data: (data ?? undefined) as Hex | undefined,
         nonce: nonce ? ethers.BigNumber.from(nonce).toNumber() : undefined,

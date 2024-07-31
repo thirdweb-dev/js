@@ -8,6 +8,9 @@ import {
 } from "../../__generated__/IOffers/write/acceptOffer.js";
 import { getOffer } from "../read/getOffer.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type AcceptOfferParams = GeneratedAcceptOfferParams;
 
 /**
@@ -23,11 +26,14 @@ export type AcceptOfferParams = GeneratedAcceptOfferParams;
  * @example
  * ```ts
  * import { acceptOffer } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const acceptOfferTx = acceptOffer({
  *  contract,
  *  offerId: 1n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function acceptOffer(

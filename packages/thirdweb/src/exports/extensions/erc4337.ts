@@ -36,6 +36,9 @@ export { signerPermissionsUpdatedEvent } from "../../extensions/erc4337/__genera
 
 // FACTORY
 export { getAllAccounts } from "../../extensions/erc4337/__generated__/IAccountFactory/read/getAllAccounts.js";
+export { getAccounts } from "../../extensions/erc4337/__generated__/IAccountFactory/read/getAccounts.js";
+export { totalAccounts } from "../../extensions/erc4337/__generated__/IAccountFactory/read/totalAccounts.js";
+export { isRegistered } from "../../extensions/erc4337/__generated__/IAccountFactory/read/isRegistered.js";
 export {
   getAccountsOfSigner,
   type GetAccountsOfSignerParams,

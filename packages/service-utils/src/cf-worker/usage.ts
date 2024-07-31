@@ -15,6 +15,7 @@ function getAws(options: ConstructorParameters<typeof AwsClient>[0]) {
  */
 const usageEventSchema = z.object({
   source: z.enum([
+    "ecosystemWallets",
     "embeddedWallets",
     "rpc",
     "storage",
@@ -25,6 +26,7 @@ const usageEventSchema = z.object({
     "checkout",
     "engine",
     "pay",
+    "rpcV2",
   ]),
   action: z.string(),
 
@@ -84,6 +86,21 @@ const usageEventSchema = z.object({
       "TRACE",
     ])
     .optional(),
+  // Used to identify the ecosystem that the an ecosystem wallet belongs too
+  ecosystemId: z.string().optional(),
+  ecosystemPartnerId: z.string().optional(),
+  chainName: z.string().optional(),
+  tokenSymbol: z.string().optional(),
+  dstChainId: z.number().optional(),
+  dstTokenAddress: z.string().optional(),
+  dstChainName: z.string().optional(),
+  dstTokenSymbol: z.string().optional(),
+  msLatency: z.number().optional(),
+  toAmountUSDCents: z.number().optional(),
+  secondaryProvider: z.string().optional(),
+  onRampId: z.string().optional(),
+  evmRequestParams: z.string().optional(),
+  providerIp: z.string().optional(),
 });
 export type UsageEvent = z.infer<typeof usageEventSchema>;
 

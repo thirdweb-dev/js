@@ -12,6 +12,7 @@ import { airdropERC20WithSignature as generatedAirdropERC20WithSignature } from 
  * @example
  * ```ts
  * import { airdropERC20WithSignature, generateAirdropSignatureERC20 } from "thirdweb/extensions/airdrop";
+ * import { sendTransaction } from "thirdweb";
  *
  * const { req, signature } = await generateAirdropSignatureERC20(...)
  *
@@ -27,6 +28,9 @@ import { airdropERC20WithSignature as generatedAirdropERC20WithSignature } from 
  */
 export const airdropERC20WithSignature = generatedAirdropERC20WithSignature;
 
+/**
+ * @extension Airdrop
+ */
 export type GenerateAirdropERC20SignatureOptions = {
   account: Account;
   contract: ThirdwebContract;

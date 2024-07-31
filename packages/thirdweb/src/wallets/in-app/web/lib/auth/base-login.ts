@@ -17,13 +17,17 @@ export class BaseLogin extends AbstractLogin<
   private async getOauthLoginUrl(
     authProvider: AuthProvider,
   ): Promise<GetHeadlessLoginLinkReturnType> {
-    const result = await this.LoginQuerier.call<GetHeadlessLoginLinkReturnType>(
-      {
-        procedureName: "getHeadlessOauthLoginLink",
-        params: { authProvider },
-      },
-    );
-    return result;
+    try {
+      const result =
+        await this.LoginQuerier.call<GetHeadlessLoginLinkReturnType>({
+          procedureName: "getHeadlessOauthLoginLink",
+          params: { authProvider },
+        });
+      return result;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 
   /**
@@ -174,6 +178,8 @@ export class BaseLogin extends AbstractLogin<
                   eventType: "injectDeveloperClientIdResult",
                   developerClientId: this.client.clientId,
                   authOption: args.oauthProvider,
+                  partnerId: this.ecosystem?.partnerId,
+                  ecosystemId: this.ecosystem?.id,
                 },
                 this.baseUrl,
               );

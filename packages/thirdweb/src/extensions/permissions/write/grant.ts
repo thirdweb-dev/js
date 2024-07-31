@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { grantRole as generatedGrantRole } from "../__generated__/IPermissions/write/grantRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type GrantRoleParams = {
   role: RoleInput;
   targetAccountAddress: Address;
@@ -17,12 +20,16 @@ export type GrantRoleParams = {
  * @example
  * ```ts
  * import { grantRole } from "thirdweb/extensions/permissions";
+ * import { sendTransaction } from "thirdweb";
  *
- * const result = await grantRole({
+ * const transaction = grantRole({
  *  contract,
  *  role: "admin",
  *  targetAccountAddress: "0x1234567890123456789012345678901234567890",
  * });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
  */
 export function grantRole(options: BaseTransactionOptions<GrantRoleParams>) {
   return generatedGrantRole({

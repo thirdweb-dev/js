@@ -3,13 +3,13 @@
 
 export const wallet = {
   id: "xyz.bonuz",
-  name: "Bonuz",
+  name: "Bonuz - Social ID",
   homepage: "https://bonuz.xyz",
-  image_id: "4f8737be-5aa1-4dff-d956-39c81a998e00",
+  image_id: "eb376138-c5b9-4d82-c610-c98c9c218a00",
   app: {
     browser: null,
-    ios: "https://bonuz.xyz",
-    android: "https://bonuz.xyz",
+    ios: "https://apps.apple.com/eg/app/bonuz-social-smart-wallet/id1637687439",
+    android: "https://play.google.com/store/apps/details?id=market.bonuz.app",
     mac: null,
     windows: null,
     linux: null,

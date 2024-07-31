@@ -1,5 +1,5 @@
 import type { Chain } from "../../chains/types.js";
-import type { AsyncStorage } from "../storage/AsyncStorage.js";
+import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
 import type { WalletCreationOptions, WalletId } from "../wallet-types.js";
 import type { Account, Wallet } from "./wallet.js";
 

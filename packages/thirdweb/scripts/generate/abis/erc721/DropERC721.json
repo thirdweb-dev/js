@@ -1,0 +1,5 @@
+[
+  "function updateBatchBaseURI(uint256 _index, string calldata _uri)",
+  "function freezeBatchBaseURI(uint256 _index)",
+  "function setMaxTotalSupply(uint256 _maxTotalSupply)"
+]

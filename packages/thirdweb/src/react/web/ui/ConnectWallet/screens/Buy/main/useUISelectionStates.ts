@@ -1,36 +1,30 @@
 import { useState } from "react";
 import { polygon } from "../../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../../chains/types.js";
-import { formatNumber } from "../../../../../../../utils/formatNumber.js";
-import { toEther } from "../../../../../../../utils/units.js";
-import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/wallet-hooks.js";
+import type {
+  FundWalletOptions,
+  PayUIOptions,
+} from "../../../../../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
-import type { PayUIOptions } from "../../../ConnectButtonProps.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
 import { defaultSelectedCurrency } from "../fiat/currencies.js";
 import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
-import type { BuyForTx } from "./types.js";
 
 // handle states for token and chain selection
 
 export function useUISelectionStates(options: {
   payOptions: PayUIOptions;
-  buyForTx?: BuyForTx;
   supportedDestinations: SupportedChainAndTokens;
 }) {
   const activeChain = useActiveWalletChain();
-  const { payOptions, buyForTx, supportedDestinations } = options;
+  const { payOptions, supportedDestinations } = options;
 
   // buy token amount ---------------------------------------------------------
-  const initialTokenAmount =
-    payOptions.prefillBuy?.amount ||
-    (buyForTx
-      ? String(
-          formatNumber(Number(toEther(buyForTx.cost - buyForTx.balance)), 4),
-        )
-      : "");
+  // NOTE - for transaction / direct payment modes, the token amount is set when the user tap continue
+  const prefillBuy = (payOptions as FundWalletOptions)?.prefillBuy;
+  const initialTokenAmount = prefillBuy?.amount || "";
 
-  const [hasEditedAmount, setHasEditedAmount] = useState(false);
   const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
 
@@ -39,9 +33,9 @@ export function useUISelectionStates(options: {
   // Destination chain and token selection -----------------------------------
   const [toChain, setToChain] = useState<Chain>(
     // use prefill chain if available
-    payOptions.prefillBuy?.chain ||
-      // use buyForTx chain if available
-      buyForTx?.tx.chain ||
+    prefillBuy?.chain ||
+      (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
+      (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain) ||
       // use active chain if its supported as destination
       supportedDestinations.find((x) => x.chain.id === activeChain?.id)
         ?.chain ||
@@ -50,7 +44,9 @@ export function useUISelectionStates(options: {
   );
 
   const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    payOptions.prefillBuy?.token || NATIVE_TOKEN,
+    prefillBuy?.token ||
+      (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
+      NATIVE_TOKEN,
   );
   // --------------------------------------------------------------------------
 
@@ -59,6 +55,8 @@ export function useUISelectionStates(options: {
     // use prefill chain if available
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.chain) ||
+      (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
+      (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain) ||
       // default to polygon
       polygon,
   );
@@ -67,6 +65,7 @@ export function useUISelectionStates(options: {
     // use prefill token if available
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.token) ||
+      (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
       // default to native token
       NATIVE_TOKEN,
   );
@@ -74,12 +73,14 @@ export function useUISelectionStates(options: {
   // --------------------------------------------------------------------------
 
   // stripe only supports USD, so not using a state right now
-  const selectedCurrency = defaultSelectedCurrency;
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    defaultSelectedCurrency,
+  );
 
   return {
     tokenAmount,
     setTokenAmount,
-    hasEditedAmount,
+
     toChain,
     setToChain,
     deferredTokenAmount,
@@ -90,6 +91,7 @@ export function useUISelectionStates(options: {
     fromToken,
     setFromToken,
     selectedCurrency,
-    setHasEditedAmount,
+
+    setSelectedCurrency,
   };
 }

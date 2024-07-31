@@ -11,7 +11,10 @@ import {
   setWallerUserDetails,
 } from "../storage/local.js";
 import { setUpNewUserWallet } from "../wallet/creation.js";
-import { getCognitoRecoveryPassword } from "../wallet/recoveryCode.js";
+import {
+  getCognitoRecoveryPasswordV1,
+  getCognitoRecoveryPasswordV2,
+} from "../wallet/recoveryCode.js";
 import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 
 export async function preAuth(args: {
@@ -42,7 +45,9 @@ export async function postAuth({
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
-        : undefined, // TODO (rn) store phone number too?
+        : "phoneNumber" in storedToken.authDetails
+          ? storedToken.authDetails.phoneNumber
+          : undefined,
   });
 
   if (storedToken.isNewUser) {
@@ -100,7 +105,9 @@ export async function postAuthUserManaged(
     email:
       "email" in storedToken.authDetails
         ? storedToken.authDetails.email
-        : undefined, // TODO (rn) store phone number too?
+        : "phoneNumber" in storedToken.authDetails
+          ? storedToken.authDetails.phoneNumber
+          : undefined,
   });
 
   if (storedToken.isNewUser) {
@@ -145,13 +152,23 @@ async function getRecoveryCode(
         );
       }
       return recoveryCode;
+    } else {
+      try {
+        return await getCognitoRecoveryPasswordV2(client);
+      } catch (e) {
+        return await getCognitoRecoveryPasswordV1(client).catch(() => {
+          throw new Error("Something went wrong getting cognito recovery code");
+        });
+      }
     }
-    try {
-      const code = await getCognitoRecoveryPassword(client);
-      return code;
-    } catch (e) {
-      throw new Error("Something went wrong getting cognito recovery code");
+  } else if (
+    storedToken.authDetails.recoveryShareManagement ===
+    RecoveryShareManagement.USER_MANAGED
+  ) {
+    if (recoveryCode) {
+      return recoveryCode;
     }
+    throw new Error(ErrorMessages.missingRecoveryCode);
   } else {
     throw new Error("Invalid recovery share management option");
   }

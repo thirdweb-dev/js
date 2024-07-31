@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: "com.blanqlabs.wallet",
   mobile: {
-    native: "blanq://blanqlabs.com/settings/app",
-    universal: "https://www.blanq.app/link/",
+    native: null,
+    universal: "https://wallet.blanq.app",
   },
   desktop: {
     native: null,
-    universal: null,
+    universal: "https://wallet.blanq.app",
   },
 } as const;

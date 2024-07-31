@@ -10,26 +10,28 @@ export default {
     }
   ],
   "faucets": [],
+  "features": [],
   "icon": {
-    "url": "ipfs://bafkreia2tiurhfkc2lifytbpv356d4rfmqoivzrepg2wsrqwrqgbb4bp7a",
-    "width": 600,
-    "height": 600,
+    "url": "ipfs://QmTWt4P7guuSSK5GhpHpzsFh1ccB6PD9Vsk5sVhJYgjKFM",
+    "width": 360,
+    "height": 360,
     "format": "png"
   },
   "infoURL": "https://www.sei.io",
-  "name": "Sei Network",
+  "name": "Sei",
   "nativeCurrency": {
     "name": "Sei",
-    "symbol": "SEI",
+    "symbol": "Sei",
     "decimals": 18
   },
   "networkId": 1329,
+  "redFlags": [],
   "rpc": [
     "https://1329.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.sei-apis.com",
     "wss://evm-ws.sei-apis.com"
   ],
   "shortName": "sei",
-  "slug": "sei-network",
+  "slug": "sei",
   "testnet": false
 } as const satisfies Chain;

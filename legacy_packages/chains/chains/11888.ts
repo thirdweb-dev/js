@@ -1,6 +1,6 @@
 import type { Chain } from "../src/types";
 export default {
-  "chain": "Santiment Intelligence Network",
+  "chain": "Santiment Intelligence Network DEPRECATED",
   "chainId": 11888,
   "explorers": [
     {
@@ -17,10 +17,10 @@ export default {
     "format": "png"
   },
   "infoURL": "https://sanr.app",
-  "name": "Santiment Intelligence Network",
+  "name": "Santiment Intelligence Network DEPRECATED",
   "nativeCurrency": {
-    "name": "SANR",
-    "symbol": "SANR",
+    "name": "SANold",
+    "symbol": "SANold",
     "decimals": 18
   },
   "networkId": 11888,
@@ -37,7 +37,8 @@ export default {
     "https://11888.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sanrchain-node.santiment.net"
   ],
-  "shortName": "SAN",
-  "slug": "santiment-intelligence-network",
+  "shortName": "SANold",
+  "slug": "santiment-intelligence-network-deprecated",
+  "status": "deprecated",
   "testnet": false
 } as const satisfies Chain;

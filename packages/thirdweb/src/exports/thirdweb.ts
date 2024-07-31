@@ -8,7 +8,11 @@ declare module "abitype" {
 /**
  * CONSTANTS
  */
-export { ADDRESS_ZERO, NATIVE_TOKEN_ADDRESS } from "../constants/addresses.js";
+export {
+  ADDRESS_ZERO,
+  ZERO_ADDRESS,
+  NATIVE_TOKEN_ADDRESS,
+} from "../constants/addresses.js";
 
 /**
  * CLIENT
@@ -273,3 +277,8 @@ export {
 
 // re-exports of types
 export type { AbiParameterToPrimitiveType } from "abitype";
+
+export {
+  type VerifyTypedDataParams,
+  verifyTypedData,
+} from "../auth/verify-typed-data.js";

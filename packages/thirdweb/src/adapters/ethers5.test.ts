@@ -3,6 +3,7 @@ import { describe, expect, test } from "vitest";
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
+import { randomBytesBuffer } from "../utils/random.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
 import { toEthersSigner } from "./ethers5.js";
 
@@ -32,6 +33,19 @@ describe("ethers5 adapter", () => {
     );
     const expectedSig = await account.signMessage({ message: "hello world" });
     const sig = await signer.signMessage("hello world");
+    expect(sig).toBe(expectedSig);
+  });
+
+  test("should sign raw message", async () => {
+    const signer = await toEthersSigner(
+      ethers5,
+      TEST_CLIENT,
+      account,
+      ANVIL_CHAIN,
+    );
+    const bytes = randomBytesBuffer(32);
+    const expectedSig = await account.signMessage({ message: { raw: bytes } });
+    const sig = await signer.signMessage(bytes);
     expect(sig).toBe(expectedSig);
   });
 

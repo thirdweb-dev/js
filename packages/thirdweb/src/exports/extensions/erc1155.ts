@@ -54,6 +54,7 @@ export {
 } from "../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js";
 export {
   safeTransferFrom,
+  encodeSafeTransferFrom,
   type SafeTransferFromParams,
 } from "../../extensions/erc1155/__generated__/IERC1155/write/safeTransferFrom.js";
 export {
@@ -93,6 +94,15 @@ export {
   setClaimConditions,
   type SetClaimConditionsParams,
 } from "../../extensions/erc1155/drops/write/setClaimConditions.js";
+
+export {
+  updateMetadata,
+  type UpdateMetadataParams,
+} from "../../extensions/erc1155/drops/write/updateMetadata.js";
+export {
+  getClaimConditionById,
+  type GetClaimConditionByIdParams,
+} from "../../extensions/erc1155/__generated__/IDrop1155/read/getClaimConditionById.js";
 
 /**
  * SIGNATURE extension for ERC1155
@@ -147,3 +157,6 @@ export {
   openPack,
   type OpenPackParams,
 } from "../../extensions/erc1155/__generated__/IPack/write/openPack.js";
+
+// Zora 1155 contract
+export { nextTokenId } from "../../extensions/erc1155/__generated__/Zora1155/read/nextTokenId.js";

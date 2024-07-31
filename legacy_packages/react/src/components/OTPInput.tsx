@@ -63,7 +63,8 @@ const caretBlink = keyframes`
   }
   `;
 
-const FakeCaret = /* @__PURE__ */StyledDiv(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const FakeCaret = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "absolute",
@@ -83,7 +84,8 @@ const FakeCaret = /* @__PURE__ */StyledDiv(() => {
   };
 });
 
-const OTPInputBox = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const OTPInputBox = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "relative",

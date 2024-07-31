@@ -12,7 +12,7 @@ import {
   Theme,
 } from "../../design-system";
 import styled from "@emotion/styled";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import {
   useChainId,
@@ -95,12 +95,38 @@ export type NetworkSelectorProps = {
   chains?: Chain[];
   /**
    * Array of chains to be displayed under "Popular" section
+   * @deprecated Use `sections` prop instead
+   *
+   * If `sections` prop is provided, this prop will be ignored
    */
   popularChains?: Chain[];
   /**
    * Array of chains to be displayed under "Recent" section
+   * @deprecated Use `sections` prop instead
+   *
+   * If `sections` prop is provided, this prop will be ignored
    */
   recentChains?: Chain[];
+
+  /**
+   * Specify sections of chains to be displayed in the Network Selector Modal
+   *
+   * @example
+   * To display "Polygon", "Avalanche" chains under "Recently used" section and "Ethereum", "Arbitrum" chains under "Popular" section, you can set the prop with the following value
+   * ```ts
+   * import { Polygon, Avalanche, Ethereum, Arbitrum } from "@thirdweb-dev/chains";
+   *
+   * const sections = [
+   *  { label: 'Recently used', chains: [Polygon, Avalanche] },
+   *  { label: 'Popular', chains: [Ethereum, Arbitrum] },
+   * ]
+   * ```
+   */
+  sections?: Array<{
+    label: string;
+    chains: Chain[];
+  }>;
+
   /**
    * Override how the chain button is rendered in the Modal
    */
@@ -117,20 +143,6 @@ export type NetworkSelectorProps = {
    * The "Add Custom Network" button is displayed at the bottom of the modal - only if this prop is provided
    */
   onCustomClick?: () => void;
-};
-
-const fuseConfig = {
-  threshold: 0.4,
-  keys: [
-    {
-      name: "name",
-      weight: 1,
-    },
-    {
-      name: "chainId",
-      weight: 1,
-    },
-  ],
 };
 
 /**
@@ -178,6 +190,11 @@ export function NetworkSelector(props: NetworkSelectorProps) {
   );
 }
 
+type ChainSection = {
+  chains: Chain[];
+  label: string;
+};
+
 export function NetworkSelectorContent(
   props: NetworkSelectorProps & {
     onBack?: () => void;
@@ -186,56 +203,149 @@ export function NetworkSelectorContent(
 ) {
   const [searchTerm, setSearchTerm] = useState("");
   const deferredSearchTerm = useDeferredValue(searchTerm);
-
-  const supportedChains = useSupportedChains();
-  const chains = props.chains || supportedChains;
   const locale = useTWLocale().connectWallet.networkSelector;
 
-  const _recentChains = props.recentChains;
+  const supportedChains = useSupportedChains();
+  const otherChains = props.chains || supportedChains;
 
-  // remove recent chains from popular chains
-  const cleanedPopularChains = !_recentChains
-    ? props.popularChains
-    : props.popularChains?.filter((chain) => {
-        return !_recentChains.some(
-          (recentChain) => recentChain.chainId === chain.chainId,
+  // labels
+  const othersLabel = locale.categoryLabel.others;
+  const popularLabel = locale.categoryLabel.popular;
+  const recentLabel = locale.categoryLabel.recentlyUsed;
+
+  // create sections, chainToSectionMap and allChains
+  const { chainSections, allChains, allChainsToSectionMap } = useMemo(() => {
+    const chainSectionsValue: ChainSection[] = [];
+    const allChainsValue: Chain[] = [];
+    const allChainsToSectionMapValue: Map<number, string> = new Map();
+
+    function addChain(c: Chain, section: string) {
+      allChainsToSectionMapValue.set(c.chainId, section);
+      allChainsValue.push(c);
+    }
+
+    // if new API is used
+    if (props.sections) {
+      props.sections.forEach((s) => {
+        const chainsToAdd = s.chains.filter(
+          (c) => !allChainsToSectionMapValue.has(c.chainId),
         );
+        if (chainsToAdd.length > 0) {
+          chainSectionsValue.push({
+            label: s.label,
+            chains: chainsToAdd,
+          });
+          chainsToAdd.forEach((c) => addChain(c, s.label));
+        }
       });
+    }
 
-  // fuse instances
-  const fuseAllChains = useMemo(() => {
-    return new Fuse(chains, fuseConfig);
-  }, [chains]);
+    // if old API is used
+    else {
+      // add all recent chains
+      if (props.recentChains && props.recentChains.length > 0) {
+        chainSectionsValue.push({
+          label: recentLabel,
+          chains: props.recentChains,
+        });
+        props.recentChains.forEach((c) => addChain(c, recentLabel));
+      }
 
-  const fusePopularChains = useMemo(() => {
-    return new Fuse(cleanedPopularChains || [], fuseConfig);
-  }, [cleanedPopularChains]);
+      // then add all popular chains ( exclude already added chains )
+      if (props.popularChains && props.popularChains.length > 0) {
+        const chainsToAdd = props.popularChains.filter(
+          (c) => !allChainsToSectionMapValue.has(c.chainId),
+        );
+        if (chainsToAdd.length > 0) {
+          chainSectionsValue.push({
+            label: popularLabel,
+            chains: chainsToAdd,
+          });
+          chainsToAdd.forEach((c) => addChain(c, popularLabel));
+        }
+      }
+    }
 
-  const fuseRecentChains = useMemo(() => {
-    return new Fuse(props.recentChains || [], fuseConfig);
-  }, [props.recentChains]);
+    // add all other chains ( exclude already added chains )
+    const otherChainsToAdd = otherChains.filter(
+      (c) => !allChainsToSectionMapValue.has(c.chainId),
+    );
+    if (otherChainsToAdd.length > 0) {
+      chainSectionsValue.push({
+        label: othersLabel,
+        chains: otherChainsToAdd,
+      });
+      otherChainsToAdd.forEach((c) => addChain(c, othersLabel));
+    }
+
+    return {
+      chainSections: chainSectionsValue,
+      allChains: allChainsValue,
+      allChainsToSectionMap: allChainsToSectionMapValue,
+    };
+  }, [
+    props.sections,
+    props.recentChains,
+    props.popularChains,
+    otherChains,
+    recentLabel,
+    popularLabel,
+    othersLabel,
+  ]);
+
+  // fuse instance for searching
+  const fuse = useMemo(() => {
+    return new Fuse(allChains, {
+      threshold: 0.4,
+      keys: [
+        {
+          name: "name",
+          weight: 1,
+        },
+        {
+          name: "chainId",
+          weight: 1,
+        },
+      ],
+    });
+  }, [allChains]);
 
   // chains filtered by search term
-  const allChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return chains;
-    }
-    return fuseAllChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fuseAllChains, deferredSearchTerm, chains]);
+  const filteredChainSections =
+    useMemo(() => {
+      if (deferredSearchTerm === "") {
+        return undefined;
+      }
 
-  const popularChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return cleanedPopularChains || [];
-    }
-    return fusePopularChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fusePopularChains, deferredSearchTerm, cleanedPopularChains]);
+      const filteredChainSectionsValue: ChainSection[] = [];
 
-  const recentChains = useMemo(() => {
-    if (deferredSearchTerm === "") {
-      return props.recentChains || [];
-    }
-    return fuseRecentChains.search(deferredSearchTerm).map((r) => r.item);
-  }, [fuseRecentChains, deferredSearchTerm, props.recentChains]);
+      const filteredAllChains = fuse
+        .search(deferredSearchTerm)
+        .map((r) => r.item);
+
+      filteredAllChains.forEach((c) => {
+        const label = allChainsToSectionMap.get(c.chainId);
+        if (!label) {
+          return; // just a type guard, this never happens
+        }
+
+        const section = filteredChainSectionsValue.find(
+          (s) => s.label === label,
+        );
+        if (section) {
+          section.chains.push(c);
+        } else {
+          filteredChainSectionsValue.push({
+            label,
+            chains: [c],
+          });
+        }
+
+        return filteredChainSectionsValue;
+      });
+
+      return filteredChainSectionsValue;
+    }, [deferredSearchTerm, fuse, allChainsToSectionMap]) || chainSections;
 
   const { onClose, onSwitch, onCustomClick } = props;
 
@@ -290,7 +400,7 @@ export function NetworkSelectorContent(
 
         {props.showTabs === false && <Spacer y="xxs" />}
 
-        {chains.length > 10 && (
+        {allChains.length > 10 && (
           <>
             <Container px="lg">
               {/* Search */}
@@ -344,10 +454,8 @@ export function NetworkSelectorContent(
             }}
           >
             <NetworkTab
-              allChains={allChains}
+              chainSections={filteredChainSections}
               type="all"
-              popularChains={popularChains}
-              recentChains={recentChains}
               onSwitch={handleSwitch}
               renderChain={props.renderChain}
               close={props.onClose}
@@ -362,10 +470,8 @@ export function NetworkSelectorContent(
             }}
           >
             <NetworkTab
-              allChains={allChains}
+              chainSections={filteredChainSections}
               type="mainnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
               onSwitch={handleSwitch}
               renderChain={props.renderChain}
               close={props.onClose}
@@ -380,10 +486,8 @@ export function NetworkSelectorContent(
             }}
           >
             <NetworkTab
-              allChains={allChains}
+              chainSections={filteredChainSections}
               type="testnet"
-              popularChains={popularChains}
-              recentChains={recentChains}
               onSwitch={handleSwitch}
               renderChain={props.renderChain}
               close={props.onClose}
@@ -436,27 +540,24 @@ const filterChainByType = (
 };
 
 const NetworkTab = (props: {
-  allChains: Chain[];
-  recentChains?: Chain[];
-  popularChains?: Chain[];
+  chainSections: ChainSection[];
   type: "testnet" | "mainnet" | "all";
   onSwitch: (chain: Chain) => void;
   renderChain?: React.FC<NetworkSelectorChainProps>;
   close?: () => void;
 }) => {
-  const allChains = useMemo(
-    () => filterChainByType(props.allChains, props.type),
-    [props.type, props.allChains],
-  );
-  const recentChains = useMemo(
-    () => filterChainByType(props.recentChains || [], props.type),
-    [props.type, props.recentChains],
-  );
-  const popularChains = useMemo(
-    () => filterChainByType(props.popularChains || [], props.type),
-    [props.type, props.popularChains],
-  );
-  const locale = useTWLocale().connectWallet.networkSelector.categoryLabel;
+  const filteredChainSections = useMemo(() => {
+    return props.chainSections
+      .map((section) => {
+        return {
+          label: section.label,
+          chains: filterChainByType(section.chains, props.type),
+        };
+      })
+      .filter((section) => section.chains.length > 0);
+  }, [props.chainSections, props.type]);
+
+  const showSectionLabel = filteredChainSections.length > 1;
 
   return (
     <Container
@@ -467,48 +568,35 @@ const NetworkTab = (props: {
         paddingBottom: spacing.lg,
       }}
     >
-      {recentChains.length > 0 && (
-        <div>
-          <SectionLabel>{locale.recentlyUsed}</SectionLabel>
-          <Spacer y="sm" />
-          <NetworkList
-            chains={recentChains}
-            onSwitch={props.onSwitch}
-            renderChain={props.renderChain}
-            close={props.close}
-          />
-          <Spacer y="lg" />
-        </div>
-      )}
+      {filteredChainSections.length > 0 ? (
+        <Container flex="column" gap="lg">
+          {filteredChainSections.map((section) => {
+            return (
+              <div key={section.label}>
+                {showSectionLabel && (
+                  <>
+                    <SectionLabel>{section.label}</SectionLabel>
+                    <Spacer y="sm" />
+                  </>
+                )}
 
-      {popularChains.length > 0 && (
-        <div>
-          <SectionLabel>{locale.popular}</SectionLabel>
-          <Spacer y="sm" />
-          <NetworkList
-            chains={popularChains}
-            onSwitch={props.onSwitch}
-            renderChain={props.renderChain}
-            close={props.close}
-          />
-          <Spacer y="lg" />
-        </div>
+                <NetworkList
+                  chains={section.chains}
+                  onSwitch={props.onSwitch}
+                  renderChain={props.renderChain}
+                  close={props.close}
+                />
+              </div>
+            );
+          })}
+        </Container>
+      ) : (
+        <Container flex="column" gap="md" center="both" color="secondaryText">
+          <Spacer y="xl" />
+          <CrossCircledIcon width={iconSize.xl} height={iconSize.xl} />
+          <Text> {"No Results"} </Text>
+        </Container>
       )}
-
-      {/* separator  */}
-      {(popularChains.length > 0 || recentChains.length > 0) && (
-        <>
-          <SectionLabel>{locale.others}</SectionLabel>
-          <Spacer y="sm" />
-        </>
-      )}
-
-      <NetworkList
-        chains={allChains}
-        onSwitch={props.onSwitch}
-        renderChain={props.renderChain}
-        close={props.close}
-      />
     </Container>
   );
 };
@@ -668,7 +756,8 @@ export const ChainButton = /* @__PURE__ */ memo(function ChainButton(props: {
 });
 
 const TabButton = /* @__PURE__ */ (() =>
-  styled(Tabs.Trigger)(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  styled(Tabs.Trigger)((_) => {
     const theme = useCustomTheme();
     return {
       all: "unset",
@@ -709,7 +798,8 @@ const NetworkListUl = /* @__PURE__ */ StyledUl({
   boxSizing: "border-box",
 });
 
-const NetworkButton = /* @__PURE__ */ StyledButton(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const NetworkButton = /* @__PURE__ */ StyledButton((_) => {
   const theme = useCustomTheme();
   return {
     all: "unset",
@@ -736,7 +826,8 @@ const NetworkButton = /* @__PURE__ */ StyledButton(() => {
 });
 
 const StyledMagnifyingGlassIcon = /* @__PURE__ */ styled(MagnifyingGlassIcon)(
-  () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (_) => {
     const theme = useCustomTheme();
     return {
       color: theme.colors.secondaryText,

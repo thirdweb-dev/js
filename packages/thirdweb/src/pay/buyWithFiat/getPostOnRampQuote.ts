@@ -7,6 +7,7 @@ import type { BuyWithFiatStatus } from "./getStatus.js";
 
 /**
  * The parameters for [`getPostOnRampQuote`](https://portal.thirdweb.com/references/typescript/v5/getPostOnRampQuote) function
+ * @buyCrypto
  */
 export type GetPostOnRampQuoteParams = {
   /**
@@ -67,7 +68,9 @@ export async function getPostOnRampQuote({
   return getBuyWithCryptoQuote({
     client,
     intentId: buyWithFiatStatus.intentId,
-    fromAddress: buyWithFiatStatus.toAddress,
+    // onramp always happens to fromAddress, and then swap is done from - fromAddress to toAddress
+    fromAddress: buyWithFiatStatus.fromAddress,
+    toAddress: buyWithFiatStatus.toAddress,
     fromChainId: buyWithFiatStatus.quote.onRampToken.chainId,
     fromTokenAddress: buyWithFiatStatus.quote.onRampToken.tokenAddress,
     toChainId: buyWithFiatStatus.quote.toToken.chainId,

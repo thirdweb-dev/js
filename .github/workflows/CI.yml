@@ -3,19 +3,8 @@ name: CI
 on:
   push:
     branches: ["main"]
-    paths:
-      - "packages/**"
-      - "package.json"
   pull_request:
     types: [opened, synchronize]
-    paths:
-      - "packages/**"
-      - "package.json"
-      - ".github/**"
-  # trigger on merge group as well (merge queue)
-  merge_group:
-    types: [checks_requested]
-    branches: ["main"]
   workflow_dispatch:
 
 concurrency:
@@ -76,6 +65,7 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           cache: false
+          version: nightly-c4a984fbf2c48b793c8cd53af84f56009dd1070c
 
       - run: pnpm test
 
@@ -106,7 +96,7 @@ jobs:
 
       - name: Install Yarn (if needed)
         if: matrix.package_manager == 'yarn'
-        run: npm install -g yarn
+        run: npm install -g yarn@1.22.19
 
       - name: Create test project
         run: |
@@ -173,7 +163,7 @@ jobs:
           cache: false
 
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@v2
+        uses: CodSpeedHQ/action@v3
         with:
           token: ${{ secrets.CODSPEED_TOKEN }}
           run: "pnpm bench"

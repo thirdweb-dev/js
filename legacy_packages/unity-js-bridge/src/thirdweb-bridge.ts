@@ -27,6 +27,7 @@ import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { LocalWallet } from "@thirdweb-dev/wallets/evm/wallets/local-wallet";
 import { MetaMaskWallet } from "@thirdweb-dev/wallets/evm/wallets/metamask";
+import { RabbyWallet } from "@thirdweb-dev/wallets/evm/wallets/rabby";
 import { SmartWallet } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import {
@@ -68,6 +69,7 @@ const bigNumberReplacer = (_key: string, value: any) => {
 const SUPPORTED_WALLET_IDS = [
   "injected",
   "metamask",
+  "rabby",
   "walletConnect",
   "coinbase",
   "localWallet",
@@ -119,6 +121,7 @@ interface TWBridge {
   resolveENSFromAddress: (address: string) => Promise<string>;
   resolveAddressFromENS: (ens: string) => Promise<string>;
   copyBuffer: (text: string) => Promise<void>;
+  getNonce: (address: string, blockTag: string) => Promise<string>;
 }
 
 const w = window;
@@ -171,7 +174,7 @@ class ThirdwebBridge implements TWBridge {
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_PLATFORM = "unity";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
-      (globalThis as any).X_SDK_VERSION = "4.15.1";
+      (globalThis as any).X_SDK_VERSION = "4.17.0";
       // biome-ignore lint/suspicious/noExplicitAny: TODO: fix use of any
       (globalThis as any).X_SDK_OS = browser?.os ?? "unknown";
     }
@@ -232,6 +235,14 @@ class ThirdwebBridge implements TWBridge {
           break;
         case "metamask":
           walletInstance = new MetaMaskWallet({
+            dappMetadata,
+            chains: supportedChains,
+            clientId: sdkOptions.clientId,
+          });
+          break;
+        case "rabby":
+          walletInstance = new RabbyWallet({
+            projectId: sdkOptions.wallet?.walletConnectProjectId,
             dappMetadata,
             chains: supportedChains,
             clientId: sdkOptions.clientId,
@@ -600,7 +611,9 @@ class ThirdwebBridge implements TWBridge {
           maxFeePerGas: txInput?.maxFeePerGas,
           maxPriorityFeePerGas: txInput?.maxPriorityFeePerGas,
           nonce: txInput?.nonce,
-          type: txInput?.type?.toNumber(),
+          type: txInput?.type
+            ? BigNumber.from(txInput.type).toNumber()
+            : undefined,
           accessList: txInput?.accessList,
           // customData: txInput.data,
           // ccipReadEnabled: txInput.ccipReadEnabled,
@@ -642,6 +655,15 @@ class ThirdwebBridge implements TWBridge {
         }
         if (routeArgs[2].includes("getGasPrice")) {
           const result = await tx.getGasPrice();
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        }
+        if (routeArgs[2].includes("getGasFees")) {
+          const fees = await this.activeSDK.getProvider().getFeeData();
+          const result = {
+            maxFeePerGas: fees.maxFeePerGas ?? fees.gasPrice ?? 0,
+            maxPriorityFeePerGas:
+              fees.maxPriorityFeePerGas ?? fees.gasPrice ?? 0,
+          };
           return JSON.stringify({ result: result }, bigNumberReplacer);
         }
       }
@@ -968,6 +990,16 @@ class ThirdwebBridge implements TWBridge {
     navigator.clipboard.writeText(text).catch((err) => {
       console.error("Could not copy text: ", err);
     });
+  }
+
+  public async getNonce(address: string, blockTag: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const res = await this.activeSDK
+      .getProvider()
+      .getTransactionCount(address, blockTag);
+    return JSON.stringify({ result: res }, bigNumberReplacer);
   }
 
   public openPopupWindow() {

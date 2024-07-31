@@ -1,6 +1,8 @@
 import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account } from "../../../interfaces/wallet.js";
+import type { SocialAuthOption } from "../../../types.js";
+import type { Ecosystem } from "../../web/types.js";
 
 export type MultiStepAuthProviderType =
   | {
@@ -13,6 +15,7 @@ export type MultiStepAuthProviderType =
     };
 export type PreAuthArgsType = MultiStepAuthProviderType & {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
 };
 
 export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
@@ -21,19 +24,7 @@ export type MultiStepAuthArgsType = MultiStepAuthProviderType & {
 
 export type SingleStepAuthArgsType =
   | {
-      strategy: "google";
-      openedWindow?: Window;
-      closeOpenedWindow?: (window: Window) => void;
-      redirectUrl?: string;
-    }
-  | {
-      strategy: "apple";
-      openedWindow?: Window;
-      closeOpenedWindow?: (window: Window) => void;
-      redirectUrl?: string;
-    }
-  | {
-      strategy: "facebook";
+      strategy: SocialAuthOption;
       openedWindow?: Window;
       closeOpenedWindow?: (window: Window) => void;
       redirectUrl?: string;
@@ -51,6 +42,7 @@ export type SingleStepAuthArgsType =
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {
   client: ThirdwebClient;
+  ecosystem?: Ecosystem;
 };
 
 // TODO: remove usage of enums, instead use object with as const
@@ -69,10 +61,12 @@ export enum AuthProvider {
   FACEBOOK = "Facebook",
   APPLE = "Apple",
   PASSKEY = "Passkey",
+  DISCORD = "Discord",
+  FARCASTER = "Farcaster",
 }
 
 export type OauthOption = {
-  provider: AuthProvider;
+  strategy: SocialAuthOption;
   redirectUrl: string;
 };
 
@@ -210,3 +204,7 @@ export type GetUser =
       walletAddress: string;
     }
   | InitializedUser;
+
+export type GetAuthenticatedUserParams = {
+  client: ThirdwebClient;
+};

@@ -2,13 +2,16 @@ import type { Abi, AbiFunction } from "abitype";
 import type { WalletSendCallsParameters as ViemWalletSendCallsParameters } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import { toSerializableTransaction } from "../../transaction/actions/to-serializable-transaction.js";
+import { encode } from "../../transaction/actions/encode.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { type Address, getAddress } from "../../utils/address.js";
 import { type Hex, numberToHex } from "../../utils/encoding/hex.js";
-import type { PromisedObject } from "../../utils/promise/resolve-promised-value.js";
+import {
+  type PromisedObject,
+  resolvePromisedValue,
+} from "../../utils/promise/resolve-promised-value.js";
 import type { OneOf } from "../../utils/type-utils.js";
-import { isCoinbaseSDKWallet } from "../coinbase/coinbaseSDKWallet.js";
+import { isCoinbaseSDKWallet } from "../coinbase/coinbaseWebSDK.js";
 import { isInAppWallet } from "../in-app/core/wallet/index.js";
 import { getInjectedProvider } from "../injected/index.js";
 import type { Wallet } from "../interfaces/wallet.js";
@@ -144,22 +147,23 @@ export async function sendCalls<const ID extends WalletId>(
 
   const preparedCalls: EIP5792Call[] = await Promise.all(
     calls.map(async (call) => {
-      const serializableTransaction = await toSerializableTransaction({
-        transaction: call,
-        from: account.address,
-      });
-
-      const { to, data, value } = serializableTransaction;
-      if (to === undefined && data === undefined) {
+      const { to, value } = call;
+      if (to === undefined && call.data === undefined) {
         throw new Error("Cannot send call, `to` or `data` must be provided.");
       }
 
+      const [_to, _data, _value] = await Promise.all([
+        resolvePromisedValue(to),
+        encode(call),
+        resolvePromisedValue(value),
+      ]);
+
       return {
-        to: to as Address,
-        data: data as Hex,
+        to: _to as Address,
+        data: _data as Hex,
         value:
-          typeof value === "bigint" || typeof value === "number"
-            ? numberToHex(value)
+          typeof _value === "bigint" || typeof _value === "number"
+            ? numberToHex(_value)
             : undefined,
       };
     }),
@@ -177,7 +181,7 @@ export async function sendCalls<const ID extends WalletId>(
 
   if (isCoinbaseSDKWallet(wallet)) {
     const { coinbaseSDKWalletSendCalls } = await import(
-      "../coinbase/coinbaseSDKWallet.js"
+      "../coinbase/coinbaseWebSDK.js"
     );
     return coinbaseSDKWalletSendCalls({
       wallet,

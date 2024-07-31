@@ -1,0 +1,152 @@
+[
+    {
+      "type": "function",
+      "name": "getExtensionConfig",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "config",
+          "type": "tuple",
+          "internalType": "struct IExtensionConfig.ExtensionConfig",
+          "components": [
+            {
+              "name": "registerInstallationCallback",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "requiredInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "supportedInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "callbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IExtensionConfig.CallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                }
+              ]
+            },
+            {
+              "name": "fallbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IExtensionConfig.FallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                },
+                {
+                  "name": "permissionBits",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "onTokenURI",
+      "inputs": [
+        { "name": "_id", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setSharedMetadata",
+      "inputs": [
+        {
+          "name": "_metadata",
+          "type": "tuple",
+          "internalType": "struct OpenEditionMetadataERC721.SharedMetadata",
+          "components": [
+            { "name": "name", "type": "string", "internalType": "string" },
+            {
+              "name": "description",
+              "type": "string",
+              "internalType": "string"
+            },
+            { "name": "imageURI", "type": "string", "internalType": "string" },
+            {
+              "name": "animationURI",
+              "type": "string",
+              "internalType": "string"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "BatchMetadataUpdate",
+      "inputs": [
+        {
+          "name": "_fromTokenId",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "_toTokenId",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SharedMetadataUpdated",
+      "inputs": [
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        },
+        {
+          "name": "imageURI",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        },
+        {
+          "name": "animationURI",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "BatchMetadataNoMetadataForTokenId",
+      "inputs": []
+    }
+  ]

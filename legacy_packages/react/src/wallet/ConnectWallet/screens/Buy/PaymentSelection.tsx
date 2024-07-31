@@ -50,23 +50,26 @@ export function PaymentSelection() {
   );
 }
 
-const CheckButton = /* @__PURE__ */ styled(Button)((props: {
-  isChecked: boolean;
-}) => {
-  const theme = useCustomTheme();
-  return {
-    fontSize: fontSize.sm,
-    borderColor: props.isChecked
-      ? theme.colors.accentText
-      : theme.colors.borderColor,
-    gap: spacing.xs,
-    paddingInline: spacing.xxs,
-    paddingBlock: spacing.sm,
-    width: "100%",
-  };
-});
+const CheckButton = /* @__PURE__ */ styled(Button)(
+  (props: {
+    isChecked: boolean;
+  }) => {
+    const theme = useCustomTheme();
+    return {
+      fontSize: fontSize.sm,
+      borderColor: props.isChecked
+        ? theme.colors.accentText
+        : theme.colors.borderColor,
+      gap: spacing.xs,
+      paddingInline: spacing.xxs,
+      paddingBlock: spacing.sm,
+      width: "100%",
+    };
+  },
+);
 
-const FloatingBadge = /* @__PURE__ */ StyledDiv(() => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const FloatingBadge = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     position: "absolute",

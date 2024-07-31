@@ -250,8 +250,8 @@ function read() {
             return majorType == 4
               ? array
               : majorType == 3
-              ? array.join("")
-              : Buffer.concat(array);
+                ? array.join("")
+                : Buffer.concat(array);
           case 5: // map
             let key;
             if (currentDecoder.mapsAsObjects) {

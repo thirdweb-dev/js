@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { LoginPayload } from "../../../../auth/core/types.js";
 import type { VerifyLoginPayloadParams } from "../../../../auth/core/verify-login-payload.js";
-import { useActiveWallet } from "../../../core/hooks/wallets/wallet-hooks.js";
+import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 /**
  * Options for Setting up SIWE (Sign in with Ethereum) Authentication
@@ -46,8 +46,10 @@ export type SiweAuthOptions = {
 /**
  * @internal
  */
-export function useSiweAuth(authOptions?: SiweAuthOptions) {
-  const activeWallet = useActiveWallet();
+export function useSiweAuth(
+  activeWallet?: Wallet,
+  authOptions?: SiweAuthOptions,
+) {
   const activeAccount = activeWallet?.getAccount();
 
   const requiresAuth = !!authOptions;
@@ -64,9 +66,12 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
       }
       return authOptions.isLoggedIn(activeAccount.address);
     },
+    placeholderData: false,
+    refetchOnWindowFocus: false,
   });
 
   const loginMutation = useMutation({
+    mutationKey: ["siwe_auth", "login"],
     mutationFn: async () => {
       if (!authOptions) {
         throw new Error("No auth options provided");
@@ -106,6 +111,7 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
   });
 
   const logoutMutation = useMutation({
+    mutationKey: ["siwe_auth", "logout"],
     mutationFn: async () => {
       if (!authOptions) {
         throw new Error("No auth options provided");
@@ -134,6 +140,6 @@ export function useSiweAuth(authOptions?: SiweAuthOptions) {
 
     // checking if logged in
     isLoggedIn: isLoggedInQuery.data,
-    isLoading: isLoggedInQuery.isLoading,
+    isLoading: isLoggedInQuery.isFetching,
   };
 }

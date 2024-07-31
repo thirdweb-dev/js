@@ -180,11 +180,14 @@ export type ExtendedMetadata = {
           params: Array<{ name: string; type: string }>;
           customFactoryAddresses: Record<string, string>;
         };
+        modularFactoryInput?: {
+          hooksParamName: string;
+        };
         factoryAddresses?: Record<string, string>;
       }
     | undefined;
   deployType?: "standard" | "autoFactory" | "customFactory";
-  routerType?: "none" | "plugin" | "dynamic";
+  routerType?: "none" | "plugin" | "dynamic" | "modular";
   networksForDeployment?: {
     allNetworks?: boolean;
     networksEnabled?: number[];

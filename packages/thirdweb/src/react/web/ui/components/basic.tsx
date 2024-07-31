@@ -10,7 +10,7 @@ import {
 import { StyledDiv } from "../design-system/elements.js";
 import { BackButton, ModalTitle } from "./modalElements.js";
 
-export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv(() => {
+export const ScreenBottomContainer = /* @__PURE__ */ StyledDiv((_) => {
   const theme = useCustomTheme();
   return {
     borderTop: `1px solid ${theme.colors.separatorLine}`,
@@ -35,6 +35,7 @@ export const noScrollBar = /* @__PURE__ */ {
 export function ModalHeader(props: {
   onBack?: () => void;
   title: React.ReactNode;
+  leftAligned?: boolean;
 }) {
   const { onBack, title } = props;
   return (
@@ -42,7 +43,7 @@ export function ModalHeader(props: {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: props.leftAligned ? "flex-start" : "center",
         position: "relative",
       }}
     >
@@ -56,7 +57,7 @@ export function ModalHeader(props: {
           }}
         />
       )}
-      <Container flex="row" gap="xs" center="both">
+      <Container flex="row" gap="xs" center={"both"}>
         {typeof title === "string" ? <ModalTitle>{title}</ModalTitle> : title}
       </Container>
     </div>
@@ -183,7 +184,7 @@ type BoxProps = {
   borderColor?: keyof Theme["colors"] | undefined;
 };
 
-const Box = /* @__PURE__ */ StyledDiv((props: BoxProps) => {
+const Box = /* @__PURE__ */ StyledDiv<BoxProps>((props) => {
   const theme = useCustomTheme();
   return {
     color: props.color ? theme.colors[props.color] : "inherit",

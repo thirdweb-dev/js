@@ -1,15 +1,15 @@
 import type { BlockTag } from "@ethersproject/abstract-provider";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
-import { ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
+import { type ThirdwebStorage, isBrowser } from "@thirdweb-dev/storage";
 import {
-  BigNumber,
-  Wallet,
-  utils,
+  type BigNumber,
   type BigNumberish,
+  type ContractInterface,
   type Signer,
   type TypedDataField,
+  Wallet,
   type providers,
-  ContractInterface,
+  utils,
 } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -17,19 +17,19 @@ import { fetchCurrencyValue } from "../../common/currency/fetchCurrencyValue";
 import { isNativeToken } from "../../common/currency/isNativeToken";
 import { normalizePriceValue } from "../../common/currency/normalizePriceValue";
 import { resolveAddress } from "../../common/ens/resolveAddress";
-import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
+import { getDefaultGasOverrides } from "../../common/gas-price";
+import { type EIP712Domain, signTypedDataInternal } from "../../common/sign";
 import { LOCAL_NODE_PKEY } from "../../constants/addresses/LOCAL_NODE_PKEY";
 import { ChainId } from "../../constants/chains/ChainId";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/currency";
 import { getChainProvider } from "../../constants/urls";
-import { SDKOptions } from "../../schema/sdk-options";
-import { Address } from "../../schema/shared/Address";
-import { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
+import type { SDKOptions } from "../../schema/sdk-options";
+import type { Address } from "../../schema/shared/Address";
+import type { AddressOrEns } from "../../schema/shared/AddressOrEnsSchema";
 import type { Amount, CurrencyValue } from "../../types/currency";
 import { ContractWrapper } from "../classes/internal/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/internal/rpc-connection-handler";
-import { NetworkInput, TransactionResult } from "../types";
-import { getDefaultGasOverrides } from "../../common/gas-price";
+import type { NetworkInput, TransactionResult } from "../types";
 /**
  *
  * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
@@ -298,8 +298,10 @@ export class UserWallet {
     transactionRequest: providers.TransactionRequest,
   ): Promise<providers.TransactionResponse> {
     const signer = this.requireWallet();
-    // set default gas values
+    // set default gas values (except for if they are already set in the transactionRequest)
     const gasOverrides = isBrowser()
+    || transactionRequest.gasLimit
+    || (transactionRequest.maxFeePerGas && transactionRequest.maxPriorityFeePerGas)
       ? {}
       : await getDefaultGasOverrides(this.connection.getProvider());
     transactionRequest = {

@@ -3,6 +3,9 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { setPermissionsForSigner } from "../__generated__/IAccountPermissions/write/setPermissionsForSigner.js";
 import { signPermissionRequest, toContractPermissions } from "./common.js";
 
+/**
+ * @extension ERC4337
+ */
 export type RemoveSessionKeyOptions = {
   /**
    * The account that will perform the operation.
@@ -21,12 +24,14 @@ export type RemoveSessionKeyOptions = {
  * @example
  * ```ts
  * import { removeSessionKey } from 'thirdweb/extensions/erc4337';
+ * import { sendTransaction } from 'thirdweb';
  *
  * const transaction = removeSessionKey({
  * contract,
  * account,
  * sessionKeyAddress
  * });
+ *
  * await sendTransaction({ transaction, account });
  * ```
  * @extension ERC4337

@@ -2,6 +2,9 @@ import type { Account } from "../../wallets/interfaces/wallet.js";
 import { createLoginMessage } from "./create-login-message.js";
 import type { LoginPayload } from "./types.js";
 
+/**
+ * @auth
+ */
 export type SignLoginPayloadParams = {
   payload: LoginPayload;
   account: Account;

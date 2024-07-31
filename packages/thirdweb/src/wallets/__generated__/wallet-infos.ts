@@ -558,8 +558,8 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "3S Wallet",
   },
   {
-    id: "io.simplehold",
-    name: "SimpleHold",
+    id: "com.payperless",
+    name: "Payperless",
   },
   {
     id: "digital.minerva",
@@ -660,10 +660,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.humbl",
     name: "HUMBL WALLET",
-  },
-  {
-    id: "com.safemoon",
-    name: "SafeMoon",
   },
   {
     id: "io.passpay",
@@ -990,10 +986,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Gridlock Wallet",
   },
   {
-    id: "net.newmoney",
-    name: "New Money",
-  },
-  {
     id: "app.zeal",
     name: "Zeal",
   },
@@ -1246,6 +1238,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "DexTrade",
   },
   {
+    id: "app.hashpack",
+    name: "HashPack",
+  },
+  {
     id: "org.thepulsewallet",
     name: "The Pulse Wallet",
   },
@@ -1370,10 +1366,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "DGPub App",
   },
   {
-    id: "xyz.bonuz",
-    name: "Bonuz",
-  },
-  {
     id: "com.icewal",
     name: "icewal",
   },
@@ -1382,8 +1374,32 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "metapro wallet",
   },
   {
+    id: "xyz.bonuz",
+    name: "Bonuz - Social ID",
+  },
+  {
     id: "io.shido",
     name: "Shido App",
+  },
+  {
+    id: "co.lifedefi",
+    name: "Life DeFi",
+  },
+  {
+    id: "fun.tobi",
+    name: "Tobi",
+  },
+  {
+    id: "app.clot",
+    name: "Clot",
+  },
+  {
+    id: "me.komet.app",
+    name: "Komet",
+  },
+  {
+    id: "io.guardiianwallet",
+    name: "GUARDIIAN Wallet",
   },
   {
     id: "io.rabby",
@@ -1432,6 +1448,10 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "app.core.extension",
     name: "Core",
+  },
+  {
+    id: "xyz.dawnwallet",
+    name: "Dawn Wallet",
   },
   {
     id: "smart",

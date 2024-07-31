@@ -20,3 +20,10 @@ export type { QueryAllParams } from "./core/schema/QueryParams";
 
 // export EVM by default
 export * from "./evm";
+
+export type {
+  FeatureName,
+  FeatureWithEnabled,
+} from "./evm/constants/contract-features";
+export type { ContractWrapper } from "./evm/core/classes/internal/contract-wrapper";
+export type { DeploymentTransaction } from "./evm/types/any-evm/deploy-data";

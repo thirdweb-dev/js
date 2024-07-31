@@ -9,6 +9,7 @@ import {
 
 /**
  * Parameters for getting an NFT.
+ * @extension ERC721
  */
 export type GetNFTParams = Prettify<
   TokenURIParams & {

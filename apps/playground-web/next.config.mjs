@@ -4,9 +4,8 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
-  serverExternalPackages: ["@shikijs/twoslash", "prettier", "shiki"],
   experimental: {
-    reactCompiler: true,
+    serverExternalPackages: ["@shikijs/twoslash", "prettier", "shiki"],
   },
 };
 

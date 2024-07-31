@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.6.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
   "extends": ["../../biome.json"],
   "linter": {
     "rules": {
@@ -17,6 +17,7 @@
       "src/crypto/aes/lib/md5.ts",
       "src/utils/promise/p-limit.ts",
       "src/utils/bytecode/cbor-decode.ts",
+      "src/wallets/in-app/native/helpers/wallet/sss.ts",
       "src/**/__generated__/**"
     ]
   }

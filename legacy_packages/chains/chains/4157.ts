@@ -5,8 +5,14 @@ export default {
   "explorers": [
     {
       "name": "CrossFi Testnet Scan",
-      "url": "https://scan.testnet.ms",
-      "standard": "EIP3091"
+      "url": "https://test.xfiscan.com",
+      "standard": "EIP3091",
+      "icon": {
+        "url": "ipfs://QmbRJzDeAdMkEXkqDwBwezpUxyjTPHZ2iXEomqKPvWZcWE",
+        "width": 40,
+        "height": 42,
+        "format": "svg"
+      }
     },
     {
       "name": "Scan Testnet",
@@ -16,7 +22,13 @@ export default {
   ],
   "faucets": [],
   "features": [],
-  "infoURL": "https://crossfi.org/",
+  "icon": {
+    "url": "ipfs://QmbRJzDeAdMkEXkqDwBwezpUxyjTPHZ2iXEomqKPvWZcWE",
+    "width": 40,
+    "height": 42,
+    "format": "svg"
+  },
+  "infoURL": "https://crossfi.org",
   "name": "CrossFi Testnet",
   "nativeCurrency": {
     "name": "XFI",

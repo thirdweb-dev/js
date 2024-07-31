@@ -3,6 +3,9 @@ import type { ThirdwebContract } from "../../contract/contract.js";
 import { isHex } from "../../utils/encoding/hex.js";
 import { isValidSignature } from "./__generated__/isValidSignature/read/isValidSignature.js";
 
+/**
+ * @extension ERC1271
+ */
 export type CheckContractWalletSignTypedDataOptions<
   typedData extends TypedData | Record<string, unknown>,
   primaryType extends keyof typedData | "EIP712Domain" = keyof typedData,
@@ -15,6 +18,7 @@ const MAGIC_VALUE = "0x1626ba7e";
 
 /**
  * Checks if a contract wallet signature is valid.
+ * @deprecated Use `verifyTypedData` instead
  * @param options - The options for the checkContractWalletSignature function.
  * @param options.contract - The contract to check the signature against.
  * @param options.message - The message to check the signature against.

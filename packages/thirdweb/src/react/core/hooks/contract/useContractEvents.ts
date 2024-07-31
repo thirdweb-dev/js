@@ -35,7 +35,7 @@ type UseContractEventsOptions<
  *
  * const account = useActiveAccount();
  * const contractEvents = useContractEvents({
- *  contract
+ *  contract,
  *  events: [tokensClaimedEvent({ claimer: account?.address })],
  * });
  * ```

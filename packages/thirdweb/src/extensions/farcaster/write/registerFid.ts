@@ -5,8 +5,10 @@ import { prepareContractCall } from "../../../transaction/prepare-contract-call.
 import { toBigInt } from "../../../utils/bigint.js";
 import { getIdGateway } from "../contracts/getIdGateway.js";
 import { getRegistrationPrice } from "../read/getRegistrationPrice.js";
+
 /**
  * Represents the parameters for the `registerFid` function.
+ * @extension FARCASTER
  */
 export type RegisterFidParams = {
   client: ThirdwebClient;
@@ -24,10 +26,14 @@ export type RegisterFidParams = {
  * @example
  * ```ts
  * import { registerFid } from "thirdweb/extensions/farcaster";
- * const tx = await registerFid({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = registerFid({
  *  client,
  * 	recoveryAddress
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function registerFid(options: RegisterFidParams) {

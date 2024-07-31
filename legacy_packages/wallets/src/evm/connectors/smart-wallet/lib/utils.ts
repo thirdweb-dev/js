@@ -2,7 +2,8 @@ import { BigNumber, utils } from "ethers";
 import { UserOperationStruct } from "@account-abstraction/contracts";
 
 export async function hexlifyUserOp(
-  op: Partial<UserOperationStruct>,
+  // TODO: types
+  op: Partial<UserOperationStruct | any>,
 ): Promise<any> {
   const userOp = await utils.resolveProperties(op);
   return Object.keys(userOp)

@@ -1,9 +1,9 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { InjectedSupportedWalletIds } from "../../../../../wallets/__generated__/wallet-ids.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
-import type { WalletInfo } from "../../../../../wallets/wallet-info.js";
-import { useConnectUI } from "../../../../core/hooks/others/useWalletConnectionCtx.js";
 import { wait } from "../../../../core/utils/wait.js";
 import type { InjectedWalletLocale } from "../../../wallets/injected/locale/types.js";
 import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
@@ -12,15 +12,17 @@ import { ConnectingScreen } from "../../../wallets/shared/ConnectingScreen.js";
  * @internal
  */
 export const InjectedConnectUI = (props: {
-  onGetStarted: () => void;
+  onGetStarted?: () => void;
   locale: InjectedWalletLocale;
   wallet: Wallet<InjectedSupportedWalletIds>;
-  walletInfo: WalletInfo;
+  walletName: string;
   onBack?: () => void;
   done: () => void;
+  client: ThirdwebClient;
+  chain: Chain | undefined;
+  size: "compact" | "wide";
 }) => {
   const { wallet, done } = props;
-  const { client, chain } = useConnectUI();
   const [errorConnecting, setErrorConnecting] = useState(false);
   const locale = props.locale;
 
@@ -30,8 +32,8 @@ export const InjectedConnectUI = (props: {
       setErrorConnecting(false);
       await wait(1000);
       await wallet.connect({
-        client,
-        chain: chain,
+        client: props.client,
+        chain: props.chain,
       });
 
       done();
@@ -39,7 +41,7 @@ export const InjectedConnectUI = (props: {
       setErrorConnecting(true);
       console.error(e);
     }
-  }, [client, chain, done, wallet]);
+  }, [props.client, props.chain, done, wallet]);
 
   const connectPrompted = useRef(false);
   useEffect(() => {
@@ -60,13 +62,15 @@ export const InjectedConnectUI = (props: {
         failed: locale.connectionScreen.failed,
       }}
       onBack={props.onBack}
-      walletName={props.walletInfo.name}
+      walletName={props.walletName}
       onGetStarted={props.onGetStarted}
       walletId={props.wallet.id}
       onRetry={() => {
         connectToExtension();
       }}
       errorConnecting={errorConnecting}
+      client={props.client}
+      size={props.size}
     />
   );
 };

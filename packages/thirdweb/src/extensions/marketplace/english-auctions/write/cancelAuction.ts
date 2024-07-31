@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { cancelAuction as generatedCancelAuction } from "../../__generated__/IEnglishAuctions/write/cancelAuction.js";
 import { getWinningBid } from "../read/getWinningBid.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type CancelAuctionParams = {
   auctionId: bigint;
 };
@@ -16,11 +19,14 @@ export type CancelAuctionParams = {
  * @example
  * ```ts
  * import { cancelAuction } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = cancelAuction({
  *  contract,
  *  auctionId: 0n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function cancelAuction(

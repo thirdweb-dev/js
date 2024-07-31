@@ -11,7 +11,7 @@ export default {
     "format": "svg"
   },
   "infoURL": "https://eternalcoin.io",
-  "name": "EternalCoin Mainnet",
+  "name": "Eternal Mainnet",
   "nativeCurrency": {
     "name": "Eternal",
     "symbol": "Eter",
@@ -24,6 +24,6 @@ export default {
     "ws://mainnet.eternalcoin.io/v1/ws"
   ],
   "shortName": "Eter",
-  "slug": "eternalcoin",
+  "slug": "eternal",
   "testnet": false
 } as const satisfies Chain;

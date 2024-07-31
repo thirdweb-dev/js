@@ -1,6 +1,5 @@
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Account } from "../../interfaces/wallet.js";
-import { oauthStrategyToAuthProvider } from "../core/authentication/index.js";
 import {
   type AuthArgsType,
   type AuthLoginReturnType,
@@ -20,7 +19,7 @@ import {
   sendVerificationSms,
   socialLogin,
   validateEmailOTP,
-} from "./auth.js";
+} from "./auth/native-auth.js";
 import { fetchUserDetails } from "./helpers/api/fetchers.js";
 import { logoutUser } from "./helpers/auth/logout.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
@@ -28,6 +27,7 @@ import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
 export type NativeConnectorOptions = {
   client: ThirdwebClient;
+  partnerId?: string | undefined;
 };
 
 export class InAppNativeConnector implements InAppConnector {
@@ -108,16 +108,15 @@ export class InAppNativeConnector implements InAppConnector {
       }
       case "google":
       case "facebook":
+      case "discord":
+      case "farcaster":
       case "apple": {
-        if (!params.redirectUrl) {
-          throw new Error(
-            "redirectUrl deeplink is required for oauth login (ex: myApp://) - You also need add this deeplink in your allowed `Redirect URIs` under your API Key in your thirdweb dashboard: https://thirdweb.com/dashboard/settings/api-keys",
-          );
-        }
-        const oauthProvider = oauthStrategyToAuthProvider[strategy];
+        const ExpoLinking = require("expo-linking");
+        const redirectUrl =
+          params.redirectUrl || (ExpoLinking.createURL("") as string); // Will default to the app scheme
         return this.socialLogin({
-          provider: oauthProvider,
-          redirectUrl: params.redirectUrl,
+          strategy,
+          redirectUrl,
         });
       }
       case "jwt": {
@@ -136,10 +135,10 @@ export class InAppNativeConnector implements InAppConnector {
         throw new Error("Passkey authentication is not implemented yet");
       }
       case "iframe": {
-        throw new Error("iframe_email_verification is not supported in iframe");
+        throw new Error("iframe_email_verification is not supported in native");
       }
       case "iframe_email_verification": {
-        throw new Error("iframe_email_verification is not supported in iframe");
+        throw new Error("iframe_email_verification is not supported in native");
       }
       default:
         assertUnreachable(strategy);
@@ -168,7 +167,7 @@ export class InAppNativeConnector implements InAppConnector {
         },
       };
     } catch (error) {
-      console.error(`Error while validating otp: ${error}`);
+      console.error(`Error while validating OTP: ${error}`);
       if (error instanceof Error) {
         throw new Error(`Error while validating otp: ${error.message}`);
       }
@@ -181,14 +180,9 @@ export class InAppNativeConnector implements InAppConnector {
     return deleteActiveAccount({ client: this.options.client });
   }
 
-  private async socialLogin(
-    oauthOption: OauthOption,
-  ): Promise<AuthLoginReturnType> {
+  private async socialLogin(auth: OauthOption): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await socialLogin(
-        oauthOption,
-        this.options.client,
-      );
+      const { storedToken } = await socialLogin(auth, this.options.client);
       const account = await this.getAccount();
       return {
         user: {
@@ -199,17 +193,11 @@ export class InAppNativeConnector implements InAppConnector {
         },
       };
     } catch (error) {
-      console.error(
-        `Error while signing in with: ${oauthOption.provider}. ${error}`,
-      );
+      console.error(`Error while signing in with: ${auth}. ${error}`);
       if (error instanceof Error) {
-        throw new Error(
-          `Error signing in with ${oauthOption.provider}: ${error.message}`,
-        );
+        throw new Error(`Error signing in with ${auth}: ${error.message}`);
       }
-      throw new Error(
-        `An unknown error occurred signing in with ${oauthOption.provider}`,
-      );
+      throw new Error(`An unknown error occurred signing in with ${auth}`);
     }
   }
 

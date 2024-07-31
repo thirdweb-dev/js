@@ -1,0 +1,50 @@
+# Using CUSTOM_GITHUB_TOKEN instead of GITHUB_TOKEN is required to trigger workflows in "Version Packages" PR created by changesets/action
+# CUSTOM_GITHUB_TOKEN should be a PAT with write access to the repo and has to be created and set as a secret in the repo manually
+
+name: Release Nightly
+
+on:
+  schedule:
+    # every night at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: 
+
+  
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release Nightly
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Do not use the GITHUB_TOKEN by default
+          token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.0.35
+
+      - name: Install
+        uses: ./.github/composite-actions/install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Create @nightly release
+        run: |
+          pnpm version-packages:nightly
+          pnpm release:nightly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CUSTOM_GITHUB_TOKEN }}

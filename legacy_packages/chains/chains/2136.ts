@@ -20,8 +20,8 @@ export default {
   "networkId": 2136,
   "rpc": [
     "https://2136.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://test-market.bigsb.io",
-    "wss://test-market.bigsb.io"
+    "https://test-market.bigsb.network",
+    "wss://test-market.bigsb.network"
   ],
   "shortName": "bigsb_testnet",
   "slug": "bigshortbets-testnet",

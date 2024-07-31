@@ -78,7 +78,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
   /**
    * Get all members of a specific role
    * @remarks See {@link ContractRoles.getAll} to get get a list of addresses for all supported roles on the contract.
-   * @param role - The Role to to get a memberlist for.
+   * @param role - The Role to get a memberlist for.
    * @returns The list of addresses that are members of the specific role.
    * @throws If you are requesting a role that does not exist on the contract this will throw an error.
    *
@@ -314,9 +314,8 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
         `this contract does not support the "${role}" role`,
       );
       const resolvedAddress = await resolveAddress(address);
-      const revokeFunctionName = await this.getRevokeRoleFunctionName(
-        resolvedAddress,
-      );
+      const revokeFunctionName =
+        await this.getRevokeRoleFunctionName(resolvedAddress);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

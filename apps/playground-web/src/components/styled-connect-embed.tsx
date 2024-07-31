@@ -7,6 +7,7 @@ import {
   type ConnectEmbedProps,
   useActiveAccount,
 } from "thirdweb/react";
+import { WALLETS } from "../lib/constants";
 import { StyledConnectButton } from "./styled-connect-button";
 
 export function StyledConnectEmbed(
@@ -21,6 +22,7 @@ export function StyledConnectEmbed(
     </div>
   ) : (
     <ConnectEmbed
+      wallets={WALLETS}
       client={THIRDWEB_CLIENT}
       theme={theme === "light" ? "light" : "dark"}
       {...props}

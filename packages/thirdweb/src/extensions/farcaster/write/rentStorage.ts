@@ -7,6 +7,7 @@ import { getStoragePrice } from "../read/getStoragePrice.js";
 
 /**
  * Represents the parameters for the `rentStorage` function.
+ * @extension FARCASTER
  */
 export type RentStorageParams = {
   client: ThirdwebClient;
@@ -24,11 +25,15 @@ export type RentStorageParams = {
  * @example
  * ```ts
  * import { rentStorage } from "thirdweb/extensions/farcaster";
- * const tx = await rentStorage({
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = rentStorage({
  *  client,
  * 	fid,
  *  units,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function rentStorage(options: RentStorageParams) {

@@ -11,8 +11,8 @@ function getFunctionSignature(fnInputs: any): string {
         return i.type === "tuple"
           ? getFunctionSignature(i.components)
           : i.type === "tuple[]"
-          ? getFunctionSignature(i.components) + `[]`
-          : i.type;
+            ? getFunctionSignature(i.components) + `[]`
+            : i.type;
       })
       .join(",") +
     ")"

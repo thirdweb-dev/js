@@ -3,6 +3,9 @@ import { isNativeTokenAddress } from "../../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { makeOffer as makeOfferGenerated } from "../../__generated__/IOffers/write/makeOffer.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type MakeOfferParams = {
   /**
    * The address of the asset contract to offer on.
@@ -49,6 +52,7 @@ export type MakeOfferParams = {
  * @example
  * ```ts
  * import { makeOffer } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const offerTx = makeOffer({
  *  contract,
@@ -58,8 +62,9 @@ export type MakeOfferParams = {
  *  offerExpiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
  *  totalOffer: "1.0",
  * });
- * ```
  *
+ * await sendTransaction({ transaction, account });
+ * ```
  */
 export function makeOffer(options: BaseTransactionOptions<MakeOfferParams>) {
   return makeOfferGenerated({

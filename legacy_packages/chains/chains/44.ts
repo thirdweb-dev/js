@@ -4,8 +4,8 @@ export default {
   "chainId": 44,
   "explorers": [
     {
-      "name": "subscan",
-      "url": "https://crab.subscan.io",
+      "name": "blockscout",
+      "url": "https://crab-scan.darwinia.network",
       "standard": "EIP3091"
     }
   ],
@@ -21,7 +21,7 @@ export default {
   "rpc": [
     "https://44.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://crab-rpc.darwinia.network",
-    "https://crab-rpc.darwiniacommunitydao.xyz"
+    "https://crab-rpc.dcdao.box"
   ],
   "shortName": "crab",
   "slug": "crab-network",

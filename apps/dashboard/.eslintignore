@@ -1,0 +1,13 @@
+# folders
+artifacts/
+build/
+cache/
+coverage/
+dist/
+node_modules/
+typechain/
+graphql/
+
+# files
+.solcover.js
+coverage.json

@@ -163,3 +163,7 @@ export {
   type BatchToReveal,
   getBatchesToReveal,
 } from "../../extensions/erc721/lazyMinting/read/getBatchesToReveal.js";
+export {
+  updateMetadata,
+  type UpdateMetadataParams,
+} from "../../extensions/erc721/drops/write/updateMetadata.js";

@@ -42,7 +42,8 @@ to {
 `;
 
 const TooltipContent = /* @__PURE__ */ (() =>
-  styled(RadixTooltip.Content)(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  styled(RadixTooltip.Content)((_) => {
     const theme = useCustomTheme();
     return {
       background: theme.colors.tooltipBg,

@@ -23,6 +23,7 @@ export function ThirdwebAuthProvider(cfg: ThirdwebProviderConfig) {
       try {
         const parsedPayload: LoginPayload = JSON.parse(payload);
         const verifyOptions: VerifyOptions = {
+          domain: cfg.domain,
           statement: cfg.authOptions?.statement,
           uri: cfg.authOptions?.uri,
           version: cfg.authOptions?.version,

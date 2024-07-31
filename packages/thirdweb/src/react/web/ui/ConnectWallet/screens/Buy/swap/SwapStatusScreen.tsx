@@ -12,18 +12,18 @@ import { Container, ModalHeader } from "../../../../components/basic.js";
 import { Button } from "../../../../components/buttons.js";
 import { Text } from "../../../../components/text.js";
 import { AccentFailIcon } from "../../../icons/AccentFailIcon.js";
-import { SwapTxDetailsTable } from "../tx-history/SwapDetailsScreen.js";
+import { SwapTxDetailsTable } from "../pay-transactions/SwapDetailsScreen.js";
 
 type UIStatus = "pending" | "success" | "failed" | "partialSuccess";
 
 export function SwapStatusScreen(props: {
+  title: string;
   onBack?: () => void;
-  onViewPendingTx: () => void;
   swapTxHash: string;
   client: ThirdwebClient;
   onTryAgain: () => void;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
   quote: BuyWithCryptoQuote;
 }) {
@@ -77,7 +77,7 @@ export function SwapStatusScreen(props: {
   return (
     <Container animate="fadein">
       <Container p="lg">
-        <ModalHeader title="Buy" onBack={props.onBack} />
+        <ModalHeader title={props.title} onBack={props.onBack} />
         <Spacer y="sm" />
 
         {uiStatus === "success" && (
@@ -90,7 +90,7 @@ export function SwapStatusScreen(props: {
               />
               <Spacer y="sm" />
               <Text color={"primaryText"} size="lg">
-                Buy Success
+                Buy Complete
               </Text>
             </Container>
 
@@ -99,7 +99,7 @@ export function SwapStatusScreen(props: {
             <Spacer y="sm" />
             {!props.isEmbed && (
               <Button variant="accent" fullWidth onClick={props.onDone}>
-                {props.isBuyForTx ? "Continue Transaction" : "Done"}
+                {props.transactionMode ? "Continue Transaction" : "Done"}
               </Button>
             )}
           </>

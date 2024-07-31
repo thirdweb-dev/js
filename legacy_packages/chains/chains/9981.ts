@@ -2,7 +2,13 @@ import type { Chain } from "../src/types";
 export default {
   "chain": "Avalanche",
   "chainId": 9981,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "Volley Mainnet Explorer",
+      "url": "https://volleyscan.io",
+      "standard": "EIP3091"
+    }
+  ],
   "faucets": [],
   "features": [],
   "icon": {
@@ -22,7 +28,8 @@ export default {
   "redFlags": [],
   "rpc": [
     "https://9981.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc"
+    "https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc",
+    "https://main-rpc.volleychain.com"
   ],
   "shortName": "QaUser4131",
   "slug": "qauser4131",

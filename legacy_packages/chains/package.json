@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.1.116",
+  "version": "0.1.120",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "exports": {
@@ -12,12 +12,12 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "eslint": "8.57.0",
     "@babel/runtime": "^7.24.5",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
+    "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.4.4"
+    "typescript": "5.5.2"
   },
   "preconstruct": {
     "entrypoints": [

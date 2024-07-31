@@ -10,6 +10,7 @@ import {
 import { useTWLocale } from "../../../evm/providers/locale-provider";
 import { ExtensionOrWCConnectionUI } from "../_common/ExtensionORWCConnectionUI";
 import { handelWCSessionRequest } from "../handleWCSessionRequest";
+import type { QRModalOptions } from "@thirdweb-dev/wallets/src/evm/connectors/wallet-connect/qrModalOptions";
 
 const cryptoDefiWalletUris = {
   ios: "dfw://",
@@ -33,6 +34,22 @@ export type CryptoDefiWalletConfigOptions = {
    * If true, the wallet will be tagged as "recommended" in ConnectWallet Modal
    */
   recommended?: boolean;
+
+  /**
+   * Specify whether to open the official Wallet Connect  Modal when connecting the wallet if no injected MetaMask provider is found when connecting the wallet.
+   *
+   * This should not be set if you are using ConnectWallet component and only when manually connecting the wallet using a hook like `useConnect`.
+   *
+   * You can set it to `true` or a configuration object to enable the Wallet Connect Modal.
+   */
+  wcModal?:
+    | {
+        /**
+         * Configure the style of Wallet Connect Modal.
+         */
+        qrModalOptions?: QRModalOptions;
+      }
+    | boolean;
 };
 
 /**
@@ -82,7 +99,11 @@ export const cryptoDefiWallet = (
       const wallet = new CryptoDefiWallet({
         ...walletOptions,
         projectId: options?.projectId,
-        qrcode: false,
+        qrcode: options?.wcModal ? true : false,
+        qrModalOptions:
+          typeof options?.wcModal === "object"
+            ? options?.wcModal?.qrModalOptions
+            : undefined,
       });
 
       handelWCSessionRequest(wallet, cryptoDefiWalletUris);

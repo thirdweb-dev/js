@@ -4,6 +4,9 @@ import { encodeCollectAuctionPayout } from "../../__generated__/IEnglishAuctions
 import { encodeCollectAuctionTokens } from "../../__generated__/IEnglishAuctions/write/collectAuctionTokens.js";
 import { getWinningBid } from "../read/getWinningBid.js";
 
+/**
+ * @extension MARKETPLACE
+ */
 export type ExecuteSaleParams = {
   auctionId: bigint;
 };
@@ -18,11 +21,14 @@ export type ExecuteSaleParams = {
  * @example
  * ```ts
  * import { executeSale } from "thirdweb/extensions/marketplace";
+ * import { sendTransaction } from "thirdweb";
  *
  * const transaction = executeSale({
  *  contract,
  *  auctionId: 0n,
  * });
+ *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function executeSale(

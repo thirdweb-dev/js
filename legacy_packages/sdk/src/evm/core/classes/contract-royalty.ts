@@ -125,9 +125,8 @@ export class ContractRoyalty<
 
       // why not use this.metadata.set()? - because that would end up sending it's own separate transaction to `setContractURI`
       // but we want to send both the `setRoyaltyInfo` and `setContractURI` in one transaction!
-      const contractURI = await this.metadata._parseAndUploadMetadata(
-        mergedMetadata,
-      );
+      const contractURI =
+        await this.metadata._parseAndUploadMetadata(mergedMetadata);
 
       if (
         hasFunction<ContractMetadataContract>(

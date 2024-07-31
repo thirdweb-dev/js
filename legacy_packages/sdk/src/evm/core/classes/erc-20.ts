@@ -55,11 +55,10 @@ import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
  * @public
  */
 export class Erc20<
-    T extends TokenERC20 | DropERC20 | BaseERC20 =
-      | BaseERC20
-      | BaseSignatureMintERC20,
-  >
-  implements UpdateableNetwork, DetectableFeature
+  T extends TokenERC20 | DropERC20 | BaseERC20 =
+    | BaseERC20
+    | BaseSignatureMintERC20,
+> implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_TOKEN.name;
   /**

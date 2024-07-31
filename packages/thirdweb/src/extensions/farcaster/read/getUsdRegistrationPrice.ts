@@ -6,6 +6,9 @@ import { toTokens } from "../../../utils/units.js";
 import { usdUnitPrice } from "../__generated__/IStorageRegistry/read/usdUnitPrice.js";
 import { getStorageRegistry } from "../contracts/getStorageRegistry.js";
 
+/**
+ * @extension FARCASTER
+ */
 export type GetUsdRegistrationPriceParams = {
   client: ThirdwebClient;
   chain?: Chain;

@@ -8,6 +8,9 @@ import { getPayBuyWithCryptoStatusUrl } from "../utils/definitions.js";
 
 // TODO: add JSDoc description for all properties
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoQuoteSummary = {
   fromToken: PayTokenInfo;
   toToken: PayTokenInfo;
@@ -34,6 +37,9 @@ export type BuyWithCryptoQuoteSummary = {
   createdAt: string; // ISO DATE
 };
 
+/**
+ * @buyCrypto
+ */
 export type BuyWithCryptoTransaction = {
   client: ThirdwebClient;
   transactionHash: string;
@@ -47,7 +53,8 @@ export type BuyWithCryptoSubStatuses =
   | "REVERTED_ON_CHAIN"
   | "SUCCESS"
   | "PARTIAL_SUCCESS"
-  | "UNKNOWN_ERROR";
+  | "UNKNOWN_ERROR"
+  | "REFUNDED";
 
 export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
 
@@ -70,6 +77,7 @@ export type BuyWithCryptoStatus =
       toAddress: string;
       failureMessage?: string;
       bridge?: string;
+      purchaseData?: object;
     };
 
 export type ValidBuyWithCryptoStatus = Exclude<

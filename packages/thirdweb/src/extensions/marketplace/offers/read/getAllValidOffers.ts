@@ -10,6 +10,9 @@ import { mapOffer } from "../utils.js";
 
 const DEFAULT_QUERY_ALL_COUNT = 100n;
 
+/**
+ * @extension MARKETPLACE
+ */
 export type GetAllValidOffersParams = {
   /**
    * The start index of the offers to retrieve.

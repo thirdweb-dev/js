@@ -73,6 +73,7 @@ const ERROR_SUBSTRINGS = [
   "chainid no support",
   "chainid (0)",
   "chainid(0)",
+  "invalid sender",
 ];
 
 function matchError(error: string): boolean {
@@ -86,6 +87,11 @@ function matchError(error: string): boolean {
 
   // otherwise return true if any of the composite substrings are found
   return ERROR_SUBSTRINGS_COMPOSITE.some((arr) => {
-    return arr.some((substring) => error.includes(substring));
+    let foundError = true;
+
+    for (const substring of arr) {
+      foundError &&= error.includes(substring);
+    }
+    return foundError;
   });
 }

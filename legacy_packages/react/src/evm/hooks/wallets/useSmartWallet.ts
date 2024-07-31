@@ -10,6 +10,7 @@ import {
 import type { SmartWalletConfigOptions } from "../../../wallet/wallets/smartWallet/types";
 import {
   getSmartWalletAddress,
+  DEFAULT_FACTORY_ADDRESS,
   type SmartWalletConnectionArgs,
 } from "@thirdweb-dev/wallets/evm/wallets/smart-wallet";
 import { useCallback } from "react";
@@ -226,7 +227,7 @@ export function useSmartWallet<W extends WalletInstance>(
     async (args: { personalWalletAddress: string; data?: BytesLike }) => {
       return getSmartWalletAddress(
         context.activeChain,
-        options.factoryAddress,
+        options.factoryAddress || DEFAULT_FACTORY_ADDRESS,
         args.personalWalletAddress,
         args.data,
       );

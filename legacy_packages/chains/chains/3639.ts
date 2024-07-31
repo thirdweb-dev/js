@@ -10,6 +10,12 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmcumhDxUyoLTHkcMKgPqkpGnnjwSTqE2KGFnDXXFY8mMo",
+    "width": 40,
+    "height": 38,
+    "format": "png"
+  },
   "infoURL": "https://islamicoin.finance",
   "name": "iChain Network",
   "nativeCurrency": {

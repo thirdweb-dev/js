@@ -2,6 +2,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { uri } from "../__generated__/IERC1155/read/uri.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC1155/write/mintTo.js";
 
+/**
+ * @extension ERC1155
+ */
 export type MintAdditionalSupplyToParams = {
   to: string;
   tokenId: bigint;
@@ -16,6 +19,8 @@ export type MintAdditionalSupplyToParams = {
  * @example
  * ```ts
  * import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
+ *
  * const transaction = mintAdditionalSupplyTo({
  *  contract,
  *  to: "0x...",
@@ -23,7 +28,7 @@ export type MintAdditionalSupplyToParams = {
  *  supply: 10n,
  * });
  *
- * const { transactionHash } = await sendTransaction({ transaction, account });
+ * await sendTransaction({ transaction, account });
  *
  * ```
  */

@@ -1928,7 +1928,6 @@ export function useCreateDirectListing<
   );
 }
 
-
 /**
  * Create multiple direct listings in one batch
  *
@@ -1945,7 +1944,7 @@ export function useCreateDirectListing<
  *   if (error) {
  *     console.error("failed to create direct listing batch", error);
  *   }
- *   
+ *
  *   // Sample data
  *   const directListingData = [
  *     {

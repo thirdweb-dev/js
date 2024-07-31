@@ -1,7 +1,6 @@
 import { ChainId } from "../constants/chains/ChainId";
 import { BigNumber, utils, providers } from "ethers";
 import {
-  Mumbai,
   Polygon,
   Flag,
   FlagTestnet,
@@ -13,6 +12,7 @@ import {
   ZoraSepoliaTestnet,
   Celo,
   CeloAlfajoresTestnet,
+  PolygonAmoyTestnet,
 } from "@thirdweb-dev/chains";
 
 type FeeData = {
@@ -63,7 +63,7 @@ export async function getDynamicFeeData(
   if (chainId === Flag.chainId || chainId === FlagTestnet.chainId) {
     // chains does not support eip-1559, return null for all
     return { maxFeePerGas: null, maxPriorityFeePerGas: null, baseFee: null };
-  } else if (chainId === Mumbai.chainId || chainId === Polygon.chainId) {
+  } else if (chainId === PolygonAmoyTestnet.chainId || chainId === Polygon.chainId) {
     // for polygon, get fee data from gas station
     maxPriorityFeePerGas = await getPolygonGasPriorityFee(chainId);
   } else if (eth_maxPriorityFeePerGas) {
@@ -147,11 +147,11 @@ function isOpStackChain(chainId: number) {
 /**
  * @internal
  */
-function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
+function getGasStationUrl(chainId: ChainId.Polygon | 80002): string {
   switch (chainId) {
     case ChainId.Polygon:
       return "https://gasstation.polygon.technology/v2";
-    case ChainId.Mumbai:
+    case 80002:
       return "https://gasstation-testnet.polygon.technology/v2";
   }
 }
@@ -159,30 +159,13 @@ function getGasStationUrl(chainId: ChainId.Polygon | ChainId.Mumbai): string {
 const MIN_POLYGON_GAS_PRICE = /* @__PURE__ */ (() =>
   utils.parseUnits("31", "gwei"))();
 
-const MIN_MUMBAI_GAS_PRICE = /* @__PURE__ */ (() =>
-  utils.parseUnits("1", "gwei"))();
-
-/**
- * @internal
- */
-function getDefaultGasFee(
-  chainId: ChainId.Polygon | ChainId.Mumbai,
-): BigNumber {
-  switch (chainId) {
-    case ChainId.Polygon:
-      return MIN_POLYGON_GAS_PRICE;
-    case ChainId.Mumbai:
-      return MIN_MUMBAI_GAS_PRICE;
-  }
-}
-
 /**
  *
  * @returns The gas price
  * @internal
  */
 export async function getPolygonGasPriorityFee(
-  chainId: ChainId.Polygon | ChainId.Mumbai,
+  chainId: ChainId.Polygon | 80002,
 ): Promise<BigNumber> {
   const gasStationUrl = getGasStationUrl(chainId);
   try {
@@ -196,5 +179,5 @@ export async function getPolygonGasPriorityFee(
   } catch {
     // if the gas station is down, return the default gas fee
   }
-  return getDefaultGasFee(chainId);
+  return MIN_POLYGON_GAS_PRICE;
 }

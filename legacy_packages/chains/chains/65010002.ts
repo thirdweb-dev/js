@@ -26,13 +26,10 @@ export default {
     "decimals": 18
   },
   "networkId": 65010002,
-  "rpc": [
-    "https://65010002.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://rpc1.bakerloo.autonity.org/",
-    "wss://rpc1.bakerloo.autonity.org/ws/"
-  ],
+  "rpc": [],
   "shortName": "bakerloo-02",
   "slip44": 1,
   "slug": "autonity-bakerloo-sumida-testnet",
+  "status": "deprecated",
   "testnet": true
 } as const satisfies Chain;

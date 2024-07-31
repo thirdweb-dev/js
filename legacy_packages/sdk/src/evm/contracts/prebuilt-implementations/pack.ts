@@ -439,9 +439,8 @@ export class Pack extends StandardErc1155<PackContract> {
         this.contractWrapper.getSignerAddress(),
         PackRewardsOutputSchema.parseAsync(packContents),
       ]);
-      const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-        parsedContents,
-      );
+      const { contents, numOfRewardUnits } =
+        await this.toPackContentArgs(parsedContents);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,
@@ -531,9 +530,8 @@ export class Pack extends StandardErc1155<PackContract> {
         erc721Rewards,
         erc1155Rewards,
       };
-      const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-        rewardsData,
-      );
+      const { contents, numOfRewardUnits } =
+        await this.toPackContentArgs(rewardsData);
 
       return Transaction.fromContractWrapper({
         contractWrapper: this.contractWrapper,

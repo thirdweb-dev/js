@@ -1,21 +1,49 @@
-import type { PreparedTransaction } from "../../../../../../../transaction/prepare-transaction.js";
+import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
+import type { GetWalletBalanceResult } from "../../../../../../../wallets/utils/getWalletBalance.js";
+import type { TokenInfo } from "../../../../../../core/utils/defaultTokens.js";
 
-export type BuyForTx = {
-  cost: bigint;
-  balance: bigint;
-  tx: PreparedTransaction;
-  tokenSymbol: string;
+export type TransactionCostAndData = {
+  token: TokenInfo;
+  decimals: number;
+  walletBalance: GetWalletBalanceResult;
+  transactionValueWei: bigint;
+  gasCostWei: bigint;
 };
 
 export type SelectedScreen =
   | {
-      type: "node";
-      node: React.ReactNode;
+      id: "main" | "select-payment-method" | "buy-with-fiat" | "select-wallet";
     }
   | {
-      type: "screen-id";
-      name: "select-from-token" | "select-to-token" | "select-currency";
+      id: "buy-with-crypto";
+      payDisabled?: boolean;
     }
   | {
-      type: "main";
+      id: "select-from-token";
+      backScreen: SelectedScreen;
+    }
+  | {
+      id: "select-to-token";
+      backScreen: SelectedScreen;
+    }
+  | {
+      id: "select-currency";
+      backScreen: SelectedScreen;
+    }
+  | {
+      id: "swap-flow";
+      quote: BuyWithCryptoQuote;
+    }
+  | {
+      id: "fiat-flow";
+      quote: BuyWithFiatQuote;
+      openedWindow: Window | null;
+    }
+  | {
+      id: "transfer-flow";
+    }
+  | {
+      id: "connect-payer-wallet";
+      backScreen: SelectedScreen;
     };

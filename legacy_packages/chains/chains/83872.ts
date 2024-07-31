@@ -10,11 +10,17 @@ export default {
     }
   ],
   "faucets": [],
+  "icon": {
+    "url": "ipfs://QmZ5DXJVxuMRvKzKstFte3TahJ4LSDsGd8DWTrYEPbSjTu",
+    "width": 254,
+    "height": 254,
+    "format": "png"
+  },
   "infoURL": "https://docs.zedscan.net",
   "name": "ZEDXION",
   "nativeCurrency": {
     "name": "Zedxion",
-    "symbol": "zedx",
+    "symbol": "ZEDX",
     "decimals": 9
   },
   "networkId": 83872,

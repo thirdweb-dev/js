@@ -1,7 +1,7 @@
 "use client";
 import type { Chain } from "../../../../../chains/types.js";
 import { type Theme, fontSize } from "../../../../core/design-system/index.js";
-import { useChainQuery } from "../../../../core/hooks/others/useChainQuery.js";
+import { useChainSymbol } from "../../../../core/hooks/others/useChainQuery.js";
 import {
   type ERC20OrNativeToken,
   isNativeToken,
@@ -47,9 +47,9 @@ function NativeTokenSymbol(props: {
   color?: keyof Theme["colors"];
   inline?: boolean;
 }) {
-  const chainQuery = useChainQuery(props.chain);
+  const chainSymbolQuery = useChainSymbol(props.chain);
 
-  if (!chainQuery.isFetched) {
+  if (chainSymbolQuery.isLoading) {
     return <Skeleton width="70px" height={fontSize[props.size]} />;
   }
 
@@ -59,7 +59,7 @@ function NativeTokenSymbol(props: {
       color={props.color || "primaryText"}
       inline={props.inline}
     >
-      {chainQuery.data?.nativeCurrency.symbol ?? "ETH"}
+      {chainSymbolQuery.symbol ?? "ETH"}
     </Text>
   );
 }

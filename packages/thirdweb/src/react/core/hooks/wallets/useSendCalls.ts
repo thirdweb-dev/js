@@ -15,13 +15,13 @@ import type {
 import { waitForBundle } from "../../../../wallets/eip5792/wait-for-bundle.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { invalidateWalletBalance } from "../../providers/invalidateWalletBalance.js";
-import { useActiveWallet } from "../wallets/wallet-hooks.js";
+import { useActiveWallet } from "./useActiveWallet.js";
 
 /**
  * A hook to send [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) calls to a wallet.
  * This hook works with all Thirdweb wallets (in-app and smart) and certain injected wallets that already support EIP-5792.
  * Transactions will be bundled and sponsored when those capabilities are supported, otherwise they will be sent as individual transactions.
- * 
+ *
  * When calls are sent, all contracts that are interacted with will have their corresponding reads revalidated via React Query.
  *
  * @note This hook is dependent on the wallet's support for EIP-5792 and could fail.
@@ -35,7 +35,7 @@ import { useActiveWallet } from "../wallets/wallet-hooks.js";
  * @example
  * ```tsx
  * import { useSendCalls } from "thirdweb/react";
- * 
+ *
  * const sendTx1 = approve({
       contract: USDT_CONTRACT,
       amount: 100,
@@ -74,8 +74,9 @@ import { useActiveWallet } from "../wallets/wallet-hooks.js";
  *     }
  *   }
  * });
- * @note We recommend proxying any paymaster calls via an API route you setup and control.
  * ```
+ *
+ * @note We recommend proxying any paymaster calls via an API route you setup and control.
  * @extension EIP5792
  */
 export function useSendCalls({
@@ -86,12 +87,12 @@ export function useSendCalls({
   Error,
   Omit<SendCallsOptions, "chain" | "wallet"> & { wallet?: Wallet } // Optional wallet override
 > {
-  const connectedWallet = useActiveWallet();
+  const activeWallet = useActiveWallet();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (options) => {
-      const { wallet = connectedWallet } = options;
+      const { wallet = activeWallet } = options;
       const chain = wallet?.getChain();
       if (!wallet || !chain) {
         throw new Error(
@@ -114,15 +115,15 @@ export function useSendCalls({
     },
     onSettled: async (_result, _error, variables) => {
       // Attempt to invalidate any reads related to the sent transactions
-      const chain = connectedWallet?.getChain();
-      if (!_result || !connectedWallet || !chain) {
+      const chain = activeWallet?.getChain();
+      if (!_result || !activeWallet || !chain) {
         return;
       }
 
       if (typeof _result === "string") {
         await waitForBundle({
           bundleId: _result,
-          wallet: connectedWallet,
+          wallet: activeWallet,
           client,
           chain,
         }).catch((error) => {

@@ -5,6 +5,7 @@ import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/get
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
+import type { PayerInfo } from "../types.js";
 import { OnrampStatusScreen } from "./FiatStatusScreen.js";
 import { FiatSteps, fiatQuoteToPartialQuote } from "./FiatSteps.js";
 import { PostOnRampSwapFlow } from "./PostOnRampSwapFlow.js";
@@ -36,16 +37,17 @@ type Screen =
     };
 
 export function FiatFlow(props: {
+  title: string;
   quote: BuyWithFiatQuote;
   onBack: () => void;
   client: ThirdwebClient;
   testMode: boolean;
   theme: "light" | "dark";
-  onViewPendingTx: () => void;
   openedWindow: Window | null;
   onDone: () => void;
-  isBuyForTx: boolean;
+  transactionMode: boolean;
   isEmbed: boolean;
+  payer: PayerInfo;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<Screen>(
@@ -65,6 +67,7 @@ export function FiatFlow(props: {
   if (screen.id === "step-1") {
     return (
       <FiatSteps
+        title={props.title}
         client={props.client}
         onBack={props.onBack}
         partialQuote={fiatQuoteToPartialQuote(props.quote)}
@@ -85,10 +88,10 @@ export function FiatFlow(props: {
   if (screen.id === "onramp-status") {
     return (
       <OnrampStatusScreen
+        title={props.title}
         client={props.client}
         intentId={props.quote.intentId}
         onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
         hasTwoSteps={hasTwoSteps}
         openedWindow={popupWindow}
         quote={props.quote}
@@ -96,7 +99,7 @@ export function FiatFlow(props: {
         onShowSwapFlow={(_status) => {
           setScreen({ id: "postonramp-swap", data: _status });
         }}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
       />
     );
@@ -105,17 +108,18 @@ export function FiatFlow(props: {
   if (screen.id === "postonramp-swap") {
     return (
       <PostOnRampSwapFlow
+        title={props.title}
         status={screen.data}
         quote={fiatQuoteToPartialQuote(props.quote)}
         client={props.client}
         onBack={props.onBack}
-        onViewPendingTx={props.onViewPendingTx}
         onDone={props.onDone}
         onSwapFlowStarted={() => {
           // no op
         }}
-        isBuyForTx={props.isBuyForTx}
+        transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
+        payer={props.payer}
       />
     );
   }

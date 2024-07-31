@@ -5,27 +5,18 @@ import { waitForReceipt } from "../../../transaction/actions/wait-for-tx-receipt
 import { isBaseTransactionOptions } from "../../../transaction/types.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { isObjectWithKeys } from "../../../utils/type-guards.js";
+import type { ConnectionManager } from "../../../wallets/manager/index.js";
 import { SetRootElementContext } from "./RootElementContext.js";
+import { ConnectionManagerCtx } from "./connection-manager.js";
 import { invalidateWalletBalance } from "./invalidateWalletBalance.js";
 
 /**
- * The ThirdwebProvider is component is a provider component that sets up the React Query client.
- * @param props - The props for the ThirdwebProvider
- * @example
- * ```jsx
- * import { ThirdwebProvider } from "thirdweb/react";
- *
- * function Example() {
- *  return (
- *    <ThirdwebProvider>
- *      <App />
- *    </ThirdwebProvider>
- *   )
- * }
- * ```
- * @component
+ * @internal
  */
-export function ThirdwebProvider(props: React.PropsWithChildren) {
+export function ThirdwebProviderCore(props: {
+  manager: ConnectionManager;
+  children: React.ReactNode;
+}) {
   const [el, setEl] = useState<React.ReactNode>(null);
   const [queryClient] = useState(
     () =>
@@ -78,11 +69,13 @@ export function ThirdwebProvider(props: React.PropsWithChildren) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SetRootElementContext.Provider value={setEl}>
-        {props.children}
-      </SetRootElementContext.Provider>
-      {el}
-    </QueryClientProvider>
+    <ConnectionManagerCtx.Provider value={props.manager}>
+      <QueryClientProvider client={queryClient}>
+        <SetRootElementContext.Provider value={setEl}>
+          {props.children}
+        </SetRootElementContext.Provider>
+        {el}
+      </QueryClientProvider>
+    </ConnectionManagerCtx.Provider>
   );
 }

@@ -23,6 +23,7 @@ import {
  * @example
  * ```ts
  * import { mintWithSignature, generateMintSignature } from "thirdweb/extensions/erc1155";
+ * import { sendTransaction } from "thirdweb";
  *
  * const { payload, signature } = await generateMintSignature(...)
  *
@@ -50,6 +51,9 @@ export function mintWithSignature(
   });
 }
 
+/**
+ * @extension ERC1155
+ */
 export type GenerateMintSignatureOptions = {
   account: Account;
   contract: ThirdwebContract;

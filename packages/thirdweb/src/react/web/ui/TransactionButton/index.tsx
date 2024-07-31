@@ -1,9 +1,11 @@
 "use client";
-import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
+import { CustomThemeProvider } from "../../../core/design-system/CustomThemeProvider.js";
 import {
   type TransactionButtonProps,
-  useTransactionButtonCore,
-} from "../../../core/hooks/transaction/button-core.js";
+  useTransactionButtonMutation,
+} from "../../../core/hooks/transaction/transaction-button-utils.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
+import { useSendTransaction } from "../../hooks/transaction/useSendTransaction.js";
 import { Spinner } from "../components/Spinner.js";
 import { Button } from "../components/buttons.js";
 
@@ -50,50 +52,56 @@ export function TransactionButton(props: TransactionButtonProps) {
     unstyled,
     ...buttonProps
   } = props;
-  const { account, handleClick, isPending } = useTransactionButtonCore(props);
+  const account = useActiveAccount();
+  const sendTransaction = useSendTransaction({ gasless, payModal });
+  const { mutate: handleClick, isPending } = useTransactionButtonMutation(
+    props,
+    sendTransaction.mutateAsync,
+  );
 
   return (
-    <Button
-      gap="xs"
-      disabled={!account || disabled || isPending}
-      variant={"primary"}
-      unstyled={unstyled}
-      data-is-loading={isPending}
-      onClick={handleClick}
-      {...buttonProps}
-      style={
-        !unstyled
-          ? {
-              opacity: !account || disabled ? 0.5 : 1,
-              minWidth: "150px",
-              position: "relative",
-              ...buttonProps.style,
-            }
-          : {
-              position: "relative",
-              ...buttonProps.style,
-            }
-      }
-      theme={parseTheme(props.theme)}
-    >
-      <span style={{ visibility: isPending ? "hidden" : "visible" }}>
-        {children}
-      </span>
-      {isPending && (
-        <div
-          style={{
-            position: "absolute",
-            display: "flex",
-            alignItems: "center",
-            height: "100%",
-            top: 0,
-            bottom: 0,
-            margin: "auto",
-          }}
-        >
-          <Spinner size="md" color="primaryButtonText" />
-        </div>
-      )}
-    </Button>
+    <CustomThemeProvider theme={props.theme}>
+      <Button
+        gap="xs"
+        disabled={!account || disabled || isPending}
+        variant={"primary"}
+        unstyled={unstyled}
+        data-is-loading={isPending}
+        onClick={() => handleClick()}
+        {...buttonProps}
+        style={
+          !unstyled
+            ? {
+                opacity: !account || disabled ? 0.5 : 1,
+                minWidth: "150px",
+                position: "relative",
+                ...buttonProps.style,
+              }
+            : {
+                position: "relative",
+                ...buttonProps.style,
+              }
+        }
+      >
+        <span style={{ visibility: isPending ? "hidden" : "visible" }}>
+          {children}
+        </span>
+        {isPending && (
+          <div
+            style={{
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+              top: 0,
+              bottom: 0,
+              margin: "auto",
+            }}
+          >
+            <Spinner size="md" color="primaryButtonText" />
+          </div>
+        )}
+      </Button>
+    </CustomThemeProvider>
   );
 }

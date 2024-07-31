@@ -10,6 +10,7 @@ const chainCache: Record<number, Chain> = {};
 const slugToChainId: Record<string, keyof typeof chainCache> = {};
 export async function fetchChain(chainIdOrSlug: number | string) {
   if (typeof chainIdOrSlug === "string" && chainIdOrSlug in slugToChainId) {
+    // @ts-expect-error - TODO: should check index access
     return chainCache[slugToChainId[chainIdOrSlug]];
   } else if (typeof chainIdOrSlug === "number" && chainIdOrSlug in chainCache) {
     return chainCache[chainIdOrSlug];

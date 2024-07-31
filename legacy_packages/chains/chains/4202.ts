@@ -15,7 +15,15 @@ export default {
       }
     }
   ],
-  "faucets": [],
+  "faucets": [
+    "https://app.optimism.io/faucet"
+  ],
+  "icon": {
+    "url": "ipfs://QmVTS8jmWD5e7jVEn86wLjJsuMnc6s8fym3JbtE4etzSKf",
+    "width": 400,
+    "height": 400,
+    "format": "png"
+  },
   "infoURL": "https://lisk.com",
   "name": "Lisk Sepolia Testnet",
   "nativeCurrency": {

@@ -121,6 +121,23 @@ export type PrepareContractCallOptions<
  *  params: [to, value],
  * });
  * ```
+ *
+ * @example
+ * Passing extra call data to the transaction
+ * ```ts
+ * import { getContract, prepareContractCall } from "thirdweb";
+ * const contract = getContract({
+ *   ..., // chain, address, client
+ * });
+ *
+ * const transaction = prepareContractCall({
+ *   contract,
+ *   method: "function transfer(address to, uint256 value)",
+ *   params: [...],
+ *   // The extra call data MUST be encoded to hex before passing
+ *   extraCallData: "0x......."
+ * });
+ * ```
  */
 export function prepareContractCall<
   const TAbi extends Abi,

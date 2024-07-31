@@ -1,13 +1,23 @@
+// --- KEEEP IN SYNC with exports/wallets.native.ts ---
+
 export {
   createWallet,
-  smartWallet,
+  walletConnect,
+} from "../wallets/create-wallet.js";
+export {
   inAppWallet,
   /**
    * @deprecated use inAppWallet instead
    */
   inAppWallet as embeddedWallet,
-  walletConnect,
-} from "../wallets/create-wallet.js";
+} from "../wallets/in-app/web/in-app.js";
+export { ecosystemWallet } from "../wallets/in-app/web/ecosystem.js";
+export type {
+  EcosystemWalletCreationOptions,
+  EcosystemWalletConnectionOptions,
+  EcosystemWalletAutoConnectOptions,
+} from "../wallets/ecosystem/types.js";
+export { smartWallet } from "../wallets/smart/smart-wallet.js";
 
 export type { Wallet, Account } from "../wallets/interfaces/wallet.js";
 export type { ConnectionStatus } from "../wallets/manager/index.js";
@@ -38,15 +48,15 @@ export {
   type PrivateKeyToAccountOptions as PrivateKeyAccountOptions,
 } from "../wallets/private-key.js";
 
-// injected
-export { injectedProvider } from "../wallets/injected/mipdStore.js";
-
 export type {
   WalletId,
   WalletAutoConnectionOption,
   WalletCreationOptions,
   WalletConnectionOption,
   CreateWalletArgs,
+  InjectedConnectOptions,
+  DeepLinkSupportedWalletCreationOptions,
+  StandaloneWCConnectOptions,
 } from "../wallets/wallet-types.js";
 
 export type {
@@ -87,7 +97,10 @@ export type {
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
 } from "../wallets/in-app/core/wallet/types.js";
 
-export type { CoinbaseSDKWalletConnectionOptions } from "../wallets/coinbase/coinbaseSDKWallet.js";
+export type {
+  CoinbaseWalletCreationOptions,
+  CoinbaseSDKWalletConnectionOptions,
+} from "../wallets/coinbase/coinbaseWebSDK.js";
 
 export type {
   WalletEmitter,
@@ -99,3 +112,24 @@ export { getWalletInfo } from "../wallets/__generated__/getWalletInfo.js";
 export { type WalletInfo } from "../wallets/wallet-info.js";
 
 export { createWalletAdapter } from "../adapters/wallet-adapter.js";
+export type { AdapterWalletOptions } from "../adapters/wallet-adapter.js";
+
+// wallet connect
+export {
+  createWalletConnectClient,
+  createWalletConnectSession,
+  disconnectWalletConnectSession,
+  getActiveWalletConnectSessions,
+  DefaultWalletConnectRequestHandlers,
+} from "../wallets/wallet-connect/receiver/index.js";
+export type {
+  WalletConnectClient,
+  WalletConnectSession,
+} from "../wallets/wallet-connect/receiver/types.js";
+
+// WEB ONLY EXPORTS
+
+// injected
+export { injectedProvider } from "../wallets/injected/mipdStore.js";
+
+export type { ConnectionManager } from "../wallets/manager/index.js";

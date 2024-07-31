@@ -3,6 +3,9 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { renounceRole as generatedRenounceRole } from "../__generated__/IPermissions/write/renounceRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+/**
+ * @extension PERMISSIONS
+ */
 export type RenounceRoleParams = {
   role: RoleInput;
   targetAccountAddress: Address;
@@ -17,12 +20,15 @@ export type RenounceRoleParams = {
  * @example
  * ```ts
  * import { renounceRole } from "thirdweb/extensions/permissions";
+ * import { sendTransaction } from "thirdweb";
  *
- * const result = await renounceRole({
+ * const transaction = renounceRole({
  *  contract,
  *  role: "admin",
  *  targetAccountAddress: "0x1234567890123456789012345678901234567890",
  * });
+ * await sendTransaction({ transaction, account });
+ * ```
  */
 export function renounceRole(
   options: BaseTransactionOptions<RenounceRoleParams>,

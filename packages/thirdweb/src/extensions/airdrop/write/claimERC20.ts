@@ -4,10 +4,13 @@ import {
 } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Address } from "../../../utils/address.js";
-import { fetchProofsrERC20 } from "../../../utils/extensions/airdrop/fetch-proofs-erc20.js";
+import { fetchProofsERC20 } from "../../../utils/extensions/airdrop/fetch-proofs-erc20.js";
 import { tokenMerkleRoot } from "../__generated__/Airdrop/read/tokenMerkleRoot.js";
 import { claimERC20 as generatedClaimERC20 } from "../__generated__/Airdrop/write/claimERC20.js";
 
+/**
+ * @extension Airdrop
+ */
 export type ClaimERC20Params = {
   tokenAddress: string;
   recipient: string;
@@ -19,6 +22,7 @@ export type ClaimERC20Params = {
  * @example
  * ```ts
  * import { claimERC20 } from "thirdweb/extensions/airdrop";
+ * import { sendTransaction } from "thirdweb";
  *
  * const tokenAddress = "0x..." // Address of airdropped tokens to claim
  * const recipient = "0x..."  // Address of the allowlisted recipient
@@ -66,7 +70,7 @@ export function claimERC20(options: BaseTransactionOptions<ClaimERC20Params>) {
         return await getDecimals({ contract: tokenContract });
       })();
 
-      const merkleProof = await fetchProofsrERC20({
+      const merkleProof = await fetchProofsERC20({
         contract: options.contract,
         recipient: options.recipient,
         merkleRoot,

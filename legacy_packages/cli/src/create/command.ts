@@ -54,7 +54,7 @@ export async function twCreate(
       framework = "vite";
     }
 
-    if (options.reactNative) {
+    if (options.reactNative || options.expo) {
       projectType = "app";
       framework = "expo";
     }
@@ -72,7 +72,7 @@ export async function twCreate(
     if (options.vite) {
       framework = "vite";
     }
-    if (options.reactNative) {
+    if (options.reactNative || options.expo) {
       framework = "expo";
     }
     if (options.node) {
@@ -390,8 +390,8 @@ export async function twCreate(
   const packageManager = !!options.useNpm
     ? "npm"
     : !!options.usePnpm
-    ? "pnpm"
-    : getPkgManager();
+      ? "pnpm"
+      : getPkgManager();
 
   const template =
     typeof options.template === "string" ? options.template.trim() : undefined;
