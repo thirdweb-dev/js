@@ -51,8 +51,8 @@ export type Transaction = {
   value: string;
   gasLimit: string;
   gasPrice: string;
-  gasUsed: string;
-  maxPriorityFeePerGas: string;
+  gasUsed?: string;
+  maxPriorityFeePerGas?: string;
   success: boolean;
   type: number;
   decoded?: DecodedTransaction;
@@ -68,7 +68,7 @@ export type NFTData = {
   collectionName: string;
   uri: string;
   ownerAddress?: Hex;
-  balance?: number;
+  balance?: string;
   type: string;
 };
 
