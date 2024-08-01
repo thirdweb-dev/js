@@ -8,6 +8,7 @@ import { BuyFundsSection } from "./components/server/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
 import { ClaimChainSection } from "./components/server/ClaimChainSection";
 import { FaucetSection } from "./components/server/FaucetSection";
+import { SupportedProductsSection } from "./components/server/SupportedProductsSection";
 import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
 
@@ -86,6 +87,10 @@ export default async function Page(props: {
               showPagination={false}
             />
           </section>
+        )}
+
+        {chain.services.filter((s) => s.enabled).length > 0 && (
+          <SupportedProductsSection services={chain.services} />
         )}
 
         {/* Claim Chain */}
