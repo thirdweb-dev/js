@@ -48,6 +48,11 @@ import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { isBrowser } from "../../../common/utils";
 import { detectFeatures } from "../../../common/feature-detection/detectFeatures";
 
+const GAS_FREE_CHAINS = [
+  75513, // Geek verse testnet
+  75512, // Geek verse mainnet
+];
+
 /**
  * @internal
  */
@@ -155,6 +160,14 @@ export class ContractWrapper<
    * @internal
    */
   public async getCallOverrides(): Promise<CallOverrides> {
+    const chainId = await this.getChainID();
+    // avoid ethers5 defaulting to 1.5gwei -> https://github.com/oasysgames/verse-layer-opstack?tab=readme-ov-file#why-doesnt-metamask-automatically-set-gas-to-zero
+    if(GAS_FREE_CHAINS.includes(chainId)) {
+      return {
+        maxFeePerGas: 0,
+        maxPriorityFeePerGas: 0,
+      };
+    }
     // If we're running in the browser, let users configure gas price in their wallet UI
     if (isBrowser()) {
       return {};
