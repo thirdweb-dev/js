@@ -345,7 +345,7 @@ export class FrameConnector extends WagmiConnector<
   }
 
   private injectedProvider() {
-    return window?.ethereum as FrameInjectedProvider;
+    return (window as any)?.ethereum as FrameInjectedProvider;
   }
 
   private isInjected() {

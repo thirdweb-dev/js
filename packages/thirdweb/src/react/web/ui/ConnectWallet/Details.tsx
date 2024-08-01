@@ -639,7 +639,7 @@ function DetailsModal(props: {
   if (screen === "transactions") {
     content = (
       <TransactionsScreen
-        title="Buy"
+        title={locale.buy}
         onBack={() => setScreen("main")}
         closeModal={closeModal}
         locale={locale}
@@ -812,7 +812,7 @@ function DetailsModal(props: {
   else if (screen === "buy") {
     content = (
       <LazyBuyScreen
-        title="Buy"
+        title={locale.buy}
         isEmbed={false}
         client={client}
         onBack={() => setScreen("main")}

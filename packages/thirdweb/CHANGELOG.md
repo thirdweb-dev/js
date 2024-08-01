@@ -1,5 +1,13 @@
 # thirdweb
 
+## 5.43.1
+
+### Patch Changes
+
+- [#3896](https://github.com/thirdweb-dev/js/pull/3896) [`3b49b18`](https://github.com/thirdweb-dev/js/commit/3b49b18f4da60ae27c540a8957e81c55df787609) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix OTP validation in React Native Connect UI
+
+- [#3897](https://github.com/thirdweb-dev/js/pull/3897) [`4463848`](https://github.com/thirdweb-dev/js/commit/446384867180e5441fd361de979457ff93818d59) Thanks [@jnsdls](https://github.com/jnsdls)! - fix "create" command requiring login
+
 ## 5.43.0
 
 ### Minor Changes

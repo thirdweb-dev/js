@@ -24,6 +24,7 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { FiHelpCircle } from "react-icons/fi";
+import { useActiveAccount } from "thirdweb/react";
 import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import {
@@ -50,6 +51,8 @@ import {
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
 import {
   ModularContractDefaultExtensionsFieldset,
+  showPrimarySaleFiedset,
+  showRoyaltyFieldset,
   useModularContractsDefaultExtensionsInstallParams,
 } from "./modular-contract-default-extensions-fieldset";
 import { Param } from "./param";
@@ -102,6 +105,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const ensQuery = useEns(walletAddress);
   const connectedWallet = ensQuery.data?.address || walletAddress;
   const trackEvent = useTrack();
+  const activeAccount = useActiveAccount();
 
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
@@ -118,6 +122,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     customFactoryAddress,
     Number(customFactoryNetwork),
   );
+
+  const isTWPublisher =
+    fullPublishMetadata.data?.publisher === "deployer.thirdweb.eth";
 
   const initializerParams = useFunctionParamsFromABI(
     fullPublishMetadata.data?.deployType === "customFactory" &&
@@ -198,9 +205,36 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       signerAsSalt: true,
       deployParams: parsedDeployParams,
       recipients: [{ address: connectedWallet || "", sharesBps: 10000 }],
-      modularContractDefaultExtensionsInstallParams: [],
+      // set default values for modular contract extensions with custom components
+      modularContractDefaultExtensionsInstallParams:
+        (activeAccount &&
+          isTWPublisher &&
+          modularContractDefaultExtensionsInstallParams.data?.map((ext) => {
+            const paramNames = ext.params.map((param) => param.name);
+            const returnVal: Record<string, string> = {};
+
+            // set connected wallet address as default "royaltyRecipient"
+            if (showRoyaltyFieldset(paramNames)) {
+              returnVal.royaltyRecipient = activeAccount.address;
+            }
+
+            // set connected wallet address as default "primarySaleRecipient"
+            else if (showPrimarySaleFiedset(paramNames)) {
+              returnVal.primarySaleRecipient = activeAccount.address;
+            }
+
+            return returnVal;
+          })) ||
+        [],
     }),
-    [parsedDeployParams, isAccountFactory, connectedWallet],
+    [
+      parsedDeployParams,
+      isAccountFactory,
+      connectedWallet,
+      modularContractDefaultExtensionsInstallParams.data,
+      isTWPublisher,
+      activeAccount,
+    ],
   );
 
   const form = useForm<CustomContractDeploymentFormData>({
@@ -439,8 +473,54 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   metadata={compilerMetadata}
                 />
               )}
-              {hasRoyalty && <RoyaltyFieldset form={form} />}
-              {hasPrimarySale && <PrimarySaleFieldset form={form} />}
+              {hasRoyalty && (
+                <RoyaltyFieldset
+                  royaltyRecipient={{
+                    isInvalid: !!form.getFieldState(
+                      "deployParams._royaltyRecipient",
+                      form.formState,
+                    ).error,
+                    register: form.register("deployParams._royaltyRecipient"),
+                    errorMessage: form.getFieldState(
+                      "deployParams._royaltyRecipient",
+                      form.formState,
+                    ).error?.message,
+                  }}
+                  royaltyBps={{
+                    value: form.watch("deployParams._royaltyBps"),
+                    isInvalid: !!form.getFieldState(
+                      "deployParams._royaltyBps",
+                      form.formState,
+                    ).error,
+                    setValue: (v) => {
+                      form.setValue("deployParams._royaltyBps", v, {
+                        shouldTouch: true,
+                      });
+                    },
+                    errorMessage: form.getFieldState(
+                      "deployParams._royaltyBps",
+                      form.formState,
+                    ).error?.message,
+                  }}
+                />
+              )}
+              {hasPrimarySale && (
+                <PrimarySaleFieldset
+                  isInvalid={
+                    !!form.getFieldState(
+                      "deployParams._saleRecipient",
+                      form.formState,
+                    ).error
+                  }
+                  register={form.register("deployParams._saleRecipient")}
+                  errorMessage={
+                    form.getFieldState(
+                      "deployParams._saleRecipient",
+                      form.formState,
+                    ).error?.message
+                  }
+                />
+              )}
               {isSplit && <SplitFieldset form={form} />}
               {hasTrustedForwarders && (
                 <TrustedForwardersFieldset form={form} />
@@ -485,9 +565,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   {modularContractDefaultExtensionsInstallParams.data ? (
                     <ModularContractDefaultExtensionsFieldset
                       form={form}
-                      installParams={
+                      extensions={
                         modularContractDefaultExtensionsInstallParams.data
                       }
+                      isTWPublisher={isTWPublisher}
                     />
                   ) : (
                     <div className="min-h-[250px] flex justify-center items-center">
