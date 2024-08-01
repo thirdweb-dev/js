@@ -22,6 +22,8 @@ export type GetEventsParams = {
   groupBy?: GetEventsGroupBy[];
 } & ChainsawPagingParams;
 
+export type GetEventsResult = ChainsawResponse<Events>;
+
 /**
  * Get events
  *
@@ -29,12 +31,10 @@ export type GetEventsParams = {
  */
 export async function getEvents(
   params: GetEventsParams,
-): Promise<ChainsawResponse<Events>> {
+): Promise<GetEventsResult> {
   try {
     const queryParams = addPagingToRequest(
       new URLSearchParams({
-        contractAddresses: params.contractAddresses.toString(),
-        ...(params.chainIds && { chainIds: params.chainIds.toString() }),
         ...(params.startDate && { startDate: params.startDate.toISOString() }),
         ...(params.endDate && { endDate: params.endDate.toISOString() }),
         ...(params.interval && { interval: params.interval }),
@@ -42,6 +42,15 @@ export async function getEvents(
       }),
       params,
     );
+    for (const contractAddress of params.contractAddresses) {
+      queryParams.append("contractAddresses[]", contractAddress);
+    }
+    for (const chainId of params.chainIds || []) {
+      queryParams.append("chainIds[]", chainId.toString());
+    }
+    for (const groupBy of params.groupBy || []) {
+      queryParams.append("groupBy[]", groupBy);
+    }
     const url = `${getEventsEndpoint()}?${queryParams.toString()}`;
 
     const response = await getClientFetch(params.client)(url);
@@ -53,6 +62,6 @@ export async function getEvents(
     const data: ChainsawResponse<Events> = await response.json();
     return data;
   } catch (error) {
-    throw new Error(`Fetch failed: ${error}`);
+    throw new Error(`Fetch failed: ${error}, ${JSON.stringify(params)}`);
   }
 }

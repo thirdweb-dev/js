@@ -16,7 +16,7 @@ export type Block = {
   blockNumber: number;
   time: Date;
   parentHash: Hex;
-  miner: string;
+  miner: Hex;
   nonce: Hex;
   baseFeePerGas?: string;
   difficulty: string;
@@ -43,8 +43,8 @@ export type DecodedTransaction = {
 
 export type Transaction = {
   time: Date;
-  to: string;
-  from: string;
+  to: Hex;
+  from: Hex;
   hash: Hex;
   blockNumber: number;
   data?: string;
