@@ -26,6 +26,7 @@ export async function TrendingContractSection(props: {
   chainId?: number;
   perPage?: number;
   searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
+  showPagination: boolean;
 }) {
   const { page } = props.searchParams;
   const firstIndex = Math.max(0, ((page || 1) - 1) * (props.perPage || 10));
@@ -135,9 +136,11 @@ export async function TrendingContractSection(props: {
           </Table>
         </ScrollShadow>
 
-        <div className="w-full flex flex-row gap-4 justify-end mt-10">
-          <TablePagination />
-        </div>
+        {props.showPagination && (
+          <div className="w-full flex flex-row gap-4 justify-end mt-10">
+            <TablePagination />
+          </div>
+        )}
       </div>
     )
   );
@@ -153,9 +156,9 @@ function ChangeCell(props: { displayCount: string; change: number }) {
       className="gap-1.5 px-2 py-1 min-w-[80px] flex justify-center"
     >
       {props.change > 0 ? (
-        <CircleArrowDown className="size-4" />
-      ) : (
         <CircleArrowUp className="size-4" />
+      ) : (
+        <CircleArrowDown className="size-4" />
       )}
       {props.change < 10 ? props.change.toFixed(1) : props.change.toFixed(0)}%
     </Badge>

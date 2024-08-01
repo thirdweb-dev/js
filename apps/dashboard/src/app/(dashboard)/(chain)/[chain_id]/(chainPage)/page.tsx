@@ -1,4 +1,8 @@
-import { CircleAlertIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
+import Link from "next/link";
+import { type SortBy, fetchTopContracts } from "../../../../../lib/search";
+import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain, getChainMetadata } from "../../utils";
 import { BuyFundsSection } from "./components/server/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
@@ -9,10 +13,19 @@ import { ExplorersSection } from "./components/server/explorer-section";
 
 export default async function Page(props: {
   params: { chain_id: string };
+  searchParams: { page?: number; sortBy?: SortBy };
 }) {
   const chain = await getChain(props.params.chain_id);
   const chainMetadata = await getChainMetadata(chain.chainId);
   const isDeprecated = chain.status === "deprecated";
+
+  const topContracts = await fetchTopContracts({
+    chainId: chain.chainId,
+    page: props.searchParams.page,
+    sortBy: props.searchParams.sortBy,
+    perPage: 3,
+    timeRange: "month",
+  });
 
   return (
     <div className="pb-10">
@@ -48,6 +61,31 @@ export default async function Page(props: {
         {/* Explorers */}
         {chain.explorers && chain.explorers.length > 0 && (
           <ExplorersSection explorers={chain.explorers} />
+        )}
+
+        {topContracts.length > 0 && (
+          <section>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-xl tracking-tight font-semibold">
+                Popular Contracts
+              </h2>
+              <Button asChild variant="outline">
+                <Link
+                  href={`/${chain.slug}/popular`}
+                  className="flex gap-2 items-center"
+                >
+                  See All
+                  <ArrowRightIcon className="size-4" />
+                </Link>
+              </Button>
+            </div>
+            <TrendingContractSection
+              topContracts={topContracts}
+              chainId={chain.chainId}
+              searchParams={props.searchParams}
+              showPagination={false}
+            />
+          </section>
         )}
 
         {/* Claim Chain */}

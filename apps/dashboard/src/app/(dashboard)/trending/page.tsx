@@ -33,6 +33,7 @@ export default async function DashboardContractTrendingPage(props: {
       <TrendingContractSection
         topContracts={topContracts}
         searchParams={props.searchParams}
+        showPagination={true}
       />
     </div>
   );

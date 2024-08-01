@@ -1,17 +1,13 @@
 import { CircleAlertIcon } from "lucide-react";
 import React from "react";
-import {
-  type SortBy,
-  type TimeRange,
-  fetchTopContracts,
-} from "../../../../../../lib/search";
+import { type SortBy, fetchTopContracts } from "../../../../../../lib/search";
 import { TrendingContractSection } from "../../../../trending/components/trending-table";
 import { getChain } from "../../../utils";
 import { SectionTitle } from "../components/server/SectionTitle";
 
 export default async function Page(props: {
   params: { chain_id: string };
-  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
+  searchParams: { page?: number; sortBy?: SortBy };
 }) {
   const chain = await getChain(props.params.chain_id);
   const topContracts = await fetchTopContracts({
@@ -31,6 +27,7 @@ export default async function Page(props: {
           topContracts={topContracts}
           chainId={chain.chainId}
           searchParams={props.searchParams}
+          showPagination={true}
         />
       )}
 
