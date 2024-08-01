@@ -21,7 +21,11 @@ import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
 
-export const CustomConnectWallet: React.FC = () => {
+export const CustomConnectWallet = (props: {
+  loginRequired?: boolean;
+}) => {
+  const loginRequired =
+    props.loginRequired === undefined ? true : props.loginRequired;
   const { theme } = useTheme();
   const recentChainsv4 = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
@@ -67,7 +71,7 @@ export const CustomConnectWallet: React.FC = () => {
     );
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && loginRequired) {
     return (
       <>
         <Button asChild variant="default" className="gap-2" size="lg">

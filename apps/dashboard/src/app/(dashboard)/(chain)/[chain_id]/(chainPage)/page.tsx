@@ -3,6 +3,7 @@ import { getChain, getChainMetadata } from "../../utils";
 import { BuyFundsSection } from "./components/server/BuyFundsSection";
 import { ChainOverviewSection } from "./components/server/ChainOverviewSection";
 import { ClaimChainSection } from "./components/server/ClaimChainSection";
+import { FaucetSection } from "./components/server/FaucetSection";
 import { ChainCTA } from "./components/server/cta-card";
 import { ExplorersSection } from "./components/server/explorer-section";
 
@@ -37,6 +38,9 @@ export default async function Page(props: {
         {chain.services.find((c) => c.service === "pay" && c.enabled) && (
           <BuyFundsSection chain={chain} />
         )}
+
+        {/* Faucet */}
+        {chain.testnet && <FaucetSection chain={chain} />}
 
         {/* Chain Overview */}
         <ChainOverviewSection chain={chain} />
