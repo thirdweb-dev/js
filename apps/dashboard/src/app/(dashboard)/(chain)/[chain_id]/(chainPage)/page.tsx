@@ -35,7 +35,7 @@ export default async function Page(props: {
 
         {/* Buy Funds */}
         {chain.services.find((c) => c.service === "pay" && c.enabled) && (
-          <BuyFundsSection chainId={chain.chainId} chainName={chain.name} />
+          <BuyFundsSection chain={chain} />
         )}
 
         {/* Chain Overview */}

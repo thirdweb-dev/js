@@ -9,7 +9,7 @@ import { thirdwebClient } from "lib/thirdweb-client";
 import { CircleCheck, XIcon } from "lucide-react";
 import { useState } from "react";
 import { hostnameEndsWith } from "utils/url";
-import { PrimaryInfoItem } from "../../../components/server/primary-info-item";
+import { PrimaryInfoItem } from "../server/primary-info-item";
 
 function useChainStatswithRPC(_rpcUrl: string) {
   const [shouldRefetch, setShouldRefetch] = useState(true);
