@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import { PayModalButton } from "./PayModal";
 
-export function BridgeFundsSection() {
+export function BuyFundsSection() {
   return (
     <div className="border roudned-lg border-border px-4 py-10 rounded-lg flex justify-center">
       <div className="max-w-[520px] flex flex-col items-center ">
@@ -24,9 +24,7 @@ export function BridgeFundsSection() {
 
         <div className="h-8" />
 
-        <Button variant="primary" className="w-full">
-          Buy Funds
-        </Button>
+        <PayModalButton />
 
         <div className="h-4" />
 

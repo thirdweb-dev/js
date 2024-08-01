@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { defineChain } from "thirdweb";
 import { AutoConnect, ConnectButton } from "thirdweb/react";
+import { getSDKTheme } from "../../../../app/components/sdk-component-theme";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
@@ -84,7 +85,7 @@ export const CustomConnectWallet: React.FC = () => {
 
   return (
     <ConnectButton
-      theme={t}
+      theme={getSDKTheme(t)}
       client={thirdwebClient}
       connectModal={{
         privacyPolicyUrl: "/privacy",

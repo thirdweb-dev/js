@@ -4,7 +4,7 @@ import { MenuIcon } from "lucide-react";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { ChainHeader } from "./components/chain-header";
-import { BridgeFundsSection } from "./components/client/BridgeFundsSection";
+import { BuyFundsSection } from "./components/client/BuyFundsSection";
 import {
   SidebarContent,
   type SidebarContentProps,
@@ -49,7 +49,7 @@ export default async function Page(props: {
 
       <div className="h-6" />
 
-      <BridgeFundsSection />
+      <BuyFundsSection />
 
       <div className="h-8" />
     </div>
