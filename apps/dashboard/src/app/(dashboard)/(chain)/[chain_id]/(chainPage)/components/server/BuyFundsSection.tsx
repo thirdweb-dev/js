@@ -1,46 +1,51 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { PayModalButton } from "../client/PayModal";
+import { SectionTitle } from "./SectionTitle";
 
 export function BuyFundsSection(props: { chainId: number; chainName: string }) {
   const sanitizedChainName = props.chainName.replace("Mainnet", "").trim();
 
   return (
-    <div className="border roudned-lg border-border px-4 py-10 rounded-lg flex justify-center">
-      <div className="max-w-[520px] flex flex-col items-center ">
-        <BridgeIcon bg="hsl(var(--background))" className="h-12" />
+    <section>
+      <SectionTitle title="Buy Funds" />
+      <div className="border roudned-lg border-border px-4 py-10 rounded-lg flex justify-center">
+        <div className="max-w-[520px] flex flex-col items-center ">
+          <BridgeIcon bg="hsl(var(--background))" className="h-12" />
 
-        <div className="h-6" />
+          <div className="h-6" />
 
-        <h2 className="text-lg tracking-tight font-semibold text-center">
-          Buy Funds on {sanitizedChainName} using thirdweb Pay
-        </h2>
+          <h2 className="text-lg tracking-tight font-semibold text-center">
+            Buy Funds on {sanitizedChainName} using thirdweb Pay
+          </h2>
 
-        <div className="h-2" />
+          <div className="h-2" />
 
-        <p className="text-secondary-foreground text-sm max-w-[520px] text-center">
-          Pay allows you to purchase cryptocurrencies and execute transactions
-          with their credit card or debit card, or with any token via
-          cross-chain routing.
-        </p>
+          <p className="text-secondary-foreground text-sm max-w-[520px] text-center">
+            Pay allows you to purchase cryptocurrencies and execute transactions
+            with their credit card or debit card, or with any token via
+            cross-chain routing.
+          </p>
 
-        <div className="h-8" />
+          <div className="h-8" />
 
-        <PayModalButton
-          chainId={props.chainId}
-          label={`Buy Funds on ${sanitizedChainName}`}
-        />
+          <PayModalButton
+            chainId={props.chainId}
+            label={`Buy Funds on ${sanitizedChainName}`}
+          />
 
-        <div className="h-4" />
+          <div className="h-4" />
 
-        <Link
-          href="https://portal.thirdweb.com/connect/pay/overview"
-          className="inline-flex gap-2 items-center text-sm text-secondary-foreground hover:foreground"
-        >
-          Learn more about thirdweb Pay <ExternalLinkIcon className="size-3" />
-        </Link>
+          <Link
+            href="https://portal.thirdweb.com/connect/pay/overview"
+            className="inline-flex gap-2 items-center text-sm text-secondary-foreground hover:foreground"
+          >
+            Learn more about thirdweb Pay{" "}
+            <ExternalLinkIcon className="size-3" />
+          </Link>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 

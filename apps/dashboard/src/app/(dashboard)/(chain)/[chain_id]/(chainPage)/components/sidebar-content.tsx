@@ -21,6 +21,7 @@ export function SidebarContent(props: SidebarContentProps) {
           <span>Back to Chainlist</span>
         </Link>
       </Button>
+
       <Button
         size="sm"
         className="gap-1.5 w-full justify-start text-secondary-foreground"
@@ -42,24 +43,10 @@ export function SidebarContent(props: SidebarContentProps) {
         asChild
       >
         <NavLink
-          href={`/${props.slug}/trending`}
+          href={`/${props.slug}/popular`}
           activeClassName="bg-accent text-accent-foreground"
         >
-          Trending Contracts
-        </NavLink>
-      </Button>
-
-      <Button
-        size="sm"
-        className="gap-1.5 w-full justify-start text-secondary-foreground"
-        variant="ghost"
-        asChild
-      >
-        <NavLink
-          href={`/${props.slug}/deploy`}
-          activeClassName="bg-accent text-accent-foreground"
-        >
-          Deploy Contracts
+          Popular Contracts
         </NavLink>
       </Button>
     </>

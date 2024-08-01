@@ -3,6 +3,7 @@ import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import type { ChainMetadata } from "thirdweb/chains";
+import { ChainLiveStats } from "../../rpc-edge/components/client/live-stats";
 import { SectionTitle } from "./SectionTitle";
 import { PrimaryInfoItem } from "./primary-info-item";
 
@@ -40,6 +41,8 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
         <PrimaryInfoItem title="Native Token">
           {chain.nativeCurrency.name} ({chain.nativeCurrency.symbol})
         </PrimaryInfoItem>
+
+        {chain.rpc[0] && <ChainLiveStats rpc={chain.rpc[0]} />}
       </div>
     </section>
   );
