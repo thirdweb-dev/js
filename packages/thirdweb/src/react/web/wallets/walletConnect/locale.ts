@@ -33,4 +33,13 @@ export const walletConnectLocales: Record<LocaleId, WalletConnectLocale> = {
     scanInstruction: "Scanne dies mit deiner Wallet-App, um zu verbinden",
     openWCModal: "Offizielles WalletConnect-Modal öffnen",
   },
+  ko_KR: {
+    scanInstruction: "지갑 앱으로 이 QR 코드를 스캔하여 연결하세요",
+    openWCModal: "공식 WalletConnect 모달 열기",
+  },
+  fr_FR: {
+    scanInstruction:
+      "Scannez ce code avec votre application de portefeuille pour vous connecter",
+    openWCModal: "Ouvrir le modal WalletConnect officiel",
+  },
 };

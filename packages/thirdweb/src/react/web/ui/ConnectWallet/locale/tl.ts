@@ -15,11 +15,11 @@ const connectWalletLocalTl: ConnectLocale = {
   newToWallets: "Bago sa mga wallet?",
   getStarted: "Simulan",
   guest: "Guest",
-  buy: "Buy", // TODO
-  transactions: "Transactions",
-  payTransactions: "Fiat Transactions",
-  walletTransactions: "Wallet Transactions",
-  viewAllTransactions: "View All Transactions", // TODO
+  buy: "Bumili",
+  transactions: "Mga Transaksyon",
+  payTransactions: "Mga Transaksyong Fiat",
+  walletTransactions: "Mga Transaksyon sa Wallet",
+  viewAllTransactions: "Tingnan ang Lahat ng Transaksyon",
   send: "Ipadala",
   receive: "Matanggap",
   currentNetwork: "Kasalukuyang network",
@@ -103,15 +103,15 @@ const connectWalletLocalTl: ConnectLocale = {
     },
   },
   manageWallet: {
-    title: "Manage Wallet",
-    connectAnApp: "Connect an App",
-    exportPrivateKey: "Export Private Key",
+    title: "Pamahalaan ang Wallet",
+    connectAnApp: "Ikonekta ang isang App",
+    exportPrivateKey: "I-export ang Pribadong Susi",
   },
   viewFunds: {
-    title: "View Funds",
-    viewNFTs: "View NFTs",
-    viewTokens: "View Tokens",
-    viewAssets: "View Assets",
+    title: "Tingnan ang Pondo",
+    viewNFTs: "Tingnan ang mga NFT",
+    viewTokens: "Tingnan ang mga Token",
+    viewAssets: "Tingnan ang mga Asset",
   },
 };
 

@@ -1,13 +1,11 @@
 import type { SmartWalletLocale } from "./types.js";
-
-const smartWalletLocaleJa: SmartWalletLocale = {
-  connecting: "スマートウォレットに接続中",
-  failedToConnect: "スマートウォレットに接続できませんでした",
+const smartWalletLocale: SmartWalletLocale = {
+  connecting: "スマートアカウントに接続中",
+  failedToConnect: "スマートアカウントへの接続に失敗しました",
   wrongNetworkScreen: {
-    title: "異なるネットワーク",
+    title: "ネットワークが違います",
     subtitle: "ウォレットが必要なネットワークに接続されていません",
     failedToSwitch: "ネットワークの切り替えに失敗しました",
   },
 };
-
-export default smartWalletLocaleJa;
+export default smartWalletLocale;

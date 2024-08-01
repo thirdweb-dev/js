@@ -54,4 +54,5 @@ export default {
   phonePlaceholder: "Phone number",
   signInWithPhone: "Sign in with phone number",
   phoneRequired: "phone number is required",
+  passkey: "Passkey",
 } satisfies InAppWalletLocale;

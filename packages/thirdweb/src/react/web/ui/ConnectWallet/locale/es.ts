@@ -17,7 +17,7 @@ const connectWalletLocalEs: ConnectLocale = {
   guest: "Invitado",
   send: "Enviar",
   receive: "Recibir",
-  buy: "Buy", // TODO
+  buy: "Comprar",
   transactions: "Transactions",
   payTransactions: "Fiat Transactions",
   walletTransactions: "Wallet Transactions",
@@ -103,15 +103,15 @@ const connectWalletLocalEs: ConnectLocale = {
     },
   },
   manageWallet: {
-    title: "Manage Wallet",
-    connectAnApp: "Connect an App",
-    exportPrivateKey: "Export Private Key",
+    title: "Gestionar Cartera",
+    connectAnApp: "Conectar una Aplicación",
+    exportPrivateKey: "Exportar Clave Privada",
   },
   viewFunds: {
-    title: "View Funds",
-    viewNFTs: "View NFTs",
-    viewTokens: "View Tokens",
-    viewAssets: "View Assets",
+    title: "Ver Fondos",
+    viewNFTs: "Ver NFTs",
+    viewTokens: "Ver Tokens",
+    viewAssets: "Ver Activos",
   },
 };
 

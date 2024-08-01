@@ -20,11 +20,11 @@ const connectWalletLocalJa: ConnectLocale = {
   currentNetwork: "現在のネットワーク",
   switchAccount: "アカウントを切り替える",
   requestTestnetFunds: "テストネットの資金をリクエストする",
-  buy: "Buy", // TODO
-  transactions: "Transactions",
-  payTransactions: "Fiat Transactions",
-  walletTransactions: "Wallet Transactions",
-  viewAllTransactions: "View All Transactions", // TODO
+  buy: "購入",
+  transactions: "取引",
+  payTransactions: "支払い取引",
+  walletTransactions: "ウォレット取引",
+  viewAllTransactions: "全ての取引を表示",
   backupWallet: "ウォレットのバックアップ",
   guestWalletWarning:
     "これは一時的なゲストウォレットです。アクセスできなくなることを防ぐため、バックアップをしてください",
@@ -103,15 +103,15 @@ const connectWalletLocalJa: ConnectLocale = {
     },
   },
   manageWallet: {
-    title: "Manage Wallet",
-    connectAnApp: "Connect an App",
-    exportPrivateKey: "Export Private Key",
+    title: "ウォレットを管理",
+    connectAnApp: "アプリを接続",
+    exportPrivateKey: "秘密鍵をエクスポート",
   },
   viewFunds: {
-    title: "View Funds",
-    viewNFTs: "View NFTs",
-    viewTokens: "View Tokens",
-    viewAssets: "View Assets",
+    title: "資金を表示",
+    viewNFTs: "NFTを表示",
+    viewTokens: "トークンを表示",
+    viewAssets: "資産を表示",
   },
 };
 

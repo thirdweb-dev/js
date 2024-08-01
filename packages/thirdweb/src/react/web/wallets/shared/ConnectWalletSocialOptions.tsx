@@ -325,8 +325,7 @@ export const ConnectWalletSocialOptions = (
               onClick={() => {
                 setManualInputMode("email");
               }}
-              // TODO locale
-              title={"Email address"}
+              title={locale.emailPlaceholder}
             />
           )}
         </>
@@ -365,8 +364,7 @@ export const ConnectWalletSocialOptions = (
               onClick={() => {
                 setManualInputMode("phone");
               }}
-              // TODO locale
-              title={"Phone number"}
+              title={locale.phonePlaceholder}
             />
           )}
         </>
@@ -380,8 +378,7 @@ export const ConnectWalletSocialOptions = (
             onClick={() => {
               handlePassKeyLogin();
             }}
-            // TODO locale
-            title="Passkey"
+            title={locale.passkey}
           />
         </>
       )}
