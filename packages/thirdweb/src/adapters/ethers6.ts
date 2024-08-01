@@ -10,6 +10,7 @@ import { type ThirdwebContract, getContract } from "../contract/contract.js";
 import { toSerializableTransaction } from "../transaction/actions/to-serializable-transaction.js";
 import type { PreparedTransaction } from "../transaction/prepare-transaction.js";
 import { toHex } from "../utils/encoding/hex.js";
+import { toBytes } from "../utils/encoding/to-bytes.js";
 import { resolvePromisedValue } from "../utils/promise/resolve-promised-value.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 import { normalizeChainId } from "../wallets/utils/normalizeChainId.js";
@@ -448,6 +449,11 @@ function alignTxToEthers(
   }
   return {
     ...rest,
+    // get around ethers6 type issue
+    blobVersionedHashes: rest.blobVersionedHashes?.map((v) => v),
+    blobs: rest.blobs
+      ? rest.blobs.map((v) => (typeof v === "string" ? toBytes(v) : v))
+      : undefined,
     type,
     accessList: tx.accessList as ethers6.AccessListish | null | undefined,
   };

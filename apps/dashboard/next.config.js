@@ -86,12 +86,6 @@ function determineIpfsGateways() {
 /** @type {import('next').NextConfig} */
 const moduleExports = {
   webpack: (config, { dev }) => {
-    if (config.cache && !dev) {
-      config.cache = Object.freeze({
-        type: "memory",
-      });
-      config.cache.maxMemoryGenerations = 0;
-    }
     config.externals.push("pino-pretty");
     config.module = {
       ...config.module,
@@ -145,15 +139,11 @@ const moduleExports = {
   experimental: {
     scrollRestoration: true,
     esmExternals: "loose",
-    webpackBuildWorker: true,
-    serverSourceMaps: false,
   },
-  cacheMaxMemorySize: 0,
   swcMinify: true,
   compiler: {
     emotion: true,
   },
-  productionBrowserSourceMaps: false,
 };
 
 const { withSentryConfig } = require("@sentry/nextjs");
@@ -208,12 +198,6 @@ module.exports = withBundleAnalyzer(
         // https://docs.sentry.io/product/crons/
         // https://vercel.com/docs/cron-jobs
         automaticVercelMonitors: false,
-
-        /**
-         * Disables the Sentry Webpack plugin on the server.
-         * See: https://github.com/getsentry/sentry-javascript/issues/10468#issuecomment-2004710692
-         */
-        disableServerWebpackPlugin: true,
       },
     ),
   ),

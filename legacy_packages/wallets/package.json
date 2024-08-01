@@ -519,7 +519,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@account-abstraction/contracts": "^0.5.0",
+    "@account-abstraction/contracts": "0.5.0",
     "@blocto/sdk": "0.10.2",
     "@coinbase/wallet-sdk": "^3.9.0",
     "@google-cloud/kms": "^4.4.0",
