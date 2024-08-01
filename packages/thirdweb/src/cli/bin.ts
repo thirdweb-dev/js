@@ -33,7 +33,7 @@ async function main() {
 
     default: {
       // check several commands for missing -k flag
-      const commands = ["create", "deploy", "publish", "generate", "upload"];
+      const commands = ["deploy", "publish", "generate", "upload"];
       if (commands.includes(command) && !rest.includes("-k")) {
         console.info(
           "Please include the -k flag with your secret key, learn more: https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
