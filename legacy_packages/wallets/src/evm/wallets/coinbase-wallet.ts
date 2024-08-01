@@ -150,7 +150,7 @@ export class CoinbaseWallet extends AbstractClientWallet {
         options: {
           appMetadata: {
             appName: this.dappMetadata.name,
-            appLogoUrl: this.dappMetadata.url,
+            appLogoUrl: this.dappMetadata.logoUrl ?? null,
             appChainIds: this.options?.chains?.map((c) => c.chainId) || [1],
           },
         },
