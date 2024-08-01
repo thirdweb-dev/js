@@ -4,13 +4,12 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
-import { ChainHeader } from "./components/chain-header";
-import { SidebarContent } from "./components/sidebar-content";
+import { ChainHeader } from "./components/server/chain-header";
+import { SidebarContent } from "./components/server/sidebar-content";
 
-export async function generateMetadata(
-  { params }: { params: { chain_id: string } },
-  // parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: { params: { chain_id: string } }): Promise<Metadata> {
   const chain = await getChain(params.chain_id);
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
   const title = `${sanitizedChainName}: RPC and Chain Settings`;
@@ -43,10 +42,10 @@ export default async function ChainPageLayout({
 
   return (
     <div className="container flex flex-row h-full">
-      <aside className="w-[280px] p-4 border-r border-border flex-shrink-0 hidden lg:flex flex-col gap-2">
+      <aside className="w-[280px] p-4 flex-shrink-0 hidden lg:flex flex-col gap-2">
         <SidebarContent slug={chain.slug} />
       </aside>
-      <div className="flex flex-col w-full lg:px-6">
+      <div className="flex flex-col w-full lg:px-6 lg:border-x">
         {/* Icon + Background */}
         <ChainHeader
           headerImageUrl={chainMetadata?.headerImgUrl}

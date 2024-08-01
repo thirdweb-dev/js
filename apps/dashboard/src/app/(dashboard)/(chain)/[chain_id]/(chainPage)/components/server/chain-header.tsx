@@ -2,7 +2,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { MenuIcon } from "lucide-react";
-import { ChainIcon } from "../../../components/server/chain-icon";
+import { ChainIcon } from "../../../../components/server/chain-icon";
 import { SidebarContent } from "./sidebar-content";
 
 type ChainHeaderProps = {

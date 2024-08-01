@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { Button } from "../../../../../../@/components/ui/button";
-import { NavLink } from "./nav-link.client";
+import { Button } from "../../../../../../../@/components/ui/button";
+import { NavLink } from "../client/nav-link.client";
 
 export type SidebarContentProps = {
   slug: string;
