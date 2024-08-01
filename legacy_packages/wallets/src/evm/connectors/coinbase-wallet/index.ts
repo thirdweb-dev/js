@@ -6,18 +6,49 @@ import {
   SwitchChainError,
   ProviderRpcError,
 } from "../../../lib/wagmi-core/errors";
-import type {
-  CoinbaseWalletProvider,
-  CoinbaseWalletSDK,
+import CoinbaseWalletSDK, {
+  ProviderInterface,
+  type Preference,
+  AppMetadata,
 } from "@coinbase/wallet-sdk";
-import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
+
 import type { Chain } from "@thirdweb-dev/chains";
 import { providers, utils } from "ethers";
 import { walletIds } from "../../constants/walletIds";
 import { getValidPublicRPCUrl } from "../../utils/url";
 import { normalizeChainId } from "../../../lib/wagmi-core/normalizeChainId";
 
-type Options = CoinbaseWalletSDKOptions & {
+type Options = {
+  /**
+       * Metadata of the dApp that will be passed to connected wallet.
+       *
+       * Some wallets may display this information to the user.
+       *
+       * Setting this property is highly recommended. If this is not set, Below default metadata will be used:
+       *
+       * ```ts
+       * {
+       *   name: "thirdweb powered dApp",
+       *   url: "https://thirdweb.com",
+       *   description: "thirdweb powered dApp",
+       *   logoUrl: "https://thirdweb.com/favicon.ico",
+       * };
+       * ```
+       */
+  appMetadata?: AppMetadata;
+  /**
+       * Wallet configuration, choices are 'all' | 'smartWalletOnly' | 'eoaOnly'
+       * default is 'all'
+       * @example
+       * ```ts
+       * {
+       *  walletConfig: {
+       *   options: 'all',
+       *  }
+       * }
+       * ```
+       */
+  walletConfig?: Preference;
   /**
    * Fallback Ethereum JSON RPC URL
    *
@@ -33,7 +64,7 @@ type Options = CoinbaseWalletSDKOptions & {
 };
 
 export class CoinbaseWalletConnector extends WagmiConnector<
-  CoinbaseWalletProvider,
+ProviderInterface,
   Options,
   providers.JsonRpcSigner
 > {
@@ -42,15 +73,12 @@ export class CoinbaseWalletConnector extends WagmiConnector<
   readonly ready = true;
 
   private _client?: CoinbaseWalletSDK;
-  private _provider?: CoinbaseWalletProvider;
+  private _provider?: ProviderInterface;
 
   constructor({ chains, options }: { chains?: Chain[]; options: Options }) {
     super({
       chains,
-      options: {
-        reloadOnDisconnect: false,
-        ...options,
-      },
+      options,
     });
   }
 
@@ -62,7 +90,9 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
       this.emit("message", { type: "connecting" });
 
-      const accounts = await provider.enable();
+      const accounts = (await provider.request({
+        method: "eth_requestAccounts",
+      })) as string[];
       const account = utils.getAddress(accounts[0] as string);
       // Switch to chain if provided
       let id = await this.getChainId();
@@ -108,8 +138,7 @@ export class CoinbaseWalletConnector extends WagmiConnector<
     provider.removeListener("accountsChanged", this.onAccountsChanged);
     provider.removeListener("chainChanged", this.onChainChanged);
     provider.removeListener("disconnect", this.onDisconnect);
-    provider.disconnect();
-    provider.close();
+    await provider.disconnect();
   }
 
   async getAccount() {
@@ -127,52 +156,17 @@ export class CoinbaseWalletConnector extends WagmiConnector<
 
   async getChainId() {
     const provider = await this.getProvider();
-    const chainId = normalizeChainId(provider.chainId);
+    const connectedChainId = (await provider.request({
+      method: "eth_chainId",
+    })) as string | number;
+    const chainId = normalizeChainId(connectedChainId);
     return chainId;
   }
 
   async getProvider() {
     if (!this._provider) {
-      let CoinbaseWalletSDK = (await import("@coinbase/wallet-sdk")).default;
-      // Workaround for Vite dev import errors
-      // https://github.com/vitejs/vite/issues/7112
-      if (
-        typeof CoinbaseWalletSDK !== "function" &&
-        // @ts-expect-error This import error is not visible to TypeScript
-        typeof CoinbaseWalletSDK.default === "function"
-      ) {
-        CoinbaseWalletSDK = (
-          CoinbaseWalletSDK as unknown as { default: typeof CoinbaseWalletSDK }
-        ).default;
-      }
-      this._client = new CoinbaseWalletSDK(this.options);
-
-      /**
-       * Mock implementations to retrieve private `walletExtension` method
-       * from the Coinbase Wallet SDK.
-       */
-      abstract class WalletProvider {
-        // https://github.com/coinbase/coinbase-wallet-sdk/blob/b4cca90022ffeb46b7bbaaab9389a33133fe0844/packages/wallet-sdk/src/provider/CoinbaseWalletProvider.ts#L927-L936
-        abstract getChainId(): number;
-      }
-      abstract class Client {
-        // https://github.com/coinbase/coinbase-wallet-sdk/blob/b4cca90022ffeb46b7bbaaab9389a33133fe0844/packages/wallet-sdk/src/CoinbaseWalletSDK.ts#L233-L235
-        abstract get walletExtension(): WalletProvider | undefined;
-      }
-      const walletExtensionChainId = (
-        this._client as unknown as Client
-      ).walletExtension?.getChainId();
-
-      const chain =
-        this.chains.find((chain_) =>
-          this.options.chainId
-            ? chain_.chainId === this.options.chainId
-            : chain_.chainId === walletExtensionChainId,
-        ) || this.chains[0];
-      const chainId = this.options.chainId || chain?.chainId;
-      const jsonRpcUrl = this.options.jsonRpcUrl || chain?.rpc[0];
-
-      this._provider = this._client.makeWeb3Provider(jsonRpcUrl, chainId);
+      const client = new CoinbaseWalletSDK({ ...this.options.appMetadata }); 
+      this._provider = client.makeWeb3Provider(this.options?.walletConfig)
     }
     return this._provider;
   }
@@ -290,6 +284,6 @@ export class CoinbaseWalletConnector extends WagmiConnector<
     if (!this._client) {
       throw new Error("Coinbase Wallet SDK not initialized");
     }
-    return this._client.getQrUrl();
+    return ""; // TODO: implement in connect SDK
   }
 }

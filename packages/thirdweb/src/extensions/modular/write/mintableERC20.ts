@@ -8,15 +8,13 @@ import type { Hex } from "../../../utils/encoding/hex.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
-import { encodeMintParams } from "../__generated__/MintableERC20/read/mint.js";
+import { encodeBytesBeforeMintERC20Params } from "../__generated__/MintableERC20/encode/encodeBytesBeforeMintERC20.js";
 
 export type TokenMintParams = {
   to: string;
 } & ({ quantity: string } | { quantityWei: bigint });
 
-export function mintWithPermissions(
-  options: BaseTransactionOptions<TokenMintParams>,
-) {
+export function mintWithRole(options: BaseTransactionOptions<TokenMintParams>) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
@@ -51,7 +49,7 @@ export function mintWithPermissions(
       return {
         to: options.to,
         amount: BigInt(amount),
-        data: encodeMintParams({
+        data: encodeBytesBeforeMintERC20Params({
           params: {
             request: emptyPayload,
             signature: "0x",
@@ -74,7 +72,7 @@ export function mintWithSignature(
       return {
         to: payload.recipient,
         amount: BigInt(payload.quantity),
-        data: encodeMintParams({
+        data: encodeBytesBeforeMintERC20Params({
           params: {
             request: payload,
             signature,
@@ -122,12 +120,12 @@ export async function generateMintSignature(
 ) {
   const { mintRequest, account, contract } = options;
   const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
-  const [pricePerUnit, quantity, uid] = await Promise.all([
+  const [pricePerUnit, quantity] = await Promise.all([
     // price per token in wei
     (async () => {
-      // if priceInWei is provided, use it
-      if ("priceInWei" in mintRequest && mintRequest.priceInWei) {
-        return mintRequest.priceInWei;
+      // if pricePerUnit is provided, use it
+      if ("pricePerUnit" in mintRequest && mintRequest.pricePerUnit) {
+        return mintRequest.pricePerUnit;
       }
 
       // if neither price nor priceInWei is provided, default to 0
@@ -150,9 +148,8 @@ export async function generateMintSignature(
         erc20Address: contract.address,
       });
     })(),
-    // uid computation
-    mintRequest.uid || randomBytesHex(),
   ]);
+  const uid = options.mintRequest.uid || randomBytesHex();
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
@@ -192,7 +189,7 @@ type GeneratePayloadInput = {
   validityEndTimestamp?: Date;
   recipient: string;
   currency?: string;
-  priceInWei?: bigint;
+  pricePerUnit?: bigint;
   uid?: Hex;
 } & ({ quantity: string } | { quantityWei: bigint });
 

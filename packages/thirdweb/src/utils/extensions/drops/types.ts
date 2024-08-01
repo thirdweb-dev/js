@@ -2,7 +2,7 @@ import type { Address } from "../../address.js";
 import type { Hex } from "../../encoding/hex.js";
 
 export type ShardedMerkleTreeInfo = {
-  merkleRoot: string;
+  merkleRoot: Hex;
   baseUri: string;
   originalEntriesUri: string;
   shardNybbles: number;
@@ -38,12 +38,7 @@ export type ClaimConditionsInput = {
   merkleRootHash?: string;
   overrideList?: OverrideEntry[];
   metadata?: string | Record<string, unknown>;
-} & (
-  | {
-      price?: string | number;
-    }
-  | { priceInWei?: bigint }
-);
+};
 
 export type ClaimCondition = {
   startTimestamp: bigint;
@@ -54,4 +49,37 @@ export type ClaimCondition = {
   pricePerToken: bigint;
   currency: string;
   metadata: string;
+};
+
+// Modular Drops
+
+/**
+ * Represents the input data for creating a claim condition for a Modular Drop contract.
+ * @extension MODULAR
+ */
+export type ClaimConditionInput = {
+  /**
+   * The start time of the claim condition, defaults to now.
+   */
+  startTime?: Date;
+  /**
+   * The end time of the claim condition, defaults to 10 years from now.
+   */
+  endTime?: Date;
+  /**
+   * The currency address to pay with, defaults to native currency.
+   */
+  currencyAddress?: string;
+  /**
+   * The price per token to pay, defaults to 0.
+   */
+  pricePerToken?: number | string;
+  /**
+   * The maximum amount of tokens that can be claimed, defaults to unlimited.
+   */
+  maxClaimableSupply?: number | string;
+  /**
+   * List of overrides per wallet address.
+   */
+  allowList?: string[];
 };

@@ -1,10 +1,5 @@
-import { startTokenId } from "../__generated__/ERC721Core/read/startTokenId.js";
-import { totalMinted } from "../__generated__/ERC721Core/read/totalMinted.js";
-import { mint as generatedMint } from "../__generated__/ERC721Core/write/mint.js";
-import { encodeMintParams } from "../__generated__/MintableERC721/read/mint.js";
-
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -18,6 +13,10 @@ import {
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { startTokenId } from "../../erc721/__generated__/IERC721A/read/startTokenId.js";
+import { totalMinted } from "../__generated__/ERC721Core/read/totalMinted.js";
+import { mint as generatedMint } from "../__generated__/ERC721Core/write/mint.js";
+import { encodeBytesBeforeMintERC721Params } from "../__generated__/MintableERC721/encode/encodeBytesBeforeMintERC721.js";
 
 export type NFTMintParams = {
   to: Address;
@@ -29,9 +28,7 @@ export type NFTSignatureMintParams = {
   nfts: (NFTInput | string)[];
 };
 
-export function mintWithPermissions(
-  options: BaseTransactionOptions<NFTMintParams>,
-) {
+export function mintWithRole(options: BaseTransactionOptions<NFTMintParams>) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
@@ -50,8 +47,8 @@ export function mintWithPermissions(
         pricePerUnit: 0n,
         quantity: 0n,
         uid: randomBytesHex(),
-        currency: ADDRESS_ZERO,
-        recipient: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
+        recipient: ZERO_ADDRESS,
         startTimestamp: 0,
         endTimestamp: 0,
         baseURI: "",
@@ -60,7 +57,7 @@ export function mintWithPermissions(
       return {
         to: options.to,
         quantity: BigInt(options.nfts.length),
-        data: encodeMintParams({
+        data: encodeBytesBeforeMintERC721Params({
           params: {
             request: emptyPayload,
             signature: "0x",
@@ -73,18 +70,18 @@ export function mintWithPermissions(
 }
 
 export function mintWithSignature(
-  options: BaseTransactionOptions<GenerateMintSignatureOptions>,
+  options: BaseTransactionOptions<
+    Awaited<ReturnType<typeof generateMintSignature>>
+  >,
 ) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature, baseURI } =
-        await generateMintSignature(options);
-
+      const { payload, signature, baseURI } = options;
       return {
         to: payload.recipient,
-        quantity: BigInt(options.nfts.length),
-        data: encodeMintParams({
+        quantity: payload.quantity,
+        data: encodeBytesBeforeMintERC721Params({
           params: {
             request: payload,
             signature,
@@ -113,9 +110,13 @@ export type GenerateMintSignatureOptions = {
  * const { payload, signature } = await generateMintSignature({
  *   account,
  *   contract,
+ *   nfts: [{
+ *    name: "My NFT",
+ *    description: "My NFT",
+ *    image: "https://example.com/image.png",
+ *   }],
  *   mintRequest: {
  *     recipient: "0x...",
- *     quantity: "10",
  *   },
  * });
  *
@@ -134,23 +135,9 @@ export async function generateMintSignature(
 ) {
   const { mintRequest, account, contract } = options;
   const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
-  const [pricePerUnit, quantity, uid] = await Promise.all([
-    // price per token in wei
-    (async () => {
-      // if priceInWei is provided, use it
-      if ("priceInWei" in mintRequest && mintRequest.priceInWei) {
-        return mintRequest.priceInWei;
-      }
-
-      // if neither price nor priceInWei is provided, default to 0
-      return 0n;
-    })(),
-    (async () => {
-      return BigInt(options.nfts.length);
-    })(),
-    // uid computation
-    mintRequest.uid || (await randomBytesHex()),
-  ]);
+  const quantity = BigInt(options.nfts.length);
+  const pricePerUnit = options.mintRequest.pricePerUnit || 0n;
+  const uid = options.mintRequest.uid || randomBytesHex();
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
@@ -200,7 +187,7 @@ type PayloadType = AbiParameterToPrimitiveType<{
 type GeneratePayloadInput = {
   recipient: Address;
   currency?: Address;
-  priceInWei?: bigint;
+  pricePerUnit?: bigint;
   uid?: Hex;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;

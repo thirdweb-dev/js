@@ -1,7 +1,11 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "../../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../../test/src/test-clients.js";
-import { TEST_ACCOUNT_A } from "../../../../test/src/test-wallets.js";
+import {
+  TEST_ACCOUNT_A,
+  TEST_ACCOUNT_B,
+  TEST_ACCOUNT_C,
+} from "../../../../test/src/test-wallets.js";
 import {
   type ThirdwebContract,
   getContract,
@@ -9,10 +13,8 @@ import {
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
-import { getClaimCondition } from "../__generated__/ClaimableERC20/read/getClaimCondition.js";
-import { getSaleConfig } from "../__generated__/ClaimableERC20/read/getSaleConfig.js";
 import { getInstalledExtensions } from "../__generated__/ModularCore/read/getInstalledExtensions.js";
-import { claimTo, setClaimConditions } from "./claimableERC20.js";
+import { claimTo, setClaimCondition } from "./claimableERC20.js";
 
 describe("ModularDropERC20", () => {
   let contract: ThirdwebContract;
@@ -50,22 +52,30 @@ describe("ModularDropERC20", () => {
         }),
         account: TEST_ACCOUNT_A,
       }),
-    ).rejects.toThrowError(); // TODO (modular) this should be a more specific error
+    ).rejects.toThrowError(/ClaimableOutOfTimeWindow/);
   });
 
-  it("should claim tokens with default claim conditions", async () => {
+  it("should claim tokens with claim conditions", async () => {
     await sendAndConfirmTransaction({
-      transaction: setClaimConditions({
+      transaction: setClaimCondition({
         contract,
+        maxClaimableSupply: "1",
+        pricePerToken: "0.1",
       }),
       account: TEST_ACCOUNT_A,
     });
 
-    const cc = await getClaimCondition({ contract });
-    console.log("cc", cc);
-
-    const saleConfig = await getSaleConfig({ contract });
-    console.log("saleConfig", saleConfig);
+    // should throw if claiming more than supply
+    await expect(
+      sendAndConfirmTransaction({
+        transaction: claimTo({
+          contract,
+          quantity: "10",
+          to: TEST_ACCOUNT_A.address,
+        }),
+        account: TEST_ACCOUNT_A,
+      }),
+    ).rejects.toThrowError(/ClaimableOutOfSupply/);
 
     let balance = await getWalletBalance({
       address: TEST_ACCOUNT_A.address,
@@ -92,5 +102,47 @@ describe("ModularDropERC20", () => {
       tokenAddress: contract.address,
     });
     expect(balance.value).toBe(100000000000000000n);
+  });
+
+  it("should claim tokens with allowlist", async () => {
+    await sendAndConfirmTransaction({
+      transaction: setClaimCondition({
+        contract,
+        maxClaimableSupply: "1",
+        pricePerToken: "0.1",
+        allowList: [TEST_ACCOUNT_A.address, TEST_ACCOUNT_B.address],
+      }),
+      account: TEST_ACCOUNT_A,
+    });
+
+    // should throw if not in allowlist
+    await expect(
+      sendAndConfirmTransaction({
+        transaction: claimTo({
+          contract,
+          quantity: "0.1",
+          to: TEST_ACCOUNT_C.address,
+        }),
+        account: TEST_ACCOUNT_C,
+      }),
+    ).rejects.toThrowError(/ClaimableNotInAllowlist/);
+
+    // can claim to address in allowlist (regardless of sender)
+    await sendAndConfirmTransaction({
+      transaction: claimTo({
+        contract,
+        quantity: 0.2,
+        to: TEST_ACCOUNT_B.address,
+      }),
+      account: TEST_ACCOUNT_C,
+    });
+
+    const balance = await getWalletBalance({
+      address: TEST_ACCOUNT_B.address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      tokenAddress: contract.address,
+    });
+    expect(balance.value).toBe(200000000000000000n);
   });
 });

@@ -9,12 +9,11 @@ import {
 } from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
-import { encodeAbiParameters } from "../../utils/abi/encodeAbiParameters.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js"; // FIXME
+import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js";
 import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
 import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/initialize.js";
 
@@ -174,7 +173,6 @@ async function getInitializeTransaction(options: {
       // can't promise all this unfortunately, needs to be sequential because of nonces
       const extensions: string[] = [];
       const extensionInstallData: Hex[] = [];
-      console.log("EXTENSIONS", extensionNames);
       for (const extension of extensionNames) {
         const contract = await getOrDeployInfraContract({
           client,
@@ -184,13 +182,34 @@ async function getInitializeTransaction(options: {
           constructorParams: [],
         });
         extensions.push(contract.address);
-        // TODO (modular) this should be dynamic based on the extension using the onInstall ABI
-        extensionInstallData.push(
-          encodeAbiParameters(
-            [{ type: "address" }],
-            [params.saleRecipient || accountAddress],
-          ),
-        );
+        // TODO (modular) this should be more dynamic
+        switch (extension) {
+          case "MintableERC20": {
+            const { encodeBytesOnInstallParams } = await import(
+              "../../extensions/modular/__generated__/MintableERC20/encode/encodeBytesOnInstall.js"
+            );
+            extensionInstallData.push(
+              encodeBytesOnInstallParams({
+                primarySaleRecipient: params.saleRecipient || accountAddress,
+              }),
+            );
+            break;
+          }
+          case "ClaimableERC20": {
+            const { encodeBytesOnInstallParams } = await import(
+              "../../extensions/modular/__generated__/ClaimableERC20/encode/encodeBytesOnInstall.js"
+            );
+            extensionInstallData.push(
+              encodeBytesOnInstallParams({
+                primarySaleRecipient: params.saleRecipient || accountAddress,
+              }),
+            );
+            break;
+          }
+          default: {
+            extensionInstallData.push("0x");
+          }
+        }
       }
 
       return initCoreERC20({

@@ -13,39 +13,24 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "mint" function.
  */
 export type MintParams = WithOverrides<{
-  to: AbiParameterToPrimitiveType<{
-    name: "to";
-    type: "address";
-    internalType: "address";
-  }>;
-  quantity: AbiParameterToPrimitiveType<{
-    name: "quantity";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "quantity" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
 export const FN_SELECTOR = "0x94d008ef" as const;
 const FN_INPUTS = [
   {
-    name: "to",
     type: "address",
-    internalType: "address",
+    name: "to",
   },
   {
-    name: "quantity",
     type: "uint256",
-    internalType: "uint256",
+    name: "quantity",
   },
   {
-    name: "data",
     type: "bytes",
-    internalType: "bytes",
+    name: "data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -170,5 +155,6 @@ export function mint(
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
     extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
   });
 }

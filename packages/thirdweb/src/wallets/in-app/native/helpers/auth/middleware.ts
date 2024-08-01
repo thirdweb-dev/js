@@ -11,7 +11,10 @@ import {
   setWallerUserDetails,
 } from "../storage/local.js";
 import { setUpNewUserWallet } from "../wallet/creation.js";
-import { getCognitoRecoveryPasswordV2 } from "../wallet/recoveryCode.js";
+import {
+  getCognitoRecoveryPasswordV1,
+  getCognitoRecoveryPasswordV2,
+} from "../wallet/recoveryCode.js";
 import { setUpShareForNewDevice } from "../wallet/retrieval.js";
 
 export async function preAuth(args: {
@@ -153,7 +156,9 @@ async function getRecoveryCode(
       try {
         return await getCognitoRecoveryPasswordV2(client);
       } catch (e) {
-        throw new Error("Something went wrong getting cognito recovery code");
+        return await getCognitoRecoveryPasswordV1(client).catch(() => {
+          throw new Error("Something went wrong getting cognito recovery code");
+        });
       }
     }
   } else if (

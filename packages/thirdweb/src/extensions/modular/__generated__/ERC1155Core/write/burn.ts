@@ -13,49 +13,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "burn" function.
  */
 export type BurnParams = WithOverrides<{
-  from: AbiParameterToPrimitiveType<{
-    name: "from";
-    type: "address";
-    internalType: "address";
-  }>;
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  value: AbiParameterToPrimitiveType<{
-    name: "value";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
+  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
 export const FN_SELECTOR = "0x8a94b05f" as const;
 const FN_INPUTS = [
   {
-    name: "from",
     type: "address",
-    internalType: "address",
+    name: "from",
   },
   {
+    type: "uint256",
     name: "tokenId",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
+    type: "uint256",
     name: "value",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
-    name: "data",
     type: "bytes",
-    internalType: "bytes",
+    name: "data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -185,5 +165,6 @@ export function burn(
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
     extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
   });
 }

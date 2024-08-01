@@ -10,9 +10,7 @@ export const FN_SELECTOR = "0xa2309ff8" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "uint256",
-    internalType: "uint256",
   },
 ] as const;
 

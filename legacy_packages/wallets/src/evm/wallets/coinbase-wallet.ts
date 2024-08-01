@@ -148,10 +148,11 @@ export class CoinbaseWallet extends AbstractClientWallet {
       const cbConnector = new CoinbaseWalletConnector({
         chains: this.chains,
         options: {
-          appName: this.dappMetadata.name,
-          reloadOnDisconnect: false,
-          darkMode: this.theme === "dark",
-          headlessMode: this.headlessMode,
+          appMetadata: {
+            appName: this.dappMetadata.name,
+            appLogoUrl: this.dappMetadata.logoUrl ?? null,
+            appChainIds: this.options?.chains?.map((c) => c.chainId) || [1],
+          },
         },
       });
 

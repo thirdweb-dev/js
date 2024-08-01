@@ -1,8 +1,5 @@
-import { mint as generatedMint } from "../__generated__/ERC1155Core/write/mint.js";
-import { encodeMintParams } from "../__generated__/MintableERC1155/read/mint.js";
-
 import type { AbiParameterToPrimitiveType } from "abitype";
-import { ADDRESS_ZERO } from "../../../constants/addresses.js";
+import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -16,6 +13,8 @@ import {
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
+import { mint as generatedMint } from "../__generated__/ERC1155Core/write/mint.js";
+import { encodeBytesBeforeMintERC1155Params } from "../__generated__/MintableERC1155/encode/encodeBytesBeforeMintERC1155.js";
 
 export type EditionMintParams = {
   to: Address;
@@ -48,8 +47,8 @@ export function mintWithPermissions(
         pricePerUnit: 0n,
         quantity: 0n,
         uid: randomBytesHex(),
-        currency: ADDRESS_ZERO,
-        recipient: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
+        recipient: ZERO_ADDRESS,
         startTimestamp: 0,
         endTimestamp: 0,
         metadataURI: "",
@@ -59,7 +58,7 @@ export function mintWithPermissions(
         to: options.to,
         tokenId: options.tokenId,
         value: options.amount,
-        data: encodeMintParams({
+        data: encodeBytesBeforeMintERC1155Params({
           params: {
             request: emptyPayload,
             signature: "0x",
@@ -84,7 +83,7 @@ export function mintWithSignature(
         to: payload.recipient,
         tokenId: payload.tokenId,
         value: BigInt(payload.quantity),
-        data: encodeMintParams({
+        data: encodeBytesBeforeMintERC1155Params({
           params: {
             request: payload,
             signature,

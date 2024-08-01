@@ -1,7 +1,9 @@
+import type { Address } from "../utils/address.js";
+
 /**
  * The address of the native token.
  */
-export const NATIVE_TOKEN_ADDRESS =
+export const NATIVE_TOKEN_ADDRESS: Address =
   "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
 /**
@@ -14,7 +16,8 @@ export function isNativeTokenAddress(address: string) {
 /**
  * The zero address in Ethereum, represented as a hexadecimal string.
  */
-export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+export const ZERO_ADDRESS: Address =
+  "0x0000000000000000000000000000000000000000";
 
 /**
  * @deprecated Use {@link ZERO_ADDRESS}.

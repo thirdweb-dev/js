@@ -103,6 +103,7 @@ const ExploreCategoryPage: ThirdwebNextPage = (
                   source: props.category.id,
                   itemIndex: `${idx}`,
                 }}
+                isBeta={props.category.isBeta}
               />
             );
           })}

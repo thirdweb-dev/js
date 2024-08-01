@@ -13,21 +13,9 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "burn" function.
  */
 export type BurnParams = WithOverrides<{
-  from: AbiParameterToPrimitiveType<{
-    type: "address";
-    name: "from";
-    internalType: "address";
-  }>;
-  amount: AbiParameterToPrimitiveType<{
-    type: "uint256";
-    name: "amount";
-    internalType: "uint256";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    type: "bytes";
-    name: "data";
-    internalType: "bytes";
-  }>;
+  from: AbiParameterToPrimitiveType<{ type: "address"; name: "from" }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
 export const FN_SELECTOR = "0x44d17187" as const;
@@ -35,17 +23,14 @@ const FN_INPUTS = [
   {
     type: "address",
     name: "from",
-    internalType: "address",
   },
   {
     type: "uint256",
     name: "amount",
-    internalType: "uint256",
   },
   {
     type: "bytes",
     name: "data",
-    internalType: "bytes",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -170,5 +155,6 @@ export function burn(
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
     extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
   });
 }

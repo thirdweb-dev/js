@@ -16,7 +16,7 @@ import { getInstalledExtensions } from "../__generated__/ModularCore/read/getIns
 import { grantMinterRole } from "./grantMinterRole.js";
 import {
   generateMintSignature,
-  mintWithPermissions,
+  mintWithRole,
   mintWithSignature,
 } from "./mintableERC20.js";
 
@@ -49,7 +49,7 @@ describe("ModularTokenERC20", () => {
     // should throw
     await expect(
       sendAndConfirmTransaction({
-        transaction: mintWithPermissions({
+        transaction: mintWithRole({
           contract,
           quantity: "0.1",
           to: TEST_ACCOUNT_A.address,
@@ -79,7 +79,7 @@ describe("ModularTokenERC20", () => {
 
     // mint
     await sendAndConfirmTransaction({
-      transaction: mintWithPermissions({
+      transaction: mintWithRole({
         contract,
         quantity: "0.1",
         to: TEST_ACCOUNT_A.address,
@@ -97,7 +97,7 @@ describe("ModularTokenERC20", () => {
     expect(balance.value).toBe(100000000000000000n);
 
     await sendAndConfirmTransaction({
-      transaction: mintWithPermissions({
+      transaction: mintWithRole({
         contract,
         quantityWei: 2000000000n,
         to: TEST_ACCOUNT_A.address,

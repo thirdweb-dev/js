@@ -11,11 +11,11 @@ declare global {
  * @internal
  */
 export function getInjectedCoin98Provider(): Ethereum | undefined {
+  const window = globalThis.window;
   if (typeof window === "undefined") {
     return;
   }
-
-  if (assertWindowEthereum(globalThis.window)) {
+  if (assertWindowEthereum(window)) {
     if (window.coin98) {
       return window.ethereum;
     }
