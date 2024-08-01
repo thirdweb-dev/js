@@ -302,6 +302,7 @@ export async function getBuyWithFiatQuote(
         isTestMode: params.isTestMode,
         purchaseData: params.purchaseData,
         fromAddress: params.fromAddress,
+        toGasAmountWei: params.toGasAmountWei
       }),
     });
 
