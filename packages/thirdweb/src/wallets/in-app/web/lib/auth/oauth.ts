@@ -111,7 +111,7 @@ export const loginWithOauth = async (options: {
             break;
           }
           default: {
-            reject(new Error(`Invalid event type: ${event.data.eventType}`));
+            // no-op, DO NOT THROW HERE
           }
         }
       };
