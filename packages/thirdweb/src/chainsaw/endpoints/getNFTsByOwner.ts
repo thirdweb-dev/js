@@ -26,13 +26,13 @@ export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
 ): Promise<ChainsawResponse<NFT[]>> {
   try {
-    const queryParams = addPagingToRequest(
-      new URLSearchParams({
-        ownerAddresses: params.ownerAddresses.toString(),
-        ...(params.chainIds && { chainIds: params.chainIds.toString() }),
-      }),
-      params,
-    );
+    const queryParams = addPagingToRequest(new URLSearchParams(), params);
+    for (const ownerAddress of params.ownerAddresses) {
+      queryParams.append("ownerAddresses[]", ownerAddress);
+    }
+    for (const chainId of params.chainIds || []) {
+      queryParams.append("chainIds[]", chainId.toString());
+    }
     const url = `${getNftsByOwnerEndpoint()}?${queryParams.toString()}`;
 
     const response = await getClientFetch(params.client)(url);

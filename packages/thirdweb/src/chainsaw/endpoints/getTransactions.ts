@@ -31,12 +31,14 @@ export async function getTransactions(
     const queryParams = addPagingToRequest(
       new URLSearchParams({
         to: params.to.toString(),
-        ...(params.chainIds && { chainIds: params.chainIds.toString() }),
         ...(params.startDate && { startDate: params.startDate.toISOString() }),
         ...(params.endDate && { endDate: params.endDate.toISOString() }),
       }),
       params,
     );
+    for (const chainId of params.chainIds || []) {
+      queryParams.append("chainIds[]", chainId.toString());
+    }
     const url = `${getTransactionsEndpoint()}?${queryParams.toString()}`;
 
     const response = await getClientFetch(params.client)(url);

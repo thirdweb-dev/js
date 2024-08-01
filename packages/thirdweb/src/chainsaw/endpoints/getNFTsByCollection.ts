@@ -31,12 +31,16 @@ export async function getNFTsByCollection(
   try {
     const queryParams = addPagingToRequest(
       new URLSearchParams({
-        contractAddresses: params.contractAddresses.toString(),
-        ...(params.chainIds && { chainIds: params.chainIds.toString() }),
         ...(params.groupBy && { groupBy: params.groupBy.toString() }),
       }),
       params,
     );
+    for (const contractAddress of params.contractAddresses) {
+      queryParams.append("contractAddresses[]", contractAddress);
+    }
+    for (const chainId of params.chainIds || []) {
+      queryParams.append("chainIds[]", chainId.toString());
+    }
     const url = `${getNftsByCollectionEndpoint()}?${queryParams.toString()}`;
 
     const response = await getClientFetch(params.client)(url);
