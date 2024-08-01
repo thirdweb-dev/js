@@ -23,6 +23,7 @@ import { popularChains } from "../popularChains";
 
 export const CustomConnectWallet = (props: {
   loginRequired?: boolean;
+  connectButtonClassName?: string;
 }) => {
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
@@ -111,6 +112,9 @@ export const CustomConnectWallet = (props: {
         } catch (err) {
           console.error("Failed to log out", err);
         }
+      }}
+      connectButton={{
+        className: props.connectButtonClassName,
       }}
       chains={allChains}
       detailsModal={{

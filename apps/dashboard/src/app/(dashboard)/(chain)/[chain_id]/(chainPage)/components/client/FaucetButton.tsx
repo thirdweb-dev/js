@@ -4,9 +4,9 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
+import { useMutation } from "@tanstack/react-query";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "sonner";
 import { defineChain, toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -45,7 +45,35 @@ export function FaucetButton({
     client: thirdwebClient,
   });
   // for some bizzare reason, If I use useMutation here, it's never executing the mutationFn !!!
-  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const claimMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch("/api/testnet-faucet/claim", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chainId: chainId,
+          toAddress: address,
+          amount,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw data.error;
+      }
+    },
+    onSuccess: () => {
+      toast.success(
+        `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
+      );
+      router.refresh();
+    },
+    onError: () => {
+      toast.error(`Failed to claim ${amount} ${chain.nativeCurrency.symbol}`);
+    },
+  });
   const router = useRouter();
 
   const isFaucetEmpty =
@@ -53,7 +81,12 @@ export function FaucetButton({
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
   if (!address) {
-    return <CustomConnectWallet loginRequired={false} />;
+    return (
+      <CustomConnectWallet
+        loginRequired={false}
+        connectButtonClassName="!w-full !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm"
+      />
+    );
   }
 
   // not eligible to claim right now
@@ -90,44 +123,10 @@ export function FaucetButton({
         variant="primary"
         className="w-full gap-2"
         onClick={async () => {
-          setStatus("loading");
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-
-          setStatus("success");
-          const requestBody = {
-            chainId: chainId,
-            toAddress: address,
-            amount,
-          };
-
-          try {
-            const response = await fetch("/api/testnet-faucet/claim", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(requestBody),
-            });
-
-            if (!response.ok) {
-              const data = await response.json();
-              throw data.error;
-            }
-          } catch (e) {
-            setStatus("idle");
-            toast.error(
-              `Failed to claim ${amount} ${chain.nativeCurrency.symbol}`,
-            );
-            return;
-          }
-
-          toast.success(
-            `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
-          );
-          router.refresh();
+          claimMutation.mutate();
         }}
       >
-        {status === "loading" ? (
+        {claimMutation.isLoading ? (
           <>
             Claiming <Spinner className="size-3" />
           </>
@@ -137,7 +136,7 @@ export function FaucetButton({
       </Button>
 
       {faucetWalletBalanceQuery.data && (
-        <p className="mt-3 text-xs">
+        <p className="mt-3 text-xs text-secondary-foreground">
           {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}{" "}
           {faucetWalletBalanceQuery.data.symbol} left in the faucet
         </p>

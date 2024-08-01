@@ -16,9 +16,10 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
   const cacheKey = `testnet-faucet:${chain.chainId}:${ipAddress}`;
   const ttlSeconds = await cacheTtl(cacheKey);
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
+
   return (
     <section>
-      <SectionTitle title="Buy Funds" />
+      <SectionTitle title="Faucet" />
       <div className="border roudned-lg border-border px-4 py-10 rounded-lg flex justify-center">
         <div className="max-w-[520px] w-full flex flex-col items-center ">
           <div className="flex items-center">

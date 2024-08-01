@@ -16,9 +16,10 @@ export default async function Page(props: {
   const chain = await getChain(props.params.chain_id);
   const topContracts = await fetchTopContracts({
     chainId: chain.chainId,
-    timeRange: props.searchParams.timeRange,
     page: props.searchParams.page,
     sortBy: props.searchParams.sortBy,
+    perPage: 20,
+    timeRange: "month",
   });
 
   return (

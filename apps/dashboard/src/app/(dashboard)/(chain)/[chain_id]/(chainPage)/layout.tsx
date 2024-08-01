@@ -45,7 +45,7 @@ export default async function ChainPageLayout({
       <aside className="w-[280px] p-4 flex-shrink-0 hidden lg:flex flex-col gap-2">
         <SidebarContent slug={chain.slug} />
       </aside>
-      <div className="flex flex-col w-full lg:px-6 lg:border-x">
+      <div className="flex flex-col w-full lg:px-6 lg:border-x pb-10">
         {/* Icon + Background */}
         <ChainHeader
           headerImageUrl={chainMetadata?.headerImgUrl}
