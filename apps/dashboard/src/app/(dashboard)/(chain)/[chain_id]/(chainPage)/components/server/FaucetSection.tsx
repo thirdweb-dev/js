@@ -24,7 +24,7 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
         <div className="max-w-[520px] w-full flex flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
-              className="size-12 -mr-2 rounded-full border"
+              className="size-12 -mr-2 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
             />
             <GiftIcon bg="hsl(var(--background))" className="size-12 -ml-2" />

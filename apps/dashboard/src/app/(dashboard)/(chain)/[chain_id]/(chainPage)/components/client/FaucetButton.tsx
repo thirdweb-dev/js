@@ -80,15 +80,6 @@ export function FaucetButton({
     faucetWalletBalanceQuery.data !== undefined &&
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
-  if (!address) {
-    return (
-      <CustomConnectWallet
-        loginRequired={false}
-        connectButtonClassName="!w-full !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm"
-      />
-    );
-  }
-
   // not eligible to claim right now
   if (ttlSeconds > 0) {
     return (
@@ -113,6 +104,15 @@ export function FaucetButton({
       <Button variant="outline" disabled className="w-full">
         Faucet is empty right now, come back later
       </Button>
+    );
+  }
+
+  if (!address) {
+    return (
+      <CustomConnectWallet
+        loginRequired={false}
+        connectButtonClassName="!w-full !rounded !bg-primary !text-primary-foreground !px-4 !py-2 !text-sm"
+      />
     );
   }
 

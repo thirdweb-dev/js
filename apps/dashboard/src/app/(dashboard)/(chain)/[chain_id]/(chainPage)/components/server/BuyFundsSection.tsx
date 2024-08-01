@@ -16,7 +16,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
         <div className="max-w-[520px] flex flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
-              className="size-12 -mr-1.5 rounded-full border-2 border-background"
+              className="size-12 -mr-1.5 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
             />
             <CreditCardIcon
