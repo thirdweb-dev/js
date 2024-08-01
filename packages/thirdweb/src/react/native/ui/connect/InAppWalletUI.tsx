@@ -159,6 +159,11 @@ function PreOtpLogin(
     }) => {
       const { auth, phoneOrEmail } = options;
       if (auth === "phone") {
+        if (phoneOrEmail.slice(0, 1) !== "+") {
+          throw new Error(
+            "Invalid phone number. Please include a country code.",
+          );
+        }
         await preAuthenticate({
           client,
           strategy: auth,
