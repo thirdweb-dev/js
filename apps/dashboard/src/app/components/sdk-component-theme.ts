@@ -18,7 +18,13 @@ export function getSDKTheme(theme: "light" | "dark"): Theme {
       inputAutofillBg: "hsl(var(--muted))",
       secondaryIconHoverBg: "hsl(var(--accent))",
       separatorLine: "hsl(var(--border))",
-      skeletonBg: "hsl(var(--muted))",
+      skeletonBg: "hsl(var(--accent))",
+      // scrollbarBg: "hsl(var(--muted))",
+      // secondaryText: "hsl(var(--secondary-foreground))",
+      // primaryText: "hsl(var(--foreground))",
+      // accentButtonBg: "hsl(var(--primary))",
+      // accentButtonText: "hsl(var(--foreground))",
+      // accentText: "hsl(var(--link-foreground))",
     },
   };
 

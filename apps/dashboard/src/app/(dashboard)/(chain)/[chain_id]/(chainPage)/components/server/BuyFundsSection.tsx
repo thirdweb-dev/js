@@ -1,8 +1,10 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import { PayModalButton } from "./PayModal";
+import { PayModalButton } from "../client/PayModal";
 
-export function BuyFundsSection() {
+export function BuyFundsSection(props: { chainId: number; chainName: string }) {
+  const sanitizedChainName = props.chainName.replace("Mainnet", "").trim();
+
   return (
     <div className="border roudned-lg border-border px-4 py-10 rounded-lg flex justify-center">
       <div className="max-w-[520px] flex flex-col items-center ">
@@ -11,7 +13,7 @@ export function BuyFundsSection() {
         <div className="h-6" />
 
         <h2 className="text-lg tracking-tight font-semibold text-center">
-          Buy Funds using thirdweb Pay
+          Buy Funds on {sanitizedChainName} using thirdweb Pay
         </h2>
 
         <div className="h-2" />
@@ -24,7 +26,10 @@ export function BuyFundsSection() {
 
         <div className="h-8" />
 
-        <PayModalButton />
+        <PayModalButton
+          chainId={props.chainId}
+          label={`Buy Funds on ${sanitizedChainName}`}
+        />
 
         <div className="h-4" />
 

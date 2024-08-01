@@ -1,12 +1,11 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
+import { SectionTitle } from "./SectionTitle";
 
 export function FaucetsSection(props: { faucets: readonly string[] }) {
   return (
-    <div>
-      <h2 className="text-base text-muted-foreground mb-2 font-medium">
-        Faucets
-      </h2>
+    <section>
+      <SectionTitle title="Faucets" />
       <div className="grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {props.faucets.map((faucet) => {
           const url = new URL(faucet);
@@ -22,7 +21,7 @@ export function FaucetsSection(props: { faucets: readonly string[] }) {
           return (
             <div
               key={faucet}
-              className="p-4 border rounded-xl relative bg-secondary hover:bg-muted"
+              className="p-4 border rounded-xl relative hover:bg-secondary"
             >
               <h3 className="mb-1 text-base font-semibold capitalize">
                 {displayTitle}
@@ -39,6 +38,6 @@ export function FaucetsSection(props: { faucets: readonly string[] }) {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
