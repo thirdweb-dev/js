@@ -64,13 +64,7 @@ export function FaucetButton({
       }
     },
     onSuccess: () => {
-      toast.success(
-        `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
-      );
       router.refresh();
-    },
-    onError: () => {
-      toast.error(`Failed to claim ${amount} ${chain.nativeCurrency.symbol}`);
     },
   });
   const router = useRouter();
@@ -121,8 +115,12 @@ export function FaucetButton({
       <Button
         variant="primary"
         className="w-full gap-2"
-        onClick={async () => {
-          claimMutation.mutate();
+        onClick={() => {
+          const claimPromise = claimMutation.mutateAsync();
+          toast.promise(claimPromise, {
+            success: `${amount} ${chain.nativeCurrency.symbol} sent successfully`,
+            error: `Failed to claim ${amount} ${chain.nativeCurrency.symbol}`,
+          });
         }}
       >
         {claimMutation.isLoading ? (

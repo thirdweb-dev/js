@@ -26,12 +26,6 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
     mutationFn: async () => {
       await switchChain(props.chain);
     },
-    onSuccess: () => {
-      toast.success(`${props.chain.name} added to wallet`);
-    },
-    onError: () => {
-      toast.error(`Failed to add ${props.chain.name} to wallet`);
-    },
   });
 
   // debounce the loading state to prevent flickering
@@ -44,7 +38,13 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
       }
       className="gap-2"
       variant="outline"
-      onClick={() => switchChainMutation.mutate()}
+      onClick={() => {
+        const switchPromise = switchChainMutation.mutateAsync();
+        toast.promise(switchPromise, {
+          success: `${props.chain.name} added to wallet`,
+          error: `Failed to add ${props.chain.name} to wallet`,
+        });
+      }}
     >
       <span>Add to wallet</span>
       {debouncedLoading && <Spinner className="size-3" />}
