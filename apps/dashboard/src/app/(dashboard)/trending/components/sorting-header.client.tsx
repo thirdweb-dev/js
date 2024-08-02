@@ -18,10 +18,11 @@ export function SortingHeader(props: SortingHeaderProps) {
   const isCurrentSort = currentSort === props.sortBy;
   const justify =
     props.sortBy === "transactionCountChange" ? "justify-start" : "justify-end";
+
   return (
     <div className={`flex flex-row ${justify}`}>
       <Button
-        className={"flex flex-row items-center gap-2 px-0 cursor-pointer"}
+        className={"flex flex-row items-center gap-1 px-0 cursor-pointer"}
         variant={"link"}
         onClick={() => {
           router.replace(
@@ -32,7 +33,7 @@ export function SortingHeader(props: SortingHeaderProps) {
           );
         }}
       >
-        {isCurrentSort && <ChevronDown className="size-sm" />}
+        {isCurrentSort && <ChevronDown className="size-4 shrink-0" />}
         {props.title}
       </Button>
     </div>

@@ -9,7 +9,7 @@ import { thirdwebClient } from "lib/thirdweb-client";
 import { CircleCheck, XIcon } from "lucide-react";
 import { useState } from "react";
 import { hostnameEndsWith } from "utils/url";
-import { PrimaryInfoItem } from "../../../components/server/primary-info-item";
+import { PrimaryInfoItem } from "../server/primary-info-item";
 
 function useChainStatswithRPC(_rpcUrl: string) {
   const [shouldRefetch, setShouldRefetch] = useState(true);
@@ -79,7 +79,7 @@ export function ChainLiveStats(props: { rpc: string }) {
         }
       >
         <div className="flex items-center gap-1">
-          <div className="text-lg">{new URL(props.rpc).origin}</div>
+          {new URL(props.rpc).origin}
           <CopyButton text={new URL(props.rpc).origin} />
         </div>
       </PrimaryInfoItem>
@@ -87,11 +87,9 @@ export function ChainLiveStats(props: { rpc: string }) {
       {/* Latency */}
       <PrimaryInfoItem title="RPC Latency" titleIcon={<PulseDot />}>
         {stats.isError ? (
-          <p className="text-lg fade-in-0 animate-in text-destructive-text">
-            N/A
-          </p>
+          <p className="fade-in-0 animate-in text-destructive-text">N/A</p>
         ) : stats.data ? (
-          <p className="text-lg fade-in-0 animate-in">{stats.data.latency}ms</p>
+          <p className="fade-in-0 animate-in">{stats.data.latency}ms</p>
         ) : (
           <div className="flex py-1 h-[28px] w-[70px]">
             <Skeleton className="h-full w-full" />
@@ -102,13 +100,9 @@ export function ChainLiveStats(props: { rpc: string }) {
       {/* Block Height */}
       <PrimaryInfoItem title="Block Height" titleIcon={<PulseDot />}>
         {stats.isError ? (
-          <p className="text-lg fade-in-0 animate-in text-destructive-text">
-            N/A
-          </p>
+          <p className="fade-in-0 animate-in text-destructive-text">N/A</p>
         ) : stats.data ? (
-          <p className="text-lg fade-in-0 animate-in">
-            {stats.data.blockNumber}
-          </p>
+          <p className="fade-in-0 animate-in">{stats.data.blockNumber}</p>
         ) : (
           <div className="flex py-1 h-[28px] w-[140px]">
             <Skeleton className="h-full w-full" />
@@ -122,9 +116,9 @@ export function ChainLiveStats(props: { rpc: string }) {
 function PulseDot() {
   return (
     <ToolTipLabel label={"Live Data"}>
-      <span className="relative flex size-3">
+      <span className="relative flex size-2">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-        <span className="relative inline-flex rounded-full size-3 bg-primary" />
+        <span className="relative inline-flex rounded-full size-2 bg-primary" />
       </span>
     </ToolTipLabel>
   );

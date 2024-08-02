@@ -398,9 +398,6 @@ importers:
       spdx-correct:
         specifier: ^3.2.0
         version: 3.2.0
-      spin-wheel-game:
-        specifier: 1.0.3-alpha.3
-        version: 1.0.3-alpha.3
       swagger-ui-react:
         specifier: ^5.17.14
         version: 5.17.14(@types/react@18.3.3)(ramda@0.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -419,6 +416,9 @@ importers:
       use-debounce:
         specifier: ^10.0.1
         version: 10.0.1(react@18.3.1)
+      vaul:
+        specifier: ^0.9.1
+        version: 0.9.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zksync-ethers:
         specifier: 5.9.0
         version: 5.9.0(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -16295,9 +16295,6 @@ packages:
   spdx-license-ids@3.0.17:
     resolution: {integrity: sha512-sh8PWc/ftMqAAdFiBu6Fy6JUOYjqDJBJvIhpfDMyHrr0Rbp5liZqd4TjtQ/RgfLjKFZb+LMx5hpml5qOWy0qvg==}
 
-  spin-wheel-game@1.0.3-alpha.3:
-    resolution: {integrity: sha512-GiW+BG+6/0cpl5WiIgViYas0125lLOP53OEUdIsgcj519L7viy4iPqCQUxarFYaR3Qm7p8ubwgxsw60ODymGKg==}
-
   split-on-first@1.1.0:
     resolution: {integrity: sha512-43ZssAJaMusuKWL8sKUBQXHWOpq8d6CfN/u1p4gUzfJkM05C8rxTmYrkIPTXapZpORA6LkkzcUulJ8FqA7Uudw==}
     engines: {node: '>=6'}
@@ -17487,6 +17484,12 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  vaul@0.9.1:
+    resolution: {integrity: sha512-fAhd7i4RNMinx+WEm6pF3nOl78DFkAazcN04ElLPFF9BMCNGbY/kou8UMhIcicm0rJCNePJP0Yyza60gGOD0Jw==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
 
   vfile-message@4.0.2:
     resolution: {integrity: sha512-jRDZ1IMLttGj41KcZvlrYAaI3CfqpLpfpf+Mfig13viT6NKvRzWZ+lXz0Y5D60w6uJIBAOGq9mSHf0gktF0duw==}
@@ -39173,11 +39176,6 @@ snapshots:
 
   spdx-license-ids@3.0.17: {}
 
-  spin-wheel-game@1.0.3-alpha.3:
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-
   split-on-first@1.1.0: {}
 
   split2@3.2.2:
@@ -40504,6 +40502,15 @@ snapshots:
   varint@6.0.0: {}
 
   vary@1.1.2: {}
+
+  vaul@0.9.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@radix-ui/react-dialog': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   vfile-message@4.0.2:
     dependencies:

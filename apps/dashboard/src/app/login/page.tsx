@@ -5,8 +5,9 @@ import { thirdwebClient } from "@/constants/client";
 import { useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
-import { ConnectEmbed, darkTheme, lightTheme } from "thirdweb/react";
+import { ConnectEmbed } from "thirdweb/react";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
+import { getSDKTheme } from "../components/sdk-component-theme";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "./auth-actions";
 
 export default function LoginPage() {
@@ -48,29 +49,7 @@ function CustomConnectEmmbed() {
       }}
       client={thirdwebClient}
       modalSize={isLG ? "wide" : "compact"}
-      theme={
-        theme === "light"
-          ? lightTheme({
-              colors: {
-                primaryButtonBg: "hsl(var(--primary))",
-                modalBg: "hsl(var(--background))",
-                borderColor: "hsl(var(--border))",
-                secondaryButtonBg: "hsl(var(--secondary))",
-                secondaryButtonHoverBg: "hsl(var(--accent))",
-                tertiaryBg: "hsl(var(--accent))",
-              },
-            })
-          : darkTheme({
-              colors: {
-                primaryButtonBg: "hsl(var(--primary))",
-                modalBg: "hsl(var(--background))",
-                borderColor: "hsl(var(--border))",
-                secondaryButtonBg: "hsl(var(--secondary))",
-                secondaryButtonHoverBg: "hsl(var(--accent))",
-                tertiaryBg: "hsl(var(--accent))",
-              },
-            })
-      }
+      theme={getSDKTheme(theme === "light" ? "light" : "dark")}
     />
   );
 }

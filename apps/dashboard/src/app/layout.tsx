@@ -69,7 +69,7 @@ export default function RootLayout({
         >
           <PostHogPageView />
           <AppRouterProviders>{children}</AppRouterProviders>
-          <Toaster />
+          <Toaster richColors />
           <NextTopLoader
             color="hsl(var(--primary))"
             height={2}

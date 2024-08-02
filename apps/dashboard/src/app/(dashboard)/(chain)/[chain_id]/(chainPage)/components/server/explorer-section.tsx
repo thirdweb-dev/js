@@ -1,21 +1,20 @@
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadataWithServices } from "../../../../types/chain";
+import { SectionTitle } from "./SectionTitle";
 
 export function ExplorersSection(props: {
   explorers: NonNullable<ChainMetadataWithServices["explorers"]>;
 }) {
   return (
-    <div>
-      <h2 className="text-base text-muted-foreground mb-2 font-medium">
-        Explorers
-      </h2>
+    <section>
+      <SectionTitle title="Explorers" />
       <div className="grid grid-cols-1 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-3">
         {props.explorers.map((explorer) => {
           return (
             <div
               key={explorer.url}
-              className="p-4 border rounded-xl relative bg-secondary hover:bg-muted"
+              className="p-4 border rounded-xl relative hover:bg-secondary"
             >
               <h3 className="mb-1 text-base font-semibold capitalize">
                 {explorer.name}
@@ -34,6 +33,6 @@ export function ExplorersSection(props: {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }

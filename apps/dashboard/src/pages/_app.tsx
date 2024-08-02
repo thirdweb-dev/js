@@ -275,7 +275,7 @@ const ConsoleApp = memo(function ConsoleApp({
           {isFallback && Component.fallback
             ? Component.fallback
             : getLayout(<Component {...pageProps} />, pageProps)}
-          <Toaster />
+          <Toaster richColors />
           <SyncTheme />
         </ChakraProvider>
       </TailwindTheme>

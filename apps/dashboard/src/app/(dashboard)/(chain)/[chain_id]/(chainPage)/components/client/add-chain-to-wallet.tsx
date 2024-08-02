@@ -3,8 +3,8 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 import type { Chain } from "thirdweb";
 import {
   useActiveAccount,
@@ -14,8 +14,7 @@ import {
 import { useDebounce } from "use-debounce";
 
 type AddChainToWalletProps = {
-  chain?: Chain;
-  hasBackground?: boolean;
+  chain: Chain;
 };
 
 export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
@@ -25,9 +24,6 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
 
   const switchChainMutation = useMutation({
     mutationFn: async () => {
-      if (!props.chain) {
-        throw new Error("Chain is not defined");
-      }
       await switchChain(props.chain);
     },
   });
@@ -40,11 +36,15 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
       disabled={
         !address || debouncedLoading || activeWalletChainId === props.chain?.id
       }
-      className={cn(
-        "w-full md:min-w-40 gap-2",
-        props.hasBackground && "invert dark:invert-0",
-      )}
-      onClick={() => switchChainMutation.mutate()}
+      className="gap-2"
+      variant="outline"
+      onClick={() => {
+        const switchPromise = switchChainMutation.mutateAsync();
+        toast.promise(switchPromise, {
+          success: `${props.chain.name} added to wallet`,
+          error: `Failed to add ${props.chain.name} to wallet`,
+        });
+      }}
     >
       <span>Add to wallet</span>
       {debouncedLoading && <Spinner className="size-3" />}

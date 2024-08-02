@@ -4,14 +4,14 @@ export function PrimaryInfoItem(props: {
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-b pb-4 lg:pb-6">
+    <div>
       <div className="flex items-center gap-2">
-        <h2 className="text-base text-muted-foreground font-medium">
+        <h3 className="text-base text-muted-foreground font-medium">
           {props.title}
-        </h2>
+        </h3>
         {props.titleIcon}
       </div>
       {props.children}
-    </section>
+    </div>
   );
 }
