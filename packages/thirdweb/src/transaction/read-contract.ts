@@ -70,16 +70,49 @@ export type ReadContractOptions<
 >;
 
 /**
- * Reads data from a smart contract.
+ * Reads state from a deployed smart contract.
+ *
+ * You can use raw read calls or read [extensions](https://portal.thirdweb.com/typescript/v5/extensions/use) to read from a contract.
+ *
  * @param options - The transaction options.
- * @returns A promise that resolves with the result of the read transaction.
+ * @returns A promise that resolves with the result of the read call.
  * @transaction
  * @example
+ *
+ * ### Using a contract read extension
+ *
  * ```ts
- * import { readContract } from "thirdweb";
- * const result = await readContract({
- *  contract,
- *  method: "function totalSupply() view returns (uint256)",
+ * import { getContract } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ * import { useReadContract } from "thirdweb/react";
+ * import { getOwnedNFTs } form "thirdweb/extensions/erc721";
+ *
+ * const contract = getContract({
+ *   client,
+ *   address: "0x...",
+ *   chain: sepolia,
+ * });
+ *
+ * const { data, isLoading } = useReadContract(getOwnedNFTs, { contract, owner: address });
+ * ```
+ *
+ * ### Using a raw contract call
+ *
+ * ```ts
+ * import { getContract } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ * import { useReadContract } from "thirdweb/react";
+ *
+ * const contract = getContract({
+ *   client,
+ *   address: "0x...",
+ *   chain: sepolia,
+ * });
+ *
+ * const { data, isLoading } = useReadContract({
+ *   contract,
+ *   method: "function tokenURI(uint256 tokenId) returns (string)"});
+ *   params: [1n],
  * });
  * ```
  */
