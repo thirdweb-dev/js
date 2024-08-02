@@ -63,36 +63,41 @@ export type PrepareContractCallOptions<
  * @returns A promise that resolves to the prepared transaction.
  * @transaction
  * @example
- * Usage with a human-readable method signature:
+ *
+ * ### Usage with a human-readable method signature:
+ *
  * ```ts
  * import { prepareContractCall } from "thirdweb";
  *
- * const transaction = await prepareContractCall({
+ * const transaction = prepareContractCall({
  *  contract,
  *  method: "function transfer(address to, uint256 value)",
  *  params: [to, value],
  * });
  * ```
- * @example
- * Usage with explicit gas price and/or value:
+ *
+ * ### Usage with explicit gas price and/or value:
+ *
  * ```ts
  * import { prepareContractCall } from "thirdweb";
+ * import { toWei } from "thirdweb/utils";
  *
- * const transaction = await prepareContractCall({
+ * const transaction = prepareContractCall({
  *  contract,
  *  method: "function transfer(address to, uint256 value)",
  *  params: [to, value],
  *  maxFeePerGas: 30n,
  *  maxPriorityFeePerGas: 1n,
- *  value: 100000n,
+ *  value: toWei("0.01"),
  * });
  * ```
- * @example
- * Usage with a JSON ABI function object:
+ *
+ * ### Usage with a JSON ABI function object:
+ *
  * ```ts
  * import { prepareContractCall } from "thirdweb";
  *
- * const transaction = await prepareContractCall({
+ * const transaction = prepareContractCall({
  *  contract,
  *  method: {
  *    name: "transfer",
@@ -107,8 +112,9 @@ export type PrepareContractCallOptions<
  *  params: [to, value],
  * });
  * ```
- * @example
- * Usage with a the ABI defined on the contract:
+ *
+ * ### Usage with a the ABI defined on the contract:
+ *
  * ```ts
  * import { getContract, prepareContractCall } from "thirdweb";
  * const contract = getContract({
@@ -122,8 +128,7 @@ export type PrepareContractCallOptions<
  * });
  * ```
  *
- * @example
- * Passing extra call data to the transaction
+ * ### Passing extra call data to the transaction
  * ```ts
  * import { getContract, prepareContractCall } from "thirdweb";
  * const contract = getContract({

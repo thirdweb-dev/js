@@ -87,12 +87,27 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ### Customizing the default chain to connect to
  *
  * ```tsx
- * import { base } from "thirdweb/chains";
+ * import { sepolia } from "thirdweb/chains";
  *
  * <ConnectButton
  *   client={client}
- *   chain={base}
+ *   chain={sepolia}
  * />
+ * ```
+ *
+ * ### Enabling Account Abstraction
+ *
+ * By passing the `accountAbstraction` prop, ALL connected wallets will be converted to smart accounts.
+ * And by setting `sponsorGas` to `true`, all transactions done with those smart accounts will be sponsored.
+ *
+ * ```tsx
+ * <ConnectButton
+ * client={client}
+ * accountAbstraction={{
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * }}
+ * />;
  * ```
  *
  * ### Enabling sign in with ethereum (Auth)

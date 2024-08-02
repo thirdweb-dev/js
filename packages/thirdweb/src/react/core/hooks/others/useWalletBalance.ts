@@ -23,8 +23,8 @@ export type UseWalletBalanceQueryOptions = Omit<
 >;
 
 /**
- * Fetch the balance of a wallet for a specific token.
- * @note Leave `tokenAddress` undefined to fetch the native token balance.
+ * Fetch the balance of a wallet in native currency or for a specific token.
+ * Leave `tokenAddress` undefined to fetch the native token balance.
  * @param options {@link GetWalletBalanceOptions} - The options for fetching the wallet balance.
  * @param options.chain - The chain to fetch the wallet balance from.
  * @param options.address - The address of the wallet to fetch the balance from.
@@ -33,10 +33,25 @@ export type UseWalletBalanceQueryOptions = Omit<
  * @returns {@link GetWalletBalanceResult} The result of the query.
  *
  * @example
+ *
+ * ### Fetching the native token balance
+ *
  * ```ts
  * import { useWalletBalance } from "thirdweb/react";
  *
+ * const { data, isLoading, isError } = useWalletBalance({ chain, address, client });
+ * console.log("balance", data?.displayValue, data?.symbol);
+ * ```
+ *
+ * ### Fetching a specific token balance
+ *
+ * ```ts
+ * import { useWalletBalance } from "thirdweb/react";
+ *
+ * const tokenAddress = "0x..."; // the ERC20 token address
+ *
  * const { data, isLoading, isError } = useWalletBalance({ chain, address, client, tokenAddress });
+ * console.log("balance", data?.displayValue, data?.symbol);
  * ```
  * @wallet
  */

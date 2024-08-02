@@ -106,6 +106,7 @@ export async function getUserPhoneNumber(options: GetAuthenticatedUserParams) {
 
 /**
  * Pre-authenticates the user based on the provided authentication strategy.
+ * Use this function to send a verification code to the user's email or phone number.
  * @param args - The arguments required for pre-authentication.
  * @returns A promise that resolves to the pre-authentication result.
  * @throws An error if the provided authentication strategy doesn't require pre-authentication.

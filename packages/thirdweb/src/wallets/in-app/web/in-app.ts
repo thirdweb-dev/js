@@ -39,7 +39,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  *
  * [View all available social auth methods](https://portal.thirdweb.com/references/typescript/v5/InAppWalletSocialAuth)
  *
- * * ### Login with email
+ * ### Login with email
  *
  * ```ts
  * import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
@@ -58,6 +58,7 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  *   client,
  *   chain,
  *   strategy: "email",
+ *   email: "example@example.com",
  *   verificationCode: "123456",
  * });
  * ```
@@ -80,8 +81,10 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  *   client,
  *   chain,
  *   strategy: "phone",
+ *   honeNumber: "+1234567890",
  *   verificationCode: "123456",
  * });
+ * ```
  *
  * ### Login with passkey
  *
