@@ -132,22 +132,23 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                   </Text>
                 </GridItem>
 
-                <GridItem colSpan={3}>
-                  <Heading size="label.md">Price</Heading>
-                </GridItem>
-                <GridItem colSpan={9}>
-                  <Text fontFamily="mono" size="body.md">
-                    {
-                      (renderData as DirectListing).currencyValuePerToken
-                        .displayValue
-                    }{" "}
-                    {(renderData as DirectListing).currencyValuePerToken.symbol}
-                  </Text>
-                </GridItem>
+                {renderData.type === "direct-listing" && (
+                  <>
+                    <GridItem colSpan={3}>
+                      <Heading size="label.md">Price</Heading>
+                    </GridItem>
+                    <GridItem colSpan={9}>
+                      <Text fontFamily="mono" size="body.md">
+                        {renderData.currencyValuePerToken.displayValue}{" "}
+                        {renderData.currencyValuePerToken.symbol}
+                      </Text>
+                    </GridItem>
+                  </>
+                )}
 
                 {/* 
                   Todo: Add a Buy button somewhere in this section once the Dashboard is fully migrated to v5 (?)
-                  Kien is working on a prebuilt component for the Marketplace Buy Button in SDK v5 
+                  Kien already shipped a prebuilt component for the Marketplace Buy Button in SDK v5 
                 */}
               </SimpleGrid>
             </Card>

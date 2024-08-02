@@ -5,8 +5,9 @@ import {
   useRoleMembers,
 } from "@thirdweb-dev/react";
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { ZERO_ADDRESS } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { hasRole } from "thirdweb/extensions/permissions";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import type { RequiredParam } from "utils/types";
 
 function isContractWithRoles(
@@ -91,20 +92,21 @@ export function useIsMinter<TContract extends ValidContractInstance>(
   return isAccountRole;
 }
 
-export function useIsLister<TContract extends ValidContractInstance>(
-  contract: RequiredParam<TContract>,
-) {
+// Applicable to Marketplace v3 only
+export function useIsLister(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
-  const { data: contractType } = useContractType(contract?.getAddress());
-  const contractHasRoles = isContractWithRoles(contract);
-  const isAccountRole = useIsAccountRole(
-    "lister",
-    contractHasRoles ? contract : undefined,
-    address,
-  );
+  const { data: userCanList } = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: address ?? "",
+    role: "lister",
+    queryOptions: { enabled: !!address },
+  });
 
-  if (contractType === "custom") {
-    return true;
-  }
-  return isAccountRole;
+  const { data: anyoneCanList } = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: ZERO_ADDRESS,
+    role: "lister",
+  });
+
+  return anyoneCanList || userCanList;
 }
