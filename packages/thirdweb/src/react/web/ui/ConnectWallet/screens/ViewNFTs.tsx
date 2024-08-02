@@ -130,14 +130,28 @@ function NftCard(
             theme === "light" ? "rgba(0, 0, 0, 0.10)" : "rgba(0, 0, 0, 0.20)",
         }}
       >
-        {(props.metadata.image || props.imageData) && (
+        {props.metadata.image && (
           <MediaRenderer
-            src={props.metadata.image || props.imageData?.replace(`\"`, '"')}
+            src={props.metadata.image}
             style={{
               width: "100%",
               height: "100%",
             }}
             client={props.client}
+          />
+        )}
+        {!props.metadata.image && props.imageData && (
+          <div
+            // TODO: make this safe
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: Some NFTs have raw HTML or SVG as image
+            dangerouslySetInnerHTML={{
+              __html: props.imageData.replace(`\"`, '"'),
+            }}
+            style={{
+              objectFit: "contain",
+              width: "100%",
+              height: "100%",
+            }}
           />
         )}
         {quantityOwned > 1 && (
