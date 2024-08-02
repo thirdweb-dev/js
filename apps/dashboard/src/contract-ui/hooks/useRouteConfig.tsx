@@ -15,6 +15,11 @@ const LazyContractEventsPage = dynamic(() =>
     ({ ContractEventsPage }) => ContractEventsPage,
   ),
 );
+const LazyContractTransactionsPage = dynamic(() =>
+  import("../tabs/transactions/page").then(
+    ({ ContractTransactionsPage }) => ContractTransactionsPage,
+  ),
+);
 const LazyContractAnalyticsPage = dynamic(() =>
   import("../tabs/analytics/page").then(
     ({ ContractAnalyticsPage }) => ContractAnalyticsPage,
@@ -154,6 +159,12 @@ export function useContractRouteConfig(
       title: "Events",
       path: "events",
       component: LazyContractEventsPage,
+      isDefault: true,
+    },
+    {
+      title: "Transactions",
+      path: "transactions",
+      component: LazyContractTransactionsPage,
       isDefault: true,
     },
     {
