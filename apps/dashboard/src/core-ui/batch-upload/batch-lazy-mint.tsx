@@ -17,7 +17,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { AiFillEyeInvisible } from "@react-icons/all-files/ai/AiFillEyeInvisible";
 import type { DelayedRevealLazyMintInput } from "@thirdweb-dev/react/evm";
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -25,6 +24,7 @@ import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
+import type { NFTInput } from "thirdweb/utils";
 import {
   Button,
   Card,
@@ -49,7 +49,7 @@ type DelayedSubmit = {
 };
 type InstantSubmit = {
   revealType: "instant";
-  data: { metadatas: NFTMetadataInput[] };
+  data: { metadatas: NFTInput[] };
 };
 
 type SubmitType = DelayedSubmit | InstantSubmit;
@@ -92,7 +92,7 @@ const BatchLazyMintFormSchema = z
   });
 
 type BatchLazyMintFormType = z.output<typeof BatchLazyMintFormSchema> & {
-  metadatas: NFTMetadataInput[];
+  metadatas: NFTInput[];
 };
 
 function useBatchLazyMintForm() {

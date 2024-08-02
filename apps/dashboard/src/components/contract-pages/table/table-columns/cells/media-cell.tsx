@@ -1,4 +1,4 @@
-import type { NFTMetadata } from "@thirdweb-dev/sdk";
+import type { NFTMetadata } from "thirdweb/utils";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 interface MediaCellProps {

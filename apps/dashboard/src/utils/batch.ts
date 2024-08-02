@@ -1,5 +1,5 @@
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import Papa from "papaparse";
+import type { NFTInput } from "thirdweb/utils";
 import { removeEmptyValues } from "./parseAttributes";
 
 interface CSVData extends Record<string, string | undefined> {
@@ -113,7 +113,7 @@ const removeEmptyKeysFromObject = (obj: any) => {
   return obj;
 };
 
-const convertToOsStandard = (obj: NFTMetadataInput["attributes"]) => {
+const convertToOsStandard = (obj: NFTInput["attributes"]) => {
   const attributes = Object.entries(obj || {}).map(([trait_type, value]) => ({
     trait_type,
     value,
@@ -128,7 +128,7 @@ const getMergedData = (
   jsonData: any,
   imageFiles: File[],
   videoFiles: File[],
-): NFTMetadataInput[] => {
+): NFTInput[] => {
   if (csvData?.data) {
     const isImageMapped = csvData.data.some((row) =>
       imageFiles.find((img) => img?.name === row.image),
@@ -198,7 +198,7 @@ const getMergedData = (
 
 export async function processInputData(
   files: File[],
-  setData: (data: NFTMetadataInput[]) => void,
+  setData: (data: NFTInput[]) => void,
 ) {
   const { csv, json, images, videos } = await getAcceptedFiles(files);
   if (json.length > 0) {
@@ -229,7 +229,7 @@ export async function processInputData(
   }
 }
 
-export const shuffleData = (array: NFTMetadataInput[]) =>
+export const shuffleData = (array: NFTInput[]) =>
   array
     .map((value) => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)

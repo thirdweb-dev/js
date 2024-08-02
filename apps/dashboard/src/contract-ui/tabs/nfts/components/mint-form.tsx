@@ -23,7 +23,6 @@ import type {
   useSetSharedMetadata,
   useUpdateNFTMetadata,
 } from "@thirdweb-dev/react";
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
@@ -36,6 +35,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { NFT } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import type { NFTInput } from "thirdweb/utils";
 import {
   Button,
   FormErrorMessage,
@@ -64,7 +64,7 @@ type NFTMintForm =
       lazyMintMutation: UseMutationResult<
         unknown,
         unknown,
-        { metadatas: NFTMetadataInput[] }
+        { metadatas: NFTInput[] }
       >;
       mintMutation?: undefined;
       sharedMetadataMutation?: undefined;
@@ -112,8 +112,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       background_color: nft?.metadata.background_color || "",
       attributes: nft?.metadata.attributes || [],
       // We override these in the submit if they haven't been changed
-      image: nft?.metadata.image || null,
-      animation_url: nft?.metadata.animation_url || null,
+      image: nft?.metadata.image || undefined,
+      animation_url: nft?.metadata.animation_url || undefined,
       // No need for these, but we need to pass them to the form
       supply: 0,
       customImage: "",
@@ -192,7 +192,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     }
   };
 
-  const imageUrl = useImageFileOrUrl(watch("image"));
+  const imageUrl = useImageFileOrUrl(watch("image") as File | string);
   const mediaFileUrl =
     watch("animation_url") instanceof File
       ? watch("animation_url")
@@ -414,7 +414,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             <Box>
               <FileInput
                 maxContainerWidth={"200px"}
-                value={mediaFileUrl}
+                value={mediaFileUrl as File | string}
                 showUploadButton
                 showPreview={nft?.metadata ? !!mediaFileUrl : true}
                 setValue={setFile}

@@ -75,10 +75,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       {
         Header: "Media",
         accessor: (row) => row.metadata,
-        Cell: (
-          cell: CellProps<NFT, NFT["metadata"]>,
-          // @ts-expect-error - types are not compatible yet until we have NFTRenderer in v5
-        ) => <MediaCell cell={cell} />,
+        Cell: (cell: CellProps<NFT, NFT["metadata"]>) => (
+          <MediaCell cell={cell} />
+        ),
       },
       {
         Header: "Name",
