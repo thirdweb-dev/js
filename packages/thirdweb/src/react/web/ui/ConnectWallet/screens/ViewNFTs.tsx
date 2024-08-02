@@ -1,13 +1,8 @@
-import { useQueries } from "@tanstack/react-query";
-import { useMemo } from "react";
 import type { Chain } from "../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../chains/utils.js";
+import type { NFTs } from "../../../../../chainsaw/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { getContract } from "../../../../../contract/contract.js";
-import { getOwnedNFTs as getErc721OwnedNFTs } from "../../../../../extensions/erc721/read/getOwnedNFTs.js";
-import { isERC721 } from "../../../../../extensions/erc721/read/isERC721.js";
-import { getOwnedNFTs as getErc1155OwnedNFTs } from "../../../../../extensions/erc1155/read/getOwnedNFTs.js";
-import { isERC1155 } from "../../../../../extensions/erc1155/read/isERC1155.js";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
 import type { Theme } from "../../../../core/design-system/index.js";
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWalletChain } from "../../../../core/hooks/wallets/useActiveWalletChain.js";
@@ -16,51 +11,8 @@ import { MediaRenderer } from "../../MediaRenderer/MediaRenderer.js";
 import { Skeleton } from "../../components/Skeleton.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
+import { useGetOwnedNFTs } from "../hooks/useGetOwnedNFTs.js";
 import type { ConnectLocale } from "../locale/types.js";
-
-const fetchNFTs = async (
-  client: ThirdwebClient,
-  chain: Chain,
-  nftAddress: string,
-  owner: string,
-) => {
-  const contract = getContract({
-    address: nftAddress,
-    chain,
-    client,
-  });
-
-  const erc721 = await isERC721({ contract }).catch(() => {
-    throw new Error(
-      `Failed to read contract bytecode for NFT ${nftAddress} on ${chain.name || chain.id}, is this NFT on the correct chain?`,
-    );
-  });
-  if (erc721) {
-    const result = await getErc721OwnedNFTs({
-      contract,
-      owner: owner,
-    });
-    return result.map((nft) => ({
-      ...nft,
-      quantityOwned: BigInt(1),
-      address: contract.address,
-      chain,
-    }));
-  }
-
-  const erc1155 = await isERC1155({ contract }).catch(() => false);
-  if (erc1155) {
-    const result = await getErc1155OwnedNFTs({
-      contract,
-      address: owner,
-    });
-    return result.map((nft) => ({ ...nft, address: contract.address, chain }));
-  }
-
-  throw new Error(
-    `NFT at ${nftAddress} on chain ${chain.id} is not ERC721 or ERC1155, or does not properly identify itself as supporting either interface`,
-  );
-};
 
 /**
  * @internal
@@ -112,29 +64,12 @@ export function ViewNFTsContent(props: {
     return null;
   }
 
-  const nftList = useMemo(() => {
-    const nfts = [];
-    if (!props.supportedNFTs) return [];
-    for (const chainId in props.supportedNFTs) {
-      if (props.supportedNFTs[chainId]) {
-        nfts.push(
-          ...props.supportedNFTs[chainId].map((address) => ({
-            address,
-            chain: getCachedChain(Number.parseInt(chainId)),
-          })),
-        );
-      }
-    }
-    return nfts;
-  }, [props.supportedNFTs]);
-
-  const results = useQueries({
-    queries: nftList.map((nft) => ({
-      queryKey: ["readContract", nft.chain.id, nft.address],
-      queryFn: () =>
-        fetchNFTs(props.client, nft.chain, nft.address, activeAccount?.address),
-    })),
+  const { data, isLoading } = useGetOwnedNFTs({
+    client: props.client,
+    ownerAddresses: [activeAccount.address as Hex],
+    chainIds: [activeChain.id],
   });
+  const nfts = data || [];
 
   return (
     <>
@@ -145,29 +80,16 @@ export function ViewNFTsContent(props: {
           gap: "12px",
         }}
       >
-        {results.map((result, index) => {
-          if (result.error) {
-            console.error(result.error);
-            return null;
-          }
-          return result.isLoading || !result.data ? (
-            <Skeleton
-              key={`${nftList[index]?.chain?.id}:${nftList[index]?.address}`}
-              height="150px"
-              width="150px"
-            />
-          ) : (
-            result.data.map((nft) => (
-              <NftCard
-                key={`${nft.chain.id}:${nft.address}:${nft.id}`}
-                {...nft}
-                client={props.client}
-                chain={nft.chain}
-                theme={props.theme}
-              />
-            ))
-          );
-        })}
+        {isLoading && <Skeleton height="150px" width="150px" />}
+        {nfts.map((nft) => (
+          <NftCard
+            key={`${nft.chainId}:${nft.contractAddress}:${nft.id}`}
+            {...nft}
+            client={props.client}
+            chain={getCachedChain(nft.chainId)}
+            theme={props.theme}
+          />
+        ))}
       </Container>
       <Spacer y="lg" />
     </>
@@ -175,12 +97,13 @@ export function ViewNFTsContent(props: {
 }
 
 function NftCard(
-  props: Awaited<ReturnType<typeof fetchNFTs>>[number] & {
+  props: Awaited<NFTs>[number] & {
     client: ThirdwebClient;
     chain: Chain;
     theme: Theme | "light" | "dark";
   },
 ) {
+  const quantityOwned = BigInt(props.balance);
   const theme =
     typeof props.theme === "string" ? props.theme : props.theme.type;
   const themeObject = typeof props.theme === "string" ? undefined : props.theme;
@@ -207,9 +130,9 @@ function NftCard(
             theme === "light" ? "rgba(0, 0, 0, 0.10)" : "rgba(0, 0, 0, 0.20)",
         }}
       >
-        {props.metadata.image && (
+        {(props.metadata.image || props.imageData) && (
           <MediaRenderer
-            src={props.metadata.image}
+            src={props.metadata.image || props.imageData?.replace(`\"`, '"')}
             style={{
               width: "100%",
               height: "100%",
@@ -217,7 +140,7 @@ function NftCard(
             client={props.client}
           />
         )}
-        {props.quantityOwned > 1 && (
+        {quantityOwned > 1 && (
           <div
             style={{
               position: "absolute",
@@ -236,7 +159,7 @@ function NftCard(
               borderRadius: "100%",
             }}
           >
-            {props.quantityOwned.toString()}
+            {quantityOwned.toString()}
           </div>
         )}
         {props.chain.icon && (
@@ -260,7 +183,7 @@ function NftCard(
   if (props.chain.name) {
     return (
       <a
-        href={`https://thirdweb.com/${props.chain.id}/${props.address}/nfts/${props.id}`}
+        href={`https://thirdweb.com/${props.chain.id}/${props.contractAddress}/nfts/${props.id}`}
         target="_blank"
         rel="noreferrer"
       >
