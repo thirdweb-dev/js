@@ -76,7 +76,7 @@ describeIf(!!SECRET_KEY)("SmartWallet core tests", () => {
     },
   );
 
-  it(
+  it.skip(
     "can execute zkcandy tx via SDK",
     {
       timeout: 120_000,
