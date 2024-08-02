@@ -24,8 +24,8 @@ export const formatChainsawBlock = (
   }) as GetBlockReturnType<undefined, false>;
 };
 
-export const formatChainsawNFTs = (nfts?: NFTsData): NFT[] | undefined => {
-  if (!nfts) return;
+export const formatChainsawNFTs = (nfts?: NFTsData): NFT[] => {
+  if (!nfts) return [];
   return nfts.map((nft) => {
     const options =
       nft.type === "ERC1155"

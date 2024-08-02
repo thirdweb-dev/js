@@ -17,6 +17,11 @@ export type GetNFTsByOwnerParams = {
   chainIds?: number[];
 } & ChainsawPagingParams;
 
+export type GetNFTsByOwnerResult = {
+  nfts: NFT[];
+  page?: number;
+};
+
 /**
  * Get NFTs by owner address(es)
  *
@@ -24,7 +29,7 @@ export type GetNFTsByOwnerParams = {
  */
 export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
-): Promise<ChainsawResponse<NFT[]>> {
+): Promise<GetNFTsByOwnerResult> {
   try {
     const queryParams = addPagingToRequest(new URLSearchParams(), params);
     for (const ownerAddress of params.ownerAddresses) {
@@ -42,9 +47,10 @@ export async function getNFTsByOwner(
     }
 
     const data: ChainsawResponse<NFTsData> = await response.json();
+    if (data.error) throw new Error(data.error);
     return {
-      ...data,
-      data: formatChainsawNFTs(data.data),
+      nfts: formatChainsawNFTs(data.data),
+      page: data.page,
     };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

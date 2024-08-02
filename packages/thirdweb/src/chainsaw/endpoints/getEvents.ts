@@ -22,7 +22,10 @@ export type GetEventsParams = {
   groupBy?: GetEventsGroupBy[];
 } & ChainsawPagingParams;
 
-export type GetEventsResult = ChainsawResponse<Events>;
+export type GetEventsResult = {
+  events: Events;
+  page?: number;
+};
 
 /**
  * Get events
@@ -60,7 +63,11 @@ export async function getEvents(
     }
 
     const data: ChainsawResponse<Events> = await response.json();
-    return data;
+    if (data.error) throw new Error(data.error);
+    return {
+      events: data.data || [],
+      page: data.page,
+    };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}, ${JSON.stringify(params)}`);
   }

@@ -20,6 +20,11 @@ export type GetNFTsByCollectionParams = {
   groupBy?: GetNFTsGroupBy;
 } & ChainsawPagingParams;
 
+export type GetNFTsByCollectionResult = {
+  nfts: NFT[];
+  page?: number;
+};
+
 /**
  * Get NFTs for a collection
  *
@@ -27,7 +32,7 @@ export type GetNFTsByCollectionParams = {
  */
 export async function getNFTsByCollection(
   params: GetNFTsByCollectionParams,
-): Promise<ChainsawResponse<NFT[]>> {
+): Promise<GetNFTsByCollectionResult> {
   try {
     const queryParams = addPagingToRequest(
       new URLSearchParams({
@@ -50,9 +55,10 @@ export async function getNFTsByCollection(
     }
 
     const data: ChainsawResponse<NFTsData> = await response.json();
+    if (data.error) throw new Error(data.error);
     return {
-      ...data,
-      data: formatChainsawNFTs(data.data),
+      nfts: formatChainsawNFTs(data.data),
+      page: data.page,
     };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

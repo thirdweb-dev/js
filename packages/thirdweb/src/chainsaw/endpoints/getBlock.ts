@@ -18,7 +18,7 @@ export type GetBlockParams = {
  */
 export async function getBlock(
   params: GetBlockParams,
-): Promise<ChainsawResponse<GetBlockReturnType<undefined, false>>> {
+): Promise<GetBlockReturnType<undefined, false>> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("chainId", params.chainId.toString());
@@ -31,7 +31,10 @@ export async function getBlock(
     }
 
     const data: ChainsawResponse<Block> = await response.json();
-    return { ...data, data: formatChainsawBlock(data.data) };
+    if (data.error) throw new Error(data.error);
+    const block = formatChainsawBlock(data.data);
+    if (!block) throw new Error(`unable to fetch block ${params.blockNumber}`);
+    return block;
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
   }

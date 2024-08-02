@@ -15,7 +15,7 @@ export type GetLatestBlockNumberParams = {
  */
 export async function getLatestBlockNumber(
   params: GetLatestBlockNumberParams,
-): Promise<ChainsawResponse<number>> {
+): Promise<number> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("chainId", params.chainId.toString());
@@ -28,7 +28,9 @@ export async function getLatestBlockNumber(
     }
 
     const data: ChainsawResponse<number> = await response.json();
-    return data;
+    if (data.error) throw new Error(data.error);
+    if (!data.data) throw new Error("unable to fetch latest block number");
+    return data.data;
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
   }
