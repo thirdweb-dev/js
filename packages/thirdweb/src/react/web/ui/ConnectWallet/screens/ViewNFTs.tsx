@@ -145,7 +145,7 @@ function NftCard(
             // TODO: make this safe
             // biome-ignore lint/security/noDangerouslySetInnerHtml: Some NFTs have raw HTML or SVG as image
             dangerouslySetInnerHTML={{
-              __html: props.imageData.replace(`\"`, '"'),
+              __html: props.imageData.replace(/\\"/, '"'),
             }}
             style={{
               objectFit: "contain",
