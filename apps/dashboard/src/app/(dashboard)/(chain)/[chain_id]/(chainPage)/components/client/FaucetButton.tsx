@@ -44,7 +44,6 @@ export function FaucetButton({
     chain: definedChain,
     client: thirdwebClient,
   });
-  // for some bizzare reason, If I use useMutation here, it's never executing the mutationFn !!!
   const claimMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch("/api/testnet-faucet/claim", {
