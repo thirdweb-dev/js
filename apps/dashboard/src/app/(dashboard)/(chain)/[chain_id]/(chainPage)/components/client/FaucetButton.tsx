@@ -79,15 +79,6 @@ export function FaucetButton({
     faucetWalletBalanceQuery.data !== undefined &&
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
-  // not eligible to claim right now
-  if (ttlSeconds > 0) {
-    return (
-      <Button variant="outline" className="w-full" disabled>
-        Your next claim is available {formatTime(ttlSeconds)}
-      </Button>
-    );
-  }
-
   // checking faucet balance
   if (faucetWalletBalanceQuery.isLoading) {
     return (
@@ -102,6 +93,15 @@ export function FaucetButton({
     return (
       <Button variant="outline" disabled className="w-full">
         Faucet is empty right now, come back later
+      </Button>
+    );
+  }
+
+  // not eligible to claim right now
+  if (ttlSeconds > 0) {
+    return (
+      <Button variant="outline" className="w-full" disabled>
+        Your next claim is available {formatTime(ttlSeconds)}
       </Button>
     );
   }
