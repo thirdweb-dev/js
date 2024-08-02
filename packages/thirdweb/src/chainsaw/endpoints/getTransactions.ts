@@ -1,4 +1,3 @@
-import type { Transaction } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -7,6 +6,7 @@ import { addPagingToRequest } from "../paging.js";
 import type {
   ChainsawPagingParams,
   ChainsawResponse,
+  ChainsawTransactions,
   Transactions,
 } from "../types.d.ts";
 import { getTransactionsEndpoint } from "../urls.js";
@@ -19,6 +19,11 @@ export type GetTransactionsParams = {
   endDate?: Date;
 } & ChainsawPagingParams;
 
+export type GetTransactionsResult = {
+  transactions: Transactions;
+  page?: number;
+};
+
 /**
  * Get transactions
  *
@@ -26,7 +31,7 @@ export type GetTransactionsParams = {
  */
 export async function getTransactions(
   params: GetTransactionsParams,
-): Promise<ChainsawResponse<Transaction[]>> {
+): Promise<GetTransactionsResult> {
   try {
     const queryParams = addPagingToRequest(
       new URLSearchParams({
@@ -47,10 +52,11 @@ export async function getTransactions(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<Transactions> = await response.json();
+    const data: ChainsawResponse<ChainsawTransactions> = await response.json();
+    if (data.error) throw new Error(data.error);
     return {
-      ...data,
-      data: formatChainsawTransactions(data.data),
+      transactions: formatChainsawTransactions(data.data),
+      page: data.page,
     };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

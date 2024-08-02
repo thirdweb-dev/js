@@ -1,6 +1,7 @@
+import type { Transaction as ViemTransaction } from "viem";
 import type { Hex } from "../utils/encoding/hex.ts";
 
-export type ChainsawResponse<T> = {
+export type ChainsawResponse<T = unknown> = {
   data?: T;
   error?: string;
   page?: number;
@@ -41,12 +42,14 @@ export type DecodedTransaction = {
   args?: string;
 };
 
-export type Transaction = {
+export type ChainsawTransaction = {
   time: Date;
   to: Hex;
   from: Hex;
   hash: Hex;
+  index: number;
   blockNumber: number;
+  blockHash: Hex;
   data?: string;
   value: string;
   gasLimit: string;
@@ -56,8 +59,13 @@ export type Transaction = {
   success: boolean;
   type: number;
   decoded?: DecodedTransaction;
+  nonce: string;
 };
 
+export type ChainsawTransactions = ChainsawTransaction[];
+
+export type Transaction = Omit<ChainsawTransaction, keyof ViemTransaction> &
+  ViemTransaction;
 export type Transactions = Transaction[];
 
 export type NFTData = {

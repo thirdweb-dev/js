@@ -1,13 +1,14 @@
 import { BigNumber } from "ethers";
-import {
-  type GetBlockReturnType,
-  type Transaction,
-  formatBlock,
-  formatTransaction,
-} from "viem";
+import { type GetBlockReturnType, formatBlock, formatTransaction } from "viem";
 import type { Hex } from "../utils/encoding/hex.js";
 import { type NFT, parseNFT } from "../utils/nft/parseNft.js";
-import type { Block, NFTsData, Transactions } from "./types.js";
+import type {
+  Block,
+  ChainsawTransactions,
+  NFTsData,
+  Transaction,
+  Transactions,
+} from "./types.js";
 
 export const formatChainsawBlock = (
   block?: Block,
@@ -52,49 +53,59 @@ export const formatChainsawNFTs = (nfts?: NFTsData): NFT[] | undefined => {
 };
 
 export const formatChainsawTransactions = (
-  txs?: Transactions,
-): Transaction[] | undefined => {
-  if (!txs) return;
+  txs?: ChainsawTransactions,
+): Transactions => {
+  if (!txs) return [];
   return txs.map((tx) => {
     if (tx.type === 0) {
       return formatTransaction({
         ...tx,
         type: "0x0",
-        blockNumber: `0x${BigNumber.from(tx.blockNumber).toHexString()}` as Hex,
-        value: `0x${BigNumber.from(tx.value).toHexString()}` as Hex,
+        blockNumber: BigNumber.from(tx.blockNumber).toHexString() as Hex,
+        value: BigNumber.from(tx.value).toHexString() as Hex,
         gasPrice: undefined,
+        nonce: BigNumber.from(tx.nonce).toHexString() as Hex,
         maxPriorityFeePerGas: undefined,
-      });
+        transactionIndex: BigNumber.from(tx.index).toHexString() as Hex,
+      }) as Transaction;
     }
     if (tx.type === 1) {
       return formatTransaction({
         ...tx,
         type: "0x1",
-        blockNumber: `0x${BigNumber.from(tx.blockNumber).toHexString()}` as Hex,
-        value: `0x${BigNumber.from(tx.value).toHexString()}` as Hex,
-        gasPrice: `0x${BigNumber.from(tx.gasPrice).toHexString()}` as Hex,
+        blockNumber: BigNumber.from(tx.blockNumber).toHexString() as Hex,
+        value: BigNumber.from(tx.value).toHexString() as Hex,
+        gasPrice: BigNumber.from(tx.gasPrice).toHexString() as Hex,
+        nonce: BigNumber.from(tx.nonce).toHexString() as Hex,
         maxPriorityFeePerGas: undefined,
-      });
+        transactionIndex: BigNumber.from(tx.index).toHexString() as Hex,
+      }) as Transaction;
     }
     if (tx.type === 2) {
       return formatTransaction({
         ...tx,
         type: "0x2",
-        blockNumber: `0x${BigNumber.from(tx.blockNumber).toHexString()}` as Hex,
-        value: `0x${BigNumber.from(tx.value).toHexString()}` as Hex,
+        blockNumber: BigNumber.from(tx.blockNumber).toHexString() as Hex,
+        transactionIndex: BigNumber.from(tx.index).toHexString() as Hex,
+        value: BigNumber.from(tx.value).toHexString() as Hex,
+        nonce: BigNumber.from(tx.nonce).toHexString() as Hex,
         gasPrice: undefined,
-        maxPriorityFeePerGas:
-          `0x${BigNumber.from(tx.maxPriorityFeePerGas).toHexString()}` as Hex,
-      });
+        maxPriorityFeePerGas: BigNumber.from(
+          tx.maxPriorityFeePerGas,
+        ).toHexString() as Hex,
+      }) as Transaction;
     }
     return formatTransaction({
       ...tx,
       type: "0x3",
-      blockNumber: `0x${BigNumber.from(tx.blockNumber).toHexString()}` as Hex,
-      value: `0x${BigNumber.from(tx.value).toHexString()}` as Hex,
+      blockNumber: BigNumber.from(tx.blockNumber).toHexString() as Hex,
+      value: BigNumber.from(tx.value).toHexString() as Hex,
       gasPrice: undefined,
-      maxPriorityFeePerGas:
-        `0x${BigNumber.from(tx.maxPriorityFeePerGas).toHexString()}` as Hex,
-    });
+      nonce: BigNumber.from(tx.nonce).toHexString() as Hex,
+      maxPriorityFeePerGas: BigNumber.from(
+        tx.maxPriorityFeePerGas,
+      ).toHexString() as Hex,
+      transactionIndex: BigNumber.from(tx.index).toHexString() as Hex,
+    }) as Transaction;
   });
 };
