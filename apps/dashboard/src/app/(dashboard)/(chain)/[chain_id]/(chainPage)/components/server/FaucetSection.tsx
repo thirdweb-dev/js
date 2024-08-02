@@ -20,7 +20,7 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
   return (
     <section>
       <SectionTitle title="Faucet" />
-      <div className="border roudned-lg border-border px-4 py-10 rounded-lg flex justify-center">
+      <div className="border border-border px-4 py-10 rounded-lg flex justify-center">
         <div className="max-w-[520px] w-full flex flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
