@@ -35,7 +35,7 @@ export async function TrendingContractSection(props: {
   return (
     props.topContracts.length > 0 && (
       <div>
-        <ScrollShadow scrollableClassName="rounded-lg">
+        <ScrollShadow scrollableClassName="rounded-lg border">
           <Table className="w-full">
             <TableHeader>
               <TableRow className="bg-secondary">
@@ -64,7 +64,7 @@ export async function TrendingContractSection(props: {
             <TableBody>
               {props.topContracts.map((contract, index) => (
                 <TableRow
-                  className="relative hover:bg-muted dark:even:bg-secondary/30 "
+                  className="relative hover:bg-muted even:bg-secondary/30 "
                   key={`${contract.chainMetadata.chainId}${contract.contractAddress}${index}`}
                 >
                   {/* Rank */}

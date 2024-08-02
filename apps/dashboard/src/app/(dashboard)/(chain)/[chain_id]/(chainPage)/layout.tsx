@@ -45,7 +45,7 @@ export default async function ChainPageLayout({
 
   return (
     <div className="container flex flex-row h-full">
-      <aside className="w-[280px] p-4 flex-shrink-0 hidden lg:block">
+      <aside className="w-[280px] flex-shrink-0 hidden lg:block">
         <SidebarContent chain={chain} />
       </aside>
       <div className="flex flex-col w-full lg:px-6 lg:border-x pb-10">

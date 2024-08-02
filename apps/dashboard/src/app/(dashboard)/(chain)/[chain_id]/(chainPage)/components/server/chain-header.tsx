@@ -64,9 +64,7 @@ export function ChainHeader(props: ChainHeaderProps) {
               </Button>
             </DrawerTrigger>
             <DrawerContent>
-              <div className="p-4">
-                <SidebarContent chain={props.chain} />
-              </div>
+              <SidebarContent chain={props.chain} />
             </DrawerContent>
           </Drawer>
         </div>
