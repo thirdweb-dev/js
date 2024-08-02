@@ -188,6 +188,20 @@ export type {
   PayTokenInfo,
 } from "../pay/utils/commonTypes.js";
 
+/**
+ * CHAINSAW
+ */
+export {
+  getTransactions,
+  type GetTransactionsResult,
+  type GetTransactionsParams,
+} from "../chainsaw/endpoints/getTransactions.js";
+
+export type {
+  Transactions,
+  Transaction,
+} from "../chainsaw/types.js";
+
 // ------------------------------------------------
 // encoding
 // ------------------------------------------------
