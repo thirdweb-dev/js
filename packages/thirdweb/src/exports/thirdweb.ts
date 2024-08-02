@@ -197,6 +197,36 @@ export {
   type GetTransactionsParams,
 } from "../chainsaw/endpoints/getTransactions.js";
 
+export {
+  getNFTsByOwner,
+  type GetNFTsByOwnerParams,
+  type GetNFTsByOwnerResult,
+} from "../chainsaw/endpoints/getNFTsByOwner.js";
+
+export {
+  getNFTsByCollection,
+  type GetNFTsByCollectionParams,
+  type GetNFTsByCollectionResult,
+} from "../chainsaw/endpoints/getNFTsByCollection.js";
+
+export {
+  getBlock,
+  type GetBlockParams,
+} from "../chainsaw/endpoints/getBlock.js";
+
+export {
+  getEvents,
+  type GetEventsParams,
+  type GetEventsGroupBy,
+  type GetEventsInterval,
+  type GetEventsResult,
+} from "../chainsaw/endpoints/getEvents.js";
+
+export {
+  getLatestBlockNumber,
+  type GetLatestBlockNumberParams,
+} from "../chainsaw/endpoints/getLatestBlockNumber.js";
+
 export type {
   Transactions,
   Transaction,
