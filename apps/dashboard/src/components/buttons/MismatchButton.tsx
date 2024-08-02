@@ -263,7 +263,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
       if (chainInfo.chainId === localhost.id) {
         await sdk.wallet.requestFunds(10);
       } else if (chainInfo?.testnet) {
-        router.push(`/${chainInfo.chainId}/faucet`);
+        router.push(`/${chainInfo.chainId}`);
       }
     }
   };
