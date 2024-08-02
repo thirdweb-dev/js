@@ -14,15 +14,15 @@ export function SidebarContent(props: SidebarContentProps) {
   return (
     <div className="pt-4">
       {/* Desktop only */}
-      <div className="lg:flex items-center gap-1.5 mb-5 hidden">
+      <div className="lg:flex items-center gap-1.5 mb-5 hidden flex-wrap">
         <Link
           href="/chainlist"
-          className="text-secondary-foreground hover:text-foreground"
+          className="text-secondary-foreground hover:text-foreground text-sm"
         >
           Chainlist
         </Link>
-        <span className="text-secondary-foreground"> / </span>
-        <Link href={`/${props.chain.slug}`} className="text-foreground">
+        <span className="text-secondary-foreground text-sm"> / </span>
+        <Link href={`/${props.chain.slug}`} className="text-foreground text-sm">
           {props.chain.name.replace("Mainnet", "")}
         </Link>
       </div>
