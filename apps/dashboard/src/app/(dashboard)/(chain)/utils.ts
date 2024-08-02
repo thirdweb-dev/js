@@ -180,8 +180,7 @@ const chainMetaRecord = {
       "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
     cta: {
       backgroundImageUrl: lumiaCTA.src,
-      title:
-        "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
+      title:"",
       buttonLink: "https://docs.lumia.org/",
       buttonText: "Learn more",
     },
