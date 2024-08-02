@@ -10,6 +10,8 @@ import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 import { ChainHeader } from "./components/server/chain-header";
 import { SidebarContent } from "./components/server/sidebar-content";
 
+// TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
+
 export async function generateMetadata({
   params,
 }: { params: { chain_id: string } }): Promise<Metadata> {
@@ -58,7 +60,7 @@ export default async function ChainPageLayout({
 
         <div className="h-4 md:h-8" />
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3 md:gap-2">
           {/* Gas Sponsored badge - Mobile */}
           {chainMetadata?.gasSponsored && (
             <div className="md:hidden flex">
@@ -68,7 +70,7 @@ export default async function ChainPageLayout({
 
           {/* Chain name */}
           <div className="flex flex-row gap-1.5 items-center">
-            <h1 className="text-xl font-semibold lg:text-3xl lg:font-semibold tracking-tight">
+            <h1 className="text-2xl font-semibold lg:text-3xl lg:font-semibold tracking-tight">
               {chain.name}
             </h1>
 
@@ -99,7 +101,7 @@ export default async function ChainPageLayout({
             <div className="grid grid-cols-2 gap-2">
               <AddChainToWallet chain={defineChain(chain)} />
               <Button variant="primary">
-                <Link href="https://portal.thirdweb.com/" target="_blank">
+                <Link href="https://thirdweb.com/dashboard" target="_blank">
                   Get started
                 </Link>
               </Button>

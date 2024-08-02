@@ -31,7 +31,9 @@ export default async function Page(props: {
   return (
     <div className="flex flex-col gap-10">
       {/* Custom CTA */}
-      {chainMetadata?.cta && <ChainCTA {...chainMetadata.cta} />}
+      {(chainMetadata?.cta?.title || chainMetadata?.cta?.description) && (
+        <ChainCTA {...chainMetadata.cta} />
+      )}
 
       {/* Deprecated Alert */}
       {isDeprecated && (

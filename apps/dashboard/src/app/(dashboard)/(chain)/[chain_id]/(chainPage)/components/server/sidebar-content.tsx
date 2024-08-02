@@ -12,7 +12,7 @@ export type SidebarContentProps = {
 
 export function SidebarContent(props: SidebarContentProps) {
   return (
-    <div className="p-4 pt-8 sticky top-0">
+    <div className="p-4 md:pt-8 sticky top-0">
       {/* Desktop only */}
       <div className="lg:flex items-center gap-1.5 mb-5 hidden flex-wrap">
         <Link

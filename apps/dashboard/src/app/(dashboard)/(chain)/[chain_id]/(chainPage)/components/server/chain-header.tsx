@@ -1,19 +1,19 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { defineChain } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
+import { MobileMenu } from "../client/MobileMenu";
 import { AddChainToWallet } from "../client/add-chain-to-wallet";
-import { SidebarContent } from "./sidebar-content";
 
 type ChainHeaderProps = {
   headerImageUrl?: string;
   logoUrl?: string;
   chain: ChainMetadata;
 };
+
+// TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
 
 export function ChainHeader(props: ChainHeaderProps) {
   return (
@@ -50,23 +50,14 @@ export function ChainHeader(props: ChainHeaderProps) {
           <div className="hidden lg:flex flex-row gap-2">
             <AddChainToWallet chain={defineChain(props.chain)} />
             <Button variant="primary" asChild>
-              <Link href="https://portal.thirdweb.com/" target="_blank">
+              <Link href="https://thirdweb.com/dashboard" target="_blank">
                 Get started with thirdweb
               </Link>
             </Button>
           </div>
 
           {/* Mobile Menu */}
-          <Drawer direction="bottom">
-            <DrawerTrigger asChild>
-              <Button size="icon" variant="outline" className="lg:hidden">
-                <MenuIcon strokeWidth={1} />
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <SidebarContent chain={props.chain} />
-            </DrawerContent>
-          </Drawer>
+          <MobileMenu chain={props.chain} />
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useCustomConnectModal } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { Chain } from "thirdweb";
@@ -18,9 +19,10 @@ type AddChainToWalletProps = {
 };
 
 export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
-  const address = useActiveAccount()?.address;
+  const account = useActiveAccount();
   const switchChain = useSwitchActiveWalletChain();
   const activeWalletChainId = useActiveWalletChain()?.id;
+  const customConnectModal = useCustomConnectModal();
 
   const switchChainMutation = useMutation({
     mutationFn: async () => {
@@ -28,42 +30,39 @@ export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
     },
   });
 
-  // debounce the loading state to prevent flickering
   const [debouncedLoading] = useDebounce(switchChainMutation.isLoading, 50);
 
-  const buttonContent = (
-    <Button
-      disabled={
-        !address || debouncedLoading || activeWalletChainId === props.chain?.id
-      }
-      className="gap-2"
-      variant="outline"
-      onClick={() => {
-        const switchPromise = switchChainMutation.mutateAsync();
-        toast.promise(switchPromise, {
-          success: `${props.chain.name} added to wallet`,
-          error: `Failed to add ${props.chain.name} to wallet`,
-        });
-      }}
-    >
-      <span>Add to wallet</span>
-      {debouncedLoading && <Spinner className="size-3" />}
-    </Button>
-  );
-
-  if (address && activeWalletChainId !== props.chain?.id) {
-    return buttonContent;
-  }
+  const disabled = debouncedLoading || activeWalletChainId === props.chain?.id;
 
   return (
     <ToolTipLabel
       label={
-        activeWalletChainId === props.chain?.id
-          ? "You are already connected to this chain"
-          : "Connect your wallet first"
+        activeWalletChainId === props.chain.id
+          ? "Wallet is already connected to this chain"
+          : undefined
       }
     >
-      <div className="cursor-not-allowed">{buttonContent}</div>
+      <Button
+        disabled={disabled}
+        className="gap-2 w-full"
+        variant="outline"
+        onClick={() => {
+          // Connct directly to this chain
+          if (!account) {
+            return customConnectModal({ chain: props.chain });
+          }
+
+          // switch to this chain
+          const switchPromise = switchChainMutation.mutateAsync();
+          toast.promise(switchPromise, {
+            success: `${props.chain.name} added to wallet`,
+            error: `Failed to add ${props.chain.name} to wallet`,
+          });
+        }}
+      >
+        <span>Add to wallet</span>
+        {debouncedLoading && <Spinner className="size-3" />}
+      </Button>
     </ToolTipLabel>
   );
 };
