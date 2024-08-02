@@ -19,6 +19,7 @@ export function PayModalButton(props: { chainId: number; label: string }) {
       <DialogContent
         className="md:max-w-[360px] p-0 border-none bg-transparent"
         dialogOverlayClassName="backdrop-blur-lg"
+        dialogCloseClassName="focus:ring-0"
       >
         <PayEmbed
           client={thirdwebClient}
