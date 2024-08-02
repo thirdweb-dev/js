@@ -186,7 +186,6 @@ export function PayEmbed(props: PayEmbedProps) {
       </div>
     );
   } else {
-    // show and hide screens with CSS to not lose state when switching between them
     content = (
       <>
         {screen === "buy" && (
