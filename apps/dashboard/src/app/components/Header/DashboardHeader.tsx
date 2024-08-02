@@ -27,8 +27,8 @@ export function DashboardHeader() {
               key={link.href}
               href={link.href}
               target={link.href.startsWith("https") ? "_blank" : undefined}
-              className="text-foreground font-medium py-2 px-[10px] hover:underline"
-              activeClassName="font-semibold"
+              className="text-secondary-foreground font-medium py-2 px-[10px] hover:text-foreground"
+              activeClassName="font-medium text-foreground"
             >
               {link.name}
             </NavLink>
@@ -45,7 +45,7 @@ export function DashboardHeader() {
                 key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
-                className="text-foreground font-medium py-2 px-[10px] hover:underline"
+                className="text-secondary-foreground font-medium py-2 px-[10px] hover:text-foreground"
               >
                 {link.name}
               </Link>
