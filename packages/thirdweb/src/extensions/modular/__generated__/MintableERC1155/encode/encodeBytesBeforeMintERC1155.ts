@@ -7,28 +7,26 @@ import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameter
  */
 export type EncodeBytesBeforeMintERC1155Params = {
   params: AbiParameterToPrimitiveType<{
-    name: "params";
     type: "tuple";
-    internalType: "struct MintableERC1155.MintParamsERC1155";
+    name: "params";
     components: [
       {
-        name: "request";
         type: "tuple";
-        internalType: "struct MintableERC1155.MintRequestERC1155";
+        name: "request";
         components: [
-          { name: "tokenId"; type: "uint256"; internalType: "uint256" },
-          { name: "startTimestamp"; type: "uint48"; internalType: "uint48" },
-          { name: "endTimestamp"; type: "uint48"; internalType: "uint48" },
-          { name: "recipient"; type: "address"; internalType: "address" },
-          { name: "quantity"; type: "uint256"; internalType: "uint256" },
-          { name: "currency"; type: "address"; internalType: "address" },
-          { name: "pricePerUnit"; type: "uint256"; internalType: "uint256" },
-          { name: "metadataURI"; type: "string"; internalType: "string" },
-          { name: "uid"; type: "bytes32"; internalType: "bytes32" },
+          { type: "uint256"; name: "tokenId" },
+          { type: "uint48"; name: "startTimestamp" },
+          { type: "uint48"; name: "endTimestamp" },
+          { type: "address"; name: "recipient" },
+          { type: "uint256"; name: "quantity" },
+          { type: "address"; name: "currency" },
+          { type: "uint256"; name: "pricePerUnit" },
+          { type: "string"; name: "metadataURI" },
+          { type: "bytes32"; name: "uid" },
         ];
       },
-      { name: "signature"; type: "bytes"; internalType: "bytes" },
-      { name: "metadataURI"; type: "string"; internalType: "string" },
+      { type: "bytes"; name: "signature" },
+      { type: "string"; name: "metadataURI" },
     ];
   }>;
 };
@@ -36,71 +34,58 @@ export type EncodeBytesBeforeMintERC1155Params = {
 export const FN_SELECTOR = "0xa4c6930f" as const;
 const FN_INPUTS = [
   {
-    name: "params",
     type: "tuple",
-    internalType: "struct MintableERC1155.MintParamsERC1155",
+    name: "params",
     components: [
       {
-        name: "request",
         type: "tuple",
-        internalType: "struct MintableERC1155.MintRequestERC1155",
+        name: "request",
         components: [
           {
+            type: "uint256",
             name: "tokenId",
-            type: "uint256",
-            internalType: "uint256",
           },
           {
+            type: "uint48",
             name: "startTimestamp",
-            type: "uint48",
-            internalType: "uint48",
           },
           {
+            type: "uint48",
             name: "endTimestamp",
-            type: "uint48",
-            internalType: "uint48",
           },
           {
+            type: "address",
             name: "recipient",
-            type: "address",
-            internalType: "address",
           },
           {
+            type: "uint256",
             name: "quantity",
-            type: "uint256",
-            internalType: "uint256",
           },
           {
-            name: "currency",
             type: "address",
-            internalType: "address",
+            name: "currency",
           },
           {
-            name: "pricePerUnit",
             type: "uint256",
-            internalType: "uint256",
+            name: "pricePerUnit",
           },
           {
-            name: "metadataURI",
             type: "string",
-            internalType: "string",
+            name: "metadataURI",
           },
           {
-            name: "uid",
             type: "bytes32",
-            internalType: "bytes32",
+            name: "uid",
           },
         ],
       },
       {
-        name: "signature",
         type: "bytes",
-        internalType: "bytes",
+        name: "signature",
       },
       {
-        name: "metadataURI",
         type: "string",
-        internalType: "string",
+        name: "metadataURI",
       },
     ],
   },

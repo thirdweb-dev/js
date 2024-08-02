@@ -18,6 +18,12 @@ export async function getConnectLocale(localeId: LocaleId) {
     case "de_DE": {
       return (await import("./de.js")).default;
     }
+    case "ko_KR": {
+      return (await import("./kr.js")).default;
+    }
+    case "fr_FR": {
+      return (await import("./fr.js")).default;
+    }
     default: {
       return (await import("./en.js")).default;
     }

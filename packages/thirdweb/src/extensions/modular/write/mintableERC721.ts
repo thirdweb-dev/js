@@ -5,7 +5,7 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Address } from "../../../utils/address.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
+import { type Hex, padHex } from "../../../utils/encoding/hex.js";
 import {
   getBaseUriFromBatch,
   uploadOrExtractURIs,
@@ -46,7 +46,7 @@ export function mintWithRole(options: BaseTransactionOptions<NFTMintParams>) {
       const emptyPayload = {
         pricePerUnit: 0n,
         quantity: 0n,
-        uid: randomBytesHex(),
+        uid: padHex("0x", { size: 32 }),
         currency: ZERO_ADDRESS,
         recipient: ZERO_ADDRESS,
         startTimestamp: 0,

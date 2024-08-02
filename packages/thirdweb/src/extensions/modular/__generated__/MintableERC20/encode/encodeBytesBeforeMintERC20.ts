@@ -7,25 +7,23 @@ import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameter
  */
 export type EncodeBytesBeforeMintERC20Params = {
   params: AbiParameterToPrimitiveType<{
-    name: "params";
     type: "tuple";
-    internalType: "struct MintableERC20.MintParamsERC20";
+    name: "params";
     components: [
       {
-        name: "request";
         type: "tuple";
-        internalType: "struct MintableERC20.MintRequestERC20";
+        name: "request";
         components: [
-          { name: "startTimestamp"; type: "uint48"; internalType: "uint48" },
-          { name: "endTimestamp"; type: "uint48"; internalType: "uint48" },
-          { name: "recipient"; type: "address"; internalType: "address" },
-          { name: "quantity"; type: "uint256"; internalType: "uint256" },
-          { name: "currency"; type: "address"; internalType: "address" },
-          { name: "pricePerUnit"; type: "uint256"; internalType: "uint256" },
-          { name: "uid"; type: "bytes32"; internalType: "bytes32" },
+          { type: "uint48"; name: "startTimestamp" },
+          { type: "uint48"; name: "endTimestamp" },
+          { type: "address"; name: "recipient" },
+          { type: "uint256"; name: "quantity" },
+          { type: "address"; name: "currency" },
+          { type: "uint256"; name: "pricePerUnit" },
+          { type: "bytes32"; name: "uid" },
         ];
       },
-      { name: "signature"; type: "bytes"; internalType: "bytes" },
+      { type: "bytes"; name: "signature" },
     ];
   }>;
 };
@@ -33,56 +31,46 @@ export type EncodeBytesBeforeMintERC20Params = {
 export const FN_SELECTOR = "0xc7a090f4" as const;
 const FN_INPUTS = [
   {
-    name: "params",
     type: "tuple",
-    internalType: "struct MintableERC20.MintParamsERC20",
+    name: "params",
     components: [
       {
-        name: "request",
         type: "tuple",
-        internalType: "struct MintableERC20.MintRequestERC20",
+        name: "request",
         components: [
           {
+            type: "uint48",
             name: "startTimestamp",
-            type: "uint48",
-            internalType: "uint48",
           },
           {
+            type: "uint48",
             name: "endTimestamp",
-            type: "uint48",
-            internalType: "uint48",
           },
           {
+            type: "address",
             name: "recipient",
-            type: "address",
-            internalType: "address",
           },
           {
+            type: "uint256",
             name: "quantity",
-            type: "uint256",
-            internalType: "uint256",
           },
           {
-            name: "currency",
             type: "address",
-            internalType: "address",
+            name: "currency",
           },
           {
-            name: "pricePerUnit",
             type: "uint256",
-            internalType: "uint256",
+            name: "pricePerUnit",
           },
           {
-            name: "uid",
             type: "bytes32",
-            internalType: "bytes32",
+            name: "uid",
           },
         ],
       },
       {
-        name: "signature",
         type: "bytes",
-        internalType: "bytes",
+        name: "signature",
       },
     ],
   },

@@ -1,6 +1,6 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { grantRoles } from "../__generated__/MintableERC20/write/grantRoles.js";
+import { grantRoles } from "../__generated__/ModularCore/write/grantRoles.js";
 
 const MINTER_ROLE = 1n;
 

@@ -1,4 +1,5 @@
 import type { AbiParameterToPrimitiveType } from "abitype";
+import { padHex } from "viem";
 import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
@@ -6,10 +7,6 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import type { Address } from "../../../utils/address.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
-import {
-  getBaseUriFromBatch,
-  uploadOrExtractURIs,
-} from "../../../utils/ipfs.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
@@ -18,35 +15,37 @@ import { encodeBytesBeforeMintERC1155Params } from "../__generated__/MintableERC
 
 export type EditionMintParams = {
   to: Address;
-  tokenId: bigint;
   amount: bigint;
   nft: NFTInput | string;
+  tokenId: bigint; // TODO (modular) this should be optional
 };
 
-export type NFTSignatureMintParams = {
-  to: Address;
-  nfts: (NFTInput | string)[];
-};
-
-export function mintWithPermissions(
+export function mintWithRole(
   options: BaseTransactionOptions<EditionMintParams>,
 ) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const batchOfUris = await uploadOrExtractURIs(
-        [options.nft],
-        options.contract.client,
-        0,
-      );
+      let metadataURI: string;
+      if (typeof options.nft === "string") {
+        // if the input is already a string then we just use that
+        metadataURI = options.nft;
+      } else {
+        // otherwise we need to upload the file to the storage server
+        // load the upload code if we need it
+        const { upload } = await import("../../../storage/upload.js");
+        metadataURI = await upload({
+          client: options.contract.client,
+          files: [options.nft],
+        });
+      }
 
-      const baseURI = getBaseUriFromBatch(batchOfUris);
-
+      const tokenId = options.tokenId;
       const emptyPayload = {
-        tokenId: options.tokenId,
+        tokenId,
         pricePerUnit: 0n,
         quantity: 0n,
-        uid: randomBytesHex(),
+        uid: padHex("0x", { size: 32 }),
         currency: ZERO_ADDRESS,
         recipient: ZERO_ADDRESS,
         startTimestamp: 0,
@@ -56,13 +55,13 @@ export function mintWithPermissions(
 
       return {
         to: options.to,
-        tokenId: options.tokenId,
+        tokenId,
         value: options.amount,
         data: encodeBytesBeforeMintERC1155Params({
           params: {
             request: emptyPayload,
             signature: "0x",
-            metadataURI: `${baseURI}0`,
+            metadataURI,
           },
         }),
       };
@@ -71,18 +70,18 @@ export function mintWithPermissions(
 }
 
 export function mintWithSignature(
-  options: BaseTransactionOptions<GenerateMintSignatureOptions>,
+  options: BaseTransactionOptions<
+    Awaited<ReturnType<typeof generateMintSignature>>
+  >,
 ) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature, metadataURI } =
-        await generateMintSignature(options);
-
+      const { payload, signature, metadataURI } = options;
       return {
         to: payload.recipient,
         tokenId: payload.tokenId,
-        value: BigInt(payload.quantity),
+        value: payload.quantity,
         data: encodeBytesBeforeMintERC1155Params({
           params: {
             request: payload,
@@ -133,31 +132,24 @@ export async function generateMintSignature(
 ) {
   const { mintRequest, account, contract } = options;
   const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
-  const [pricePerUnit, uid] = await Promise.all([
-    // price per token in wei
-    (async () => {
-      // if priceInWei is provided, use it
-      if ("priceInWei" in mintRequest && mintRequest.priceInWei) {
-        return mintRequest.priceInWei;
-      }
-
-      // if neither price nor priceInWei is provided, default to 0
-      return 0n;
-    })(),
-    // uid computation
-    mintRequest.uid || (await randomBytesHex()),
-  ]);
-
+  const pricePerUnit = options.mintRequest.pricePerUnit || 0n;
+  const uid = mintRequest.uid || randomBytesHex();
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
   const endTime = mintRequest.validityEndTimestamp || tenYearsFromNow();
 
-  const batchOfUris = await uploadOrExtractURIs(
-    [options.nft],
-    options.contract.client,
-    0,
-  );
-
-  const metadataURI = `${getBaseUriFromBatch(batchOfUris)}0`;
+  let metadataURI: string;
+  if (typeof options.nft === "string") {
+    // if the input is already a string then we just use that
+    metadataURI = options.nft;
+  } else {
+    // otherwise we need to upload the file to the storage server
+    // load the upload code if we need it
+    const { upload } = await import("../../../storage/upload.js");
+    metadataURI = await upload({
+      client: options.contract.client,
+      files: [options.nft],
+    });
+  }
 
   const payload: PayloadType = {
     pricePerUnit,
@@ -193,10 +185,10 @@ type PayloadType = AbiParameterToPrimitiveType<{
 
 type GeneratePayloadInput = {
   recipient: Address;
-  tokenId: bigint;
   quantity: bigint;
+  tokenId: bigint; // TODO (modular) this should be optional
   currency?: Address;
-  priceInWei?: bigint;
+  pricePerUnit?: bigint;
   uid?: Hex;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;

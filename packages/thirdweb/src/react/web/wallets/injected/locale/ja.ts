@@ -1,27 +1,25 @@
 import type { InjectedWalletLocale } from "./types.js";
-
 /**
  * @internal
  */
-const injectedWalletLocaleJa = (walletName: string): InjectedWalletLocale => ({
+const injectedWalletLocale = (wallet: string): InjectedWalletLocale => ({
   connectionScreen: {
-    inProgress: "確認待ち",
+    inProgress: "確認を待っています",
     failed: "接続に失敗しました",
-    instruction: `${walletName}のウォレットで接続リクエストを承認してください`,
+    instruction: `${wallet}で接続リクエストを承認してください`,
     retry: "再試行",
   },
   getStartedScreen: {
-    instruction: `QRコードをスキャンして${walletName}アプリをダウンロードしてください`,
+    instruction: `QRコードをスキャンして${wallet}アプリをダウンロードしてください`,
   },
   scanScreen: {
-    instruction: `${walletName}のウォレットアプリでQRコードをスキャンして接続してください`,
+    instruction: `${wallet}アプリでQRコードをスキャンして接続してください`,
   },
-  getStartedLink: `${walletName}のウォレットを持っていませんか？`,
+  getStartedLink: `${wallet}をお持ちではありませんか？`,
   download: {
-    chrome: "Chrome拡張をダウンロード",
+    chrome: "Chrome拡張機能をダウンロード",
     android: "Google Playでダウンロード",
     iOS: "App Storeでダウンロード",
   },
 });
-
-export default injectedWalletLocaleJa;
+export default injectedWalletLocale;

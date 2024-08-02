@@ -3,6 +3,10 @@ export {
   mintWithSignature,
   generateMintSignature,
 } from "../../extensions/modular/write/mintableERC20.js";
+export type {
+  GenerateMintSignatureOptions,
+  TokenMintParams,
+} from "../../extensions/modular/write/mintableERC20.js";
 
 export {
   claimTo,

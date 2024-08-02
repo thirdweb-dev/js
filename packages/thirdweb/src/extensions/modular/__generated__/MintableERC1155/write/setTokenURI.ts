@@ -13,29 +13,19 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setTokenURI" function.
  */
 export type SetTokenURIParams = WithOverrides<{
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "_tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  tokenURI: AbiParameterToPrimitiveType<{
-    name: "_tokenURI";
-    type: "string";
-    internalType: "string";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
+  tokenURI: AbiParameterToPrimitiveType<{ type: "string"; name: "_tokenURI" }>;
 }>;
 
 export const FN_SELECTOR = "0x162094c4" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenId",
     type: "uint256",
-    internalType: "uint256",
+    name: "_tokenId",
   },
   {
-    name: "_tokenURI",
     type: "string",
-    internalType: "string",
+    name: "_tokenURI",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

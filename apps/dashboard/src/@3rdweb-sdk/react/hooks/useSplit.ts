@@ -5,8 +5,6 @@ import type {
   BalanceQueryRequest,
   BalanceQueryResponse,
 } from "pages/api/moralis/balances";
-import { ZERO_ADDRESS } from "thirdweb";
-import { getAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
 import { splitsKeys } from "..";
@@ -17,7 +15,7 @@ import {
 
 export function useSplitData(contract?: Split) {
   return useQueryWithNetwork(
-    splitsKeys.list(getAddress(contract?.getAddress() || ZERO_ADDRESS)),
+    splitsKeys.list(contract?.getAddress()),
     async () => contract?.getAllRecipients(),
     {
       enabled: !!contract,
@@ -27,7 +25,7 @@ export function useSplitData(contract?: Split) {
 export function useSplitBalances(contractAddress?: string) {
   const chainId = useSDKChainId();
   const currencies = useQueryWithNetwork(
-    splitsKeys.currencies(getAddress(contractAddress || ZERO_ADDRESS)),
+    splitsKeys.currencies(contractAddress),
     async () => {
       const query = await fetch("/api/moralis/balances", {
         method: "POST",

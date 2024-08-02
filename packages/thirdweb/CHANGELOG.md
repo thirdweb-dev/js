@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.43.2
+
+### Patch Changes
+
+- [#3895](https://github.com/thirdweb-dev/js/pull/3895) [`13d9741`](https://github.com/thirdweb-dev/js/commit/13d9741f77df6e8e3d53dbffe6671d0852ac6a06) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add Korean and French Locale
+
+- [#3901](https://github.com/thirdweb-dev/js/pull/3901) [`825ef23`](https://github.com/thirdweb-dev/js/commit/825ef239a0552295a218e61f4dcbb5f32eb19632) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Handle gas free chains where baseFeePerGas is 0
+
+- [#3903](https://github.com/thirdweb-dev/js/pull/3903) [`306f3da`](https://github.com/thirdweb-dev/js/commit/306f3da606b83d7030d6a2d0b1771e1b3f9edb8b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix occasional iframe error when logging in with oauth
+
+## 5.43.1
+
+### Patch Changes
+
+- [#3896](https://github.com/thirdweb-dev/js/pull/3896) [`3b49b18`](https://github.com/thirdweb-dev/js/commit/3b49b18f4da60ae27c540a8957e81c55df787609) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix OTP validation in React Native Connect UI
+
+- [#3897](https://github.com/thirdweb-dev/js/pull/3897) [`4463848`](https://github.com/thirdweb-dev/js/commit/446384867180e5441fd361de979457ff93818d59) Thanks [@jnsdls](https://github.com/jnsdls)! - fix "create" command requiring login
+
 ## 5.43.0
 
 ### Minor Changes

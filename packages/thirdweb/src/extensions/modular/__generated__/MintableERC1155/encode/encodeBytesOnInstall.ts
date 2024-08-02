@@ -7,18 +7,16 @@ import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameter
  */
 export type EncodeBytesOnInstallParams = {
   primarySaleRecipient: AbiParameterToPrimitiveType<{
-    name: "primarySaleRecipient";
     type: "address";
-    internalType: "address";
+    name: "primarySaleRecipient";
   }>;
 };
 
 export const FN_SELECTOR = "0x5d4c0b89" as const;
 const FN_INPUTS = [
   {
-    name: "primarySaleRecipient",
     type: "address",
-    internalType: "address",
+    name: "primarySaleRecipient",
   },
 ] as const;
 
