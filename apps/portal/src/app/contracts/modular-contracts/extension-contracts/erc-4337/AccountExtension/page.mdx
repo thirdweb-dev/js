@@ -1,0 +1,208 @@
+import { Details, GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "AccountExtension contract",
+		icon: "solidity",
+	},
+	title: "AccountExtension | thirdweb contract",
+	description:
+		"The AccountExtension smart contract is the extension usable with the Managed Account smart contracts",
+});
+
+# AccountExtension
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/utils/AccountExtension.sol";
+```
+
+The `AccountExtension` smart contract is the extension usable with the [Managed](/contracts/build/base-contracts/erc-4337/managed-account) Account smart contracts. It is the _default extension_ for these base contracts.
+It includes the default logic for creating a smart account smart contract including the ability to:
+
+- Have multiple owners
+- Execute transactions (single and batched).
+- Send and receive native tokens.
+- Send and receive ERC-721 and ERC-1155 NFTs.
+- Multicall-able.
+- Store contract metadata.
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/utils/AccountExtension.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/smart-wallet/utils/AccountExtension.sol";
+
+contract MyManagedAccount is AccountExtension { ... }
+```
+
+## Inherited Extensions
+
+This extension inherits from the following extensions:
+
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [PermissionsEnumerable](/contracts/build/extensions/general/Permissions-enumerable)
+
+## Base Contracts Implementing This Extension
+
+- [ManagedAccount](/contracts/build/base-contracts/erc-4337/managed-account)
+
+## Full API reference
+
+<Details summary="execute">
+
+Executes a transaction (called directly from an admin, or by entryPoint)
+
+```solidity
+function execute(
+    address _target,
+    uint256 _value,
+    bytes calldata _calldata
+) external virtual onlyAdminOrEntrypoint {
+    _call(_target, _value, _calldata);
+}
+```
+
+#### \_target
+
+The target contract to call.
+
+#### \_value
+
+The amount of native tokens to send to the target contract.
+
+#### \_calldata
+
+The `bytes` calldata to send to the target contract.
+
+</Details>
+
+<Details summary="executeBatch">
+
+Executes a sequence transaction (called directly from an admin, or by entryPoint)
+
+```solidity
+function executeBatch(
+    address[] calldata _target,
+    uint256[] calldata _value,
+    bytes[] calldata _calldata
+) external virtual onlyAdminOrEntrypoint {
+    require(_target.length == _calldata.length && _target.length == _value.length, "Account: wrong array lengths.");
+    for (uint256 i = 0; i < _target.length; i++) {
+        _call(_target[i], _value[i], _calldata[i]);
+    }
+}
+```
+
+#### \_target
+
+The target contracts to call.
+
+#### \_value
+
+The amounts of native tokens to send to the target contracts.
+
+#### \_calldata
+
+The `bytes` calldata to send to the target contracts.
+
+</Details>
+
+<Details summary="_call">
+
+Calls a target contract and reverts if it fails.
+
+```solidity
+function _call(
+    address _target,
+    uint256 value,
+    bytes memory _calldata
+) internal {
+    (bool success, bytes memory result) = _target.call{ value: value }(_calldata);
+    if (!success) {
+        assembly {
+            revert(add(result, 32), mload(result))
+        }
+    }
+}
+```
+
+#### \_target
+
+The target contract to call.
+
+#### \_value
+
+The amount of native tokens to send to the target contract.
+
+#### \_calldata
+
+The `bytes` calldata to send to the target contract.
+
+</Details>
+
+<Details summary="_canSetContractURI">
+
+Returns whether contract metadata can be set in the given execution context.
+
+```solidity
+function _canSetContractURI() internal view virtual override returns (bool) {
+    return hasRole(DEFAULT_ADMIN_ROLE, msg.sender);
+}
+```
+
+</Details>
+
+<Details summary="_setupRole">
+
+Registers a signer in the factory.
+
+```solidity
+function _setupRole(bytes32 role, address account) internal virtual override {
+    super._setupRole(role, account);
+    if (role == SIGNER_ROLE && factory.code.length > 0) {
+        IAccountFactory(factory).addSigner(account);
+    }
+}
+```
+
+#### role
+
+The role to set up. Must be of type `bytes32`.
+
+#### account
+
+The address of the account to register for the role.
+
+</Details>
+
+<Details summary="_revokeRole">
+
+Un-registers a signer in the factory.
+
+```solidity
+function _revokeRole(bytes32 role, address account) internal virtual override {
+    super._revokeRole(role, account);
+    if (role == SIGNER_ROLE && factory.code.length > 0) {
+        IAccountFactory(factory).removeSigner(account);
+    }
+}
+```
+
+#### role
+
+The role to revoke. Must be of type `bytes32`.
+
+#### account
+
+The address of the account to un-register for the role.
+
+</Details>

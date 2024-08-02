@@ -1,0 +1,201 @@
+import {
+	Callout,
+	Steps,
+	Step,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
+	DocImage,
+	createMetadata,
+} from "@doc";
+
+import deployNowImage from "./assets/deploy-now.png";
+import contractMetadataImage from "./assets/contract-metadata.png";
+import fundsImage from "./assets/funds.png";
+import advancedConfigurationImage from "./assets/advanced-configuration.png";
+import chooseNetworkImage from "./assets/choose-network.png";
+import uploadTypesImage from "./assets/upload-types.png";
+import delayedRevealImage from "./assets/delayed-reveal.png";
+
+export const metadata = createMetadata({
+	image: {
+		title: "NFT Drop contract",
+		icon: "contract",
+	},
+	title: "NFT Drop contract | thirdweb",
+	description: `NFT Drop enables users to release a collection of unique NFTs using the ERC721A standard. NFT Drop uses a “drop” mechanism intended for large collections to distribute NFTs.`,
+});
+
+# NFT Drop
+
+NFT Drop enables users to release a collection of unique NFTs using the ERC721A standard. NFT Drop uses a “drop” mechanism intended for large collections to distribute NFTs.
+
+<Callout title="NFT Drop vs NFT Collection" variant="info">
+	NFT Drop differs from [NFT
+	Collection](/contracts/explore/pre-built-contracts/nft-collection) in that it
+	allows users to lazy-mint the NFT directly to their wallet. This eliminates
+	the need to mint the NFT to the creator's wallet and then transfer the asset
+	to another user’s wallet.
+</Callout>
+
+The NFT Drop contract can be deployed via the [dashboard](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-dashboard), [CLI](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-cli), or [SDKs](/contracts/explore/pre-built-contracts/nft-drop#deploy-nft-drop-sdk).
+
+<Callout title="Drop Design" variant="info">
+	Learn more about why Drop contracts were built, how they were designed, and
+	their limitations by reading the [Drop Design
+	Document](/contracts/design-docs/drop)
+</Callout>
+
+## Use Cases
+
+- Create restricted-access NFTs which can only be claimed by a specified allowlist of wallets
+- Create large collections of unique NFT profile pics with each NFT corresponding to unique metadata or traits
+- Create NFTs of artwork intended for distribution
+
+## Deploy NFT Drop (Dashboard)
+
+Learn how to deploy and manage an NFT Drop contract using dashboard.
+
+### Deploy and configure contract
+
+<Steps>
+
+<Step title="Select Contract">
+	Navigate to Contracts > Explore > [NFT
+	Drop](https://thirdweb.com/thirdweb.eth/DropERC721)
+</Step>
+
+<Step title="Deploy">
+
+Select `Deploy now`
+
+<DocImage src={deployNowImage} alt="Deploy a contract view from Explore" />
+
+</Step>
+
+<Step title="Set Metadata">
+
+A modal will appear to set Contract Metadata or settings to organize and distinguish between contracts. Set the following metadata:
+
+- **Name** - name of the contract.
+- **Symbol (optional)** - shortened name or symbol to denote a specific group of tokens. Similar to a stock ticker.
+- **Description (optional)** - description of contract to
+- **Image (optional)** - image or icon of contract
+
+<DocImage src={contractMetadataImage} alt="Contract metadata settings" />
+
+</Step>
+
+<Step title="Fund distribution">
+
+Set fund distribution recipients for Primary Sales and Secondary Sales by passing in the corresponding wallet addresses you want to receive the funds.
+
+- **Primary Sales** - The initial recipient will receive any funds from sales made upon initially minting the NFT.
+
+- **Royalties / Secondary Sales** - The recipient that will receive funds from any secondary sales or re-sales of the NFT.
+
+  <DocImage src={fundsImage} alt="Fund distribution settings" />
+
+- **(Optional) Platform fees** - Recipient that will receive additional fees for all primary sales that happen on this contract. (This is useful if you are deploying this contract for a 3rd party and want to take fees for your service).
+
+  <DocImage
+  	src={advancedConfigurationImage}
+  	alt="Screenshot of advanced configuration"
+  />
+
+</Step>
+
+<Step title="Choose network">
+
+Choose a Network / Chain to Deploy to. [View list of available Networks.](https://thirdweb.com/chainlist)
+
+<DocImage src={chooseNetworkImage} alt="Choose network screen" />
+
+</Step>
+
+<Step title="Sign transaction">
+	Select `Deploy` and sign the transaction prompted in the connected wallet to
+	finish deploying the contract.
+</Step>
+
+</Steps>
+
+### Upload NFTs
+
+**Single Upload**
+
+- Single upload is a preferred option for users uploading few NFTs at a time.
+
+**Batch Upload**
+
+- Batch upload is a method that allows you to upload large amounts of NFTs in one click.
+
+<DocImage
+	src={uploadTypesImage}
+	alt="NFT settings page highlighting NFT Upload types"
+/>
+
+### Enable Delayed Reveal
+
+Optionally, users may choose to hide their NFT image and metadata from users before minting.
+
+<DocImage src={delayedRevealImage} alt="Screenshot of delayed reveal page" />
+
+## Deploy NFT Drop (CLI)
+
+1. In the CLI run the following Deploy command:
+
+   ```bash
+   npx thirdweb deploy -n --name nft-drop
+   ```
+
+2. Follow the prompts to fill out your contract by following the Deploy NFT Drop (Dashboard) section.
+
+## Deploy NFT Drop (SDK)
+
+<Tabs defaultValue="typescript">
+
+<TabsList>
+	<TabsTrigger value="typescript">TypeScript</TabsTrigger>
+	<TabsTrigger value="react">React</TabsTrigger>
+	<TabsTrigger value="react-native">React Native</TabsTrigger>
+</TabsList>
+
+<TabsContent value="typescript">
+
+```jsx
+const txResult = await sdk.deployer.deployBuiltInContract("nft-drop", {
+	name: "<your_contract_name>",
+	primary_sale_recipient: "<wallet_address>",
+});
+```
+
+</TabsContent>
+
+<TabsContent value="react">
+
+```tsx
+// TODO
+```
+
+</TabsContent>
+
+<TabsContent value="react-native">
+
+```jsx
+const sdk = useSDK(
+	sdk.deployer.deployBuiltInContract("nft-drop", {
+		name: "<your_contract_name>",
+		primary_sale_recipient: "<wallet_address>",
+	}),
+);
+```
+
+</TabsContent>
+
+</Tabs>
+
+## Interact with your contract
+
+For easy-to-use code snippets for your contract, view the [Code Snippets](/dashboard/build) view on your contract’s dashboard or visit the [SDK documentation](/contracts/interact/overview).

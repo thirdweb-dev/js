@@ -1,0 +1,68 @@
+import { DocImage } from "@doc";
+import testImage from "./test.jpg";
+
+export const metadata = {
+	robots: "noindex, nofollow",
+};
+
+# Heading 1
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus cras adipiscing enim. Purus gravida quis blandit turpis. Egestas quis ipsum suspendisse ultrices gravida. Risus quis varius quam quisque id diam. Velit egestas dui id ornare arcu odio ut sem.
+
+## Heading 2
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus cras adipiscing enim. Purus gravida quis blandit turpis. Egestas quis ipsum suspendisse ultrices gravida. Risus quis varius quam quisque id diam. Velit egestas dui id ornare arcu odio ut sem.
+
+### Heading 3
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus cras adipiscing enim. Purus gravida quis blandit turpis. Egestas quis ipsum suspendisse ultrices gravida. Risus quis varius quam quisque id diam. Velit egestas dui id ornare arcu odio ut sem.
+
+#### Heading 4
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus cras adipiscing enim. Purus gravida quis blandit turpis. Egestas quis ipsum suspendisse ultrices gravida. Risus quis varius quam quisque id diam. Velit egestas dui id ornare arcu odio ut sem.
+
+##### Heading 5
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus cras adipiscing enim. Purus gravida quis blandit turpis. Egestas quis ipsum suspendisse ultrices gravida. Risus quis varius quam quisque id diam. Velit egestas dui id ornare arcu odio ut sem.
+
+###### Heading 6
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra aliquet eget sit amet tellus cras adipiscing enim. Purus gravida quis blandit turpis. Egestas quis ipsum suspendisse ultrices gravida. Risus quis varius quam quisque id diam. Velit egestas dui id ornare arcu odio ut sem.
+
+---
+
+this is normal, **this is bold**, _this is italic_, [this is a link](#)
+
+---
+
+## Unordered List
+
+- The function to execute the mutation (e.g. mint a new NFT).
+- `mutateAsync` - The function to execute the mutation, but returns a promise (allowing `await` to be used).
+- `isLoading` - Whether the mutation is currently executing.
+- `error` - The error returned from the mutation, if any.
+
+## Ordered List
+
+1. The function to execute the mutation (e.g. mint a new NFT).
+2. `mutateAsync` - The function to execute the mutation, but returns a promise (allowing `await` to be used).
+3. `isLoading` - Whether the mutation is currently executing.
+4. `error` - The error returned from the mutation, if any.
+
+## Nested List
+
+1. Nested lists are rarely a good idea
+
+   - You might feel like you are being really "organized" or something but you are just creating a gross shape on the screen that is hard to read.
+   - Nested navigation in UIs is a bad idea too, keep things as flat as possible.
+   - Nesting tons of folders in your source code is also not helpful.
+
+2. Nested lists are rarely a good idea
+
+   - You might feel like you are being really "organized" or something but you are just creating a gross shape on the screen that is hard to read.
+   - Nested navigation in UIs is a bad idea too, keep things as flat as possible.
+   - Nesting tons of folders in your source code is also not helpful.
+
+## Image
+
+<DocImage src={testImage} alt="" />

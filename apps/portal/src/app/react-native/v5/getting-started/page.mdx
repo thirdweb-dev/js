@@ -1,0 +1,189 @@
+import { Callout, Steps, Step, GithubTemplateCard } from "@doc";
+
+# Getting Started
+
+### Automatic Installation
+
+We recommend starting a new thirdweb React Native project using our CLI, which sets up everything automatically for you.
+
+In your CLI, run:
+
+```bash
+npx thirdweb create --legacy-peer-deps --react-native
+```
+
+or clone the [expo-starter](https://github.com/thirdweb-dev/expo-starter) repo using git.
+
+<GithubTemplateCard
+	title="Expo + thirdweb demo repo"
+	descrption="A starter template for using the thirdweb package in a React Native app"
+	href="https://github.com/thirdweb-dev/expo-starter"
+/>
+
+### Manual Installation
+
+To manually install the React Native SDK, you'll need to install the `@thirdweb/react-native-adapter` package from npm on top of the `thirdweb` package.
+
+<Steps>
+<Step title="Install the packages">
+
+Using your favorite package manager or expo, install all the require dependencies
+
+```shell
+npx expo install thirdweb @thirdweb-dev/react-native-adapter
+```
+
+Since react native requires installing native dependencies directly, you also have to install these required peer dependencies:
+
+```shell
+npx expo install react-native-get-random-values @react-native-community/netinfo expo-application @react-native-async-storage/async-storage expo-web-browser expo-linking react-native-aes-gcm-crypto react-native-quick-crypto amazon-cognito-identity-js @coinbase/wallet-mobile-sdk react-native-mmkv react-native-svg @react-native-clipboard/clipboard
+```
+
+Here's an explanation of each peer dependency and why its needed:
+
+```ts
+// needed for wallet connect
+react-native-get-random-values
+@react-native-community/netinfo
+expo-application
+
+// needed wallet connect + in-app wallet
+@react-native-async-storage/async-storage
+
+// needed for inapp wallet
+expo-web-browser // for oauth flows
+amazon-cognito-identity-js // for authentication
+react-native-aes-gcm-crypto // for encryption
+react-native-quick-crypto@0.7.0-rc.6 // for fast hashing
+
+// needed for coinbase wallet
+@coinbase/wallet-mobile-sdk
+react-native-mmkv
+
+// needed for UI components
+react-native-svg 
+@react-native-clipboard/clipboard
+```
+
+</Step>
+<Step title="Edit your `metro.config.js`">
+
+If you don't already have a `metro.config.file.js` in your project, you can create one by running:
+
+```shell
+npx expo customize metro.config.js
+```
+
+Then, you need to add 2 properties to the metro resolver: `unstable_enablePackageExports` and `unstable_conditionNames`. This is to tell metro to resolve named `exports` properly.
+
+```js
+// file: metro.config.js
+
+// Learn more https://docs.expo.io/guides/customizing-metro
+const { getDefaultConfig } = require("expo/metro-config");
+
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname);
+
+// ADD THESE 2 PROPERTIES
+config.resolver.unstable_enablePackageExports = true;
+config.resolver.unstable_conditionNames = [
+	"react-native",
+	"browser",
+	"require",
+];
+
+module.exports = config;
+```
+
+</Step>
+<Step title="Import `@thirdweb-dev/react-native-adapter`">
+
+### Without `expo-router`
+
+Simply import the package in the entrypoint of your app before any other import. This will polyfill all the required functionality needed.
+
+```js
+// file: App.tsx
+
+// this needs to be imported before anything else
+import "@thirdweb-dev/react-native-adapter";
+// ... the rest of your app
+```
+
+### With `expo-router`
+
+If you're using `expo-router`, you need to polyfill before the router entry:
+
+#### 1. create a `index.js`
+
+Create an `index.js` file at the root of the repo. This will be the new entrypoint to your app, ensuring the polyfills happen before any routing.
+
+```ts
+// file: index.js
+
+// this needs to be imported before expo-router
+import "@thirdweb-dev/react-native-adapter";
+import "expo-router/entry";
+```
+
+#### 2. Change your main entrypoint in `package.json`
+
+Now you can replace `expo-router/entry` with `./index.js` as your main entrypoint.
+
+```ts
+// file: package.json
+
+"main": "./index.js",
+```
+
+<Callout variant="info" title="Additional notes">
+
+1. `react-native-aes-gcm-crypto` requires `minSDK 26` for android, you can edit this in your `app.json` file.
+2. You will get some warnings about unresolved exports, this is normal and will get better as the libraries get updated.
+
+</Callout>
+
+</Step>
+
+<Step title="Run the development build">
+
+You can run the development build using the Expo CLI, note that this needs to use the 'development build' option and not Expo Go.
+
+<Callout variant="info" title="Expo Go">
+
+Due to conflicts between Expo Go's wrapper and thirdweb's, **Expo Go is not currently supported**. When running your app, be sure to run a normal development build without using Expo Go.
+
+If the Expo CLI says "Using Expo Go" when starting the app, press `s` to switch to the development build.
+
+<img src="https://i.ibb.co/JxyZzLn/Screenshot-2024-06-24-at-12-38-57-PM.png" width={300} />
+
+</Callout>
+
+Examples:
+
+```shell
+npx expo:run ios
+```
+
+</Step>
+
+<Step title=" Use the `thirdweb` package normally">
+
+Once all the setup above is all done, you can use the most of functionality in the `thirdweb` package out of the box, without having to do any react native specific code.
+
+This means that you can follow all the React documentation and expect it all to be exactly the same.
+
+Examples:
+
+```tsx
+// import thirdweb hooks, extensions, provider and wallets as usual
+import { ThirdwebProvider } from "thirdweb/react";
+import { balanceOf, claimTo } from "thirdweb/extensions/erc721";
+import { inAppWallet } from "thirdweb/wallets/in-app";
+```
+
+</Step>
+</Steps>
+
+

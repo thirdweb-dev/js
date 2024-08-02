@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://portal.thirdweb.com
+
+# Sitemaps
+Sitemap: https://portal.thirdweb.com/sitemap.xml

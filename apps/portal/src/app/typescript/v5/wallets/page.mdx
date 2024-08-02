@@ -1,0 +1,69 @@
+import { Breadcrumb, createMetadata, ArticleIconCard, Stack } from "@doc";
+import { ComponentIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Accounts & Wallets",
+		icon: "typescript",
+	},
+	title: "Accounts & Wallets | thirdweb SDK",
+	description: "Learn about accounts and wallets in the thirdweb SDK.",
+});
+
+# Accounts & Wallets
+
+We distinguish between "accounts" and "wallets" in the thirdweb SDK. We believe this ultimately provides a more predictable and flexible API for developers.
+
+## What is an Account?
+
+- An account always has an `address` and a way to `sign` messages, transactions, and typed data.
+- An account is always mapped to exactly one address on the blockchain.
+- An account cannot be "connected" or "disconnected" like a wallet, instead it is often the result of a wallet being connected.
+
+See also: [Account (ethereum.org)](https://ethereum.org/en/glossary/#account)
+
+## What is a Wallet?
+
+- A wallet "contains" one or more accounts.
+- A wallet can be "connected" (often prompting the user for approval) or "disconnected".
+- A wallet cannot independently sign messages, transactions, or typed data, instead, it delegates this to the account(s) it "contains".
+
+
+<Stack>
+
+<ArticleIconCard
+	title="Supported Wallets"
+	icon={ComponentIcon}
+	href="/typescript/v5/supported-wallets"
+	description="See all 350+ wallets supported by the Connect SDK"
+/>
+
+</Stack>
+
+## Example: Connect a wallet and access an account to send a transaction.
+
+```ts
+import { sendTransaction } from "thirdweb";
+// We use MetaMask wallet as an example, the pattern is the same for all wallets
+import { createWallet } from "thirdweb/wallets";
+
+// initialize the wallet, you can pick any of the 300+ wallet connectors supported
+// wallet ids are typed, let your TS editor autocomplete them for you
+// ex: "io.metamask", "com.coinbase.wallet", "me.rainbow", etc...
+const wallet = createWallet("io.metamask");
+
+// connect the wallet, this returns a promise that resolves to the connected account
+const account = await wallet.connect({
+	// pass the client you created with `createThirdwebClient()`
+	client,
+});
+
+// sign & send a transaction with the account -> returns the transaction hash
+const { transactionHash } = await sendTransaction({
+	// assuming you have called `prepareTransaction()` or `prepareContractCall()` before which returns the prepared transaction to send
+	transaction,
+	// Pass the account to sign the transaction with
+	account,
+});
+```
+

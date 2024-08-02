@@ -1,0 +1,58 @@
+# Fetch User Details on the server
+
+If you want to get the user details for a given thirdweb In-App Wallet on the server, you can make a `GET` request on `https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details`
+
+Here's an example function on how you might perform the query:
+
+```ts
+export async function fetchInAppWalletMetadataFromThirdweb(
+	args:
+		| {
+				queryBy: "walletAddress";
+				walletAddress: string;
+		  }
+		| {
+				queryBy: "email";
+				email: string;
+		  }
+		| {
+				queryBy: "phone";
+				phone: string;
+		  }
+		| {
+				queryBy: "phone";
+				phone: string;
+		  },
+) {
+	const url = new URL(
+		"https://embedded-wallet.thirdweb.com/api/2023-11-30/embedded-wallet/user-details",
+	);
+	if (args.queryBy === "walletAddress") {
+		url.searchParams.set("queryBy", "walletAddress");
+		url.searchParams.set("walletAddress", args.walletAddress);
+	}
+	if (args.queryBy === "email") {
+		url.searchParams.set("queryBy", "email");
+		url.searchParams.set("email", args.email);
+	}
+	if (args.queryBy === "phone") {
+		url.searchParams.set("queryBy", "phone");
+		url.searchParams.set("phone", args.phone);
+	}
+
+	const resp = await fetchReq(url.href, {
+		headers: {
+			Authorization: `Bearer ${THIRD_WEB_CLIENT_SECRET}`,
+		},
+	});
+
+	const data = (await resp.json()) as {
+		userId: string;
+		walletAddress: string;
+		email?: string;
+		phone?: string;
+		createdAt: string;
+	}[];
+	return data;
+}
+```

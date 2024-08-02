@@ -1,0 +1,59 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721BatchMintable contract",
+		icon: "solidity",
+	},
+	title: "ERC721BatchMintable | thirdweb contract",
+	description:
+		"Enable minting multiple NFTs at once in a single transaction by Implementing ERC721, IMintableERC721, and Multicall extensions",
+});
+
+# ERC721BatchMintable
+
+```solidity
+import "@thirdweb-dev/eip/ERC721.sol"
+import "@thirdweb-dev/contracts/extension/multicall.sol";
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
+```
+
+Enable minting multiple NFTs at once in a single transaction by Implementing [`ERC721`](/contracts/build/extensions/erc-721/ERC721), [`IMintableERC721`](/contracts/build/extensions/erc-721/ERC721Mintable), and [`Multicall`](/contracts/build/extensions/general/Multicall) extensions.
+
+This is an extension which is detectable in the dashboard if the smart contract implements the
+[ERC721](/contracts/build/extensions/erc-721/ERC721), [Multicall](/contracts/build/extensions/general/Multicall) and [ERC721Mintable](/contracts/build/extensions/erc-721/ERC721Mintable) extensions.
+
+## Usage
+
+This is an example smart contract which will have ERC721BatchMintable detected on it in the dashboard. It also shows the functions which can be (optionally) overridden to add custom logic.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC721A.sol";
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
+import "@thirdweb-dev/contracts/extension/Multicall.sol";
+
+contract Contract is ERC721A, IMintableERC721, Multicall {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC721A(
+            _name,
+            _symbol
+        )
+    {}
+
+    function mintTo(address to, string calldata uri) external override returns (uint256) {
+        // Your custom implementation here
+    }
+
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721Base](/contracts/build/base-contracts/erc-721/base)
+- [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)

@@ -1,0 +1,102 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Edition Drop contract",
+		icon: "contract",
+	},
+	title: "Edition Drop contract | thirdweb",
+	description: `The Edition Drop contract is best used when you want to release many NFTs with the same metadata that you want users to be able to claim`,
+});
+
+# Edition Drop
+
+The **Edition Drop** contract is best used when you want to release many NFTs with the same metadata that you want users to be able to claim. This contract follows the [ERC1155 extension](https://eips.ethereum.org/EIPS/eip-1155), also known as "Semi-Fungible Tokens".
+
+The Edition Drop contract allows you to define the conditions for when and how your users can claim an NFT, which has been previously [lazy minted](/glossary/lazy-minting) by the contract admin (usually the deployer), including allowlists, release dates, and the maximum number of NFTs which can be claimed.
+
+## Extensions
+
+This contract includes the following extensions:
+
+- [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
+- [ERC1155Supply](/contracts/build/extensions/erc-1155/ERC1155Supply)
+- [ERC1155Enumerable](/contracts/build/extensions/erc-1155/ERC1155Enumerable)
+- [ERC1155LazyMintable](/contracts/build/extensions/general/LazyMintable)
+- [ERC1155ClaimPhases](/contracts/build/extensions/erc-1155/ERC1155ClaimPhases)
+- [Royalty](/contracts/build/extensions/general/Royalty)
+- [PlatformFee](/contracts/build/extensions/general/PlatformFee)
+- [PrimarySale](/contracts/build/extensions/general/PrimarySale)
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+
+## Use Cases & Examples
+
+You could use the Edition Drop contract to:
+
+- Create NFT Memberships such as our [Early Access Cards](https://opensea.io/collection/thirdweb-community) that you want your users to claim
+- Release an item in your game for a limited-time
+- Create 100 NFTs based on one art piece, and allow users to claim one per wallet
+
+## Resources
+
+- [Frontend demo project](https://github.com/thirdweb-example/edition-drop)
+- [Technical Design Doc](/contracts/design-docs/drop)
+- [Full reference](/contracts/DropERC1155)
+
+## Creating & Configuring the Edition Drop
+
+Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/dashboard).
+
+### Creating an Edition Drop Contract
+
+Deploy the edition drop contract to any EVM network using the button below.
+
+### Lazy Minting NFTs
+
+Lazy minting is the process of uploading your metadata for your NFT(s) without minting them _yet_.
+
+This is useful when you want _other_ wallets to mint NFTs from your drop into their own wallets.
+
+To lazy-mint NFT(s), click **Create** to lazy-mint a single NFT, or **Batch Upload** to lazy-mint multiple NFTs at once.
+
+To get started, you can use one of our example files for [CSV](https://thirdweb.com/example.csv) or [JSON](https://nightly.thirdweb.com/example.json) metadata.
+
+### Setting Claim Phases
+
+On the Edition Drop contract, you set claim phases for each NFT, by clicking the **Claim Phases** button
+
+A claim phase is a set of conditions that define when and how your users can claim an NFT from your drop.
+
+**The Edition Drop contract supports multiple sequential claim phases**.
+
+Within a claim phase, you can define:
+
+- When the claim phase will start
+- How many NFTs do you want to drop
+- How much do you want to charge per NFT
+- What currency do you want to use
+- Which wallet addresses are allowed to mint (allowlist)
+- How many NFTs can be claimed per transaction
+- How many seconds do wallets have to wait between claims
+
+To add a claim phase to a token, click **Add Initial Claim Phase**:
+
+### Airdrop NFTs
+
+Click **Airdrop** on the token you want to use, and upload a `.csv` file containing a list of addresses you want to airdrop NFTs to.
+
+In the `.csv` file, you must specify an `address` column and a `quantity` column, representing the address you want to send the NFTs and how many you wish to send.
+You can download our example [CSV File](https://thirdweb.com/airdrop.csv) to get started.
+
+### Contract Metadata
+
+To configure the image, name, and description of the contract, click the **Settings** tab:
+
+### Royalty & Platform Fees
+
+From the **Settings** tab, you also configure the royalty fee,
+primary sales recipient,
+and platform fee.

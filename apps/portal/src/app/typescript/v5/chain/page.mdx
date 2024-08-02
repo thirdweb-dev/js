@@ -1,0 +1,31 @@
+# Chain
+
+The thirdweb SDK works with **any EVM chain**.
+
+All you need to connect a chain is its chain id. RPC connection to the chain is handled for you.
+
+```ts
+import { defineChain } from "thirdweb";
+
+const myChain = defineChain(myChainId);
+```
+
+The SDK comes with predefined [popular chains](/references/typescript/v5/variables) like `base`, `polygon`, and more exported from the `thirdweb/chains` entrypoint.
+
+```ts
+import { polygon } from "thirdweb/chains";
+
+const myChain = polygon;
+```
+
+### Configuring chains (Advanced)
+
+You can also configure chains with custom RPC endpoints, native currency, block explorers, and more.
+
+```ts
+const myChain = defineChain({
+  id: myChainId,
+  rpc: "https://my-custom-rpc.com",
+  ...
+})
+```

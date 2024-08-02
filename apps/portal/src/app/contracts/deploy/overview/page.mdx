@@ -1,0 +1,30 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Deploy",
+		icon: "contract",
+	},
+	title: "thirdweb Deploy",
+	description:
+		"Deploy is a tool to deploy any contract to any EVM compatible chain through one simple command and an easy-to-use interface. Deploy reduces the complexities of deploying a contract by eliminating steps such as hardcoding private keys, managing RPC URLs, or running scripts to deploy your contracts.",
+});
+
+# Deploy
+
+Deploy is a tool to deploy any contract to any EVM compatible chain through one simple command and an easy-to-use interface. Deploy reduces the complexities of deploying a contract by eliminating steps such as hardcoding private keys, managing RPC URLs, or running scripts to deploy your contracts.
+
+Simply run the following command at the root of your contract directory:
+
+```bash
+npx thirdweb deploy
+```
+
+#### Features
+
+- **Automatically verified contracts:** Contracts deployed using Deploy are automatically verified on [Sourcify](https://sourcify.dev/).
+- **Client-side deployment (increased security):** Deploy simplifies contract deployment with an intuitive dashboard. Users can avoid exporting / storing private keys, setting up RPC URLs, copying ABIs, or running scripts.
+- **No additional setup:** There is no need to modify your contract or do any additional setup. Deploy works with any contract, including those created with popular frameworks such as Hardhat and Foundry.
+- **Deploy to any EVM network:** Deploy supports the deployment of a contract to any EVM network.
+- **Dashboard management:** Automatically add your contracts to dashboard to setup constructors, manage and interact with your contract.
+- **Support for browser based wallets:** Deploy a contract using browser-based wallets like MetaMask, Coinbase Wallet, and others. Alternatively, deploy safely with a team using options such as Safe.

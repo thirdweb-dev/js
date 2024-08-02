@@ -1,0 +1,59 @@
+import { DocImage, createMetadata } from "@doc";
+import unrealImage from "../../assets/unreal.png";
+
+export const metadata = createMetadata({
+	title: "Unreal Engine | thirdweb",
+	description: "Building games on Unreal Engine with thirdweb",
+});
+
+# Quickstart
+
+In this guide, we'll build a demo game called Speed Racer using a template. Once setup, users will be able to connect their wallet and perform onchain actions without signing transactions or paying gas.
+
+## Architecture
+
+We recommend the following architecture to build production-grade games on Unreal Engine.
+
+<DocImage src={unrealImage} alt="Gaming Diagram preview" />
+
+There are two thirdweb tools being used here
+
+- [Connect](https://portal.thirdweb.com/connect): This is used to link user wallets to your game. This step needs to be done in a browser environment.
+- [Engine](https://portal.thirdweb.com/engine): Once you have a wallet linked to a game user, you can use engine to perform all blockchain interactions.
+
+## 1. Set up Engine
+
+This example makes use of thirdweb Engine, a backend HTTP server that calls smart contracts using your managed backend wallets.
+
+You’ll need an instance running for your server to interact with the blockchain. [Learn how to set up your own Engine instance](/engine).
+
+## 2. Set up website and backend
+
+We’ll need a website for users to sign up and link their wallets, and a backend to handle wallet authentication, user registration and interaction with engine.
+
+Here’s a step by step guide to deploy your client/server:
+
+To deploy a client/server:
+
+1. Clone https://github.com/thirdweb-example/engine-express/
+2. Install client dependencies `cd client` and `yarn`
+3. Install server dependencies `cd server` and `yarn`
+4. Navigate to the root folder and run `yarn`
+5. Replace the `.env.example` in the client/server folder with your own [api key](http://thirdweb.com/create-api-key) values and engine url. Ensure your api key can be used to authenticate with your deployed engine
+6. We’ll be claiming ERC20’s from Unreal in this demo. Navigate to the [engineController.ts](https://github.com/thirdweb-example/engine-express/blob/main/server/src/controllers/engineController.ts) file, and set your backend engine wallet as well as your [Token Drop](https://thirdweb.com/thirdweb.eth/DropERC20) contract details - make sure you have claim conditions set up for your drop
+7. You can now run the client and server in two terminals using `yarn client` and `yarn server`
+8. By default, the client runs on [localhost:3000](http://localhost:3000) and the server on [localhost:8000](http://localhost:8000)
+9. Go ahead and create a user on your website, and link a wallet
+10. You are now ready to head into Unreal!
+
+## 3. Build your Unreal Engine game
+
+This part is simple, we have a template for you with a simple script to interact with your server as per the architecture above. A level blueprint instantiates the UI, which has its own blueprint to interact with your server.
+
+Go ahead and clone https://github.com/thirdweb-example/unreal_demo and head to `_Thirdweb/Scenes/Scene_Game` and start the level.
+
+At this point, you can update your server url in ThirdwebManager.cpp, and website url in the Canvas_Main blueprint graph to match your deployed frontend/backend in the previous step.
+
+You should now be able to login and see the output as the game polls and updates your balance whenever you collect an item while driving.
+
+All thirdweb related assets are under the `_Thirdweb` folder in your Content Browser.

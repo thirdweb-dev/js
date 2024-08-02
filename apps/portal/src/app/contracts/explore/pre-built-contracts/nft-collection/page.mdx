@@ -1,0 +1,67 @@
+import { Callout, DocImage } from "@doc";
+import mintNFTCollectionImage from "./assets/mint-nft-collection.png";
+import nftCollectionSettingsImage from "./assets/nft-collection-settings.png";
+import moreSettingsImage from "./assets/more-settings.png";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "NFT Collection Contract",
+		icon: "contract",
+	},
+	title: "NFT Collection Contract | thirdweb",
+	description: `The NFT Collection contract is suitable for when you want to have a collection of unique NFTs, but not "drop" or "release" them for your community to claim.`,
+});
+
+# NFT Collection
+
+The NFT Collection contract is suitable for when you want to have a collection of unique NFTs, but **not** "drop" or "release" them for your community to claim.
+
+Unlike the [NFT Drop](/contracts/explore/pre-built-contracts/nft-drop) contract, the NFT Collection contract does not **lazy mint** your NFTs. Instead, NFTs are minted immediately when they are added to the collection.
+
+This means you can still transfer the NFTs or sell them on a [Marketplace](/contracts/explore/pre-built-contracts/marketplace) and perform any other actions you would expect to do with an NFT.
+
+For advanced use-cases, the NFT Collection also has [signature-based minting](/glossary/signature-based-minting) capabilities.
+
+<Callout title="Signature Minting Design" variant="info">
+	For a detailed exploration of how **signature-based minting** works in the NFT
+	Collection contract, why it was built, and it's limitations, visit our
+	[Signature Minting Design Document](/contracts/design-docs/signature-mint)
+</Callout>
+
+## Use Cases & Examples
+
+You could use the NFT Collection contract to:
+
+- Create a 1-of-many collection of your photography
+- Create a 1-of-1 NFT that provides special utility
+- Mint your artwork as NFTs and then sell them on a [Marketplace](/contracts/explore/pre-built-contracts/marketplace)
+- Create a community-made NFT collection
+
+## Creating & Configuring the NFT Collection
+
+Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/dashboard).
+
+### Creating a NFT Collection Contract
+
+Deploy the NFT collection contract to any EVM network using the button below.
+
+### Minting NFTs
+
+Click **Mint** to create a single NFT.
+
+<DocImage src={mintNFTCollectionImage} alt="Minting an NFT collection" />
+
+### Contract Metadata
+
+To configure the image, name, and description of the contract, click the **Settings** tab:
+
+<DocImage src={nftCollectionSettingsImage} alt="NFT Collection settings" />
+
+### Royalty & Platform Fees
+
+From the **Settings** tab, you also configure the royalty fee,
+primary sales recipient,
+and platform fee.
+
+<DocImage src={moreSettingsImage} alt="Royalty and Platform Fee" />

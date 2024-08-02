@@ -1,0 +1,60 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Edition contract",
+		icon: "contract",
+	},
+	title: "Edition contract | thirdweb",
+	description: `The Edition contract is best used when you want to release many NFTs based on the same asset, but you don't want to "drop" or "release" them for your community to claim`,
+});
+
+# Edition
+
+The **Edition** contract is best used when you want to release many NFTs based on the same asset, but you **don't** want to "drop" or "release" them for your community to claim.
+
+Unlike the [Edition Drop](/pre-built-contracts/edition-drop) contract, the Edition contract does not **lazy mint** your NFTs. Instead, NFTs are minted immediately when they are added to the collection.
+
+This means you can still transfer the NFTs or sell them on a [Marketplace](/contracts/explore/pre-built-contracts/marketplace) and perform any other actions you would expect to do with an NFT.
+
+For advanced use-cases, the Edition also has [signature-based minting](/glossary/signature-based-minting) capabilities.
+
+## Use Cases & Examples
+
+You could use the Edition contract to:
+
+- Create an NFT Collection where each NFT has 100 copies
+- Airdrop an NFT to a list of addresses that all use the same asset and metadata
+- Create 10 "copies" of your artwork and sell them on a [Marketplace](/contracts/explore/pre-built-contracts/marketplace)
+
+## Creating & Configuring the Edition
+
+Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/dashboard).
+
+### Creating an Edition Contract
+
+Deploy the edition contract to any EVM network using the button below.
+
+### Minting NFTs
+
+Click **Mint** to create a single NFT.
+
+You can add additional supply to an existing NFT by clicking on that NFT and clicking **Mint**:
+
+### Airdrop NFTs
+
+Click on the token you want to use, navigate to the **Airdrop** tab,
+and upload a `.csv` file containing a list of addresses you want to airdrop NFTs to.
+
+In the `.csv` file, you must specify an `address` column and a `quantity` column, representing the address you want to send the NFTs and how many you wish to send.
+You can download our example [CSV File](https://thirdweb.com/airdrop.csv) to get started.
+
+### Contract Metadata
+
+To configure the image, name, and description of the contract, click the **Settings** tab:
+
+### Royalty & Platform Fees
+
+From the **Settings** tab, you also configure the royalty fee,
+primary sales recipient,
+and platform fee.

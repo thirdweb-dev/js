@@ -1,0 +1,34 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.PersonalSign | Thirdweb .NET SDK",
+	description: "Sign a string message using the wallet's private key.",
+});
+
+# IThirdwebWallet.PersonalSign
+
+This method allows signing a string message using the wallet's private key. The signed message proves the message's integrity and authenticity, demonstrating that the message was indeed created by the owner of the private key.
+
+**Note:** When using `SmartWallet`, calling this method will deploy a smart contract account if it hasn't been deployed yet.
+
+## Usage
+
+```csharp
+string signature = await wallet.PersonalSign("Your message here");
+```
+
+<Details summary="Parameters">
+
+### message (required)
+
+A `string` message to be signed. This is the message whose integrity and authenticity you want to ensure.
+
+</Details>
+
+<Details summary="Return Value">
+
+### string
+
+The method returns a `string` representing the hexadecimal signature of the message. This signature can be used to verify the message's authenticity.
+
+</Details>

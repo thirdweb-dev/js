@@ -1,0 +1,32 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Stake ERC721 contract",
+		icon: "contract",
+	},
+	title: "Stake ERC721 | thirdweb",
+	description: `This contract allows users to stake their ERC-721 NFTs and get ERC-20 tokens as staking rewards. Contract admin should set the NFT and Reward-token addresses during deployment`,
+});
+
+# Stake ERC-721
+
+This contract allows users to stake their ERC-721 NFTs and get ERC-20 tokens as staking rewards. Contract admin should set the NFT and Reward-token addresses during deployment. These can't be changed later.
+
+Staked NFTs are stored inside the contract and rewards are calculated for the amount of time these NFTs were staked. Admin should maintain adequate balance of reward tokens in the staking-contract. These rewards are then transferred to stakers upon claiming.
+
+Reward calculation at the time of claiming rewards:
+
+`rewardsPerTokenStaked = (stakingDuration * rewardsPerUnitTime) / timeUnit`
+
+Note:
+
+- Users need to approve their NFTs to the staking contract address before they can stake them
+- Contract admin should maintain adequate balance of Reward Tokens in the staking contract -- use the deposit function for depositing reward tokens
+
+## Extensions
+
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Gasless](/contracts/build/extensions)

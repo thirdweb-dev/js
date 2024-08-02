@@ -1,0 +1,30 @@
+# Transactions
+
+Sending a transaction in react is done via the `useSendTransaction` hook. The hook returns a React Query `mutate` function that you can call with a transaction object created with `prepareContractCall` or `prepareTransaction`.
+
+Note that unlike in TypeScript core, `useSendTransaction` does not require passing the active `Account`, it will used the current active account from the React context.
+
+```ts
+import { prepareContractCall, getContract } from "thirdweb";
+import { useSendTransaction } from "thirdweb/react";
+
+const contract = getContract({
+	client,
+	chain,
+	address: "0x...",
+});
+
+const MyComponent = () => {
+	const { mutate: sendTransaction, isPending } = useSendTransaction();
+
+	const onClick = async () => {
+		const transaction = prepareContractCall({
+			contract,
+			method: "function mint(address to)",
+			params: ["0x..."],
+			value: 0,
+		});
+		sendTransaction(transaction);
+	};
+};
+```

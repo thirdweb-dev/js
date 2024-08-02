@@ -1,0 +1,25 @@
+.unorderedList,
+.orderedList {
+	@apply pl-5 leading-relaxed list-none mb-6 text-f-200;
+}
+
+.unorderedList > li {
+	@apply pb-0.5 pl-2 list-disc;
+}
+
+.orderedList > li {
+	@apply pb-0.5 pl-2 list-decimal;
+}
+
+.unorderedList > li::marker {
+	@apply text-f-300 !m-0 text-left;
+}
+
+.orderedList > li::marker {
+	@apply text-f-300 text-left;
+}
+
+.unorderedList > li:hover::marker,
+.orderedList > li:hover::marker {
+	@apply text-f-100;
+}

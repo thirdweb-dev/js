@@ -1,0 +1,245 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebTransaction Static Methods | Thirdweb .NET SDK",
+	description:
+		"Documentation of all static methods available on the ThirdwebTransaction class for the Thirdweb .NET SDK, providing tools for transaction management and execution.",
+});
+
+# ThirdwebTransaction Static Methods
+
+The `ThirdwebTransaction` class includes several static methods that provide functionality to estimate costs, simulate, send and poll transactions and user operations.
+
+These methods are crucial for advanced transaction management and execution in blockchain applications.
+
+## ThirdwebTransaction.EstimateGasCosts
+
+Estimate the gas costs of a transaction.
+
+```csharp
+TotalCosts gasCosts = await ThirdwebTransaction.EstimateGasCosts(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas costs.
+
+</Details>
+
+<Details summary="Return Value">
+
+### TotalCosts
+
+Returns the estimated gas costs as `TotalCosts`, including costs in both `ether` and `wei`.
+
+</Details>
+
+## ThirdwebTransaction.EstimateTotalCosts
+
+Calculate the total costs of a transaction, combining the gas costs and transaction value.
+
+```csharp
+TotalCosts totalCosts = await ThirdwebTransaction.EstimateTotalCosts(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction for which you are calculating total costs.
+
+</Details>
+
+<Details summary="Return Value">
+
+### TotalCosts
+
+Returns the total costs of the transaction as `TotalCosts`, encompassing both the gas costs and the transaction value in `ether` and `wei`.
+
+</Details>
+
+## ThirdwebTransaction.EstimateGasLimit
+
+Estimate the gas limit of a transaction or user operation.
+
+```csharp
+BigInteger estimatedGasLimit = await ThirdwebTransaction.EstimateGasLimit(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas limit.
+
+</Details>
+
+<Details summary="Return Value">
+
+### BigInteger
+
+Returns the estimated gas limit as a `BigInteger`.
+
+</Details>
+
+## ThirdwebTransaction.EstimateGasPrice
+
+Estimate the gas price for a transaction, optionally adjusting the estimate by a bump ratio.
+
+```csharp
+BigInteger estimatedGasPrice = await ThirdwebTransaction.EstimateGasPrice(transaction, withBump);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas price.
+
+### withBump (optional)
+
+A Boolean indicating whether to adjust the estimated gas price by a factor to account for network conditions. Defaults to `true`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### BigInteger
+
+Returns the estimated gas price as a `BigInteger`.
+
+</Details>
+
+## ThirdwebTransaction.Simulate
+
+Simulate the execution of a transaction and return raw data.
+
+```csharp
+string data = await ThirdwebTransaction.Simulate(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction you are simulating.
+
+</Details>
+
+<Details summary="Return Value">
+
+### string
+
+Returns the raw data of the simulated transaction as a `string`.
+
+</Details>
+
+## ThirdwebTransaction.Sign
+
+Sign a raw transaction and returns the signed transaction data or the signed user operation json.
+
+```csharp
+string signedTx = await ThirdwebTransaction.Sign(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction you are signing.
+
+</Details>
+
+<Details summary="Return Value">
+
+### string
+
+Returns the signed transaction data as a `string` or the signed user operation json if using Account Abstraction.
+
+</Details>
+
+## ThirdwebTransaction.Send
+
+Send a transaction to the blockchain without waiting for confirmation.
+
+```csharp
+string transactionHash = await ThirdwebTransaction.Send(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction you want to send to the blockchain.
+
+</Details>
+
+<Details summary="Return Value">
+
+### string
+
+Returns the hash of the transaction as a `string`.
+
+</Details>
+
+## ThirdwebTransaction.SendAndWaitForTransactionReceipt
+
+Send a transaction and wait for its receipt.
+
+```csharp
+TransactionReceipt receipt = await ThirdwebTransaction.SendAndWaitForTransactionReceipt(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction you are sending and waiting for a receipt.
+
+</Details>
+
+<Details summary="Return Value">
+
+### TransactionReceipt
+
+Returns the transaction receipt as a `TransactionReceipt`, which includes details of the transaction execution result.
+
+</Details>
+
+## ThirdwebTransaction.WaitForTransactionReceipt
+
+Wait for a transaction receipt to be available. Throws if reverted explicitly or silently and attempts to decode the revert reason.
+
+```csharp
+TransactionReceipt receipt = await ThirdwebTransaction.WaitForTransactionReceipt(client, chainId, txHash);
+```
+
+<Details summary="Parameters">
+
+### client (required)
+
+An instance of `ThirdwebClient`.
+
+### chainId (required)
+
+The chain ID of the blockchain network where the transaction was sent. Must be a `BigInteger`.
+
+### txHash (required)
+
+The hash of the transaction you are waiting for. Must be a hexadecimal `string`.
+
+### cancellationToken (optional)
+
+A `CancellationToken` to cancel the operation.
+
+</Details>
+
+<Details summary="Return Value">
+
+### TransactionReceipt
+
+Returns the transaction receipt as a `TransactionReceipt`, which includes details of the transaction execution result.
+
+</Details>

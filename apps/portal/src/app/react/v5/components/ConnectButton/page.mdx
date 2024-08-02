@@ -1,0 +1,115 @@
+import {
+	Details,
+	Breadcrumb,
+	Callout,
+	Steps,
+	Step,
+	DocImage,
+	createMetadata,
+	ArticleIconCard,
+	Stack,
+} from "@doc";
+import ConnectWalletHeroImage from "./images/connect-wallet-hero.webp";
+import { TablePropertiesIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ConnectButton",
+		icon: "react",
+	},
+	title: "ConnectButton | thirdweb React SDK",
+	description: "API Reference for the ConnectButton component",
+});
+
+# ConnectButton
+
+ConnectButton component renders a `<button>` which when clicked opens a modal and allows users to connect to various wallets. It is extremely customizable and very easy to use.
+
+<Callout variant='info' title="Playground">
+
+See the ConnectButton in action on [ConnectButton Playground!](https://thirdweb.com/dashboard/wallets/connect)
+
+</Callout>
+
+<DocImage src={ConnectWalletHeroImage} />
+
+## Usage
+
+To Configure the wallets to show in the ConnectButton Modal, configure the `wallets` prop
+
+To mark a wallet as `Recommended`, pass in the `recommended: true` property in the wallet config function.
+
+Refer to [Props](#props) to see all the available configuration options
+
+<Callout title="In-App Wallets" variant="info">
+
+    This example uses [In-App Wallets](/connect/in-app-wallet/overview), a special type of wallet that allows users to connect to your app using email, social logins, or other custom forms of authentication.
+
+</Callout>
+
+```tsx
+import { ConnectButton } from "thirdweb/react";
+import { createWallet, inAppWallet } from "thirdweb/wallets";
+
+const wallets = [
+	inAppWallet(),
+	createWallet("io.metamask"),
+	createWallet("com.coinbase.wallet"),
+	createWallet("me.rainbow"),
+];
+
+function Example() {
+	return (
+		<div>
+			<ConnectButton client={client} wallets={wallets} />
+		</div>
+	);
+}
+```
+
+<Stack>
+
+<ArticleIconCard
+	title="Supported Wallets"
+	icon={TablePropertiesIcon}
+	href="/typescript/v5/supported-wallets"
+/>
+
+</Stack>
+
+## Auth
+
+The `ConnectButton` can optionally include [Auth](/connect/auth) to manage user authentication for you. When the user connects their wallet, the `ConnectButton` will immediately prompt them to sign a message to login. That signature can then be verified on your server to issue the user a JWT authenticating their session.
+
+```ts
+<ConnectButton
+	client={client}
+	auth={{
+		isLoggedIn: async (address) => {
+			console.log("checking if logged in!", { address });
+			return await isLoggedIn();
+		},
+		doLogin: async (params) => {
+			console.log("logging in!");
+			await login(params);
+		},
+		getLoginPayload: async ({ address }) => generatePayload({ address }),
+		doLogout: async () => {
+			console.log("logging out!");
+			await logout();
+		},
+	}}
+/>
+```
+
+Each of these functions correspond to a server API endpoint or server-side function. For their implementations, see the [TypeScript Auth docs](/typescript/v5/auth/#server-functions) or check out our [examples](/typescript/v5/auth/#example-repos).
+
+## Props
+
+<Stack>
+	<ArticleIconCard
+		title="ConnectButtonProps"
+		icon={TablePropertiesIcon}
+		href="/references/typescript/v5/ConnectButtonProps"
+	/>
+</Stack>

@@ -19,6 +19,8 @@
     "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb",
     "playground:build": "turbo run build --filter=./apps/playground-web",
+    "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb",
+    "portal:build": "turbo run build --filter=./apps/portal",
     "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb",
     "dashboard:build": "turbo run build --filter=./apps/dashboard",
     "build:packages": "turbo run build --filter=./packages/*",

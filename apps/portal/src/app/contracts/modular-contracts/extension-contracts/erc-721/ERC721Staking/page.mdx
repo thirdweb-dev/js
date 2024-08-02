@@ -1,0 +1,146 @@
+import { Details, GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721Staking contract",
+		icon: "solidity",
+	},
+	title: "ERC721Staking | thirdweb contract",
+	description:
+		"The Staking721 smart contract extension implements NFT staking mechanism. With this extension you can setup a staking contract for NFT holders of your ERC721 Collection",
+});
+
+# ERC721Staking
+
+```solidity
+import "@thirdweb-dev/contracts/extension/Staking721.sol";
+```
+
+The `Staking721` smart contract extension implements NFT staking mechanism. With this extension you can setup a staking contract for NFT holders of your ERC721 Collection. Users can stake their NFTs and earn ERC20 tokens as rewards.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Staking721.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/Staking721.sol";
+import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
+
+contract MyContract is Staking721 {
+    // ERC20 Reward Token address. See {_mintRewards}.
+    address public rewardToken;
+
+    /**
+     *  We store the contract deployer's address only for the purposes of the example
+     *  in the code comment below.
+     *
+     *  Doing this is not necessary to use the `Staking721` extension.
+     */
+    address public deployer;
+
+    constructor(
+        uint256 _timeUnit,
+        uint256 _rewardsPerUnitTime,
+        address _stakingToken,
+        address _rewardToken
+    ) Staking721(_stakingToken) {
+        _setStakingCondition(_timeUnit, _rewardsPerUnitTime);
+
+        rewardToken = _rewardToken;
+        deployer = msg.sender;
+    }
+
+    /**
+     *  @dev    Mint/Transfer ERC20 rewards to the staker. Must override.
+     *
+     *  @param _staker    Address for sending rewards to.
+     *  @param _rewards   Amount of tokens to be given out as reward.
+     *
+     */
+    function _mintRewards(address _staker, uint256 _rewards) internal override {
+        IERC20(rewardToken).transfer(_staker, _rewards);
+    }
+
+    // Returns whether staking restrictions can be set in given execution context.
+    function _canSetStakeConditions() internal view override returns (bool) {
+        return msg.sender == deployer;
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [Staking721Base](/contracts/build/base-contracts/erc-721/staking)
+
+## Full API Reference
+
+<Details summary="stake">
+
+```solidity
+function stake(uint256[] calldata tokenIds) external;
+```
+
+- Lets a user stake a number of ERC721 tokens by passing in token-Ids.
+- Parameter `tokenIds`: List of token-Ids to stake.
+
+</Details>
+
+<Details summary="withdraw">
+
+```solidity
+function withdraw(uint256[] calldata tokenIds) external;
+```
+
+- Un-stake and withdraw NFTs from the contract.
+- Parameter `tokenIds`: List of token-Ids to withdraw.
+
+</Details>
+
+<Details summary="claimRewards">
+
+```solidity
+function claimRewards() external;
+```
+
+- Claim accumulated rewards. This claim method allows for a pull mechanism where users must initiate claiming of rewards.
+
+</Details>
+
+<Details summary="getStakeInfo">
+
+```solidity
+function getStakeInfo(address staker) external view returns (uint256 tokensStaked, uint256 rewards);
+```
+
+- View number of NFTs staked and total rewards available for a user.
+- Parameter `staker`: Account address of staker.
+
+</Details>
+
+<Details summary="setRewardsPerUnitTime">
+
+```solidity
+function setRewardsPerUnitTime(uint256 rewardsPerUnitTime) external;
+```
+
+- Allows an authorized account to set rewards per unit of time. Interpreted as x rewards per second/per day/etc based on time-unit.
+- Parameter `rewardsPerUnitTime`: New rewards per unit time.
+
+</Details>
+
+<Details summary="setTimeUnit">
+
+```solidity
+function setTimeUnit(uint256 timeUnit) external;
+```
+
+- Allows an authorized account to set time unit as a number of seconds. For e.g. 1 hour can be set as 3600 seconds - setting the reward frequency as _per hour_.
+- Parameter `timeUnit`: New time unit.
+
+</Details>

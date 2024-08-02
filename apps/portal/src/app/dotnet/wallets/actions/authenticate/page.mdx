@@ -1,0 +1,48 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.Authenticate | Thirdweb .NET SDK",
+	description: "Login to your thirdweb Auth-integrated backend.",
+});
+
+# IThirdwebWallet.Authenticate
+
+Login to your [thirdweb Auth](https://portal.thirdweb.com/connect/auth)-integrated backend.
+
+## Usage
+
+```csharp
+var authResult = await wallet.Authenticate(domain: "https://mydomain.com", chainId: 1);
+```
+
+<Details summary="Parameters">
+
+### domain
+
+The domain of the backend to authenticate with, must be a `string`.
+
+### chainId
+
+The chain ID of the blockchain to authenticate with, must be a `BigInteger`.
+
+### authPayloadPath (optional)
+
+The path to the auth payload endpoint, defaults to `"/auth/payload"`, must be a `string`.
+
+### authLoginPath (optional)
+
+The path to the auth login endpoint, defaults to `"/auth/login"`, must be a `string`.
+
+### httpClient (optional)
+
+The `HttpClient` to use for the request, defaults to `null`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### string
+
+The raw auth result response from the backend as a `string`.
+
+</Details>

@@ -1,0 +1,50 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Airdrop ERC-20 Contract",
+		icon: "contract",
+	},
+	title: "Airdrop ERC-20 Contract | thirdweb",
+	description:
+		"Airdrop ERC-20 tokens or the chain's native token (e.g. ether for Ethereum mainnet) to a list of recipients",
+});
+
+# Airdrop ERC-20
+
+Airdrop ERC-20 tokens or the chain's native token (e.g. ether for Ethereum mainnet) to a list of recipients.
+
+The `AirdropERC20` contract is suitable to use when you want to transfer ERC20 tokens or native tokens to a list of recipient addresses, where these recipients are not expected to individually claim their airdrop; they just receive it in a transfer.
+When airdropping tokens with this contract, you specify:
+
+- The address of the ERC20 token being transferred. (For native tokens, the address used is `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`)
+- The address from which the token will be transferred to a list of the recipients.
+- An array of objects containing recipient-address and token-amounts, for e.g.
+
+```typescript
+[
+	{
+		recipient: "0x123...",
+		amount: 1, // these amounts are in wei
+	},
+	{
+		recipient: "0xabc...",
+		amount: 10, // these amounts are in wei
+	},
+];
+```
+
+note: token-owner must approve their tokens to this airdrop contract, by calling approval related function on the ERC20 token contract.
+
+**Estimated gas costs for airdropping tokens:**
+Cost of airdropping `1` ERC20 token: ~`66,600` gas. Cost of airdropping each additional ERC20 token: ~`32,526` gas.
+
+## Extensions
+
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Gasless](/contracts/build/extensions)
+- [AirdropERC20](/contracts/build/extensions)
+
+## Airdrop

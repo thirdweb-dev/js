@@ -1,0 +1,60 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Using thirdweb API Key",
+	description: "How to use thirdweb API key in TypeScript, React, and Unity.",
+	image: {
+		title: "Using thirdweb API Key",
+		icon: "thirdweb",
+	},
+});
+
+# Use API keys in your application
+
+<Tabs defaultValue="typescript">
+
+<TabsList>
+	<TabsTrigger value="typescript">TypeScript & React</TabsTrigger>
+	<TabsTrigger value="unity">Unity</TabsTrigger>
+</TabsList>
+
+<TabsContent value='typescript'>
+When working with backend environments (including React Server Components), you can use the secret key to instantiate the thirdweb Client:
+
+```ts
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({
+	secretKey: "YOUR_SECRET_KEY", // Use secret key if using on the server, get it from dashboard settings
+});
+```
+
+When using the Typescript SDK for frontend applications, use the client id:
+
+```ts
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({
+	clientKey: "YOUR_CLIENT_ID", // Use client id if using on the client side, get it from dashboard settings
+});
+```
+
+The `client` can be utilized to initiate [contracts](/typescript/v5/contract) or used in some React components such as [ConnectButton](/references/typescript/v5/ConnectButton).
+
+</TabsContent>
+
+<TabsContent value="unity">
+
+When using the Unity SDK, you can use the client id to instantiate the SDK:
+
+```csharp
+ThirdwebSDK sdk = new ThirdwebSDK("goerli", 5, new ThirdwebSDK.Options()
+{
+  clientId = "my-client-id", // you can get client id from dashboard settings
+});
+```
+
+</TabsContent>
+
+</Tabs>

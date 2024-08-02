@@ -1,0 +1,37 @@
+import { Breadcrumb, createMetadata } from "@doc";
+import { WalletCard, WalletCardGrid } from "@/components/others/WalletCard";
+import SmartWalletIcon from "@public/icons/wallets/smartwallet.svg";
+import EmbeddedWalletIcon from "@public/icons/wallets/embeddedwallet.svg";
+import { AllSupportedWallets } from "@/components/others/AllSupportedWallets";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Supported Wallets",
+		icon: "typescript",
+	},
+	title: "Supported Wallets | Connect SDK",
+	description: "List of all the supported wallets in Connect SDK.",
+});
+
+# Supported Wallets
+
+## thirdweb first-party wallets
+
+<WalletCardGrid>
+	<WalletCard
+		label="Smart Wallet"
+		href="/references/typescript/v5/smartWallet"
+		icon={SmartWalletIcon}
+	/>
+	<WalletCard
+		label="In App Wallet"
+		href="/references/typescript/v5/inAppWallet"
+		icon={EmbeddedWalletIcon}
+	/>
+</WalletCardGrid>
+
+<div className="h-10" />
+
+## Other wallets
+
+<AllSupportedWallets />

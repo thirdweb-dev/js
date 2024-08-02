@@ -1,0 +1,36 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Loyalty Card contract",
+		icon: "contract",
+	},
+	title: "Loyalty Card contract | thirdweb",
+	description: `The Loyalty Card contract is suitable for launching loyalty programs. Each NFT represents a loyalty card, and the NFT's metadata contains the loyalty card's information.`,
+});
+
+# Loyalty Card
+
+The Loyalty Card contract is suitable for launching loyalty programs. Each NFT represents a loyalty card, and the NFT's metadata contains the loyalty card's information.
+
+A loyalty card's **metadata can be updated by an admin** of the contract. A loyalty card can be cancelled (i.e. 'burned') by its owner or an approved operator. A loyalty card can be revoked (i.e. 'burned') without its owner's approval, by an admin of the contract. By default, loyalty cards are non-transferrable NFTs.
+
+Loyalty cards can be minted to users via signature minting.
+
+## Extensions
+
+- [ERC721](/contracts/build/extensions/erc-721/ERC721)
+- [ERC721Supply](/contracts/build/extensions/erc-721/ERC721Supply)
+- [ERC721Mintable](/contracts/build/extensions/erc-721/ERC721Mintable)
+- [ERC721BatchMintable](/contracts/build/extensions/erc-721/ERC721BatchMintable)
+- [ERC721SignatureMintV2](/contracts/build/extensions/erc-721/ERC721SignatureMint)
+- [ERC721LoyaltyCard](/contracts/build/extensions)
+- [ERC721UpdatableMetadata](/contracts/build/extensions)
+- [Royalty](/contracts/build/extensions/general/Royalty)
+- [PlatformFee](/contracts/build/extensions/general/PlatformFee)
+- [PrimarySale](/contracts/build/extensions/general/PrimarySale)
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+- [Gasless](/contracts/build/extensions)

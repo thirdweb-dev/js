@@ -1,0 +1,88 @@
+import { Callout, Steps, Step, ArticleIconCard, createMetadata, Stack } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "Interacting with Contracts | Thirdweb .NET SDK",
+	description:
+		"Learn how to interact with smart contracts using the thirdweb .NET SDK.",
+});
+
+# Getting Started
+
+<Callout variant='info' title="Recommendation">
+
+We recommend using an API key to use thirdweb’s default infrastructure services with the .NET SDK such as RPC, Storage, and Account Abstraction. If you haven’t created a key yet, you can do so for free from the [thirdweb dashboard](https://thirdweb.com/create-api-key).
+
+</Callout>
+
+To get started with the Thirdweb .NET SDK, ensure you have [.NET SDK](https://dotnet.microsoft.com/download) installed on your machine.
+
+We recommend using the latest stable version of .NET.
+
+## Integration Steps
+
+<Steps>
+
+<Step title=".NET Package Installation" >
+
+Install the Thirdweb .NET SDK via NuGet package manager:
+
+```bash
+dotnet add package Thirdweb
+```
+
+This command adds the Thirdweb SDK to your project, allowing you to interact with the blockchain in your .NET applications.
+
+</Step>
+<Step title="Initialize Thirdweb Client" >
+
+Create a new instance of the Thirdweb client in your application:
+
+```csharp
+// For Frontend Applications
+var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
+
+// For Backend Applications
+var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
+```
+
+Replace "yourClientId" and "yourBundleId" with your actual client ID and bundle ID. Note that a bundle ID is only required if you are not using the SDK from a web application.
+
+</Step>
+<Step title="Interact with Smart Contracts" >
+
+Now, you can start interacting with smart contracts. For example, to read from a contract:
+
+```csharp
+var contract = await ThirdwebContract.Create(client: client, address: "contractAddress", chain: chainId);
+var readResult = await ThirdwebContract.Read<string>(contract, "methodName");
+Console.WriteLine($"Contract read result: {readResult}");
+```
+
+Replace "contractAddress", chainId, and "methodName" with your contract's address, the chain ID, and the method name you wish to call.
+
+</Step>
+<Step title="Explore Advanced Features" >
+
+Check the SDK documentation for more advanced features like interacting with smart wallets, signing messages, and performing transactions.
+
+</Step>
+</Steps>
+
+## Gaming Integrations
+
+<Stack>
+
+<ArticleIconCard
+	href="/dotnet/godot"
+	icon={GraduationCap}
+	title="Godot Integration"
+/>
+
+<ArticleIconCard
+	href="/dotnet/unity"
+	icon={GraduationCap}
+	title="Unity Integration"
+/>
+
+</Stack>

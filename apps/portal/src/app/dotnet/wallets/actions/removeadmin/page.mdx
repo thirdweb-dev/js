@@ -1,0 +1,32 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "SmartWallet.RemoveAdmin | Thirdweb .NET SDK",
+	description: "Removes an admin from the connected Smart Wallet.",
+});
+
+# SmartWallet.RemoveAdmin
+
+Removes an admin from the connected Smart Wallet.
+
+## Usage
+
+```csharp
+var receipt = await SmartWallet.RemoveAdmin("0xLivedminAddress");
+```
+
+<Details summary="Parameters">
+
+### admin
+
+Hexadecimal `string` representing the signer to remove admin access from.
+
+</Details>
+
+<Details summary="Return Value">
+
+### receipt
+
+The transaction receipt as a `TransactionReceipt` object.
+
+</Details>

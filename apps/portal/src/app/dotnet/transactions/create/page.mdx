@@ -1,0 +1,48 @@
+import { Details, Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebTransaction.Create | Thirdweb .NET SDK",
+	description:
+		"Instantiate a low level ThirdwebTransaction object to manipulate, simulate and execute transactions using specific wallet credentials and transaction inputs.",
+});
+
+# ThirdwebTransaction.Create
+
+<Callout variant="warning" title="Advanced Use Case">
+	If you are interacting with a contract, it is best to use
+	[ThirdwebContract.Prepare](/dotnet/contracts/prepare) to create a transaction.
+</Callout>
+
+The `ThirdwebTransaction.Create` method allows advanced users to manually create transactions using specific wallet credentials and transaction inputs. This method is ideal for users who need precise control over the transaction details.
+
+## Usage
+
+```csharp
+ThirdwebTransaction transaction = await ThirdwebTransaction.Create(wallet, txInput, chainId);
+```
+
+<Details summary="Parameters">
+
+### wallet (required)
+
+An instance of `IThirdwebWallet`. This represents the wallet that will be used to perform the transaction. The wallet's address must match the from address specified in txInput, if provided.
+
+### txInput (required)
+
+An instance of `ThirdwebTransactionInput`. This structure includes necessary details such as the from address, value, gas limit, and data payload.
+
+The `from` field is optional and, if not provided, will default to the wallet's address.
+
+### chainId (required)
+
+The blockchain network's chain ID as a `BigInteger`. This ID specifies which network the transaction is intended for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns an instance of `ThirdwebTransaction` configured with the provided parameters, ready to interact with the blockchain.
+
+</Details>

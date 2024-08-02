@@ -1,0 +1,129 @@
+import { Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721Permit contract",
+		icon: "solidity",
+	},
+	title: "ERC721Permit | thirdweb contract",
+	description:
+		"Implementing the ERC20Permit extensions allows approvals to be made via signatures, as defined in EIP-2612",
+});
+
+# ERC721Permit
+
+```solidity
+import "@thirdweb-dev/contracts/eip/interface/IERC20Permit.sol";
+```
+
+Implementing the `ERC20Permit` extensions allows approvals to be made via signatures, as defined in
+[EIP-2612](https://eips.ethereum.org/EIPS/eip-2612[EIP-2612]).
+
+The `permit` function can be used to change an account's ERC20 allowance (IERC20-allowance) by
+presenting a message signed by the account. By not relying on (IERC20-approve), the token holder account doesn't
+need to send a transaction and thus is not required to hold Ether at all.
+
+<Callout title="info" variant="info">
+
+This extension is an interface and requires all of the functions to be implemented
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC20Permit.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+The [ERC721A](/contracts/build/extensions/erc-721/ERC721) contract comes with a `totalPermit`
+function that returns the total number of NFTs that have been minted in the collection (including tokens that have been burned).
+
+This means you can already view the total Permit of NFTs in the collection by implementing the `ERC721A` contract.
+
+You can optionally override the functionality of this function as outlined below:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/openzeppelin-presets/token/ERC20/ERC20.sol";
+import "@thirdweb-dev/contracts/eip/interface/IERC20Permit.sol";
+
+contract Contract is ERC20, IERC20Permit {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC20(
+            _name,
+            _symbol
+        )
+    {}
+
+    /**
+     * @dev Sets `value` as the allowance of `spender` over ``owner``'s tokens,
+     * given ``owner``'s signed approval.
+     *
+     * IMPORTANT: The same issues {IERC20-approve} has related to transaction
+     * ordering also apply here.
+     *
+     * Emits an {Approval} event.
+     *
+     * Requirements:
+     *
+     * - `spender` cannot be the zero address.
+     * - `deadline` must be a timestamp in the future.
+     * - `v`, `r` and `s` must be a valid `secp256k1` signature from `owner`
+     * over the EIP712-formatted function arguments.
+     * - the signature must use ``owner``'s current nonce (see {nonces}).
+     *
+     * For more information on the signature format, see the
+     * https://eips.ethereum.org/EIPS/eip-2612#specification[relevant EIP
+     * section].
+     */
+    function permit(
+        address owner,
+        address spender,
+        uint256 value,
+        uint256 deadline,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) external {
+        // Your custom implementation here
+    }
+
+    /**
+     * @dev Returns the current nonce for `owner`. This value must be
+     * included whenever a signature is generated for {permit}.
+     *
+     * Every successful call to {permit} increases ``owner``'s nonce by one. This
+     * prevents a signature from being used multiple times.
+     */
+    function nonces(address owner) external view returns (uint256) {
+        // Your custom implementation here
+    }
+
+    /**
+     * @dev Returns the domain separator used in the encoding of the signature for {permit}, as defined by {EIP712}.
+     */
+    // solhint-disable-next-line func-name-mixedcase
+    function DOMAIN_SEPARATOR() external view returns (bytes32) {
+        // Your custom implementation here
+    }
+
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC20Base](/contracts/build/base-contracts/erc-20/base)
+- [ERC20Drop](/contracts/build/base-contracts/erc-20/drop)
+- [ERC20DropVote](/contracts/build/base-contracts/erc-20/drop-vote)
+- [ERC20SignatureMint](/contracts/build/base-contracts/erc-20/signature-mint)
+- [ERC20SignatureMintVote](/contracts/build/base-contracts/erc-20/signature-mint-vote)
+- [ERC20Vote](/contracts/build/base-contracts/erc-20/base)

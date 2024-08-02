@@ -1,0 +1,36 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Open Edition ERC721",
+		icon: "contract",
+	},
+	title: "Open Edition ERC721 | thirdweb",
+	description: `The OpenEditionERC721 contract is an 'open edition' ERC721 NFT collection. The contract uses the ERC-721A standard`,
+});
+
+# Open Edition ERC721
+
+The `OpenEditionERC721` contract is an 'open edition' ERC721 NFT collection. The contract uses the [ERC-721A](/contracts/build/extensions/erc-721/ERC721) standard.
+
+The `OpenEditionERC721` contract is ideal when you want to release an open edition of NFTs like the Base, `Introduced` collection.
+
+All NFTs in the contract have shared metadata except that each NFT has its unique token ID appended to the NFT's name. An admin can set this shared metadata at any time.
+
+The contract does not require the admin to set a limit to the total supply of NFTs. The admin can set claim phases (like in NFT Drop) to apply restrictions on the minting of NFTs, such as a price, mint start and end times, etc.
+
+## Extensions
+
+- [ERC721](/contracts/build/extensions/erc-721/ERC721)
+- [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)
+- [ERC721Supply](/contracts/build/extensions/erc-721/ERC721Supply)
+- [ERC721AQueryable](/contracts/build/extensions)
+- [ERC721ClaimPhasesV2](/contracts/build/extensions/erc-721/ERC721ClaimPhases)
+- [ERC721SharedMetadata](/contracts/build/extensions)
+- [Royalty](/contracts/build/extensions/general/Royalty)
+- [PrimarySale](/contracts/build/extensions/general/PrimarySale)
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+- [Gasless](/contracts/build/extensions)

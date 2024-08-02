@@ -1,0 +1,51 @@
+import { ArticleIconCard, createMetadata, DocImage, Stack } from "@doc";
+import { Wallet2Icon } from "lucide-react";
+import { ComponentIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Connecting Wallets",
+		icon: "react",
+	},
+	title: "Connecting Wallets in thirdweb React SDK",
+	description:
+		"Connect wallets using ConnectButton, ConnectEmbed or useConnect hook",
+});
+
+# Connection Hooks
+
+You can build a completely custom UI for connecting the wallet using the [`useConnect`](/references/typescript/v5/useConnect) hook to connect any of [supported wallets](/typescript/v5/supported-wallets).
+
+```tsx
+import { createThirdwebClient } from "thirdweb";
+import { useConnect } from "thirdweb/react";
+import { createWallet, injectedProvider } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId });
+
+function Example() {
+	const { connect, isConnecting, error } = useConnect();
+	return (
+		<button
+			onClick={() =>
+				connect(async () => {
+                    // create a wallet instance
+					const metamask = createWallet("io.metamask"); // autocomplete the wallet id
+                    // trigger the connection
+					await metamask.connect({ client });
+					// return the wallet
+					return metamask;
+				})
+			}
+		>
+			Connect
+		</button>
+	);
+}
+```
+
+Refer to [`createWallet`](/references/typescript/v5/createWallet) and [`injectedProvider`](/references/typescript/v5/injectedProvider) for more information.
+
+## Post Connection
+
+Once the wallet is connected, you can use the [Wallet Connection hooks](/references/typescript/v5/hooks#wallet-connection) to get information about the connected wallet like getting the address, account, etc

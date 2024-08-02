@@ -1,0 +1,44 @@
+
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as extensions.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# Batch Metadata ERC-1155
+
+## Description
+
+The `BatchMetadataERC1155` contract is an extension that provides batch metadata functionality for ERC-1155 tokens. It inherits from `BatchMetadataERC721` to leverage the batch metadata capabilities and adapt them for ERC-1155 tokens, allowing for efficient management of metadata across ranges of token IDs.
+
+## Callback Functions
+
+| Function   | Description                                                                |
+|------------|----------------------------------------------------------------------------|
+| `onTokenURI` | Callback function to retrieve the metadata URI for a given tokenId.       |
+
+## Fallback Functions
+
+| Function                | Description                                                                             |
+|-------------------------|-----------------------------------------------------------------------------------------|
+| `getAllMetadataBatches` | Returns all metadata batches for a token. Each batch contains a range of token IDs and their associated base URI. |
+| `uploadMetadata`        | Uploads metadata for a range of token IDs. Emits a `NewMetadataBatch` event and a `BatchMetadataUpdate` event. |
+
+## Required Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-1155` | `0xd9b67a26`|
+
+## Supported Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-4906` | `0x49064906`|
+

@@ -1,0 +1,27 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "thirdweb API Keys",
+	description:
+		"API Keys are required to use thirdweb's infrastructure services",
+	image: {
+		title: "thirdweb API Keys",
+		icon: "thirdweb",
+	},
+});
+
+# API Keys
+
+API Keys are required to use thirdweb's infrastructure services including [Storage](/infrastructure/storage/overview), [RPC Edge](/infrastructure/rpc-edge/overview), [Account Abstraction infrastructure](/connect/account-abstraction), and [In-App Wallets](/connect/in-app-wallet/overview).
+
+API Keys allow you to:
+
+- Upload and download assets to IPFS using Storage via dashboard, CLI, or SDKs
+- Use a dedicated RPC Edge service in your application
+- Use Account Abstraction infrastructure (Bundler & Paymaster)
+- Enable various services such as signing in with Google, Facebook, Apple, Email, and Custom JWT when using in-app wallets.
+
+API Keys consists of two components:
+
+- **Client ID**- Used to access the enabled thirdweb infrastructure services and identify your application using an app bundle ID (identifier for native apps) or domain (identifier for websites). Client IDs can be restricted to allow only specified domains and app bundle IDs to access the enabled services.
+- **Secret Key**- Used to access the enabled thirdweb infrastructure services by identifying and authenticating your application from a backend. **Sharing or exposing this key to others is unsafe because it grants access to all services.**

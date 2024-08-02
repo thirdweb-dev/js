@@ -1,0 +1,75 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebContract.Write | Thirdweb .NET SDK",
+	description: "Execute state-changing transactions on a smart contract.",
+});
+
+# ThirdwebContract.Write
+
+The `ThirdwebContract.Write` method allows you to execute transactions that alter the state of the blockchain via a smart contract. This is typically used for functions that create, modify, or delete data on the blockchain.
+
+## Usage
+
+```csharp
+var transactionReceipt = await ThirdwebContract.Write(wallet, contract, "methodName", weiValue, parameters);
+```
+
+<Details summary="Parameters">
+
+### wallet (required)
+
+An instance of `IThirdwebWallet`. This represents the signer of the transaction, which can be any type of wallet provider.
+
+### contract (required)
+
+An instance of `ThirdwebContract`. Represents the smart contract you wish to interact with.
+
+### methodName (required)
+
+The name of the smart contract method you intend to call. Must be a `string`.
+
+### weiValue (required)
+
+The amount of Wei to send with payable transactions as a `BigInteger`. This is often set to 0 for methods that don't require sending Ether.
+
+### parameters (optional)
+
+The parameters to pass to the smart contract method, if any. Provide these as a comma-separated list after weiValue.
+
+</Details>
+
+<Details summary="Return Value">
+
+### TransactionReceipt
+
+Returns the transaction receipt as a `TransactionReceipt` object, which contains information about the executed transaction.
+
+</Details>
+
+## Example
+
+Let's say you have a smart contract with a `transfer` method that transfers ERC20 tokens from the caller's address to another address. Here's how you could execute a transaction to transfer tokens using `ThirdwebContract.Write`:
+
+```csharp
+BigInteger chainId = 1; // Ethereum mainnet
+string contractAddress = "0x..."; // Your contract address
+var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
+var contract = await ThirdwebContract.Create(client, contractAddress, chainId);
+
+// The wallet that signs and sends the transaction
+var wallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
+
+// Assuming transfer takes an address and an amount as parameters
+string toAddress = "0x...";
+BigInteger amount = new BigInteger(1000); // The amount to transfer
+
+// No ether is being sent in this non-payable transaction, so weiValue is 0
+BigInteger weiValue = BigInteger.Zero;
+
+// Executing the transfer
+var receipt = await ThirdwebContract.Write(wallet, contract, "transfer", weiValue, toAddress, amount);
+Console.WriteLine($"Transaction receipt: {receipt}");
+```
+
+This method is essential for interacting with smart contracts when you need to make changes to the blockchain, such as updating state or transferring assets.

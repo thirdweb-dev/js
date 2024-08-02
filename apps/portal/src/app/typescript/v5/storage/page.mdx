@@ -1,0 +1,29 @@
+# IPFS Storage
+
+The thirdweb SDK comes built-in with an IPFS uploader and downloader.
+
+### Download from IPFS
+
+```ts
+import { download } from "thirdweb/storage";
+
+const file = await download({
+	client,
+	uri: "ipfs://Qm...",
+});
+```
+
+You can view all of the configuration options in the [full reference](/references/typescript/v5/download).
+
+### Upload to IPFS
+
+```ts
+import { upload } from "thirdweb/storage";
+
+const uris = await upload({
+	client,
+	files: [new File(["hello world"], "hello.txt")],
+});
+```
+
+You can view all of the configuration options in the [full reference](/references/typescript/v5/upload).

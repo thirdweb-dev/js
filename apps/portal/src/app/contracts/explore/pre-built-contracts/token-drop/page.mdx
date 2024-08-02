@@ -1,0 +1,42 @@
+import { Callout } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Token Drop Contract",
+		icon: "contract",
+	},
+	title: "Token Drop Contract | thirdweb",
+	description:
+		" Token Drop contract is a way of releasing your ERC20 tokens for a set price.",
+});
+
+# Token Drop
+
+The Token Drop contract is a way of releasing your <a href="https://eips.ethereum.org/EIPS/eip-20">ERC20</a>
+tokens for a set price.
+
+It allows you to define the conditions for when and how your users can claim
+your tokens; including allowlists, release dates, and claim limits.
+
+In the Token Drop, you define the price for your tokens in each claim phase and can set a
+limit on how many tokens you want to release. Other users can then claim your tokens under
+the conditions you defined.
+
+<Callout title="Drop Design" variant="info">
+	Learn more about why Drop contracts were built, how they were designed, and
+	their limitations by reading the [Drop Design
+	Document](/contracts/design-docs/drop)
+</Callout>
+
+## Use Cases & Examples
+
+You could use the Token Drop contract to:
+
+- Release your new cryptocurrency for a set price such as 1 MATIC per token.
+- Allow a specific set of wallets to claim your ERC20 tokens before releasing them to the public.
+- Allow users to claim your tokens up until a specific date.
+
+## Creating & Configuring the Token Drop
+
+Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/dashboard).

@@ -1,0 +1,46 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Multiwrap contract",
+		icon: "contract",
+	},
+	title: "Multiwrap contract | thirdweb",
+	description: `The Multiwrap contract lets you wrap ERC20, ERC721 and ERC1155 tokens into a new wrapped ERC721 NFT`,
+});
+
+# Multiwrap
+
+The Multiwrap contract lets you wrap [ERC20](https://eips.ethereum.org/EIPS/eip-20),
+[ERC721](https://eips.ethereum.org/EIPS/eip-721) and
+[ERC1155](https://eips.ethereum.org/EIPS/eip-1155)
+tokens into a **new** wrapped ERC721 NFT.
+The wrapped NFT can be unwrapped (burned) back into the underlying tokens.
+
+The wrapped NFT itself also acts as an ERC721 token, which can have the metadata you'd expect of an NFT,
+such as a name, image, description, etc.
+
+## Use Cases & Examples
+
+You could use the Multiwrap contract to:
+
+- Combine multiple NFTs into one NFT with new metadata
+- Wrap NFTs along with ERC20 tokens to easily trade them for other NFTs
+- Create a transparent "bundle" in your game, where the contents of the bundle are visible to the player
+
+## Smart Contract Design
+
+For a detailed exploration of how the multiwrap smart contract works, why it was built,
+and it's limitations, visit our [Multiwrap Design Doc](/contracts/design-docs/multiwrap)!
+
+## Creating & Configuring the Multiwrap
+
+Learn how to create and configure your smart contract using the [dashboard](https://thirdweb.com/dashboard).
+
+### Contract Metadata
+
+To configure the image, name, and description of the contract, click the **Settings** tab:
+
+### Royalty & Platform Fees
+
+From the **Settings** tab, you also configure the royalty fee.

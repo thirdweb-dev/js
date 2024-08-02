@@ -1,0 +1,102 @@
+# Acting on a prepared transaction
+
+Transactions have a variety of actions that can be called on them, in all cases this is done by passing the transaction to the various action functions.
+
+## Sending a transaction
+
+Send the prepared transaction to the blockchain. Sending a transaction requires a wallet.
+
+See [Wallets](/typescript/v5/wallets) for more information on how to create a wallet.
+
+```ts
+import { sendTransaction } from "thirdweb";
+import { createWallet } from "thirdweb/wallets";
+
+const wallet = createWallet("io.metamask");
+const account = await wallet.connect({ client });
+
+const transactionResult = await sendTransaction({
+	transaction,
+	account,
+});
+```
+
+## sendAndConfirmTransaction
+
+Send a transaction and wait for it to be mined. Useful when you want to block until the transaction is fully confirmed onchain before proceeding to the next step.
+
+```ts
+import { sendAndConfirmTransaction } from "thirdweb";
+import { createWallet } from "thirdweb/wallets";
+
+const wallet = createWallet("io.metamask");
+const account = await wallet.connect({ client });
+
+const receipt = await sendAndConfirmTransaction({
+	transaction,
+	account,
+});
+```
+
+## waitForReceipt
+
+Wait for a transaction to be mined and get the transaction receipt.
+
+```ts
+import { sendTransaction, waitForReceipt } from "thirdweb";
+import { createWallet } from "thirdweb/wallets";
+
+const wallet = createWallet("io.metamask");
+const account = await wallet.connect({ client });
+
+const transactionResult = await sendTransaction({
+	transaction,
+	account,
+});
+
+const receipt = await waitForReceipt(transactionResult);
+```
+
+## estimateGas
+
+Estimating gas used by a transaction
+
+```ts
+import { estimateGas } from "thirdweb";
+
+const gasEstimate = await estimateGas({ transaction });
+console.log("estmated gas used", gasEstimate);
+```
+
+## estimateGasCost
+
+Estimating gas cost in ether and wei for a transaction
+
+```ts
+import { estimateGas } from "thirdweb";
+
+const gasCost = await estimateGasCost({ transaction });
+console.log("cost in ether", gasCost.ether);
+```
+
+## simulateTransaction
+
+Simulate a transaction to see if it would be successful.
+
+```ts
+import { simulateTransaction } from "thirdweb";
+
+const result = await simulateTransaction({ transaction });
+console.log("simulation result", result);
+```
+
+## encode
+
+Encode a transaction data to be used later
+
+```ts
+import { encode } from "thirdweb";
+
+const data = await encode(transaction);
+console.log("encoded data", data);
+```

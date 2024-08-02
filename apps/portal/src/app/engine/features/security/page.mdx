@@ -1,0 +1,26 @@
+import { Details, Callout, DocImage } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Security | thirdweb Engine",
+	description:
+		"thirdweb Engine provides you with security features to configure and restrict access.",
+});
+
+# Security
+
+Engine provides you with security features to configure and restrict access to sensitive operations.
+
+## IP Allowlist
+
+You can restrict access to your Engine instance by configuring an IP allowlist. This can be configured in the **Configuration** section of the [Engine dashboard](https://thirdweb.com/dashboard/engine/).
+If an IP allowlist is not configured, Engine will allow all incoming requests.
+
+<Callout variant="info" title="Note">
+	This does not affect calls from the Engine dashboard to your Engine instance.
+</Callout>
+
+## Domain Allowlist (CORS)
+
+You can restrict access to your Engine instance by configuring a domain allowlist. This can be configured in the **Configuration** section of the [Engine dashboard](https://thirdweb.com/dashboard/engine/).
+Multiple domains can be added to the allowlist, and Engine will only accept requests from these domains. A wildcard domain can also be added to allow requests from any domain.
