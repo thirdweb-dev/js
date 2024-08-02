@@ -225,6 +225,17 @@ const AppHeader: React.FC = () => {
             Engine
           </LinkButton>
           <LinkButton
+            href="/chainlist"
+            isActive={pathname === "/chainlist"}
+            _active={{
+              bg: "bgBlack",
+              color: "bgWhite",
+            }}
+            rounded="lg"
+          >
+            Chainlist
+          </LinkButton>
+          <LinkButton
             href="/dashboard/settings/api-keys"
             isActive={pathname.startsWith("/dashboard/settings")}
             _active={{

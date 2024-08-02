@@ -13,6 +13,10 @@ export const headerLinks = {
       href: "/dashboard/engine",
     },
     {
+      name: "Chainlist",
+      href: "/chainlist",
+    },
+    {
       name: "Settings",
       href: "/dashboard/settings/api-keys",
     },
