@@ -1,10 +1,11 @@
 import { BigNumber } from "ethers";
 import { type GetBlockReturnType, formatBlock, formatTransaction } from "viem";
 import type { Hex } from "../utils/encoding/hex.js";
-import { type NFT, parseNFT } from "../utils/nft/parseNft.js";
+import { parseNFT } from "../utils/nft/parseNft.js";
 import type {
   Block,
   ChainsawTransactions,
+  NFTs,
   NFTsData,
   Transaction,
   Transactions,
@@ -24,7 +25,7 @@ export const formatChainsawBlock = (
   }) as GetBlockReturnType<undefined, false>;
 };
 
-export const formatChainsawNFTs = (nfts?: NFTsData): NFT[] => {
+export const formatChainsawNFTs = (nfts?: NFTsData): NFTs => {
   if (!nfts) return [];
   return nfts.map((nft) => {
     const options =
@@ -42,13 +43,24 @@ export const formatChainsawNFTs = (nfts?: NFTsData): NFT[] => {
             tokenUri: nft.uri,
             type: "ERC721" as const,
           };
-    return parseNFT(
+    const parsedNft = parseNFT(
       {
         id: BigInt(nft.tokenId),
         uri: nft.uri,
+        image: nft.image,
+        description: nft.description,
+        name: nft.name,
       },
       options,
     );
+    return {
+      ...parsedNft,
+      contractAddress: nft.contractAddress,
+      collectionName: nft.collectionName,
+      chainId: nft.chainId,
+      balance: nft.balance || "1",
+      ...(nft.imageData && { imageData: nft.imageData }),
+    };
   });
 };
 

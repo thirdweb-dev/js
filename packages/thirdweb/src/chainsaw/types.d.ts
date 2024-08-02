@@ -1,5 +1,6 @@
 import type { Transaction as ViemTransaction } from "viem";
 import type { Hex } from "../utils/encoding/hex.ts";
+import type { NFT as ParsedNFT } from "../utils/nft/parseNft.js";
 
 export type ChainsawResponse<T = unknown> = {
   data?: T;
@@ -78,6 +79,20 @@ export type NFTData = {
   ownerAddress?: Hex;
   balance?: string;
   type: string;
+  image?: string;
+  imageData?: string;
+  name?: string;
+  description?: string;
 };
 
 export type NFTsData = NFTData[];
+
+export type NFT = ParsedNFT & {
+  contractAddress: string;
+  collectionName: string;
+  chainId: number;
+  balance: string;
+  imageData?: string;
+};
+
+export type NFTs = NFT[];

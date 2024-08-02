@@ -1,12 +1,12 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import type { NFT } from "../../utils/nft/parseNft.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
   ChainsawPagingParams,
   ChainsawResponse,
+  NFTs,
   NFTsData,
 } from "../types.d.ts";
 import { getNftsByCollectionEndpoint } from "../urls.js";
@@ -21,7 +21,7 @@ export type GetNFTsByCollectionParams = {
 } & ChainsawPagingParams;
 
 export type GetNFTsByCollectionResult = {
-  nfts: NFT[];
+  nfts: NFTs;
   page?: number;
 };
 
