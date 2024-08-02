@@ -16,27 +16,26 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
         <div className="max-w-[520px] flex flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
-              className="size-12 -mr-1.5 rounded-full border p-1"
+              className="size-12 -mr-2 rounded-full border p-1"
               iconUrl={props.chain.icon?.url}
             />
             <CreditCardIcon
               bg="hsl(var(--background))"
-              className="size-12 -ml-1.5"
+              className="size-12 -ml-2"
             />
           </div>
 
           <div className="h-6" />
 
-          <h2 className="text-lg tracking-tight font-semibold text-center">
+          <h2 className="text-lg tracking-tight font-semibold text-center px-4">
             Buy Funds on {sanitizedChainName} using thirdweb Pay
           </h2>
 
           <div className="h-2" />
 
-          <p className="text-secondary-foreground text-sm max-w-[520px] text-center">
-            Pay allows you to purchase cryptocurrencies and execute transactions
-            with their credit card or debit card, or with any token via
-            cross-chain routing.
+          <p className="text-secondary-foreground text-sm max-w-[520px] text-center px-4">
+            Instantly onramp, bridge & swap into {sanitizedChainName} with any
+            token.
           </p>
 
           <div className="h-8" />

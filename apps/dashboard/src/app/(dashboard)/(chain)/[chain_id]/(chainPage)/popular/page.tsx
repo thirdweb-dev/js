@@ -3,7 +3,6 @@ import React from "react";
 import { type SortBy, fetchTopContracts } from "../../../../../../lib/search";
 import { TrendingContractSection } from "../../../../trending/components/trending-table";
 import { getChain } from "../../../utils";
-import { SectionTitle } from "../components/server/SectionTitle";
 
 export default async function Page(props: {
   params: { chain_id: string };
@@ -14,13 +13,21 @@ export default async function Page(props: {
     chainId: chain.chainId,
     page: props.searchParams.page,
     sortBy: props.searchParams.sortBy,
-    perPage: 20,
+    perPage: 15,
     timeRange: "month",
   });
 
   return (
-    <section>
-      <SectionTitle title="Popular Contracts" />
+    <section className="mt-2">
+      <h2 className="text-2xl tracking-tighter font-semibold mb-2">
+        Popular Contracts
+      </h2>
+
+      <p className="text-sm text-secondary-foreground">
+        Explore contracts on Ethereum and sort them by your preferred metrics
+      </p>
+
+      <div className="h-8" />
 
       {topContracts.length > 0 && (
         <TrendingContractSection

@@ -32,13 +32,13 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
 
           <div className="h-6" />
 
-          <h2 className="text-lg tracking-tight font-semibold text-center">
+          <h2 className="text-lg tracking-tight font-semibold text-center px-4">
             {sanitizedChainName} Faucet
           </h2>
 
           <div className="h-2" />
 
-          <p className="text-secondary-foreground text-sm max-w-[520px] text-center">
+          <p className="text-secondary-foreground text-sm max-w-[520px] text-center px-4">
             Get free {chain.nativeCurrency.symbol} fast and reliably.{" "}
             {amountToGive} {chain.nativeCurrency.symbol}/day.
           </p>

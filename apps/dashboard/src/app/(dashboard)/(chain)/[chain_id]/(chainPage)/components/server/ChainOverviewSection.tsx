@@ -12,7 +12,7 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
   return (
     <section>
       <SectionTitle title="Chain Overview" />
-      <div className="grid grid-cols-1 gap-6 lg:gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3 border rounded-lg p-4 md:p-6">
         {/* Info */}
         {chain.infoURL && (
           <PrimaryInfoItem title="Info">

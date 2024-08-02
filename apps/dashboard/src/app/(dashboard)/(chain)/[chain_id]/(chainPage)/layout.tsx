@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { defineChain } from "thirdweb";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
+import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 import { ChainHeader } from "./components/server/chain-header";
 import { SidebarContent } from "./components/server/sidebar-content";
 
@@ -42,15 +45,15 @@ export default async function ChainPageLayout({
 
   return (
     <div className="container flex flex-row h-full">
-      <aside className="w-[280px] p-4 flex-shrink-0 hidden lg:flex flex-col gap-2">
-        <SidebarContent slug={chain.slug} />
+      <aside className="w-[280px] p-4 flex-shrink-0 hidden lg:block">
+        <SidebarContent chain={chain} />
       </aside>
       <div className="flex flex-col w-full lg:px-6 lg:border-x pb-10">
         {/* Icon + Background */}
         <ChainHeader
           headerImageUrl={chainMetadata?.headerImgUrl}
           logoUrl={chain.icon?.url}
-          chainSlug={chain.slug}
+          chain={chain}
         />
 
         <div className="h-4 md:h-8" />
@@ -92,9 +95,16 @@ export default async function ChainPageLayout({
           )}
 
           {/* mobile action row */}
-          <Button className="sm:hidden w-full" variant="primary">
-            Get started with thirdweb
-          </Button>
+          <div className="sm:hidden w-full">
+            <div className="grid grid-cols-2 gap-2">
+              <AddChainToWallet chain={defineChain(chain)} />
+              <Button variant="primary">
+                <Link href="https://portal.thirdweb.com/" target="_blank">
+                  Get started
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="h-8" />
