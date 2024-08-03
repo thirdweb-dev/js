@@ -19,7 +19,7 @@
       "dependsOn": ["^build"]
     },
     "portal#build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "searchIndex.json"],
       "dependsOn": ["^build"]
     },
     "playground-web#build": {
