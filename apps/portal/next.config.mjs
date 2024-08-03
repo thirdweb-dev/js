@@ -12,6 +12,10 @@ const withMDX = createMDX({
 const nextConfig = {
 	pageExtensions: ["mdx", "tsx", "ts"],
 	redirects,
+	webpack: (config) => {
+		config.externals.push("pino-pretty", "lokijs", "encoding");
+		return config;
+	},
 	headers: async () => {
 		return [
 			// Disallow all pages from being embedded in an iframe.
