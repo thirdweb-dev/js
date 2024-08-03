@@ -20,6 +20,7 @@
     "playground-web",
     "thirdweb-dashboard",
     "wallet-ui",
+    "portal",
     "@thirdweb-dev/auth",
     "@thirdweb-dev/chains",
     "@thirdweb-dev/cli",
