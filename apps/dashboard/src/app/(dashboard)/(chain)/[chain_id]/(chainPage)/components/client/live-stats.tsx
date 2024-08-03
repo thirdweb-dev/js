@@ -1,6 +1,6 @@
 "use client";
 
-import { CopyButton } from "@/components/ui/CopyButton";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
@@ -79,8 +79,15 @@ export function ChainLiveStats(props: { rpc: string }) {
         }
       >
         <div className="flex items-center gap-1">
-          {new URL(props.rpc).origin}
-          <CopyButton text={new URL(props.rpc).origin} />
+          <CopyTextButton
+            tooltip="Copy RPC URL"
+            textToShow={new URL(props.rpc).origin}
+            textToCopy={props.rpc}
+            copyIconPosition="right"
+            variant="ghost"
+            className="px-2 py-1 -translate-x-2 text-base"
+            iconClassName="size-4"
+          />
         </div>
       </PrimaryInfoItem>
 

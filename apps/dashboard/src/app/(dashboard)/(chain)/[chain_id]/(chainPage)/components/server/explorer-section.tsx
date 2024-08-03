@@ -16,6 +16,7 @@ export function ExplorersSection(props: {
               key={explorer.url}
               className="p-4 border rounded-xl relative hover:bg-secondary"
             >
+              <ExternalLinkIcon className="size-4 absolute top-4 right-4 text-muted-foreground" />
               <h3 className="mb-1 text-base font-semibold capitalize">
                 {explorer.name}
               </h3>
@@ -28,7 +29,6 @@ export function ExplorersSection(props: {
                   ? explorer.url.slice(0, -1)
                   : explorer.url}
               </Link>
-              <ExternalLinkIcon className="size-4 absolute top-4 right-4 text-muted-foreground" />
             </div>
           );
         })}

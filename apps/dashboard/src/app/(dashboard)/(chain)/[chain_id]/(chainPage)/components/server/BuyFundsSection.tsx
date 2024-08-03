@@ -49,7 +49,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
 
           <Link
             href="https://portal.thirdweb.com/connect/pay/overview"
-            className="inline-flex gap-2 items-center text-sm text-secondary-foreground hover:foreground"
+            className="inline-flex gap-1.5 items-center text-sm text-secondary-foreground hover:text-foreground"
           >
             Learn more about thirdweb Pay{" "}
             <ExternalLinkIcon className="size-3" />

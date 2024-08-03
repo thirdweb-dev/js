@@ -16,12 +16,14 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
         {/* Info */}
         {chain.infoURL && (
           <PrimaryInfoItem title="Info">
-            <div className="flex items-center gap-1.5 hover:text-primary">
-              <Link href={chain.infoURL} target="_blank">
-                {new URL(chain.infoURL).hostname}
-              </Link>
+            <Link
+              href={chain.infoURL}
+              target="_blank"
+              className="inline-flex items-center gap-1.5 hover:text-link-foreground"
+            >
+              {new URL(chain.infoURL).hostname}
               <ExternalLinkIcon className="size-4" />
-            </div>
+            </Link>
           </PrimaryInfoItem>
         )}
 
@@ -32,7 +34,8 @@ export function ChainOverviewSection(props: { chain: ChainMetadata }) {
             textToShow={chain.chainId.toString()}
             tooltip="Copy Chain ID"
             variant="ghost"
-            className="-translate-x-2 py-0.5"
+            className="-translate-x-2 py-1 px-2 text-base"
+            iconClassName="size-4"
             copyIconPosition="right"
           />
         </PrimaryInfoItem>

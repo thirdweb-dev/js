@@ -36,7 +36,7 @@ export function CopyTextButton(props: {
         variant={props.variant || "outline"}
         aria-label={props.tooltip}
         className={cn(
-          "h-auto w-auto px-2.5 py-1.5 flex gap-2 rounded-lg text-foreground",
+          "h-auto w-auto px-2.5 py-1.5 flex gap-2 rounded-lg text-foreground font-normal",
           props.className,
         )}
         onClick={() => {
