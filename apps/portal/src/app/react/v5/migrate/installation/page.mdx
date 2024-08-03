@@ -16,7 +16,13 @@ import {
 
 # Installation & Setups
 
-Welcome to the migration guide for updating your React SDK from version 4 to version 5. This guide will walk you through the necessary steps to ensure a smooth transition. In this section, we'll cover the installation process for the new version of the SDK.
+### High-level changes
+
+- All imports from `@thirdweb-dev/*` should be replaced with `thirdweb` SDK with sub-exports.
+- The new SDK is `function` based rather than `class` based for better tree shaking and performance.
+- All contract calls are now prepared using `prepareContractCall` and sent using the `useSendTransaction` function.
+- Transactions are submitted without waiting for receipt by default. You can call the `useSendAndConfirmTransaction` function to wait for the transaction to be mined.
+
 
 ## Installation
 

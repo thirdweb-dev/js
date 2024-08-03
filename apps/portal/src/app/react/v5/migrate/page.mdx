@@ -69,46 +69,9 @@ Want to keep using ethers.js 5? Worry not! The SDK v5 comes with powerful adapte
 
 <hr/>
 
-### High-level changes
+### Get started
 
-- All imports from `@thirdweb-dev/*` should be replaced with `thirdweb` SDK with sub-exports.
-- The new SDK is `function` based rather than `class` based for better tree shaking and performance.
-- All contract calls are now prepared using `prepareContractCall` and sent using the `useSendTransaction` function.
-- Transactions are submitted without waiting for receipt by default. You can call the `useSendAndConfirmTransaction` function to wait for the transaction to be mined.
-
-### Progressive migration
-
-If you're currently using the `@thirdweb-dev/sdk`, you can progressively migrate to the new `thirdweb` SDK. Both SDKs can be used side by side and are interoperable with each other.
-
-In React, you can mix and match the v4 and v5 `ThirdwebProvider`, that gives you access to the hooks and functionality of both SDKs.
-
-```tsx
-import { ThirdwebProvider as ThirdwebProviderV4 } from "@thirdweb-dev/react";
-import { ThirdwebProvider } from "thirdweb/react"
-
-<ThirdwebProviderV4 activeChain={...} clientId={...}>
-  <ThirdwebProviderV5>
-     ...
-  </ThirdwebProviderV5>
-</ThirdwebProviderV4>
-```
-
-From there, you can obtain the current signer using the `useSigner` hook, and convert it when needed using the `ethers5Adapter`:
-
-```tsx
-import { useSigner } from "@thirdweb-dev/react";
-import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-
-const signer = useSigner();
-
-const onClick = async () => {
-    // convert the signer to used with the new SDK
-	const account = await ethers5Adapter.signer.fromEthers(signer);
-    // then use the new SDK normally
-    const transaction = prepareContractCall({ ... });
-    await sendTransaction({
-	    transaction,
-	    account,
-    });
-};
-```
+1. [Installation & Setups](/typescript/v5/react/migrate/installation)
+2. [Interacting with contracts](/typescript/v5/react/migrate/contracts)
+3. [ethers.js Adapter](/typescript/v5/react/migrate/ethers-adapter)
+4. [Cheatsheet](/typescript/v5/react/migrate/cheatsheet)
