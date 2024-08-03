@@ -131,11 +131,23 @@ export async function doLogin(
   });
 
   // redirect to the nextPath (if set)
-  if (nextPath) {
+  if (nextPath && isValidRedirectPath(nextPath)) {
     return redirect(nextPath);
   }
   // if we do not have a next path, redirect to dashboard home
   return redirect("/dashboard");
+}
+function isValidRedirectPath(encodedPath: string): boolean {
+  try {
+    // Decode the URI component
+    const decodedPath = decodeURIComponent(encodedPath);
+    // ensure the path always starts with a _single_ slash
+    // dobule slash could be interpreted as `//example.com` which is not allowed
+    return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
+  } catch (e) {
+    // If decoding fails, return false
+    return false;
+  }
 }
 
 export async function doLogout() {
