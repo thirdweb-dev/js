@@ -1,5 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
@@ -48,6 +49,18 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC721ClaimCustom",
   ]);
 
+  const detectedClaimState = extensionDetectedState({
+    contractQuery,
+    feature: [
+      // erc 721
+      "ERC721ClaimPhasesV1",
+      "ERC721ClaimPhasesV2",
+      "ERC721ClaimConditionsV1",
+      "ERC721ClaimConditionsV2",
+      "ERC721ClaimCustom",
+    ],
+  });
+
   if (tokenId && isOnlyNumbers(tokenId)) {
     return (
       <TokenIdPage
@@ -70,7 +83,12 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <Heading size="title.sm">Contract NFTs</Heading>
         <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
           <NFTRevealButton contractQuery={contractQuery} />
-          <NFTClaimButton contractQuery={contractQuery} />
+          {detectedClaimState && contractQuery?.contract && (
+            <NFTClaimButton
+              contractAddress={contractQuery.contract.getAddress()}
+              chainId={contractQuery.contract.chainId}
+            />
+          )}
           <NFTMintButton contractQuery={contractQuery} />
           <NFTSharedMetadataButton contractQuery={contractQuery} />
           <NFTLazyMintButton contractQuery={contractQuery} />
