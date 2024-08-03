@@ -18,6 +18,9 @@ import {
 	BoxIcon,
 	KeyRoundIcon,
 } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
 import { ReactIcon } from "@/icons";
 
 export const metadata = createMetadata({
@@ -47,6 +50,22 @@ Performant & lightweight SDK to interact with any EVM chain from Node, React and
 	pnpm="pnpm i thirdweb"
 	bun="bun i thirdweb"
 />
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/create-api-key"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
 
 ## Quickstart
 

@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { TypeScriptIcon, ReactIcon } from "@/icons";
 import { Callout } from "@doc";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 # React Native SDK
 
@@ -36,6 +38,22 @@ Many of the components and hooks in the React Native SDK use a [`client`](/types
 	href="/react-native/v5/differences"
 	description="Get to know the differences between React and React Native usage"
 />
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/dashboard/settings/api-keys"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
 
 ## Starter kit
 

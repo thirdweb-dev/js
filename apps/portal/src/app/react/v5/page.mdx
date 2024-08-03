@@ -1,4 +1,4 @@
-import { Details, ArticleIconCard, Stack, GithubTemplateCard } from "@doc";
+import { Details, ArticleIconCard, Stack, GithubTemplateCard, Callout } from "@doc";
 import {
 	ZapIcon,
 	ScrollTextIcon,
@@ -12,6 +12,8 @@ import {
 	CableIcon,
 } from "lucide-react";
 import { TypeScriptIcon } from "@/icons";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 # React SDK
 
@@ -28,6 +30,22 @@ Follow this [guide](/react/v5/getting-started) to get started with the React SDK
 	description="Get started with the React SDK"
 />
 </Stack>
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/create-api-key"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
 
 ## Starter kits
 

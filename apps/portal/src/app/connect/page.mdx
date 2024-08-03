@@ -7,8 +7,11 @@ import {
 	OpenSourceCard,
 	Stack,
 	ConnectCard,
+	Callout
 } from "@doc";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const metadata = createMetadata({
 	title: "thirdweb Connect",
@@ -58,6 +61,22 @@ Connect is the complete toolkit for connecting every user to your application. I
 - **Perform wallet actions** like connecting and disconnecting wallets, viewing balance, displaying ENS names, and execute transactions with our [perfomant, reliable and type safe API](https://portal.thirdweb.com/connect/blockchain-api)
 - **Easily integrate with thirdweb's contracts** to enable users to interact with your application.
 - **Facilitate payments** by lettung user top up their wallets or do onchain purchases with a credit card with [Pay](https://portal.thirdweb.com/connect/pay/overview).
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access Connect's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/create-api-key"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
 
 ### Supported Chains
 
