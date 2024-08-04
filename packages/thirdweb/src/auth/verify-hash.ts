@@ -75,22 +75,9 @@ export async function verifyHash({
     );
   })();
 
-  const accountContract = getContract({
-    address,
-    chain,
-    client,
-  });
-
   const wrappedSignature = await (async () => {
     // If this sigature was already wrapped for ERC-6492, carry on
     if (isErc6492Signature(signatureHex)) return signatureHex;
-
-    // If the contract is already deployed, return the original signature
-    const { isContractDeployed } = await import(
-      "../utils/bytecode/is-contract-deployed.js"
-    );
-    const isDeployed = await isContractDeployed(accountContract);
-    if (!isDeployed) return signatureHex;
 
     // Otherwise, serialize the signature for ERC-6492 validation
     return serializeErc6492Signature({
