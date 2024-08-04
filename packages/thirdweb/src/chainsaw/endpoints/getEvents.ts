@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
   ChainsawPagingParams,
@@ -12,40 +13,42 @@ import { getEventsEndpoint } from "../urls.js";
 export type GetEventsInterval = "hour" | "day" | "week" | "month";
 export type GetEventsGroupBy = "time" | "chainId" | "contractAddress";
 
-export type GetEventsParams = {
-  /**
-   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
-   *
-   * You can create a client using the `createThirdwebClient` function.
-   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-   *
-   */
-  client: ThirdwebClient;
-  /**
-   * Contract addresses to fetch events for
-   */
-  contractAddresses: Address[];
-  /**
-   * Chain IDs to search events on
-   */
-  chainIds?: number[];
-  /**
-   * Start point for events date range. Default is 7 days ago
-   */
-  startDate?: Date;
-  /**
-   * End point for events date range. Default is current date
-   */
-  endDate?: Date;
-  /**
-   * If grouped by time, determines the bucket length
-   */
-  interval?: GetEventsInterval;
-  /**
-   * Parameters to group events by for the count
-   */
-  groupBy?: GetEventsGroupBy[];
-} & ChainsawPagingParams;
+export type GetEventsParams = Prettify<
+  {
+    /**
+     * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+     *
+     * You can create a client using the `createThirdwebClient` function.
+     * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+     *
+     */
+    client: ThirdwebClient;
+    /**
+     * Contract addresses to fetch events for
+     */
+    contractAddresses: Address[];
+    /**
+     * Chain IDs to search events on
+     */
+    chainIds?: number[];
+    /**
+     * Start point for events date range. Default is 7 days ago
+     */
+    startDate?: Date;
+    /**
+     * End point for events date range. Default is current date
+     */
+    endDate?: Date;
+    /**
+     * If grouped by time, determines the bucket length
+     */
+    interval?: GetEventsInterval;
+    /**
+     * Parameters to group events by for the count
+     */
+    groupBy?: GetEventsGroupBy[];
+  } & ChainsawPagingParams
+>;
 
 export type GetEventsResult = {
   events: Events;

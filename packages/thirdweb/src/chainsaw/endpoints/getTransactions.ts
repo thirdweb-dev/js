@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawTransactions } from "../formatter.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
@@ -11,32 +12,34 @@ import type {
 } from "../types.d.ts";
 import { getTransactionsEndpoint } from "../urls.js";
 
-export type GetTransactionsParams = {
-  /**
-   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
-   *
-   * You can create a client using the `createThirdwebClient` function.
-   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-   *
-   */
-  client: ThirdwebClient;
-  /**
-   * Contract address to fetch transactions for
-   */
-  to: Address;
-  /**
-   * Chain IDs to fetch transactions from. If omitted, will look on all supported chains
-   */
-  chainIds?: number[];
-  /**
-   * Start of the date range to search in
-   */
-  startDate?: Date;
-  /**
-   * End of the date range to search in
-   */
-  endDate?: Date;
-} & ChainsawPagingParams;
+export type GetTransactionsParams = Prettify<
+  {
+    /**
+     * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+     *
+     * You can create a client using the `createThirdwebClient` function.
+     * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+     *
+     */
+    client: ThirdwebClient;
+    /**
+     * Contract address to fetch transactions for
+     */
+    to: Address;
+    /**
+     * Chain IDs to fetch transactions from. If omitted, will look on all supported chains
+     */
+    chainIds?: number[];
+    /**
+     * Start of the date range to search in
+     */
+    startDate?: Date;
+    /**
+     * End of the date range to search in
+     */
+    endDate?: Date;
+  } & ChainsawPagingParams
+>;
 
 export type GetTransactionsResult = {
   transactions: Transactions;

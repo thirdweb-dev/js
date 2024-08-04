@@ -1,6 +1,7 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
@@ -13,28 +14,30 @@ import { getNftsByCollectionEndpoint } from "../urls.js";
 
 export type GetNFTsGroupBy = "ownerAddress";
 
-export type GetNFTsByCollectionParams = {
-  /**
-   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
-   *
-   * You can create a client using the `createThirdwebClient` function.
-   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-   *
-   */
-  client: ThirdwebClient;
-  /**
-   * Addresses of NFT collections
-   */
-  contractAddresses: Address[];
-  /**
-   * Chain IDs to search from
-   */
-  chainIds?: number[];
-  /**
-   * Parameters to group results count by. Currently supports "ownerAddress"
-   */
-  groupBy?: GetNFTsGroupBy;
-} & ChainsawPagingParams;
+export type GetNFTsByCollectionParams = Prettify<
+  {
+    /**
+     * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+     *
+     * You can create a client using the `createThirdwebClient` function.
+     * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+     *
+     */
+    client: ThirdwebClient;
+    /**
+     * Addresses of NFT collections
+     */
+    contractAddresses: Address[];
+    /**
+     * Chain IDs to search from
+     */
+    chainIds?: number[];
+    /**
+     * Parameters to group results count by. Currently supports "ownerAddress"
+     */
+    groupBy?: GetNFTsGroupBy;
+  } & ChainsawPagingParams
+>;
 
 export type GetNFTsByCollectionResult = {
   nfts: NFTs;
