@@ -443,11 +443,7 @@ const SelectReveal: React.FC<SelectRevealProps> = ({ form, isRevealable }) => {
                         setValue={(file) =>
                           form.setValue("placeHolder.image", file)
                         }
-                        border="1px solid"
-                        borderColor="gray.200"
-                        borderRadius="md"
-                        transition="all 200ms ease"
-                        _hover={{ shadow: "sm" }}
+                        className="rounded border border-border transition-all duration-200"
                       />
                     </Box>
                     <FormHelperText>
