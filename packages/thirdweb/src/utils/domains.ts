@@ -36,7 +36,7 @@ const DEFAULT_IN_APP_WALLET_URL = "embedded-wallet.thirdweb.com";
 const DEFAULT_PAY_URL = "pay.thirdweb.com";
 const DEFAULT_STORAGE_URL = "storage.thirdweb.com";
 const DEFAULT_BUNDLER_URL = "bundler.thirdweb.com";
-const DEFAULT_CHAINSAW_URL = "https://chainsaw.thirdweb.com";
+const DEFAULT_CHAINSAW_URL = "chainsaw.thirdweb.com";
 
 let domains: { [k in keyof DomainOverrides]-?: string } = {
   rpc: DEFAULT_RPC_URL,
