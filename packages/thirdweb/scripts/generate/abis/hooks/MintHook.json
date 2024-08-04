@@ -1,0 +1,1007 @@
+[
+  {
+    "type": "function",
+    "name": "BEFORE_APPROVE_ERC20_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_APPROVE_ERC721_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_APPROVE_FOR_ALL_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_BATCH_TRANSFER_ERC1155_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_BURN_ERC1155_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_BURN_ERC20_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_BURN_ERC721_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_MINT_ERC1155_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_MINT_ERC20_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_MINT_ERC721_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_TRANSFER_ERC1155_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_TRANSFER_ERC20_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "BEFORE_TRANSFER_ERC721_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "ON_ROYALTY_INFO_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "ON_TOKEN_URI_FLAG",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "allowlistMint",
+    "inputs": [
+      {
+        "name": "_params",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimParams",
+        "components": [
+          {
+            "name": "allowlistProof",
+            "type": "bytes32[]",
+            "internalType": "bytes32[]"
+          },
+          {
+            "name": "expectedPricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "expectedCurrency",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "beforeMintERC1155",
+    "inputs": [
+      { "name": "_to", "type": "address", "internalType": "address" },
+      { "name": "_id", "type": "uint256", "internalType": "uint256" },
+      { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
+      { "name": "_data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "beforeMintERC20",
+    "inputs": [
+      { "name": "_to", "type": "address", "internalType": "address" },
+      { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
+      { "name": "_data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "beforeMintERC721",
+    "inputs": [
+      { "name": "_to", "type": "address", "internalType": "address" },
+      { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
+      { "name": "_data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "decodeClaimParams",
+    "inputs": [{ "name": "_data", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimParams",
+        "components": [
+          {
+            "name": "allowlistProof",
+            "type": "bytes32[]",
+            "internalType": "bytes32[]"
+          },
+          {
+            "name": "expectedPricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "expectedCurrency",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "decodeSignatureMintERC1155Params",
+    "inputs": [{ "name": "_data", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct MintHook.SignatureMintParamsERC1155",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintHook.SignatureMintRequestERC1155",
+            "components": [
+              {
+                "name": "tokenId",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "decodeSignatureMintERC20Params",
+    "inputs": [{ "name": "_data", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct MintHook.SignatureMintParamsERC20",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintHook.SignatureMintRequestERC20",
+            "components": [
+              {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "decodeSignatureMintERC721Params",
+    "inputs": [{ "name": "_data", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct MintHook.SignatureMintParamsERC721",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintHook.SignatureMintRequestERC721",
+            "components": [
+              {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "eip712Domain",
+    "inputs": [],
+    "outputs": [
+      { "name": "fields", "type": "bytes1", "internalType": "bytes1" },
+      { "name": "name", "type": "string", "internalType": "string" },
+      { "name": "version", "type": "string", "internalType": "string" },
+      { "name": "chainId", "type": "uint256", "internalType": "uint256" },
+      {
+        "name": "verifyingContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      { "name": "salt", "type": "bytes32", "internalType": "bytes32" },
+      {
+        "name": "extensions",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getClaimPhaseERC1155",
+    "inputs": [
+      { "name": "_token", "type": "address", "internalType": "address" },
+      { "name": "_id", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [
+      {
+        "name": "claimPhase",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimPhase",
+        "components": [
+          {
+            "name": "availableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "allowlistMerkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          },
+          {
+            "name": "endTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getClaimPhaseERC20",
+    "inputs": [
+      { "name": "_token", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [
+      {
+        "name": "claimPhase",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimPhase",
+        "components": [
+          {
+            "name": "availableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "allowlistMerkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          },
+          {
+            "name": "endTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getClaimPhaseERC721",
+    "inputs": [
+      { "name": "_token", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [
+      {
+        "name": "claimPhase",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimPhase",
+        "components": [
+          {
+            "name": "availableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "allowlistMerkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          },
+          {
+            "name": "endTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getHookInfo",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "info",
+        "type": "tuple",
+        "internalType": "struct IHookInfo.HookInfo",
+        "components": [
+          {
+            "name": "hookFlags",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "hookFallbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IHookInfo.HookFallbackFunction[]",
+            "components": [
+              {
+                "name": "functionSelector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              },
+              {
+                "name": "callType",
+                "type": "uint8",
+                "internalType": "enum IHookInfo.CallType"
+              },
+              {
+                "name": "permissioned",
+                "type": "bool",
+                "internalType": "bool"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "getSaleConfig",
+    "inputs": [
+      { "name": "_token", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [
+      {
+        "name": "primarySaleRecipient",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "platformFeeRecipient",
+        "type": "address",
+        "internalType": "address"
+      },
+      { "name": "platformFeeBps", "type": "uint16", "internalType": "uint16" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "multicall",
+    "inputs": [
+      { "name": "data", "type": "bytes[]", "internalType": "bytes[]" }
+    ],
+    "outputs": [{ "name": "", "type": "bytes[]", "internalType": "bytes[]" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setClaimPhaseERC1155",
+    "inputs": [
+      { "name": "_id", "type": "uint256", "internalType": "uint256" },
+      {
+        "name": "_claimPhase",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimPhase",
+        "components": [
+          {
+            "name": "availableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "allowlistMerkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          },
+          {
+            "name": "endTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setClaimPhaseERC20",
+    "inputs": [
+      {
+        "name": "_claimPhase",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimPhase",
+        "components": [
+          {
+            "name": "availableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "allowlistMerkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          },
+          {
+            "name": "endTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setClaimPhaseERC721",
+    "inputs": [
+      {
+        "name": "_claimPhase",
+        "type": "tuple",
+        "internalType": "struct MintHook.ClaimPhase",
+        "components": [
+          {
+            "name": "availableSupply",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "allowlistMerkleRoot",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          },
+          {
+            "name": "pricePerUnit",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "currency",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          },
+          {
+            "name": "endTimestamp",
+            "type": "uint48",
+            "internalType": "uint48"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setSaleConfig",
+    "inputs": [
+      {
+        "name": "_primarySaleRecipient",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_platformFeeRecipient",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "_platformFeeBps",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "signatureMintERC1155",
+    "inputs": [
+      {
+        "name": "_params",
+        "type": "tuple",
+        "internalType": "struct MintHook.SignatureMintParamsERC1155",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintHook.SignatureMintRequestERC1155",
+            "components": [
+              {
+                "name": "tokenId",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "signatureMintERC20",
+    "inputs": [
+      {
+        "name": "_params",
+        "type": "tuple",
+        "internalType": "struct MintHook.SignatureMintParamsERC20",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintHook.SignatureMintRequestERC20",
+            "components": [
+              {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "signatureMintERC721",
+    "inputs": [
+      {
+        "name": "_params",
+        "type": "tuple",
+        "internalType": "struct MintHook.SignatureMintParamsERC721",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintHook.SignatureMintRequestERC721",
+            "components": [
+              {
+                "name": "token",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "error",
+    "name": "BeforeMintHookERC1155NotImplemented",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BeforeMintHookERC20NotImplemented",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BeforeMintHookERC721NotImplemented",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MintHookClaimPhaseNotInAllowlist",
+    "inputs": []
+  },
+  { "type": "error", "name": "MintHookClaimPhaseOutOfSupply", "inputs": [] },
+  {
+    "type": "error",
+    "name": "MintHookClaimPhaseOutOfTimeWindow",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MintHookClaimPhasePriceMismatch",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MintHookIncorrectNativeTokenSent",
+    "inputs": []
+  },
+  { "type": "error", "name": "MintHookRequestExpired", "inputs": [] },
+  { "type": "error", "name": "MintHookRequestInvalidToken", "inputs": [] },
+  { "type": "error", "name": "MintHookRequestMismatch", "inputs": [] },
+  { "type": "error", "name": "MintHookRequestUidReused", "inputs": [] },
+  {
+    "type": "error",
+    "name": "MintHookRequestUnauthorizedSignature",
+    "inputs": []
+  },
+  { "type": "error", "name": "MintHookUnrecognizedParams", "inputs": [] }
+]
