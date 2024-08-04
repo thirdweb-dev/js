@@ -7,9 +7,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  HStack,
-  Icon,
-  Tooltip,
 } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
@@ -28,8 +25,6 @@ import { useActiveAccount } from "thirdweb/react";
 import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import {
-  Card,
-  Checkbox,
   FormHelperText,
   FormLabel,
   Heading,
@@ -37,6 +32,9 @@ import {
   TrackedLink,
 } from "tw-components";
 import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
+import { Checkbox, CheckboxWithLabel } from "../../../@/components/ui/checkbox";
+import { ToolTipLabel } from "../../../@/components/ui/tooltip";
+import { TrackedLinkTW } from "../../../@/components/ui/tracked-link";
 import {
   useConstructorParamsFromABI,
   useContractEnabledExtensions,
@@ -647,54 +645,45 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           </Text>
         </Flex>
 
-        <Checkbox
-          {...form.register("addToDashboard")}
-          isChecked={form.watch("addToDashboard")}
-        >
-          <Text>
-            Import so I can find it in the list of my contracts at{" "}
-            <TrackedLink
-              href="/dashboard"
-              isExternal
-              category="custom-contract"
-              label="visit-dashboard"
-              color="blue.500"
-            >
-              /dashboard
-            </TrackedLink>
-            .
-          </Text>
-        </Checkbox>
+        <CheckboxWithLabel>
+          <Checkbox
+            {...form.register("addToDashboard")}
+            checked={form.watch("addToDashboard")}
+            onCheckedChange={(checked) =>
+              form.setValue("addToDashboard", !!checked)
+            }
+          />
+          Import so I can find it in the list of my contracts at{" "}
+          <TrackedLinkTW
+            className="text-link-foreground hover:text-foreground"
+            href="/dashboard"
+            target="_blank"
+            category="custom-contract"
+            label="visit-dashboard"
+          >
+            /dashboard
+          </TrackedLinkTW>
+        </CheckboxWithLabel>
 
         {fullPublishMetadata.data?.deployType === "standard" && (
           <Flex gap={4} flexDir="column">
-            <Checkbox
-              {...form.register("deployDeterministic")}
-              isChecked={form.watch("deployDeterministic")}
-            >
-              <Tooltip
-                label={
-                  <Card py={2} px={4} bgColor="backgroundHighlight">
-                    <Text fontSize="small" lineHeight={6}>
-                      Allows having the same contract address on multiple
-                      chains. You can control the address by specifying a salt
-                      for create2 deployment below.
-                    </Text>
-                  </Card>
+            <CheckboxWithLabel>
+              <Checkbox
+                {...form.register("deployDeterministic")}
+                checked={form.watch("deployDeterministic")}
+                onCheckedChange={(c) =>
+                  form.setValue("deployDeterministic", !!c)
                 }
-                isDisabled={false}
-                p={0}
-                bg="transparent"
-                boxShadow="none"
-              >
-                <HStack>
-                  <Heading as="label" size="label.md">
+              />
+              <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
+                <div className="inline-flex gap-1.5 items-center">
+                  <span className="tex-sm">
                     Deploy at a deterministic address
-                  </Heading>
-                  <Icon as={FiHelpCircle} />
-                </HStack>
-              </Tooltip>
-            </Checkbox>
+                  </span>
+                  <FiHelpCircle className="size-4" />
+                </div>
+              </ToolTipLabel>
+            </CheckboxWithLabel>
 
             {isCreate2Deployment && (
               <FormControl>
@@ -712,16 +701,17 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   solidityType={"string"}
                   {...form.register("saltForCreate2")}
                 />
-                <Flex alignItems="center" gap={3}>
+                <div className="h-2" />
+                <CheckboxWithLabel>
                   <Checkbox
                     {...form.register("signerAsSalt")}
-                    isChecked={form.watch("signerAsSalt")}
+                    checked={form.watch("signerAsSalt")}
+                    onCheckedChange={(c) => form.setValue("signerAsSalt", !!c)}
                   />
-
-                  <Text mt={1}>
+                  <span className="text-sm">
                     Include deployer wallet address in salt (recommended)
-                  </Text>
-                </Flex>
+                  </span>
+                </CheckboxWithLabel>
               </FormControl>
             )}
           </Flex>
