@@ -2,7 +2,6 @@ import { equalBytes } from "@noble/curves/abstract/utils";
 import { type Signature, encodeDeployData, serializeSignature } from "viem";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
-import { getContract } from "../contract/contract.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
