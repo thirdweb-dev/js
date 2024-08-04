@@ -4,7 +4,17 @@ import type { ChainsawResponse } from "../types.d.ts";
 import { getLatestBlockNumberEndpoint } from "../urls.js";
 
 export type GetLatestBlockNumberParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
   client: ThirdwebClient;
+  /**
+   * Chain ID
+   */
   chainId: number;
 };
 
@@ -12,6 +22,27 @@ export type GetLatestBlockNumberParams = {
  * Get latest block number for a chain
  *
  * @beta
+ */
+/**
+ * @beta
+ *
+ * Get the block number of the latest indexed block
+ *
+ * @param {GetLatestBlockNumberParams} params
+ * @returns {Promise<number>}
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getLatestBlockNumber } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
+ * const latestBlockNumber = await getLatestBlockNumber({
+ *  client,
+ *  chainId: 1
+ * });
+ * ```
+ * @chainsaw
  */
 export async function getLatestBlockNumber(
   params: GetLatestBlockNumberParams,

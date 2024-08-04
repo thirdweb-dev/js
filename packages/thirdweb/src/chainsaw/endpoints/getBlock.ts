@@ -6,15 +6,45 @@ import type { Block, ChainsawResponse } from "../types.d.ts";
 import { getBlockEndpoint } from "../urls.js";
 
 export type GetBlockParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
   client: ThirdwebClient;
+  /**
+   * Number of the block to fetch
+   */
   blockNumber: number;
+  /**
+   * Chain ID of the block
+   */
   chainId: number;
 };
 
 /**
+ * @beta
+ *
  * Get data for a single block
  *
- * @beta
+ * @param {GetBlockParams} params
+ * @returns {Promise<GetBlockReturnType<undefined, false>>}
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getBlock } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
+ * const block = await getBlock({
+ *  client,
+ *  blockNumber: 9662167,
+ *  chainId: 1
+ * });
+ * ```
+ * @chainsaw
  */
 export async function getBlock(
   params: GetBlockParams,

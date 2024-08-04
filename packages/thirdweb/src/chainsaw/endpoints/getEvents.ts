@@ -13,12 +13,37 @@ export type GetEventsInterval = "hour" | "day" | "week" | "month";
 export type GetEventsGroupBy = "time" | "chainId" | "contractAddress";
 
 export type GetEventsParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
   client: ThirdwebClient;
+  /**
+   * Contract addresses to fetch events for
+   */
   contractAddresses: Address[];
+  /**
+   * Chain IDs to search events on
+   */
   chainIds?: number[];
+  /**
+   * Start point for events date range. Default is 7 days ago
+   */
   startDate?: Date;
+  /**
+   * End point for events date range. Default is current date
+   */
   endDate?: Date;
+  /**
+   * If grouped by time, determines the bucket length
+   */
   interval?: GetEventsInterval;
+  /**
+   * Parameters to group events by for the count
+   */
   groupBy?: GetEventsGroupBy[];
 } & ChainsawPagingParams;
 
@@ -28,9 +53,34 @@ export type GetEventsResult = {
 };
 
 /**
- * Get events
- *
  * @beta
+ *
+ * Get events emitted by contract(s)
+ *
+ * @param {GetEventsParams} params
+ * @returns {Promise<GetEventsResult>}
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getEvents } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
+ * const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ * const endDate = new Date();
+ * const events = await getEvents({
+ *  client,
+ *  contractAddresses: ["0x..."],
+ *  chainIds: [1],
+ *  startDate,
+ *  endDate,
+ *  groupBy: ["time"],
+ *  interval: ["day"],
+ *  pageSize: 20,
+ *  page: 1
+ * });
+ * ```
+ * @chainsaw
  */
 export async function getEvents(
   params: GetEventsParams,

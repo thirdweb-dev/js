@@ -9,7 +9,13 @@ export type ChainsawResponse<T = unknown> = {
 };
 
 export type ChainsawPagingParams = {
+  /**
+   * Number of items per page
+   */
   pageSize?: number;
+  /**
+   * Page number
+   */
   page?: number;
 };
 

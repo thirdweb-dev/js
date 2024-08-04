@@ -12,8 +12,21 @@ import type {
 import { getNftsByOwnerEndpoint } from "../urls.js";
 
 export type GetNFTsByOwnerParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
   client: ThirdwebClient;
+  /**
+   * Addresses of the NFT owners
+   */
   ownerAddresses: Address[];
+  /**
+   * Chain IDs to search from
+   */
   chainIds?: number[];
 } & ChainsawPagingParams;
 
@@ -23,9 +36,30 @@ export type GetNFTsByOwnerResult = {
 };
 
 /**
+ * @beta
+ *
  * Get NFTs by owner address(es)
  *
- * @beta
+ * @param {GetNFTsByOwnerParams} params
+ * @returns {Promise<GetNFTsByOwnerResult>}
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getNFTsByOwner } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
+ * const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ * const endDate = new Date(Date.now() - 24 * 60 * 60_000);
+ * const nfts = await getNFTsByOwner({
+ *  client,
+ *  ownerAddresses: ["0x..."],
+ *  chainIds: [1],
+ *  pageSize: 20,
+ *  page: 1
+ * });
+ * ```
+ * @chainsaw
  */
 export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,

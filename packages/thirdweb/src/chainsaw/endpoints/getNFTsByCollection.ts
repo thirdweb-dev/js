@@ -14,9 +14,25 @@ import { getNftsByCollectionEndpoint } from "../urls.js";
 export type GetNFTsGroupBy = "ownerAddress";
 
 export type GetNFTsByCollectionParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
   client: ThirdwebClient;
+  /**
+   * Addresses of NFT collections
+   */
   contractAddresses: Address[];
+  /**
+   * Chain IDs to search from
+   */
   chainIds?: number[];
+  /**
+   * Parameters to group results count by. Currently supports "ownerAddress"
+   */
   groupBy?: GetNFTsGroupBy;
 } & ChainsawPagingParams;
 
@@ -26,9 +42,29 @@ export type GetNFTsByCollectionResult = {
 };
 
 /**
+ * @beta
+ *
  * Get NFTs for a collection
  *
- * @beta
+ * @param {GetNFTsByCollectionParams} params
+ * @returns {Promise<GetNFTsByCollectionResult>}
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getNFTsByCollection } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
+ * const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ * const endDate = new Date(Date.now() - 24 * 60 * 60_000);
+ * const nfts = await getNFTsByCollection({
+ *  client,
+ *  contractAddresses: ["0x..."],
+ *  chainIds: [1],
+ *  groupBy: ["ownerAddress"],
+ * });
+ * ```
+ * @chainsaw
  */
 export async function getNFTsByCollection(
   params: GetNFTsByCollectionParams,

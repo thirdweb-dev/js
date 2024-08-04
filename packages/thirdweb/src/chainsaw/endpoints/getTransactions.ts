@@ -12,10 +12,29 @@ import type {
 import { getTransactionsEndpoint } from "../urls.js";
 
 export type GetTransactionsParams = {
+  /**
+   * A client is the entry point to the thirdweb SDK. It is required for all other actions.
+   *
+   * You can create a client using the `createThirdwebClient` function.
+   * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
+   *
+   */
   client: ThirdwebClient;
+  /**
+   * Contract address to fetch transactions for
+   */
   to: Address;
+  /**
+   * Chain IDs to fetch transactions from. If omitted, will look on all supported chains
+   */
   chainIds?: number[];
+  /**
+   * Start of the date range to search in
+   */
   startDate?: Date;
+  /**
+   * End of the date range to search in
+   */
   endDate?: Date;
 } & ChainsawPagingParams;
 
@@ -25,9 +44,32 @@ export type GetTransactionsResult = {
 };
 
 /**
- * Get transactions
- *
  * @beta
+ *
+ * Get transactions to a contract
+ *
+ * @param {GetTransactionsParams} params
+ * @returns {Promise<GetTransactionsResult>}
+ *
+ * @example
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getTransactions } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
+ * const startDate = new Date(Date.now() - 24 * 60 * 60_000);
+ * const endDate = new Date();
+ * const block = await getTransactions({
+ *  client,
+ *  to: "0x...",
+ *  chainIds: [1],
+ *  startDate,
+ *  endDate,
+ *  pageSize: 20,
+ *  page: 1
+ * });
+ * ```
+ * @chainsaw
  */
 export async function getTransactions(
   params: GetTransactionsParams,

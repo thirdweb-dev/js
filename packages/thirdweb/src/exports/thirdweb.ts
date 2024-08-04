@@ -230,6 +230,7 @@ export {
 export type {
   Transactions,
   Transaction,
+  ChainsawPagingParams,
 } from "../chainsaw/types.js";
 
 // ------------------------------------------------
