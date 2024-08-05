@@ -38,7 +38,7 @@ export const formatChainsawNFTs = (nfts?: NFTs): ChainsawNFTs => {
             owner: nft.ownerAddress || null,
             tokenUri: nft.uri,
             type: "ERC1155" as const,
-            supply: BigInt(nft.balance || 0),
+            supply: BigInt(0),
           }
         : {
             tokenId: BigInt(nft.tokenId),
