@@ -7,7 +7,6 @@ import { getRpcClient } from "../rpc/rpc.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
 import { type Hex, isHex } from "../utils/encoding/hex.js";
 import { toBytes } from "../utils/encoding/to-bytes.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "../wallets/smart/lib/constants.js";
 import {
   universalSignatureValidatorAbi,
   universalSignatureValidatorByteCode,
@@ -75,13 +74,17 @@ export async function verifyHash({
   })();
 
   const wrappedSignature = await (async () => {
+    // If no factory is provided, we have to assume its already deployed or is an EOA
+    // TODO: Figure out how to automatically tell if our default factory was used
+    if (!accountFactory) return signatureHex;
+
     // If this sigature was already wrapped for ERC-6492, carry on
     if (isErc6492Signature(signatureHex)) return signatureHex;
 
     // Otherwise, serialize the signature for ERC-6492 validation
     return serializeErc6492Signature({
-      address: accountFactory?.address ?? DEFAULT_ACCOUNT_FACTORY,
-      data: accountFactory?.verificationCalldata ?? "0x",
+      address: accountFactory.address,
+      data: accountFactory.verificationCalldata,
       signature: signatureHex,
     });
   })();
