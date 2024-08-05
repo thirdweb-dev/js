@@ -22,11 +22,12 @@ import type {
 } from "./types.js";
 
 /**
- * This button is used to claim tokens (NFT or ERC20) from a given thirdweb Drop contract
+ * This button is used to claim tokens (NFT or ERC20) from a given thirdweb Drop contract.
  *
  * there are 3 type of Drop contract: NFT Drop (DropERC721), Edition Drop (DropERC1155) and Token Drop (DropERC20)
  *
  * Learn more: https://thirdweb.com/explore/drops
+ *
  *
  * Note: This button only works with thirdweb Drop contracts.
  * For custom contract, please use [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton)
@@ -36,11 +37,11 @@ import type {
  * @component
  * @example
  *
+ * Example for claiming NFT from an NFT Drop contract
  * ```tsx
  * import { ClaimButton } from "thirdweb/react";
  * import { ethereum } from "thirdweb/chains";
  *
- * // For NFT Drop (ERC721)
  * <ClaimButton
  *   contractAddress="0x..." // contract address of the NFT Drop
  *   chain={ethereum}
@@ -52,9 +53,10 @@ import type {
  * >
  *   Claim now
  * </ClaimButton>
+ * ```
  *
- *
- * // For Edition Drop (ERC1155)
+ * For Edition Drop (ERC1155)
+ * ```tsx
  * <ClaimButton
  *   contractAddress="0x..." // contract address of the Edition Drop
  *   chain={ethereum}
@@ -67,9 +69,10 @@ import type {
  * >
  *   Claim now
  * </ClaimButton>
+ * ```
  *
- *
- * // For Token Drop (ERC20)
+ * For Token Drop (ERC20)
+ * ```tsx
  * <ClaimButton
  *   contractAddress="0x..." // contract address of the Token Drop
  *   chain={ethereum}
@@ -82,8 +85,10 @@ import type {
  * >
  *   Claim now
  * </ClaimButton>
+ * ```
  *
- * // Attach custom Pay metadata
+ * Attach custom Pay metadata
+ * ```tsx
  * <ClaimButton
  *   payModal={{
  *     metadata: {
@@ -94,6 +99,13 @@ import type {
  * >...</ClaimButton>
  *
  * ```
+ *
+ * Since this button uses the `TransactionButton`, it can take in any props that can be passed
+ * to the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton)
+ *
+ *
+ * For error handling & callbacks on transaction-sent and transaction-confirmed,
+ * please refer to the TransactionButton docs.
  */
 export function ClaimButton(props: ClaimButtonProps) {
   const { children, contractAddress, client, chain, claimParams, payModal } =

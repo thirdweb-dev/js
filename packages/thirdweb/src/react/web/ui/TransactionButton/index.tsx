@@ -28,12 +28,75 @@ import { Button } from "../components/buttons.js";
  * ```tsx
  * <TransactionButton
  *   transaction={() => {}}
- *   onTransactionConfirmed={handleSuccess}
- *   onError={handleError}
  *   unstyled
  *   className="bg-white text-black rounded-md p-4 flex items-center justify-center"
  * >
  *   Confirm Transaction
+ * </TransactionButton>
+ * ```
+ *
+ * Handle errors
+ * ```tsx
+ * <TransactionButton
+ *   transaction={() => ...}
+ *   onError={(err) => {
+ *     alert(err.message);
+ *     // Add your own logic here
+ *   }}
+ * >
+ *   Confirm Transaction
+ * </TransactionButton>
+ * ```
+ *
+ * Alert when a transaction is sent
+ * ```tsx
+ * <TransactionButton
+ *   transaction={() => ...}
+ *   onTransactionSent={(tx) => {
+ *     alert("transaction sent!");
+ *     // Add your own logic here. For example, a toast
+ *   }}
+ * >
+ *   Confirm Transaction
+ * </TransactionButton>
+ * ```
+ *
+ * Alert when a transaction is completed
+ * ```tsx
+ * <TransactionButton
+ *   transaction={() => ...}
+ *   onTransactionConfirmed={(tx) => {
+ *     alert("transaction sent!");
+ *     console.log(tx);
+ *     // Add your own logic here. For example, a toast
+ *   }}
+ * >
+ *   Confirm Transaction
+ * </TransactionButton>
+ * ```
+ *
+ * The onClick prop, if provided, will be called before the transaction is sent.
+ * ```tsx
+ * <TransactionButton
+ *   onClick={() => alert("Transaction is about to be sent")}
+ *   transaction={...}
+ * >
+ *   ...
+ * </TransactionButton>
+ * ```
+ *
+ * Attach custom Pay metadata
+ * ```tsx
+ * <TransactionButton
+ *   payModal={{
+ *     // This image & title will show up in the Pay modal
+ *     metadata: {
+ *       name: "Van Gogh Starry Night",
+ *       image: "https://unsplash.com/starry-night.png"
+ *     }
+ *   }}
+ * >
+ *   ...
  * </TransactionButton>
  * ```
  * @component
