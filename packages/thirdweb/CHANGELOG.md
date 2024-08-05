@@ -1,5 +1,27 @@
 # thirdweb
 
+## 5.44.0
+
+### Minor Changes
+
+- [`c9e14e3`](https://github.com/thirdweb-dev/js/commit/c9e14e366ca5ab016fd77df588488d0effe408db) Thanks [@jnsdls](https://github.com/jnsdls)! - Adds telegram login option for in-app wallets
+
+  ```ts
+  import { inAppWallet } from "thirdweb";
+
+  const wallet = inAppWallet();
+
+  await wallet.connect({
+    strategy: "telegram",
+  });
+  ```
+
+### Patch Changes
+
+- [`c9e14e3`](https://github.com/thirdweb-dev/js/commit/c9e14e366ca5ab016fd77df588488d0effe408db) Thanks [@jnsdls](https://github.com/jnsdls)! - Added Celo Alfajores Testnet within the chain-definitions
+
+- [`c9e14e3`](https://github.com/thirdweb-dev/js/commit/c9e14e366ca5ab016fd77df588488d0effe408db) Thanks [@jnsdls](https://github.com/jnsdls)! - Add `type` field on `DirectListing` and `EnglishAuction` types.
+
 ## 5.43.2
 
 ### Patch Changes
