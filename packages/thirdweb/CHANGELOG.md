@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.43.3
+
+### Patch Changes
+
+- [#3907](https://github.com/thirdweb-dev/js/pull/3907) [`d04b032`](https://github.com/thirdweb-dev/js/commit/d04b03226a1f590c30cbce740404c965880c3c2f) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add `type` field on `DirectListing` and `EnglishAuction` types.
+
 ## 5.43.2
 
 ### Patch Changes
