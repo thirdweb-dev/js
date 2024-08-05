@@ -33,6 +33,11 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
     "ERC20",
   ]);
 
+  const isERC20Mintable = detectFeatures<TokenContract>(
+    contractQuery.contract,
+    ["ERC20Mintable"],
+  );
+
   if (!isERC20) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
@@ -80,8 +85,9 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
             contractAddress={contractAddress}
             chainId={chainId}
           />
-          {/* TODO: update (mintable detection) */}
-          <TokenMintButton contractQuery={contractQuery} />
+          {isERC20Mintable && contractQuery.contract && (
+            <TokenMintButton contractQuery={contractQuery} />
+          )}
         </ButtonGroup>
       </Flex>
 
