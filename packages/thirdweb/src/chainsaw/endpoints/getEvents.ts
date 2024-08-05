@@ -2,8 +2,10 @@ import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
+import { formatChainsawEvents } from "../formatter.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
+  ChainsawEvents,
   ChainsawPagingParams,
   ChainsawResponse,
   Events,
@@ -11,7 +13,7 @@ import type {
 import { getEventsEndpoint } from "../urls.js";
 
 export type GetEventsInterval = "hour" | "day" | "week" | "month";
-export type GetEventsGroupBy = "time" | "chainId" | "contractAddress";
+export type GetEventsGroupBy = "time" | "name" | "chainId" | "contractAddress";
 
 export type GetEventsParams = Prettify<
   {
@@ -51,7 +53,7 @@ export type GetEventsParams = Prettify<
 >;
 
 export type GetEventsResult = {
-  events: Events;
+  events: ChainsawEvents;
   page?: number;
 };
 
@@ -94,7 +96,6 @@ export async function getEvents(
         ...(params.startDate && { startDate: params.startDate.toISOString() }),
         ...(params.endDate && { endDate: params.endDate.toISOString() }),
         ...(params.interval && { interval: params.interval }),
-        ...(params.groupBy && { groupBy: params.groupBy.toString() }),
       }),
       params,
     );
@@ -118,7 +119,7 @@ export async function getEvents(
     const data: ChainsawResponse<Events> = await response.json();
     if (data.error) throw new Error(data.error);
     return {
-      events: data.data || [],
+      events: formatChainsawEvents(data.data),
       page: data.page,
     };
   } catch (error) {

@@ -4,7 +4,9 @@ import { parseNFT } from "../utils/nft/parseNft.js";
 import type {
   Block,
   ChainsawBlock,
+  ChainsawEvents,
   ChainsawTransactions,
+  Events,
   NFTs,
   NFTsData,
   Transaction,
@@ -121,4 +123,12 @@ export const formatChainsawTransactions = (
       transactionIndex: numberToHex(BigInt(tx.index)),
     }) as Transaction;
   });
+};
+
+export const formatChainsawEvents = (events?: Events): ChainsawEvents => {
+  if (!events?.length) return [];
+  return events.map((event) => ({
+    ...event,
+    count: BigInt(event.count),
+  }));
 };

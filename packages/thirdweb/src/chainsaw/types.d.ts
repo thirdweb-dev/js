@@ -1,6 +1,7 @@
 import type { Transaction as ViemTransaction } from "viem";
 import type { Hex } from "../utils/encoding/hex.ts";
 import type { NFT as ParsedNFT } from "../utils/nft/parseNft.js";
+import type { Prettify } from "../utils/type-utils.ts";
 
 export type ChainsawResponse<T = unknown> = {
   data?: T;
@@ -63,13 +64,22 @@ export type ChainsawBlock = {
 
 export type Event = {
   name: string;
-  count: number;
+  count: string;
   time?: string;
   chainId?: number;
   contractAddress?: Hex;
+  args?: string;
 };
 
 export type Events = Event[];
+
+export type ChainsawEvent = Prettify<
+  Omit<Event, "count"> & {
+    count: bigint;
+  }
+>;
+
+export type ChainsawEvents = ChainsawEvent[];
 
 export type DecodedTransaction = {
   functionName: string;
