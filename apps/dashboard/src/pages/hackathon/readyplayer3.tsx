@@ -1,4 +1,4 @@
-import { Box, DarkMode, Flex, Image, List, ListItem } from "@chakra-ui/react";
+import { Box, Flex, Image, List, ListItem } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
@@ -18,6 +18,7 @@ import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Heading, Link, LinkButton, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const Timer = dynamic(() => import("components/hackathon/common/Timer"), {
   ssr: false,
@@ -193,9 +194,10 @@ const scheduleItems = [
 
 const ReadyPlayer3Landing: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title={metadata.title}
         description={metadata.description}
@@ -549,7 +551,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           </Box>
         </Box>
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 
