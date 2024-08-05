@@ -34,6 +34,7 @@ function getOauthLoginPath(
     case "facebook":
     case "google":
     case "farcaster":
+    case "telegram":
     case "discord":
       return getSocialAuthLoginPath({ authOption, client, ecosystem });
     default:
