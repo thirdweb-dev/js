@@ -5,10 +5,10 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addPagingToRequest } from "../paging.js";
 import type {
+  ChainsawNFTs,
   ChainsawPagingParams,
   ChainsawResponse,
   NFTs,
-  NFTsData,
 } from "../types.d.ts";
 import { getNftsByOwnerEndpoint } from "../urls.js";
 
@@ -34,7 +34,7 @@ export type GetNFTsByOwnerParams = Prettify<
 >;
 
 export type GetNFTsByOwnerResult = {
-  nfts: NFTs;
+  nfts: ChainsawNFTs;
   page?: number;
 };
 
@@ -83,7 +83,7 @@ export async function getNFTsByOwner(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<NFTsData> = await response.json();
+    const data: ChainsawResponse<NFTs> = await response.json();
     if (data.error) throw new Error(data.error);
     return {
       nfts: formatChainsawNFTs(data.data),

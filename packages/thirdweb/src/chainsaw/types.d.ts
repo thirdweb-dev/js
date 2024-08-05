@@ -112,7 +112,7 @@ export type ChainsawTransaction = Omit<Transaction, keyof ViemTransaction> &
   ViemTransaction;
 export type ChainsawTransactions = ChainsawTransaction[];
 
-export type NFTData = {
+export type NFT = {
   chainId: number;
   contractAddress: Hex;
   tokenId: string;
@@ -128,9 +128,9 @@ export type NFTData = {
   description?: string;
 };
 
-export type NFTsData = NFTData[];
+export type NFTs = NFT[];
 
-export type NFT = ParsedNFT & {
+export type ChainsawNFT = ParsedNFT & {
   contractAddress: string;
   collectionName: string;
   chainId: number;
@@ -138,4 +138,4 @@ export type NFT = ParsedNFT & {
   imageData?: string;
 };
 
-export type NFTs = NFT[];
+export type ChainsawNFTs = ChainsawNFT[];

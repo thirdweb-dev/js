@@ -5,11 +5,11 @@ import type {
   Block,
   ChainsawBlock,
   ChainsawEvents,
+  ChainsawNFTs,
   ChainsawTransaction,
   ChainsawTransactions,
   Events,
   NFTs,
-  NFTsData,
   Transactions,
 } from "./types.js";
 
@@ -28,7 +28,7 @@ export const formatChainsawBlock = (
   });
 };
 
-export const formatChainsawNFTs = (nfts?: NFTsData): NFTs => {
+export const formatChainsawNFTs = (nfts?: NFTs): ChainsawNFTs => {
   if (!nfts) return [];
   return nfts.map((nft) => {
     const options =
