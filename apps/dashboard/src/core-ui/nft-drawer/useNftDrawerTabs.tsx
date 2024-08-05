@@ -72,7 +72,7 @@ export function useNFTDrawerTabs({
     },
   );
 
-  const isMinterRole = useIsMinter(oldContract);
+  const isMinterRole = useIsMinter(contract);
 
   return useMemo(() => {
     const isMintable = detectFeatures(oldContract, ["ERC1155Mintable"]);

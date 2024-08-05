@@ -1,6 +1,5 @@
 import {
   Box,
-  DarkMode,
   Flex,
   Image,
   LinkBox,
@@ -16,6 +15,7 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { useForceDarkTheme } from "../@/components/theme-provider";
 
 export interface TemplateCardProps {
   id: string;
@@ -400,8 +400,9 @@ const description =
   "Start building with a library of quick-start templates for web3 apps and websites — for NFTs, marketplaces, and more. Get started.";
 
 const Templates: ThirdwebNextPage = () => {
+  useForceDarkTheme();
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title={title}
         description={description}
@@ -467,7 +468,7 @@ const Templates: ThirdwebNextPage = () => {
       <GetStartedSection />
       <NewsletterSection />
       <HomepageFooter />
-    </DarkMode>
+    </>
   );
 };
 

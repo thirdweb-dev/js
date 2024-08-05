@@ -97,7 +97,7 @@
     "react-dom": "18.3.1",
     "stream": "npm:stream-browserify@^3.0.0",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "@emotion/css": "11.11.2",

@@ -1,4 +1,4 @@
-import { Box, DarkMode, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
+import { Box, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import EarnReasonSection from "components/hackathon/EarnReasonSection";
@@ -15,6 +15,7 @@ import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Heading, LinkButton, Text } from "tw-components";
+import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const List = dynamic(
   () => import("@chakra-ui/react").then((result) => result.List),
@@ -37,8 +38,10 @@ const description =
 
 const HackathonEarn = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
+
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title={title}
         description={description}
@@ -360,7 +363,7 @@ const HackathonEarn = () => {
           <HackathonEarnFooter TRACKING_CATEGORY={TRACKING_CATEGORY} />
         </Flex>
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

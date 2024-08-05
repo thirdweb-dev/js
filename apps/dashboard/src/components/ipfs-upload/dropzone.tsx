@@ -1,4 +1,5 @@
 import { thirdwebClient } from "@/constants/client";
+import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
   AspectRatio,
   Box,
@@ -16,8 +17,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useStorageUpload } from "@thirdweb-dev/react";
-import type { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -159,19 +158,19 @@ const filesPerPage = 20;
 const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const [progress, setProgress] = useState<UploadProgressEvent>({
-    progress: 0,
-    total: 100,
-  });
+  // const [progress, setProgress] = useState<UploadProgressEvent>({
+  //   progress: 0,
+  //   total: 100,
+  // });
   const [uploadWithoutDirectory, setUploadWithoutDirectory] = useState(
     files.length === 1,
   );
   const uploadToAFolder = !uploadWithoutDirectory;
-  const storageUpload = useStorageUpload({
+  const storageUpload = useDashboardStorageUpload({
     uploadWithoutDirectory,
-    onProgress: setProgress,
+    // onProgress: setProgress,
     metadata: {
-      address,
+      address: address ?? "",
       uploadedAt: new Date().toISOString(),
       uploadedFrom: "thirdweb-dashboard",
     },
@@ -182,7 +181,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
 
   const [page, setPage] = useState(0);
 
-  const progressPercent = (progress.progress / progress.total) * 100;
+  // const progressPercent = (progress.progress / progress.total) * 100;
 
   const mainIpfsUri = useMemo(() => {
     if (ipfsHashes.length === 0) {
@@ -430,11 +429,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
             >
               <Progress
                 colorScheme="green"
-                value={progress.progress ? progressPercent : undefined}
+                // value={progress.progress ? progressPercent : undefined}
                 size={{ base: "xs", md: "lg" }}
                 w="100%"
                 borderRadius="full"
-                isIndeterminate={progress.progress === progress.total}
+                isIndeterminate={storageUpload.isLoading}
                 position="relative"
               />
               <Center
@@ -445,7 +444,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 top={0}
                 bottom={0}
               >
-                <Text
+                {/* <Text
                   mt={0.5}
                   size="label.xs"
                   fontSize={11}
@@ -470,7 +469,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                   transition="color 0.2s"
                 >
                   {Math.round(progressPercent)}%
-                </Text>
+                </Text> */}
               </Center>
             </Flex>
           )}
@@ -516,49 +515,34 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                     action: "upload",
                     label: "start",
                   });
-                  storageUpload.mutate(
-                    {
-                      data: files,
+                  storageUpload.mutate(files, {
+                    onError: (error) => {
+                      trackEvent({
+                        category: TRACKING_CATEGORY,
+                        action: "upload",
+                        label: "error",
+                        error,
+                      });
+                      onError(error, "Failed to upload file");
                     },
-                    {
-                      onError: (error) => {
-                        trackEvent({
-                          category: TRACKING_CATEGORY,
-                          action: "upload",
-                          label: "error",
-                          error,
-                        });
-                        onError(error, "Failed to upload file");
-                        setProgress({
-                          progress: 0,
-                          total: 100,
-                        });
-                      },
-                      onSuccess: (uris) => {
-                        trackEvent({
-                          category: TRACKING_CATEGORY,
-                          action: "upload",
-                          label: "success",
-                          address,
-                          uri:
-                            uris.length === 1
-                              ? uris[0]
-                              : uris[0].split("/").slice(0, -1).join("/"),
-                        });
-                        setIpfsHashes(uris);
-                        // also refetch the files list
-                        queryClient.invalidateQueries([
-                          PINNED_FILES_QUERY_KEY_ROOT,
-                        ]);
-                      },
-                      onSettled: () => {
-                        setProgress({
-                          progress: 0,
-                          total: 100,
-                        });
-                      },
+                    onSuccess: (uris) => {
+                      trackEvent({
+                        category: TRACKING_CATEGORY,
+                        action: "upload",
+                        label: "success",
+                        address,
+                        uri:
+                          uris.length === 1
+                            ? uris[0]
+                            : uris[0].split("/").slice(0, -1).join("/"),
+                      });
+                      setIpfsHashes(uris);
+                      // also refetch the files list
+                      queryClient.invalidateQueries([
+                        PINNED_FILES_QUERY_KEY_ROOT,
+                      ]);
                     },
-                  );
+                  });
                 }}
               >
                 Start Upload
