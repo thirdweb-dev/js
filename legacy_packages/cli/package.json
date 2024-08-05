@@ -28,7 +28,7 @@
     "hardhat": "^2.22.2",
     "ora": "^8.0.1",
     "tsup": "8.0.2",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "@iarna/toml": "^2.2.5",

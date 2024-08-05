@@ -108,7 +108,7 @@
     "nyc": "^15.1.0",
     "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2",
+    "typescript": "5.5.4",
     "zksync-ethers": "5.9.0"
   },
   "peerDependencies": {

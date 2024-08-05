@@ -328,7 +328,7 @@
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-svg": "15.3.0",
-    "typescript": "5.5.2",
+    "typescript": "5.5.4",
     "vitest": "1.6.0"
   }
 }
