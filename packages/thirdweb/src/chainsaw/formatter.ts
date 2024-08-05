@@ -5,11 +5,11 @@ import type {
   Block,
   ChainsawBlock,
   ChainsawEvents,
+  ChainsawTransaction,
   ChainsawTransactions,
   Events,
   NFTs,
   NFTsData,
-  Transaction,
   Transactions,
 } from "./types.js";
 
@@ -68,8 +68,8 @@ export const formatChainsawNFTs = (nfts?: NFTsData): NFTs => {
 };
 
 export const formatChainsawTransactions = (
-  txs?: ChainsawTransactions,
-): Transactions => {
+  txs?: Transactions,
+): ChainsawTransactions => {
   if (!txs) return [];
   return txs.map((tx) => {
     if (tx.type === 0) {
@@ -82,7 +82,7 @@ export const formatChainsawTransactions = (
         nonce: numberToHex(BigInt(tx.nonce)),
         maxPriorityFeePerGas: undefined,
         transactionIndex: numberToHex(BigInt(tx.index)),
-      }) as Transaction;
+      }) as ChainsawTransaction;
     }
     if (tx.type === 1) {
       return formatTransaction({
@@ -94,7 +94,7 @@ export const formatChainsawTransactions = (
         nonce: numberToHex(BigInt(tx.nonce)),
         maxPriorityFeePerGas: undefined,
         transactionIndex: numberToHex(BigInt(tx.index)),
-      }) as Transaction;
+      }) as ChainsawTransaction;
     }
     if (tx.type === 2) {
       return formatTransaction({
@@ -108,7 +108,7 @@ export const formatChainsawTransactions = (
           ? numberToHex(BigInt(tx.maxPriorityFeePerGas))
           : undefined,
         transactionIndex: numberToHex(BigInt(tx.index)),
-      }) as Transaction;
+      }) as ChainsawTransaction;
     }
     return formatTransaction({
       ...tx,
@@ -121,7 +121,7 @@ export const formatChainsawTransactions = (
         ? numberToHex(BigInt(tx.maxPriorityFeePerGas))
         : undefined,
       transactionIndex: numberToHex(BigInt(tx.index)),
-    }) as Transaction;
+    }) as ChainsawTransaction;
   });
 };
 

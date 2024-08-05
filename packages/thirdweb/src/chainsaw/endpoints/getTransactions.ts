@@ -42,7 +42,7 @@ export type GetTransactionsParams = Prettify<
 >;
 
 export type GetTransactionsResult = {
-  transactions: Transactions;
+  transactions: ChainsawTransactions;
   page?: number;
 };
 
@@ -97,7 +97,7 @@ export async function getTransactions(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawTransactions> = await response.json();
+    const data: ChainsawResponse<Transactions> = await response.json();
     if (data.error) throw new Error(data.error);
     return {
       transactions: formatChainsawTransactions(data.data),

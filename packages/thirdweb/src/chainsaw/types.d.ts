@@ -86,7 +86,7 @@ export type DecodedTransaction = {
   args?: string;
 };
 
-export type ChainsawTransaction = {
+export type Transaction = {
   time: Date;
   to: Hex;
   from: Hex;
@@ -106,11 +106,11 @@ export type ChainsawTransaction = {
   nonce: string;
 };
 
-export type ChainsawTransactions = ChainsawTransaction[];
-
-export type Transaction = Omit<ChainsawTransaction, keyof ViemTransaction> &
-  ViemTransaction;
 export type Transactions = Transaction[];
+
+export type ChainsawTransaction = Omit<Transaction, keyof ViemTransaction> &
+  ViemTransaction;
+export type ChainsawTransactions = ChainsawTransaction[];
 
 export type NFTData = {
   chainId: number;
