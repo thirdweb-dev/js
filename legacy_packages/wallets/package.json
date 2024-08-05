@@ -605,7 +605,7 @@
     "rimraf": "5.0.7",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "scripts": {
     "format": "biome format ./src --write",
