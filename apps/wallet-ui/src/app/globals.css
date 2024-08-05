@@ -1,70 +1,85 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 215.88 100% 60%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 215.88 100% 60%;
-    --radius: 0.5rem;
+  @layer base {
+    :root {
+      /* bg - nuetral  */
+      --background: 0 0% 100%;
+      --secondary: 0 0% 97%;
+      --muted: 0 0% 95%;
+      --accent: 0 0% 92%;
+      --card: var(--secondary);
+      --popover: var(--background);
+      --inverted: var(--foreground);
+
+      /* bg - colorful */
+      --primary: 220.9 39.3% 11%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+
+      /* Text */
+      --foreground: 0 0% 3.9%;
+      --card-foreground: 0 0% 3.9%;
+      --popover-foreground: 240 10% 3.9%;
+      --primary-foreground: 0 0% 100%;
+      --secondary-foreground: 0 0% 30%;
+      --muted-foreground: 0 0% 40%;
+      --accent-foreground: 0 0% 9%;
+      --success-foreground: 142.09 70.56% 35.29%;
+      --destructive-foreground: 0 84.24% 60.2%;
+      --inverted-foreground: var(--background);
+      --warning-foreground: 40.61deg 96.12% 40.4%;
+      --link-foreground: 221.21deg 83.19% 53.33%;
+
+      /* Borders */
+      --border: 0 0% 80%;
+      --input: var(--border);
+      --ring: var(--primary);
+
+      /* Others */
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      /* bg - nuetral  */
+      --background: 0 0% 4.5%;
+      --secondary: 0 0% 5.5%;
+      --muted: 0 0% 9%;
+      --accent: 0 0% 12%;
+      --card: var(--secondary);
+      --popover: var(--background);
+      --inverted: var(--foreground);
+
+      /* bg - colorful */
+      --primary: 210 20% 98%;
+      --destructive: 0 62.8% 30.6%;
+
+      /* Text */
+      --foreground: 0 0% 98%;
+      --card-foreground: 0 0% 98%;
+      --popover-foreground: 0 0% 98%;
+      --primary-foreground: 0 0% 4.5%;
+      --secondary-foreground: 0 0% 75%;
+      --muted-foreground: 0 0% 63.9%;
+      --accent-foreground: 0 0% 98%;
+      --destructive-foreground: 0 84.24% 60.2%;
+      --success-foreground: 156.2 71.6% 66.86%;
+      --warning-foreground: 45.4deg 93.39% 47.45%;
+      --link-foreground: 215.88 100% 65%;
+
+      /* Borders */
+      --border: 0 0% 14.9%;
+      --ring: var(--primary);
+      --input: var(--border);
+    }
   }
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 215.88 100% 60%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 215.88 100% 60%;
+  @layer base {
+    * {
+      @apply border-border;
+    }
+    body {
+      @apply bg-background text-foreground;
+    }
   }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-
-html.dark .shiki,
-html.dark .shiki span {
-  color: var(--shiki-dark) !important;
-  background-color: var(--shiki-dark-bg) !important;
-  /* Optional, if you also want font styles */
-  font-style: var(--shiki-dark-font-style) !important;
-  font-weight: var(--shiki-dark-font-weight) !important;
-  text-decoration: var(--shiki-dark-text-decoration) !important;
-}

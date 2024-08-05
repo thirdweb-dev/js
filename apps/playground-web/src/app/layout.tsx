@@ -47,10 +47,9 @@ export default function RootLayout({
           sansFont.variable,
           monoFont.variable,
         )}
-        suppressHydrationWarning
       >
         <Providers>
-          <div className="relative flex min-h-screen flex-col">
+          <div className="relative flex flex-col min-h-screen">
             <Header />
             {children}
             <div
