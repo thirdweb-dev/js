@@ -1,0 +1,88 @@
+import { Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ERC20 | thirdweb contract",
+	description:
+		"ERC20 is the standard for representing fungible tokens; where each token is of equal valuable and interchangeable",
+	image: {
+		title: "ERC20 contract",
+		icon: "solidity",
+	},
+});
+
+# ERC20
+
+```solidity
+import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
+```
+
+ERC20 is the standard for representing fungible tokens; where each token is of equal valuable and interchangeable.
+
+<Callout title="info" variant="info">
+	This extension is an interface and requires all of the functions to be
+	implemented
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC20.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension
+and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/interface/IERC20.sol";
+
+contract Contract is IERC20 {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    ) {}
+
+    function totalSupply() external view returns (uint256) {
+      // Your custom implementation here
+    }
+
+    function balanceOf(address who) external view returns (uint256) {
+      // Your custom implementation here
+    }
+
+    function allowance(address owner, address spender) external view returns (uint256) {
+      // Your custom implementation here
+    }
+
+    function transfer(address to, uint256 value) external returns (bool) {
+      // Your custom implementation here
+    }
+
+    function approve(address spender, uint256 value) external returns (bool) {
+      // Your custom implementation here
+    }
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    ) external returns (bool); {
+      // Your custom implementation here
+    }
+}
+```
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/openzeppelin-presets/token/ERC20/ERC20.sol" />
+
+## Base Contracts Implementing This Extension
+
+- [ERC20Base](/contracts/build/base-contracts/erc-20/base)
+- [ERC20Drop](/contracts/build/base-contracts/erc-20/drop)
+- [ERC20DropVote](/contracts/build/base-contracts/erc-20/drop-vote)
+- [ERC20SignatureMint](/contracts/build/base-contracts/erc-20/signature-mint)
+- [ERC20SignatureMintVote](/contracts/build/base-contracts/erc-20/signature-mint-vote)
+- [ERC20Vote](/contracts/build/base-contracts/erc-20/base)

@@ -25,7 +25,7 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "esbuild": "0.21.5",
     "node-stdlib-browser": "^1.2.0",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "sideEffects": false,
   "scripts": {

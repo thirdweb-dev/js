@@ -1,0 +1,72 @@
+import { Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC1155Mintable contract",
+		icon: "solidity",
+	},
+	title: "ERC1155Mintable | thirdweb contract",
+	description:
+		"ERC1155Mintable allows you to mint new NFTs into your ERC1155 NFT collection contract",
+});
+
+# ERC1155Mintable
+
+```solidity
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
+```
+
+`ERC1155Mintable` allows you to mint new NFTs into your ERC1155 NFT collection contract.
+
+<Callout title="info" variant="info">
+
+This extension is an interface and requires all of the functions to be implemented
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IMintableERC1155.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC1155.sol";
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC1155.sol";
+
+contract Contract is ERC1155, IMintableERC1155 {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC1155(
+            _name,
+            _symbol
+        )
+    {}
+
+    function mintTo(
+        address to,
+        uint256 tokenId,
+        string calldata uri,
+        uint256 amount
+    ) external override {
+        // Your custom implementation here
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
+- [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)
+- [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop)
+- [ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint)
+- [ERC1155SignatureMint](/contracts/build/base-contracts/erc-1155/signature-mint)

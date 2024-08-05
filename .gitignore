@@ -14,7 +14,7 @@ public/dist
 .idea/
 .yalc/
 yalc.lock
-build/
+./build/
 playwright-report/
 .env/
 

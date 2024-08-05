@@ -1,0 +1,78 @@
+import { Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC1155Claimable contract",
+		icon: "solidity",
+	},
+	title: "ERC1155Claimable | thirdweb contract",
+	description: "Allow other wallets to claim NFTs that you have lazy-minted",
+});
+
+# ERC1155Claimable
+
+```solidity
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC721.sol";
+```
+
+Allow other wallets to **claim** NFTs that you have lazy-minted.
+
+It is recommended to use this extension alongside the [`LazyMint`](/contracts/build/extensions/general/LazyMint) extension.
+
+<Callout title="info" variant="info">
+
+This extension is an interface and requires all of the functions to be implemented
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IClaimableERC1155.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC1155.sol";
+import "@thirdweb-dev/contracts/extension/LazyMint.sol";
+import "@thirdweb-dev/contracts/extension/interface/IClaimableERC1155.sol";
+
+contract Contract is ERC1155, LazyMint, IClaimableERC1155 {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC1155(
+            _name,
+            _symbol
+        )
+    {}
+
+    function _canLazyMint() internal view override returns (bool) {
+        // Your custom implementation here
+    }
+
+    function verifyClaim(address _claimer, uint256 _quantity) public view virtual override {
+        // Your custom implementation here
+    }
+
+    function claim(address _receiver, uint256 _quantity) public payable virtual override {
+        // Your custom implementation here
+    }
+
+}
+```
+
+## Base Contracts Implementing This Extension
+
+This extension is used as part of the [ERC1155ClaimCustom](/contracts/build/extensions/erc-1155/ERC1155ClaimCustom) extension.
+The base contracts which have ERC1155ClaimCustom detected on them will also implement ERC1155Claimable.
+
+- [ERC1155DelayedReveal](/contracts/build/extensions/erc-1155/ERC1155Revealable)
+- [ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint)

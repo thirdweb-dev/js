@@ -44,7 +44,8 @@ packages/unity-js-bridge/ @joaquim-verges @0xFirekeeper @jnsdls
 apps/ @jnsdls @joaquim-verges
 apps/dashboard/ @jnsdls @MananTank @joaquim-verges
 apps/playground-web/ @joaquim-verges @gregfromstl @jnsdls @joaquim-verges
-apps/wallet-ui/ @gregfromstl @jnsdls @joaquim-verges
+apps/wallet-ui/ @gregfromstl @jnsdls @joaquim-verges @MananTank
+apps/portal/ @gregfromstl @jnsdls @joaquim-verges @MananTank
 
 # .github folder + .changeset + turbo config is owned by jonas for now
 scripts/ @jnsdls @joaquim-verges

@@ -1,0 +1,198 @@
+import { Details, Callout, GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "BaseAccount contract",
+		icon: "solidity",
+	},
+	title: "BaseAccount | thirdweb contract",
+	description:
+		"The BaseAccount smart contract is an extension that is intended to be used when creating your own smart account contract which does not use one of our ready-to-use base-contract account smart contracts.",
+});
+
+# BaseAccount
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/utils/BaseAccount.sol";
+```
+
+The `BaseAccount` smart contract is an extension that is intended to be used when creating your own smart account contract
+which does not use one of our ready-to-use base-contract account smart contracts.
+
+It is abstract, allowing you to customize the functionality for your use case.
+
+<Callout title="info" variant="info">
+	This smart contract extension conforms to the `IAccount` interface which is
+	detectable on the dashboard as the `SmartWallet` extension.
+</Callout>
+
+<br />
+
+<GithubButtonLink
+	href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/utils/BaseAccount.sol"
+	name="BaseAccount"
+/>
+
+## Usage
+
+The `BaseAccount` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                 | Type        | Description                                         |
+| -------------------- | ----------- | --------------------------------------------------- |
+| `entryPoint`         | public view | Return the current entryPoint used by this account. |
+| `_validateSignature` | internal    | Validate the signature is valid for this message.   |
+| `_validateNonce`     | internal    | Validate the nonce of the UserOperation.            |
+
+This is an example factory smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/smart-wallet/utils/BaseAccountFactory.sol";
+
+contract MyAccountFactory is BaseAccountFactory { ... }
+```
+
+## SDK Usage
+
+This extension unlocks the use of the [smart account](wallet/smart-wallet) in the wallet SDK.
+
+## Base Contracts Implementing This Extension
+
+- [ManagedAccount](/contracts/build/base-contracts/erc-4337/managed-account)
+- [Account](/contracts/build/base-contracts/erc-4337/account)
+
+## Full API reference
+
+<Details summary="getNonce">
+
+This method returns the next sequential nonce.
+
+```solidity
+function getNonce() public view virtual returns (uint256) {
+    return entryPoint().getNonce(address(this), 0);
+}
+```
+
+</Details>
+
+<Details summary="entryPoint">
+
+Subclass should return the current entryPoint used by this account.
+
+```solidity
+function entryPoint() public view virtual returns (IEntryPoint);
+```
+
+</Details>
+
+<Details summary="validateUserOp">
+
+Validate user's signature and nonce.
+
+Subclass doesn't need to override this method. Instead, it should override the specific internal validation methods.
+
+```solidity
+function validateUserOp(
+    UserOperation calldata userOp,
+    bytes32 userOpHash,
+    uint256 missingAccountFunds
+) external virtual override returns (uint256 validationData) {
+    _requireFromEntryPoint();
+    validationData = _validateSignature(userOp, userOpHash);
+    _validateNonce(userOp.nonce);
+    _payPrefund(missingAccountFunds);
+}
+```
+
+</Details>
+
+<Details summary="_requireFromEntryPoint">
+
+Ensure the request comes from the known entrypoint.
+
+```solidity
+function _requireFromEntryPoint() internal view virtual {
+    require(msg.sender == address(entryPoint()), "account: not from EntryPoint");
+}
+```
+
+</Details>
+
+<Details summary="_validateSignature">
+
+Validate the signature is valid for this message.
+
+```solidity
+function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)
+    internal
+    virtual
+    returns (uint256 validationData);
+```
+
+#### userOp
+
+Validate the userOp.signature field
+
+#### userOpHash
+
+the hash of the request, to check the signature against (also hashes the entrypoint and chain id)
+
+### Return value
+
+signature and time-range of this operation:
+
+- `sigAuthorizer` - 0 for valid signature, 1 to mark signature failure, otherwise, an address of an "authorizer" contract.
+- `validUntil` - last timestamp this operation is valid. 0 for "indefinite"
+- `validAfter` - first timestamp this operation is valid.
+
+</Details>
+
+<Details summary="_validateNonce">
+
+Validate the nonce of the UserOperation.
+To limit the nonce to use sequenced UserOps only (no "out of order" UserOps):
+
+- `require(nonce < type(uint64).max)`
+
+For a hypothetical account that _requires_ the nonce to be out-of-order:
+
+- `require(nonce & type(uint64).max == 0)`
+
+The actual nonce uniqueness is managed by the EntryPoint, and thus no other action is needed by the account itself.
+
+```solidity
+function _validateNonce(uint256 nonce) internal view virtual {}
+```
+
+#### nonce
+
+`uint256` representing the nonce to validate.
+
+</Details>
+
+<Details summary="_payPrefund">
+
+Sends to the entrypoint (msg.sender) the missing funds for this transaction.
+Subclass MAY override this method for better funds management
+
+For example, send to the entryPoint more than the minimum required, so that in future transactions it will not be required to send again.
+
+```solidity
+function _payPrefund(uint256 missingAccountFunds) internal virtual {
+    if (missingAccountFunds != 0) {
+        (bool success, ) = payable(msg.sender).call{ value: missingAccountFunds, gas: type(uint256).max }("");
+        (success);
+        //ignore failure (its EntryPoint's job to verify, not account.)
+    }
+}
+```
+
+#### missingAccountFunds
+
+The minimum value this method should send the entrypoint.
+This value MAY be zero, in case there is enough deposit, or the userOp has a paymaster.
+
+</Details>

@@ -1,0 +1,250 @@
+import { Details } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ERC1155LazyMint | thirdweb contracts",
+	description:
+		"ERC1155LazyMint allows you to Lazy Mint NFTs on your contract. It exposes a verifyClaim function that you can override to add your claim-restriction logic",
+	image: {
+		title: "ERC1155LazyMint contract",
+		icon: "contract",
+	},
+});
+
+# ERC1155LazyMint
+
+```solidity
+import "@thirdweb-dev/contracts/base/ERC1155LazyMint.sol";
+```
+
+`ERC1155LazyMint` allows you to [Lazy Mint](/glossary/lazy-minting) NFTs on your contract.
+It exposes a `verifyClaim` function that you can override to add your claim-restriction logic.
+
+Lazy minting allows you to define the metadata of NFTs without minting it to an address.
+As a contract admin, this lets you prepare the metadata for NFTs that will be minted by other wallets,
+without paying the gas cost for actually minting the NFTs.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC1155LazyMint.sol" />
+
+## Usage
+
+Import the contract and inherit from it.
+
+```solidity
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC1155LazyMint.sol";
+
+contract MyNFT is ERC1155LazyMint {
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps
+    ) ERC1155LazyMint(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+
+    function verifyClaim(address _claimer, uint256 _tokenId, uint256 _quantity) public view virtual override {
+      // Your custom claim restriction logic
+    }
+}
+```
+
+## Detected Extensions
+
+Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+
+Click on each feature to learn more about what functions are available.
+
+- [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)
+- [ERC1155LazyMintableV2](/contracts/build/extensions/general/LazyMint)
+- [ERC1155Burnable](/contracts/build/extensions/erc-1155/ERC1155Burnable)
+- [ERC1155Enumerable](/contracts/build/extensions/erc-1155/ERC1155Enumerable)
+- [ERC1155ClaimCustom](/contracts/build/extensions/erc-1155/ERC1155ClaimCustom)
+- [Royalty](/contracts/build/extensions/general/Royalty)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+
+## Functions to Override
+
+The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+
+<Details id="uri" summary="uri">
+
+```solidity
+/// @notice Returns the metadata URI for the given tokenId.
+function uri(uint256 _tokenId) public view virtual override returns (string memory) {
+    string memory batchUri = _getBaseURI(_tokenId);
+    return string(abi.encodePacked(batchUri, _tokenId.toString()));
+}
+```
+
+</Details>
+
+<Details id="claim" summary="claim">
+
+```solidity
+/**
+*  @notice          Lets an address claim multiple lazy minted NFTs at once to a recipient.
+*                   This function prevents any reentrant calls, and is not allowed to be overridden.
+*
+*                   Contract creators should override `verifyClaim` and `transferTokensOnClaim`
+*                   functions to create custom logic for verification and claiming,
+*                   for e.g. price collection, allowlist, max quantity, etc.
+*
+*  @dev             The logic in `verifyClaim` determines whether the caller is authorized to mint NFTs.
+*                   The logic in `transferTokensOnClaim` does actual minting of tokens,
+*                   can also be used to apply other state changes.
+*
+*  @param _receiver  The recipient of the tokens to mint.
+*  @param _tokenId   The tokenId of the lazy minted NFT to mint.
+*  @param _quantity  The number of tokens to mint.
+*/
+function claim(
+    address _receiver,
+    uint256 _tokenId,
+    uint256 _quantity
+) public payable nonReentrant {
+    require(_tokenId < nextTokenIdToMint(), "invalid id");
+    verifyClaim(msg.sender, _tokenId, _quantity); // Add your claim verification logic by overriding this function.
+
+    _transferTokensOnClaim(_receiver, _tokenId, _quantity); // Mints tokens. Apply any state updates by overriding this function.
+    emit TokensClaimed(msg.sender, _receiver, _tokenId, _quantity);
+
+}
+
+```
+
+</Details>
+
+<Details id="verifyClaim" summary="verifyClaim">
+
+```solidity
+/**
+ *  @notice          Override this function to add logic for claim verification, based on conditions
+ *                   such as allowlist, price, max quantity etc.
+ *
+ *  @dev             Checks a request to claim NFTs against a custom condition.
+ *
+ *  @param _claimer   Caller of the claim function.
+ *  @param _tokenId   The tokenId of the lazy minted NFT to mint.
+ *  @param _quantity  The number of NFTs being claimed.
+ */
+function verifyClaim(
+    address _claimer,
+    uint256 _tokenId,
+    uint256 _quantity
+) public view virtual {}
+```
+
+</Details>
+
+<Details id="burn" summary="burn">
+
+```solidity
+/**
+ *  @notice         Lets an owner or approved operator burn NFTs of the given tokenId.
+ *
+ *  @param _owner   The owner of the NFT to burn.
+ *  @param _tokenId The tokenId of the NFT to burn.
+ *  @param _amount  The amount of the NFT to burn.
+ */
+function burn(
+    address _owner,
+    uint256 _tokenId,
+    uint256 _amount
+) external virtual {
+    address caller = msg.sender;
+
+    require(caller == _owner || isApprovedForAll[_owner][caller], "Unapproved caller");
+    require(balanceOf[_owner][_tokenId] >= _amount, "Not enough tokens owned");
+
+    _burn(_owner, _tokenId, _amount);
+}
+```
+
+</Details>
+
+<Details id="burnBatch" summary="burnBatch">
+
+```solidity
+    /**
+     *  @notice         Lets an owner or approved operator burn NFTs of the given tokenIds.
+     *
+     *  @param _owner    The owner of the NFTs to burn.
+     *  @param _tokenIds The tokenIds of the NFTs to burn.
+     *  @param _amounts  The amounts of the NFTs to burn.
+     */
+    function burnBatch(
+        address _owner,
+        uint256[] memory _tokenIds,
+        uint256[] memory _amounts
+    ) external virtual {
+        address caller = msg.sender;
+
+        require(caller == _owner || isApprovedForAll[_owner][caller], "Unapproved caller");
+        require(_tokenIds.length == _amounts.length, "Length mismatch");
+
+        for (uint256 i = 0; i < _tokenIds.length; i += 1) {
+            require(balanceOf[_owner][_tokenIds[i]] >= _amounts[i], "Not enough tokens owned");
+        }
+
+        _burnBatch(_owner, _tokenIds, _amounts);
+    }
+```
+
+</Details>
+
+<Details id="_transferTokensOnClaim" summary="_transferTokensOnClaim">
+
+```solidity
+  /**
+     *  @notice          Mints tokens to receiver on claim.
+     *                   Any state changes related to `claim` must be applied
+     *                   here by overriding this function.
+     *
+     *  @dev             Override this function to add logic for state updation.
+     *                   When overriding, apply any state changes before `_mint`.
+     */
+    function _transferTokensOnClaim(
+        address _receiver,
+        uint256 _tokenId,
+        uint256 _quantity
+    ) internal virtual {
+        _mint(_receiver, _tokenId, _quantity, "");
+    }
+```
+
+</Details>
+
+<Details id="_beforeTokenTransfer" summary="_beforeTokenTransfer">
+
+```solidity
+/// @dev Runs before every token transfer / mint / burn.
+    function _beforeTokenTransfer(
+        address operator,
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) internal virtual override {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
+
+        if (from == address(0)) {
+            for (uint256 i = 0; i < ids.length; ++i) {
+                totalSupply[ids[i]] += amounts[i];
+            }
+        }
+
+        if (to == address(0)) {
+            for (uint256 i = 0; i < ids.length; ++i) {
+                totalSupply[ids[i]] -= amounts[i];
+            }
+        }
+    }
+```
+
+</Details>

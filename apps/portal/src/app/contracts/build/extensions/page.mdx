@@ -1,0 +1,85 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: { title: "thirdweb Extension contracts", icon: "solidity" },
+	title: "Extensions | thirdweb contract",
+	description: "List of all the thirdweb contract extensions",
+});
+
+# Extensions
+
+## ERC721
+
+| Name                                                                               | Description                                                                                |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [ERC721](/contracts/build/extensions/erc-721/ERC721)                               | Basic functionality of ERC721 "non-fungible" NFTs                                          |
+| [ERC721BatchMintable](/contracts/build/extensions/erc-721/ERC721BatchMintable)     | Batch minting of new NFTs                                                                  |
+| [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)               | Burn (take out of circulation) NFTs                                                        |
+| [ERC721Claimable](/contracts/build/extensions/erc-721/ERC721Claimable)             | Interface to allow users to claim NFTs that you have lazy minted                           |
+| [ERC721ClaimConditions](/contracts/build/extensions/erc-721/ERC721ClaimConditions) | Allow users to claim NFTs from your drop under specific conditions (one claim phase)       |
+| [ERC721ClaimCustom](/contracts/build/extensions/erc-721/ERC721ClaimCustom)         | Allow users to claim NFTs from your drop under specific conditions                         |
+| [ERC721ClaimPhases](/contracts/build/extensions/erc-721/ERC721ClaimPhases)         | Allow users to claim NFTs from your drop under specific conditions (multiple claim phases) |
+| [ERC721Enumerable](/contracts/build/extensions/erc-721/ERC721Enumerable)           | Enumerate through NFTs in a contract to get all or get owned NFTs                          |
+| [ERC721Mintable](/contracts/build/extensions/erc-721/ERC721Mintable)               | Mint new NFTs into the contract                                                            |
+| [ERC721Revealable](/contracts/build/extensions/erc-721/ERC721Revealable)           | NFTs that can be revealed at a later date after they have been minted and claimed          |
+| [ERC721SignatureMint](/contracts/build/extensions/erc-721/ERC721SignatureMint)     | Use signature-based minting functionality to mint new NFTs into the contract               |
+| [ERC721Staking](/contracts/build/extensions/erc-721/ERC721Staking)                 | Implement ERC721 staking mechanism                                                         |
+| [ERC721Supply](/contracts/build/extensions/erc-721/ERC721Supply)                   | View information about the supply of the NFT collection                                    |
+
+## ERC1155
+
+| Name                                                                                  | Description                                                                                |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [ERC1155](/contracts/build/extensions/erc-1155/ERC1155)                               | Basic functionality of ERC1155 "semi-fungible" NFTs                                        |
+| [ERC1155BatchMintable](/contracts/build/extensions/erc-1155/ERC1155BatchMintable)     | Batch minting of new NFTs                                                                  |
+| [ERC1155Burnable](/contracts/build/extensions/erc-1155/ERC1155Burnable)               | Burn (take out of circulation) NFTs                                                        |
+| [ERC1155Claimable](/contracts/build/extensions/erc-1155/ERC1155Claimable)             | Interface to allow users to claim NFTs that you have lazy minted                           |
+| [ERC1155ClaimConditions](/contracts/build/extensions/erc-1155/ERC1155ClaimConditions) | Allow users to claim NFTs from your drop under specific conditions (one claim phase)       |
+| [ERC1155ClaimCustom](/contracts/build/extensions/erc-1155/ERC1155ClaimCustom)         | Allow users to claim NFTs from your drop under specific conditions                         |
+| [ERC1155ClaimPhases](/contracts/build/extensions/erc-1155/ERC1155ClaimPhases)         | Allow users to claim NFTs from your drop under specific conditions (multiple claim phases) |
+| [ERC1155Drop](/contracts/build/extensions/erc-1155/ERC1155Drop)                       | For distributing ERC21155 tokens to set up multiple claim phases                           |
+| [ERC1155DropSinglePhase](/contracts/build/extensions/erc-1155/ERC1155DropSinglePhase) | For distributing ERC1155 tokens to set up a single claim phase                             |
+| [ERC1155Enumerable](/contracts/build/extensions/erc-1155/ERC1155Enumerable)           | Enumerate through NFTs in a contract to get all or get owned NFTs                          |
+| [ERC1155Mintable](/contracts/build/extensions/erc-1155/ERC1155Mintable)               | Mint new NFTs into the contract                                                            |
+| [ERC1155Revealable](/contracts/build/extensions/erc-1155/ERC1155Revealable)           | NFTs that can be revealed at a later date after they have been minted and claimed          |
+| [ERC1155SignatureMint](/contracts/build/extensions/erc-1155/ERC1155SignatureMint)     | Use signature-based minting functionality to mint new NFTs into the contract               |
+| [ERC1155Staking](/contracts/build/extensions/erc-1155/ERC1155Staking)                 | Implement ERC721 staking mechanism                                                         |
+
+## ERC20
+
+| Name                                                                            | Description                                                                            |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [ERC20](/contracts/build/extensions/erc-20/ERC20)                               | Basic functionality of ERC20 "fungible" tokens                                         |
+| [ERC20BatchMintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)     | Batch minting of new tokens                                                            |
+| [ERC20Burnable](/contracts/build/extensions/erc-20/ERC20Burnable)               | Burn (take out of circulation) tokens                                                  |
+| [ERC20ClaimConditions](/contracts/build/extensions/erc-20/ERC20ClaimConditions) | Allow users to claim tokens from your drop under specific conditions (one claim phase) |
+| [ERC20Mintable](/contracts/build/extensions/erc-20/ERC20Mintable)               | Mint new tokens into the contract                                                      |
+| [ERC20Permit](/contracts/build/extensions/erc-20/ERC20Permit)                   | Mint new tokens into the contract                                                      |
+| [ERC20SignatureMint](/contracts/build/extensions/erc-20/ERC20SignatureMint)     | Use signature-based minting functionality to mint new tokens into the contract         |
+| [ERC20Staking](/contracts/build/extensions/erc-20/ERC20Staking)                 | Implement ERC20 staking mechanism                                                      |
+
+## General
+
+| Name                                                                               | Description                                                                                              |
+| ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [BatchMintMetadata](/contracts/build/extensions/general/BatchMintMetadata)         | Batch minting of new tokens                                                                              |
+| [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)           | Define metadata for your smart contract                                                                  |
+| [DelayedReveal](/contracts/build/extensions/general/DelayedReveal)                 | create batches of 'delayed-reveal' NFTs                                                                  |
+| [Drop](/contracts/build/extensions/general/Drop)                                   | for distributing ERC20 or ERC721 tokens to set up multiple claim phases                                  |
+| [DropSinglePhase](/contracts/build/extensions/general/DropSinglePhase)             | for distributing ERC20 or ERC721 tokens to set up a single claim phase                                   |
+| [LazyMint](/contracts/build/extensions/general/LazyMint)                           | Pre define the metadata for NFTs before they are minted & upload to IPFS                                 |
+| [Multicall](/contracts/build/extensions/general/Multicall)                         | Batch together multiple calls in a single external call                                                  |
+| [Ownable](/contracts/build/extensions/general/Ownable)                             | Set an owner for your smart contract                                                                     |
+| [Permissions](/contracts/build/extensions/general/Permissions)                     | Provide role-based access control                                                                        |
+| [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable) | Provide role-based access control, plus the capability to view all the addresses holding a specific role |
+| [PlatformFee](/contracts/build/extensions/general/PlatformFee)                     | Charge a percentage fee wherever there is a transfer of currency                                         |
+| [PrimarySale](/contracts/build/extensions/general/PrimarySale)                     | Set a recipient for any sale value you intend to collect                                                 |
+| [Royalty](/contracts/build/extensions/general/Royalty)                             | Take a percentage fee of secondary sales of your NFTs by giving royalty support on NFT marketplaces      |
+
+## Account Abstraction
+
+| Name                                                                          | Description                                                                                                    |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [AccountExtension](/contracts/build/extensions/erc-4337/AccountExtension)     | Batch minting of new tokens                                                                                    |
+| [BaseAccount](/contracts/build/extensions/erc-4337/SmartWallet)               | Implementation of the `IAccount` interface used to detect the `SmartWallet` Dashboard extension.               |
+| [BaseAccountFactory](/contracts/build/extensions/erc-4337/SmartWalletFactory) | Implementation of the `IAccountFactory` interface used to detect the `SmartWalletFactory` Dashboard extension. |

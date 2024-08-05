@@ -1,0 +1,104 @@
+import { Details, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Ownable contract",
+		icon: "solidity",
+	},
+	title: "Ownable | thirdweb contract",
+	description:
+		"The Ownable smart contract extension is usable with any base smart contract. It lets you set an owner for your smart contract.",
+});
+
+# Ownable
+
+```solidity
+import "@thirdweb-dev/contracts/extension/Ownable.sol";
+```
+
+The `Ownable` smart contract extension is usable with any base smart contract. It lets you set an owner for your smart contract.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Ownable.sol" />
+
+## Usage
+
+The `Ownable` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                                                                       | Type                    | Returns | Description                                                                                                                  |
+| -------------------------------------------------------------------------- | ----------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetOwner`](/contracts/build/extensions/general/Ownable#_cansetowner) | internal view _virtual_ | `bool`  | Runs on every attempt to set the owner of the contract. Returns whether the owner can be set in the given execution context. |
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/Ownable.sol";
+
+contract MyContract is Ownable {
+    /**
+     *  This function returns who is authorized to set the owner of your contract.
+     *
+     *  As an EXAMPLE, we'll only allow the current owner to set the contract's new owner.
+     *
+     *  You MUST complete the body of this function to use the `Ownable` extension.
+     */
+    function _canSetOwner() internal virtual view override returns (bool) {
+        return msg.sender == owner();
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+All of the base contracts implement this extension.
+
+## Full API reference
+
+<Details summary="owner">
+
+```solidity
+function owner() public view override returns (address);
+```
+
+- Returns the owner of the contract.
+- Set this value using the `setOwner` function.
+
+</Details>
+
+<Details summary="setOwner">
+
+```solidity
+function setOwner(address _newOwner) external;
+```
+
+- Lets an authorized wallet set a new owner for the contract. This value can be read from the `owner` function.
+- Parameter `_newOwner`: The address to make the owner of the contract.
+- The `_canSetOwner` function is run on every call to this function. If the return value of `_canSetOwner` is `false`, the `setOwner` call will revert.
+
+</Details>
+
+<Details summary="_setupOwner">
+
+```solidity
+function _setupOwner(address _newOwner) internal;
+```
+
+- Sets the owner of the smart contract. This value can be read from the `owner` function.
+- Parameter `_newOwner`: The address to make the owner of the contract.
+- The `_canSetOwner` function is _not_ run on a call to this function.
+
+</Details>
+
+<Details summary="_canSetOwner">
+
+```solidity
+function _canSetOwner() internal view virtual returns (bool);
+```
+
+- Runs on every `setOwner` function call.
+- Returns whether a new owner can be set in the given execution context.
+- For example, this function can check whether the wallet calling `setOwner` is the contract owner, and enforce that only the current owner should be able to successfully call `setOwner`.
+
+</Details>

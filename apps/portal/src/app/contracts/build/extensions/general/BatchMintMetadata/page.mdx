@@ -1,0 +1,112 @@
+import { Details, createMetadata, GithubButtonLink } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "BatchMintMetadata contract",
+		icon: "solidity",
+	},
+	title: "BatchMintMetadata | thirdweb contract",
+	description:
+		"The BatchMintMetadata smart contract is an extension for any NFT contract. It lets the smart contract using this extension set the metadata for n number of NFTs in one transaction",
+});
+
+# BatchMintMetadata (ERC1155 & ERC721)
+
+```solidity
+import "@thirdweb-dev/contracts/extension/BatchMintMetadata.sol";
+```
+
+The `BatchMintMetadata` smart contract is an extension for any NFT contract. It lets the smart contract using this extension set the metadata for `n` number of NFTs in one transaction. A single base URI for a batch of `n` NFTs is defined, where the metadata URI for each NFT in a relevant batch is `baseURI/tokenId`.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/BatchMintMetadata.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/BatchMintMetadata.sol";
+
+contract MyContract is BatchMintMetadata {}
+```
+
+## Base Contracts Implementing This Extension
+
+None of the base contracts implement this extension.
+
+## Full API reference
+
+<Details summary="getBaseURICount">
+
+```solidity
+function getBaseURICount() public view returns (uint256);
+```
+
+- Returns the total number of batches of NFTs, where each batch has a single base URI and metadata for NFTs in the batch is stored as `baseURI/tokenId`.
+- This value is updated when the metadata of a new set of NFTs is 'batch minted' using the `_batchMintMetadata` function.
+
+</Details>
+
+<Details summary="getBatchIdAtIndex">
+
+```solidity
+function getBatchIdAtIndex(uint256 _index) public view returns (uint256);
+```
+
+- The extension smart contract stores an array of 'batch IDs' i.e. IDs for different batches of NFTs minted on the contract. This function returns the batch ID at a given index in this ordered array of batch IDs.
+
+</Details>
+
+<Details summary="_getBatchId">
+
+```solidity
+function _getBatchId(uint256 tokenId) internal view returns (uint256 batchId, uint256 index);
+```
+
+- Returns the batch ID for the batch of NFTs the given tokenId belongs to.
+- Parameter `tokenId`: the tokenId for which to retrieve the associated batch ID.
+
+</Details>
+
+<Details summary="_getBaseURI">
+
+```solidity
+function _getBaseURI(uint256 _tokenId) internal view returns (string memory);
+```
+
+- Returns the base metadata URI for the given tokenId.
+- Parameter `tokenId`: the tokenId for which to retrieve the associated base metadata URI.
+
+</Details>
+
+<Details summary="_setBaseURI">
+
+```solidity
+function _setBaseURI(uint256 batchId, string memory baseURI) internal;
+```
+
+- Update the base metadata URI for a given batch of NFTs.
+- Parameter `batchID`: the batch ID of the batch of NFTs whose metadata URI is to be updated.
+- Parameter `baseURI`: the value to set as the new base URI for the relevant batch of NFTs.
+
+</Details>
+
+<Details summary="_batchMintMetadata">
+
+```solidity
+function _batchMintMetadata(
+    uint256 _startId,
+    uint256 _amountToMint,
+    string memory _baseURIForTokens
+) internal returns (uint256 nextTokenIdToMint, uint256 batchId);
+```
+
+- Mints a batch of tokenIds and associates a common baseURI to all those Ids.
+- Parameter `_startId`: The lowest tokenId from the batch of NFTs to mint. It is assumed that token Ids are assigned to NFTs in a serial order, when batch minting e.g. `[startId, startId + 1, ... n-1, n]`
+- Parameter `_amountToMint`: The number of NFTs to mint at once.
+- Parameter `_baseURIForTokens`: The common base URI for the batch of NFTs being minted, where for a batch of NFTs with token IDs `[startId, startId + 1, ... n-1, n]`, each NFT's associated metadata URI is `[baseURI/startId, baseURI/startId+1, ... baseURI/n-1, baseURI/n]`
+
+</Details>
