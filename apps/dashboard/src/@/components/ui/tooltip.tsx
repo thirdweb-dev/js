@@ -45,7 +45,10 @@ export function ToolTipLabel(props: {
         <TooltipTrigger asChild className="!pointer-events-auto">
           {props.children}
         </TooltipTrigger>
-        <TooltipContent sideOffset={10}>
+        <TooltipContent
+          sideOffset={10}
+          className="max-w-[300px] leading-relaxed"
+        >
           <div className="p-2 text-sm flex items-center gap-1.5">
             {props.leftIcon}
             {props.label}

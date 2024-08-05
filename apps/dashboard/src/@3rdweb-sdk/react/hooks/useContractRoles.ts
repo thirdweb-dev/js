@@ -74,22 +74,28 @@ export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
   return isAdmin;
 }
 
-export function useIsMinter<TContract extends ValidContractInstance>(
-  contract: RequiredParam<TContract>,
-) {
+export function useIsMinter(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
-  const { data: contractType } = useContractType(contract?.getAddress());
-  const contractHasRoles = isContractWithRoles(contract);
-  const isAccountRole = useIsAccountRole(
-    "minter",
-    contractHasRoles ? contract : undefined,
-    address,
-  );
+  const userCanMintQuery = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: address ?? "",
+    role: "minter",
+    queryOptions: { enabled: !!address },
+  });
 
-  if (contractType === "custom") {
-    return true;
-  }
-  return isAccountRole;
+  const anyoneCanMintQuery = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: ZERO_ADDRESS,
+    role: "minter",
+  });
+
+  // If both requests "error out", we can safely assume that
+  // this is a custom (aka. non-thirdweb) contract
+  // so we just return `true` in that case
+  const isCustomContract =
+    userCanMintQuery.isError && anyoneCanMintQuery.isError;
+
+  return anyoneCanMintQuery.data || userCanMintQuery.data || isCustomContract;
 }
 
 // Applicable to Marketplace v3 only

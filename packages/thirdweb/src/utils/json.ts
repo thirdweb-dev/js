@@ -1,5 +1,11 @@
 /**
  * Stringify a JSON object and convert all bigint values to string
+ *
+ * If you are getting this error: "Exception: Do not know how to serialize a BigInt",
+ * you probably can use this function to parse the data.
+ * Because bigint is not an accepted value of the JSON format.
+ *
+ * @returns An object with all bigint values converted to string
  * @example
  * ```ts
  * import { stringify } from "thirdweb/utils";

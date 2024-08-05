@@ -1,10 +1,11 @@
-import { Box, DarkMode, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { NextSeo, type NextSeoProps } from "next-seo";
 import type { PropsWithChildren } from "react";
+import { useForceDarkTheme } from "../../../@/components/theme-provider";
 
 interface IProductPage {
   seo: NextSeoProps;
@@ -16,8 +17,9 @@ export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
   accentColor,
   children,
 }) => {
+  useForceDarkTheme();
   return (
-    <DarkMode>
+    <>
       <NextSeo {...seo} />
       <Flex
         sx={{
@@ -41,6 +43,6 @@ export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
         <NewsletterSection />
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };

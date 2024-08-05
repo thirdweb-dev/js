@@ -223,10 +223,7 @@ export const SettingsMetadata = <
                       shouldDirty: true,
                     })
                   }
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="md"
-                  transition="all 200ms ease"
+                  className="rounded border border-border transition-all duration-200"
                 />
                 <FormErrorMessage>
                   {getFieldState("image", formState).error?.message}

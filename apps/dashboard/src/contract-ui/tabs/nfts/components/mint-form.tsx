@@ -413,18 +413,14 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             )}
             <Box>
               <FileInput
-                maxContainerWidth={"200px"}
+                previewMaxWidth="200px"
                 value={mediaFileUrl as File | string}
                 showUploadButton
                 showPreview={nft?.metadata ? !!mediaFileUrl : true}
                 setValue={setFile}
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                transition="all 200ms ease"
+                className="border border-border rounded transition-all duration-200"
                 selectOrUpload="Upload"
                 helperText={nft?.metadata ? "New Media" : "Media"}
-                _hover={{ shadow: "sm" }}
               />
             </Box>
             <FormHelperText>
@@ -439,16 +435,12 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             <FormControl isInvalid={!!errors.image}>
               <FormLabel>Cover Image</FormLabel>
               <FileInput
-                maxContainerWidth={"200px"}
+                previewMaxWidth="200px"
                 accept={{ "image/*": [] }}
                 value={imageUrl}
                 showUploadButton
                 setValue={(file) => setValue("image", file)}
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                transition="all 200ms ease"
-                _hover={{ shadow: "sm" }}
+                className="border border-border rounded transition-all"
               />
               <FormHelperText>
                 You can optionally upload an image as the cover of your NFT.

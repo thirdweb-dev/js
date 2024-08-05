@@ -96,11 +96,7 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
               accept={{ "image/*": [] }}
               value={logoUrl}
               setValue={(file) => form.setValue("logo", file)}
-              border="1px solid"
-              borderColor="gray.200"
-              borderRadius="md"
-              transition="all 200ms ease"
-              _hover={{ shadow: "sm" }}
+              className="border border-border rounded transition-all duration-200"
               renderPreview={(fileUrl) => (
                 <Image
                   alt=""

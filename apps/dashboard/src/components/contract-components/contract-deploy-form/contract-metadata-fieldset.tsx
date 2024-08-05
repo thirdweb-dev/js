@@ -41,10 +41,7 @@ export const ContractMetadataFieldset: React.FC<
                   shouldTouch: true,
                 })
               }
-              border="1px solid"
-              borderColor="gray.200"
-              borderRadius="md"
-              transition="all 200ms ease"
+              className="border border-border rounded transition-all duration-200"
             />
             <FormErrorMessage>
               {

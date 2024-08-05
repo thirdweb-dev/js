@@ -50,6 +50,9 @@ export type CreateDirectListingButtonProps = Omit<
  *   Sell NFT
  * </CreateDirectListingButton>
  * ```
+ *
+ * For error handling & callbacks on transaction-sent and transaction-confirmed,
+ * please refer to the TransactionButton docs.
  * @component
  */
 export function CreateDirectListingButton(

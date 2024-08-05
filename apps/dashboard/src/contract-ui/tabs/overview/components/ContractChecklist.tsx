@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   useIsAdmin,
   useIsMinter,
@@ -16,6 +17,8 @@ import { detectFeatures } from "components/contract-components/utils";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useTabHref } from "contract-ui/utils";
 import { BigNumber } from "ethers";
+import { defineDashboardChain } from "lib/v5-adapter";
+import { getContract } from "thirdweb";
 import { Link, Text } from "tw-components";
 
 interface ContractChecklistProps {
@@ -31,6 +34,11 @@ type Step = {
 export const ContractChecklist: React.FC<ContractChecklistProps> = ({
   contract,
 }) => {
+  const contractv5 = getContract({
+    address: contract.getAddress(),
+    chain: defineDashboardChain(contract.chainId),
+    client: thirdwebClient,
+  });
   const nftHref = useTabHref("nfts");
   const tokenHref = useTabHref("tokens");
   const accountsHref = useTabHref("accounts");
@@ -53,7 +61,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
   ];
 
   const isAdmin = useIsAdmin(contract);
-  const isMinter = useIsMinter(contract);
+  const isMinter = useIsMinter(contractv5);
 
   if (!isAdmin) {
     return null;
