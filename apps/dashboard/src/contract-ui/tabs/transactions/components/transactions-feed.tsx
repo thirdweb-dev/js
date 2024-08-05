@@ -27,7 +27,7 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { type ReactNode, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
-import type { Transaction, Transactions } from "thirdweb";
+import type { ChainsawTransaction, ChainsawTransactions } from "thirdweb";
 import { Button, Card, Heading, Text } from "tw-components";
 import { toDateTimeLocal } from "utils/date-utils";
 import { useGetTransactions } from "../hooks/useGetTransactions";
@@ -37,7 +37,7 @@ interface TransactionsFeedProps {
 }
 
 type UIData = {
-  transactions: Transactions;
+  transactions: ChainsawTransactions;
   showLoadMore: boolean;
 };
 
@@ -87,7 +87,8 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
   });
 
   const uiQuery = processQuery(getTransactionsQuery);
-  const allTransactions: Transactions = uiQuery.data?.transactions || [];
+  const allTransactions: ChainsawTransactions =
+    uiQuery.data?.transactions || [];
   console.log("allTransactions", allTransactions);
 
   const functionName = useSingleQueryParam("functionName");
@@ -104,7 +105,7 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
       Array.from(
         new Set([
           ...allTransactions.map(
-            (tx: Transaction) => tx?.decoded?.functionName,
+            (tx: ChainsawTransaction) => tx?.decoded?.functionName,
           ),
         ]),
       ),
@@ -116,7 +117,7 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
       selectedFunctionName === "all"
         ? allTransactions
         : allTransactions.filter(
-            (tx: Transaction) =>
+            (tx: ChainsawTransaction) =>
               tx?.decoded?.functionName === selectedFunctionName,
           ),
     [allTransactions, selectedFunctionName],
@@ -191,7 +192,7 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
               allowMultiple
               defaultIndex={[]}
             >
-              {filteredFunctionCalls?.map((t: Transaction) => (
+              {filteredFunctionCalls?.map((t: ChainsawTransaction) => (
                 <TransactionsFeedItem
                   key={t.transactionHash}
                   transaction={t}
@@ -209,7 +210,7 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
 };
 
 interface TransactionsFeedItemProps {
-  transaction: Transaction;
+  transaction: ChainsawTransaction;
   setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
   contractAddress: string;
   chainSlug?: string;

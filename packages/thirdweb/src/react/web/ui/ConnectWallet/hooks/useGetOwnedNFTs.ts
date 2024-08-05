@@ -3,10 +3,10 @@ import {
   type GetNFTsByOwnerParams,
   getNFTsByOwner,
 } from "../../../../../chainsaw/endpoints/getNFTsByOwner.js";
-import type { NFTs } from "../../../../../chainsaw/types.js";
+import type { ChainsawNFTs } from "../../../../../chainsaw/types.js";
 
 export function useGetOwnedNFTs(params: GetNFTsByOwnerParams) {
-  return useQuery<NFTs, Error>({
+  return useQuery<ChainsawNFTs, Error>({
     queryKey: ["useGetOwnedNFTs", params],
     queryFn: async () => {
       const result = await getNFTsByOwner(params);

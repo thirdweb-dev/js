@@ -1,6 +1,6 @@
 import type { Chain } from "../../../../../chains/types.js";
 import { getCachedChain } from "../../../../../chains/utils.js";
-import type { NFTs } from "../../../../../chainsaw/types.js";
+import type { ChainsawNFTs } from "../../../../../chainsaw/types.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import type { Theme } from "../../../../core/design-system/index.js";
@@ -97,7 +97,7 @@ export function ViewNFTsContent(props: {
 }
 
 function NftCard(
-  props: Awaited<NFTs>[number] & {
+  props: Awaited<ChainsawNFTs>[number] & {
     client: ThirdwebClient;
     chain: Chain;
     theme: Theme | "light" | "dark";

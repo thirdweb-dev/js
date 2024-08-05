@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import {
+  type ChainsawTransactions,
   type GetTransactionsParams,
-  type Transactions,
   getTransactions,
 } from "thirdweb";
 
@@ -17,7 +17,7 @@ export function useGetTransactions(params: GetTransactionsParams) {
   return useInfiniteQuery<
     GetTransactionsParams,
     Error,
-    { pageData: Transactions; nextPageIndex?: number }
+    { pageData: ChainsawTransactions; nextPageIndex?: number }
   >({
     queryKey: ["useGetTransactions", params],
     queryFn: async ({ pageParam = 0 }) => {

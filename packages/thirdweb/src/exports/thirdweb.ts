@@ -228,8 +228,8 @@ export {
 } from "../chainsaw/endpoints/getLatestBlockNumber.js";
 
 export type {
-  Transactions,
-  Transaction,
+  ChainsawTransactions,
+  ChainsawTransaction,
   ChainsawPagingParams,
 } from "../chainsaw/types.js";
 
