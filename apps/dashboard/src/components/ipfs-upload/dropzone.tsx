@@ -192,8 +192,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
       return replaceIpfsUrl(ipfsHashes[0]);
     }
     // get the folder
-    // return replaceIpfsUrl(ipfsHashes[0].split("/").slice(0, -1).join("/"));
-    return `https://ipfs.io/ipfs/${ipfsHashes[0].split("ipfs://")[1]}`;
+    const uri = ipfsHashes[0].split("ipfs://")[1];
+    const folderPath = uri.split("/")[0]; // "Qma.../image.png" -> "Qma..."
+    return `https://ipfs.io/ipfs/${folderPath}`;
   }, [ipfsHashes]);
 
   const filesToShow = useMemo(() => {
