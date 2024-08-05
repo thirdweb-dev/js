@@ -120,6 +120,19 @@ const AppHeader: React.FC = () => {
           <Button
             as={TrackedLink}
             variant="link"
+            href="/chainlist"
+            category="header"
+            label="chainlist"
+            color="bgBlack"
+            display={{ base: "none", md: "block" }}
+            size="sm"
+            mx={1.5}
+          >
+            Chainlist
+          </Button>
+          <Button
+            as={TrackedLink}
+            variant="link"
             href="https://portal.thirdweb.com"
             isExternal
             category="header"
@@ -223,17 +236,6 @@ const AppHeader: React.FC = () => {
             rounded="lg"
           >
             Engine
-          </LinkButton>
-          <LinkButton
-            href="/chainlist"
-            isActive={pathname === "/chainlist"}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Chainlist
           </LinkButton>
           <LinkButton
             href="/dashboard/settings/api-keys"
