@@ -34,6 +34,33 @@ export type Block = {
   version: number;
 };
 
+export type ChainsawBlock = {
+  number: bigint | null;
+  hash: Hex | null;
+  nonce: Hex | null;
+  logsBloom: Hex | null;
+  baseFeePerGas: bigint | null;
+  blobGasUsed: bigint;
+  difficulty: bigint;
+  excessBlobGas: bigint;
+  extraData: Hex;
+  gasLimit: bigint;
+  gasUsed: bigint;
+  miner: string;
+  mixHash: Hex;
+  parentHash: Hex;
+  receiptsRoot: Hex;
+  sealFields: Hex[];
+  sha3Uncles: Hex;
+  size: bigint;
+  stateRoot: Hex;
+  timestamp: bigint;
+  totalDifficulty: bigint | null;
+  transactionsRoot: Hex;
+  uncles: Hex[];
+  withdrawalsRoot?: Hex;
+};
+
 export type Event = {
   name: string;
   count: number;

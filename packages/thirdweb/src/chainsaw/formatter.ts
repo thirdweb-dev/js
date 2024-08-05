@@ -1,8 +1,9 @@
-import { type GetBlockReturnType, formatBlock, formatTransaction } from "viem";
+import { formatBlock, formatTransaction } from "viem";
 import { numberToHex } from "../utils/encoding/hex.js";
 import { parseNFT } from "../utils/nft/parseNft.js";
 import type {
   Block,
+  ChainsawBlock,
   ChainsawTransactions,
   NFTs,
   NFTsData,
@@ -12,7 +13,7 @@ import type {
 
 export const formatChainsawBlock = (
   block?: Block,
-): GetBlockReturnType<undefined, false> | undefined => {
+): ChainsawBlock | undefined => {
   if (!block) return;
   return formatBlock({
     ...block,
@@ -22,7 +23,7 @@ export const formatChainsawBlock = (
     difficulty: numberToHex(BigInt(block.difficulty)),
     gasLimit: numberToHex(BigInt(block.gasLimit)),
     gasUsed: numberToHex(BigInt(block.gasUsed)),
-  }) as GetBlockReturnType<undefined, false>;
+  });
 };
 
 export const formatChainsawNFTs = (nfts?: NFTsData): NFTs => {
