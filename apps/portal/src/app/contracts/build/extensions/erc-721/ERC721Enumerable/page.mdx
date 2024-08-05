@@ -1,0 +1,71 @@
+import { Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721Enumerable contract",
+		icon: "solidity",
+	},
+	title: "ERC721Enumerable | thirdweb contract",
+	description:
+		"View all of the NFTs owned by a specific wallet address by implementing the IERC721Enumerable interface",
+});
+
+# ERC721Enumerable
+
+```solidity
+import "@thirdweb-dev/contracts/eip/interface/IERC721Enumerable.sol";
+```
+
+View all of the NFTs owned by a specific wallet address by implementing the `IERC721Enumerable` interface.
+
+<Callout title="info" variant="info">
+
+This extension is an interface and requires all of the functions to be implemented
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC721Enumerable.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC721A.sol";
+import "@thirdweb-dev/contracts/eip/interface/IERC721Enumerable.sol";
+
+contract Contract is ERC721A, IERC721Enumerable {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC721A(
+            _name,
+            _symbol
+        )
+    {}
+
+    function tokenByIndex(uint256 _index) external view override returns (uint256) {
+        // Your custom implementation here
+    }
+
+    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view override returns (uint256) {
+        // Your custom implementation here
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721Base](/contracts/build/base-contracts/erc-721/base)
+- [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
+- [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)
+- [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint)
+- [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)

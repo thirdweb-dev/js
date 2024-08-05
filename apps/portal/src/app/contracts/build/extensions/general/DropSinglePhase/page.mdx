@@ -1,0 +1,354 @@
+import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "DropSinglePhase contract",
+		icon: "solidity",
+	},
+	title: "DropSinglePhase | thirdweb contract",
+	description:
+		"The DropSinglePhase smart contract is an extension meant for distributing ERC20 or ERC721 tokens.",
+});
+
+# DropSinglePhase (ERC20 & ERC721)
+
+```solidity
+import "@thirdweb-dev/contracts/extension/DropSinglePhase.sol";
+```
+
+The `DropSinglePhase` smart contract is an extension meant for distributing ERC20 or ERC721 tokens.
+
+This extension implements the 'Drop' distribution mechanism: set restrictions, known as a claim phase, such as a price to charge, an allowlist etc. for the public / allowlisted mint of your tokens.
+
+`DropSinglePhase` allows you to set one claim phase unlike the [`Drop`](/contracts/build/extensions/general/Drop) extension.
+
+<Callout title="info" variant="info">
+
+It is recommended to use this extension alongside the [`LazyMint`](/contracts/build/extensions/general/LazyMint) extension.
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DropSinglePhase.sol" />
+
+## Usage
+
+The `DropSinglePhase` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                     | Type                    | Description                                                                                                                                      |
+| ------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `_afterClaim`            | internal _virtual_      | Runs after every `claim` function call.                                                                                                          |
+| `_beforeClaim`           | internal _virtual_      | Runs before every `claim` function call.                                                                                                         |
+| `_collectPriceOnClaim`   | internal _virtual_      | Collects and distributes the primary sale value of NFTs being claimed.                                                                           |
+| `_transferTokensOnClaim` | internal _virtual_      | Transfers the NFTs being claimed.                                                                                                                |
+| `_canSetClaimConditions` | internal view _virtual_ | Runs on every attempt to set the claim condition on the contract. Returns whether the claim condition can be set in the given execution context. |
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/DropSinglePhase.sol";
+import "@thirdweb-dev/contracts/base/ERC20Base.sol";
+import "@thirdweb-dev/contracts/lib/CurrencyTransferLib.sol";
+
+/// This is an EXAMPLE of the usage of `DropSinglePhase` for distributing ERC20 tokens.
+
+contract MyContract is ERC20Base, DropSinglePhase {
+    /*//////////////////////////////////////////////////////////////
+                            Constructor
+    //////////////////////////////////////////////////////////////*/
+
+    constructor(address _defaultAdmin, string memory _name, string memory _symbol)
+        ERC20Base(_defaultAdmin, _name, _symbol)
+    {}
+
+    /*//////////////////////////////////////////////////////////////
+                        Internal (overrideable) functions
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Runs before every `claim` function call.
+    function _beforeClaim(
+        uint256 _tokenId,
+        address _receiver,
+        uint256 _quantity,
+        address _currency,
+        uint256 _pricePerToken,
+        AllowlistProof calldata _allowlistProof,
+        bytes memory _data
+    ) internal virtual override {
+      // Your custom implementation logic here
+    }
+
+    /// @dev Runs after every `claim` function call.
+    function _afterClaim(
+        uint256 _tokenId,
+        address _receiver,
+        uint256 _quantity,
+        address _currency,
+        uint256 _pricePerToken,
+        AllowlistProof calldata _allowlistProof,
+        bytes memory _data
+    ) internal virtual override {
+      // Your custom implementation logic here
+    }
+
+    /// @dev Collects and distributes the primary sale value of tokens being claimed.
+    function _collectPriceOnClaim(
+        address _primarySaleRecipient,
+        uint256 _quantityToClaim,
+        address _currency,
+        uint256 _pricePerToken
+    ) internal virtual override {
+        if (_pricePerToken == 0) {
+            return;
+        }
+
+        uint256 totalPrice = (_quantityToClaim * _pricePerToken) / 1 ether;
+        require(totalPrice > 0, "quantity too low");
+
+        if (_currency == CurrencyTransferLib.NATIVE_TOKEN) {
+            require(msg.value == totalPrice, "Must send total price.");
+        }
+
+        address saleRecipient = _primarySaleRecipient;
+        CurrencyTransferLib.transferCurrency(
+            _currency,
+            msg.sender,
+            saleRecipient,
+            totalPrice
+        );
+    }
+
+    /// @dev Transfers the tokens being claimed.
+    function _transferTokensOnClaim(address _to, uint256 _quantityBeingClaimed)
+        internal
+        virtual
+        override
+        returns (uint256)
+    {
+        _mint(_to, _quantityBeingClaimed);
+        return 0;
+    }
+
+    /// @dev Checks whether platform fee info can be set in the given execution context.
+    function _canSetClaimConditions()
+        internal
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        return msg.sender == owner();
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)
+- [ERC20Drop](/contracts/build/extensions/erc-1155/ERC1155Claimable)
+
+## Full API reference
+
+<Details summary="claim">
+
+```solidity
+function claim(
+    address receiver,
+    uint256 quantity,
+    address currency,
+    uint256 pricePerToken,
+    AllowlistProof calldata allowlistProof,
+    bytes memory data
+) external payable;
+```
+
+- Lets an account claim a given quantity of tokens.
+- Parameter `receiver`: The receiver of the tokens to claim.
+- Parameter `quantity`: The quantity of tokens to claim.
+- Parameter `currency`: The currency in which to pay for the claim.
+- Parameter `pricePerToken`: The price per token to pay for the claim.
+- Parameter `allowlistProof`: The proof of the claimer's inclusion in the merkle root allowlist.
+- Parameter `data`: Arbitrary bytes data that can be leveraged in the implementation of this interface.
+
+</Details>
+
+<Details summary="setClaimConditions">
+
+```solidity
+struct ClaimCondition {
+    uint256 startTimestamp;
+    uint256 maxClaimableSupply;
+    uint256 supplyClaimed;
+    uint256 quantityLimitPerWallet;
+    bytes32 merkleRoot;
+    uint256 pricePerToken;
+    address currency;
+    string metadata;
+}
+
+function setClaimConditions(ClaimCondition calldata phase, bool resetClaimEligibility) external;
+```
+
+- Lets an authorized wallet set the claim condition for the contract.
+- Parameter `phase`: The set of restrictions that will apply to the minting of tokens on the contract.
+  - `startTimestamp`: The unix timestamp after which the claim condition applies.
+  - `maxClaimableSupply`: The maximum total number of tokens that can be claimed under the claim condition.
+  - `supplyClaimed`: At any given point, the number of tokens that have been claimed under the claim condition.
+  - `quantityLimitPerWallet`: The maximum number of tokens that can be claimed by a wallet.
+  - `merkleRoot`: The allowlist of addresses that can claim tokens under the claim condition.
+  - `pricePerToken`: The price required to pay per token claimed.
+  - `currency`: The currency in which the price must be paid.
+  - `metadata`: Claim condition metadata.
+- Parameter `resetClaimEligibility`: Whether to carry over the restrictions active for wallets that claimed tokens in the incumbent claim condition (e.g. next valid claim timestamp for a given wallet).
+- The `_canSetClaimConditions` function is run on every call to this function. If the return value of `_canSetClaimConditions` is `false`, the `setClaimConditions` call will revert.
+
+</Details>
+
+<Details summary="verifyClaim">
+
+```solidity
+struct AllowlistProof {
+    bytes32[] proof;
+    uint256 quantityLimitPerWallet;
+    uint256 pricePerToken;
+    address currency;
+}
+
+function verifyClaim(
+    address claimer,
+    uint256 quantity,
+    address currency,
+    uint256 pricePerToken,
+    AllowlistProof calldata allowlistProof
+) public view returns (bool isOverride);
+```
+
+- Checks a request to claim tokens against the active claim condition's criteria.
+- Parameter `claimer`: The wallet claiming tokens.
+- Parameter `quantity`: The quantity of tokens to claim.
+- Parameter `currency`: The currency in which to pay the price for the claim.
+- Parameter `pricePerToken`: The price to pay per token claimed.
+- Parameter `allowlistProof`: Struct containing below elements:
+  - `proof`: Proof of concerned wallet's inclusion in an allowlist.
+  - `quantityLimitPerWallet`: The total quantity of tokens the allowlisted wallet is eligible to claim over time.
+  - `pricePerToken`: The price per token the allowlisted wallet must pay to claim tokens.
+  - `currency`: The currency in which the allowlisted wallet must pay the price for claiming tokens.
+
+</Details>
+
+<Details summary="getSupplyClaimedByWallet">
+
+```solidity
+function getSupplyClaimedByWallet(address claimer) public view returns (uint256);
+```
+
+- Returns the number of tokens claimed by a wallet under the active condition.
+- Parameter `claimer`: The wallet claiming tokens.
+
+</Details>
+
+<Details summary="_dropMsgSender">
+
+```solidity
+function _dropMsgSender() internal virtual returns (address);
+```
+
+- Exposes the ability to override the msg sender.
+
+</Details>
+
+<Details summary="_beforeClaim">
+
+```solidity
+function _beforeClaim(
+    address receiver,
+    uint256 quantity,
+    address currency,
+    uint256 pricePerToken,
+    AllowlistProof calldata allowlistProof,
+    bytes memory data
+) internal virtual
+```
+
+- Runs before every `claim` function call. Exposes the ability to add custom logic that runs before every claim of tokens.
+- Parameter `receiver`: The receiver of the tokens to claim.
+- Parameter `quantity`: The quantity of tokens to claim.
+- Parameter `currency`: The currency in which to pay for the claim.
+- Parameter `pricePerToken`: The price per token to pay for the claim.
+- Parameter `allowlistProof`: The proof of the claimer's inclusion in the merkle root allowlist.
+- Parameter `data`: Arbitrary bytes data that can be leveraged in the implementation of this interface.
+
+</Details>
+
+<Details summary="_afterClaim">
+
+```solidity
+function _afterClaim(
+    address receiver,
+    uint256 quantity,
+    address currency,
+    uint256 pricePerToken,
+    AllowlistProof calldata allowlistProof,
+    bytes memory data
+) internal virtual
+```
+
+- Runs after every `claim` function call. Exposes the ability to add custom logic that runs after every claim of tokens.
+- Parameter `receiver`: The receiver of the tokens to claim.
+- Parameter `quantity`: The quantity of tokens to claim.
+- Parameter `currency`: The currency in which to pay for the claim.
+- Parameter `pricePerToken`: The price per token to pay for the claim.
+- Parameter `allowlistProof`: The proof of the claimer's inclusion in the merkle root allowlist.
+- Parameter `data`: Arbitrary bytes data that can be leveraged in the implementation of this interface.
+
+</Details>
+
+<Details summary="_collectPriceOnClaim">
+
+```solidity
+function _collectPriceOnClaim(
+    address primarySaleRecipient,
+    uint256 quantityToClaim,
+    address currency,
+    uint256 pricePerToken
+) internal virtual;
+```
+
+- Collects and distributes the primary sale value of tokens being claimed.
+- Parameter `primarySaleRecipient`: The recipient of the primary sale value generated from a claim.
+- Parameter `quantityToClaim`: The quantity of tokens being claimed.
+- Parameter `currency`: The currency used to pay for the claim.
+- Parameter `pricePerToken`: The price per token to pay for the claim.
+
+</Details>
+
+<Details summary="_transferTokensOnClaim">
+
+```solidity
+function _transferTokensOnClaim(address to, uint256 quantityBeingClaimed)
+    internal
+    virtual
+    returns (uint256 startTokenId);
+```
+
+- Transfers the tokens being claimed to the appropriate recipient.
+- Parameter `to`: The recipient of the tokens for a claim.
+- Parameter `quantityBeingClaimed`: The quantity of tokens being claimed.
+
+</Details>
+
+<Details summary="_canSetClaimConditions">
+
+```solidity
+function _canSetClaimConditions() internal view virtual returns (bool);
+```
+
+- Runs on every `setClaimConditions` function call.
+- Returns whether the claim condition can be set in the given execution context.
+- For example, this function can check whether the wallet calling `setClaimConditions` is the contract owner, and enforce that only the owner should be able to successfully call `setClaimConditions`.
+
+</Details>

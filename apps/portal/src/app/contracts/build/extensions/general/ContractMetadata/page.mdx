@@ -1,0 +1,117 @@
+import { Details, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ContractMetadata contract",
+		icon: "solidity",
+	},
+	title: "ContractMetadata | thirdweb contract",
+	description:
+		"This extension lets you define metadata for your smart contract. Additionally, ContractMetadata is necessary to enable royalties on NFT contracts on OpenSea.",
+});
+
+# ContractMetadata
+
+```solidity
+import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
+```
+
+The `ContractMetadata` smart contract is an extension usable with any smart contract. It lets you define metadata for your smart contract. Additionally, `ContractMetadata` is necessary to enable [royalties](/contracts/build/extensions/general/Royalty) on NFT contracts on OpenSea.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/ContractMetadata.sol" />
+
+## Usage
+
+The `ContractMetadata` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                                                                                            | Type                    | Returns | Description                                                                                                                             |
+| ----------------------------------------------------------------------------------------------- | ----------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetContractURI`](/contracts/build/extensions/general/ContractMetadata#_cansetcontracturi) | internal view _virtual_ | `bool`  | Runs on every attempt to set the metadata of the contract. Returns whether contract metadata can be set in the given execution context. |
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/ContractMetadata.sol";
+
+contract MyContract is ContractMetadata {
+
+    /**
+     *  We store the contract deployer's address only for the purposes of the example
+     *  in the code comment below.
+     *
+     *  Doing this is not necessary to use the `ContractMetadata` extension.
+     */
+    address public deployer;
+
+    constructor() {
+        deployer = msg.sender;
+    }
+
+    /**
+     *  This function returns who is authorized to set the metadata for your metadata.
+     *
+     *  As an EXAMPLE, we'll only allow the contract deployer to set the contract's metadata.
+     *
+     *  You MUST complete the body of this function to use the `ContractMetadata` extension.
+     */
+    function _canSetContractURI() internal view virtual override returns (bool){
+        return msg.sender == deployer;
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+All of the base contracts implement this extension.
+
+## Full API reference
+
+<Details summary="contractURI">
+
+```solidity
+function contractURI() external view returns (string memory);
+```
+
+- Returns the URI for the metadata associated with the smart contract. Generally, an IPFS URI.
+- Set this value using the `setContractURI` function.
+
+</Details>
+
+<Details summary="setContractURI">
+
+```solidity
+function setContractURI(string calldata _uri) external;
+```
+
+- Sets the metadata of the smart contract. This value can be read from the `contractURI` function.
+- Parameter `_uri`: The URI of the metadata to associate with the contract.
+- The `_canSetContractURI` function is run on every call to this function. If the return value of `_canSetContractURI` is `false`, the `setContractURI` call will revert.
+
+</Details>
+
+<Details summary="_setupContractURI">
+
+```solidity
+function _setupContractURI(string memory _uri) internal;
+```
+
+- Sets the metadata of the smart contract. This value can be read from the `contractURI` function.
+- Parameter `_uri`: The URI of the metadata to associate with the contract.
+- The `_canSetContractURI` function is _not_ run on a call to this function.
+
+</Details>
+
+<Details summary="_canSetContractURI">
+
+```solidity
+function _canSetContractURI() internal view virtual returns (bool);
+```
+
+- Runs on every `setContractURI` function call.
+- Returns whether contract metadata can be set in the given execution context.
+- For example, this function can check whether the wallet calling `setContractURI` is the contract owner, and enforce that only the owner should be able to successfully call `setContractURI`.
+
+</Details>

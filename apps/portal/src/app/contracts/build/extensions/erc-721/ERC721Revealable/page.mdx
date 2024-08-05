@@ -1,0 +1,67 @@
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721Revealable contract",
+		icon: "solidity",
+	},
+	title: "ERC721Revealable | thirdweb contract",
+	description:
+		"Create batches of 'delayed-reveal' NFTs that can be revealed at a later date after they have been minted and claimed",
+});
+
+# ERC721Revealable
+
+```solidity
+import "@thirdweb-dev/contracts/eip/ERC721.sol";
+import "@thirdweb-dev/contracts/extension/DelayedReveal.sol";
+```
+
+Create batches of ['delayed-reveal'](/glossary/delayed-reveal) NFTs that can be revealed at a later date after they have been minted and claimed.
+
+This is an extension which is detectable in the dashboard if the smart contract implements the
+[`ERC721`](/contracts/build/extensions/erc-721/ERC721) and [`DelayedReveal`](/contracts/build/extensions/general/DelayedReveal) extensions.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/DelayedReveal.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC721A.sol";
+import "@thirdweb-dev/contracts/extension/LazyMint.sol";
+import "@thirdweb-dev/contracts/extension/DelayedReveal.sol";
+
+contract Contract is ERC721A, LazyMint, DelayedReveal {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC721A(
+            _name,
+            _symbol
+        )
+    {}
+  function reveal(uint256 _index, bytes calldata _key)
+        external
+        override
+        returns (string memory revealedURI)
+    {
+      // Your custom implementation here
+    }
+
+    function _canLazyMint() internal view override returns (bool) {
+        // Your custom implementation here
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
+- [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)

@@ -1,0 +1,117 @@
+import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "LazyMint contract",
+		icon: "solidity",
+	},
+	title: "LazyMint | thirdweb contract",
+	description:
+		"The LazyMint smart contract is an extension for any base NFT contract. It lets you 'lazy mint' any number of NFTs at once.",
+});
+
+# LazyMint
+
+```solidity
+import "@thirdweb-dev/contracts/extension/LazyMint.sol";
+```
+
+The `LazyMint` smart contract is an extension for any base NFT contract. It lets you 'lazy mint' any number of NFTs at once.
+
+Here, ['lazy mint'](/glossary/lazy-minting) means defining the metadata for particular tokenIds of your NFT contract, without actually minting a non-zero balance of NFTs of those tokenIds.
+
+<Callout title="info" variant="info">
+
+In order for the `ERC721LazyMintable`, `ERC1155LazyMintable` or `ERC20LazyMintable` extension to be detected
+in the Dashboard, the corresponding [`ERC721`](/contracts/build/extensions/erc-721/ERC721), [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155) or [`ERC20`](/contracts/build/extensions/erc-20/ERC20) extensions need to be added alongside
+the `LazyMint` extension.
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/LazyMint.sol" />
+
+## Usage
+
+The `LazyMint` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                                                                        | Type                    | Returns | Description                                                                                                                      |
+| --------------------------------------------------------------------------- | ----------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canLazyMint`](/contracts/build/extensions/general/LazyMint#_canlazymint) | internal view _virtual_ | `bool`  | Runs on every attempt to lazy mint NFTs on the contract. Returns whether NFTs can be lazy minted in the given execution context. |
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/LazyMint.sol";
+
+contract MyContract is LazyMint {
+    /**
+     *  We store the contract deployer's address only for the purposes of the example
+     *  in the code comment below.
+     *
+     *  Doing this is not necessary to use the `LazyMint` extension.
+     */
+    address public deployer;
+
+    constructor() {
+        deployer = msg.sender;
+    }
+
+    /**
+     *  This function returns who is authorized to lazy mint NFTs on this contract.
+     *
+     *  As an EXAMPLE, we'll only allow the contract deployer to lazy mint NFTs.
+     *
+     *  You MUST complete the body of this function to use the `LazyMint` extension.
+     */
+    function _canLazyMint() internal view virtual override returns (bool) {
+        return msg.sender == deployer;
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+(if combined with either [`ERC721`](/contracts/build/extensions/erc-721/ERC721) or [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155))
+
+- [`ERC721LazyMint`](/contracts/build/base-contracts/erc-721/lazy-mint)
+- [`ERC721DelayedReveal`](/contracts/build/base-contracts/erc-721/delayed-reveal)
+- [`ERC721Drop`](/contracts/build/base-contracts/erc-721/drop)
+- [`ERC1155LazyMint`](/contracts/build/base-contracts/erc-1155/lazy-mint)
+- [`ERC1155DelayedReveal`](/contracts/build/base-contracts/erc-1155/delayed-reveal)
+- [`ERC1155Drop`](/contracts/build/base-contracts/erc-1155/drop)
+
+## Full API Reference
+
+<Details summary="lazyMint">
+
+```solidity
+function lazyMint(
+    uint256 amount,
+    string calldata baseURIForTokens,
+    bytes calldata extraData
+) external returns (uint256 batchId);
+```
+
+- Lazy mints a given amount of NFTs.
+- Parameter `amount`: The number of NFTs to lazy mint.
+- Parameter `baseURIForTokens`: The base URI for the 'n' number of NFTs being lazy minted, where the metadata for each of those NFTs is `baseURIForTokens/tokenId`.
+- Parameter `extraData`: Additional bytes data to be used at the discretion of the contract.
+
+</Details>
+
+<Details summary="_canLazyMint">
+
+```solidity
+function _canLazyMint() internal view virtual returns (bool);
+```
+
+- Runs on every `lazyMint` function call.
+- Returns whether NFTs can be lazy minted in the given execution context.
+- For example, this function can check whether the wallet calling `lazyMint` is the contract owner, and enforce that only the owner should be able to successfully call `lazyMint`.
+
+</Details>

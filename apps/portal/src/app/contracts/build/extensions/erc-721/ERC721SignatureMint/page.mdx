@@ -1,0 +1,297 @@
+import { Details, GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721SignatureMint contract",
+		icon: "solidity",
+	},
+	title: "ERC721SignatureMint | thirdweb contract",
+	description:
+		"The SignatureMintERC721 smart contract is an extension meant for distributing ERC721 tokens",
+});
+
+# ERC721SignatureMint
+
+```solidity
+import "@thirdweb-dev/contracts/extension/SignatureMintERC721.sol";
+```
+
+The `SignatureMintERC721` smart contract is an extension meant for distributing ERC721 tokens.
+
+The ['signature minting'](/glossary/signature-based-minting) mechanism in the `SignatureMintERC721` extension uses [EIP-712](https://eips.ethereum.org/EIPS/eip-712), and is a way for a contract admin to authorize an external party's request to mint tokens on the admin's contract. At a high level, this means you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/SignatureMintERC721.sol" />
+
+## Usage
+
+The `SignatureMintERC721` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                                                                             | Type                    | Description                                                                                                                                     |
+| -------------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSignMintRequest`](/contracts/build/extensions/erc-721/ERC721SignatureMint) | internal view _virtual_ | Runs on every attempt to mint tokens with signature on the contract. Returns whether the signer is authorized to issue a signature for minting. |
+| [`mintWithSignature`](/contracts/build/extensions/erc-721/ERC721SignatureMint)   | external payable        | Mints tokens according to the provided mint request.                                                                                            |
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+import "@thirdweb-dev/contracts/extension/SignatureMintERC721.sol";
+import "@thirdweb-dev/contracts/lib/CurrencyTransferLib.sol";
+
+contract ERC721SignatureMint is ERC721Base, SignatureMintERC721 {
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps
+    ) ERC721Base(_defaultAdmin, _name, _symbol, _royaltyRecipient, _royaltyBps) {}
+
+    /// @dev Mints tokens according to the provided mint request.
+    function mintWithSignature(
+        MintRequest calldata _req,
+        bytes calldata _signature
+    ) external payable virtual override returns (address signer) {
+        require(_req.quantity == 1, "quantity must be 1");
+
+        uint256 tokenIdToMint = nextTokenIdToMint();
+
+        // Verify and process payload.
+        signer = _processRequest(_req, _signature);
+
+        address receiver = _req.to;
+
+        // Collect price
+        _collectPriceOnClaim(
+            _req.primarySaleRecipient,
+            _req.quantity,
+            _req.currency,
+            _req.pricePerToken
+        );
+
+        // Mint tokens.
+        _setTokenURI(tokenIdToMint, _req.uri);
+        _safeMint(receiver, _req.quantity);
+
+        emit TokensMintedWithSignature(signer, receiver, tokenIdToMint, _req);
+    }
+
+    /// @dev Returns whether a given address is authorized to sign mint requests.
+    function _canSignMintRequest(address _signer)
+        internal
+        view
+        virtual
+        override
+        returns (bool)
+    {
+        return _signer == owner();
+    }
+
+    /// @dev Collects and distributes the primary sale value of tokens being claimed.
+    function _collectPriceOnClaim(
+        address _primarySaleRecipient,
+        uint256 _quantityToClaim,
+        address _currency,
+        uint256 _pricePerToken
+    ) internal virtual {
+        if (_pricePerToken == 0) {
+            return;
+        }
+
+        uint256 totalPrice = (_quantityToClaim * _pricePerToken) / 1 ether;
+        require(totalPrice > 0, "quantity too low");
+
+        if (_currency == CurrencyTransferLib.NATIVE_TOKEN) {
+            require(msg.value == totalPrice, "Must send total price.");
+        }
+
+        address saleRecipient = _primarySaleRecipient;
+        CurrencyTransferLib.transferCurrency(
+            _currency,
+            msg.sender,
+            saleRecipient,
+            totalPrice
+        );
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)
+
+## Full API reference
+
+<Details summary="verify">
+
+```solidity
+struct MintRequest {
+    address to;
+    address royaltyRecipient;
+    uint256 royaltyBps;
+    address primarySaleRecipient;
+    string uri;
+    uint256 quantity;
+    uint256 pricePerToken;
+    address currency;
+    uint128 validityStartTimestamp;
+    uint128 validityEndTimestamp;
+    bytes32 uid;
+}
+
+function verify(MintRequest calldata req, bytes calldata signature)
+    public
+    view
+    returns (bool success, address signer)
+```
+
+- Verifies that a mint request is valid and signed by an authorized wallet.
+- Parameter `req`: The mint request.
+  - `to`: The recipient of the tokens to mint.
+  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
+  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
+  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
+  - `uri`: The metadata URI of the token to mint.
+  - `quantity`: The quantity of tokens to mint.
+  - `pricePerToken`: The price to pay per quantity of tokens minted.
+  - `currency`: The currency in which to pay the price per token minted.
+  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
+  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
+  - `uid`: A unique identifier for the payload.
+- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+
+</Details>
+
+<Details summary="mintWithSignature">
+
+```solidity
+struct MintRequest {
+    address to;
+    address royaltyRecipient;
+    uint256 royaltyBps;
+    address primarySaleRecipient;
+    string uri;
+    uint256 quantity;
+    uint256 pricePerToken;
+    address currency;
+    uint128 validityStartTimestamp;
+    uint128 validityEndTimestamp;
+    bytes32 uid;
+}
+
+function mintWithSignature(MintRequest calldata req, bytes calldata signature)
+    external
+    payable
+    returns (address signer)
+```
+
+- Mints tokens according to the provided mint request.
+- Parameter `req`: The mint request.
+  - `to`: The recipient of the tokens to mint.
+  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
+  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
+  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
+  - `uri`: The metadata URI of the token to mint.
+  - `quantity`: The quantity of tokens to mint.
+  - `pricePerToken`: The price to pay per quantity of tokens minted.
+  - `currency`: The currency in which to pay the price per token minted.
+  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
+  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
+  - `uid`: A unique identifier for the payload.
+- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+
+</Details>
+
+<Details summary="_processRequest">
+
+```solidity
+struct MintRequest {
+    address to;
+    address royaltyRecipient;
+    uint256 royaltyBps;
+    address primarySaleRecipient;
+    string uri;
+    uint256 quantity;
+    uint256 pricePerToken;
+    address currency;
+    uint128 validityStartTimestamp;
+    uint128 validityEndTimestamp;
+    bytes32 uid;
+}
+
+function _processRequest(MintRequest calldata req, bytes calldata signature)
+    internal
+    returns (address signer)
+```
+
+- Verifies a mint request and marks the request and signature as used.
+- Parameter `req`: The mint request.
+  - `to`: The recipient of the tokens to mint.
+  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
+  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
+  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
+  - `uri`: The metadata URI of the token to mint.
+  - `quantity`: The quantity of tokens to mint.
+  - `pricePerToken`: The price to pay per quantity of tokens minted.
+  - `currency`: The currency in which to pay the price per token minted.
+  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
+  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
+  - `uid`: A unique identifier for the payload.
+- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+
+</Details>
+
+<Details summary="_recoverAddress">
+
+```solidity
+struct MintRequest {
+    address to;
+    address royaltyRecipient;
+    uint256 royaltyBps;
+    address primarySaleRecipient;
+    string uri;
+    uint256 quantity;
+    uint256 pricePerToken;
+    address currency;
+    uint128 validityStartTimestamp;
+    uint128 validityEndTimestamp;
+    bytes32 uid;
+}
+
+function _recoverAddress(MintRequest calldata req, bytes calldata signature)
+    internal
+    view
+    returns (address signer)
+```
+
+- Returns the address of the signer of the mint request.
+- Parameter `req`: The mint request.
+  - `to`: The recipient of the tokens to mint.
+  - `royaltyRecipient`: The recipient of the minted token's secondary sales royalties.
+  - `royaltyBps`: The percentage of the minted token's secondary sales to take as royalties.
+  - `primarySaleRecipient`: The recipient of the minted token's primary sales proceeds.
+  - `uri`: The metadata URI of the token to mint.
+  - `quantity`: The quantity of tokens to mint.
+  - `pricePerToken`: The price to pay per quantity of tokens minted.
+  - `currency`: The currency in which to pay the price per token minted.
+  - `validityStartTimestamp`: The unix timestamp after which the payload is valid.
+  - `validityEndTimestamp`: The unix timestamp at which the payload expires.
+  - `uid`: A unique identifier for the payload.
+- Parameter `signature`: The signature produced by an authorized wallet signing the mint request.
+
+</Details>
+
+<Details summary="_canSignMintRequest">
+
+```solidity
+function _canSignMintRequest(address signer) internal view virtual returns (bool);
+```
+
+- Returns whether a given address is authorized to sign mint requests.
+- Parameter `signer`: the address that the contract checks is eligible to sign mint requests, or not.
+
+</Details>
