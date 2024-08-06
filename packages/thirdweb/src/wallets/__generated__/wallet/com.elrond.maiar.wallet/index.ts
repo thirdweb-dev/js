@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "cool.pay",
-  name: "paycool",
-  homepage: "https://pay.cool",
-  image_id: "98d1e016-fada-48fb-5bd5-08c95e734800",
+  id: "com.elrond.maiar.wallet",
+  name: "xPortal",
+  homepage: "https://xportal.com",
+  image_id: "ad14e385-5452-457b-4b84-31e4d4c75f00",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/pay-cool/id1636549193",
+    ios: "https://apps.apple.com/ro/app/xportal/id1519405832",
     android:
-      "https://play.google.com/store/apps/details?id=cool.pay.paycool&hl=en_CA&gl=US",
+      "https://play.google.com/store/apps/details?id=com.elrond.maiar.wallet",
     mac: null,
     windows: null,
     linux: null,
@@ -20,10 +20,10 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "com.elrond.maiar.wallet",
   mobile: {
-    native: "pay.cool://deepLinkView",
-    universal: "https://pay.cool/deepLinkView",
+    native: "xportal://",
+    universal: "https://xport.al",
   },
   desktop: {
     native: null,

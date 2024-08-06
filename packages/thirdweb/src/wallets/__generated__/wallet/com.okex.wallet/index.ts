@@ -23,7 +23,7 @@ export const wallet = {
   rdns: "com.okex.wallet",
   mobile: {
     native: "okex://main",
-    universal: null,
+    universal: "https://www.okx.com/download",
   },
   desktop: {
     native: null,

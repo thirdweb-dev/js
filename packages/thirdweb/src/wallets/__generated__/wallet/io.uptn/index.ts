@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "me.iopay",
-  name: "ioPay",
-  homepage: "https://iopay.me/",
-  image_id: "411d80d0-3a75-4932-560f-565d8c715e00",
+  id: "io.uptn",
+  name: "UPTN",
+  homepage: "https://uptn.io",
+  image_id: "5e656c3e-96ae-484f-c0c6-37bc908daa00",
   app: {
-    browser: "https://iopay.me/",
-    ios: "https://apps.apple.com/app/apple-store/id1478086371",
-    android: "https://play.google.com/store/apps/details?id=io.iotex.iopay.gp",
+    browser: null,
+    ios: "https://apps.apple.com/kr/app/id6444606758",
+    android: "https://play.google.com/store/apps/details?id=io.uptn.wallet",
     mac: null,
     windows: null,
     linux: null,
@@ -21,11 +21,11 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "iopay://",
+    native: "uptn://",
     universal: null,
   },
   desktop: {
-    native: null,
+    native: "uptn://",
     universal: null,
   },
 } as const;

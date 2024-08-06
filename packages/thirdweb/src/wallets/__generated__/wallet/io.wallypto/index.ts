@@ -2,15 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "finance.ottr",
-  name: "Ottr Finance",
-  homepage: "https://ottr.finance",
-  image_id: "7025146c-c341-473f-a79c-62ec48eef800",
+  id: "io.wallypto",
+  name: "Wallypto",
+  homepage: "https://wallypto.io",
+  image_id: "00684f38-f9f9-40b6-6b6e-33891434f400",
   app: {
     browser: null,
-    ios: "https://itunes.apple.com/app/id1628669270",
-    android:
-      "https://play.google.com/store/apps/details?id=finance.ottr.android",
+    ios: "https://apps.apple.com/us/app/wallypto-blockchain-wallet/id1639302472",
+    android: "https://play.google.com/store/apps/details?id=xyz.wallypto",
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: null,
-    universal: "https://links.ottr.finance",
+    native: "wallypto://",
+    universal: null,
   },
   desktop: {
     native: null,

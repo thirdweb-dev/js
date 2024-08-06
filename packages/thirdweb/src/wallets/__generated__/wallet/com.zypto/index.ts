@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "me.iopay",
-  name: "ioPay",
-  homepage: "https://iopay.me/",
-  image_id: "411d80d0-3a75-4932-560f-565d8c715e00",
+  id: "com.zypto",
+  name: "Zypto",
+  homepage: "https://zypto.com",
+  image_id: "4f6ae851-7fe6-41ac-5714-3a910b2ff400",
   app: {
-    browser: "https://iopay.me/",
-    ios: "https://apps.apple.com/app/apple-store/id1478086371",
-    android: "https://play.google.com/store/apps/details?id=io.iotex.iopay.gp",
+    browser: null,
+    ios: "https://apps.apple.com/app/zypto-all-in-one-crypto-wallet/id6463755992",
+    android: "https://play.google.com/store/apps/details?id=com.zypto&gl=US",
     mac: null,
     windows: null,
     linux: null,
@@ -19,9 +19,9 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "com.zypto",
   mobile: {
-    native: "iopay://",
+    native: "zypto://",
     universal: null,
   },
   desktop: {

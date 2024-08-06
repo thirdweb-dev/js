@@ -2,30 +2,30 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "technology.jambo",
-  name: "Jambo",
-  homepage: "https://www.jambo.technology/",
-  image_id: "b0fd39a1-d147-4bf7-4cb5-68a294b26f00",
+  id: "com.walletconnect.com",
+  name: "SampleW",
+  homepage: "https://walletconnect.com",
+  image_id: "361c7dfd-e4a1-46ce-e42a-241443ed5700",
   app: {
     browser: null,
     ios: null,
-    android: "https://play.google.com/store/apps/details?id=com.jambo",
+    android: null,
     mac: null,
     windows: null,
     linux: null,
-    chrome: null,
+    chrome: "https://cloud.walletconnect.com",
     firefox: null,
     safari: null,
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "com.walletconnect.com",
   mobile: {
-    native: "jbw://walletconnect",
+    native: null,
     universal: null,
   },
   desktop: {
-    native: null,
-    universal: null,
+    native: "sampleW://",
+    universal: "https://wallet-connect.sampleW.com",
   },
 } as const;

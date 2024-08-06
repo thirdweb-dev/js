@@ -2,15 +2,15 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "com.bifrostwallet",
-  name: "Bifrost Wallet",
-  homepage: "https://bifrostwallet.com",
-  image_id: "86be07e2-6652-4fd1-5f33-651682c95400",
+  id: "co.swopme",
+  name: "SWOP",
+  homepage: "https://swopme.co/",
+  image_id: "6e773b07-efcc-40eb-b3a2-300efc5df800",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/bifrost-wallet/id1577198351",
+    ios: "https://apps.apple.com/us/app/swop-connecting-the-world/id1593201322",
     android:
-      "https://play.google.com/store/apps/details?id=com.bifrostwallet.app",
+      "https://play.google.com/store/apps/details?id=com.travisheron.swopapp&pli=1",
     mac: null,
     windows: null,
     linux: null,
@@ -20,10 +20,10 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: "com.bifrostwallet",
+  rdns: null,
   mobile: {
-    native: "bifrostwallet://",
-    universal: "https://app.bifrostwallet.com",
+    native: "swopapp://",
+    universal: null,
   },
   desktop: {
     native: null,

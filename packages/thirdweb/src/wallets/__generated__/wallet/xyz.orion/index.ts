@@ -2,15 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "io.toric",
-  name: "Toric Wallet",
-  homepage: "https://toric.io",
-  image_id: "b147f2a9-a282-4a54-98c8-876b37b9c800",
+  id: "xyz.orion",
+  name: "Orion",
+  homepage: "https://orion.xyz",
+  image_id: "85007828-9522-4517-6a55-6f376de8a500",
   app: {
     browser: null,
-    ios: "https://apps.apple.com/us/app/toric-wallet/id6466638359",
-    android:
-      "https://play.google.com/store/apps/details?id=io.toric.androidwallet",
+    ios: "https://itunes.apple.com/app/id1659758160",
+    android: null,
     mac: null,
     windows: null,
     linux: null,
@@ -22,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "toric://wallet",
-    universal: "https://app.toric.io/",
+    native: "orion://wc?",
+    universal: null,
   },
   desktop: {
     native: null,

@@ -2,14 +2,14 @@
 // Do not modify this file manually.
 
 export const wallet = {
-  id: "me.iopay",
-  name: "ioPay",
-  homepage: "https://iopay.me/",
-  image_id: "411d80d0-3a75-4932-560f-565d8c715e00",
+  id: "app.tofee",
+  name: "Tofee Wallet Official",
+  homepage: "https://tofee.app/",
+  image_id: "d4dbb723-b1ec-4cfc-daab-1d559a151f00",
   app: {
-    browser: "https://iopay.me/",
-    ios: "https://apps.apple.com/app/apple-store/id1478086371",
-    android: "https://play.google.com/store/apps/details?id=io.iotex.iopay.gp",
+    browser: null,
+    ios: "https://apps.apple.com/in/app/tofee/id6504269605",
+    android: null,
     mac: null,
     windows: null,
     linux: null,
@@ -21,8 +21,8 @@ export const wallet = {
   },
   rdns: null,
   mobile: {
-    native: "iopay://",
-    universal: null,
+    native: "tofee://wallet",
+    universal: "https://tofee.app/",
   },
   desktop: {
     native: null,
