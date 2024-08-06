@@ -25,6 +25,7 @@
     "@chakra-ui/styled-system": "^2.9.2",
     "@chakra-ui/theme-tools": "^2.1.2",
     "@coinbase/onchainkit": "^0.14.2",
+    "@dnd-kit/core": "^6.1.0",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
     "@hookform/resolvers": "^3.6.0",
