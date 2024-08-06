@@ -246,7 +246,12 @@ function serializeTransactionLegacy(
     if (typeof s === "undefined")
       throw new Error(`Invalid legacy signature value s: ${s}`);
 
-    serializedTransaction = [...serializedTransaction, toHex(v_), r, s];
+    serializedTransaction = [
+      ...serializedTransaction,
+      toHex(v_),
+      r === "0x00" ? "0x" : r,
+      s === "0x00" ? "0x" : s,
+    ];
   } else if (chainId > 0) {
     serializedTransaction = [
       ...serializedTransaction,
@@ -262,10 +267,15 @@ function serializeTransactionLegacy(
 export function toYParitySignatureArray(
   signature: ExactPartial<Signature>,
 ): Hex[] {
-  const { r, s, v, yParity } = signature;
-  if (typeof r === "undefined") return [];
-  if (typeof s === "undefined") return [];
+  const { v, yParity } = signature;
+
+  if (typeof signature.r === "undefined") return [];
+  if (typeof signature.s === "undefined") return [];
+
   if (typeof v === "undefined" && typeof yParity === "undefined") return [];
+
+  const r = trim(signature.r);
+  const s = trim(signature.s);
 
   const yParity_ = (() => {
     if (yParity === 1 || yParity === 0) return yParity ? toHex(1) : "0x";
@@ -276,5 +286,5 @@ export function toYParitySignatureArray(
     if (v === 1n || v === 28n) return toHex(1);
     throw new Error(`Invalid signature value v: ${v}`);
   })();
-  return [yParity_, trim(r), trim(s)];
+  return [yParity_, r === "0x00" ? "0x" : r, s === "0x00" ? "0x" : s];
 }
