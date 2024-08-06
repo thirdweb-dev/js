@@ -142,6 +142,31 @@ jobs:
             echo "Bundling failed"
             exit 1
           fi
+      
+
+  benchmark:
+    # cannot run benchmarks on merge group
+    if: github.event_name != 'merge_group'
+    timeout-minutes: 15
+    name: "Benchmarks"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+      - name: Set up foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          cache: false
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: "pnpm bench"
 
   size:
     # only run on pull requests
