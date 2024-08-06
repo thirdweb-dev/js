@@ -21,7 +21,6 @@ import { DeployedContracts } from "components/contract-components/tables/deploye
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import type { GetStaticPaths, GetStaticProps } from "next";
@@ -32,6 +31,7 @@ import { PageId } from "page-id";
 import { useEffect, useMemo } from "react";
 import { polygon } from "thirdweb/chains";
 import { useActiveAccount } from "thirdweb/react";
+import { getAddress, isAddress } from "thirdweb/utils";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 import type { ThirdwebNextPage } from "utils/types";

@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import {
@@ -35,7 +36,6 @@ import {
 } from "@thirdweb-dev/sdk/evm/zksync";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
 import { useSupportedChain } from "hooks/chains/configureChains";
-import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import type { StaticImageData } from "next/image";
@@ -46,6 +46,7 @@ import {
   zkSync,
   zkSyncSepolia,
 } from "thirdweb/chains";
+import { resolveAddress, resolveName } from "thirdweb/extensions/ens";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -1022,6 +1023,11 @@ export function useContractEnabledExtensions(abi?: any) {
   return extensions ? extensions.enabledExtensions : [];
 }
 
+export interface ENSResolveResult {
+  ensName: string | null;
+  address: string | null;
+}
+
 export function ensQuery(addressOrEnsName?: string) {
   // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
   if (addressOrEnsName === "thirdweb.eth") {
@@ -1036,36 +1042,37 @@ export function ensQuery(addressOrEnsName?: string) {
   };
   return {
     queryKey: ["ens", addressOrEnsName],
-    queryFn: async () => {
+    queryFn: async (): Promise<ENSResolveResult> => {
       if (!addressOrEnsName) {
         return placeholderData;
       }
+
+      // If `address` resolves, it means `addressOrEnsName` is a valid ENS
+      const address = !isAddress(addressOrEnsName)
+        ? await resolveAddress({
+            client: thirdwebClient,
+            name: addressOrEnsName,
+          })
+        : null;
+
       // if it is neither an address or an ens name then return the placeholder data only
-      if (!isAddress(addressOrEnsName) && !isEnsName(addressOrEnsName)) {
+      if (!isAddress(addressOrEnsName) && !address) {
         throw new Error("Invalid address or ENS name.");
       }
 
-      const { address, ensName } = await resolveEns(addressOrEnsName).catch(
-        () => ({
-          address: isAddress(addressOrEnsName || "")
-            ? addressOrEnsName || null
-            : null,
-          ensName: null,
-        }),
-      );
-
-      if (isEnsName(addressOrEnsName) && !address) {
-        throw new Error("Failed to resolve ENS name.");
-      }
+      const ensName = address
+        ? addressOrEnsName
+        : await resolveName({
+            client: thirdwebClient,
+            address: addressOrEnsName,
+          });
 
       return {
         address,
         ensName,
       };
     },
-    enabled:
-      !!addressOrEnsName &&
-      (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
+    enabled: !!addressOrEnsName && isAddress(addressOrEnsName),
     // 24h
     cacheTime: 60 * 60 * 24 * 1000,
     // 1h

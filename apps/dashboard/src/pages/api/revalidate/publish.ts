@@ -1,9 +1,9 @@
 import { QueryClient } from "@tanstack/react-query";
 import {
+  type ENSResolveResult,
   ensQuery,
   fetchPublishedContracts,
 } from "components/contract-components/hooks";
-import type { ENSResolveResult } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
