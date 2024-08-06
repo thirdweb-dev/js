@@ -14,9 +14,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import { type Chain, defineChain } from "thirdweb";
+import type { Chain } from "thirdweb";
 import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
 import { getSDKTheme } from "../../../../app/components/sdk-component-theme";
+import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
+import { mapV4ChainToV5Chain } from "../../../../contexts/map-chains";
+import { useSetIsNetworkConfigModalOpen } from "../../../../hooks/networkConfigModal";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
@@ -34,16 +37,16 @@ export const CustomConnectWallet = (props: {
   const t = theme === "light" ? "light" : "dark";
   const allv4Chains = useSupportedChains();
   const favChainsQuery = useFavoriteChains();
-
+  const setIsNetworkConfigModalOpen = useSetIsNetworkConfigModalOpen();
   const allChains = useMemo(() => {
-    return allv4Chains.map((c) => defineChain(c));
+    return allv4Chains.map(mapV4ChainToV5Chain);
   }, [allv4Chains]);
 
   const chainSections = useMemo(() => {
     return [
       {
         label: "Favorites",
-        chains: favChainsQuery.data.map(defineChain),
+        chains: favChainsQuery.data.map(mapV4ChainToV5Chain),
       },
       {
         label: "Popular",
@@ -51,7 +54,7 @@ export const CustomConnectWallet = (props: {
       },
       {
         label: "Recent",
-        chains: recentChainsv4.map(defineChain),
+        chains: recentChainsv4.map(mapV4ChainToV5Chain),
       },
     ];
   }, [recentChainsv4, favChainsQuery.data]);
@@ -123,8 +126,10 @@ export const CustomConnectWallet = (props: {
           onSwitch(chain) {
             addRecentlyUsedChainId(chain.id);
           },
-          // TODO: bring this back when it works reliably
-          // renderChain: CustomChainRenderer,
+          renderChain: CustomChainRenderer,
+          onCustomClick: () => {
+            setIsNetworkConfigModalOpen(true);
+          },
         },
       }}
     />

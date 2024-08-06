@@ -1,9 +1,10 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { UserXIcon } from "lucide-react";
 import { useMemo } from "react";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import { getInstalledExtensions, owner } from "thirdweb/extensions/modular";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { thirdwebClient } from "../../../lib/thirdweb-client";
@@ -35,15 +36,16 @@ export const ContractEditExtensionsPage: React.FC<
 function Content(props: { contractAddress: string; chainId: number }) {
   const { contractAddress, chainId } = props;
   const account = useActiveAccount();
+  const chain = useV5DashboardChain(chainId);
 
   const contract = useMemo(
     () =>
       getContract({
         client: thirdwebClient,
         address: contractAddress,
-        chain: defineChain(chainId),
+        chain: chain,
       }),
-    [contractAddress, chainId],
+    [contractAddress, chain],
   );
 
   const installedExtensionsQuery = useReadContract(getInstalledExtensions, {

@@ -8,8 +8,8 @@ import type { BasicContract } from "contract-ui/types/types";
 import { getAllMultichainRegistry } from "dashboard-extensions/common/read/getAllMultichainRegistry";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { defineDashboardChain } from "lib/defineDashboardChain";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineDashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
@@ -22,7 +22,8 @@ const MULTICHAIN_REGISTRY_ADDRESS =
 const registryContract = getContract({
   client: thirdwebClient,
   address: MULTICHAIN_REGISTRY_ADDRESS,
-  chain: defineDashboardChain(polygon.id),
+  // eslint-disable-next-line no-restricted-syntax
+  chain: defineDashboardChain(polygon.id, undefined),
 });
 
 function useMultiChainRegContractList(walletAddress?: string) {

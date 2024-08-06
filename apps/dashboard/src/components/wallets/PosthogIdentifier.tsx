@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import {
   useActiveAccount,
   useActiveWallet,
-  useActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
+import { useDashboardActiveWalletChain } from "../../lib/v5-adapter";
 
 const walletIdToPHName: Record<string, string> = {
   metamask: "metamask",
@@ -19,7 +19,7 @@ const walletIdToPHName: Record<string, string> = {
 
 export const PosthogIdentifier: React.FC = () => {
   const account = useActiveAccount();
-  const chain = useActiveWalletChain();
+  const chain = useDashboardActiveWalletChain();
   const balance = useWalletBalance({
     address: account?.address,
     chain,

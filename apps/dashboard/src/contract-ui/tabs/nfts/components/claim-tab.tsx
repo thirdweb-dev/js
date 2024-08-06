@@ -4,7 +4,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
@@ -23,14 +23,16 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   });
 
   const claim = useClaimNFT(contract);
+  const chain = useV5DashboardChain(contract?.chainId);
 
-  const contractV5 = contract
-    ? getContract({
-        address: contract.getAddress(),
-        chain: defineDashboardChain(contract.chainId),
-        client: thirdwebClient,
-      })
-    : null;
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     "Claimed successfully",

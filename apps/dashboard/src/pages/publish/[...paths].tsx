@@ -69,7 +69,7 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
 
   const polygonSdk = getThirdwebSDK(
     polygon.id,
-    getDashboardChainRpc(polygon.id),
+    getDashboardChainRpc(polygon.id, undefined),
   );
 
   const lowercaseAddress = authorAddress.toLowerCase();

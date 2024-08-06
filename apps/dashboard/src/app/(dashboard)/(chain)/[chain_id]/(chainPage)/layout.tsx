@@ -3,7 +3,7 @@ import { TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { defineChain } from "thirdweb";
+import { mapV4ChainToV5Chain } from "../../../../../contexts/map-chains";
 import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
@@ -99,7 +99,13 @@ export default async function ChainPageLayout({
           {/* mobile action row */}
           <div className="sm:hidden w-full">
             <div className="grid grid-cols-2 gap-2">
-              <AddChainToWallet chain={defineChain(chain)} />
+              <AddChainToWallet
+                chain={
+                  // Do not include chain overrides for chain pages
+                  // eslint-disable-next-line no-restricted-syntax
+                  mapV4ChainToV5Chain(chain)
+                }
+              />
               <Button variant="primary">
                 <Link href="https://thirdweb.com/dashboard" target="_blank">
                   Get started

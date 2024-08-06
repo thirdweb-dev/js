@@ -3,8 +3,9 @@ import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import { burn as burn721, isERC721 } from "thirdweb/extensions/erc721";
 import { burn as burn1155, isERC1155 } from "thirdweb/extensions/erc1155";
 import {
@@ -32,6 +33,7 @@ const BurnTab: React.FC<BurnTabProps> = ({
   tokenId,
 }) => {
   const account = useActiveAccount();
+  const chain = useV5DashboardChain(chainId);
   const trackEvent = useTrack();
   const {
     register,
@@ -45,7 +47,7 @@ const BurnTab: React.FC<BurnTabProps> = ({
   const invalidateContractQuery = useInvalidateContractQuery();
   const contract = getContract({
     address: contractAddress,
-    chain: defineChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const { onSuccess, onError } = useTxNotifications(

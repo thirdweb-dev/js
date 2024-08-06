@@ -4,8 +4,9 @@ import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { ZERO_ADDRESS, defineChain, getContract } from "thirdweb";
+import { ZERO_ADDRESS, getContract } from "thirdweb";
 import { transferFrom } from "thirdweb/extensions/erc721";
 import { isERC1155, safeTransferFrom } from "thirdweb/extensions/erc1155";
 import {
@@ -14,7 +15,6 @@ import {
   useSendAndConfirmTransaction,
 } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
-
 interface TransferTabProps {
   contractAddress: string;
   chainId: number;
@@ -27,9 +27,10 @@ const TransferTab: React.FC<TransferTabProps> = ({
   tokenId,
 }) => {
   const account = useActiveAccount();
+  const chain = useV5DashboardChain(chainId);
   const contract = getContract({
     address: contractAddress,
-    chain: defineChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const trackEvent = useTrack();

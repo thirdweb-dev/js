@@ -45,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!contractName) {
     const polygonSdk = getThirdwebSDK(
       polygon.id,
-      getDashboardChainRpc(polygon.id),
+      getDashboardChainRpc(polygon.id, undefined),
     );
     const publishedContracts = await fetchPublishedContracts(
       polygonSdk,

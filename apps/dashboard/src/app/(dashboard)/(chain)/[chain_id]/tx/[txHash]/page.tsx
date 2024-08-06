@@ -1,14 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { IPFS_GATEWAY_URL } from "@/constants/env";
-import { DASHBOARD_THIRDWEB_SECRET_KEY, PROD_OR_DEV_URL } from "constants/rpc";
-import {
-  ZERO_ADDRESS,
-  createThirdwebClient,
-  defineChain,
-  toTokens,
-} from "thirdweb";
-import type { ChainMetadata } from "thirdweb/chains";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "constants/rpc";
+import { ZERO_ADDRESS, createThirdwebClient, toTokens } from "thirdweb";
 import {
   eth_getBlockByHash,
   eth_getTransactionByHash,
@@ -16,17 +10,8 @@ import {
   getRpcClient,
 } from "thirdweb/rpc";
 import { hexToNumber, shortenAddress, toEther } from "thirdweb/utils";
+import { mapV4ChainToV5Chain } from "../../../../../../contexts/map-chains";
 import { getChain } from "../../../utils";
-
-function defineDashboardChain(chainId: number, dashboardChain?: ChainMetadata) {
-  return defineChain({
-    id: chainId,
-    rpc:
-      dashboardChain?.rpc?.[0] || `https://${chainId}.rpc.${PROD_OR_DEV_URL}`,
-    slug: dashboardChain?.slug,
-    nativeCurrency: dashboardChain?.nativeCurrency,
-  });
-}
 
 export default async function Page(props: {
   params: { chain_id: string; txHash: `0x${string}` };
@@ -43,7 +28,9 @@ export default async function Page(props: {
 
   const rpcRequest = getRpcClient({
     client: thirdwebClient,
-    chain: defineDashboardChain(chain.chainId),
+    // Do not include chain overrides for chain pages
+    // eslint-disable-next-line no-restricted-syntax
+    chain: mapV4ChainToV5Chain(chain),
   });
 
   const [transaction, receipt] = await Promise.all([

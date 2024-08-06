@@ -7,10 +7,11 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
@@ -31,9 +32,10 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
   chainId,
 }) => {
   const account = useActiveAccount();
+  const chain = useV5DashboardChain(chainId);
   const contract = getContract({
     address: contractAddress,
-    chain: defineChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const address = useActiveAccount()?.address;

@@ -224,7 +224,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
 
   const polygonSdk = getThirdwebSDK(
     polygon.id,
-    getDashboardChainRpc(polygon.id),
+    getDashboardChainRpc(polygon.id, undefined),
   );
 
   const profileAddress = getSingleQueryValue(

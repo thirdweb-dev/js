@@ -1,8 +1,8 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { defineChain } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
+import { mapV4ChainToV5Chain } from "../../../../../../../contexts/map-chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
 import { MobileMenu } from "../client/MobileMenu";
 import { AddChainToWallet } from "../client/add-chain-to-wallet";
@@ -48,7 +48,13 @@ export function ChainHeader(props: ChainHeaderProps) {
         <div className="pt-3 lg:pt-6">
           {/* Desktop only */}
           <div className="hidden lg:flex flex-row gap-2">
-            <AddChainToWallet chain={defineChain(props.chain)} />
+            <AddChainToWallet
+              chain={
+                // Do not include chain overrides for chain pages
+                // eslint-disable-next-line no-restricted-syntax
+                mapV4ChainToV5Chain(props.chain)
+              }
+            />
             <Button variant="primary" asChild>
               <Link href="https://thirdweb.com/dashboard" target="_blank">
                 Get started with thirdweb

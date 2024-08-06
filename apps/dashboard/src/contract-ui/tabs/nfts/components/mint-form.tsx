@@ -32,7 +32,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { type NFT, getContract } from "thirdweb";
@@ -142,14 +142,16 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   });
 
   const modalContext = useModalContext();
+  const chain = useV5DashboardChain(contract?.chainId);
 
-  const contractV5 = contract
-    ? getContract({
-        address: contract.getAddress(),
-        chain: defineDashboardChain(contract.chainId),
-        client: thirdwebClient,
-      })
-    : null;
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     sharedMetadataMutation

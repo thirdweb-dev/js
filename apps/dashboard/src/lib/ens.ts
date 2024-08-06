@@ -13,7 +13,7 @@ function getMainnetProvider(): providers.Provider {
   }
   THIRDWEB_PROVIDER = getThirdwebSDK(
     ethereum.id,
-    getDashboardChainRpc(ethereum.id),
+    getDashboardChainRpc(ethereum.id, undefined),
   ).getProvider();
   return THIRDWEB_PROVIDER;
 }

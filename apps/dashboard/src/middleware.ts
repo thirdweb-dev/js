@@ -2,7 +2,8 @@ import { LOGGED_IN_ONLY_PATHS } from "@/constants/auth";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
-import { defineChain, getChainMetadata } from "thirdweb/chains";
+import { getChainMetadata } from "thirdweb/chains";
+import { defineDashboardChain } from "./lib/defineDashboardChain";
 
 // ignore assets, api - only intercept page routes
 export const config = {
@@ -57,7 +58,8 @@ export async function middleware(request: NextRequest) {
     Number.isInteger(possibleChainId) &&
     possibleChainId !== 404
   ) {
-    const possibleChain = defineChain(possibleChainId);
+    // eslint-disable-next-line no-restricted-syntax
+    const possibleChain = defineDashboardChain(possibleChainId, undefined);
     try {
       const chainMetadata = await getChainMetadata(possibleChain);
       if (chainMetadata.slug) {

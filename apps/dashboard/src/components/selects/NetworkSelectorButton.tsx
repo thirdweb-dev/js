@@ -18,8 +18,9 @@ import { useNetworkSwitcherModal } from "thirdweb/react";
 import { Button } from "tw-components";
 import { thirdwebClient } from "../../@/constants/client";
 import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
-import { mapStoredChainTov5Chain } from "../../contexts/map-chains";
+import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
+import { CustomChainRenderer } from "./CustomChainRenderer";
 
 interface NetworkSelectorButtonProps {
   disabledChainIds?: number[];
@@ -125,13 +126,13 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
               {
                 label: "Recently Used",
                 chains: (filteredRecentlyUsedChains ?? []).map(
-                  mapStoredChainTov5Chain,
+                  mapV4ChainToV5Chain,
                 ),
               },
               {
                 label: "Favorites",
                 chains: (favoriteChainsQuery.data ?? []).map(
-                  mapStoredChainTov5Chain,
+                  mapV4ChainToV5Chain,
                 ),
               },
               {
@@ -140,11 +141,10 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
               },
               {
                 label: "All Networks",
-                chains: (chains ?? []).map(mapStoredChainTov5Chain),
+                chains: (chains ?? []).map(mapV4ChainToV5Chain),
               },
             ],
-            // TODO: bring this back when it works reliably
-            // renderChain: CustomChainRenderer,
+            renderChain: CustomChainRenderer,
             onCustomClick: networksEnabled
               ? undefined
               : () => {

@@ -38,7 +38,7 @@ export default async function handler(
   const data = await getErc721PreparedEncodedData(
     accountAddress,
     contractAddress,
-    base.id,
+    base,
   );
 
   // Return transaction details response to farcaster

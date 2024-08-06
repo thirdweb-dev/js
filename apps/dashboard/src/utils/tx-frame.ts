@@ -1,16 +1,17 @@
 import type { FrameValidationData } from "@coinbase/onchainkit";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineChain, encode, getContract } from "thirdweb";
+import { encode, getContract } from "thirdweb";
+import type { Chain } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc721";
 
 export const getErc721PreparedEncodedData = async (
   walletAddress: string,
   contractAddress: string,
-  chainId: number,
+  chain: Chain,
 ) => {
   const contract = getContract({
     address: contractAddress,
-    chain: defineChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   // Prepare erc721 transaction data. Takes in destination address and quantity as parameters

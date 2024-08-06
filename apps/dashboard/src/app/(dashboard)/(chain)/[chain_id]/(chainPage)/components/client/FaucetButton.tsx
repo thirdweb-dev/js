@@ -9,9 +9,10 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { defineChain, toUnits } from "thirdweb";
+import { toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+import { mapV4ChainToV5Chain } from "../../../../../../../contexts/map-chains";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -39,7 +40,9 @@ export function FaucetButton({
 }) {
   const address = useActiveAccount()?.address;
   const chainId = chain.chainId;
-  const definedChain = defineChain(chainId);
+  // do not include local overrides for chain pages
+  // eslint-disable-next-line no-restricted-syntax
+  const definedChain = mapV4ChainToV5Chain(chain);
   const faucetWalletBalanceQuery = useWalletBalance({
     address: THIRDWEB_ENGINE_FAUCET_WALLET,
     chain: definedChain,

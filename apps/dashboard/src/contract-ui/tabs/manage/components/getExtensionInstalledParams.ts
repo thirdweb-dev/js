@@ -10,7 +10,10 @@ import { getThirdwebSDK } from "../../../../lib/sdk";
 import type { ExtensionMeta } from "./install-extension-params";
 
 export async function getExtensionInstalledParams(ext: ExtensionMeta) {
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
 
   // get all versions of the extension
   const allPublishedExtensions = await fetchAllVersions(

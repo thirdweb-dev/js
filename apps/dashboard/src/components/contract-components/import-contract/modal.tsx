@@ -17,8 +17,9 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiFilePlus } from "react-icons/fi";
 import { getAddress } from "thirdweb";
-import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
+import { useDashboardActiveWalletChain } from "../../../lib/v5-adapter";
 
 type ImportModalProps = {
   isOpen: boolean;
@@ -43,7 +44,7 @@ export const ImportModal: React.FC<ImportModalProps> = (props) => {
   }, [form, props]);
 
   const router = useRouter();
-  const chainId = useActiveWalletChain()?.id;
+  const chainId = useDashboardActiveWalletChain()?.id;
   const chainSlug = useChainSlug(chainId || 1);
   const [isRedirecting, setIsRedirecting] = useState(false);
 

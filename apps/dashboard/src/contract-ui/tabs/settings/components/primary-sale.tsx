@@ -15,7 +15,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
@@ -53,13 +53,15 @@ export const SettingsPrimarySale = <
     values: transformedQueryData,
   });
 
-  const contractV5 = contract
-    ? getContract({
-        address: contract.getAddress(),
-        chain: defineDashboardChain(contract.chainId),
-        client: thirdwebClient,
-      })
-    : null;
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     "Primary sale address updated",
