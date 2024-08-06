@@ -483,12 +483,20 @@ export const sidebar: SideBar = {
 							],
 						},
 						{
+							name: "Webhooks",
+							href: `${paySlug}/webhooks`,
+						},
+						{
 							name: "Enable Test Mode",
 							href: `${paySlug}/test-mode`,
 						},
 						{
 							name: "Build a Custom Experience",
 							href: `${paySlug}/build-a-custom-experience`,
+						},
+						{
+							name: "Accept Direct Payments",
+							href: `${paySlug}/accept-direct-payments`,
 						},
 						{
 							name: "FAQs",

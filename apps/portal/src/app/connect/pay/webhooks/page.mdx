@@ -1,0 +1,182 @@
+import { createMetadata, DocImage } from "@doc";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+export const metadata = createMetadata({
+	title: "Webhooks | thirdweb Pay",
+	description:
+		"Configure Pay webhooks to get notified at any point during a transaction's lifecycle.",
+});
+
+# Webhooks
+
+Pay can be configured to send webhook events to notify your application any time an event happens on your transaction. Pay sends a response, via a HTTP request, to any endpoint URLs that you have provided us in [the Pay dashboard](https://thirdweb.com/dashboard/connect/pay).
+
+## Events
+
+To listen to events, create a webhook in [the Pay dashboard](https://thirdweb.com/dashboard/connect/pay). Webhook URLs must start with `https://`.
+
+| Event               | Description                         |
+| ------------------- | ----------------------------------- |
+| `purchase_complete` | A transaction is confirmed onchain. |
+
+### Purchase Complete
+
+Triggered when a transaction is confirmed onchain. This event provides information about the new status of the order and its transactionHash, as well as other relevant information.
+
+Example Response:
+
+<Tabs defaultValue="fiat">
+
+<TabsList>
+	<TabsTrigger value="fiat">Fiat Purchase</TabsTrigger>
+	<TabsTrigger value="crypto">Crypto Purchase</TabsTrigger>
+</TabsList>
+
+<TabsContent value='fiat'>
+```json
+{
+  "data": {
+    "buyWithFiatStatus": {
+      "intentId": "f4cf8ab7-bb62-4b3b-a180-70fc7d72446c",
+      "status": "ON_RAMP_TRANSFER_COMPLETED",
+      "toAddress": "0xebfb127320fcbe8e07e5a03a4bfb782219f4735b",
+      "quote": {
+        "createdAt": "2024-06-18T23:46:46.024Z",
+        "fromCurrency": {
+          "amountUnits": "279",
+          "amount": "2.79",
+          "currencySymbol": "USD",
+          "decimals": 2,
+          "amountUSDCents": 279
+        },
+        "fromCurrencyWithFees": {
+          "amountUnits": "294",
+          "amount": "2.94",
+          "currencySymbol": "USD",
+          "decimals": 2,
+          "amountUSDCents": 279
+        },
+        "onRampToken": {
+          "chainId": 137,
+          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "name": "Matic",
+          "symbol": "MATIC",
+          "decimals": 18,
+          "priceUSDCents": 54.797200000000004
+        },
+        "toToken": {
+          "chainId": 137,
+          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "name": "Matic",
+          "symbol": "MATIC",
+          "decimals": 18,
+          "priceUSDCents": 54.797200000000004
+        },
+        "estimatedOnRampAmountWei": "5000000000000000000",
+        "estimatedOnRampAmount": "5",
+        "estimatedToTokenAmount": "5",
+        "estimatedToTokenAmountWei": "5000000000000000000",
+        "estimatedDurationSeconds": 30
+      },
+      "source": {
+        "completedAt": "2024-06-18T23:49:00.347Z",
+        "amount": "5",
+        "amountWei": "5000000000000000000",
+        "token": {
+          "chainId": 137,
+          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "name": "Matic",
+          "symbol": "MATIC",
+          "decimals": 18,
+          "priceUSDCents": 54.797200000000004
+        },
+        "transactionHash": "0x4bb089f6a60b49235a817b52bf39bc078f1246df15731b85837526bb62cf4e70",
+        "explorerLink": "https://polygonscan.com/tx/0x4bb089f6a60b49235a817b52bf39bc078f1246df15731b85837526bb62cf4e70",
+        "amountUSDCents": 275
+      }
+    }
+  }
+}
+```
+</TabsContent>
+
+<TabsContent value='crypto'>
+```json
+{
+  "data": {
+    "buyWithCryptoStatus": {
+      "swapType": "SAME_CHAIN",
+      "source": {
+        "transactionHash": "0x74d6c619a09e78f03f4bd495f29d5937a2539d0bbe8973e7710dce3e88c30b8b",
+        "token": {
+          "chainId": 10,
+          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "decimals": 18,
+          "name": "ETH",
+          "symbol": "ETH",
+          "priceUSDCents": 346529
+        },
+        "amountWei": "318486512146714",
+        "amount": "0.000318486512146714",
+        "amountUSDCents": 110,
+        "completedAt": "2024-06-18T23:44:07.000Z"
+      },
+      "status": "COMPLETED",
+      "subStatus": "SUCCESS",
+      "fromAddress": "0xebfb127320fcbe8e07e5a03a4bfb782219f4735b",
+      "toAddress": "0xebfb127320fcbe8e07e5a03a4bfb782219f4735b",
+      "quote": {
+        "fromToken": {
+          "chainId": 10,
+          "tokenAddress": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "decimals": 18,
+          "name": "ETH",
+          "symbol": "ETH",
+          "priceUSDCents": 346529
+        },
+        "toToken": {
+          "chainId": 10,
+          "tokenAddress": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+          "decimals": 6,
+          "name": "USD Coin",
+          "symbol": "USDC",
+          "priceUSDCents": 99
+        },
+        "fromAmountWei": "318486512146714",
+        "fromAmount": "0.000318486512146714",
+        "toAmountWei": "1100000",
+        "toAmount": "1.1",
+        "toAmountMinWei": "1100000",
+        "toAmountMin": "1.1",
+        "estimated": {
+          "fromAmountUSDCents": 110,
+          "toAmountMinUSDCents": 109,
+          "toAmountUSDCents": 109,
+          "slippageBPS": 91,
+          "feesUSDCents": 32,
+          "gasCostUSDCents": 40,
+          "durationSeconds": 30
+        },
+        "createdAt": "2024-06-18T23:43:45.900Z"
+      },
+      "destination": {
+        "transactionHash": "0x74d6c619a09e78f03f4bd495f29d5937a2539d0bbe8973e7710dce3e88c30b8b",
+        "token": {
+          "chainId": 10,
+          "tokenAddress": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+          "decimals": 6,
+          "name": "USD Coin",
+          "symbol": "USDC",
+          "priceUSDCents": 99
+        },
+        "amountWei": "1100000",
+        "amount": "1.1",
+        "amountUSDCents": 109,
+        "completedAt": "2024-06-18T23:44:07.000Z"
+      }
+    }
+  }
+}
+```
+</TabsContent>
+</Tabs>
