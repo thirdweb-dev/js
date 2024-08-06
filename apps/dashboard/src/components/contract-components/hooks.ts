@@ -1072,7 +1072,9 @@ export function ensQuery(addressOrEnsName?: string) {
         ensName,
       };
     },
-    enabled: !!addressOrEnsName && isAddress(addressOrEnsName),
+    enabled:
+      !!addressOrEnsName &&
+      (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
     // 24h
     cacheTime: 60 * 60 * 24 * 1000,
     // 1h
@@ -1081,6 +1083,12 @@ export function ensQuery(addressOrEnsName?: string) {
     placeholderData,
     retry: false,
   } as const;
+}
+
+// This function is moved from the now-deleted file: `@lib/ens.ts`
+// endsWith(".eth") might not be a complete way to valid ens address but we keep it for now for compat
+export function isEnsName(name: string): boolean {
+  return name?.endsWith(".eth");
 }
 
 export function useEns(addressOrEnsName?: string) {
