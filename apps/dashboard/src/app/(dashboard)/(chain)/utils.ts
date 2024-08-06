@@ -2,6 +2,8 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
+import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
+import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
 // TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
@@ -180,8 +182,7 @@ const chainMetaRecord = {
       "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
     cta: {
       backgroundImageUrl: lumiaCTA.src,
-      title:
-        "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
+      title: "",
       buttonLink: "https://docs.lumia.org/",
       buttonText: "Learn more",
     },
@@ -200,13 +201,13 @@ const chainMetaRecord = {
   },
   // Aleph 0 Mainnet
   41455: {
-    headerImgUrl: thirdwebBanner.src,
+    headerImgUrl: alephZeroBaner.src,
     about:
-      "Deploy Web3 apps that are as fast as legacy solutions. Aleph Zero is a layer 1 that enables teams to deploy scalable, secure, low-cost, and ZK privacy-enhanced products across multiple verticals—from DeFi and gaming to enterprise.",
+      "Aleph Zero is a privacy-enhancing blockchain ecosystem boasting a WASM L1 and an EVM L2 that offer instant transactions, the fastest ZK-based privacy features, and a seamless developer experience.",
     cta: {
-      backgroundImageUrl: thirdwebCTA.src,
-      title: "",
-      buttonLink: "https://alephzero.org/",
+      backgroundImageUrl: alephZeroCTA.src,
+      title: "See how Aleph Zero redefines EVM privacy",
+      buttonLink: "https://zkos.alephzero.org/",
       buttonText: "Learn more",
     },
   },
