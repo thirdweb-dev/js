@@ -2,6 +2,8 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
+import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
+import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
 // TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
@@ -19,9 +21,6 @@ import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
-import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
-import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
-
 
 import type { ChainMetadataWithServices } from "./types/chain";
 
@@ -183,8 +182,7 @@ const chainMetaRecord = {
       "Lumia is a groundbreaking modular layer 2 blockchain designed to integrate real-world assets (RWA) with cross-chain liquidity. A seamless, efficient, and scalable aggregation layer that unifies liquidity from both centralized (CEX) and decentralized exchanges (DEX) to provide builders with immediate access to the biggest markets in Web3.",
     cta: {
       backgroundImageUrl: lumiaCTA.src,
-      title:
-        "",
+      title: "",
       buttonLink: "https://docs.lumia.org/",
       buttonText: "Learn more",
     },
