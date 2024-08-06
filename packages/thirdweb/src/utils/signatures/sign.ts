@@ -31,8 +31,8 @@ export type SignOptions = {
 export function sign({ hash, privateKey }: SignOptions): Signature {
   const { r, s, recovery } = secp256k1.sign(hash.slice(2), privateKey.slice(2));
   return {
-    r: toHex(r),
-    s: toHex(s),
+    r: toHex(r, { size: 32 }),
+    s: toHex(s, { size: 32 }),
     v: recovery ? 28n : 27n,
     yParity: recovery,
   };
