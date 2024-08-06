@@ -1,0 +1,271 @@
+import { Callout } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "API Reference | thirdweb Engine",
+	description: "thirdweb Engine API reference.",
+});
+
+# API Reference
+
+**Auth:** `x-secret-key` / `x-client-id` / `x-bundle-id` in headers OR `bundleId` in query params OR JWT
+
+---
+## Events
+
+`/v2/events`
+
+- **Description:** Fetches events based on query parameters.
+- Example Request: `GET /v2/events?chainIds[]=42161&contractAddresses[]=0x403FF93D581801F2a76133A347B1dD7Bb4Bc79b6&startDate=2024-07-01T16:00:00.000Z&interval=day&endDate=2024-07-02T16:00:00.000Z&groupBy[]=time&groupBy[]=chainId&groupBy[]=contractAddress`
+- **Query Parameters:**
+    - `contractAddresses` - string[]: The contracts to retrieve events for.
+    - `chainIds` (optional for cross chain) - number[]
+    - `startDate`(optional) - ISO 8601 Date string: The starting date to retrieve events from. Default value = 7 days ago
+    - `endDate`(optional) - ISO 8601 Date string: The end date to retrieve events from. Default value = now
+    - `interval`(optional) - string: The One of the following values: hour, day, week, month. Default value: day
+    - `groupBy` (optional) - string[]: possible values are time, chainId, contractAddress
+    - `page` (optional) - number: page for pagination
+    - `pageSize` (optional) - number: specifies how many items to fetch per page
+- **Cache-Control:** `public, max-age=300`
+- **Response:** JSON object containing the fetched events.
+- Response Format
+
+```typescript
+{
+    "data": [
+        {
+            "count": "765",
+            "time": "2024-07-01T21:00:00.000Z",
+            "chainId": 42161,
+            "contractAddress": "0x403ff93d581801f2a76133a347b1dd7bb4bc79b6",
+            "name": "TransferSingle"
+        },
+        {
+            "count": "765",
+            "time": "2024-07-01T21:00:00.000Z",
+            "chainId": 42161,
+            "contractAddress": "0x403ff93d581801f2a76133a347b1dd7bb4bc79b6",
+            "name": "TokensClaimed"
+        },
+        {
+            "count": "239",
+            "time": "2024-06-30T21:00:00.000Z",
+            "chainId": 42161,
+            "contractAddress": "0x403ff93d581801f2a76133a347b1dd7bb4bc79b6",
+            "name": "TransferSingle"
+        },
+        {
+            "count": "239",
+            "time": "2024-06-30T21:00:00.000Z",
+            "chainId": 42161,
+            "contractAddress": "0x403ff93d581801f2a76133a347b1dd7bb4bc79b6",
+            "name": "TokensClaimed"
+        },
+        {
+            "count": "4",
+            "time": "2024-07-01T21:00:00.000Z",
+            "chainId": 42161,
+            "contractAddress": "0x403ff93d581801f2a76133a347b1dd7bb4bc79b6",
+            "name": "ApprovalForAll"
+        },
+        {
+            "count": "2",
+            "time": "2024-06-30T21:00:00.000Z",
+            "chainId": 42161,
+            "contractAddress": "0x403ff93d581801f2a76133a347b1dd7bb4bc79b6",
+            "name": "ApprovalForAll"
+        }
+    ],
+    "page": 1
+}
+```
+---
+## Latest blockNumber
+
+`/v2/blockNumber/latest`
+
+- **Description:** Retrieves the latest block number for a given chain ID.
+- **Example Request:** `GET /v2/blockNumber/latest?chainId=1`
+- **Cache-Control:** `public, max-age=300`
+- **Query Parameters:**
+    - `chainId` : The chain ID to specify the blockchain.
+- **Response:** JSON object containing the latest block number.
+- **Response Format:**
+
+```typescript
+{
+    "data": 20426022
+}
+```
+---
+## Transactions
+
+ `/v2/transactions`
+
+- **Description:** Fetches transactions based on contract address.
+- Example Request: `GET /v2/transactions?chainIds[]=137&to=0xE592427A0AEce92De3Edee1F18E0157C05861564&startDate=2024-05-08T00:00:00.000Z&endDate=2024-05-10T00:00:00.000Z`
+- **Cache-Control:** `public, max-age=300`
+- **Query Parameters:**
+    - `to` - number: The address to which transactions were sent.
+    - `chainIds` (optional for cross chain) - number[]
+    - `startDate`(optional) - ISO 8601 Date string: The starting date to retrieve events from. Default value = 1 day ago
+    - `endDate`(optional) - ISO 8601 Date string: The end date to retrieve events from. Default value = now
+- **Response:** JSON object containing the fetched transactions.
+- Response Format
+
+```typescript
+{
+    "data": [
+        {
+            "time": "2024-05-09T20:59:50.000Z",
+            "to": "0xe592427a0aece92de3edee1f18e0157c05861564",
+            "from": "0x75bc6029cda7fa87aae9a957f7a77bbff99e7474",
+            "hash": "0x8f027192127292fc0cdcefe4e80d558d39a72160bead1c879b381e7b2ade4deb",
+            "blockNumber": "56780689",
+            "value": "0",
+            "gasLimit": "300000",
+            "gasPrice": "30000000024",
+            "gasUsed": "113341",
+            "maxPriorityFeePerGas": "30000000000",
+            "success": true,
+            "type": 2,
+            "data": "0xc04b8d59000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000075bc6029cda7fa87aae9a957f7a77bbff99e747400000000000000000000000000000000000000000000000000000000663d65c5000000000000000000000000000000000000000000000000a36163399bb800000000000000000000000000000000000000000000000000000000000000d0f30d000000000000000000000000000000000000000000000000000000000000002b838c9634de6590b96aeadc4bc6db5c28fd17e3c2000bb8c2132d05d31c914a87c6611c10748aeb04b58e8f000000000000000000000000000000000000000000",
+            "decoded": {
+                "functionName": "exactInput",
+                "args": "[[\"0x838c9634de6590b96aeadc4bc6db5c28fd17e3c2000bb8c2132d05d31c914a87c6611c10748aeb04b58e8f\",\"0x75Bc6029CDA7fA87aAe9A957F7A77BBfF99e7474\",{\"type\":\"BigNumber\",\"hex\":\"0x663d65c5\"},{\"type\":\"BigNumber\",\"hex\":\"0xa36163399bb80000\"},{\"type\":\"BigNumber\",\"hex\":\"0xd0f30d\"}]]"
+            }
+        },
+     ],
+    "page": 1
+}
+```
+---
+## Blocks
+
+`/v2/blocks/:blockNumber`
+
+- **Description:** Retrieves information about a specific block by its number.
+- Example Request: `GET /v2/blocks/20425903?chainId=1`
+- **Cache-Control:** `public, max-age=300`
+- **Query Parameters:**
+    - `blockNumber` (path parameter): The block number to retrieve information for.
+    - `chainId`: The chain ID to specify the blockchain.
+- **Response:** JSON object containing the block information.
+- Response Format:
+
+```typescript
+{
+    "data": {
+        "hash": "0x01921b7fe6c6b98c901f5168dcbf01ba26ed80385873c6b13e2ea729254d1d3c",
+        "blockNumber": "20425903",
+        "time": "2024-07-31T07:21:23.000Z",
+        "parentHash": "0x86cbd943242a12a8860c58ff20f9b7a8389cb6eea032863d9c66605aecaafb4c",
+        "miner": "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5",
+        "nonce": "0x0000000000000000",
+        "difficulty": "0",
+        "gasLimit": "30000000",
+        "gasUsed": "15900915",
+        "chainId": 1,
+        "version": 0,
+        "baseFeePerGas": "4143433237"
+    }
+}
+```
+---
+## NFTs By Collection 
+
+`/v2/nfts/by-collection`
+
+- Description: Fetches NFTs from a specific collection.
+- Example Request: `GET /v2/nfts/by-collection?chainIds[]=252&collectionAddresses[]=0x00000000001594c61dd8a6804da9ab58ed2483ce&groupBy=ownerAddress`
+- Query Parameters:
+    - `chainIds` (optional) - number[]: Array of chain IDs to filter NFTs by.
+    - `contractAddresses` - string[]: Array of collection addresses to filter NFTs by.
+    - `groupBy` (optional) - string: Specifies an additional grouping parameter (supported groupings: ownerAddress).
+- Cache-Control: public, max-age=300
+- Response: JSON object containing the fetched NFTs.
+- Response Format
+
+```typescript
+{
+    "data": [
+        {
+            "chainId": 252,
+            "contractAddress": "0x00000000001594c61dd8a6804da9ab58ed2483ce",
+            "ownerAddress": "0xb918f149e75250ea48838ffe6d3b20402fc4750a",
+            "tokenId": "154293527941829100484292796273741114341534152205",
+            "balance": "1",
+            "latestTransferTime": "2024-06-12T05:04:25.000Z",
+            "collectionName": "NFTs2Me Owners",
+            "uri": "https://metadata.nfts2me.com/api/ownerTokenURI/252/154293527941829100484292796273741114341534152205/1056719529696176462909793856776361585468546249994/0/",
+            "type": "ERC721"
+        },
+        {
+            "chainId": 252,
+            "contractAddress": "0x00000000001594c61dd8a6804da9ab58ed2483ce",
+            "ownerAddress": "0x4212f5e00cb23fc920e931deec949a312d0d5b51",
+            "tokenId": "914476491876533779021069023552753199756517423203",
+            "balance": "1",
+            "latestTransferTime": "2024-07-11T08:05:47.000Z",
+            "collectionName": "NFTs2Me Owners",
+            "uri": "https://metadata.nfts2me.com/api/ownerTokenURI/252/914476491876533779021069023552753199756517423203/377216223038126689883668698268392765578124548945/10000/",
+            "type": "ERC721"
+        },
+        {
+            "chainId": 252,
+            "contractAddress": "0x00000000001594c61dd8a6804da9ab58ed2483ce",
+            "ownerAddress": "0xdb4e664e5ad83470eaa81ee85445a59004b15c18",
+            "tokenId": "139666165011710651070117738849573663745510875074",
+            "balance": "1",
+            "latestTransferTime": "2024-05-26T09:08:59.000Z",
+            "collectionName": "NFTs2Me Owners",
+            "uri": "https://metadata.nfts2me.com/api/ownerTokenURI/252/139666165011710651070117738849573663745510875074/1252017349051849023164018681650167584728015789080/10000/",
+            "type": "ERC721"
+        }
+    ],
+    "page": 1
+}
+```
+---
+## NFTs By Owner 
+
+`/v2/nfts/by-owner`
+
+- Description: Fetches NFTs owned by a specific address.
+- Example Request: `GET /v2/nfts/by-owner?chainIds[]=252&ownerAddresses[]=0x4212f5e00cb23fc920e931deec949a312d0d5b51`
+- Query Parameters:
+    - `chainIds` (optional) - number[]: Array of chain IDs to filter NFTs by.
+    - `ownerAddresses`string[]: Array of owner addresses to filter NFTs by.
+- Cache-Control: public, max-age=300
+- Response: JSON object containing the fetched NFTs.
+- Response Format
+
+```typescript
+{
+    "data": [
+        {
+            "chainId": 252,
+            "contractAddress": "0x00000000001594c61dd8a6804da9ab58ed2483ce",
+            "ownerAddress": "0x4212f5e00cb23fc920e931deec949a312d0d5b51",
+            "tokenId": "914476491876533779021069023552753199756517423203",
+            "balance": "1",
+            "latestTransferTime": "2024-07-11T08:05:47.000Z",
+            "collectionName": "NFTs2Me Owners",
+            "uri": "https://metadata.nfts2me.com/api/ownerTokenURI/252/914476491876533779021069023552753199756517423203/377216223038126689883668698268392765578124548945/10000/",
+            "type": "ERC721"
+        },
+        {
+            "chainId": 252,
+            "contractAddress": "0xa02e8b4b66d0b95a868ac53fe03b1e463921b863",
+            "ownerAddress": "0x4212f5e00cb23fc920e931deec949a312d0d5b51",
+            "tokenId": "1",
+            "balance": "1",
+            "latestTransferTime": "2024-07-11T08:06:25.000Z",
+            "collectionName": "TMT",
+            "uri": "data:application/json;base64,eyJuYW1lIjoiVE1UICMxIiwiaW1hZ2UiOiJpcGZzOi8vYmFmeWJlaWQzNjJlYndhZjVxc3Rqa21tMnRiNHdqbzJ0dTN1d2U0NmJwb3Y0dWI1dHBzdmNxYW43b2kifQ==",
+            "type": "ERC721"
+        }
+    ],
+    "page": 1
+}
+```

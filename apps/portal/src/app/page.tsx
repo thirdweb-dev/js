@@ -44,6 +44,7 @@ export default function Page() {
 			<WalletsSection />
 			<EngineSection />
 			<ContractsSection />
+			<ChainsawSection />
 		</main>
 	);
 }
@@ -342,6 +343,23 @@ function EngineSection() {
 					href="/engine"
 					title="Engine"
 					description="Backend server to reliably call smart contracts"
+					icon={InfraEngineIcon}
+				/>
+			</Grid>
+		</section>
+	);
+}
+
+function ChainsawSection() {
+	return (
+		<section className="my-12">
+			<SectionTitle id="chainsaw" title="Chainsaw" />
+			<div className="mb-6 border-b" />
+			<Grid>
+				<ArticleCardIndex
+					href="/chainsaw"
+					title="Chainsaw"
+					description="An indexer to reliably access onchain data"
 					icon={InfraEngineIcon}
 				/>
 			</Grid>
