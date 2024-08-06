@@ -78,7 +78,7 @@ function StyledPayEmbed() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Fund wallets
+          Top Up
         </h2>
         <p className="max-w-[600px]">
           Inline component that allows users to buy any currency.
@@ -110,7 +110,7 @@ function BuyMerch() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Direct Payments
+          Commerce
         </h2>
         <p className="max-w-[600px]">
           Take paymets from Fiat or Crypto directly to your seller wallet.
@@ -158,7 +158,7 @@ function BuyOnchainAsset() {
     <>
       <div className="space-y-2">
         <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Onchain Payments
+          Transactions
         </h2>
         <p className="max-w-[600px]">
           Let your users pay for onchain transactions with fiat or crypto on any

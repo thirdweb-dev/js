@@ -15,7 +15,7 @@ import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
 const nftContract = getContract({
-  address: "0x96B30d36f783c7BC68535De23147e2ce65788e93",
+  address: "0x827c1c3889923015C1FC31BF677D00FbE6F01D52",
   chain: polygon,
   client: THIRDWEB_CLIENT,
 });
