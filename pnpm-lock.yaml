@@ -540,9 +540,6 @@ importers:
       '@radix-ui/react-tabs':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@shikijs/twoslash':
-        specifier: ^1.10.0
-        version: 1.10.0(typescript@5.5.4)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -7782,9 +7779,6 @@ packages:
   '@shikijs/core@1.10.0':
     resolution: {integrity: sha512-BZcr6FCmPfP6TXaekvujZcnkFmJHZ/Yglu97r/9VjzVndQA56/F4WjUKtJRQUnK59Wi7p/UTAOekMfCJv7jnYg==}
 
-  '@shikijs/twoslash@1.10.0':
-    resolution: {integrity: sha512-LMvsYyFs73Saf0VsxrScXQZkV2UszxnYa4gGJbK0Ct8NH6YpQDg+FROsNsbqKk+SsKsbbydZP0W8ojKuvq69pA==}
-
   '@shuding/opentype.js@1.4.0-beta.0':
     resolution: {integrity: sha512-3NgmNyH3l/Hv6EvsWJbsvpcpUba6R8IREQ83nH83cyakCw7uM1arZKNfHwv1Wz6jgqrF/j4x5ELvR6PnK9nTcA==}
     engines: {node: '>= 8.0.0'}
@@ -8978,9 +8972,6 @@ packages:
   '@typescript-eslint/visitor-keys@7.2.0':
     resolution: {integrity: sha512-c6EIQRHhcpl6+tO8EMR+kjkkV+ugUNXOmeASA1rlzkd8EPIriavpWoiEz1HR/VLhbVIdhqnV6E7JZm00cBDx2A==}
     engines: {node: ^16.0.0 || >=18.0.0}
-
-  '@typescript/vfs@1.5.0':
-    resolution: {integrity: sha512-AJS307bPgbsZZ9ggCT3wwpg3VbTKMFNHfaY/uF0ahSkYYrPF2dSSKDNIDIQAHm9qJqbLvCsSJH7yN4Vs/CsMMg==}
 
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
@@ -17679,14 +17670,6 @@ packages:
 
   tweetnacl@1.0.3:
     resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
-
-  twoslash-protocol@0.2.9:
-    resolution: {integrity: sha512-uKQl8UboT6JU4VAtYaSI3DbNtgaNhFaTpCSMy/n3tRl5lMlMhrjiuNKdqx15xjcviconuGJ9oObkz1h9zJFrJg==}
-
-  twoslash@0.2.9:
-    resolution: {integrity: sha512-oj7XY6h8E9nTZBmfRE1gpsSSUqAQo5kcIpFkXyQPp8UCsyCQsUlP2bJ2s32o02c1n5+xl4h9rcCsQ1F97Z6LZg==}
-    peerDependencies:
-      typescript: '*'
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -28333,14 +28316,6 @@ snapshots:
 
   '@shikijs/core@1.10.0': {}
 
-  '@shikijs/twoslash@1.10.0(typescript@5.5.4)':
-    dependencies:
-      '@shikijs/core': 1.10.0
-      twoslash: 0.2.9(typescript@5.5.4)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-
   '@shuding/opentype.js@1.4.0-beta.0':
     dependencies:
       fflate: 0.7.3
@@ -30007,12 +29982,6 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.2.0
       eslint-visitor-keys: 3.4.3
-
-  '@typescript/vfs@1.5.0':
-    dependencies:
-      debug: 4.3.5(supports-color@8.1.1)
-    transitivePeerDependencies:
-      - supports-color
 
   '@ungap/structured-clone@1.2.0': {}
 
@@ -41881,16 +41850,6 @@ snapshots:
   tweetnacl-util@0.15.1: {}
 
   tweetnacl@1.0.3: {}
-
-  twoslash-protocol@0.2.9: {}
-
-  twoslash@0.2.9(typescript@5.5.4):
-    dependencies:
-      '@typescript/vfs': 1.5.0
-      twoslash-protocol: 0.2.9
-      typescript: 5.5.4
-    transitivePeerDependencies:
-      - supports-color
 
   type-check@0.4.0:
     dependencies:

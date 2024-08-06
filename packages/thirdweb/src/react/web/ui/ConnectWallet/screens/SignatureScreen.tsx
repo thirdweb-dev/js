@@ -11,6 +11,7 @@ import {
 } from "../../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../../core/hooks/connection/ConnectButtonProps.js";
+import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../../core/hooks/wallets/useDisconnect.js";
 import { wait } from "../../../../core/utils/wait.js";
@@ -46,7 +47,8 @@ export const SignatureScreen: React.FC<{
   } = props;
 
   const activeWallet = useActiveWallet();
-  const siweAuth = useSiweAuth(activeWallet, props.auth);
+  const activeAccount = useActiveAccount();
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const [status, setStatus] = useState<Status>("idle");
   const { disconnect } = useDisconnect();
   const wallet = useActiveWallet();

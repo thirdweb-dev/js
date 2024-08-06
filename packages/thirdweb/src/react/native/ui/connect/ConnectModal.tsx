@@ -9,6 +9,7 @@ import type { Theme } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import type { ConnectEmbedProps } from "../../../core/hooks/connection/ConnectEmbedProps.js";
+import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useConnectionManager } from "../../../core/providers/connection-manager.js";
@@ -60,7 +61,8 @@ export type ModalState =
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const theme = parseTheme(props.theme);
   const wallet = useActiveWallet();
-  const siweAuth = useSiweAuth(wallet, props.auth);
+  const account = useActiveAccount();
+  const siweAuth = useSiweAuth(wallet, account, props.auth);
   const needsAuth = siweAuth.requiresAuth && !siweAuth.isLoggedIn;
   const isConnected = wallet && !needsAuth;
   const adaptedProps = {

@@ -363,7 +363,7 @@ function ConnectButtonInner(
 ) {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(activeWallet, props.auth);
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   // if wallet gets disconnected suddently, close the signature modal if it's open

@@ -181,7 +181,7 @@ import { useSetupScreen } from "./screen.js";
 export function ConnectEmbed(props: ConnectEmbedProps) {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(activeWallet, props.auth);
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const show =
     !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
 
@@ -334,8 +334,8 @@ const ConnectEmbedContent = (props: {
   });
   const { setScreen, initialScreen, screen } = screenSetup;
   const activeWallet = useActiveWallet();
-  const siweAuth = useSiweAuth(activeWallet, props.auth);
   const activeAccount = useActiveAccount();
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
 
   const isAutoConnecting = useIsAutoConnecting();
 
