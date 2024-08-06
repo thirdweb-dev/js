@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BsGithub } from "react-icons/bs";
 
-const prefix = `https://github.com/thirdweb-dev/docs-v2/edit/main/src/app`;
+const prefix = `https://github.com/thirdweb-dev/js/edit/main/apps/portal/src/app`;
 
 export function EditPage(props: { path: string }) {
 	return (
