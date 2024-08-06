@@ -104,18 +104,23 @@ Pay is enabled by default for any contract call sent with `sendTransaction`. It 
 </Callout>
 
 ```tsx
-import { ThirdwebProvider, useSendTransaction } from "thirdweb/react";
+import { useSendTransaction } from "thirdweb/react";
+import { mintTo } from "thirdweb/extensions/erc721";
 
-const client = createThirdwebClient({ clientId: your_client_id });
+const { mutate: sendTx, data: transactionResult } = useSendTransaction();
 
-export default function App() {
-	const { sendTransaction } = useSendTransaction();
-	return (
-		<ThirdwebProvider>
-			<button onClick={() => sendTransaction()} />
-		</ThirdwebProvider>
-	);
-}
+const onClick = () => {
+	const transaction = mintTo({
+		contract,
+		to: "0x...",
+		nft: {
+			name: "NFT Name",
+			description: "NFT Description",
+			image: "https://example.com/image.png",
+		},
+	});
+	sendTx(transaction);
+};
 ```
 
 When a user clicks this button, Pay will perform gas estimation to determine if the user has a sufficient balance. If their balance is sufficient, the transaction will execute normally. If their balance is not sufficient, the following modal will pop up asking them to either onramp funds or convert crypto to the required amount:
