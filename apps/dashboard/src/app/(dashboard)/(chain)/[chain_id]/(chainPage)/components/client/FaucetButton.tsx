@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
+import { useTrack } from "hooks/analytics/useTrack";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -44,8 +45,15 @@ export function FaucetButton({
     chain: definedChain,
     client: thirdwebClient,
   });
+  const trackEvent = useTrack();
   const claimMutation = useMutation({
     mutationFn: async () => {
+      trackEvent({
+        category: "faucet",
+        action: "claim",
+        label: "attempt",
+        chain_id: chainId,
+      });
       const response = await fetch("/api/testnet-faucet/claim", {
         method: "POST",
         headers: {
@@ -60,11 +68,26 @@ export function FaucetButton({
 
       if (!response.ok) {
         const data = await response.json();
-        throw data.error;
+        throw new Error(data?.error || "Failed to claim funds");
       }
     },
     onSuccess: () => {
+      trackEvent({
+        category: "faucet",
+        action: "claim",
+        label: "success",
+        chain_id: chainId,
+      });
       router.refresh();
+    },
+    onError: (error) => {
+      trackEvent({
+        category: "faucet",
+        action: "claim",
+        label: "error",
+        chain_id: chainId,
+        errorMsg: error instanceof Error ? error.message : "Unknown error",
+      });
     },
   });
   const router = useRouter();
