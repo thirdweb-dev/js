@@ -200,23 +200,23 @@ export type BuyWithFiatQuote = {
   /**
    * Gas Token that will be sent to the user's wallet address by the on-ramp provider.
    *
-   * Only used for ERC20 + Gas on-ramp flow. This will hold the details of the gas token and amount sent for gas.  
-   * 
+   * Only used for ERC20 + Gas on-ramp flow. This will hold the details of the gas token and amount sent for gas.
+   *
    * In Native Currency case, extra for gas will be added to the output amount of the onramp.
    */
-    gasToken?: {
-      amount: string;
-      amountWei: string;
-      amountUSDCents: number;
-      token: {
-        chainId: number;
-        decimals: number;
-        name: string;
-        priceUSDCents: number;
-        symbol: string;
-        tokenAddress: string;
-      };
+  gasToken?: {
+    amount: string;
+    amountWei: string;
+    amountUSDCents: number;
+    token: {
+      chainId: number;
+      decimals: number;
+      name: string;
+      priceUSDCents: number;
+      symbol: string;
+      tokenAddress: string;
     };
+  };
 
   /**
    * Link to the on-ramp provider UI that will prompt the user to buy the token with fiat currency.
@@ -302,7 +302,7 @@ export async function getBuyWithFiatQuote(
         isTestMode: params.isTestMode,
         purchaseData: params.purchaseData,
         fromAddress: params.fromAddress,
-        toGasAmountWei: params.toGasAmountWei
+        toGasAmountWei: params.toGasAmountWei,
       }),
     });
 
