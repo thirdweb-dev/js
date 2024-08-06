@@ -16,7 +16,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { AiFillEyeInvisible } from "@react-icons/all-files/ai/AiFillEyeInvisible";
-import type { DelayedRevealLazyMintInput } from "@thirdweb-dev/react/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -24,6 +23,7 @@ import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
+import type { CreateDelayedRevealBatchParams } from "thirdweb/extensions/erc721";
 import type { NFTInput } from "thirdweb/utils";
 import {
   Button,
@@ -45,7 +45,7 @@ import { UploadStep } from "./upload-step";
 
 type DelayedSubmit = {
   revealType: "delayed";
-  data: DelayedRevealLazyMintInput;
+  data: CreateDelayedRevealBatchParams;
 };
 type InstantSubmit = {
   revealType: "instant";
@@ -179,9 +179,9 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
         return props.onSubmit({
           revealType: "delayed",
           data: {
-            metadatas: shuffledMetadatas,
+            metadata: shuffledMetadatas,
             password: data.password,
-            placeholder: {
+            placeholderMetadata: {
               name: data.placeHolder?.name,
               description: data.placeHolder?.description,
               image: data.placeHolder?.image,

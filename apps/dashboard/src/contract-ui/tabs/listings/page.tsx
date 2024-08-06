@@ -29,7 +29,8 @@ export const ContractListingsPage: React.FC<ListingsPageProps> = ({
         <Heading size="title.sm">Contract Listings</Heading>
         <Flex gap={4}>
           <CreateListingButton
-            contractQuery={contractQuery}
+            contractAddress={contractQuery.contract.getAddress()}
+            chainId={contractQuery.contract.chainId}
             createText="Create Listing"
           />
         </Flex>

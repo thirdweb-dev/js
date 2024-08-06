@@ -6,7 +6,7 @@ import { defineDashboardChain } from "lib/v5-adapter";
 import { FiPlus } from "react-icons/fi";
 import { getContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
-import { TokenMintForm } from "./mint-form";
+import { TokenERC20MintForm } from "./mint-form-erc20";
 
 interface TokenMintButtonProps {
   contractQuery: ReturnType<typeof useContract>;
@@ -37,7 +37,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenMintForm contract={contractV4} />
+        <TokenERC20MintForm contract={contract} />
       </Drawer>
       <Button
         colorScheme="primary"

@@ -111,10 +111,18 @@ export const SettingsMetadata = <
     name: "dashboard_social_urls",
   });
 
+  const contractV5 = contract
+    ? getContract({
+        address: contract.getAddress(),
+        chain: defineDashboardChain(contract.chainId),
+        client: thirdwebClient,
+      })
+    : null;
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated metadata",
     "Error updating metadata",
-    contract,
+    contractV5,
   );
 
   return (

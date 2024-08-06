@@ -7,7 +7,7 @@ export const uploadMock = (mockHash: string) => http.post(`https://${getThirdweb
   })
 });
 
-export const downloadMock = (mockData: unknown) => http.get(`https://*.ipfscdn.io/ipfs/:hash/:id`, async () => {
+export const downloadMock = (mockData: unknown) => http.get('https://*.ipfscdn.io/ipfs/:hash/:id', async () => {
   return HttpResponse.json(mockData ?? {});
 });
 
