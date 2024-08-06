@@ -1,7 +1,4 @@
 import TypeDoc from "typedoc";
-import { gzip } from "node:zlib";
-import { readFile, unlink, writeFile } from "node:fs/promises";
-import { promisify } from "node:util";
 
 /**
  *
@@ -12,7 +9,6 @@ export async function typedoc(options: {
   exclude: string[];
 }) {
   const jsonOut = "typedoc/documentation.json";
-  const gzipOut = "typedoc/documentation.json.gz";
 
   const app = await TypeDoc.Application.bootstrapWithPlugins({
     entryPoints: options.entryPoints,
@@ -26,11 +22,4 @@ export async function typedoc(options: {
   }
 
   await app.generateJson(project, jsonOut);
-  // then gzip the output
-  const json = await readFile(jsonOut);
-  const gzipped = await promisify(gzip)(json);
-  await writeFile(gzipOut, gzipped);
-
-  // delete the original json file
-  await unlink(jsonOut);
 }

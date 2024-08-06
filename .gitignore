@@ -26,3 +26,7 @@ codecov
 
 # Remove sitemap files (generated at build time)
 sitemap*.xml
+
+# typedoc
+legacy_packages/*/typedoc/*
+packages/*/typedoc/*

@@ -3,16 +3,16 @@ import { fetchReactDoc } from "@/app/references/components/TDoc/fetchDocs/fetchR
 import { createMetadata } from "@doc";
 
 export default getTDocLayout({
-	getDoc: fetchReactDoc,
-	packageSlug: "react",
-	sdkTitle: "React SDK",
+  getDoc: fetchReactDoc,
+  packageSlug: "react",
+  sdkTitle: "React SDK",
 });
 
 export const metadata = createMetadata({
-	image: {
-		title: "thirdweb React SDK Reference",
-		icon: "react",
-	},
-	title: "References | thirdweb React SDK ",
-	description: "Full Reference for thirdweb React SDK.",
+  image: {
+    title: "thirdweb React SDK Reference",
+    icon: "react",
+  },
+  title: "References | thirdweb React SDK ",
+  description: "Full Reference for thirdweb React SDK.",
 });
