@@ -14,7 +14,7 @@ import {
 import { serializeTransaction } from "../serialize-transaction.js";
 import { toSerializableTransaction } from "./to-serializable-transaction.js";
 
-describe("toSerializableTransaction", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
   let transaction: PreparedTransaction;
   beforeAll(() => {
     transaction = prepareTransaction({
