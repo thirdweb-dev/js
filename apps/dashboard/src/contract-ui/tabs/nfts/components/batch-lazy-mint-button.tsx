@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
@@ -13,7 +14,6 @@ import { ProgressBox } from "core-ui/batch-upload/progress-box";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { defineDashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
@@ -63,7 +63,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   const txNotifications = useTxNotifications(
     "Batch uploaded successfully",
     "Error uploading batch",
-    contractQuery.contract,
+    contract,
   );
   if (!contract) {
     return null;
@@ -93,7 +93,11 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
                 await mintBatchMutation.mutateAsync(data);
               } else {
                 // otherwise it's delayed reveal
-                await mintDelayedRevealBatchMutation.mutateAsync(data);
+                await mintDelayedRevealBatchMutation.mutateAsync({
+                  metadatas: data.metadata,
+                  placeholder: data.placeholderMetadata,
+                  password: data.password,
+                });
               }
 
               trackEvent({

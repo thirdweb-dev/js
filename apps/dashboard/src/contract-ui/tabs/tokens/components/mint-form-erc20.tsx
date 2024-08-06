@@ -7,46 +7,30 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import type { UseMutationResult } from "@tanstack/react-query";
-import {
-  type TokenContract,
-  type TokenParams,
-  useMintToken,
-  useTokenDecimals,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { useActiveAccount } from "thirdweb/react";
+import type { ThirdwebContract } from "thirdweb";
+import { decimals, mintTo } from "thirdweb/extensions/erc20";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import { Button, FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 const MINT_FORM_ID = "token-mint-form";
 interface TokenMintFormProps {
-  contract: TokenContract;
+  contract: ThirdwebContract;
 }
 
-export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
+export const TokenERC20MintForm: React.FC<TokenMintFormProps> = ({
+  contract,
+}) => {
   const address = useActiveAccount()?.address;
-  const mint = useMintToken(contract);
-  const decimals = useTokenDecimals(contract);
-
-  return (
-    <TokenMintFormLayout
-      contract={contract}
-      mintQuery={mint}
-      decimals={decimals.data}
-      address={address}
-    />
-  );
-};
-
-const TokenMintFormLayout: React.FC<{
-  contract: TokenContract;
-  mintQuery: UseMutationResult<unknown, unknown, TokenParams>;
-  decimals: number | undefined;
-  address: string | undefined;
-}> = ({ contract, mintQuery, decimals, address }) => {
+  const { data: tokenDecimals } = useReadContract(decimals, { contract });
+  const { mutate, isPending } = useSendAndConfirmTransaction();
   const trackEvent = useTrack();
   const {
     register,
@@ -76,29 +60,31 @@ const TokenMintFormLayout: React.FC<{
                 action: "mint",
                 label: "attempt",
               });
-              mintQuery.mutate(
-                { amount: d.amount, to: address },
-                {
-                  onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "mint",
-                      label: "success",
-                    });
-                    onSuccess();
-                    modalContext.onClose();
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "mint",
-                      label: "error",
-                      error,
-                    });
-                    onError(error);
-                  },
+              const transaction = mintTo({
+                contract,
+                amount: d.amount,
+                to: address,
+              });
+              mutate(transaction, {
+                onSuccess: () => {
+                  trackEvent({
+                    category: "token",
+                    action: "mint",
+                    label: "success",
+                  });
+                  onSuccess();
+                  modalContext.onClose();
                 },
-              );
+                onError: (error) => {
+                  trackEvent({
+                    category: "token",
+                    action: "mint",
+                    label: "error",
+                    error,
+                  });
+                  onError(error);
+                },
+              });
             }
           })}
         >
@@ -106,7 +92,7 @@ const TokenMintFormLayout: React.FC<{
             <FormLabel>Additional Supply</FormLabel>
             <Input
               type="text"
-              pattern={`^\\d+(\\.\\d{1,${decimals || 18}})?$`}
+              pattern={`^\\d+(\\.\\d{1,${tokenDecimals || 18}})?$`}
               {...register("amount")}
             />
             <FormErrorMessage>{errors?.amount?.message}</FormErrorMessage>
@@ -115,7 +101,7 @@ const TokenMintFormLayout: React.FC<{
       </DrawerBody>
       <DrawerFooter>
         <Button
-          isDisabled={mintQuery.isLoading}
+          isDisabled={isPending}
           variant="outline"
           mr={3}
           onClick={modalContext.onClose}
@@ -124,7 +110,7 @@ const TokenMintFormLayout: React.FC<{
         </Button>
         <TransactionButton
           transactionCount={1}
-          isLoading={mintQuery.isLoading}
+          isLoading={isPending}
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"

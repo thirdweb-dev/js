@@ -264,11 +264,13 @@ const ContractPage: ThirdwebNextPage = () => {
           </Flex>
         </Container>
       </Box>
-      <ContractSidebar
-        contractAddress={contractAddress}
-        routes={routes}
-        activeRoute={activeRoute}
-      />
+      {contract && (
+        <ContractSidebar
+          contract={contract}
+          routes={routes}
+          activeRoute={activeRoute}
+        />
+      )}
       <Container pt={8} maxW="container.page">
         {activeRoute?.component && contractAddress && contract && (
           <activeRoute.component

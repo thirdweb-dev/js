@@ -236,9 +236,6 @@ importers:
       '@thirdweb-dev/react':
         specifier: workspace:*
         version: link:../../legacy_packages/react
-      '@thirdweb-dev/react-core':
-        specifier: workspace:*
-        version: link:../../legacy_packages/react-core
       '@thirdweb-dev/sdk':
         specifier: workspace:*
         version: link:../../legacy_packages/sdk
@@ -248,9 +245,6 @@ importers:
       '@thirdweb-dev/storage':
         specifier: workspace:*
         version: link:../../legacy_packages/storage
-      '@thirdweb-dev/wallets':
-        specifier: workspace:*
-        version: link:../../legacy_packages/wallets
       '@vercel/og':
         specifier: ^0.6.2
         version: 0.6.2

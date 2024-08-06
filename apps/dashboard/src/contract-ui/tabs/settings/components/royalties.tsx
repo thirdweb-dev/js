@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +16,9 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { defineDashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
@@ -47,10 +50,18 @@ export const SettingsRoyalties = <
   });
   const address = useActiveAccount()?.address;
 
+  const contractV5 = contract
+    ? getContract({
+        address: contract.getAddress(),
+        chain: defineDashboardChain(contract.chainId),
+        client: thirdwebClient,
+      })
+    : null;
+
   const { onSuccess, onError } = useTxNotifications(
     "Royalty settings updated",
     "Error updating royalty settings",
-    contract,
+    contractV5,
   );
 
   return (
