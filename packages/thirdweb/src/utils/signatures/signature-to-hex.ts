@@ -26,19 +26,14 @@ import { type Hex, hexToBigInt } from "../encoding/hex.js";
  * @utils
  */
 export function signatureToHex(signature: Signature): Hex {
-  const { r, s, v } = signature;
-  const vHex = (() => {
-    if (v === 27n) {
-      return "1b";
-    }
-    if (v === 28n) {
-      return "1c";
-    }
-    throw new Error("Invalid v value");
+  const { r, s, v, yParity } = signature;
+  const yParity_ = (() => {
+    if (yParity === 0 || yParity === 1) return yParity;
+    if (v && (v === 27n || v === 28n || v >= 35n)) return v % 2n === 0n ? 1 : 0;
+    throw new Error("Invalid `v` or `yParity` value");
   })();
-
   return `0x${new secp256k1.Signature(
     hexToBigInt(r),
     hexToBigInt(s),
-  ).toCompactHex()}${vHex}`;
+  ).toCompactHex()}${yParity_ === 0 ? "1b" : "1c"}`;
 }
