@@ -354,20 +354,6 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
           </Stack>
         ) : null}
       </FormControl>
-      {/* Just don't support Marketplace v2 anymore */}
-      {/* <FormControl isDisabled={noNfts}>
-        <Heading as={FormLabel} size="label.lg">
-          Listing Type
-        </Heading>
-        <Select {...form.register("listingType")}>
-          <option value="direct">Direct</option>
-          <option value="auction">Auction</option>
-        </Select>
-        <FormHelperText>
-          The type of listing you want to create, either an auction or direct
-          listing.
-        </FormHelperText>
-      </FormControl> */}
       <FormControl isRequired isDisabled={noNfts}>
         <Heading as={FormLabel} size="label.lg">
           Listing Currency
