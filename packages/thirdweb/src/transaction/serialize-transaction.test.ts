@@ -26,7 +26,7 @@ const BASE_TRANSACTION = {
   value: toWei("1"),
 } as const satisfies TransactionSerializableBase;
 
-describe("eip1559", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
   const baseEip1559 = {
     ...BASE_TRANSACTION,
     chainId: 1,
