@@ -45,7 +45,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   const wallet = useActiveWallet();
   const account = useActiveAccount();
   const status = useActiveWalletConnectionStatus();
-  const siweAuth = useSiweAuth(wallet, props.auth);
+  const siweAuth = useSiweAuth(wallet, account, props.auth);
   useAutoConnect(props);
 
   const fadeAnim = useRef(new Animated.Value(0)); // For background opacity

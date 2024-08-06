@@ -310,9 +310,9 @@ const ViewFunds = (props: ConnectedModalPropsInner) => {
 };
 
 const DisconnectWallet = (props: ConnectedModalProps) => {
-  const { wallet, theme, onClose } = props;
+  const { wallet, account, theme, onClose } = props;
   const { disconnect } = useDisconnect();
-  const siweAuth = useSiweAuth(wallet, props.auth);
+  const siweAuth = useSiweAuth(wallet, account, props.auth);
   return (
     <TouchableOpacity
       style={styles.walletMenuRow}
