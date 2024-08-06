@@ -18,6 +18,7 @@ import {
   googleIconUri,
   passkeyIcon,
   phoneIcon,
+  telegramIconUri,
 } from "../../../core/utils/socialIcons.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import { useWalletImage } from "../../../core/utils/wallet.js";
@@ -80,6 +81,9 @@ export function WalletImage(props: {
             break;
           case "farcaster":
             image = farcasterIconUri;
+            break;
+          case "telegram":
+            image = telegramIconUri;
             break;
         }
       } else {

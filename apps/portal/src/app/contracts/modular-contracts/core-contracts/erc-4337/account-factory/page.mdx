@@ -1,0 +1,116 @@
+import { Details, Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "AccountFactory contract",
+		icon: "contract",
+	},
+	title: "AccountFactory | thirdweb contracts",
+	description:
+		"This factory smart contract is intended to be used to distribute 'Accounts` programmatically",
+});
+
+# AccountFactory
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/non-upgradeable/AccountFactory.sol";
+```
+
+This contract inherits from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWalletFactory) contract.
+
+This factory smart contract is intended to be used to distribute ['Accounts`](/contracts/build/base-contracts/erc-4337/account) programmatically.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/non-upgradeable/AccountFactory.sol" />
+
+<br />
+
+<Callout title="Modifications" variant="info">
+
+If you modify the [`Account`](/contracts/build/base-contracts/erc-4337/account) contract, it is recommended that you write your own
+factory contract by inheriting from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWalletFactory) extension.
+
+</Callout>
+
+## Detected Extensions
+
+Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+
+Click on each feature to learn more about what functions are available.
+
+- [SmartWalletFactory](/contracts/build/extensions/erc-4337/SmartWalletFactory)
+
+## Usage
+
+Use the [CLI](/cli) [`create`](/cli/create) command to create a `AccountFactory` smart contract:
+
+```bash
+npx thirdweb create contract
+```
+
+[Deploy](/contracts/deploy/overview) your contract using the deploy cli command:
+
+```bash
+npx thirdweb deploy
+```
+
+Or import the contract into your existing project and inherit from it.
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/non-upgradable/AccountFactory.sol";
+
+contract MyAccountFactory is AccountFactory {
+	  constructor(
+        IEntryPoint _entrypoint
+    )
+        AccountFactory(
+            _entrypoint
+        )
+    {}
+}
+```
+
+## Full Reference
+
+The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+
+<Details id="_initializeAccount" summary="_initializeAccount">
+
+Called in `createAccount`. Initializes the account contract created in `createAccount`.
+
+```solidity
+function _initializeAccount(
+    address _account,
+    address _admin,
+    bytes calldata _data
+) internal override {
+    Account(payable(_account)).initialize(_admin, _data);
+}
+```
+
+#### \_account
+
+The address of the smart account smart contract to initialize.
+
+#### \_admin
+
+The address to be set as default admin role for the contract. Must be of type `address`.
+
+#### \_data
+
+If extra storage variables are required in your account contract, abi encode the variables,
+pass them to this function as the `bytes` argument.
+
+For example:
+
+```solidity
+function initializeAccount(
+    address _admin,
+    bytes calldata _data
+) public override initializer {
+    Account.initialize(_admin, _data);
+}
+```
+
+</Details>

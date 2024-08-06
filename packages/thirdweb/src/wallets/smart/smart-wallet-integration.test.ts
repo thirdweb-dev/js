@@ -18,6 +18,7 @@ import { setContractURI } from "../../extensions/marketplace/__generated__/IMark
 import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
+import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
@@ -139,6 +140,11 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         ],
       });
       expect(tx.transactionHash).toHaveLength(66);
+      await waitForReceipt({
+        client,
+        transactionHash: tx.transactionHash,
+        chain,
+      });
       const balance = await balanceOf({
         contract,
         owner: smartWalletAddress,

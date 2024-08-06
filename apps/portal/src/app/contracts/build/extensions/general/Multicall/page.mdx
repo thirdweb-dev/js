@@ -1,0 +1,68 @@
+import { Details, Callout, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Multicall contract",
+		icon: "solidity",
+	},
+	title: "Multicall | thirdweb contract",
+	description:
+		"The Multicall smart contract is an extension usable with any base smart contract. It provides a function multicall to batch together multiple calls in a single external call",
+});
+
+# Multicall
+
+```solidity
+import "@thirdweb-dev/contracts/extension/Multicall.sol";
+```
+
+The `Multicall` smart contract is an extension usable with any base smart contract. It provides a function `multicall` to batch together multiple calls in a single external call.
+
+<Callout title="info" variant="info">
+
+It is recommended to use this extension alongside the [`ERC721Mintable`](/contracts/build/extensions/erc-721/ERC721Mintable), [`ERC1155Mintable`](/contracts/build/extensions/erc-1155/ERC1155Mintable) or [`ERC20Mintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable)
+extension to unlock the [`ERC721BatchMintable`](/contracts/build/extensions/erc-721/ERC721BatchMintable), [`ERC1155BatchMintable`](/contracts/build/extensions/erc-1155/ERC1155BatchMintable) or [`ERC20BatchMintable`](/contracts/build/extensions/erc-20/ERC20BatchMintable) dashboard extension detection.
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Multicall.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/Multicall.sol";
+
+contract MyContract is Multicall { ... }
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721Base](/contracts/build/base-contracts/erc-721/base)
+- [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)
+- [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
+- [ERC1155SignatureMint](/contracts/build/base-contracts/erc-1155/signature-mint)
+- [ERC20Base](/contracts/build/base-contracts/erc-20/base)
+- [ERC20SignatureMint](/contracts/build/base-contracts/erc-20/signature-mint)
+- [ERC20SignatureMintVote](/contracts/build/base-contracts/erc-20/signature-mint-vote)
+- [ERC20Vote](/contracts/build/base-contracts/erc-20/base)
+
+## Full API reference
+
+<Details summary="multicall">
+
+```solidity
+function multicall(bytes[] calldata data) external virtual override returns (bytes[] memory results);
+```
+
+- Receives and executes a batch of function calls on the contract.
+- Parameter `data`: The bytes data that makes up the batch of function calls to execute.
+- Return value `results`: The bytes data that makes up the result of the batch of function calls executed.
+
+</Details>

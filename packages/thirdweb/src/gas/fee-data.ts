@@ -143,7 +143,7 @@ async function getDynamicFeeData(
     eth_maxPriorityFeePerGas(rpcRequest).catch(() => null),
   ]);
 
-  const baseBlockFee = block?.baseFeePerGas ? block.baseFeePerGas : 100n;
+  const baseBlockFee = block?.baseFeePerGas ?? 0n;
 
   const chainId = chain.id;
   // flag chain testnet & flag chain

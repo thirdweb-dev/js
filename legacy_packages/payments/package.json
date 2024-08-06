@@ -45,7 +45,7 @@
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint": "8.57.0",
     "eslint-config-thirdweb": "workspace:*",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "scripts": {
     "format": "biome format ./src --write",

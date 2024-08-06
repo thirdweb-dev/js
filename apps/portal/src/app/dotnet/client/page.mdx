@@ -1,0 +1,67 @@
+import { Details, Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebClient.Create | Thirdweb .NET SDK",
+	description:
+		"Instantiate a Thirdweb client to interact with the blockchain and smart contracts.",
+});
+
+# Initializing a Thirdweb Client
+
+The `ThirdwebClient` class is the main entry point for interacting with the Thirdweb SDK.
+
+You can pass the client to other methods to interact with wallets and smart contracts.
+
+One client unlocks all thirdweb infrastructure services by default.
+
+## Usage
+
+To start interacting with a deployed smart contract using the Thirdweb .NET SDK, first create a `ThirdwebClient` instance. You can create a client using either a `secretKey` for backend applications or a `clientId` for frontend applications. If your application is not web-based (has no origin), you should also provide a `bundleId`.
+
+<Callout variant='info' title="Choosing between clientId and secretKey">
+
+- Use `Client ID` for client-side or frontend applications.
+- Use `Secret Key` for server-side or backend applications where you can securely store and use the secret key.
+- A `Client ID` should be paired with a `Bundle ID` for non-web applications.
+
+Always ensure that your secret keys are stored securely and not exposed in client-side code.
+
+</Callout>
+
+```csharp
+using Thirdweb;
+
+// For native applications
+var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
+
+// For frontend applications
+var client = ThirdwebClient.Create(clientId: "yourClientId");
+
+// For backend applications
+var client = ThirdwebClient.Create(secretKey: "yourSecretKey");
+```
+
+<Details summary="Configuration">
+
+### clientId (optional)
+
+The client ID associated with your thirdweb dashboard API Key.
+
+### secretKey (optional)
+
+The secret key associated with your thirdweb dashboard API Key.
+
+### bundleId (optional)
+
+The bundle ID associated with your thirdweb dashboard API Key. Required for non-web applications and paired with the client ID.
+
+### fetchTimeoutOptions (optional)
+
+Options for configuring timeouts for fetching data. Useful for fine-tuning request performance.
+
+```csharp
+// You can choose to override default timeout values for storage, rpc, and other requests.
+TimeoutOptions(int? storage = null, int? rpc = null, int? other = null)
+```
+
+</Details>

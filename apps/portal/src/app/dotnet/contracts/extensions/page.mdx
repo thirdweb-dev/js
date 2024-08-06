@@ -1,0 +1,35 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Contract Extensions | Thirdweb .NET SDK",
+	description: "Useful type-safe extensions for calling contracts.",
+});
+
+# Contract Extensions
+
+Thirdweb's .NET SDK provides a set of useful type-safe extensions for calling smart contracts. These extensions simplify the process of interacting with smart contracts by providing a more intuitive and user-friendly API.
+
+## Usage
+
+```csharp
+// Without extensions
+var receiver = await wallet.GetAddress();
+var quantity = BigInteger.One;
+var currency = Constants.NATIVE_TOKEN_ADDRESS;
+var pricePerToken = BigInteger.Zero;
+var allowlistProof = new object[] { new byte[] { }, BigInteger.Zero, BigInteger.Zero, Constants.ADDRESS_ZERO };
+var data = new byte[] { };
+var receipt = await ThirdwebContract.Write(smartAccount, contract, "claim", 0, receiver, quantity, currency, pricePerToken, allowlistProof, data);
+
+// With extensions
+var receipt = await contract.DropERC20_Claim(wallet, receiver, amount);
+
+// Can also do read operations and much more
+var balance = await contract.ERC20_BalanceOf("0xOwnerAddress");
+```
+
+## Available Contract Extensions
+
+Please refer to the `ThirdwebExtensions` [full reference](https://thirdweb-dev.github.io/thirdweb-dotnet/docs/Thirdweb.ThirdwebExtensions.html) for a complete list of available contract extensions.
+
+

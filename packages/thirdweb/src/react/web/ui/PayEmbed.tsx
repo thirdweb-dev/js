@@ -126,6 +126,8 @@ export type PayEmbedProps = {
   connectOptions?: PayEmbedConnectOptions;
 
   style?: React.CSSProperties;
+
+  className?: string;
 };
 
 /**
@@ -184,10 +186,9 @@ export function PayEmbed(props: PayEmbedProps) {
       </div>
     );
   } else {
-    // show and hide screens with CSS to not lose state when switching between them
     content = (
       <>
-        <div style={{ display: screen === "buy" ? "inherit" : "none" }}>
+        {screen === "buy" && (
           <BuyScreen
             title={metadata?.name || "Buy"}
             isEmbed={true}
@@ -208,7 +209,7 @@ export function PayEmbed(props: PayEmbedProps) {
             connectOptions={props.connectOptions}
             onBack={undefined}
           />
-        </div>
+        )}
 
         {screen === "execute-tx" &&
           props.payOptions?.mode === "transaction" &&
@@ -230,7 +231,11 @@ export function PayEmbed(props: PayEmbedProps) {
 
   return (
     <CustomThemeProvider theme={theme}>
-      <EmbedContainer modalSize="compact">
+      <EmbedContainer
+        modalSize="compact"
+        style={props.style}
+        className={props.className}
+      >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>
     </CustomThemeProvider>

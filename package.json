@@ -12,13 +12,15 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "lint": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk && turbo run lint",
+    "lint": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk -i remark-gfm && turbo run lint",
     "lint:legacy": "pnpm lint",
-    "fix": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk --fix && turbo run fix",
+    "fix": "pnpm dlx sherif@latest -i @tanstack/react-query -i @coinbase/wallet-sdk -i remark-gfm --fix && turbo run fix",
     "wallet-ui": "turbo run dev --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "wallet-ui:build": "turbo run build --filter=./apps/wallet-ui --filter=./packages/thirdweb",
     "playground": "turbo run dev --filter=./apps/playground-web --filter=./packages/thirdweb",
     "playground:build": "turbo run build --filter=./apps/playground-web",
+    "portal": "turbo run dev --filter=./apps/portal --filter=./packages/thirdweb",
+    "portal:build": "turbo run build --filter=./apps/portal",
     "dashboard": "turbo run dev --filter=./apps/dashboard --filter=./packages/thirdweb",
     "dashboard:build": "turbo run build --filter=./apps/dashboard",
     "build:packages": "turbo run build --filter=./packages/*",
@@ -76,7 +78,7 @@
     "sharp": "^0.33.4",
     "size-limit": "11.1.4",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2",
+    "typescript": "5.5.4",
     "vitest": "1.6.0"
   },
   "manypkg": {

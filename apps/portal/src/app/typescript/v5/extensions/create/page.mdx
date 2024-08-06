@@ -1,0 +1,66 @@
+import { Details } from "@doc";
+
+# Writing your own extensions
+
+You can create your own extensions. They are just regular functions that pre-define the behavior of a `prepareContractCall()` or `readContract()` function.
+
+The goal of extensions is to add a layer of convenience to direct contract calls, either to simplify the inputs or to give richer outputs.
+
+### Example: Creating the `getBalance` extension for ERC20 tokens
+
+The `erc20/getBalance` extension is a very convenient and efficient way to fetch all the information needed to display an ERC20 token balance to a user, a very common usecase for applications. Here is how it is implemented in the SDK.
+
+```typescript
+// Define your extension function
+export function getBalance(
+	// The base options include everything that is needed to interact with the contract, *except* the specific params for your function, in this case, "address"
+	options: BaseTransactionOptions<{ address: string }>,
+) {
+	// The extension conveniently fetches all the relevant information from the contract to display a readable balance
+	const [balanceWei, decimals_, symbol_, name_] = await Promise.all([
+		balanceOf(options),
+		decimals(options),
+		symbol(options),
+		name(options),
+	]);
+	return {
+		value: balanceWei,
+		decimals: decimals_,
+		// The `toTokens` function converts the balance from wei to a human-readable format
+		displayValue: toTokens(balanceWei, decimals_),
+		symbol: symbol_,
+		name: name_,
+	};
+}
+```
+
+### Example: Creating the `mintTo` extension for ERC721 tokens
+
+The `erc721/mintTo` extension handles uploading the NFT metadata to IPFS before minting. Here is how it is implemented in the SDK.
+
+```typescript
+import { prepareContractCall, type BaseTransactionOptions } from "thirdweb";
+
+// Define your extension function
+export function mintTo(
+	// The base options include everything that is needed to interact with the contract, *except* the specific params for your function, in this case "to" and "nft"
+	options: BaseTransactionOptions<{ to: string; nft: NFTMetadata }>,
+) {
+	return prepareContractCall({
+		// Pass the contract from the options
+		contract: options.contract,
+		// Pre-define the function to call on the smart contract
+		method: "function mintTo(address to, string uri)",
+		// The function params can be async
+		params: async () => {
+			// Upload the metadata to IPFS
+			const tokenURI = (await upload({
+				client: options.contract.client,
+				files: [options.nft],
+			})[0]) as string;
+			// return the contract params
+			return [options.to, tokenURI] as const;
+		},
+	});
+}
+```

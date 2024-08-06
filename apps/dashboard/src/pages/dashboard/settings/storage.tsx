@@ -207,14 +207,14 @@ const DashboardSettingsStorage: ThirdwebNextPage = () => {
 };
 
 const storageSnippets = {
-  react: `// Initialize your provider
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+  react: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
+
+// Initialize your provider
+import { ThirdwebProvider } from "thirdweb/react";
 
 function Provider() {
   return (
     <ThirdwebProvider
-      clientId="YOUR_CLIENT_ID" // You can get a client id from dashboard settings
-      activeChain="sepolia"
       >
       ...
     </ThirdwebProvider>
@@ -222,23 +222,23 @@ function Provider() {
 }
 
 // Upload files to IPFS
-import { useStorageUpload } from "@thirdweb-dev/react";
+import { upload } from "thirdweb/storage";
 
 function App() {
-  const { mutateAsync: upload } = useStorageUpload();
-
   const uploadData = () => {
-    // Get any data that you want to upload
-    const dataToUpload = [...];
-
     // And upload the data with the upload function
-    const uris = await upload({ data: dataToUpload });
+    const uri = await upload({
+      client, // thirdweb client
+      files: [
+        new File(["hello world"], "hello.txt"),
+      ],
+    });
   }
   ...
 }
 
 // Render files from IPFS
-import { MediaRenderer } from "@thirdweb-dev/react";
+import { MediaRenderer } from "thirdweb/react";
 
 function App() {
   return (
@@ -246,25 +246,30 @@ function App() {
     <MediaRenderer src="ipfs://QmamvVM5kvsYjQJYs7x8LXKYGFkwtGvuRvqZsuzvpHmQq9/0" />
   );
 }`,
-  javascript: `import { ThirdwebStorage } from "@thirdweb-dev/storage";
-
-// First, instantiate the thirdweb IPFS storage
-const storage = new ThirdwebStorage({
-  secretKey: "YOUR_SECRET_KEY", // You can get one from dashboard settings
-});
+  javascript: `// Check out the latest docs here: https://portal.thirdweb.com/typescript/v5/storage
+  
+import { upload } from "thirdweb/storage";
 
 // Here we get the IPFS URI of where our metadata has been uploaded
-const uri = await storage.upload(metadata);
+const uri = await upload({
+  client,
+  files: [
+    new File(["hello world"], "hello.txt"),
+  ],
+});
+
 // This will log a URL like ipfs://QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
 console.info(uri);
 
 // Here we a URL with a gateway that we can look at in the browser
-const url = await storage.resolveScheme(uri);
-// This will log a URL like https://ipfs.thirdwebstorage.com/ipfs/QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
-console.info(url);
+const url = await download({
+  client,
+  uri,
+}).url;
 
-// You can also download the data from the uri
-const data = await storage.downloadJSON(uri);`,
+// This will log a URL like https://ipfs.thirdwebstorage.com/ipfs/QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
+console.info(url);`,
+
   unity: `using Thirdweb;
 
 // Reference the SDK

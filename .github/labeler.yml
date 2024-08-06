@@ -11,3 +11,6 @@ legacy_packages:
 packages:
   - changed-files:
     - any-glob-to-any-file: "packages/**/*"
+portal:
+  - changed-files:
+    - any-glob-to-any-file: "apps/portal/**/*"

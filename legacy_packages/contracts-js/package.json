@@ -441,7 +441,7 @@
     "eslint-config-thirdweb": "workspace:*",
     "ethers": "^5.7.2",
     "typechain": "^8.3.2",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "peerDependencies": {
     "ethers": "^5"

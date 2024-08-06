@@ -1,0 +1,49 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Airdrop ERC1155 contract",
+		icon: "contract",
+	},
+	title: "Airdrop ERC1155 contract | thirdweb",
+	description: `AirdropERC1155 contract is suitable to use when you want to transfer ERC1155 NFTs to a list of recipient addresses, where these recipients are not expected to individually claim their airdrop`,
+});
+
+# Airdrop ERC1155
+
+Airdrop ERC1155 NFTs to a list of recipients.
+
+The `AirdropERC1155` contract is suitable to use when you want to transfer ERC1155 NFTs to a list of recipient addresses, where these recipients are not expected to individually claim their airdrop; they just receive it in a transfer.
+When airdropping tokens with this contract, you specify:
+
+- The address of the Edition (ERC-1155 contract) from which NFTs are being transferred.
+- The owner address of the NFTs from where the NFTs will be transferred to a list of the recipients.
+- An array of objects containing recipient-address, token-ids, and amounts for e.g.
+
+```typescript
+[
+	{
+		recipient: "0x123...",
+		tokenId: 1,
+		amount: 5,
+	},
+	{
+		recipient: "0xabc...",
+		tokenId: 1,
+		amount: 5,
+	},
+];
+```
+
+note: token-owner must approve their tokens to this airdrop contract, by calling approval related functions on the ERC1155 contract.
+
+**Estimated gas costs for airdropping tokens:**
+Cost of airdropping `1` ERC1155 token: ~`51,571` gas. Cost of airdropping each additional ERC1155 token: ~`42,672` gas.
+
+## Extensions
+
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Gasless](/contracts/build/extensions)
+- [AirdropERC1155](/contracts/build/extensions)

@@ -1,7 +1,6 @@
 import {
   Box,
   Center,
-  DarkMode,
   Flex,
   Icon,
   LightMode,
@@ -23,6 +22,7 @@ import { Heading, LinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import WhiteLogo from "../../../public/assets/landingpage/white-logo.png";
 import HeroImage from "../../../public/assets/learn/hero.png";
+import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const TRACKING_CATEGORY = "learn";
 
@@ -34,9 +34,10 @@ const SEO = {
 
 const Learn: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
+    <>
       <NextSeo {...SEO} />
       <Flex
         sx={{
@@ -253,7 +254,7 @@ const Learn: ThirdwebNextPage = () => {
         <NewsletterSection />
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

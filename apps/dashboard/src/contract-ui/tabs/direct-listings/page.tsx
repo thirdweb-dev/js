@@ -29,7 +29,8 @@ export const ContractDirectListingsPage: React.FC<
         <Heading size="title.sm">Contract Listings</Heading>
         <Flex gap={4}>
           <CreateListingButton
-            contractQuery={contractQuery}
+            contractAddress={contractQuery.contract.getAddress()}
+            chainId={contractQuery.contract.chainId}
             type="direct-listings"
             createText="Create Direct Listing"
           />

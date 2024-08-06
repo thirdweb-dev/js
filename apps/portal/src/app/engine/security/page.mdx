@@ -1,0 +1,33 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Security | thirdweb Engine",
+	description:
+		"thirdweb Engine is a self-hosted, open-source, and secure wallet solution for your users.",
+});
+
+# Security
+
+## Data handling
+
+- Since Engine is self-hosted, you (the developer) maintain control over the server, database, logging, and observability.
+- Engine handles configuration data encrypted in transit and at rest.
+- Backend wallet signers are reconstructed only in memory on your Engine instance, and this data is never sent to thirdweb or other external platforms.
+- thirdweb may collect the following information:
+  - Metrics on which accounts are using Engine
+  - Anonymized metrics on usage
+  - Transactions history
+  - (TBD future data to power advanced analytics)
+
+## Third-party security audit
+
+As of Jan 2024, Engine has received a thorough security audit and internal bug bounty program from HackerOne. A Letter of Attestation may be provided upon request.
+
+## Responsible disclosure
+
+To report a security vulnerability, please contact security@thirdweb.com.
+
+## Legal
+
+- [Terms of Service](https://thirdweb.com/tos)
+- [Privacy Policy](https://thirdweb.com/privacy)

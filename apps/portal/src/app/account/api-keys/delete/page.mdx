@@ -1,0 +1,40 @@
+import { DocImage, Steps, Step } from "@doc";
+import chooseKeyImage from "../assets/choose-key.png";
+import confirmDeleteImage from "../assets/confirm-delete.png";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Delete API Key",
+	description:
+		"Deleting an API key will invalidate it, making it no longer usable.",
+	image: {
+		title: "Delete thirdweb API Key",
+		icon: "thirdweb",
+	},
+});
+
+# Delete API Key
+
+Deleting an API key will invalidate it, making it no longer usable.
+
+<Steps>
+
+<Step title="Go to Dashboard">
+	Navigate to **[Settings > API
+	Keys](https://thirdweb.com/dashboard/settings/api-keys/)** on the dashboard.
+</Step>
+
+<Step title='Choose API Key'>
+Choose the API Key you want to delete.
+
+<DocImage src={chooseKeyImage} />
+
+</Step>
+
+<Step title='Delete Key'>
+To delete an API key, select `Delete key` and confirm your intention to delete the key. The key will then be deleted.
+
+<DocImage src={confirmDeleteImage} />
+</Step>
+
+</Steps>

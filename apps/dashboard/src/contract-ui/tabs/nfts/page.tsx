@@ -1,5 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
@@ -28,25 +29,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contract,
 }) => {
   const contractQuery = useContract(contractAddress);
-
   const router = useRouter();
   const tokenId = router.query?.paths?.[2];
-
-  const detectedState = detectFeatures(contractQuery?.contract, [
-    "ERC721Enumerable",
-    "ERC1155Enumerable",
-    "ERC721Supply",
-  ]);
-
   const isErc721 = detectFeatures(contractQuery?.contract, ["ERC721"]);
-
-  const isErc721Claimable = detectFeatures(contractQuery?.contract, [
-    "ERC721ClaimPhasesV1",
-    "ERC721ClaimPhasesV2",
-    "ERC721ClaimConditionsV1",
-    "ERC721ClaimConditionsV2",
-    "ERC721ClaimCustom",
-  ]);
 
   if (tokenId && isOnlyNumbers(tokenId)) {
     return (
@@ -64,17 +49,100 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     return <div>Loading...</div>;
   }
 
+  const detectedClaimState = extensionDetectedState({
+    contractQuery,
+    feature: [
+      "ERC721ClaimPhasesV1",
+      "ERC721ClaimPhasesV2",
+      "ERC721ClaimConditionsV1",
+      "ERC721ClaimConditionsV2",
+      "ERC721ClaimCustom",
+    ],
+  });
+
+  const isErc721Claimable = detectFeatures(contractQuery?.contract, [
+    "ERC721ClaimPhasesV1",
+    "ERC721ClaimPhasesV2",
+    "ERC721ClaimConditionsV1",
+    "ERC721ClaimConditionsV2",
+    "ERC721ClaimCustom",
+  ]);
+
+  const detectedState = detectFeatures(contractQuery?.contract, [
+    "ERC721Enumerable",
+    "ERC1155Enumerable",
+    "ERC721Supply",
+  ]);
+
+  const detectedLzyMintState = extensionDetectedState({
+    contractQuery,
+    feature: [
+      "ERC721LazyMintable",
+      "ERC1155LazyMintableV1",
+      "ERC1155LazyMintableV2",
+    ],
+  });
+
+  const isRevealable = detectFeatures(contractQuery.contract, [
+    "ERC721Revealable",
+    "ERC1155Revealable",
+  ]);
+
+  const detectedRevealableState = extensionDetectedState({
+    contractQuery,
+    feature: ["ERC721Revealable", "ERC1155Revealable"],
+  });
+
+  const detectedMintableState = extensionDetectedState({
+    contractQuery,
+    feature: ["ERC721Mintable", "ERC1155Mintable"],
+  });
+
+  const detectedLazyMintableState = extensionDetectedState({
+    contractQuery,
+    feature: [
+      "ERC721LazyMintable",
+      "ERC1155LazyMintableV1",
+      "ERC1155LazyMintableV2",
+    ],
+  });
+
+  const detectedSharedMetadataState = extensionDetectedState({
+    contractQuery,
+    feature: ["ERC721SharedMetadata"],
+  });
+
   return (
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Contract NFTs</Heading>
         <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
-          <NFTRevealButton contractQuery={contractQuery} />
-          <NFTClaimButton contractQuery={contractQuery} />
-          <NFTMintButton contractQuery={contractQuery} />
-          <NFTSharedMetadataButton contractQuery={contractQuery} />
-          <NFTLazyMintButton contractQuery={contractQuery} />
-          <BatchLazyMintButton contractQuery={contractQuery} />
+          {detectedRevealableState === "enabled" && contractQuery?.contract && (
+            <NFTRevealButton contractQuery={contractQuery} />
+          )}
+          {detectedClaimState && contractQuery?.contract && (
+            <NFTClaimButton
+              contractAddress={contractQuery.contract.getAddress()}
+              chainId={contractQuery.contract.chainId}
+            />
+          )}
+          {detectedMintableState === "enabled" && contractQuery?.contract && (
+            <NFTMintButton contractQuery={contractQuery} />
+          )}
+          {detectedSharedMetadataState === "enabled" &&
+            contractQuery?.contract && (
+              <NFTSharedMetadataButton contractQuery={contractQuery} />
+            )}
+          {detectedLazyMintableState === "enabled" &&
+            contractQuery?.contract && (
+              <NFTLazyMintButton contractQuery={contractQuery} />
+            )}
+          {detectedLzyMintState === "enabled" && contractQuery?.contract && (
+            <BatchLazyMintButton
+              contractQuery={contractQuery}
+              isRevealable={isRevealable}
+            />
+          )}
         </Flex>
       </Flex>
       {!detectedState ? (

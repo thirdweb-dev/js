@@ -1,0 +1,79 @@
+# FAQ
+
+## About Engine
+
+### How are Engine and the thirdweb Contract SDK different?
+
+Engine is a server that manages your backend wallets and how they interact with contracts. This difference unlocks capabilities that thirdweb and other web3 SDKs, including:
+
+- Management of KMS backend wallets
+- Fine-grained access control with access tokens
+- Transaction parallelization to handle higher throughput per wallet
+- Observability and retries on stuck transactions
+- Webhooks on completed transactions to sync onchain and off-chain activity
+
+Additionally, Engine is built on top of the thirdweb SDK and has the same capabilities.
+
+### Does Engine work with all thirdweb smart contracts?
+
+Yes. Engine has intuitive interfaces to deploy prebuilt contracts, manage smart accounts, run a marketplace, and more.
+
+### Does Engine work with my non-thirdweb smart contract?
+
+Yes. Engine can read and write to any EVM contract with low-level API calls, including providing raw calldata. ERC-721 and ERC-1155 APIs can also be used for [contracts imported to thirdweb](https://support.thirdweb.com/smart-contracts/rtHYyzspnPaHmmANmJQz1k/importing-non-thirdweb-contracts-into-the-dashboard/hELLjgTc8TWrMdMEQkm2Es).
+
+## Using Engine
+
+### How do I wait for a transaction to be mined?
+
+Write calls to contracts do not block until they are mined. Instead they enqueue an async job and immediately return a reference to the job called `queueId`.
+
+Here are three ways to determine when the job is mined:
+
+- Use [webhooks](/engine/features/webhooks) to notify your backend when a transaction event occurs.
+- Poll the `/transaction/status/<queue_id>` endpoint.
+- Use websockets:
+
+  ```js
+  const socket = new WebSocket(
+  	"wss://<engine_url>/transaction/status/<queue_id>?token=<session_token>",
+  );
+  socket.onmessage = (event) => {
+  	const res = JSON.parse(event.data);
+  	console.log("Received data:", JSON.parse(res.result));
+  };
+  ```
+
+### How do I customize my RPC?
+
+Use [Update Chain Configuration](https://redocly.github.io/redoc/?url=https://demo.web3api.thirdweb.com/json#tag/Configuration/operation/updateChainsConfiguration) to override a chain's settings.
+
+**Example**
+
+`POST /configuration/chains`
+
+Headers
+
+```text
+Content-Type: application/json
+Authorization: Bearer <access_token>
+```
+
+Body
+
+```json
+[
+	{
+		"name": "Polygon Mainnet",
+		"chain": "Polygon",
+		"slug": "polygon",
+		"chainId": 137,
+		"rpc": ["https://<custom_rpc_url>"],
+		"nativeCurrency": {
+			"name": "MATIC",
+			"symbol": "MATIC",
+			"decimals": 18
+		}
+	}
+]
+```

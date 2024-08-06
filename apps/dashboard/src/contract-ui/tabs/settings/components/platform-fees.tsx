@@ -12,7 +12,10 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { defineDashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
@@ -43,10 +46,18 @@ export const SettingsPlatformFees = <
     values: query.data,
   });
 
+  const contractV5 = contract
+    ? getContract({
+        address: contract.getAddress(),
+        chain: defineDashboardChain(contract.chainId),
+        client: thirdwebClient,
+      })
+    : null;
+
   const { onSuccess, onError } = useTxNotifications(
     "Platform fee settings updated",
     "Error updating platform fee settings",
-    contract,
+    contractV5,
   );
 
   return (

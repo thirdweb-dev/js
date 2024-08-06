@@ -1,0 +1,46 @@
+import { ArticleIconCard, createMetadata, DocImage, Stack } from "@doc";
+import {
+	ZapIcon,
+	ScrollTextIcon,
+	ArrowRightLeftIcon,
+	WalletIcon,
+	BlocksIcon,
+	CodeIcon,
+	FolderTreeIcon,
+	PlugZapIcon,
+	ComponentIcon,
+	CableIcon,
+} from "lucide-react";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Connecting Wallets",
+		icon: "react",
+	},
+	title: "Connecting Wallets in thirdweb React SDK",
+	description:
+		"Connect wallets using ConnectButton, ConnectEmbed or useConnect hook",
+});
+
+# Connecting Wallets
+
+Use the prebuilt UI components or create your own UX with hooks to connect wallets in your app.
+
+<Stack>
+
+<ArticleIconCard
+	title="Using UI Components"
+	icon={ComponentIcon}
+	description="Prebuilt UI components for connecting wallets"
+	href="/react/v5/connecting-wallets/ui-components"
+/>
+
+<ArticleIconCard
+	title="Using Hooks"
+	icon={CableIcon}
+	href="/react/v5/connecting-wallets/hooks"
+	description="Hooks for connecting wallets with your own UX"
+/>
+
+</Stack>
+

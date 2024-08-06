@@ -1,0 +1,45 @@
+
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as extensions.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# Delayed Reveal Batch Metadata ERC-721
+
+## Description
+
+The `DelayedRevealBatchMetadataERC721` contract is an extension that provides functionality for delayed reveal of metadata for ERC-721 tokens. It enables the uploading of metadata for ranges of token IDs with optional encryption, allowing tokens to be revealed at a later time with a decryption key. This is useful for scenarios where the token metadata needs to be kept secret until a specified time.
+
+## Callback Functions
+
+| Function   | Description                                                                |
+|------------|----------------------------------------------------------------------------|
+| `onTokenURI` | Callback function for `ERC721Metadata.tokenURI`. Returns the metadata URI for a given tokenId. If the metadata is encrypted, it returns a placeholder URI. |
+
+## Fallback Functions
+
+| Function                | Description                                                                             |
+|-------------------------|-----------------------------------------------------------------------------------------|
+| `getAllMetadataBatches` | Returns all metadata batches for a token. Each batch contains a range of token IDs, their associated base URI, and any encrypted data. |
+| `uploadMetadata`        | Uploads metadata for a range of token IDs. Emits a `NewMetadataBatch` event and a `BatchMetadataUpdate` event. Optionally includes encrypted data and a provenance hash. |
+| `reveal`                | Reveals the URI for a range of 'delayed-reveal' tokens using a provided decryption key. Emits a `TokenURIRevealed` event and a `BatchMetadataUpdate` event. |
+
+## Required Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-721`  | `0x80ac58cd`|
+
+## Supported Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-4906` | `0x49064906`|
+

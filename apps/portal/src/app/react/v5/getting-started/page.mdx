@@ -1,0 +1,257 @@
+import { Stack, InstallTabs, Callout, Steps, Step, GithubTemplateCard } from "@doc";
+
+# Getting Started
+
+You can get started by creating a new project or adding thirdweb to an existing project.
+
+## New Projects
+
+You can quickly create a new project with the thirdweb CLI
+
+```bash
+npx thirdweb create app --legacy-peer-deps
+```
+
+or clone the the Next.js or Vite starter repo:
+
+<Stack>
+<GithubTemplateCard
+	title="Next.js + thirdweb starter repo"
+	descrption="A starter template for using the thirdweb package in a Next.js app"
+	href="https://github.com/thirdweb-example/next-starter"
+/>
+
+<GithubTemplateCard
+	title="Vite + thirdweb starter repo"
+	descrption="A starter template for using the thirdweb package in a Vite app"
+	href="https://github.com/thirdweb-example/vite-starter"
+/>
+</Stack>
+
+## Existing Projects
+
+Install the thirdweb packages in your project
+
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+    but="bun i thirdweb"
+/>
+
+## Build your app
+
+<Steps>
+<Step title="Setup the ThirdwebProvider">
+
+At the root of your application, wrap your app with a `ThirdwebProvider` component. This keeps state around like the active wallet and chain.
+
+```tsx
+// src/main.tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+function Main() {
+	return (
+		<ThirdwebProvider>
+			<App />
+		</ThirdwebProvider>
+	);
+}
+```
+
+</Step>
+
+<Step title="Create the thirdweb client">
+
+Head to the [thirdweb dashboard](https://thirdweb.com/dashboard), create your account (or sign in), and click **Settings** to reach the [api keys](https://thirdweb.com/dashboard/settings/api-keys) page.
+
+Create an API key with `localhost` included in the allowed domains. Securely store your secret key and copy your client id for use in the next step.
+
+Create a `.env` file and add your client ID there. Then create a `client.ts` file with the following content:
+
+```tsx
+// src/client.ts
+import { createThirdwebClient } from "thirdweb";
+
+export const client = createThirdwebClient({
+  clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
+});
+```
+
+You only need to define the client once. Exporting the client vartiable will allow you to use anywhere in your app.
+
+</Step>
+
+<Step title="Connect a wallet">
+
+There are two ways to connect users to your app:
+
+- The prebuilt `ConnectButton` or `ConnectEmbed` components.
+- Your own custom button.
+
+In this guide, we'll use the prebuilt `ConnectButton` component.
+
+```tsx
+// src/app.tsx
+import { client }  from "./client";
+import { ConnectButton } from 'thirdweb/react';
+
+function App() {
+  return (
+    <div>
+      <ConnectButton client={client} />
+    </div>
+  )
+}
+```
+
+The `ConnectButton` and `ConnectEmbed` components come with built-in support for 350+ of wallets, 2000+ chains, fiat on-ramping, crypto swapping, transaction tracking, and more.
+
+You can also build your own custom button using the [`useConnect`](/react/v5/connecting-wallets/hooks) hook.
+
+</Step>
+
+<Step title="Get the connected wallet information">
+
+Once the user has connected their wallet, you can get the wallet address, balance, and other details.
+
+```tsx
+import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+
+export default function App() {
+	const account = useActiveAccount();
+	const { data: balance, isLoading } = useWalletBalance({
+		client,
+		chain,
+		address: account.address,
+	});
+
+	return <div>
+        <p>Wallet address: {account.address}</p>
+        <p>Wallet balance: {balance?.displayValue} {balance?.symbol}</p>
+    </div>;
+}
+```
+
+</Step>
+
+<Step title="Read blockchain data">
+
+You can read contract state with the [`useReadContract`](/react/v5/useReadContract) hook. This works with any contract call. Simply specify the solidity function signature to get a type safe API for your contract.
+
+```tsx
+import { client }  from "./client";
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useReadContract } from "thirdweb/react";
+
+const contract = getContract({ client, address: "0x...", chain: sepolia });
+
+export default function App() {
+	const { data, isLoading } = useReadContract({
+    	contract,
+   		method: "function tokenURI(uint256 tokenId) returns (string)",
+    	params: [1n],  // type safe params
+  	});
+
+	return <div>
+        <p>Token URI: {data}</p>
+    </div>;
+}
+```
+
+Using [Extensions](/react/v5/extensions) you can do powerful queries like getting all the owned NFTs of a specific address, and generate performant typesafe functions for your contract.
+
+```tsx
+import { client }  from "./client";
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useReadContract } from "thirdweb/react";
+import { getOwnedNFTs } from "thirdweb/extensions/erc721";
+
+const contract = getContract({ client, address: "0x...", chain: sepolia });
+
+export default function App() {
+	const { data: ownedNFTs } = useReadContract(getOwnedNFTs, {
+    contract,
+    address: "0x...",
+  });
+
+	return <div>
+        <p>Owned NFTs: {ownedNFTs}</p>
+    </div>;
+}
+```
+
+</Step>
+
+<Step title="Execute transactions">
+
+You can execute transactions with the [`useSendTransaction`](/react/v5/useSendTransaction) hook. Prepare a transaction with the [`prepareContractCall`](/references/typescript/v5/prepareContractCall) function and pass it to the `sendTransaction` function.
+
+```tsx
+import { client }  from "./client";
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useSendTransaction } from "thirdweb/react";
+
+const contract = getContract({ client, address: "0x...", chain: sepolia });
+
+export default function App() {
+	const { mutate: sendTransaction } = useSendTransaction();
+
+	const onClick = async () => {
+		const transaction = prepareContractCall({
+			contract,
+			method: "function mint(address to)",
+			params: ["0x..."], // type safe params
+		});
+		sendTransaction(transaction);
+  	};
+
+	return <div>
+        <button onClick={onClick}>Mint</button>
+    </div>;
+}
+```
+
+Using [Extensions](/react/v5/extensions/use) you can do more complex transactions like a claim, batch mint, and more. These will handle all the preprocessing needed before calling the contract.
+
+```tsx
+import { client }  from "./client";
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { useSendTransaction } from "thirdweb/react";
+import { mintTo } from "thirdweb/extensions/erc721";
+
+const contract = getContract({ client, address: "0x...", chain: sepolia });
+
+export default function App() {
+	const { mutate: sendTransaction } = useSendTransaction();
+
+	const onClick = async () => {
+		// this mint extension handles uploading metadata to IPFS and pining it
+		const transaction = mintTo({
+			contract,
+			to: "0x...",
+			nft: {
+				name: "NFT Name",
+				description: "NFT Description",
+				image: "https://example.com/image.png",
+			},
+    	});
+		sendTransaction(transaction);
+  	};
+
+	return <div>
+        <button onClick={onClick}>Mint</button>
+    </div>;
+}
+```
+
+</Step>
+</Steps>
+
+## Learn more
+
+You know have all the basics to build your own app with thirdweb. You can also check out the [full thirdweb SDK reference](/references/typescript/v5) to learn more about the different hooks and functions available.

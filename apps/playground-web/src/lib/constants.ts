@@ -10,7 +10,7 @@ export const WALLETS = [
       options: [
         "google",
         "discord",
-        "apple",
+        "telegram",
         "email",
         "passkey",
         "phone",

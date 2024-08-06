@@ -1,0 +1,126 @@
+import {
+	createMetadata,
+	Callout,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
+} from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Deploying thirdweb Auth",
+		icon: "wallets",
+	},
+	title: "Deploying thirdweb Auth",
+	description:
+		"A few things to note before deploying thirdweb Auth applications to production.",
+});
+
+# Deploying Your App to Production
+
+Before you deploy your app to real users, you'll want to make sure your application is secure and ready to onboard users to your app. This involves separating some operations to the server and others to the client.
+
+The examples in [Getting Started](/connect/auth) do everything on the client. The following examples demonstrate what should be on the server instead to ensure your application is secure.
+
+<Callout variant="info">
+	Some of the code here is left for you to implement. This provides you with
+	flexibility and control over your application's authentication. However, if
+	you'd like specific examples, check out our
+	[templates](/connect/auth#templates) or [framework
+	guides](/connect/auth#frameworks).
+</Callout>
+
+<Tabs defaultValue="client">
+
+<TabsList>
+	<TabsTrigger value="client">Client</TabsTrigger>
+	<TabsTrigger value="server">Server</TabsTrigger>
+</TabsList>
+
+<TabsContent value="client">
+
+At the root of your application:
+
+```tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+export default function App() {
+	return <ThirdwebProvider>{/* Your app here */}</ThirdwebProvider>;
+}
+```
+
+In your `components` directory:
+
+```tsx
+import { ConnectButton } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({ clientId });
+
+export default function Connect() {
+	<ConnectButton
+		client={client}
+		auth={{
+			getLoginPayload: async (params) => {
+				const address = params.address;
+				// fetch the login payload here using address
+			},
+			doLogin: async (params) => {
+				// send the signed login payload (params) to the server
+			},
+			isLoggedIn: async () => {
+				// fetch the user's login status from the server
+			},
+			doLogout: async () => {
+				// send a logout request to the server
+			},
+		}}
+	/>;
+}
+```
+
+</TabsContent>
+
+<TabsContent value="server">
+
+```ts
+import { createThirdwebClient } from "thirdweb";
+import { createAuth } from "thirdweb/auth";
+
+const client = createThirdwebClient({
+	clientId: "1234567890", // get yours at https://thirdweb.com/dashboard/settings/api-keys
+});
+
+const thirdwebAuth = createAuth({
+	domain: "localhost:3000",
+	client,
+});
+
+// 1. generate a login payload
+const loginPayload = await auth.generatePayload({ address: "0x123..." });
+
+// 2. sign the login payload
+const signature = await auth.signPayload({
+	payload: loginPayload,
+	account: userAccount,
+});
+
+// 3. verify the login payload and signature that the client sends back later
+const verifiedPayload = await auth.verifyPayload({
+	payload: loginPayload,
+	signature,
+});
+
+// 4. generate a JWT for the client
+const jwt = await auth.generateJWT({ payload: verifiedPayload });
+
+// 5. set the JWT as a cookie or store it another way
+
+// 6. authenticate the client based on the JWT on subsequent calls
+const { valid, parsedJWT } = await auth.verifyJWT({ jwt });
+```
+
+</TabsContent>
+
+</Tabs>

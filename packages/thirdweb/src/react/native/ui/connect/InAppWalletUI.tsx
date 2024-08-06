@@ -33,6 +33,7 @@ import {
   FARCASTER_ICON,
   GOOGLE_ICON,
   PHONE_ICON,
+  TELEGRAM_ICON,
 } from "../icons/svgs.js";
 import type { ModalState } from "./ConnectModal.js";
 
@@ -50,6 +51,7 @@ const socialIcons = {
   apple: APPLE_ICON,
   discord: DISCORD_ICON,
   farcaster: FARCASTER_ICON,
+  telegram: TELEGRAM_ICON,
 };
 
 type InAppWalletFormUIProps = {
@@ -159,6 +161,11 @@ function PreOtpLogin(
     }) => {
       const { auth, phoneOrEmail } = options;
       if (auth === "phone") {
+        if (phoneOrEmail.slice(0, 1) !== "+") {
+          throw new Error(
+            "Invalid phone number. Please include a country code.",
+          );
+        }
         await preAuthenticate({
           client,
           strategy: auth,

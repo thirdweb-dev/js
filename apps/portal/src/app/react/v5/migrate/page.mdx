@@ -1,0 +1,77 @@
+# Migration from React SDK v4
+
+## Why you should migrate
+
+#### 1. Better performance, happier clients
+The new SDK is built with performance in mind and proper tree-shaking. Therefore, the minimum bundle size of your application is greatly reduced.
+
+Below is the comparison of 2 similar applications, using `ConnectWallet` (v4) & `ConnectButton` (v5), which are identical in term of functionality.
+
+|                     | SDK v4 | SDK v5
+| ------------------- | ------ | -------
+| Minimum bundle size | <span style={{color: 'red'}}>766kb</span>  | <span style={{color: 'green'}}>104kb</span>
+| Dependencies        | `"@thirdweb-dev/react": "^4.9.4"`<br/>`"@thirdweb-dev/sdk": "^4.0.99"`<br/>`"ethers": "^5.7.2"`| `"thirdweb": "^5.42.0"`
+
+_(Built with Next.js 14.2.5)_
+
+#### 2. More wallets supported
+The SDK v4 only supports a handful of web3 wallets and the more wallets you want to include in your app, the heavier it becomes.
+
+SDK v5 supports over 300 wallets and this number is increasing! You can [interact with wallets based on their unique IDs](/typescript/v5/wallets#example-connect-a-wallet-and-access-an-account-to-send-a-transaction).
+Hence, adding more wallets to your app has little to no effect to the final bundle.
+
+#### 3. Flexibility with React hooks
+When building a React web3 application with thirdweb SDK v4, you have access to a set of prebuilt React hooks which let you conveniently interact with your smart contracts.
+
+The issue with this approach is that, the number of smart-contract methods is ever-increasing, and for each hook that does not exist, we have to dedicate time & energy
+to write, test & maintain. This process is time-consuming & frankly, the more React hooks you add to your app, the slower and more unmaintainable your projects become.
+
+In SDK v5, we introduce a novel concept called "prebuilt extensions" - a set of read & write methods for popular contracts which you can _plug & play_. For example:
+###### Read contract states with v5
+```ts
+// Get a list of owned ERC721 tokens in a wallet
+import { useReadContract } from "thirdweb/react";
+import { getOwnedNFTs } from "thirdweb/extensions/erc721";
+
+const { data } = useReadContract(getOwned, { contract, owner });
+```
+
+###### Write to contract with v5
+```ts
+// Claim an NFT from thirdweb Drop contract
+import { useSendTransaction } from "thirdweb/react";
+import { claimTo } from "thirdweb/extensions/erc721";
+
+const { mutate: sendTx } = useSendTransaction();
+const transaction = claimTo({
+  contract,
+  to: "0x...",
+  quantity: 1n,
+});
+sendTx(transaction);
+```
+
+As you can see, by pairing the contract extensions with `useReadContract` (for read) and `useSendTransaction` (for write),
+we are able to greatly reduce the amount of code that is packaged & shipped to the end users. Plus, with this approach we can dedicate more time
+to building contract extensions. The SDK v5 currenty supports over hundreds of extensions, with some popular protocols like Uniswap, Farcaster, Lens & more to come.
+
+View a list of [supported extensions](/typescript/v5/extensions/built-in) here, or [build your own](/typescript/v5/extensions/create)!
+
+
+
+#### 4. Access to latest software
+Currently the SDK v4 is using `ethers@5.7.2` and `@tanstack/react-query@^4` which can be considered "outdated".
+We unfortunately do not have a plan to upgrade v4's dependencies to the latest versions. 
+We highly recommend you to migrate to the SDK v5 to receive the latest software with better security and performance.  
+Want to keep using ethers.js 5? Worry not! The SDK v5 comes with powerful adapters which let you use thirdweb with popular web3 frameworks like viem or ethers 5 & 6.  
+[Learn more](/typescript/v5/adapters#ethers-v5)  
+
+
+<hr/>
+
+### Get started
+
+1. [Installation & Setups](/typescript/v5/react/migrate/installation)
+2. [Interacting with contracts](/typescript/v5/react/migrate/contracts)
+3. [ethers.js Adapter](/typescript/v5/react/migrate/ethers-adapter)
+4. [Cheatsheet](/typescript/v5/react/migrate/cheatsheet)

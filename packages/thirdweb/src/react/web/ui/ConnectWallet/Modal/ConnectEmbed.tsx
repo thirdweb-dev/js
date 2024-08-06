@@ -96,6 +96,21 @@ import { useSetupScreen } from "./screen.js";
  * />
  * ```
  *
+ * ### Enabling Account Abstraction
+ *
+ * By passing the `accountAbstraction` prop, ALL connected wallets will be converted to smart accounts.
+ * And by setting `sponsorGas` to `true`, all transactions done with those smart accounts will be sponsored.
+ *
+ * ```tsx
+ * <ConnectEmbed
+ * client={client}
+ * accountAbstraction={{
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * }}
+ * />;
+ * ```
+ *
  * ### Enabling sign in with ethereum (Auth)
  *
  * ```tsx

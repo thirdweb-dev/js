@@ -1,0 +1,75 @@
+import { Details, ArticleIconCard, Stack } from "@doc";
+import {
+	BlocksIcon,
+} from "lucide-react";
+
+# Extensions
+
+Get familiar with the concept of extensions and how to use them in your project.
+
+<ArticleIconCard
+	title="Understanding Extensions"
+	description="Learn how to use extensions in your project"
+	icon={BlocksIcon}
+	href="/typescript/v5/extensions/use"
+/>
+
+## Using read extensions in React
+
+Any extension that reads from the blockchain can be used with `useReadContract`. The extension function itself be passed as the first argument, and the extension's parameters must be passed as the second argument.
+
+```ts
+import { getContract } from "thirdweb";
+import { useReadContract } from "thirdweb/react";
+import { getOwnedNFTs } from "thirdweb/extensions/erc721";
+
+const contract = getContract({
+	client,
+	chain,
+	address: "0x...",
+});
+
+const MyComponent = () => {
+	const ownedNFTs = useReadContract(getOwnedNFTs, {
+		contract,
+		address: "0x...",
+	});
+};
+```
+
+## Using write extensions in React
+
+For extensions that write to the blockchain, they work the same way as raw contract calls using `useSendTransaction`.
+
+Write extensions always return a `Transaction` object that can be passed to `useSendTransaction`.
+
+Note that unlike in TypeScript core, `useSendTransaction` does not require passing the active `Account`, it will used the current active account from the React context.
+
+```ts
+import { getContract } from "thirdweb";
+import { useSendTransaction } from "thirdweb/react";
+import { mintTo } from "thirdweb/extensions/erc721";
+
+const contract = getContract({
+	client,
+	chain,
+	address: "0x...",
+});
+
+const MyComponent = () => {
+	const { mutate: sendTransaction, isPending } = useSendTransaction();
+
+	const onClick = async () => {
+		const transaction = mintTo({
+			contract,
+			to: "0x...",
+			nft: {
+				name: "NFT Name",
+				description: "NFT Description",
+				image: "https://example.com/image.png",
+			},
+		});
+		sendTransaction(transaction);
+	};
+};
+```

@@ -1,0 +1,192 @@
+import { InstallTabs, Steps, Step, Callout } from "@doc";
+
+# Getting Started
+
+In this quickstart guide, we'll create a basic script to generate a wallet using a private key and send a transaction. We’ll assume you already have a TypeScript project created.
+
+<Steps>
+<Step title="Install the SDK">
+
+To get started, install the thirdweb SDK using your preferred package manager.
+
+<InstallTabs npm="npm i thirdweb" yarn="yarn add thirdweb" pnpm="pnpm i thirdweb" bun="bun i thirdweb" />
+</Step>
+
+<Step title="Create a thirdweb client">
+
+Get an API key from https://thirdweb.com/dashboard/settings/api-keys and add it to your `.env`.
+
+```shell
+THIRDWEB_SECRET_KEY=[YOUR SECRET KEY]
+WALLET_PRIVATE_KEY=[YOUR WALLET PRIVATE KEY]
+```
+
+Create a thirdweb client in your script.
+
+```ts
+import { createThirdwebClient } from "thirdweb"
+
+const client = createThirdwebClient({
+	// use `secretKey` for server side or script usage
+	secretKey: process.env.THIRDWEB_SECRET_KEY
+});
+```
+
+<Callout variant="warning" title="Client Id vs Secret Key">
+	Client Id is used for **client side usage** and is restricted by the domain restrictions you set on your API key, it is a public identifier which can be used on the frontend safely.
+    
+    Secret key is used for **server side or script usage** and is not restricted by the domain restrictions. Never expose your secret key in client side code.
+</Callout>
+
+
+</Step>
+
+<Step title="Read Contract State">
+
+A client is all your need to start reading blockchain data. 
+
+1. Import the extensions you want to use.
+2. Define a contract with `getContract` at a given address and chain.
+3. Call the extension function to read the data.
+
+```ts
+import { getContract } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+// 1. import the extension you want to use
+import { getOwnedNFTs } from "thirdweb/extensions/erc1155";
+
+// 2. get the contract
+const contract = getContract({
+    client,
+    address: "0x1234...",
+    chain: sepolia,
+});
+
+// 3. call the extension function
+const ownedNFTs = await getOwnedNFTs({
+	contract,
+	address: "0x1234...",
+});
+
+console.log(ownedNFTs);
+```
+
+</Step>
+
+<Step title="Generate a wallet from a private key">
+
+To perform transactions from your script, you'll need an account. You can generate a wallet from a private key using the `privateKeyToAccount` function.
+
+```ts
+import { privateKeyToAccount } from "thirdweb/wallets"
+
+const account = privateKeyToAccount({
+	client,
+	privateKey: process.env.PRIVATE_KEY
+});
+
+// Get the address of the account
+const address = account.address;
+console.log("Connected as", address);
+```
+
+</Step>
+
+<Step title="Read Wallet Data">
+
+Let's read balance of the account you just created, you'll need funds to perform transactions.
+
+```ts
+import { getWalletBalance } from "thirdweb/wallets";
+
+// Get the balance of the account
+const balance = await getWalletBalance({
+	account,
+	chain: sepolia,
+});
+console.log("Balance:", balance.displayValue, balance.symbol);
+```
+
+</Step>
+
+<Step title="Send a transaction">
+
+With the account created and funded, you can now send a transaction.
+
+1. Import the extension you want to use.
+2. Define a contract with `getContract` at a given address and chain.
+3. Call the extension function to prepare the transaction.
+4. Send the transaction.
+
+```ts
+import { getContract, sendTransaction } from "thirdweb";
+// 1. Import the extension you want to use
+import { transfer } from "thirdweb/extensions/erc20";
+ 
+// 2. Define the contract
+const contract = getContract({
+    client,
+    address: "0x1234...",
+    chain: sepolia,
+});
+ 
+// 3. Call the extension function to prepare the transaction
+const transaction = transfer({
+  contract,
+  to: "0x1234...",
+  amount: "0.01",
+});
+ 
+// 4. Send the transaction
+const result = await sendTransaction({
+  transaction,
+  account,
+});
+
+console.log("Transaction hash:", result.transactionHash);
+```
+
+You can also call generic contract functions using the `prepareContractCall` function by just specifying the solidity method signature you want to call. The arguments will be automatically inferred based on the method signature.
+
+```ts
+import { getContract, prepareContractCall, sendTransaction } from "thirdweb";
+import { sepolia } from "thirdweb/chains";
+import { toWei } from "thirdweb/utils";
+
+// 1. Define the contract
+const contract = getContract({
+    client,
+    address: "0x1234...",
+    chain: sepolia,
+});
+
+// 2. Prepare the transaction
+const transaction = prepareContractCall({
+  contract,
+  // Pass the method signature that you want to call
+  method: "function mintTo(address to, uint256 amount)",
+  // and the params for that method
+  // Their types are automatically inferred based on the method signature
+  params: ["0x123...", toWei("100")],
+});
+
+// 3. Send the transaction
+const result = await sendTransaction({
+  transaction,
+  account,
+});
+
+console.log("Transaction hash:", result.transactionHash);
+```
+
+</Step>
+<Step title="Conclusion">
+
+You've now learned the basics of how to use the thirdweb SDK to read and write to the blockchain. You can now start building your own applications and explore the full potential of the SDK.
+
+[View the full SDK reference](/references/typescript/v5).
+
+
+</Step>
+
+</Steps>

@@ -1,0 +1,28 @@
+import { DocImage } from "@doc";
+import { createMetadata, FeatureCard } from "@doc";
+import transformer from "./assets/transformer.png";
+
+export const metadata = createMetadata({
+	title: "thirdweb Modular Contracts",
+	description:
+		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as extensions.",
+	image: {
+		title: "thirdweb Modular Contracts",
+		icon: "solidity",
+	},
+});
+
+# How it works
+
+A modular contract is composed of two types of contracts:
+
+- Core Contract: the foundational API to be customized by installing extensions
+- Extension Contract: implement a set of functionality to be enabled on a Core Contract upon installation
+
+As an analogy, think of a robot in which the torso is the Core with available sockets for attaching extensions.
+
+<DocImage src={transformer} />
+
+The torso has a particular shape and exposes sockets at fixed places, determining how extensions will be attached. Similarly, a Core smart contract has a fixed API determining which extensions are compatible with installation.
+
+The *Extensions*, e.g., a leg, arm, head, etc., give the robot (i.e., the modular contract) various capabilities.

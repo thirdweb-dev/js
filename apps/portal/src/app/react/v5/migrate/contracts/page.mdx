@@ -1,0 +1,172 @@
+[Migrate from React v4](/react/v5/migrate)
+
+# Interacting with contracts
+
+With SDK v4, you always have to "load" a contract with `useContract`. This process adds complexity to your app and inpacts its performance.  
+In the latest version, a smart contract (type: [`ThirdwebContract`](/references/typescript/v5/ThirdwebContract)) represents a simple object containing info about the contract address, the chain it was deployed on, and the thirdweb client object.
+
+Example for declaring a smart contract on Ethereum mainnet
+```tsx
+import { getContract, createThirdwebClient } from "thirdweb";
+import { ethereum } from "thirdweb/chains";
+
+const client = createThirdwebClient({
+  clientId: process.env.NEXT_PUBLIC_TW_CLIENT_ID,
+});
+
+const contract = getContract({
+  address: "0x....",
+  chain: ethereum,
+  client,
+});
+```
+
+## Contract extensions
+
+This is a new terminology that we introduced in the new SDK. Basically, each extension represents a method of a contract, be it a "write" or a "read" method.
+
+An extension is a function that returns a [`PreparedTransaction`](/references/typescript/v5/PreparedTransaction) which in turn can be executed in a React hook for interacting with the contract. We will talk more about it in the section below.
+
+One of the amazing updates that v5 brings is the rich set of prebuilt extensions. They are the contract methods that have been precompile to ensure a typesafe & performant developer experience.
+
+Check out the list of over 100 prebuilt extensions [here](/typescript/v5/extensions/built-in), ranging from ERC20, ERC721, ERC1155 to top popular DeFi protocols like Uniswap, Farcaster & Lens.
+
+Example: Import an ERC1155 "read" extension, for checking the balance of a wallet
+```tsx
+import { balanceOf } from "thirdweb/extension/erc1155";
+
+const transaction = balanceOf({
+  contract,
+  owner: "0x...",
+  tokenId: 0n,
+});
+```
+
+## Reading states of a contract
+Given the task of calling `balanceOf` from an ERC1155 contract, we'll be comparing the code between v4 and v5
+
+#### SDK v4
+```tsx
+import { useNFTBalance, useContract } from "@thirdweb-dev/react";
+
+function App() {
+  const { contract } = useContract(contractAddress);
+  const { isLoading, data, error } = useNFTBalance(
+    contract,
+    "{{wallet_address}}",
+    "{{token_id}}",
+  );
+}
+
+```
+
+#### SDK v5
+```tsx
+import { getContract, createThirdwebClient } from "thirdweb";
+import { balanceOf } from "thirdweb/extensions/erc1155";
+import { ethereum } from "thirdweb/chains";
+import { client } from "@lib/client";
+
+const contract = getContract({
+  address: "0x....",
+  chain: ethereum,
+  client,
+});
+
+function App() {
+  const { data } = useReadContract(balanceOf, { contract, owner: "0x...", tokenId: 0n });
+}
+```
+
+As you can see from the example above, we introduced the hook [`useReadContract`](/references/typescript/v5/useReadContract) in v5.
+You should use it to perform any contract "read" in your React app.
+It is the perfect replacement for the old chunky React hooks from v4. 
+
+The formula for reading a contract state is:
+```
+useReadContract + <the read contract method>
+```
+
+#### If the extension you are looking for is not included in the SDK
+You can always use the function signature with `useReadContract` (It's also typesafe)
+```tsx
+useReadContract({
+  contract,
+  method: "function balanceOf(address _owner, uint256 tokenId) view returns (uint256)",
+  ...
+})
+```
+
+#### A tip for getting a function's signature
+Go to the thirdweb Dashboard's explorer page and select the function that you want to interact with.
+You should see the "Use this function in your app" section with the code snippet for the signature of the function.
+
+[An example](https://thirdweb.com/avalanche-fuji/0xd5e815241882676F772A624E3892b27Ff3a449c4/explorer?name=balanceOf)
+
+
+## Writing to a contract
+In v5, you can utilize the following hooks for writing to contracts: [`useSendTransaction`](/references/typescript/v5/useSendTransaction) and [`useSendAndConfirmTransaction`](/references/typescript/v5/useSendAndConfirmTransaction).
+The main difference between the 2 hooks is that `useSendTransaction` will mark the request as "complete" once the transaction is sent,
+while `useSendAndConfirmTransaction` will wait until the transaction is included in the blockchain.
+
+Given the task of claiming an NFT from an NFT Drop collection, let's compare the code between the SDK v4 and v5
+
+
+#### SDK V4
+```tsx
+import { useContract, useClaimNFT } from "@thirdweb-dev/react";
+
+function App() {
+  const { contract } = useContract(contractAddress);
+  const {
+    mutateAsync: claimNft,
+    isLoading,
+    error,
+  } = useClaimNFT(contract);
+
+  return (
+    <Web3Button
+      contractAddress={contractAddress}
+      action={() =>
+        claimNft({
+          to: "{{wallet_address}}", // Use useAddress hook to get current wallet address
+          quantity: 1,
+        })
+      }
+    >
+      Claim NFT
+    </Web3Button>
+  );
+}
+```
+
+#### SDK v5
+```tsx
+import { useSendTransaction } from "thirdweb/react";
+import { claimTo } from "thirdweb/extension/erc721";
+
+function App() {
+  const transaction = claimTo({ contract, quantity: 1n, to: "0x..." });
+  const { mutateAsync: claimNft } = useSendTransaction();
+
+  return <button onClick={() => claimNft(transaction)}>
+    Claim
+  </button>
+}
+```
+
+Another beautiful thing about the SDK v5 is that it comes with the [`TransactionButton`](/references/typescript/v5/TransactionButton) 
+which allows you to make a contract call _without_ having to use the above React hooks. As you can see, the code is much cleaner this way!
+
+```tsx
+import { TransactionButton } from "thirdweb/react";
+import { claimTo } from "thirdweb/extension/erc721";
+
+function App() {
+  return <TransactionButton transaction={
+    () => claimTo({ contract, quantity: 1n, to: "0x..." })
+  }>
+    Claim
+  </TransactionButton>
+}
+```

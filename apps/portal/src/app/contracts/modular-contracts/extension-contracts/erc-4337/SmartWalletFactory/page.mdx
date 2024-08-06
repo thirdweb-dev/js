@@ -1,0 +1,222 @@
+import { Details, Callout, GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "BaseAccountFactory contract",
+		icon: "solidity",
+	},
+	title: "BaseAccountFactory | thirdweb contract",
+	description:
+		"The BaseAccountFactory smart contract is an extension usable with the Managed and Non-Upgradable Account smart contracts",
+});
+
+# BaseAccountFactory
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/utils/BaseAccountFactory.sol";
+```
+
+The `BaseAccountFactory` smart contract is an extension usable with the [Managed](/contracts/build/base-contracts/erc-4337/managed-account) and [Non-Upgradable](/contracts/build/base-contracts/erc-4337/account-factory) Account smart contracts.
+When creating your [Smart Account](/glossary/smart-wallet) account factory contract, inherit from this extension to include all of the base logic to create your factory.
+
+<Callout title="info" variant="info">
+	This smart contract extension conforms to the `IAccountFactory` interface
+	which is detectable on the dashboard as the `SmartWalletFactory` extension.
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/utils/BaseAccountFactory.sol" />
+
+## Usage
+
+The `BaseAccountFactory` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                 | Type               | Description                                                                             |
+| -------------------- | ------------------ | --------------------------------------------------------------------------------------- |
+| `_initializeAccount` | internal _virtual_ | Called in `createAccount`. Initializes the account contract created in `createAccount`. |
+
+This is an example factory smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/smart-wallet/utils/BaseAccountFactory.sol";
+
+contract MyAccountFactory is BaseAccountFactory { ... }
+```
+
+## SDK Usage
+
+This extension unlocks the use of the [smart wallet](wallet/smart-wallet) in the wallet SDK.
+
+## Base Contracts Implementing This Extension
+
+- [ManagedAccountFactory](/contracts/build/base-contracts/erc-4337/managed-account-factory)
+- [AccountFactory](/contracts/build/base-contracts/erc-4337/account-factory)
+
+## Full API reference
+
+<Details summary="createAccount">
+
+Deploys a new Account for admin.
+
+```solidity
+function createAccount(address _admin, bytes calldata _data) external virtual override returns (address) {
+    address impl = accountImplementation;
+    bytes32 salt = _generateSalt(_admin, _data);
+    address account = Clones.predictDeterministicAddress(impl, salt);
+    if (account.code.length > 0) {
+        return account;
+    }
+    account = Clones.cloneDeterministic(impl, salt);
+    _initializeAccount(account, _admin, _data);
+    emit AccountCreated(account, _admin);
+    return account;
+}
+```
+
+#### \_admin
+
+The address to be set as default admin role for the contract. Must be of type `address`.
+
+#### \_data
+
+If extra storage variables are required in your account contract, override this function, abi encode the variables,
+pass them to this function as a `bytes` type.
+
+</Details>
+
+<Details summary="addSigner">
+
+Callback function for an Account to register its signers.
+
+```solidity
+function addSigner(address _signer) external {
+    address account = msg.sender;
+    bool isAlreadyAccount = accountsOfSigner[_signer].add(account);
+    bool isAlreadySigner = signersOfAccount[account].add(_signer);
+    if (!isAlreadyAccount || !isAlreadySigner) {
+        revert("AccountFactory: signer already added");
+    }
+    emit SignerAdded(account, _signer);
+}
+```
+
+#### signer
+
+The address of the signer to add to the account.
+
+</Details>
+
+<Details summary="removeSigner">
+
+Callback function for an Account to un-register its signers.
+
+```solidity
+function removeSigner(address _signer) external {
+    address account = msg.sender;
+    bool isAccount = accountsOfSigner[_signer].remove(account);
+    bool isSigner = signersOfAccount[account].remove(_signer);
+    if (!isAccount || !isSigner) {
+        revert("AccountFactory: signer not found");
+    }
+    emit SignerRemoved(account, _signer);
+}
+```
+
+#### \_signer
+
+The address of the signer to remove from the account.
+
+</Details>
+
+<Details summary="getAddress">
+
+Returns the address of an Account that would be deployed with the given admin signer.
+
+```solidity
+function getAddress(address _adminSigner) public view returns (address) {
+    bytes32 salt = _generateSalt(_admin, _data);
+    return Clones.predictDeterministicAddress(accountImplementation, salt);
+}
+```
+
+#### \_adminSigner
+
+The admin signer for the account.
+
+</Details>
+
+<Details summary="getSignersOfAccount">
+
+Returns all signers of an account.
+
+```solidity
+function getSignersOfAccount(address account) external view returns (address[] memory signers) {
+    return signersOfAccount[account].values();
+}
+```
+
+#### account
+
+The address of the account to get the signers of.
+
+</Details>
+
+<Details summary="getAccountsOfSigner">
+
+Returns all accounts that the given address is a signer of.
+
+```solidity
+function getAccountsOfSigner(address signer) external view returns (address[] memory accounts) {
+    return accountsOfSigner[signer].values();
+}
+```
+
+#### signer
+
+The address of the signer to get the accounts of.
+
+</Details>
+
+<Details summary="_initializeAccount">
+
+Called in `createAccount`. Initializes the account contract created in `createAccount`.
+
+```solidity
+function _initializeAccount(
+    address _account,
+    address _admin,
+    bytes calldata _data
+) internal virtual;
+```
+
+#### \_account
+
+The address of the smart account smart contract to initialize.
+
+#### \_admin
+
+The address to be set as default admin role for the contract. Must be of type `address`.
+
+#### \_data
+
+If extra storage variables are required in your account contract, abi encode the variables,
+pass them to this function as the `bytes` argument.
+
+For example:
+
+```solidity
+
+function initializeAccount(
+    address _admin,
+    bytes calldata _data
+) public override initializer {
+    Account.initialize(_admin, _data);
+}
+```
+
+</Details>

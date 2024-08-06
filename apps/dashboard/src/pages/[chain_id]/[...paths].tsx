@@ -16,7 +16,6 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { detectContractFeature } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";
@@ -33,7 +32,6 @@ import {
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { defineDashboardChain } from "lib/v5-adapter";
 import type { GetStaticPaths, GetStaticProps } from "next";
@@ -43,6 +41,10 @@ import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { getContract } from "thirdweb";
+import { getContractMetadata } from "thirdweb/extensions/common";
+import { isERC20 } from "thirdweb/extensions/erc20";
+import { isERC721 } from "thirdweb/extensions/erc721";
+import { isERC1155 } from "thirdweb/extensions/erc1155";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -262,11 +264,13 @@ const ContractPage: ThirdwebNextPage = () => {
           </Flex>
         </Container>
       </Box>
-      <ContractSidebar
-        contractAddress={contractAddress}
-        routes={routes}
-        activeRoute={activeRoute}
-      />
+      {contract && (
+        <ContractSidebar
+          contract={contract}
+          routes={routes}
+          activeRoute={activeRoute}
+        />
+      )}
       <Container pt={8} maxW="container.page">
         {activeRoute?.component && contractAddress && contract && (
           <activeRoute.component
@@ -410,28 +414,28 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   }
   const chain = await fetchChain(chainSlug);
 
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  let contractMetadata: any;
-
   let detectedExtension: EVMContractProps["detectedExtension"] = "unknown";
+  let contractMetadata: {
+    [key: string]: unknown;
+    name: string;
+    symbol: string;
+  } | null = null;
 
   if (chain?.chainId) {
     try {
-      // create the SDK on the chain
-      const sdk = getThirdwebSDK(
-        chain.chainId,
-        getDashboardChainRpc(chain.chainId),
-      );
-      // get the contract
-      const contract = await sdk.getContract(address);
-      // extract the abi to detect extensions
-      // we know it's there...
-      // biome-ignore lint/suspicious/noExplicitAny: FIXME
-      const contractWrapper = (contract as any).contractWrapper;
-      // detect extension bases
-      const isErc20 = detectContractFeature(contractWrapper, "ERC20");
-      const isErc721 = detectContractFeature(contractWrapper, "ERC721");
-      const isErc1155 = detectContractFeature(contractWrapper, "ERC1155");
+      const contract = getContract({
+        address,
+        chain: defineDashboardChain(chain.chainId),
+        client: thirdwebClient,
+      });
+      const [isErc20, isErc721, isErc1155, _contractMetadata] =
+        await Promise.all([
+          isERC20({ contract }).catch(() => false),
+          isERC721({ contract }).catch(() => false),
+          isERC1155({ contract }).catch(() => false),
+          getContractMetadata({ contract }).catch(() => null),
+        ]);
+      contractMetadata = _contractMetadata;
       // set the detected extension
       if (isErc20) {
         detectedExtension = "erc20";
@@ -439,13 +443,6 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
         detectedExtension = "erc721";
       } else if (isErc1155) {
         detectedExtension = "erc1155";
-      }
-
-      // get the contract metadata
-      try {
-        contractMetadata = await contract.metadata.get();
-      } catch (err) {
-        // ignore, most likely requires import
       }
     } catch (e) {
       // ignore, most likely requires import

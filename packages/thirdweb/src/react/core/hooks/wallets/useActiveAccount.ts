@@ -9,6 +9,7 @@ import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
  * import { useActiveAccount } from "thirdweb/react";
  *
  * const activeAccount = useActiveAccount();
+ * console.log("address", activeAccount?.address);
  * ```
  * @walletConnection
  */

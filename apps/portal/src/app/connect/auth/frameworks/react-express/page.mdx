@@ -1,0 +1,383 @@
+import {
+	OpenSourceCard,
+	ArticleIconCard,
+	Callout,
+	Stack,
+	createMetadata,
+	InstallTabs,
+	Tabs,
+	TabsList,
+	TabsContent,
+	TabsTrigger,
+} from "@doc";
+import { GraduationCap } from "lucide-react";
+import { V4SDKbanner } from "@/components/others/V4SDKBanner";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Integrate thirdweb Auth with Next.js",
+		icon: "react",
+	},
+	title: "Auth in Next.js with thirdweb SDK",
+	description: "Add support for Auth to your Next apps",
+});
+
+# React + Express
+
+If you want to interact with a working version of the Auth + React integration that we'll be building in this guide, you can check the following GitHub repository, or clone it with the command below:
+
+```
+npx thirdweb create app --template thirdweb-auth-express
+```
+
+<OpenSourceCard
+	title="thirdweb-auth-express"
+	href="https://github.com/thirdweb-example/thirdweb-auth-express"
+	description="React + Express Auth example repository."
+/>
+
+## Installation & Setup
+
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+	bun="bun i thirdweb"
+/>
+
+Create a directory to hold your client and server:
+
+```shell
+$ mkdir my-app
+$ cd my-app
+```
+
+## Client-side Setup
+
+### Setup Your App
+
+Create a new React app with Vite:
+
+```shell
+$ npm create vite@latest client -- --template react-ts
+$ cd client
+```
+
+Setup your _React app_ `.env` file with the following:
+
+```bash
+# Get your client id from the thirdweb dashboard: https://thirdweb.com/create-api-key
+THIRDWEB_CLIENT_ID=
+# The url of your backend (Express) server for the frontend to interact with
+AUTH_API=
+```
+
+Wrap the root of your application with a thirdweb provider:
+
+```tsx
+// main.tsx
+ReactDOM.createRoot(document.getElementById("root")!).render(
+	<React.StrictMode>
+		<ThirdwebProvider>// Your application layout...</ThirdwebProvider>
+	</React.StrictMode>,
+);
+```
+
+### Creating a Client
+
+Create and export a thirdweb client somewhere in your application to be used in your components. This client gives you access to thirdweb's RPCs to read and right from the blockchain.
+
+```tsx
+// lib/client.ts
+import { createThirdwebClient } from "thirdweb";
+
+const clientId = process.env.THIRDWEB_CLIENT_ID!;
+
+export const client = createThirdwebClient({ clientId });
+```
+
+<Callout variant="info">
+	Don't have a secret key? Get one [here](https://thirdweb.com/create-api-key).
+</Callout>
+
+### Adding the Connect Button
+
+Create your `<ConnectButton />` component. **This is where your users will sign in.**
+
+```tsx
+// components/ConnectButtonAuth.tsx
+import { ConnectButton } from "thirdweb/react";
+import { client } from "../lib/client";
+import { LoginPayload, VerifyLoginPayloadParams } from "thirdweb/auth";
+import { get, post } from "../lib/api";
+import { sepolia } from "thirdweb/chains";
+
+export default function ConnectButtonAuth() {
+	return (
+		<ConnectButton
+			client={client}
+			auth={{
+				/**
+				 * 	`getLoginPayload` should @return {VerifyLoginPayloadParams} object.
+				 * 	This can be generated on the server with the generatePayload method.
+				 */
+				getLoginPayload: async (params: {
+					address: string;
+				}): Promise<LoginPayload> => {
+					return get({
+						url: process.env.AUTH_API + "/login",
+						params: {
+							address: params.address,
+							chainId: sepolia.id.toString(),
+						},
+					});
+				},
+				/**
+				 * 	`doLogin` performs any logic necessary to log the user in using the signed payload.
+				 * 	In this case, this means sending the payload to the server for it to set a JWT cookie for the user.
+				 */
+				doLogin: async (params: VerifyLoginPayloadParams) => {
+					await post({
+						url: process.env.AUTH_API + "/login",
+						params,
+					});
+				},
+				/**
+				 * 	`isLoggedIn` returns true or false to signal if the user is logged in.
+				 * 	Here, this is done by calling the server to check if the user has a valid JWT cookie set.
+				 */
+				isLoggedIn: async () => {
+					return await get({
+						url: process.env.AUTH_API + "/isLoggedIn",
+					});
+				},
+				/**
+				 * 	`doLogout` performs any logic necessary to log the user out.
+				 * 	In this case, this means sending a request to the server to clear the JWT cookie.
+				 */
+				doLogout: async () => {
+					await post({
+						url: process.env.AUTH_API + "/logout",
+					});
+				},
+			}}
+		/>
+	);
+}
+```
+
+### Adding Account Abstraction
+
+To provide your users with a smart wallet so your app can sponsor gas and batch transactions, add the following to your `<ConnectButton />`:
+
+```tsx
+<ConnectButton
+	// ...
+	accountAbstraction={{
+		chain: sepolia, // Update this to your chain of choice
+		factoryAddress: "0x5cA3b8E5B82D826aF6E8e9BA9E4E8f95cbC177F4", // Set this to your Account Factory (deploy one here: https://thirdweb.com/dashboard/connect/account-abstraction)
+		gasless: true, // Sponsor gas for your users
+	}}
+/>
+```
+
+## Server-side Setup
+
+### Setup Your Express API
+
+Create a new directory for your backend server:
+
+```shell
+$ mkdir server
+$ cd server
+```
+
+Initialize a new node project:
+
+```shell
+$ npm init
+```
+
+Accept the defaults for now. Once your project is initialized, install the dependencies:
+
+```shell
+$ npm install express cors cookie-parser thirdweb
+```
+
+Create a `.env` file with the following:
+
+```bash
+# Get your client id from the thirdweb dashboard: https://thirdweb.com/create-api-key
+THIRDWEB_SECRET_KEY=
+# The domain of your frontend -- include the port when running local but nothing else (remember to update this in production)
+CLIENT_DOMAIN=localhost:5173
+# An wallet private key to generate the JWT with
+AUTH_PRIVATE_KEY=
+NODE_ENV=development # Set this to production when you deploy!
+```
+
+<Callout variant="info">
+	To keep things simple, we've put all server-side routes in the same file. For
+	a production-grade application you'll likely break them out depending on what
+	works for your use case. Either way, the core logic is the same as you see
+	here.
+</Callout>
+
+### Create a Server-Side Client
+
+Create a server-side client using your secret key:
+
+```ts
+// thirdwebClient.js
+import { createThirdwebClient } from "thirdweb";
+
+const secretKey = process.env.THIRDWEB_SECRET_KEY!;
+
+export const thirdwebClient = createThirdwebClient({ secretKey });
+```
+
+### Setup your Express Server
+
+We'll assume you've already setup a basic Express API, but there are a few things you'll need to make sure you've done for authentication to work properly between your frontend and backend.
+
+```js
+import cors from "cors";
+import express from "express";
+import cookieParser from "cookie-parser";
+import { createAuth, type VerifyLoginPayloadParams } from "thirdweb/auth";
+import { privateKeyToAccount } from "thirdweb/wallets";
+import { thirdwebClient } from "./thirdwebClient";
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+	// This is important for the cookie to be saved properly!!!
+	cors({
+		origin: `${process.env.NODE_ENV === "development" ? "http" : "https"}://${process.env.CLIENT_DOMAIN}`,
+		credentials: true,
+	}),
+);
+
+// ...we'll add routes here next
+
+app.listen(3000, () => {
+	console.log(`⚡ Auth server listening on port 3000...`);
+});
+```
+
+Create your thirdweb auth instance
+
+```js
+const thirdwebAuth = createAuth({
+	domain: process.env.CLIENT_DOMAIN!,
+	client: thirdwebClient,
+	adminAccount: privateKeyToAccount({
+		client: thirdwebClient,
+		privateKey: process.env.ADMIN_PRIVATE_KEY!,
+	}),
+});
+```
+
+Setup a `GET` route at `/login` to fetch the login payload:
+
+```js
+app.get("/login", async (req, res) => {
+	const address = req.query.address;
+	const chainId = req.query.chainId;
+
+	if (!address) {
+		return res.status(400).send("Address is required");
+	}
+
+	return res.send(
+		await thirdwebAuth.generatePayload({
+			address,
+			chainId: chainId ? parseInt(chainId) : undefined,
+		}),
+	);
+});
+```
+
+Here, we get the user's address and chain ID to generate the payload with using thirdweb Auth. This payload will be returned to the client for the user to sign with their wallet. It will then be sent back to the server for verification.
+
+Create a `POST` route also at `/login` for the frontend to submit the signed payload:
+
+```js
+app.post("/login", async (req, res) => {
+	const payload: VerifyLoginPayloadParams = req.body;
+
+	const verifiedPayload = await thirdwebAuth.verifyPayload(payload);
+
+	if (verifiedPayload.valid) {
+		const jwt = await thirdwebAuth.generateJWT({
+			payload: verifiedPayload.payload,
+		});
+		res.cookie("jwt", jwt);
+		return res.status(200).send({ token: jwt });
+	}
+
+	res.status(400).send("Failed to login");
+});
+```
+
+We receive the signed payload, verify it via thirdweb Auth, then create a JWT if the signed payload is valid. This JWT is assigned to this domain and allows the client to identify itself to the server as authenticated for future requests (until the token expires).
+
+Now, we create a route to check if the user is currently logged in:
+
+```js
+app.get("/isLoggedIn", async (req, res) => {
+	const jwt = req.cookies?.jwt;
+
+	if (!jwt) {
+		return res.send(false);
+	}
+
+	const authResult = await thirdwebAuth.verifyJWT({ jwt });
+
+	if (!authResult.valid) {
+		return res.send(false);
+	}
+
+	return res.send(true);
+});
+```
+
+If the user doesn't have a token, they're definitely not logged in, so we immediately return false. If they do, we verify it to make sure its both accurate and not yet expired. If both are true, we return true.
+
+Finally, we need a route to log the user out by clearing their token:
+
+```js
+app.post("/logout", (req, res) => {
+	res.clearCookie("jwt");
+	return res.send(true);
+});
+```
+
+For any routes you add to your server, you can authenticate the user just like we did in `/isLoggedIn`:
+
+```js
+app.get("/secure", async (req, res) => {
+	const jwt = req.cookies?.jwt;
+
+	if (!jwt) {
+		return res.status(401).send("Unauthorized");
+	}
+
+	const authResult = await thirdwebAuth.verifyJWT({ jwt });
+
+	if (!authResult.valid) {
+		return res.status(401).send("Unauthorized");
+	}
+
+	// ...your route logic
+});
+```
+
+Remember your `app.listen` (when you start the server) must come **after** your routes.
+
+That's it! You have a React + Express app fully configured with SIWE. When running your app, be sure to start both the client and the server.
+
+## Support
+
+For help or feedback, please [visit our support site](https://thirdweb.com/support)

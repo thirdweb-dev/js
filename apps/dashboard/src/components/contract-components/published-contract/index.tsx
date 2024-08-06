@@ -13,7 +13,6 @@ import {
   type PublishedMetadata,
   fetchSourceFilesFromMetadata,
 } from "@thirdweb-dev/sdk";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { replaceDeployerAddress } from "components/explore/publisher";
 import { ShareButton } from "components/share-buttom";
@@ -194,7 +193,7 @@ Deploy it in one click`,
               sources: contractPublishMetadata.data.compilerMetadata.sources,
             },
           } as unknown as PublishedMetadata,
-          StorageSingleton as ThirdwebStorage,
+          StorageSingleton,
         )
       )
         .map((source) => {

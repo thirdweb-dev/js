@@ -1,6 +1,6 @@
+import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import { Icon } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useStorageUpload } from "@thirdweb-dev/react";
 import { FileInput } from "components/shared/FileInput";
 import { PINNED_FILES_QUERY_KEY_ROOT } from "components/storage/your-files";
 import { useErrorHandler } from "contexts/error-handler";
@@ -11,7 +11,7 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
   onUpload,
 }) => {
   const errorHandler = useErrorHandler();
-  const storageUpload = useStorageUpload();
+  const storageUpload = useDashboardStorageUpload();
   const queryClient = useQueryClient();
 
   const handleIconUpload = (file: File) => {
@@ -21,19 +21,16 @@ export const IconUpload: React.FC<{ onUpload: (url: string) => void }> = ({
       return;
     }
 
-    storageUpload.mutate(
-      { data: [file] },
-      {
-        onSuccess([uri]) {
-          onUpload(uri);
-          // also refetch the files list
-          queryClient.invalidateQueries([PINNED_FILES_QUERY_KEY_ROOT]);
-        },
-        onError(error) {
-          errorHandler.onError(error, "Failed to upload file");
-        },
+    storageUpload.mutate([file], {
+      onSuccess([uri]) {
+        onUpload(uri);
+        // also refetch the files list
+        queryClient.invalidateQueries([PINNED_FILES_QUERY_KEY_ROOT]);
       },
-    );
+      onError(error) {
+        errorHandler.onError(error, "Failed to upload file");
+      },
+    });
   };
 
   return (

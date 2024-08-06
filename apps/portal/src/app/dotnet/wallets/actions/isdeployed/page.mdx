@@ -1,0 +1,24 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "SmartWallet.IsDeployed | Thirdweb .NET SDK",
+	description: "Retrieve whether the connected Smart Wallet is deployed.",
+});
+
+# SmartWallet.IsDeployed
+
+This method retrieves whether the connected Smart Wallet is deployed onchain.
+
+## Usage
+
+```csharp
+bool isDeployed = await SmartWallet.IsDeployed();
+```
+
+<Details summary="Return Value">
+
+### bool
+
+Whether a Smart Wallet is deployed as a `bool`.
+
+</Details>

@@ -1,0 +1,135 @@
+import { Details, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Permissions contract",
+		icon: "solidity",
+	},
+	title: "Permissions | thirdweb contract",
+	description:
+		"The Permissions extension provides role-based access control: you can create roles and write custom logic in your smart contract that depends on whether a given wallet holds a given role",
+});
+
+# Permissions
+
+```solidity
+import "@thirdweb-dev/contracts/extension/Permissions.sol";
+```
+
+The `Permissions` extension provides role-based access control: you can create roles and write custom logic in your smart contract that depends on whether a given wallet holds a given role.
+
+There are two different contracts you can implement to add permissions:
+
+- `Permissions`: Create roles and restrict access to functions based on those roles.
+- [`PermissionsEnumerable`](/contracts/build/extensions/general/PermissionsEnumerable): `Permissions` plus the capability to view all the addresses holding a specific role (or all roles).
+
+You only need to implement **one** of the two.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/Permissions.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/Permissions.sol";
+
+contract MyContract is Permissions {
+    // Any `bytes32` value is a valid role. You can create roles by defining them like this.
+    bytes32 public constant NUMBER_ROLE = keccak256("NUMBER_ROLE");
+
+    // See comments for `setNumber`, below.
+    uint256 public number;
+
+    /**
+     *  The `Permissions` contract makes an already defined role available: the `DEFAULT_ADMIN_ROLE`.
+     *
+     *  As an EXAMPLE, we grant the deployer of the contract this admin role.
+     */
+    constructor() {
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    /**
+     *  EXAMPLE: here we have a function that we want to restrict only to holders of `NUMBER_ROLE`.
+     *
+     *  To accomplish this, we use the `onlyRole` modifier made available by `Permissions`, and
+     *  pass it `NUMBER_ROLE` as an argument.
+     */
+    function setNumber(uint256 _newNumber) public onlyRole(NUMBER_ROLE) {
+        number = _newNumber;
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+None of the base contracts implement this extension.
+
+## Full API Reference
+
+<Details summary="hasRole">
+
+```solidity
+function hasRole(bytes32 role, address account) external view returns (bool);
+```
+
+- Returns `true` if `account` has been granted `role`.
+
+</Details>
+
+<Details summary="getRoleAdmin">
+
+```solidity
+function getRoleAdmin(bytes32 role) external view returns (bytes32);
+```
+
+- Returns the admin role that controls `role` i.e. the holders of the admin role (the return value) can grant or revoke `role` from wallets.
+
+</Details>
+
+<Details summary="grantRole">
+
+```solidity
+function grantRole(bytes32 role, address account) external;
+```
+
+- Grants `role` to `account`. Can only be called by a holder of the admin role of the role being granted.
+
+</Details>
+
+<Details summary="revokeRole">
+
+```solidity
+function revokeRole(bytes32 role, address account) external;
+```
+
+- Revokes `role` from `account`. Can only be called by a holder of the admin role of the role being granted.
+
+</Details>
+
+<Details summary="renounceRole">
+
+```solidity
+function renounceRole(bytes32 role, address account) external;
+```
+
+- Revokes `role` from the calling account.
+
+</Details>
+
+<Details summary="hasRoleWithSwitch">
+
+```solidity
+function hasRoleWithSwitch(bytes32 role, address account) public view returns (bool);
+```
+
+- Returns `true` if `account` has been granted `role`.
+- Role restrictions can be switched on and off:
+  - If `address(0)` has `role`, then the role restrictions don't apply i.e. this function will always return `true`.
+  - If `address(0)` does not have `role`, then the role restrictions will apply i.e. this function will behave like `hasRole`.
+
+</Details>

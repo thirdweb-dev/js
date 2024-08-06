@@ -1,4 +1,4 @@
-import { Box, DarkMode, Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -13,6 +13,7 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { useForceDarkTheme } from "../@/components/theme-provider";
 
 export type LumaEvent = {
   api_id: string;
@@ -133,8 +134,9 @@ const Events = () => {
 const queryClient = new QueryClient();
 
 const EventsPage: ThirdwebNextPage = () => {
+  useForceDarkTheme();
   return (
-    <DarkMode>
+    <>
       <NextSeo title="events" />
       <Flex
         sx={{
@@ -153,7 +155,7 @@ const EventsPage: ThirdwebNextPage = () => {
         </QueryClientProvider>
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

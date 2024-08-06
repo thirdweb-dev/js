@@ -1,0 +1,92 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebStorage | Thirdweb .NET SDK",
+	description: "Interact with IPFS for downloading and uploading data.",
+});
+
+# ThirdwebStorage
+
+The `ThirdwebStorage` class provides methods to interact with any URL including IPFS, allowing you to download and upload data easily.
+
+## Download
+
+Download data from an HTTP or IPFS URI.
+
+```csharp
+var data = await ThirdwebStorage.Download<string>(client, "{{uri}}");
+```
+
+<Details summary="Configuration">
+
+### uri
+
+The IPFS URI or a URL that points to the data.
+
+Must be a `string`.
+
+### Return Value
+
+Returns the data as the specified type. If you're downloading a string, such as JSON data, it's directly returned. For other types, the method attempts to deserialize the data to the specified type using `Newtonsoft.Json`.
+
+</Details>
+
+## Upload
+
+Upload file to IPFS and pin it.
+
+```csharp
+var result = await ThirdwebStorage.Upload(client, "{{path/to-file}}");
+```
+
+<Details summary="Configuration">
+
+### path
+
+The path to the file to upload.
+
+Must be a `string`.
+
+### Return Value
+
+Returns an `IPFSUploadResult` containing the IPFS hash (IpfsHash), the size of the pinned content (PinSize), the timestamp of the pinning (Timestamp), and a preview URL (PreviewUrl) constructed using the client ID and the IPFS hash.
+
+</Details>
+
+## UploadRaw
+
+Upload raw data to IPFS and pin it.
+
+```csharp
+var bytes = Encoding.UTF8.GetBytes("{{data}}");
+var result = await ThirdwebStorage.UploadRaw(client, bytes);
+```
+
+<Details summary="Configuration">
+
+### rawBytes
+
+The raw data to upload.
+
+Must be a `byte[]`.
+
+### Return Value
+
+Returns an `IPFSUploadResult` containing the IPFS hash (IpfsHash), the size of the pinned content (PinSize), the timestamp of the pinning (Timestamp), and a preview URL (PreviewUrl) constructed using the client ID and the IPFS hash.
+
+</Details>
+
+## Example Usage
+
+### Downloading JSON Data
+
+```csharp
+var jsonData = await ThirdwebStorage.Download<Dictionary<string, object>>(client, "ipfs://Qm...");
+```
+
+### Uploading a File
+
+```csharp
+var uploadResult = await ThirdwebStorage.Upload(client, @"C:\path\to\your\file.txt");
+Console.WriteLine($"IPFS Hash: {uploadResult.IpfsHash}");
+```

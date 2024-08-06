@@ -1,0 +1,47 @@
+import { Callout } from "@doc";
+
+# Client
+
+A client is the entry point to the thirdweb SDK. It is required for all other actions.
+
+<Callout title="Client ID" variant="info">
+
+    You must provide a `clientId` or `secretKey` in order to initialize a client.
+
+    You can create an client ID for free at
+    [thirdweb.com/create-api-key](https://thirdweb.com/create-api-key).
+
+</Callout>
+
+## Create a client
+
+#### For "client-side" usage
+
+```ts
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({
+	clientId: "<your_client_id>",
+});
+```
+
+#### For "server-side" usage
+
+```ts
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({
+	secretKey: "<your_secret_key>",
+});
+```
+
+You will need to pass this client to other methods in the SDK. This will allow you to
+
+- get performant RPC to all chains
+- download/upload to IPFS
+- access Account Abstraction infrastructure (bundler, paymaster)
+- access other thirdweb services
+
+<Callout variant="info" title="Getting your RPC URL">
+	If you need to access the raw RPC URL, just use thirdweb's default RPC format with your client ID `https://<chainId>.rpc.thirdweb.com/<clientId>`.
+</Callout>

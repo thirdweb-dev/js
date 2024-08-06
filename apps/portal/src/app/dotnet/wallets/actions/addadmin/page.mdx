@@ -1,0 +1,32 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "SmartWallet.AddAmin | Thirdweb .NET SDK",
+	description: "Add a new admin to the connected Smart Wallet.",
+});
+
+# SmartWallet.AddAmin
+
+Add a new admin to the connected Smart Wallet.
+
+## Usage
+
+```csharp
+var receipt = await SmartWallet.AddAdmin("0xNewAdminAddress");
+```
+
+<Details summary="Parameters">
+
+### admin
+
+Hexadecimal `string` representing the signer to grant admin access to.
+
+</Details>
+
+<Details summary="Return Value">
+
+### receipt
+
+The transaction receipt as a `TransactionReceipt` object.
+
+</Details>

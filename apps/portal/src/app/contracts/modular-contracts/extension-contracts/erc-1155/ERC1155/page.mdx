@@ -1,0 +1,54 @@
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC1155 contract",
+		icon: "solidity",
+	},
+	title: "ERC1155 | thirdweb contract",
+	description:
+		"ERC1155 is the standard for representing 'Edition' NFTs where each NFT in the collection can have more than 1 quantity; also known as 'semi-fungible' tokens",
+});
+
+# ERC1155
+
+```solidity
+import "@thirdweb-dev/contracts/eip/ERC1155.sol";
+```
+
+ERC1155 is the standard for representing "Edition" NFTs
+where each NFT in the collection can have more than 1 quantity; also known as "semi-fungible" tokens.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/ERC1155.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC1155.sol";
+
+contract Contract is ERC1155 {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC1155(
+            _name,
+            _symbol
+        )
+    {}
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
+- [ERC1155DelayedReveal](/contracts/build/base-contracts/erc-1155/delayed-reveal)
+- [ERC1155Drop](/contracts/build/base-contracts/erc-1155/drop)
+- [ERC1155LazyMint](/contracts/build/base-contracts/erc-1155/lazy-mint)
+- [ERC1155SignatureMint](/contracts/build/base-contracts/erc-1155/signature-mint)

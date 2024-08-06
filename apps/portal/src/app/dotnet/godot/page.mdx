@@ -1,0 +1,41 @@
+import { OpenSourceCard, DocImage, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Thirdweb .NET SDK in Godot",
+	description:
+		"A guide on how to integrate the Thirdweb .NET SDK into your Godot (tested with .NET Godot 4.2) projects to add blockchain functionality.",
+});
+
+# Integrating into Godot Projects
+
+To integrate the Thirdweb .NET SDK into your Godot projects, you will need to add the Thirdweb SDK package directly to your Godot project's `.csproj` file. This enables you to use the SDK's functionalities within your Godot application, allowing for blockchain interactions such as connecting to user's wallets, interacting with smart contracts, and more.
+
+## Configuration
+
+### Adding the Package to Your Project
+
+To add the Thirdweb .NET SDK to your Godot project, you will need to manually edit your project's `.csproj` file to include the Thirdweb NuGet package as a dependency. Here is how you can do it:
+
+1. Close your Godot project if it's open in the Godot editor.
+2. Locate your project's `.csproj` file in your project directory.
+3. Open the `.csproj` file in a text editor.
+4. Add the following `PackageReference` inside the `<ItemGroup>` tag that contains other `PackageReference` entries:
+
+```xml
+<ItemGroup>
+  <!-- Other NuGet package references -->
+  <PackageReference Include="Thirdweb" Version="1.0.0" />
+  <!-- Update with the latest version when necessary -->
+</ItemGroup>
+```
+
+## Example Project
+
+An example Godot project integrating the Thirdweb .NET SDK is available below.
+
+<OpenSourceCard
+	title="Godot Template"
+	description="A Godot project template with the Thirdweb .NET SDK integrated."
+	href="https://github.com/thirdweb-example/godot-starter"
+	isLibrary={false}
+/>

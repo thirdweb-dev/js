@@ -1,0 +1,152 @@
+import { Details } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721SignatureMint contract",
+		icon: "contract",
+	},
+	title: "ERC721SignatureMint | thirdweb contracts",
+	description:
+		"The ERC721SignatureMint smart contract uses the ERC721Base base contract along with the SignatureMintERC721 contract extension",
+});
+
+# ERC721SignatureMint
+
+```solidity
+import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
+```
+
+The `ERC721SignatureMint` smart contract uses the
+[ERC721Base](/contracts/build/base-contracts/erc-721/base)
+base contract along with the [SignatureMintERC721](/contracts/build/extensions/erc-721/ERC721SignatureMint) contract extension.
+
+[Signature minting](/glossary/signature-based-minting) uses the [EIP-712](https://eips.ethereum.org/EIPS/eip-712) standard,
+enables a contract admin to authorize an external party's request to mint tokens on the admin's contract.
+At a high level, this means you can authorize another wallet to mint tokens
+on your contract, and specify what exactly will be minted by that external party.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC721SignatureMint.sol" />
+
+## Usage
+
+Import the contract extension and make your contract inherit it.
+
+```solidity
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
+
+contract MyNFT is ERC721SignatureMint {
+    constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol,
+        address _royaltyRecipient,
+        uint128 _royaltyBps,
+        address _primarySaleRecipient
+    )
+        ERC721SignatureMint(
+            _defaultAdmin,
+            _name,
+            _symbol,
+            _royaltyRecipient,
+            _royaltyBps,
+            _primarySaleRecipient
+        )
+    {}
+}
+```
+
+## Detected Extensions
+
+Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+
+Click on each feature to learn more about what functions are available.
+
+- [ERC721](/contracts/build/extensions/erc-721/ERC721)
+- [ERC721Burnable](/contracts/build/extensions/erc-721/ERC721Burnable)
+- [ERC721Mintable](/contracts/build/extensions/erc-721/ERC721Mintable)
+- [ERC721BatchMintable](/contracts/build/extensions/erc-721/ERC721BatchMintable)
+- [ERC721Supply](/contracts/build/extensions/erc-721/ERC721Supply)
+- [ERC721SignatureMintV2](/contracts/build/extensions/erc-721/ERC721SignatureMint)
+- [PrimarySale](/contracts/build/extensions/general/PrimarySale)
+- [Royalty](/contracts/build/extensions/general/Royalty)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+
+## Functions to Override
+
+The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+
+<Details id="mintWithSignature" summary="mintWithSignature">
+
+```solidity
+/**
+*  @notice           Mints tokens according to the provided mint request.
+*
+*  @param _req       The payload / mint request.
+*  @param _signature The signature produced by an account signing the mint request.
+*/
+function mintWithSignature(MintRequest calldata _req, bytes calldata _signature)
+    external
+    payable
+    virtual
+    override
+    returns (address signer)
+{
+    require(_req.quantity == 1, "quantity must be 1");
+
+    uint256 tokenIdToMint = nextTokenIdToMint();
+
+    // Verify and process payload.
+    signer = _processRequest(_req, _signature);
+
+    address receiver = _req.to;
+
+    // Collect price
+    _collectPriceOnClaim(_req.primarySaleRecipient, _req.quantity, _req.currency, _req.pricePerToken);
+
+    // Set royalties, if applicable.
+    if (_req.royaltyRecipient != address(0) && _req.royaltyBps != 0) {
+        _setupRoyaltyInfoForToken(tokenIdToMint, _req.royaltyRecipient, _req.royaltyBps);
+    }
+
+    // Mint tokens.
+    _setTokenURI(tokenIdToMint, _req.uri);
+    _safeMint(receiver, _req.quantity);
+
+    emit TokensMintedWithSignature(signer, receiver, tokenIdToMint, _req);
+}
+```
+
+</Details>
+
+<Details id="_collectPriceOnClaim" summary="_collectPriceOnClaim">
+
+```solidity
+/// @dev Collects and distributes the primary sale value of NFTs being claimed.
+function _collectPriceOnClaim(
+    address _primarySaleRecipient,
+    uint256 _quantityToClaim,
+    address _currency,
+    uint256 _pricePerToken
+) internal virtual {
+    if (_pricePerToken == 0) {
+        return;
+    }
+
+    uint256 totalPrice = _quantityToClaim * _pricePerToken;
+
+    if (_currency == CurrencyTransferLib.NATIVE_TOKEN) {
+        require(msg.value == totalPrice, "Must send total price.");
+    }
+
+    address saleRecipient = _primarySaleRecipient == address(0) ? primarySaleRecipient() : _primarySaleRecipient;
+    CurrencyTransferLib.transferCurrency(_currency, msg.sender, saleRecipient, totalPrice);
+}
+```
+
+</Details>

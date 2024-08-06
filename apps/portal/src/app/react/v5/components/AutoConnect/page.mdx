@@ -1,0 +1,70 @@
+import { TablePropertiesIcon } from "lucide-react";
+import {
+	Details,
+	Breadcrumb,
+	Callout,
+	Steps,
+	Step,
+	DocImage,
+	createMetadata,
+	ArticleIconCard,
+	Stack,
+} from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "AutoConnect",
+		icon: "react",
+	},
+	title: "AutoConnect | thirdweb React SDK",
+	description: "API Reference for the AutoConnect component",
+});
+
+# AutoConnect
+
+Automatically connects the last connected wallet in the case a user reloads the page or revisits the app at a later time.
+
+This component has no UI, simply mount it anywher in your app to trigger the auto connection flow on page load.
+
+<Callout variant='info'>
+If you are using [`ConnectButton`](/react/v5/ConnectButton)
+or [`ConnectEmbed`](/react/v5/ConnectEmbed) components, You don't need to use this component because it is already included.
+
+</Callout>
+
+### Example
+
+```tsx
+import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { AutoConnect } from "thirdweb/react";
+
+// wallets used in your app
+const wallets = [
+	inAppWallet(),
+	createWallet("io.metamask"),
+	createWallet("com.coinbase.wallet"),
+	createWallet("me.rainbow"),
+];
+
+function Example() {
+	return (
+		<AutoConnect
+			client={client}
+			timeout={10000}
+			wallets={wallets}
+			appMetadata={appMetadata}
+		/>
+	);
+}
+```
+
+## Props
+
+<Stack>
+	<ArticleIconCard
+		title="AutoConnectProps"
+		icon={TablePropertiesIcon}
+		href="/references/typescript/v5/AutoConnectProps"
+	/>
+</Stack>
+import {util} from "prettier";

@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.43.0",
+  "version": "5.44.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -323,11 +323,12 @@
     "expo-linking": "6.3.1",
     "expo-web-browser": "13.0.3",
     "happy-dom": "^14.12.0",
+    "msw": "^2.3.4",
     "react-native": "0.74.2",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-svg": "15.3.0",
-    "vitest": "1.6.0",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4",
+    "vitest": "1.6.0"
   }
 }

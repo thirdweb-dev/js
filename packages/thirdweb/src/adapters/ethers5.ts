@@ -59,6 +59,12 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        * const provider = ethers5Adapter.provider.toEthers({ client, chainId });
        * ```
+       *
+       * Once you have converted a thirdweb Client to ethers Provider,
+       * you can use it like any other ethers provider:
+       * ```ts
+       * const blockNumber = await provider.getBlockNumber();
+       * ```
        */
       toEthers: (options: { client: ThirdwebClient; chain: Chain }) => {
         assertEthers5(ethers);
@@ -78,6 +84,19 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        *   thirdwebContract,
        * });
        * ```
+       *
+       * Once you have converted a thirdweb Contract to an ethers contract,
+       * you can interact with it:
+       * ```ts
+       * // Estimate gas
+       * const gasLimit = await contract.estimateGas["functionName"](
+       *   ...params,
+       * );
+       *
+       * // Send a transaction
+       * const tx = await contract["functionName"](...params, { gasLimit });
+       * ```
+       *
        */
       toEthers: (options: { thirdwebContract: ThirdwebContract }) => {
         assertEthers5(ethers);
@@ -133,6 +152,16 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        * const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
        * ```
+       *
+       * Once you have the signer, you can perform different tasks using ethers.js as usual:
+       * ```ts
+       * // Sign message
+       * const signature = await signer.signMessage(message);
+       *
+       * // Get balance
+       * const balance = await signer.getBalance();
+       * ```
+       *
        */
       toEthers: (options: {
         client: ThirdwebClient;

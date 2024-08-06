@@ -1,0 +1,25 @@
+# Reading contract state
+
+The recommended way to read the contract state is to use the `readContract` function and pass the Solidity method signature and the params. This is type-safe based on the Solidity method signature you define. You can get your desired contract method signature from the solidity code directly.
+
+```ts
+import { readContract } from "thirdweb";
+
+const balance = await readContract({
+	contract: contract,
+	method: "function balanceOf(address) view returns (uint256)",
+	params: ["0x123..."],
+});
+```
+
+This will execute the read immediately and return the result from the blockchain.
+
+### Generating all read functions for a deployed contract
+
+Using the CLI, you can generate optimized functions for all the possible calls to a contract. This saves you time and precomputes all the necessary encoding.
+
+```shell
+npx thirdweb generate <contractId>/<contractAddress>
+```
+
+Read more on how to [generate extension functions using the CLI](/typescript/v5/extensions/generate).

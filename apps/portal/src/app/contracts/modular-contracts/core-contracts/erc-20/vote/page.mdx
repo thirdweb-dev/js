@@ -1,0 +1,106 @@
+import { Details } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC20Vote contract",
+		icon: "contract",
+	},
+	title: "ERC20Vote | thirdweb contracts",
+	description:
+		"The ERC20Vote smart contract implements the ERC20 standard. It also supports EIP-2612; allowing approvals to be made via signatures, and the ERC20Votes contract",
+});
+
+# ERC20Vote
+
+The `ERC20Vote` smart contract implements the [ERC20](https://eips.ethereum.org/EIPS/eip-20) standard.
+It also supports [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612); allowing approvals to be made via signatures, and the
+[ERC20Votes](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC20Votes.sol) contract;
+which provides voting and delegation functionality, along with delegation by signature.
+
+```solidity
+import "@thirdweb-dev/contracts/base/ERC20Vote.sol";
+```
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20Vote.sol" />
+
+## Usage
+
+Import the contract and inherit from it.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC20Vote.sol";
+
+contract MyToken is ERC20Vote {
+	  constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol
+    )
+        ERC20Vote(
+            _defaultAdmin,
+            _name,
+            _symbol
+        )
+    {}
+}
+```
+
+## Detected Extensions
+
+Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+
+Click on each feature to learn more about what functions are available.
+
+- [ERC20](/contracts/build/extensions/erc-20/ERC20)
+- [ERC20Mintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
+- [ERC20BatchMintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
+- [ERC20Permit](/contracts/build/extensions/erc-20/ERC20Permit)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+
+## Functions to Override
+
+The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+
+<Details id="mintTo" summary="mintTo">
+
+```solidity
+/**
+ *  @notice          Lets an authorized address mint tokens to a recipient.
+ *  @dev             The logic in the `_canMint` function determines whether the caller is authorized to mint tokens.
+ *
+ *  @param _to       The recipient of the tokens to mint.
+ *  @param _amount   Quantity of tokens to mint.
+ */
+function mintTo(address _to, uint256 _amount) public virtual {
+    require(_canMint(), "Not authorized to mint.");
+    require(_amount != 0, "Minting zero tokens.");
+
+    _mint(_to, _amount);
+}
+
+```
+
+</Details>
+
+<Details id="burn" summary="burn">
+
+```solidity
+/**
+ *  @notice          Lets an owner a given amount of their tokens.
+ *  @dev             Caller should own the `_amount` of tokens.
+ *
+ *  @param _amount   The number of tokens to burn.
+ */
+function burn(uint256 _amount) external virtual {
+    require(balanceOf(_msgSender()) >= _amount, "not enough balance");
+    _burn(msg.sender, _amount);
+}
+```
+
+</Details>

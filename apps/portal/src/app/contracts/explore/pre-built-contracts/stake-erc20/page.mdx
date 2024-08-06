@@ -1,0 +1,34 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Stake ERC-20 Contract",
+		icon: "contract",
+	},
+	title: "Stake ERC-20 Contract | thirdweb",
+	description:
+		"This contract allows users to stake their ERC-20 tokens and get ERC-20 tokens as staking rewards (different from the staked tokens)",
+});
+
+# Stake ERC-20
+
+This contract allows users to stake their ERC-20 tokens and get ERC-20 tokens as staking rewards (different from the staked tokens). Contract admin should set the Staking and Reward token addresses during deployment. These can't be changed later.
+
+Staked tokens are stored inside the contract and rewards are calculated for the amount of time these tokens were staked. Admin should maintain adequate balance of reward tokens in the staking-contract. These rewards are then transferred to stakers upon claiming.
+
+Reward calculation at the time of claiming rewards:
+
+`rewardsPerTokenStaked = ((stakingDuration * rewardRatioNumerator) / rewardRatioDenominator) / timeUnit`
+For e.g., if reward ratio is 1/20, this implies that there will be 1 Reward token given out for every 20 tokens staked. The numerator and denominator of the reward ratio should be set separately (1 and 20 in this case respectively).
+
+Note:
+
+- Users need to approve their tokens to the staking contract address before they can stake them
+- Contract admin should maintain adequate balance of Reward Tokens in the staking contract -- use the deposit function for depositing reward tokens
+
+## Extensions
+
+- [Permissions](/contracts/build/extensions/general/Permissions)
+- [PermissionsEnumerable](/contracts/build/extensions/general/PermissionsEnumerable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+- [Gasless](/contracts/build/extensions)

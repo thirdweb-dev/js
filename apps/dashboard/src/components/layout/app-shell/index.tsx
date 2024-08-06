@@ -120,6 +120,19 @@ const AppHeader: React.FC = () => {
           <Button
             as={TrackedLink}
             variant="link"
+            href="/chainlist"
+            category="header"
+            label="chainlist"
+            color="bgBlack"
+            display={{ base: "none", md: "block" }}
+            size="sm"
+            mx={1.5}
+          >
+            Chainlist
+          </Button>
+          <Button
+            as={TrackedLink}
+            variant="link"
             href="https://portal.thirdweb.com"
             isExternal
             category="header"

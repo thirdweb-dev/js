@@ -1,0 +1,105 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb CLI references",
+		icon: "thirdweb",
+	},
+	title: "thirdweb CLI references",
+	description:
+		"Use the CLI to deploy your contracts directly to any EVM compatible blockchain by running:",
+});
+
+# CLI Reference
+
+Use the CLI to deploy your contracts directly to any EVM compatible blockchain by running:
+
+```bash
+npx thirdweb [options]
+```
+
+### Options
+
+```bash
+-p--path <string>
+```
+
+- Path to project
+
+```bash
+-c--clean
+```
+
+- Clear the cache before building
+
+```bash
+--dry-run
+```
+
+- Dry run (skip actually publishing)
+
+```bash
+-d--debug
+```
+
+- Show debug logs
+
+```bash
+--ci
+```
+
+- Continuous Integration mode
+
+```bash
+--dist-path <string>
+```
+
+- Path to the dist folder where the HTML based App is
+
+```bash
+-n--name <string>
+```
+
+- Name of the pre-built or published contract (such as nft-drop)
+
+```bash
+-f--file <string>
+```
+
+- Filter for contract files that contain this file name
+
+```bash
+-cn--contract-name <string>
+```
+
+- Filter for contracts that contain this contract name
+
+```bash
+-cv--contract-version <string>
+```
+
+- Version of the published contract
+
+```bash
+--app
+```
+
+- Deploy a web app to decentralized storage
+
+```bash
+--contract
+```
+
+- Deploy a smart contract to blockchains
+
+```bash
+--dynamic
+```
+
+- Deploy a dynamic smart contract made up of extensions to blockchains
+
+```bash
+-k--key <string>
+```
+
+- Optional parameter to use passed in secret key, most useful for continuous integration use cases.

@@ -1,14 +1,7 @@
-import {
-  Code,
-  Divider,
-  Flex,
-  Icon,
-  useClipboard,
-  useToast,
-} from "@chakra-ui/react";
-import type { TransactionError } from "@thirdweb-dev/sdk";
+import { Code, Divider, Flex, Icon, useClipboard } from "@chakra-ui/react";
 import { createContext, useCallback, useContext, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiCopy, FiHelpCircle } from "react-icons/fi";
+import { toast } from "sonner";
 import { Button, Drawer, Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import type { ComponentWithChildren } from "types/component-with-children";
@@ -24,34 +17,38 @@ const ErrorContext = createContext<ErrorContext>({
   dismissError: () => undefined,
 });
 
+// We have decided to not export this class from v5 because that area need to be reworked
+// so this type is created as a workaround
+// @internal
+type TransactionError = {
+  message: string;
+  info?: {
+    from: string;
+    to: string;
+    network?: {
+      name: string;
+      chainId: number;
+    };
+  };
+  reason?: string;
+};
+
 type EnhancedTransactionError = TransactionError & {
   title: string;
 };
 
 export const ErrorProvider: ComponentWithChildren = ({ children }) => {
-  const toast = useToast();
   const [currentError, setCurrentError] = useState<EnhancedTransactionError>();
   const dismissError = useCallback(() => setCurrentError(undefined), []);
-  const onError = useCallback(
-    (err: unknown, title = "An error occurred") => {
-      if (isTransactionError(err)) {
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        (err as any).title = title;
-        setCurrentError(err as EnhancedTransactionError);
-      } else {
-        toast({
-          position: "bottom",
-          variant: "solid",
-          title,
-          description: parseErrorToMessage(err),
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      }
-    },
-    [toast],
-  );
+  const onError = useCallback((err: unknown, title = "An error occurred") => {
+    if (isTransactionError(err)) {
+      // biome-ignore lint/suspicious/noExplicitAny: FIXME
+      (err as any).title = title;
+      setCurrentError(err as EnhancedTransactionError);
+    } else {
+      toast.error(parseErrorToMessage(err));
+    }
+  }, []);
 
   const { onCopy, hasCopied } = useClipboard(currentError?.message || "");
 
@@ -79,8 +76,8 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           <Flex direction="column" gap={2}>
             <Heading size="label.md">Chain / Chain ID</Heading>
             <Text>
-              {currentError?.info.network.name} (
-              {currentError?.info.network.chainId})
+              {currentError?.info?.network?.name} (
+              {currentError?.info?.network?.chainId})
             </Text>
           </Flex>
           <Flex direction="column" gap={2}>

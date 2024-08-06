@@ -1,0 +1,125 @@
+import { Details, GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: { title: "PrimarySale contract", icon: "solidity" },
+	title: "PrimarySale | thirdweb contract",
+	description:
+		"PrimarySale lets you set a recipient for any sale value you intend to collect in your smart contract",
+});
+
+# PrimarySale
+
+```solidity
+import "@thirdweb-dev/contracts/extension/PrimarySale.sol";
+```
+
+`PrimarySale` lets you set a recipient for any sale value you intend to collect in your smart contract.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/PrimarySale.sol" />
+
+## Usage
+
+The `PrimarySale` extension is an _abstract contract_, and expects you to implement the following functions by yourself:
+
+| Name                                                                                                         | Type                    | Returns | Description                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [`_canSetPrimarySaleRecipient`](/contracts/build/extensions/general/PrimarySale#_cansetprimarysalerecipient) | internal view _virtual_ | `bool`  | Runs on every attempt to set a new primary sale recipient. Returns whether this info can be set in the given execution context. |
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/extension/PrimarySale.sol";
+
+contract MyContract is PrimarySale {
+    /**
+     *  We store the contract deployer's address only for the purposes of the example
+     *  in the code comment below.
+     *
+     *  Doing this is not necessary to use the `PrimarySale` extension.
+     */
+    address public deployer;
+
+    constructor() {
+        deployer = msg.sender;
+    }
+
+    /**
+     *  This function returns who is authorized to set primary sale recipient address for your contract.
+     *
+     *  As an EXAMPLE, we'll only allow the contract deployer to set the primary sale recipient address.
+     *
+     *  You MUST complete the body of this function to use the `PrimarySale` extension.
+     */
+    function _canSetPrimarySaleRecipient()
+        internal
+        virtual
+        override
+        returns (bool)
+    {
+        return msg.sender == deployer;
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [`ERC20Drop`](/contracts/build/extensions/erc-1155/ERC1155Claimable)
+- [`ERC20DropVote`](/contracts/build/base-contracts/erc-20/drop-vote)
+- [`ERC20SignatureMint`](/contracts/build/base-contracts/erc-20/signature-mint)
+- [`ERC20SignatureMintVote`](/contracts/build/base-contracts/erc-20/signature-mint-vote)
+- [`ERC721Drop`](/contracts/build/base-contracts/erc-721/drop)
+- [`ERC721SignatureMint`](/contracts/build/base-contracts/erc-721/signature-mint)
+- [`ERC1155Drop`](/contracts/build/base-contracts/erc-1155/drop)
+- [`ERC1155SignatureMint`](/contracts/build/base-contracts/erc-1155/signature-mint)
+
+## Full API Reference
+
+<Details summary="primarySaleRecipient">
+
+```solidity
+function primarySaleRecipient() public view returns (address);
+```
+
+- Returns the primary sale recipient address stored in the contract.
+- Set this value using the `setPrimarySaleRecipient` function.
+
+</Details>
+
+<Details summary="setPrimarySaleRecipient">
+
+```solidity
+function setPrimarySaleRecipient(address saleRecipient) external;
+```
+
+- Lets an authorized wallet set the primary sale recipient address.
+- Parameter `saleRecipient`: The address to set as the new primary sale recipient.
+- The `_canSetPrimarySaleRecipient` function is run on every call to this function. If the return value of `_canSetPrimarySaleRecipient` is `false`, the `setPrimarySaleRecipient` call will revert.
+
+</Details>
+
+<Details summary="_setupPrimarySaleRecipient">
+
+```solidity
+function _setupPrimarySaleRecipient(address saleRecipient) internal;
+```
+
+- Sets the primary sale recipient.
+- Parameter `saleRecipient`: The address to set as the new primary sale recipient.
+- The `_canSetPrimarySaleRecipient` function is _not_ run on a call to this function.
+
+</Details>
+
+<Details summary="_canSetPrimarySaleRecipient">
+
+```solidity
+function _canSetPrimarySaleRecipient() internal view virtual returns (bool);
+```
+
+- Runs on every `setPrimarySaleRecipient` function call.
+- Returns whether a new primary sale recipient can be set in the given execution context.
+- For example, this function can check whether the wallet calling `setPrimarySaleRecipient` is the contract owner, and enforce that only the current owner should be able to successfully call `setPrimarySaleRecipient`.
+
+</Details>

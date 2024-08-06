@@ -2,7 +2,6 @@ import {
   Box,
   Center,
   Container,
-  DarkMode,
   Flex,
   Icon,
   SimpleGrid,
@@ -18,6 +17,7 @@ import { PageId } from "page-id";
 import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const TRACKING_CATEGORY = "community";
 
@@ -105,9 +105,10 @@ const communitySections = [
 
 const Community: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
+    <>
       <NextSeo {...SEO} />
       <Flex
         sx={{
@@ -389,7 +390,7 @@ const Community: ThirdwebNextPage = () => {
 
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

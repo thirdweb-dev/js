@@ -1,0 +1,34 @@
+# Install
+
+Install thirdweb dependencies into your project. If no path is specified, the current directory will be used.
+
+```bash
+npx thirdweb install
+```
+
+## Usage
+
+Run this command to install thirdweb dependencies into your project. If no path is specified, the current directory will be used.
+
+```bash
+npx thirdweb install <projectpath> [options]
+```
+
+This command will automatically detect the type of project you are working on and install or update the appropriate thirdweb dependencies.
+
+**Dependencies installed:**
+
+- **JS/TS**
+  - **Smart contract projects**: [`@thirdweb/contracts`](/typescript/latest)
+  - **App projects:**
+    - **React**: [`@thirdweb/react`](/react/latest), [`@thirdweb/sdk`](/typescript/latest) and [`ethers` v5](https://docs.ethers.org/v5/)
+    - **React Native**: [`@thirdweb/react-native`](/react-native/latest), [`@thirdweb/react-native-compat`](/react-native/latest) and [`ethers` v5](https://docs.ethers.org/v5/)
+    - **Other**: [`@thirdweb/sdk`](/typescript/latest) and [`ethers` v5](https://docs.ethers.org/v5/)
+
+If any thirdweb package _(or Ethers)_ is already installed, they are updated to the latest compatible version.
+
+## Options
+
+- `--nightly`: Install the nightly version of packages.
+- `--dev`: Install the dev version of packages.
+- `--debug`: Show debug logs.

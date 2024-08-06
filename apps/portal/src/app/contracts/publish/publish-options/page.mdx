@@ -1,0 +1,76 @@
+import { Callout } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Publish options",
+		icon: "contract",
+	},
+	title: "Publish Options | thirdweb Publish",
+	description:
+		"The deployment options you choose will determine how users deploy your contract",
+});
+
+# Publish Options
+
+The deployment options you choose will determine how _users_ deploy your contract.
+
+## 1. Direct deploy
+
+Publishing with the direct deploy option allows users to deploy a copy of your contract, including the logic and storage.
+Choose this option if your contract does not follow the upgradeable contract pattern.
+
+### Requirements
+
+There are no requirements. Any contract can be published with this deployment option.
+
+## 2. Deploy via Factory
+
+Choose this option if you would like users to deploy proxies of your implementation contract using the thirdweb default factory contract or using your own pre-deployed custom factory.
+
+<Callout title="Deploy via Factory" variant="info">
+	To use the "Deploy via Factory" option, you should be publishing your
+	implementation contract rather than a factory.
+</Callout>
+
+### 2(a). Default Factory
+
+Publishing your contract using the [thirdweb default factory](https://github.com/thirdweb-dev/contracts/blob/main/contracts/infra/TWStatelessFactory.sol) allows users to deploy a proxy contract.
+
+- Allows users to deploy to **any EVM compatible network**.
+- Users will deploy an [EIP-1167](https://eips.ethereum.org/EIPS/eip-1167) minimal proxy contract, containing the state, which will refer to your implementation contract for the logic. This makes the deployment cheaper for your users.
+- The [thirdweb default factory](https://github.com/thirdweb-dev/contracts/blob/main/contracts/infra/TWStatelessFactory.sol) is open-source, permissionless, and does not alter contract ownership - contract deployers have 100% ownership.
+
+#### Requirements
+
+- Your contract needs to implement the [upgradeable pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable), meaning it has an "initialize" function to set the storage, instead of a constructor.
+
+#### Usage
+
+1. Choose your "initialize" function - in most cases, this will be `initialize` but can be any function on your contract.
+2. Select which networks you would like to publish to. This way, you can limit which networks your users can deploy to.
+3. Click "Next" and fill in the ["Contract Parameters"](/contracts/publish/publish-contract#customize-contract-parameters) form.
+
+### 2(b). Custom Factory
+
+Publishing your contract using a custom factory allows users to deploy a proxy contract using your own pre-deployed custom factory.
+This allows you to add custom logic to the function which is invoked when a user deploys a contract.
+
+#### Requirements
+
+- Be publishing your implementation contract rather than a factory.
+- Have a custom factory contract pre-deployed to all networks you are publishing to.
+
+#### Usage
+
+1. Enter the address(s) of your custom factory contract on each network you would like users to be able to deploy to.
+2. Choose your "factory function" - this will be the function that will be called when deploying a user's contract.
+3. Click "Next" and fill in the ["Contract Parameters"](/contracts/publish/publish-contract#customize-contract-parameters) form.
+
+## Not sure which option to choose?
+
+| Deployment option                                                                | Description                                                                                                          | Main use case                                                                                                                           | Requirements                                                                                                          | Can my contract be deployed to any EVM?                       | Can your contract be featured on Explore? |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ----------------------------------------- |
+| [Direct Deploy](/contracts/publish/publish-options#direct-deploy)                | Users can deploy a copy of your contract, including the logic and storage.                                           | Smart contract developers using publish to share their smart contract and are not expecting their contract to get lots of deploys       | No requirements.                                                                                                      | Yes.                                                          | No.                                       |
+| [Deploy via Default Factory](/contracts/publish/publish-options#default-factory) | Users can deploy proxies of your implementation contract, containing the storage, using the thirdweb default factory | Protocols that want their contract to be deployable to all networks and want to gas-optimize the deploys                                | Must be written in the [upgradeable pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/writing-upgradeable). | Yes.                                                          | Yes.                                      |
+| [Deploy via Custom Factory](/contracts/publish/publish-options#custom-factory)   | Use your own pre-deployed factory contract to deploy proxies for your users.                                         | Protocols that want to use a custom factory to create proxies for their users & the ability to add custom logic to the create function. | Must have pre-deployed a custom factory on each chain you would like users to be able to deploy to.                   | Deployable to all networks the custom factory is deployed to. | Yes.                                      |

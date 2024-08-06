@@ -521,7 +521,7 @@
   "dependencies": {
     "@account-abstraction/contracts": "^0.5.0",
     "@blocto/sdk": "0.10.2",
-    "@coinbase/wallet-sdk": "^3.9.0",
+    "@coinbase/wallet-sdk": "^4.0.4",
     "@google-cloud/kms": "^4.4.0",
     "@magic-ext/connect": "^6.7.2",
     "@magic-ext/oauth": "^7.6.2",
@@ -605,7 +605,7 @@
     "rimraf": "5.0.7",
     "tweetnacl": "^1.0.3",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "scripts": {
     "format": "biome format ./src --write",

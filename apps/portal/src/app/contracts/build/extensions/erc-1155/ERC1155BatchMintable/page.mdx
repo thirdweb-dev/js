@@ -1,0 +1,66 @@
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC1155BatchMintable contract",
+		icon: "solidity",
+	},
+	title: "ERC1155BatchMintable | thirdweb contract",
+	description:
+		"Enable minting multiple NFTs at once in a single transaction by Implementing ERC1155, IMintableERC1155, and Multicall extensions",
+});
+
+# ERC1155BatchMintable
+
+```solidity
+import "@thirdweb-dev/eip/ERC1155.sol"
+import "@thirdweb-dev/contracts/extension/multicall.sol";
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC1155.sol";
+```
+
+Enable minting multiple NFTs at once in a single transaction by Implementing [`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155), [`IMintableERC1155`](/contracts/build/extensions/erc-1155/ERC1155Mintable), and [`Multicall`](/contracts/build/extensions/general/Multicall) extensions.
+
+This is an extension which is detectable in the dashboard if the smart contract implements the
+[`ERC1155`](/contracts/build/extensions/erc-1155/ERC1155), [`Multicall`](/contracts/build/extensions/general/Multicall) and [`ERC1155Mintable`](/contracts/build/extensions/erc-1155/ERC1155Mintable) extensions.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/extension/interface/IMintableERC1155.sol" />
+
+## Usage
+
+This is an example smart contract which will have ERC1155BatchMintable detected on it in the dashboard. It also highlights the functions which can be (optionally) overridden to add custom logic.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC1155.sol";
+import "@thirdweb-dev/contracts/extension/interface/IMintableERC1155.sol";
+import "@thirdweb-dev/contracts/extension/Multicall.sol";
+
+contract Contract is ERC1155, IMintableERC1155, Multicall {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC1155(
+            _name,
+            _symbol
+        )
+    {}
+
+    function mintTo(
+        address to,
+        uint256 tokenId,
+        string calldata uri,
+        uint256 amount
+    ) external override {
+        // Your custom implementation here
+    }
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC1155Base](/contracts/build/base-contracts/erc-1155/base)
+- [ERC1155SignatureMint](/contracts/build/base-contracts/erc-1155/signature-mint)

@@ -51,7 +51,12 @@ export async function middleware(request: NextRequest) {
 
   // if the first section of the path is a number, check if it's a valid chain_id and re-write it to the slug
   const possibleChainId = Number(paths[0]);
-  if (Number.isInteger(possibleChainId) && possibleChainId !== 404) {
+
+  if (
+    possibleChainId &&
+    Number.isInteger(possibleChainId) &&
+    possibleChainId !== 404
+  ) {
     const possibleChain = defineChain(possibleChainId);
     try {
       const chainMetadata = await getChainMetadata(possibleChain);

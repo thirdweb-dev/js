@@ -1,0 +1,50 @@
+# Create
+
+Create a new project with the thirdweb packages installed and configured.
+
+Choose between creating apps with one of our SDKs,
+[smart contracts](/contracts/build/base-contracts) or
+[dynamic smart contract extensions](/contracts/build/extensions).
+
+```bash
+npx thirdweb create
+```
+
+## Usage
+
+After running the command, you will be prompted to provide the:
+
+1. Type of project to create (app, smart contract, or dynamic contract extension)
+2. Name of your project
+
+If you choose **App**, you will be prompted to provide the:
+
+3. Framework to build with (Next.js, Vite, React Native, or Node.js)
+
+If you choose **Smart Contract** or **Dynamic Contract Extension** you will be prompted to provide the:
+
+3. Framework to build with (Forge or HardHat)
+4. Base Contract (choose from [ERC721](/contracts/build/base-contracts/erc-721/base), [ERC1155](/contracts/build/base-contracts/erc-1155/base) or [ERC20](/contracts/build/base-contracts/erc-20/base), or empty)
+5. Smart Contract name
+
+```bash
+npx thirdweb create [options] [projectPath]
+```
+
+## Options
+
+- `--app` - Create a web3 app.
+- `--contract` - Create a web3 contract project.
+- `--forge` - Initialize as a Forge project.
+- `--hardhat` - Initialize as a Hardhat project.
+- `--extension` - Create a smart contract extension.
+- `--next` - Initialize as a Next.js project.
+- `--vite` - Initialize as a Vite project.
+- `--react-native` - Initialize as a React Native project.
+- `--node` - Initialize as a Node project.
+- `--use-npm` - Explicitly tell the CLI to bootstrap the app using npm.
+- `--use-pnpm` - Explicitly tell the CLI to bootstrap the app using pnpm.
+- `--framework` - The preferred framework.
+- `--evm` - Initialize as an Ethereum project.
+- `--template` - A template to start your project from. You can use an template repository name from the official thirdweb-example org.
+- `--contract-name` - Name of the new smart contract to create.

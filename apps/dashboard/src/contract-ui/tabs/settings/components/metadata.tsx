@@ -111,10 +111,18 @@ export const SettingsMetadata = <
     name: "dashboard_social_urls",
   });
 
+  const contractV5 = contract
+    ? getContract({
+        address: contract.getAddress(),
+        chain: defineDashboardChain(contract.chainId),
+        client: thirdwebClient,
+      })
+    : null;
+
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated metadata",
     "Error updating metadata",
-    contract,
+    contractV5,
   );
 
   return (
@@ -223,10 +231,7 @@ export const SettingsMetadata = <
                       shouldDirty: true,
                     })
                   }
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="md"
-                  transition="all 200ms ease"
+                  className="rounded border border-border transition-all duration-200"
                 />
                 <FormErrorMessage>
                   {getFieldState("image", formState).error?.message}

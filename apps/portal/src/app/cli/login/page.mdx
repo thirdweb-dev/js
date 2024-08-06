@@ -1,0 +1,82 @@
+import { Callout, DocImage } from "@doc";
+import authImage from "./link-device-cli-auth.png";
+import removeImage from "./revoke-access-cli-auth.png";
+
+# Login
+
+<Callout variant="warning">
+	If you are on windows, please avoid using powershell it has some known issues
+	that we are actively working on, please use git bash instead or the windows
+	command prompt.
+</Callout>
+
+Authenticate your device and link it to your thirdweb account with the thirdweb CLI.
+By logging in, you can access the thirdweb infrastructure and services which the CLI commands use under the hood such as storage.
+
+```bash
+npx thirdweb login [options]
+```
+
+## Usage
+
+If it's your first time using the CLI you will need to login with the dashboard in order to use the following commands:
+
+- [Deploy](/contracts/deploy/overview)
+- [Publish](/contracts/publish/overview)
+- [Upload](/cli/upload)
+- [Generate](/cli/generate)
+
+Once you've logged in, your devices will be authorized for future use.
+
+<Callout variant="info">
+	If you want to login with an API secret key, e.g. you are using continuous
+	integration, you can use the `--key` flag and pass a secret key.
+</Callout>
+
+To create a new device to link to your account, use the `--new` flag.
+
+```bash
+npx thirdweb login --new
+```
+
+## Options
+
+- `-n <string>` or `--new <string>` - Login with a new API secret key
+
+## Login with the dashboard
+
+1. Run the `login` command, this will open the dashboard to allow you to link your device to your thirdweb account.
+2. Choose a Device name to identify the device from the devices linked to your account.
+3. Click the `Authorize device` button.
+4. Sign the message with your wallet (this step is gasless) to authorize the device.
+
+<DocImage src={authImage} />
+
+This only needs to be done once per device.
+
+### How it Works
+
+When you login with the dashboard, a number of things happen:
+
+- A [local wallet](/references/wallets/v2/LocalWallet) is created and stored in your device's local storage.
+- An auth token is generated for this local wallet.
+- The auth token is linked to your wallet when you sign the message.
+
+## Login with an API secret key
+
+If you want to login with an API secret key, e.g. you are using continuous integration (CI), you can use the `--key` flag and pass a secret key.
+For example, if you are running the `generate` command with CI:
+
+```bash
+npx thirdweb generate --key <secret-key>
+```
+
+## Revoking Access
+
+To revoke access to a device:
+
+1. Navigate to the dashboard **Settings page**
+2. Click the `Accounts` tab from the sidebar and find the device you would like to revoke.
+3. Click the `Revoke Access` button to revoke access to the device.
+
+<DocImage src={removeImage} />

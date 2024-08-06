@@ -1,0 +1,40 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebContract.Read | Thirdweb .NET SDK",
+	description: "Read data from a smart contract using the Thirdweb .NET SDK.",
+});
+
+# ThirdwebContract.Read
+
+Use `ThirdwebContract.Read` to fetch data from a smart contract without making any state changes to the blockchain. This method is primarily used for "view" and "pure" functions within the smart contract.
+
+## Usage
+
+```csharp
+var result = await ThirdwebContract.Read<T>(contract, "methodName", parameters);
+```
+
+<Details summary="Parameters">
+
+### contract (required)
+
+An instance of `ThirdwebContract`. Represents the smart contract you want to interact with.
+
+### methodName (required)
+
+The name of the contract method you wish to call. Must be a `string`.
+
+### parameters (optional)
+
+The parameters to pass to the contract method, if any. Provide as a comma-separated list following methodName.
+
+</Details>
+
+<Details summary="Return Value">
+
+### T
+
+Returns the result of the contract method call as type T. The type T should match the expected return type of the smart contract method. For example, if the smart contract method returns an uint256, you should expect to receive a BigInteger in C#.
+
+</Details>

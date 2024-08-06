@@ -1,0 +1,99 @@
+import { Details } from "@doc";
+import { GithubButtonLink, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC20Base contract",
+		icon: "contract",
+	},
+	title: "ERC20Base | thirdweb contracts",
+	description:
+		"The ERC20Base smart contract implements the ERC-20 standard. Additionally, it supports EIP-2612, allowing approvals to be made via signatures.",
+});
+
+# ERC20Base
+
+The `ERC20Base` smart contract implements the [ERC-20](https://eips.ethereum.org/EIPS/eip-20) standard. Additionally, it supports [EIP-2612](https://eips.ethereum.org/EIPS/eip-2612), allowing approvals to be made via signatures.
+
+```solidity
+import "@thirdweb-dev/contracts/base/ERC20Base.sol";
+```
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/base/ERC20Base.sol" />
+
+## Usage
+
+Import the contract and inherit from it.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/base/ERC20Base.sol";
+
+contract MyToken is ERC20Base {
+	  constructor(
+        address _defaultAdmin,
+        string memory _name,
+        string memory _symbol
+    )
+        ERC20Base(
+            _defaultAdmin,
+            _name,
+            _symbol
+        )
+    {}
+}
+```
+
+## Detected Extensions
+
+Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+
+- [ERC20](/contracts/build/extensions/erc-20/ERC20)
+- [ERC20Mintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
+- [ERC20Permit](/contracts/build/extensions/erc-20/ERC20Permit)
+- [ERC20BatchMintable](/contracts/build/extensions/erc-20/ERC20BatchMintable)
+- [Ownable](/contracts/build/extensions/general/Ownable)
+- [ContractMetadata](/contracts/build/extensions/general/ContractMetadata)
+
+### Functions to Override
+
+The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+
+<Details id="mintTo" summary="mintTo">
+
+```solidity
+/**
+ *  @notice          Lets an authorized address mint tokens to a recipient.
+ *  @dev             The logic in the `_canMint` function determines whether the caller is authorized to mint tokens.
+ *
+ *  @param _to       The recipient of the tokens to mint.
+ *  @param _amount   Quantity of tokens to mint.
+ */
+function mintTo(address _to, uint256 _amount) public virtual {
+    require(_canMint(), "Not authorized to mint.");
+    require(_amount != 0, "Minting zero tokens.");
+
+    _mint(_to, _amount);
+}
+```
+
+</Details>
+
+<Details id="burn" summary="burn">
+
+```solidity
+/**
+ *  @notice          Lets an owner a given amount of their tokens.
+ *  @dev             Caller should own the `_amount` of tokens.
+ *
+ *  @param _amount   The number of tokens to burn.
+ */
+function burn(uint256 _amount) external virtual {
+    require(balanceOf(msg.sender) >= _amount, "not enough balance");
+    _burn(msg.sender, _amount);
+}
+```
+
+</Details>

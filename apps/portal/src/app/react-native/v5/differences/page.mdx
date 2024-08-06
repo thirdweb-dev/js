@@ -1,0 +1,39 @@
+import { OpenSourceCard } from "@doc";
+
+# Differences from React
+
+The `thirdweb` package is designed to work with React Native, but there are some differences you should be aware of.
+
+### Available wallets
+
+All wallets are supported on both web and React Native
+
+| Component | React | React Native |
+| --- | --- | --- |
+| `inAppWallet` | ✅ | ✅ |
+| `smartWallet` | ✅ | ✅ |
+| `privateKeyAccount` | ✅ | ✅ |
+| `walletConnect` | ✅ | ✅ |
+| `coinbaseWallet` | ✅ | ✅ |
+| `injectedWallet` | ✅ | ✅ |
+
+### UI components
+
+Some UI components might not be implemented yet on React Native. However, you can build your own UI easily with the hooks and functions provided.
+
+| Component | React | React Native |
+| --- | --- | --- |
+| `ConnectButton` | ✅ |  ✅ |
+| `ConnectEmbed` | ✅ |  ✅ |
+| `TransactionButton` | ✅ |  ✅ |
+| `PayEmbed` | ✅ |  ⚠️ (coming soon) |
+
+Interested in contributing to get these out sooner? Put up a PR on the [JS monorepo](https://github.com/thirdweb-dev/js)!
+
+<OpenSourceCard
+	title="thirdweb JS monorepo"
+	href={"https://github.com/thirdweb-example/account-abstraction"}
+/>
+
+
+

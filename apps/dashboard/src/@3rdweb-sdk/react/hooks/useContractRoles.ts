@@ -5,8 +5,9 @@ import {
   useRoleMembers,
 } from "@thirdweb-dev/react";
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { ZERO_ADDRESS } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { hasRole } from "thirdweb/extensions/permissions";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import type { RequiredParam } from "utils/types";
 
 function isContractWithRoles(
@@ -73,38 +74,45 @@ export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
   return isAdmin;
 }
 
-export function useIsMinter<TContract extends ValidContractInstance>(
-  contract: RequiredParam<TContract>,
-) {
+export function useIsMinter(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
-  const { data: contractType } = useContractType(contract?.getAddress());
-  const contractHasRoles = isContractWithRoles(contract);
-  const isAccountRole = useIsAccountRole(
-    "minter",
-    contractHasRoles ? contract : undefined,
-    address,
-  );
+  const userCanMintQuery = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: address ?? "",
+    role: "minter",
+    queryOptions: { enabled: !!address },
+  });
 
-  if (contractType === "custom") {
-    return true;
-  }
-  return isAccountRole;
+  const anyoneCanMintQuery = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: ZERO_ADDRESS,
+    role: "minter",
+  });
+
+  // If both requests "error out", we can safely assume that
+  // this is a custom (aka. non-thirdweb) contract
+  // so we just return `true` in that case
+  const isCustomContract =
+    userCanMintQuery.isError && anyoneCanMintQuery.isError;
+
+  return anyoneCanMintQuery.data || userCanMintQuery.data || isCustomContract;
 }
 
-export function useIsLister<TContract extends ValidContractInstance>(
-  contract: RequiredParam<TContract>,
-) {
+// Applicable to Marketplace v3 only
+export function useIsLister(contract: ThirdwebContract) {
   const address = useActiveAccount()?.address;
-  const { data: contractType } = useContractType(contract?.getAddress());
-  const contractHasRoles = isContractWithRoles(contract);
-  const isAccountRole = useIsAccountRole(
-    "lister",
-    contractHasRoles ? contract : undefined,
-    address,
-  );
+  const { data: userCanList } = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: address ?? "",
+    role: "lister",
+    queryOptions: { enabled: !!address },
+  });
 
-  if (contractType === "custom") {
-    return true;
-  }
-  return isAccountRole;
+  const { data: anyoneCanList } = useReadContract(hasRole, {
+    contract,
+    targetAccountAddress: ZERO_ADDRESS,
+    role: "lister",
+  });
+
+  return anyoneCanList || userCanList;
 }

@@ -1,0 +1,78 @@
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { createMetadata, Callout } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Pay - Test Mode",
+		icon: "thirdweb",
+	},
+	title: "thirdweb Pay - Test Mode - thirdweb",
+	description: "thirdweb Pay - Test Mode",
+});
+
+# Enable Test Mode
+
+Developers can turn on Buy With Fiat Test Mode to test fiat-to-crypto transactions through our onramp providers.
+
+<Callout variant="info">
+
+    Crypto-to-crypto transactions will remain on mainnet during test mode as Pay
+    does not currently support testnets.
+
+</Callout>
+
+<Tabs defaultValue="connectbutton">
+
+<TabsList>
+	<TabsTrigger value="connectbutton">ConnectButton</TabsTrigger>
+	<TabsTrigger value="payembed">PayEmbed</TabsTrigger>
+	<TabsTrigger value="sendtxn">sendTransaction</TabsTrigger>
+</TabsList>
+
+<TabsContent value='connectbutton'>
+
+```tsx
+<ConnectButton
+	client={client}
+	detailsModal={{
+		payOptions: {
+			buyWithFiat: {
+				testMode: true, // defaults to false
+			},
+		},
+	}}
+/>
+```
+
+</TabsContent>
+
+<TabsContent value="payembed">
+
+```tsx
+<PayEmbed
+	client={client}
+	payOptions={{
+		buyWithFiat: {
+			testMode: true, // defaults to false
+		},
+	}}
+/>
+```
+
+</TabsContent>
+
+<TabsContent value="sendtxn">
+
+```tsx
+const { mutate: sendTransaction } = useSendTransaction({
+	payModal: {
+		buyWithFiat: {
+			testMode: true, // defaults to false
+		},
+	},
+});
+```
+
+</TabsContent>
+
+</Tabs>

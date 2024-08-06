@@ -14,13 +14,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import { defineChain } from "thirdweb";
-import { AutoConnect, ConnectButton } from "thirdweb/react";
+import { type Chain, defineChain } from "thirdweb";
+import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
+import { getSDKTheme } from "../../../../app/components/sdk-component-theme";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
 
-export const CustomConnectWallet: React.FC = () => {
+export const CustomConnectWallet = (props: {
+  loginRequired?: boolean;
+  connectButtonClassName?: string;
+}) => {
+  const loginRequired =
+    props.loginRequired === undefined ? true : props.loginRequired;
   const { theme } = useTheme();
   const recentChainsv4 = useRecentlyUsedChains();
   const addRecentlyUsedChainId = useAddRecentlyUsedChainId();
@@ -66,7 +72,7 @@ export const CustomConnectWallet: React.FC = () => {
     );
   }
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn && loginRequired) {
     return (
       <>
         <Button asChild variant="default" className="gap-2" size="lg">
@@ -84,7 +90,7 @@ export const CustomConnectWallet: React.FC = () => {
 
   return (
     <ConnectButton
-      theme={t}
+      theme={getSDKTheme(t)}
       client={thirdwebClient}
       connectModal={{
         privacyPolicyUrl: "/privacy",
@@ -106,6 +112,9 @@ export const CustomConnectWallet: React.FC = () => {
         } catch (err) {
           console.error("Failed to log out", err);
         }
+      }}
+      connectButton={{
+        className: props.connectButtonClassName,
       }}
       chains={allChains}
       detailsModal={{
@@ -190,6 +199,35 @@ export function ConnectWalletWelcomeScreen(props: {
         New to Wallets?
       </TrackedAnchorLink>
     </div>
+  );
+}
+
+export function useCustomConnectModal() {
+  const { connect } = useConnectModal();
+  const { theme } = useTheme();
+
+  return useCallback(
+    (options?: { chain?: Chain }) => {
+      return connect({
+        client: thirdwebClient,
+        appMetadata: {
+          name: "thirdweb",
+          logoUrl: "https://thirdweb.com/favicon.ico",
+          url: "https://thirdweb.com",
+        },
+        chain: options?.chain,
+        privacyPolicyUrl: "/privacy",
+        termsOfServiceUrl: "/tos",
+        showThirdwebBranding: false,
+        welcomeScreen: () => (
+          <ConnectWalletWelcomeScreen
+            theme={theme === "light" ? "light" : "dark"}
+          />
+        ),
+        theme: getSDKTheme(theme === "light" ? "light" : "dark"),
+      });
+    },
+    [connect, theme],
   );
 }
 

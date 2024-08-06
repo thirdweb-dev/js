@@ -1,0 +1,127 @@
+import { Details, Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Managed Account Factory contract",
+		icon: "contract",
+	},
+	title: "Managed Account Factory | thirdweb contracts",
+	description:
+		"This factory smart contract is intended to be used to distribute ManagedAccounts programmatically",
+});
+
+# Managed Account Factory
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/managed/ManagedAccountFactory.sol";
+```
+
+This contract inherits from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWallet-factory) contract.
+
+This factory smart contract is intended to be used to distribute ['ManagedAccounts`](/contracts/build/base-contracts/erc-4337/managed-account) programmatically.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/prebuilts/account/managed/ManagedAccountFactory.sol" />
+
+<br />
+
+<Callout title="Modified Contract" variant="info">
+
+If you modify the [`ManagedAccount`](/contracts/build/base-contracts/erc-4337/managed-account) contract, it is recommended that you write your own
+factory contract by inheriting from the [`BaseAccountFactory`](/contracts/build/extensions/erc-4337/SmartWallet-factory) extension.
+
+</Callout>
+
+## Detected Extensions
+
+Once deployed, you can use the features made available by these extensions on the SDK and dashboard:
+
+- [SmartWalletFactory](/contracts/build/extensions/erc-4337/SmartWallet-factory)
+
+## Usage
+
+Use the [CLI](/cli) [`create`](/cli/create) command to create a `ManagedAccountFactory` smart contract:
+
+```bash
+npx thirdweb create contract
+```
+
+[Deploy](/contracts/deploy/overview) your contract using the deploy cli command:
+
+```bash
+npx thirdweb create
+```
+
+Or import the contract into your existing project and inherit from it.
+
+```solidity
+import "@thirdweb-dev/contracts/smart-wallet/managed/ManagedAccountFactory.sol";
+
+contract MyManagedAccountFactory is ManagedAccountFactory {
+	  constructor(
+        IEntryPoint _entrypoint
+    )
+        ManagedAccountFactory(
+            _entrypoint
+        )
+    {}
+}
+```
+
+## Functions to Override
+
+The following functions have been implemented on this contract & are available to be overridden to add custom logic:
+
+<Details id="_initializeAccount" summary="_initializeAccount">
+
+Called in `createAccount`. Initializes the account contract created in `createAccount`.
+
+```solidity
+function _initializeAccount(
+    address _account,
+    address _admin,
+    bytes calldata _data
+) internal override {
+    ManagedAccount(payable(_account)).initialize(_admin, _data);
+}
+```
+
+#### \_account
+
+The address of the smart account smart contract to initialize.
+
+#### \_admin
+
+The address to be set as default admin role for the contract. Must be of type `address`.
+
+#### \_data
+
+If extra storage variables are required in your account contract, abi encode the variables,
+pass them to this function as the `bytes` argument.
+
+For example:
+
+```solidity
+
+function initializeAccount(
+    address _admin,
+    bytes calldata _data
+) public override initializer {
+    ManagedAccount.initialize(_admin, _data);
+}
+```
+
+</Details>
+
+<Details id="_canSetExtension" summary="_canSetExtension">
+
+Returns whether an extension can be set in the given execution context.
+
+```solidity
+function _canSetExtension() internal view virtual override returns (bool) {
+    return hasRole(DEFAULT_ADMIN_ROLE, msg.sender);
+}
+```
+
+</Details>

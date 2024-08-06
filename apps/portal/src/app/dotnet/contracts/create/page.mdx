@@ -1,0 +1,45 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebContract.Create | Thirdweb .NET SDK",
+	description:
+		"Instantiate a ThirdwebContract to interact with smart contracts.",
+});
+
+# ThirdwebContract.Create
+
+Create an instance of `ThirdwebContract` to start interacting with a deployed smart contract. You can read data from and write data to the blockchain using this contract instance. If the ABI is not provided, it will attempt to fetch it automatically if available.
+
+## Usage
+
+```csharp
+var contract = await ThirdwebContract.Create(client, "contractAddress", chainId, "optionalAbi");
+```
+
+<Details summary="Parameters">
+
+### client (required)
+
+An instance of `ThirdwebClient`.
+
+### address (required)
+
+The address of the smart contract you want to interact with. Must be a hexadecimal `string`.
+
+### chain (required)
+
+The blockchain network's chain ID as a `BigInteger`. This ID specifies which network the contract is deployed on.
+
+### abi (optional)
+
+The ABI of the contract. If not provided, it will attempt to fetch the ABI automatically if available.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebContract
+
+Returns an instance of `ThirdwebContract` configured with the provided parameters, ready to interact with the blockchain.
+
+</Details>

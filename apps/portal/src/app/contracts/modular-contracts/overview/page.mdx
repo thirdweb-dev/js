@@ -1,0 +1,64 @@
+import { DocImage } from "@doc";
+import extensionModelImage from "./assets/NFT-drop-overview.png";
+import { createMetadata, FeatureCard } from "@doc";
+import { PencilRulerIcon, HandCoinsIcon, BlocksIcon, WorkflowIcon, ShieldCheckIcon, CirclePlusIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "thirdweb Modular Contracts",
+	description:
+		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as extensions.",
+	image: {
+		title: "thirdweb Modular Contracts",
+		icon: "solidity",
+	},
+});
+
+# Modular Contracts
+Modular contracts is a framework that enables the creation of highly customizable and upgradeable smart contracts. Modular contracts is designed to encompass a broad number of use cases without compromising on the ease and security of creating smart contracts with thirdweb.
+
+<DocImage src={extensionModelImage} />
+
+#### Features
+
+<div
+	className="my-4 grid gap-2 md:grid-cols-2 lg:grid-cols-2 "
+>
+	<FeatureCard
+		title="Customizable"
+		description="Build contracts to only add features relevant to your use case"
+		iconUrl={<PencilRulerIcon />}
+	/>
+
+    <FeatureCard
+    	title="Upgradeable"
+    	description="Enable ability to add, configure, and remove extensions post-deployment"
+		iconUrl={<CirclePlusIcon/>}
+    />
+
+	<FeatureCard
+    	title="Secure"
+    	description="Core & Extension contracts published by thirdweb are audited"
+		iconUrl={<ShieldCheckIcon/>}
+    />
+
+	<FeatureCard
+    	title="Interoperable"
+    	description="Usable with frameworks such as Hardhat and Foundry"
+    	iconUrl={<WorkflowIcon/>}
+    />
+
+	<FeatureCard
+    	title="Gas-optimized"
+    	description="Increased gas-savings on deployment and for end-users"
+    	iconUrl={<HandCoinsIcon/>}
+    />
+
+	<FeatureCard
+    	title="Integration Options"
+    	description="Deploy through Explore, SDKs, or Contract Wizard (coming soon)"
+		iconUrl={<BlocksIcon/>}
+    />
+</div>
+
+### Templates
+[Extenion Starter Template](https://github.com/thirdweb-example/modular-contract-extension-starter)
