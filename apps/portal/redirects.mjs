@@ -476,6 +476,11 @@ const paymentRedirects = {
 	"/checkouts/api-reference": "/payments/nft-checkout/api-reference",
 	"/checkouts/faq": "/payments/nft-checkout/faq",
 	"/payments/:match*": "/connect/pay/overview",
+	"/connect/pay/buy-with-fiat": "/connect/pay/overview",
+	"/connect/pay/buy-with-crypto/overview": "/connect/pay/overview",
+	"/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
+	"/connect/pay/build-a-custom-experience": "/connect/pay/guides/build-a-custom-experience",
+	"/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
 };
 
 const contractRedirects = {
