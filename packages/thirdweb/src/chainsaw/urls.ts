@@ -1,6 +1,6 @@
 import { getThirdwebDomains } from "../utils/domains.js";
 
-export const getChainsawV2Url = (): string => {
+export function getChainsawV2Url(): string {
   const domain: string = getThirdwebDomains().chainsaw;
   return `${domain}/v2`;
 };
