@@ -3,7 +3,7 @@ import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawEvents } from "../formatter.js";
-import { addPagingToRequest } from "../paging.js";
+import { addRequestPagination } from "../paging.js";
 import type {
   ChainsawEvents,
   ChainsawPagingParams,
@@ -91,7 +91,7 @@ export async function getEvents(
   params: GetEventsParams,
 ): Promise<GetEventsResult> {
   try {
-    const queryParams = addPagingToRequest(
+    const queryParams = addRequestPagination(
       new URLSearchParams({
         ...(params.startDate && { startDate: params.startDate.toISOString() }),
         ...(params.endDate && { endDate: params.endDate.toISOString() }),

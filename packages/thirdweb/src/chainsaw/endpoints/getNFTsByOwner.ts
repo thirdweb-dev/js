@@ -3,7 +3,7 @@ import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
-import { addPagingToRequest } from "../paging.js";
+import { addRequestPagination } from "../paging.js";
 import type {
   ChainsawNFTs,
   ChainsawPagingParams,
@@ -68,7 +68,7 @@ export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
 ): Promise<GetNFTsByOwnerResult> {
   try {
-    const queryParams = addPagingToRequest(new URLSearchParams(), params);
+    const queryParams = addRequestPagination(new URLSearchParams(), params);
     for (const ownerAddress of params.ownerAddresses) {
       queryParams.append("ownerAddresses[]", ownerAddress);
     }

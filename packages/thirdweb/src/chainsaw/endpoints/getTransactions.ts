@@ -3,7 +3,7 @@ import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawTransactions } from "../formatter.js";
-import { addPagingToRequest } from "../paging.js";
+import { addRequestPagination } from "../paging.js";
 import type {
   ChainsawPagingParams,
   ChainsawResponse,
@@ -78,7 +78,7 @@ export async function getTransactions(
   params: GetTransactionsParams,
 ): Promise<GetTransactionsResult> {
   try {
-    const queryParams = addPagingToRequest(
+    const queryParams = addRequestPagination(
       new URLSearchParams({
         to: params.to.toString(),
         ...(params.startDate && { startDate: params.startDate.toISOString() }),

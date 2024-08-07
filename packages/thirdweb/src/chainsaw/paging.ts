@@ -1,6 +1,6 @@
 import type { ChainsawPagingParams } from "./types.js";
 
-export function addPagingToRequest(
+export function addRequestPagination(
   searchParams: URLSearchParams,
   pagingParams: ChainsawPagingParams,
 ): URLSearchParams {
