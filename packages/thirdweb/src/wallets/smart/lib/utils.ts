@@ -43,5 +43,10 @@ export function hexlifyUserOp(userOp: UserOperation): UserOperationHexed {
 }
 
 export function isNativeAAChain(chain: Chain) {
-  return chain.id === 324 || chain.id === 300 || chain.id === 302;
+  return (
+    chain.id === 324 ||
+    chain.id === 300 ||
+    chain.id === 302 ||
+    chain.id === 11124
+  );
 }

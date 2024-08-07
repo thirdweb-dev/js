@@ -110,7 +110,7 @@ export async function isZkSyncChain(
     secretKey,
   });
   const chainId = (await provider.getNetwork()).chainId;
-  return chainId === 324 || chainId === 300 || chainId === 302;
+  return chainId === 324 || chainId === 300 || chainId === 302 || chainId === 11124;
 }
 
 /**

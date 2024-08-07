@@ -41,6 +41,7 @@ import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import {
+  abstractTestnet,
   polygon,
   zkCandySepolia,
   zkSync,
@@ -85,6 +86,19 @@ interface RawPredeployMetadata {
   analytics?: Record<string, any>;
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
   compilers?: Record<string, any>;
+}
+
+function isChainIdZkSync(chainId?: number) {
+  switch (chainId) {
+    case zkSync.id:
+    case zkSyncSepolia.id:
+    case zkCandySepolia.id:
+    case abstractTestnet.id:
+      // TODO - add more ZK chains here
+      return true;
+    default:
+      return false;
+  }
 }
 
 // metadata PRE publish, only has the compiler output info (from CLI)
@@ -639,10 +653,7 @@ export function useCustomContractDeployMutation(
       // open the modal with the appropriate steps
       deployContext.open(steps);
 
-      const isZkSync =
-        chainId === zkSync.id ||
-        chainId === zkSyncSepolia.id ||
-        chainId === zkCandySepolia.id;
+      const isZkSync = isChainIdZkSync(chainId);
 
       let contractAddress: string;
       try {
@@ -778,7 +789,7 @@ export function useCustomContractDeployMutation(
           await addContractToMultiChainRegistry(
             {
               address: contractAddress,
-              chainId,
+              chainId: chainId as number,
               metadataURI: uriToRegister,
             },
             account,
@@ -883,7 +894,7 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
       invariant(sdk, "sdk not provided");
 
       // Handle separately for ZkSync
-      if (chainId === zkSync.id || chainId === zkSyncSepolia.id) {
+      if (isChainIdZkSync(chainId)) {
         return await getZkTransactionsForDeploy();
       }
 
