@@ -45,6 +45,7 @@ import {
   zkCandySepolia,
   zkSync,
   zkSyncSepolia,
+  abstractTestnet
 } from "thirdweb/chains";
 import { useActiveAccount, useActiveWallet } from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
@@ -642,7 +643,8 @@ export function useCustomContractDeployMutation(
       const isZkSync =
         chainId === zkSync.id ||
         chainId === zkSyncSepolia.id ||
-        chainId === zkCandySepolia.id;
+        chainId === zkCandySepolia.id ||
+        chainId === abstractTestnet.id;
 
       let contractAddress: string;
       try {
@@ -883,7 +885,7 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
       invariant(sdk, "sdk not provided");
 
       // Handle separately for ZkSync
-      if (chainId === zkSync.id || chainId === zkSyncSepolia.id) {
+      if (chainId === zkSync.id || chainId === zkSyncSepolia.id || chainId === abstractTestnet.id) {
         return await getZkTransactionsForDeploy();
       }
 

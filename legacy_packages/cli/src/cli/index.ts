@@ -327,7 +327,7 @@ const main = async () => {
       "--dynamic",
       "Deploy a dynamic smart contract made up of extensions to blockchains",
     )
-    .option("--zksync", "Deploy on ZKSync")
+    .option("--zksync", "Deploy on ZKSync Era or a ZK Stack chain")
     .option(
       "--link-lib <library:address...>",
       "Specify library names and addresses",
