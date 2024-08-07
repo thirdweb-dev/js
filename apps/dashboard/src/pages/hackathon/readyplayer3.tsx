@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Flex, Image, List, ListItem } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
@@ -18,7 +19,6 @@ import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Heading, Link, LinkButton, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const Timer = dynamic(() => import("components/hackathon/common/Timer"), {
   ssr: false,

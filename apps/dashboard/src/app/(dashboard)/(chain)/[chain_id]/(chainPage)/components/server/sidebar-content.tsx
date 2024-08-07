@@ -1,9 +1,9 @@
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import type React from "react";
 import type { ChainMetadata } from "thirdweb/chains";
-import { Button } from "../../../../../../../@/components/ui/button";
-import { Separator } from "../../../../../../../@/components/ui/separator";
 import { NavLink } from "../client/nav-link.client";
 
 export type SidebarContentProps = {

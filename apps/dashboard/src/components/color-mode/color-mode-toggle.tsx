@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useTheme } from "next-themes";
 import { FiMoon, FiSun } from "react-icons/fi";
-import { Button } from "../../@/components/ui/button";
-import { SkeletonContainer } from "../../@/components/ui/skeleton";
 import { useIsClientMounted } from "../ClientOnly/ClientOnly";
 
 export const ColorModeToggle: React.FC = () => {

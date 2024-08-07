@@ -38,11 +38,6 @@ const LazyContractEnglishAuctionsPage = dynamic(() =>
     ({ ContractEnglishAuctionsPage }) => ContractEnglishAuctionsPage,
   ),
 );
-const LazyContractListingsPage = dynamic(() =>
-  import("../tabs/listings/page").then(
-    ({ ContractListingsPage }) => ContractListingsPage,
-  ),
-);
 const LazyContractSplitPage = dynamic(() =>
   import("../tabs/split/page").then(
     ({ ContractSplitPage }) => ContractSplitPage,
@@ -195,16 +190,6 @@ export function useContractRouteConfig(
         feature: "EnglishAuctions",
       }),
       component: LazyContractEnglishAuctionsPage,
-    },
-    {
-      title: "Listings",
-      path: "listings",
-      isEnabled: contractTypeQuery.isLoading
-        ? "loading"
-        : contractTypeQuery.data === "marketplace"
-          ? "enabled"
-          : "disabled",
-      component: LazyContractListingsPage,
     },
     {
       title: "Balances",

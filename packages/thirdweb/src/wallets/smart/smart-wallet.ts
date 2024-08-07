@@ -38,7 +38,7 @@ import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
  * The `sponsorGas` option is used to enable sponsored gas for transactions automatically.
  *
  * ```ts
- * import { smartWalletm inAppWallet } from "thirdweb/wallets";
+ * import { smartWallet, inAppWallet } from "thirdweb/wallets";
  * import { sepolia } from "thirdweb/chains";
  * import { sendTransaction } from "thirdweb";
  *

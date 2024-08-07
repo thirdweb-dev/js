@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { thirdwebClient } from "@/constants/client";
+import { defineDashboardChain } from "lib/defineDashboardChain";
 import { useTheme } from "next-themes";
-import { defineChain } from "thirdweb";
 import { PayEmbed } from "thirdweb/react";
 import { getSDKTheme } from "../../../../../../components/sdk-component-theme";
 
@@ -27,7 +27,9 @@ export function PayModalButton(props: { chainId: number; label: string }) {
           className="!w-auto"
           payOptions={{
             prefillBuy: {
-              chain: defineChain(props.chainId),
+              // Do not include local chain overrides for chain pages
+              // eslint-disable-next-line no-restricted-syntax
+              chain: defineDashboardChain(props.chainId, undefined),
               allowEdits: {
                 chain: false,
                 amount: true,

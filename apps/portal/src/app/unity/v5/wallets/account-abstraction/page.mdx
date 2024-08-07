@@ -1,0 +1,41 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "SmartWallet | Thirdweb Unity SDK",
+	description:
+		"Instantiate a SmartWallet to sign transactions and messages.",
+});
+
+# SmartWallet
+
+Instantiate or upgrade any other wallet to a `SmartWallet` to enable advanced blockchain interactions, including gasless transactions through Account Abstraction (ERC4337 as well as ZkSync Native AA).
+
+Account Abstraction is a system that turns any personal wallet into a smart wallet, allowing you to sponsor gas for your users and unlocking advanced permissioning features that allow for seamless user onboarding, gasless transactions, automation and more.
+
+We recommend using Smart Wallets as the primary wallet type for your users.
+
+### Connecting to a Smart Wallet directly
+
+```csharp
+var smartWalletOptions = new SmartWalletOptions(sponsorGas: true)
+var options = new WalletOptions(..., smartWalletOptions: smartWalletOptions);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+### Upgrading an existing wallet to a Smart Wallet
+
+```csharp
+var smartWalletOptions = new SmartWalletOptions(sponsorGas: true)
+var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(
+    personalWallet: myExistingIThirdwebWallet, 
+    chainId: 1, 
+    smartWalletOptions: smartWalletOptions
+);
+```
+
+<ArticleIconCard
+	href="/dotnet/wallets/providers/account-abstraction"
+	icon={GraduationCap}
+	title="Learn more about SmartWallet"
+/>

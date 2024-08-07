@@ -1,0 +1,62 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "InAppWallet | Thirdweb Unity SDK",
+	description:
+		"Instantiate an InAppWallet to sign transactions and messages.",
+});
+
+# InAppWallet
+
+`InAppWallet` is the ultimate persistent wallet provider option for your game. It supports email, phone, social and custom authentication schemes, and will persist across devices, platforms, and other SDKs.
+
+It makes for a fantastic [SmartWallet](/unity/wallets/account-abstraction) admin/signer and will make sure your users can have the same wallet address across all your games, apps and blockchains.
+
+### Login with Email
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(email: "myepicemail@domain.id");
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+Will instantiate `InAppWalletModal` or resume the session - a simple prefab that will verify the user OTP.
+
+### Login with Phone
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(phoneNumber: "+1234567890");
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+Will instantiate `InAppWalletModal` or resume the session - a simple prefab that will verify the user OTP.
+
+### Login with Socials (Google, Apple, Facebook, etc.)
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Google);
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+Will open a native browser or oauth session to authenticate the user and redirect back to the game.
+
+<ArticleIconCard
+	href="/dotnet/wallets/providers/in-app-wallet"
+	icon={GraduationCap}
+	title="Learn more about InAppWallet"
+/>

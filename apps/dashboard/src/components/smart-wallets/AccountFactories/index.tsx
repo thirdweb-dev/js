@@ -25,7 +25,7 @@ const useFactories = () => {
       invariant(user?.address, "user should be logged in");
       const polygonSDK = getThirdwebSDK(
         polygon.id,
-        getDashboardChainRpc(polygon.id),
+        getDashboardChainRpc(polygon.id, undefined),
       );
       const contractList = await polygonSDK.getMultichainContractList(
         user.address,

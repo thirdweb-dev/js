@@ -1,8 +1,8 @@
 "use client";
 
+import { PaginationButtons } from "@/components/pagination-buttons";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { PaginationButtons } from "../../../../../../@/components/pagination-buttons";
 
 type ChainlistPaginationProps = {
   totalPages: number;

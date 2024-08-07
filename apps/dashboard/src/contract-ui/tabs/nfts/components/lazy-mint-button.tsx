@@ -2,7 +2,7 @@ import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { type useContract, useLazyMint } from "@thirdweb-dev/react";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiPlus } from "react-icons/fi";
 import { getContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
@@ -17,13 +17,15 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
   ...restButtonProps
 }) => {
   const contractV4 = contractQuery.contract;
-  const contract = contractV4
-    ? getContract({
-        address: contractV4.getAddress(),
-        chain: defineDashboardChain(contractV4.chainId),
-        client: thirdwebClient,
-      })
-    : null;
+  const chain = useV5DashboardChain(contractV4?.chainId);
+  const contract =
+    contractV4 && chain
+      ? getContract({
+          address: contractV4.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const mutation = useLazyMint(contractV4);
   if (!contract) {

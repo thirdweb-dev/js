@@ -17,7 +17,7 @@ import { detectFeatures } from "components/contract-components/utils";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useTabHref } from "contract-ui/utils";
 import { BigNumber } from "ethers";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { getContract } from "thirdweb";
 import { Link, Text } from "tw-components";
 
@@ -34,9 +34,10 @@ type Step = {
 export const ContractChecklist: React.FC<ContractChecklistProps> = ({
   contract,
 }) => {
+  const chain = useV5DashboardChain(contract.chainId);
   const contractv5 = getContract({
     address: contract.getAddress(),
-    chain: defineDashboardChain(contract.chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const nftHref = useTabHref("nfts");

@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Box,
   Flex,
@@ -15,7 +16,6 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../@/components/theme-provider";
 
 export interface TemplateCardProps {
   id: string;

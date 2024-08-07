@@ -5,8 +5,7 @@ import { FormErrorMessage, FormLabel } from "tw-components";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const RpcInput: React.FC<{
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<NetworkConfigFormData, any>;
+  form: UseFormReturn<NetworkConfigFormData>;
 }> = ({ form }) => {
   const reg = form.register("rpcUrl", {
     required: true,

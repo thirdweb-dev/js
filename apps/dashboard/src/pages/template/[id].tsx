@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Flex, Image } from "@chakra-ui/react";
 import { CopyButton } from "components/homepage/AnimatedCLICommand/AnimatedCLICommand";
 import { ProductButton } from "components/product-pages/common/ProductButton";
@@ -15,7 +16,6 @@ import {
   TrackedLinkButton,
 } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 type TemplateContentsProps = {
   overview: React.ReactNode;

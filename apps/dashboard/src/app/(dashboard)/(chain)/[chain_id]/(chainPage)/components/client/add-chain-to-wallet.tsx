@@ -5,13 +5,10 @@ import { Button } from "@/components/ui/button";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useCustomConnectModal } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
+import { useDashboardActiveWalletChain } from "lib/v5-adapter";
 import { toast } from "sonner";
 import type { Chain } from "thirdweb";
-import {
-  useActiveAccount,
-  useActiveWalletChain,
-  useSwitchActiveWalletChain,
-} from "thirdweb/react";
+import { useActiveAccount, useSwitchActiveWalletChain } from "thirdweb/react";
 import { useDebounce } from "use-debounce";
 
 type AddChainToWalletProps = {
@@ -21,7 +18,7 @@ type AddChainToWalletProps = {
 export const AddChainToWallet: React.FC<AddChainToWalletProps> = (props) => {
   const account = useActiveAccount();
   const switchChain = useSwitchActiveWalletChain();
-  const activeWalletChainId = useActiveWalletChain()?.id;
+  const activeWalletChainId = useDashboardActiveWalletChain()?.id;
   const customConnectModal = useCustomConnectModal();
 
   const switchChainMutation = useMutation({

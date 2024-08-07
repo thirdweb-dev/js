@@ -1,6 +1,6 @@
+import { type SortBy, fetchTopContracts } from "lib/search";
 import { CircleAlertIcon } from "lucide-react";
 import React from "react";
-import { type SortBy, fetchTopContracts } from "../../../../../../lib/search";
 import { TrendingContractSection } from "../../../../trending/components/trending-table";
 import { getChain } from "../../../utils";
 

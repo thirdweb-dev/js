@@ -5,9 +5,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SkeletonContainer } from "@/components/ui/skeleton";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { useState } from "react";
-import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
-import { ToolTipLabel } from "../../../../@/components/ui/tooltip";
 import { usePayVolume } from "../hooks/usePayVolume";
 import { CardHeading, FailedToLoad } from "./common";
 

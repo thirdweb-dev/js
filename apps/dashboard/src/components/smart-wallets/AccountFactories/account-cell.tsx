@@ -20,7 +20,7 @@ const useAccountCount = (address: string, chainId: number) => {
       if (!chain) {
         throw new Error("chain not found");
       }
-      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId));
+      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId, chain));
       const contract = await sdk.getContract(address);
       const accounts = await contract.accountFactory.getAllAccounts();
       return accounts.length;

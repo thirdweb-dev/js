@@ -199,12 +199,12 @@ export const sidebar: SideBar = {
 			icon: <ZapIcon />,
 		},
 		{
-			name: "Godot Setup",
+			name: "Godot Integration",
 			href: "/dotnet/godot",
 		},
 		{
-			name: "Unity Setup",
-			href: "/dotnet/unity",
+			name: "Unity Integration",
+			href: "/unity/v5",
 		},
 		{
 			name: "Core",

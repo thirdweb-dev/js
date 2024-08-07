@@ -284,56 +284,100 @@ const reactNativeRedirects = {
 };
 
 const unityRedirects = {
-	// wlalets
-	"/unity/wallet/metamask": "/unity/wallets/providers/metamask",
-	"/unity/wallet/coinbase": "/unity/wallets/providers/coinbase",
-	"/unity/wallet/walletconnect": "/unity/wallets/providers/walletconnect",
-	"/unity/wallet/injected": "/unity/wallets/providers/metamask",
-	"/unity/wallet/localwallet": "/unity/wallets/providers/local-wallet",
-	"/unity/wallet/smartwallet": "/unity/wallets/providers/smart-wallet",
-	"/unity/wallet/hyperplay": "/unity/wallets/providers/hyperplay",
-	"/unity/wallet/embeddedwallet": "/unity/wallets/providers/embedded-wallet",
+	// top level
+	"/unity": "/unity/v4",
+	"/unity/getting-started": "/unity/v4/getting-started",
+	// core
+	"/unity/thirdwebmanager": "/unity/v4/thirdwebmanager",
+	"/unity/storage": "/unity/v4/storage",
+	// wallets
+	"/unity/wallets/prefab": "/unity/v4/wallets/prefab",
+	// wallet providers
+	"/unity/wallets/providers/in-app-wallet": "/unity/v4/wallets/providers/in-app-wallet",
+	"/unity/wallets/providers/account-abstraction": "/unity/v4/wallets/providers/account-abstraction",
+	"/unity/wallets/providers/local-wallet": "/unity/v4/wallets/providers/local-wallet",
+	"/unity/wallets/providers/metamask": "/unity/v4/wallets/providers/metamask",
+	"/unity/wallets/providers/coinbase": "/unity/v4/wallets/providers/coinbase",
+	"/unity/wallets/providers/walletconnect": "/unity/v4/wallets/providers/walletconnect",
+	"/unity/wallets/providers/hyperplay": "/unity/v4/wallets/providers/hyperplay",
+	"/unity/wallets/providers/rabby": "/unity/v4/wallets/providers/rabby",
 	// wallet actions
-	"/unity/wallet/:path*": "/unity/wallets/actions/:path*",
-	"/unity/connectwallet": "/unity/wallets/prefab",
-	// contract actions
-	"/unity/extensions": "/unity/contracts",
-	"/unity/contract": "/unity/contracts/get",
-	"/unity/smartcontract.read": "/unity/contracts/read",
-	"/unity/contract.write": "/unity/contracts/write",
-	"/unity/contract.prepare": "/unity/contracts/prepare",
-	// extensions
-	// erc721
-	"/unity/erc721": "/unity/contracts/erc721/erc721",
-	"/unity/erc721burnable": "/unity/contracts/erc721/erc721burnable",
-	"/unity/erc721claimconditions": "/unity/contracts/erc721/erc721claimconditions",
-	"/unity/erc721enumerable": "/unity/contracts/erc721/erc721enumerable",
-	"/unity/erc721lazymintable": "/unity/contracts/erc721/erc721lazymintable",
-	"/unity/erc721mintable": "/unity/contracts/erc721/erc721mintable",
-	"/unity/erc721signaturemint": "/unity/contracts/erc721/erc721signaturemintable",
-	"/unity/erc721supply": "/unity/contracts/erc721/erc721supply",
-	"/unity/erc721tiereddrop": "/unity/contracts/erc721/erc721tiereddrop",
-	// erc1155
-	"/unity/erc1155": "/unity/contracts/erc1155/erc1155",
-	"/unity/erc1155burnable": "/unity/contracts/erc1155/erc1155burnable",
-	"/unity/erc1155claimconditions": "/unity/contracts/erc1155/erc1155claimconditions",
-	"/unity/erc1155enumerable": "/unity/contracts/erc1155/erc1155enumerable",
-	"/unity/erc1155mintable": "/unity/contracts/erc1155/erc1155mintable",
-	"/unity/delayedreveal1155": "/unity/contracts/erc1155/erc1155",
-	"/unity/erc1155signaturemintable": "/unity/contracts/erc1155/erc1155signaturemintable",
+	"/unity/wallets/actions/connect": "/unity/v4/wallets/actions/connect",
+	"/unity/wallets/actions/disconnect": "/unity/v4/wallets/actions/disconnect",
+	"/unity/wallets/actions/authenticate": "/unity/v4/wallets/actions/authenticate",
+	"/unity/wallets/actions/getaddress": "/unity/v4/wallets/actions/getaddress",
+	"/unity/wallets/actions/getbalance": "/unity/v4/wallets/actions/getbalance",
+	"/unity/wallets/actions/getchainid": "/unity/v4/wallets/actions/getchainid",
+	"/unity/wallets/actions/isconnected": "/unity/v4/wallets/actions/isconnected",
+	"/unity/wallets/actions/recoveraddress": "/unity/v4/wallets/actions/recoveraddress",
+	"/unity/wallets/actions/sendrawtransaction": "/unity/v4/wallets/actions/sendrawtransaction",
+	"/unity/wallets/actions/executerawtransaction": "/unity/v4/wallets/actions/executerawtransaction",
+	"/unity/wallets/actions/sign": "/unity/v4/wallets/actions/sign",
+	"/unity/wallets/actions/switchnetwork": "/unity/v4/wallets/actions/switchnetwork",
+	"/unity/wallets/actions/transfer": "/unity/v4/wallets/actions/transfer",
+	"/unity/wallets/actions/addadmin": "/unity/v4/wallets/actions/addadmin",
+	"/unity/wallets/actions/removeadmin": "/unity/v4/wallets/actions/removeadmin",
+	"/unity/wallets/actions/createsessionkey": "/unity/v4/wallets/actions/createsessionkey",
+	"/unity/wallets/actions/revokesessionkey": "/unity/v4/wallets/actions/revokesessionkey",
+	"/unity/wallets/actions/getallactivesigners": "/unity/v4/wallets/actions/getallactivesigners",
+	"/unity/wallets/actions/getemail": "/unity/v4/wallets/actions/getemail",
+	"/unity/wallets/actions/getnonce": "/unity/v4/wallets/actions/getnonce",
+	"/unity/wallets/actions/getsigneraddress": "/unity/v4/wallets/actions/getsigneraddress",
+	"/unity/wallets/actions/signtypeddatav4": "/unity/v4/wallets/actions/signtypeddatav4",
+	// submission
+	"/unity/wallets/submission": "/unity/v4/wallets/submission",
+	// pay
+	"/unity/pay/getbuyhistory": "/unity/v4/pay/getbuyhistory",
+	// buy with fiat
+	"/unity/pay/getbuywithfiatquote": "/unity/v4/pay/getbuywithfiatquote",
+	"/unity/pay/buywithfiat": "/unity/v4/pay/buywithfiat",
+	"/unity/pay/getbuywithfiatstatus": "/unity/v4/pay/getbuywithfiatstatus",
+	"/unity/pay/getbuywithfiatcurrencies": "/unity/v4/pay/getbuywithfiatcurrencies",
+	// buy with crypto
+	"/unity/pay/getbuywithcryptoquote": "/unity/v4/pay/getbuywithcryptoquote",
+	"/unity/pay/buywithcrypto": "/unity/v4/pay/buywithcrypto",
+	"/unity/pay/getbuywithcryptostatus": "/unity/v4/pay/getbuywithcryptostatus",
+	// blockchain api
+	"/unity/contracts": "/unity/v4/contracts",
+	"/unity/contracts/get": "/unity/v4/contracts/get",
+	"/unity/contracts/read": "/unity/v4/contracts/read",
+	"/unity/contracts/write": "/unity/v4/contracts/write",
+	"/unity/contracts/prepare": "/unity/v4/contracts/prepare",
 	// erc20
-	"/unity/erc20": "/unity/contracts/erc20/erc20",
-	"/unity/erc20burnable": "/unity/contracts/erc20/erc20burnable",
-	"/unity/erc20claimconditions": "/unity/contracts/erc20/erc20claimconditions",
-	"/unity/erc20mintable": "/unity/contracts/erc20/erc20mintable",
-	"/unity/erc20signaturemintable": "/unity/contracts/erc20/erc20signaturemintable",
-	// other extensions
-	"/unity/marketplace": "/unity/contracts/marketplace",
-	"/unity/pack": "/unity/contracts/pack",
-	// contract events
-	"/unity/events/:path*": "/unity/contracts/events/:path*",
-	// others
-	"/unity/submit-wallet": "/unity/wallets/submission",
+	"/unity/contracts/erc20/erc20": "/unity/v4/contracts/erc20/erc20",
+	"/unity/contracts/erc20/erc20burnable": "/unity/v4/contracts/erc20/erc20burnable",
+	"/unity/contracts/erc20/erc20claimconditions": "/unity/v4/contracts/erc20/erc20claimconditions",
+	"/unity/contracts/erc20/erc20mintable": "/unity/v4/contracts/erc20/erc20mintable",
+	"/unity/contracts/erc20/erc20signaturemintable": "/unity/v4/contracts/erc20/erc20signaturemintable",
+	// erc721
+	"/unity/contracts/erc721/erc721": "/unity/v4/contracts/erc721/erc721",
+	"/unity/contracts/erc721/erc721burnable": "/unity/v4/contracts/erc721/erc721burnable",
+	"/unity/contracts/erc721/erc721claimconditions": "/unity/v4/contracts/erc721/erc721claimconditions",
+	"/unity/contracts/erc721/erc721enumerable": "/unity/v4/contracts/erc721/erc721enumerable",
+	"/unity/contracts/erc721/erc721mintable": "/unity/v4/contracts/erc721/erc721mintable",
+	"/unity/contracts/erc721/erc721signaturemintable": "/unity/v4/contracts/erc721/erc721signaturemintable",
+	"/unity/contracts/erc721/erc721supply": "/unity/v4/contracts/erc721/erc721supply",
+	// erc1155
+	"/unity/contracts/erc1155/erc1155": "/unity/v4/contracts/erc1155/erc1155",
+	"/unity/contracts/erc1155/erc1155burnable": "/unity/v4/contracts/erc1155/erc1155burnable",
+	"/unity/contracts/erc1155/erc1155claimconditions": "/unity/v4/contracts/erc1155/erc1155claimconditions",
+	"/unity/contracts/erc1155/erc1155enumerable": "/unity/v4/contracts/erc1155/erc1155enumerable",
+	"/unity/contracts/erc1155/erc1155mintable": "/unity/v4/contracts/erc1155/erc1155mintable",
+	"/unity/contracts/erc1155/erc1155signaturemintable": "/unity/v4/contracts/erc1155/erc1155signaturemintable",
+	// marketplace
+	"/unity/contracts/marketplace": "/unity/v4/contracts/marketplace",
+	// pack
+	"/unity/contracts/pack": "/unity/v4/contracts/pack",
+	// events
+	"/unity/contracts/events/get": "/unity/v4/contracts/events/get",
+	"/unity/contracts/events/getall": "/unity/v4/contracts/events/getall",
+	"/unity/contracts/events/listentoall": "/unity/v4/contracts/events/listentoall",
+	"/unity/contracts/events/removealllisteners": "/unity/v4/contracts/events/removealllisteners",
+	// blocks
+	"/unity/blocks/getblock": "/unity/v4/blocks/getblock",
+	"/unity/blocks/getblockwithtransactions": "/unity/v4/blocks/getblockwithtransactions",
+	"/unity/blocks/getlatestblocknumber": "/unity/v4/blocks/getlatestblocknumber",
+	"/unity/blocks/getlatestblocktimestamp": "/unity/v4/blocks/getlatestblocktimestamp",
 };
 
 const walletRedirects = {
@@ -476,6 +520,11 @@ const paymentRedirects = {
 	"/checkouts/api-reference": "/payments/nft-checkout/api-reference",
 	"/checkouts/faq": "/payments/nft-checkout/faq",
 	"/payments/:match*": "/connect/pay/overview",
+	"/connect/pay/buy-with-fiat": "/connect/pay/overview",
+	"/connect/pay/buy-with-crypto/overview": "/connect/pay/overview",
+	"/connect/pay/buy-with-crypto/fee-sharing": "/connect/pay/fee-sharing",
+	"/connect/pay/build-a-custom-experience": "/connect/pay/guides/build-a-custom-experience",
+	"/connect/pay/enable-test-mode": "/connect/pay/guides/enable-test-mode",
 };
 
 const contractRedirects = {

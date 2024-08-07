@@ -3,8 +3,9 @@ import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { defineChain, getContract } from "thirdweb";
+import { getContract } from "thirdweb";
 import { mintAdditionalSupplyTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
@@ -29,9 +30,10 @@ const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
   } = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1" },
   });
+  const chain = useV5DashboardChain(chainId);
   const contract = getContract({
     address: contractAddress,
-    chain: defineChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const address = useActiveAccount()?.address;

@@ -158,8 +158,10 @@ export const FileInput: React.FC<IFileInputProps> = ({
                   />
                 )
               ) : (
-                <div className="flex flex-col items-center text-secondary-foreground gap-2">
-                  <FiUpload className="size-6" />
+                <div className="flex flex-col items-center text-secondary-foreground gap-2.5">
+                  <div className="p-3 bg-background rounded-full flex items-center justify-center border border-border">
+                    <FiUpload className="size-5" />
+                  </div>
                   <p className="text-sm text-center">
                     Upload {helperTextOrFile}
                   </p>

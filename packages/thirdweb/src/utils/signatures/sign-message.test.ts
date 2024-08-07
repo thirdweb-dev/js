@@ -21,6 +21,15 @@ test("default", async () => {
   ).toMatchInlineSnapshot(
     '"0xc0cd7599731c37aa4c0815a89dc8dcb4ce479f83df7ee8ffc606a9ef29323e814b54bb8935b56e7c690f1ee4c6290da5c2f6df6fc3443fbe96bb1846a2c4fefc1c"',
   );
+
+  expect(
+    signMessage({
+      message: "0x787037Ba5b7eA8a8737627FfB67d35FdCaAd9A18",
+      privateKey: ANVIL_PKEY_A,
+    }),
+  ).toMatchInlineSnapshot(
+    '"0x151436da0ef734f06ae71f4b907a062fa5683b40af4221e86dfe5f2fc9f09ffa40c90fee4a0e48311506b84dc6f20e513dc4dc434f0f70a03af6ff3e22c7b7591c"',
+  );
 });
 
 test("raw", async () => {

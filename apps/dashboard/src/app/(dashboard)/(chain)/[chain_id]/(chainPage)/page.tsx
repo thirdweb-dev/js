@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { type SortBy, fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
-import { type SortBy, fetchTopContracts } from "../../../../../lib/search";
 import { TrendingContractSection } from "../../../trending/components/trending-table";
 import { getChain, getChainMetadata } from "../../utils";
 import { BuyFundsSection } from "./components/server/BuyFundsSection";

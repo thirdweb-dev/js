@@ -1,10 +1,13 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Divider,
   Flex,
   FormControl,
 } from "@chakra-ui/react";
@@ -24,17 +27,7 @@ import { FiHelpCircle } from "react-icons/fi";
 import { useActiveAccount } from "thirdweb/react";
 import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
-import {
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Text,
-  TrackedLink,
-} from "tw-components";
-import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
-import { Checkbox, CheckboxWithLabel } from "../../../@/components/ui/checkbox";
-import { ToolTipLabel } from "../../../@/components/ui/tooltip";
-import { TrackedLinkTW } from "../../../@/components/ui/tracked-link";
+import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import {
   useConstructorParamsFromABI,
   useContractEnabledExtensions,
@@ -245,13 +238,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   });
   const formDeployParams = form.watch("deployParams");
 
-  const anyHiddenParams = Object.keys(formDeployParams).some((paramKey) => {
-    const contructorParams = fullPublishMetadata.data?.constructorParams || {};
-    const isHidden = contructorParams[paramKey]?.hidden;
-
-    return isHidden;
-  });
-
   const hasContractURI = "_contractURI" in formDeployParams;
   const hasRoyalty =
     "_royaltyBps" in formDeployParams &&
@@ -326,12 +312,44 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const isCreate2Deployment = form.watch("deployDeterministic");
 
+  if (fullPublishMetadata.isLoading) {
+    return (
+      <div className="min-h-[200px] flex items-center justify-center">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+
+  const advancedParams = Object.keys(formDeployParams)
+    .map((paramKey) => {
+      const deployParam = deployParams.find((p) => p.name === paramKey);
+      const contructorParams =
+        fullPublishMetadata.data?.constructorParams || {};
+      const extraMetadataParam = contructorParams[paramKey];
+
+      if (shouldHide(paramKey) || !extraMetadataParam?.hidden) {
+        return null;
+      }
+
+      return (
+        <Param
+          key={paramKey}
+          paramKey={paramKey}
+          deployParam={deployParam}
+          extraMetadataParam={extraMetadataParam}
+        />
+      );
+    })
+    .filter((x) => x !== null);
+
+  console.log("advancedParams", advancedParams);
+
   return (
     <FormProvider {...form}>
       <Flex
         flexGrow={1}
         minH="full"
-        gap={4}
+        gap={8}
         direction="column"
         id="custom-contract-form"
         as="form"
@@ -455,218 +473,164 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       >
         {Object.keys(formDeployParams).length > 0 && (
           <>
-            {/* Info */}
-            <Flex direction="column">
-              <Heading size="subtitle.md">Contract Parameters</Heading>
-              <Text size="body.md">
-                Parameters the contract specifies to be passed in during
-                deployment.
-              </Text>
-            </Flex>
+            {/* Contract Metadata */}
+            {hasContractURI && (
+              <ContractMetadataFieldset
+                form={form}
+                metadata={compilerMetadata}
+              />
+            )}
 
-            <Flex gap={4} flexDir="column">
-              {hasContractURI && (
-                <ContractMetadataFieldset
-                  form={form}
-                  metadata={compilerMetadata}
-                />
-              )}
-              {hasRoyalty && (
-                <RoyaltyFieldset
-                  royaltyRecipient={{
-                    isInvalid: !!form.getFieldState(
-                      "deployParams._royaltyRecipient",
-                      form.formState,
-                    ).error,
-                    register: form.register("deployParams._royaltyRecipient"),
-                    errorMessage: form.getFieldState(
-                      "deployParams._royaltyRecipient",
-                      form.formState,
-                    ).error?.message,
-                  }}
-                  royaltyBps={{
-                    value: form.watch("deployParams._royaltyBps"),
-                    isInvalid: !!form.getFieldState(
-                      "deployParams._royaltyBps",
-                      form.formState,
-                    ).error,
-                    setValue: (v) => {
-                      form.setValue("deployParams._royaltyBps", v, {
-                        shouldTouch: true,
-                      });
-                    },
-                    errorMessage: form.getFieldState(
-                      "deployParams._royaltyBps",
-                      form.formState,
-                    ).error?.message,
-                  }}
-                />
-              )}
-              {hasPrimarySale && (
-                <PrimarySaleFieldset
-                  isInvalid={
-                    !!form.getFieldState(
-                      "deployParams._saleRecipient",
-                      form.formState,
-                    ).error
-                  }
-                  register={form.register("deployParams._saleRecipient")}
-                  errorMessage={
-                    form.getFieldState(
-                      "deployParams._saleRecipient",
-                      form.formState,
-                    ).error?.message
-                  }
-                />
-              )}
-              {isSplit && <SplitFieldset form={form} />}
-              {hasTrustedForwarders && (
-                <TrustedForwardersFieldset form={form} />
-              )}
-
-              {Object.keys(formDeployParams)
-                .filter((paramName) => {
-                  if (
-                    isModular &&
-                    (paramName === "_extensionInstallData" ||
-                      paramName === "_extensions")
-                  ) {
-                    return false;
-                  }
-
-                  return true;
-                })
-                .map((paramKey) => {
-                  const deployParam = deployParams.find(
-                    (p) => p.name === paramKey,
-                  );
-                  const contructorParams =
-                    fullPublishMetadata.data?.constructorParams || {};
-                  const extraMetadataParam = contructorParams[paramKey];
-
-                  if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
-                    return null;
-                  }
-
-                  return (
-                    <Param
-                      key={paramKey}
-                      paramKey={paramKey}
-                      deployParam={deployParam}
-                      extraMetadataParam={extraMetadataParam}
-                    />
-                  );
-                })}
-
-              {isModular && (
-                <>
-                  {modularContractDefaultExtensionsInstallParams.data ? (
-                    <ModularContractDefaultExtensionsFieldset
-                      form={form}
-                      extensions={
-                        modularContractDefaultExtensionsInstallParams.data
+            {(hasRoyalty || hasPrimarySale || hasPlatformFee) && (
+              <fieldset>
+                <legend className="text-2xl font-semibold tracking-tight mb-3">
+                  Fee Distribution
+                </legend>
+                <div className="border rounded-lg border-border p-4 md:p-6 flex flex-col gap-6">
+                  {/* Primary Sale */}
+                  {hasPrimarySale && (
+                    <PrimarySaleFieldset
+                      isInvalid={
+                        !!form.getFieldState(
+                          "deployParams._saleRecipient",
+                          form.formState,
+                        ).error
                       }
-                      isTWPublisher={isTWPublisher}
+                      register={form.register("deployParams._saleRecipient")}
+                      errorMessage={
+                        form.getFieldState(
+                          "deployParams._saleRecipient",
+                          form.formState,
+                        ).error?.message
+                      }
                     />
-                  ) : (
-                    <div className="min-h-[250px] flex justify-center items-center">
-                      <Spinner className="size-8" />
-                    </div>
                   )}
-                </>
-              )}
 
-              {(anyHiddenParams || hasPlatformFee) && (
-                <Accordion allowToggle>
-                  <AccordionItem borderColor="borderColor" borderBottom="none">
-                    <AccordionButton px={0}>
-                      <Heading size="subtitle.md" flex="1" textAlign="left">
-                        Advanced Configuration
-                      </Heading>
+                  {/* Royalty */}
+                  {hasRoyalty && (
+                    <RoyaltyFieldset
+                      royaltyRecipient={{
+                        isInvalid: !!form.getFieldState(
+                          "deployParams._royaltyRecipient",
+                          form.formState,
+                        ).error,
+                        register: form.register(
+                          "deployParams._royaltyRecipient",
+                        ),
+                        errorMessage: form.getFieldState(
+                          "deployParams._royaltyRecipient",
+                          form.formState,
+                        ).error?.message,
+                      }}
+                      royaltyBps={{
+                        value: form.watch("deployParams._royaltyBps"),
+                        isInvalid: !!form.getFieldState(
+                          "deployParams._royaltyBps",
+                          form.formState,
+                        ).error,
+                        setValue: (v) => {
+                          form.setValue("deployParams._royaltyBps", v, {
+                            shouldTouch: true,
+                          });
+                        },
+                        errorMessage: form.getFieldState(
+                          "deployParams._royaltyBps",
+                          form.formState,
+                        ).error?.message,
+                      }}
+                    />
+                  )}
 
-                      <AccordionIcon />
-                    </AccordionButton>
+                  {hasPlatformFee && <PlatformFeeFieldset form={form} />}
+                </div>
+              </fieldset>
+            )}
 
-                    <AccordionPanel
-                      py={4}
-                      px={0}
-                      as={Flex}
-                      flexDir="column"
-                      gap={4}
-                    >
-                      {hasPlatformFee && <PlatformFeeFieldset form={form} />}
-                      {Object.keys(formDeployParams).map((paramKey) => {
-                        const deployParam = deployParams.find(
-                          (p) => p.name === paramKey,
-                        );
-                        const contructorParams =
-                          fullPublishMetadata.data?.constructorParams || {};
-                        const extraMetadataParam = contructorParams[paramKey];
+            {isSplit && <SplitFieldset form={form} />}
 
-                        if (
-                          shouldHide(paramKey) ||
-                          !extraMetadataParam?.hidden
-                        ) {
-                          return null;
-                        }
+            {hasTrustedForwarders && <TrustedForwardersFieldset form={form} />}
 
-                        return (
-                          <Param
-                            key={paramKey}
-                            paramKey={paramKey}
-                            deployParam={deployParam}
-                            extraMetadataParam={extraMetadataParam}
-                          />
-                        );
-                      })}
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              )}
-            </Flex>
-            <Divider mt="auto" />
+            {Object.keys(formDeployParams)
+              .filter((paramName) => {
+                if (
+                  isModular &&
+                  (paramName === "_extensionInstallData" ||
+                    paramName === "_extensions")
+                ) {
+                  return false;
+                }
+
+                return true;
+              })
+              .map((paramKey) => {
+                const deployParam = deployParams.find(
+                  (p) => p.name === paramKey,
+                );
+                const contructorParams =
+                  fullPublishMetadata.data?.constructorParams || {};
+                const extraMetadataParam = contructorParams[paramKey];
+
+                if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
+                  return null;
+                }
+
+                return (
+                  <Param
+                    key={paramKey}
+                    paramKey={paramKey}
+                    deployParam={deployParam}
+                    extraMetadataParam={extraMetadataParam}
+                  />
+                );
+              })}
+
+            {isModular && (
+              <>
+                {modularContractDefaultExtensionsInstallParams.data ? (
+                  <ModularContractDefaultExtensionsFieldset
+                    form={form}
+                    extensions={
+                      modularContractDefaultExtensionsInstallParams.data
+                    }
+                    isTWPublisher={isTWPublisher}
+                  />
+                ) : (
+                  <div className="min-h-[250px] flex justify-center items-center">
+                    <Spinner className="size-8" />
+                  </div>
+                )}
+              </>
+            )}
+
+            {advancedParams.length > 0 && (
+              <Accordion allowToggle>
+                <AccordionItem borderColor="borderColor" borderBottom="none">
+                  <AccordionButton px={0}>
+                    <Heading size="subtitle.md" flex="1" textAlign="left">
+                      Advanced Configuration
+                    </Heading>
+
+                    <AccordionIcon />
+                  </AccordionButton>
+
+                  <AccordionPanel
+                    py={4}
+                    px={0}
+                    as={Flex}
+                    flexDir="column"
+                    gap={4}
+                  >
+                    {advancedParams}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            )}
           </>
         )}
 
-        <Flex direction="column">
-          <Heading size="subtitle.md">Network / Chain</Heading>
-          <Text size="body.md">
-            Select a network to deploy this contract on. We recommend starting
-            with a testnet.{" "}
-            <TrackedLink
-              href="https://blog.thirdweb.com/guides/which-network-should-you-use"
-              color="blue.500"
-              category="deploy"
-              label="learn-networks"
-              isExternal
-            >
-              Learn more about the different networks.
-            </TrackedLink>
-          </Text>
-        </Flex>
-
-        <CheckboxWithLabel>
-          <Checkbox
-            {...form.register("addToDashboard")}
-            checked={form.watch("addToDashboard")}
-            onCheckedChange={(checked) =>
-              form.setValue("addToDashboard", !!checked)
-            }
-          />
-          Import so I can find it in the list of my contracts at{" "}
-          <TrackedLinkTW
-            className="text-link-foreground hover:text-foreground"
-            href="/dashboard"
-            target="_blank"
-            category="custom-contract"
-            label="visit-dashboard"
-          >
-            /dashboard
-          </TrackedLinkTW>
-        </CheckboxWithLabel>
-
         {fullPublishMetadata.data?.deployType === "standard" && (
-          <Flex gap={4} flexDir="column">
+          <>
+            {/* Deterministic deploy */}
             <CheckboxWithLabel>
               <Checkbox
                 {...form.register("deployDeterministic")}
@@ -685,6 +649,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               </ToolTipLabel>
             </CheckboxWithLabel>
 
+            {/*  Optional Salt Input */}
             {isCreate2Deployment && (
               <FormControl>
                 <Flex alignItems="center" my={1}>
@@ -714,28 +679,76 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 </CheckboxWithLabel>
               </FormControl>
             )}
-          </Flex>
+          </>
         )}
 
-        <Flex gap={4} direction={{ base: "column", md: "row" }}>
-          <NetworkSelectorButton
-            isDisabled={
-              isImplementationDeploy ||
-              deploy.isLoading ||
-              !compilerMetadata.isSuccess
-            }
-            onSwitchChain={(chain) => {
-              onChainSelect(chain.chainId);
-            }}
-            networksEnabled={
-              fullPublishMetadata.data?.name === "AccountFactory" ||
-              fullPublishMetadata.data?.networksForDeployment?.allNetworks ||
-              !fullPublishMetadata.data?.networksForDeployment
-                ? undefined
-                : fullPublishMetadata.data?.networksForDeployment
-                    ?.networksEnabled
+        {/* Chain */}
+        <fieldset>
+          <legend className="text-2xl font-semibold tracking-tight mb-2">
+            Chain
+          </legend>
+
+          <p className="text-muted-foreground text-sm mb-3">
+            Select a network to deploy this contract on. We recommend starting
+            with a testnet.{" "}
+            <TrackedLinkTW
+              href="/chainlist"
+              category="deploy"
+              label="chainlist"
+              target="_blank"
+              className="text-link-foreground hover:text-foreground"
+            >
+              View all chains
+            </TrackedLinkTW>
+          </p>
+
+          <div className="flex flex-col gap-3">
+            <NetworkSelectorButton
+              isDisabled={
+                isImplementationDeploy ||
+                deploy.isLoading ||
+                !compilerMetadata.isSuccess
+              }
+              onSwitchChain={(chain) => {
+                onChainSelect(chain.chainId);
+              }}
+              networksEnabled={
+                fullPublishMetadata.data?.name === "AccountFactory" ||
+                fullPublishMetadata.data?.networksForDeployment?.allNetworks ||
+                !fullPublishMetadata.data?.networksForDeployment
+                  ? undefined
+                  : fullPublishMetadata.data?.networksForDeployment
+                      ?.networksEnabled
+              }
+            />
+
+            <DeprecatedAlert chain={networkInfo} />
+          </div>
+        </fieldset>
+
+        {/* Import Enable/Disable */}
+        <CheckboxWithLabel>
+          <Checkbox
+            {...form.register("addToDashboard")}
+            checked={form.watch("addToDashboard")}
+            onCheckedChange={(checked) =>
+              form.setValue("addToDashboard", !!checked)
             }
           />
+          Import so I can find it in the list of my contracts at{" "}
+          <TrackedLinkTW
+            className="text-link-foreground hover:text-foreground"
+            href="/dashboard"
+            target="_blank"
+            category="custom-contract"
+            label="visit-dashboard"
+          >
+            /dashboard
+          </TrackedLinkTW>
+        </CheckboxWithLabel>
+
+        {/* Depoy */}
+        <div className="flex justify-end">
           <TransactionButton
             onChainSelect={onChainSelect}
             upsellTestnet
@@ -749,8 +762,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           >
             Deploy Now
           </TransactionButton>
-        </Flex>
-        <DeprecatedAlert chain={networkInfo} />
+        </div>
       </Flex>
     </FormProvider>
   );

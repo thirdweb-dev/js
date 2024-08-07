@@ -2,7 +2,7 @@ import { SidebarNav } from "./nav";
 import type { Route } from "./types";
 
 type ContractsSidebarProps = {
-  activePage: "build" | "explore" | "deploy" | "publish";
+  activePage?: "build" | "explore" | "deploy" | "publish";
 };
 
 const links: Route[] = [

@@ -21,7 +21,7 @@ export const wallet = {
     edge: "https://microsoftedge.microsoft.com/addons/detail/keplr/ocodgmmffbkkeecmadcijjhkmeohinei",
     opera: null,
   },
-  rdns: null,
+  rdns: "app.keplr",
   mobile: {
     native: "keplrwallet://wcV2",
     universal: null,

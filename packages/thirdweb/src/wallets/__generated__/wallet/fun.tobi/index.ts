@@ -22,10 +22,10 @@ export const wallet = {
   rdns: null,
   mobile: {
     native: null,
-    universal: "https://api.tobiwallet.app/accounts/wallet-connect/redirect",
+    universal: "https://api.tobiwallet.app/dapp/wallet-connect/redirect",
   },
   desktop: {
     native: null,
-    universal: "https://api.tobiwallet.app/accounts/wallet-connect/redirect",
+    universal: "https://api.tobiwallet.app/dapp/wallet-connect/redirect",
   },
 } as const;

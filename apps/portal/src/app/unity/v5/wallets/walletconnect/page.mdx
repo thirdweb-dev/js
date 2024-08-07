@@ -1,0 +1,31 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "WalletConnectWallet | Thirdweb Unity SDK",
+	description:
+		"Instantiate a WalletConnectWallet to sign transactions and messages.",
+});
+
+# WalletConnectWallet
+
+`WalletConnectWallet` is a wallet provider that allows users to connect any of 400+ external wallets.
+
+It uses the [WalletConnect](https://explorer.walletconnect.com/) protocol.
+
+### Connecting using WalletConnect
+
+```csharp
+var options = new WalletOptions(provider: WalletProvider.WalletConnectWallet, chainId: 1);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+Will instantiate `WalletConnectModal` - an out-of-the-box WalletConnect modal that can be used to connect to 400+ wallets.
+
+Make sure you have any chains you want to connect to added to your [ThirdwebManager](/unity/v5/thirdwebmanager) prefab.
+
+<ArticleIconCard
+	href="/dotnet/wallets/actions/getaddress"
+	icon={GraduationCap}
+	title="Explore the IThirdwebWallet API"
+/>

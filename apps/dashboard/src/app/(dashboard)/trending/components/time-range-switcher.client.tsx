@@ -1,7 +1,7 @@
 "use client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import type { TimeRange } from "lib/search";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { TimeRange } from "../../../../lib/search";
 
 export function TimeRangeSwitcher() {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import { AppFooter } from "@/components/blocks/app-footer";
-import { DashboardHeader } from "../components/Header/DashboardHeader";
+import { DashboardHeader } from "app/components/Header/DashboardHeader";
 
 export default function DashboardLayout(props: { children: React.ReactNode }) {
   return (

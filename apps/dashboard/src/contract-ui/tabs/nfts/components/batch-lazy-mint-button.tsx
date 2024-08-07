@@ -14,7 +14,7 @@ import { ProgressBox } from "core-ui/batch-upload/progress-box";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { getContract } from "thirdweb";
@@ -31,13 +31,15 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   ...restButtonProps
 }) => {
   const contractV4 = contractQuery.contract;
-  const contract = contractV4
-    ? getContract({
-        address: contractV4.getAddress(),
-        chain: defineDashboardChain(contractV4.chainId),
-        client: thirdwebClient,
-      })
-    : null;
+  const chain = useV5DashboardChain(contractV4?.chainId);
+  const contract =
+    contractV4 && chain
+      ? getContract({
+          address: contractV4.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
   const trackEvent = useTrack();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const nextTokenIdToMint = useTotalCount(contractV4);

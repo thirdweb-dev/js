@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Aurora } from "components/homepage/Aurora";
@@ -6,7 +7,6 @@ import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import NotFound from "../../public/assets/landingpage/not-found.png";
-import { useForceDarkTheme } from "../@/components/theme-provider";
 
 const PageNotFound: ThirdwebNextPage = () => {
   useForceDarkTheme();

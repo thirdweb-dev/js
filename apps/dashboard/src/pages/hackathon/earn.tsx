@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
@@ -15,7 +16,6 @@ import { NextSeo } from "next-seo";
 import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { Heading, LinkButton, Text } from "tw-components";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const List = dynamic(
   () => import("@chakra-ui/react").then((result) => result.List),

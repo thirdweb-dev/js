@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ChakraProvider, useColorMode } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
@@ -20,7 +21,6 @@ import posthogOpenSource from "posthog-js-opensource";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
-import { ThemeProvider } from "../@/components/theme-provider";
 import chakraTheme from "../theme";
 import "@/styles/globals.css";
 

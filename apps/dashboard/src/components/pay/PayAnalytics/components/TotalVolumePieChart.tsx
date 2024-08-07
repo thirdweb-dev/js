@@ -1,6 +1,6 @@
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Cell, Pie, PieChart } from "recharts";
-import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
 import { usePayVolume } from "../hooks/usePayVolume";
 import { FailedToLoad, chartHeight } from "./common";
 

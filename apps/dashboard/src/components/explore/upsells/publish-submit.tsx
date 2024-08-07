@@ -1,6 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import Image from "next/image";
-import { Button } from "../../../@/components/ui/button";
-import { TrackedLinkTW } from "../../../@/components/ui/tracked-link";
 
 export const PublishUpsellCard: React.FC = () => {
   return (

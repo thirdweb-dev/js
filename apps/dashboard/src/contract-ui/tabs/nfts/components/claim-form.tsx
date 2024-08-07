@@ -11,7 +11,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
 import { claimTo } from "thirdweb/extensions/erc721";
@@ -33,9 +33,10 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({
   contractAddress,
   chainId,
 }) => {
+  const chain = useV5DashboardChain(chainId);
   const contract = getContract({
     address: contractAddress,
-    chain: defineDashboardChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const trackEvent = useTrack();

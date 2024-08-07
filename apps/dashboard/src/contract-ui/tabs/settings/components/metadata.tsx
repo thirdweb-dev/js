@@ -18,8 +18,11 @@ import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectB
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useInvalidatev4Contract } from "hooks/invalidate-v4-contract";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlus, FiTrash } from "react-icons/fi";
@@ -35,9 +38,6 @@ import {
   Text,
 } from "tw-components";
 import { z } from "zod";
-import { useInvalidatev4Contract } from "../../../../hooks/invalidate-v4-contract";
-import { thirdwebClient } from "../../../../lib/thirdweb-client";
-import { defineDashboardChain } from "../../../../lib/v5-adapter";
 import { SettingDetectedState } from "./detected-state";
 
 const DashboardCommonContractSchema = CommonContractSchema.extend({
@@ -111,13 +111,15 @@ export const SettingsMetadata = <
     name: "dashboard_social_urls",
   });
 
-  const contractV5 = contract
-    ? getContract({
-        address: contract.getAddress(),
-        chain: defineDashboardChain(contract.chainId),
-        client: thirdwebClient,
-      })
-    : null;
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated metadata",
@@ -151,7 +153,7 @@ export const SettingsMetadata = <
             },
             {},
           );
-          if (!contract) {
+          if (!contract || !chain) {
             return;
           }
 
@@ -163,7 +165,7 @@ export const SettingsMetadata = <
 
           const contractV5 = getContract({
             address: contract.getAddress(),
-            chain: defineDashboardChain(contract.chainId),
+            chain: chain,
             client: thirdwebClient,
           });
           const tx = setContractMetadata({

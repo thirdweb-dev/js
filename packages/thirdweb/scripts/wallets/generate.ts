@@ -320,7 +320,7 @@ const walletImports = allSupportedWallets
   )
   .join("\n");
 
-const customWalletImports = ["smart", "inApp", "walletConnect", "embedded"]
+const customWalletImports = ["smart", "inApp", "walletConnect", "embedded", "adapter"]
   .map(
     (walletId) =>
       `case "${walletId}": {

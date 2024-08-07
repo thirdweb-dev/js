@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useMutation } from "@tanstack/react-query";
+import { useTrack } from "hooks/analytics/useTrack";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { defineChain, toUnits } from "thirdweb";
+import { toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+import { mapV4ChainToV5Chain } from "../../../../../../../contexts/map-chains";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -38,14 +40,23 @@ export function FaucetButton({
 }) {
   const address = useActiveAccount()?.address;
   const chainId = chain.chainId;
-  const definedChain = defineChain(chainId);
+  // do not include local overrides for chain pages
+  // eslint-disable-next-line no-restricted-syntax
+  const definedChain = mapV4ChainToV5Chain(chain);
   const faucetWalletBalanceQuery = useWalletBalance({
     address: THIRDWEB_ENGINE_FAUCET_WALLET,
     chain: definedChain,
     client: thirdwebClient,
   });
+  const trackEvent = useTrack();
   const claimMutation = useMutation({
     mutationFn: async () => {
+      trackEvent({
+        category: "faucet",
+        action: "claim",
+        label: "attempt",
+        chain_id: chainId,
+      });
       const response = await fetch("/api/testnet-faucet/claim", {
         method: "POST",
         headers: {
@@ -60,11 +71,26 @@ export function FaucetButton({
 
       if (!response.ok) {
         const data = await response.json();
-        throw data.error;
+        throw new Error(data?.error || "Failed to claim funds");
       }
     },
     onSuccess: () => {
+      trackEvent({
+        category: "faucet",
+        action: "claim",
+        label: "success",
+        chain_id: chainId,
+      });
       router.refresh();
+    },
+    onError: (error) => {
+      trackEvent({
+        category: "faucet",
+        action: "claim",
+        label: "error",
+        chain_id: chainId,
+        errorMsg: error instanceof Error ? error.message : "Unknown error",
+      });
     },
   });
   const router = useRouter();

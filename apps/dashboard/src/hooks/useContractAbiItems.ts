@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { type Address, defineChain, getContract } from "thirdweb";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { type Address, getContract } from "thirdweb";
 import { resolveContractAbi } from "thirdweb/contract";
 
 function dedupeAndSort(arr: string[]) {
@@ -18,6 +19,8 @@ function dedupeAndSort(arr: string[]) {
  * @returns events - List of event names
  */
 export function useContractAbiItems(chainId: number, address: Address) {
+  const chain = useV5DashboardChain(chainId);
+
   return useQuery({
     queryKey: ["contract-abi-items", chainId, address],
     initialData: {
@@ -26,7 +29,6 @@ export function useContractAbiItems(chainId: number, address: Address) {
       events: [],
     },
     queryFn: async () => {
-      const chain = defineChain(chainId);
       const contract = getContract({
         client: thirdwebClient,
         chain,

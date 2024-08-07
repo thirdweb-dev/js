@@ -22,7 +22,7 @@
     "build": "tsc && preconstruct build",
     "test": "vitest run",
     "push": "yalc push",
-    "typedoc": "node scripts/typedoc.mjs"
+    "typedoc": "bun run scripts/typedoc.mjs"
   },
   "files": [
     "dist/"

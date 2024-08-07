@@ -1,5 +1,17 @@
 # thirdweb
 
+## 5.44.1
+
+### Patch Changes
+
+- [#3976](https://github.com/thirdweb-dev/js/pull/3976) [`358a757`](https://github.com/thirdweb-dev/js/commit/358a7577c1c92cb777952e21253d4924e11a6303) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix wallet info retrieval for adapter wallets
+
+- [#3963](https://github.com/thirdweb-dev/js/pull/3963) [`2e3c5e9`](https://github.com/thirdweb-dev/js/commit/2e3c5e9dbd307119804ad14896fac5c645e59a40) Thanks [@jnsdls](https://github.com/jnsdls)! - handle switching accounts inside a connected wallet in SIWE auth states
+
+- [#3934](https://github.com/thirdweb-dev/js/pull/3934) [`d7e5930`](https://github.com/thirdweb-dev/js/commit/d7e59305bd4852c1f7686b1b3fa2a260fa44b813) Thanks [@jxom](https://github.com/jxom)! - Fix 6492 signature verification for undeployed accounts
+
+- [#3894](https://github.com/thirdweb-dev/js/pull/3894) [`dc86fa2`](https://github.com/thirdweb-dev/js/commit/dc86fa2e6ea1899d414054528fd59c920c2ab030) Thanks [@IDubuque](https://github.com/IDubuque)! - updated pay interface for onramp + gas
+
 ## 5.44.0
 
 ### Minor Changes

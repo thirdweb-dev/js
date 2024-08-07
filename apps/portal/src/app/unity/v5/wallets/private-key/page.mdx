@@ -1,0 +1,25 @@
+import { Details, Callout, createMetadata, ArticleIconCard } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+	title: "PrivateKeyWallet | Thirdweb Unity SDK",
+	description:
+		"Instantiate a PrivateKeyWallet to sign transactions and messages.",
+});
+
+# PrivateKeyWallet
+
+`PrivateKeyWallet` is best used as a guest wallet. Should be treated as ephemereal, useful for testing.
+
+### Generating a PrivateKeyWallet
+
+```csharp
+var options = new WalletOptions(provider: WalletProvider.PrivateKeyWallet, chainId: 1);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+<ArticleIconCard
+	href="/dotnet/wallets/providers/private-key"
+	icon={GraduationCap}
+	title="Learn more about PrivateKeyWallet"
+/>

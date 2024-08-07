@@ -2,7 +2,7 @@ import { thirdwebClient } from "@/constants/client";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { defineDashboardChain } from "lib/v5-adapter";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import {
@@ -24,17 +24,18 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
   contractAddress,
 }) => {
   const contractQuery = useContract(contractAddress);
+  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
 
   const v5Contract = useMemo(() => {
-    if (!contractQuery.contract) {
+    if (!contractQuery.contract || !chain) {
       return null;
     }
     return getContract({
       address: contractQuery.contract.getAddress(),
-      chain: defineDashboardChain(contractQuery.contract.chainId),
+      chain: chain,
       client: thirdwebClient,
     });
-  }, [contractQuery.contract]);
+  }, [contractQuery.contract, chain]);
 
   const detectedFeature = extensionDetectedState({
     contractQuery,

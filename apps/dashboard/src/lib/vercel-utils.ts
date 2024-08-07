@@ -1,11 +1,11 @@
-import { setThirdwebDomains } from "thirdweb/utils";
-import { isBrowser } from "utils/isBrowser";
 import {
   THIRDWEB_INAPP_WALLET_DOMAIN,
   THIRDWEB_PAY_DOMAIN,
   THIRDWEB_RPC_DOMAIN,
   THIRDWEB_STORAGE_DOMAIN,
-} from "../constants/urls";
+} from "constants/urls";
+import { setThirdwebDomains } from "thirdweb/utils";
+import { isBrowser } from "utils/isBrowser";
 
 function getVercelEnv() {
   const onVercel = process.env.vercel || process.env.NEXT_PUBLIC_VERCEL_ENV;

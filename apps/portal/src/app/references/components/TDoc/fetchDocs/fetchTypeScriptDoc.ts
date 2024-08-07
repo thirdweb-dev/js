@@ -1,21 +1,32 @@
-import { fetchJSON } from "@/lib/fetchJSON";
 import { transform } from "typedoc-better-json";
-import { withCache } from "../../../../../lib/withCache";
 
+let v4Prom: Promise<ReturnType<typeof transform>> | null = null;
+let v5Prom: Promise<ReturnType<typeof transform>> | null = null;
 export async function fetchTypeScriptDoc(version: string) {
-	let URL =
-		"https://raw.githubusercontent.com/thirdweb-dev/js/main/legacy_packages/sdk/typedoc/documentation.json.gz";
+  // v4 case
+  if (version === "v4") {
+    if (v4Prom) {
+      return v4Prom;
+    }
+    v4Prom = (async () => {
+      const doc = await import(
+        "../../../../../../../../legacy_packages/sdk/typedoc/documentation.json"
+      );
 
-	if (version === "v5") {
-		URL =
-			"https://raw.githubusercontent.com/thirdweb-dev/js/main/packages/thirdweb/typedoc/documentation.json.gz";
-	}
+      return transform(doc as any);
+    })();
+    return v4Prom;
+  }
+  // v5 case (default)
+  if (v5Prom) {
+    return v5Prom;
+  }
+  v5Prom = (async () => {
+    const doc = await import(
+      "../../../../../../../../packages/thirdweb/typedoc/documentation.json"
+    );
 
-	const doc = await withCache(() => fetchJSON(URL), {
-		cacheKey: URL,
-		// cache for 10min
-		cacheTime: 10 * 60 * 1000,
-	});
-
-	return transform(doc as any);
+    return transform(doc as any);
+  })();
+  return v5Prom;
 }

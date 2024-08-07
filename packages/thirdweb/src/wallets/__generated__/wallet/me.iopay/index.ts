@@ -5,7 +5,7 @@ export const wallet = {
   id: "me.iopay",
   name: "ioPay",
   homepage: "https://iopay.me/",
-  image_id: "18891f5a-fd0f-4126-7d1a-452be6714700",
+  image_id: "411d80d0-3a75-4932-560f-565d8c715e00",
   app: {
     browser: "https://iopay.me/",
     ios: "https://apps.apple.com/app/apple-store/id1478086371",

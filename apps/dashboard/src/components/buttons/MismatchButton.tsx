@@ -23,13 +23,15 @@ import { localhost } from "thirdweb/chains";
 import {
   useActiveAccount,
   useActiveWallet,
-  useActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
-import { defineDashboardChain } from "../../lib/v5-adapter";
+import {
+  useDashboardActiveWalletChain,
+  useV5DashboardChain,
+} from "../../lib/v5-adapter";
 
 const GAS_FREE_CHAINS = [
   75513, // Geek verse testnet
@@ -37,7 +39,7 @@ const GAS_FREE_CHAINS = [
 ];
 
 function useNetworkMismatchAdapter() {
-  const walletChainId = useActiveWalletChain()?.id;
+  const walletChainId = useDashboardActiveWalletChain()?.id;
   const v4SDKChainId = useSDKChainId();
   if (!walletChainId || !v4SDKChainId) {
     // simply not ready yet, assume false
@@ -51,7 +53,8 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
     const account = useActiveAccount();
     const wallet = useActiveWallet();
-    const activeWalletChain = useActiveWalletChain();
+    const activeWalletChain = useDashboardActiveWalletChain();
+
     const evmBalance = useWalletBalance({
       address: account?.address,
       chain: activeWalletChain,
@@ -157,7 +160,7 @@ const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
   onClose: (hasSwitched: boolean) => void;
 }> = ({ initialFocusRef, onClose }) => {
-  const connectedChainId = useActiveWalletChain()?.id;
+  const connectedChainId = useDashboardActiveWalletChain()?.id;
   const desiredChainId = useSDKChainId();
   const switchNetwork = useSwitchActiveWalletChain();
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -168,18 +171,25 @@ const MismatchNotice: React.FC<{
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const chain = useSupportedChain(desiredChainId || -1);
+  const chainV5 = useV5DashboardChain(desiredChainId);
 
   const onSwitchWallet = useCallback(async () => {
-    if (actuallyCanAttemptSwitch && desiredChainId && chain) {
+    if (actuallyCanAttemptSwitch && desiredChainId && chainV5) {
       try {
-        await switchNetwork(defineDashboardChain(desiredChainId));
+        await switchNetwork(chainV5);
         onClose(true);
       } catch (e) {
         //  failed to switch network
         onClose(false);
       }
     }
-  }, [chain, actuallyCanAttemptSwitch, desiredChainId, onClose, switchNetwork]);
+  }, [
+    chainV5,
+    actuallyCanAttemptSwitch,
+    desiredChainId,
+    onClose,
+    switchNetwork,
+  ]);
 
   const shortenedName = useMemo(() => {
     const limit = isMobile ? 10 : 19;
@@ -246,7 +256,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
   const trackEvent = useTrack();
 
   const sdk = useSDK();
-  const chainId = useActiveWalletChain()?.id;
+  const chainId = useDashboardActiveWalletChain()?.id;
   const chainInfo = useSupportedChain(chainId || -1);
   const router = useRouter();
 

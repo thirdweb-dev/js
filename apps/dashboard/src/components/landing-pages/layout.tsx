@@ -1,10 +1,10 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, type BoxProps, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { NextSeo, type NextSeoProps } from "next-seo";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 interface LandingLayoutProps {
   seo: NextSeoProps;

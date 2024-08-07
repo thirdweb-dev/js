@@ -1,9 +1,5 @@
+import { type SortBy, type TimeRange, fetchTopContracts } from "lib/search";
 import type { Metadata } from "next";
-import {
-  type SortBy,
-  type TimeRange,
-  fetchTopContracts,
-} from "../../../lib/search";
 import { TrendingContractSection } from "./components/trending-table";
 
 export const metadata: Metadata = {

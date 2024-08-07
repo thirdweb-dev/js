@@ -5,7 +5,8 @@ import { AsyncContractNameCell } from "components/contract-components/tables/cel
 import { TWTable } from "components/shared/TWTable";
 import { AsyncFactoryAccountCell } from "components/smart-wallets/AccountFactories/account-cell";
 import type { BasicContract } from "contract-ui/types/types";
-import { defineChain, getChainMetadata } from "thirdweb/chains";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { getChainMetadata } from "thirdweb/chains";
 import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -41,9 +42,10 @@ const columns = [
 ];
 
 function NetworkName(props: { id: number }) {
+  const chain = useV5DashboardChain(props.id);
   const chainQuery = useQuery({
     queryKey: ["getChainByChainIdAsync", props.id],
-    queryFn: () => getChainMetadata(defineChain(props.id)),
+    queryFn: () => getChainMetadata(chain),
   });
 
   return (

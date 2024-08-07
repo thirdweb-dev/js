@@ -24,6 +24,7 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
 import { polygon } from "thirdweb/chains";
 import type { ThirdwebNextPage } from "utils/types";
+import { ContractsSidebar } from "../../core-ui/sidebar/contracts";
 
 type PublishPageProps = {
   dehydratedState: DehydratedState;
@@ -36,6 +37,7 @@ const PublishPage: ThirdwebNextPage = (props: PublishPageProps) => {
         author={props.author}
         contractName={props.contractName}
         version={props.version}
+        isDeploy={props.isDeploy}
       />
     </PublisherSDKContext>
   );
@@ -44,7 +46,12 @@ const PublishPage: ThirdwebNextPage = (props: PublishPageProps) => {
 PublishPage.pageId = PageId.PublishedContract;
 
 PublishPage.getLayout = (page, props: PublishPageProps) => {
-  return <AppLayout dehydratedState={props.dehydratedState}>{page}</AppLayout>;
+  return (
+    <AppLayout dehydratedState={props.dehydratedState} noOverflowX>
+      {props.isDeploy && <ContractsSidebar />}
+      {page}
+    </AppLayout>
+  );
 };
 
 PublishPage.fallback = (
@@ -59,7 +66,17 @@ export default PublishPage;
 
 export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
   const paths = ctx.params?.paths as string[];
-  const [authorAddress, contractName, version = ""] = paths;
+  const [authorAddress, contractName, versionOrDeploy = "", deployStr] = paths;
+  let version = "";
+  let isDeploy = false;
+
+  if (versionOrDeploy === "deploy") {
+    isDeploy = true;
+    version = "";
+  } else if (versionOrDeploy && deployStr === "deploy") {
+    version = versionOrDeploy;
+    isDeploy = true;
+  }
 
   if (!contractName) {
     return {
@@ -69,7 +86,7 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
 
   const polygonSdk = getThirdwebSDK(
     polygon.id,
-    getDashboardChainRpc(polygon.id),
+    getDashboardChainRpc(polygon.id, undefined),
   );
 
   const lowercaseAddress = authorAddress.toLowerCase();
@@ -133,6 +150,7 @@ export const getStaticProps: GetStaticProps<PublishPageProps> = async (ctx) => {
     author: checksummedAddress,
     contractName,
     version,
+    isDeploy,
   };
 
   return {

@@ -1,16 +1,19 @@
 import { extractFunctionParamsFromAbi } from "@thirdweb-dev/sdk";
+import { getDashboardChainRpc } from "lib/rpc";
+import { getThirdwebSDK } from "lib/sdk";
 import { polygon } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 import {
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
 } from "../../../../components/contract-components/hooks";
-import { getDashboardChainRpc } from "../../../../lib/rpc";
-import { getThirdwebSDK } from "../../../../lib/sdk";
 import type { ExtensionMeta } from "./install-extension-params";
 
 export async function getExtensionInstalledParams(ext: ExtensionMeta) {
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
 
   // get all versions of the extension
   const allPublishedExtensions = await fetchAllVersions(

@@ -4,6 +4,4 @@ packages:
 - apps/*
 - legacy_e2e/bundlers/*
 - legacy_e2e/runtimes/*
-- '!legacy_packages/react-native'
-- '!legacy_packages/react-native-compat'
 

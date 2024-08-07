@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
@@ -16,7 +17,6 @@ import { PageId } from "page-id";
 import { Suspense } from "react";
 import { Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../@/components/theme-provider";
 import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
 
 const TRACKING_CATEGORY = "homepage";

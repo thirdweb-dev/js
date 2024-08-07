@@ -5,7 +5,7 @@ export const wallet = {
   id: "technology.jambo",
   name: "Jambo",
   homepage: "https://www.jambo.technology/",
-  image_id: "4feba888-eb07-4c20-f3b7-985dc7488100",
+  image_id: "b0fd39a1-d147-4bf7-4cb5-68a294b26f00",
   app: {
     browser: null,
     ios: null,

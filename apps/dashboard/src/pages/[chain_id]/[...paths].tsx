@@ -33,7 +33,6 @@ import {
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { defineDashboardChain } from "lib/v5-adapter";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -50,6 +49,8 @@ import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
+import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
+import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 type EVMContractProps = {
   contractInfo?: EVMContractInfo;
@@ -96,8 +97,8 @@ const ContractPage: ThirdwebNextPage = () => {
       const configuredChain = supportedChainsSlugRecord[chainSlug];
       if (
         configuredChain &&
-        getDashboardChainRpc(configuredChain.chainId) !==
-          getDashboardChainRpc(chain.chainId)
+        getDashboardChainRpc(configuredChain.chainId, configuredChain) !==
+          getDashboardChainRpc(chain.chainId, chain)
       ) {
         setContractInfo({
           chainSlug,
@@ -165,16 +166,17 @@ const ContractPage: ThirdwebNextPage = () => {
 
   const activeTab = router.query?.paths?.[1] || "overview";
 
+  const v5Chain = useV5DashboardChain(chain?.chainId);
   const contract = useMemo(() => {
-    if (!contractAddress || !chain?.chainId) {
+    if (!contractAddress || !v5Chain) {
       return null;
     }
     return getContract({
       address: contractAddress,
       client: thirdwebClient,
-      chain: defineDashboardChain(chain.chainId, chain),
+      chain: v5Chain,
     });
-  }, [contractAddress, chain]);
+  }, [contractAddress, v5Chain]);
 
   const routes = useContractRouteConfig(contractAddress);
 
@@ -425,7 +427,8 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
     try {
       const contract = getContract({
         address,
-        chain: defineDashboardChain(chain.chainId),
+        // eslint-disable-next-line no-restricted-syntax
+        chain: mapV4ChainToV5Chain(chain),
         client: thirdwebClient,
       });
       const [isErc20, isErc721, isErc1155, _contractMetadata] =

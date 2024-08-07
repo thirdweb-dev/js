@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { ArrowDownIcon, ArrowUpIcon, OctagonXIcon } from "lucide-react";
-import { ToolTipLabel } from "../../../../@/components/ui/tooltip";
 
 import {
   Select,

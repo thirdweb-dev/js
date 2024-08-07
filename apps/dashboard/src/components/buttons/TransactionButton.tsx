@@ -11,15 +11,12 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
+import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
-import {
-  useActiveAccount,
-  useActiveWallet,
-  useActiveWalletChain,
-} from "thirdweb/react";
+import { useActiveAccount, useActiveWallet } from "thirdweb/react";
 import type { WalletId } from "thirdweb/wallets";
 import {
   Button,
@@ -29,7 +26,7 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
-import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
+import { useDashboardActiveWalletChain } from "../../lib/v5-adapter";
 import { MismatchButton } from "./MismatchButton";
 
 interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
@@ -213,7 +210,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   initialFocusRef,
 }) => {
   const address = useActiveAccount()?.address;
-  const chainId = useActiveWalletChain()?.id || -1;
+  const chainId = useDashboardActiveWalletChain()?.id || -1;
 
   const [showHint, setShowHint] = useState(false);
 

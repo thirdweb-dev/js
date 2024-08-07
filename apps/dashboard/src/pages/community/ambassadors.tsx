@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { AmbassadorCard } from "components/devRelEvents/AmbassadorCards";
 import { ProductCard } from "components/product-pages/common/ProductCard";
@@ -8,7 +9,6 @@ import { PageId } from "page-id";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const TRACKING_CATEGORY = "ambassadors_page";
 

@@ -1,8 +1,5 @@
-import {
-  type ChainMetadata,
-  defineChain,
-  getChainMetadata,
-} from "thirdweb/chains";
+import { defineDashboardChain } from "lib/defineDashboardChain";
+import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 
 export type TimeRange = "month" | "week" | "day";
@@ -118,7 +115,8 @@ export async function fetchTopContracts(args?: {
     result.hits.map(async (hit: any) => {
       const document = hit.document;
       const chainMetadata = await getChainMetadata(
-        defineChain(Number(document.chainId)),
+        // eslint-disable-next-line no-restricted-syntax
+        defineDashboardChain(Number(document.chainId), undefined),
       );
       let name = document.name;
       if (

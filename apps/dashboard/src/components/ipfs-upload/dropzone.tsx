@@ -1,3 +1,4 @@
+import { Label } from "@/components/ui/label";
 import { thirdwebClient } from "@/constants/client";
 import { useDashboardStorageUpload } from "@3rdweb-sdk/react/hooks/useDashboardStorageUpload";
 import {
@@ -37,7 +38,6 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
-import { Label } from "../../@/components/ui/label";
 
 const TRACKING_CATEGORY = "ipfs_uploader";
 
