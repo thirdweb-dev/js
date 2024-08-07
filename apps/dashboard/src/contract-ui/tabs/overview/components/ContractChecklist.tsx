@@ -61,7 +61,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     },
   ];
 
-  const isAdmin = useIsAdmin(contract);
+  const isAdmin = useIsAdmin(contractv5);
   const isMinter = useIsMinter(contractv5);
 
   if (!isAdmin) {

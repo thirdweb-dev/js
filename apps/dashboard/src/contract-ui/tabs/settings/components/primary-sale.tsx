@@ -135,22 +135,24 @@ export const SettingsPrimarySale = <
             </FormControl>
           </Flex>
         </Flex>
-        <AdminOnly contract={contract as ValidContractInstance}>
-          <TransactionButton
-            colorScheme="primary"
-            transactionCount={1}
-            isDisabled={query.isLoading || !form.formState.isDirty}
-            type="submit"
-            isLoading={mutation.isLoading}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
-          >
-            Update Primary Sale Settings
-          </TransactionButton>
-        </AdminOnly>
+        {contractV5 && (
+          <AdminOnly contract={contractV5}>
+            <TransactionButton
+              colorScheme="primary"
+              transactionCount={1}
+              isDisabled={query.isLoading || !form.formState.isDirty}
+              type="submit"
+              isLoading={mutation.isLoading}
+              loadingText="Saving..."
+              size="md"
+              borderRadius="xl"
+              borderTopLeftRadius="0"
+              borderTopRightRadius="0"
+            >
+              Update Primary Sale Settings
+            </TransactionButton>
+          </AdminOnly>
+        )}
       </Flex>
     </Card>
   );

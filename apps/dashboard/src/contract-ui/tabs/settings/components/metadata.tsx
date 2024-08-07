@@ -153,7 +153,7 @@ export const SettingsMetadata = <
             },
             {},
           );
-          if (!contract || !chain) {
+          if (!contract || !contractV5) {
             return;
           }
 
@@ -163,11 +163,6 @@ export const SettingsMetadata = <
             label: "attempt",
           });
 
-          const contractV5 = getContract({
-            address: contract.getAddress(),
-            chain: chain,
-            client: thirdwebClient,
-          });
           const tx = setContractMetadata({
             contract: contractV5,
             ...data,
@@ -328,22 +323,24 @@ export const SettingsMetadata = <
           </Flex>
         </Flex>
 
-        <AdminOnly contract={contract as ValidContractInstance}>
-          <TransactionButton
-            colorScheme="primary"
-            transactionCount={1}
-            isDisabled={metadata.isLoading || !formState.isDirty}
-            type="submit"
-            isLoading={sendTransaction.isPending}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
-          >
-            Update Metadata
-          </TransactionButton>
-        </AdminOnly>
+        {contractV5 && (
+          <AdminOnly contract={contractV5}>
+            <TransactionButton
+              colorScheme="primary"
+              transactionCount={1}
+              isDisabled={metadata.isLoading || !formState.isDirty}
+              type="submit"
+              isLoading={sendTransaction.isPending}
+              loadingText="Saving..."
+              size="md"
+              borderRadius="xl"
+              borderTopLeftRadius="0"
+              borderTopRightRadius="0"
+            >
+              Update Metadata
+            </TransactionButton>
+          </AdminOnly>
+        )}
       </Flex>
     </Card>
   );
