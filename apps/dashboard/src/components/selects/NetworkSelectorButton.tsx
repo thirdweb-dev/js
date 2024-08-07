@@ -18,6 +18,7 @@ import { useNetworkSwitcherModal } from "thirdweb/react";
 import { Button } from "tw-components";
 import { thirdwebClient } from "../../@/constants/client";
 import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
+import { getSDKTheme } from "../../app/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 import { CustomChainRenderer } from "./CustomChainRenderer";
@@ -121,7 +122,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
         }}
         onClick={() => {
           networkSwitcherModal.open({
-            theme: theme === "dark" ? "dark" : "light",
+            theme: getSDKTheme(theme === "light" ? "light" : "dark"),
             sections: [
               {
                 label: "Recently Used",

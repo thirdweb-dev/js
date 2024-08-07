@@ -1,10 +1,4 @@
-import {
-  Flex,
-  FormControl,
-  InputGroup,
-  InputRightElement,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Flex, FormControl, InputGroup, Tooltip } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { Button, Card, FormErrorMessage, Heading, Text } from "tw-components";
 import { useDefaultForwarders } from "../hooks";
@@ -47,48 +41,46 @@ export const TrustedForwardersFieldset: React.FC<
               {...form.register("deployParams._trustedForwarders")}
             />
           </Flex>
-          <InputRightElement>
-            <Tooltip
-              bg="transparent"
-              boxShadow="none"
-              shouldWrapChildren
-              label={
-                <Card
-                  as={Flex}
-                  flexDir="column"
-                  gap={2}
-                  bgColor="backgroundHighlight"
-                  mr={10}
-                >
-                  <Text>Click to apply.</Text>
-                </Card>
-              }
-            >
-              <Button
-                type="button"
-                size="xs"
-                padding="3"
-                paddingY="3.5"
-                mr={16}
-                bgColor="bgBlack"
-                color="bgWhite"
-                _hover={{
-                  opacity: 0.8,
-                }}
-                borderRadius="md"
-                mt={2}
-                onClick={() =>
-                  form.setValue(
-                    "deployParams._trustedForwarders",
-                    JSON.stringify(defaultForwarders.data),
-                  )
-                }
-              >
-                Get default
-              </Button>
-            </Tooltip>
-          </InputRightElement>
         </InputGroup>
+
+        <Tooltip
+          bg="transparent"
+          boxShadow="none"
+          shouldWrapChildren
+          label={
+            <Card
+              as={Flex}
+              flexDir="column"
+              gap={2}
+              bgColor="backgroundHighlight"
+              mr={10}
+            >
+              <Text>Click to apply.</Text>
+            </Card>
+          }
+        >
+          <Button
+            type="button"
+            size="xs"
+            mt={3}
+            padding="3"
+            paddingY="3.5"
+            bgColor="bgBlack"
+            color="bgWhite"
+            _hover={{
+              opacity: 0.8,
+            }}
+            borderRadius="md"
+            onClick={() =>
+              form.setValue(
+                "deployParams._trustedForwarders",
+                JSON.stringify(defaultForwarders.data),
+              )
+            }
+          >
+            Get default
+          </Button>
+        </Tooltip>
 
         <FormErrorMessage>
           {
