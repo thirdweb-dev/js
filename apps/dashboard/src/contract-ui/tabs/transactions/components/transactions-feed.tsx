@@ -139,7 +139,7 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
               if (allIsSelected || functionCalls.includes(val)) {
                 const path = allIsSelected
                   ? `/${chainSlug}/${contractAddress}/transactions`
-                  : `/${chainSlug}/${contractAddress}/transactions?functionName=${val}`;
+                  : `/${chainSlug}/${contractAddress}/transactions?functionName=${encodeURIComponent(val)}`;
                 router.push(path);
                 setSelectedFunctionName(val);
               }
