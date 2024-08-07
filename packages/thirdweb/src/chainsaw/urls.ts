@@ -43,5 +43,5 @@ export function getNftsByCollectionEndpoint() {
  * Endpoint to get NFTs by owner
  * @internal
  */
-export const getNftsByOwnerEndpoint = () =>
+export function getNftsByOwnerEndpoint() {
   `${getChainsawV2Url()}/nfts/by-owner`;
