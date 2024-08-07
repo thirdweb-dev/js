@@ -89,7 +89,6 @@ export const TransactionsFeed: React.FC<TransactionsFeedProps> = ({
   const uiQuery = processQuery(getTransactionsQuery);
   const allTransactions: ChainsawTransactions =
     uiQuery.data?.transactions || [];
-  console.log("allTransactions", allTransactions);
 
   const functionName = useSingleQueryParam("functionName");
   const [selectedFunctionName, setSelectedFunctionName] = useState(
@@ -227,7 +226,6 @@ const TransactionsFeedItem: React.FC<TransactionsFeedItemProps> = ({
 
   const router = useRouter();
 
-  console.log(transaction);
   return (
     <AccordionItem
       borderBottom="none"
