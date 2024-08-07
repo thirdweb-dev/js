@@ -1,5 +1,3 @@
-# vim: ft=jsx
-
 import { DocImage, Callout } from "@doc";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import modularContractsAnalogyImage from "./assets/modular-contracts-analogy.png";
@@ -42,7 +40,7 @@ npm i @thirdweb-dev/contracts
 </TabsContent>
 </Tabs>
 
-A modular contract is made up of [1] a **Core** and [2] **Extension** contracts. Learn more about these, below.
+A modular contract is made up of [1] a **Core** and [2] **Module** contracts. Learn more about these, below.
 
 Follow this [end-to-end guide](https://blog.thirdweb.com/p/d45e40f7-e8f3-4bcd-be6b-f800beff963f/)
 to learn how to write, deploy and use your own custom modular contract.
@@ -51,26 +49,26 @@ to learn how to write, deploy and use your own custom modular contract.
 
 A modular contract is made up of two kinds of contracts:
 
-1. **Core** contract: the foundational API that can be customized by installing Extensions.
-2. **Extension** contract: implements a set of functionality that is enabled on a Core when it is installed.
+1. **Core** contract: the foundational API that can be customized by installing Modules.
+2. **Module** contract: implements a set of functionality that is enabled on a Core when it is installed.
 
 <Callout variant="info">
 	As an analogy, think of the robot, below. The torso is the *Core* to which you
-	attach/detach *Extensions*. 
+	attach/detach *Modules*. 
     
-    The torso has a particular shape and exposes sockets at fixed places -- all of which determine how extensions will be attached to it. Similarly,
-    a Core smart contract has a fixed API that determines what Extensions are compatible for installation.
+    The torso has a particular shape and exposes sockets at fixed places -- all of which determine how modules will be attached to it. Similarly,
+    a Core smart contract has a fixed API that determines what Modules are compatible for installation.
 
-    The *Extensions* themselves e.g. a leg, arm, head, etc. give the robot (i.e. the modular contract as a whole) its various capabilities.
+    The *Modules* themselves e.g. a leg, arm, head, etc. give the robot (i.e. the modular contract as a whole) its various capabilities.
 
     <DocImage src={modularContractsAnalogyImage} className="w-[500px]" />
 
 </Callout>
 
-Installing an Extension in a Core customizes the Core’s behaviour in two ways:
+Installing an Module in a Core customizes the Core’s behaviour in two ways:
 
 1. New functions become callable on the Core contract (via its [fallback function](https://docs.soliditylang.org/en/v0.8.26/contracts.html#fallback-function)).
-2. Core contract’s fixed functions make callback function calls into the Extension.
+2. Core contract’s fixed functions make callback function calls into the Module.
 
 <DocImage src={modularContractsFlowImage} />
 

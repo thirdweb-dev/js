@@ -3,16 +3,16 @@ import { DocImage, createMetadata, FeatureCard, Steps, Step } from "@doc";
 import deployCoreContract from './assets/deploy-core-contract.png';
 import deploying from './assets/deploying.png';
 import deployedCoreContract from './assets/deployed-core-contract.png';
-import publishExtensionContract from './assets/publish-extension-contract.png';
+import publishModuleContract from './assets/publish-module-contract.png';
 import selectNetwork from './assets/select-network.png';
-import installExtension from './assets/install-extension.png';
-import installedExtension from './assets/installed-extension.png';
+import installModule from './assets/install-module.png';
+import installedModule from './assets/installed-module.png';
 import manageTabHighlight from './assets/manage-tab-highlight.png';
 
 export const metadata = createMetadata({
 	title: "thirdweb Modular Contracts",
 	description:
-		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as extensions.",
+		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
 	image: {
 		title: "thirdweb Modular Contracts",
 		icon: "solidity",
@@ -87,25 +87,25 @@ In this Quickstart, learn how to go over how to create an ERC-721 modular contra
     Hold onto this page as you will need it for later
 </Step>
 
-<Step title="Create the extension contract">
-    Back in your forge project, in the `/src` folder, create a file called `PricedExtension.sol` and paste in the following code.
+<Step title="Create the module contract">
+    Back in your forge project, in the `/src` folder, create a file called `PricedModule.sol` and paste in the following code.
 
-    For a better understanding of how extension contracts work, refer to the [starter template code](https://github.com/thirdweb-example/modular-contract-extension-starter/blob/main/src/ExtensionStarter.sol)
+    For a better understanding of how module contracts work, refer to the [starter template code](https://github.com/thirdweb-example/modular-contract-module-starter/blob/main/src/ModuleStarter.sol)
     ```solidity
     // SPDX-License-Identifier: UNLICENSED
     pragma solidity ^0.8.0;
 
-    import {ModularExtension} from "modular-contracts/src/ModularExtension.sol";
+    import {ModularModule} from "modular-contracts/src/ModularModule.sol";
     import {BeforeMintCallbackERC721} from "modular-contracts/src/callback/BeforeMintCallbackERC721.sol";
 
-    contract PricedMint is ModularExtension, BeforeMintCallbackERC721 {
+    contract PricedMint is ModularModule, BeforeMintCallbackERC721 {
         uint256 public constant mintPrice = 0.01 ether;
 
-        function getExtensionConfig()
+        function getModuleConfig()
             external
             pure
             override
-            returns (ExtensionConfig memory config)
+            returns (ModuleConfig memory config)
         {
             config.callbackFunctions = new CallbackFunction[](1);
 
@@ -129,7 +129,7 @@ In this Quickstart, learn how to go over how to create an ERC-721 modular contra
     ```
 </Step>
 
-<Step title="Publish the extension contract">
+<Step title="Publish the module contract">
     In your terminal, run the following command
     ```
     npx thirdweb publish
@@ -137,7 +137,7 @@ In this Quickstart, learn how to go over how to create an ERC-721 modular contra
 
     Then select `PricedMint`
     it should open up to the following page to publish the `PricedMint` contract
-    <DocImage src={publishExtensionContract} />
+    <DocImage src={publishModuleContract} />
 
     Accept the defaults and then hit "next"
     It should then redirect you to choose which chain to deploy on.
@@ -146,17 +146,17 @@ In this Quickstart, learn how to go over how to create an ERC-721 modular contra
     <DocImage src={selectNetwork} />
 </Step>
 
-<Step title="Install the Extension onto the Core contract">
+<Step title="Install the Module onto the Core contract">
     Back to the deployed core contract page, then go and click on the "Manage" tab
     <DocImage src={manageTabHighlight} />
 
-    It should then redirect to the edit extensions page
-    <DocImage src={installExtension} />
+    It should then redirect to the edit modules page
+    <DocImage src={installModule} />
 
     Here, fill out the info as needed and then hit "Install"
 
-    After it has finished installing, it should then show up under the "Installed Extension" section
-    <DocImage src={installedExtension} />
+    After it has finished installing, it should then show up under the "Installed Module" section
+    <DocImage src={installedModule} />
 </Step>
 
 <Step title="Test the modular contract">
