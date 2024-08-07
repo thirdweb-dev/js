@@ -1,9 +1,9 @@
 import type { ChainsawPagingParams } from "./types.js";
 
-export const addPagingToRequest = (
+export function addPagingToRequest(
   searchParams: URLSearchParams,
   pagingParams: ChainsawPagingParams,
-): URLSearchParams => {
+): URLSearchParams {
   if (pagingParams.page) {
     searchParams.append("page", pagingParams.page.toString());
   }
@@ -11,4 +11,4 @@ export const addPagingToRequest = (
     searchParams.append("pageSize", pagingParams.pageSize.toString());
   }
   return searchParams;
-};
+}

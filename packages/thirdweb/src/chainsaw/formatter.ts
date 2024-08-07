@@ -13,9 +13,7 @@ import type {
   Transactions,
 } from "./types.js";
 
-export const formatChainsawBlock = (
-  block?: Block,
-): ChainsawBlock | undefined => {
+export function formatChainsawBlock(block?: Block): ChainsawBlock | undefined {
   if (!block) return;
   return formatBlock({
     ...block,
@@ -26,9 +24,9 @@ export const formatChainsawBlock = (
     gasLimit: numberToHex(BigInt(block.gasLimit)),
     gasUsed: numberToHex(BigInt(block.gasUsed)),
   });
-};
+}
 
-export const formatChainsawNFTs = (nfts?: NFTs): ChainsawNFTs => {
+export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
   if (!nfts) return [];
   return nfts.map((nft) => {
     const options =
@@ -65,11 +63,11 @@ export const formatChainsawNFTs = (nfts?: NFTs): ChainsawNFTs => {
       ...(nft.imageData && { imageData: nft.imageData }),
     };
   });
-};
+}
 
-export const formatChainsawTransactions = (
+export function formatChainsawTransactions(
   txs?: Transactions,
-): ChainsawTransactions => {
+): ChainsawTransactions {
   if (!txs) return [];
   return txs.map((tx) => {
     if (tx.type === 0) {
@@ -123,12 +121,12 @@ export const formatChainsawTransactions = (
       transactionIndex: numberToHex(BigInt(tx.index)),
     }) as ChainsawTransaction;
   });
-};
+}
 
-export const formatChainsawEvents = (events?: Events): ChainsawEvents => {
+export function formatChainsawEvents(events?: Events): ChainsawEvents {
   if (!events?.length) return [];
   return events.map((event) => ({
     ...event,
     count: BigInt(event.count),
   }));
-};
+}
