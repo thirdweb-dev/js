@@ -36,7 +36,7 @@ export const getEventsEndpoint = () => `${getChainsawV2Url()}/events`;
  * Endpoint to get NFTs by collection
  * @internal
  */
-export const getNftsByCollectionEndpoint = () =>
+export function getNftsByCollectionEndpoint() {
   `${getChainsawV2Url()}/nfts/by-collection`;
 
 /**
