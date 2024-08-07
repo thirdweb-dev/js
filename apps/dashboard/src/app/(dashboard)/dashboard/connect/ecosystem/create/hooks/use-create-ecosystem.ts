@@ -5,8 +5,8 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { THIRDWEB_API_HOST } from "constants/urls";
 import { upload } from "thirdweb/storage";
-import { THIRDWEB_API_HOST } from "../../../../../../../constants/urls";
 
 export type CreateEcosystemParams = {
   name: string;

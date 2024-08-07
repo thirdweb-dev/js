@@ -1,13 +1,13 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import { thirdwebClient } from "lib/thirdweb-client";
 import { UserXIcon } from "lucide-react";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import { getInstalledExtensions, owner } from "thirdweb/extensions/modular";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { thirdwebClient } from "../../../lib/thirdweb-client";
+import { useV5DashboardChain } from "../../../lib/v5-adapter";
 import { InstallExtensionForm } from "./components/ExtensionForm";
 import { InstalledExtensionsTable } from "./components/InstalledExtensionsTable";
 

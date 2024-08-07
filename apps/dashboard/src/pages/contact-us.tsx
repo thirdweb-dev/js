@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Box,
   Flex,
@@ -22,7 +23,6 @@ import { useForm } from "react-hook-form";
 import { BsFillLightningChargeFill } from "react-icons/bs";
 import { Button, Card, Heading, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../@/components/theme-provider";
 
 interface FormSchema {
   firstname: string;

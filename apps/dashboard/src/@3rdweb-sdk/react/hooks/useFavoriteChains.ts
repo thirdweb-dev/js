@@ -1,7 +1,7 @@
 import { useSupportedChains } from "@thirdweb-dev/react";
+import { useFavouriteChainIds } from "app/(dashboard)/(chain)/components/client/star-button";
 import { useMemo } from "react";
 import type { ChainMetadata } from "thirdweb/chains";
-import { useFavouriteChainIds } from "../../../app/(dashboard)/(chain)/components/client/star-button";
 
 export function useFavoriteChains() {
   const allChains = useSupportedChains();

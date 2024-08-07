@@ -1,9 +1,9 @@
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 
 import { EngineTierCard } from "components/engine/tier-card";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
-import { useTrack } from "../../../hooks/analytics/useTrack";
-import { Heading } from "../../../tw-components";
+import { Heading } from "tw-components";
 
 interface PricingSectionProps {
   trackingCategory: string;

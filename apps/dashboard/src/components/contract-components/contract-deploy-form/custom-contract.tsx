@@ -1,3 +1,7 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   Accordion,
   AccordionButton,
@@ -24,10 +28,6 @@ import { useActiveAccount } from "thirdweb/react";
 import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
-import { Checkbox, CheckboxWithLabel } from "../../../@/components/ui/checkbox";
-import { ToolTipLabel } from "../../../@/components/ui/tooltip";
-import { TrackedLinkTW } from "../../../@/components/ui/tracked-link";
 import {
   useConstructorParamsFromABI,
   useContractEnabledExtensions,

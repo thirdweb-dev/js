@@ -4,9 +4,9 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { THIRDWEB_API_HOST } from "constants/urls";
 import type { ChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
-import { THIRDWEB_API_HOST } from "../../../constants/urls";
 import { accountKeys, apiKeys, authorizedWallets } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";

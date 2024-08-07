@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "@vercel/og";
+import { isProd } from "constants/rpc";
 import type { NextRequest } from "next/server";
 import { ContractOG } from "og-lib/url-utils";
-import { isProd } from "../../../constants/rpc";
 
 export function shortenString(str: string) {
   return `${str.substring(0, 7)}...${str.substring(str.length - 5)}`;

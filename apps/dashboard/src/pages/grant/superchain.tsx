@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
@@ -18,7 +19,6 @@ import {
   TrackedLink,
   TrackedLinkButton,
 } from "tw-components";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const TRACKING_CATEGORY = "grant-superchain";
 

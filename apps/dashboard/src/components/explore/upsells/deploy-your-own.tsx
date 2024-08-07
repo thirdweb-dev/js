@@ -1,6 +1,6 @@
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { ExternalLinkIcon } from "lucide-react";
 import { CodeBlock } from "tw-components";
-import { TrackedLinkTW } from "../../../@/components/ui/tracked-link";
 
 export const DeployUpsellCard: React.FC = () => {
   return (

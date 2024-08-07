@@ -1,10 +1,10 @@
 import type { SUPPORTED_CHAIN_ID } from "constants/chains";
+import { DASHBOARD_THIRDWEB_SECRET_KEY } from "constants/rpc";
 import { utils } from "ethers";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ZERO_ADDRESS, createThirdwebClient, isAddress } from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
-import { DASHBOARD_THIRDWEB_SECRET_KEY } from "../../../constants/rpc";
 import { IPFS_GATEWAY_URL } from "../../../lib/sdk";
 
 export type BalanceQueryRequest = {

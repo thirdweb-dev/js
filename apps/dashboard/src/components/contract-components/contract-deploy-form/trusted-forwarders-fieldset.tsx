@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { Flex, FormControl, InputGroup } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { FormErrorMessage } from "tw-components";
-import { ToolTipLabel } from "../../../@/components/ui/tooltip";
 import { useDefaultForwarders } from "../hooks";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 

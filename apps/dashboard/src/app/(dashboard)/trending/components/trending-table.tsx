@@ -1,3 +1,5 @@
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -6,18 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { SortBy, TimeRange, TrendingContract } from "lib/search";
 import { CircleArrowDown, CircleArrowUp, DotIcon } from "lucide-react";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
 import { shortenAddress } from "thirdweb/utils";
 import { ChainIcon } from "../../(chain)/components/server/chain-icon";
-import { ScrollShadow } from "../../../../@/components/ui/ScrollShadow/ScrollShadow";
-import { Badge } from "../../../../@/components/ui/badge";
-import type {
-  SortBy,
-  TimeRange,
-  TrendingContract,
-} from "../../../../lib/search";
 import { TablePagination } from "./pagination.client";
 import { SortingHeader } from "./sorting-header.client";
 

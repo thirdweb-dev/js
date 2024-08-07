@@ -1,4 +1,4 @@
-import { TrackedLink } from "../../../tw-components";
+import { TrackedLink } from "tw-components";
 import styles from "./opensource.module.css";
 
 const thirdwebRepoUrl = "https://github.com/thirdweb-dev";

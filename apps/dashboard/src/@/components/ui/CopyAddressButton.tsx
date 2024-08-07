@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 import { CopyTextButton } from "./CopyTextButton";
 
 export function CopyAddressButton(props: {

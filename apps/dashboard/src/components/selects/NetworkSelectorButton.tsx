@@ -1,4 +1,6 @@
+import { thirdwebClient } from "@/constants/client";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
+import { useFavoriteChains } from "@3rdweb-sdk/react/hooks/useFavoriteChains";
 import { ChainIcon } from "components/icons/ChainIcon";
 import type { StoredChain } from "contexts/configured-chains";
 import {
@@ -10,17 +12,15 @@ import {
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
 import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
+import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
 import { Button } from "tw-components";
-import { thirdwebClient } from "../../@/constants/client";
-import { useFavoriteChains } from "../../@3rdweb-sdk/react/hooks/useFavoriteChains";
 import { getSDKTheme } from "../../app/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
-import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 import { CustomChainRenderer } from "./CustomChainRenderer";
 
 interface NetworkSelectorButtonProps {

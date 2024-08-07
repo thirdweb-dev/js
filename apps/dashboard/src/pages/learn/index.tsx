@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Box,
   Center,
@@ -22,7 +23,6 @@ import { Heading, LinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 import WhiteLogo from "../../../public/assets/landingpage/white-logo.png";
 import HeroImage from "../../../public/assets/learn/hero.png";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const TRACKING_CATEGORY = "learn";
 

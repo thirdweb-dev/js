@@ -1,8 +1,8 @@
+import { Textarea } from "@/components/ui/textarea";
 import { FormControl, Input } from "@chakra-ui/react";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { FormErrorMessage, FormLabel } from "tw-components";
-import { Textarea } from "../../../@/components/ui/textarea";
 import type { useContractPublishMetadataFromURI } from "../hooks";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 

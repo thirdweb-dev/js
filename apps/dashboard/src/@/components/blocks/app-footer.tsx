@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ThirdwebMiniLogo } from "app/components/ThirdwebMiniLogo";
 import Link from "next/link";
 import {
   SiDiscord,
@@ -11,7 +12,6 @@ import {
   SiX,
   SiYoutube,
 } from "react-icons/si";
-import { ThirdwebMiniLogo } from "../../../app/components/ThirdwebMiniLogo";
 
 type AppFooterProps = {
   className?: string;

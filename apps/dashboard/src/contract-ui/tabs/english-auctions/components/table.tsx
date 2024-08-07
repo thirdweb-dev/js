@@ -1,4 +1,5 @@
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
+import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { getContract } from "thirdweb";
@@ -8,7 +9,6 @@ import {
   totalAuctions,
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
-import { thirdwebClient } from "../../../../lib/thirdweb-client";
 
 interface EnglishAuctionsTableProps {
   contractAddress: string;

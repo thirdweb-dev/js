@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -23,7 +24,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 
 interface PayConfigProps {
   apiKey: ApiKey;

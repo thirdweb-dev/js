@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Box,
   Center,
@@ -17,7 +18,6 @@ import { PageId } from "page-id";
 import { BsLightningCharge } from "react-icons/bs";
 import { Heading, LinkButton, Text } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../../@/components/theme-provider";
 
 const TRACKING_CATEGORY = "community";
 

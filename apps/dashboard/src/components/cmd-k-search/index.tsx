@@ -22,13 +22,13 @@ import {
 } from "@tanstack/react-query";
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
+import { type TrendingContract, fetchTopContracts } from "lib/search";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
 import { Card, Heading, Link, Text } from "tw-components";
 import { useDebounce } from "use-debounce";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { type TrendingContract, fetchTopContracts } from "../../lib/search";
 
 const TRACKING_CATEGORY = "any_contract_search";
 

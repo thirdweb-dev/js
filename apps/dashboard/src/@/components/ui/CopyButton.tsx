@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
-import { cn } from "../../lib/utils";
 import { Button } from "./button";
 import { ToolTipLabel } from "./tooltip";
 

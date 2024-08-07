@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Accordion,
   AccordionButton,
@@ -21,7 +22,6 @@ import { BsGithub } from "react-icons/bs";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 import type { ThirdwebNextPage } from "utils/types";
-import { useForceDarkTheme } from "../@/components/theme-provider";
 
 const filterOut = [
   "0xFirekeeper",

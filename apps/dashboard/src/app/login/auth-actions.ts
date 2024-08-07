@@ -1,6 +1,7 @@
 "use server";
 import "server-only";
 
+import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getAddress } from "thirdweb";
@@ -9,10 +10,6 @@ import type {
   LoginPayload,
   VerifyLoginPayloadParams,
 } from "thirdweb/auth";
-import {
-  COOKIE_ACTIVE_ACCOUNT,
-  COOKIE_PREFIX_TOKEN,
-} from "../../@/constants/cookie";
 
 const THIRDWEB_API_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";

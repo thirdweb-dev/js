@@ -1,3 +1,5 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 /* eslint-disable @next/next/no-img-element */
 import { Divider, Flex, GridItem, Icon, SimpleGrid } from "@chakra-ui/react";
 import { useAllVersions, useEns } from "components/contract-components/hooks";
@@ -10,8 +12,6 @@ import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { TrackedIconButton } from "tw-components";
-import { Spinner } from "../../@/components/ui/Spinner/Spinner";
-import { Button } from "../../@/components/ui/button";
 import { ContractDeployForm } from "../contract-components/contract-deploy-form";
 import { ShareButton } from "../share-buttom";
 

@@ -1,3 +1,4 @@
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
@@ -7,7 +8,6 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { CopyTextButton } from "../../../../../../@/components/ui/CopyTextButton";
 import { ChainIcon } from "../../../components/server/chain-icon";
 import { products } from "../../../components/server/products";
 import type { ChainSupportedService } from "../../../types/chain";

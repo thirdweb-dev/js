@@ -1,14 +1,14 @@
-import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
-import { format } from "date-fns";
-import { useState } from "react";
-import { DatePickerWithRange } from "../../../@/components/ui/DatePickerWithRange";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../@/components/ui/select";
+} from "@/components/ui/select";
+import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
+import { format } from "date-fns";
+import { useState } from "react";
 import { PayCustomersTable } from "./components/PayCustomersTable";
 import { PayNewCustomers } from "./components/PayNewCustomers";
 import { PaymentHistory } from "./components/PaymentHistory";

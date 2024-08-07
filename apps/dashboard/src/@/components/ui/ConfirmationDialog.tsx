@@ -10,9 +10,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import type { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { VariantProps } from "class-variance-authority";
 import type React from "react";
-import { cn } from "../../lib/utils";
 
 export interface ConfirmationDialogProps
   extends VariantProps<typeof buttonVariants> {
