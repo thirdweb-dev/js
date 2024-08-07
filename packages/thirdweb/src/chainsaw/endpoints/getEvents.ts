@@ -9,7 +9,7 @@ import type {
   ChainsawPagingParams,
   ChainsawResponse,
   Events,
-} from "../types.d.ts";
+} from "../types.ts";
 import { getEventsEndpoint } from "../urls.js";
 
 export type GetEventsInterval = "hour" | "day" | "week" | "month";

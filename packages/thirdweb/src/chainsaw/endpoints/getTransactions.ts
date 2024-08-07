@@ -9,7 +9,7 @@ import type {
   ChainsawResponse,
   ChainsawTransactions,
   Transactions,
-} from "../types.d.ts";
+} from "../types.ts";
 import { getTransactionsEndpoint } from "../urls.js";
 
 export type GetTransactionsParams = Prettify<

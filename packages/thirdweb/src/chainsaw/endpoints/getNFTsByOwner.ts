@@ -9,7 +9,7 @@ import type {
   ChainsawPagingParams,
   ChainsawResponse,
   NFTs,
-} from "../types.d.ts";
+} from "../types.ts";
 import { getNftsByOwnerEndpoint } from "../urls.js";
 
 export type GetNFTsByOwnerParams = Prettify<

@@ -1,7 +1,7 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { formatChainsawBlock } from "../formatter.js";
-import type { Block, ChainsawBlock, ChainsawResponse } from "../types.d.ts";
+import type { Block, ChainsawBlock, ChainsawResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
 
 export type GetBlockParams = {
