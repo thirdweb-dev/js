@@ -1,7 +1,7 @@
 import type { Transaction as ViemTransaction } from "viem";
-import type { Hex } from "../utils/encoding/hex.ts";
+import type { Hex } from "../utils/encoding/hex.js";
 import type { NFT as ParsedNFT } from "../utils/nft/parseNft.js";
-import type { Prettify } from "../utils/type-utils.ts";
+import type { Prettify } from "../utils/type-utils.js";
 
 export type ChainsawResponse<T = unknown> = {
   data?: T;
