@@ -107,7 +107,7 @@ export const SettingsPrimarySale = <
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Primary Sales</Heading>
           <Text size="body.md" fontStyle="italic">
-            Determine the address that should receive the revenue from initial
+            The wallet address that should receive the revenue from initial
             sales of the assets.
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>

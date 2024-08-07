@@ -24,6 +24,7 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
 import { polygon } from "thirdweb/chains";
 import type { ThirdwebNextPage } from "utils/types";
+import { ContractsSidebar } from "../../core-ui/sidebar/contracts";
 
 type PublishPageProps = {
   dehydratedState: DehydratedState;
@@ -45,7 +46,12 @@ const PublishPage: ThirdwebNextPage = (props: PublishPageProps) => {
 PublishPage.pageId = PageId.PublishedContract;
 
 PublishPage.getLayout = (page, props: PublishPageProps) => {
-  return <AppLayout dehydratedState={props.dehydratedState}>{page}</AppLayout>;
+  return (
+    <AppLayout dehydratedState={props.dehydratedState} noOverflowX>
+      {props.isDeploy && <ContractsSidebar />}
+      {page}
+    </AppLayout>
+  );
 };
 
 PublishPage.fallback = (

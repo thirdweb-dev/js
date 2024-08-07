@@ -1,6 +1,8 @@
-import { Flex, FormControl, InputGroup, Tooltip } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
+import { Flex, FormControl, InputGroup } from "@chakra-ui/react";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { Button, Card, FormErrorMessage, Heading, Text } from "tw-components";
+import { FormErrorMessage } from "tw-components";
+import { ToolTipLabel } from "../../../@/components/ui/tooltip";
 import { useDefaultForwarders } from "../hooks";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
@@ -14,16 +16,21 @@ export const TrustedForwardersFieldset: React.FC<
   const defaultForwarders = useDefaultForwarders();
 
   return (
-    <Flex pb={4} direction="column" gap={2}>
-      <Heading size="label.lg">Trusted Forwarders</Heading>
+    <fieldset>
+      <legend className="text-2xl font-semibold tracking-tight mb-2">
+        Trusted Forwarders
+      </legend>
 
-      <Text size="body.md" fontStyle="italic">
+      <p className="text-muted-foreground text-sm mb-1">
         Trusted forwarder addresses to enable ERC-2771 transactions (i.e.
-        gasless). You can provide your own forwarder, or click the button below
-        to use default forwarders provided by thirdweb. Leave empty if not
-        needed.
-      </Text>
-      <Flex gap={4} direction={{ base: "column", md: "row" }} />
+        gasless).
+      </p>
+
+      <p className="text-muted-foreground text-sm mb-3">
+        You can provide your own forwarder, or click the button below to use
+        default forwarders provided by thirdweb. Leave empty if not needed.
+      </p>
+
       <FormControl
         isRequired
         isInvalid={
@@ -43,34 +50,12 @@ export const TrustedForwardersFieldset: React.FC<
           </Flex>
         </InputGroup>
 
-        <Tooltip
-          bg="transparent"
-          boxShadow="none"
-          shouldWrapChildren
-          label={
-            <Card
-              as={Flex}
-              flexDir="column"
-              gap={2}
-              bgColor="backgroundHighlight"
-              mr={10}
-            >
-              <Text>Click to apply.</Text>
-            </Card>
-          }
-        >
+        <ToolTipLabel label="Click to apply default trusted forwarders">
           <Button
             type="button"
-            size="xs"
-            mt={3}
-            padding="3"
-            paddingY="3.5"
-            bgColor="bgBlack"
-            color="bgWhite"
-            _hover={{
-              opacity: 0.8,
-            }}
-            borderRadius="md"
+            variant="outline"
+            className="mt-2"
+            // size="sm"
             onClick={() =>
               form.setValue(
                 "deployParams._trustedForwarders",
@@ -78,9 +63,9 @@ export const TrustedForwardersFieldset: React.FC<
               )
             }
           >
-            Get default
+            Get Default
           </Button>
-        </Tooltip>
+        </ToolTipLabel>
 
         <FormErrorMessage>
           {
@@ -91,6 +76,6 @@ export const TrustedForwardersFieldset: React.FC<
           }
         </FormErrorMessage>
       </FormControl>
-    </Flex>
+    </fieldset>
   );
 };

@@ -104,7 +104,7 @@ export const SettingsRoyalties = <
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Royalties</Heading>
           <Text size="body.md" fontStyle="italic">
-            Determine the address that should receive the revenue from royalties
+            The wallet address that should receive the revenue from royalties
             earned from secondary sales of the assets.
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>

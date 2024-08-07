@@ -100,7 +100,7 @@ export const SettingsPlatformFees = <
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Platform fee</Heading>
           <Text size="body.md" fontStyle="italic">
-            Determine the address that should receive the revenue from platform
+            The wallet address that should receive the revenue from platform
             fees.
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
