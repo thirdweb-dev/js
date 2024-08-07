@@ -9,11 +9,49 @@ export const sidebar: SideBar = {
 			name: "Overview",
 			href: "/chainsaw",
 		},
-		{ name: "Authentication", href: `${chainsawSlug}/authentication` },
-		{
-			name: "Get Started",
-			href: `${chainsawSlug}/get-started`,
-		},
+        {
+            name: "Get Started",
+            href: `${chainsawSlug}/get-started`,
+        },
+		{ name: "Authentication", links: [
+			{
+				name: "API Authentication",
+				href: `${chainsawSlug}/authentication#api-authentication`,
+			},
+			{
+				name: "SDK Authentication",
+				href: `${chainsawSlug}/authentication#sdk-authentication`,
+			},
+        ] },
+        {
+            name: "Typescript SDK",
+            links: [
+                {
+                    name: "getBlock",
+                    href: `${chainsawSlug}/typescript-sdk#getblock`,
+                },
+                {
+                    name: "getEvents",
+                    href: `${chainsawSlug}/typescript-sdk#getevents`,
+                },
+                {
+                    name: "getLatestBlockNumber",
+                    href: `${chainsawSlug}/typescript-sdk#getlatestblocknumber`,
+                },
+                {
+                    name: "getNFTsByCollection",
+                    href: `${chainsawSlug}/typescript-sdk#getnftsbycollection`,
+                },
+                {
+                    name: "getNFTsByOwner",
+                    href: `${chainsawSlug}/typescript-sdk#getnftsbyowner`,
+                },
+                {
+                    name: "getTransactions",
+                    href: `${chainsawSlug}/typescript-sdk#gettransactions`,
+                }
+            ]
+        },
 		{
 			name: "API Reference",
 			links: [
@@ -42,43 +80,6 @@ export const sidebar: SideBar = {
 					href: `${chainsawSlug}/api-reference#nfts-by-owner`,
 				},
 
-            ]
-		},
-		{
-			name: "Typescript SDK",
-			links: [
-                {
-                    name: "Setup",
-                    href: `${chainsawSlug}/typescript-sdk#setup`,
-                },
-                {
-                    name: "Usage",
-                    href: `${chainsawSlug}/typescript-sdk#usage`,
-                },
-                {
-                    name: "getBlock",
-                    href: `${chainsawSlug}/typescript-sdk#getblock`,
-                },
-                {
-                    name: "getEvents",
-                    href: `${chainsawSlug}/typescript-sdk#getevents`,
-                },
-                {
-                    name: "getLatestBlockNumber",
-                    href: `${chainsawSlug}/typescript-sdk#getlatestblocknumber`,
-                },
-                {
-                    name: "getNFTsByCollection",
-                    href: `${chainsawSlug}/typescript-sdk#getnftsbycollection`,
-                },
-                {
-                    name: "getNFTsByOwner",
-                    href: `${chainsawSlug}/typescript-sdk#getnftsbyowner`,
-                },
-                {
-                    name: "getTransactions",
-                    href: `${chainsawSlug}/typescript-sdk#gettransactions`,
-                }
             ]
 		},
 		{

@@ -1,4 +1,5 @@
 import { createMetadata } from "@doc";
+import { InstallTabs } from "@doc";
 
 export const metadata = createMetadata({
 	title: "Fetch Address NFTs | thirdweb Chainsaw",
@@ -7,4 +8,50 @@ export const metadata = createMetadata({
 
 # Wallet NFTs
 
-// TODO: Add content
+# Tutorial: Fetching NFTs Owned by a Wallet Address
+
+This comprehensive tutorial will guide you through the process of using thirdweb Chainsaw to fetch NFTs owned by a specific wallet address. We'll cover the setup, authentication, and implementation steps with complete code snippets.
+
+## Step 1: Setup
+
+First, you need to install the thirdweb Chainsaw package. Choose your preferred package manager:
+
+<InstallTabs
+	npm="npm i @thirdweb-dev/chainsaw"
+	yarn="yarn add @thirdweb-dev/chainsaw"
+	pnpm="pnpm i @thirdweb-dev/chainsaw"
+/>
+
+## Step 2: Authentication
+
+Before using the Chainsaw SDK, you need to authenticate. Follow these steps to obtain a client ID:
+
+1. Sign up or log in to the [thirdweb dashboard](https://thirdweb.com/dashboard).
+2. Create a new project or select an existing one.
+3. Navigate to the API Keys section and create a new API key.
+4. Copy the client ID for use in your code.
+
+## Step 3: Implement NFT Fetching
+
+Now, let's write the code to fetch NFTs owned by a specific wallet address:
+
+```typescript
+ @param {GetNFTsByOwnerParams} params
+ @returns {Promise<GetNFTsByOwnerResult>}
+
+ ---
+ import { createThirdwebClient } from "thirdweb";
+ import { getNFTsByOwner } from "thirdweb/chainsaw";
+
+ const client = createThirdwebClient({ clientId: "..." });
+ const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ const endDate = new Date(Date.now() - 24 * 60 * 60_000);
+ const nfts = await getNFTsByOwner({
+  client,
+  ownerAddresses: ["0x..."],
+  chainIds: [1],
+  pageSize: 20,
+  page: 1
+ });
+```
+

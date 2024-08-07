@@ -8,4 +8,81 @@ export const metadata = createMetadata({
 
 # Anthentication
 
-// TODO: Add content
+
+## API Authentication
+
+To authenticate your requests to the Chainsaw API, you need to obtain an API key from the thirdweb dashboard. 
+Once you have your API key, you can use it to authenticate your requests using one of the following methods:
+
+1. Header Authentication:
+   You can include your API key in the request headers using one of these options:
+   - `x-secret-key`: Your API secret key
+   - `x-client-id`: Your client ID
+   - `x-bundle-id`: Your bundle ID
+
+   Example:
+   ```bash
+   curl -X GET "https://chainsaw.thirdweb.com/v2/events" \
+     -H "Host: api.thirdweb.com" \
+     -H "x-secret-key: your_api_key_here"
+   ```
+
+2. Query Parameter Authentication:
+   Alternatively, you can include your API key as a query parameter in your request URL:
+   - `bundleId`: Your bundle ID
+
+   Example:
+   ```bash
+   curl -X GET "https://api.thirdweb.com/v2/events?bundleId=your_bundle_id_here"
+   ```
+
+3. JWT Authentication:
+   For enhanced security, you can use JSON Web Token (JWT) authentication. Generate a JWT token using your API key and include it in the `Authorization` header of your request.
+
+   Example:
+   ```bash
+   curl -X GET "https://api.thirdweb.com/v2/events" \
+     -H "Authorization: Bearer your_jwt_token_here"
+   ```
+
+To ensure the security of your API key, always use HTTPS for your requests and never share your API key publicly or include it in client-side code.
+
+
+## SDK Authentication
+
+To authenticate using the Chainsaw SDK, follow these steps:
+
+1. Import the necessary function:
+   In your TypeScript or JavaScript file, import the `createThirdwebClient` function:
+
+   ```typescript
+   import { createThirdwebClient } from "thirdweb";
+   ```
+
+2. Create a client instance:
+   Use the `createThirdwebClient` function to create an authenticated client instance. You'll need to provide your client ID, which you can obtain from the thirdweb dashboard:
+
+   ```typescript
+   const client = createThirdwebClient({ clientId: "your-client-id-here" });
+   ```
+
+   Replace `"your-client-id-here"` with your actual client ID.
+
+3. Use the client for authenticated calls:
+   Once you have created the client instance, you can use it to make authenticated calls to Chainsaw. For example:
+
+   ```typescript
+   import { getTransactions } from "thirdweb/chainsaw";
+
+   const transactions = await getTransactions({
+     client,
+     // ... other parameters
+   });
+   ```
+
+4. Best practices:
+   - Store your client ID securely, preferably in environment variables.
+   - Never expose your client ID in client-side code or public repositories.
+   - Use appropriate error handling when making API calls.
+
+By following these steps, you'll be able to authenticate and use the Chainsaw SDK in your applications securely and efficiently.

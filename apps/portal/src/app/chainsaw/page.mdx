@@ -2,4 +2,45 @@ import { DocImage, OpenSourceCard } from "@doc";
 
 # Chainsaw
 
-// TODO: Add content
+
+Chainsaw is a powerful blockchain data indexing and querying solution designed to simplify access to on-chain information. It provides developers with an efficient way to retrieve and analyze blockchain data, enabling the creation of more robust and data-driven decentralized applications.
+
+## Motivation
+
+As blockchain ecosystems grow more complex, accessing and interpreting on-chain data becomes increasingly challenging. Chainsaw addresses this challenge by offering a streamlined approach to data retrieval, allowing developers to focus on building innovative applications rather than wrestling with complex data extraction processes.
+
+## Functionality
+
+Chainsaw offers a comprehensive set of features for blockchain data interaction:
+
+- **Block Information**: Retrieve detailed information about specific blocks.
+- **Event Tracking**: Fetch and analyze blockchain events based on various parameters.
+- **Transaction Details**: Access comprehensive transaction data for in-depth analysis.
+- **NFT Data**: Query NFT ownership and collection information across different chains.
+- **Real-time Updates**: Get the latest block numbers for up-to-date information.
+
+## Usage
+
+Chainsaw can be easily integrated into your projects using our TypeScript SDK or by directly accessing our API endpoints. 
+Here's a quick example using the TypeScript SDK:
+
+```typescript
+
+  import { createThirdwebClient } from "thirdweb";
+  import { getTransactions } from "thirdweb/chainsaw";
+
+  const client = createThirdwebClient({ clientId: "..." });
+  const startDate = new Date(Date.now() - 24 * 60 * 60_000);
+  const endDate = new Date();
+  const block = await getTransactions({
+   client,
+   to: "0x...",
+   chainIds: [1],
+   startDate,
+   endDate,
+   pageSize: 20,
+   page: 1
+  });
+```
+
+

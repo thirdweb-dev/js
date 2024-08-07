@@ -1,5 +1,6 @@
 import { Callout } from "@doc";
 import { createMetadata, DocImage } from "@doc";
+import { InstallTabs } from "@doc";
 
 export const metadata = createMetadata({
 	title: "Getting started with Chainsaw",
@@ -9,4 +10,33 @@ export const metadata = createMetadata({
 
 # Get Started
 
-// TODO: Add content
+Chainsaw provides a simple way to access onchain data.
+
+## Setup
+
+<InstallTabs
+	npm="npm i @thirdweb-dev/chainsaw"
+	yarn="yarn add @thirdweb-dev/chainsaw"
+	pnpm="pnpm i @thirdweb-dev/chainsaw"
+/>
+
+## Usage
+
+```typescript
+
+  import { createThirdwebClient } from "thirdweb";
+  import { getTransactions } from "thirdweb/chainsaw";
+
+  const client = createThirdwebClient({ clientId: "..." });
+  const startDate = new Date(Date.now() - 24 * 60 * 60_000);
+  const endDate = new Date();
+  const block = await getTransactions({
+   client,
+   to: "0x...",
+   chainIds: [1],
+   startDate,
+   endDate,
+   pageSize: 20,
+   page: 1
+  });
+```
