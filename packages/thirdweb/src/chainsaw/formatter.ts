@@ -1,6 +1,6 @@
 import { formatBlock, formatTransaction } from "viem";
 import { numberToHex } from "../utils/encoding/hex.js";
-import { parseNFT } from "../utils/nft/parseNft.js";
+import { type ParseNFTOptions, parseNFT } from "../utils/nft/parseNft.js";
 import type {
   Block,
   ChainsawBlock,
@@ -29,21 +29,31 @@ export function formatChainsawBlock(block?: Block): ChainsawBlock | undefined {
 export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
   if (!nfts) return [];
   return nfts.map((nft) => {
-    const options =
-      nft.type === "ERC1155"
-        ? {
-            tokenId: BigInt(nft.tokenId),
-            owner: nft.ownerAddress || null,
-            tokenUri: nft.uri,
-            type: "ERC1155" as const,
-            supply: BigInt(0),
-          }
-        : {
-            tokenId: BigInt(nft.tokenId),
-            owner: nft.ownerAddress || null,
-            tokenUri: nft.uri,
-            type: "ERC721" as const,
-          };
+    let options: ParseNFTOptions;
+    switch (nft.type) {
+      case "ERC1155": {
+        options = {
+          tokenId: BigInt(nft.tokenId),
+          owner: nft.ownerAddress || null,
+          tokenUri: nft.uri,
+          type: "ERC1155" as const,
+          supply: BigInt(0),
+        };
+        break;
+      }
+      case "ERC721": {
+        options = {
+          tokenId: BigInt(nft.tokenId),
+          owner: nft.ownerAddress || null,
+          tokenUri: nft.uri,
+          type: "ERC721" as const,
+        };
+        break;
+      }
+      default: {
+        throw Error(`Unsupported NFT type ${nft.type}`);
+      }
+    }
     const parsedNft = parseNFT(
       {
         id: BigInt(nft.tokenId),
