@@ -35,7 +35,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
   } as const satisfies TransactionSerializableEIP1559;
 
   test("default", () => {
-    const serialized = serializeTransaction({
+    const serialized = serializeTransaction<TransactionSerializableEIP1559>({
       transaction: baseEip1559,
     });
     assertType<TransactionSerializedEIP1559>(serialized);
@@ -125,7 +125,9 @@ describe.runIf(process.env.TW_SECRET_KEY)("eip1559", () => {
         },
       ],
     } satisfies TransactionSerializableEIP1559;
-    const serialized = serializeTransaction({ transaction: args });
+    const serialized = serializeTransaction<TransactionSerializableEIP1559>({
+      transaction: args,
+    });
     expect(serialized).toEqual(
       "0x02f88b0182031184773594008477359400809470997970c51812dc3a010c7d01b50e0d17dc79c8880de0b6b3a764000080f85bf859940000000000000000000000000000000000000000f842a00000000000000000000000000000000000000000000000000000000000000001a060fdd29ff912ce880cd3edaf9f932dc61d3dae823ea77e0323f94adb9f6a72fe",
     );
@@ -271,7 +273,7 @@ describe("eip2930", () => {
   } as const satisfies TransactionSerializableEIP2930;
 
   test("default", () => {
-    const serialized = serializeTransaction({
+    const serialized = serializeTransaction<TransactionSerializableEIP2930>({
       transaction: BASE_EIP2930_TRANSACTION,
     });
     assertType<TransactionSerializedEIP2930>(serialized);
@@ -324,7 +326,9 @@ describe("eip2930", () => {
       ],
       gasPrice: fromGwei("2"),
     } satisfies TransactionSerializableEIP2930;
-    const serialized = serializeTransaction({ transaction: args });
+    const serialized = serializeTransaction<TransactionSerializableEIP2930>({
+      transaction: args,
+    });
     expect(serialized).toEqual(
       "0x01f8450180847735940080808080f838f7940000000000000000000000000000000000000000e1a00000000000000000000000000000000000000000000000000000000000000001",
     );
@@ -486,7 +490,7 @@ describe("legacy", () => {
   };
 
   test("default", () => {
-    const serialized = serializeTransaction({
+    const serialized = serializeTransaction<TransactionSerializableLegacy>({
       transaction: BASE_LEGACY_TRANSACTION,
     });
     assertType<TransactionSerializedLegacy>(serialized);
@@ -706,7 +710,7 @@ describe("miscellaneous", () => {
           s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
           chainId: undefined,
           typeHex: "0x0",
-        },
+        } as TransactionSerializable,
       }),
     ).toMatchInlineSnapshot(
       '"0xf8667584b2d05e0082c9ab9455d398326f99059ff775485246999027b31979558080830149fba073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
@@ -733,7 +737,7 @@ describe("miscellaneous", () => {
           s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
           chainId: undefined,
           typeHex: "0x0",
-        },
+        } as TransactionSerializable,
       }),
     ).toMatchInlineSnapshot(
       '"0xf8667584b2d05e0082c9ab9455d398326f99059ff775485246999027b31979558080830149fca073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
@@ -760,7 +764,7 @@ describe("miscellaneous", () => {
           s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
           chainId: undefined,
           typeHex: "0x0",
-        },
+        } as TransactionSerializable,
       }),
     ).toMatchInlineSnapshot(
       '"0xf8637584b2d05e0082c9ab9455d398326f99059ff775485246999027b319795580801ba073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
@@ -787,7 +791,7 @@ describe("miscellaneous", () => {
           s: "0x354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23",
           chainId: undefined,
           typeHex: "0x0",
-        },
+        } as TransactionSerializable,
       }),
     ).toMatchInlineSnapshot(
       '"0xf8637584b2d05e0082c9ab9455d398326f99059ff775485246999027b319795580801ca073b39769ff4a36515c8fca546550a3fdafebbf37fa9e22be2d92b44653ade7bfa0354c756a1aa3346e9b3ea5423ac99acfc005e9cce2cd698e14d792f43fa15a23"',
