@@ -31,11 +31,11 @@ export type GetTransactionsParams = Prettify<
      */
     chainIds?: number[];
     /**
-     * Start of the date range to search in
+     * Start of the date range to search in. Default is 1 day ago
      */
     startDate?: Date;
     /**
-     * End of the date range to search in
+     * End of the date range to search in. Default is current date
      */
     endDate?: Date;
   } & ChainsawPagingParams
