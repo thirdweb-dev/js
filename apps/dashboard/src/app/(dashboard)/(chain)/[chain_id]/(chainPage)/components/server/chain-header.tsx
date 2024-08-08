@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
 import { mapV4ChainToV5Chain } from "../../../../../../../contexts/map-chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
-import { MobileMenu } from "../client/MobileMenu";
 import { AddChainToWallet } from "../client/add-chain-to-wallet";
 
 type ChainHeaderProps = {
@@ -61,9 +60,6 @@ export function ChainHeader(props: ChainHeaderProps) {
               </Link>
             </Button>
           </div>
-
-          {/* Mobile Menu */}
-          <MobileMenu chain={props.chain} />
         </div>
       </div>
     </div>

@@ -47,8 +47,13 @@ PublishPage.pageId = PageId.PublishedContract;
 
 PublishPage.getLayout = (page, props: PublishPageProps) => {
   return (
-    <AppLayout dehydratedState={props.dehydratedState} noOverflowX>
-      {props.isDeploy && <ContractsSidebar />}
+    <AppLayout
+      dehydratedState={props.dehydratedState}
+      noOverflowX
+      pageContainerClassName={props.isDeploy ? "!container" : ""}
+      mainClassName={props.isDeploy ? "!pt-0" : ""}
+    >
+      {!props.isDeploy && <ContractsSidebar />}
       {page}
     </AppLayout>
   );

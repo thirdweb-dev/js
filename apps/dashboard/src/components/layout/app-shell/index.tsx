@@ -31,6 +31,8 @@ export interface AppShellProps {
   noSEOOverride?: boolean;
   hasSidebar?: boolean;
   noOverflowX?: boolean;
+  pageContainerClassName?: string;
+  mainClassName?: string;
 }
 
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
@@ -38,6 +40,8 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   layout,
   hasSidebar,
   noOverflowX,
+  pageContainerClassName,
+  mainClassName,
 }) => {
   return (
     <div>
@@ -69,6 +73,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           colSpan={{ base: 2, md: 1 }}
           rowSpan={1}
           overflowX={noOverflowX ? undefined : "auto"}
+          className={mainClassName}
         >
           <Container maxW="container.page">
             <BillingAlerts />
@@ -77,7 +82,9 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           {layout === "custom-contract" ? (
             children
           ) : (
-            <Container maxW="container.page">{children}</Container>
+            <Container maxW="container.page" className={pageContainerClassName}>
+              {children}
+            </Container>
           )}
         </GridItem>
       </Grid>
@@ -112,7 +119,7 @@ const AppHeader: React.FC = () => {
           </Link>
           <CmdKSearch />
         </Flex>
-        <Flex align="center" gap={4} marginLeft="auto">
+        <Flex align="center" gap={[2, 4]} marginLeft="auto">
           <Flex display={{ base: "none", md: "flex" }} gap={2}>
             <CreditsButton />
             <UpgradeButton />
@@ -157,7 +164,6 @@ const AppHeader: React.FC = () => {
           >
             Support
           </Button>
-
           <Flex display={{ base: "flex", md: "none" }}>
             <TrackedIconButton
               bg="transparent"
@@ -170,9 +176,7 @@ const AppHeader: React.FC = () => {
               href="/support"
             />
           </Flex>
-
           <ColorModeToggle />
-
           <div className="md:ml-2">
             <CustomConnectWallet />
           </div>

@@ -733,16 +733,18 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               form.setValue("addToDashboard", !!checked)
             }
           />
-          Import so I can find it in the list of my contracts at{" "}
-          <TrackedLinkTW
-            className="text-link-foreground hover:text-foreground"
-            href="/dashboard"
-            target="_blank"
-            category="custom-contract"
-            label="visit-dashboard"
-          >
-            /dashboard
-          </TrackedLinkTW>
+          <span>
+            Import so I can find it in the list of my contracts at{" "}
+            <TrackedLinkTW
+              className="text-link-foreground hover:text-foreground"
+              href="/dashboard"
+              target="_blank"
+              category="custom-contract"
+              label="visit-dashboard"
+            >
+              /dashboard
+            </TrackedLinkTW>
+          </span>
         </CheckboxWithLabel>
 
         {/* Depoy */}

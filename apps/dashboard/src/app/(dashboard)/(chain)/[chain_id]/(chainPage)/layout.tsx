@@ -1,5 +1,7 @@
+import { BurgerMenuButton } from "@/components/blocks/BurgerMenuButton";
+import { Sidebar } from "@/components/blocks/Sidebar";
 import { Button } from "@/components/ui/button";
-import { TicketCheckIcon } from "lucide-react";
+import { ArrowLeftIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -8,7 +10,6 @@ import { StarButton } from "../../components/client/star-button";
 import { getChain, getChainMetadata } from "../../utils";
 import { AddChainToWallet } from "./components/client/add-chain-to-wallet";
 import { ChainHeader } from "./components/server/chain-header";
-import { SidebarContent } from "./components/server/sidebar-content";
 
 // TODO: improve the behavior when clicking "Get started with thirdweb", currently just redirects to the dashboard
 
@@ -45,11 +46,37 @@ export default async function ChainPageLayout({
 
   const chainMetadata = await getChainMetadata(chain.chainId);
 
+  const sidebarLinks = [
+    {
+      href: `/${chain.slug}`,
+      label: "Overview",
+    },
+    {
+      href: `/${chain.slug}/popular`,
+      label: "Popular Contracts",
+    },
+  ];
+
   return (
     <div className="container flex flex-row h-full">
-      <aside className="w-[280px] flex-shrink-0 hidden lg:block">
-        <SidebarContent chain={chain} />
-      </aside>
+      <Sidebar
+        header={
+          <div className="flex items-center gap-1.5 mb-5 flex-wrap">
+            <Link
+              href="/chainlist"
+              className="text-secondary-foreground hover:text-foreground text-sm"
+            >
+              Chainlist
+            </Link>
+            <span className="text-secondary-foreground text-sm"> / </span>
+            <Link href={`/${chain.slug}`} className="text-foreground text-sm">
+              {chain.name.replace("Mainnet", "")}
+            </Link>
+          </div>
+        }
+        links={sidebarLinks}
+      />
+
       <div className="flex flex-col w-full lg:px-6 lg:border-x pb-10">
         {/* Icon + Background */}
         <ChainHeader
@@ -57,6 +84,23 @@ export default async function ChainPageLayout({
           logoUrl={chain.icon?.url}
           chain={chain}
         />
+
+        <div className="flex lg:hidden justify-end">
+          <BurgerMenuButton
+            links={sidebarLinks}
+            footer={
+              <div className="mt-5 border-t pt-6 pb-2">
+                <Link
+                  href="/chainlist"
+                  className="px-2 text-sm flex justify-start gap-2 items-center text-secondary-foreground hover:text-foreground"
+                >
+                  <ArrowLeftIcon className="size-4" />
+                  View all chains
+                </Link>
+              </div>
+            }
+          />
+        </div>
 
         <div className="h-4 md:h-8" />
 

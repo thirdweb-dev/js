@@ -36,7 +36,7 @@ export function CheckboxWithLabel(props: {
   return (
     <label
       className={cn(
-        "flex gap-2 items-center text-secondary-foreground text-sm cursor-pointer select-none",
+        "flex gap-2 items-start text-secondary-foreground text-sm cursor-pointer select-none [&>button]:mt-0.5",
         props.className,
       )}
     >
