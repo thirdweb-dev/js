@@ -227,7 +227,11 @@ function BuyScreenContent(props: BuyScreenContentProps) {
           }
         }}
         recommendedWallets={props.connectOptions?.recommendedWallets}
-        showAllWallets={!!props.connectOptions?.showAllWallets}
+        showAllWallets={
+          props.connectOptions?.showAllWallets === undefined
+            ? true
+            : props.connectOptions?.showAllWallets
+        }
         walletConnect={props.connectOptions?.walletConnect}
         wallets={props.connectOptions?.wallets}
       />
