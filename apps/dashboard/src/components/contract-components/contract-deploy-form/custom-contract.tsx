@@ -342,8 +342,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     })
     .filter((x) => x !== null);
 
-  console.log("advancedParams", advancedParams);
-
   return (
     <FormProvider {...form}>
       <Flex

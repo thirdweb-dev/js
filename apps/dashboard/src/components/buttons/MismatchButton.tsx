@@ -23,15 +23,13 @@ import { localhost } from "thirdweb/chains";
 import {
   useActiveAccount,
   useActiveWallet,
+  useActiveWalletChain,
   useActiveWalletConnectionStatus,
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
-import {
-  useDashboardActiveWalletChain,
-  useV5DashboardChain,
-} from "../../lib/v5-adapter";
+import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 const GAS_FREE_CHAINS = [
   75513, // Geek verse testnet
@@ -39,7 +37,7 @@ const GAS_FREE_CHAINS = [
 ];
 
 function useNetworkMismatchAdapter() {
-  const walletChainId = useDashboardActiveWalletChain()?.id;
+  const walletChainId = useActiveWalletChain()?.id;
   const v4SDKChainId = useSDKChainId();
   if (!walletChainId || !v4SDKChainId) {
     // simply not ready yet, assume false
@@ -53,7 +51,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
     const account = useActiveAccount();
     const wallet = useActiveWallet();
-    const activeWalletChain = useDashboardActiveWalletChain();
+    const activeWalletChain = useActiveWalletChain();
 
     const evmBalance = useWalletBalance({
       address: account?.address,
@@ -160,7 +158,7 @@ const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
   onClose: (hasSwitched: boolean) => void;
 }> = ({ initialFocusRef, onClose }) => {
-  const connectedChainId = useDashboardActiveWalletChain()?.id;
+  const connectedChainId = useActiveWalletChain()?.id;
   const desiredChainId = useSDKChainId();
   const switchNetwork = useSwitchActiveWalletChain();
   const connectionStatus = useActiveWalletConnectionStatus();
@@ -256,7 +254,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
   const trackEvent = useTrack();
 
   const sdk = useSDK();
-  const chainId = useDashboardActiveWalletChain()?.id;
+  const chainId = useActiveWalletChain()?.id;
   const chainInfo = useSupportedChain(chainId || -1);
   const router = useRouter();
 

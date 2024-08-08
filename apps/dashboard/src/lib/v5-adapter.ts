@@ -47,12 +47,3 @@ export function useActiveChainAsDashboardChain(): ChainMetadata | undefined {
     return undefined;
   }, [activeChain, configuredChainsRecord]);
 }
-
-/**
- * Get the active chain from `activeChain`, Add local overrides and return
- */
-export function useDashboardActiveWalletChain() {
-  // eslint-disable-next-line no-restricted-syntax
-  const activeChain = useActiveWalletChain();
-  return useV5DashboardChain(activeChain?.id);
-}

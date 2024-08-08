@@ -1,16 +1,15 @@
 import { thirdwebClient } from "@/constants/client";
 import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import { SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
-import { useWalletBalance } from "thirdweb/react";
+import { useActiveWalletChain, useWalletBalance } from "thirdweb/react";
 import { Card } from "tw-components";
-import { useDashboardActiveWalletChain } from "../../../../lib/v5-adapter";
 
 interface AccountBalanceProps {
   address: string;
 }
 
 export const AccountBalance: React.FC<AccountBalanceProps> = ({ address }) => {
-  const activeChain = useDashboardActiveWalletChain();
+  const activeChain = useActiveWalletChain();
   const { data: balance } = useWalletBalance({
     address,
     chain: activeChain,

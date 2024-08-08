@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ResultItem } from "components/engine/system-metrics/components/StatusCodes";
 import { THIRDWEB_API_HOST } from "constants/urls";
-import { useDashboardActiveWalletChain } from "lib/v5-adapter";
 import { useState } from "react";
-import { useActiveAccount } from "thirdweb/react";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
@@ -418,7 +417,7 @@ export function useEngineBackendWalletBalance(
   address: string,
 ) {
   const token = useLoggedInUser().user?.jwt ?? null;
-  const chainId = useDashboardActiveWalletChain()?.id;
+  const chainId = useActiveWalletChain()?.id;
 
   invariant(chainId, "chainId is required");
 

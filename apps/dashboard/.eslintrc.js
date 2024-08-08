@@ -30,11 +30,6 @@ module.exports = {
         message:
           "Use useV5DashboardChain instead if you are using it inside a component",
       },
-      {
-        selector: "CallExpression[callee.name='useActiveWalletChain']",
-        message:
-          "Use `useDashboardActiveWalletChain` instead to make sure local chain overrides are included in the chain object",
-      },
     ],
     "no-restricted-imports": [
       "error",

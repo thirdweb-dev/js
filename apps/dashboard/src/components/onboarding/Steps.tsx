@@ -15,8 +15,8 @@ import { useTheme } from "next-themes";
 import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
+import { useActiveWalletChain } from "thirdweb/react";
 import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
-import { useDashboardActiveWalletChain } from "../../lib/v5-adapter";
 
 enum Step {
   Keys = "keys",
@@ -79,7 +79,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
     return apiKeysQuery?.data && apiKeysQuery?.data?.length > 0;
   }, [apiKeysQuery?.data]);
 
-  const chainId = useDashboardActiveWalletChain()?.id;
+  const chainId = useActiveWalletChain()?.id;
 
   const isSponsoredChain = useMemo(() => {
     if (chainId) {

@@ -47,11 +47,14 @@ import {
   zkSync,
   zkSyncSepolia,
 } from "thirdweb/chains";
-import { useActiveAccount, useActiveWallet } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+} from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import type { z } from "zod";
-import { useDashboardActiveWalletChain } from "../../lib/v5-adapter";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import {
   getStepAddToRegistry,
@@ -609,7 +612,7 @@ export function useCustomContractDeployMutation(
   const queryClient = useQueryClient();
   const account = useActiveAccount();
   const walletAddress = account?.address;
-  const chainId = useDashboardActiveWalletChain()?.id;
+  const chainId = useActiveWalletChain()?.id;
   const signer = useSigner();
   const deployContext = useDeployContextModal();
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
@@ -886,7 +889,7 @@ export function useCustomContractDeployMutation(
 
 export function useTransactionsForDeploy(publishMetadataOrUri: string) {
   const sdk = useSDK();
-  const chainId = useDashboardActiveWalletChain()?.id;
+  const chainId = useActiveWalletChain()?.id;
 
   const queryResult = useQuery<DeploymentTransaction[]>(
     ["transactions-for-deploy", publishMetadataOrUri, chainId],

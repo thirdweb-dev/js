@@ -19,11 +19,14 @@ import { StorageSingleton } from "lib/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
 import { type ChainMetadata, ethereum } from "thirdweb/chains";
-import { useActiveAccount, useActiveWallet } from "thirdweb/react";
+import {
+  useActiveAccount,
+  useActiveWallet,
+  useActiveWalletChain,
+} from "thirdweb/react";
 import { setThirdwebDomains } from "thirdweb/utils";
 import type { ComponentWithChildren } from "types/component-with-children";
 import type { StoredChain } from "../../contexts/configured-chains";
-import { useDashboardActiveWalletChain } from "../../lib/v5-adapter";
 
 const PLACEHOLDER_CHAIN: StoredChain = {
   chainId: 1,
@@ -108,7 +111,7 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
 function useEthersSigner() {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const activeChain = useDashboardActiveWalletChain();
+  const activeChain = useActiveWalletChain();
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
 
   // will be deleted as part of: https://github.com/thirdweb-dev/dashboard/pull/2648
