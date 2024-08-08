@@ -73,6 +73,27 @@ export function useNFTDrawerTabs({
   );
 
   const isMinterRole = useIsMinter(contract);
+  const hasNewClaimConditions = useMemo(
+    () =>
+      detectFeatures(oldContract, [
+        // erc721
+        "ERC721ClaimConditionsV2",
+        "ERC721ClaimPhasesV2",
+        // erc1155
+        "ERC1155ClaimConditionsV2",
+        "ERC1155ClaimPhasesV2",
+        // erc20
+        "ERC20ClaimConditionsV2",
+        "ERC20ClaimPhasesV2",
+      ]),
+    [oldContract],
+  );
+  const contractInfo = useMemo(() => {
+    return {
+      hasNewClaimConditions,
+      isErc20: detectFeatures(oldContract, ["ERC20"]),
+    };
+  }, [oldContract, hasNewClaimConditions]);
 
   return useMemo(() => {
     const isMintable = detectFeatures(oldContract, ["ERC1155Mintable"]);
@@ -115,6 +136,7 @@ export function useNFTDrawerTabs({
           isDisabled: false,
           children: (
             <ClaimConditionTab
+              contractInfo={contractInfo}
               contract={oldContract}
               tokenId={tokenId}
               isColumn
@@ -225,5 +247,6 @@ export function useNFTDrawerTabs({
     address,
     tokenId,
     isMinterRole,
+    contractInfo,
   ]);
 }

@@ -256,10 +256,9 @@ const ContractPage: ThirdwebNextPage = () => {
               direction={{ base: "column", md: "row" }}
               gap={4}
             >
-              <ContractMetadata
-                contractAddress={contractAddress}
-                chain={chain}
-              />
+              {contract && (
+                <ContractMetadata contract={contract} chain={chain} />
+              )}
               <PrimaryDashboardButton contractAddress={contractAddress} />
             </Flex>
             <DeprecatedAlert chain={chain} />

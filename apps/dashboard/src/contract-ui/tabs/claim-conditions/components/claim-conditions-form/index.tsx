@@ -31,10 +31,6 @@ import { detectFeatures } from "components/contract-components/utils";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import {
-  hasLegacyClaimConditions,
-  hasMultiphaseClaimConditions,
-} from "lib/claimcondition-utils";
 import { Fragment, createContext, useContext, useMemo, useState } from "react";
 import {
   type UseFieldArrayReturn,
@@ -196,14 +192,40 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   isColumn,
   contractV5,
 }) => {
-  const { isMultiPhase, isClaimPhaseV1, isErc20 } = useMemo(() => {
-    return {
-      isMultiPhase: hasMultiphaseClaimConditions(contract),
-      isClaimPhaseV1: hasLegacyClaimConditions(contract),
-      isErc20: detectFeatures(contract, ["ERC20"]),
-    };
-  }, [contract]);
-
+  const isMultiPhase = useMemo(
+    () =>
+      detectFeatures(contract, [
+        // erc721
+        "ERC721ClaimPhasesV1",
+        "ERC721ClaimPhasesV2",
+        // erc1155
+        "ERC1155ClaimPhasesV1",
+        "ERC1155ClaimPhasesV2",
+        // erc 20
+        "ERC20ClaimPhasesV1",
+        "ERC20ClaimPhasesV2",
+      ]),
+    [contract],
+  );
+  const isClaimPhaseV1 = useMemo(
+    () =>
+      detectFeatures(contract, [
+        // erc721
+        "ERC721ClaimConditionsV1",
+        "ERC721ClaimPhasesV1",
+        // erc1155
+        "ERC1155ClaimConditionsV1",
+        "ERC1155ClaimPhasesV1",
+        // erc20
+        "ERC20ClaimConditionsV1",
+        "ERC20ClaimPhasesV1",
+      ]),
+    [contract],
+  );
+  const isErc20 = useMemo(
+    () => detectFeatures(contract, ["ERC20"]),
+    [contract],
+  );
   const walletAddress = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);
@@ -516,7 +538,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                   }}
                 >
                   <ClaimConditionsPhase
-                    contract={contract}
+                    contract={contractV5}
                     onRemove={() => {
                       removePhase(index);
                       if (!isMultiPhase) {
