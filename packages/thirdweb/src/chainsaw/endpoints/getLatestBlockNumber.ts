@@ -18,18 +18,17 @@ export type GetLatestBlockNumberParams = {
   chainId: number;
 };
 
-/**
- * Get latest block number for a chain
- *
- * @beta
- */
+export type GetLatestBlockNumberResult = {
+  latestBlockNumber: number;
+};
+
 /**
  * @beta
  *
  * Get the block number of the latest indexed block
  *
  * @param {GetLatestBlockNumberParams} params
- * @returns {Promise<number>}
+ * @returns {Promise<GetLatestBlockNumberResult>}
  *
  * @example
  * ```ts
@@ -37,7 +36,7 @@ export type GetLatestBlockNumberParams = {
  * import { getLatestBlockNumber } from "thirdweb/chainsaw";
  *
  * const client = createThirdwebClient({ clientId: "..." });
- * const latestBlockNumber = await getLatestBlockNumber({
+ * const { latestBlockNumber } = await getLatestBlockNumber({
  *  client,
  *  chainId: 1
  * });
@@ -46,7 +45,7 @@ export type GetLatestBlockNumberParams = {
  */
 export async function getLatestBlockNumber(
   params: GetLatestBlockNumberParams,
-): Promise<number> {
+): Promise<GetLatestBlockNumberResult> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("chainId", params.chainId.toString());
@@ -61,7 +60,7 @@ export async function getLatestBlockNumber(
     const data: ChainsawResponse<number> = await response.json();
     if (data.error) throw new Error(data.error);
     if (!data.data) throw new Error("unable to fetch latest block number");
-    return data.data;
+    return { latestBlockNumber: data.data };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
   }

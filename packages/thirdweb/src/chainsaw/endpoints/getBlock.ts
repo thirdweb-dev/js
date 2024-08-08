@@ -23,13 +23,17 @@ export type GetBlockParams = {
   chainId: number;
 };
 
+export type GetBlockResult = {
+  block: ChainsawBlock;
+};
+
 /**
  * @beta
  *
  * Get data for a single block
  *
  * @param {GetBlockParams} params
- * @returns {Promise<ChainsawBlock>}
+ * @returns {Promise<GetBlockResult>}
  *
  * @example
  * ```ts
@@ -37,7 +41,7 @@ export type GetBlockParams = {
  * import { getBlock } from "thirdweb/chainsaw";
  *
  * const client = createThirdwebClient({ clientId: "..." });
- * const block = await getBlock({
+ * const { block } = await getBlock({
  *  client,
  *  blockNumber: 9662167,
  *  chainId: 1
@@ -45,7 +49,9 @@ export type GetBlockParams = {
  * ```
  * @chainsaw
  */
-export async function getBlock(params: GetBlockParams): Promise<ChainsawBlock> {
+export async function getBlock(
+  params: GetBlockParams,
+): Promise<GetBlockResult> {
   try {
     const queryParams = new URLSearchParams();
     queryParams.append("chainId", params.chainId.toString());
@@ -61,7 +67,7 @@ export async function getBlock(params: GetBlockParams): Promise<ChainsawBlock> {
     if (data.error) throw new Error(data.error);
     const block = formatChainsawBlock(data.data);
     if (!block) throw new Error(`unable to fetch block ${params.blockNumber}`);
-    return block;
+    return { block };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);
   }
