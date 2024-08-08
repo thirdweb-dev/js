@@ -23,10 +23,15 @@ export function CopyTextButton(props: {
 }) {
   const [isCopied, setIsCopied] = useState(false);
   const copyButton = isCopied ? (
-    <CheckIcon className={cn("size-3 text-green-500", props.iconClassName)} />
+    <CheckIcon
+      className={cn("size-3 text-green-500 shrink-0", props.iconClassName)}
+    />
   ) : (
     <CopyIcon
-      className={cn("size-3 text-muted-foreground", props.iconClassName)}
+      className={cn(
+        "size-3 text-muted-foreground shrink-0",
+        props.iconClassName,
+      )}
     />
   );
 
@@ -47,13 +52,13 @@ export function CopyTextButton(props: {
       >
         {props.copyIconPosition === "right" ? (
           <>
-            {props.textToShow}
+            <span className="truncate min-w-0"> {props.textToShow} </span>
             {copyButton}
           </>
         ) : (
           <>
             {copyButton}
-            {props.textToShow}
+            <span className="truncate min-w-0"> {props.textToShow} </span>
           </>
         )}
       </Button>

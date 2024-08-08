@@ -226,8 +226,8 @@ export const CmdKSearch: React.FC = () => {
       {/* modal below here */}
 
       <DialogContent
-        className="z-[10000001] p-0 gap-0"
-        dialogOverlayClassName="z-[10000000] backdrop-blur-sm"
+        className="p-0 gap-0 z-[10000001]"
+        dialogOverlayClassName="z-[10000000]"
       >
         {/* Title */}
         <DynamicHeight>
