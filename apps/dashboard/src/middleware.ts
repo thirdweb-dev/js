@@ -1,4 +1,4 @@
-import { LOGGED_IN_ONLY_PATHS } from "@/constants/auth";
+import { isLoginRequired } from "@/constants/auth";
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { type NextRequest, NextResponse } from "next/server";
 import { getAddress } from "thirdweb";
@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
     : null;
 
   // logged in paths
-  if (LOGGED_IN_ONLY_PATHS.some((path) => pathname.startsWith(path))) {
+  if (isLoginRequired(pathname)) {
     // check if the user is logged in (has a valid auth cookie)
 
     if (!authCookie) {
