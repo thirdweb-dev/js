@@ -8,20 +8,12 @@ import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { WalletId } from "../../../../wallets/wallet-types.js";
 import { radius } from "../../../core/design-system/index.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
-import {
-  appleIconUri,
-  discordIconUri,
-  emailIcon,
-  facebookIconUri,
-  farcasterIconUri,
-  genericWalletIcon,
-  googleIconUri,
-  passkeyIcon,
-  phoneIcon,
-  telegramIconUri,
-} from "../../../core/utils/socialIcons.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
 import { useWalletImage } from "../../../core/utils/wallet.js";
+import {
+  genericWalletIcon,
+  getWalletIcon,
+} from "../../../core/utils/walletIcon.js";
 import { Img } from "./Img.js";
 
 /**
@@ -57,35 +49,9 @@ export function WalletImage(props: {
       ) {
         // when showing an active wallet icon - check last auth provider and override the IAW icon
         const lastAuthProvider = await getLastAuthProvider(storage);
-        switch (lastAuthProvider) {
-          case "google":
-            image = googleIconUri;
-            break;
-          case "apple":
-            image = appleIconUri;
-            break;
-          case "facebook":
-            image = facebookIconUri;
-            break;
-          case "phone":
-            image = phoneIcon;
-            break;
-          case "email":
-            image = emailIcon;
-            break;
-          case "passkey":
-            image = passkeyIcon;
-            break;
-          case "discord":
-            image = discordIconUri;
-            break;
-          case "farcaster":
-            image = farcasterIconUri;
-            break;
-          case "telegram":
-            image = telegramIconUri;
-            break;
-        }
+        image = lastAuthProvider
+          ? getWalletIcon(lastAuthProvider)
+          : genericWalletIcon;
       } else {
         const mipdImage = getInstalledWalletProviders().find(
           (x) => x.info.rdns === activeEOAId,

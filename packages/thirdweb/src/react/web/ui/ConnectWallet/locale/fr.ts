@@ -37,6 +37,10 @@ const connectLocaleFr: ConnectLocale = {
   smartWallet: "Portefeuille intelligent",
   or: "OU",
   goBackButton: "Retour",
+  passkeys: {
+    title: "Clés d'accès",
+    linkPasskey: "Lier une clé d'accès",
+  },
   welcomeScreen: {
     defaultTitle: "Votre porte d'entrée vers le monde décentralisé",
     defaultSubtitle: "Connectez un portefeuille pour commencer",
@@ -104,6 +108,8 @@ const connectLocaleFr: ConnectLocale = {
   },
   manageWallet: {
     title: "Gérer le portefeuille",
+    linkedProfiles: "Profils liés",
+    linkProfile: "Lier un profil",
     connectAnApp: "Connecter une application",
     exportPrivateKey: "Exporter la clé privée",
   },

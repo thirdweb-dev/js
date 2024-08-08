@@ -5,7 +5,7 @@ import type { Profile } from "./types.js";
 /**
  * @description
  * Links a new account to the current one using an auth token.
- * For the public-facing API, use `wallet.addAuthMethod` instead.
+ * For the public-facing API, use `wallet.linkProfile` instead.
  *
  * @internal
  */
@@ -44,7 +44,7 @@ export async function linkAccount({
 
   if (!linkedDetailsResp.ok) {
     const body = await linkedDetailsResp.json();
-    throw new Error(`Failed to link account: ${body.message || "Unknown"}`);
+    throw new Error(body.message || "Failed to link account.");
   }
 
   const { linkedAccounts } = await linkedDetailsResp.json();
@@ -55,7 +55,7 @@ export async function linkAccount({
 /**
  * @description
  * Gets the linked accounts for the current user.
- * For the public-facing API, use `wallet.getConnectedProfiles` instead.
+ * For the public-facing API, use `wallet.getProfiles` instead.
  *
  * @internal
  */
@@ -86,7 +86,8 @@ export async function getLinkedProfilesInternal({
   );
 
   if (!linkedAccountsResp.ok) {
-    throw new Error(`Failed to get accounts: ${linkedAccountsResp.text}`);
+    const body = await linkedAccountsResp.json();
+    throw new Error(body.message || "Failed to get linked accounts.");
   }
 
   const { linkedAccounts } = await linkedAccountsResp.json();

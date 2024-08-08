@@ -250,6 +250,7 @@ export class Auth {
    * @internal
    */
   async loginWithEmailOtp(args: Parameters<BaseLogin["loginWithEmailOtp"]>[0]) {
+    await this.preLogin();
     return this.BaseLogin.loginWithEmailOtp(args);
   }
   async authenticateWithEmailOtp(
@@ -262,6 +263,7 @@ export class Auth {
    * @internal
    */
   async loginWithSmsOtp(args: Parameters<BaseLogin["loginWithSmsOtp"]>[0]) {
+    await this.preLogin();
     return this.BaseLogin.loginWithSmsOtp(args);
   }
   async authenticateWithSmsOtp(

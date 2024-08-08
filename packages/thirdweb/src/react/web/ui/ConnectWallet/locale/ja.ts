@@ -37,6 +37,10 @@ const connectWalletLocalJa: ConnectLocale = {
   smartWallet: "スマートウォレット",
   or: "または",
   goBackButton: "戻る", // TODO - check translation
+  passkeys: {
+    linkPasskey: "パスキーをリンクする",
+    title: "パスキー",
+  },
   welcomeScreen: {
     defaultTitle: "分散型世界へのゲートウェイ",
     defaultSubtitle: "始めるためにウォレットを接続してください",
@@ -104,6 +108,8 @@ const connectWalletLocalJa: ConnectLocale = {
   },
   manageWallet: {
     title: "ウォレットを管理",
+    linkedProfiles: "リンクされたプロファイル",
+    linkProfile: "プロフィールをリンクする",
     connectAnApp: "アプリを接続",
     exportPrivateKey: "秘密鍵をエクスポート",
   },

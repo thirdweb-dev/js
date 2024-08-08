@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import type { Wallet } from "../../../../exports/wallets.js";
+import { type Wallet, linkProfile } from "../../../../exports/wallets.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
@@ -9,6 +9,7 @@ import { iconSize } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
+import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -23,13 +24,15 @@ import { LoadingScreen } from "./LoadingScreen.js";
 
 export function PassKeyLogin(props: {
   wallet: Wallet;
+  locale: ConnectLocale;
   done: () => void;
   onBack?: () => void;
   client: ThirdwebClient;
   chain: Chain | undefined;
   size: "compact" | "wide";
+  isLinking?: boolean;
 }) {
-  const { wallet, done, client, chain, size } = props;
+  const { wallet, done, client, chain, size, locale } = props;
   const [screen, setScreen] = useState<
     "select" | "login" | "loading" | "signup"
   >("loading");
@@ -60,7 +63,14 @@ export function PassKeyLogin(props: {
   return (
     <Container animate="fadein" fullHeight flex="column">
       <Container p="lg">
-        <ModalHeader title="Passkey" onBack={props.onBack} />
+        <ModalHeader
+          title={
+            props.isLinking
+              ? locale.passkeys.linkPasskey
+              : locale.passkeys.title
+          }
+          onBack={props.onBack}
+        />
       </Container>
 
       <Container
@@ -97,6 +107,7 @@ export function PassKeyLogin(props: {
                 setScreen("signup");
               }}
               chain={chain}
+              isLinking={props.isLinking}
             />
           )}
 
@@ -106,6 +117,7 @@ export function PassKeyLogin(props: {
               client={client}
               done={done}
               chain={chain}
+              isLinking={props.isLinking}
             />
           )}
         </div>
@@ -120,20 +132,32 @@ function LoginScreen(props: {
   client: ThirdwebClient;
   onCreate: () => void;
   chain?: Chain;
+  isLinking?: boolean;
 }) {
   const { wallet, done, client, chain } = props;
   const [status, setStatus] = useState<"loading" | "error">("loading");
+  const [error, setError] = useState<string | undefined>();
 
   async function login() {
     setStatus("loading");
     try {
-      await wallet.connect({
-        client: client,
-        strategy: "passkey",
-        type: "sign-in",
-        chain,
-      });
-      await setLastAuthProvider("passkey", webLocalStorage);
+      if (props.isLinking) {
+        await linkProfile(wallet as Wallet<"inApp">, {
+          strategy: "passkey",
+          type: "sign-in",
+        }).catch((e) => {
+          setError(e.message);
+          throw e;
+        });
+      } else {
+        await wallet.connect({
+          client: client,
+          strategy: "passkey",
+          type: "sign-in",
+          chain,
+        });
+        await setLastAuthProvider("passkey", webLocalStorage);
+      }
       done();
     } catch {
       setStatus("error");
@@ -162,7 +186,7 @@ function LoginScreen(props: {
   if (status === "error") {
     return (
       <>
-        <ErrorState onTryAgain={login} title="Failed to Login" />
+        <ErrorState onTryAgain={login} title={error || "Failed to Login"} />
         <Spacer y="sm" />
         <Button variant="outline" fullWidth onClick={props.onCreate}>
           Create a new Passkey
@@ -180,20 +204,32 @@ function SignupScreen(props: {
   done: () => void;
   client: ThirdwebClient;
   chain?: Chain;
+  isLinking?: boolean;
 }) {
   const { wallet, done, client, chain } = props;
+  const [error, setError] = useState<string | undefined>();
   const [status, setStatus] = useState<"loading" | "error">("loading");
 
   async function signup() {
     setStatus("loading");
     try {
-      await wallet.connect({
-        client: client,
-        strategy: "passkey",
-        type: "sign-up",
-        chain,
-      });
-      await setLastAuthProvider("passkey", webLocalStorage);
+      if (props.isLinking) {
+        await linkProfile(wallet as Wallet<"inApp">, {
+          strategy: "passkey",
+          type: "sign-up",
+        }).catch((e) => {
+          setError(e.message);
+          throw e;
+        });
+      } else {
+        await wallet.connect({
+          client: client,
+          strategy: "passkey",
+          type: "sign-up",
+          chain,
+        });
+        await setLastAuthProvider("passkey", webLocalStorage);
+      }
       done();
     } catch {
       setStatus("error");
@@ -222,7 +258,10 @@ function SignupScreen(props: {
   if (status === "error") {
     return (
       <>
-        <ErrorState onTryAgain={signup} title="Failed to create passkey" />
+        <ErrorState
+          onTryAgain={signup}
+          title={error || "Failed to create passkey"}
+        />
         <Spacer y="lg" />
       </>
     );
@@ -269,7 +308,7 @@ function ErrorState(props: {
         <AccentFailIcon size={iconSize["3xl"]} />
       </Container>
       <Spacer y="lg" />
-      <Text center color="primaryText" size="lg">
+      <Text center color="primaryText" size="md">
         {props.title}
       </Text>
       <Spacer y="xl" />

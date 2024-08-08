@@ -55,3 +55,28 @@ export const socialIcons = {
   farcaster: farcasterIconUri,
   telegram: telegramIconUri,
 };
+
+export function getWalletIcon(provider: string) {
+  switch (provider) {
+    case "google":
+      return googleIconUri;
+    case "apple":
+      return appleIconUri;
+    case "facebook":
+      return facebookIconUri;
+    case "phone":
+      return phoneIcon;
+    case "email":
+      return emailIcon;
+    case "passkey":
+      return passkeyIcon;
+    case "discord":
+      return discordIconUri;
+    case "farcaster":
+      return farcasterIconUri;
+    case "telegram":
+      return telegramIconUri;
+    default:
+      return genericWalletIcon;
+  }
+}

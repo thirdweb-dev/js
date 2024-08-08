@@ -4,11 +4,13 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import type { InAppWalletSocialAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
+import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
 import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
@@ -31,6 +33,8 @@ export function SocialLogin(props: {
   size: "compact" | "wide";
   client: ThirdwebClient;
   chain: Chain | undefined;
+  connectLocale: ConnectLocale;
+  isLinking?: boolean;
 }) {
   const ewLocale = props.locale;
   const locale = ewLocale.socialLoginScreen;
@@ -47,7 +51,8 @@ export function SocialLogin(props: {
     if (
       walletConfig &&
       "auth" in walletConfig &&
-      walletConfig?.auth?.mode === "redirect"
+      walletConfig?.auth?.mode === "redirect" &&
+      !props.isLinking // Redirect not supported for account linking (we need to maintain the aplication state)
     ) {
       return loginWithOauthRedirect({
         authOption: props.socialAuth,
@@ -79,15 +84,29 @@ export function SocialLogin(props: {
       }
 
       setStatus("connecting");
-      await wallet.connect({
-        chain: props.chain,
-        strategy: props.socialAuth,
-        openedWindow: socialWindow,
-        closeOpenedWindow: (openedWindow) => {
-          openedWindow.close();
-        },
-        client: props.client,
-      });
+      if (props.isLinking) {
+        await linkProfile(wallet as Wallet<"inApp">, {
+          strategy: props.socialAuth,
+          openedWindow: socialWindow,
+          closeOpenedWindow: (openedWindow) => {
+            openedWindow.close();
+          },
+        }).catch((e) => {
+          setAuthError(e.message);
+          throw e;
+        });
+      } else {
+        await wallet.connect({
+          chain: props.chain,
+          strategy: props.socialAuth,
+          openedWindow: socialWindow,
+          closeOpenedWindow: (openedWindow) => {
+            openedWindow.close();
+          },
+          client: props.client,
+        });
+      }
+
       await setLastAuthProvider(props.socialAuth, webLocalStorage);
       setStatus("connected");
       done();
@@ -122,7 +141,8 @@ export function SocialLogin(props: {
           done();
           setStatus("connected");
         })
-        .catch(() => {
+        .catch((e) => {
+          setAuthError(e.message);
           setStatus("error");
         });
     }
@@ -139,7 +159,14 @@ export function SocialLogin(props: {
         }}
       >
         {props.goBack && (
-          <ModalHeader title={locale.title} onBack={props.goBack} />
+          <ModalHeader
+            title={
+              props.isLinking
+                ? props.connectLocale.manageWallet.linkProfile
+                : locale.title
+            }
+            onBack={props.goBack}
+          />
         )}
 
         {props.size === "compact" ? <Spacer y="xl" /> : null}
@@ -176,8 +203,13 @@ export function SocialLogin(props: {
 
           {status === "error" && (
             <Container animate="fadein">
-              <Text color="danger">{locale.failed}</Text>
-              {authError && <Text color="danger">{authError}</Text>}
+              {authError ? (
+                <Text center color="danger">
+                  {authError}
+                </Text>
+              ) : (
+                <Text color="danger">{locale.failed}</Text>
+              )}
               <Spacer y="lg" />
               <Button variant="primary" onClick={handleSocialLogin}>
                 {locale.retry}

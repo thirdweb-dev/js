@@ -27,7 +27,7 @@ export const Spinner: React.FC<{
         r="20"
         fill="none"
         stroke={theme.colors[props.color]}
-        strokeWidth="4"
+        strokeWidth={Number(iconSize[props.size]) > 64 ? "2" : "4"}
       />
     </Svg>
   );

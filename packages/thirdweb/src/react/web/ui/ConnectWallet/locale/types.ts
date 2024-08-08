@@ -25,6 +25,10 @@ export type ConnectLocale = {
   buy: string;
   guestWalletWarning: string;
   installed: string;
+  passkeys: {
+    title: string;
+    linkPasskey: string;
+  };
   networkSelector: {
     addCustomNetwork: string;
     allNetworks: string;
@@ -94,7 +98,9 @@ export type ConnectLocale = {
   welcomeScreen: { defaultSubtitle: string; defaultTitle: string };
   manageWallet: {
     title: string;
+    linkedProfiles: string;
     connectAnApp: string;
+    linkProfile: string;
     exportPrivateKey: string;
   };
   viewFunds: {

@@ -73,4 +73,6 @@ export type WalletDetailsModalScreen =
   | "private-key"
   | "manage-wallet"
   | "wallet-connect-receiver"
-  | "wallet-manager";
+  | "wallet-manager"
+  | "link-profile"
+  | "linked-profiles";
