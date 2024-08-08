@@ -92,6 +92,7 @@ export const ConnectWalletSocialOptions = (
     apple: locale.signInWithApple,
     discord: locale.signInWithDiscord,
     farcaster: "Farcaster",
+    telegram: "Telegram",
   };
 
   const { data: ecosystemAuthOptions, isLoading } = useQuery({

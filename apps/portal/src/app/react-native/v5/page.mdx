@@ -1,0 +1,91 @@
+import { Details, ArticleIconCard, Stack, GithubTemplateCard } from "@doc";
+import {
+	ZapIcon,
+	ScrollTextIcon,
+	ArrowRightLeftIcon,
+	WalletIcon,
+	BlocksIcon,
+	CodeIcon,
+	PlugZapIcon,
+	ComponentIcon,
+	CableIcon,
+} from "lucide-react";
+import { TypeScriptIcon, ReactIcon } from "@/icons";
+import { Callout } from "@doc";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+# React Native SDK
+
+You can use all of the `thirdweb` and `thirdweb/react` exports in your React Native app, with some exceptions (see differences).
+
+## Quickstart
+
+Many of the components and hooks in the React Native SDK use a [`client`](/typescript/v5/core/client) to interface with the core SDK and your private RPC endpoints. You'll need to create a `clientId` in the [Dashboard](https://thirdweb.com/create-api-key) to generate this client.
+
+<Stack>
+
+<ArticleIconCard
+	title="Getting started"
+	icon={ZapIcon}
+	href="/react-native/v5/installation"
+	description="Get started with the React Native SDK"
+/>
+
+<ArticleIconCard
+	title="Differences from React"
+	icon={ComponentIcon}
+	href="/react-native/v5/differences"
+	description="Get to know the differences between React and React Native usage"
+/>
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/dashboard/settings/api-keys"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
+
+## Starter kit
+
+If you want to get started quickly run:
+
+```bash
+npx thirdweb create --legacy-peer-deps --react-native
+```
+
+or clone the [expo-starter](https://github.com/thirdweb-dev/expo-starter) repo using git.
+
+<GithubTemplateCard
+	title="Expo + thirdweb starter repo"
+	descrption="A starter template for using the thirdweb package in a React Native app"
+	href="https://github.com/thirdweb-dev/expo-starter"
+/>
+
+
+## Usage
+
+<ArticleIconCard
+	title="TypeScript"
+	icon={TypeScriptIcon}
+	href="/typescript/v5/client"
+	description="Follow the TypeScript docs for functions and types"
+/>
+
+<ArticleIconCard
+	title="React"
+	icon={ReactIcon}
+	href="/react/v5"
+	description="Follow the React docs for hooks, providers and components"
+/>
+
+</Stack>

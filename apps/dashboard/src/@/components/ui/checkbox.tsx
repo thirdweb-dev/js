@@ -28,3 +28,19 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 
 export { Checkbox };
+
+export function CheckboxWithLabel(props: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <label
+      className={cn(
+        "flex gap-2 items-start text-secondary-foreground text-sm cursor-pointer select-none [&>button]:mt-0.5",
+        props.className,
+      )}
+    >
+      {props.children}
+    </label>
+  );
+}

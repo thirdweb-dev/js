@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Chain } from "../../../chains/types.js";
-import { cacheChains } from "../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../wallets/smart/types.js";
@@ -14,6 +13,7 @@ import type {
   ConnectButton_connectModalOptions,
   PayUIOptions,
 } from "../../core/hooks/connection/ConnectButtonProps.js";
+import { useConnectionManager } from "../../core/providers/connection-manager.js";
 import type { SupportedTokens } from "../../core/utils/defaultTokens.js";
 import { EmbedContainer } from "./ConnectWallet/Modal/ConnectEmbed.js";
 import { useConnectLocale } from "./ConnectWallet/locale/getConnectLocale.js";
@@ -126,6 +126,8 @@ export type PayEmbedProps = {
   connectOptions?: PayEmbedConnectOptions;
 
   style?: React.CSSProperties;
+
+  className?: string;
 };
 
 /**
@@ -154,15 +156,20 @@ export function PayEmbed(props: PayEmbedProps) {
   const localeQuery = useConnectLocale(props.locale || "en_US");
   const [screen, setScreen] = useState<"buy" | "execute-tx">("buy");
   const theme = props.theme || "dark";
+  const connectionManager = useConnectionManager();
 
-  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
-  if (props.connectOptions?.chains) {
-    cacheChains(props.connectOptions?.chains);
-  }
+  // Add props.chain and props.chains to defined chains store
+  useEffect(() => {
+    if (props.connectOptions?.chain) {
+      connectionManager.defineChains([props.connectOptions?.chain]);
+    }
+  }, [props.connectOptions?.chain, connectionManager]);
 
-  if (props.connectOptions?.chain) {
-    cacheChains([props.connectOptions?.chain]);
-  }
+  useEffect(() => {
+    if (props.connectOptions?.chains) {
+      connectionManager.defineChains(props.connectOptions?.chains);
+    }
+  }, [props.connectOptions?.chains, connectionManager]);
 
   let content = null;
   const metadata =
@@ -184,10 +191,9 @@ export function PayEmbed(props: PayEmbedProps) {
       </div>
     );
   } else {
-    // show and hide screens with CSS to not lose state when switching between them
     content = (
       <>
-        <div style={{ display: screen === "buy" ? "inherit" : "none" }}>
+        {screen === "buy" && (
           <BuyScreen
             title={metadata?.name || "Buy"}
             isEmbed={true}
@@ -208,7 +214,7 @@ export function PayEmbed(props: PayEmbedProps) {
             connectOptions={props.connectOptions}
             onBack={undefined}
           />
-        </div>
+        )}
 
         {screen === "execute-tx" &&
           props.payOptions?.mode === "transaction" &&
@@ -230,7 +236,11 @@ export function PayEmbed(props: PayEmbedProps) {
 
   return (
     <CustomThemeProvider theme={theme}>
-      <EmbedContainer modalSize="compact">
+      <EmbedContainer
+        modalSize="compact"
+        style={props.style}
+        className={props.className}
+      >
         <DynamicHeight>{content}</DynamicHeight>
       </EmbedContainer>
     </CustomThemeProvider>

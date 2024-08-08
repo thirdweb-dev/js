@@ -30,6 +30,7 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import QRCode from "qrcode";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,7 +46,6 @@ import {
   Text,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { useActiveChainAsDashboardChain } from "../../../lib/v5-adapter";
 import { prettyPrintCurrency } from "../utils";
 
 interface BackendWalletsTableProps {

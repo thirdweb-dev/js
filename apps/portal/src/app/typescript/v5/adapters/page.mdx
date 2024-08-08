@@ -1,0 +1,159 @@
+# Adapters
+
+The thirdweb SDK can work side by side with:
+
+- wagmi
+- ethers.js v5
+- ethers.js v6
+- viem
+- older versions of the @thirdweb-dev/sdk (using the ethers.js v5 adapter)
+
+Adapters allow you to use contracts, providers and wallets from these libraries with the thirdweb SDK and vice versa.
+
+## Wagmi
+
+You can use the thirdweb SDK within a wagmi application by setting the wagmi connected account as the thirdweb 'active wallet'. After that, you can use all of the react components and hooks normally, including `PayEmbed`, `TransactionButton`, etc.
+
+```ts
+// Assumes you've wrapped your application in a `<ThirdwebProvider>`
+
+import { useEffect } from 'react'
+import { defineChain } from 'thirdweb'
+import { useSetActiveWallet } from 'thirdweb/react'
+import { createWalletAdapter } from 'thirdweb/wallets'
+import { useDisconnect, useSwitchChain, useWalletClient } from 'wagmi'
+import { viemAdapter } from "thirdweb/adapters/viem";
+import { client } from './client'
+
+
+const { data: walletClient } = useWalletClient(); // from wagmi 
+const { disconnectAsync } = useDisconnect(); // from wagmi
+const { switchChainAsync } = useSwitchChain(); // from wagmi
+const setActiveWallet = useSetActiveWallet(); // from thirdweb/react
+useEffect(() => {
+    const setActive = async () => {
+        if (walletClient) {
+            // adapt the walletClient to a thirdweb account
+            const adaptedAccount = viemAdapter.walletClient.fromViem({
+                walletClient: walletClient as any, // accounts for wagmi/viem version mismatches
+            });
+            // create the thirdweb wallet with the adapted account
+            const thirdwebWallet = createWalletAdapter({
+		client,
+                adaptedAccount,
+                chain: defineChain(await walletClient.getChainId()),
+                onDisconnect: async () => {
+                    await disconnectAsync();
+                },
+                switchChain: async (chain) => {
+                    await switchChainAsync({ chainId: chain.id as any });
+                },
+            });
+            setActiveWallet(thirdwebWallet);
+        }
+    };
+    setActive();
+}, [walletClient]);
+
+```
+
+You can view a fully functioning wagmi + thirdweb app in this [github repository](https://github.com/thirdweb-example/wagmi-thirdweb-pay).
+
+## Ethers v6
+
+You can use an existing ethers.js v6 Signer with the thirdweb SDK by converting it using the `ethers6Adapter`:
+
+```ts
+import { ethers6Adapter } from "thirdweb/adapters/ethers6";
+import { sendTransaction } from "thirdweb";
+
+// convert a ethers signer
+const signer: ethers.Signer = ...;
+const account = await ethers6Adapter.signer.fromEthers({
+  signer,
+});
+
+// use it with the thirdweb SDK
+await sendTransaction({
+  transaction,
+  account,
+});
+```
+
+Similarly, you can use any wallets created with the thirdweb SDK with ethers.js v6 by converting them using the `ethers6Adapter`:
+
+```ts
+import { ethers6Adapter } from "thirdweb/adapters/ethers6";
+import { createThirdwebClient, inAppWallet } from "thirdweb/wallets";
+import { sepolia } from "thirdweb/chains";
+
+const client = createThirdwebClient({ clientId });
+const wallet = inAppWallet();
+const chain = sepolia;
+const account = await wallet.connect({
+	client,
+	strategy: "google",
+});
+
+// convert a thirdweb account to ethers signer
+const ethersSigner = await ethers6Adapter.signer.toEthers({
+	client,
+	chain,
+	account,
+});
+```
+
+You can also convert ethers.js providers and contracts from and to the thirdweb SDK.
+
+View the [ethers6Adapter](/references/typescript/v5/ethers6Adapter) reference for more details.
+
+## Ethers v5
+
+You can use an existing ethers.js v5 Signer with the thirdweb SDK by converting it using the `ethers5Adapter`:
+
+```ts
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+
+// convert an ethers signer to a thirdweb account
+const signer: ethers.Signer = ...;
+const account = await ethers5Adapter.signer.fromEthers({
+  signer,
+});
+
+// convert a thirdweb account to ethers signer
+const ethersSigner = await ethers5Adapter.signer.toEthers({
+  client,
+  chain,
+  account
+});
+```
+
+You can also convert ethers.js providers and contracts from and to the thirdweb SDK.
+
+View the [ethers5Adapter](/references/typescript/v5/ethers5Adapter) reference for more details.
+
+## viem
+
+You can use an existing wallet client from viem with the thirdweb SDK by converting it using the `viemAdapter`:
+
+```ts
+import { viemAdapter } from "thirdweb/adapters/viem";
+
+// convert a viem wallet client to a thirdweb account
+const walletClient = createWalletClient(...);
+const account = await viemAdapter.walletClient.fromViem({
+  walletClient,
+});
+
+
+// convert a thirdweb account to viem wallet client
+const viemClientWallet = viemAdapter.walletClient.toViem({
+  client,
+  chain,
+  account,
+});
+```
+
+You can also convert viem public clients and contracts from and to the thirdweb SDK.
+
+View the [viemAdapter](/references/typescript/v5/viemAdapter) reference for more details.

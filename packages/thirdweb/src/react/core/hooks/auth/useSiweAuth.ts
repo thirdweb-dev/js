@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { LoginPayload } from "../../../../auth/core/types.js";
 import type { VerifyLoginPayloadParams } from "../../../../auth/core/verify-login-payload.js";
-import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 /**
  * Options for Setting up SIWE (Sign in with Ethereum) Authentication
@@ -48,10 +48,9 @@ export type SiweAuthOptions = {
  */
 export function useSiweAuth(
   activeWallet?: Wallet,
+  activeAccount?: Account,
   authOptions?: SiweAuthOptions,
 ) {
-  const activeAccount = activeWallet?.getAccount();
-
   const requiresAuth = !!authOptions;
 
   const queryClient = useQueryClient();

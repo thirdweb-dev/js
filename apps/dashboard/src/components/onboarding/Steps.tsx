@@ -8,6 +8,7 @@ import {
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex, HStack, VStack, useBreakpointValue } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { OPSponsoredChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTheme } from "next-themes";
@@ -16,7 +17,6 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
 import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
-import { OPSponsoredChains } from "../../constants/chains";
 
 enum Step {
   Keys = "keys",

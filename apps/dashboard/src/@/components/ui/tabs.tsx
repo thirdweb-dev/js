@@ -1,6 +1,6 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { cn } from "../../lib/utils";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
 

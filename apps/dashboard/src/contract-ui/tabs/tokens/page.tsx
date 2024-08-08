@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import { type TokenContract, useContract } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { TokenAirdropButton } from "./components/airdrop-button";
@@ -29,8 +29,17 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
     return <div>Loading...</div>;
   }
 
-  const isERC20 = detectFeatures<TokenContract>(contractQuery.contract, [
-    "ERC20",
+  const isERC20 = detectFeatures(contractQuery.contract, ["ERC20"]);
+
+  const isERC20Mintable = detectFeatures(contractQuery.contract, [
+    "ERC20Mintable",
+  ]);
+
+  const isERC20Claimable = detectFeatures(contractQuery.contract, [
+    "ERC20ClaimConditionsV1",
+    "ERC20ClaimConditionsV2",
+    "ERC20ClaimPhasesV1",
+    "ERC20ClaimPhasesV2",
   ]);
 
   if (!isERC20) {
@@ -64,8 +73,12 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           gap={2}
           w="inherit"
         >
-          {/* TODO: update (claimable detection) */}
-          <TokenClaimButton contractQuery={contractQuery} />
+          {isERC20Claimable && contractQuery.contract && (
+            <TokenClaimButton
+              contractAddress={contractQuery.contract.getAddress()}
+              chainId={contractQuery.contract.chainId}
+            />
+          )}
           <TokenBurnButton
             contractAddress={contractAddress}
             chainId={chainId}
@@ -80,8 +93,12 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
             contractAddress={contractAddress}
             chainId={chainId}
           />
-          {/* TODO: update (mintable detection) */}
-          <TokenMintButton contractQuery={contractQuery} />
+          {isERC20Mintable && contractQuery.contract && (
+            <TokenMintButton
+              contractAddress={contractQuery.contract.getAddress()}
+              chainId={contractQuery.contract.chainId}
+            />
+          )}
         </ButtonGroup>
       </Flex>
 

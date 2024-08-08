@@ -147,11 +147,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 value={imageUrl}
                 showUploadButton
                 setValue={(file) => setValue("avatar", file)}
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                transition="all 200ms ease"
-                _hover={{ shadow: "sm" }}
+                className="border border-border rounded transition-all"
                 renderPreview={(fileUrl) => (
                   <MaskedAvatar w="100%" h="100%" src={fileUrl} />
                 )}

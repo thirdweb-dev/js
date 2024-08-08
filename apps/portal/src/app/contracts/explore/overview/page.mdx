@@ -1,0 +1,47 @@
+import { ArticleCard, createMetadata, Grid } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Pre-built Contracts",
+		icon: "contract",
+	},
+	title: "thirdweb Pre-built Contracts | Explore",
+	description:
+		"Pre-built contracts are proxy contracts created by the thirdweb team to cover most common use cases and patterns for smart contracts",
+});
+
+# Explore (Pre-built Contracts)
+
+Pre-built contracts are proxy contracts created by the thirdweb team to cover most common use cases and patterns for smart contracts. Contracts cover various use cases across NFTs, airdrops, staking, marketplaces, memberships, and more. All pre-built contracts are available to deploy on [Explore](https://thirdweb.com/explore).
+
+## Features
+
+- **Easily deployable:** Deploy pre-built contracts through a user interface (dashboard), CLI, or even programmatically through SDKs.
+- **Customized dashboard to manage contract:** Pre-built contracts provide a custom interface to easily manage your contract.
+- **Retained ownership:** All contracts deployed are fully owned by the contract deployer (you).
+- **Audited:** All pre-built contracts are audited by 3rd party auditors with audit reports attached and ongoing bug programs to ensure security for both deployers and users.
+- **Cheaper Deployment:** Utilizing the proxy pattern, pre-built contracts are 10x cheaper to deploy vs non-proxy versions.
+
+## Guides
+
+<Grid>
+
+<ArticleCard
+	title="Account Factory"
+	description="Learn how to deploy an NFT Factory contract."
+	href="/contracts/explore/pre-built-contracts/account-factory"
+/>
+
+<ArticleCard
+	title="Token"
+	description="Learn how to deploy a Token contract."
+	href="/contracts/explore/pre-built-contracts/token"
+/>
+
+<ArticleCard
+	title="NFT Drop"
+	description="Learn how to deploy an NFT Drop contract."
+	href="/contracts/explore/pre-built-contracts/nft-drop"
+/>
+
+</Grid>

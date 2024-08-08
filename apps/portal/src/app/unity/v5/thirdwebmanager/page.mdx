@@ -1,0 +1,80 @@
+import { DocImage, createMetadata } from "@doc";
+import thirdwebManager from "./thirdwebmanager.png";
+
+export const metadata = createMetadata({
+	title: "Thirdweb Manager | thirdweb Unity SDK",
+	description:
+		"ThirdwebManager is a prefab that provides a convenient way to instantiate the ThirdwebClient, and contains helper functions to create contracts and wallets. Add the prefab to your scene and the SDK will persist throughout your game's lifecycle.",
+});
+
+# Thirdweb Manager
+
+The `ThirdwebManager` is a prefab that provides a convenient way to instantiate the [ThirdwebClient](/dotnet/client), and contains helper functions to create contracts and wallets. 
+Add the prefab to your scene and the client will persist throughout your game's lifecycle, keeping track of your connected wallets.
+
+It is entirely optional, and you can opt to use the [.NET SDK](/dotnet) directly if you prefer to do so.
+
+<DocImage src={thirdwebManager} className="w-[600px]" />
+
+## Configuration
+
+Configure `ThirdwebManager` through the Unity Inspector window.
+
+Below is a list of all the settings you can adjust.
+
+### Client Settings
+
+This section involves the basic settings to configure the SDK:
+
+- `Client ID`: Thirdweb [API Key](https://thirdweb.com/create-api-key). Used to access thirdweb services such as RPC, Storage and Account Abstraction.
+- `Bundle ID`: The bundle ID used to access thirdweb services from native platforms. Should be the same as the bundle ID in your Unity project e.g. `com.companyname.gamename`.
+- `Initialize On Awake`: Whether the SDK should initialize on awake or not. If not, you can call `ThirdwebManager.Instance.Initialize("chain-identifier")` to initialize it manually.
+- `Show Debug Logs`: Whether to show thirdweb sdk debug logs.
+- `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as amount of wallets connected to your game, etc.
+
+### Wallet Settings
+
+This section allows you to define wallet specific settings:
+
+- `Supported Chains`: A list of chain IDs that the wallets should be able to connect to by default.
+
+## Interacting with the ThirdwebManager
+
+Once your `ThirdwebManager` is set up, you can interact with it using the following methods:
+
+### Get Contract
+
+```csharp
+var contract = await ThirdwebManager.Instance.GetContract("contract-address", chainId, "optional-contract-abi");
+var result = await contract.Read<string>("name");
+```
+
+Returns a [ThirdwebContract](/dotnet/contracts/create) instance that can be used to interact with a smart contract.
+
+### Connect Wallet
+
+```csharp
+var walletOptions = new WalletOptions(WalletProvider.PrivateKeyWallet, 421614);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(walletOptions);
+var address = await wallet.GetAddress();
+```
+
+Returns an `IThirdwebWallet` instance that can be used to interact with the blockchain, in this case, a [PrivateKeyWallet](/dotnet/wallets/providers/private-key).
+
+## Child Prefabs
+
+### InAppWalletModal
+
+The `InAppWalletModal` prefab is a simple and customizable OTP verification modal for `InAppWallet` providers. It is used to verify and finalize the user's wallet connection.
+
+It will be automatically activated when connecting to an `InAppWallet` provider.
+
+### WalletConnectWallet
+
+The `WalletConnectWallet` prefab is an out-of-the-box WalletConnect modal that can be used to connect to 400+ wallets.
+
+It will be automatically activated when connecting to a `WalletConnect` provider.
+
+## What Now?
+
+Explore the [.NET SDK](/dotnet) to learn more about interacting with smart contracts, wallets, storage, rpc, account abstraction and more.

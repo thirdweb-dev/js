@@ -85,6 +85,13 @@ export function getCachedChain(id: number) {
   return chain;
 }
 
+/**
+ * @internal
+ */
+export function getCachedChainIfExists(id: number) {
+  return CUSTOM_CHAIN_MAP.get(id);
+}
+
 function isLegacyChain(
   chain: ChainOptions | ViemChain | LegacyChain,
 ): chain is LegacyChain {

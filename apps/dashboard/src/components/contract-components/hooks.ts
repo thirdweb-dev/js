@@ -41,6 +41,7 @@ import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import {
+  abstractTestnet,
   polygon,
   zkCandySepolia,
   zkSync,
@@ -88,6 +89,19 @@ interface RawPredeployMetadata {
   analytics?: Record<string, any>;
   // biome-ignore lint/suspicious/noExplicitAny: FIXME
   compilers?: Record<string, any>;
+}
+
+function isChainIdZkSync(chainId?: number) {
+  switch (chainId) {
+    case zkSync.id:
+    case zkSyncSepolia.id:
+    case zkCandySepolia.id:
+    case abstractTestnet.id:
+      // TODO - add more ZK chains here
+      return true;
+    default:
+      return false;
+  }
 }
 
 // metadata PRE publish, only has the compiler output info (from CLI)
@@ -218,7 +232,10 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
       invariant(address, "address is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
-      const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+      const sdk = getThirdwebSDK(
+        polygon.id,
+        getDashboardChainRpc(polygon.id, undefined),
+      );
       return await sdk
         ?.getPublisher()
         .fetchPrePublishMetadata(contractIdIpfsHash, address);
@@ -252,7 +269,10 @@ async function fetchFullPublishMetadata(
 // Metadata POST publish, contains all the extra information filled in by the user
 export function useContractFullPublishMetadata(uri: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
   const queryClient = useQueryClient();
 
   return useQuery(
@@ -274,7 +294,10 @@ export function useContractFullPublishMetadata(uri: string) {
 }
 
 async function fetchPublisherProfile(publisherAddress?: string | null) {
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
   invariant(publisherAddress, "address is not defined");
   return await sdk.getPublisher().getPublisherProfile(publisherAddress);
 }
@@ -344,7 +367,10 @@ export function useAllVersions(
   publisherAddress?: string,
   contractName?: string,
 ) {
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
   return useQuery(
     ["all-releases", publisherAddress, contractName],
     () => fetchAllVersions(sdk, publisherAddress, contractName),
@@ -371,7 +397,9 @@ export function usePublishedContractsFromDeploy(
       invariant(contractAddress, "contractAddress is not defined");
       invariant(cId, "chain not defined");
 
-      const rpcUrl = chainInfo ? getDashboardChainRpc(cId) : undefined;
+      const rpcUrl = chainInfo
+        ? getDashboardChainRpc(cId, chainInfo)
+        : undefined;
 
       invariant(rpcUrl, "rpcUrl not defined");
       const sdk = getThirdwebSDK(cId, rpcUrl);
@@ -382,7 +410,7 @@ export function usePublishedContractsFromDeploy(
 
       const polygonSdk = getThirdwebSDK(
         polygon.id,
-        getDashboardChainRpc(polygon.id),
+        getDashboardChainRpc(polygon.id, undefined),
       );
 
       return await polygonSdk
@@ -406,7 +434,10 @@ export async function fetchPublishedContractInfo(
 }
 
 export function usePublishedContractInfo(contract: PublishedContract) {
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
   return useQuery(
     ["released-contract", contract],
     () => fetchPublishedContractInfo(sdk, contract),
@@ -625,10 +656,7 @@ export function useCustomContractDeployMutation(
       // open the modal with the appropriate steps
       deployContext.open(steps);
 
-      const isZkSync =
-        chainId === zkSync.id ||
-        chainId === zkSyncSepolia.id ||
-        chainId === zkCandySepolia.id;
+      const isZkSync = isChainIdZkSync(chainId);
 
       let contractAddress: string;
       try {
@@ -764,7 +792,7 @@ export function useCustomContractDeployMutation(
           await addContractToMultiChainRegistry(
             {
               address: contractAddress,
-              chainId,
+              chainId: chainId as number,
               metadataURI: uriToRegister,
             },
             account,
@@ -869,7 +897,7 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
       invariant(sdk, "sdk not provided");
 
       // Handle separately for ZkSync
-      if (chainId === zkSync.id || chainId === zkSyncSepolia.id) {
+      if (isChainIdZkSync(chainId)) {
         return await getZkTransactionsForDeploy();
       }
 
@@ -947,7 +975,10 @@ export function usePublishedContractsQuery(
   address?: string,
   feature?: FeatureName,
 ) {
-  const sdk = getThirdwebSDK(polygon.id, getDashboardChainRpc(polygon.id));
+  const sdk = getThirdwebSDK(
+    polygon.id,
+    getDashboardChainRpc(polygon.id, undefined),
+  );
   const queryClient = useQueryClient();
   return useQuery<PublishedContractDetails[]>(
     ["published-contracts", address, feature],
@@ -1115,10 +1146,11 @@ export function useFeatureContractCodeSnippetQuery(language: string) {
 }
 
 export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
+  const chain = useSupportedChain(chainId);
   return useQuery(
     ["custom-factory-abi", { contractAddress, chainId }],
     async () => {
-      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId));
+      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId, chain));
       return (await sdk.getContract(contractAddress)).abi;
     },
     {

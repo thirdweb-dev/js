@@ -1,0 +1,56 @@
+import { DocImage, Steps, Step } from "@doc";
+import chooseKeyImage from "../assets/choose-key.png";
+import allowedDomainsImage from "../assets/allowed-domains.png";
+import selectEditImage from "../assets/select-edit.png";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Access Restrictions",
+	description: "Set access restrictions on API keys",
+	image: {
+		title: "Access Restrictions on API Keys",
+		icon: "thirdweb",
+	},
+});
+
+# Access Restrictions
+
+API Keys provide two forms of access restrictions:
+
+- Domain IDs: A domain ID is used to restrict access to the enabled thirdweb infrastructure services based on a specific domain. It serves as an identifier for websites.
+- Bundle IDs: A bundle ID is a unique identifier used to restrict the Client ID to your Unity native or mobile application.
+
+To modify the allowed Domain Id or Bundle Ids:
+
+<Steps>
+
+<Step title="Go to Dashboard">
+
+Navigate to **[Settings > API
+Keys](https://thirdweb.com/dashboard/settings/api-keys/)** on the dashboard.
+
+</Step>
+
+<Step title="Choose API Key">
+Choose the API Key you want to modify restrictions on.
+
+<DocImage src={chooseKeyImage} />
+</Step>
+
+<Step title="Edit">
+Select `Edit` to enter editor mode.
+
+<DocImage src={selectEditImage} />
+</Step>
+
+<Step title="Edit Domains">
+Enter the allowed domains the "Allowed Domains" field or switch to Bundle IDs to enter allowed Bundle IDs.
+
+<DocImage src={allowedDomainsImage} />
+</Step>
+
+<Step title="Save Changes">
+
+</Step>
+
+</Steps>

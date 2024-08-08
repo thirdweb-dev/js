@@ -20,13 +20,10 @@ export const IpfsUploadButton: ComponentWithChildren<IpfsUploadButtonProps> = ({
 }) => {
   const { onError } = useErrorHandler();
   const handleUpload = (file: File) => {
-    storageUpload.mutate(
-      { data: [file] },
-      {
-        onSuccess: ([uri]) => onUpload(uri),
-        onError: (error) => onError(error, "Failed to upload file"),
-      },
-    );
+    storageUpload.mutate([file], {
+      onSuccess: ([uri]) => onUpload(uri),
+      onError: (error) => onError(error, "Failed to upload file"),
+    });
   };
 
   return (

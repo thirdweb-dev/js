@@ -1,4 +1,7 @@
-import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
+import {
+  type EVMContractInfo,
+  EVMContractInfoProvider,
+} from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
@@ -35,10 +38,7 @@ import { Heading } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { bigNumberReplacer } from "utils/bignumber";
 import { isBrowser } from "utils/isBrowser";
-import {
-  DashboardThirdwebProvider,
-  type DashboardThirdwebProviderProps,
-} from "./providers";
+import { DashboardThirdwebProvider } from "./providers";
 
 const __CACHE_BUSTER = "3.14.40-nightly-1e6f9dcc-20230831023648";
 
@@ -91,8 +91,9 @@ const persister: Persister = createAsyncStoragePersister({
   key: "tw-query-cache",
 });
 
-interface AppLayoutProps extends AppShellProps, DashboardThirdwebProviderProps {
+interface AppLayoutProps extends AppShellProps {
   dehydratedState?: DehydratedState;
+  contractInfo?: EVMContractInfo;
 }
 
 export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {

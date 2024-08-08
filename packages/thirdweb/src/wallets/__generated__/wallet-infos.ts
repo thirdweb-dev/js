@@ -22,96 +22,116 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Trust Wallet",
   },
   {
-    id: "global.safe",
-    name: "Safe",
-  },
-  {
-    id: "me.rainbow",
-    name: "Rainbow",
-  },
-  {
-    id: "org.uniswap",
-    name: "Uniswap Wallet",
-  },
-  {
-    id: "io.zerion.wallet",
-    name: "Zerion",
-  },
-  {
-    id: "im.token",
-    name: "imToken",
-  },
-  {
-    id: "xyz.argent",
-    name: "Argent",
+    id: "com.okex.wallet",
+    name: "OKX Wallet",
   },
   {
     id: "com.bitget.web3",
     name: "Bitget Wallet",
   },
   {
-    id: "com.crypto",
-    name: "Crypto.com | DeFi Wallet",
+    id: "com.binance",
+    name: "Binance Web3 Wallet",
   },
   {
-    id: "com.okex.wallet",
-    name: "OKX Wallet",
-  },
-  {
-    id: "pro.tokenpocket",
-    name: "TokenPocket",
-  },
-  {
-    id: "com.robinhood.wallet",
-    name: "Robinhood Wallet",
-  },
-  {
-    id: "xyz.frontier.wallet",
-    name: "Frontier",
-  },
-  {
-    id: "com.blockchain",
-    name: "Blockchain.com",
+    id: "org.uniswap",
+    name: "Uniswap Wallet",
   },
   {
     id: "com.safepal",
     name: "SafePal",
   },
   {
-    id: "app.omni",
-    name: "Omni",
+    id: "me.rainbow",
+    name: "Rainbow",
   },
   {
-    id: "com.zengo",
-    name: "Zengo Wallet",
+    id: "com.bybit",
+    name: "Bybit Wallet",
   },
   {
-    id: "io.1inch.wallet",
-    name: "1inch Wallet",
-  },
-  {
-    id: "com.binance",
-    name: "Binance Web3 Wallet",
-  },
-  {
-    id: "com.exodus",
-    name: "Exodus",
+    id: "pro.tokenpocket",
+    name: "TokenPocket",
   },
   {
     id: "com.ledger",
     name: "Ledger Live",
   },
   {
+    id: "xyz.timelesswallet",
+    name: "Timeless X",
+  },
+  {
+    id: "global.safe",
+    name: "Safe",
+  },
+  {
+    id: "io.zerion.wallet",
+    name: "Zerion",
+  },
+  {
+    id: "com.robinhood.wallet",
+    name: "Robinhood Wallet",
+  },
+  {
+    id: "io.1inch.wallet",
+    name: "1inch Wallet",
+  },
+  {
+    id: "com.crypto",
+    name: "Crypto.com | DeFi Wallet",
+  },
+  {
+    id: "com.exodus",
+    name: "Exodus",
+  },
+  {
+    id: "xyz.argent",
+    name: "Argent",
+  },
+  {
+    id: "im.token",
+    name: "imToken",
+  },
+  {
+    id: "com.zengo",
+    name: "Zengo Wallet",
+  },
+  {
+    id: "com.blockchain",
+    name: "Blockchain.com",
+  },
+  {
+    id: "com.kraken",
+    name: "Kraken Wallet ",
+  },
+  {
     id: "com.mewwallet",
     name: "MEW wallet",
+  },
+  {
+    id: "org.mathwallet",
+    name: "MathWallet",
   },
   {
     id: "com.alphawallet",
     name: "AlphaWallet",
   },
   {
+    id: "com.unstoppabledomains",
+    name: "Unstoppable Domains",
+  },
+  {
     id: "app.keyring",
     name: "KEYRING PRO",
+  },
+  {
+    id: "xyz.frontier.wallet",
+    name: "Frontier",
+  },
+  {
+    id: "app.omni",
+    name: "Omni",
   },
   {
     id: "co.lobstr",
@@ -120,14 +140,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "app.onto",
     name: "ONTO",
-  },
-  {
-    id: "org.mathwallet",
-    name: "MathWallet",
-  },
-  {
-    id: "com.unstoppabledomains",
-    name: "Unstoppable Domains",
   },
   {
     id: "technology.obvious",
@@ -168,10 +180,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.myabcwallet",
     name: "ABC Wallet",
-  },
-  {
-    id: "finance.ottr",
-    name: "Ottr Finance",
   },
   {
     id: "co.arculus",
@@ -622,10 +630,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Kriptonio",
   },
   {
-    id: "xyz.timelesswallet",
-    name: "Timeless Wallet",
-  },
-  {
     id: "com.brave.wallet",
     name: "Bitski",
   },
@@ -732,10 +736,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.tomi",
     name: "tomiPAY",
-  },
-  {
-    id: "com.bybit",
-    name: "Bybit Wallet",
   },
   {
     id: "app.subwallet",
@@ -1134,10 +1134,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Noone Wallet",
   },
   {
-    id: "io.gate.wallet",
-    name: "GateWallet",
-  },
-  {
     id: "com.bitso",
     name: "Bitso Web3 Wallet",
   },
@@ -1156,10 +1152,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.bharatbox",
     name: "BharatBox App",
-  },
-  {
-    id: "com.blanqlabs.wallet",
-    name: "Blanq",
   },
   {
     id: "foundation.klaytn",
@@ -1184,10 +1176,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.getcogni",
     name: "Cogni ",
-  },
-  {
-    id: "io.toric",
-    name: "Toric Wallet",
   },
   {
     id: "com.fastex.wallet",
@@ -1262,10 +1250,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Keychain",
   },
   {
-    id: "cool.pay",
-    name: "paycool",
-  },
-  {
     id: "com.mpcvault.broswerplugin",
     name: "MPCVault | Team crypto wallet",
   },
@@ -1292,10 +1276,6 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "com.bettatrade",
     name: "Bettatrade",
-  },
-  {
-    id: "com.kraken",
-    name: "Kraken Wallet ",
   },
   {
     id: "io.scramberry",
@@ -1402,6 +1382,46 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "GUARDIIAN Wallet",
   },
   {
+    id: "io.wallypto",
+    name: "Wallypto",
+  },
+  {
+    id: "com.safemoon",
+    name: "SafeMoon",
+  },
+  {
+    id: "com.elrond.maiar.wallet",
+    name: "xPortal",
+  },
+  {
+    id: "co.swopme",
+    name: "SWOP",
+  },
+  {
+    id: "com.bitpay",
+    name: "BitPay Wallet",
+  },
+  {
+    id: "app.tofee",
+    name: "Tofee Wallet Official",
+  },
+  {
+    id: "com.zypto",
+    name: "Zypto",
+  },
+  {
+    id: "xyz.orion",
+    name: "Orion",
+  },
+  {
+    id: "io.uptn",
+    name: "UPTN",
+  },
+  {
+    id: "com.coinbase.wallet",
+    name: "Coinbase Wallet",
+  },
+  {
     id: "io.rabby",
     name: "Rabby",
   },
@@ -1410,16 +1430,16 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
     name: "Phantom",
   },
   {
-    id: "com.coinbase.wallet",
-    name: "Coinbase Wallet",
-  },
-  {
     id: "io.xdefi",
     name: "XDEFI Wallet",
   },
   {
     id: "com.moongate.one",
     name: "MG",
+  },
+  {
+    id: "com.blanqlabs.wallet",
+    name: "Blanq",
   },
   {
     id: "tech.levain",
@@ -1440,6 +1460,18 @@ const ALL_MINIMAL_WALLET_INFOS = (<const>[
   {
     id: "io.finoa",
     name: "FinoaConnect",
+  },
+  {
+    id: "inc.tomo",
+    name: "tomo extension wallet",
+  },
+  {
+    id: "com.walletconnect.com",
+    name: "SampleW",
+  },
+  {
+    id: "io.leapwallet.CompassWallet",
+    name: "Compass Wallet",
   },
   {
     id: "com.lootrush",

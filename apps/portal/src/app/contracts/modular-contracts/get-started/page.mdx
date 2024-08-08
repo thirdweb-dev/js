@@ -1,0 +1,232 @@
+import { DocImage, createMetadata, FeatureCard, Steps, Step } from "@doc";
+
+import deployCoreContract from './assets/deploy-core-contract.png';
+import deploying from './assets/deploying.png';
+import deployedCoreContract from './assets/deployed-core-contract.png';
+import publishModuleContract from './assets/publish-module-contract.png';
+import selectNetwork from './assets/select-network.png';
+import installModule from './assets/install-module.png';
+import installedModule from './assets/installed-module.png';
+import manageTabHighlight from './assets/manage-tab-highlight.png';
+
+export const metadata = createMetadata({
+	title: "thirdweb Modular Contracts",
+	description:
+		"Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+	image: {
+		title: "thirdweb Modular Contracts",
+		icon: "solidity",
+	},
+});
+
+# Quickstart
+
+#### Overview
+Modular contracts are a composable set of contracts that can be combined to create a feature complete protocol. To learn more, refer to [How it works](https://portal.thirdweb.com/contracts/modular-contracts/how-it-works)
+
+In this Quickstart, learn how to go over how to create an ERC-721 modular contract with fixed mint pricing
+
+<Steps>
+<Step title="Create a new forge project and install the modular-contracts package">
+    Install Forge from this [guide](https://book.getfoundry.sh/getting-started/installation) from Foundry
+    ```bash
+    forge init
+    forge install https://github.com/thirdweb-dev/modular-contracts.git
+    forge remappings > remappings.txt
+    ```
+</Step>
+
+<Step title="Create the core contract">
+    In the `/src` folder, create a new file called `ERC721Start.sol` with the following code.
+    This will inherit the prebuilt `ERC721Core` contract.
+    ```solidity
+    // SPDX-License-Identifier: UNLICENSED
+    pragma solidity ^0.8.0;
+
+    import {ERC721Core} from "modular-contracts/src/core/token/ERC721Core.sol";
+
+    contract ERC721Start is ERC721Core {
+        constructor(
+            string memory _name,
+            string memory _symbol,
+            string memory _contractURI,
+            address _owner
+        )
+            ERC721Core(
+                _name,
+                _symbol,
+                _contractURI,
+                _owner,
+                new address[](0),
+                new bytes[](0)
+            )
+        {}
+    }
+    ```
+</Step>
+
+<Step title="Deploy the core contract">
+    In your terminal, run the following command
+    ```bash
+    npx thirdweb deploy
+    ```
+
+    Then select `ERC721Start`
+    After signing in, it should open up to the following page to deploy the `ERC721Start` contract
+    <DocImage src={deployCoreContract} />
+
+    After filling in the fields, select the Sepolia testnet chain and then hit Deploy
+
+    > If you need funds to deploy the contract, head over to the Sepolia faucet [here](https://thirdweb.com/sepolia/)
+
+    <DocImage src={deploying} />
+
+    After deploying the contract, you should be redirected to the deployed contract page
+    <DocImage src={deployedCoreContract} />
+
+    Hold onto this page as you will need it for later
+</Step>
+
+<Step title="Create the module contract">
+    Back in your forge project, in the `/src` folder, create a file called `PricedModule.sol` and paste in the following code.
+
+    For a better understanding of how module contracts work, refer to the [starter template code](https://github.com/thirdweb-example/modular-contract-module-starter/blob/main/src/ModuleStarter.sol)
+    ```solidity
+    // SPDX-License-Identifier: UNLICENSED
+    pragma solidity ^0.8.0;
+
+    import {ModularModule} from "modular-contracts/src/ModularModule.sol";
+    import {BeforeMintCallbackERC721} from "modular-contracts/src/callback/BeforeMintCallbackERC721.sol";
+
+    contract PricedMint is ModularModule, BeforeMintCallbackERC721 {
+        uint256 public constant mintPrice = 0.01 ether;
+
+        function getModuleConfig()
+            external
+            pure
+            override
+            returns (ModuleConfig memory config)
+        {
+            config.callbackFunctions = new CallbackFunction[](1);
+
+            config.callbackFunctions[0] = CallbackFunction(
+                this.beforeMintERC721.selector
+            );
+
+            config.requiredInterfaces = new bytes4[](1);
+            config.requiredInterfaces[0] = 0x80ac58cd; // ERC721.
+        }
+
+        function beforeMintERC721(
+            address _to,
+            uint256 _startTokenId,
+            uint256 _quantity,
+            bytes memory _data
+        ) external payable virtual override returns (bytes memory) {
+            require(msg.value == mintPrice * _quantity, "Insufficient ETH sent");
+        }
+    }
+    ```
+</Step>
+
+<Step title="Publish the module contract">
+    In your terminal, run the following command
+    ```
+    npx thirdweb publish
+    ```
+
+    Then select `PricedMint`
+    it should open up to the following page to publish the `PricedMint` contract
+    <DocImage src={publishModuleContract} />
+
+    Accept the defaults and then hit "next"
+    It should then redirect you to choose which chain to deploy on.
+    Here we'll leave it on the Sepolia testnet
+    Afterwards, hit "Publish Contract"
+    <DocImage src={selectNetwork} />
+</Step>
+
+<Step title="Install the Module onto the Core contract">
+    Back to the deployed core contract page, then go and click on the "Manage" tab
+    <DocImage src={manageTabHighlight} />
+
+    It should then redirect to the edit modules page
+    <DocImage src={installModule} />
+
+    Here, fill out the info as needed and then hit "Install"
+
+    After it has finished installing, it should then show up under the "Installed Module" section
+    <DocImage src={installedModule} />
+</Step>
+
+<Step title="Test the modular contract">
+    Now with the modular contract fully up and ready to go, we can test that it setup properly by running the following script
+
+    ```javascript
+    // Pre-requisite: install thirdweb <https://portal.thirdweb.com/typescript/v5>
+
+    import {
+      createThirdwebClient,
+      getContract,
+      prepareContractCall,
+      sendTransaction,
+      waitForReceipt,
+      toUnits,
+    } from "thirdweb";
+    import { privateKeyToAccount } from "thirdweb/wallets";
+    import { sepolia } from "thirdweb/chains";
+
+    const PRIVATE_KEY = "<"; // Paste your private key here
+    const SECRET_KEY = ""; // Paste your secret key here
+
+    const TARGET_TOKEN_CORE_ADDRESS = ""; // Paste your target token core address here
+    const MINTER_RECIPIENT_ADDRESS = ""; // Paste your minter recipient address here
+
+    const client = createThirdwebClient({
+      secretKey: SECRET_KEY,
+    });
+
+    const account = privateKeyToAccount({
+      client,
+      privateKey: PRIVATE_KEY,
+    });
+
+    const contract = getContract({
+      client,
+      address: TARGET_TOKEN_CORE_ADDRESS,
+      chain: sepolia,
+    });
+
+    const transaction = prepareContractCall({
+      contract,
+      method: {
+        type: "function",
+        name: "mint",
+        inputs: [
+          { name: "to", type: "address", internalType: "address" },
+          { name: "amount", type: "uint256", internalType: "uint256" },
+          { name: "data", type: "bytes", internalType: "bytes" },
+        ],
+        value: toUnits("0.01", 18),
+        outputs: [],
+        stateMutability: "payable",
+      },
+      params: [MINTER_RECIPIENT_ADDRESS, 1, ""],
+    });
+
+    async function main() {
+      // Send transaction
+      const result = await sendTransaction({
+        transaction: transaction,
+        account: account,
+      });
+
+      const receipt = await waitForReceipt(result);
+
+      console.log("NFT minted tx: ", receipt.transactionHash);
+    }
+
+    main()
+    ```
+</Step>
+</Steps>

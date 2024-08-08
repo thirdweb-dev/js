@@ -1,0 +1,53 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# ERC-721 Core
+
+## Supported Callback Functions
+
+| Function             | Mode      |
+|----------------------|------------|
+| `beforeMintERC721`   | REQUIRED  |
+| `beforeTransferERC721`| OPTIONAL  |
+| `beforeBurnERC721`   | OPTIONAL  |
+| `beforeApproveERC721`| OPTIONAL  |
+| `beforeApproveForAll`| OPTIONAL  |
+| `onTokenURI`         | REQUIRED  |
+
+## Supported Interfaces
+
+| Interface        | ID          |
+|------------------|-------------|
+| `ERC165`         | `0x01ffc9a7`|
+| `ERC721`         | `0x80ac58cd`|
+| `ERC721Metadata` | `0x5b5e139f`|
+| `ERC-7572`       | `0xe8a3d485`|
+| `ERC-173`        | `0x7f5828d0`|
+
+## Functions Supported
+
+| Function                | Description                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| `constructor`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and their data. |
+| `contractURI`           | Returns the contract metadata URI.                                          |
+| `startTokenId`          | Returns the starting token ID for sequential mints.                         |
+| `totalMinted`           | Returns the total number of tokens minted ever.                             |
+| `tokenURI`              | Returns the token metadata of an NFT.                                       |
+| `supportsInterface`     | Checks if the contract implements an interface with the given interface ID. |
+| `getSupportedCallbackFunctions` | Returns the supported callback functions.                      |
+| `setContractURI`        | Sets the contract metadata URI. Callable only by the contract admin.        |
+| `mint`                  | Mints tokens to a specified address, calling the beforeMint hook.           |
+| `burn`                  | Burns a specified token, calling the beforeBurn hook if it exists.          |
+| `transferFrom`          | Transfers ownership of an NFT, calling the beforeTransfer hook if it exists.|
+| `approve`               | Approves an address to transfer a specific NFT, calling the beforeApprove hook if it exists. |
+| `setApprovalForAll`     | Approves or revokes approval from an operator to transfer or approve for all of the caller's NFTs. |
+

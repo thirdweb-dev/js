@@ -1,0 +1,74 @@
+import { Callout } from "@doc";
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721Supply contract",
+		icon: "solidity",
+	},
+	title: "ERC721Supply | thirdweb contract",
+	description:
+		"View all of the NFTs from the collection by implementing the totalSupply function on your ERC721(A) contract",
+});
+
+# ERC721Supply
+
+```solidity
+import "@thirdweb-dev/contracts/eip/interface/IERC721Supply.sol"
+```
+
+View all of the NFTs from the collection by implementing the `totalSupply` function on your ERC721(A) contract.
+
+<Callout title="info" variant="info">
+
+This extension is an interface and requires all of the functions to be implemented
+
+</Callout>
+
+<br />
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/interface/IERC721Supply.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+The [ERC721A](/contracts/build/extensions/erc-721/ERC721) contract comes with a `totalSupply`
+function that returns the total number of NFTs that have been minted in the collection (including tokens that have been burned).
+
+This means you can already view the total supply of NFTs in the collection by implementing the `ERC721A` contract.
+
+You can optionally override the functionality of this function as outlined below:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC721A.sol";
+
+contract Contract is ERC721A {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC721A(
+            _name,
+            _symbol
+        )
+    {}
+
+    function totalSupply() public view override returns (uint256) {
+        // Your custom implementation here (overriding this function is optional)
+    }
+
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721Base](/contracts/build/base-contracts/erc-721/base)
+- [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
+- [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)
+- [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint)
+- [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)

@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
@@ -8,56 +9,54 @@ import {
   useTotalCount,
 } from "@thirdweb-dev/react";
 import type { UploadProgressEvent } from "@thirdweb-dev/sdk";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { detectFeatures } from "components/contract-components/utils";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
 import { ProgressBox } from "core-ui/batch-upload/progress-box";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
+import { getContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
 
 interface BatchLazyMintButtonProps {
   contractQuery: ReturnType<typeof useContract>;
+  isRevealable: boolean;
 }
 
 export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   contractQuery,
+  isRevealable,
   ...restButtonProps
 }) => {
+  const contractV4 = contractQuery.contract;
+  const chain = useV5DashboardChain(contractV4?.chainId);
+  const contract =
+    contractV4 && chain
+      ? getContract({
+          address: contractV4.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
   const trackEvent = useTrack();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const nextTokenIdToMint = useTotalCount(contractQuery.contract);
+  const nextTokenIdToMint = useTotalCount(contractV4);
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
     total: 100,
   });
 
-  const detectedState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721LazyMintable",
-      "ERC1155LazyMintableV1",
-      "ERC1155LazyMintableV2",
-    ],
-  });
-
-  const isRevealable = detectFeatures(contractQuery.contract, [
-    "ERC721Revealable",
-    "ERC1155Revealable",
-  ]);
-
   const mintBatchMutation = useLazyMint(
-    contractQuery.contract,
+    contractV4,
     (event: UploadProgressEvent) => {
       setProgress(event);
     },
   );
 
   const mintDelayedRevealBatchMutation = useDelayedRevealLazyMint(
-    contractQuery.contract as RevealableContract,
+    contractV4 as RevealableContract,
     (event: UploadProgressEvent) => {
       setProgress(event);
     },
@@ -66,15 +65,13 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   const txNotifications = useTxNotifications(
     "Batch uploaded successfully",
     "Error uploading batch",
-    contractQuery.contract,
+    contract,
   );
-
-  if (detectedState !== "enabled") {
+  if (!contract) {
     return null;
   }
-
   return (
-    <MinterOnly contract={contractQuery?.contract}>
+    <MinterOnly contract={contract}>
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -98,7 +95,11 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
                 await mintBatchMutation.mutateAsync(data);
               } else {
                 // otherwise it's delayed reveal
-                await mintDelayedRevealBatchMutation.mutateAsync(data);
+                await mintDelayedRevealBatchMutation.mutateAsync({
+                  metadatas: data.metadata,
+                  placeholder: data.placeholderMetadata,
+                  password: data.password,
+                });
               }
 
               trackEvent({

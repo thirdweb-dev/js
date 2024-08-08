@@ -1,0 +1,146 @@
+import {
+	Tabs,
+	TabsList,
+	TabsTrigger,
+	TabsContent,
+	GithubTemplateCard,
+	Stack,
+	createMetadata,
+} from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Build a custom UI for connecting in-app wallets",
+		icon: "wallets",
+	},
+	title: "Build a custom UI for in-app wallets",
+	description:
+		"You have full control with the connection hooks and functions to build your own UI",
+});
+
+# Build your own UI
+
+## Low level control to authenticate and connect wallets
+
+You have full control with the connection hooks and functions to build your own UI. To use in-app wallets, you first choose a authentication strategy and then connect.
+
+## Setup the ThirdwebProvider
+
+This will ensure that the wallet is available to all components in your app, handle connection states and auto-connection on page load.
+
+```jsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+<ThirdwebProvider>
+	<YourApp />
+</ThirdwebProvider>;
+```
+
+## Authenticate via Google
+
+Note that for Apple and Facebook, you just need to update the strategy to "facebook" or "apple".
+
+In React and React Native, the `useConnect()` hook handles authentication and connection states.
+
+```tsx
+import { inAppWallet } from "thirdweb/wallets";
+import { useConnect } from "thirdweb/react";
+
+const { connect } = useConnect();
+
+const handleLogin = async () => {
+	await connect(() => {
+		const wallet = inAppWallet();
+		await wallet.connect({
+			client,
+			strategy: "google",
+		});
+		return wallet;
+	});
+};
+```
+
+Other social options include Apple, Facebook, Discord, Farcaster and more.
+
+## Authenticate via Email verification
+
+```typescript
+import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
+
+const { connect } = useConnect();
+
+const preLogin = async (email: string) => {
+	// send email verification code
+	await preAuthenticate({
+		client,
+		strategy: "email",
+		email, // ex: user@example.com
+	});
+};
+
+const handleLogin = async (email: string, verificationCode: string) => {
+	// verify email and connect
+	await connect(() => {
+		const wallet = inAppWallet();
+		await wallet.connect({
+			client,
+			strategy: "email",
+			email,
+			verificationCode,
+		});
+		return wallet;
+	});
+};
+```
+
+## Authenticate via Phone number verification
+
+```typescript
+import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
+
+const { connect } = useConnect();
+
+const preLogin = async (phonNumber: string) => {
+	// send phone number verification code
+	await preAuthenticate({
+		client,
+		strategy: "phone",
+		phonNumber, // ex: +1234567890
+	});
+};
+
+const handleLogin = async (phonNumber: string, verificationCode: string) => {
+	// verify phone number and connect
+	await connect(() => {
+		const wallet = inAppWallet();
+		await wallet.connect({
+			client,
+			strategy: "phone",
+			phonNumber,
+			verificationCode,
+		});
+		return wallet;
+	});
+};
+```
+
+## Authenticate via Passkey
+
+```typescript
+import { inAppWallet, hasStoredPasskey } from "thirdweb/wallets/in-app";
+
+const { connect } = useConnect();
+
+const handleLogin = async () => {
+	await connect(() => {
+		const wallet = inAppWallet();
+		const hasPasskey = await hasStoredPasskey(client);
+		await wallet.connect({
+			client,
+			strategy: "passkey",
+			type: hasPasskey ? "sign-in" : "sign-up",
+		});
+		return wallet;
+	});
+};
+```

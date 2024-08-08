@@ -1,0 +1,71 @@
+import { TablePropertiesIcon } from "lucide-react";
+import {
+	Details,
+	Breadcrumb,
+	Callout,
+	Steps,
+	Step,
+	DocImage,
+	createMetadata,
+	ArticleIconCard,
+	Stack,
+} from "@doc";
+import TXButtonImage from "./tx-button.png";
+
+export const metadata = createMetadata({
+	image: {
+		title: "TransactionButton",
+		icon: "react",
+	},
+	title: "TransactionButton | thirdweb React SDK",
+	description: "API Reference for the TransactionButton component",
+});
+
+# TransactionButton
+
+TransactionButton component is used to render a button that sends a given transaction. Refer to [preparing transactions guide](/typescript/v5/transactions/prepare) to learn how to create a transaction object.
+
+It shows a "Switch Network" button if the connected wallet is on a different chain than the transaction.
+
+### Example
+
+```tsx
+function Example() {
+	return (
+		<TransactionButton
+			transaction={() => {
+				// Create a transaction object and return it
+				const tx = prepareContractCall({
+					contract,
+					method: "mint",
+					params: [address, amount],
+				});
+				return tx;
+			}}
+			onTransactionSent={(result) => {
+				console.log("Transaction submitted", result.transactionHash);
+			}}
+			onTransactionConfirmed={(receipt) => {
+				console.log("Transaction confirmed", receipt.transactionHash);
+			}}
+			onError={(error) => {
+				console.error("Transaction error", error);
+			}}
+		>
+			Confirm Transaction
+		</TransactionButton>
+	);
+}
+```
+
+<DocImage src={TXButtonImage} />
+
+## Props
+
+<Stack>
+	<ArticleIconCard
+		title="TransactionButtonProps"
+		icon={TablePropertiesIcon}
+		href="/references/typescript/v5/TransactionButtonProps"
+	/>
+</Stack>

@@ -1,0 +1,104 @@
+import { Details, Callout, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "SmartWallet.Create | Thirdweb .NET SDK",
+	description:
+		"Instantiate a SmartWallet for enhanced user interactions with blockchain applications.",
+});
+
+# SmartWallet.Create
+
+Instantiate a `SmartWallet` to enable advanced blockchain interactions, including gasless transactions through account abstraction. This wallet type is especially useful for creating a user-friendly experience in decentralized applications.
+
+## Usage
+
+```csharp
+var smartWallet = await SmartWallet.Create(personalWallet, chainId);
+```
+
+<Callout variant="info" title="Advanced Functionality">
+	This method sets up a SmartWallet with optional gasless transactions,
+	leveraging account abstraction. It's designed for developers looking to create
+	seamless blockchain interactions within their applications.
+</Callout>
+
+<Details summary="Parameters">
+
+### client (required)
+
+An instance of `ThirdwebClient`. Facilitates communication with the blockchain.
+
+### personalWallet (required)
+
+An instance of IThirdwebWallet (e.g., `PrivateKeyWallet` or `InAppWallet`). Represents the personal wallet connected to the SmartWallet.
+
+### chainId (required)
+
+The blockchain network's chain ID as a `BigInteger`. Identifies the network the smart wallet interacts with.
+
+### factoryAddress (optional)
+
+The address of the factory contract used to deploy new smart wallet instances.
+
+### gasless (optional)
+
+A `boolean` indicating if the wallet should operate in a gasless mode for transactions.
+
+### accountAddressOverride (optional)
+
+Overrides the default account address for the smart wallet. Useful for session key advanced use cases.
+
+### entryPoint (optional)
+
+The entry point contract address for account abstraction.
+
+### bundlerUrl (optional)
+
+URL of the bundler server used for processing User Operations.
+
+### paymasterUrl (optional)
+
+URL of the paymaster service that sponsors gas for User Operations.
+
+</Details>
+
+<Details summary="Return Value">
+
+### SmartWallet
+
+Returns an instance of `SmartWallet`, configured with the provided parameters and ready for blockchain interactions.
+
+</Details>
+Example
+
+Here's how you can create a SmartWallet for a user, assuming you already have a ThirdwebClient and a personal wallet (PrivateKeyWallet or InAppWallet) set up:
+
+```csharp
+var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
+var personalWallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
+
+BigInteger chainId = 1; // Ethereum mainnet
+string factoryAddress = "0xFactoryContractAddress";
+bool gasless = true; // Enable gasless transactions
+
+var smartWallet = await SmartWallet.Create(
+    client,
+    personalWallet,
+    factoryAddress,
+    gasless,
+    chainId,
+    null, // Optional: accountAddressOverride
+    "0xEntryPointAddress", // Optional: entryPoint
+    null, // Optional: bundlerUrl
+    null // Optional: paymasterUrl
+);
+
+Console.WriteLine($"SmartWallet address: {await smartWallet.GetAddress()}");
+
+// Sign a message (this will also deploy your smart wallet if it hasn't been deployed yet)
+var message = "Hello, Thirdweb!";
+var signature = await wallet.PersonalSign(message);
+Console.WriteLine($"Signature: {signature}");
+```
+
+**Note:** This documentation covers the setup of a `SmartWallet` for advanced blockchain interactions. The optional gasless feature, powered by account abstraction, can significantly enhance the user experience by abstracting away the complexities of gas fees.

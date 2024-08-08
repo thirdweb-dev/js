@@ -1,0 +1,118 @@
+import {
+  ArticleCard,
+  GithubTemplateCard,
+  Grid,
+  ExpandableGrid,
+  createMetadata,
+  OpenSourceCard,
+  Stack,
+  Steps,
+  Step,
+  InstallTabs,
+  Callout
+} from "@doc";
+
+[Migrate from React v4](/react/v5/migrate)
+
+# Installation & Setups
+
+### High-level changes
+
+- All imports from `@thirdweb-dev/*` should be replaced with `thirdweb` SDK with sub-exports.
+- The new SDK is `function` based rather than `class` based for better tree shaking and performance.
+- All contract calls are now prepared using `prepareContractCall` and sent using the `useSendTransaction` function.
+- Transactions are submitted without waiting for receipt by default. You can call the `useSendAndConfirmTransaction` function to wait for the transaction to be mined.
+
+
+## Installation
+
+#### Below is how you install thirdweb v4 SDKs
+<InstallTabs
+	npm="npm i @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
+	yarn="yarn add @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
+	pnpm="pnpm i @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
+	bun="bun i @thirdweb-dev/sdk @thirdweb-dev/react ethers@5.7.2"
+/>
+
+#### With the latest version, everything comes in one single package
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+	bun="bun i thirdweb"
+/>
+
+
+## Setups
+
+Once you have installed the latest package (alongside the older version that you want to replace), you can start the migration process.
+
+### ThirdwebProvider
+
+In the latest SDK, the [`ThirdwebProvider`](/references/typescript/v5/ThirdwebProvider) no longer accepts any prop such as `activeChain`, `clientId` or any extra SDK options.
+Instead, you only need to pass the clientId when necessary (we'll talk more about this in a few sections below).
+
+```tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+<ThirdwebProvider>  
+ ...
+</ThirdwebProvider>
+```
+
+###### Progressive migration
+
+
+If you're currently using the `@thirdweb-dev/sdk`, you can progressively migrate to the new `thirdweb` SDK. Both SDKs can be used side by side and are interoperable with each other.
+
+In React, you can mix and match the v4 and v5 `ThirdwebProvider`, that gives you access to the hooks and functionality of both SDKs.
+This way, once you have moved away from all the v4 functionalities, you can finally remove the `ThirdwebProviderV4` from your app.
+
+```tsx
+import { ThirdwebProvider as ThirdwebProviderV4 } from "@thirdweb-dev/react";
+import { ThirdwebProvider } from "thirdweb/react"; // v5
+
+<ThirdwebProviderV4 activeChain={...} clientId={...}>
+  <ThirdwebProvider>
+     ...
+  </ThirdwebProvider>
+</ThirdwebProviderV4>
+```
+
+### Connecting wallets
+
+Similar to v4's `ConnectWallet` component, the latest version has the [`ConnectButton`](/connect/sign-in/ConnectButton) component which has the same functionality.
+
+However, unlike with v4 where the number of supported wallets is limited (about 20), and adding more wallets mean your app becomes heavier,
+the SDK v5 supports [over 300 wallets](/typescript/v5/supported-wallets) with virtually no impact to your application. 
+
+Here's how you use the new `ConnectButton`:
+
+```tsx
+import { createThirdwebClient } from "thirdweb";
+import { ConnectButton } from "thirdweb/react";
+
+const client = createThirdwebClient({
+  clientId: process.env.NEXT_PUBLIC_TW_CLIENT_ID,
+});
+
+<ConnectButton client={client} />
+```
+
+To learn more about the new `ConnectButton`, head over to the [Playground](https://thirdweb.com/dashboard/connect/playground).
+
+Notice how you are passing the thirdweb client to the component itself and not to the `ThirdwebProvider` like in v4?
+By not putting every config inside the context wrapper, we were able to make the SDK v5 much more lightweight since you only load what you need!
+
+
+Tip: You can reuse the thirdweb client object by putting it in a file and export it.
+```ts
+// @lib/client.ts
+
+import { createThirdwebClient } from "thirdweb";
+
+export const client = createThirdwebClient({
+  clientId: process.env.NEXT_PUBLIC_TW_CLIENT_ID,
+});
+
+```

@@ -23,4 +23,5 @@ export type EnglishAuction = {
   endTimeInSeconds: bigint;
   asset: NFT;
   status: ListingStatus;
+  type: "english-auction";
 };

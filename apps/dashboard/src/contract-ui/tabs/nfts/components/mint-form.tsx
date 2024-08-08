@@ -23,7 +23,6 @@ import type {
   useSetSharedMetadata,
   useUpdateNFTMetadata,
 } from "@thirdweb-dev/react";
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
@@ -32,10 +31,13 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import type { NFT } from "thirdweb";
+import { type NFT, getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
+import type { NFTInput } from "thirdweb/utils";
 import {
   Button,
   FormErrorMessage,
@@ -64,7 +66,7 @@ type NFTMintForm =
       lazyMintMutation: UseMutationResult<
         unknown,
         unknown,
-        { metadatas: NFTMetadataInput[] }
+        { metadatas: NFTInput[] }
       >;
       mintMutation?: undefined;
       sharedMetadataMutation?: undefined;
@@ -112,8 +114,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       background_color: nft?.metadata.background_color || "",
       attributes: nft?.metadata.attributes || [],
       // We override these in the submit if they haven't been changed
-      image: nft?.metadata.image || null,
-      animation_url: nft?.metadata.animation_url || null,
+      image: nft?.metadata.image || undefined,
+      animation_url: nft?.metadata.animation_url || undefined,
       // No need for these, but we need to pass them to the form
       supply: 0,
       customImage: "",
@@ -140,6 +142,16 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   });
 
   const modalContext = useModalContext();
+  const chain = useV5DashboardChain(contract?.chainId);
+
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     sharedMetadataMutation
@@ -152,7 +164,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
       : updateMetadataMutation
         ? "Failed to update NFT Metadata"
         : "Failed to mint NFT",
-    contract,
+    contractV5,
   );
 
   const setFile = (file: File) => {
@@ -192,7 +204,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     }
   };
 
-  const imageUrl = useImageFileOrUrl(watch("image"));
+  const imageUrl = useImageFileOrUrl(watch("image") as File | string);
   const mediaFileUrl =
     watch("animation_url") instanceof File
       ? watch("animation_url")
@@ -413,18 +425,14 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             )}
             <Box>
               <FileInput
-                maxContainerWidth={"200px"}
-                value={mediaFileUrl}
+                previewMaxWidth="200px"
+                value={mediaFileUrl as File | string}
                 showUploadButton
                 showPreview={nft?.metadata ? !!mediaFileUrl : true}
                 setValue={setFile}
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                transition="all 200ms ease"
+                className="border border-border rounded transition-all duration-200"
                 selectOrUpload="Upload"
                 helperText={nft?.metadata ? "New Media" : "Media"}
-                _hover={{ shadow: "sm" }}
               />
             </Box>
             <FormHelperText>
@@ -439,16 +447,12 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             <FormControl isInvalid={!!errors.image}>
               <FormLabel>Cover Image</FormLabel>
               <FileInput
-                maxContainerWidth={"200px"}
+                previewMaxWidth="200px"
                 accept={{ "image/*": [] }}
                 value={imageUrl}
                 showUploadButton
                 setValue={(file) => setValue("image", file)}
-                border="1px solid"
-                borderColor="gray.200"
-                borderRadius="md"
-                transition="all 200ms ease"
-                _hover={{ shadow: "sm" }}
+                className="border border-border rounded transition-all"
               />
               <FormHelperText>
                 You can optionally upload an image as the cover of your NFT.

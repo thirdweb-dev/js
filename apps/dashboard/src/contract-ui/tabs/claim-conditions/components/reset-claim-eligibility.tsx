@@ -1,14 +1,16 @@
+import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Box } from "@chakra-ui/react";
 import {
   type DropContract,
   useResetClaimConditions,
 } from "@thirdweb-dev/react";
-import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { getContract } from "thirdweb";
 import { Text } from "tw-components";
 
 interface ResetClaimEligibilityProps {
@@ -60,11 +62,20 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
     });
   };
 
+  const chain = useV5DashboardChain(contract?.chainId);
+
+  if (!contract || !chain) {
+    return null;
+  }
+
+  const contractV5 = getContract({
+    address: contract.getAddress(),
+    chain,
+    client: thirdwebClient,
+  });
+
   return (
-    <AdminOnly
-      contract={contract as ValidContractInstance}
-      fallback={<Box pb={5} />}
-    >
+    <AdminOnly contract={contractV5} fallback={<Box pb={5} />}>
       <TransactionButton
         colorScheme="secondary"
         bg="bgBlack"

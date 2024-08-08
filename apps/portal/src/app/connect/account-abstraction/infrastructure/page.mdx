@@ -1,0 +1,107 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Bundler & Paymaster Infrastructure",
+		icon: "thirdweb",
+	},
+	title: "Bundler & Paymaster Infrastructure | thirdweb",
+	description:
+		"The thirdweb SDK handles all the heavy lifting of bundling operations and covering gas fees with a turn-key infrastructure. The thirdweb paymaster and bundler services are stand-alone and can be used with any smart account contract without using the thirdweb SDKs",
+});
+
+# Bundler & Paymaster Infrastructure
+
+The thirdweb SDK handles all the heavy lifting of bundling operations and covering gas fees with a turn-key infrastructure.
+The thirdweb paymaster and bundler services are **stand alone** and can be used with any smart account contract without using the thirdweb SDKs.
+
+On testnets, the only requirement is to obtain a free client id to get started.
+Once you're ready to deploy on mainnets, you will require an active [billing account](https://thirdweb.com/dashboard/settings).
+You can configure your client ID to restrict interactions only with your own contracts or with any contract.
+
+### Supported chains
+
+With a thirdweb API key, you get access to bundler and paymaster infrastructure on the following chains:
+
+| Chain                | Mainnet | Testnet |
+| -------------------- | ------- | ------- |
+| Ethereum             | ✅      | ✅      |
+| Polygon              | ✅      | ✅      |
+| Arbitrum (one, nova) | ✅      | ✅      |
+| Optimism             | ✅      | ✅      |
+| Gnosis               | ✅      | ✅      |
+| Linea                | ✅      | ✅      |
+| Base                 | ✅      | ✅      |
+| Avalanche C-Chain    | ✅      | ✅      |
+| Scroll               | ✅      | ✅      |
+| Celo                 | ✅      | ✅      |
+| Binance              | ✅      | ✅      |
+| Xai Orbit            | ✅      | ✅      |
+| Mode                 | ✅      | ✅      |
+| Zora                 | ✅      | ✅      |
+| Fraxtal              | ✅      | ✅      |
+| Lisk                 | ❌      | ✅      |
+| Taiko                | ✅      | ❌      |
+| Degen                | ✅      | ❌      |
+| Mantle               | ✅      | ❌      |
+| Ancient8             | ✅      | ✅      |
+| Blast                | ❌      | ✅      |
+| B3                   | ❌      | ✅      |
+| Plume                | ❌      | ✅      |
+| Camp Network         | ❌      | ✅      |
+| Vanar                | ✅      | ✅      |
+| DFK                  | ✅      | ✅      |
+| Form                 | ❌      | ✅      |
+| Cyber                | ✅      | ✅      |
+| Treasure Ruby        | ✅      | ❌      |
+| Redstone             | ✅      | ✅      |
+| Klaytn Cypress       | ✅      | ✅      |
+| OpBNB                | ✅      | ❌      |
+| Nautilus             | ✅      | ❌      | 
+| Fuse                 | ✅      | ❌      |
+| zkCandy              | ❌      | ✅      |
+
+To support a chain not listed, [contact us](https://thirdweb.com/contact-us).
+
+## Using a Custom Bundler
+
+Smart accounts are free to use with your own account abstraction infrastructure. To use your own paymaster & bundler,
+pass the `bundlerUrl` the `SmartWalletOptions` overrides:
+
+```ts
+const config: SmartWalletOptions = {
+	chain,
+	sponsorGas: true,
+	overrides: {
+		bundlerUrl: "your-bundler-url",
+	},
+};
+```
+
+## Using a Custom Paymaster
+
+You can also provide an entirely custom paymaster logic by providing a `paymaster` function to the `SmartWalletOptions` overrides.
+
+```ts
+const config: SmartWalletOptions = {
+	chain,
+	sponsorGas: true,
+	overrides: {
+		paymaster: async (userOp: UserOperation) => {
+			// your custom paymaster logic
+			return myPaymasterResultLogic(userOp);
+		},
+	},
+};
+```
+
+## Pricing & Billing
+
+To use thirdweb's account abstraction infrastructure, you need to set up a billing account on the thirdweb dashboard Settings page.
+
+**Pricing**:
+
+- **Bundler**: Transaction bundle calls (non-sponsored calls) are free to use.
+- **Paymaster**: 10% premium on top of network fee based on your usage.
+
+Find more information on the different billing tiers by visiting [thirdweb's pricing page](https://thirdweb.com/pricing).

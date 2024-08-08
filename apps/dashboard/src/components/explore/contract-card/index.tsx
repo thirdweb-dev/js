@@ -174,7 +174,7 @@ async function publishedContractQueryFn(
 ) {
   const polygonSdk = getThirdwebSDK(
     polygon.id,
-    getDashboardChainRpc(polygon.id),
+    getDashboardChainRpc(polygon.id, undefined),
   );
 
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));

@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.43.2",
+  "version": "5.44.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -178,7 +178,7 @@
     "mipd": "0.0.7",
     "node-libs-browser": "2.2.1",
     "uqr": "0.1.2",
-    "viem": "2.17.10"
+    "viem": "2.19.2"
   },
   "peerDependencies": {
     "@aws-sdk/client-lambda": "^3",
@@ -272,7 +272,7 @@
     "test:cov": "vitest dev -c ./test/vitest.config.ts --coverage",
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
-    "typedoc": "node scripts/typedoc.mjs",
+    "typedoc": "bun run scripts/typedoc.mjs",
     "update-version": "node scripts/version.mjs"
   },
   "engines": {
@@ -297,11 +297,12 @@
     "expo-linking": "6.3.1",
     "expo-web-browser": "13.0.3",
     "happy-dom": "^14.12.0",
+    "msw": "^2.3.4",
     "react-native": "0.74.2",
     "react-native-aes-gcm-crypto": "0.2.2",
     "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-svg": "15.3.0",
-    "vitest": "1.6.0",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4",
+    "vitest": "1.6.0"
   }
 }

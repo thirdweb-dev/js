@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
+import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
 import { useTheme } from "next-themes";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
@@ -29,7 +30,6 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
-import { useActiveChainAsDashboardChain } from "../../lib/v5-adapter";
 import { MismatchButton } from "./MismatchButton";
 
 interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {

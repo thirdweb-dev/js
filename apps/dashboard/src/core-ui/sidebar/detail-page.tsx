@@ -1,9 +1,11 @@
 import { Box, Flex, Image, Skeleton, useDisclosure } from "@chakra-ui/react";
-import { useContract, useContractMetadata } from "@thirdweb-dev/react/evm";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import type { ThirdwebContract } from "thirdweb";
+import { getContractMetadata } from "thirdweb/extensions/common";
+import { useReadContract } from "thirdweb/react";
 import { Badge, Text } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -11,18 +13,19 @@ import { SidebarNav } from "./nav";
 import { NavLink } from "./nav-link";
 
 type ContractSidebarProps = {
-  contractAddress: string;
+  contract: ThirdwebContract;
   routes: EnhancedRoute[];
   activeRoute?: EnhancedRoute;
 };
 
 export const ContractSidebar: React.FC<ContractSidebarProps> = ({
-  contractAddress,
+  contract,
   routes,
   activeRoute,
 }) => {
-  const contractQuery = useContract(contractAddress);
-  const contractMetadataQuery = useContractMetadata(contractQuery.contract);
+  const contractMetadataQuery = useReadContract(getContractMetadata, {
+    contract,
+  });
   const openState = useDisclosure();
   return (
     <SidebarNav
@@ -52,7 +55,7 @@ export const ContractSidebar: React.FC<ContractSidebarProps> = ({
                 }
               >
                 {contractMetadataQuery.data?.name ||
-                  shortenIfAddress(contractAddress)}
+                  shortenIfAddress(contract.address)}
               </Skeleton>
             }
             links={routes
@@ -173,9 +176,7 @@ const DetailNavLink: ComponentWithChildren<DetailNavLinkProps> = ({
         ? [query.paths]
         : [];
     const [network, address, tab = ""] = [
-      ...new Set(
-        ([query.chain_id, ...combinedPaths] || []).filter((c) => c !== "evm"),
-      ),
+      ...new Set([query.chain_id, ...combinedPaths].filter((c) => c !== "evm")),
     ];
     return [`/${network}/${address}`, tab] as const;
   }, [query.chain_id, query.paths]);

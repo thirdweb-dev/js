@@ -1,0 +1,27 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.IsConnected | Thirdweb .NET SDK",
+	description:
+		"Check if the wallet is currently connected to the blockchain or related services.",
+});
+
+# IThirdwebWallet.IsConnected
+
+Determines whether the wallet instance is currently connected to the blockchain network and any related services.
+
+**Note:** an `InAppWallet` returning `false` here means that it could not auto-connect to the wallet right after creation, and requires user authentication, see [InAppWallet.Connect](/dotnet/wallets/providers/in-app-wallet) for more information.
+
+## Usage
+
+```csharp
+bool isConnected = await wallet.IsConnected();
+```
+
+<Details summary="Return Value">
+
+### bool
+
+Returns a `bool` indicating the wallet's connection status. `true` signifies that the wallet is currently connected and ready to go, whereas `false` indicates it is not.
+
+</Details>

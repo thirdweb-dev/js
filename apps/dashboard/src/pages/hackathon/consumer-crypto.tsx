@@ -1,4 +1,5 @@
-import { Box, DarkMode, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
+import { useForceDarkTheme } from "@/components/theme-provider";
+import { Box, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import FAQ from "components/hackathon/FAQ";
@@ -32,8 +33,9 @@ const TRACKING_CATEGORY = "caldera-thirdweb-hacakthon";
 
 const Hackathon = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title="Consumer Crypto Hackathon | Presented by Caldera & thirdweb"
         description="Join the Consumer Crypto Hackathon and build the next billion-dollar consumer web3 app — presented by Caldera & thirdweb. Learn more & sign up here."
@@ -290,7 +292,7 @@ const Hackathon = () => {
           <HackathonFooter TRACKING_CATEGORY={TRACKING_CATEGORY} />
         </Flex>
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

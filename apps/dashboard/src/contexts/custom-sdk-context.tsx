@@ -36,12 +36,12 @@ export const CustomSDKContext: ComponentWithChildren<{
 }> = ({ desiredChainId, options, children }) => {
   const signer = useSigner();
   const queryClient = useQueryClient();
-  const networkInfo = useSupportedChain(desiredChainId || -1);
+  const v4Chain = useSupportedChain(desiredChainId || -1);
   const configuredChains = useSupportedChains();
 
   return (
     <ThirdwebSDKProvider
-      activeChain={desiredChainId}
+      activeChain={v4Chain}
       signer={signer}
       queryClient={queryClient}
       supportedChains={
@@ -52,10 +52,10 @@ export const CustomSDKContext: ComponentWithChildren<{
           maxPriceInGwei: 650,
         },
         readonlySettings:
-          networkInfo && desiredChainId
+          v4Chain && desiredChainId
             ? {
                 chainId: desiredChainId,
-                rpcUrl: getDashboardChainRpc(desiredChainId),
+                rpcUrl: getDashboardChainRpc(desiredChainId, v4Chain),
               }
             : undefined,
         ...options,

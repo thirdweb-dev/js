@@ -19,6 +19,10 @@ export const headerLinks = {
   ],
   right: [
     {
+      name: "Chainlist",
+      href: "/chainlist",
+    },
+    {
       name: "Docs",
       href: "https://portal.thirdweb.com",
     },

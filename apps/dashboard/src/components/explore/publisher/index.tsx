@@ -1,9 +1,9 @@
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useEns } from "components/contract-components/hooks";
 import { PublisherAvatar } from "components/contract-components/publisher/masked-avatar";
 import Link from "next/link";
 import type { RequiredParam } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { SkeletonContainer } from "../../../@/components/ui/skeleton";
 
 interface ContractPublisherProps {
   addressOrEns: RequiredParam<string>;

@@ -75,7 +75,7 @@ export const DashboardThirdwebProviderSetup: ComponentWithChildren<
     if (!chain) {
       return undefined;
     }
-    const rpcUrl = getDashboardChainRpc(chain.chainId);
+    const rpcUrl = getDashboardChainRpc(chain.chainId, chain);
     if (!rpcUrl) {
       return undefined;
     }

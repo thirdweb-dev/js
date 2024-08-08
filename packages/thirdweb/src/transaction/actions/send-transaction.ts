@@ -14,18 +14,89 @@ export type SendTransactionOptions = {
 };
 
 /**
- * Sends a transaction using the provided wallet.
+ * Sends a transaction using the provided account.
+ *
+ * You can send a transaction with a [prepared contract call](https://portal.thirdweb.com/references/typescript/v5/prepareContractCall), a [prepared transaction](https://portal.thirdweb.com/references/typescript/v5/prepareTransaction), or using a write [Extension](https://portal.thirdweb.com/typescript/v5/extensions/use).
  * @param options - The options for sending the transaction.
- * @returns A promise that resolves to the transaction hash.
- * @throws An error if the wallet is not connected.
+ * @returns A promise that resolves to the transaction result.
+ * @throws An error if the transaction reverts.
  * @transaction
  * @example
+ *
+ * ### Using a prepared contract call
+ *
  * ```ts
- * import { sendTransaction } from "thirdweb";
+ * import { sendTransaction, getContract, prepareContractCall } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const contract = getContract({
+ *   address: "0x...",
+ *   chain: sepolia,
+ *   client,
+ * });
+ *
+ * const transaction = prepareContractCall({
+ *   contract,
+ *   method: "function transfer(address to, uint256 value)",
+ *   params: [to, value],
+ * });
  *
  * const { transactionHash } = await sendTransaction({
  *  account,
- *  transaction
+ *  transaction,
+ * });
+ * ```
+ *
+ * ### Using a write extension
+ *
+ * ```ts
+ * import { sendTransaction, getContract } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ * import { mintTo } from "thirdweb/extensions/erc721";
+ *
+ * const contract = getContract({
+ *   address: "0x...",
+ *   chain: sepolia,
+ *   client,
+ * });
+ *
+ * const transaction = mintTo({
+ *   contract,
+ *   to: "0x...",
+ *   nft: {
+ *     name: "NFT Name",
+ *     description: "NFT Description",
+ *     image: "https://example.com/image.png",
+ *   },
+ * });
+ *
+ * const { transactionHash } = await sendTransaction({
+ *  account,
+ *  transaction,
+ * });
+ * ```
+ *
+ * ### Using a prepared transaction
+ *
+ * ```ts
+ * import { sendTransaction, getContract, prepareTransaction } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ *
+ * const contract = getContract({
+ *   address: "0x...",
+ *   chain: sepolia,
+ *   client,
+ * });
+ *
+ * const transaction = prepareTransaction({
+ *   contract,
+ *   to: "0x...",
+ *   value: toWei("0.1"),
+ * });
+ *
+ * const { transactionHash } = await sendTransaction({
+ *  account,
+ *  transaction,
  * });
  * ```
  */

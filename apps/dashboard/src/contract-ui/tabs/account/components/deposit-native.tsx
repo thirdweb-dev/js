@@ -6,7 +6,7 @@ import { prepareTransaction, toWei } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 import { Card } from "tw-components";
 import type { StoredChain } from "../../../../contexts/configured-chains";
-import { mapStoredChainTov5Chain } from "../../../../contexts/map-chains";
+import { useV5DashboardChain } from "../../../../lib/v5-adapter";
 
 interface DepositNativeProps {
   address: string;
@@ -24,6 +24,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(e.currentTarget.value);
   };
+  const v5Chain = useV5DashboardChain(chain.chainId);
 
   return (
     <Card
@@ -55,7 +56,7 @@ export const DepositNative: React.FC<DepositNativeProps> = ({
 
           const transaction = prepareTransaction({
             to: address,
-            chain: mapStoredChainTov5Chain(chain),
+            chain: v5Chain,
             client: thirdwebClient,
             value: toWei(amount),
           });

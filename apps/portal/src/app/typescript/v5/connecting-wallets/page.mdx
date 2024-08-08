@@ -1,0 +1,54 @@
+import { Breadcrumb, createMetadata, ArticleIconCard, Stack } from "@doc";
+import { WalletCard, WalletCardGrid } from "@/components/others/WalletCard";
+import SmartWalletIcon from "@public/icons/wallets/smartwallet.svg";
+import EmbeddedWalletIcon from "@public/icons/wallets/embeddedwallet.svg";
+import { AllSupportedWallets } from "@/components/others/AllSupportedWallets";
+import { ComponentIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Connecting Wallets",
+		icon: "typescript",
+	},
+	title: "Connecting Wallets | Connect SDK",
+	description:
+		"Learn how to connect various types of wallets using Connect SDK",
+});
+
+# Connecting Wallets
+
+The SDK supports 350+ wallets out of the box, all you need to pass is their id.
+
+<Stack>
+
+<ArticleIconCard
+	title="Supported Wallets"
+	icon={ComponentIcon}
+	href="/typescript/v5/supported-wallets"
+	description="See all 350+ wallets supported by the Connect SDK"
+/>
+
+</Stack>
+
+These wallets include thirdweb's first-party wallets like Smart Wallet and In-App Wallet, as well as other popular wallet extensions/mobile apps.
+
+Refer to [`createWallet`](/references/typescript/v5/createWallet) and [`injectedProvider`](/references/typescript/v5/injectedProvider) for more information.
+
+```tsx
+import { createThirdwebClient } from "thirdweb";
+import { createWallet, injectedProvider } from "thirdweb/wallets";
+
+const client = createThirdwebClient({ clientId });
+
+const metamask = createWallet("io.metamask"); // pass the wallet id
+
+// if user has metamask installed, connect to it
+if (injectedProvider("io.metamask")) {
+	await metamask.connect({ client });
+}
+
+// open wallet connect modal so user can scan the QR code and connect
+else {
+	await metamask.connect({ client, walletConnect: { showQrModal: true } });
+}
+```

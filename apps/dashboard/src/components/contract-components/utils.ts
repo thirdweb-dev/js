@@ -46,7 +46,7 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
 export function getGaslessPolygonSDK(signer?: Signer) {
   const polygonSDK = getThirdwebSDK(
     polygon.id,
-    getDashboardChainRpc(polygon.id),
+    getDashboardChainRpc(polygon.id, undefined),
     {
       gasless: {
         engine: {

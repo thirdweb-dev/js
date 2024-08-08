@@ -1,4 +1,5 @@
-import { Box, DarkMode, Flex, Image, List, ListItem } from "@chakra-ui/react";
+import { useForceDarkTheme } from "@/components/theme-provider";
+import { Box, Flex, Image, List, ListItem } from "@chakra-ui/react";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
@@ -193,9 +194,10 @@ const scheduleItems = [
 
 const ReadyPlayer3Landing: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title={metadata.title}
         description={metadata.description}
@@ -549,7 +551,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           </Box>
         </Box>
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

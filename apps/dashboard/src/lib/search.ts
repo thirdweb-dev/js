@@ -1,8 +1,5 @@
-import {
-  type ChainMetadata,
-  defineChain,
-  getChainMetadata,
-} from "thirdweb/chains";
+import { defineDashboardChain } from "lib/defineDashboardChain";
+import { type ChainMetadata, getChainMetadata } from "thirdweb/chains";
 import invariant from "tiny-invariant";
 
 export type TimeRange = "month" | "week" | "day";
@@ -43,7 +40,7 @@ export const getSearchQueryUrl = ({
   perPage = 10,
   query = "",
   chainId,
-  timeRange = "day",
+  timeRange = "month",
   sortBy = "transactionCount",
 }: {
   page?: number;
@@ -112,12 +109,14 @@ export async function fetchTopContracts(args?: {
   );
   const result = await res.json();
   if (!result.hits) return [];
+
   return (await Promise.all(
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     result.hits.map(async (hit: any) => {
       const document = hit.document;
       const chainMetadata = await getChainMetadata(
-        defineChain(Number(document.chainId)),
+        // eslint-disable-next-line no-restricted-syntax
+        defineDashboardChain(Number(document.chainId), undefined),
       );
       let name = document.name;
       if (

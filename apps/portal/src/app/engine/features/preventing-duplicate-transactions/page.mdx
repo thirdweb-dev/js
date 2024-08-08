@@ -1,0 +1,57 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Preventing Duplicate Transactions | thirdweb Engine",
+	description: "Manage dashboard and API access to your Engine instance.",
+});
+
+# Preventing Duplicate Transactions
+
+Your backend server may implement retries to handle when an HTTP response from Engine was not received successfully.
+In these cases, set an **idempotency key** to drop duplicate submissions of the same transaction.
+
+This approach prevents costly and irreversible errors like transferring funds or minting NFTs more than once.
+
+## Usage
+
+Set the `x-idempotency-key` header to a unique string.
+
+Engine only submits a transaction if there was not another transaction sent with the same idempotency key in the past 24 hours. Subsequent calls with the same idempotency key return the original transaction `queueId`.
+
+## Example
+
+This example safely retries a request up to three times if a 2xx is not received.
+
+```typescript
+const idempotencyKey = "27R82mBV"; // Some unique identifier from your app
+const numRetries = 3;
+let queueId: string | undefined;
+
+for (let i = 0; i < numRetries; i++) {
+	const resp = await fetch(url, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${process.env.THIRDWEB_ACCESS_TOKEN}`,
+			"Content-Type": "application/json",
+			"x-backend-wallet-address": "0x4Ff9aa707AE1eAeb40E581DF2cf4e14AffcC553d",
+			"x-idempotency-key": idempotencyKey,
+		},
+		body: JSON.stringify({
+			to: "0x4Ff9aa707AE1eAeb40E581DF2cf4e14AffcC553d",
+			amount: "42000000000",
+		}),
+	});
+
+	// If 2xx, break. Else try again.
+	if (resp.ok) {
+		queueId = (await resp.json()).result;
+		break;
+	}
+}
+
+if (queueId) {
+	console.log("Transaction submitted:", queueId);
+} else {
+	console.error("Unable to submit transaction.");
+}
+```

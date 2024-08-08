@@ -29,7 +29,7 @@ import {
   useWalletBalance,
 } from "thirdweb/react";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
-import { defineDashboardChain } from "../../lib/v5-adapter";
+import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 const GAS_FREE_CHAINS = [
   75513, // Geek verse testnet
@@ -52,6 +52,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const account = useActiveAccount();
     const wallet = useActiveWallet();
     const activeWalletChain = useActiveWalletChain();
+
     const evmBalance = useWalletBalance({
       address: account?.address,
       chain: activeWalletChain,
@@ -168,18 +169,25 @@ const MismatchNotice: React.FC<{
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const chain = useSupportedChain(desiredChainId || -1);
+  const chainV5 = useV5DashboardChain(desiredChainId);
 
   const onSwitchWallet = useCallback(async () => {
-    if (actuallyCanAttemptSwitch && desiredChainId && chain) {
+    if (actuallyCanAttemptSwitch && desiredChainId && chainV5) {
       try {
-        await switchNetwork(defineDashboardChain(desiredChainId));
+        await switchNetwork(chainV5);
         onClose(true);
       } catch (e) {
         //  failed to switch network
         onClose(false);
       }
     }
-  }, [chain, actuallyCanAttemptSwitch, desiredChainId, onClose, switchNetwork]);
+  }, [
+    chainV5,
+    actuallyCanAttemptSwitch,
+    desiredChainId,
+    onClose,
+    switchNetwork,
+  ]);
 
   const shortenedName = useMemo(() => {
     const limit = isMobile ? 10 : 19;
@@ -263,7 +271,7 @@ const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({ symbol }) => {
       if (chainInfo.chainId === localhost.id) {
         await sdk.wallet.requestFunds(10);
       } else if (chainInfo?.testnet) {
-        router.push(`/${chainInfo.chainId}/faucet`);
+        router.push(`/${chainInfo.chainId}`);
       }
     }
   };

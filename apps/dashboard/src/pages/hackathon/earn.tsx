@@ -1,4 +1,5 @@
-import { Box, DarkMode, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
+import { useForceDarkTheme } from "@/components/theme-provider";
+import { Box, Divider, Flex, Icon, ListItem } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { ChakraNextImage } from "components/Image";
 import EarnReasonSection from "components/hackathon/EarnReasonSection";
@@ -37,8 +38,10 @@ const description =
 
 const HackathonEarn = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
+
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title={title}
         description={description}
@@ -360,7 +363,7 @@ const HackathonEarn = () => {
           <HackathonEarnFooter TRACKING_CATEGORY={TRACKING_CATEGORY} />
         </Flex>
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

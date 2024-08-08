@@ -2,13 +2,13 @@
 
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
-import { cacheChains } from "../../../../chains/utils.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletConnectionStatus } from "../../../core/hooks/wallets/useActiveWalletConnectionStatus.js";
+import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { defaultTokens } from "../../../core/utils/defaultTokens.js";
 import {
   WalletUIStatesProvider,
@@ -87,12 +87,27 @@ const TW_CONNECT_WALLET = "tw-connect-wallet";
  * ### Customizing the default chain to connect to
  *
  * ```tsx
- * import { base } from "thirdweb/chains";
+ * import { sepolia } from "thirdweb/chains";
  *
  * <ConnectButton
  *   client={client}
- *   chain={base}
+ *   chain={sepolia}
  * />
+ * ```
+ *
+ * ### Enabling Account Abstraction
+ *
+ * By passing the `accountAbstraction` prop, ALL connected wallets will be converted to smart accounts.
+ * And by setting `sponsorGas` to `true`, all transactions done with those smart accounts will be sponsored.
+ *
+ * ```tsx
+ * <ConnectButton
+ * client={client}
+ * accountAbstraction={{
+ *   chain: sepolia,
+ *   sponsorGas: true,
+ * }}
+ * />;
  * ```
  *
  * ### Enabling sign in with ethereum (Auth)
@@ -252,20 +267,25 @@ export function ConnectButton(props: ConnectButtonProps) {
     [props.wallets, props.appMetadata, props.chains],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
+  const connectionManager = useConnectionManager();
 
   usePreloadWalletProviders({
     wallets,
     client: props.client,
   });
 
-  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
-  if (props.chains) {
-    cacheChains(props.chains);
-  }
+  // Add props.chain and props.chains to defined chains store
+  useEffect(() => {
+    if (props.chain) {
+      connectionManager.defineChains([props.chain]);
+    }
+  }, [props.chain, connectionManager]);
 
-  if (props.chain) {
-    cacheChains([props.chain]);
-  }
+  useEffect(() => {
+    if (props.chains) {
+      connectionManager.defineChains(props.chains);
+    }
+  }, [props.chains, connectionManager]);
 
   const size = useMemo(() => {
     return !canFitWideModal() || wallets.length === 1
@@ -348,7 +368,7 @@ function ConnectButtonInner(
 ) {
   const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
-  const siweAuth = useSiweAuth(activeWallet, props.auth);
+  const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
 
   // if wallet gets disconnected suddently, close the signature modal if it's open

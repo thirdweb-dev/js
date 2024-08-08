@@ -1,4 +1,5 @@
-import { Box, DarkMode, Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { useForceDarkTheme } from "@/components/theme-provider";
+import { Box, Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
 import {
   QueryClient,
   QueryClientProvider,
@@ -133,8 +134,9 @@ const Events = () => {
 const queryClient = new QueryClient();
 
 const EventsPage: ThirdwebNextPage = () => {
+  useForceDarkTheme();
   return (
-    <DarkMode>
+    <>
       <NextSeo title="events" />
       <Flex
         sx={{
@@ -153,7 +155,7 @@ const EventsPage: ThirdwebNextPage = () => {
         </QueryClientProvider>
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

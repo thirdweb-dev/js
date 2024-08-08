@@ -1,0 +1,66 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "SmartWallet.CreateSessionKey | Thirdweb .NET SDK",
+	description:
+		"Grants a signer restricted access to the connected Smart Wallet.",
+});
+
+# SmartWallet.CreateSessionKey
+
+Grants restricted Smart Wallet access to a signer, otherwise known as session keys, allowing that signer to connect to this Smart Wallet and interact with it, alongside the original admin.
+
+## Usage
+
+```csharp
+// Grant a session key to pk wallet (advanced use case)
+var receipt = await smartWallet.CreateSessionKey(
+    signerAddress: await privateKeyWallet.GetAddress(),
+    approvedTargets: new List<string>() { Constants.ADDRESS_ZERO },
+    nativeTokenLimitPerTransactionInWei: "0",
+    permissionStartTimestamp: "0",
+    permissionEndTimestamp: (Utils.GetUnixTimeStampNow() + 86400).ToString(),
+    reqValidityStartTimestamp: "0",
+    reqValidityEndTimestamp: Utils.GetUnixTimeStampIn10Years().ToString()
+);
+```
+
+<Details summary="Parameters">
+
+### signerAddress
+
+`string`: the address of the signer to grant access to.
+
+### approvedTargets
+
+`List<string>`: the contracts this signer may interact with, set to ADDRESS_ZERO to allow all.
+
+### nativeTokenLimitPerTransactionInWei
+
+`string`: amount of native tokens per transaction this signer is allowed to use, in wei.
+
+### permissionStartTimestamp
+
+`string`: UNIX timestamp representing the date at which this session key shall be granted, set to 0 to immediately activate it.
+
+### permissionEndTimestamp
+
+`string`: UNIX timestamp representing the date at which this session key shall end, set to 0 to immediately activate it.
+
+### reqValidityStartTimestamp
+
+`string`: UNIX timestamp representing the date at which this signed request shall begin to be valid and processable.
+
+### reqValidityEndTimestamp
+
+`string`: UNIX timestamp representing the date at which this signed request shall no longer be valid and processable.
+
+</Details>
+
+<Details summary="Return Value">
+
+### TransactionReceipt
+
+The transaction receipt for this user operation, as a `TransactionReceipt` object.
+
+</Details>

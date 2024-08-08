@@ -1,0 +1,331 @@
+import { DocImage, Callout } from "@doc";
+import { createMetadata } from "@doc";
+import modularContractsAnalogyImage from "./assets/modular-contracts-analogy.png";
+import modularContractsFlowImage from "./assets/modular-contracts-flow.png";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Modular Contracts design document",
+		icon: "contract",
+	},
+	title: "Modular Contracts design document | thirdweb",
+	description:
+		"This is a live document that explains the technical design details of the Modular Contract architecture",
+});
+
+# Modular Contracts design document.
+
+## Background
+
+_Modular Contracts_ is a framework for writing highly composable smart contracts. These are smart contracts for which you can add, remove, upgrade or switch out the exact parts you want.
+
+A modular contract is made up of two kinds of contracts:
+
+1. **Core** contract: the foundational API that can be customized by installing Extensions.
+2. **Extension** contract: implements a set of functionality that is enabled on a Core when it is installed.
+
+<Callout variant="info">
+	As an analogy, think of the robot, below. The torso is the *Core* to which you
+	attach/detach *Extensions*. 
+    
+    The torso has a particular shape and exposes sockets at fixed places -- all of which determine how extensions will be attached to it. Similarly,
+    a Core smart contract has a fixed API that determines what Extensions are compatible for installation.
+
+    The *Extensions* themselves e.g. a leg, arm, head, etc. give the robot (i.e. the modular contract as a whole) its various capabilities.
+
+    <DocImage src={modularContractsAnalogyImage} className="w-[500px]" />
+
+</Callout>
+
+Installing an Extension in a Core customizes the Core’s behaviour in two ways:
+
+1. New functions become callable on the Core contract (via its [fallback function](https://docs.soliditylang.org/en/v0.8.26/contracts.html#fallback-function)).
+2. Core contract’s fixed functions make callback function calls into the Extension.
+
+<DocImage src={modularContractsFlowImage} />
+
+As an example — a developer can write an ERC-721 NFT smart contract as a **_Core_** contract. An entire ecosystem of third-party developer built customizations can form around this one **_Core_**.
+
+Various minting and burning mechanisms, token metadata formats, soulbound capabilities, etc. can all be implemented as independent **_Extension_** smart contracts which can be plugged into a developer’s ERC-721 **_Core_** contract.
+
+This means — builders can now deploy this ERC-721 **_Core_** contract, and access a host of customizations they can use to evolve their NFT collection over time.
+
+As seen in this example, the advantage of building a product with Modular Contracts is:
+
+1. **Future Proof:** a product has needs that evolve over time. Modular contracts can be updated to adapt to changing product requirements and new industry innovations as needed.
+2. **Flexible:** the Modular Contracts framework is compatible with all upgradeability and feature-related industry standards. This means modular contracts can be written to follow any of the popular EIPs and be structured as upgradeable or non-upgradeable contracts — all without losing out on its customizability.
+3. **Highly Customizable:** Modular Contracts have been developed to enjoy a vast library of opt-in customizations in which you can discover the right smart contract features for building out your use case.
+
+## Technical Design
+
+### Abstract
+
+This architecture standardizes how a router contract verifies that an implementation contract is safe and compatible as a call destination for a given set of functions.
+
+The architecture outlines interfaces for router contracts and implementation contracts that let them communicate and agree over compatibility with each other, and interfaces for ERC-165 compliance by router contracts.
+
+### Motivation
+
+Router contracts (i.e. contracts with a potentially different call destination per function) have gained adoption for their quality of being future-proof and upgradeable in parts.
+
+There are various different ways to write router or implementation contracts, which means using any given implementation contract as a call destination in any given router contract can lead to either contract not operating according to its specification.
+
+The goal of this architecture is to make all router and implementation contracts interoperable by creating a method where both contracts communicate and agree over compatibility before a router sets some implementation contract as the call destination for a set of functions.
+
+The ecosystem benefits from this standardization as
+
+- developers can safely re-use any self or third-party developed features (implementation contracts) across many projects (router contracts).
+- new feature innovations (implementation contracts) can explicitly break compatibility with older, already deployed projects (router contracts).
+
+### Specification
+
+> The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be interpreted as described in RFC 2119 and RFC 8174.
+
+#### Definitions
+
+- **Router**: a smart contract with a potentially different call destination per function
+- **Implementation**: a smart contract stored by a router contract as the call destination a given set of functions.
+- **Modular Core:** a router contract written in the Modular Contract architecture and expresses compatibility with certain implementation contracts. Also referenced as “Core”.
+- **Modular Extension**: an implementation contract written in the Modular Contract architecture and expresses compatibility with certain router contracts. Also referenced as “Extension”.
+
+#### Extension Config
+
+The `ExtensionConfig` struct contains all information that a Core uses to check whether an Extension is compatible for installation.
+
+**`ExtensionConfig` struct**
+
+| Field                        | Type               | Description                                                                                                                           |
+| ---------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| requiredInterfaces           | bytes4[]           | The ERC-165 interfaces that a Core MUST support to be compatible for installation. (OPTIONAL field)                                   |
+| registerInstallationCallback | bool               | Whether the Extension expects onInstall and onUninstall callback function calls at installation and uninstallation time, respectively |
+| supportedInterfaces          | bytes4[]           | The ERC-165 interfaces that a Core supports upon installing the Extension.                                                            |
+| callbackFunctions            | CallbackFunction[] | List of callback functions that the Core MUST call at some point in the execution of its fixed functions.                             |
+| fallbackFunction             | FallbackFunction[] | List of functions that the Core MUST call via its fallback function with the Extension as the call destination.                       |
+
+**`FallbackFunction` struct**
+
+| Field          | Type    | Description                                                                                                                           |
+| -------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| selector       | bytes4  | The 4-byte selector of the function.                                                                                                  |
+| permissionBits | uint256 | Core’s fallback function MUST check that msg.sender has these permissions before performing a call on the Extension. (OPTIONAL field) |
+
+**`CallbackFunction` struct**
+
+| Field    | Type   | Description                          |
+| -------- | ------ | ------------------------------------ |
+| selector | bytes4 | The 4-byte selector of the function. |
+
+#### Modular Core
+
+A router contract MUST implement `IModularCore` and ERC-165 interfaces to comply with the Modular Contract architecture.
+
+The `ERC165.supportsInterface` function MUST return true for all interfaces supported by the Core and the supported interfaces expressed in the ExtensionConfig of installed extensions.
+
+```solidity
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity ^0.8.23;
+
+import {IExtensionConfig} from "./IExtensionConfig.sol";
+import {IERC165} from "./IERC165.sol";
+
+interface IModularCore is IExtensionConfig, IERC165 {
+    /*//////////////////////////////////////////////////////////////
+                            STRUCTS & ENUMS
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+     *  @dev Whether execution reverts when the callback function is not implemented by any installed Extension.
+     *  @param OPTIONAL Execution does not revert when the callback function is not implemented.
+     *  @param REQUIRED Execution reverts when the callback function is not implemented.
+     */
+    enum CallbackMode {
+        OPTIONAL,
+        REQUIRED
+    }
+
+    /**
+     *  @dev Struct representing a callback function called on an Extension during some fixed function's execution.
+     *  @param selector The 4-byte function selector of the callback function.
+     *  @param mode Whether execution reverts when the callback function is not implemented by any installed Extension.
+     */
+    struct SupportedCallbackFunction {
+        bytes4 selector;
+        CallbackMode mode;
+    }
+
+    /**
+     *  @dev Struct representing an installed Extension.
+     *  @param implementation The address of the Extension contract.
+     *  @param config The Extension Config of the Extension contract.
+     */
+    struct InstalledExtension {
+        address implementation;
+        ExtensionConfig config;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                            VIEW FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @dev Returns all callback function calls made to Extensions at some point during a fixed function's execution.
+    function getSupportedCallbackFunctions() external pure returns (SupportedCallbackFunction[] memory);
+
+    /// @dev Returns all installed extensions and their respective extension configs.
+    function getInstalledExtensions() external view returns (InstalledExtension[] memory);
+
+    /*//////////////////////////////////////////////////////////////
+                            EXTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /**
+     *  @dev Installs an Extension in the Core.
+     *
+     *  @param extensionContract The address of the Extension contract to be installed.
+     *  @param data The data to be passed to the Extension's onInstall callback function.
+     *
+     *  MUST implement authorization control.
+     *  MUST call `onInstall` callback function if Extension Config has registerd for installation callbacks.
+     *  MUST revert if Core does not implement the interface required by the Extension, specified in the Extension Config.
+     *  MUST revert if any callback or fallback function in the Extension's ExtensionConfig is already registered in the Core with another Extension.
+     *
+     *  MAY interpret the provided address as the implementation address of the Extension contract to install as a proxy.
+     */
+    function installExtension(address extensionContract, bytes calldata data) external payable;
+
+    /**
+     *  @dev Uninstalls an Extension from the Core.
+     *
+     *  @param extensionContract The address of the Extension contract to be uninstalled.
+     *  @param data The data to be passed to the Extension's onUninstall callback function.
+     *
+     *  MUST implement authorization control.
+     *  MUST call `onUninstall` callback function if Extension Config has registerd for installation callbacks.
+     *
+     *  MAY interpret the provided address as the implementation address of the Extension contract which is installed as a proxy.
+     */
+    function uninstallExtension(address extensionContract, bytes calldata data) external payable;
+}
+```
+
+#### Modular Extension
+
+Any given callback function in the ExtensionConfig of an installed Extension MUST be called by the Core during the function execution of some fixed function.
+
+Any given fallback function in the ExtensionConfig of an installed Extension MUST be called by the Core via its fallback, when called with the given fallback function’s calldata.
+
+```solidity
+interface IModularExtension is IExtensionConfig {
+    /**
+     *  @dev Returns the ExtensionConfig of the Extension contract.
+     */
+    function getExtensionConfig() external pure returns (ExtensionConfig memory);
+}
+```
+
+### Rationale
+
+#### Callback and Fallback functions
+
+We allow for a Core to be customized by Extension contracts in two different ways — callback functions and fallback functions.
+
+Callback functions are function calls made to an Extension at some point during the execution of a fixed function. They allow injecting custom logic to run within a Core’s fixed functions. This means a Core can have a foundational API of fixed functions which can nevertheless enjoy customizations.
+
+Fallback functions are functions that are callable on the Core as an entrypoint, whereon the Core calls an Extension from its fallback function with the calldata it receives. They allow additions to a Core’s foundational API of fixed functions.
+
+#### Callback and Fallback functions are called via delegateCall
+
+All callback and fallback functions care called via performing a delegateCall on the Extension contract where the respective function is defined. This means that Extension contracts define functions that instruct the Core contract on how it should update its state.
+
+This is to allow developers to only care about a core contract’s address as an entrypoint for calling any functions, and for the state making up the whole smart contract system to not be split across the Core and various Extension contracts, and instead, only be consolidated in the Core contract’s state.
+
+#### Core and Extension compatibility
+
+An Extension is compatible to install in a Core if:
+
+1. all of the Extension’s callback functions (specified in ExtensionConfig) are included in the Core’s supported callbacks (specified in IModularCore.getSupportedCallbackFunctions).
+
+   This is because we assume that an Extension only specifies a callback function in its ExtensionConfig when it expects a Core to call it.
+
+2. the Core implements the required interface (if any) specified by the ExtensionConfig
+
+   It is optional for an ExtensionConfig to specify an interface that a Core must implement. However, some Extensions may only be sensible to install in particular Core contracts, and the ExtensionConfig.requiredInterfaceId field encodes this requirement.
+
+#### Pure getter functions
+
+Both IModularCore.getSupportedCallbackFunctions and IModularExtension.getExtensionConfig are pure functions, which means their return value does not change based on any storage.
+
+For a given Extension, it is important for the Core’s stored representation of an ExtensionConfig to not go out of sync with the actual return value of IModularExtension.getExtensionConfig at any time, since this may lead to unintended consequences such as the Core calling functions on the Extension that no longer exist or be called on the Extension contract.
+
+#### Permissions in FallbackFunction and CallbackFunction structs
+
+The FallbackFunction struct contains a `uint256 permissions` field that allows expressing the permissions required by the msg.sender in the Core contract’s fallback to be authorized for calling the relevant function on the Extension contract.
+
+This is important because a caller should be authorized for making the state updates to the Core contract that’ll result from a delegateCall to the relevant Extension contract function.
+
+The CallbackFunction struct does not contain a similar permissions struct field.
+
+This is because a callback function call is specified in the function body of a fixed function, and so, the authorization a caller is left to the Core contract itself since it is expected that the Core will perform authorization checks on callers in its fixed functions, wherever necessary.
+
+### Reference Implementation
+
+#### IModularCore
+
+https://github.com/thirdweb-dev/modular-contracts/blob/main/src/ModularCore.sol
+
+#### IModularExtension
+
+```solidity
+library MockExtensionStorage {
+    /// @custom:storage-location erc7201:mock.extension
+    bytes32 public constant MOCK_EXTENSION_STORAGE_POSITION =
+        keccak256(abi.encode(uint256(keccak256("mock.extension")) - 1)) & ~bytes32(uint256(0xff));
+
+    struct Data {
+				uint256 count;
+    }
+
+    function data() internal pure returns (Data storage data_) {
+        bytes32 position = MOCK_EXTENSION_STORAGE_POSITION;
+        assembly {
+            data_.slot := position
+        }
+    }
+}
+
+contract MockExtension is IModularExtension {
+
+    function increment() external {
+			   MockExtensionStorage.data().count++;
+    }
+
+    function getIndex() external view {
+		    return MockExtensionStorage.data().count++;
+    }
+
+    function getExtensionConfig() external pure override returns (ExtensionConfig memory config) {
+        config.callbackFunctions = new CallbackFunction[](1);
+        config.callbackFunctions[0] = CallbackFunction(this.increment.selector);
+
+        config.fallbackFunctions = new FallbackFunction()[1];
+        config.fallbackFunctions[0] = FallbackFunction(this.getIndex.selector, 0);
+    }
+}
+```
+
+### Security Considerations
+
+#### Core out-of-sync with Extension
+
+For a Core to go “out of sync” with an installed Extension means that the extension config stored locally by the Core is different from the return value of the `getExtensionConfig` function of the Extension.
+
+Since the extension config of an Extension encodes the spec. that defines how the Extension contract is _meant_ to be used when installed, a Core going out-of-sync with an installed Extension in this way is spec. breaking for both the Core and Extension contracts.
+
+This scenario can occur when the return value of the `getExtensionConfig` function changes after and while the Extension is installed in the Core. Since the `getExtensionConfig` is a pure function, this is only possible when the installed Extension is a proxy contract whose underlying implementation can be upgraded, and hence, the return value of the pure function `getExtensionConfig` can potentially change.
+
+For this reason, we recommend not using already proxy contracts as Extensions to install, and rather, install Extensions that are non-proxy, implementation contracts.
+
+An upgrade/patch to an installed Extension should be performed by first uninstalling the Extension, and then re-installing the Extension by providing the `installExtension` function the relevant new implementation address.
+
+---
+
+thirdweb is excited to bring Modular Contracts to developers. The Modular Contract framework is actively being developed in the opensource thirdweb-dev/modular-contracts github repository, and is currently in audit.

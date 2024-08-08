@@ -12,7 +12,10 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
@@ -43,10 +46,20 @@ export const SettingsPlatformFees = <
     values: query.data,
   });
 
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
+
   const { onSuccess, onError } = useTxNotifications(
     "Platform fee settings updated",
     "Error updating platform fee settings",
-    contract,
+    contractV5,
   );
 
   return (
@@ -87,7 +100,7 @@ export const SettingsPlatformFees = <
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Platform fee</Heading>
           <Text size="body.md" fontStyle="italic">
-            Determine the address that should receive the revenue from platform
+            The wallet address that should receive the revenue from platform
             fees.
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
@@ -145,22 +158,24 @@ export const SettingsPlatformFees = <
             </FormControl>
           </Flex>
         </Flex>
-        <AdminOnly contract={contract as ValidContractInstance}>
-          <TransactionButton
-            colorScheme="primary"
-            transactionCount={1}
-            isDisabled={query.isLoading || !form.formState.isDirty}
-            type="submit"
-            isLoading={mutation.isLoading}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
-          >
-            Update Platform Fee Settings
-          </TransactionButton>
-        </AdminOnly>
+        {contractV5 && (
+          <AdminOnly contract={contractV5}>
+            <TransactionButton
+              colorScheme="primary"
+              transactionCount={1}
+              isDisabled={query.isLoading || !form.formState.isDirty}
+              type="submit"
+              isLoading={mutation.isLoading}
+              loadingText="Saving..."
+              size="md"
+              borderRadius="xl"
+              borderTopLeftRadius="0"
+              borderTopRightRadius="0"
+            >
+              Update Platform Fee Settings
+            </TransactionButton>
+          </AdminOnly>
+        )}
       </Flex>
     </Card>
   );

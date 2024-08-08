@@ -20,4 +20,5 @@ export type DirectListing = {
   endTimeInSeconds: bigint;
   isReservedListing: boolean;
   status: ListingStatus;
+  type: "direct-listing";
 };

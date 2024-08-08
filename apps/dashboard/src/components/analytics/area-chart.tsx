@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { useEffect, useId, useState } from "react";
 import {
   Area,
@@ -7,7 +8,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { cn } from "../../@/lib/utils";
 import { CustomToolTip } from "./custom-tooltip";
 
 export type GenericDataType = Record<string, string | number>;

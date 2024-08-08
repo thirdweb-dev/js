@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +16,9 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
@@ -46,11 +49,21 @@ export const SettingsRoyalties = <
     values: query.data,
   });
   const address = useActiveAccount()?.address;
+  const chain = useV5DashboardChain(contract?.chainId);
+
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   const { onSuccess, onError } = useTxNotifications(
     "Royalty settings updated",
     "Error updating royalty settings",
-    contract,
+    contractV5,
   );
 
   return (
@@ -91,7 +104,7 @@ export const SettingsRoyalties = <
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Royalties</Heading>
           <Text size="body.md" fontStyle="italic">
-            Determine the address that should receive the revenue from royalties
+            The wallet address that should receive the revenue from royalties
             earned from secondary sales of the assets.
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
@@ -144,22 +157,24 @@ export const SettingsRoyalties = <
             </FormControl>
           </Flex>
         </Flex>
-        <AdminOnly contract={contract as ValidContractInstance}>
-          <TransactionButton
-            colorScheme="primary"
-            transactionCount={1}
-            isDisabled={query.isLoading || !form.formState.isDirty}
-            type="submit"
-            isLoading={mutation.isLoading}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
-          >
-            Update Royalty Settings
-          </TransactionButton>
-        </AdminOnly>
+        {contractV5 && (
+          <AdminOnly contract={contractV5}>
+            <TransactionButton
+              colorScheme="primary"
+              transactionCount={1}
+              isDisabled={query.isLoading || !form.formState.isDirty}
+              type="submit"
+              isLoading={mutation.isLoading}
+              loadingText="Saving..."
+              size="md"
+              borderRadius="xl"
+              borderTopLeftRadius="0"
+              borderTopRightRadius="0"
+            >
+              Update Royalty Settings
+            </TransactionButton>
+          </AdminOnly>
+        )}
       </Flex>
     </Card>
   );

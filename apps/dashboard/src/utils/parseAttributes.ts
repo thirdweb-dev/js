@@ -1,6 +1,6 @@
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
+import type { NFTInput } from "thirdweb/utils";
 
-export function parseAttributes<T extends NFTMetadataInput>(input: T): T {
+export function parseAttributes<T extends NFTInput>(input: T): T {
   return {
     ...input,
     attributes: removeEmptyValues(input.attributes),
@@ -8,7 +8,7 @@ export function parseAttributes<T extends NFTMetadataInput>(input: T): T {
   };
 }
 
-export function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
+export function removeEmptyValues(data: NFTInput["attributes"]) {
   if (!data) {
     return data;
   }

@@ -1,4 +1,5 @@
-import { Box, type BoxProps, DarkMode, Flex } from "@chakra-ui/react";
+import { useForceDarkTheme } from "@/components/theme-provider";
+import { Box, type BoxProps, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
@@ -17,8 +18,10 @@ export const LandingLayout: ComponentWithChildren<LandingLayoutProps> = ({
   children,
   py,
 }) => {
+  useForceDarkTheme();
+
   return (
-    <DarkMode>
+    <>
       <NextSeo {...seo} />
       <Flex
         sx={{
@@ -44,6 +47,6 @@ export const LandingLayout: ComponentWithChildren<LandingLayoutProps> = ({
         <NewsletterSection />
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };

@@ -22,7 +22,7 @@
     "build": "tsc && preconstruct build",
     "test": "vitest run",
     "push": "yalc push",
-    "typedoc": "node scripts/typedoc.mjs"
+    "typedoc": "bun run scripts/typedoc.mjs"
   },
   "files": [
     "dist/"
@@ -44,7 +44,7 @@
     "esm": "^3.2.25",
     "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2"
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "@thirdweb-dev/crypto": "workspace:*",

@@ -11,39 +11,48 @@ export const products = [
     name: "Contracts",
     id: "contracts",
     icon: ContractIcon,
+    description: "Pre-built contracts & deployment tools",
+    link: "https://portal.thirdweb.com/contracts",
   },
   {
     name: "Connect SDK",
     id: "connect-sdk",
     icon: ConnectSDKIcon,
+    description: "Client-side SDKs for wallets and blockchain interactions",
+    link: "https://portal.thirdweb.com/connect",
   },
   {
     name: "RPC Edge",
     id: "rpc-edge",
     icon: RPCIcon,
+    description: "Performant and scalable RPC service",
+    link: "https://portal.thirdweb.com/infrastructure/rpc-edge/overview",
   },
   {
     name: "Engine",
     id: "engine",
     icon: EngineIcon,
+    description: "Backend server that reads, writes, and deploys contracts",
+    link: "https://portal.thirdweb.com/engine",
   },
   {
     name: "Account Abstraction",
     id: "account-abstraction",
     icon: SmartAccountIcon,
+    description: "Account factory contracts, bundler & paymaster",
+    link: "https://portal.thirdweb.com/connect/account-abstraction/overview",
   },
   {
     name: "Pay",
     id: "pay",
     icon: PayIcon,
-  },
-  {
-    name: "Faucet",
-    id: "faucet",
-    icon: PayIcon,
+    description: "Point of sale solution for bridging, onramping & swapping",
+    link: "https://portal.thirdweb.com/connect/pay/overview",
   },
 ] satisfies Array<{
   name: string;
   id: ChainSupportedService;
   icon: React.FC<{ className?: string }>;
+  description: string;
+  link: string;
 }>;

@@ -1,0 +1,49 @@
+import { OpenSourceCard, Callout, InstallTabs } from "@doc";
+
+# CLI
+
+The CLI provides tools to create, build, and deploy projects using thirdweb tools and infrastructure. Using the CLI, you can
+create new projects with the SDK configured, build, publish and deploy smart contracts, generate types while developing, upload files to IPFS, and more.
+
+<OpenSourceCard
+	title="CLI"
+	href="https://github.com/thirdweb-dev/js/tree/main/legacy_packages/cli"
+/>
+
+## Installation
+
+<Callout variant="warning" title="Usage on Windows">
+	If you are on windows, please avoid using powershell it has some known issues
+	that we are actively working on, please use git bash instead or the windows
+	command prompt.
+</Callout>
+
+Install the CLI package globally to use the commands anywhere on your system.
+
+_Note: If you do not wish to install it globally, you can prefix each command with `npx`. i.e. `npx thirdweb <command>`_.
+
+<InstallTabs
+	npm="npm i -g thirdweb"
+	yarn="yarn global add thirdweb"
+	pnpm="pnpm install -g thirdweb"
+/>
+
+Once installed, you can view the full list of available commands by running:
+
+```bash
+thirdweb
+```
+
+## Available Commands
+
+| Name of command                          | Description                                                                                    |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [`create`](/cli/create)                  | Create a web3 app from any of our official templates.                                          |
+| [`install`](/cli/install)                | Add thirdweb&rsquo;s packages to your existing project.                                        |
+| [`build`](/cli/build)                    | Compile contract and detect thirdweb contract extensions.                                      |
+| [`generate`](/cli/generate)              | Fetch contract ABIs to generate types and improve performance in the SDK.                      |
+| [`upload`](/cli/upload)                  | Upload any file or directory to decentralized storage (IPFS).                                  |
+| [`deploy`](/contracts/deploy/overview)   | Deploy your (or your team&rsquo;s) contracts securely to blockchains.                          |
+| [`publish`](/contracts/publish/overview) | Publish your protocol so other devs can deploy them and unlock SDKs, dashboards and analytics. |
+| [`login`](/cli/login)                    | Authenticate with the thirdweb CLI using your API secret key or replace an existing API key.   |
+| [`logout`](/cli/logout)                  | Logout of the thirdweb CLI, effectively removing your API secret key from your machine.        |

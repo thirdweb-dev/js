@@ -1,0 +1,32 @@
+### React Cheatsheet
+
+| Task                 | `@thirdweb-dev/react`                                 | `thirdweb`                                          |
+| ---------------------| ----------------------------------------------------- | --------------------------------------------------- |
+| Provider             | `import { ThirdwebProvider} from @thirdweb-dev/react` | [`import { ThirdwebProvider } from "thirdweb/react"`](/react/v5/ThirdwebProvider) |
+| Contract             | `useContract(...)`                                    | [`getContract(...) // not a hook`](/references/typescript/v5/getContract)                    |
+| Address              | `useAddress(...)`                                     | [`useActiveAccount(...) // account?.address`](/references/typescript/v5/useActiveAccount)         |
+| Read                 | `useContractRead(...)`                                | [`useReadContract(...)`](/references/typescript/v5/useReadContract)                              |
+| Write                | `useContractWrite(...)`                               | [`useSendTransaction()`](/references/typescript/v5/useSendTransaction)                             |
+| Extensions           | `useNFTs(...)`                                        | [`useReadContract(getNFTs, { ... })`](/references/typescript/v5/useReadContract)                |
+| Get Signer           | `useSigner()`                                         | [`useActiveAccount()`](/references/typescript/v5/useActiveAccount)                                |
+| Get Wallet           | `useWallet()`                                         | [`useActiveWallet()`](/references/typescript/v5/useActiveWallet)                                 |
+| Button               | `Web3Button`                                          | [`TransactionButton`](/react/v5/TransactionButton)                                 |
+| Connect              | `ConnectWallet`                                       | [`ConnectButton`](/react/v5/ConnectButton)                                     |
+| Connection Status    | `useConnectionStatus()`                               | [`useActiveWalletConnectionStatus()`](/references/typescript/v5/useActiveWalletConnectionStatus)                 |
+| Switch Chain         | `useSwitchChain()`                                    | [`useSwitchActiveWalletChain()`](/references/typescript/v5/useSwitchActiveWalletChain)                      |
+| Get Connected Chain  | `useChain()`                                          | [`useSwitchActiveWalletChain()`](/references/typescript/v5/useSwitchActiveWalletChain)                  |
+
+
+### TypeScript Cheatsheet
+
+| Task       | `@thirdweb-dev/sdk`                                      | `thirdweb`                                        |
+| ---------- | -------------------------------------------------------- | ------------------------------------------------- |
+| Chains     | `import { Sepolia } from "@thirdweb-dev/chains"`         | [`import { sepolia } from "thirdweb/chains"`](/typescript/v5/chain)       |
+| Wallets    | `import { MetaMaskWallet } from "@thirdweb-dev/wallets"` | [`import { createWallet } from "thirdweb/wallets"`](/references/typescript/v5/createWallet) |
+| Initialize | `new ThirdwebSDK(...)`                                   | [`createThirdwebClient({ ... })`](/references/typescript/v5/createThirdwebClient)                   |
+| Contract   | `await sdk.getContract(...)`                             | [`getContract(...) // no await`](/references/typescript/v5/getContract)                    |
+| Read       | `await contract.call(...)`                               | [`await readContract(...)`](/references/typescript/v5/readContract)                         |
+| Prepare    | `await contract.prepare(...)`                            | [`prepareContractCall(...) // no await`](/references/typescript/v5/prepareContractCall)            |
+| Send       | `await contract.call(...)`                               | [`await sendTransaction(...)`](/references/typescript/v5/sendTransaction)                      |
+| Extensions | `await contract.erc721.getAll()`                         | [`await getNFTs(...)`](/references/typescript/v5/erc721/getNFTs)                              |
+| Deploy     | `sdk.deployer.deployBuiltInContract(...)`                | [`await deployPublishedContract(...)`](/references/typescript/v5/deploy/deployPublishedContract)              |

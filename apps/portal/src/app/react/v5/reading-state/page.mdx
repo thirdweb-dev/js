@@ -1,0 +1,23 @@
+# Read contract state
+
+Reading contract state in react is done via the `useReadContract` hook. The hook returns a React Query `data`, `isLoading`, and other useful state that you can use to render your component.
+
+```ts
+import { getContract } from "thirdweb";
+import { useReadContract } from "thirdweb/react";
+
+const contract = getContract({
+	client,
+	chain,
+	address: "0x...",
+});
+
+const MyComponent = () => {
+	const { data, isLoading } = useReadContract({
+		contract,
+		method: "function tokenURI(uint256 tokenId) returns (string)",
+		params: [1n],
+	});
+};
+```
+

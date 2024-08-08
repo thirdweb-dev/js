@@ -1,0 +1,122 @@
+import { Details, ArticleIconCard, Stack, GithubTemplateCard, Callout } from "@doc";
+import {
+	ZapIcon,
+	ScrollTextIcon,
+	ArrowRightLeftIcon,
+	WalletIcon,
+	BlocksIcon,
+	CodeIcon,
+	FolderTreeIcon,
+	PlugZapIcon,
+	ComponentIcon,
+	CableIcon,
+} from "lucide-react";
+import { TypeScriptIcon } from "@/icons";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+# React SDK
+
+`thirdweb/react` exports various Components and Hooks to easily connect wallets & interact with smart contracts
+
+## Quickstart
+
+Follow this [guide](/react/v5/getting-started) to get started with the React SDK.
+<Stack>
+<ArticleIconCard
+	title="Getting started"
+	icon={ZapIcon}
+	href="/react/v5/getting-started"
+	description="Get started with the React SDK"
+/>
+</Stack>
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/create-api-key"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
+
+## Starter kits
+
+You can quickly create a new project with the thirdweb CLI
+
+```bash
+npx thirdweb create app --legacy-peer-deps
+```
+
+or clone the the Next.js or Vite starter repo:
+
+<Stack>
+<GithubTemplateCard
+	title="Next.js + thirdweb starter repo"
+	descrption="A starter template for using the thirdweb package in a Next.js app"
+	href="https://github.com/thirdweb-example/next-starter"
+/>
+
+<GithubTemplateCard
+	title="Vite + thirdweb starter repo"
+	descrption="A starter template for using the thirdweb package in a Vite app"
+	href="https://github.com/thirdweb-example/vite-starter"
+/>
+</Stack>
+
+## Usage
+
+Many of the components and hooks in the React SDK use a [`client`](/typescript/v5/core/client) to interface with the core SDK and your private RPC endpoints. You'll need to create a `clientId` in the [Dashboard](https://thirdweb.com/create-api-key) to generate this client.
+
+<Stack>
+
+<ArticleIconCard
+	title="TypeScript"
+	icon={TypeScriptIcon}
+	href="/typescript/v5/client"
+	description="Follow the TypeScript docs for functions and types"
+/>
+
+<ArticleIconCard
+	title="ThirdwebProvider"
+	icon={FolderTreeIcon}
+	href="/react/v5/ThirdwebProvider"
+	description="Setup the ThirdwebProvider"
+/>
+
+<ArticleIconCard
+	title="Connecting Wallets"
+	icon={PlugZapIcon}
+	href="/react/v5/connecting-wallets"
+	description="Connect wallets using ConnectButton, ConnectEmbed or useConnect hook"
+/>
+
+<ArticleIconCard
+	title="Supported Wallets"
+	icon={WalletIcon}
+	href="/typescript/v5/supported-wallets"
+	description="See all 350+ wallets supported by the Connect SDK"
+/>
+
+<ArticleIconCard
+	title="UI Components"
+	icon={ComponentIcon}
+	href="/react/v5/connecting-wallets/ui-components"
+	description="UI components for wallet connection and transactions"
+/>
+
+<ArticleIconCard
+	title="Hooks"
+	icon={CableIcon}
+	href="/react/v5/connecting-wallets/hooks"
+	description="Hooks for wallet connection and transactions"
+/>
+
+</Stack>

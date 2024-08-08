@@ -31,15 +31,24 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
 
 export function ToolTipLabel(props: {
   children: React.ReactNode;
-  label: string;
+  label: string | undefined;
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
 }) {
+  if (!props.label) {
+    return props.children;
+  }
+
   return (
     <TooltipProvider>
       <Tooltip delayDuration={100} disableHoverableContent={true}>
-        <TooltipTrigger asChild>{props.children}</TooltipTrigger>
-        <TooltipContent sideOffset={10}>
+        <TooltipTrigger asChild className="!pointer-events-auto">
+          {props.children}
+        </TooltipTrigger>
+        <TooltipContent
+          sideOffset={10}
+          className="max-w-[300px] leading-relaxed"
+        >
           <div className="p-2 text-sm flex items-center gap-1.5">
             {props.leftIcon}
             {props.label}

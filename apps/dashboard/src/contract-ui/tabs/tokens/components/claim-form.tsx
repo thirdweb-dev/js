@@ -7,17 +7,17 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import {
-  type TokenContract,
-  useClaimToken,
-  useTokenDecimals,
-} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { ZERO_ADDRESS } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { claimTo, decimals } from "thirdweb/extensions/erc20";
+import {
+  useActiveAccount,
+  useReadContract,
+  useSendAndConfirmTransaction,
+} from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -27,13 +27,12 @@ import {
 
 const CLAIM_FORM_ID = "token-claim-form";
 interface TokenClaimFormProps {
-  contract: TokenContract;
+  contract: ThirdwebContract;
 }
 
 export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const claim = useClaimToken(contract);
   const {
     register,
     handleSubmit,
@@ -47,7 +46,10 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
     contract,
   );
 
-  const decimals = useTokenDecimals(contract);
+  const { data: _decimals, isLoading } = useReadContract(decimals, {
+    contract,
+  });
+  const { mutate, isPending } = useSendAndConfirmTransaction();
 
   return (
     <>
@@ -70,7 +72,7 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
               <FormLabel>Amount</FormLabel>
               <Input
                 type="text"
-                pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
+                pattern={`^\\d+(\\.\\d{1,${_decimals || 18}})?$`}
                 {...register("amount", { required: true })}
               />
               <FormHelperText>How many would you like to claim?</FormHelperText>
@@ -83,10 +85,10 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
         <TransactionButton
           transactionCount={1}
           form={CLAIM_FORM_ID}
-          isLoading={claim.isLoading}
+          isLoading={isPending}
           type="submit"
           colorScheme="primary"
-          isDisabled={!isDirty}
+          isDisabled={!isDirty || isLoading}
           onClick={handleSubmit((d) => {
             if (d.to) {
               trackEvent({
@@ -94,29 +96,31 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
                 action: "claim",
                 label: "attempt",
               });
-              claim.mutate(
-                { amount: d.amount, to: d.to },
-                {
-                  onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "claim",
-                      label: "success",
-                    });
-                    onSuccess();
-                    modalContext.onClose();
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "claim",
-                      label: "error",
-                      error,
-                    });
-                    onError(error);
-                  },
+              const transaction = claimTo({
+                contract,
+                to: d.to,
+                quantity: d.amount,
+              });
+              mutate(transaction, {
+                onSuccess: () => {
+                  trackEvent({
+                    category: "token",
+                    action: "claim",
+                    label: "success",
+                  });
+                  onSuccess();
+                  modalContext.onClose();
                 },
-              );
+                onError: (error) => {
+                  trackEvent({
+                    category: "token",
+                    action: "claim",
+                    label: "error",
+                    error,
+                  });
+                  onError(error);
+                },
+              });
             }
           })}
         >

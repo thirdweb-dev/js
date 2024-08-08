@@ -1,8 +1,8 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Box,
   Center,
   Container,
-  DarkMode,
   Flex,
   Icon,
   SimpleGrid,
@@ -105,9 +105,10 @@ const communitySections = [
 
 const Community: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
+    <>
       <NextSeo {...SEO} />
       <Flex
         sx={{
@@ -389,7 +390,7 @@ const Community: ThirdwebNextPage = () => {
 
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

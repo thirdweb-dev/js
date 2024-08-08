@@ -1,0 +1,261 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "ThirdwebTransaction Instance Methods | Thirdweb .NET SDK",
+	description:
+		"All instance methods available on the ThirdwebTransaction class in the Thirdweb .NET SDK.",
+});
+
+# ThirdwebTransaction Instance Methods
+
+The `ThirdwebTransaction` class provides a set of instance methods to set various properties of your transaction's input data and gas settings.
+
+Do note that in most cases those are autopolulated by the SDK and you don't need to set them manually.
+
+## ThirdwebTransaction.SetTo
+
+Set the target address or contract of the transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetTo("0xToAddress");
+```
+
+<Details summary="Parameters">
+
+### toAddress (required)
+
+The target address or contract of the transaction. Must be a hexadecimal `string`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `to` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetData
+
+Set the raw encoded data payload (potentially overriding previous data if the transaction was created using `ThirdwebContract.Prepare`).
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetData("0x");
+```
+
+<Details summary="Parameters">
+
+### data (required)
+
+The raw data payload of the transaction. Must be a hexadecimal `string`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `data` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetValue
+
+Set the value of the payable transaction in Wei.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetValue(1000000000000000000);
+```
+
+<Details summary="Parameters">
+
+### value (required)
+
+The value of the transaction in Wei. Must be a `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `value` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetGasLimit
+
+Set the gas limit of the transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetGasLimit(21000);
+```
+
+<Details summary="Parameters">
+
+### gasLimit (required)
+
+The gas limit of the transaction. Must be an `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+Returns the instance of `ThirdwebTransaction` with the `gasLimit` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetGasPrice
+
+Set the gas price of a legacy transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetGasPrice(1000000000);
+```
+
+<Details summary="Parameters">
+
+### gasPrice (required)
+
+The gas price of the transaction. Must be an `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `gasPrice` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetNonce
+
+Set the nonce of the transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetNonce(1);
+```
+
+<Details summary="Parameters">
+
+### nonce (required)
+
+The nonce of the transaction. Must be an `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `nonce` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetMaxFeePerGas
+
+Set the maximum fee per gas of an EIP-1559 transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetMaxFeePerGas(1000000000);
+```
+
+<Details summary="Parameters">
+
+### maxFeePerGas (required)
+
+The maximum fee per gas of the transaction. Must be an `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `maxFeePerGas` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetMaxPriorityFeePerGas
+
+Set the maximum priority fee per gas of an EIP-1559 transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetMaxPriorityFeePerGas(1000000000);
+```
+
+<Details summary="Parameters">
+
+### maxPriorityFeePerGas (required)
+
+The maximum priority fee per gas of the transaction. Must be an `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `maxPriorityFeePerGas` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetChainId
+
+Set the chain ID of the transaction.
+
+```csharp
+ThirdwebTransaction transaction = transaction.SetChainId(1);
+```
+
+<Details summary="Parameters">
+
+### chainId (required)
+
+The chain ID of the transaction. Must be an `BigInteger`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `chainId` property set.
+
+</Details>
+
+## ThirdwebTransaction.SetZkSyncOptions
+
+Set the ZkSync options of the transaction.
+
+This allows you to use native ZkSync Account Abstraction with any paymaster.
+
+```csharp
+ZkSyncOptions zkSyncOptions = new ZkSyncOptions("0xPaymaster", "0xPaymasterInput");
+ThirdwebTransaction transaction = transaction.SetZkSyncOptions(zkSyncOptions);
+```
+
+<Details summary="Parameters">
+
+### zkSyncOptions (required)
+
+The ZkSync options of the transaction. Must be an instance of `ZkSyncOptions`.
+
+`ZkSyncOptions` includes the following properties:
+
+- `Paymaster` - The paymaster address. Must be a hexadecimal `string`.
+- `PaymasterInput` - The paymaster input data. Must be a hexadecimal `string`.
+- `GasPerPubdataByteLimit` - The gas limit per pubdata byte. Must be a `BigInteger`.
+- `FactoryDeps` - A list of factory dependencies. Must be a list of `byte[]`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the instance of `ThirdwebTransaction` with the `zkSyncOptions` property set.
+
+</Details>

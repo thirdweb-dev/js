@@ -1,0 +1,74 @@
+import { TablePropertiesIcon } from "lucide-react";
+import {
+	Details,
+	Breadcrumb,
+	Callout,
+	Steps,
+	Step,
+	DocImage,
+	createMetadata,
+	ArticleIconCard,
+	Stack,
+} from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "MediaRenderer",
+		icon: "react",
+	},
+	title: "MediaRenderer | thirdweb React SDK",
+	description: "API Reference for the MediaRenderer component",
+});
+
+# MediaRenderer
+
+Component that renders any asset stored on IPFS (or anywhere else), given the IPFS URI / URL.
+
+If an IPFS URL is given, the asset is fetched from IPFS through the thirdweb IPFS gateway by default. You can also specify a custom gateway URL using the gatewayUrl prop.
+
+The mime type of the asset is determined and the appropriate component is rendered on the UI.
+
+For example, if the URI points to an image, the `<img>` tag will be used. If it is a video, the `<video>` tag will be used, etc. The component currently supports:
+
+- Images
+- Videos
+- Audio files
+- 3D Models
+- SVGs (for [on-chain NFTs](https://blog.thirdweb.com/guides/how-to-create-on-chain-nfts-with-thirdweb/))
+- iframe and HTML
+
+If none of these are appropriate, the fallback is a link to the asset.
+
+The default size of rendered media is 300px x 300px, but this can be changed using the width and height props.
+
+You can use thirdweb CLI to upload any file to IPFS and get the IPFS URI:
+
+```bash
+npx thirdweb upload <path/to/file>
+```
+
+### Example
+
+```tsx
+import { MediaRenderer } from "thirdweb/react";
+
+function Home() {
+	return (
+		<MediaRenderer
+			client={client}
+			src="ipfs://QmV4HC9fNrPJQeYpbW55NLLuSBMyzE11zS1L4HmL6Lbk7X"
+		/>
+	);
+}
+```
+
+## Props
+
+<Stack>
+	<ArticleIconCard
+		title="MediaRendererProps"
+		icon={TablePropertiesIcon}
+		href="/references/typescript/v5/MediaRendererProps"
+	/>
+</Stack>
+import {util} from "prettier";

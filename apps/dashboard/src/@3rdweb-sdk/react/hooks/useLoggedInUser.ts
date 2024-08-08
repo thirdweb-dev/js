@@ -1,12 +1,12 @@
 import { LOGGED_IN_ONLY_PATHS } from "@/constants/auth";
 import { useQuery } from "@tanstack/react-query";
+import type { EnsureLoginResponse } from "app/api/auth/ensure-login/route";
 import { usePathname, useRouter } from "next/navigation";
 import { useRef } from "react";
 import {
   useActiveAccount,
   useActiveWalletConnectionStatus,
 } from "thirdweb/react";
-import type { EnsureLoginResponse } from "../../../app/api/auth/ensure-login/route";
 
 // define "TW_AUTH_TOKEN" to exist on the window object
 declare global {

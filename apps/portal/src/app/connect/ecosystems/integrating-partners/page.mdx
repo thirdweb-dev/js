@@ -1,0 +1,94 @@
+import { Callout, DocImage, createMetadata, Steps, Step } from "@doc";
+import CreateEcosystemWallet from "../assets/create-ecosystem-wallet.png";
+import EcosystemWalletPermissions from "../assets/ecosystem-wallet-permissions.png";
+import FullLoginSystem from "../assets/full-login-system.png";
+import SingleLoginOption from "../assets/single-login-option.png";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Ecosystem Wallet",
+		icon: "wallets",
+	},
+	title: "Integrating Partners - Ecosystem Wallet | thirdweb",
+	description: "Ecosystem Wallet - Own your own web3 identity stack",
+});
+
+# Integrating with Partners
+
+One of the key features of ecosystem wallets is the ability to enable other developers to spin up in-app wallets on your behalf. All partners that spin up in-app wallets using your ecosystem wallet will access the same account for your end users. You can create partners in the [Ecosystem Wallets dashboard](https://thirdweb.com/dashboard/connect/ecosystem).
+
+Adding a new partner will create their unique Partner ID. They can use this Partner ID to integrate your wallet in a number of different ways:
+
+### thirdweb SDK
+
+Partners can install thirdweb SDK and use the Partner ID you created for them to display your branded sign in flow. All login options in this sign in flow will create an in-app wallet that works across the ecosystem.
+
+#### Sign In UI
+
+The Sign In UI provides a complete flow with email, phone, passkey, and social sign in options. Available social login options are determined by the ecosystem creator. Any options displayed in the sign in flow will create an in-app wallet within the specified ecosystem.
+
+<DocImage src={FullLoginSystem} />
+
+<Steps>
+<Step title='Create a Wallet'>
+Partners can instantiate your ecosystem wallet by using your **Ecosystem ID**.
+
+```ts
+import { ecosystemWallet } from "thirdweb/wallets";
+
+// Create a wallet for a non-gated "Anyone" ecosystem
+const wallet = ecosystemWallet("ecosystem.your-ecosystem-id");
+```
+
+If you set your ecosystem wallet to Allowlist, your partners will also need to specify their unique **Partner ID** (available on the Ecosystem Wallet dashboard).
+
+```ts
+import { ecosystemWallet } from "thirdweb/wallets";
+
+// Create a wallet for "Allowlist" ecosystems restricted to partners
+const wallet = ecosystemWallet("ecosystem.your-ecosystem-id", {
+	partnerId: "...",
+});
+```
+
+</Step>
+
+<Step title='Add Ecosystem Wallet to Sign In'>
+Once a partner has instantiated your ecosystem wallet, they can add it to their Sign In UI.
+
+```tsx
+import { ConnectButton } from "thirdweb/react";
+
+<ConnectButton
+	client={THIRDWEB_CLIENT}
+	wallets={[wallet]} // Pass a non-gated or restricted wallet to the ConnectButton
+	{...props}
+/>;
+```
+
+</Step>
+
+</Steps>
+
+#### Branded Wallet Connector
+
+Partners that want to utilize your Ecosystem Wallet as an option to their existing sign in flow can integrate your wallet separately. In this case, only sign ins through your `ecosystem.your-ecosystem-id` will create in-app wallets within your ecosystem:
+
+<DocImage src={SingleLoginOption} />
+
+```tsx
+import { createWallet } from "thirdweb/wallets";
+
+<ConnectButton
+	client={THIRDWEB_CLIENT}
+	wallets={[
+		createWallet("ecosystem.your-ecosystem-id", {
+			partnerId: "...", // Pass an optional partner ID for restricted ecosystems
+		}),
+		createWallet("io.metamask"),
+	]}
+	{...props}
+/>;
+```
+
+### WalletConnect (Coming Soon)

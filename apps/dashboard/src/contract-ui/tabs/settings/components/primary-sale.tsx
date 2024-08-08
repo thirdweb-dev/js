@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +15,9 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import {
   Card,
@@ -50,10 +53,20 @@ export const SettingsPrimarySale = <
     values: transformedQueryData,
   });
 
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
+
   const { onSuccess, onError } = useTxNotifications(
     "Primary sale address updated",
     "Error updating primary sale address",
-    contract,
+    contractV5,
   );
 
   return (
@@ -94,7 +107,7 @@ export const SettingsPrimarySale = <
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Primary Sales</Heading>
           <Text size="body.md" fontStyle="italic">
-            Determine the address that should receive the revenue from initial
+            The wallet address that should receive the revenue from initial
             sales of the assets.
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
@@ -122,22 +135,24 @@ export const SettingsPrimarySale = <
             </FormControl>
           </Flex>
         </Flex>
-        <AdminOnly contract={contract as ValidContractInstance}>
-          <TransactionButton
-            colorScheme="primary"
-            transactionCount={1}
-            isDisabled={query.isLoading || !form.formState.isDirty}
-            type="submit"
-            isLoading={mutation.isLoading}
-            loadingText="Saving..."
-            size="md"
-            borderRadius="xl"
-            borderTopLeftRadius="0"
-            borderTopRightRadius="0"
-          >
-            Update Primary Sale Settings
-          </TransactionButton>
-        </AdminOnly>
+        {contractV5 && (
+          <AdminOnly contract={contractV5}>
+            <TransactionButton
+              colorScheme="primary"
+              transactionCount={1}
+              isDisabled={query.isLoading || !form.formState.isDirty}
+              type="submit"
+              isLoading={mutation.isLoading}
+              loadingText="Saving..."
+              size="md"
+              borderRadius="xl"
+              borderTopLeftRadius="0"
+              borderTopRightRadius="0"
+            >
+              Update Primary Sale Settings
+            </TransactionButton>
+          </AdminOnly>
+        )}
       </Flex>
     </Card>
   );

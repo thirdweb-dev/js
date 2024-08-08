@@ -15,6 +15,21 @@ module.exports = {
         message:
           'Are you *sure* you need to use "useEffect" here? If you loading any async function prefer using "useQuery".',
       },
+      {
+        selector: "CallExpression[callee.name='defineChain']",
+        message:
+          "Use useV5DashboardChain instead if you are using it inside a component",
+      },
+      {
+        selector: "CallExpression[callee.name='defineDashboardChain']",
+        message:
+          "Use useV5DashboardChain instead if you are using it inside a component",
+      },
+      {
+        selector: "CallExpression[callee.name='mapV4ChainToV5Chain']",
+        message:
+          "Use useV5DashboardChain instead if you are using it inside a component",
+      },
     ],
     "no-restricted-imports": [
       "error",

@@ -1,31 +1,31 @@
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import type { TokenContract, useContract } from "@thirdweb-dev/react";
-import { detectFeatures } from "components/contract-components/utils";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiPlus } from "react-icons/fi";
+import { getContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
-import { TokenMintForm } from "./mint-form";
+import { TokenERC20MintForm } from "./mint-form-erc20";
 
 interface TokenMintButtonProps {
-  contractQuery: ReturnType<typeof useContract>;
+  contractAddress: string;
+  chainId: number;
 }
 
 export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
-  contractQuery,
+  contractAddress,
+  chainId,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isERC20Mintable = detectFeatures<TokenContract>(
-    contractQuery.contract,
-    ["ERC20Mintable"],
-  );
-
-  if (!isERC20Mintable || !contractQuery.contract) {
-    return null;
-  }
-
+  const chain = useV5DashboardChain(chainId);
+  const contract = getContract({
+    address: contractAddress,
+    chain,
+    client: thirdwebClient,
+  });
   return (
-    <MinterOnly contract={contractQuery.contract}>
+    <MinterOnly contract={contract}>
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -33,7 +33,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenMintForm contract={contractQuery.contract} />
+        <TokenERC20MintForm contract={contract} />
       </Drawer>
       <Button
         colorScheme="primary"

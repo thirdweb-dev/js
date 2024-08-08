@@ -122,6 +122,14 @@ export function useConnectedWalletDetails(
 
 /**
  * Returns the wallet info for the provided wallet id.
+ *
+ * @example
+ * ```tsx
+ * import { useWalletInfo } from "thirdweb/react";
+ *
+ * const { data: walletInfo } = useWalletInfo("io.metamask");
+ * console.log("Walelt name", walletInfo?.name);
+ * ```
  * @wallet
  */
 export function useWalletInfo(id: WalletId | undefined) {
@@ -141,7 +149,17 @@ export function useWalletInfo(id: WalletId | undefined) {
 }
 
 /**
- * Returns the wallet image for the provided wallet id.
+ * Returns the wallet icon for the provided wallet id.
+ *
+ * @example
+ * ```tsx
+ * import { useWalletImage } from "thirdweb/react";
+ *
+ * const { data: walletImage } = useWalletImage("io.metamask");
+ *
+ * return <img src={walletImage} alt="MetaMask logo" />;
+ * ```
+ *
  * @wallet
  */
 export function useWalletImage(id: WalletId | undefined) {

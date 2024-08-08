@@ -43,7 +43,8 @@ export function getClientFetch(client: ThirdwebClient, ecosystem?: Ecosystem) {
       }
       const authToken = getTWAuthToken();
       // if we have an auth token set, use that (thirdweb.com/dashboard sets this for the user)
-      if (authToken) {
+      // pay urls should never send the auth token, because we always want the "developer" to be the one making the request, not the "end user"
+      if (authToken && !isPayUrl(url)) {
         headers.set("authorization", `Bearer ${authToken}`);
       } else if (client.secretKey) {
         headers.set("x-secret-key", client.secretKey);
@@ -123,6 +124,16 @@ export function isThirdwebUrl(url: string): boolean {
     return is;
   } catch {
     IS_THIRDWEB_URL_CACHE.set(url, false);
+    return false;
+  }
+}
+
+function isPayUrl(url: string): boolean {
+  try {
+    const { hostname } = new URL(url);
+    // pay service hostname always starts with "pay."
+    return hostname.startsWith("pay.");
+  } catch {
     return false;
   }
 }

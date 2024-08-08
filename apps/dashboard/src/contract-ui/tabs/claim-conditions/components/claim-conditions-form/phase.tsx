@@ -1,9 +1,11 @@
+import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import type { DropContract } from "@thirdweb-dev/react";
-import type { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiX } from "react-icons/fi";
 import { RxCaretDown, RxCaretUp } from "react-icons/rx";
+import { getContract } from "thirdweb";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import { ClaimConditionTypeData, useClaimConditionsFormContext } from ".";
 import { PricePreview } from "../price-preview";
@@ -44,6 +46,17 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
     form.setValue(`phases.${phaseIndex}.isEditing`, !field.isEditing);
   };
 
+  const chain = useV5DashboardChain(contract?.chainId);
+
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : null;
+
   return (
     <Card position="relative" p={8}>
       <Flex direction="column" gap={8}>
@@ -68,18 +81,20 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
           >
             {field.isEditing ? "Collapse" : isAdmin ? "Edit" : "See Phase"}
           </Button>
-          <AdminOnly contract={contract as ValidContractInstance}>
-            <Button
-              variant="ghost"
-              onClick={onRemove}
-              isDisabled={isLoading}
-              colorScheme="red"
-              size="sm"
-              rightIcon={<Icon as={FiX} />}
-            >
-              Remove
-            </Button>
-          </AdminOnly>
+          {contractV5 && (
+            <AdminOnly contract={contractV5}>
+              <Button
+                variant="ghost"
+                onClick={onRemove}
+                isDisabled={isLoading}
+                colorScheme="red"
+                size="sm"
+                rightIcon={<Icon as={FiX} />}
+              >
+                Remove
+              </Button>
+            </AdminOnly>
+          )}
         </Flex>
 
         <Flex flexDir="column" gap={2} mt={{ base: 4, md: 0 }}>

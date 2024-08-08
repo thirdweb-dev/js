@@ -77,6 +77,21 @@ Many of the tests use forked versions of live chains like mainnet. We fork these
 
 If you need to use accounts in your tests, use the predefined accounts in `test/src/test-wallets.ts`. These are the default anvil accounts that are pre-funded on the local test forks.
 
+##### Mocking Network Calls
+
+If your test depends on a downstream network call, you must mock the call using `msw`. You can use one of the existing mocks in `test/src/mocks` or create your own. Once you've created a mock request, setup the server and add all your mocks like so:
+
+```ts
+import { setupServer } from "msw/node";
+import { downloadMock, uploadMock } from "../../../test/src/mocks/storage.js";
+
+const server = setupServer(uploadMock("HASH"), downloadMock({ name: "Test NFT" }));
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
+
 #### Linting
 
 We use a linter to maintain best practices across projects. Once your changes are complete (or periodically while making changes), run the linter with the following command from the repo root:

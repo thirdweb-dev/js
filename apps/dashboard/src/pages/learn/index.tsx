@@ -1,7 +1,7 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Box,
   Center,
-  DarkMode,
   Flex,
   Icon,
   LightMode,
@@ -34,9 +34,10 @@ const SEO = {
 
 const Learn: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
+    <>
       <NextSeo {...SEO} />
       <Flex
         sx={{
@@ -253,7 +254,7 @@ const Learn: ThirdwebNextPage = () => {
         <NewsletterSection />
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

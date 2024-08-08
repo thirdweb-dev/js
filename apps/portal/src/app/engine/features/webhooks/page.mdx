@@ -1,0 +1,206 @@
+import webhooksImage from "../../assets/engine-webhooks.webp";
+import { createMetadata, DocImage } from "@doc";
+
+export const metadata = createMetadata({
+	title: "Webhooks | thirdweb Engine",
+	description:
+		"Configure webhooks in Engine to notify your backend server of transaction or backend wallet events.",
+});
+
+# Webhooks
+
+Configure webhooks in Engine to notify your backend server of transaction or backend wallet events.
+
+## Supported events
+
+### Transactions
+
+| Event                 | Description                                                                                                          |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `queued_transaction`  | A transaction is added to the Engine queue.                                                                          |
+| `sent_transaction`    | A transaction is submitted to an RPC provider. A transaction hash is provided, but it may not be mined onchain yet.  |
+| `mined_transaction`   | A transaction is mined on the blockchain. A transaction hash is provided, and it is mined onchain.                   |
+| `errored_transaction` | A transaction is unable to be submitted. There may be an error in the transaction params, backend wallet, or server. |
+| `all_transaction`     | All the above events. The `status` field will be one of: `queued`, `sent`, `mined`, `errored`.                       |
+
+<DocImage
+	src={webhooksImage}
+	alt="Webhooks lifecycle"
+	className="max-w-[500px] mx-auto"
+/>
+
+### Wallets
+
+| Event                    | Description                                                                                                                                  |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `backend_wallet_balance` | A backend wallet's balance is below `minWalletBalance`. To read or update this value, call `GET/POST /configuration/backend-wallet-balance`. |
+
+## Setup
+
+### Create a webhook
+
+1. Visit the [Engine dashboard](https://thirdweb.com/dashboard/engine).
+1. Select the **Configuration** tab.
+1. Select **Create Webhook**.
+
+Webhook URLs must start with `https://`.
+
+## Webhook verification (recommended)
+
+Since any outside origin can call your webhook endpoint, it is recommended to verify the webhook signature to ensure a request comes from your Engine instance.
+
+### Check the signature
+
+The payload body is signed with the webhook secret and provided in the `X-Engine-Signature` request header.
+
+Get the **webhook secret** for your webhook endpoint from the dashboard.
+
+This code example checks if the signature is valid:
+
+```ts
+const generateSignature = (
+	body: string,
+	timestamp: string,
+	secret: string,
+): string => {
+	const payload = `${timestamp}.${body}`;
+	return crypto.createHmac("sha256", secret).update(payload).digest("hex");
+};
+
+const isValidSignature = (
+	body: string,
+	timestamp: string,
+	signature: string,
+	secret: string,
+): boolean => {
+	const expectedSignature = generateSignature(body, timestamp, secret);
+	return crypto.timingSafeEqual(
+		Buffer.from(expectedSignature),
+		Buffer.from(signature),
+	);
+};
+```
+
+### Check the timestamp
+
+The event timestamp is provided in the `X-Engine-Timestamp` request header.
+
+This code example checks if the event exceeds a given expiration duration:
+
+```ts
+export const isExpired = (
+	timestamp: string,
+	expirationInSeconds: number,
+): boolean => {
+	const currentTime = Math.floor(Date.now() / 1000);
+	return currentTime - parseInt(timestamp) > expirationInSeconds;
+};
+```
+
+### Example webhook endpoint
+
+This NodeJS code example listens for event notifications on the `/webhook` endpoint:
+
+```ts
+import express from "express";
+import bodyParser from "body-parser";
+import { isValidSignature, isExpired } from "./webhookHelper";
+
+const app = express();
+const port = 3000;
+
+const WEBHOOK_SECRET = "<your_webhook_auth_secret>";
+
+app.use(bodyParser.text());
+
+app.post("/webhook", (req, res) => {
+	const signatureFromHeader = req.header("X-Engine-Signature");
+	const timestampFromHeader = req.header("X-Engine-Timestamp");
+
+	if (!signatureFromHeader || !timestampFromHeader) {
+		return res.status(401).send("Missing signature or timestamp header");
+	}
+
+	if (
+		!isValidSignature(
+			req.body,
+			timestampFromHeader,
+			signatureFromHeader,
+			WEBHOOK_SECRET,
+		)
+	) {
+		return res.status(401).send("Invalid signature");
+	}
+
+	if (isExpired(timestampFromHeader, 300)) {
+		// Assuming expiration time is 5 minutes (300 seconds)
+		return res.status(401).send("Request has expired");
+	}
+
+	// Process the request
+	res.status(200).send("Webhook received!");
+});
+
+app.listen(port, () => {
+	console.log(`Server started on http://localhost:${port}`);
+});
+```
+
+## Payload format
+
+The webhook request to your backend follows this format.
+
+Method: `POST`
+
+Headers:
+
+- `Content-Type`: `application/json`
+- `X-Engine-Signature`: &lt;payload signature&gt;
+- `X-Engine-Timestamp`: &lt;Unix timestamp in seconds&gt;
+
+```json
+{
+	"chainId": 80001,
+	"data": "0xa9059cbb0000000000000000000000003ecdbf3b911d0e9052b64850693888b008e183730000000000000000000000000000000000000000000000000000000000000064",
+	"value": "0x00",
+	"gasLimit": "39580",
+	"nonce": 1786,
+	"maxFeePerGas": "2063100466",
+	"maxPriorityFeePerGas": "1875545856",
+	"fromAddress": "0x3ecdbf3b911d0e9052b64850693888b008e18373",
+	"toAddress": "0x365b83d67d5539c6583b9c0266a548926bf216f4",
+	"gasPrice": "1875545871",
+	"transactionType": 2,
+	"transactionHash": "0xc3ffa42dd4734b017d483e1158a2e936c8a97dd1aa4e4ce11df80ac8e81d2c7e",
+	"signerAddress": null,
+	"accountAddress": null,
+	"target": null,
+	"sender": null,
+	"initCode": null,
+	"callData": null,
+	"callGasLimit": null,
+	"verificationGasLimit": null,
+	"preVerificationGas": null,
+	"paymasterAndData": null,
+	"userOpHash": null,
+	"functionName": "transfer",
+	"functionArgs": "0x3ecdbf3b911d0e9052b64850693888b008e18373,100",
+	"extension": "none",
+	"deployedContractAddress": null,
+	"deployedContractType": null,
+	"queuedAt": "2023-09-29T22:01:31.031Z",
+	"processedAt": "2023-09-29T22:01:38.754Z",
+	"sentAt": "2023-09-29T22:01:41.580Z",
+	"minedAt": "2023-09-29T22:01:44.000Z",
+	"cancelledAt": null,
+	"retryCount": 0,
+	"retryGasValues": false,
+	"retryMaxPriorityFeePerGas": null,
+	"retryMaxFeePerGas": null,
+	"errorMessage": null,
+	"sentAtBlockNumber": 40660021,
+	"blockNumber": 40660026,
+	"queueId": "1411246e-b1c8-4f5d-9a25-8c1f40b54e55",
+	"status": "mined"
+}
+```

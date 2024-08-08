@@ -25,10 +25,21 @@ type UseContractEventsOptions<
 };
 
 /**
- * Watches contract events and returns the logs.
- * @param options - The {@link UseContractEventsOptions | options} for watching contract events.
+ * Watches contract events and returns the parsed logs.
+ * @param options - The options for watching contract events.
+ * @param options.contract - The contract to watch events for.
+ * @param options.events - The events to watch. Shuould be an array of [prepared events](https://portal.thirdweb.com/references/typescript/v5/prepareEvent).
+ * @param options.blockRange - The number of blocks to search for events.
+ * @param options.enabled - Whether to enable the query.
+ * @param options.watch - Whether to watch for new events.
  * @returns The contract events of the watched contract events.
  * @example
+ *
+ * ### Using event extensions
+ *
+ * The `thirdweb/extesions` export contains event definitions for many popular contracts.
+ * You can use these event definitions to watch for specific events with a type-safe API.
+ *
  * ```jsx
  * import { useContractEvents } from "thirdweb/react";
  * import { tokensClaimedEvent } from "thirdweb/extensions/erc721";
@@ -39,6 +50,25 @@ type UseContractEventsOptions<
  *  events: [tokensClaimedEvent({ claimer: account?.address })],
  * });
  * ```
+ *
+ * ### Using custom events
+ *
+ * You can also watch for custom events by passing an array of [prepared events](https://portal.thirdweb.com/references/typescript/v5/prepareEvent).
+ *
+ * ```jsx
+ * import { useContractEvents } from "thirdweb/react";
+ * import { prepareEvent } from "thirdweb";
+ *
+ * const myEvent = prepareEvent({
+ *  signature: "event MyEvent(uint256 myArg)",
+ * });
+ *
+ * const contractEvents = useContractEvents({
+ *  contract,
+ *  events: [myEvent],
+ * });
+ * ```
+ *
  * @contract
  */
 export function useContractEvents<

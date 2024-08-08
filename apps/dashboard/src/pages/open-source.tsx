@@ -1,10 +1,10 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import {
   Accordion,
   AccordionButton,
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  DarkMode,
   Flex,
   Icon,
   LinkBox,
@@ -214,217 +214,216 @@ const RepoCard: React.FC<RepoCardProps> = ({ title, description, url }) => {
 
 const OSS: ThirdwebNextPage = ({ contributors }: PageProps) => {
   const trackEvent = useTrack();
+  useForceDarkTheme();
 
   return (
-    <DarkMode>
-      <Flex
-        sx={{
-          // overwrite the theme colors because the home page is *always* in "dark mode"
-          "--chakra-colors-heading": "#F2F2F7",
-          "--chakra-colors-paragraph": "#AEAEB2",
-          "--chakra-colors-borderColor": "rgba(255,255,255,0.1)",
+    <Flex
+      sx={{
+        // overwrite the theme colors because the home page is *always* in "dark mode"
+        "--chakra-colors-heading": "#F2F2F7",
+        "--chakra-colors-paragraph": "#AEAEB2",
+        "--chakra-colors-borderColor": "rgba(255,255,255,0.1)",
+      }}
+      justify="center"
+      flexDir="column"
+      as="main"
+      bg="#000"
+    >
+      <ProductPage
+        seo={{
+          title: "Open Source Community",
+          description:
+            "All of our SDKs, infrastructure, and documentation are open source under the Apache 2.0 license and open to contributions.",
+          openGraph: {
+            images: [
+              {
+                url: `${getAbsoluteUrl()}/assets/og-image/sdk.png`,
+                width: 2334,
+                height: 1260,
+                alt: "thirdweb Open Source SDKs",
+              },
+            ],
+          },
         }}
-        justify="center"
-        flexDir="column"
-        as="main"
-        bg="#000"
       >
-        <ProductPage
-          seo={{
-            title: "Open Source Community",
-            description:
-              "All of our SDKs, infrastructure, and documentation are open source under the Apache 2.0 license and open to contributions.",
-            openGraph: {
-              images: [
-                {
-                  url: `${getAbsoluteUrl()}/assets/og-image/sdk.png`,
-                  width: 2334,
-                  height: 1260,
-                  alt: "thirdweb Open Source SDKs",
-                },
-              ],
-            },
-          }}
-        >
-          <HomepageSection pt="100px" bottomPattern pb={32}>
-            <Aurora
-              pos={{ left: "50%", top: "0%" }}
-              size={{ width: "2400px", height: "2400px" }}
-              color="hsl(289deg 78% 30% / 45%)"
-            />
+        <HomepageSection pt="100px" bottomPattern pb={32}>
+          <Aurora
+            pos={{ left: "50%", top: "0%" }}
+            size={{ width: "2400px", height: "2400px" }}
+            color="hsl(289deg 78% 30% / 45%)"
+          />
+
+          <Flex
+            pt={24}
+            mb={{ base: 24, md: -24 }}
+            flexDir="column"
+            gap={{ base: 6, md: 8 }}
+            align={{ base: "initial", md: "start" }}
+          >
+            <Heading
+              as="h2"
+              size="display.md"
+              textAlign={{ base: "center", md: "left" }}
+            >
+              Open Source
+            </Heading>
+            <Heading
+              as="h3"
+              size="subtitle.md"
+              textAlign={{ base: "center", md: "left" }}
+              maxW="container.sm"
+            >
+              All of our SDKs, infrastructure, and documentation are open source
+              under the Apache 2.0 license and open to contributions.
+            </Heading>
 
             <Flex
-              pt={24}
-              mb={{ base: 24, md: -24 }}
-              flexDir="column"
-              gap={{ base: 6, md: 8 }}
-              align={{ base: "initial", md: "start" }}
+              flexDirection={{ base: "column", md: "row" }}
+              gap={4}
+              mt={{ base: 8, md: 0 }}
             >
-              <Heading
-                as="h2"
-                size="display.md"
-                textAlign={{ base: "center", md: "left" }}
-              >
-                Open Source
-              </Heading>
-              <Heading
-                as="h3"
-                size="subtitle.md"
-                textAlign={{ base: "center", md: "left" }}
-                maxW="container.sm"
-              >
-                All of our SDKs, infrastructure, and documentation are open
-                source under the Apache 2.0 license and open to contributions.
-              </Heading>
-
-              <Flex
-                flexDirection={{ base: "column", md: "row" }}
-                gap={4}
-                mt={{ base: 8, md: 0 }}
-              >
-                <Flex flexDir="column" gap={3} flexGrow={1} minW={300}>
-                  <LinkButton
-                    href="https://github.com/orgs/thirdweb-dev/"
-                    isExternal
-                    onClick={() =>
-                      trackEvent({
-                        category: "cta-button",
-                        action: "click",
-                        label: "oss",
-                        title: "Contribute Now",
-                      })
-                    }
-                    px={4}
-                    py={7}
-                    fontSize="20px"
-                    leftIcon={<Icon as={BsGithub} color="black" />}
-                    color="black"
-                    flexShrink={0}
-                    background="rgba(255,255,255,1)"
-                    _hover={{
-                      background: "rgba(255,255,255,0.9)!important",
-                    }}
-                    zIndex={12}
-                  >
-                    Contribute Now
-                  </LinkButton>
-                </Flex>
+              <Flex flexDir="column" gap={3} flexGrow={1} minW={300}>
+                <LinkButton
+                  href="https://github.com/orgs/thirdweb-dev/"
+                  isExternal
+                  onClick={() =>
+                    trackEvent({
+                      category: "cta-button",
+                      action: "click",
+                      label: "oss",
+                      title: "Contribute Now",
+                    })
+                  }
+                  px={4}
+                  py={7}
+                  fontSize="20px"
+                  leftIcon={<Icon as={BsGithub} color="black" />}
+                  color="black"
+                  flexShrink={0}
+                  background="rgba(255,255,255,1)"
+                  _hover={{
+                    background: "rgba(255,255,255,0.9)!important",
+                  }}
+                  zIndex={12}
+                >
+                  Contribute Now
+                </LinkButton>
               </Flex>
             </Flex>
-          </HomepageSection>
-          <HomepageSection pb={32}>
-            <Heading size="display.sm" mb={12}>
-              Top Community Contributors
-            </Heading>
-            <SimpleGrid
-              columns={{ base: 2, md: 4 }}
-              gap={8}
-              justifyContent="space-evenly"
-            >
-              {contributors.slice(0, 16).map((contributor) => (
-                <Flex
-                  key={contributor.login}
-                  flexDir="row"
-                  gap={2}
-                  alignItems="center"
-                >
-                  <MaskedAvatar src={contributor.avatar_url} />
-                  <Flex key={contributor.login} flexDir="column" gap={1}>
-                    <TrackedLink
-                      href={`https://github.com/${contributor.login}`}
-                      isExternal
-                      category="team"
-                      label={contributor.login}
-                    >
-                      <Heading size="title.sm">@{contributor.login}</Heading>
-                    </TrackedLink>
-                    <Text size="label.md" color="gray.500">
-                      {contributor.contributions}{" "}
-                      {contributor.contributions === 1
-                        ? "contribution"
-                        : "contributions"}
-                    </Text>
-                  </Flex>
+          </Flex>
+        </HomepageSection>
+        <HomepageSection pb={32}>
+          <Heading size="display.sm" mb={12}>
+            Top Community Contributors
+          </Heading>
+          <SimpleGrid
+            columns={{ base: 2, md: 4 }}
+            gap={8}
+            justifyContent="space-evenly"
+          >
+            {contributors.slice(0, 16).map((contributor) => (
+              <Flex
+                key={contributor.login}
+                flexDir="row"
+                gap={2}
+                alignItems="center"
+              >
+                <MaskedAvatar src={contributor.avatar_url} />
+                <Flex key={contributor.login} flexDir="column" gap={1}>
+                  <TrackedLink
+                    href={`https://github.com/${contributor.login}`}
+                    isExternal
+                    category="team"
+                    label={contributor.login}
+                  >
+                    <Heading size="title.sm">@{contributor.login}</Heading>
+                  </TrackedLink>
+                  <Text size="label.md" color="gray.500">
+                    {contributor.contributions}{" "}
+                    {contributor.contributions === 1
+                      ? "contribution"
+                      : "contributions"}
+                  </Text>
                 </Flex>
-              ))}
-            </SimpleGrid>
-          </HomepageSection>
+              </Flex>
+            ))}
+          </SimpleGrid>
+        </HomepageSection>
 
-          <HomepageSection pb={32}>
-            <Heading size="display.sm" mb={12}>
-              Open Bounties
-            </Heading>
+        <HomepageSection pb={32}>
+          <Heading size="display.sm" mb={12}>
+            Open Bounties
+          </Heading>
 
-            <Accordion allowToggle defaultIndex={[]}>
-              {bounties.map((bounty) => (
-                <AccordionItem
-                  key={bounty.id}
-                  background={"rgba(0,0,0,0.2)"}
-                  boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
-                  borderRadius="12px"
-                  p={{ base: 6, md: 8 }}
-                  my={4}
-                >
-                  <AccordionButton justifyContent="space-between" py={2}>
-                    <Flex direction="column" alignItems="flex-start" gap={4}>
-                      <Heading size="label.lg" color="green.400">
-                        {bounty.amount}
-                      </Heading>
-                      <Heading size="label.lg">{bounty.title}</Heading>
-                    </Flex>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel as={Flex} flexDir="column" gap={6}>
-                    <Text
-                      size="label.md"
-                      color="gray.500"
-                      mt={2}
-                      lineHeight={1.7}
+          <Accordion allowToggle defaultIndex={[]}>
+            {bounties.map((bounty) => (
+              <AccordionItem
+                key={bounty.id}
+                background={"rgba(0,0,0,0.2)"}
+                boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
+                borderRadius="12px"
+                p={{ base: 6, md: 8 }}
+                my={4}
+              >
+                <AccordionButton justifyContent="space-between" py={2}>
+                  <Flex direction="column" alignItems="flex-start" gap={4}>
+                    <Heading size="label.lg" color="green.400">
+                      {bounty.amount}
+                    </Heading>
+                    <Heading size="label.lg">{bounty.title}</Heading>
+                  </Flex>
+                  <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel as={Flex} flexDir="column" gap={6}>
+                  <Text
+                    size="label.md"
+                    color="gray.500"
+                    mt={2}
+                    lineHeight={1.7}
+                  >
+                    {bounty.description}
+                  </Text>
+                  <Flex gap={4} flexDir={{ base: "column", md: "row" }}>
+                    <LinkButton
+                      href={bounty.primaryButtonLink}
+                      isExternal
+                      color="bgWhite"
+                      bgColor="bgBlack"
+                      _hover={{ opacity: 0.8 }}
                     >
-                      {bounty.description}
-                    </Text>
-                    <Flex gap={4} flexDir={{ base: "column", md: "row" }}>
-                      <LinkButton
-                        href={bounty.primaryButtonLink}
-                        isExternal
-                        color="bgWhite"
-                        bgColor="bgBlack"
-                        _hover={{ opacity: 0.8 }}
-                      >
-                        {bounty.primaryButtonText}
-                      </LinkButton>
-                      <LinkButton
-                        href={bounty.secondaryButtonLink}
-                        isExternal
-                        variant="outline"
-                      >
-                        {bounty.secondaryButtonText}
-                      </LinkButton>
-                    </Flex>
-                  </AccordionPanel>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </HomepageSection>
+                      {bounty.primaryButtonText}
+                    </LinkButton>
+                    <LinkButton
+                      href={bounty.secondaryButtonLink}
+                      isExternal
+                      variant="outline"
+                    >
+                      {bounty.secondaryButtonText}
+                    </LinkButton>
+                  </Flex>
+                </AccordionPanel>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </HomepageSection>
 
-          <HomepageSection pb={32}>
-            <Heading size="display.sm" mb={12}>
-              Repositories
-            </Heading>
-            <SimpleGrid columns={{ lg: 3, base: 1 }} gap={{ lg: 12, base: 12 }}>
-              {repositories.map((repo) => (
-                <RepoCard
-                  key={repo.id}
-                  title={repo.name}
-                  description={repo.description}
-                  url={repo.url ?? `https://github.com/thirdweb-dev/${repo.id}`}
-                />
-              ))}
-            </SimpleGrid>
-          </HomepageSection>
-        </ProductPage>
-      </Flex>
-    </DarkMode>
+        <HomepageSection pb={32}>
+          <Heading size="display.sm" mb={12}>
+            Repositories
+          </Heading>
+          <SimpleGrid columns={{ lg: 3, base: 1 }} gap={{ lg: 12, base: 12 }}>
+            {repositories.map((repo) => (
+              <RepoCard
+                key={repo.id}
+                title={repo.name}
+                description={repo.description}
+                url={repo.url ?? `https://github.com/thirdweb-dev/${repo.id}`}
+              />
+            ))}
+          </SimpleGrid>
+        </HomepageSection>
+      </ProductPage>
+    </Flex>
   );
 };
 

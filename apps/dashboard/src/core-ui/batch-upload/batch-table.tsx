@@ -18,7 +18,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
@@ -29,6 +28,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { type Column, usePagination, useTable } from "react-table";
+import type { NFTInput } from "thirdweb/utils";
 import { CodeBlock, Text } from "tw-components";
 import { parseDescription } from "utils/parseDescription";
 
@@ -52,7 +52,7 @@ const FileVideo: React.FC<
   return <Box as="video" {...props} src={video} />;
 };
 interface BatchTableProps {
-  data: NFTMetadataInput[];
+  data: NFTInput[];
   portalRef: React.RefObject<HTMLDivElement>;
   nextTokenIdToMint?: number;
 }
@@ -63,7 +63,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
   nextTokenIdToMint,
 }) => {
   const columns = useMemo(() => {
-    let cols: Column<NFTMetadataInput>[] = [];
+    let cols: Column<NFTInput>[] = [];
     if (nextTokenIdToMint !== undefined) {
       cols = cols.concat({
         Header: "Token ID",

@@ -12,6 +12,7 @@ import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
 import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-stats";
 import { useTabHref } from "contract-ui/utils";
 import { BigNumber } from "ethers";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
 import {
@@ -34,7 +35,6 @@ import {
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { thirdwebClient } from "../../../../lib/thirdweb-client";
-import { defineDashboardChain } from "../../../../lib/v5-adapter";
 
 type ListingData =
   | (Pick<
@@ -95,10 +95,11 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   trackingCategory,
   contract: v4Contract,
 }) => {
+  const chain = useV5DashboardChain(v4Contract.chainId);
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineDashboardChain(v4Contract.chainId),
+    chain: chain,
   });
   const directListingsHref = useTabHref("direct-listings");
   const countQuery = useReadContract(totalListings, { contract });
@@ -157,10 +158,11 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   trackingCategory,
   contract: v4Contract,
 }) => {
+  const chain = useV5DashboardChain(v4Contract.chainId);
   const contract = getContract({
     client: thirdwebClient,
     address: v4Contract.getAddress(),
-    chain: defineDashboardChain(v4Contract.chainId),
+    chain: chain,
   });
 
   const englishAuctionsHref = useTabHref("english-auctions");

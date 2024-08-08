@@ -1,8 +1,10 @@
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { type useContract, useSetSharedMetadata } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiPlus } from "react-icons/fi";
+import { getContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
 import { NFTMintForm } from "./mint-form";
 
@@ -13,19 +15,23 @@ interface NFTSharedMetadataButtonProps {
 export const NFTSharedMetadataButton: React.FC<
   NFTSharedMetadataButtonProps
 > = ({ contractQuery, ...restButtonProps }) => {
+  const contractV4 = contractQuery.contract;
+  const chain = useV5DashboardChain(contractV4?.chainId);
+  const contract =
+    contractV4 && chain
+      ? getContract({
+          address: contractV4.getAddress(),
+          chain: chain,
+          client: thirdwebClient,
+        })
+      : null;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const mutation = useSetSharedMetadata(contractQuery.contract);
-
-  const detectedState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721SharedMetadata"],
-  });
-  if (detectedState !== "enabled" || !contractQuery.contract) {
+  const mutation = useSetSharedMetadata(contractV4);
+  if (!contract) {
     return null;
   }
-
   return (
-    <MinterOnly contract={contractQuery.contract}>
+    <MinterOnly contract={contract}>
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -33,10 +39,7 @@ export const NFTSharedMetadataButton: React.FC<
         onClose={onClose}
         isOpen={isOpen}
       >
-        <NFTMintForm
-          contract={contractQuery.contract}
-          sharedMetadataMutation={mutation}
-        />
+        <NFTMintForm contract={contractV4} sharedMetadataMutation={mutation} />
       </Drawer>
       <Button
         colorScheme="primary"

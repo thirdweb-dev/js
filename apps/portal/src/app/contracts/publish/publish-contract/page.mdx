@@ -1,0 +1,82 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Publish",
+		icon: "contract",
+	},
+	title: "CLI | thirdweb Publish",
+	description:
+		"Use the CLI to publish your contracts directly to Any EVM compatible chain using the dashboard",
+});
+
+# Publish
+
+Use the [CLI](/cli) to publish your contracts directly to **Any EVM compatible chain** using the [dashboard](https://thirdweb.com/dashboard):
+
+```bash
+npx thirdweb publish
+```
+
+This command will:
+
+- Compile your smart contract.
+- Upload the contract source code (ABI) to IPFS.
+- Open the publish flow in the dashboard.
+
+## How to Publish Your Contract
+
+In your browser, follow the steps below to publish your contract:
+
+### Configure Contract Metadata
+
+From the dashboard, provide the metadata for your smart contract including:
+
+- **Name**
+- **Image**
+- **Description**
+- **README** - Markdown is supported. What your contract does, common use cases & examples are great things to include here.
+
+### Add A Version & Audit Report (Optional)
+
+Use [semantic versioning](https://semver.org/) to incrementally publish new versions of your smart contract;
+ideal for when you want to make changes to your smart contract but don't want to break existing integrations.
+
+Each version of your smart contract is stored onchain and can be deployed by anyone. You
+can optionally include release notes, to describe the changes you've made between versions.
+
+You can also link each version to an audit report. You can paste a link to it, or drag and drop a PDF. We will generate an IPFS link for you.
+
+### Choose how users will deploy your published contract
+
+Select the contract type for your published contract
+
+- Direct Deploy: Choose this option if your contract does not follow the upgradeable contract pattern.
+  - This option can be used for **any contract**
+  - there are no requirements for using this option to publish your contract.
+  - Users will deploy the **full contract**: storage and implementation logic.
+- [Deploy via Factory](/contracts/publish/publish-options): Choose this option if you would like users to deploy proxies of your contract using the thirdweb default factory contract or using your own pre-deployed custom factory.
+  - [Default Factory](/contracts/publish/publish-options#default-factory) - Use this option to use the thirdweb default factory if your contract follows the upgradeable contract pattern.
+  - [Custom Factory](/contracts/publish/publish-options#custom-factory) - Use this option to use your own pre-deployed custom factory to create proxies for your users.
+
+Once selected, click "Next" to move on to the flow corresponding to the contract type selected.
+
+### Choose which network(s) to publish your contract to
+
+Select the network(s) you would like to publish your contract. You can select multiple networks or any EVM.
+
+If you chose to publish via direct deploy, you will be asked to select the network(s) you would like users to be able to deploy your contract to and then click the "Next" button.
+If you chose to publish via factory, you will be asked to select the network(s) you would like users to be able to deploy your contract to when setting your "Factory deploy settings".
+
+### Customize Contract Parameters
+
+Help users trying to deploy your smart contract by changing what your contract parameters look like. These are fields that users need to enter before deploying your contract with each field corresponding to the associated variable in the constructor of your contract.
+
+- **Display name**: Use this to have a more readable version of the parameter name. Otherwise, the parameter name from the contract will be shown as is.
+- **Default value**: This will be pre-filled in the deploy form. Use this to guide users on what value to enter. If the parameter is of the address datatype, you can pre-fill the users connected wallet address by setting the default value as your connected wallet
+- **Description**: Use this to clear up any confusion and explain what value this parameter is expecting
+- **Advanced**: Tick this option if you want to hide this parameter from the deploy form. This is useful for parameters that are not required to be changed by the user. This option is only available for parameters that have a default value.
+
+### Publish Contract
+
+Finally, click the "Publish Contract" button to publish your smart contract to the onchain registry.

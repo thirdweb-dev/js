@@ -1,0 +1,87 @@
+import {
+	Details,
+	Breadcrumb,
+	Callout,
+	Steps,
+	Step,
+	DocImage,
+	GithubTemplateCard,
+	ArticleIconCard,
+	createMetadata,
+	Stack,
+} from "@doc";
+import ConnectEmbedDefaultImg from "./_assets/ConnectEmbed-default.png";
+import ConnectEmbedSigninImg from "./_assets/ConnectEmbed-signin.png";
+import { TablePropertiesIcon } from "lucide-react";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ConnectEmbed",
+		icon: "react",
+	},
+	title: "ConnectEmbed | thirdweb React SDK",
+	description: "API Reference for the ConnectEmbed component",
+});
+
+# ConnectEmbed
+
+ConnectEmbed component renders a UI to connect to various wallets. It renders the same UI as the [`ConnectButton`](/react/v5/ConnectButton) component's Modal UI.
+This is really useful for Implementing a "Sign in" page by embedding the UI for connecting wallets directly in the page instead of showing inside a modal.
+
+<Callout variant='info' title="Playground">
+
+See the ConnectButton in action on [ConnectButton Playground!](https://thirdweb.com/dashboard/wallets/connect)
+
+</Callout>
+
+<DocImage src={ConnectEmbedDefaultImg} />
+
+It only renders UI if wallet is not connected, Once the wallet is connected, it renders nothing.
+
+## Usage
+
+To Configure the wallets to show in the ConnectEmbed, configure the `wallets` prop
+
+To mark a wallet as `Recommended`, pass in the `recommended: true` property in the wallet config function.
+
+Refer to [Props](#props) to see all the available configuration options
+
+```tsx
+import { ConnectEmbed } from "thirdweb/react";
+import { createWallet, inAppWallet } from "thirdweb/wallets";
+
+const wallets = [
+	inAppWallet(),
+	createWallet("io.metamask"),
+	createWallet("com.coinbase.wallet"),
+	createWallet("me.rainbow"),
+];
+
+function Example() {
+	return (
+		<div>
+			<ConnectEmbed client={client} wallets={wallets} />
+		</div>
+	);
+}
+```
+
+<Stack>
+
+<ArticleIconCard
+	title="Supported Wallets"
+	icon={TablePropertiesIcon}
+	href="/typescript/v5/supported-wallets"
+/>
+
+</Stack>
+
+## Props
+
+<Stack>
+	<ArticleIconCard
+		title="ConnectEmbedProps"
+		icon={TablePropertiesIcon}
+		href="/references/typescript/v5/ConnectEmbedProps"
+	/>
+</Stack>

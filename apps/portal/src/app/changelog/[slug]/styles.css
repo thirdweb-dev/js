@@ -1,0 +1,51 @@
+.changelog-page .kg-video-player-container {
+	display: none;
+}
+
+.changelog-page a {
+	color: var(--accent-500);
+}
+
+.changelog-page a:hover {
+	color: var(--f-100);
+}
+
+.changelog-page figcaption {
+	text-align: center;
+	color: var(--f-300);
+}
+
+.changelog-page iframe {
+	width: 100%;
+	margin-block: 40px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1em;
+	overflow: hidden;
+}
+
+.kg-video-container {
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	padding: 1em;
+	margin: 20px 0;
+}
+
+.kg-video-container video {
+	border-radius: var(--radius);
+}
+
+.kg-callout-card {
+	padding: 20px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	display: flex;
+	gap: 10px;
+	margin: 20px 0;
+	background: var(--b-800);
+}
+
+.kg-video-overlay {
+	display: none;
+}

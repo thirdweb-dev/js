@@ -72,5 +72,6 @@ export async function mapEnglishAuction(
     },
     timeBufferInSeconds: rawAuction.timeBufferInSeconds,
     bidBufferBps: rawAuction.bidBufferBps,
+    type: "english-auction",
   };
 }

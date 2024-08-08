@@ -64,6 +64,7 @@ export async function mapDirectListing(
     endTimeInSeconds: rawListing.endTimestamp,
     isReservedListing: rawListing.reserved,
     status,
+    type: "direct-listing",
   };
 }
 

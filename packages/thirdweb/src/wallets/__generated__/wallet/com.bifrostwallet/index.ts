@@ -20,7 +20,7 @@ export const wallet = {
     edge: null,
     opera: null,
   },
-  rdns: null,
+  rdns: "com.bifrostwallet",
   mobile: {
     native: "bifrostwallet://",
     universal: "https://app.bifrostwallet.com",

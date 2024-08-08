@@ -72,7 +72,7 @@
     "test": "make test-evm",
     "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000",
     "push": "yalc push",
-    "typedoc": "node scripts/typedoc.mjs"
+    "typedoc": "bun run scripts/typedoc.mjs"
   },
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.549.0",
@@ -108,7 +108,7 @@
     "nyc": "^15.1.0",
     "rimraf": "5.0.7",
     "typedoc-gen": "workspace:*",
-    "typescript": "5.5.2",
+    "typescript": "5.5.4",
     "zksync-ethers": "5.9.0"
   },
   "peerDependencies": {

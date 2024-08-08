@@ -4,7 +4,8 @@ import { Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { defineChain, getContract } from "thirdweb";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { getContract } from "thirdweb";
 import { cancelAuction, cancelListing } from "thirdweb/extensions/marketplace";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
 
@@ -23,9 +24,10 @@ export const CancelTab: React.FC<CancelTabProps> = ({
 }) => {
   const trackEvent = useTrack();
   const network = useEVMContractInfo()?.chain;
+  const chain = useV5DashboardChain(chainId);
   const contract = getContract({
     address: contractAddress,
-    chain: defineChain(chainId),
+    chain: chain,
     client: thirdwebClient,
   });
   const transaction = isAuction

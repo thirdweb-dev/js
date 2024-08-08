@@ -1,0 +1,132 @@
+import {
+	createMetadata,
+	Callout,
+	DocImage,
+	Steps,
+	Step,
+	InstallTabs,
+} from "@doc";
+import GetStartedSend from "../assets/get-started-send.png";
+import GetStartedEmbed from "../assets/get-started-embed.png";
+export const metadata = createMetadata({
+	image: {
+		title: "thirdweb Pay - Get Started",
+		icon: "thirdweb",
+	},
+	title: "thirdweb Pay - Buy With Fiat - thirdweb",
+	description:
+		"Get Started with Pay -  Onchain Purchases Directly From Credit or Debit Card",
+});
+
+# Get Started
+
+Learn how to add onramps and crypto purchases to your application. To see which integration is right for you, refer to our [integrations overview](/connect/pay/overview#integration-options).
+
+The following guide uses our React SDK. You can also learn how to integrate Pay with our [Unity SDK](https://portal.thirdweb.com/unity/pay/getbuywithcryptoquote).
+
+---
+
+## Installation
+
+<Steps>
+<Step title="Install the Connect SDK">
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+/>
+</Step>
+<Step title="Get Your Client ID">
+
+Log in to [the thirdweb dashboard](https://thirdweb.com/dashboard). Navigate to the **Settings** page and create an API key to get your **Client ID**. You'll need your Client ID to interact with the Connect SDK.
+
+</Step>
+</Steps>
+---
+
+## Option 1: ConnectButton
+
+Pay is available by default with our `ConnectButton` component. When users log in with Connect, they'll be able to onramp and purchase crypto directly from the logged in Connect interface. You can read more about `ConnectButton` [in this guide](/connect/sign-in/ConnectButton).
+
+```tsx
+import { ThirdwebProvider, ConnectButton } from "thirdweb/react";
+
+const client = createThirdwebClient({ clientId: your_client_id });
+
+export default function App() {
+	return (
+		<ThirdwebProvider>
+			<ConnectButton client={client} />
+		</ThirdwebProvider>
+	);
+}
+```
+
+Our `ConnectButton` has a number of [customization options](/connect/pay/customization/connectbutton) so you can tailor it to your experience.
+
+---
+
+## Option 2: Embed Pay
+
+The `PayEmbed` allows users to onramp and purchase crypto directly from your application interface.
+
+```tsx
+import { ThirdwebProvider, PayEmbed } from "thirdweb/react";
+
+const client = createThirdwebClient({ clientId: your_client_id });
+
+export default function App() {
+	return (
+		<ThirdwebProvider>
+			<PayEmbed client={client} />
+		</ThirdwebProvider>
+	);
+}
+```
+
+The embedded Pay component will be displayed like so in your application interface:
+
+<DocImage src={GetStartedEmbed} />
+
+And voila! Your users can now onramp and convert crypto directly from your application.
+
+Our `PayEmbed` has a number of [customization options](/connect/pay/customization/payembed) so you can tailor it to your experience.
+
+---
+
+## Option 3: Send a Transaction with Pay
+
+Pay is enabled by default for any contract call sent with `sendTransaction`. It will automatically be invoked when a user does not have enough funds to complete the transaction.
+
+<Callout variant="info">
+	ℹ️ `sendTransaction` is available in [Connect SDK v5](/typescript/v5) or
+	above.
+</Callout>
+
+```tsx
+import { useSendTransaction } from "thirdweb/react";
+import { mintTo } from "thirdweb/extensions/erc721";
+
+const { mutate: sendTx, data: transactionResult } = useSendTransaction();
+
+const onClick = () => {
+	const transaction = mintTo({
+		contract,
+		to: "0x...",
+		nft: {
+			name: "NFT Name",
+			description: "NFT Description",
+			image: "https://example.com/image.png",
+		},
+	});
+	sendTx(transaction);
+};
+```
+
+When a user clicks this button, Pay will perform gas estimation to determine if the user has a sufficient balance. If their balance is sufficient, the transaction will execute normally. If their balance is not sufficient, the following modal will pop up asking them to either onramp funds or convert crypto to the required amount:
+
+<DocImage src={GetStartedSend} />
+
+Once a user onramps or converts their funds to the required token, the user will be prompted once more to confirm the transaction. The transaction will then execute as expected.
+
+For deeper customization of the Pay transaction modal, you can refer to our [sendTransaction customization guide](/connect/pay/customization/send-transaction).

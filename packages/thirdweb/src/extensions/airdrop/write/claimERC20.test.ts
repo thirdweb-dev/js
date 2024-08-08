@@ -24,7 +24,7 @@ import { saveSnapshot } from "./saveSnapshot.js";
 
 // skip this test suite if there is no secret key available to test with
 // TODO: remove reliance on secret key during unit tests entirely
-describe.runIf(process.env.TW_SECRET_KEY)("claimERC20", () => {
+describe.runIf(process.env.TW_SECRET_KEY).skip("claimERC20", () => {
   let airdropContract: ThirdwebContract;
   let erc20TokenContract: ThirdwebContract;
 

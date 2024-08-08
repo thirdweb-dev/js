@@ -1,0 +1,192 @@
+import {
+	Callout,
+	ArticleIconCard,
+	Stack,
+	OpenSourceCard,
+	InstallTabs,
+	createMetadata,
+} from "@doc";
+import {
+	ZapIcon,
+	ScrollTextIcon,
+	ArrowRightLeftIcon,
+	WalletIcon,
+	BlocksIcon,
+	CodeIcon,
+	RssIcon,
+	PlugZapIcon,
+	BoxIcon,
+	KeyRoundIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+import { ReactIcon } from "@/icons";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Connect TS SDK",
+		icon: "wallets",
+	},
+	title: "Connect TS SDK | thirdweb",
+	description:
+		"Performant & lightweight TypeScript SDK to connect wallets and interact with any EVM chain.",
+});
+
+# TypeScript SDK
+
+Performant & lightweight SDK to interact with any EVM chain from Node, React and React Native.
+
+<OpenSourceCard
+	title="Connect TypeScript SDK"
+	href="https://github.com/thirdweb-dev/js"
+/>
+
+## Installation
+
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+	bun="bun i thirdweb"
+/>
+
+<Callout variant="info" title="Have you generated a client ID?">
+	<div className="flex flex-col gap-4 items-start">
+	<p>
+		You'll need a client ID to access the SDK's free blockchain APIs, storage, and more.
+	</p>
+	<Link
+			href="https://thirdweb.com/create-api-key"
+			target="_blank"
+		>
+		<Button> 
+			Generate
+		</Button>
+		</Link>
+	</div>
+</Callout>
+
+## Quickstart
+
+Follow our [Quickstart](/typescript/v5/getting-started) to get started with the TypeScript SDK.
+
+<ArticleIconCard
+	title="Getting Started"
+	icon={ZapIcon}
+	href="/typescript/v5/getting-started"
+  description="Get started with the TypeScript SDK"
+/>
+
+## Features
+
+- **React and React Native UI Components**: for wallets connection, transactions and more
+- **In-app wallets**: first-class support for email and social logins
+- **Account abstraction**: first-class support for ERC4337 smart accounts
+- **Type safe contract API**: fully typed with human readable ABI
+- **Code generation**: CLI to generate highly optimized contract, type-safe interfaces\
+- **RPC for any EVM chain**: highly performant RPCs with just a chain id
+- **IPFS upload/download**: simple and efficient IPFS integration
+- **Auto ABI resolution**: resolve ABIs for any deployed contract with just an address
+- **Ethers / Viem Interoperability**: adapters for ethers and viem libraries
+
+## Design principles
+
+- **Single package:** for Node, React and React Native with tree shaking for a minimal footprint.
+- **Performance optimized:** focuses on speed and efficiency with single responsibility principles.
+- **Out-of-the-box infra:** direct access to all the thirdweb infrastructure from wallets to RPCs to IPFS.
+- **Developer experience:** type-safe, simple to use, with repeatable and predictable patterns.
+- **Interoperable:** works with any infra provider and with other libraries like viem and ethers.
+
+## Get Started
+
+<Stack>
+<ArticleIconCard
+	title="Client"
+	icon={ZapIcon}
+	href="/typescript/v5/client"
+  description="Entry point to the thirdweb SDK. It is required for all other actions."
+/>
+
+<ArticleIconCard
+	title="Chain"
+	icon={RssIcon}
+	href="/typescript/v5/chain"
+	description="Connect to any EVM chain"
+/>
+
+<ArticleIconCard
+	title="Contract"
+	icon={ScrollTextIcon}
+	href="/typescript/v5/contract"
+	description="Smart contract interface for creating transactions and read contract state"
+/>
+
+<ArticleIconCard
+	title="Transactions"
+	icon={ArrowRightLeftIcon}
+	href="/typescript/v5/transactions"
+	description="Interact with smart contracts"
+/>
+
+<ArticleIconCard
+	title="Accounts & Wallets"
+	icon={WalletIcon}
+	href="/typescript/v5/wallets"
+	description="Connect wallets and work with accounts"
+/>
+
+<ArticleIconCard
+	title="Extensions"
+	icon={BlocksIcon}
+	href="/typescript/v5/extensions"
+	description="Pre-compiled transactions for common actions"
+/>
+
+<ArticleIconCard
+	title="Adapters"
+	icon={PlugZapIcon}
+	href="/typescript/v5/adapters"
+	description="Interoperability with popular libraries"
+/>
+
+<ArticleIconCard
+	title="Storage"
+	icon={BoxIcon}
+	href="/typescript/v5/storage"
+	description="IPFS download and upload"
+/>
+
+<ArticleIconCard
+	title="Auth"
+	icon={KeyRoundIcon}
+	href="/typescript/v5/auth"
+	description="Authenticate users"
+/>
+
+<ArticleIconCard
+	title="React"
+	icon={ReactIcon}
+	href="/react/v5"
+	description="React components and hooks"
+/>
+
+</Stack>
+
+## API Reference
+
+<Stack>
+
+<ArticleIconCard
+	title="Full SDK Reference"
+	icon={CodeIcon}
+	href="/references/typescript/v5"
+/>
+
+</Stack>
+
+## Requirements
+
+- Node 18.6 or higher
+- TypeScript 5.0.4 or higher (for TypeScript users)
+- React 18.0.0 or higher (for React users)

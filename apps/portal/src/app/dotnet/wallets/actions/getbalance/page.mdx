@@ -1,0 +1,44 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.GetBalance | Thirdweb .NET SDK",
+	description: "Extension method to get the balance of a wallet.",
+});
+
+# IThirdwebWallet.GetBalance
+
+This method allows getting either the native token balance or the balance of a specific token for a wallet.
+
+## Usage
+
+```csharp
+// Get native balance
+BigInteger nativeBalance = await wallet.GetBalance(chainId);
+
+// Get ERC20 token balance
+BigInteger tokenBalance = await wallet.GetBalance(chainId, erc20ContractAddress);
+```
+
+<Details summary="Parameters">
+
+### wallet (required)
+
+An instance of `IThirdwebWallet`. This represents the wallet for which you want to retrieve the balance.
+
+### chainId (required)
+
+The chain ID from which you want to retrieve the balance.
+
+### erc20ContractAddress (optional)
+
+The optional ERC20 contract address from which you want to retrieve the balance. If not provided, the method will return the native token balance.
+
+</Details>
+
+<Details summary="Return Value">
+
+### string
+
+The method returns a `BigInteger` representing the balance in Wei.
+
+</Details>

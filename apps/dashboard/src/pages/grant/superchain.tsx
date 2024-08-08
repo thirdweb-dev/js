@@ -1,4 +1,5 @@
-import { Box, Container, DarkMode, Flex, SimpleGrid } from "@chakra-ui/react";
+import { useForceDarkTheme } from "@/components/theme-provider";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import HeroSection from "components/grant/superchain/HeroSection";
@@ -80,6 +81,7 @@ const superchains = [
 
 const GrantSuperChain = () => {
   const mySectionRef = useRef<HTMLDivElement>(null);
+  useForceDarkTheme();
 
   // Function to scroll to the section
   const scrollToSection = () => {
@@ -92,7 +94,7 @@ const GrantSuperChain = () => {
   };
 
   return (
-    <DarkMode>
+    <>
       <NextSeo
         title={title}
         description={description}
@@ -473,7 +475,7 @@ const GrantSuperChain = () => {
 
         <HomepageFooter />
       </Flex>
-    </DarkMode>
+    </>
   );
 };
 

@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { ResultItem } from "components/engine/system-metrics/components/StatusCodes";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useState } from "react";
 import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import type { ResultItem } from "../../../components/engine/system-metrics/components/StatusCodes";
 import { engineKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useLoggedInUser } from "./useLoggedInUser";

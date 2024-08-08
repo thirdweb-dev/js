@@ -3,6 +3,7 @@
 import { Linking } from "react-native";
 import { trackConnect } from "../../analytics/track.js";
 import type { Chain } from "../../chains/types.js";
+import { getCachedChainIfExists } from "../../chains/utils.js";
 import { nativeLocalStorage } from "../../utils/storage/nativeStorage.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import { coinbaseWalletSDK } from "../coinbase/coinbase-wallet.js";
@@ -121,7 +122,14 @@ export function createWallet<const ID extends WalletId>(
         id,
         subscribe: emitter.subscribe,
         getConfig: () => args[1],
-        getChain: () => chain,
+        getChain() {
+          if (!chain) {
+            return undefined;
+          }
+
+          chain = getCachedChainIfExists(chain.id) || chain;
+          return chain;
+        },
         getAccount: () => account,
         autoConnect: async (
           options: WalletAutoConnectionOption<WCSupportedWalletIds>,

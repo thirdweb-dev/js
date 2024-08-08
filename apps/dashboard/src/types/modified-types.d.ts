@@ -1,7 +1,7 @@
-import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
+import type { NFTInput } from "thirdweb/utils";
 
 export type NFTMetadataInputLimited = Pick<
-  NFTMetadataInput,
+  NFTInput,
   | "name"
   | "image"
   | "external_url"

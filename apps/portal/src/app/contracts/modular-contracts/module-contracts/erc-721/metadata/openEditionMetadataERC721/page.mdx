@@ -1,0 +1,43 @@
+
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# Open Edition Metadata ERC-721
+
+## Description
+
+The `OpenEditionMetadataERC721` contract is an module that provides shared metadata functionality for ERC-721 tokens in an open edition format. It allows for setting and retrieving a common metadata URI for all tokens within the contract, making it easier to manage metadata for large collections of tokens that share the same metadata.
+
+## Callback Functions
+
+| Function      | Description                                                                |
+|---------------|----------------------------------------------------------------------------|
+| `onTokenURI`  | Callback function for retrieving the shared metadata URI for a given token ID.   |
+
+## Fallback Functions
+
+| Function                | Description                                                             |
+|-------------------------|-------------------------------------------------------------------------|
+| `setSharedMetadata`     | Sets the shared metadata URI for all tokens in the contract. Requires minter role. |
+
+## Required Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-721`  | `0x80ac58cd`|
+
+## Supported Interfaces
+
+| Interface  | ID          |
+|------------|-------------|
+| `ERC-4906` | `0x49064906`|
+

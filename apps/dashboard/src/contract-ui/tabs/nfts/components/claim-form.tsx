@@ -7,13 +7,15 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { type DropContract, useClaimNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { ZERO_ADDRESS } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { claimTo } from "thirdweb/extensions/erc721";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -23,12 +25,21 @@ import {
 
 const CLAIM_FORM_ID = "nft-claim-form";
 interface NFTClaimFormProps {
-  contract: DropContract;
+  contractAddress: string;
+  chainId: number;
 }
 
-export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
+export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({
+  contractAddress,
+  chainId,
+}) => {
+  const chain = useV5DashboardChain(chainId);
+  const contract = getContract({
+    address: contractAddress,
+    chain: chain,
+    client: thirdwebClient,
+  });
   const trackEvent = useTrack();
-  const claim = useClaimNFT(contract);
   const address = useActiveAccount()?.address;
   const {
     register,
@@ -42,7 +53,7 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
     "Failed to claim NFT",
     contract,
   );
-
+  const { mutate, isPending } = useSendAndConfirmTransaction();
   return (
     <>
       <DrawerHeader>
@@ -70,7 +81,7 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
         <TransactionButton
           transactionCount={1}
           form={CLAIM_FORM_ID}
-          isLoading={claim.isLoading}
+          isLoading={isPending}
           type="submit"
           colorScheme="primary"
           onClick={handleSubmit((d) => {
@@ -79,29 +90,36 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({ contract }) => {
               action: "claim",
               label: "attempt",
             });
-            claim.mutate(
-              { quantity: d.amount, to: d.to },
-              {
-                onSuccess: () => {
-                  trackEvent({
-                    category: "nft",
-                    action: "claim",
-                    label: "success",
-                  });
-                  onSuccess();
-                  modalContext.onClose();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "nft",
-                    action: "claim",
-                    label: "error",
-                    error,
-                  });
-                  onError(error);
-                },
+            if (!d.to) {
+              return onError(
+                new Error("Please enter the address that will receive the NFT"),
+              );
+            }
+            const transaction = claimTo({
+              contract,
+              to: d.to,
+              quantity: BigInt(d.amount),
+            });
+            mutate(transaction, {
+              onSuccess: () => {
+                trackEvent({
+                  category: "nft",
+                  action: "claim",
+                  label: "success",
+                });
+                onSuccess();
+                modalContext.onClose();
               },
-            );
+              onError: (error) => {
+                trackEvent({
+                  category: "nft",
+                  action: "claim",
+                  label: "error",
+                  error,
+                });
+                onError(error);
+              },
+            });
           })}
         >
           Claim NFT

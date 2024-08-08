@@ -1,0 +1,65 @@
+# Ethers.js in v5
+
+One common misconception about the thirdweb SDK v5 is that it will no longer work with Ethers.js.
+As a matter of fact, the SDK v5 is built so that it can play well with polular web3 SDKs like viem, ethers v5 and ether v6!
+
+Let's say you decide to upgrade to v5, and still want to stick with ethers.js,
+you can utilize thirdweb's ethers Adapter to achieve that!
+
+### Signer
+
+In v5, instead of having "signer", we pivoted to [`Account`](/references/typescript/v5/Account), which is the replacement for "signer".
+Thanks to the thirdweb ethers adapter, you can conveniently convert between ethers's Signer and thirdweb's Account.
+
+```ts
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import { useActiveAccount } from "thirdweb/react";
+
+const account = useActiveAccount();
+...
+const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
+```
+Once you have the signer, you can perform different tasks using ethers.js as usual:
+
+```tsx
+// Get balance
+const balance = await signer.getBalance();
+
+// Sign message
+const signature = await signer.signMessage(message);
+```
+
+### Provider
+Similar to `signer`, you can retrieve the ethers provider in thirdweb v5 using the same adapter:
+```ts
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+import { createThirdwebClient } from "thirdweb";
+
+const client = createThirdwebClient({
+  clientId: "...",
+});
+
+const provider = ethers5Adapter.provider.toEthers({ client, chainId });
+```
+
+and perform tasks with it:
+```ts
+const blockNumber = await provider.getBlockNumber();
+```
+
+### Contracts
+Similarly to the 2 components above, here's how you can convert a [thirdweb contract instance](/references/typescript/v5/ThirdwebContract) to ethers's:
+```tsx
+import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+const ethersContract = await ethers5Adapter.contract.toEthers({
+  thirdwebContract,
+});
+```
+and then do stuff with it:
+```tsx
+// Estimate gas
+const gasLimit = await contract.estimateGas["functionName"](...params);
+
+// Send a transaction
+const tx = await contract["functionName"](...params, { gasLimit });
+```

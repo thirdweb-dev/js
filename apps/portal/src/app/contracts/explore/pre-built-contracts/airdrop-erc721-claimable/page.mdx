@@ -1,0 +1,34 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Airdrop ERC721 Claimable contract",
+		icon: "contract",
+	},
+	title: "Airdrop ERC721 Claimable contract | thirdweb",
+	description: `AirdropERC721Claimable contract is suitable to use when you want to airdrop ERC721 NFTs to a list of recipient addresses, where these recipients are expected to individually claim their own airdrop.`,
+});
+
+# Airdrop ERC721 Claimable
+
+The `AirdropERC721Claimable` contract is suitable to use when you want to airdrop ERC721 NFTs to a list of recipient addresses, where these recipients are expected to individually claim their own airdrop.
+
+When deploying this contract, you specify:
+
+- The address of the ERC721 NFTs being airdropped.
+- The tokenIds of the NFTs to airdrop.
+- The address of the owner of NFTs from whom NFTs will be transferred out in the airdrop.
+- The UNIX timestamp after which the airdrop period will expire.
+- A maximum claimable amount per wallet (claiming the airdrop).
+- An optional merkle root allowlist for recipients permitted to claim the airdrop.
+
+On claiming an airdrop, a recipient specifies:
+
+- The address to transfer the claimed airdrop to.
+- The total quantity to claim.
+- The proof of inclusion in the merkle root allowlist, if it exists.
+
+## Extensions
+
+- [Ownable](/contracts/build/extensions/general/Ownable)
+- [Gasless](/contracts/build/extensions)

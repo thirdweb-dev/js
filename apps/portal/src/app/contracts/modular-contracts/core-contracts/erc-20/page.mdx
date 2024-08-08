@@ -1,0 +1,50 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "thirdweb Modular Contracts",
+    description:
+        "Modular Contract provides a framework to build custom smart contracts more efficiently by offering a set of pre-built base contracts and reusable components, better known as modules.",
+    image: {
+        title: "thirdweb Modular Contracts",
+        icon: "solidity",
+    },
+});
+
+# ERC-20 Core
+
+## Supported Callback Functions
+
+| Function             |    Mode    |
+|----------------------|------------|
+| `beforeMintERC20`    |  REQUIRED  |
+| `beforeTransferERC20`|  OPTIONAL  |
+| `beforeBurnERC20`    | OPTIONAL  |
+| `beforeApproveERC20` | OPTIONAL  |
+
+## Supported Interfaces
+
+| Interface       | ID          |
+|-----------------|-------------|
+| `ERC165`        | `0x01ffc9a7`|
+| `ERC-7572`      | `0xe8a3d485`|
+| `ERC-173`       | `0x7f5828d0`|
+| `ERC20`         | `0x36372b07`|
+
+## Functions Supported
+
+| Function                | Description                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| `constructor`           | Initializes the contract with parameters for name, symbol, metadata URI, owner, modules, and module data. |
+| `name`                  | Returns the name of the token.                                              |
+| `symbol`                | Returns the symbol of the token.                                            |
+| `contractURI`           | Returns the contract metadata URI.                                          |
+| `getSupportedCallbackFunctions` | Returns the supported callback functions.                      |
+| `supportsInterface`     | Checks if the contract implements an interface with the given interface ID. |
+| `setContractURI`        | Sets the contract metadata URI. Callable only by the contract admin.        |
+| `mint`                  | Mints tokens to a specified address, calling the beforeMint hook.           |
+| `burn`                  | Burns a specified amount of tokens, calling the beforeBurn hook if it exists.|
+| `transfer`              | Transfers tokens to a specified address, calling the beforeTransfer hook if it exists. |
+| `transferFrom`          | Transfers tokens from one address to another, calling the beforeTransfer hook if it exists. |
+| `approve`               | Approves a spender to spend tokens on behalf of an owner, calling the beforeApprove hook if it exists. |
+| `permit`                | Sets allowance based on token owner's signed approval, calling the beforeApprove hook if it exists. |
+

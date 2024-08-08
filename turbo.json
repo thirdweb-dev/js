@@ -12,18 +12,41 @@
     },
     "typedoc": {
       "outputs": ["typedoc/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["typedoc-gen#build", "^build"]
     },
     "thirdweb-dashboard#build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },
+    "portal#build": {
+      "outputs": [".next/**", "!.next/cache/**", "searchIndex.json"],
+      "dependsOn": [
+        "^build",
+        "thirdweb#typedoc",
+        "@thirdweb-dev/sdk#typedoc",
+        "@thirdweb-dev/react#typedoc",
+        "@thirdweb-dev/react-core#typedoc",
+        "@thirdweb-dev/storage#typedoc",
+        "@thirdweb-dev/wallets#typedoc"
+      ]
+    },
+    "portal#dev": {
+      "dependsOn": [
+        "^build",
+        "thirdweb#typedoc",
+        "@thirdweb-dev/sdk#typedoc",
+        "@thirdweb-dev/react#typedoc",
+        "@thirdweb-dev/react-core#typedoc",
+        "@thirdweb-dev/storage#typedoc",
+        "@thirdweb-dev/wallets#typedoc"
+      ]
+    },
     "playground-web#build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },
     "wallet-ui#build": {
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/chains#build": {

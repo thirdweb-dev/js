@@ -1,0 +1,55 @@
+import { GithubButtonLink } from "@doc";
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	image: {
+		title: "ERC721 contract",
+		icon: "solidity",
+	},
+	title: "ERC721 | thirdweb contract",
+	description:
+		"ERC721 is the standard for representing NFTs (non-fungible tokens).",
+});
+
+# ERC721
+
+```solidity
+import "@thirdweb-dev/contracts/eip/ERC721A.sol";
+```
+
+ERC721 is the standard for representing NFTs (non-fungible tokens).
+
+We recommend using the optimized [ERC721A](https://www.erc721a.org/) standard for integrating NFT functionality into your smart contract.
+
+<GithubButtonLink href="https://github.com/thirdweb-dev/contracts/blob/main/contracts/eip/ERC721A.sol" />
+
+## Usage
+
+This is an example smart contract demonstrating how to inherit from this extension and override the functions to add (optional) custom functionality.
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "@thirdweb-dev/contracts/eip/ERC721A.sol";
+
+contract Contract is ERC721A {
+    constructor(
+        string memory _name,
+        string memory _symbol
+    )
+        ERC721A(
+            _name,
+            _symbol
+        )
+    {}
+}
+```
+
+## Base Contracts Implementing This Extension
+
+- [ERC721Base](/contracts/build/base-contracts/erc-721/base)
+- [ERC721DelayedReveal](/contracts/build/base-contracts/erc-721/delayed-reveal)
+- [ERC721Drop](/contracts/build/base-contracts/erc-721/drop)
+- [ERC721LazyMint](/contracts/build/base-contracts/erc-721/lazy-mint)
+- [ERC721SignatureMint](/contracts/build/base-contracts/erc-721/signature-mint)

@@ -1,18 +1,10 @@
-import {
-  AspectRatio,
-  Box,
-  type BoxProps,
-  Center,
-  Flex,
-  Icon,
-  Image,
-  type LayoutProps,
-  Link,
-  Stack,
-} from "@chakra-ui/react";
+/* eslint-disable @next/next/no-img-element */
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
 import { AiOutlineFileAdd } from "@react-icons/all-files/ai/AiOutlineFileAdd";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import Link from "next/link";
 import { useCallback } from "react";
 import {
   type Accept,
@@ -21,20 +13,21 @@ import {
   useDropzone,
 } from "react-dropzone";
 import { FiImage, FiUpload } from "react-icons/fi";
-import { Button, Text } from "tw-components";
 
-interface IFileInputProps extends BoxProps {
+interface IFileInputProps {
   accept?: Accept;
   setValue: (file: File) => void;
   isDisabled?: boolean;
   value?: string | File;
   showUploadButton?: true;
-  maxContainerWidth?: LayoutProps["maxW"];
+  previewMaxWidth?: string;
   renderPreview?: (fileUrl: string) => React.ReactNode;
   helperText?: string;
   selectOrUpload?: "Select" | "Upload";
   isDisabledText?: string;
   showPreview?: boolean;
+  children?: React.ReactNode;
+  className?: string;
 }
 
 export const FileInput: React.FC<IFileInputProps> = ({
@@ -44,13 +37,13 @@ export const FileInput: React.FC<IFileInputProps> = ({
   showUploadButton,
   value,
   children,
-  maxContainerWidth,
   renderPreview,
   helperText,
   selectOrUpload = "Select",
   isDisabledText = "Upload Disabled",
   showPreview = true,
-  ...restBoxProps
+  className,
+  previewMaxWidth,
 }) => {
   const onDrop = useCallback<
     <T extends File>(
@@ -107,111 +100,101 @@ export const FileInput: React.FC<IFileInputProps> = ({
 
   if (children) {
     return (
-      <Box {...restBoxProps} cursor="pointer" {...getRootProps()}>
+      <div className={cn("cursor-pointer", className)} {...getRootProps()}>
         {children}
         <input {...getInputProps()} />
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Stack
-      spacing={4}
-      direction="row"
-      align="center"
-      {...getRootProps()}
-      // onClick={(e) => e.stopPropagation()}
-    >
+    <div className="flex gap-4 items-center" {...getRootProps()}>
       <input {...getInputProps()} />
       {showPreview && (
-        <AspectRatio w="100%" maxW={maxContainerWidth} ratio={1}>
+        <>
           {isDisabled ? (
-            <Center
-              {...restBoxProps}
-              cursor="not-allowed"
-              opacity={0.5}
-              bg="inputBg"
-              _hover={{
-                bg: "inputBgHover",
-                borderColor: "primary.500",
+            <div
+              style={{
+                aspectRatio: 1,
+                maxWidth: previewMaxWidth,
               }}
-              borderColor="inputBorder"
-              borderWidth="1px"
+              className={cn(
+                "opacity-50 cursor-not-allowed bg-muted",
+                "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
+                className,
+              )}
             >
-              <Stack align="center" color="gray.600">
-                <Icon boxSize={6} as={FiUpload} />
-                <Text color="gray.500" textAlign="center">
-                  {isDisabledText}
-                </Text>
-              </Stack>
-            </Center>
+              <div className="flex flex-col items-center text-secondary-foreground gap-2">
+                <FiUpload className="size-6" />
+                <p className="text-sm text-center">{isDisabledText}</p>
+              </div>
+            </div>
           ) : (
-            <Center
-              {...restBoxProps}
-              cursor="pointer"
-              bg={fileUrl ? "transparent" : "inputBg"}
-              _hover={{
-                bg: "inputBgHover",
-                borderColor: "primary.500",
+            <div
+              style={{
+                aspectRatio: 1,
+                maxWidth: previewMaxWidth,
               }}
-              borderColor="inputBorder"
-              borderWidth="1px"
-              position="relative"
-              overflow="hidden"
+              className={cn(
+                "cursor-pointer relative overflow-hidden",
+                "w-full flex items-center justify-center hover:bg-accent border border-border hover:ring-2 hover:ring-ring",
+                fileUrl ? "bg-transparent" : "bg-muted",
+                className,
+              )}
             >
               {noDisplay ? (
-                <Stack align="center" color="gray.600">
-                  <Icon boxSize={6} as={FiImage} />
-                  <Text color="gray.600">{fileType} uploaded</Text>
-                </Stack>
+                <div className="flex flex-col items-center text-secondary-foreground gap-2">
+                  <FiImage className="size-6" />
+                  <p className="text-sm">{fileType} uploaded</p>
+                </div>
               ) : fileUrl ? (
                 renderPreview ? (
                   renderPreview(fileUrl)
                 ) : (
-                  <Image
+                  <img
                     alt=""
-                    top={0}
-                    left={0}
-                    position="absolute"
-                    w="100%"
-                    h="100%"
+                    className="top-0 left-0 absolute w-full h-full object-contain"
                     src={fileUrl}
-                    objectFit="contain"
                   />
                 )
               ) : (
-                <Stack align="center" color="gray.600">
-                  <Icon boxSize={6} as={FiUpload} />
-                  <Text color="gray.600" textAlign="center">
+                <div className="flex flex-col items-center text-secondary-foreground gap-2.5">
+                  <div className="p-3 bg-background rounded-full flex items-center justify-center border border-border">
+                    <FiUpload className="size-5" />
+                  </div>
+                  <p className="text-sm text-center">
                     Upload {helperTextOrFile}
-                  </Text>
-                </Stack>
+                  </p>
+                </div>
               )}
-            </Center>
+            </div>
           )}
-        </AspectRatio>
+        </>
       )}
+
       {showUploadButton || noDisplay ? (
-        <Flex direction="column" borderStyle="none">
+        <div className="flex flex-col">
           {showUploadButton && (
             <Button
-              leftIcon={<Icon as={AiOutlineFileAdd} />}
               onClick={open}
               variant="outline"
-              isDisabled={isDisabled}
+              disabled={isDisabled}
+              className="gap-2"
             >
+              <AiOutlineFileAdd className="size-4" />
               {selectOrUpload} {helperTextOrFile}
             </Button>
           )}
           {noDisplay && (
-            <Link href={fileUrl} isExternal textDecor="none !important">
-              <Button leftIcon={<Icon as={AiFillEye} />} variant="outline">
+            <Link href={fileUrl} target="_blank" className="no-underline">
+              <Button variant="outline" className="gap-2">
+                <AiFillEye className="size-4" />
                 View File
               </Button>
             </Link>
           )}
-        </Flex>
+        </div>
       ) : null}
-    </Stack>
+    </div>
   );
 };

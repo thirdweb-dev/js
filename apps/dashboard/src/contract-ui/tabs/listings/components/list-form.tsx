@@ -13,20 +13,8 @@ import {
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
-import {
-  type UseContractResult,
-  useContract,
-  useContractType,
-  type useCreateAuctionListing,
-  type useCreateDirectListing,
-  useOwnedNFTs,
-} from "@thirdweb-dev/react";
-import type {
-  Marketplace,
-  MarketplaceV3,
-  NewAuctionListing,
-  NewDirectListing,
-} from "@thirdweb-dev/sdk";
+import { useContract, useOwnedNFTs } from "@thirdweb-dev/react";
+import type { NewAuctionListing, NewDirectListing } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { formatEther, parseEther } from "ethers/lib/utils";
@@ -39,7 +27,14 @@ import type { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
-import { NATIVE_TOKEN_ADDRESS } from "thirdweb";
+import type { UseMutateFunction } from "react-query-v5";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  type PreparedTransaction,
+  type ThirdwebContract,
+} from "thirdweb";
+import type { TransactionReceipt } from "thirdweb/dist/types/transaction/types";
+import { createAuction, createListing } from "thirdweb/extensions/marketplace";
 import { useActiveAccount } from "thirdweb/react";
 import {
   FormErrorMessage,
@@ -64,13 +59,15 @@ interface ListForm
 }
 
 type NFTMintForm = {
-  contractQuery:
-    | UseContractResult<Marketplace>
-    | UseContractResult<MarketplaceV3>;
-  directList: ReturnType<typeof useCreateDirectListing>;
-  auctionList: ReturnType<typeof useCreateAuctionListing>;
+  contract: ThirdwebContract;
   formId: string;
   type?: "direct-listings" | "english-auctions";
+  mutate: UseMutateFunction<
+    TransactionReceipt,
+    Error,
+    PreparedTransaction,
+    unknown
+  >;
 };
 
 const auctionTimes = [
@@ -84,11 +81,10 @@ const auctionTimes = [
 ];
 
 export const CreateListingsForm: React.FC<NFTMintForm> = ({
-  contractQuery,
-  directList,
-  auctionList,
+  contract,
   formId,
   type,
+  mutate,
 }) => {
   const trackEvent = useTrack();
   const network = useEVMContractInfo()?.chain;
@@ -99,10 +95,6 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
     (isSimpleHashSupported(chainId) ||
       isAlchemySupported(chainId) ||
       isMoralisSupported(chainId));
-
-  const { data: contractType } = useContractType(
-    contractQuery?.contract?.getAddress(),
-  );
 
   const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs();
 
@@ -122,12 +114,15 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
     },
   });
 
-  const { contract } = useContract(form.watch("contractAddress"));
+  const { contract: selectedContract } = useContract(
+    form.watch("contractAddress"),
+  );
   const address = useActiveAccount()?.address;
   const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } = useOwnedNFTs(
-    contract,
+    selectedContract,
     address,
   );
+
   const isSelected = (nft: WalletNFT) => {
     return (
       form.watch("selected")?.tokenId === nft.tokenId &&
@@ -155,6 +150,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
     "NFT listed successfully",
     "Failed to list NFT",
   );
+
   return (
     <Stack
       spacing={6}
@@ -165,80 +161,69 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
           return;
         }
         if (formData.listingType === "direct") {
-          directList.mutate(
-            {
-              assetContractAddress: formData.selected.contractAddress,
-              tokenId: formData.selected.tokenId,
-              currencyContractAddress: formData.currencyContractAddress,
-              quantity: formData.quantity,
-              startTimestamp: formData.startTimestamp,
-              // Hard code to year 2100 for now
-              pricePerToken: formData.buyoutPricePerToken,
-              endTimestamp: new Date(4102444800000),
-
-              // Marketplace v1 only params
-              buyoutPricePerToken: formData.buyoutPricePerToken,
-              // Hard code to 100 years for now
-              listingDurationInSeconds: (60 * 60 * 24 * 365 * 100).toString(),
-            },
-            {
-              onSuccess: () => {
-                onSuccess();
-                modalContext.onClose();
-              },
-              onError,
-            },
+          // Hard code to 100 years for now
+          const endTimestamp = new Date(
+            new Date().setFullYear(new Date().getFullYear() + 100),
           );
+          const transaction = createListing({
+            contract,
+            assetContractAddress: formData.selected.contractAddress,
+            tokenId: BigInt(formData.selected.tokenId),
+            currencyContractAddress: formData.currencyContractAddress,
+            quantity: BigInt(formData.quantity),
+            startTimestamp: formData.startTimestamp,
+            pricePerToken: String(formData.buyoutPricePerToken),
+            endTimestamp,
+          });
+          mutate(transaction, {
+            onSuccess: () => {
+              onSuccess();
+              modalContext.onClose();
+            },
+            onError,
+          });
         } else if (formData.listingType === "auction") {
-          auctionList.mutate(
-            {
-              assetContractAddress: formData.selected.contractAddress,
-              tokenId: formData.selected.tokenId,
-              quantity: formData.quantity,
-              startTimestamp: formData.startTimestamp,
-              currencyContractAddress: formData.currencyContractAddress,
-              minimumBidAmount: mulDecimalByQuantity(
-                formData.reservePricePerToken,
-                formData.quantity,
-              ),
-              buyoutBidAmount: mulDecimalByQuantity(
-                formData.buyoutPricePerToken,
-                formData.quantity,
-              ),
-              // Create endTimestamp with the current date + listingDurationInSeconds
-              endTimestamp: new Date(
-                new Date().getTime() +
-                  Number.parseInt(formData.listingDurationInSeconds) * 1000,
-              ),
-
-              // Marketplace v1 only params
-              reservePricePerToken: formData.reservePricePerToken,
-              buyoutPricePerToken: formData.buyoutPricePerToken,
-              listingDurationInSeconds: formData.listingDurationInSeconds,
+          const transaction = createAuction({
+            contract,
+            assetContractAddress: formData.selected.contractAddress,
+            tokenId: BigInt(formData.selected.tokenId),
+            startTimestamp: formData.startTimestamp,
+            currencyContractAddress: formData.currencyContractAddress,
+            endTimestamp: new Date(
+              new Date().getTime() +
+                Number.parseInt(formData.listingDurationInSeconds) * 1000,
+            ),
+            minimumBidAmount: mulDecimalByQuantity(
+              formData.reservePricePerToken,
+              formData.quantity,
+            ),
+            buyoutBidAmount: mulDecimalByQuantity(
+              formData.buyoutPricePerToken,
+              formData.quantity,
+            ),
+          });
+          mutate(transaction, {
+            onSuccess: () => {
+              onSuccess();
+              trackEvent({
+                category: "marketplace",
+                action: "add-listing",
+                label: "success",
+                network,
+              });
+              modalContext.onClose();
             },
-            {
-              onSuccess: () => {
-                onSuccess();
-                trackEvent({
-                  category: "marketplace",
-                  action: "add-listing",
-                  label: "success",
-                  network,
-                });
-                modalContext.onClose();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "marketplace",
-                  action: "add-listing",
-                  label: "error",
-                  network,
-                  error,
-                });
-                onError(error);
-              },
+            onError: (error) => {
+              trackEvent({
+                category: "marketplace",
+                action: "add-listing",
+                label: "error",
+                network,
+                error,
+              });
+              onError(error);
             },
-          );
+          });
         }
       })}
     >
@@ -369,21 +354,6 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
           </Stack>
         ) : null}
       </FormControl>
-      {contractType === "marketplace" ? (
-        <FormControl isDisabled={noNfts}>
-          <Heading as={FormLabel} size="label.lg">
-            Listing Type
-          </Heading>
-          <Select {...form.register("listingType")}>
-            <option value="direct">Direct</option>
-            <option value="auction">Auction</option>
-          </Select>
-          <FormHelperText>
-            The type of listing you want to create, either an auction or direct
-            listing.
-          </FormHelperText>
-        </FormControl>
-      ) : null}
       <FormControl isRequired isDisabled={noNfts}>
         <Heading as={FormLabel} size="label.lg">
           Listing Currency

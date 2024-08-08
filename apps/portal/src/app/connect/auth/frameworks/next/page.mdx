@@ -1,0 +1,313 @@
+import {
+	OpenSourceCard,
+	ArticleIconCard,
+	Callout,
+	Stack,
+	createMetadata,
+	InstallTabs,
+	Tabs,
+	TabsList,
+	TabsContent,
+	TabsTrigger,
+} from "@doc";
+import { GraduationCap } from "lucide-react";
+import { V4SDKbanner } from "@/components/others/V4SDKBanner";
+
+export const metadata = createMetadata({
+	image: {
+		title: "Integrate thirdweb Auth with Next.js",
+		icon: "react",
+	},
+	title: "Auth in Next.js with thirdweb SDK",
+	description: "Add support for Auth to your Next apps",
+});
+
+# Next.js
+
+If you want to interact with a working version of the Auth + Next integration that we'll be building in this guide, you can check the following GitHub repository, or clone it with the command below:
+
+```
+npx thirdweb create app --template thirdweb-auth-next
+```
+
+<OpenSourceCard
+	title="thirdweb-auth-next"
+	href="https://github.com/thirdweb-example/thirdweb-auth-next"
+	description="Auth Next example repository."
+/>
+
+## Installation & Setup
+
+<InstallTabs
+	npm="npm i thirdweb"
+	yarn="yarn add thirdweb"
+	pnpm="pnpm i thirdweb"
+	bun="bun i thirdweb"
+/>
+
+Setup your `.env` file with the following:
+
+```bash
+# the DOMAIN is the domain of the application
+NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN=
+# Get your client id from the thirdweb dashboard: https://thirdweb.com/create-api-key
+NEXT_PUBLIC_THIRDWEB_CLIENT_ID=
+# Get your secret key from the thirdweb dashboard: https://thirdweb.com/create-api-key
+THIRDWEB_SECRET_KEY=
+# A private key that will be used to sign the JWT for the `jwt-cookie` authentication method
+# this does *not* need to hold any funds, can be any valid private key to sign with
+AUTH_PRIVATE_KEY=
+```
+
+## Client-side Setup
+
+Create a `lib` directory inside `src` and create a `client.ts` file inside it:
+
+```tsx
+// lib/client.ts
+import { createThirdwebClient } from "thirdweb";
+
+const clientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID!; // this will be used on the client
+const secretKey = process.env.THIRDWEB_SECRET_KEY!; // this will be used on the server-side
+
+export const client = createThirdwebClient(
+	secretKey ? { secretKey } : { clientId },
+);
+```
+
+Add the `ThirdwebProvider` in your root layout:
+
+```tsx
+// app/layout.tsx
+import { ThirdwebProvider } from "thirdweb/react";
+
+const Layout = ({ children }: { children: React.ReactNode }) => {
+	return <ThirdwebProvider>{children}</ThirdwebProvider>;
+};
+
+export default Layout;
+```
+
+There are two ways to setup Auth on the client-side of a Next.js application, the Connect Button or your own custom component. For both cases, we'll use a JWT in a cookie to store the user's session and authenticate across the app. The connect button will handle a lot of the underlying complexity for you, but if you would like to bring your own components the functions it uses are exposed for your custom use case.
+
+<Tabs defaultValue="connect">
+
+<TabsList>
+	<TabsTrigger value="connect">Connect Button</TabsTrigger>
+	<TabsTrigger value="custom">Custom Component</TabsTrigger>
+</TabsList>
+
+<TabsContent value="connect">
+Wherever you'd like your connect/login button, place the `ConnectButton` component.
+
+```tsx
+// app/page.tsx
+import type { NextPage } from "next";
+import { ConnectButton } from "thirdweb/react";
+import { client } from "@/lib/client";
+import { generatePayload, isLoggedIn, login, logout } from "@/actions/login"; // we'll create this file in the next section
+
+const Page = () => {
+	return (
+		<ConnectButton
+			client={client}
+			auth={{
+				isLoggedIn: async (address) => {
+					console.log("checking if logged in!", { address });
+					return await isLoggedIn();
+				},
+				doLogin: async (params) => {
+					console.log("logging in!");
+					await login(params);
+				},
+				getLoginPayload: async ({ address }) => generatePayload({ address }),
+				doLogout: async () => {
+					console.log("logging out!");
+					await logout();
+				},
+			}}
+		/>
+	);
+};
+
+export default Page;
+```
+
+Use this component anywhere in your application. To try it out, we'll put it in the root `page.tsx`:
+
+```tsx
+// app/page.tsx
+import ConnectButton from "@/components/ConnectButton";
+
+const Home = () => {
+	return <ConnectButton />;
+};
+
+export default Home;
+```
+
+</TabsContent>
+
+<TabsContent value="custom">
+
+In your project's components directory, create a `LoginButton.tsx` file:
+
+```tsx
+// LoginButton.tsx
+"use client";
+
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { generatePayload, login } from "@/actions/login"; // we'll add this file in the next section
+import { signLoginPayload } from "thirdweb/auth";
+
+export const LoginButton = () => {
+	const account = useActiveAccount();
+	const chain = useActiveWalletChain();
+	const { connect, isConnecting, error } = useConnect();
+
+	async function handleClick() {
+		let activeAccount;
+		if (!account) {
+			const wallet = await connect(async () => {
+				const wallet = createWallet("io.metamask"); // update this to your wallet of choice or create a custom UI to select wallets
+				await wallet.connect();
+				return wallet;
+			});
+			activeAccount = wallet.getAccount();
+		} else {
+			activeAccount = account;
+		}
+		// Step 1: fetch the payload from the server
+		const payload = await generatePayload({
+			address: account.address,
+			chainId: chain.id,
+		});
+		// Step 2: Sign the payload
+		const signatureResult = await signLoginPayload({ account, payload });
+		// Step 3: Send the signature to the server for verification
+		const finalResult = await login(signatureResult);
+
+		alert(finalResult.valid ? "Login successful" : "Login failed");
+	}
+
+	return (
+		<button disabled={!account} onClick={handleClick}>
+			Login
+		</button>
+	);
+};
+
+export default LoginButton;
+```
+
+Use this component anywhere in your application. To try it out, we'll put it in the root `page.tsx`:
+
+```tsx
+// app/page.tsx
+import LoginButton from "@/components/LoginButton";
+
+const Home = () => {
+	return <LoginButton />;
+};
+
+export default Home;
+```
+
+</TabsContent>
+
+</Tabs>
+
+## Server-side Setup
+
+We'll use server functions to keep your login secure and concise.
+
+Create an `actions` directory with a `login.ts` file with the following:
+
+```tsx
+"use server";
+import { VerifyLoginPayloadParams, createAuth } from "thirdweb/auth";
+import { privateKeyAccount } from "thirdweb/wallets";
+import { client } from "@/lib/client";
+import { cookies } from "next/headers";
+
+const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY || "";
+
+if (!privateKey) {
+	throw new Error("Missing THIRDWEB_ADMIN_PRIVATE_KEY in .env file.");
+}
+
+const thirdwebAuth = createAuth({
+	domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
+	adminAccount: privateKeyAccount({ client, privateKey }),
+	client: client,
+});
+
+export const generatePayload = thirdwebAuth.generatePayload;
+
+export async function login(payload: VerifyLoginPayloadParams) {
+	const verifiedPayload = await thirdwebAuth.verifyPayload(payload);
+	if (verifiedPayload.valid) {
+		const jwt = await thirdwebAuth.generateJWT({
+			payload: verifiedPayload.payload,
+		});
+		cookies().set("jwt", jwt);
+	}
+}
+
+export async function isLoggedIn() {
+	const jwt = cookies().get("jwt");
+	if (!jwt?.value) {
+		return false;
+	}
+
+	const authResult = await thirdwebAuth.verifyJWT({ jwt: jwt.value });
+	if (!authResult.valid) {
+		return false;
+	}
+	return true;
+}
+
+export async function logout() {
+	cookies().delete("jwt");
+}
+```
+
+You can include custom context in the JWT token with the `context` parameter:
+
+```ts
+const jwt = await thirdwebAuth.generateJWT({
+	payload: verifiedPayload.payload,
+	context: {
+		admin: true,
+	},
+});
+```
+
+Now anywhere in your project, you can check a user's authentication status:
+
+```tsx
+import { redirect } from "next/navigation";
+import { isLoggedIn } from "../actions/login";
+
+const AuthenticatedPage = async () => {
+	// redirect back if user is not logged in
+	if (!(await isLoggedIn())) {
+		redirect("/connect-button");
+	}
+
+	return (
+		<div>
+			<h1>Logged In Page</h1>
+			<p>You are logged in, so you can see this page!</p>
+		</div>
+	);
+};
+
+export default AuthenticatedPage;
+```
+
+That's it! You know have a working SIWE Next.js app.
+
+## Support
+
+For help or feedback, please [visit our support site](https://thirdweb.com/support)

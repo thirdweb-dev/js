@@ -1,5 +1,5 @@
+import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { createThirdwebClient } from "thirdweb";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "../constants/rpc";
 
 // use env var to set IPFS gateway or fallback to ipfscdn.io
 const IPFS_GATEWAY_URL =

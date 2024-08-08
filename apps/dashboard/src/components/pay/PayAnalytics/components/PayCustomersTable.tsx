@@ -1,8 +1,8 @@
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Button } from "@/components/ui/button";
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { useState } from "react";
-import { CopyAddressButton } from "../../../../@/components/ui/CopyAddressButton";
-import { ScrollShadow } from "../../../../@/components/ui/ScrollShadow/ScrollShadow";
-import { Button } from "../../../../@/components/ui/button";
-import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
 import {
   type PayTopCustomersData,
   usePayCustomers,

@@ -1,7 +1,7 @@
+import { SkeletonContainer } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { SkeletonContainer } from "../../../../@/components/ui/skeleton";
 import { AreaChartLoadingState } from "../../../analytics/area-chart";
 import { usePayVolume } from "../hooks/usePayVolume";
 import {
