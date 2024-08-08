@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -9,13 +9,13 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { cacheChains } from "../../../../chains/utils.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletConnectionStatus } from "../../../core/hooks/wallets/useActiveWalletConnectionStatus.js";
+import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { useAutoConnect } from "../../hooks/wallets/useAutoConnect.js";
 import { ThemedButton } from "../components/button.js";
 import { ThemedSpinner } from "../components/spinner.js";
@@ -45,6 +45,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   const wallet = useActiveWallet();
   const account = useActiveAccount();
   const status = useActiveWalletConnectionStatus();
+  const connectionManager = useConnectionManager();
   const siweAuth = useSiweAuth(wallet, account, props.auth);
   useAutoConnect(props);
 
@@ -68,14 +69,18 @@ export function ConnectButton(props: ConnectButtonProps) {
     ]).start();
   }, []);
 
-  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
-  if (props.chains) {
-    cacheChains(props.chains);
-  }
+  // Add props.chain and props.chains to defined chains store
+  useEffect(() => {
+    if (props.chain) {
+      connectionManager.defineChains([props.chain]);
+    }
+  }, [props.chain, connectionManager]);
 
-  if (props.chain) {
-    cacheChains([props.chain]);
-  }
+  useEffect(() => {
+    if (props.chains) {
+      connectionManager.defineChains(props.chains);
+    }
+  }, [props.chains, connectionManager]);
 
   const closeModal = useCallback(() => {
     Animated.parallel([

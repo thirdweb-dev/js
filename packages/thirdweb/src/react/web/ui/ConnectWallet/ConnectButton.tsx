@@ -2,13 +2,13 @@
 
 import styled from "@emotion/styled";
 import { useEffect, useMemo, useState } from "react";
-import { cacheChains } from "../../../../chains/utils.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js";
 import { useActiveWalletConnectionStatus } from "../../../core/hooks/wallets/useActiveWalletConnectionStatus.js";
+import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { defaultTokens } from "../../../core/utils/defaultTokens.js";
 import {
   WalletUIStatesProvider,
@@ -267,20 +267,25 @@ export function ConnectButton(props: ConnectButtonProps) {
     [props.wallets, props.appMetadata, props.chains],
   );
   const localeQuery = useConnectLocale(props.locale || "en_US");
+  const connectionManager = useConnectionManager();
 
   usePreloadWalletProviders({
     wallets,
     client: props.client,
   });
 
-  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
-  if (props.chains) {
-    cacheChains(props.chains);
-  }
+  // Add props.chain and props.chains to defined chains store
+  useEffect(() => {
+    if (props.chain) {
+      connectionManager.defineChains([props.chain]);
+    }
+  }, [props.chain, connectionManager]);
 
-  if (props.chain) {
-    cacheChains([props.chain]);
-  }
+  useEffect(() => {
+    if (props.chains) {
+      connectionManager.defineChains(props.chains);
+    }
+  }, [props.chains, connectionManager]);
 
   const size = useMemo(() => {
     return !canFitWideModal() || wallets.length === 1

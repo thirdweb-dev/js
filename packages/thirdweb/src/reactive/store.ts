@@ -31,6 +31,9 @@ export function createStore<T>(initialValue: T): Store<T> {
       return value;
     },
     setValue(newValue: T) {
+      if (newValue === value) {
+        return;
+      }
       value = newValue;
       notify();
     },

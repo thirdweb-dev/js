@@ -1,5 +1,6 @@
 import { trackConnect } from "../../../../analytics/track.js";
 import type { Chain } from "../../../../chains/types.js";
+import { getCachedChainIfExists } from "../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Account, Wallet } from "../../../interfaces/wallet.js";
 import { createWalletEmitter } from "../../../wallet-emitter.js";
@@ -45,7 +46,14 @@ export function createInAppWallet(args: {
   return {
     id: "inApp",
     subscribe: emitter.subscribe,
-    getChain: () => chain,
+    getChain() {
+      if (!chain) {
+        return undefined;
+      }
+
+      chain = getCachedChainIfExists(chain.id) || chain;
+      return chain;
+    },
     getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {

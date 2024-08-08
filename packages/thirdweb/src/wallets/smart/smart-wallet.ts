@@ -1,5 +1,6 @@
 import { trackConnect } from "../../analytics/track.js";
 import type { Chain } from "../../chains/types.js";
+import { getCachedChainIfExists } from "../../chains/utils.js";
 import { getContract } from "../../contract/contract.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -107,7 +108,14 @@ export function smartWallet(
   const _smartWallet: Wallet<"smart"> = {
     id: "smart",
     subscribe: emitter.subscribe,
-    getChain: () => chain,
+    getChain() {
+      if (!chain) {
+        return undefined;
+      }
+
+      chain = getCachedChainIfExists(chain.id) || chain;
+      return chain;
+    },
     getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {

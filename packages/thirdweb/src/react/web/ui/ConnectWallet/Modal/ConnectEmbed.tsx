@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useMemo } from "react";
 import type { Chain } from "../../../../../chains/types.js";
-import { cacheChains } from "../../../../../chains/utils.js";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../../wallets/smart/types.js";
@@ -18,6 +17,7 @@ import type { ConnectEmbedProps } from "../../../../core/hooks/connection/Connec
 import { useActiveAccount } from "../../../../core/hooks/wallets/useActiveAccount.js";
 import { useActiveWallet } from "../../../../core/hooks/wallets/useActiveWallet.js";
 import { useIsAutoConnecting } from "../../../../core/hooks/wallets/useIsAutoConnecting.js";
+import { useConnectionManager } from "../../../../core/providers/connection-manager.js";
 import { WalletUIStatesProvider } from "../../../providers/wallet-ui-states-provider.js";
 import { canFitWideModal } from "../../../utils/canFitWideModal.js";
 import { usePreloadWalletProviders } from "../../../utils/usePreloadWalletProviders.js";
@@ -184,15 +184,20 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
   const siweAuth = useSiweAuth(activeWallet, activeAccount, props.auth);
   const show =
     !activeAccount || (siweAuth.requiresAuth && !siweAuth.isLoggedIn);
+  const connectionManager = useConnectionManager();
 
-  // to update cached chains ASAP, we skip using useEffect - this does not trigger a re-render so it's fine
-  if (props.chains) {
-    cacheChains(props.chains);
-  }
+  // Add props.chain and props.chains to defined chains store
+  useEffect(() => {
+    if (props.chain) {
+      connectionManager.defineChains([props.chain]);
+    }
+  }, [props.chain, connectionManager]);
 
-  if (props.chain) {
-    cacheChains([props.chain]);
-  }
+  useEffect(() => {
+    if (props.chains) {
+      connectionManager.defineChains(props.chains);
+    }
+  }, [props.chains, connectionManager]);
 
   const wallets = useMemo(
     () =>

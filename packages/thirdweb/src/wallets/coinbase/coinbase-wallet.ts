@@ -5,6 +5,7 @@
 import type { ProviderInterface } from "@coinbase/wallet-sdk";
 import { trackConnect } from "../../analytics/track.js";
 import type { Chain } from "../../chains/types.js";
+import { getCachedChainIfExists } from "../../chains/utils.js";
 import { COINBASE } from "../constants.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { createWalletEmitter } from "../wallet-emitter.js";
@@ -54,7 +55,14 @@ export function coinbaseWalletSDK(args: {
   return {
     id: COINBASE,
     subscribe: emitter.subscribe,
-    getChain: () => chain,
+    getChain() {
+      if (!chain) {
+        return undefined;
+      }
+
+      chain = getCachedChainIfExists(chain.id) || chain;
+      return chain;
+    },
     getConfig: () => createOptions,
     getAccount: () => account,
     autoConnect: async (options) => {

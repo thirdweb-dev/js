@@ -13,6 +13,7 @@ import type {
 } from "./wallet-types.js";
 
 import { trackConnect } from "../analytics/track.js";
+import { getCachedChainIfExists } from "../chains/utils.js";
 import { webLocalStorage } from "../utils/storage/webStorage.js";
 import { isMobile } from "../utils/web/isMobile.js";
 import { openWindow } from "../utils/web/openWindow.js";
@@ -206,7 +207,14 @@ export function createWallet<const ID extends WalletId>(
         id,
         subscribe: emitter.subscribe,
         getConfig: () => args[1],
-        getChain: () => chain,
+        getChain() {
+          if (!chain) {
+            return undefined;
+          }
+
+          chain = getCachedChainIfExists(chain.id) || chain;
+          return chain;
+        },
         getAccount: () => account,
         autoConnect: async (
           options: WalletAutoConnectionOption<

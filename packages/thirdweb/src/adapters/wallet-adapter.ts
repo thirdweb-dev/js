@@ -1,4 +1,5 @@
 import type { Chain } from "../chains/types.js";
+import { getCachedChainIfExists } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import type { Account, Wallet } from "../wallets/interfaces/wallet.js";
 import { createWalletEmitter } from "../wallets/wallet-emitter.js";
@@ -69,6 +70,8 @@ export function createWalletAdapter(
       return options.adaptedAccount;
     },
     getChain() {
+      const cachedChain = getCachedChainIfExists(_chain.id);
+      _chain = cachedChain || _chain;
       return _chain;
     },
     getConfig() {
