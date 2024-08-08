@@ -10,6 +10,7 @@ import { BookOpenIcon, ChevronRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import { SiDiscord } from "react-icons/si";
 import accountIcon from "../../../../public/assets/support/account.svg";
 import contractsIcon from "../../../../public/assets/support/contracts.png";
@@ -228,6 +229,12 @@ export default function SupportPage() {
           />
         </Card>
       </div>
+      <Script
+        id="helpkit-widget"
+        src="https://www.helpkit.so/widget/script.js"
+        data-project-id="thirdweb"
+        async
+      />
     </main>
   );
 }
