@@ -29,6 +29,10 @@ const links = [
 		name: "Contracts",
 		href: "/contracts",
 	},
+    {
+        name: "Chainsaw",
+        href: "/chainsaw"
+    }
 ];
 
 const toolLinks = [

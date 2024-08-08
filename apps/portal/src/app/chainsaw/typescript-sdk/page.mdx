@@ -1,0 +1,161 @@
+import { createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "thirdweb Chainsaw Typescript SDK",
+	description: "thirdweb Chainsaw Typescript SDK Reference",
+});
+
+# Typescript SDK
+
+The thirdweb Chainsaw Typescript SDK provides a set of powerful functions to interact with blockchain data. This documentation page covers the key features and usage of the SDK, including:
+
+- Retrieving block information
+- Fetching blockchain events
+- Querying transaction details
+- Accessing contract data
+
+Each section below provides a detailed explanation of a specific function, along with code examples to demonstrate its usage. These functions are designed to simplify blockchain data retrieval and analysis, making it easier for developers to build robust applications on top of blockchain networks.
+
+To get started, make sure you have the thirdweb client set up with your client ID. Then, you can use the various functions provided by the Chainsaw SDK to interact with blockchain data efficiently.
+
+
+## getBlock
+
+The `getBlock` function retrieves information about a specific block on the blockchain. This function typically returns details such as the block number, timestamp, transactions included in the block, and other relevant metadata.
+
+Here's an example of how to use the `getBlock` function:
+```typescript
+ @param {GetBlockParams} params
+ @returns {Promise<ChainsawBlock>}
+
+ ---
+ import { createThirdwebClient } from "thirdweb";
+ import { getBlock } from "thirdweb/chainsaw";
+
+ const client = createThirdwebClient({ clientId: "..." });
+ const block = await getBlock({
+  client,
+  blockNumber: 9662167,
+  chainId: 1
+ });
+```
+
+## getEvents
+The `getEvents` function allows you to retrieve events from the blockchain based on specified parameters. This function is useful for tracking contract events, analyzing historical data, or monitoring real-time updates.
+
+Here's an example of how to use the `getEvents` function:
+```typescript
+ @param {GetEventsParams} params
+ @returns {Promise<GetEventsResult>}
+
+ ---
+ import { createThirdwebClient } from "thirdweb";
+ import { getEvents } from "thirdweb/chainsaw";
+
+ const client = createThirdwebClient({ clientId: "..." });
+ const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ const endDate = new Date();
+ const events = await getEvents({
+  client,
+  contractAddresses: ["0x..."],
+  chainIds: [1],
+  startDate,
+  endDate,
+  groupBy: ["time"],
+  interval: ["day"],
+  pageSize: 20,
+  page: 1
+ });
+```
+
+## getLatestBlockNumber
+The `getLatestBlockNumber` function retrieves the most recent block number indexed for a specified chain. This is useful for getting the current state of the blockchain or for synchronizing data with the latest block.
+
+Here's an example of how to use the `getLatestBlockNumber` function:
+```typescript
+ @param {GetLatestBlockNumberParams} params
+ @returns {Promise<number>}
+ 
+ ---
+ import { createThirdwebClient } from "thirdweb";
+ import { getLatestBlockNumber } from "thirdweb/chainsaw";
+ 
+ const client = createThirdwebClient({ clientId: "..." });
+ const latestBlockNumber = await getLatestBlockNumber({
+  client,
+  chainId: 1
+ });
+```
+
+## getNFTsByCollection
+The `getNFTsByCollection` function allows you to retrieve NFTs (Non-Fungible Tokens) from a specific collection on the blockchain. This function is useful for querying and displaying NFTs associated with a particular contract address.
+
+Here's an example of how to use the `getNFTsByCollection` function:
+```typescript
+ @param {GetNFTsByCollectionParams} params
+ @returns {Promise<GetNFTsByCollectionResult>}
+
+ ---
+ import { createThirdwebClient } from "thirdweb";
+ import { getNFTsByCollection } from "thirdweb/chainsaw";
+
+ const client = createThirdwebClient({ clientId: "..." });
+ const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ const endDate = new Date(Date.now() - 24 * 60 * 60_000);
+ const nfts = await getNFTsByCollection({
+  client,
+  contractAddresses: ["0x..."],
+  chainIds: [1],
+  groupBy: ["ownerAddress"],
+ });
+```
+
+## getNFTsByOwner
+The `getNFTsByOwner` function allows you to retrieve NFTs (Non-Fungible Tokens) owned by a specific address on the blockchain. This function is useful for querying and displaying NFTs associated with a particular wallet address.
+
+Here's an example of how to use the `getNFTsByOwner` function:
+```typescript
+ @param {GetNFTsByOwnerParams} params
+ @returns {Promise<GetNFTsByOwnerResult>}
+
+ ---
+ import { createThirdwebClient } from "thirdweb";
+ import { getNFTsByOwner } from "thirdweb/chainsaw";
+
+ const client = createThirdwebClient({ clientId: "..." });
+ const startDate = new Date(Date.now() - 48 * 60 * 60_000);
+ const endDate = new Date(Date.now() - 24 * 60 * 60_000);
+ const nfts = await getNFTsByOwner({
+  client,
+  ownerAddresses: ["0x..."],
+  chainIds: [1],
+  pageSize: 20,
+  page: 1
+ });
+```
+
+## getTransactions
+The `getTransactions` function allows you to retrieve transaction information from the blockchain based on specified parameters. This function is useful for analyzing historical transactions, monitoring account activity, or verifying transaction details.
+
+Here's an example of how to use the `getTransactions` function:
+```typescript
+ @param {GetTransactionsParams} params
+ @returns {Promise<GetTransactionsResult>}
+
+---
+ import { createThirdwebClient } from "thirdweb";
+ import { getTransactions } from "thirdweb/chainsaw";
+
+ const client = createThirdwebClient({ clientId: "..." });
+ const startDate = new Date(Date.now() - 24 * 60 * 60_000);
+ const endDate = new Date();
+ const block = await getTransactions({
+  client,
+  to: "0x...",
+  chainIds: [1],
+  startDate,
+  endDate,
+  pageSize: 20,
+  page: 1
+ });
+```
