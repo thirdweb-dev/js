@@ -18,7 +18,7 @@ const coreContractsSlug = "/contracts/modular-contracts/core-contracts";
 // TODO: Deprecate links that start with the following slugs
 const buildSlug = "/contracts/build";
 const interactSlug = "/contracts/interact";
-const modulesSlug = "/contracts/build/modules";
+const extensionsSlug = "/contracts/build/extensions";
 const baseContractsSlug = "/contracts/build/base-contracts";
 
 export const sidebar: SideBar = {
@@ -469,65 +469,65 @@ export const sidebar: SideBar = {
 						},
 					],
 				},
-				// modules
+				// extensions
 				{
-					name: "Modules",
-					href: `${modulesSlug}`,
+					name: "Extensions",
+					href: `${extensionsSlug}`,
 					links: [
 						{
 							name: "General",
 							links: [
 								{
 									name: "BatchMintMetadata",
-									href: `${modulesSlug}/general/BatchMintMetadata`,
+									href: `${extensionsSlug}/general/BatchMintMetadata`,
 								},
 								{
 									name: "ContractMetadata",
-									href: `${modulesSlug}/general/ContractMetadata`,
+									href: `${extensionsSlug}/general/ContractMetadata`,
 								},
 								{
 									name: "DelayedReveal",
-									href: `${modulesSlug}/general/DelayedReveal`,
+									href: `${extensionsSlug}/general/DelayedReveal`,
 								},
 								{
 									name: "Drop",
-									href: `${modulesSlug}/general/Drop`,
+									href: `${extensionsSlug}/general/Drop`,
 								},
 								{
 									name: "DropSinglePhase",
-									href: `${modulesSlug}/general/DropSinglePhase`,
+									href: `${extensionsSlug}/general/DropSinglePhase`,
 								},
 								{
 									name: "LazyMint",
-									href: `${modulesSlug}/general/LazyMint`,
+									href: `${extensionsSlug}/general/LazyMint`,
 								},
 								{
 									name: "Multicall",
-									href: `${modulesSlug}/general/Multicall`,
+									href: `${extensionsSlug}/general/Multicall`,
 								},
 								{
 									name: "Ownable",
-									href: `${modulesSlug}/general/Ownable`,
+									href: `${extensionsSlug}/general/Ownable`,
 								},
 								{
 									name: "Permissions",
-									href: `${modulesSlug}/general/Permissions`,
+									href: `${extensionsSlug}/general/Permissions`,
 								},
 								{
 									name: "PermissionsEnumerable",
-									href: `${modulesSlug}/general/PermissionsEnumerable`,
+									href: `${extensionsSlug}/general/PermissionsEnumerable`,
 								},
 								{
 									name: "PlatformFee",
-									href: `${modulesSlug}/general/PlatformFee`,
+									href: `${extensionsSlug}/general/PlatformFee`,
 								},
 								{
 									name: "PrimarySale",
-									href: `${modulesSlug}/general/PrimarySale`,
+									href: `${extensionsSlug}/general/PrimarySale`,
 								},
 								{
 									name: "Royalty",
-									href: `${modulesSlug}/general/Royalty`,
+									href: `${extensionsSlug}/general/Royalty`,
 								},
 							],
 						},
@@ -536,39 +536,39 @@ export const sidebar: SideBar = {
 							links: [
 								{
 									name: "ERC20",
-									href: `${modulesSlug}/erc-20/ERC20`,
+									href: `${extensionsSlug}/erc-20/ERC20`,
 								},
 								{
 									name: "ERC20BatchMintable",
-									href: `${modulesSlug}/erc-20/ERC20BatchMintable`,
+									href: `${extensionsSlug}/erc-20/ERC20BatchMintable`,
 								},
 								{
 									name: "ERC20Burnable",
-									href: `${modulesSlug}/erc-20/ERC20Burnable`,
+									href: `${extensionsSlug}/erc-20/ERC20Burnable`,
 								},
 								{
 									name: "ERC20ClaimConditions",
-									href: `${modulesSlug}/erc-20/ERC20ClaimConditions`,
+									href: `${extensionsSlug}/erc-20/ERC20ClaimConditions`,
 								},
 								{
 									name: "ERC20ClaimPhases",
-									href: `${modulesSlug}/erc-20/ERC20ClaimPhases`,
+									href: `${extensionsSlug}/erc-20/ERC20ClaimPhases`,
 								},
 								{
 									name: "ERC20Mintable",
-									href: `${modulesSlug}/erc-20/ERC20Mintable`,
+									href: `${extensionsSlug}/erc-20/ERC20Mintable`,
 								},
 								{
 									name: "ERC20Permit",
-									href: `${modulesSlug}/erc-20/ERC20Permit`,
+									href: `${extensionsSlug}/erc-20/ERC20Permit`,
 								},
 								{
 									name: "ERC20SignatureMint",
-									href: `${modulesSlug}/erc-20/ERC20SignatureMint`,
+									href: `${extensionsSlug}/erc-20/ERC20SignatureMint`,
 								},
 								{
 									name: "ERC20Staking",
-									href: `${modulesSlug}/erc-20/ERC20Staking`,
+									href: `${extensionsSlug}/erc-20/ERC20Staking`,
 								},
 							],
 						},
@@ -577,55 +577,55 @@ export const sidebar: SideBar = {
 							links: [
 								{
 									name: "ERC721",
-									href: `${modulesSlug}/erc-721/ERC721`,
+									href: `${extensionsSlug}/erc-721/ERC721`,
 								},
 								{
 									name: "ERC721BatchMintable",
-									href: `${modulesSlug}/erc-721/ERC721BatchMintable`,
+									href: `${extensionsSlug}/erc-721/ERC721BatchMintable`,
 								},
 								{
 									name: "ERC721Burnable",
-									href: `${modulesSlug}/erc-721/ERC721Burnable`,
+									href: `${extensionsSlug}/erc-721/ERC721Burnable`,
 								},
 								{
 									name: "ERC721ClaimConditions",
-									href: `${modulesSlug}/erc-721/ERC721ClaimConditions`,
+									href: `${extensionsSlug}/erc-721/ERC721ClaimConditions`,
 								},
 								{
 									name: "ERC721ClaimCustom",
-									href: `${modulesSlug}/erc-721/ERC721ClaimCustom`,
+									href: `${extensionsSlug}/erc-721/ERC721ClaimCustom`,
 								},
 								{
 									name: "ERC721ClaimPhases",
-									href: `${modulesSlug}/erc-721/ERC721ClaimPhases`,
+									href: `${extensionsSlug}/erc-721/ERC721ClaimPhases`,
 								},
 								{
 									name: "ERC721Claimable",
-									href: `${modulesSlug}/erc-721/ERC721Claimable`,
+									href: `${extensionsSlug}/erc-721/ERC721Claimable`,
 								},
 								{
 									name: "ERC721Enumerable",
-									href: `${modulesSlug}/erc-721/ERC721Enumerable`,
+									href: `${extensionsSlug}/erc-721/ERC721Enumerable`,
 								},
 								{
 									name: "ERC721Mintable",
-									href: `${modulesSlug}/erc-721/ERC721Mintable`,
+									href: `${extensionsSlug}/erc-721/ERC721Mintable`,
 								},
 								{
 									name: "ERC721Revealable",
-									href: `${modulesSlug}/erc-721/ERC721Revealable`,
+									href: `${extensionsSlug}/erc-721/ERC721Revealable`,
 								},
 								{
 									name: "ERC721SignatureMint",
-									href: `${modulesSlug}/erc-721/ERC721SignatureMint`,
+									href: `${extensionsSlug}/erc-721/ERC721SignatureMint`,
 								},
 								{
 									name: "ERC721Staking",
-									href: `${modulesSlug}/erc-721/ERC721Staking`,
+									href: `${extensionsSlug}/erc-721/ERC721Staking`,
 								},
 								{
 									name: "ERC721Supply",
-									href: `${modulesSlug}/erc-721/ERC721Supply`,
+									href: `${extensionsSlug}/erc-721/ERC721Supply`,
 								},
 							],
 						},
@@ -634,63 +634,63 @@ export const sidebar: SideBar = {
 							links: [
 								{
 									name: "ERC1155",
-									href: `${modulesSlug}/erc-1155/ERC1155`,
+									href: `${extensionsSlug}/erc-1155/ERC1155`,
 								},
 								{
 									name: "ERC1155BatchMintable",
-									href: `${modulesSlug}/erc-1155/ERC1155BatchMintable`,
+									href: `${extensionsSlug}/erc-1155/ERC1155BatchMintable`,
 								},
 								{
 									name: "ERC1155Burnable",
-									href: `${modulesSlug}/erc-1155/ERC1155Burnable`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Burnable`,
 								},
 								{
 									name: "ERC1155ClaimConditions",
-									href: `${modulesSlug}/erc-1155/ERC1155ClaimConditions`,
+									href: `${extensionsSlug}/erc-1155/ERC1155ClaimConditions`,
 								},
 								{
 									name: "ERC1155ClaimCustom",
-									href: `${modulesSlug}/erc-1155/ERC1155ClaimCustom`,
+									href: `${extensionsSlug}/erc-1155/ERC1155ClaimCustom`,
 								},
 								{
 									name: "ERC1155ClaimPhases",
-									href: `${modulesSlug}/erc-1155/ERC1155ClaimPhases`,
+									href: `${extensionsSlug}/erc-1155/ERC1155ClaimPhases`,
 								},
 								{
 									name: "ERC1155Claimable",
-									href: `${modulesSlug}/erc-1155/ERC1155Claimable`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Claimable`,
 								},
 								{
 									name: "ERC1155Drop",
-									href: `${modulesSlug}/erc-1155/ERC1155Drop`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Drop`,
 								},
 								{
 									name: "ERC1155DropSinglePhase",
-									href: `${modulesSlug}/erc-1155/ERC1155DropSinglePhase`,
+									href: `${extensionsSlug}/erc-1155/ERC1155DropSinglePhase`,
 								},
 								{
 									name: "ERC1155Enumerable",
-									href: `${modulesSlug}/erc-1155/ERC1155Enumerable`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Enumerable`,
 								},
 								{
 									name: "ERC1155Mintable",
-									href: `${modulesSlug}/erc-1155/ERC1155Mintable`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Mintable`,
 								},
 								{
 									name: "ERC1155Revealable",
-									href: `${modulesSlug}/erc-1155/ERC1155Revealable`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Revealable`,
 								},
 								{
 									name: "ERC1155SignatureMint",
-									href: `${modulesSlug}/erc-1155/ERC1155SignatureMint`,
+									href: `${extensionsSlug}/erc-1155/ERC1155SignatureMint`,
 								},
 								{
 									name: "ERC1155Staking",
-									href: `${modulesSlug}/erc-1155/ERC1155Staking`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Staking`,
 								},
 								{
 									name: "ERC1155Supply",
-									href: `${modulesSlug}/erc-1155/ERC1155Supply`,
+									href: `${extensionsSlug}/erc-1155/ERC1155Supply`,
 								},
 							],
 						},
@@ -699,15 +699,15 @@ export const sidebar: SideBar = {
 							links: [
 								{
 									name: "AccountModule",
-									href: `${modulesSlug}/erc-4337/AccountModule`,
+									href: `${extensionsSlug}/erc-4337/AccountModule`,
 								},
 								{
 									name: "SmartWallet",
-									href: `${modulesSlug}/erc-4337/SmartWallet`,
+									href: `${extensionsSlug}/erc-4337/SmartWallet`,
 								},
 								{
 									name: "SmartWalletFactory",
-									href: `${modulesSlug}/erc-4337/SmartWalletFactory`,
+									href: `${extensionsSlug}/erc-4337/SmartWalletFactory`,
 								},
 							],
 						},
