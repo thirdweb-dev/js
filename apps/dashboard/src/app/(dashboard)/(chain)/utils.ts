@@ -22,7 +22,7 @@ import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import plumeBanner from "./temp-assets/plumeBanner.png";
-import plumeCTA from "./temp-assets/plume-CTA-banner.png";
+import plumeCTA from "./temp-assets/plumeCTA.png";
 
 import type { ChainMetadataWithServices } from "./types/chain";
 
