@@ -59,7 +59,7 @@ export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
       contractAddress: nft.contractAddress,
       collectionName: nft.collectionName,
       chainId: nft.chainId,
-      balance: nft.balance || "1",
+      balance: BigInt(nft.balance || 1),
       ...(nft.imageData && { imageData: nft.imageData }),
     };
   });

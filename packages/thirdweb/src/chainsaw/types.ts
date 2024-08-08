@@ -134,7 +134,7 @@ export type ChainsawNFT = ParsedNFT & {
   contractAddress: string;
   collectionName: string;
   chainId: number;
-  balance: string;
+  balance: bigint;
   imageData?: string;
 };
 
