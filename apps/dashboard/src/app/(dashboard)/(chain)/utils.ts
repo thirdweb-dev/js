@@ -13,6 +13,8 @@ import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
 import lumiaCTA from "./temp-assets/lumia-cta.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import mantleBanner from "./temp-assets/mantle-banner.jpeg";
+import plumeBanner from "./temp-assets/plumeBanner.png";
+import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
@@ -285,13 +287,13 @@ const chainMetaRecord = {
   },
   //Plume
   161221135: {
-    headerImgUrl: thirdwebBanner.src,
+    headerImgUrl: plumeBanner.src,
     about:
-      "Plume Network is the premier RWA chain built for crypto natives. Venture into RWA land with us while earning Plume Miles!",
+      "Plume is the first modular L2 blockchain dedicated for all real-world assets (RWAs) that integrates asset tokenization and compliance providers directly into the chain. Our mission is to simplify the convoluted processes of RWA project deployment and offer investors a blockchain ecosystem to cross-pollinate and invest in various RWAs. In addition, Plume enables RWA composability through its thriving DeFi applications and provides access to high-quality buyers to increase liquidity for all tokenized RWAs.",
     cta: {
-      backgroundImageUrl: thirdwebCTA.src,
-      title: "",
-      buttonLink: "https://www.plumenetwork.xyz/",
+      backgroundImageUrl: plumeCTA.src,
+      title: "Participate on the Testnet Now!",
+      buttonLink: "https://miles.plumenetwork.xyz/",
       buttonText: "Learn more",
     },
   },
