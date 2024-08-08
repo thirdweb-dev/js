@@ -1,15 +1,15 @@
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
+import type { NFT } from "../../utils/nft/parseNft.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawNFTs,
+  ChainsawInternalNFTs,
   ChainsawPagingParams,
   ChainsawResponse,
-  NFTs,
-} from "../types.ts";
+} from "../types.js";
 import { getNftsByOwnerEndpoint } from "../urls.js";
 
 export type GetNFTsByOwnerParams = Prettify<
@@ -34,7 +34,7 @@ export type GetNFTsByOwnerParams = Prettify<
 >;
 
 export type GetNFTsByOwnerResult = {
-  nfts: ChainsawNFTs;
+  nfts: NFT[];
   page?: number;
 };
 
@@ -81,7 +81,7 @@ export async function getNFTsByOwner(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<NFTs> = await response.json();
+    const data: ChainsawResponse<ChainsawInternalNFTs> = await response.json();
     if (data.error) throw new Error(data.error);
     return {
       nfts: formatChainsawNFTs(data.data),

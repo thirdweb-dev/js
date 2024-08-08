@@ -20,9 +20,11 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         expect(nft.id).toBeTypeOf("bigint");
         expect(nft.tokenURI).toBeTypeOf("string");
         expect(nft.type).toEqual("ERC721");
-        expect(nft.contractAddress).toEqual(contractAddress.toLowerCase());
-        expect(nft.chainId).toEqual(252);
-        expect(nft.balance).toBeTypeOf("bigint");
+        expect(nft.metadata?.contractAddress).toEqual(
+          contractAddress.toLowerCase(),
+        );
+        expect(nft.metadata?.chainId).toEqual(252);
+        expect(nft.metadata?.balance).toBeTypeOf("bigint");
         expect(nft.metadata).toMatchObject(
           expect.objectContaining({
             id: expect.any(BigInt),

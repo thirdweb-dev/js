@@ -1,6 +1,4 @@
-import type { Transaction as ViemTransaction } from "viem";
 import type { Hex } from "../utils/encoding/hex.js";
-import type { NFT as ParsedNFT } from "../utils/nft/parseNft.js";
 import type { Prettify } from "../utils/type-utils.js";
 
 export type ChainsawResponse<T = unknown> = {
@@ -20,10 +18,10 @@ export type ChainsawPagingParams = {
   page?: number;
 };
 
-export type Block = {
+export type ChainsawInternalBlock = {
   hash: Hex;
   blockNumber: number;
-  time: Date;
+  time: string;
   parentHash: Hex;
   miner: Hex;
   nonce: Hex;
@@ -59,15 +57,16 @@ export type DecodedTransaction = {
   args?: string;
 };
 
-export type Transaction = {
-  time: Date;
+export type ChainsawInternalTransaction = {
+  chainId: number;
+  time: string;
   to: Hex;
   from: Hex;
   hash: Hex;
   index: number;
   blockNumber: number;
   blockHash: Hex;
-  data?: string;
+  data?: Hex;
   value: string;
   gasLimit: string;
   gasPrice: string;
@@ -79,13 +78,9 @@ export type Transaction = {
   nonce: string;
 };
 
-export type Transactions = Transaction[];
+export type ChainsawInternalTransactions = ChainsawInternalTransaction[];
 
-export type ChainsawTransaction = Omit<Transaction, keyof ViemTransaction> &
-  ViemTransaction;
-export type ChainsawTransactions = ChainsawTransaction[];
-
-export type NFT = {
+export type ChainsawInternalNFT = {
   chainId: number;
   contractAddress: Hex;
   tokenId: string;
@@ -101,14 +96,4 @@ export type NFT = {
   description?: string;
 };
 
-export type NFTs = NFT[];
-
-export type ChainsawNFT = ParsedNFT & {
-  contractAddress: string;
-  collectionName: string;
-  chainId: number;
-  balance: bigint;
-  imageData?: string;
-};
-
-export type ChainsawNFTs = ChainsawNFT[];
+export type ChainsawInternalNFTs = ChainsawInternalNFT[];

@@ -18,20 +18,19 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getTransactions", () => {
     expect(transactions).toHaveLength(10);
     for (const transaction of transactions) {
       expect(transaction.chainId).toEqual(1);
-      expect(transaction.time).toBeTypeOf("string");
       expect(transaction.to).toEqual(contractAddress.toLowerCase());
       expect(transaction.from).toBeTypeOf("string");
       expect(transaction.hash).toBeTypeOf("string");
-      expect(transaction.index).toBeTypeOf("number");
+      expect(transaction.transactionIndex).toBeTypeOf("number");
       expect(transaction.blockNumber).toBeTypeOf("bigint");
       expect(transaction.blockHash).toBeTypeOf("string");
       expect(transaction.value).toBeTypeOf("bigint");
-      expect(transaction.gasLimit).toBeTypeOf("string");
-      expect(transaction.success).toBeTypeOf("boolean");
       expect(transaction.type).toBeTypeOf("string");
       expect(transaction.nonce).toBeTypeOf("number");
-      expect(transaction.data).toBeTypeOf("string");
-      expect(transaction.gasUsed).toBeTypeOf("string");
+      expect(transaction.input).toBeTypeOf("string");
+      if (transaction.gas) {
+        expect(transaction.gas).toBeTypeOf("bigint");
+      }
     }
   });
 });

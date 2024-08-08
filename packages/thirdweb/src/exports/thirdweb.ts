@@ -227,11 +227,7 @@ export {
   type GetLatestBlockNumberParams,
 } from "../chainsaw/endpoints/getLatestBlockNumber.js";
 
-export type {
-  ChainsawTransactions,
-  ChainsawTransaction,
-  ChainsawPagingParams,
-} from "../chainsaw/types.js";
+export type { ChainsawPagingParams } from "../chainsaw/types.js";
 
 // ------------------------------------------------
 // encoding

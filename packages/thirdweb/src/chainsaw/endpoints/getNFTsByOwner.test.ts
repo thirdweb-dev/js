@@ -19,8 +19,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
       expect(nft.tokenURI).toBeTypeOf("string");
       expect(nft.type).toBeTypeOf("string");
       expect(nft.owner).toEqual(ownerAddress.toLowerCase());
-      expect(nft.chainId).toEqual(252);
-      expect(nft.balance).toBeTypeOf("bigint");
+      expect(nft.metadata?.chainId).toEqual(252);
+      expect(nft.metadata?.balance).toBeTypeOf("bigint");
       expect(nft.metadata).toMatchObject(
         expect.objectContaining({
           id: expect.any(BigInt),

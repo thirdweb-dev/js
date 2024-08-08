@@ -1,36 +1,39 @@
 import {
   type BlockTag,
   type GetBlockReturnType,
+  type Transaction,
   formatBlock,
   formatTransaction,
 } from "viem";
 import { numberToHex } from "../utils/encoding/hex.js";
-import { type ParseNFTOptions, parseNFT } from "../utils/nft/parseNft.js";
+import {
+  type NFT,
+  type ParseNFTOptions,
+  parseNFT,
+} from "../utils/nft/parseNft.js";
 import type {
-  Block,
   ChainsawEvents,
-  ChainsawNFTs,
-  ChainsawTransaction,
-  ChainsawTransactions,
+  ChainsawInternalBlock,
+  ChainsawInternalNFTs,
+  ChainsawInternalTransactions,
   Events,
-  NFTs,
-  Transactions,
 } from "./types.js";
 
 /**
  * @internal
  */
 export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
-  block?: Block,
+  block?: ChainsawInternalBlock,
 ): GetBlockReturnType<undefined, false, TBlockTag> | undefined {
   if (!block) return;
   return formatBlock({
     number: numberToHex(block.blockNumber),
+    hash: block.hash,
     nonce: numberToHex(BigInt(block.nonce)),
     baseFeePerGas: block.baseFeePerGas
       ? numberToHex(BigInt(block.baseFeePerGas))
       : undefined,
-    timestamp: numberToHex(block.time.valueOf()),
+    timestamp: numberToHex(new Date(block.time).valueOf()),
     difficulty: numberToHex(BigInt(block.difficulty)),
     gasLimit: numberToHex(BigInt(block.gasLimit)),
     gasUsed: numberToHex(BigInt(block.gasUsed)),
@@ -40,16 +43,19 @@ export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
 /**
  * @internal
  */
-export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
+export function formatChainsawNFTs(nfts?: ChainsawInternalNFTs): NFT[] {
   if (!nfts) return [];
   return nfts.map((nft) => {
+    const common = {
+      tokenId: BigInt(nft.tokenId),
+      owner: nft.ownerAddress || null,
+      tokenUri: nft.uri,
+    };
     let options: ParseNFTOptions;
     switch (nft.type) {
       case "ERC1155": {
         options = {
-          tokenId: BigInt(nft.tokenId),
-          owner: nft.ownerAddress || null,
-          tokenUri: nft.uri,
+          ...common,
           type: "ERC1155" as const,
           supply: BigInt(0),
         };
@@ -57,9 +63,7 @@ export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
       }
       case "ERC721": {
         options = {
-          tokenId: BigInt(nft.tokenId),
-          owner: nft.ownerAddress || null,
-          tokenUri: nft.uri,
+          ...common,
           type: "ERC721" as const,
         };
         break;
@@ -68,24 +72,22 @@ export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
         throw Error(`Unsupported NFT type ${nft.type}`);
       }
     }
-    const parsedNft = parseNFT(
+    return parseNFT(
       {
         id: BigInt(nft.tokenId),
         uri: nft.uri,
         image: nft.image,
         description: nft.description,
         name: nft.name,
+        // custom extra data
+        contractAddress: nft.contractAddress,
+        collectionName: nft.collectionName,
+        chainId: nft.chainId,
+        balance: BigInt(nft.balance || 1),
+        ...(nft.imageData && { imageData: nft.imageData }),
       },
       options,
     );
-    return {
-      ...parsedNft,
-      contractAddress: nft.contractAddress,
-      collectionName: nft.collectionName,
-      chainId: nft.chainId,
-      balance: BigInt(nft.balance || 1),
-      ...(nft.imageData && { imageData: nft.imageData }),
-    };
   });
 }
 
@@ -93,60 +95,59 @@ export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
  * @internal
  */
 export function formatChainsawTransactions(
-  txs?: Transactions,
-): ChainsawTransactions {
+  txs?: ChainsawInternalTransactions,
+): Transaction[] {
   if (!txs) return [];
   return txs.map((tx) => {
+    const common = {
+      blockHash: tx.blockHash,
+      blockNumber: numberToHex(BigInt(tx.blockNumber)),
+      chainId: numberToHex(tx.chainId),
+      gas: tx.gasUsed ? numberToHex(BigInt(tx.gasUsed)) : undefined,
+      nonce: numberToHex(BigInt(tx.nonce)),
+      hash: tx.hash,
+      to: tx.to,
+      from: tx.from,
+      transactionIndex: numberToHex(BigInt(tx.index)),
+      value: numberToHex(BigInt(tx.value)),
+      input: tx.data,
+      blockTime: new Date(tx.time),
+      decoded: tx.decoded,
+    };
     if (tx.type === 0) {
       return formatTransaction({
-        ...tx,
-        type: "0x0",
-        blockNumber: numberToHex(BigInt(tx.blockNumber)),
-        value: numberToHex(BigInt(tx.value)),
-        gasPrice: undefined,
-        nonce: numberToHex(BigInt(tx.nonce)),
+        ...common,
+        gasPrice: numberToHex(BigInt(tx.gasPrice)),
         maxPriorityFeePerGas: undefined,
-        transactionIndex: numberToHex(BigInt(tx.index)),
-      }) as ChainsawTransaction;
+        type: "0x0",
+      });
     }
     if (tx.type === 1) {
       return formatTransaction({
-        ...tx,
-        type: "0x1",
-        blockNumber: numberToHex(BigInt(tx.blockNumber)),
-        value: numberToHex(BigInt(tx.value)),
+        ...common,
         gasPrice: numberToHex(BigInt(tx.gasPrice)),
-        nonce: numberToHex(BigInt(tx.nonce)),
         maxPriorityFeePerGas: undefined,
-        transactionIndex: numberToHex(BigInt(tx.index)),
-      }) as ChainsawTransaction;
+        type: "0x1",
+      });
     }
     if (tx.type === 2) {
       return formatTransaction({
-        ...tx,
-        type: "0x2",
-        blockNumber: numberToHex(BigInt(tx.blockNumber)),
-        value: numberToHex(BigInt(tx.value)),
-        nonce: numberToHex(BigInt(tx.nonce)),
+        ...common,
         gasPrice: undefined,
         maxPriorityFeePerGas: tx.maxPriorityFeePerGas
           ? numberToHex(BigInt(tx.maxPriorityFeePerGas))
           : undefined,
-        transactionIndex: numberToHex(BigInt(tx.index)),
-      }) as ChainsawTransaction;
+        type: "0x2",
+      });
     }
     return formatTransaction({
-      ...tx,
-      type: "0x3",
-      blockNumber: numberToHex(BigInt(tx.blockNumber)),
-      value: numberToHex(BigInt(tx.value)),
+      ...common,
       gasPrice: undefined,
-      nonce: numberToHex(BigInt(tx.nonce)),
       maxPriorityFeePerGas: tx.maxPriorityFeePerGas
         ? numberToHex(BigInt(tx.maxPriorityFeePerGas))
         : undefined,
-      transactionIndex: numberToHex(BigInt(tx.index)),
-    }) as ChainsawTransaction;
+      type: "0x3",
+    });
   });
 }
 

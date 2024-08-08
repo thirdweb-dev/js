@@ -2,7 +2,7 @@ import type { BlockTag, GetBlockReturnType } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { formatChainsawBlock } from "../formatter.js";
-import type { Block, ChainsawResponse } from "../types.ts";
+import type { ChainsawInternalBlock, ChainsawResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
 
 export type GetBlockParams = {
@@ -64,7 +64,7 @@ export async function getBlock(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<Block> = await response.json();
+    const data: ChainsawResponse<ChainsawInternalBlock> = await response.json();
     if (data.error) throw new Error(data.error);
     const block = formatChainsawBlock(data.data);
     if (!block) throw new Error(`unable to fetch block ${params.blockNumber}`);

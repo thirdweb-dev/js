@@ -1,3 +1,4 @@
+import type { Transaction } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -5,10 +6,9 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawTransactions } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
+  ChainsawInternalTransactions,
   ChainsawPagingParams,
   ChainsawResponse,
-  ChainsawTransactions,
-  Transactions,
 } from "../types.ts";
 import { getTransactionsEndpoint } from "../urls.js";
 
@@ -42,7 +42,7 @@ export type GetTransactionsParams = Prettify<
 >;
 
 export type GetTransactionsResult = {
-  transactions: ChainsawTransactions;
+  transactions: Transaction[];
   page?: number;
 };
 
@@ -112,7 +112,8 @@ export async function getTransactions(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<Transactions> = await response.json();
+    const data: ChainsawResponse<ChainsawInternalTransactions> =
+      await response.json();
     if (data.error) throw new Error(data.error);
     return {
       transactions: formatChainsawTransactions(data.data),
