@@ -13,6 +13,8 @@ import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
 import lumiaCTA from "./temp-assets/lumia-cta.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
 import mantleBanner from "./temp-assets/mantle-banner.jpeg";
+import plumeBanner from "./temp-assets/plumeBanner.png";
+import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
@@ -21,8 +23,6 @@ import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
-import plumeBanner from "./temp-assets/plumeBanner.png";
-import plumeCTA from "./temp-assets/plumeCTA.png";
 
 import type { ChainMetadataWithServices } from "./types/chain";
 
