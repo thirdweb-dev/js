@@ -1,9 +1,13 @@
-import { formatBlock, formatTransaction } from "viem";
+import {
+  type BlockTag,
+  type GetBlockReturnType,
+  formatBlock,
+  formatTransaction,
+} from "viem";
 import { numberToHex } from "../utils/encoding/hex.js";
 import { type ParseNFTOptions, parseNFT } from "../utils/nft/parseNft.js";
 import type {
   Block,
-  ChainsawBlock,
   ChainsawEvents,
   ChainsawNFTs,
   ChainsawTransaction,
@@ -16,17 +20,21 @@ import type {
 /**
  * @internal
  */
-export function formatChainsawBlock(block?: Block): ChainsawBlock | undefined {
+export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
+  block?: Block,
+): GetBlockReturnType<undefined, false, TBlockTag> | undefined {
   if (!block) return;
   return formatBlock({
-    ...block,
+    number: numberToHex(block.blockNumber),
+    nonce: numberToHex(BigInt(block.nonce)),
     baseFeePerGas: block.baseFeePerGas
       ? numberToHex(BigInt(block.baseFeePerGas))
       : undefined,
+    timestamp: numberToHex(block.time.valueOf()),
     difficulty: numberToHex(BigInt(block.difficulty)),
     gasLimit: numberToHex(BigInt(block.gasLimit)),
     gasUsed: numberToHex(BigInt(block.gasUsed)),
-  });
+  }) as GetBlockReturnType<undefined, false, TBlockTag>;
 }
 
 /**

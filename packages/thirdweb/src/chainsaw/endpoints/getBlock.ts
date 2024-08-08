@@ -1,7 +1,8 @@
+import type { BlockTag, GetBlockReturnType } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { formatChainsawBlock } from "../formatter.js";
-import type { Block, ChainsawBlock, ChainsawResponse } from "../types.ts";
+import type { Block, ChainsawResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
 
 export type GetBlockParams = {
@@ -23,8 +24,8 @@ export type GetBlockParams = {
   chainId: number;
 };
 
-export type GetBlockResult = {
-  block: ChainsawBlock;
+export type GetBlockResult<TBlockTag extends BlockTag = "latest"> = {
+  block: GetBlockReturnType<undefined, false, TBlockTag>;
 };
 
 /**
