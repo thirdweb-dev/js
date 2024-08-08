@@ -1,7 +1,7 @@
-import { getThirdwebDomains } from "../utils/domains.js";
+import { getThirdwebBaseUrl } from "../utils/domains.js";
 
 export function getChainsawV2Url(): string {
-  const domain: string = getThirdwebDomains().chainsaw;
+  const domain: string = getThirdwebBaseUrl("chainsaw");
   return `${domain}/v2`;
 }
 
