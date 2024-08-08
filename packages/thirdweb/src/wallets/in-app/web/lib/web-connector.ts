@@ -12,7 +12,7 @@ import {
   type SendEmailOtpReturnType,
   type SingleStepAuthArgsType,
   UserWalletStatus,
-} from "../../core/authentication/type.js";
+} from "../../core/authentication/types.js";
 import type { InAppConnector } from "../../core/interfaces/connector.js";
 import type { InAppWalletConstructorType } from "../types.js";
 import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
@@ -104,7 +104,7 @@ export class InAppWebConnector implements InAppConnector {
   }
 
   /**
-   * Gets the usr if they are logged in
+   * Gets the user if they're logged in
    * @example
    * ```js
    *  const user = await thirdwebInAppWallet.getUser();
@@ -165,19 +165,90 @@ export class InAppWebConnector implements InAppConnector {
     return this.auth.loginWithAuthToken(authResult);
   }
 
+  /**
+   * Authenticates the user and returns the auth token, but does not instantiate their wallet
+   */
   async authenticate(
+    args: MultiStepAuthArgsType | SingleStepAuthArgsType,
+  ): Promise<AuthStoredTokenWithCookieReturnType> {
+    const strategy = args.strategy;
+    switch (strategy) {
+      case "email":
+        return this.auth.authenticateWithEmailOtp({
+          email: args.email,
+          otp: args.verificationCode,
+        });
+      case "phone":
+        return this.auth.authenticateWithSmsOtp({
+          phoneNumber: args.phoneNumber,
+          otp: args.verificationCode,
+        });
+      case "jwt":
+        return this.auth.authenticateWithCustomJwt({
+          jwt: args.jwt,
+          encryptionKey: args.encryptionKey,
+        });
+      case "passkey":
+        if (args.type === "sign-up") {
+          return registerPasskey({
+            client: this.wallet.client,
+            ecosystem: this.wallet.ecosystem,
+            authenticatorType: args.authenticatorType,
+            username: args.passkeyName,
+          });
+        }
+        return loginWithPasskey({
+          client: this.wallet.client,
+          ecosystem: this.wallet.ecosystem,
+          authenticatorType: args.authenticatorType,
+        });
+      case "auth_endpoint": {
+        return this.auth.authenticateWithCustomAuthEndpoint({
+          payload: args.payload,
+          encryptionKey: args.encryptionKey,
+        });
+      }
+      case "iframe_email_verification": {
+        return this.auth.authenticateWithIframe({
+          email: args.email,
+        });
+      }
+      case "iframe": {
+        return this.auth.authenticateWithModal();
+      }
+      case "apple":
+      case "facebook":
+      case "google":
+      case "farcaster":
+      case "discord": {
+        return loginWithOauth({
+          authOption: strategy,
+          client: this.wallet.client,
+          ecosystem: this.wallet.ecosystem,
+          closeOpenedWindow: args.closeOpenedWindow,
+          openedWindow: args.openedWindow,
+        });
+      }
+    }
+    throw new Error("Unreachable");
+  }
+
+  /**
+   * Authenticates the user then instantiates their wallet using the resulting auth token
+   */
+  async connect(
     args: MultiStepAuthArgsType | SingleStepAuthArgsType,
   ): Promise<AuthLoginReturnType> {
     const strategy = args.strategy;
     switch (strategy) {
       case "email": {
-        return await this.auth.verifyEmailLoginOtp({
+        return await this.auth.loginWithEmailOtp({
           email: args.email,
           otp: args.verificationCode,
         });
       }
       case "phone": {
-        return await this.auth.verifySmsLoginOtp({
+        return await this.auth.loginWithSmsOtp({
           otp: args.verificationCode,
           phoneNumber: args.phoneNumber,
         });
@@ -195,7 +266,7 @@ export class InAppWebConnector implements InAppConnector {
         });
       }
       case "iframe_email_verification": {
-        return this.auth.loginWithEmailOtp({
+        return this.auth.loginWithIframe({
           email: args.email,
         });
       }
@@ -225,14 +296,8 @@ export class InAppWebConnector implements InAppConnector {
       case "farcaster":
       case "telegram":
       case "discord": {
-        const authToken = await loginWithOauth({
-          authOption: strategy,
-          client: this.wallet.client,
-          ecosystem: this.wallet.ecosystem,
-          closeOpenedWindow: args.closeOpenedWindow,
-          openedWindow: args.openedWindow,
-        });
-        return this.loginWithAuthToken(authToken);
+        const authToken = await this.authenticate(args);
+        return this.auth.loginWithAuthToken(authToken);
       }
 
       default:

@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { AuthArgsType } from "../../../core/authentication/type.js";
+import type { AuthArgsType } from "../../../core/authentication/types.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,

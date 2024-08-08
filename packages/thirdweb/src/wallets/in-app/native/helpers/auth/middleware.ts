@@ -3,7 +3,7 @@ import {
   AuthProvider,
   type AuthStoredTokenWithCookieReturnType,
   RecoveryShareManagement,
-} from "../../../core/authentication/type.js";
+} from "../../../core/authentication/types.js";
 import { ErrorMessages } from "../errors.js";
 import {
   getDeviceShare,

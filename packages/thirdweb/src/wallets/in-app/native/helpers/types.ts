@@ -1,7 +1,7 @@
 import type {
   AuthProvider,
   RecoveryShareManagement,
-} from "../../core/authentication/type.js";
+} from "../../core/authentication/types.js";
 
 export type VerifiedTokenResponse = {
   verifiedToken: {

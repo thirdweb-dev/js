@@ -1,5 +1,5 @@
 import type { AsyncStorage } from "../../../utils/storage/AsyncStorage.js";
-import type { AuthArgsType } from "../../../wallets/in-app/core/authentication/type.js";
+import type { AuthArgsType } from "../../../wallets/in-app/core/authentication/types.js";
 
 const LAST_AUTH_PROVIDER_STORAGE_KEY = "lastAuthProvider";
 

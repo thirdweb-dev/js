@@ -3,16 +3,18 @@ import type { Account } from "../../interfaces/wallet.js";
 import {
   type AuthArgsType,
   type AuthLoginReturnType,
+  type AuthStoredTokenWithCookieReturnType,
   type GetUser,
   type LogoutReturnType,
   type OauthOption,
   type PreAuthArgsType,
   type SendEmailOtpReturnType,
   UserWalletStatus,
-} from "../core/authentication/type.js";
+} from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
 import {
   authEndpoint,
+  authenticate,
   customJwt,
   deleteActiveAccount,
   sendVerificationEmail,
@@ -89,18 +91,37 @@ export class InAppNativeConnector implements InAppConnector {
     }
   }
 
-  async authenticate(params: AuthArgsType): Promise<AuthLoginReturnType> {
+  async authenticate(
+    params: AuthArgsType,
+  ): Promise<AuthStoredTokenWithCookieReturnType> {
+    const strategy = params.strategy;
+    switch (strategy) {
+      case "google":
+      case "facebook":
+      case "discord":
+      case "apple": {
+        const ExpoLinking = require("expo-linking");
+        const redirectUrl =
+          params.redirectUrl || (ExpoLinking.createURL("") as string);
+        return authenticate({ strategy, redirectUrl }, this.options.client);
+      }
+      default:
+        throw new Error(`Unsupported authentication type: ${strategy}`);
+    }
+  }
+
+  async connect(params: AuthArgsType): Promise<AuthLoginReturnType> {
     const strategy = params.strategy;
     switch (strategy) {
       case "email": {
-        return await this.validateEmailOTP({
+        return await this.validateOtp({
           email: params.email,
           otp: params.verificationCode,
           recoveryCode: params.verificationCode,
         });
       }
       case "phone": {
-        return await this.validateEmailOTP({
+        return await this.validateOtp({
           email: params.phoneNumber,
           otp: params.verificationCode,
           recoveryCode: params.verificationCode,
@@ -146,7 +167,7 @@ export class InAppNativeConnector implements InAppConnector {
     }
   }
 
-  private async validateEmailOTP(options: {
+  private async validateOtp(options: {
     email: string;
     otp: string;
     recoveryCode?: string;

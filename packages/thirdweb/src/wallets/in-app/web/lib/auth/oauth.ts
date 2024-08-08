@@ -1,8 +1,8 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import type { AuthStoredTokenWithCookieReturnType } from "../../../../../wallets/in-app/core/authentication/type.js";
 import type { SocialAuthOption } from "../../../../../wallets/types.js";
 import { getSocialAuthLoginPath } from "../../../core/authentication/getLoginPath.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/types.js";
 import type { Ecosystem } from "../../types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
 

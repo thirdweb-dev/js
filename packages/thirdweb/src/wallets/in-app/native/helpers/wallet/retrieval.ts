@@ -6,7 +6,7 @@ import {
 } from "../../../../../utils/encoding/hex.js";
 import type { Account } from "../../../../interfaces/wallet.js";
 import { privateKeyToAccount } from "../../../../private-key.js";
-import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type.js";
+import type { SetUpWalletRpcReturnType } from "../../../core/authentication/types.js";
 import { getUserShares } from "../api/fetchers.js";
 import {
   DEVICE_SHARE_MISSING_MESSAGE,

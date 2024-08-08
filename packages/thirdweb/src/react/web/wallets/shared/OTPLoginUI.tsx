@@ -4,7 +4,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
+import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/types.js";
 import { preAuthenticate } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";

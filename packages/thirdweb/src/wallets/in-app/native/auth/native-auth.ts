@@ -10,7 +10,7 @@ import {
   type OauthOption,
   RecoveryShareManagement,
   type SendEmailOtpReturnType,
-} from "../../core/authentication/type.js";
+} from "../../core/authentication/types.js";
 import {
   deleteAccount,
   fetchUserDetails,
@@ -204,7 +204,7 @@ export async function validateEmailOTP(options: {
   }
 }
 
-export async function socialLogin(
+export async function authenticate(
   auth: OauthOption,
   client: ThirdwebClient,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
@@ -246,8 +246,14 @@ export async function socialLogin(
   if (!authResult) {
     throw new Error("No auth result found");
   }
-  const { storedToken } = JSON.parse(authResult);
+  return JSON.parse(authResult);
+}
 
+export async function socialLogin(
+  auth: OauthOption,
+  client: ThirdwebClient,
+): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { storedToken } = await authenticate(auth, client);
   try {
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
       jwtToken: storedToken.jwtToken,

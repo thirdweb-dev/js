@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import { randomBytesHex } from "../../../../../utils/random.js";
-import type { UserDetailsApiType } from "../../../core/authentication/type.js";
+import type { UserDetailsApiType } from "../../../core/authentication/types.js";
 import {
   ROUTE_EMBEDDED_WALLET_DETAILS,
   ROUTE_IS_VALID_USER_MANAGED_OTP,
