@@ -114,7 +114,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * const twContract = await ethers5Adapter.contract.fromEthersContract({
        *  client,
        *  ethersContract,
-       *  chainId,
+       *  chain: defineChain(1), // Replace with your chain
        * });
        * ```
        */
@@ -255,7 +255,9 @@ async function fromEthersContract<abi extends Abi>(
 ): Promise<ThirdwebContract<abi>> {
   return getContract({
     client: options.client,
-    address: await options.ethersContract.getAddress(),
+    address:
+      options.ethersContract.address ||
+      (await options.ethersContract.getAddress()),
     chain: options.chain,
   });
 }
