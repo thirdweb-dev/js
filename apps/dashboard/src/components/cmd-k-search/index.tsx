@@ -1,20 +1,18 @@
+"use client";
+
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import {
-  Box,
-  Divider,
-  Flex,
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  LinkBox,
-  LinkOverlay,
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  Spinner,
-} from "@chakra-ui/react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import {
   type QueryClient,
   useQuery,
@@ -23,10 +21,10 @@ import {
 import { ChainIcon } from "components/icons/ChainIcon";
 import { useTrack } from "hooks/analytics/useTrack";
 import { type TrendingContract, fetchTopContracts } from "lib/search";
+import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FiArrowRight, FiSearch, FiX } from "react-icons/fi";
-import { Card, Heading, Link, Text } from "tw-components";
 import { useDebounce } from "use-debounce";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -197,75 +195,88 @@ export const CmdKSearch: React.FC = () => {
   }, [activeIndex, data, handleClose, open, router, trackEvent]);
 
   return (
-    <>
-      <InputGroup
-        display={{ base: "none", lg: "block" }}
-        minW="300px"
-        size="sm"
-        onClick={() => setOpen(true)}
-      >
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          handleClose();
+        }
+      }}
+    >
+      <div className="hidden lg:block w-[300px] relative">
         <Input
-          borderRadius="md"
-          fontSize="var(--tw-font-size-body-md)"
-          borderColor="borderColor"
+          onClick={() => setOpen(true)}
           placeholder="Search any contract"
+          className="bg-transparent pr-4"
         />
-        <InputRightElement w="auto" pr={2} as={Flex} gap={1}>
-          <Text size="body.sm" color="chakra-placeholder-color">
-            ⌘K
-          </Text>
-        </InputRightElement>
-      </InputGroup>
-      <IconButton
+        <div className="flex items-center text-sm text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 gap-[2px]">
+          <CommandIcon className="size-3" /> K
+        </div>
+      </div>
+
+      <Button
+        className="lg:hidden p-2"
         aria-label="Search any contract"
         variant="ghost"
-        display={{ base: "inherit", lg: "none" }}
-        icon={<Icon as={FiSearch} />}
         onClick={() => setOpen(true)}
-      />
+      >
+        <SearchIcon className="size-4" />
+      </Button>
 
       {/* modal below here */}
-      <Modal size="lg" isOpen={open} onClose={handleClose}>
-        <ModalOverlay />
-        <Card bg="backgroundCard" as={ModalContent} p={0}>
-          <InputGroup size="lg">
-            <InputLeftElement>
-              <Icon as={FiSearch} />
-            </InputLeftElement>
-            <Input
-              bg="transparent!important"
-              autoFocus
-              border="none"
-              borderRadius="none"
-              placeholder="Search any contract"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-            />
-            <InputRightElement>
-              {isFetching ? (
-                <Spinner size="sm" />
-              ) : searchValue.length > 0 ? (
-                <IconButton
-                  size="sm"
-                  aria-label="Clear search"
-                  variant="ghost"
-                  icon={<Icon as={FiX} />}
-                  onClick={() => setSearchValue("")}
-                />
-              ) : null}
-            </InputRightElement>
-          </InputGroup>
+
+      <DialogContent
+        className="z-[10000001] p-0 gap-0"
+        dialogOverlayClassName="z-[10000000] backdrop-blur-sm"
+      >
+        {/* Title */}
+        <DynamicHeight>
+          <div className="p-6">
+            <DialogHeader>
+              <DialogTitle className="mb-1">Search Contracts</DialogTitle>
+              <DialogDescription>
+                Search a contract by name or contract address accross all
+                blockchains
+              </DialogDescription>
+            </DialogHeader>
+
+            {/* Search */}
+            <div className="relative mt-4 ">
+              <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                autoFocus
+                placeholder="Name or Contract Address"
+                className="px-10"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                {isFetching ? (
+                  <Spinner className="size-5 text-muted-foreground" />
+                ) : searchValue.length > 0 ? (
+                  <Button
+                    size="sm"
+                    aria-label="Clear search"
+                    variant="ghost"
+                    className="p-2 translate-x-2"
+                    onClick={() => setSearchValue("")}
+                  >
+                    <XIcon className="size-4 text-muted-foreground" />
+                  </Button>
+                ) : null}
+              </div>
+            </div>
+          </div>
 
           {searchValue.length > 0 && (!isFetching || data.length) ? (
-            <Flex px={2} direction="column">
-              <Divider borderColor="borderColor" />
-              <Flex py={2}>
+            <div className="border-t border-border">
+              <ScrollShadow scrollableClassName="max-h-[50vh] md:max-h-[500px] p-2 rounded-lg">
                 {!data || data?.length === 0 ? (
-                  <Text p={3} size="label.md">
-                    No contracts found.
-                  </Text>
+                  <div className="h-[100px] flex justify-center items-center p-4 text-secondary-foreground">
+                    No contracts found
+                  </div>
                 ) : (
-                  <Flex direction="column" w="full">
+                  <div className="w-full">
                     {data.map((result, idx) => {
                       return (
                         <SearchResult
@@ -286,14 +297,14 @@ export const CmdKSearch: React.FC = () => {
                         />
                       );
                     })}
-                  </Flex>
+                  </div>
                 )}
-              </Flex>
-            </Flex>
+              </ScrollShadow>
+            </div>
           ) : null}
-        </Card>
-      </Modal>
-    </>
+        </DynamicHeight>
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -311,44 +322,38 @@ const SearchResult: React.FC<SearchResultProps> = ({
   onClick,
 }) => {
   return (
-    <Flex
-      as={LinkBox}
-      gap={4}
-      align="center"
-      _dark={{
-        bg: isActive ? "rgba(255,255,255,.05)" : "transparent",
-      }}
-      _light={{
-        bg: isActive ? "rgba(0,0,0,.05)" : "transparent",
-      }}
-      borderRadius="md"
-      w="100%"
-      p={3}
+    <div
+      className={cn(
+        "relative flex gap-4 items-center rounded-lg p-3 hover:bg-muted",
+        isActive && "bg-muted",
+      )}
     >
-      <Box flexShrink={0}>
-        <ChainIcon size={24} ipfsSrc={result.chainMetadata?.icon?.url} />
-      </Box>
-      <Flex direction="column">
-        <LinkOverlay
-          textDecor="none!important"
-          as={Link}
-          href={`/${result.chainMetadata.chainId}/${result.contractAddress}`}
-          onMouseEnter={onMouseEnter}
-          onClick={onClick}
-          size="label.xl"
-        >
-          <Heading as="h3" size="label.lg">
+      <ChainIcon
+        size={24}
+        ipfsSrc={result.chainMetadata?.icon?.url}
+        className="shrink-0"
+      />
+      <div className="flex flex-col gap-1">
+        <h3 className="line-clamp-2 text-foreground font-semibold">
+          <Link
+            href={`/${result.chainMetadata.chainId}/${result.contractAddress}`}
+            onMouseEnter={onMouseEnter}
+            onClick={onClick}
+            className="before:absolute before:inset-0"
+          >
             {shortenIfAddress(result.name)}
-          </Heading>
-        </LinkOverlay>
-        <Heading pointerEvents="none" as="h4" opacity={0.6} size="subtitle.xs">
+          </Link>
+        </h3>
+        <p className="text-xs text-muted-foreground">
           {result.chainMetadata.name} -{" "}
-          {shortenIfAddress(result.contractAddress)}
-        </Heading>
-      </Flex>
-      <Flex ml="auto" align="center" gap={3} flexShrink={0}>
-        <Icon as={FiArrowRight} />
-      </Flex>
-    </Flex>
+          <span className="font-mono">
+            {shortenIfAddress(result.contractAddress)}
+          </span>
+        </p>
+      </div>
+      <div className="flex ml-auto shrink-0">
+        <ArrowRightIcon className="size-4 text-muted-foreground/50" />
+      </div>
+    </div>
   );
 };
