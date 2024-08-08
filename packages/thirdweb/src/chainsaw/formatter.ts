@@ -13,6 +13,9 @@ import type {
   Transactions,
 } from "./types.js";
 
+/**
+ * @internal
+ */
 export function formatChainsawBlock(block?: Block): ChainsawBlock | undefined {
   if (!block) return;
   return formatBlock({
@@ -26,6 +29,9 @@ export function formatChainsawBlock(block?: Block): ChainsawBlock | undefined {
   });
 }
 
+/**
+ * @internal
+ */
 export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
   if (!nfts) return [];
   return nfts.map((nft) => {
@@ -75,6 +81,9 @@ export function formatChainsawNFTs(nfts?: NFTs): ChainsawNFTs {
   });
 }
 
+/**
+ * @internal
+ */
 export function formatChainsawTransactions(
   txs?: Transactions,
 ): ChainsawTransactions {
@@ -133,6 +142,9 @@ export function formatChainsawTransactions(
   });
 }
 
+/**
+ * @internal
+ */
 export function formatChainsawEvents(events?: Events): ChainsawEvents {
   if (!events?.length) return [];
   return events.map((event) => ({
