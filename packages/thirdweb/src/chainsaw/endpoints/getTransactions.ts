@@ -60,6 +60,21 @@ export type GetTransactionsResult = {
  * import { getTransactions } from "thirdweb/chainsaw";
  *
  * const client = createThirdwebClient({ clientId: "..." });
+ * const block = await getTransactions({
+ *  client,
+ *  to: "0x...",
+ *  chainIds: [1],
+ *  pageSize: 20,
+ *  page: 1
+ * });
+ * ```
+ *
+ * @example with a date range
+ * ```ts
+ * import { createThirdwebClient } from "thirdweb";
+ * import { getTransactions } from "thirdweb/chainsaw";
+ *
+ * const client = createThirdwebClient({ clientId: "..." });
  * const startDate = new Date(Date.now() - 24 * 60 * 60_000);
  * const endDate = new Date();
  * const block = await getTransactions({
