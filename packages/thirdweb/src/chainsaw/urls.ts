@@ -1,8 +1,8 @@
 import { getThirdwebBaseUrl } from "../utils/domains.js";
 
-export function getChainsawV2Url(): string {
-  const domain: string = getThirdwebBaseUrl("chainsaw");
-  return `${domain}/v2`;
+export function getChainsawV2Url(): URL {
+  const domain = getThirdwebBaseUrl("chainsaw");
+  return new URL(`${domain}/v2`);
 }
 
 /**
@@ -10,7 +10,9 @@ export function getChainsawV2Url(): string {
  * @internal
  */
 export function getBlockEndpoint(blockNumber: bigint): URL {
-  return new URL(`${getChainsawV2Url()}/blocks/${blockNumber}`);
+  const url = getChainsawV2Url();
+  url.pathname += `/blocks/${blockNumber}`;
+  return url;
 }
 
 /**
@@ -18,7 +20,9 @@ export function getBlockEndpoint(blockNumber: bigint): URL {
  * @internal
  */
 export function getLatestBlockNumberEndpoint(): URL {
-  return new URL(`${getChainsawV2Url()}/blockNumber/latest`);
+  const url = getChainsawV2Url();
+  url.pathname += "/blockNumber/latest";
+  return url;
 }
 
 /**
@@ -26,7 +30,9 @@ export function getLatestBlockNumberEndpoint(): URL {
  * @internal
  */
 export function getTransactionsEndpoint(): URL {
-  return new URL(`${getChainsawV2Url()}/transactions`);
+  const url = getChainsawV2Url();
+  url.pathname += "/transactions";
+  return url;
 }
 
 /**
@@ -34,7 +40,9 @@ export function getTransactionsEndpoint(): URL {
  * @internal
  */
 export function getEventsEndpoint(): URL {
-  return new URL(`${getChainsawV2Url()}/events`);
+  const url = getChainsawV2Url();
+  url.pathname += "/events";
+  return url;
 }
 
 /**
@@ -42,7 +50,9 @@ export function getEventsEndpoint(): URL {
  * @internal
  */
 export function getNftsByCollectionEndpoint(): URL {
-  return new URL(`${getChainsawV2Url()}/nfts/by-collection`);
+  const url = getChainsawV2Url();
+  url.pathname += "/nfts/by-collection";
+  return url;
 }
 
 /**
@@ -50,5 +60,7 @@ export function getNftsByCollectionEndpoint(): URL {
  * @internal
  */
 export function getNftsByOwnerEndpoint(): URL {
-  return new URL(`${getChainsawV2Url()}/nfts/by-owner`);
+  const url = getChainsawV2Url();
+  url.pathname += "/nfts/by-owner";
+  return url;
 }
