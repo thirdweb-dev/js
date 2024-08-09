@@ -1,5 +1,6 @@
-import { Icon, useClipboard, useToast } from "@chakra-ui/react";
+import { Icon, useClipboard } from "@chakra-ui/react";
 import { FiCheck, FiShare2 } from "react-icons/fi";
+import { toast } from "sonner";
 import { TrackedIconButton } from "tw-components";
 
 export const ShareButton: React.FC<ShareData> = (props) => {
@@ -8,7 +9,6 @@ export const ShareButton: React.FC<ShareData> = (props) => {
   const shareData = { ...props, url };
   const { onCopy, hasCopied } = useClipboard(shareData.url);
 
-  const toast = useToast();
   const onShareClick = async () => {
     // if browser supports sharing use native sharing
     if (
@@ -24,13 +24,7 @@ export const ShareButton: React.FC<ShareData> = (props) => {
       }
     } else {
       onCopy();
-      toast({
-        position: "bottom",
-        title: "URL copied to clipboard",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.info("URL copied to clipboard");
     }
   };
 
