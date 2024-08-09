@@ -1,0 +1,26 @@
+# Build
+
+Compile your smart contracts and detect any [extensions](/contracts/build/extensions) you have implemented.
+
+```bash
+npx thirdweb build
+```
+
+## Usage
+
+This command:
+
+- Detects the framework you're using (Hardhat, Forge, etc.)
+- Compiles all of your smart contracts using the framework's compiler, or the default Solidity compiler
+- Displays the [extensions](/contracts/build/extensions) you have implemented for each contract
+
+```bash
+npx thirdweb [options]
+```
+
+## Options
+
+- `--clean`: Clear the cache before building
+- `--path` or `-p`: Path to project
+- `--debug` or `-d`: Show debug logs
+- `--all` or `-a`: Run detection on all contracts
