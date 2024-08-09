@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   Center,
   Flex,
@@ -8,6 +9,7 @@ import {
 import { ChainIcon } from "components/icons/ChainIcon";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
+import { resolveScheme } from "thirdweb/storage";
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -77,7 +79,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
               right={0}
               left={0}
               objectFit="contain"
-              src={data.image}
+              src={resolveScheme({
+                client: thirdwebClient,
+                uri: data.image,
+              })}
               alt={data?.name?.toString() || ""}
             />
           ) : null}
