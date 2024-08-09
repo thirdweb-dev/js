@@ -1,6 +1,8 @@
 import {
   type BlockTag,
+  type DecodeEventLogReturnType,
   type GetBlockReturnType,
+  type Log,
   type Transaction,
   formatBlock,
   formatTransaction,
@@ -11,12 +13,12 @@ import {
   type ParseNFTOptions,
   parseNFT,
 } from "../utils/nft/parseNft.js";
+import type { Prettify } from "../utils/type-utils.js";
 import type {
-  ChainsawEvents,
   ChainsawInternalBlock,
+  ChainsawInternalEvents,
   ChainsawInternalNFTs,
   ChainsawInternalTransactions,
-  Events,
 } from "./types.js";
 
 /**
@@ -154,10 +156,38 @@ export function formatChainsawTransactions(
 /**
  * @internal
  */
-export function formatChainsawEvents(events?: Events): ChainsawEvents {
+export function formatChainsawEvents(
+  events?: ChainsawInternalEvents,
+): Prettify<
+  Log &
+    DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
+>[] {
   if (!events?.length) return [];
-  return events.map((event) => ({
-    ...event,
-    count: BigInt(event.count),
-  }));
+  return events.map((event) => {
+    let args = [];
+    try {
+      if (event.args) {
+        args = JSON.parse(event.args);
+      }
+    } catch (e) {
+      // don't throw if we can't parse
+    }
+
+    return {
+      address: event.contractAddress || "0x",
+      blockHash: event.blockHash || "0x",
+      blockNumber: BigInt(event.blockNumber || 0),
+      data: event.data || "0x",
+      logIndex: event.logIndex || 0,
+      transactionHash: event.transactionHash || "0x",
+      transactionIndex: event.transactionIndex || 0,
+      args,
+      eventName: event.name,
+      topics: event.topics || [],
+      removed: false,
+      chainId: event.chainId,
+      count: BigInt(event.count),
+      ...(event.time && { time: new Date(event.time) }),
+    };
+  });
 }

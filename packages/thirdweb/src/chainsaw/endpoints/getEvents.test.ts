@@ -17,16 +17,13 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getEvents", () => {
       endDate: new Date("2024-08-02T12:00:00.000Z"),
     });
     expect(events).toHaveLength(65);
+
     for (const event of events) {
-      expect(event.time).toBeTypeOf("string");
-      expect(event.name).toBeTypeOf("string");
+      expect(event.time).toBeTypeOf("object");
+      expect(event.eventName).toBeTypeOf("string");
       expect(event.chainId).toEqual(1);
-      expect(event.contractAddress).toEqual(contractAddress.toLowerCase());
-      if (event.args) {
-        expect(event.args).toBeTypeOf("string");
-        const parsedArgs = JSON.parse(event.args);
-        assert.isArray(parsedArgs);
-      }
+      expect(event.address).toEqual(contractAddress.toLowerCase());
+      assert.isArray(event.args);
       expect(event.count).toBeTypeOf("bigint");
     }
   });

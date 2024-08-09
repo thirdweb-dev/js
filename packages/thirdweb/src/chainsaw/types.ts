@@ -1,5 +1,4 @@
 import type { Hex } from "../utils/encoding/hex.js";
-import type { Prettify } from "../utils/type-utils.js";
 
 export type ChainsawResponse<T = unknown> = {
   data?: T;
@@ -33,24 +32,23 @@ export type ChainsawInternalBlock = {
   version: number;
 };
 
-export type Event = {
+export type ChainsawInternalEvent = {
   name: string;
   count: string;
   time?: string;
   chainId?: number;
   contractAddress?: Hex;
   args?: string;
+  blockHash?: Hex;
+  blockNumber?: string;
+  transactionHash?: Hex;
+  transactionIndex?: number;
+  logIndex?: number;
+  data?: Hex;
+  topics?: [Hex, ...Hex[]] | [];
 };
 
-export type Events = Event[];
-
-export type ChainsawEvent = Prettify<
-  Omit<Event, "count"> & {
-    count: bigint;
-  }
->;
-
-export type ChainsawEvents = ChainsawEvent[];
+export type ChainsawInternalEvents = ChainsawInternalEvent[];
 
 export type DecodedTransaction = {
   functionName: string;

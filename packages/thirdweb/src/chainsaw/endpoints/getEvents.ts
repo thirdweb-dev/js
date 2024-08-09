@@ -1,3 +1,4 @@
+import type { DecodeEventLogReturnType, Log } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -5,11 +6,10 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawEvents } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawEvents,
+  ChainsawInternalEvents,
   ChainsawPagingParams,
   ChainsawResponse,
-  Events,
-} from "../types.ts";
+} from "../types.js";
 import { getEventsEndpoint } from "../urls.js";
 
 export type GetEventsInterval = "hour" | "day" | "week" | "month";
@@ -53,7 +53,14 @@ export type GetEventsParams = Prettify<
 >;
 
 export type GetEventsResult = {
-  events: ChainsawEvents;
+  events: Prettify<
+    Log &
+      DecodeEventLogReturnType & {
+        chainId?: number;
+        count: bigint;
+        time?: Date;
+      }
+  >[];
   page?: number;
 };
 
@@ -116,7 +123,8 @@ export async function getEvents(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<Events> = await response.json();
+    const data: ChainsawResponse<ChainsawInternalEvents> =
+      await response.json();
     if (data.error) throw new Error(data.error);
     return {
       events: formatChainsawEvents(data.data),
