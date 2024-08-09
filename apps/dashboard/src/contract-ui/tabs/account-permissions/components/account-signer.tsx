@@ -1,27 +1,36 @@
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
 import { useSDKChainId } from "@thirdweb-dev/react";
-import type { SignerWithPermissions } from "@thirdweb-dev/sdk";
 import { formatDistance } from "date-fns/formatDistance";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useActiveAccount } from "thirdweb/react";
 import { Badge, Card, Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
-interface AccountSignerProps {
+export type AccountSignerType = {
+  signer: string;
   isAdmin?: boolean;
-  signer: SignerWithPermissions;
+  approvedTargets: readonly string[];
+  nativeTokenLimitPerTransaction: bigint;
+  startTimestamp: bigint;
+  endTimestamp: bigint;
+};
+interface AccountSignerProps {
+  item: AccountSignerType;
 }
 
-export const AccountSigner: React.FC<AccountSignerProps> = ({
-  isAdmin,
-  signer,
-}) => {
+export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
   const address = useActiveAccount()?.address;
   const chainId = useSDKChainId();
   const configuredChainsRecord = useSupportedChainsRecord();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
   const isMobile = useBreakpointValue({ base: true, md: false });
-
+  const {
+    isAdmin,
+    signer,
+    nativeTokenLimitPerTransaction,
+    approvedTargets,
+    endTimestamp,
+  } = item;
   return (
     <Card position="relative" p={8}>
       <Flex direction="column" gap={8}>
@@ -32,10 +41,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
             flexDir={{ base: "column", lg: "row" }}
           >
             <Heading size="label.lg">
-              <AddressCopyButton
-                shortenAddress={isMobile}
-                address={signer.signer}
-              />
+              <AddressCopyButton shortenAddress={isMobile} address={signer} />
             </Heading>
             <Flex gap={2}>
               {isAdmin ? (
@@ -47,7 +53,7 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
                   Scoped key
                 </Badge>
               )}
-              {signer.signer === address && (
+              {signer === address && (
                 <Badge colorScheme="green" borderRadius="lg" p={1.5}>
                   Currently connected
                 </Badge>
@@ -61,24 +67,20 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({
             <Flex direction="column">
               <Text fontWeight="bold">Maximum value per transaction</Text>
               <Text textTransform="capitalize">
-                {signer.permissions.nativeTokenLimitPerTransaction.toString()}{" "}
+                {nativeTokenLimitPerTransaction.toString()}{" "}
                 {chain?.nativeCurrency.symbol}
               </Text>
             </Flex>
             <Flex direction="column">
               <Text fontWeight="bold">Approved targets</Text>
-              <Text textTransform="capitalize">
-                {signer.permissions.approvedCallTargets.length}
-              </Text>
+              <Text textTransform="capitalize">{approvedTargets.length}</Text>
             </Flex>
             <Flex direction="column">
               <Text fontWeight="bold">Expiration</Text>
               <Text textTransform="capitalize">
-                {formatDistance(
-                  new Date(signer.permissions.expirationDate),
-                  new Date(),
-                  { addSuffix: true },
-                )}
+                {formatDistance(new Date(String(endTimestamp)), new Date(), {
+                  addSuffix: true,
+                })}
               </Text>
             </Flex>
           </SimpleGrid>
