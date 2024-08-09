@@ -6,7 +6,7 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalNFTs,
+  ChainsawInternalNFT,
   ChainsawPagingParams,
   ChainsawResponse,
 } from "../types.js";
@@ -91,7 +91,7 @@ export async function getNFTsByCollection(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalNFTs> = await response.json();
+    const data: ChainsawResponse<ChainsawInternalNFT[]> = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }

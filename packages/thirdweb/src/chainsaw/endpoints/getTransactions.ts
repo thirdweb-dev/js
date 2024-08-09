@@ -6,7 +6,7 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawTransactions } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalTransactions,
+  ChainsawInternalTransaction,
   ChainsawPagingParams,
   ChainsawResponse,
 } from "../types.ts";
@@ -112,7 +112,7 @@ export async function getTransactions(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalTransactions> =
+    const data: ChainsawResponse<ChainsawInternalTransaction[]> =
       await response.json();
     if (data.error) {
       throw new Error(data.error);

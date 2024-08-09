@@ -48,8 +48,6 @@ export type ChainsawInternalEvent = {
   topics?: [Hex, ...Hex[]] | [];
 };
 
-export type ChainsawInternalEvents = ChainsawInternalEvent[];
-
 export type DecodedTransaction = {
   functionName: string;
   args?: string;
@@ -76,8 +74,6 @@ export type ChainsawInternalTransaction = {
   nonce: string;
 };
 
-export type ChainsawInternalTransactions = ChainsawInternalTransaction[];
-
 export type ChainsawInternalNFT = {
   chainId: number;
   contractAddress: Hex;
@@ -93,5 +89,3 @@ export type ChainsawInternalNFT = {
   name?: string;
   description?: string;
 };
-
-export type ChainsawInternalNFTs = ChainsawInternalNFT[];

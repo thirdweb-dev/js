@@ -6,7 +6,7 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawEvents } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalEvents,
+  ChainsawInternalEvent,
   ChainsawPagingParams,
   ChainsawResponse,
 } from "../types.js";
@@ -123,7 +123,7 @@ export async function getEvents(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalEvents> =
+    const data: ChainsawResponse<ChainsawInternalEvent[]> =
       await response.json();
     if (data.error) {
       throw new Error(data.error);
