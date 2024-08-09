@@ -1,6 +1,5 @@
 import {
   Center,
-  DarkMode,
   Flex,
   Icon,
   Popover,
@@ -8,12 +7,10 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  Tooltip,
 } from "@chakra-ui/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import { useActiveChainAsDashboardChain } from "lib/v5-adapter";
-import { useTheme } from "next-themes";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
 import {
@@ -30,6 +27,7 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
+import { ToolTipLabel } from "../../@/components/ui/tooltip";
 import { MismatchButton } from "./MismatchButton";
 
 interface TransactionButtonProps extends Omit<ButtonProps, "leftIcon"> {
@@ -60,7 +58,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   onChainSelect,
   ...restButtonProps
 }) => {
-  const { theme } = useTheme();
   const activeWallet = useActiveWallet();
   const walletRequiresExternalConfirmation =
     useWalletRequiresExternalConfirmation();
@@ -71,8 +68,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     () => chain?.status === "deprecated",
     [chain],
   );
-
-  const ColorModeComp = theme === "dark" ? DarkMode : Fragment;
 
   const numberWidth = useMemo(() => {
     // for each digit of transaction count add 8.3px
@@ -119,31 +114,11 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           isDisabled={isChainDeprecated || restButtonProps.isDisabled}
         >
           {children}
-          <Tooltip
-            bg="transparent"
-            boxShadow="none"
-            p={0}
-            w="auto"
+          <ToolTipLabel
             label={
-              isChainDeprecated ? (
-                <ColorModeComp>
-                  <Card w="auto" py={2} bgColor="backgroundHighlight">
-                    <Text>
-                      This chain is deprecated so you cannot execute
-                      transactions on it.
-                    </Text>
-                  </Card>
-                </ColorModeComp>
-              ) : (
-                <ColorModeComp>
-                  <Card w="auto" py={2} bgColor="backgroundHighlight">
-                    <Text>
-                      This action will trigger {transactionCount}{" "}
-                      {transactionCount > 1 ? "transactions" : "transaction"}.
-                    </Text>
-                  </Card>
-                </ColorModeComp>
-              )
+              isChainDeprecated
+                ? "This chain is deprecated so you cannot execute transactions on it"
+                : `This action will trigger ${transactionCount} ${transactionCount > 1 ? "transactions" : "transaction"}`
             }
           >
             <Center
@@ -180,7 +155,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
                 <BiTransferAlt />
               </Flex>
             </Center>
-          </Tooltip>
+          </ToolTipLabel>
         </ButtonComponent>
       </PopoverTrigger>
       <Card
