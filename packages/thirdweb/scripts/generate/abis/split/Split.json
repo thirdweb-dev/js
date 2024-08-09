@@ -1,0 +1,10 @@
+[
+  "function payee(uint256 index) view returns (address)",
+  "function payeeCount() view returns (uint256)",
+  "function releasable(address account) view returns (uint256)",
+  "function released(address account) view returns (uint256)",
+  "function shares(address account) view returns (uint256)",
+  "function totalReleased() view returns (uint256)",
+  "function distribute()",
+  "function release(address account)"
+]
