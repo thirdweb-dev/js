@@ -25,6 +25,7 @@ export async function siweAuthenticate(args: {
     const path = getLoginUrl({
       authOption: "siwe",
       client: args.client,
+      ecosystem: args.ecosystem,
     });
     const res = await clientFetch(
       `${path}&address=${account.address}&chainId=${args.chainId}`,
@@ -40,6 +41,7 @@ export async function siweAuthenticate(args: {
     const path = getLoginCallbackUrl({
       authOption: "siwe",
       client: args.client,
+      ecosystem: args.ecosystem,
     });
     const res = await clientFetch(
       `${path}&signature=${signature}&payload=${encodeURIComponent(payload)}`,
