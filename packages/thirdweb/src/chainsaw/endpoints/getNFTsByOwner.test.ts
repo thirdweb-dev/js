@@ -39,6 +39,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
         chainIds: [12312],
         ownerAddresses: [ownerAddress],
       }),
-    ).rejects.toThrow("status: 500");
+    ).rejects.toThrow("Fetch failed");
   });
 });

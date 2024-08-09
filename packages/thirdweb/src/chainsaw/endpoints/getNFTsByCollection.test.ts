@@ -43,7 +43,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
           chainIds: [12312],
           contractAddresses: [contractAddress],
         }),
-      ).rejects.toThrow("status: 500");
+      ).rejects.toThrow("Fetch failed");
     });
   },
 );

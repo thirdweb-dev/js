@@ -66,6 +66,6 @@ export async function getLatestBlockNumber(
     }
     return { latestBlockNumber: data.data };
   } catch (error) {
-    throw new Error(`Fetch failed: ${error}`);
+    throw new Error("Fetch failed", { cause: error });
   }
 }

@@ -100,6 +100,6 @@ export async function getNFTsByCollection(
       page: data.page,
     };
   } catch (error) {
-    throw new Error(`Fetch failed: ${error}`);
+    throw new Error("Fetch failed", { cause: error });
   }
 }

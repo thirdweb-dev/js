@@ -133,6 +133,6 @@ export async function getEvents(
       page: data.page,
     };
   } catch (error) {
-    throw new Error(`Fetch failed: ${error}, ${JSON.stringify(params)}`);
+    throw new Error("Fetch failed", { cause: error });
   }
 }

@@ -74,6 +74,6 @@ export async function getBlock(
     }
     return { block };
   } catch (error) {
-    throw new Error(`Fetch failed: ${error}`);
+    throw new Error("Fetch failed", { cause: error });
   }
 }
