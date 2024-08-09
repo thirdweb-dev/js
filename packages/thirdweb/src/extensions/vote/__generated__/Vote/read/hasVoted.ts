@@ -1,0 +1,136 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
+import { readContract } from "../../../../../transaction/read-contract.js";
+import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { decodeAbiParameters } from "viem";
+import type { Hex } from "../../../../../utils/encoding/hex.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+/**
+ * Represents the parameters for the "hasVoted" function.
+ */
+export type HasVotedParams = {
+  proposalId: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "proposalId";
+  }>;
+  account: AbiParameterToPrimitiveType<{ type: "address"; name: "account" }>;
+};
+
+export const FN_SELECTOR = "0x43859632" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "proposalId",
+  },
+  {
+    type: "address",
+    name: "account",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "bool",
+  },
+] as const;
+
+/**
+ * Checks if the `hasVoted` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `hasVoted` method is supported.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { isHasVotedSupported } from "thirdweb/extensions/vote";
+ *
+ * const supported = await isHasVotedSupported(contract);
+ * ```
+ */
+export async function isHasVotedSupported(contract: ThirdwebContract<any>) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
+ * Encodes the parameters for the "hasVoted" function.
+ * @param options - The options for the hasVoted function.
+ * @returns The encoded ABI parameters.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeHasVotedParams } "thirdweb/extensions/vote";
+ * const result = encodeHasVotedParams({
+ *  proposalId: ...,
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeHasVotedParams(options: HasVotedParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.proposalId, options.account]);
+}
+
+/**
+ * Encodes the "hasVoted" function into a Hex string with its parameters.
+ * @param options - The options for the hasVoted function.
+ * @returns The encoded hexadecimal string.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeHasVoted } "thirdweb/extensions/vote";
+ * const result = encodeHasVoted({
+ *  proposalId: ...,
+ *  account: ...,
+ * });
+ * ```
+ */
+export function encodeHasVoted(options: HasVotedParams) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeHasVotedParams(options).slice(2)) as `${typeof FN_SELECTOR}${string}`;
+}
+
+/**
+ * Decodes the result of the hasVoted function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { decodeHasVotedResult } from "thirdweb/extensions/vote";
+ * const result = decodeHasVotedResult("...");
+ * ```
+ */
+export function decodeHasVotedResult(result: Hex) {
+  return decodeAbiParameters(FN_OUTPUTS, result)[0];
+}
+
+/**
+ * Calls the "hasVoted" function on the contract.
+ * @param options - The options for the hasVoted function.
+ * @returns The parsed result of the function call.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { hasVoted } from "thirdweb/extensions/vote";
+ *
+ * const result = await hasVoted({
+ *  contract,
+ *  proposalId: ...,
+ *  account: ...,
+ * });
+ *
+ * ```
+ */
+export async function hasVoted(
+  options: BaseTransactionOptions<HasVotedParams>,
+) {
+  return readContract({
+    contract: options.contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    params: [options.proposalId, options.account],
+  });
+}

@@ -1,0 +1,147 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+/**
+ * Represents the parameters for the "updateQuorumNumerator" function.
+ */
+export type UpdateQuorumNumeratorParams = WithOverrides<{
+  newQuorumNumerator: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "newQuorumNumerator";
+  }>;
+}>;
+
+export const FN_SELECTOR = "0x06f3f9e6" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "newQuorumNumerator",
+  },
+] as const;
+const FN_OUTPUTS = [] as const;
+
+/**
+ * Checks if the `updateQuorumNumerator` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `updateQuorumNumerator` method is supported.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { isUpdateQuorumNumeratorSupported } from "thirdweb/extensions/vote";
+ *
+ * const supported = await isUpdateQuorumNumeratorSupported(contract);
+ * ```
+ */
+export async function isUpdateQuorumNumeratorSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
+ * Encodes the parameters for the "updateQuorumNumerator" function.
+ * @param options - The options for the updateQuorumNumerator function.
+ * @returns The encoded ABI parameters.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeUpdateQuorumNumeratorParams } "thirdweb/extensions/vote";
+ * const result = encodeUpdateQuorumNumeratorParams({
+ *  newQuorumNumerator: ...,
+ * });
+ * ```
+ */
+export function encodeUpdateQuorumNumeratorParams(
+  options: UpdateQuorumNumeratorParams,
+) {
+  return encodeAbiParameters(FN_INPUTS, [options.newQuorumNumerator]);
+}
+
+/**
+ * Encodes the "updateQuorumNumerator" function into a Hex string with its parameters.
+ * @param options - The options for the updateQuorumNumerator function.
+ * @returns The encoded hexadecimal string.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeUpdateQuorumNumerator } "thirdweb/extensions/vote";
+ * const result = encodeUpdateQuorumNumerator({
+ *  newQuorumNumerator: ...,
+ * });
+ * ```
+ */
+export function encodeUpdateQuorumNumerator(
+  options: UpdateQuorumNumeratorParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeUpdateQuorumNumeratorParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
+}
+
+/**
+ * Prepares a transaction to call the "updateQuorumNumerator" function on the contract.
+ * @param options - The options for the "updateQuorumNumerator" function.
+ * @returns A prepared transaction object.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { updateQuorumNumerator } from "thirdweb/extensions/vote";
+ *
+ * const transaction = updateQuorumNumerator({
+ *  contract,
+ *  newQuorumNumerator: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * ...
+ *
+ * ```
+ */
+export function updateQuorumNumerator(
+  options: BaseTransactionOptions<
+    | UpdateQuorumNumeratorParams
+    | {
+        asyncParams: () => Promise<UpdateQuorumNumeratorParams>;
+      }
+  >,
+) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
+  return prepareContractCall({
+    contract: options.contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [resolvedOptions.newQuorumNumerator] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+  });
+}
