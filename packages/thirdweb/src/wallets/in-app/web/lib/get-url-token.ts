@@ -10,8 +10,9 @@ export function getUrlToken(): {
   authResult?: AuthStoredTokenWithCookieReturnType;
   authProvider?: AuthOption;
 } {
-  if (!window) {
-    throw new Error("Attempted to fetch a URL token on the server");
+  if (!window?.location) {
+    // Not in web
+    return {};
   }
 
   const queryString = window.location.search;
