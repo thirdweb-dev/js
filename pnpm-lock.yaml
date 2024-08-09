@@ -154,7 +154,7 @@ importers:
         version: 2.1.2(@chakra-ui/styled-system@2.9.2)
       '@coinbase/onchainkit':
         specifier: ^0.14.2
-        version: 0.14.2(@tanstack/react-query@4.36.1(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(@xmtp/frames-validator@0.6.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))(graphql-request@6.1.0(graphql@16.8.2))(graphql@16.8.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viem@2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))
+        version: 0.14.2(@tanstack/react-query@4.36.1(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(@xmtp/frames-validator@0.6.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))(graphql-request@6.1.0(graphql@16.8.2))(graphql@16.8.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viem@2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))
       '@emotion/react':
         specifier: 11.11.4
         version: 11.11.4(@types/react@18.3.3)(react@18.3.1)
@@ -1322,8 +1322,8 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
       viem:
-        specifier: 2.19.2
-        version: 2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+        specifier: 2.19.3
+        version: 2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
 
   legacy_packages/eslint-config-thirdweb:
     dependencies:
@@ -2282,8 +2282,8 @@ importers:
         specifier: 0.1.2
         version: 0.1.2
       viem:
-        specifier: 2.19.2
-        version: 2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+        specifier: 2.19.3
+        version: 2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
     devDependencies:
       '@aws-sdk/client-lambda':
         specifier: 3.577.0
@@ -18257,8 +18257,8 @@ packages:
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
 
-  viem@2.19.2:
-    resolution: {integrity: sha512-BrR7fEEpuu9Om7obQGThb4BEu00PPHPKaUx+snB/F6yBZtr34FdXCPnphr+S73W2iIu/mt3yaRkfkLlD6a1R5g==}
+  viem@2.19.3:
+    resolution: {integrity: sha512-djOw1X/jOvDOEMiol4g/T030MVncF2utC9G929ODNJ/00E7UXjSpwOeuyapmaqn831eSIHlELicZETYl2vI9oQ==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
@@ -23787,7 +23787,7 @@ snapshots:
     optionalDependencies:
       regenerator-runtime: 0.13.11
 
-  '@coinbase/onchainkit@0.14.2(@tanstack/react-query@4.36.1(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(@xmtp/frames-validator@0.6.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))(graphql-request@6.1.0(graphql@16.8.2))(graphql@16.8.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viem@2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))':
+  '@coinbase/onchainkit@0.14.2(@tanstack/react-query@4.36.1(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(@xmtp/frames-validator@0.6.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))(graphql-request@6.1.0(graphql@16.8.2))(graphql@16.8.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(viem@2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))':
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
       '@xmtp/frames-validator': 0.6.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -23795,7 +23795,7 @@ snapshots:
       graphql-request: 6.1.0(graphql@16.8.2)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      viem: 2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
 
   '@coinbase/wallet-mobile-sdk@1.0.13(expo@51.0.5(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(bufferutil@4.0.8)(utf-8-validate@5.0.10))(react-native@0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)':
     dependencies:
@@ -30848,7 +30848,7 @@ snapshots:
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
       '@xmtp/proto': 3.56.0
-      viem: 2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -42500,7 +42500,7 @@ snapshots:
       d3-time: 3.1.0
       d3-timer: 3.0.1
 
-  viem@2.19.2(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8):
+  viem@2.19.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.10.0
       '@noble/curves': 1.4.0
