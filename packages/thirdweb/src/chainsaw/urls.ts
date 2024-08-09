@@ -9,7 +9,7 @@ export function getChainsawV2Url(): string {
  * Endpoint to get block data
  * @internal
  */
-export function getBlockEndpoint(blockNumber: number) {
+export function getBlockEndpoint(blockNumber: bigint) {
   return `${getChainsawV2Url()}/blocks/${blockNumber}`;
 }
 

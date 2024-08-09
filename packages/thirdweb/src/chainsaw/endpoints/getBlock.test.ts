@@ -11,7 +11,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getBlock", () => {
     const { block } = await getBlock({
       client,
       chainId: 1,
-      blockNumber: 20484878,
+      blockNumber: 20484878n,
     });
     expect(block).toEqual({
       baseFeePerGas: 11109371721n,

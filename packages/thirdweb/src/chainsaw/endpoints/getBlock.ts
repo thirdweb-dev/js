@@ -17,7 +17,7 @@ export type GetBlockParams = {
   /**
    * Number of the block to fetch
    */
-  blockNumber: number;
+  blockNumber: bigint;
   /**
    * Chain ID of the block
    */
@@ -44,7 +44,7 @@ export type GetBlockResult<TBlockTag extends BlockTag = "latest"> = {
  * const client = createThirdwebClient({ clientId: "..." });
  * const { block } = await getBlock({
  *  client,
- *  blockNumber: 9662167,
+ *  blockNumber: 9662167n,
  *  chainId: 1
  * });
  * ```
