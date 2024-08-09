@@ -3,6 +3,7 @@ import {
   type Signature,
   encodeDeployData,
   serializeSignature,
+  universalSignatureValidatorAbi,
   universalSignatureValidatorByteCode,
 } from "viem";
 import type { Chain } from "../chains/types.js";
@@ -12,7 +13,6 @@ import { getRpcClient } from "../rpc/rpc.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
 import { type Hex, isHex } from "../utils/encoding/hex.js";
 import { toBytes } from "../utils/encoding/to-bytes.js";
-import { universalSignatureValidatorAbi } from "./constants.js";
 import { isErc6492Signature } from "./is-erc6492-signature.js";
 import { serializeErc6492Signature } from "./serialize-erc6492-signature.js";
 
