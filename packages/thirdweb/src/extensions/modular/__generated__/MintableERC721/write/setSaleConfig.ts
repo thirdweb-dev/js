@@ -14,18 +14,16 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type SetSaleConfigParams = WithOverrides<{
   primarySaleRecipient: AbiParameterToPrimitiveType<{
-    name: "_primarySaleRecipient";
     type: "address";
-    internalType: "address";
+    name: "_primarySaleRecipient";
   }>;
 }>;
 
 export const FN_SELECTOR = "0xd29a3628" as const;
 const FN_INPUTS = [
   {
-    name: "_primarySaleRecipient",
     type: "address",
-    internalType: "address",
+    name: "_primarySaleRecipient",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -140,5 +138,6 @@ export function setSaleConfig(
       (await asyncOptions()).overrides?.maxPriorityFeePerGas,
     nonce: async () => (await asyncOptions()).overrides?.nonce,
     extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
   });
 }

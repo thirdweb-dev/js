@@ -1,15 +1,27 @@
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
+import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
+import {
+  getOrDeployInfraContract,
+  getOrDeployInfraForPublishedContract,
+} from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
+import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
+import type { Account } from "../../wallets/interfaces/wallet.js";
+import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js";
 import { initialize as initDropERC20 } from "./__generated__/DropERC20/write/initialize.js";
 import { initialize as initTokenERC20 } from "./__generated__/TokenERC20/write/initialize.js";
 
-export type ERC20ContractType = "DropERC20" | "TokenERC20";
+export type ERC20ContractType =
+  | "DropERC20"
+  | "TokenERC20"
+  | "ModularTokenERC20"
+  | "ModularDropERC20";
 
 /**
  * @extension DEPLOY
@@ -36,6 +48,7 @@ export type DeployERC20ContractOptions = Prettify<
   ClientAndChainAndAccount & {
     type: ERC20ContractType;
     params: ERC20ContractParams;
+    publisher?: string;
   }
 >;
 
@@ -61,7 +74,7 @@ export type DeployERC20ContractOptions = Prettify<
  * ```
  */
 export async function deployERC20Contract(options: DeployERC20ContractOptions) {
-  const { chain, client, account, type, params } = options;
+  const { chain, client, account, type, params, publisher } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
@@ -69,9 +82,12 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
       account,
       contractId: type,
       constructorParams: [],
+      publisher,
     });
   const initializeTransaction = await getInitializeTransaction({
     client,
+    chain,
+    account,
     implementationContract,
     type,
     params,
@@ -89,13 +105,22 @@ export async function deployERC20Contract(options: DeployERC20ContractOptions) {
 
 async function getInitializeTransaction(options: {
   client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
   implementationContract: ThirdwebContract;
   type: ERC20ContractType;
   params: ERC20ContractParams;
   accountAddress: string;
 }) {
-  const { client, implementationContract, type, params, accountAddress } =
-    options;
+  const {
+    client,
+    chain,
+    account,
+    implementationContract,
+    type,
+    params,
+    accountAddress,
+  } = options;
   const contractURI =
     options.params.contractURI ||
     (await upload({
@@ -137,5 +162,65 @@ async function getInitializeTransaction(options: {
         platformFeeRecipient: params.platformFeeRecipient || accountAddress,
         trustedForwarders: params.trustedForwarders || [],
       });
+    case "ModularTokenERC20":
+    case "ModularDropERC20": {
+      const { extendedMetadata } = await fetchPublishedContractMetadata({
+        client,
+        contractId: type,
+      });
+      const extensionNames =
+        extendedMetadata?.defaultExtensions?.map((e) => e.extensionName) || [];
+      // can't promise all this unfortunately, needs to be sequential because of nonces
+      const extensions: string[] = [];
+      const extensionInstallData: Hex[] = [];
+      for (const extension of extensionNames) {
+        const contract = await getOrDeployInfraContract({
+          client,
+          chain,
+          account,
+          contractId: extension,
+          constructorParams: [],
+        });
+        extensions.push(contract.address);
+        // TODO (modular) this should be more dynamic
+        switch (extension) {
+          case "MintableERC20": {
+            const { encodeBytesOnInstallParams } = await import(
+              "../../extensions/modular/__generated__/MintableERC20/encode/encodeBytesOnInstall.js"
+            );
+            extensionInstallData.push(
+              encodeBytesOnInstallParams({
+                primarySaleRecipient: params.saleRecipient || accountAddress,
+              }),
+            );
+            break;
+          }
+          case "ClaimableERC20": {
+            const { encodeBytesOnInstallParams } = await import(
+              "../../extensions/modular/__generated__/ClaimableERC20/encode/encodeBytesOnInstall.js"
+            );
+            extensionInstallData.push(
+              encodeBytesOnInstallParams({
+                primarySaleRecipient: params.saleRecipient || accountAddress,
+              }),
+            );
+            break;
+          }
+          default: {
+            extensionInstallData.push("0x");
+          }
+        }
+      }
+
+      return initCoreERC20({
+        contract: implementationContract,
+        owner: params.defaultAdmin || accountAddress,
+        name: params.name || "",
+        symbol: params.symbol || "",
+        contractURI,
+        extensions,
+        extensionInstallData,
+      });
+    }
   }
 }

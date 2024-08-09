@@ -7,7 +7,7 @@ import { toUnits } from "../units.js";
 
 export type AmountOrAmountInWei =
   | {
-      amount: string;
+      amount: string | number;
     }
   | {
       amountInWei: bigint;

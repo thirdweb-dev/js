@@ -28,13 +28,18 @@ export async function generateFromAbi(
   const overloadedWrites = new Set<string>();
   // split functions into read and write
   const readFunctions: AbiFunction[] = [];
+  const encodeFunctions: AbiFunction[] = [];
   const writeFunctions: AbiFunction[] = [];
   for (const f of functions) {
     if (f.stateMutability === "view" || f.stateMutability === "pure") {
       if (overloadedReads.has(f.name)) {
         continue;
       }
-      readFunctions.push(f);
+      if (f.name.startsWith("encode") && f.inputs.length > 0) {
+        encodeFunctions.push(f);
+      } else {
+        readFunctions.push(f);
+      }
       overloadedReads.add(f.name);
     } else {
       if (overloadedWrites.has(f.name)) {
@@ -75,6 +80,25 @@ export async function generateFromAbi(
         await writeFile(
           join(outFolder, extensionFileName, "./read", `${f.name}.ts`),
           await format(generateReadFunction(f, extensionName), {
+            parser: "babel-ts",
+            trailingComma: "all",
+          }),
+          "utf-8",
+        );
+      }),
+    );
+  }
+  if (encodeFunctions.length) {
+    // make a folder for the read functions
+    await mkdir(join(outFolder, extensionFileName, "./encode"), {
+      recursive: true,
+    });
+    // process every read function
+    await Promise.all(
+      encodeFunctions.map(async (f) => {
+        await writeFile(
+          join(outFolder, extensionFileName, "./encode", `${f.name}.ts`),
+          await format(generateEncodeFunction(f, extensionName), {
             parser: "babel-ts",
             trailingComma: "all",
           }),
@@ -466,6 +490,68 @@ export async function ${f.name}(
   });
 };
 `;
+}
+
+function generateEncodeFunction(f: AbiFunction, extensionName: string): string {
+  const preparedMethod = prepareMethod(f);
+  const needsAbiParamToPrimitiveType = f.inputs.length > 0;
+  return `${
+    needsAbiParamToPrimitiveType
+      ? `import type { AbiParameterToPrimitiveType } from "abitype";\n`
+      : ""
+  }
+${
+  f.inputs.length > 0
+    ? `import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";`
+    : ""
+}
+
+${
+  f.inputs.length > 0
+    ? `/**
+ * Represents the parameters for the "${f.name}" function.
+ */
+export type ${uppercaseFirstLetter(f.name)}Params = {
+  ${f.inputs
+    .map(
+      (x) =>
+        `${removeLeadingUnderscore(
+          x.name,
+        )}: AbiParameterToPrimitiveType<${JSON.stringify(x)}>`,
+    )
+    .join("\n")}
+};`
+    : ""
+}
+
+export const FN_SELECTOR = "${preparedMethod[0]}" as const;
+const FN_INPUTS = ${JSON.stringify(preparedMethod[1], null, 2)} as const;
+
+${
+  f.inputs.length > 0
+    ? `/**
+ * Encodes the parameters for the "${f.name}" function.
+ * @param options - The options for the ${f.name} function.
+ * @returns The encoded ABI parameters.
+ * @extension ${extensionName.toUpperCase()}
+ * @example
+ * \`\`\`ts
+ * import { encode${uppercaseFirstLetter(
+   f.name,
+ )}Params } "thirdweb/extensions/${extensionName}";
+ * const result = encode${uppercaseFirstLetter(f.name)}Params({\n * ${f.inputs
+   .map((x) => ` ${removeLeadingUnderscore(x.name)}: ...,`)
+   .join("\n * ")}\n * });
+ * \`\`\`
+ */
+export function ${f.name}Params(options: ${uppercaseFirstLetter(f.name)}Params) {
+  return encodeAbiParameters(FN_INPUTS, [${f.inputs
+    .map((x) => `options.${removeLeadingUnderscore(x.name)}`)
+    .join(", ")}]);
+}
+`
+    : ""
+}`;
 }
 
 function generateEvent(e: AbiEvent, extensionName: string): string {

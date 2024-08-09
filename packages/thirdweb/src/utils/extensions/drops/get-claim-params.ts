@@ -1,9 +1,10 @@
 import { maxUint256, padHex } from "viem";
 import {
-  ADDRESS_ZERO,
+  ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
+import { getContractMetadata } from "../../../extensions/common/read/getContractMetadata.js";
 import type { Hex } from "../../encoding/hex.js";
 import type { OverrideProof } from "./types.js";
 
@@ -85,7 +86,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
     // early exit if no merkle root is set
     if (!cc.merkleRoot || cc.merkleRoot === padHex("0x", { size: 32 })) {
       return {
-        currency: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
         proof: [],
         quantityLimitPerWallet: 0n,
         pricePerToken: maxUint256,
@@ -96,16 +97,32 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
       "./fetch-proofs-for-claimers.js"
     );
 
+    // 1. fetch merkle data from contract URI
+    const metadata = await getContractMetadata({
+      contract: options.contract,
+    });
+    const merkleData: Record<string, string> = metadata.merkle || {};
+    const snapshotUri = merkleData[cc.merkleRoot];
+
+    if (!snapshotUri) {
+      return {
+        currency: ZERO_ADDRESS,
+        proof: [],
+        quantityLimitPerWallet: 0n,
+        pricePerToken: maxUint256,
+      } satisfies OverrideProof;
+    }
+
     const allowListProof = await fetchProofsForClaimer({
       contract: options.contract,
       claimer: options.from || options.to, // receiver and claimer can be different, always prioritize the claimer for allowlists
-      merkleRoot: cc.merkleRoot,
+      merkleTreeUri: snapshotUri,
       tokenDecimals,
     });
     // if no proof is found, we'll try the empty proof
     if (!allowListProof) {
       return {
-        currency: ADDRESS_ZERO,
+        currency: ZERO_ADDRESS,
         proof: [],
         quantityLimitPerWallet: 0n,
         pricePerToken: maxUint256,
@@ -118,7 +135,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
   // currency and price need to match the allowlist proof if set
   // if default values in the allowlist proof, fallback to the claim condition
   const currency =
-    allowlistProof.currency && allowlistProof.currency !== ADDRESS_ZERO
+    allowlistProof.currency && allowlistProof.currency !== ZERO_ADDRESS
       ? allowlistProof.currency
       : cc.currency;
   const pricePerToken =

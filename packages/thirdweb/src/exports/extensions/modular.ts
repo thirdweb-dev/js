@@ -67,12 +67,12 @@ export { getExtensionConfig } from "../../extensions/modular/__generated__/Modul
 export {
   installPublishedExtension,
   type InstallPublishedExtensionOptions,
-} from "../../extensions/modular/ModularCore/write/installPublishedExtension.js";
+} from "../../extensions/modular/write/installPublishedExtension.js";
 export {
   uninstallPublishedExtension,
   type UninstallPublishedExtensionOptions,
-} from "../../extensions/modular/ModularCore/write/uninstallPublishedExtension.js";
+} from "../../extensions/modular/write/uninstallPublishedExtension.js";
 export {
   uninstallExtensionByProxy,
   type UninstallExtensionByProxyOptions,
-} from "../../extensions/modular/ModularCore/write/uninstallExtensionByProxy.js";
+} from "../../extensions/modular/write/uninstallExtensionByProxy.js";
