@@ -4,14 +4,14 @@ import type { ChainsawPagingParams } from "./types.js";
  * @internal
  */
 export function addRequestPagination(
-  searchParams: URLSearchParams,
+  url: URL,
   pagingParams: ChainsawPagingParams,
-): URLSearchParams {
+): URL {
   if (pagingParams.page) {
-    searchParams.append("page", pagingParams.page.toString());
+    url.searchParams.append("page", pagingParams.page.toString());
   }
   if (pagingParams.pageSize) {
-    searchParams.append("pageSize", pagingParams.pageSize.toString());
+    url.searchParams.append("pageSize", pagingParams.pageSize.toString());
   }
-  return searchParams;
+  return url;
 }

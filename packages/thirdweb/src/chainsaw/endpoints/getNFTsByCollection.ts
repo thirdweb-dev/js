@@ -71,21 +71,8 @@ export async function getNFTsByCollection(
   params: GetNFTsByCollectionParams,
 ): Promise<GetNFTsByCollectionResult> {
   try {
-    const queryParams = addRequestPagination(
-      new URLSearchParams({
-        ...(params.groupBy && { groupBy: params.groupBy.toString() }),
-      }),
-      params,
-    );
-    for (const contractAddress of params.contractAddresses) {
-      queryParams.append("contractAddresses[]", contractAddress);
-    }
-    for (const chainId of params.chainIds || []) {
-      queryParams.append("chainIds[]", chainId.toString());
-    }
-    const url = `${getNftsByCollectionEndpoint()}?${queryParams.toString()}`;
-
-    const response = await getClientFetch(params.client)(url);
+    const url = getEndpointUrl(params);
+    const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -102,4 +89,18 @@ export async function getNFTsByCollection(
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });
   }
+}
+
+function getEndpointUrl(params: GetNFTsByCollectionParams): URL {
+  const url = getNftsByCollectionEndpoint();
+  for (const contractAddress of params.contractAddresses) {
+    url.searchParams.append("contractAddresses[]", contractAddress);
+  }
+  for (const chainId of params.chainIds || []) {
+    url.searchParams.append("chainIds[]", chainId.toString());
+  }
+  if (params.groupBy) {
+    url.searchParams.append("groupBy", params.groupBy);
+  }
+  return addRequestPagination(url, params);
 }

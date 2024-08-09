@@ -54,11 +54,10 @@ export async function getBlock(
   params: GetBlockParams,
 ): Promise<GetBlockResult> {
   try {
-    const queryParams = new URLSearchParams();
-    queryParams.append("chainId", params.chainId.toString());
-    const url = `${getBlockEndpoint(params.blockNumber)}?${queryParams.toString()}`;
+    const url = getBlockEndpoint(params.blockNumber);
+    url.searchParams.append("chainId", params.chainId.toString());
 
-    const response = await getClientFetch(params.client)(url);
+    const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);

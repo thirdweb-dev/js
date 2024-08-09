@@ -93,20 +93,8 @@ export async function getTransactions(
   params: GetTransactionsParams,
 ): Promise<GetTransactionsResult> {
   try {
-    const queryParams = addRequestPagination(
-      new URLSearchParams({
-        to: params.to.toString(),
-        ...(params.startDate && { startDate: params.startDate.toISOString() }),
-        ...(params.endDate && { endDate: params.endDate.toISOString() }),
-      }),
-      params,
-    );
-    for (const chainId of params.chainIds || []) {
-      queryParams.append("chainIds[]", chainId.toString());
-    }
-    const url = `${getTransactionsEndpoint()}?${queryParams.toString()}`;
-
-    const response = await getClientFetch(params.client)(url);
+    const url = getEndpointUrl(params);
+    const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -124,4 +112,19 @@ export async function getTransactions(
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });
   }
+}
+
+function getEndpointUrl(params: GetTransactionsParams): URL {
+  const url = getTransactionsEndpoint();
+  url.searchParams.append("to", params.to);
+  for (const chainId of params.chainIds || []) {
+    url.searchParams.append("chainIds[]", chainId.toString());
+  }
+  if (params.startDate) {
+    url.searchParams.append("startDate", params.startDate.toISOString());
+  }
+  if (params.endDate) {
+    url.searchParams.append("endDate", params.endDate.toISOString());
+  }
+  return addRequestPagination(url, params);
 }

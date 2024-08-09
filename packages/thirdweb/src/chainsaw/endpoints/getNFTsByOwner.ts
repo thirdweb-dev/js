@@ -66,16 +66,8 @@ export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
 ): Promise<GetNFTsByOwnerResult> {
   try {
-    const queryParams = addRequestPagination(new URLSearchParams(), params);
-    for (const ownerAddress of params.ownerAddresses) {
-      queryParams.append("ownerAddresses[]", ownerAddress);
-    }
-    for (const chainId of params.chainIds || []) {
-      queryParams.append("chainIds[]", chainId.toString());
-    }
-    const url = `${getNftsByOwnerEndpoint()}?${queryParams.toString()}`;
-
-    const response = await getClientFetch(params.client)(url);
+    const url = getEndpointUrl(params);
+    const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -92,4 +84,15 @@ export async function getNFTsByOwner(
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });
   }
+}
+
+function getEndpointUrl(params: GetNFTsByOwnerParams): URL {
+  const url = getNftsByOwnerEndpoint();
+  for (const ownerAddress of params.ownerAddresses) {
+    url.searchParams.append("ownerAddresses[]", ownerAddress);
+  }
+  for (const chainId of params.chainIds || []) {
+    url.searchParams.append("chainIds[]", chainId.toString());
+  }
+  return addRequestPagination(url, params);
 }

@@ -9,46 +9,46 @@ export function getChainsawV2Url(): string {
  * Endpoint to get block data
  * @internal
  */
-export function getBlockEndpoint(blockNumber: bigint) {
-  return `${getChainsawV2Url()}/blocks/${blockNumber}`;
+export function getBlockEndpoint(blockNumber: bigint): URL {
+  return new URL(`${getChainsawV2Url()}/blocks/${blockNumber}`);
 }
 
 /**
  * Endpoint to get the latest indexed block number
  * @internal
  */
-export function getLatestBlockNumberEndpoint() {
-  return `${getChainsawV2Url()}/blockNumber/latest`;
+export function getLatestBlockNumberEndpoint(): URL {
+  return new URL(`${getChainsawV2Url()}/blockNumber/latest`);
 }
 
 /**
  * Endpoint to get transactions
  * @internal
  */
-export function getTransactionsEndpoint() {
-  return `${getChainsawV2Url()}/transactions`;
+export function getTransactionsEndpoint(): URL {
+  return new URL(`${getChainsawV2Url()}/transactions`);
 }
 
 /**
  * Endpoint to get events
  * @internal
  */
-export function getEventsEndpoint() {
-  return `${getChainsawV2Url()}/events`;
+export function getEventsEndpoint(): URL {
+  return new URL(`${getChainsawV2Url()}/events`);
 }
 
 /**
  * Endpoint to get NFTs by collection
  * @internal
  */
-export function getNftsByCollectionEndpoint() {
-  return `${getChainsawV2Url()}/nfts/by-collection`;
+export function getNftsByCollectionEndpoint(): URL {
+  return new URL(`${getChainsawV2Url()}/nfts/by-collection`);
 }
 
 /**
  * Endpoint to get NFTs by owner
  * @internal
  */
-export function getNftsByOwnerEndpoint() {
-  return `${getChainsawV2Url()}/nfts/by-owner`;
+export function getNftsByOwnerEndpoint(): URL {
+  return new URL(`${getChainsawV2Url()}/nfts/by-owner`);
 }
