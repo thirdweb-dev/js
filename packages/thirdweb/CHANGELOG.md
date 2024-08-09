@@ -1,5 +1,104 @@
 # thirdweb
 
+## 5.45.0
+
+### Minor Changes
+
+- [#3870](https://github.com/thirdweb-dev/js/pull/3870) [`bbb4f1c`](https://github.com/thirdweb-dev/js/commit/bbb4f1c53f982b1f9de00fb30efbf2c77f155e96) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds useProfiles hook to fetch linked profiles for the current wallet.
+
+  ```jsx
+  import { useProfiles } from "thirdweb/react";
+
+  const { data: profiles } = useProfiles();
+
+  console.log("Type:", profiles[0].type); // "discord"
+  console.log("Email:", profiles[0].email); // "john.doe@example.com"
+  ```
+
+- [#3870](https://github.com/thirdweb-dev/js/pull/3870) [`bbb4f1c`](https://github.com/thirdweb-dev/js/commit/bbb4f1c53f982b1f9de00fb30efbf2c77f155e96) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds SIWE authentication on in-app wallets
+
+  ```ts
+  import { inAppWallet } from "thirdweb/wallets";
+
+  const wallet = inAppWallet();
+  const account = await wallet.connect({
+    client,
+    walletId: "io.metamask",
+    chainId: 1, // can be anything unless using smart accounts
+  });
+  ```
+
+  This will give you a new in-app wallet, **not** the injected provider wallet.
+
+- [#3797](https://github.com/thirdweb-dev/js/pull/3797) [`f74d523`](https://github.com/thirdweb-dev/js/commit/f74d52369f5170f87897af51118f749b6afef39d) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Wallets can now add additional profiles to an account. Once added, any connected profile can be used to access the same wallet.
+
+  ```ts
+  const wallet = inAppWallet();
+
+  await wallet.connect({ strategy: "google" });
+  const profiles = await linkProfile(wallet, { strategy: "discord" });
+  ```
+
+  Both the Google and Discord accounts will now be linked to the same wallet.
+
+  If the Discord account is already linked to this or another wallet, this will throw an error.
+
+  You can retrieve all profiles linked to a wallet using the `getProfiles` method.
+
+  ```ts
+  import { inAppWallet, getProfiles } from "thirdweb/wallets";
+
+  const wallet = inAppWallet();
+  wallet.connect({ strategy: "google" });
+
+  const profiles = getProfiles(wallet);
+  ```
+
+  This would return an array of profiles like this:
+
+  ```ts
+  [
+    {
+      type: "google",
+      details: {
+        email: "user@gmail.com",
+      },
+    },
+    {
+      type: "discord",
+      details: {
+        email: "user@gmail.com",
+      },
+    },
+  ];
+  ```
+
+- [#3995](https://github.com/thirdweb-dev/js/pull/3995) [`5367eed`](https://github.com/thirdweb-dev/js/commit/5367eed3b6fbb8dd52363443f960d557779ea2cb) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add thirdweb Split contract extensions
+
+- [#3993](https://github.com/thirdweb-dev/js/pull/3993) [`c31f25c`](https://github.com/thirdweb-dev/js/commit/c31f25c51e2ac99cafb34e5c6252a0974bb8ea16) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add thirdweb Vote contract extensions
+
+- [#3870](https://github.com/thirdweb-dev/js/pull/3870) [`bbb4f1c`](https://github.com/thirdweb-dev/js/commit/bbb4f1c53f982b1f9de00fb30efbf2c77f155e96) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds account linking to the Connect UI
+
+### Patch Changes
+
+- [#4029](https://github.com/thirdweb-dev/js/pull/4029) [`b0494f6`](https://github.com/thirdweb-dev/js/commit/b0494f6eb4b1031be5dcc1ad984e13179dea5d28) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix SIWE auth in ecosystem wallets
+
+- [#4015](https://github.com/thirdweb-dev/js/pull/4015) [`05cee23`](https://github.com/thirdweb-dev/js/commit/05cee23bbb745fd8b957060938e4817a229191eb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix native AutoConnect
+
+- [#3997](https://github.com/thirdweb-dev/js/pull/3997) [`dd7d28c`](https://github.com/thirdweb-dev/js/commit/dd7d28c44f58cd633dd63e52eed357438a413a48) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improved serializeTransaction interface to include separate signature input (maintains backwards compatibility)
+
+- [#4014](https://github.com/thirdweb-dev/js/pull/4014) [`419873a`](https://github.com/thirdweb-dev/js/commit/419873a3c618f5ddfa2e5f9b08f0696784e0e983) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Small fix for ethers5 adapter
+
+- [#3986](https://github.com/thirdweb-dev/js/pull/3986) [`4d0e00a`](https://github.com/thirdweb-dev/js/commit/4d0e00a7c41746fec740c889362f84eada536ffb) Thanks [@jarrodwatts](https://github.com/jarrodwatts)! - add abstract l2 chain definition (ZKSync ZK stack)
+
+- [#4008](https://github.com/thirdweb-dev/js/pull/4008) [`7cba594`](https://github.com/thirdweb-dev/js/commit/7cba594046b05635ad11c24af9cb82b05d884f89) Thanks [@MananTank](https://github.com/MananTank)! - Fix "All Wallets" not shown by default in Pay UI when trying to connect a new wallet
+
+- [#3989](https://github.com/thirdweb-dev/js/pull/3989) [`a4bc285`](https://github.com/thirdweb-dev/js/commit/a4bc285cb76945dea536d37026da281528490c72) Thanks [@MananTank](https://github.com/MananTank)! - Update the chain object in connection manager and wallets when chain objects passed to UI components are updated.
+
+- [#3996](https://github.com/thirdweb-dev/js/pull/3996) [`2b4629b`](https://github.com/thirdweb-dev/js/commit/2b4629b5058df0731f16322827661fba86f5d898) Thanks [@0xScratch](https://github.com/0xScratch)! - Added Fraxtal and Mode Testnets to the chain-definitions
+
+- [#4032](https://github.com/thirdweb-dev/js/pull/4032) [`c953c3f`](https://github.com/thirdweb-dev/js/commit/c953c3f4c85a1e153bd2bef0f24709825204af69) Thanks [@alecananian](https://github.com/alecananian)! - Added `enabled` param to `useWalletBalance` hook
+
 ## 5.44.1
 
 ### Patch Changes
