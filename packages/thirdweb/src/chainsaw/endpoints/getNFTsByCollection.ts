@@ -92,7 +92,9 @@ export async function getNFTsByCollection(
     }
 
     const data: ChainsawResponse<ChainsawInternalNFTs> = await response.json();
-    if (data.error) throw new Error(data.error);
+    if (data.error) {
+      throw new Error(data.error);
+    }
     return {
       nfts: formatChainsawNFTs(data.data),
       page: data.page,

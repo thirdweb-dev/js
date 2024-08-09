@@ -58,8 +58,12 @@ export async function getLatestBlockNumber(
     }
 
     const data: ChainsawResponse<number> = await response.json();
-    if (data.error) throw new Error(data.error);
-    if (!data.data) throw new Error("unable to fetch latest block number");
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    if (!data.data) {
+      throw new Error("unable to fetch latest block number");
+    }
     return { latestBlockNumber: data.data };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

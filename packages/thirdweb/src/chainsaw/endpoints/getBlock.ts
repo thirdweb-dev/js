@@ -65,9 +65,13 @@ export async function getBlock(
     }
 
     const data: ChainsawResponse<ChainsawInternalBlock> = await response.json();
-    if (data.error) throw new Error(data.error);
+    if (data.error) {
+      throw new Error(data.error);
+    }
     const block = formatChainsawBlock(data.data);
-    if (!block) throw new Error(`unable to fetch block ${params.blockNumber}`);
+    if (!block) {
+      throw new Error(`unable to fetch block ${params.blockNumber}`);
+    }
     return { block };
   } catch (error) {
     throw new Error(`Fetch failed: ${error}`);

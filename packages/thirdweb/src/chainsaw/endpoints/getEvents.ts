@@ -125,7 +125,9 @@ export async function getEvents(
 
     const data: ChainsawResponse<ChainsawInternalEvents> =
       await response.json();
-    if (data.error) throw new Error(data.error);
+    if (data.error) {
+      throw new Error(data.error);
+    }
     return {
       events: formatChainsawEvents(data.data),
       page: data.page,

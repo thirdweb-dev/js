@@ -27,7 +27,9 @@ import type {
 export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
   block?: ChainsawInternalBlock,
 ): GetBlockReturnType<undefined, false, TBlockTag> | undefined {
-  if (!block) return;
+  if (!block) {
+    return;
+  }
   return formatBlock({
     number: numberToHex(block.blockNumber),
     hash: block.hash,
@@ -46,7 +48,9 @@ export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
  * @internal
  */
 export function formatChainsawNFTs(nfts?: ChainsawInternalNFTs): NFT[] {
-  if (!nfts) return [];
+  if (!nfts) {
+    return [];
+  }
   return nfts.map((nft) => {
     const common = {
       tokenId: BigInt(nft.tokenId),
@@ -99,7 +103,9 @@ export function formatChainsawNFTs(nfts?: ChainsawInternalNFTs): NFT[] {
 export function formatChainsawTransactions(
   txs?: ChainsawInternalTransactions,
 ): Transaction[] {
-  if (!txs) return [];
+  if (!txs) {
+    return [];
+  }
   return txs.map((tx) => {
     const common = {
       blockHash: tx.blockHash,
@@ -162,7 +168,9 @@ export function formatChainsawEvents(
   Log &
     DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
 >[] {
-  if (!events?.length) return [];
+  if (!events?.length) {
+    return [];
+  }
   return events.map((event) => {
     let args = [];
     try {

@@ -114,7 +114,9 @@ export async function getTransactions(
 
     const data: ChainsawResponse<ChainsawInternalTransactions> =
       await response.json();
-    if (data.error) throw new Error(data.error);
+    if (data.error) {
+      throw new Error(data.error);
+    }
     return {
       transactions: formatChainsawTransactions(data.data),
       page: data.page,
