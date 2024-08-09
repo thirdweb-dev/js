@@ -781,9 +781,6 @@ export function useCustomContractDeployMutation(
             const { compilerMetadata } = await fetchAndCacheDeployMetadata(
               publishUri,
               StorageSingleton,
-              {
-                compilerType: "zksolc",
-              },
             );
             uriToRegister = compilerMetadata.fetchedMetadataUri;
           }
