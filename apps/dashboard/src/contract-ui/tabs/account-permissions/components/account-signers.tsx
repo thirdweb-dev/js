@@ -15,8 +15,8 @@ export const AccountSigners: React.FC<AccountSignersProps> = ({ contract }) => {
       return {
         isAdmin: true,
         signer: admin,
-        startTimestamp: BigInt(new Date(0).getTime()),
-        endTimestamp: BigInt(new Date(0).getTime()),
+        // default here has to be in seconds not milliseconds (because contract stores in seconds...)
+        endTimestamp: BigInt(new Date(0).getTime() / 1000),
         nativeTokenLimitPerTransaction: 0n,
         approvedTargets: [],
       };

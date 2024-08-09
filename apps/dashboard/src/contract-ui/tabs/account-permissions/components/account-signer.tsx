@@ -11,7 +11,6 @@ export type AccountSignerType = {
   isAdmin?: boolean;
   approvedTargets: readonly string[];
   nativeTokenLimitPerTransaction: bigint;
-  startTimestamp: bigint;
   endTimestamp: bigint;
 };
 interface AccountSignerProps {
@@ -77,10 +76,14 @@ export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
             </Flex>
             <Flex direction="column">
               <Text fontWeight="bold">Expiration</Text>
-              <Text textTransform="capitalize">
-                {formatDistance(new Date(String(endTimestamp)), new Date(), {
-                  addSuffix: true,
-                })}
+              <Text>
+                {formatDistance(
+                  new Date(new Date(Number(endTimestamp * 1000n))),
+                  new Date(),
+                  {
+                    addSuffix: true,
+                  },
+                )}
               </Text>
             </Flex>
           </SimpleGrid>
