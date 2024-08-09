@@ -137,14 +137,12 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         }}
       />
 
-      <div className="h-1" />
-
-      {publishedContractResult.data?.description ? (
-        <p className="text-sm text-secondary-foreground leading-5">
+      {publishedContractResult.data ? (
+        <p className="text-sm text-secondary-foreground leading-5 mt-1">
           {publishedContractResult.data?.description}
         </p>
       ) : (
-        <div>
+        <div className="mt-1">
           <Skeleton className="h-4 w-[80%]" />
           <div className="h-1" />
           <Skeleton className="h-4 w-[60%]" />

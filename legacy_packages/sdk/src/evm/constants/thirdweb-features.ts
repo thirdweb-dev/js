@@ -136,13 +136,13 @@ export const coreContractAbi = [
   },
   {
     type: "function",
-    name: "getInstalledExtensions",
+    name: "getInstalledModules",
     inputs: [],
     outputs: [
       {
-        name: "_installedExtensions",
+        name: "_installedModules",
         type: "tuple[]",
-        internalType: "struct IModularCore.InstalledExtension[]",
+        internalType: "struct IModularCore.InstalledModule[]",
         components: [
           {
             name: "implementation",
@@ -152,7 +152,7 @@ export const coreContractAbi = [
           {
             name: "config",
             type: "tuple",
-            internalType: "struct IExtensionConfig.ExtensionConfig",
+            internalType: "struct IModuleConfig.ModuleConfig",
             components: [
               {
                 name: "registerInstallationCallback",
@@ -172,7 +172,7 @@ export const coreContractAbi = [
               {
                 name: "callbackFunctions",
                 type: "tuple[]",
-                internalType: "struct IExtensionConfig.CallbackFunction[]",
+                internalType: "struct IModuleConfig.CallbackFunction[]",
                 components: [
                   {
                     name: "selector",
@@ -184,7 +184,7 @@ export const coreContractAbi = [
               {
                 name: "fallbackFunctions",
                 type: "tuple[]",
-                internalType: "struct IExtensionConfig.FallbackFunction[]",
+                internalType: "struct IModuleConfig.FallbackFunction[]",
                 components: [
                   {
                     name: "selector",
@@ -258,9 +258,9 @@ export const coreContractAbi = [
   },
   {
     type: "function",
-    name: "installExtension",
+    name: "installModule",
     inputs: [
-      { name: "_extension", type: "address", internalType: "address" },
+      { name: "_module", type: "address", internalType: "address" },
       { name: "_data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
@@ -336,9 +336,9 @@ export const coreContractAbi = [
   },
   {
     type: "function",
-    name: "uninstallExtension",
+    name: "uninstallModule",
     inputs: [
-      { name: "_extension", type: "address", internalType: "address" },
+      { name: "_module", type: "address", internalType: "address" },
       { name: "_data", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],
@@ -346,7 +346,7 @@ export const coreContractAbi = [
   },
   {
     type: "event",
-    name: "ExtensionInstalled",
+    name: "ModuleInstalled",
     inputs: [
       {
         name: "caller",
@@ -361,7 +361,7 @@ export const coreContractAbi = [
         internalType: "address",
       },
       {
-        name: "installedExtension",
+        name: "installedModule",
         type: "address",
         indexed: false,
         internalType: "address",
@@ -371,7 +371,7 @@ export const coreContractAbi = [
   },
   {
     type: "event",
-    name: "ExtensionUninstalled",
+    name: "ModuleUninstalled",
     inputs: [
       {
         name: "caller",
@@ -386,7 +386,7 @@ export const coreContractAbi = [
         internalType: "address",
       },
       {
-        name: "installedExtension",
+        name: "installedModule",
         type: "address",
         indexed: false,
         internalType: "address",
@@ -472,10 +472,17 @@ export const coreContractAbi = [
     name: "CallbackFunctionUnauthorizedCall",
     inputs: [],
   },
-  { type: "error", name: "ExtensionAlreadyInstalled", inputs: [] },
   {
     type: "error",
-    name: "ExtensionInterfaceNotCompatible",
+    name: "FallbackFunctionAlreadyInstalled",
+    inputs: [],
+  },
+  { type: "error", name: "FallbackFunctionNotInstalled", inputs: [] },
+  { type: "error", name: "IndexOutOfBounds", inputs: [] },
+  { type: "error", name: "ModuleAlreadyInstalled", inputs: [] },
+  {
+    type: "error",
+    name: "ModuleInterfaceNotCompatible",
     inputs: [
       {
         name: "requiredInterfaceId",
@@ -484,30 +491,24 @@ export const coreContractAbi = [
       },
     ],
   },
-  { type: "error", name: "ExtensionNotInstalled", inputs: [] },
-  { type: "error", name: "ExtensionOutOfSync", inputs: [] },
-  {
-    type: "error",
-    name: "FallbackFunctionAlreadyInstalled",
-    inputs: [],
-  },
-  { type: "error", name: "FallbackFunctionNotInstalled", inputs: [] },
-  { type: "error", name: "IndexOutOfBounds", inputs: [] },
+  { type: "error", name: "ModuleNotInstalled", inputs: [] },
+  { type: "error", name: "ModuleOutOfSync", inputs: [] },
   { type: "error", name: "NewOwnerIsZeroAddress", inputs: [] },
   { type: "error", name: "NoHandoverRequest", inputs: [] },
+  { type: "error", name: "Reentrancy", inputs: [] },
   { type: "error", name: "Unauthorized", inputs: [] },
 ];
 
-export const extensionContractAbi = [
+export const moduleContractAbi = [
   {
     type: "function",
-    name: "getExtensionConfig",
+    name: "getModuleConfig",
     inputs: [],
     outputs: [
       {
         name: "",
         type: "tuple",
-        internalType: "struct IExtensionConfig.ExtensionConfig",
+        internalType: "struct IModuleConfig.ModuleConfig",
         components: [
           {
             name: "registerInstallationCallback",
@@ -527,7 +528,7 @@ export const extensionContractAbi = [
           {
             name: "callbackFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionConfig.CallbackFunction[]",
+            internalType: "struct IModuleConfig.CallbackFunction[]",
             components: [
               {
                 name: "selector",
@@ -539,7 +540,7 @@ export const extensionContractAbi = [
           {
             name: "fallbackFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionConfig.FallbackFunction[]",
+            internalType: "struct IModuleConfig.FallbackFunction[]",
             components: [
               {
                 name: "selector",
@@ -711,15 +712,15 @@ export const FEATURE_MODULAR_CORE = {
   features: {},
 } as const;
 
-export const FEATURE_MODULAR_EXTENSION = {
-  name: "ModularExtension",
-  namespace: "modular.extension",
+export const FEATURE_MODULAR_MODULE = {
+  name: "ModularModule",
+  namespace: "modular.module",
   docLinks: {
     sdk: "",
     //TODO
     contracts: "",
   },
-  abis: [extensionContractAbi],
+  abis: [moduleContractAbi],
   features: {},
 } as const;
 

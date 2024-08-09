@@ -172,7 +172,8 @@ export const CustomFactoryInput = /* @__PURE__ */ (() =>
 export const ModularFactoryInput = /* @__PURE__ */ (() =>
   z.object({
     hooksParamName: z.string().optional(), // deprecated
-    extensionsParamName: z.string().optional(),
+    extensionsParamName: z.string().optional(), // deprecated
+    modulesParamName: z.string().optional(),
   }))();
 
 /**
@@ -264,6 +265,15 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
           z.object({
             extensionName: z.string(),
             extensionVersion: z.string().default("latest"),
+            publisherAddress: AddressOrEnsSchema,
+          }),
+        )
+        .optional(),
+        defaultModules: z
+        .array(
+          z.object({
+            moduleName: z.string(),
+            moduleVersion: z.string().default("latest"),
             publisherAddress: AddressOrEnsSchema,
           }),
         )

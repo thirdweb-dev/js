@@ -41,11 +41,11 @@ import {
 } from "../hooks";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
 import {
-  ModularContractDefaultExtensionsFieldset,
+  ModularContractDefaultModulesFieldset,
   showPrimarySaleFiedset,
   showRoyaltyFieldset,
-  useModularContractsDefaultExtensionsInstallParams,
-} from "./modular-contract-default-extensions-fieldset";
+  useModularContractsDefaultModulesInstallParams,
+} from "./modular-contract-default-modules-fieldset";
 import { Param } from "./param";
 import { PlatformFeeFieldset } from "./platform-fee-fieldset";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
@@ -69,7 +69,7 @@ export type CustomContractDeploymentFormData = {
   saltForCreate2: string;
   signerAsSalt: boolean;
   deployParams: Record<string, string>;
-  modularContractDefaultExtensionsInstallParams: Record<string, string>[];
+  modularContractDefaultModulesInstallParams: Record<string, string>[];
   contractMetadata?: {
     name: string;
     description: string;
@@ -137,11 +137,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     fullPublishMetadata.data?.deployType === "customFactory";
 
   const isModular = fullPublishMetadata.data?.routerType === "modular";
-  const defaultExtensions = fullPublishMetadata.data?.defaultExtensions;
+  const defaultModules = fullPublishMetadata.data?.defaultModules;
 
-  const modularContractDefaultExtensionsInstallParams =
-    useModularContractsDefaultExtensionsInstallParams({
-      defaultExtensions,
+  const modularContractDefaultModulesInstallParams =
+    useModularContractsDefaultModulesInstallParams({
+      defaultModules,
       isQueryEnabled: isModular,
     });
 
@@ -196,11 +196,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       signerAsSalt: true,
       deployParams: parsedDeployParams,
       recipients: [{ address: connectedWallet || "", sharesBps: 10000 }],
-      // set default values for modular contract extensions with custom components
-      modularContractDefaultExtensionsInstallParams:
+      // set default values for modular contract modules with custom components
+      modularContractDefaultModulesInstallParams:
         (activeAccount &&
           isTWPublisher &&
-          modularContractDefaultExtensionsInstallParams.data?.map((ext) => {
+          modularContractDefaultModulesInstallParams.data?.map((ext) => {
             const paramNames = ext.params.map((param) => param.name);
             const returnVal: Record<string, string> = {};
 
@@ -222,7 +222,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       parsedDeployParams,
       isAccountFactory,
       connectedWallet,
-      modularContractDefaultExtensionsInstallParams.data,
+      modularContractDefaultModulesInstallParams.data,
       isTWPublisher,
       activeAccount,
     ],
@@ -375,17 +375,17 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
           const deployParams = { ...formData.deployParams };
 
-          // if Modular contract has extensions
-          if (isModular && modularContractDefaultExtensionsInstallParams.data) {
-            const extensionInstallData: string[] =
-              modularContractDefaultExtensionsInstallParams.data.map(
+          // if Modular contract has modules
+          if (isModular && modularContractDefaultModulesInstallParams.data) {
+            const moduleInstallData: string[] =
+              modularContractDefaultModulesInstallParams.data.map(
                 (ext, extIndex) => {
                   return encodeAbiParameters(
                     // param name+type []
                     ext.params.map((p) => ({ name: p.name, type: p.type })),
                     // value []
                     Object.values(
-                      formData.modularContractDefaultExtensionsInstallParams[
+                      formData.modularContractDefaultModulesInstallParams[
                         extIndex
                       ] || {},
                     ),
@@ -393,8 +393,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 },
               );
 
-            deployParams._extensionInstallData =
-              JSON.stringify(extensionInstallData);
+            deployParams._moduleInstallData = JSON.stringify(moduleInstallData);
           }
 
           deploy.mutate(
@@ -552,8 +551,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               .filter((paramName) => {
                 if (
                   isModular &&
-                  (paramName === "_extensionInstallData" ||
-                    paramName === "_extensions")
+                  (paramName === "_moduleInstallData" ||
+                    paramName === "_modules")
                 ) {
                   return false;
                 }
@@ -584,12 +583,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
             {isModular && (
               <>
-                {modularContractDefaultExtensionsInstallParams.data ? (
-                  <ModularContractDefaultExtensionsFieldset
+                {modularContractDefaultModulesInstallParams.data ? (
+                  <ModularContractDefaultModulesFieldset
                     form={form}
-                    extensions={
-                      modularContractDefaultExtensionsInstallParams.data
-                    }
+                    modules={modularContractDefaultModulesInstallParams.data}
                     isTWPublisher={isTWPublisher}
                   />
                 ) : (

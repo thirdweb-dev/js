@@ -37,7 +37,7 @@ export async function getModularDeploymentInfo(
     ]);
   const customParams: ConstructorParamMap = {};
   const finalDeploymentInfo: DeploymentPreset[] = [];
-  const defaultExtensions = extendedMetadata?.defaultExtensions;
+  const defaultModules = extendedMetadata?.defaultModules;
 
   // get clone factory
   const factoryInfo = await computeDeploymentInfo(
@@ -51,30 +51,30 @@ export async function getModularDeploymentInfo(
   );
   finalDeploymentInfo.push(factoryInfo);
 
-  if (defaultExtensions) {
-    const publishedExtensions = await Promise.all(
-      defaultExtensions.map((e) => {
+  if (defaultModules) {
+    const publishedModules = await Promise.all(
+      defaultModules.map((e) => {
         return fetchPublishedContractFromPolygon(
           e.publisherAddress,
-          e.extensionName,
-          e.extensionVersion,
+          e.moduleName,
+          e.moduleVersion,
           storage,
           clientId,
           secretKey
         );
       })
     );
-    const extensionMetadata = await Promise.all(
-      publishedExtensions.map((e) =>
+    const moduleMetadata = await Promise.all(
+      publishedModules.map((e) =>
         fetchAndCacheDeployMetadata(e.metadataUri, storage)
       )
     );
 
     // computeDeploymentInfo for extension impl -> push into finalDeploymentInfo
-    const extensionDeploymentInfo = await Promise.all(
-      extensionMetadata.map((m) =>
+    const moduleDeploymentInfo = await Promise.all(
+      moduleMetadata.map((m) =>
         computeDeploymentInfo(
-          "extension",
+          "module",
           provider,
           storage,
           create2FactoryAddress,
@@ -84,7 +84,7 @@ export async function getModularDeploymentInfo(
         )
       )
     );
-    finalDeploymentInfo.push(...extensionDeploymentInfo);
+    finalDeploymentInfo.push(...moduleDeploymentInfo);
   }
 
   const implementationDeployInfo = await computeDeploymentInfo(

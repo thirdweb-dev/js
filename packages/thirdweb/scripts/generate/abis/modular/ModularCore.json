@@ -18,13 +18,13 @@
   },
   {
     "type": "function",
-    "name": "getInstalledExtensions",
+    "name": "getInstalledModules",
     "inputs": [],
     "outputs": [
       {
-        "name": "_installedExtensions",
+        "name": "_installedModules",
         "type": "tuple[]",
-        "internalType": "struct IModularCore.InstalledExtension[]",
+        "internalType": "struct IModularCore.InstalledModule[]",
         "components": [
           {
             "name": "implementation",
@@ -34,7 +34,7 @@
           {
             "name": "config",
             "type": "tuple",
-            "internalType": "struct IExtensionConfig.ExtensionConfig",
+            "internalType": "struct IModuleConfig.ModuleConfig",
             "components": [
               {
                 "name": "registerInstallationCallback",
@@ -54,7 +54,7 @@
               {
                 "name": "callbackFunctions",
                 "type": "tuple[]",
-                "internalType": "struct IExtensionConfig.CallbackFunction[]",
+                "internalType": "struct IModuleConfig.CallbackFunction[]",
                 "components": [
                   {
                     "name": "selector",
@@ -66,7 +66,7 @@
               {
                 "name": "fallbackFunctions",
                 "type": "tuple[]",
-                "internalType": "struct IExtensionConfig.FallbackFunction[]",
+                "internalType": "struct IModuleConfig.FallbackFunction[]",
                 "components": [
                   {
                     "name": "selector",
@@ -140,9 +140,9 @@
   },
   {
     "type": "function",
-    "name": "installExtension",
+    "name": "installModule",
     "inputs": [
-      { "name": "_extension", "type": "address", "internalType": "address" },
+      { "name": "_module", "type": "address", "internalType": "address" },
       { "name": "_data", "type": "bytes", "internalType": "bytes" }
     ],
     "outputs": [],
@@ -232,9 +232,9 @@
   },
   {
     "type": "function",
-    "name": "uninstallExtension",
+    "name": "uninstallModule",
     "inputs": [
-      { "name": "_extension", "type": "address", "internalType": "address" },
+      { "name": "_module", "type": "address", "internalType": "address" },
       { "name": "_data", "type": "bytes", "internalType": "bytes" }
     ],
     "outputs": [],
@@ -242,7 +242,7 @@
   },
   {
     "type": "event",
-    "name": "ExtensionInstalled",
+    "name": "ModuleInstalled",
     "inputs": [
       {
         "name": "caller",
@@ -257,7 +257,7 @@
         "internalType": "address"
       },
       {
-        "name": "installedExtension",
+        "name": "installedModule",
         "type": "address",
         "indexed": false,
         "internalType": "address"
@@ -267,7 +267,7 @@
   },
   {
     "type": "event",
-    "name": "ExtensionUninstalled",
+    "name": "ModuleUninstalled",
     "inputs": [
       {
         "name": "caller",
@@ -282,7 +282,7 @@
         "internalType": "address"
       },
       {
-        "name": "installedExtension",
+        "name": "installedModule",
         "type": "address",
         "indexed": false,
         "internalType": "address"
@@ -368,10 +368,17 @@
     "name": "CallbackFunctionUnauthorizedCall",
     "inputs": []
   },
-  { "type": "error", "name": "ExtensionAlreadyInstalled", "inputs": [] },
   {
     "type": "error",
-    "name": "ExtensionInterfaceNotCompatible",
+    "name": "FallbackFunctionAlreadyInstalled",
+    "inputs": []
+  },
+  { "type": "error", "name": "FallbackFunctionNotInstalled", "inputs": [] },
+  { "type": "error", "name": "IndexOutOfBounds", "inputs": [] },
+  { "type": "error", "name": "ModuleAlreadyInstalled", "inputs": [] },
+  {
+    "type": "error",
+    "name": "ModuleInterfaceNotCompatible",
     "inputs": [
       {
         "name": "requiredInterfaceId",
@@ -380,16 +387,10 @@
       }
     ]
   },
-  { "type": "error", "name": "ExtensionNotInstalled", "inputs": [] },
-  { "type": "error", "name": "ExtensionOutOfSync", "inputs": [] },
-  {
-    "type": "error",
-    "name": "FallbackFunctionAlreadyInstalled",
-    "inputs": []
-  },
-  { "type": "error", "name": "FallbackFunctionNotInstalled", "inputs": [] },
-  { "type": "error", "name": "IndexOutOfBounds", "inputs": [] },
+  { "type": "error", "name": "ModuleNotInstalled", "inputs": [] },
+  { "type": "error", "name": "ModuleOutOfSync", "inputs": [] },
   { "type": "error", "name": "NewOwnerIsZeroAddress", "inputs": [] },
   { "type": "error", "name": "NoHandoverRequest", "inputs": [] },
+  { "type": "error", "name": "Reentrancy", "inputs": [] },
   { "type": "error", "name": "Unauthorized", "inputs": [] }
 ]

@@ -1,320 +1,320 @@
 [
-    {
-      "type": "function",
-      "name": "beforeMintERC721",
-      "inputs": [
-        { "name": "_to", "type": "address", "internalType": "address" },
-        {
-          "name": "_startTokenId",
-          "type": "uint256",
-          "internalType": "uint256"
-        },
-        { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
-        { "name": "_data", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
-      "stateMutability": "payable"
-    },
-    {
-      "type": "function",
-      "name": "eip712Domain",
-      "inputs": [],
-      "outputs": [
-        { "name": "fields", "type": "bytes1", "internalType": "bytes1" },
-        { "name": "name", "type": "string", "internalType": "string" },
-        { "name": "version", "type": "string", "internalType": "string" },
-        { "name": "chainId", "type": "uint256", "internalType": "uint256" },
-        {
-          "name": "verifyingContract",
-          "type": "address",
-          "internalType": "address"
-        },
-        { "name": "salt", "type": "bytes32", "internalType": "bytes32" },
-        {
-          "name": "extensions",
-          "type": "uint256[]",
-          "internalType": "uint256[]"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "encodeBytesBeforeMintERC721",
-      "inputs": [
-        {
-          "name": "params",
-          "type": "tuple",
-          "internalType": "struct MintableERC721.MintParamsERC721",
-          "components": [
-            {
-              "name": "request",
-              "type": "tuple",
-              "internalType": "struct MintableERC721.MintRequestERC721",
-              "components": [
-                {
-                  "name": "startTimestamp",
-                  "type": "uint48",
-                  "internalType": "uint48"
-                },
-                {
-                  "name": "endTimestamp",
-                  "type": "uint48",
-                  "internalType": "uint48"
-                },
-                {
-                  "name": "recipient",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "quantity",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                },
-                {
-                  "name": "currency",
-                  "type": "address",
-                  "internalType": "address"
-                },
-                {
-                  "name": "pricePerUnit",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                },
-                {
-                  "name": "baseURI",
-                  "type": "string",
-                  "internalType": "string"
-                },
-                { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
-              ]
-            },
-            { "name": "signature", "type": "bytes", "internalType": "bytes" },
-            { "name": "baseURI", "type": "string", "internalType": "string" }
-          ]
-        }
-      ],
-      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "encodeBytesOnInstall",
-      "inputs": [
-        {
-          "name": "primarySaleRecipient",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "encodeBytesOnUninstall",
-      "inputs": [],
-      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "getAllMetadataBatches",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct MintableERC721.MetadataBatch[]",
-          "components": [
-            {
-              "name": "startTokenIdInclusive",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "endTokenIdInclusive",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            { "name": "baseURI", "type": "string", "internalType": "string" }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getExtensionConfig",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "config",
-          "type": "tuple",
-          "internalType": "struct IExtensionConfig.ExtensionConfig",
-          "components": [
-            {
-              "name": "registerInstallationCallback",
-              "type": "bool",
-              "internalType": "bool"
-            },
-            {
-              "name": "requiredInterfaces",
-              "type": "bytes4[]",
-              "internalType": "bytes4[]"
-            },
-            {
-              "name": "supportedInterfaces",
-              "type": "bytes4[]",
-              "internalType": "bytes4[]"
-            },
-            {
-              "name": "callbackFunctions",
-              "type": "tuple[]",
-              "internalType": "struct IExtensionConfig.CallbackFunction[]",
-              "components": [
-                {
-                  "name": "selector",
-                  "type": "bytes4",
-                  "internalType": "bytes4"
-                }
-              ]
-            },
-            {
-              "name": "fallbackFunctions",
-              "type": "tuple[]",
-              "internalType": "struct IExtensionConfig.FallbackFunction[]",
-              "components": [
-                {
-                  "name": "selector",
-                  "type": "bytes4",
-                  "internalType": "bytes4"
-                },
-                {
-                  "name": "permissionBits",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "getSaleConfig",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "primarySaleRecipient",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "onInstall",
-      "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "onTokenURI",
-      "inputs": [
-        { "name": "_id", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "onUninstall",
-      "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "setSaleConfig",
-      "inputs": [
-        {
-          "name": "_primarySaleRecipient",
-          "type": "address",
-          "internalType": "address"
-        }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "event",
-      "name": "BatchMetadataUpdate",
-      "inputs": [
-        {
-          "name": "_fromTokenId",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "_toTokenId",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "NewMetadataBatch",
-      "inputs": [
-        {
-          "name": "startTokenIdInclusive",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "endTokenIdNonInclusive",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "baseURI",
-          "type": "string",
-          "indexed": false,
-          "internalType": "string"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "error",
-      "name": "BeforeMintCallbackERC721NotImplemented",
-      "inputs": []
-    },
-    {
-      "type": "error",
-      "name": "MintableIncorrectNativeTokenSent",
-      "inputs": []
-    },
-    { "type": "error", "name": "MintableNoMetadataForTokenId", "inputs": [] },
-    { "type": "error", "name": "MintableRequestInvalidToken", "inputs": [] },
-    { "type": "error", "name": "MintableRequestMismatch", "inputs": [] },
-    { "type": "error", "name": "MintableRequestOutOfTimeWindow", "inputs": [] },
-    { "type": "error", "name": "MintableRequestUidReused", "inputs": [] },
-    { "type": "error", "name": "MintableRequestUnauthorized", "inputs": [] },
-    {
-      "type": "error",
-      "name": "OnTokenURICallbackNotImplemented",
-      "inputs": []
-    }
-  ]
+  {
+    "type": "function",
+    "name": "beforeMintERC721",
+    "inputs": [
+      { "name": "_to", "type": "address", "internalType": "address" },
+      {
+        "name": "_startTokenId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      { "name": "_quantity", "type": "uint256", "internalType": "uint256" },
+      { "name": "_data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "eip712Domain",
+    "inputs": [],
+    "outputs": [
+      { "name": "fields", "type": "bytes1", "internalType": "bytes1" },
+      { "name": "name", "type": "string", "internalType": "string" },
+      { "name": "version", "type": "string", "internalType": "string" },
+      { "name": "chainId", "type": "uint256", "internalType": "uint256" },
+      {
+        "name": "verifyingContract",
+        "type": "address",
+        "internalType": "address"
+      },
+      { "name": "salt", "type": "bytes32", "internalType": "bytes32" },
+      {
+        "name": "extensions",
+        "type": "uint256[]",
+        "internalType": "uint256[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "encodeBytesBeforeMintERC721",
+    "inputs": [
+      {
+        "name": "params",
+        "type": "tuple",
+        "internalType": "struct MintableERC721.MintParamsERC721",
+        "components": [
+          {
+            "name": "request",
+            "type": "tuple",
+            "internalType": "struct MintableERC721.MintRequestERC721",
+            "components": [
+              {
+                "name": "startTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "endTimestamp",
+                "type": "uint48",
+                "internalType": "uint48"
+              },
+              {
+                "name": "recipient",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "quantity",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "currency",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "pricePerUnit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "baseURI",
+                "type": "string",
+                "internalType": "string"
+              },
+              { "name": "uid", "type": "bytes32", "internalType": "bytes32" }
+            ]
+          },
+          { "name": "signature", "type": "bytes", "internalType": "bytes" },
+          { "name": "baseURI", "type": "string", "internalType": "string" }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "encodeBytesOnInstall",
+    "inputs": [
+      {
+        "name": "primarySaleRecipient",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "encodeBytesOnUninstall",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "getAllMetadataBatches",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct MintableERC721.MetadataBatch[]",
+        "components": [
+          {
+            "name": "startTokenIdInclusive",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "endTokenIdInclusive",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          { "name": "baseURI", "type": "string", "internalType": "string" }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getModuleConfig",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "config",
+        "type": "tuple",
+        "internalType": "struct IModuleConfig.ModuleConfig",
+        "components": [
+          {
+            "name": "registerInstallationCallback",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "requiredInterfaces",
+            "type": "bytes4[]",
+            "internalType": "bytes4[]"
+          },
+          {
+            "name": "supportedInterfaces",
+            "type": "bytes4[]",
+            "internalType": "bytes4[]"
+          },
+          {
+            "name": "callbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IModuleConfig.CallbackFunction[]",
+            "components": [
+              {
+                "name": "selector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              }
+            ]
+          },
+          {
+            "name": "fallbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IModuleConfig.FallbackFunction[]",
+            "components": [
+              {
+                "name": "selector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              },
+              {
+                "name": "permissionBits",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "getSaleConfig",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "primarySaleRecipient",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "onInstall",
+    "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "onTokenURI",
+    "inputs": [
+      { "name": "_id", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "onUninstall",
+    "inputs": [{ "name": "data", "type": "bytes", "internalType": "bytes" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setSaleConfig",
+    "inputs": [
+      {
+        "name": "_primarySaleRecipient",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "BatchMetadataUpdate",
+    "inputs": [
+      {
+        "name": "_fromTokenId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "_toTokenId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "NewMetadataBatch",
+    "inputs": [
+      {
+        "name": "startTokenIdInclusive",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "endTokenIdNonInclusive",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "baseURI",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "BeforeMintCallbackERC721NotImplemented",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MintableIncorrectNativeTokenSent",
+    "inputs": []
+  },
+  { "type": "error", "name": "MintableNoMetadataForTokenId", "inputs": [] },
+  { "type": "error", "name": "MintableRequestInvalidToken", "inputs": [] },
+  { "type": "error", "name": "MintableRequestMismatch", "inputs": [] },
+  { "type": "error", "name": "MintableRequestOutOfTimeWindow", "inputs": [] },
+  { "type": "error", "name": "MintableRequestUidReused", "inputs": [] },
+  { "type": "error", "name": "MintableRequestUnauthorized", "inputs": [] },
+  {
+    "type": "error",
+    "name": "OnTokenURICallbackNotImplemented",
+    "inputs": []
+  }
+]

@@ -13,24 +13,24 @@ import {
   mockCoreDeployedBytecode,
 } from "./mock/mockCoreMetadata";
 import {
-  mockExtensionWithFunctionsBytecode,
-  mockExtensionWithFunctionsCompilerMetadata,
-} from "./mock/mockExtensionWithFunctionsMetadata";
-import { compatibleExtensions } from "../../src/evm/common/modular/compatibleExtensions";
-import { mockExtensionWithInterfaceBytecode } from "./mock/mockExtensionWithInterface";
+  mockModuleWithFunctionsBytecode,
+  mockModuleWithFunctionsCompilerMetadata,
+} from "./mock/mockModuleWithFunctionsMetadata";
+import { compatibleModules } from "../../src/evm/common/modular/compatibleModules";
+import { mockModuleWithInterfaceBytecode } from "./mock/mockModuleWithInterface";
 
 describe("Modular contract deployment", async () => {
   let adminWallet: SignerWithAddress;
 
-  async function mockPublishExtension() {
+  async function mockPublishModule() {
     const mockPublisher = process.env.contractPublisherAddress;
     process.env.contractPublisherAddress =
       "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808";
 
     const publishUri = await mockUploadMetadataWithBytecode(
-      "DemoExtensionWithFunctions",
-      mockExtensionWithFunctionsCompilerMetadata.output.abi,
-      mockExtensionWithFunctionsBytecode,
+      "DemoModuleWithFunctions",
+      mockModuleWithFunctionsCompilerMetadata.output.abi,
+      mockModuleWithFunctionsBytecode,
       "",
       {
         ...extendedMetadataMock,
@@ -41,7 +41,7 @@ describe("Modular contract deployment", async () => {
         },
         publisher: await adminWallet.getAddress(),
       },
-      "ipfs://QmbAYkPwB2V8E8Phs62TFAoAa9fuP74DZFD2uCiSNAHpVb/0",
+      "ipfs://QmSbfbRZXnKPBQM9xV2gq2Bjacgn6BN6EJZzVAtLt5BdN9/0",
     );
 
     process.env.contractPublisherAddress = mockPublisher;
@@ -63,9 +63,9 @@ describe("Modular contract deployment", async () => {
         ...extendedMetadataMock,
         deployType: "autoFactory",
         routerType: "modular",
-        defaultExtensions: [
+        defaultModules: [
           {
-            extensionName: "DemoExtensionWithFunctions",
+            extensionName: "DemoModuleWithFunctions",
             extensionVersion: "",
             publisherAddress: await adminWallet.getAddress(),
           },
@@ -75,7 +75,7 @@ describe("Modular contract deployment", async () => {
           factoryAddresses: {},
           implementationInitializerFunction: "initialize",
 
-          modularFactoryInput: { hooksParamName: "extensions" },
+          modularFactoryInput: { hooksParamName: "modules" },
         },
         networksForDeployment: {
           allNetworks: true,
@@ -114,28 +114,28 @@ describe("Modular contract deployment", async () => {
 
   it("should deploy core but not install hooks", async () => {
     // await mockPublishModularFactory();
-    await mockPublishExtension();
+    await mockPublishModule();
     const mockCore = await mockPublishAndDeployMockCore();
 
-    const extensions = await mockCore.call("getInstalledExtensions");
+    const extensions = await mockCore.call("getInstalledModules");
 
     expect(extensions.length).to.equal(0);
   });
 
   it("should check extension compatibility", async () => {
     // duplicate callback/fallback
-    let isCompatible = await compatibleExtensions(
+    let isCompatible = await compatibleModules(
       mockCoreBytecode,
-      [mockExtensionWithFunctionsBytecode, mockExtensionWithFunctionsBytecode],
+      [mockModuleWithFunctionsBytecode, mockModuleWithFunctionsBytecode],
       11155111,
     );
 
     expect(isCompatible).to.be.false;
 
     // required interface not supported
-    isCompatible = await compatibleExtensions(
+    isCompatible = await compatibleModules(
       mockCoreBytecode,
-      [mockExtensionWithInterfaceBytecode],
+      [mockModuleWithInterfaceBytecode],
       11155111,
     );
 
