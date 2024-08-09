@@ -30,6 +30,10 @@ type FeeDataParams =
 const FORCE_GAS_PRICE_CHAIN_IDS = [
   78600, // Vanar testnet
   2040, // Vanar mainnet
+  248, // Oasys Mainnet
+  9372, // Oasys Testnet
+  841, // Taraxa Mainnet
+  842, // Taraxa Testnet
 ];
 
 /**
