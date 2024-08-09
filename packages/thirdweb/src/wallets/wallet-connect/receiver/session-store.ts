@@ -26,6 +26,7 @@ export function initializeSessionStore(options: {
 }) {
   if (!walletConnectSessions) {
     walletConnectSessions = new LocalStorage({
+      storage: null, // TODO: inject storage
       clientId: options.clientId,
     });
   }

@@ -1,4 +1,5 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
@@ -60,6 +61,7 @@ export class Auth {
 
     this.AuthQuerier = querier;
     this.localStorage = new LocalStorage({
+      storage: webLocalStorage,
       clientId: client.clientId,
       ecosystemId: ecosystem?.id,
     });

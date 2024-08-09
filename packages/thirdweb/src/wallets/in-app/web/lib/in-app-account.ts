@@ -8,6 +8,7 @@ import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import { getEcosystemPartnerPermissions } from "../../../ecosystem/get-ecosystem-partner-permissions.js";
 import type {
@@ -102,6 +103,7 @@ export class IFrameWallet {
     this.walletManagerQuerier = querier;
 
     this.localStorage = new LocalStorage({
+      storage: webLocalStorage,
       clientId: client.clientId,
       ecosystemId: ecosystem?.id,
     });

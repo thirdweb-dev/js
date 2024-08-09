@@ -1,3 +1,4 @@
+import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
 import { IN_APP_WALLET_PATH } from "../../../core/constants/settings.js";
 import type { Ecosystem } from "../../types.js";
 import { LocalStorage } from "../Storage/LocalStorage.js";
@@ -44,6 +45,7 @@ export class InAppWalletIframeCommunicator<
    */
   override async onIframeLoadedInitVariables() {
     const localStorage = new LocalStorage({
+      storage: webLocalStorage,
       clientId: this.clientId,
       ecosystemId: this.ecosystem?.id,
     });
