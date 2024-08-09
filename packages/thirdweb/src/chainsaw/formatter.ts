@@ -16,9 +16,9 @@ import {
 import type { Prettify } from "../utils/type-utils.js";
 import type {
   ChainsawInternalBlock,
-  ChainsawInternalEvents,
-  ChainsawInternalNFTs,
-  ChainsawInternalTransactions,
+  ChainsawInternalEvent,
+  ChainsawInternalNFT,
+  ChainsawInternalTransaction,
 } from "./types.js";
 
 /**
@@ -47,7 +47,7 @@ export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
 /**
  * @internal
  */
-export function formatChainsawNFTs(nfts?: ChainsawInternalNFTs): NFT[] {
+export function formatChainsawNFTs(nfts?: ChainsawInternalNFT[]): NFT[] {
   if (!nfts) {
     return [];
   }
@@ -101,7 +101,7 @@ export function formatChainsawNFTs(nfts?: ChainsawInternalNFTs): NFT[] {
  * @internal
  */
 export function formatChainsawTransactions(
-  txs?: ChainsawInternalTransactions,
+  txs?: ChainsawInternalTransaction[],
 ): Transaction[] {
   if (!txs) {
     return [];
@@ -163,7 +163,7 @@ export function formatChainsawTransactions(
  * @internal
  */
 export function formatChainsawEvents(
-  events?: ChainsawInternalEvents,
+  events?: ChainsawInternalEvent[],
 ): Prettify<
   Log &
     DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
