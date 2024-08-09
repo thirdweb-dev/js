@@ -58,7 +58,7 @@ interface ListForm
   quantity: string;
 }
 
-type NFTMintForm = {
+type CreateListingsFormProps = {
   contract: ThirdwebContract;
   formId: string;
   type?: "direct-listings" | "english-auctions";
@@ -80,7 +80,7 @@ const auctionTimes = [
   { label: "1 year", value: 60 * 60 * 24 * 365 },
 ];
 
-export const CreateListingsForm: React.FC<NFTMintForm> = ({
+export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   contract,
   formId,
   type,

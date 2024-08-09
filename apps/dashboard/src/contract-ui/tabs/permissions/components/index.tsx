@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import {
   type ContractWithRoles,
@@ -10,8 +11,10 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { getContract } from "thirdweb";
 import type { roleMap } from "thirdweb/extensions/permissions";
 import { Button } from "tw-components";
 import { ContractPermission } from "./contract-permission";
@@ -63,6 +66,12 @@ export const Permissions = <TContract extends ContractWithRoles>({
     BuiltinContractMap[contractType as keyof typeof BuiltinContractMap]
       .contractType !== "custom";
 
+  const chain = useV5DashboardChain(contract.chainId);
+  const contractV5 = getContract({
+    address: contract.getAddress(),
+    chain,
+    client: thirdwebClient,
+  });
   return (
     <FormProvider {...form}>
       <Flex
@@ -106,7 +115,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
               role={role}
               description={ROLE_DESCRIPTION_MAP[role] || ""}
               isPrebuilt={isPrebuilt}
-              contract={contract}
+              contract={contractV5}
             />
           );
         })}

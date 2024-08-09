@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   Accordion,
   AccordionButton,
@@ -9,6 +10,7 @@ import {
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
+  Flex,
   FormControl,
   Input,
   Stack,
@@ -22,10 +24,17 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import type { ThirdwebContract } from "thirdweb";
-import { mintTo as erc721MintTo } from "thirdweb/extensions/erc721";
-import { mintTo as erc1155MintTo } from "thirdweb/extensions/erc1155";
+import type { NFT, ThirdwebContract } from "thirdweb";
+import {
+  updateMetadata as updateMetadata721,
+  updateTokenURI as updateTokenURI721,
+} from "thirdweb/extensions/erc721";
+import {
+  updateMetadata as updateMetadata1155,
+  updateTokenURI as updateTokenURI1155,
+} from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   Button,
@@ -34,19 +43,48 @@ import {
   FormLabel,
   Heading,
 } from "tw-components";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
 
-const MINT_FORM_ID = "nft-mint-form";
+const UPDATE_METADATA_FORM_ID = "nft-update-metadata-form";
 
-type NFTMintForm = {
+type UpdateNftMetadataForm = {
   contract: ThirdwebContract;
-  isErc721: boolean;
+  nft: NFT;
+
+  /**
+   * If isDropContract (NFT Drop, Edition Drop) -> use `updateMetadata`
+   * else (NFT Collection, Edition) -> use `setTokenURI`
+   */
+  isDropContract: boolean;
 };
 
-export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
+export const UpdateNftMetadata: React.FC<UpdateNftMetadataForm> = ({
+  contract,
+  nft,
+  isDropContract,
+}) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
+
+  const transformedQueryData = useMemo(() => {
+    return {
+      name: nft?.metadata.name || "",
+      description: nft?.metadata.description || "",
+      external_url: nft?.metadata.external_url || "",
+      background_color: nft?.metadata.background_color || "",
+      attributes: nft?.metadata.attributes || [],
+      // We override these in the submit if they haven't been changed
+      image: nft?.metadata.image || undefined,
+      animation_url: nft?.metadata.animation_url || undefined,
+      // No need for these, but we need to pass them to the form
+      supply: 0,
+      customImage: "",
+      customAnimationUrl: "",
+    };
+  }, [nft]);
+
   const {
     setValue,
     control,
@@ -60,13 +98,16 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
       customImage: string;
       customAnimationUrl: string;
     }
-  >();
+  >({
+    defaultValues: transformedQueryData,
+    values: transformedQueryData,
+  });
 
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
-    "NFT minted successfully",
-    "Failed to mint NFT",
+    "NFT Metadata updated successfully",
+    "Metadata update failed",
     contract,
   );
 
@@ -134,50 +175,70 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
   const showCoverImageUpload =
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
-
   const { mutate, isPending } = useSendAndConfirmTransaction();
 
   return (
     <>
       <DrawerHeader>
-        <Heading>Mint NFT</Heading>
+        <Heading>Update NFT Metadata</Heading>
       </DrawerHeader>
       <DrawerBody>
         <Stack
           spacing={6}
           as="form"
-          id={MINT_FORM_ID}
+          id={UPDATE_METADATA_FORM_ID}
           onSubmit={handleSubmit((data) => {
             if (!address) {
-              onError("Please connect your wallet to mint.");
+              onError("Please connect your wallet to update metadata.");
               return;
             }
-
-            const dataWithCustom = {
-              ...data,
-              image: data.image || data.customImage,
-              animation_url: data.animation_url || data.customAnimationUrl,
-            };
-
             trackEvent({
               category: "nft",
-              action: "mint",
+              action: "update-metadata",
               label: "attempt",
             });
-            const nft = parseAttributes(dataWithCustom);
-            const transaction = isErc721
-              ? erc721MintTo({ contract, to: address, nft })
-              : erc1155MintTo({
-                  contract,
-                  to: address,
-                  nft,
-                  supply: BigInt(data.supply),
-                });
+
+            const newMetadata = parseAttributes({
+              ...data,
+              image: data.image || data.customImage || nft.metadata.image,
+              animation_url:
+                data.animation_url ||
+                data.customAnimationUrl ||
+                nft.metadata.animation_url,
+            });
+
+            const transaction = isDropContract
+              ? // For Drop contracts, we need to call the `updateBatchBaseURI` method
+                nft.type === "ERC721"
+                ? updateMetadata721({
+                    contract,
+                    targetTokenId: BigInt(nft.id),
+                    newMetadata,
+                    client: thirdwebClient,
+                  })
+                : updateMetadata1155({
+                    contract,
+                    targetTokenId: BigInt(nft.id),
+                    newMetadata,
+                    client: thirdwebClient,
+                  })
+              : // For Collection contracts, we need to call the `setTokenURI` method
+                nft.type === "ERC721"
+                ? updateTokenURI721({
+                    contract,
+                    tokenId: BigInt(nft.id),
+                    newMetadata,
+                  })
+                : updateTokenURI1155({
+                    contract,
+                    tokenId: BigInt(nft.id),
+                    newMetadata,
+                  });
             mutate(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
-                  action: "mint",
+                  action: "update-metadata",
                   label: "success",
                 });
                 onSuccess();
@@ -187,7 +248,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
               onError: (error: any) => {
                 trackEvent({
                   category: "nft",
-                  action: "mint",
+                  action: "update-metadata",
                   label: "error",
                   error,
                 });
@@ -207,16 +268,25 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
           </FormControl>
           <FormControl isInvalid={!!mediaFileError}>
             <FormLabel>Media</FormLabel>
+            {nft?.metadata && !mediaFileUrl && (
+              <Flex>
+                <NFTMediaWithEmptyState
+                  metadata={nft.metadata}
+                  width="200px"
+                  height="200px"
+                />
+              </Flex>
+            )}
             <Box>
               <FileInput
                 previewMaxWidth="200px"
                 value={mediaFileUrl as File | string}
                 showUploadButton
-                showPreview={true}
+                showPreview={nft?.metadata ? !!mediaFileUrl : true}
                 setValue={setFile}
                 className="border border-border rounded transition-all duration-200"
                 selectOrUpload="Upload"
-                helperText={"Media"}
+                helperText={nft?.metadata ? "New Media" : "Media"}
               />
             </Box>
             <FormHelperText>
@@ -251,18 +321,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
             <Textarea {...register("description")} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
-          {!isErc721 && (
-            <FormControl isRequired isInvalid={!!errors.supply}>
-              <FormLabel>Initial Supply</FormLabel>
-              <Input
-                type="number"
-                step="1"
-                pattern="[0-9]"
-                {...register("supply")}
-              />
-              <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
-            </FormControl>
-          )}
           <PropertiesFormControl
             watch={watch}
             // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -349,13 +407,13 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
         </Button>
         <TransactionButton
           transactionCount={1}
-          isLoading={isPending}
-          form={MINT_FORM_ID}
+          isLoading={isPending || false}
+          form={UPDATE_METADATA_FORM_ID}
           type="submit"
           colorScheme="primary"
-          isDisabled={!isDirty}
+          isDisabled={!isDirty && imageUrl === nft?.metadata.image}
         >
-          Mint NFT
+          Update NFT
         </TransactionButton>
       </DrawerFooter>
     </>
