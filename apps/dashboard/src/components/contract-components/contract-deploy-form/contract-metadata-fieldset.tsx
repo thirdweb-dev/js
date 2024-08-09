@@ -4,6 +4,7 @@ import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { FormErrorMessage, FormLabel } from "tw-components";
 import type { useContractPublishMetadataFromURI } from "../hooks";
+import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface ContractMetadataFieldsetProps {
@@ -15,12 +16,8 @@ export const ContractMetadataFieldset: React.FC<
   ContractMetadataFieldsetProps
 > = ({ form, metadata }) => {
   return (
-    <fieldset>
-      <legend className="text-2xl font-semibold tracking-tight mb-3">
-        Contract Metadata
-      </legend>
-
-      <div className="border border-border rounded-lg p-4 md:p-6 flex flex-col md:grid gap-6 md:grid-cols-[270px_1fr]">
+    <Fieldset legend="Contract Metadata">
+      <div className="flex flex-col md:grid gap-6 md:grid-cols-[270px_1fr]">
         <div>
           <FormControl
             isDisabled={!metadata.isSuccess}
@@ -119,6 +116,6 @@ export const ContractMetadataFieldset: React.FC<
           </FormControl>
         </div>
       </div>
-    </fieldset>
+    </Fieldset>
   );
 };

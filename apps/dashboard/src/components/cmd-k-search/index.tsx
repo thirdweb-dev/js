@@ -235,7 +235,7 @@ export const CmdKSearch: React.FC = () => {
             <DialogHeader>
               <DialogTitle className="mb-1">Search Contracts</DialogTitle>
               <DialogDescription>
-                Search a contract by name or contract address accross all
+                Search a contract by name or contract address across all
                 blockchains
               </DialogDescription>
             </DialogHeader>

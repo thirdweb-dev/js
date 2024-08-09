@@ -99,6 +99,24 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
     }
   }, [inputNameWatch, localInput, address]);
 
+  const helperTextLeft = resolvingEns ? (
+    <Spinner boxSize={3} mr={1} size="xs" speed="0.6s" />
+  ) : resolvedAddress || ensFound ? (
+    <Icon boxSize={3} as={FiCheck} color="green.500" />
+  ) : null;
+
+  const helperTextRight = resolvingEns ? (
+    "Resolving ENS..."
+  ) : resolvedAddress ? (
+    <Box as="span" fontFamily="mono">
+      {ensQuery?.data?.address}
+    </Box>
+  ) : ensFound ? (
+    <Box as="span" fontFamily="mono">
+      {ensQuery?.data?.ensName}
+    </Box>
+  ) : null;
+
   return (
     <>
       <Input
@@ -111,25 +129,11 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
         value={(localInput ?? inputNameWatch) || ""}
       />
 
-      {hasError ? null : (
+      {!hasError && (helperTextLeft || helperTextRight) && (
         <FormHelperText>
           <Flex gap={1} align="center">
-            {resolvingEns ? (
-              <Spinner boxSize={3} mr={1} size="xs" speed="0.6s" />
-            ) : resolvedAddress || ensFound ? (
-              <Icon boxSize={3} as={FiCheck} color="green.500" />
-            ) : null}
-            {resolvingEns ? (
-              "Resolving ENS..."
-            ) : resolvedAddress ? (
-              <Box as="span" fontFamily="mono">
-                {ensQuery?.data?.address}
-              </Box>
-            ) : ensFound ? (
-              <Box as="span" fontFamily="mono">
-                {ensQuery?.data?.ensName}
-              </Box>
-            ) : null}
+            {helperTextLeft}
+            {helperTextRight}
           </Flex>
         </FormHelperText>
       )}

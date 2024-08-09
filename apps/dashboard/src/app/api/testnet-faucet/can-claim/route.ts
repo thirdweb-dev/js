@@ -51,7 +51,7 @@ export const GET = async (req: NextRequest) => {
   const ttlSeconds = await cacheTtl(cacheKey);
 
   const res: CanClaimResponseType = {
-    canClaim: ttlSeconds > 0,
+    canClaim: ttlSeconds <= 0,
     ttlSeconds,
     type: "throttle",
   };

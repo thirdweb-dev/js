@@ -44,7 +44,7 @@ export const CustomChainRenderer = ({
   const isSponsored = OPSponsoredChains.includes(chain.id);
 
   return (
-    <div className="flex w-full justify-start hover:bg-[#22232b] rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
+    <div className="flex w-full justify-start hover:bg-accent rounded-lg px-2 py-1 cursor-pointer min-h-[48px]">
       <div className="flex flex-1 items-center group">
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: FIXME */}
         <div

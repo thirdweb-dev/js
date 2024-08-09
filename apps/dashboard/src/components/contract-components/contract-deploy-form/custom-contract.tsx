@@ -1,4 +1,5 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
@@ -20,6 +21,8 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
+import { ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
@@ -39,6 +42,7 @@ import {
   useFunctionParamsFromABI,
   useTransactionsForDeploy,
 } from "../hooks";
+import { Fieldset } from "./common";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
 import {
   ModularContractDefaultExtensionsFieldset,
@@ -81,6 +85,21 @@ export type CustomContractDeploymentFormData = {
 
 export type CustomContractDeploymentForm =
   UseFormReturn<CustomContractDeploymentFormData>;
+
+const rewardParamsSet = new Set([
+  "_rewardToken",
+  "_stakingToken",
+  "_timeUnit",
+  "_rewardsPerUnitTime",
+]);
+
+const voteParamsSet = new Set([
+  "_token",
+  "_initialVotingDelay",
+  "_initialVotingPeriod",
+  "_initialProposalThreshold",
+  "_initialVoteQuorumFraction",
+]);
 
 const CustomContractForm: React.FC<CustomContractFormProps> = ({
   ipfsHash,
@@ -243,6 +262,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "_royaltyBps" in formDeployParams &&
     "_royaltyRecipient" in formDeployParams;
   const hasPrimarySale = "_saleRecipient" in formDeployParams;
+  const hasPrimarySaleRecipient = "_primarySaleRecipient" in formDeployParams;
   const hasPlatformFee =
     "_platformFeeBps" in formDeployParams &&
     "_platformFeeRecipient" in formDeployParams;
@@ -256,6 +276,17 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "_token" in formDeployParams;
   const hasTrustedForwarders = "_trustedForwarders" in formDeployParams;
 
+  const rewardDeployParams = Object.keys(formDeployParams).filter((paramKey) =>
+    rewardParamsSet.has(paramKey),
+  );
+
+  const voteDeployParams = Object.keys(formDeployParams).filter((paramKey) =>
+    voteParamsSet.has(paramKey),
+  );
+
+  const showRewardsSection = rewardDeployParams.length === rewardParamsSet.size;
+  const showVoteSection = voteDeployParams.length === voteParamsSet.size;
+
   const shouldHide = (paramKey: string) => {
     if (isAccountFactory) {
       return false;
@@ -268,6 +299,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       (hasRoyalty &&
         (paramKey === "_royaltyBps" || paramKey === "_royaltyRecipient")) ||
       (hasPrimarySale && paramKey === "_saleRecipient") ||
+      (hasPrimarySaleRecipient && paramKey === "_primarySaleRecipient") ||
+      (showRewardsSection && rewardParamsSet.has(paramKey)) ||
+      (showVoteSection && voteParamsSet.has(paramKey)) ||
       (hasPlatformFee &&
         (paramKey === "_platformFeeBps" ||
           paramKey === "_platformFeeRecipient")) ||
@@ -479,74 +513,133 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               />
             )}
 
-            {(hasRoyalty || hasPrimarySale || hasPlatformFee) && (
-              <fieldset>
-                <legend className="text-2xl font-semibold tracking-tight mb-3">
-                  Fee Distribution
-                </legend>
-                <div className="border rounded-lg border-border p-4 md:p-6 flex flex-col gap-6">
-                  {/* Primary Sale */}
-                  {hasPrimarySale && (
-                    <PrimarySaleFieldset
-                      isInvalid={
-                        !!form.getFieldState(
-                          "deployParams._saleRecipient",
-                          form.formState,
-                        ).error
-                      }
-                      register={form.register("deployParams._saleRecipient")}
-                      errorMessage={
-                        form.getFieldState(
-                          "deployParams._saleRecipient",
-                          form.formState,
-                        ).error?.message
-                      }
-                    />
-                  )}
-
-                  {/* Royalty */}
-                  {hasRoyalty && (
-                    <RoyaltyFieldset
-                      royaltyRecipient={{
-                        isInvalid: !!form.getFieldState(
-                          "deployParams._royaltyRecipient",
-                          form.formState,
-                        ).error,
-                        register: form.register(
-                          "deployParams._royaltyRecipient",
-                        ),
-                        errorMessage: form.getFieldState(
-                          "deployParams._royaltyRecipient",
-                          form.formState,
-                        ).error?.message,
-                      }}
-                      royaltyBps={{
-                        value: form.watch("deployParams._royaltyBps"),
-                        isInvalid: !!form.getFieldState(
-                          "deployParams._royaltyBps",
-                          form.formState,
-                        ).error,
-                        setValue: (v) => {
-                          form.setValue("deployParams._royaltyBps", v, {
-                            shouldTouch: true,
-                          });
-                        },
-                        errorMessage: form.getFieldState(
-                          "deployParams._royaltyBps",
-                          form.formState,
-                        ).error?.message,
-                      }}
-                    />
-                  )}
-
-                  {hasPlatformFee && <PlatformFeeFieldset form={form} />}
-                </div>
-              </fieldset>
+            {/* Primary Sale */}
+            {hasPrimarySale && (
+              <PrimarySaleFieldset
+                isInvalid={
+                  !!form.getFieldState(
+                    "deployParams._saleRecipient",
+                    form.formState,
+                  ).error
+                }
+                register={form.register("deployParams._saleRecipient")}
+                errorMessage={
+                  form.getFieldState(
+                    "deployParams._saleRecipient",
+                    form.formState,
+                  ).error?.message
+                }
+              />
             )}
+
+            {hasPrimarySaleRecipient && (
+              <PrimarySaleFieldset
+                isInvalid={
+                  !!form.getFieldState(
+                    "deployParams._primarySaleRecipient",
+                    form.formState,
+                  ).error
+                }
+                register={form.register("deployParams._primarySaleRecipient")}
+                errorMessage={
+                  form.getFieldState(
+                    "deployParams._primarySaleRecipient",
+                    form.formState,
+                  ).error?.message
+                }
+              />
+            )}
+
+            {/* Royalty */}
+            {hasRoyalty && (
+              <RoyaltyFieldset
+                royaltyRecipient={{
+                  isInvalid: !!form.getFieldState(
+                    "deployParams._royaltyRecipient",
+                    form.formState,
+                  ).error,
+                  register: form.register("deployParams._royaltyRecipient"),
+                  errorMessage: form.getFieldState(
+                    "deployParams._royaltyRecipient",
+                    form.formState,
+                  ).error?.message,
+                }}
+                royaltyBps={{
+                  value: form.watch("deployParams._royaltyBps"),
+                  isInvalid: !!form.getFieldState(
+                    "deployParams._royaltyBps",
+                    form.formState,
+                  ).error,
+                  setValue: (v) => {
+                    form.setValue("deployParams._royaltyBps", v, {
+                      shouldTouch: true,
+                    });
+                  },
+                  errorMessage: form.getFieldState(
+                    "deployParams._royaltyBps",
+                    form.formState,
+                  ).error?.message,
+                }}
+              />
+            )}
+
+            {hasPlatformFee && <PlatformFeeFieldset form={form} />}
 
             {isSplit && <SplitFieldset form={form} />}
 
             {hasTrustedForwarders && <TrustedForwardersFieldset form={form} />}
+
+            {/* for StakeERC721 */}
+            {showRewardsSection && (
+              <Fieldset legend="Reward Parameters">
+                <div className="flex flex-col gap-6">
+                  {rewardDeployParams.map((paramKey) => {
+                    const deployParam = deployParams.find(
+                      (p) => p.name === paramKey,
+                    );
+
+                    const contructorParams =
+                      fullPublishMetadata.data?.constructorParams || {};
+                    const extraMetadataParam = contructorParams[paramKey];
+
+                    return (
+                      <Param
+                        key={paramKey}
+                        paramKey={paramKey}
+                        deployParam={deployParam}
+                        extraMetadataParam={extraMetadataParam}
+                      />
+                    );
+                  })}
+                </div>
+              </Fieldset>
+            )}
+
+            {/* for Vote */}
+            {showVoteSection && (
+              <Fieldset legend="Voting Parameters">
+                <div className="flex flex-col gap-6">
+                  {voteDeployParams.map((paramKey) => {
+                    const deployParam = deployParams.find(
+                      (p) => p.name === paramKey,
+                    );
+
+                    const contructorParams =
+                      fullPublishMetadata.data?.constructorParams || {};
+                    const extraMetadataParam = contructorParams[paramKey];
+
+                    return (
+                      <Param
+                        key={paramKey}
+                        paramKey={paramKey}
+                        deployParam={deployParam}
+                        extraMetadataParam={extraMetadataParam}
+                      />
+                    );
+                  })}
+                </div>
+              </Fieldset>
+            )}
 
             {Object.keys(formDeployParams)
               .filter((paramName) => {
@@ -626,143 +719,157 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           </>
         )}
 
-        {fullPublishMetadata.data?.deployType === "standard" && (
-          <>
-            {/* Deterministic deploy */}
-            <CheckboxWithLabel>
-              <Checkbox
-                {...form.register("deployDeterministic")}
-                checked={form.watch("deployDeterministic")}
-                onCheckedChange={(c) =>
-                  form.setValue("deployDeterministic", !!c)
-                }
-              />
-              <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
-                <div className="inline-flex gap-1.5 items-center">
-                  <span className="tex-sm">
-                    Deploy at a deterministic address
-                  </span>
-                  <FiHelpCircle className="size-4" />
-                </div>
-              </ToolTipLabel>
-            </CheckboxWithLabel>
+        <Fieldset legend="Deploy Options">
+          <div className="flex flex-col gap-6">
+            {/* Chain */}
+            <FormControl isRequired>
+              <FormLabel>Chain</FormLabel>
 
-            {/*  Optional Salt Input */}
-            {isCreate2Deployment && (
-              <FormControl>
-                <Flex alignItems="center" my={1}>
-                  <FormLabel mb={0} flex="1" display="flex">
-                    <Flex alignItems="baseline" gap={1}>
-                      Optional Salt Input
-                      <Text size="label.sm">(saltForCreate2)</Text>
-                    </Flex>
-                  </FormLabel>
-                  <FormHelperText mt={0}>string</FormHelperText>
-                </Flex>
-                <SolidityInput
-                  defaultValue={""}
-                  solidityType={"string"}
-                  {...form.register("saltForCreate2")}
-                />
-                <div className="h-2" />
+              <p className="text-muted-foreground text-sm mb-3">
+                Select a network to deploy this contract on. We recommend
+                starting with a testnet.{" "}
+                <TrackedLinkTW
+                  href="/chainlist"
+                  category="deploy"
+                  label="chainlist"
+                  target="_blank"
+                  className="text-link-foreground hover:text-foreground"
+                >
+                  View all chains
+                </TrackedLinkTW>
+              </p>
+
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <NetworkSelectorButton
+                    isDisabled={
+                      isImplementationDeploy ||
+                      deploy.isLoading ||
+                      !compilerMetadata.isSuccess
+                    }
+                    onSwitchChain={(chain) => {
+                      onChainSelect(chain.chainId);
+                    }}
+                    networksEnabled={
+                      fullPublishMetadata.data?.name === "AccountFactory" ||
+                      fullPublishMetadata.data?.networksForDeployment
+                        ?.allNetworks ||
+                      !fullPublishMetadata.data?.networksForDeployment
+                        ? undefined
+                        : fullPublishMetadata.data?.networksForDeployment
+                            ?.networksEnabled
+                    }
+                  />
+
+                  <Button asChild variant="outline">
+                    <Link href="/chainlist" className="gap-2">
+                      View all chains <ExternalLinkIcon className="size-4" />
+                    </Link>
+                  </Button>
+                </div>
+
+                <DeprecatedAlert chain={networkInfo} />
+              </div>
+            </FormControl>
+
+            {fullPublishMetadata.data?.deployType === "standard" && (
+              <>
+                {/* Deterministic deploy */}
                 <CheckboxWithLabel>
                   <Checkbox
-                    {...form.register("signerAsSalt")}
-                    checked={form.watch("signerAsSalt")}
-                    onCheckedChange={(c) => form.setValue("signerAsSalt", !!c)}
+                    {...form.register("deployDeterministic")}
+                    checked={form.watch("deployDeterministic")}
+                    onCheckedChange={(c) =>
+                      form.setValue("deployDeterministic", !!c)
+                    }
                   />
-                  <span className="text-sm">
-                    Include deployer wallet address in salt (recommended)
-                  </span>
+                  <ToolTipLabel label="Allows having the same contract address on multiple chains. You can control the address by specifying a salt for create2 deployment below">
+                    <div className="inline-flex gap-1.5 items-center">
+                      <span className="tex-sm">
+                        Deploy at a deterministic address
+                      </span>
+                      <FiHelpCircle className="size-4" />
+                    </div>
+                  </ToolTipLabel>
                 </CheckboxWithLabel>
-              </FormControl>
+
+                {/*  Optional Salt Input */}
+                {isCreate2Deployment && (
+                  <FormControl>
+                    <Flex alignItems="center" my={1}>
+                      <FormLabel mb={0} flex="1" display="flex">
+                        <Flex alignItems="baseline" gap={1}>
+                          Optional Salt Input
+                          <Text size="label.sm">(saltForCreate2)</Text>
+                        </Flex>
+                      </FormLabel>
+                      <FormHelperText mt={0}>string</FormHelperText>
+                    </Flex>
+                    <SolidityInput
+                      defaultValue={""}
+                      solidityType={"string"}
+                      {...form.register("saltForCreate2")}
+                    />
+                    <div className="h-2" />
+                    <CheckboxWithLabel>
+                      <Checkbox
+                        {...form.register("signerAsSalt")}
+                        checked={form.watch("signerAsSalt")}
+                        onCheckedChange={(c) =>
+                          form.setValue("signerAsSalt", !!c)
+                        }
+                      />
+                      <span className="text-sm">
+                        Include deployer wallet address in salt (recommended)
+                      </span>
+                    </CheckboxWithLabel>
+                  </FormControl>
+                )}
+              </>
             )}
-          </>
-        )}
 
-        {/* Chain */}
-        <fieldset>
-          <legend className="text-2xl font-semibold tracking-tight mb-2">
-            Chain
-          </legend>
+            {/* Import Enable/Disable */}
+            <CheckboxWithLabel>
+              <Checkbox
+                {...form.register("addToDashboard")}
+                checked={form.watch("addToDashboard")}
+                onCheckedChange={(checked) =>
+                  form.setValue("addToDashboard", !!checked)
+                }
+              />
+              <span>
+                Import so I can find it in the list of my contracts at{" "}
+                <TrackedLinkTW
+                  className="text-link-foreground hover:text-foreground"
+                  href="/dashboard"
+                  target="_blank"
+                  category="custom-contract"
+                  label="visit-dashboard"
+                >
+                  /dashboard
+                </TrackedLinkTW>
+              </span>
+            </CheckboxWithLabel>
 
-          <p className="text-muted-foreground text-sm mb-3">
-            Select a network to deploy this contract on. We recommend starting
-            with a testnet.{" "}
-            <TrackedLinkTW
-              href="/chainlist"
-              category="deploy"
-              label="chainlist"
-              target="_blank"
-              className="text-link-foreground hover:text-foreground"
-            >
-              View all chains
-            </TrackedLinkTW>
-          </p>
-
-          <div className="flex flex-col gap-3">
-            <NetworkSelectorButton
-              isDisabled={
-                isImplementationDeploy ||
-                deploy.isLoading ||
-                !compilerMetadata.isSuccess
-              }
-              onSwitchChain={(chain) => {
-                onChainSelect(chain.chainId);
-              }}
-              networksEnabled={
-                fullPublishMetadata.data?.name === "AccountFactory" ||
-                fullPublishMetadata.data?.networksForDeployment?.allNetworks ||
-                !fullPublishMetadata.data?.networksForDeployment
-                  ? undefined
-                  : fullPublishMetadata.data?.networksForDeployment
-                      ?.networksEnabled
-              }
-            />
-
-            <DeprecatedAlert chain={networkInfo} />
+            {/* Depoy */}
+            <div className="flex md:justify-end">
+              <TransactionButton
+                onChainSelect={onChainSelect}
+                upsellTestnet
+                flexShrink={0}
+                type="submit"
+                form="custom-contract-form"
+                isLoading={deploy.isLoading}
+                isDisabled={!compilerMetadata.isSuccess || !selectedChain}
+                colorScheme="blue"
+                transactionCount={transactionCount}
+                className="w-full md:w-auto"
+              >
+                Deploy Now
+              </TransactionButton>
+            </div>
           </div>
-        </fieldset>
-
-        {/* Import Enable/Disable */}
-        <CheckboxWithLabel>
-          <Checkbox
-            {...form.register("addToDashboard")}
-            checked={form.watch("addToDashboard")}
-            onCheckedChange={(checked) =>
-              form.setValue("addToDashboard", !!checked)
-            }
-          />
-          <span>
-            Import so I can find it in the list of my contracts at{" "}
-            <TrackedLinkTW
-              className="text-link-foreground hover:text-foreground"
-              href="/dashboard"
-              target="_blank"
-              category="custom-contract"
-              label="visit-dashboard"
-            >
-              /dashboard
-            </TrackedLinkTW>
-          </span>
-        </CheckboxWithLabel>
-
-        {/* Depoy */}
-        <div className="flex justify-end">
-          <TransactionButton
-            onChainSelect={onChainSelect}
-            upsellTestnet
-            flexShrink={0}
-            type="submit"
-            form="custom-contract-form"
-            isLoading={deploy.isLoading}
-            isDisabled={!compilerMetadata.isSuccess || !selectedChain}
-            colorScheme="blue"
-            transactionCount={transactionCount}
-          >
-            Deploy Now
-          </TransactionButton>
-        </div>
+        </Fieldset>
       </Flex>
     </FormProvider>
   );
