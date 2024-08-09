@@ -8,7 +8,7 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline';
   font-src 'self';
   frame-src * data:;
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com pg.paper.xyz portal.usecontext.io;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com pg.paper.xyz portal.usecontext.io *.helpkit.so;
   connect-src * data: blob:;
   worker-src 'self' blob:;
   block-all-mixed-content;
