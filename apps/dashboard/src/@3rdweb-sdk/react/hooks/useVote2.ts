@@ -1,12 +1,18 @@
-import { useContract, useContractMetadata } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import type { Vote } from "@thirdweb-dev/sdk";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { type ThirdwebContract, getContract } from "thirdweb";
-import { delegate, delegates } from "thirdweb/extensions/erc20";
+import {
+  balanceOf,
+  decimals,
+  delegate,
+  delegates,
+} from "thirdweb/extensions/erc20";
 import {
   type VoteType,
   castVoteWithReason,
   hasVoted,
+  propose,
   token,
 } from "thirdweb/extensions/vote";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
@@ -90,31 +96,44 @@ export function useTokensDelegated(contract: ThirdwebContract) {
   );
 }
 
-export function useVoteTokenBalances(contract?: Vote, addresses?: string[]) {
-  const { data } = useContractMetadata(contract);
-  const tokenContract = useContract(
-    data?.voting_token_address,
-    "token",
-  ).contract;
-
+export function useVoteTokenBalances(
+  contract: ThirdwebContract,
+  addresses: string[],
+) {
   return useQueryWithNetwork(
-    voteKeys.balances(contract?.getAddress(), addresses),
-    async () => {
-      invariant(data, "contract metadata is required");
-      invariant(tokenContract, "voting contract is required");
-      invariant(addresses, "addresses are required");
-
-      const balances = addresses.map(async (address) => {
+    voteKeys.balances(contract.address, addresses),
+    async (): Promise<
+      Array<{ address: string; balance: bigint; decimals: number }>
+    > => {
+      invariant(addresses.length, "addresses are required");
+      const tokenAddress = await token({ contract });
+      if (!tokenAddress) {
+        throw new Error("Expected a delegated token address");
+      }
+      const tokenContract = getContract({
+        address: tokenAddress,
+        chain: contract.chain,
+        client: thirdwebClient,
+      });
+      const _decimals = await decimals({ contract: tokenContract });
+      const balanceData = await Promise.all(
+        addresses.map((address) =>
+          balanceOf({ contract: tokenContract, address }),
+        ),
+      );
+      const balances = addresses.map((address, index) => {
+        const balance = balanceData[index] || 0n;
         return {
           address,
-          balance: (await tokenContract.balanceOf(address)).displayValue,
+          balance,
+          decimals: _decimals,
         };
       });
 
       return await Promise.all(balances);
     },
     {
-      enabled: !!data && !!contract && !!addresses?.length,
+      enabled: addresses.length > 0,
     },
   );
 }
@@ -123,17 +142,29 @@ export interface IProposalInput {
   description: string;
 }
 
-export function useProposalCreateMutation(contractAddress?: string) {
-  const voteContract = useContract(contractAddress, "vote").contract;
+/**
+ * This hook is a simplified version meant to use on the Dashboard
+ * since _currently_ the dashboard only supports creating proposals with descriptions
+ *
+ * todo: make an extension in the SDK that is more robust and user-friendly ?
+ */
+export function useProposalCreateMutation(contract: ThirdwebContract) {
+  const { mutateAsync } = useSendAndConfirmTransaction();
   return useMutationWithInvalidate(
-    (proposal: IProposalInput) => {
-      invariant(voteContract, "contract is required");
+    async (proposal: IProposalInput) => {
       const { description } = proposal;
-      return voteContract.propose(description);
+      const transaction = propose({
+        contract,
+        description,
+        targets: [contract.address],
+        values: [0n],
+        calldatas: ["0x"],
+      });
+      return await mutateAsync(transaction);
     },
     {
       onSuccess: (_data, _options, _variables, invalidate) => {
-        return invalidate([voteKeys.proposals(contractAddress)]);
+        return invalidate([voteKeys.proposals(contract.address)]);
       },
     },
   );
@@ -201,6 +232,10 @@ export function useCastVoteMutation(
   );
 }
 
+/**
+ * This hook is a simplified version for the Dashboard
+ * It doesn't pass any extra info to the execute function
+ */
 export function useExecuteProposalMutation(
   contract: RequiredParam<Vote>,
   proposalId: string,
