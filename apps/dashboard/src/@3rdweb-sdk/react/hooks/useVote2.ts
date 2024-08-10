@@ -1,4 +1,3 @@
-import { useContract } from "@thirdweb-dev/react";
 import type { Vote } from "@thirdweb-dev/sdk";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { type ThirdwebContract, getContract } from "thirdweb";
@@ -10,7 +9,9 @@ import {
 } from "thirdweb/extensions/erc20";
 import {
   type VoteType,
+  canExecute,
   castVoteWithReason,
+  getAll,
   hasVoted,
   propose,
   token,
@@ -24,10 +25,10 @@ import {
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 
-export function useVoteProposalList(contract?: Vote) {
+export function useVoteProposalList(contract: ThirdwebContract) {
   return useQueryWithNetwork(
-    voteKeys.proposals(contract?.getAddress()),
-    async () => await contract?.getAll(),
+    voteKeys.proposals(contract.address),
+    async () => await getAll({ contract }),
     {
       enabled: !!contract,
     },
@@ -56,12 +57,12 @@ export function useHasVotedOnProposal(
 }
 
 export function useCanExecuteProposal(
-  contract: RequiredParam<Vote>,
-  proposalId: string,
+  contract: ThirdwebContract,
+  proposalId: bigint,
 ) {
   return useQueryWithNetwork(
-    voteKeys.canExecuteProposal(proposalId, contract?.getAddress()),
-    async () => await contract?.canExecute(proposalId),
+    voteKeys.canExecuteProposal(String(proposalId), contract.address),
+    async () => await canExecute({ contract, proposalId }),
     {
       enabled: !!contract,
     },
