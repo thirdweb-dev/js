@@ -1,0 +1,34 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "ThirdwebSigner | Thirdweb Unreal SDK",
+    description: "Manages smart wallet signers and permissions.",
+});
+
+# ThirdwebSigner
+
+This file defines the `FSigner` struct, which represents a signer in the context of a smart wallet within the Thirdweb SDK. The signer is responsible for signing transactions and managing the approval of targets and limits on native tokens.
+
+## Key Components
+
+### `FSigner`
+- A struct representing a signer associated with a smart wallet.
+- **Properties**:
+  - `Address`: The Ethereum address of the signer.
+  - `ApprovedTargets`: An array of approved contract addresses that the signer is allowed to interact with.
+  - `NativeTokenLimitPerTransaction`: The limit on the amount of native tokens (e.g., ETH) that can be spent per transaction.
+  - `StartTime`: The start time for the signer's permissions, specified as a `FDateTime`.
+  - `EndTime`: The end time for the signer's permissions, specified as a `FDateTime`.
+
+### Core Function
+
+- **`FromJson(const TSharedPtr<FJsonObject>& JsonObject)`**:
+  - Static function to create an `FSigner` instance from a JSON object.
+  - **Parameters**:
+    - `JsonObject`: The JSON object containing the signer's data.
+  - **Returns**: An `FSigner` instance populated with the data from the JSON object.
+
+## Internal Implementation Notes
+
+- The `FSigner` struct is used internally by the Thirdweb SDK to represent a signer with specific permissions and limits within a smart wallet. It leverages Unreal Engine's `FDateTime` for handling time-based permissions and uses JSON parsing to populate the signer data.

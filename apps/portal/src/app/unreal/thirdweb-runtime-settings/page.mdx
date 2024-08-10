@@ -1,0 +1,40 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "ThirdwebRuntimeSettings | Thirdweb Unreal SDK",
+    description: "Overview and configuration of the ThirdwebRuntimeSettings in the Thirdweb Unreal SDK.",
+});
+
+# ThirdwebRuntimeSettings
+
+This file defines the `UThirdwebRuntimeSettings` class, which provides configuration settings for the Thirdweb SDK within Unreal Engine. These settings are used by the SDK to manage essential information like client credentials and storage paths.
+
+## Key Components
+
+### `UThirdwebRuntimeSettings`
+- A class derived from `UDeveloperSettings`, responsible for storing and managing Thirdweb SDK configuration settings.
+- **Properties**:
+  - `ClientID`: The client ID used to authenticate with Thirdweb services.
+  - `BundleID`: The bundle ID associated with the application.
+  - `SecretKey`: A secret key used for secure interactions with Thirdweb.
+  - `StorageDirectoryPath`: The path where the SDK's data should be stored.
+
+### Configuration Requirements
+- Only `ClientID` and `BundleID` **or** `SecretKey` are required for authentication with Thirdweb services.
+- The `StorageDirectoryPath` can be left blank if no specific storage location is needed.
+
+### Core Function
+
+- **`Get()`**:
+  - Static function to retrieve the current `UThirdwebRuntimeSettings` instance.
+  - **Returns**: A pointer to the `UThirdwebRuntimeSettings` instance.
+
+## Internal Implementation Notes
+
+- The settings defined in this class are used internally by the `UThirdwebSubsystem` to interact with the Thirdweb services.
+- **Private Methods**:
+  - `GetClientID()`: Retrieves the client ID as a C-string.
+  - `GetBundleID()`: Retrieves the bundle ID as a C-string.
+  - `GetSecretKey()`: Retrieves the secret key as a C-string.
+  - `GetStorageDirectoryPath()`: Retrieves the storage directory path as a C-string.

@@ -1,0 +1,53 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "ThirdwebWalletHandle | Thirdweb Unreal SDK",
+    description: "Manages wallet handles and operations.",
+});
+
+# ThirdwebWalletHandle
+
+This file defines the `FWalletHandle` struct, which provides a unique handle for distinguishing different types of wallets in the Thirdweb SDK. It supports a variety of operations such as managing wallets, handling sessions, and interacting with smart contract wallets.
+
+## Key Components
+
+### `FWalletHandle`
+- A unique handle that distinguishes wallets.
+- **Key Types**:
+  - `InvalidHandle`: Represents an uninitialized or invalid handle.
+  - `PrivateKey`: Represents a private key wallet.
+  - `InApp`: Represents an in-app wallet.
+  - `Smart`: Represents a smart contract wallet.
+
+### Core Functions
+
+- **`IsValid()`**: Checks if the handle is valid.
+- **`Invalidate()`**: Clears the handle, making it invalid.
+- **`FromPrivateKey(PrivateKey)`**: Creates a private key wallet handle from a private key.
+- **`GeneratePrivateKey()`**: Generates a new private key wallet handle.
+- **`IsDeployed(bDeployed, Error)`**: Checks if the smart wallet is deployed.
+- **`IsConnected()`**: Checks if the wallet is connected to a session.
+- **`Disconnect()`**: Disconnects a wallet from a session.
+- **`ToAddress()`**: Retrieves the public address of the wallet.
+- **`VerifyOTP(OTP, CanRetry, Error)`**: Verifies an OTP for in-app wallets.
+- **`SendOTP(Error)`**: Sends an OTP for in-app wallets.
+- **`FetchOAuthLoginURL(RedirectUrl, LoginLink, Error)`**: Fetches the OAuth login URL for in-app wallets.
+- **`SignInWithOAuth(AuthResult, Error)`**: Signs in with OAuth for in-app wallets.
+- **`CreateSessionKey(Signer, ApprovedTargets, NativeTokenLimitPerTransactionInWei, PermissionStart, PermissionEnd, RequestValidityStart, RequestValidityEnd, TransactionHash, Error)`**: Creates a session key for a smart wallet.
+- **`RevokeSessionKey(Signer, Error)`**: Revokes a session key for a smart wallet.
+- **`GetAdmins(Admins, Error)`**: Retrieves the admins of a smart wallet.
+- **`AddAdmin(Signer, Error)`**: Adds an admin to a smart wallet.
+- **`RemoveAdmin(Signer, Error)`**: Removes an admin from a smart wallet.
+- **`GetActiveSigners(Signers, Error)`**: Retrieves the active signers of a smart wallet.
+- **`Sign(Message)`**: Signs a message with the wallet.
+
+## Utility Methods
+
+- **`operator==`**: Compares two wallet handles for equality.
+- **`operator!=`**: Compares two wallet handles for inequality.
+- **`ToString()`**: Returns a string representation of the wallet handle.
+
+## Internal Implementation Notes
+
+- The `FWalletHandle` struct interacts with the Thirdweb SDK through various functions, providing the core functionality for wallet management within the Unreal Engine environment.
