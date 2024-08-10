@@ -1,26 +1,16 @@
-import {
-  Box,
-  Container,
-  Flex,
-  List,
-  ListItem,
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import { Aurora } from "components/homepage/Aurora";
 import { LandingImages } from "components/landing-pages/card-with-image";
-import { LandingDesktopMobileImage } from "components/landing-pages/desktop-mobile-image";
-import { LandingFAQ } from "components/landing-pages/faq";
-import { LandingGridSection } from "components/landing-pages/grid-section";
-import { LandingIconSectionItem } from "components/landing-pages/icon-section-item";
 import { LandingSectionHeading } from "components/landing-pages/section-heading";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
-import { Heading, Text, TrackedLink, TrackedLinkButton } from "tw-components";
+import { Heading, Text, TrackedLinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import ThreeBoxLayout from "./three-box-layout";
 
 const TRACKING_CATEGORY = "startup-program";
 
@@ -96,7 +86,7 @@ const trustedCompanies = [
   },
 ];
 
-const faqs = [
+/* const faqs = [
   {
     title: "Who can join the thirdweb Startup Program?",
     description:
@@ -150,7 +140,7 @@ const faqs = [
     title: "How much is the Growth plan through the startup program?",
     description: "First 90 days free, $99 per month after credits expire.",
   },
-];
+]; */
 
 const partnersCompanies = [
   { maxWidth: "99px", src: require("../../../public/assets/partners/cpg.png") },
@@ -197,12 +187,46 @@ const partnersCompanies = [
   },
 ];
 
+const gradientSecond = {
+  src: require("../../../public/assets/startup-program/gradient-2.png"),
+  title: "We help you get in front of key industry partners, mentors & VCs.",
+  text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
+};
+
+const gradientThree = {
+  src: require("../../../public/assets/startup-program/gradient-3.png"),
+  title: "We help you get in front of key industry partners, mentors & VCs.",
+  text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
+};
+
+const gradientFive = {
+  src: require("../../../public/assets/startup-program/gradient-5.png"),
+  title: "We help you get in front of key industry partners, mentors & VCs.",
+  text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
+};
+
 const StartupProgram: ThirdwebNextPage = () => {
   return (
     <>
       <NextSeo {...SEO} />
       <HomepageTopNav />
+
       <Box mt="-180px" pt="100px" overflowX="hidden">
+        {/* Image placed on the top top */}
+        <Box position="absolute" top="0" left="0" zIndex="1">
+          <ChakraNextImage src={gradientSecond.src} alt="description" />
+        </Box>
+
+        {/* Gradient Box */}
+        <Box position="absolute" top="150px" right="0" zIndex="1">
+          <ChakraNextImage
+            src={gradientThree.src}
+            alt="description"
+            maxW="500px"
+            opacity={0.5}
+          />
+        </Box>
+
         <HomepageSection isOverflowXHidden>
           {/* top */}
           <Aurora
@@ -219,14 +243,6 @@ const StartupProgram: ThirdwebNextPage = () => {
             pt="50px"
             px="20px"
           >
-            <LandingDesktopMobileImage
-              image={require("../../../public/assets/landingpage/desktop/xl-logo.png")}
-              mobileImage={require("../../../public/assets/landingpage/mobile/xl-logo.png")}
-              alt="thirdweb"
-              maxW="279px"
-              w="full"
-            />
-
             <Heading
               fontSize={{ base: "48px", md: "80px" }}
               textAlign="center"
@@ -242,19 +258,9 @@ const StartupProgram: ThirdwebNextPage = () => {
                 color="white"
                 maxW="800px"
               >
-                At thirdweb, we&apos;re committed to ensuring that the next wave
-                of consumer applications can focus on creating excellent user
-                experiences with blockchain as a powerful backend tool, without
-                worrying about infrastructure or associated costs.
-              </Text>
-              <Text
-                textAlign="center"
-                size="body.xl"
-                color="white"
-                maxW="800px"
-              >
-                Our startup program is designed to help you build, scale, and
-                generate revenue.
+                We help web3 startups accelerate
+                <br />
+                their progress at every stage.
               </Text>
             </Flex>
 
@@ -285,50 +291,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             mt={{ base: "120px", md: "170px" }}
             mb={60}
           >
-            <LandingGridSection desktopColumns={3}>
-              <LandingIconSectionItem
-                icon={require("../../../public/assets/solutions-pages/loyalty/icon-7.png")}
-                title="GET BUILDING w/ THIRDWEB"
-                customDescription={
-                  <List listStyleType="inherit" ml="20px" opacity={0.7}>
-                    <ListItem>
-                      Free usage credits to scale powerful applications.
-                    </ListItem>
-                    <ListItem margin="4px 0">
-                      Experiment and scale risk-free.
-                    </ListItem>
-                    <ListItem>Best-in-class technical support.</ListItem>
-                  </List>
-                }
-              />
-              <LandingIconSectionItem
-                icon={require("../../../public/assets/solutions-pages/loyalty/icon-2.svg")}
-                title="BUILD WITH OTHERS"
-                customDescription={
-                  <List listStyleType="inherit" ml="20px" opacity={0.7}>
-                    <ListItem>Connect with like-minded founders.</ListItem>
-                    <ListItem margin="4px 0">
-                      Leverage our network and ecosystem.
-                    </ListItem>
-                    <ListItem>Build, share, and grow together.</ListItem>
-                  </List>
-                }
-              />
-              <LandingIconSectionItem
-                icon={require("../../../public/assets/solutions-pages/loyalty/icon-1.png")}
-                title="GET TAILORED ADVICE TO WIN"
-                customDescription={
-                  <List listStyleType="inherit" ml="20px" opacity={0.7}>
-                    <ListItem>
-                      Tactical advice from proven startup founders.
-                    </ListItem>
-                    <ListItem margin="4px 0">
-                      Tailored support for your startup&apos;s success.
-                    </ListItem>
-                  </List>
-                }
-              />
-            </LandingGridSection>
+            <ThreeBoxLayout />
 
             <LandingImages
               title={
@@ -385,9 +348,36 @@ const StartupProgram: ThirdwebNextPage = () => {
                   />
                 ))}
               </SimpleGrid>
+              <Box textAlign="center" mt="64px">
+                <Text
+                  textAlign="center"
+                  size="body.xl"
+                  color="white"
+                  maxW="800px"
+                >
+                  Are you a chain or an investor looking to get involved?
+                </Text>
+                <TrackedLinkButton
+                  py={6}
+                  px={8}
+                  bgColor="white"
+                  _hover={{
+                    bgColor: "white",
+                    opacity: 0.8,
+                  }}
+                  color="black"
+                  href="https://share.hsforms.com/1WCgMOvmuQqmCjdEqtu1NdAea58c"
+                  category={TRACKING_CATEGORY}
+                  label="apply"
+                  fontWeight="bold"
+                  mt="2rem"
+                >
+                  Contact us
+                </TrackedLinkButton>
+              </Box>
             </Flex>
 
-            <Flex flexDir="column" alignItems="center">
+            {/*   <Flex flexDir="column" alignItems="center">
               <LandingFAQ
                 hideMarginTop
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
@@ -395,9 +385,77 @@ const StartupProgram: ThirdwebNextPage = () => {
                 faqs={faqs}
                 titleSize="title.2xl"
               />
+            </Flex> */}
+
+            <Flex
+              flexDir="column"
+              alignItems="center"
+              mt={{ base: 20, md: 140 }}
+              width="100%"
+              px="20px"
+            >
+              <Heading
+                fontSize={{ base: "48px", md: "80px" }}
+                textAlign="center"
+              >
+                We put founders first.
+              </Heading>
+
+              <Flex
+                flexDir="column"
+                alignItems="center"
+                gap={8}
+                paddingTop={10}
+              >
+                <Text
+                  textAlign="center"
+                  size="body.xl"
+                  color="white"
+                  maxW="800px"
+                >
+                  The program is only for startups. We don&apos;t take any
+                  equity in your company. We don&apos;t take weeks/months to
+                  decide. We don&apos;t charge any fees. We don&apos;t tell you
+                  what to do. We don&apos;t require decks, business plans, or
+                  MBAs.
+                </Text>
+              </Flex>
+
+              <TrackedLinkButton
+                py={6}
+                px={8}
+                bgColor="white"
+                _hover={{
+                  bgColor: "white",
+                  opacity: 0.8,
+                }}
+                color="black"
+                href="https://share.hsforms.com/1WCgMOvmuQqmCjdEqtu1NdAea58c"
+                category={TRACKING_CATEGORY}
+                label="apply"
+                fontWeight="bold"
+                mt={46}
+              >
+                Apply Now
+              </TrackedLinkButton>
             </Flex>
+            {/* Gradient Box */}
+            <Box
+              position="absolute"
+              bottom="-250px"
+              left={{ base: 0, md: "250px" }}
+              zIndex="-1"
+            >
+              <ChakraNextImage
+                src={gradientFive.src}
+                alt="description"
+                maxW="600px"
+                opacity={0.6}
+              />
+            </Box>
           </Container>
         </HomepageSection>
+
         <HomepageFooter />
       </Box>
     </>
