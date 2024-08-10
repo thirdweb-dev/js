@@ -67,6 +67,14 @@ export { votingDelay } from "../../extensions/vote/__generated__/Vote/read/votin
 
 export { votingPeriod } from "../../extensions/vote/__generated__/Vote/read/votingPeriod.js";
 
+export { proposalExists } from "../../extensions/vote/read/proposalExists.js";
+
+export { VoteType } from "../../extensions/vote/types.js";
+
+export { getProposalVoteCounts } from "../../extensions/vote/read/getProposalVoteCounts.js";
+
+export { getAll } from "../../extensions/vote/read/getAll.js";
+
 /**
  * WRITE Methods
  */

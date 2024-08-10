@@ -1,9 +1,14 @@
 import { useContract, useContractMetadata } from "@thirdweb-dev/react";
-import type { Vote, VoteType } from "@thirdweb-dev/sdk";
+import type { Vote } from "@thirdweb-dev/sdk";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { type ThirdwebContract, getContract } from "thirdweb";
 import { delegate, delegates } from "thirdweb/extensions/erc20";
-import { hasVoted, token } from "thirdweb/extensions/vote";
+import {
+  type VoteType,
+  castVoteWithReason,
+  hasVoted,
+  token,
+} from "thirdweb/extensions/vote";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import type { RequiredParam } from "utils/types";
@@ -161,25 +166,35 @@ interface IVoteCast {
 }
 
 export function useCastVoteMutation(
-  contract: RequiredParam<Vote>,
-  proposalId: string,
+  contract: ThirdwebContract,
+  proposalId: bigint,
 ) {
   const address = useActiveAccount()?.address;
-  const contractAddress = contract?.getAddress();
-
+  const contractAddress = contract.address;
+  const { mutateAsync } = useSendAndConfirmTransaction();
   return useMutationWithInvalidate(
-    async (vote: IVoteCast) => {
+    async (voteItem: IVoteCast) => {
       invariant(contract, "contract is required");
       invariant(address, "address is required");
-      const { voteType, reason } = vote;
-      return contract.vote(proposalId, voteType, reason);
+      const { voteType, reason } = voteItem;
+      const transaction = castVoteWithReason({
+        contract,
+        proposalId,
+        support: voteType,
+        reason: reason ?? "",
+      });
+      return await mutateAsync(transaction);
     },
     {
       onSuccess: (_data, _options, _variables, invalidate) => {
         return invalidate([
           voteKeys.proposals(contractAddress),
-          voteKeys.userHasVotedOnProposal(proposalId, contractAddress, address),
-          voteKeys.canExecuteProposal(proposalId, contractAddress),
+          voteKeys.userHasVotedOnProposal(
+            String(proposalId),
+            contractAddress,
+            address,
+          ),
+          voteKeys.canExecuteProposal(String(proposalId), contractAddress),
         ]);
       },
     },
