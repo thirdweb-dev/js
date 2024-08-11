@@ -96,12 +96,6 @@ async function getChainsToRender(params: SearchParams) {
       // if the chain does not have all of the services in the filter, return false to filter it out
       if (
         !urlServiceArray.every((service) => {
-          // TODO improve this
-          // We don't have "faucet" added in services array, so for now we just check if it's testnet or not
-          if (service === "faucet") {
-            return chain.testnet;
-          }
-
           return chain.services.find((s) => s.enabled && s.service === service);
         })
       ) {
