@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.get_login_creds"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.thirdweb.demo",
+      "sha256_cert_fingerprints": [
+        "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c"
+      ]
+    }
+  }
+]
