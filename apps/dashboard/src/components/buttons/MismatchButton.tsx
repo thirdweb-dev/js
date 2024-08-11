@@ -277,9 +277,7 @@ function NoFundsDialogContent(props: {
             {props.chain.id === localhost.id ? (
               // localhost case
               <GetLocalHostTestnetFunds />
-            ) : chainWithServiceInfoQuery.data.services.find(
-                (x) => x.enabled && x.service === "faucet",
-              ) ? (
+            ) : chainWithServiceInfoQuery.data.testnet ? (
               // faucet case
               <GetFundsFromFaucet chain={chainWithServiceInfoQuery.data} />
             ) : chainWithServiceInfoQuery.data.services.find(
