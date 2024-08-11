@@ -24,44 +24,69 @@ import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 
-import type { ChainMetadataWithServices } from "./types/chain";
-
 // END TEMPORARY
+
+import type { ChainMetadata } from "thirdweb/chains";
+import type {
+  ChainMetadataWithServices,
+  ChainService,
+  ChainServices,
+} from "./types/chain";
 
 const THIRDWEB_API_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export async function getChains() {
-  const response = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
-    // revalidate every hour
-    { next: { revalidate: 60 * 60 } },
-  );
+  const [chains, chainServices] = await Promise.all([
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains`,
+      // revalidate every 60 minutes
+      { next: { revalidate: 60 * 60 } },
+    ).then((res) => res.json()) as Promise<{ data: ChainMetadata[] }>,
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains/services`,
+      // revalidate every 60 minutes
+      { next: { revalidate: 60 * 60 } },
+    ).then((res) => res.json()) as Promise<{
+      data: Record<number, Array<ChainService>>;
+    }>,
+  ]);
 
-  if (!response.ok) {
-    response.body?.cancel();
+  if (!chains.data.length) {
     throw new Error("Failed to fetch chains");
   }
-  return (await response.json()).data as ChainMetadataWithServices[];
+  return chains.data.map((c) => ({
+    ...c,
+    services: chainServices.data[c.chainId] || [],
+  })) satisfies ChainMetadataWithServices[];
 }
 
 export async function getChain(
   chainIdOrSlug: string,
 ): Promise<ChainMetadataWithServices> {
-  const res = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}?includeServices=true`,
-    // revalidate every 15 minutes
-    { next: { revalidate: 15 * 60 } },
-  );
+  const [chain, chainServices] = await Promise.all([
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}`,
+      // revalidate every 15 minutes
+      { next: { revalidate: 15 * 60 } },
+    ).then((res) => res.json()) as Promise<{ data: ChainMetadata }>,
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}/services`,
+      // revalidate every 15 minutes
+      { next: { revalidate: 15 * 60 } },
+    ).then((res) => res.json()) as Promise<{ data: ChainServices }>,
+  ]);
 
-  const result = await res.json();
-  if (!result.data) {
+  if (!chain.data) {
     redirect("/404");
   }
-  return result.data as ChainMetadataWithServices;
+  return {
+    ...chain.data,
+    services: chainServices.data.services,
+  } satisfies ChainMetadataWithServices;
 }
 
-type ChainMetadata = Partial<{
+type ExtraChainMetadata = Partial<{
   headerImgUrl: string;
   about: string;
   gasSponsored: boolean;
@@ -321,12 +346,12 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-} satisfies Record<number, ChainMetadata>;
+} satisfies Record<number, ExtraChainMetadata>;
 // END TEMPORARY
 
 export async function getChainMetadata(
   chainId: number,
-): Promise<ChainMetadata | null> {
+): Promise<ExtraChainMetadata | null> {
   // TODO: fetch this from the API
   if (chainId in chainMetaRecord) {
     return chainMetaRecord[chainId as keyof typeof chainMetaRecord];

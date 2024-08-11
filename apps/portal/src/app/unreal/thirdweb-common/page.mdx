@@ -1,0 +1,58 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "ThirdwebCommon | Thirdweb Unreal SDK",
+    description: "Common enums and utility functions.",
+});
+
+# ThirdwebCommon
+
+The `ThirdwebCommon` header file defines several common enums and utility functions that are used across the Thirdweb Unreal SDK. These enums represent various states and outcomes for operations related to wallets, smart contracts, and authentication providers.
+
+## Key Components
+
+### Enums
+
+#### `EFunctionResult`
+- Represents the result of a generic function call.
+  - `Success`: The operation completed successfully.
+  - `Failed`: The operation failed.
+
+#### `ESmartWalletDeployedFunctionResult`
+- Represents the deployment status of a smart wallet.
+  - `Deployed`: The smart wallet is deployed.
+  - `NotDeployed`: The smart wallet is not deployed.
+  - `Failed`: The check for deployment status failed.
+
+#### `EOTPVerificationFunctionResult`
+- Represents the result of an OTP (One-Time Password) verification.
+  - `Verified`: The OTP was successfully verified.
+  - `Retry`: The OTP verification failed, but can be retried.
+  - `Failed`: The OTP verification failed with no retry available.
+
+#### `EThirdwebOAuthProvider`
+- Represents the supported OAuth providers.
+  - `Google`: Represents Google as an OAuth provider.
+  - `Apple`: Represents Apple as an OAuth provider.
+  - `Facebook`: Represents Facebook as an OAuth provider.
+
+### Utility Functions
+
+- **`ToText(const EThirdwebOAuthProvider Provider)`**:
+  - Converts an `EThirdwebOAuthProvider` enum value to a localized `FText`.
+  - **Parameters**:
+    - `Provider`: The OAuth provider enum value.
+  - **Returns**: A localized `FText` representing the provider.
+
+- **`ToString(const EThirdwebOAuthProvider Provider)`**:
+  - Converts an `EThirdwebOAuthProvider` enum value to a `FString`.
+  - **Parameters**:
+    - `Provider`: The OAuth provider enum value.
+  - **Returns**: A `FString` representing the provider.
+
+## Internal Implementation Notes
+
+- The `LOCTEXT_NAMESPACE` macro is used to define the localization context for the text related to OAuth providers.
+- The `ToText` function utilizes a static `TMap` to map the `EThirdwebOAuthProvider` enum values to their corresponding `FText` representations.
+

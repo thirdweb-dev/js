@@ -1,0 +1,70 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "ThirdwebSubsystem | Thirdweb Unreal SDK",
+    description: "Core SDK integration and wallet management.",
+});
+
+# ThirdwebSubsystem
+
+This file provides the core integration of the Thirdweb SDK within the Unreal Engine as a game instance subsystem.
+
+It should not be used directly but through the plugin's Blueprint functions or other higher-level abstractions provided by the Thirdweb Unreal SDK.
+
+## Subsystem Overview
+
+The `UThirdwebSubsystem` class, derived from `UGameInstanceSubsystem`, manages the initialization and deinitialization of Thirdweb components and provides various functions to interact with in-app wallets and smart wallets.
+
+### Key Components
+
+- **`Initialize(FSubsystemCollectionBase& Collection)`**: Initializes the subsystem and sets up the necessary components, such as runtime settings.
+- **`Deinitialize()`**: Cleans up the subsystem when it's no longer needed.
+
+## Wallet Management Functions
+
+### In-App Wallet Functions
+
+- **`BP_CreateInAppEmailWallet(const FString& Email, FWalletHandle& Wallet, FString& Error)`**:
+  - Blueprint callable function to create an in-app email wallet.
+  - **Parameters**:
+    - `Email`: The email address associated with the wallet.
+    - `Wallet`: The resulting wallet handle.
+    - `Error`: Output error message, if any.
+  - **Return Value**: `EFunctionResult` indicating success or failure.
+  
+- **`BP_CreateInAppOAuthWallet(const EThirdwebOAuthProvider Provider, FWalletHandle& Wallet, FString& Error)`**:
+  - Blueprint callable function to create an in-app OAuth wallet.
+  - **Parameters**:
+    - `Provider`: The OAuth provider used for authentication.
+    - `Wallet`: The resulting wallet handle.
+    - `Error`: Output error message, if any.
+  - **Return Value**: `EFunctionResult` indicating success or failure.
+
+### Smart Wallet Functions
+
+- **`BP_CreateSmartWallet(const FWalletHandle& PersonalWallet, FWalletHandle& SmartWallet, FString& Error, const int64 ChainID, const bool bGasless = true, const FString& Factory = "", const FString& AccountOverride = "")`**:
+  - Blueprint callable function to create a smart wallet.
+  - **Parameters**:
+    - `PersonalWallet`: The personal wallet handle used to create the smart wallet.
+    - `SmartWallet`: The resulting smart wallet handle.
+    - `Error`: Output error message, if any.
+    - `ChainID`: The blockchain chain ID.
+    - `bGasless`: Whether the smart wallet transactions should be gasless.
+    - `Factory`: Optional smart wallet factory address.
+    - `AccountOverride`: Optional account override.
+  - **Return Value**: `EFunctionResult` indicating success or failure.
+
+## Static Subsystem Access
+
+- **`Get(const UObject* WorldContextObject)`**:
+  - Static accessor function to retrieve the `UThirdwebSubsystem` instance for the current game instance.
+  - **Parameters**:
+    - `WorldContextObject`: The context object from which to retrieve the game instance.
+  - **Return Value**: Pointer to `UThirdwebSubsystem` instance.
+
+## Internal Implementation Notes
+
+- The subsystem leverages `Thirdweb::create_in_app_wallet` and `Thirdweb::create_smart_wallet` to interact with the underlying Thirdweb SDK.
+- **Property**: `Settings` - Contains runtime settings required for creating wallets.
+- **Property**: `AuthEvent`, `OAuthResult`, `OAuthLoginUrl`, etc. - Used internally to manage authentication and OAuth processes.
