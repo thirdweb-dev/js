@@ -580,7 +580,7 @@
   "devDependencies": {
     "@aws-sdk/client-secrets-manager": "^3.549.0",
     "@babel/plugin-transform-class-properties": "^7.24.1",
-    "@babel/plugin-transform-flow-strip-types": "^7.24.1",
+    "@babel/plugin-transform-flow-strip-types": "^7.24.7",
     "@babel/plugin-transform-private-methods": "^7.24.7",
     "@microsoft/api-extractor": "^7.47.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",

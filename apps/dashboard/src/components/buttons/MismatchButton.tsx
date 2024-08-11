@@ -28,7 +28,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useSDK, useSDKChainId } from "@thirdweb-dev/react";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
-import type { ChainMetadataWithServices } from "app/(dashboard)/(chain)/types/chain";
+import type {
+  ChainMetadataWithServices,
+  ChainServices,
+} from "app/(dashboard)/(chain)/types/chain";
 import { getSDKTheme } from "app/components/sdk-component-theme";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -229,20 +232,23 @@ function NoFundsDialogContent(props: {
   onCloseModal: () => void;
 }) {
   const chainWithServiceInfoQuery = useQuery({
-    queryKey: ["chain", props.chain.id],
+    queryKey: ["chain-with-services", props.chain.id],
     queryFn: async () => {
-      const res = await fetch(
-        `${THIRDWEB_API_HOST}/v1/chains/${props.chain.id}?includeServices=true`,
-      );
+      const [chain, chainServices] = await Promise.all([
+        fetch(`${THIRDWEB_API_HOST}/v1/chains/${props.chain.id}`).then((res) =>
+          res.json(),
+        ) as Promise<{ data: ChainMetadata }>,
+        fetch(`${THIRDWEB_API_HOST}/v1/chains/${props.chain.id}/services`).then(
+          (res) => res.json(),
+        ) as Promise<{ data: ChainServices }>,
+      ]);
 
-      const result = await res.json();
-
-      if (!result.data) {
-        throw new Error("Failed to fetch chain metadata with services");
-      }
-
-      return result.data as ChainMetadataWithServices;
+      return {
+        ...chain.data,
+        services: chainServices.data.services,
+      } satisfies ChainMetadataWithServices;
     },
+    enabled: !!props.chain.id,
   });
 
   return (
@@ -261,22 +267,25 @@ function NoFundsDialogContent(props: {
         </DialogHeader>
 
         {/* Get Funds content */}
+
         {!chainWithServiceInfoQuery.data ? (
           <div className="h-[300px] flex justify-center items-center">
             <Spinner className="size-10" />
           </div>
         ) : (
           <div>
-            {props.chain.id === localhost.id && <GetLocalHostTestnetFunds />}
-
-            {props.chain.id !== localhost.id &&
-              chainWithServiceInfoQuery.data.testnet && (
-                <GetFundsFromFaucet chain={chainWithServiceInfoQuery.data} />
-              )}
-
-            {chainWithServiceInfoQuery.data.services.find(
-              (x) => x.enabled && x.service === "pay",
-            ) && (
+            {props.chain.id === localhost.id ? (
+              // localhost case
+              <GetLocalHostTestnetFunds />
+            ) : chainWithServiceInfoQuery.data.services.find(
+                (x) => x.enabled && x.service === "faucet",
+              ) ? (
+              // faucet case
+              <GetFundsFromFaucet chain={chainWithServiceInfoQuery.data} />
+            ) : chainWithServiceInfoQuery.data.services.find(
+                (x) => x.enabled && x.service === "pay",
+              ) ? (
+              // pay case
               <ButtonShadcn
                 variant="primary"
                 className="w-full"
@@ -284,7 +293,8 @@ function NoFundsDialogContent(props: {
               >
                 Buy Funds
               </ButtonShadcn>
-            )}
+            ) : // no funds options available
+            null}
           </div>
         )}
       </div>
