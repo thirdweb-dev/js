@@ -34,6 +34,14 @@ export { totalReleased } from "../../extensions/split/__generated__/Split/read/t
 
 export { totalReleasedByToken } from "../../extensions/split/read/totalReleasedByToken.js";
 
+export { getAllRecipientsAddresses } from "../../extensions/split/read/getAllRecipientsAddresses.js";
+
+export { getAllRecipientsPercentages } from "../../extensions/split/read/getAllRecipientsPercentages.js";
+
+export {
+  getRecipientSplitPercentage,
+  type SplitRecipient,
+} from "../../extensions/split/read/getRecipientSplitPercentage.js";
 /**
  * WRITE
  */
