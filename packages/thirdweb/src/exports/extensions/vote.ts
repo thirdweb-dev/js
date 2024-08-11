@@ -137,3 +137,4 @@ export {
   updateQuorumNumerator,
   type UpdateQuorumNumeratorParams,
 } from "../../extensions/vote/__generated__/Vote/write/updateQuorumNumerator.js";
+export { executeProposal } from "../../extensions/vote/write/executeProposal.js";
