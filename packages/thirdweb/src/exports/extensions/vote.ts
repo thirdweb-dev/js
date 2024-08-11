@@ -75,6 +75,8 @@ export { getProposalVoteCounts } from "../../extensions/vote/read/getProposalVot
 
 export { getAll } from "../../extensions/vote/read/getAll.js";
 
+export { canExecute } from "../../extensions/vote/read/canExecute.js";
+
 /**
  * WRITE Methods
  */
