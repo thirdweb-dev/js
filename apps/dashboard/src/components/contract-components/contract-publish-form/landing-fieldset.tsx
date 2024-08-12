@@ -11,7 +11,6 @@ import {
   Tabs,
   Textarea,
 } from "@chakra-ui/react";
-import type { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
 import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -30,6 +29,24 @@ import {
 } from "tw-components";
 import { MarkdownRenderer } from "../published-contract/markdown-renderer";
 import { ExternalLinksFieldset } from "./external-links-fieldset";
+
+type ExtraPublishMetadata = {
+  version: string;
+  displayName?: string | undefined;
+  description?: string | undefined;
+  externalLinks?:
+    | {
+        name: string;
+        url: string;
+      }[]
+    | undefined;
+  readme?: string | undefined;
+  license?: string | undefined;
+  logo?: string | File;
+  changelog?: string;
+  audit?: string | null;
+  deployType?: "standard" | "autoFactory" | "customFactory";
+};
 
 interface LandingFieldsetProps {
   latestVersion: string | undefined;
