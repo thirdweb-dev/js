@@ -188,46 +188,6 @@ export type {
   PayTokenInfo,
 } from "../pay/utils/commonTypes.js";
 
-/**
- * CHAINSAW
- */
-export {
-  getTransactions,
-  type GetTransactionsResult,
-  type GetTransactionsParams,
-} from "../chainsaw/endpoints/getTransactions.js";
-
-export {
-  getNFTsByOwner,
-  type GetNFTsByOwnerParams,
-  type GetNFTsByOwnerResult,
-} from "../chainsaw/endpoints/getNFTsByOwner.js";
-
-export {
-  getNFTsByCollection,
-  type GetNFTsByCollectionParams,
-  type GetNFTsByCollectionResult,
-} from "../chainsaw/endpoints/getNFTsByCollection.js";
-
-export {
-  getBlock,
-  type GetBlockParams,
-} from "../chainsaw/endpoints/getBlock.js";
-
-export {
-  getEvents,
-  type GetEventsParams,
-  type GetEventsGroupBy,
-  type GetEventsInterval,
-  type GetEventsResult,
-} from "../chainsaw/endpoints/getEvents.js";
-
-export {
-  getLatestBlockNumber,
-  type GetLatestBlockNumberParams,
-} from "../chainsaw/endpoints/getLatestBlockNumber.js";
-
-export type { ChainsawPagingParams } from "../chainsaw/types.js";
 
 // ------------------------------------------------
 // encoding
@@ -323,3 +283,35 @@ export {
   type VerifyTypedDataParams,
   verifyTypedData,
 } from "../auth/verify-typed-data.js";
+
+// ------------------------------------------------
+// Indexer
+// ------------------------------------------------
+export {
+  getBlock,
+  type GetBlockParams,
+} from "../indexer/endpoints/getBlock.js";
+export {
+  getEvents,
+  type GetEventsParams,
+  type GetEventsInterval,
+  type GetEventsGroupBy,
+} from "../indexer/endpoints/getEvents.js";
+export {
+  getLatestBlockNumber,
+  type GetLatestBlockNumberParams,
+} from "../indexer/endpoints/getLatestBlockNumber.js";
+export {
+  getNFTsByCollection,
+  type GetNFTsByCollectionParams,
+  type GetNFTsGroupBy,
+} from "../indexer/endpoints/getNFTsByCollection.js";
+export {
+  getNFTsByOwner,
+  type GetNFTsByOwnerParams,
+} from "../indexer/endpoints/getNFTsByOwner.js";
+export {
+  getTransactions,
+  type GetTransactionsParams,
+} from "../indexer/endpoints/getTransactions.js";
+

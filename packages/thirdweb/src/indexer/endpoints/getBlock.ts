@@ -4,6 +4,7 @@ import { getClientFetch } from "../../utils/fetch.js";
 import { formatChainsawBlock } from "../formatter.js";
 import type { ChainsawInternalBlock, ChainsawResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
+import type { Chain } from "../../chains/types.js";
 
 export type GetBlockParams = {
   /**
@@ -19,9 +20,9 @@ export type GetBlockParams = {
    */
   blockNumber: bigint;
   /**
-   * Chain ID of the block
+   * Chain the block can be found on
    */
-  chainId: number;
+  chain: Chain;
 };
 
 export type GetBlockResult<TBlockTag extends BlockTag = "latest"> = {
@@ -38,14 +39,13 @@ export type GetBlockResult<TBlockTag extends BlockTag = "latest"> = {
  *
  * @example
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
- * import { getBlock } from "thirdweb/chainsaw";
+ * import { createThirdwebClient, getBlock, defineChain } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const { block } = await getBlock({
  *  client,
  *  blockNumber: 9662167n,
- *  chainId: 1
+ *  chain: defineChain(1)
  * });
  * ```
  * @chainsaw
@@ -55,7 +55,7 @@ export async function getBlock(
 ): Promise<GetBlockResult> {
   try {
     const url = getBlockEndpoint(params.blockNumber);
-    url.searchParams.append("chainId", params.chainId.toString());
+    url.searchParams.append("chainId", params.chain.id.toString());
 
     const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
