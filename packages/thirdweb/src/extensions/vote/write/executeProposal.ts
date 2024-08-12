@@ -7,13 +7,15 @@ import { proposalExists } from "../read/proposalExists.js";
 
 /**
  * Execute a Proposal
- * @extension VOTEA prepared transaction for the `execute` method
+ * @extension VOTEA
+ * @returns a prepared transaction for the `execute` method
  *
  * @example
  * ```ts
  * import { executeProposal } from "thirdweb/extensions/vote";
  *
  * const transaction = await executeProposal({ contract, proposalId });
+ * const tx = await sendTransaction({ transaction, account });
  * ```
  */
 export async function executeProposal(

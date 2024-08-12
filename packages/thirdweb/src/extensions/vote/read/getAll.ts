@@ -7,6 +7,13 @@ import { getProposalVoteCounts } from "./getProposalVoteCounts.js";
  * Get all proposals from a Vote contract with some extra info attached for each proposal (current state and votes)
  * @extension VOTE
  * @returns An array containing proposals data
+ *
+ * @example
+ * ```ts
+ * import { getAll } from "thirdweb/extension/getAll";
+ *
+ * const allProposals = await getAll({ contract });
+ * ```
  */
 export async function getAll(options: BaseTransactionOptions) {
   const _proposals = await getAllProposals(options);

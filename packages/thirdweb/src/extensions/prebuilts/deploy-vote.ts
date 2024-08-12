@@ -6,34 +6,40 @@ import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import { initialize } from "./__generated__/Split/write/initialize.js";
+import { initialize } from "./__generated__/VoteERC20/write/initialize.js";
 
 /**
  * @extension PREBUILT
  */
-export type SplitContractParams = {
+export type VoteContractParams = {
   name: string;
-
   /**
-   * An array of strings containing wallet addresses of the recipients
-   * For example:
-   * ```ts
-   * ["0x...123", "0x...456"]
-   * ```
+   * The contract address for the ERC20 that will be used as voting power
    */
-  payees: string[];
+  token: string;
   /**
-   * An array of bigints containing the shared percentages of each respective payees.
-   * Must have the same length as `payees`
-   * @example
-   * ```ts
-   * [
-   *   5100n, // 51%
-   *   4900n, // 49%
-   * ]
-   * ```
+   * The number of blocks after a proposal is created that voting on the proposal starts.
+   * A block is a series of blockchain transactions and occurs every ~1 seconds.
+   * Block time is different across EVM networks
+   *
+   * Defaults to 0 (zero)
    */
-  shares: bigint[];
+  initialVotingDelay?: bigint;
+  /**
+   * The number of blocks that voters have to vote on any new proposal.
+   */
+  initialVotingPeriod: bigint;
+  /**
+   * The minimum number of voting tokens a wallet needs in order to create proposals.
+   */
+  initialProposalThreshold: bigint;
+  /**
+   * The fraction of the total voting power that is required for a proposal to pass.
+   * A value of 0 indicates that no voting power is sufficient,
+   * whereas a value of 100 indicates that the entirety of voting power must vote for a proposal to pass.
+   */
+  initialVoteQuorumFraction: bigint;
+  // === irrelevant === //
   description?: string;
   image?: FileOrBufferOrString;
   external_link?: string;
@@ -47,14 +53,14 @@ export type SplitContractParams = {
 /**
  * @extension DEPLOY
  */
-export type DeploySplitContractOptions = Prettify<
+export type DeployVoteContractOptions = Prettify<
   ClientAndChainAndAccount & {
-    params: SplitContractParams;
+    params: VoteContractParams;
   }
 >;
 
 /**
- * Deploys a thirdweb [`Split contract`](https://thirdweb.com/thirdweb.eth/Split)
+ * Deploys a thirdweb [`VoteERC20 contract`](https://thirdweb.com/thirdweb.eth/VoteERC20)
  * On chains where the thirdweb infrastructure contracts are not deployed, this function will deploy them as well.
  * @param options - The deployment options.
  * @returns The deployed contract address.
@@ -62,27 +68,28 @@ export type DeploySplitContractOptions = Prettify<
  *
  * @example
  * ```ts
- * import { deploySplitContract } from "thirdweb/deploys";
- * const contractAddress = await deploySplitContract({
+ * import { deployVoteContract } from "thirdweb/deploys";
+ * const contractAddress = await deployVoteContract({
  *  chain,
  *  client,
  *  account,
  *  params: {
- *    name: "Split contract",
- *    payees: ["0x...123", "0x...456"],
- *    shares: [5100, 4900], // See type `SplitContractParams` for more context
- *  },
+ *    token: "0x...",
+ *    initialProposalThreshold: 1n, // user needs 1 <token> to vote
+ *    initialVotingPeriod: 10n, // vote expires 10 blocks later
+ *    initialVoteQuorumFraction: 12n,
+ *  }
  * });
  * ```
  */
-export async function deploySplitContract(options: DeploySplitContractOptions) {
+export async function deployVoteContract(options: DeployVoteContractOptions) {
   const { chain, client, account, params } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
       client,
       account,
-      contractId: "Split",
+      contractId: "VoteERC20",
       constructorParams: [],
     });
   const initializeTransaction = await getInitializeTransaction({
@@ -104,19 +111,22 @@ export async function deploySplitContract(options: DeploySplitContractOptions) {
 async function getInitializeTransaction(options: {
   client: ThirdwebClient;
   implementationContract: ThirdwebContract;
-  params: SplitContractParams;
+  params: VoteContractParams;
   accountAddress: string;
 }) {
-  const { client, implementationContract, params, accountAddress } = options;
+  const { client, implementationContract, params } = options;
   const {
     name,
+    token,
+    initialProposalThreshold,
+    initialVoteQuorumFraction,
+    initialVotingDelay,
+    initialVotingPeriod,
     description,
     symbol,
     image,
     external_link,
     social_urls,
-    payees,
-    shares,
   } = params;
   const contractURI =
     params.contractURI ||
@@ -136,10 +146,13 @@ async function getInitializeTransaction(options: {
     "";
   return initialize({
     contract: implementationContract,
-    defaultAdmin: params.defaultAdmin || accountAddress,
+    name,
+    token,
+    initialProposalThreshold,
+    initialVoteQuorumFraction,
+    initialVotingDelay: initialVotingDelay || 0n,
+    initialVotingPeriod,
     contractURI,
     trustedForwarders: params.trustedForwarders || [],
-    payees,
-    shares,
   });
 }
