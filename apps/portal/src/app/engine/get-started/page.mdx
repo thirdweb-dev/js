@@ -33,6 +33,14 @@ Blockchain **write** calls (e.g. transfer tokens) are asynchronous:
 	className="max-w-[800px] mx-auto"
 />
 
+## Learn what each transaction status means
+
+- **Queued**: The transaction was received by Engine and waiting in the transaction queue.
+- **Sent**: The transaction was successfully sent to RPC.
+- **Mined**: The transaction was successfully mined onchain.
+- **Cancelled**: The transaction was cancelled by the user.
+- **Errored**: The transaction failed to be sent to RPC or to the chain's nodes. This can happen for many reasons (malformed transaction, failed simulation, too low gas).
+
 ## Manage Engine from the dashboard
 
 <Callout variant='info' title="Check if Engine is set up">
