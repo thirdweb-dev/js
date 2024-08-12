@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { TEST_CLIENT } from "~test/test-clients.js";
 import { defineChain } from "../../chains/utils.js";
 import { getBlock } from "./getBlock.js";
-import { TEST_CLIENT } from "~test/test-clients.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getBlock", () => {
   it("gets block", async () => {

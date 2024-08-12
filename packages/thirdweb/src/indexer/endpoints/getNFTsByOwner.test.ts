@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { defineChain } from "../../chains/utils.js";
 import { createThirdwebClient } from "../../client/client.js";
 import { getNFTsByOwner } from "./getNFTsByOwner.js";
 
@@ -11,8 +12,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
     const ownerAddress = "0x29FFD91a3efe09504b0b3404cf15c133a5b8b19c";
     const { nfts } = await getNFTsByOwner({
       client,
-      chainIds: [252],
-      ownerAddresses: [ownerAddress],
+      chain: defineChain(252),
+      ownerAddress: ownerAddress,
     });
     for (const nft of nfts) {
       expect(nft.id).toBeTypeOf("bigint");
@@ -36,8 +37,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
     await expect(
       getNFTsByOwner({
         client,
-        chainIds: [12312],
-        ownerAddresses: [ownerAddress],
+        chain: defineChain(12312),
+        ownerAddress: ownerAddress,
       }),
     ).rejects.toThrow("Fetch failed");
   });

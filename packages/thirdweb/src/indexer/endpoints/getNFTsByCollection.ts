@@ -1,5 +1,5 @@
-import type { ThirdwebContract } from "../../contract/contract.js";
 import type { ThirdwebClient } from "../../client/client.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { NFT } from "../../utils/nft/parseNft.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -27,7 +27,7 @@ export type GetNFTsByCollectionParams = Prettify<
     /**
      * NFT collection contract
      */
-    contract: ThirdwebContract
+    contract: ThirdwebContract;
     /**
      * Parameters to group results count by. Currently supports "ownerAddress"
      */

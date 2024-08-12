@@ -1,5 +1,5 @@
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { NFT } from "../../utils/nft/parseNft.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -23,13 +23,13 @@ export type GetNFTsByOwnerParams = Prettify<
      */
     client: ThirdwebClient;
     /**
-     * Addresses of the NFT owners
+     * Address of the NFT owner
      */
-    ownerAddresses: Address[];
+    ownerAddress: string;
     /**
-     * Chain IDs to search from
+     * Chain to search from
      */
-    chainIds?: number[];
+    chain?: Chain;
   } & ChainsawPagingParams
 >;
 
@@ -41,21 +41,19 @@ export type GetNFTsByOwnerResult = {
 /**
  * @beta
  *
- * Get NFTs by owner address(es)
+ * Get NFTs by owner address
  *
  * @param {GetNFTsByOwnerParams} params
  * @returns {Promise<GetNFTsByOwnerResult>}
  *
  * @example
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
- * import { getNFTsByOwner } from "thirdweb/chainsaw";
+ * import { createThirdwebClient, getNFTsByOwnert } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const nfts = await getNFTsByOwner({
  *  client,
- *  ownerAddresses: ["0x..."],
- *  chainIds: [1],
+ *  ownerAddress: "0x...",
  *  pageSize: 20,
  *  page: 1
  * });
@@ -88,11 +86,9 @@ export async function getNFTsByOwner(
 
 function getEndpointUrl(params: GetNFTsByOwnerParams): URL {
   const url = getNftsByOwnerEndpoint();
-  for (const ownerAddress of params.ownerAddresses) {
-    url.searchParams.append("ownerAddresses[]", ownerAddress);
-  }
-  for (const chainId of params.chainIds || []) {
-    url.searchParams.append("chainIds[]", chainId.toString());
+  url.searchParams.append("ownerAddress", params.ownerAddress);
+  if (params.chain) {
+    url.searchParams.append("chainId", params.chain?.id.toString());
   }
   return addRequestPagination(url, params);
 }

@@ -51,11 +51,11 @@ export type GetEventsParams = Prettify<
 export type GetEventsResult = {
   events: Prettify<
     Log &
-    DecodeEventLogReturnType & {
-      chainId?: number;
-      count: bigint;
-      time?: Date;
-    }
+      DecodeEventLogReturnType & {
+        chainId?: number;
+        count: bigint;
+        time?: Date;
+      }
   >[];
   page?: number;
 };

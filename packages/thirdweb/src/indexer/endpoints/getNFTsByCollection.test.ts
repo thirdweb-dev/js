@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { getNFTsByCollection } from "./getNFTsByCollection.js";
-import { getContract } from "src/contract/contract.js";
 import { defineChain } from "src/chains/utils.js";
+import { getContract } from "src/contract/contract.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { getNFTsByCollection } from "./getNFTsByCollection.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "chainsaw.getNFTsByCollection",
@@ -13,12 +13,12 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const contract = getContract({
         client: TEST_CLIENT,
         chain: defineChain(252),
-        address: contractAddress
+        address: contractAddress,
       });
 
       const { nfts } = await getNFTsByCollection({
         client: TEST_CLIENT,
-        contract
+        contract,
       });
 
       for (const nft of nfts) {
@@ -45,13 +45,13 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       const contract = getContract({
         client: TEST_CLIENT,
         address: contractAddress,
-        chain: defineChain(12312)
+        chain: defineChain(12312),
       });
 
       await expect(
         getNFTsByCollection({
           client: TEST_CLIENT,
-          contract
+          contract,
         }),
       ).rejects.toThrow("Fetch failed");
     });
