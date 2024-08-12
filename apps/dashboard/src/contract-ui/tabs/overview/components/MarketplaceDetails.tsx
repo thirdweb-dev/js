@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { ListingStatsV3 } from "contract-ui/tabs/listings/components/listing-stats";
 import { useTabHref } from "contract-ui/utils";
-import { BigNumber } from "ethers";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import {
@@ -82,7 +81,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
   const listingsQuery = useReadContract(getAllListings, {
     contract,
     count: 3n,
-    start: Math.max(BigNumber.from(countQuery?.data || 3)?.toNumber() - 3, 0),
+    start: Math.max(Number(countQuery?.data || 3n) - 3, 0),
   });
   const listings = useMemo(
     () =>
@@ -97,7 +96,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
     [listingsQuery?.data],
   );
 
-  if (!countQuery.isLoading && BigNumber.from(countQuery.data || 0).eq(0)) {
+  if (!countQuery.isLoading && (countQuery.data || 0n) === 0n) {
     return null;
   }
   if (!listingsQuery.isLoading && listings.length === 0) {
@@ -139,7 +138,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
   const auctionsQuery = useReadContract(getAllAuctions, {
     contract,
     count: 3n,
-    start: Math.max(BigNumber.from(countQuery?.data || 3)?.toNumber() - 3, 0),
+    start: Math.max(Number(countQuery?.data || 3n) - 3, 0),
   });
   const auctions = useMemo(
     () =>
@@ -154,7 +153,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
     [auctionsQuery?.data],
   );
 
-  if (!countQuery.isLoading && BigNumber.from(countQuery.data || 0).eq(0)) {
+  if (!countQuery.isLoading && (countQuery.data || 0n) === 0n) {
     return null;
   }
   if (!auctionsQuery.isLoading && auctions.length === 0) {

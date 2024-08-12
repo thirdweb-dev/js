@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
-import { BigNumber } from "ethers";
 import {
   type Dispatch,
   type SetStateAction,
@@ -162,10 +161,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
       },
       manualPagination: true,
       pageCount: Math.max(
-        Math.ceil(
-          BigNumber.from(totalCountQuery.data || 0).toNumber() /
-            queryParams.count,
-        ),
+        Math.ceil(Number(totalCountQuery.data || 0n) / queryParams.count),
         1,
       ),
     },
