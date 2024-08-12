@@ -39,7 +39,6 @@ export type VoteContractParams = {
    * whereas a value of 100 indicates that the entirety of voting power must vote for a proposal to pass.
    */
   initialVoteQuorumFraction: bigint;
-  // === irrelevant === //
   description?: string;
   image?: FileOrBufferOrString;
   external_link?: string;
