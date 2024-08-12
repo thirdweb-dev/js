@@ -14,11 +14,11 @@ import { proposalExists } from "../read/proposalExists.js";
  * ```ts
  * import { executeProposal } from "thirdweb/extensions/vote";
  *
- * const transaction = await executeProposal({ contract, proposalId });
+ * const transaction = executeProposal({ contract, proposalId });
  * const tx = await sendTransaction({ transaction, account });
  * ```
  */
-export async function executeProposal(
+export function executeProposal(
   options: BaseTransactionOptions<{ proposalId: bigint }>,
 ) {
   return execute({
