@@ -1,6 +1,6 @@
 import type { DecodeEventLogReturnType, Log } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { Address } from "../../utils/address.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawEvents } from "../formatter.js";
@@ -26,13 +26,9 @@ export type GetEventsParams = Prettify<
      */
     client: ThirdwebClient;
     /**
-     * Contract addresses to fetch events for
+     * Contract to fetch events for
      */
-    contractAddresses: Address[];
-    /**
-     * Chain IDs to search events on
-     */
-    chainIds?: number[];
+    contract: ThirdwebContract;
     /**
      * Start point for events date range. Default is 7 days ago
      */
@@ -74,19 +70,22 @@ export type GetEventsResult = {
  *
  * @example
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
+ * import { createThirdwebClient, defineChain, getContract } from "thirdweb";
  * import { getEvents } from "thirdweb/chainsaw";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const startDate = new Date(Date.now() - 48 * 60 * 60_000);
  * const endDate = new Date();
+ * const contract = getContract({
+ *  address: "0x...",
+ *  client,
+ *  chain: defineChain(1)
+ * });
  * const events = await getEvents({
  *  client,
- *  contractAddresses: ["0x..."],
- *  chainIds: [1],
+ *  contract,
  *  startDate,
  *  endDate,
- *  groupBy: ["time"],
  *  interval: ["day"],
  *  pageSize: 20,
  *  page: 1
@@ -121,15 +120,8 @@ export async function getEvents(
 
 function getEndpointUrl(params: GetEventsParams): URL {
   const url = getEventsEndpoint();
-  for (const contractAddress of params.contractAddresses) {
-    url.searchParams.append("contractAddresses[]", contractAddress);
-  }
-  for (const chainId of params.chainIds || []) {
-    url.searchParams.append("chainIds[]", chainId.toString());
-  }
-  for (const groupBy of params.groupBy || []) {
-    url.searchParams.append("groupBy[]", groupBy);
-  }
+  url.searchParams.append("contractAddress", params.contract.address);
+  url.searchParams.append("chainId", params.contract.chain.id.toString());
   if (params.startDate) {
     url.searchParams.append("startDate", params.startDate.toISOString());
   }

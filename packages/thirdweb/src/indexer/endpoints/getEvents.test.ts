@@ -1,5 +1,8 @@
 import { assert, describe, expect, it } from "vitest";
 
+import { defineChain } from "src/chains/utils.js";
+import { getContract } from "src/contract/contract.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
 import { createThirdwebClient } from "../../client/client.js";
 import { getEvents } from "./getEvents.js";
 
@@ -9,10 +12,15 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getEvents", () => {
 
   it("gets events", async () => {
     const contractAddress = "0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC";
+    const contract = getContract({
+      client: TEST_CLIENT,
+      chain: defineChain(1),
+      address: contractAddress,
+    });
+
     const { events } = await getEvents({
       client,
-      chainIds: [1],
-      contractAddresses: [contractAddress],
+      contract,
       startDate: new Date("2024-08-01T12:00:00.000Z"),
       endDate: new Date("2024-08-02T12:00:00.000Z"),
     });

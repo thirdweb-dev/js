@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { defineChain } from "../../chains/utils.js";
 import { createThirdwebClient } from "../../client/client.js";
 import { getBlock } from "./getBlock.js";
-import { defineChain } from "../../chains/utils.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getBlock", () => {
   const SECRET_KEY = process.env.TW_SECRET_KEY as string;

@@ -188,7 +188,6 @@ export type {
   PayTokenInfo,
 } from "../pay/utils/commonTypes.js";
 
-
 // ------------------------------------------------
 // encoding
 // ------------------------------------------------
@@ -314,4 +313,3 @@ export {
   getTransactions,
   type GetTransactionsParams,
 } from "../indexer/endpoints/getTransactions.js";
-

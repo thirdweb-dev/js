@@ -1,10 +1,10 @@
 import type { BlockTag, GetBlockReturnType } from "viem";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { formatChainsawBlock } from "../formatter.js";
 import type { ChainsawInternalBlock, ChainsawResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
-import type { Chain } from "../../chains/types.js";
 
 export type GetBlockParams = {
   /**
