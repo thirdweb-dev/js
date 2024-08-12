@@ -20,6 +20,8 @@ import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
 import superpositionCTA from "./temp-assets/superpositionCTA.png";
 import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
+import treasureCTA from "./temp-assets/treasureCta";
+import treasureBanner from "./temp-assets/treasureBanner";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
@@ -343,6 +345,18 @@ const chainMetaRecord = {
       backgroundImageUrl: thirdwebCTA.src,
       title: "",
       buttonLink: "https://zksync.io/",
+      buttonText: "Learn more",
+    },
+  },
+  //treasure
+  978657: {
+    headerImgUrl: treasureBanner.src,
+    about:
+      "Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of \"Infinity Chains\" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.",
+    cta: {
+      backgroundImageUrl: treasureCTA.src,
+      title: "Start building on Treasure!",
+      buttonLink: "https://portal.treasure.lol",
       buttonText: "Learn more",
     },
   },
