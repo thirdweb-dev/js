@@ -1,0 +1,3 @@
+[
+  "function initialize(string memory _name, string memory _contractURI, address[] memory _trustedForwarders, address _token, uint256 _initialVotingDelay, uint256 _initialVotingPeriod, uint256 _initialProposalThreshold, uint256 _initialVoteQuorumFraction)"
+]

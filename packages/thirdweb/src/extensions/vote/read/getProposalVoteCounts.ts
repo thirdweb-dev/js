@@ -12,7 +12,7 @@ export type ProposalVoteInfo = { [K in keyof typeof VoteType]: bigint };
  * Get the info about Against, For and Abstain votes of a proposal
  * @param options
  * @returns the object containing the info about Against, For and Abstain votes of a proposal
- *
+ * @extension VOTE
  * @example
  * ```ts
  * import { getProposalVoteCounts } from "thirdweb/extensions/vote";
