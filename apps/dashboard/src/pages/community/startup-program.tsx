@@ -1,3 +1,4 @@
+import { useForceDarkTheme } from "@/components/theme-provider";
 import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
@@ -126,12 +127,13 @@ const cubeBottom = {
 };
 
 const StartupProgram: ThirdwebNextPage = () => {
+  useForceDarkTheme();
   return (
     <>
       <NextSeo {...SEO} />
       <HomepageTopNav />
 
-      <Box overflow={"hidden"}>
+      <Box overflow={"hidden"} position="relative">
         {/* Image placed on the top top */}
         <Box position="absolute" top="0" left="0" zIndex="1">
           <ChakraNextImage src={gradientSecond.src} alt="description" />
@@ -227,6 +229,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             gap={{ base: "80px", md: "190px" }}
             mt={{ base: "120px", md: "170px" }}
             mb={60}
+            overflow="hidden"
           >
             <ThreeBoxLayout />
 
