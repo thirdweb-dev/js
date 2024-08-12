@@ -23,7 +23,6 @@ import {
 import {
   type ClaimConditionInput,
   ClaimConditionInputSchema,
-  type SnapshotEntry,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
@@ -51,6 +50,13 @@ import * as z from "zod";
 import { ZodError } from "zod";
 import { ResetClaimEligibility } from "../reset-claim-eligibility";
 import { ClaimConditionsPhase } from "./phase";
+
+type SnapshotEntry = {
+  address: string;
+  maxClaimable: string;
+  price?: string | undefined;
+  currencyAddress?: string | undefined;
+};
 
 type ClaimConditionDashboardInput = ClaimConditionInput & {
   isEditing: boolean;
