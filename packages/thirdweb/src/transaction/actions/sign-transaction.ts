@@ -1,8 +1,7 @@
-import type { TransactionSerializable } from "viem";
+import { type TransactionSerializable, serializeTransaction } from "viem";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { keccak256 } from "../../utils/hashing/keccak256.js";
 import { sign } from "../../utils/signatures/sign.js";
-import { serializeTransaction } from "../serialize-transaction.js";
 
 export type SignTransactionOptions = {
   transaction: TransactionSerializable;
@@ -36,13 +35,11 @@ export function signTransaction({
     transaction = { ...transaction, sidecars: false };
   }
 
-  const serializedTransaction = serializeTransaction({ transaction });
+  const serializedTransaction = serializeTransaction(transaction);
 
   const signature = sign({
     hash: keccak256(serializedTransaction),
     privateKey: privateKey,
   });
-  return serializeTransaction({
-    transaction: { ...transaction, ...signature },
-  });
+  return serializeTransaction(transaction, signature);
 }
