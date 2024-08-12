@@ -1,3 +1,4 @@
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { ChainsawResponse } from "../types.ts";
@@ -13,9 +14,9 @@ export type GetLatestBlockNumberParams = {
    */
   client: ThirdwebClient;
   /**
-   * Chain ID
+   * The chain to fetch the block from
    */
-  chainId: number;
+  chain: Chain;
 };
 
 export type GetLatestBlockNumberResult = {
@@ -38,7 +39,7 @@ export type GetLatestBlockNumberResult = {
  * const client = createThirdwebClient({ clientId: "..." });
  * const { latestBlockNumber } = await getLatestBlockNumber({
  *  client,
- *  chainId: 1
+ *  chain: defineChain(1)
  * });
  * ```
  * @chainsaw
@@ -48,7 +49,7 @@ export async function getLatestBlockNumber(
 ): Promise<GetLatestBlockNumberResult> {
   try {
     const queryParams = new URLSearchParams();
-    queryParams.append("chainId", params.chainId.toString());
+    queryParams.append("chainId", params.chain.id.toString());
     const url = `${getLatestBlockNumberEndpoint()}?${queryParams.toString()}`;
 
     const response = await getClientFetch(params.client)(url);
