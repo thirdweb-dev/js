@@ -7,14 +7,14 @@ import {
   type ThirdwebContract,
   getContract,
 } from "../../../contract/contract.js";
+import { delegate } from "../../../extensions/erc20/__generated__/IVotes/write/delegate.js";
+import { mintTo } from "../../../extensions/erc20/write/mintTo.js";
+import { deployERC20Contract } from "../../../extensions/prebuilts/deploy-erc20.js";
 import { deployVoteContract } from "../../../extensions/prebuilts/deploy-vote.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { propose } from "../__generated__/Vote/write/propose.js";
-import { proposalExists } from "./proposalExists.js";
 import { getAll } from "./getAll.js";
-import { deployERC20Contract } from "../../../extensions/prebuilts/deploy-erc20.js";
-import { delegate } from "../../../extensions/erc20/__generated__/IVotes/write/delegate.js";
-import { mintTo } from "../../../extensions/erc20/write/mintTo.js";
+import { proposalExists } from "./proposalExists.js";
 
 let contract: ThirdwebContract;
 let tokenContract: ThirdwebContract;
