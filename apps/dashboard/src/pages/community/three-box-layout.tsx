@@ -26,8 +26,14 @@ const ThreeBoxLayout = () => {
 
   const gradientOne = {
     src: require("../../../public/assets/startup-program/gradient-1.png"),
-    title: "We help you get in front of key industry partners, mentors & VCs.",
-    text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
+  };
+
+  const cubeTopleft = {
+    src: require("../../../public/assets/startup-program/cube-topleft.png"),
+  };
+
+  const gradientThree = {
+    src: require("../../../public/assets/startup-program/gradient-3.png"),
   };
 
   return (
@@ -38,8 +44,23 @@ const ThreeBoxLayout = () => {
           src={gradientOne.src}
           alt="description"
           opacity={0.7}
+          display={{ base: "none", md: "block" }}
         />
       </Box>
+      {/* Cube topleft */}
+      <Box position="absolute" top="1050px" left="-280" zIndex="-1">
+        <ChakraNextImage src={cubeTopleft.src} alt="description" maxW="500px" />
+      </Box>
+      {/* Gradient Box */}
+      <Box position="absolute" top="80px" right="-400px" zIndex="1">
+        <ChakraNextImage
+          src={gradientThree.src}
+          alt="description"
+          maxW="1000px"
+          opacity={0.7}
+        />
+      </Box>
+
       <Flex
         direction="column"
         flex={{ base: "none", md: "1" }}

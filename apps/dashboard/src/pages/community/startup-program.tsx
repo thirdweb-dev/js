@@ -20,39 +20,6 @@ const SEO = {
     "The next wave of web3 mass adoption is already happening. If you want to be one of the next big crypto apps, the time to build is now!",
 };
 
-// const judges = [
-//   {
-//     name: "Jason Hitchcock",
-//     twitter: "JasonHitchcock",
-//     description: "Head of Ecosystem",
-//     image: "/assets/landingpage/james.png",
-//   },
-//   {
-//     name: "Phil Ho",
-//     twitter: "arcoraven",
-//     description: "Engineering Lead, Engine",
-//     image: "/assets/landingpage/phil.png",
-//   },
-//   {
-//     name: "Samina Kabir",
-//     twitter: "saminacodes",
-//     description: "Product Manager, Developer Experience",
-//     image: "/assets/landingpage/samina.png",
-//   },
-//   {
-//     name: "Atif Khan",
-//     twitter: "atifkhan31",
-//     description: "VP, Business",
-//     image: "/assets/landingpage/atif.png",
-//   },
-//   {
-//     name: "Mike Shin",
-//     twitter: "mdjshin",
-//     description: "Head of Business Operations",
-//     image: "/assets/landingpage/mike.png",
-//   },
-// ];
-
 const trustedCompanies = [
   {
     title: "Coinbase",
@@ -85,62 +52,6 @@ const trustedCompanies = [
     src: require("../../../public/assets/partners/rarible.png"),
   },
 ];
-
-/* const faqs = [
-  {
-    title: "Who can join the thirdweb Startup Program?",
-    description:
-      "This program is for startups. You will need to be incorporated, have a website, complete a call with the thirdweb's startup team to demonstrate you're a real startup. This program is for startups who have raised less than $1m in total funding to date.",
-  },
-  {
-    title: "What are the benefits of the program?",
-    description:
-      "Qualified startups gain access to an array of benefits including credits, prioritized support, co-marketing opportunities, educational resources, ecosystem connections, and more.",
-  },
-  {
-    title: "How do I apply?",
-    description:
-      "You can apply in less than 2 minutes by filling out the application form and scheduling a call with our team.",
-  },
-  {
-    title: "How do I get approved for credits?",
-    description: (
-      <span>
-        Apply through{" "}
-        <TrackedLink
-          href="https://share.hsforms.com/1WCgMOvmuQqmCjdEqtu1NdAea58c"
-          label="apply_faq"
-          category={TRACKING_CATEGORY}
-          color="primary.500"
-          textDecoration="underline"
-        >
-          this
-        </TrackedLink>{" "}
-        link. Tell us about your project, any partner affiliations, and
-        we&apos;ll schedule an onboarding call to get you started.
-      </span>
-    ),
-  },
-  {
-    title: "Are current thirdweb customers eligible?",
-    description:
-      "Current customers and developers affiliated with a partner can also access benefits. Customers who've already received credits are not eligible for additional credits.",
-  },
-  {
-    title: "How can I use my credits?",
-    description:
-      "Credits can be applied towards annual Growth plans and thirdweb Engine instances and usage.",
-  },
-  {
-    title: "How much is Engine through the startup program?",
-    description:
-      "First 90 days free, $99/month thereafter per engine instance.",
-  },
-  {
-    title: "How much is the Growth plan through the startup program?",
-    description: "First 90 days free, $99 per month after credits expire.",
-  },
-]; */
 
 const partnersCompanies = [
   { maxWidth: "99px", src: require("../../../public/assets/partners/cpg.png") },
@@ -180,29 +91,38 @@ const partnersCompanies = [
     maxWidth: "256",
     src: require("../../../public/assets/partners/helika.png"),
   },
-
   {
     maxWidth: "99px",
     src: require("../../../public/assets/partners/play.png"),
+  },
+  {
+    maxWidth: "200px",
+    src: require("../../../public/assets/startup-program/ava1anche_logo.png"),
+  },
+  {
+    maxWidth: "150px",
+    src: require("../../../public/assets/startup-program/powered-by-aws-white.png"),
   },
 ];
 
 const gradientSecond = {
   src: require("../../../public/assets/startup-program/gradient-2.png"),
-  title: "We help you get in front of key industry partners, mentors & VCs.",
-  text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
-};
-
-const gradientThree = {
-  src: require("../../../public/assets/startup-program/gradient-3.png"),
-  title: "We help you get in front of key industry partners, mentors & VCs.",
-  text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
 };
 
 const gradientFive = {
   src: require("../../../public/assets/startup-program/gradient-5.png"),
-  title: "We help you get in front of key industry partners, mentors & VCs.",
-  text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
+};
+
+const cubeTop = {
+  src: require("../../../public/assets/startup-program/cube-top.png"),
+};
+
+const cubeRight = {
+  src: require("../../../public/assets/startup-program/cube-topright.png"),
+};
+
+const cubeBottom = {
+  src: require("../../../public/assets/startup-program/cube-bottom.png"),
 };
 
 const StartupProgram: ThirdwebNextPage = () => {
@@ -211,23 +131,39 @@ const StartupProgram: ThirdwebNextPage = () => {
       <NextSeo {...SEO} />
       <HomepageTopNav />
 
-      <Box mt="-180px" pt="100px" overflowX="hidden">
+      <Box overflow={"hidden"}>
         {/* Image placed on the top top */}
         <Box position="absolute" top="0" left="0" zIndex="1">
           <ChakraNextImage src={gradientSecond.src} alt="description" />
         </Box>
 
-        {/* Gradient Box */}
-        <Box position="absolute" top="150px" right="0" zIndex="1">
+        {/* Cube Top */}
+        <Box
+          position="absolute"
+          top="-150px"
+          left="50%"
+          transform="translateX(-50%)"
+          zIndex="1"
+          display={{ base: "none", md: "block" }}
+        >
+          <ChakraNextImage src={cubeTop.src} alt="description" maxW="500px" />
+        </Box>
+
+        {/* Cube Topright */}
+        <Box
+          position="absolute"
+          top={{ base: "420px", md: "50px" }}
+          right={{ base: "0px", md: "-200px" }}
+          zIndex="1"
+        >
           <ChakraNextImage
-            src={gradientThree.src}
+            src={cubeRight.src}
             alt="description"
-            maxW="500px"
-            opacity={0.5}
+            maxW={{ base: "400px", md: "600px" }}
           />
         </Box>
 
-        <HomepageSection isOverflowXHidden>
+        <HomepageSection overflow={"hidden"}>
           {/* top */}
           <Aurora
             pos={{ left: "50%", top: "0%" }}
@@ -278,6 +214,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               label="apply"
               fontWeight="bold"
               mt={46}
+              zIndex="1000"
             >
               Apply Now
             </TrackedLinkButton>
@@ -348,44 +285,7 @@ const StartupProgram: ThirdwebNextPage = () => {
                   />
                 ))}
               </SimpleGrid>
-              <Box textAlign="center" mt="64px">
-                <Text
-                  textAlign="center"
-                  size="body.xl"
-                  color="white"
-                  maxW="800px"
-                >
-                  Are you a chain or an investor looking to get involved?
-                </Text>
-                <TrackedLinkButton
-                  py={6}
-                  px={8}
-                  bgColor="white"
-                  _hover={{
-                    bgColor: "white",
-                    opacity: 0.8,
-                  }}
-                  color="black"
-                  href="https://share.hsforms.com/1WCgMOvmuQqmCjdEqtu1NdAea58c"
-                  category={TRACKING_CATEGORY}
-                  label="apply"
-                  fontWeight="bold"
-                  mt="2rem"
-                >
-                  Contact us
-                </TrackedLinkButton>
-              </Box>
             </Flex>
-
-            {/*   <Flex flexDir="column" alignItems="center">
-              <LandingFAQ
-                hideMarginTop
-                TRACKING_CATEGORY={TRACKING_CATEGORY}
-                title={"FAQ"}
-                faqs={faqs}
-                titleSize="title.2xl"
-              />
-            </Flex> */}
 
             <Flex
               flexDir="column"
@@ -435,6 +335,7 @@ const StartupProgram: ThirdwebNextPage = () => {
                 label="apply"
                 fontWeight="bold"
                 mt={46}
+                zIndex="1000"
               >
                 Apply Now
               </TrackedLinkButton>
@@ -442,15 +343,29 @@ const StartupProgram: ThirdwebNextPage = () => {
             {/* Gradient Box */}
             <Box
               position="absolute"
-              bottom="-250px"
-              left={{ base: 0, md: "250px" }}
+              bottom="-280px"
+              left={{ base: 0, md: "150px" }}
               zIndex="-1"
             >
               <ChakraNextImage
                 src={gradientFive.src}
                 alt="description"
-                maxW="600px"
+                maxW="800px"
                 opacity={0.6}
+              />
+            </Box>
+            {/* Cube Top */}
+            <Box
+              position="absolute"
+              bottom="-450px"
+              left="60%"
+              transform="translateX(-50%)"
+              zIndex="1"
+            >
+              <ChakraNextImage
+                src={cubeBottom.src}
+                alt="description"
+                maxW="500px"
               />
             </Box>
           </Container>
