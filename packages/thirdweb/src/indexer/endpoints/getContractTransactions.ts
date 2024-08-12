@@ -1,6 +1,6 @@
 import type { Transaction } from "viem";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { Address } from "../../utils/address.js";
+import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawTransactions } from "../formatter.js";
@@ -23,13 +23,9 @@ export type GetTransactionsParams = Prettify<
      */
     client: ThirdwebClient;
     /**
-     * Contract address to fetch transactions for
+     * Contract fetch transactions for
      */
-    to: Address;
-    /**
-     * Chain IDs to fetch transactions from. If omitted, will look on all supported chains
-     */
-    chainIds?: number[];
+    contract: ThirdwebContract;
     /**
      * Start of the date range to search in. Default is 1 day ago
      */
@@ -56,14 +52,18 @@ export type GetTransactionsResult = {
  *
  * @example
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
- * import { getTransactions } from "thirdweb/chainsaw";
+ * import { createThirdwebClient, defineChain, getTransactions } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
+ * const contract = getContract({
+ *  client,
+ *  chain: defineChain(1),
+ *  address: "0x..."
+ * });
+ *
  * const block = await getTransactions({
  *  client,
- *  to: "0x...",
- *  chainIds: [1],
+ *  contract,
  *  pageSize: 20,
  *  page: 1
  * });
@@ -71,16 +71,20 @@ export type GetTransactionsResult = {
  *
  * @example with a date range
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
- * import { getTransactions } from "thirdweb/chainsaw";
+ * import { createThirdwebClient, defineChain, getContractTransactions } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const startDate = new Date(Date.now() - 24 * 60 * 60_000);
  * const endDate = new Date();
- * const block = await getTransactions({
+ * const contract = getContract({
  *  client,
- *  to: "0x...",
- *  chainIds: [1],
+ *  chain: defineChain(1),
+ *  address: "0x..."
+ * });
+ *
+ * const block = await getContractTransactions({
+ *  client,
+ *  contract,
  *  startDate,
  *  endDate,
  *  pageSize: 20,
@@ -89,7 +93,7 @@ export type GetTransactionsResult = {
  * ```
  * @chainsaw
  */
-export async function getTransactions(
+export async function getContractTransactions(
   params: GetTransactionsParams,
 ): Promise<GetTransactionsResult> {
   try {
@@ -116,10 +120,8 @@ export async function getTransactions(
 
 function getEndpointUrl(params: GetTransactionsParams): URL {
   const url = getTransactionsEndpoint();
-  url.searchParams.append("to", params.to);
-  for (const chainId of params.chainIds || []) {
-    url.searchParams.append("chainIds[]", chainId.toString());
-  }
+  url.searchParams.append("to", params.contract.address);
+  url.searchParams.append("chainId", params.contract.chain.id.toString());
   if (params.startDate) {
     url.searchParams.append("startDate", params.startDate.toISOString());
   }

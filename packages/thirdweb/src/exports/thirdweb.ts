@@ -310,6 +310,6 @@ export {
   type GetNFTsByOwnerParams,
 } from "../indexer/endpoints/getNFTsByOwner.js";
 export {
-  getTransactions,
+  getContractTransactions,
   type GetTransactionsParams,
-} from "../indexer/endpoints/getTransactions.js";
+} from "../indexer/endpoints/getContractTransactions.js";
