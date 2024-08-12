@@ -1,9 +1,9 @@
 import type { GasEstimate } from "@3rdweb-sdk/react/hooks/useGas";
 import { Box, type BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
 import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
-import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiExternalLink } from "react-icons/fi";
+import { toTokens } from "thirdweb";
 import { Heading, Link, Text } from "tw-components";
 import { contractSlugMapping } from "./contractSlugMapping";
 import { functionNameMapping } from "./functionNameMapping";
@@ -31,18 +31,15 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
   const formatPrice = (price: number | undefined) => {
     if (price && ethOrUsd === "eth") {
       return `~${Number(
-        utils.formatUnits(
-          `${((gasEstimate?.gasPrice as number) || 30) * price}`,
-          "gwei",
-        ),
+        toTokens(BigInt(((gasEstimate?.gasPrice as number) || 30) * price), 9),
       ).toFixed(4)} ETH`;
     }
     if (price && ethOrUsd === "usd") {
       return `~$${(
         Number(
-          utils.formatUnits(
-            `${((gasEstimate?.gasPrice as number) || 30) * price}`,
-            "gwei",
+          toTokens(
+            BigInt(((gasEstimate?.gasPrice as number) || 30) * price),
+            9,
           ),
         ) * (gasEstimate?.ethPrice || 3400)
       ).toFixed(2)}`;
