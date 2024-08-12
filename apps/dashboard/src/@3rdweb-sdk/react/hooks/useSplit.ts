@@ -1,29 +1,21 @@
-import { useToast } from "@chakra-ui/react";
-import { useSDKChainId } from "@thirdweb-dev/react";
-import type { Split } from "@thirdweb-dev/sdk";
 import type {
   BalanceQueryRequest,
   BalanceQueryResponse,
 } from "pages/api/moralis/balances";
+import { toast } from "sonner";
+import type { ThirdwebContract } from "thirdweb";
+import { distribute, distributeByToken } from "thirdweb/extensions/split";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
 import invariant from "tiny-invariant";
-import { parseErrorToMessage } from "utils/errorParser";
 import { splitsKeys } from "..";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 
-export function useSplitData(contract?: Split) {
-  return useQueryWithNetwork(
-    splitsKeys.list(contract?.getAddress()),
-    async () => contract?.getAllRecipients(),
-    {
-      enabled: !!contract,
-    },
-  );
-}
-export function useSplitBalances(contractAddress?: string) {
-  const chainId = useSDKChainId();
+export function useSplitBalances(contract: ThirdwebContract) {
+  const chainId = contract.chain.id;
+  const contractAddress = contract.address;
   const currencies = useQueryWithNetwork(
     splitsKeys.currencies(contractAddress),
     async () => {
@@ -48,72 +40,31 @@ export function useSplitBalances(contractAddress?: string) {
   return currencies;
 }
 
-export function useSplitDistributeFunds(contract?: Split) {
-  const contractAddress = contract?.getAddress();
-  const balances = useSplitBalances(contractAddress);
-  const toast = useToast();
+export function useSplitDistributeFunds(contract: ThirdwebContract) {
+  const contractAddress = contract.address;
+  const balances = useSplitBalances(contract);
+  const { mutateAsync } = useSendAndConfirmTransaction();
 
   return useMutationWithInvalidate(
     async () => {
       invariant(contract, "split contract is not ready");
       invariant(balances.data, "No balances to distribute");
-
       const distributions = (balances.data || [])
         .filter((token) => token.display_balance !== "0.0")
         .map(async (currency) => {
-          if (currency.name === "Native Token") {
-            await contract
-              .distribute()
-              .then(() => {
-                toast({
-                  position: "bottom",
-                  variant: "solid",
-                  title: "Success",
-                  description: `Successfully distributed ${currency.name}`,
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
+          const transaction =
+            currency.name === "Native Token"
+              ? distribute({ contract })
+              : distributeByToken({
+                  contract,
+                  tokenAddress: currency.token_address,
                 });
-                return void 0;
-              })
-              .catch((err: unknown) => {
-                toast({
-                  position: "bottom",
-                  variant: "solid",
-                  title: `Error distributing ${currency.name}`,
-                  description: parseErrorToMessage(err),
-                  status: "error",
-                  duration: 9000,
-                  isClosable: true,
-                });
-              });
-          } else {
-            await contract
-              .distributeToken(currency.token_address)
-              .then(() => {
-                toast({
-                  position: "bottom",
-                  variant: "solid",
-                  title: "Success",
-                  description: `Successfully distributed ${currency.name}`,
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-                });
-                return void 0;
-              })
-              .catch((err: unknown) => {
-                toast({
-                  position: "bottom",
-                  variant: "solid",
-                  title: `Error distributing ${currency.name}`,
-                  description: parseErrorToMessage(err),
-                  status: "error",
-                  duration: 9000,
-                  isClosable: true,
-                });
-              });
-          }
+          const promise = mutateAsync(transaction);
+          toast.promise(promise, {
+            success: `Successfully distributed ${currency.name}`,
+            error: `Error distributing ${currency.name}`,
+            loading: "Distributing funds",
+          });
         });
 
       return await Promise.all(distributions);

@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-
-import { execSync } from "node:child_process";
 import { spawn } from "cross-spawn";
 import {
   generate,
@@ -44,25 +42,9 @@ async function main() {
 
       const isWindows = /^win/.test(process.platform);
 
-      const isBunAvailable = (() => {
-        try {
-          const res = execSync("bun --version", {
-            // stdio: "ignore",
-            encoding: "utf-8",
-          });
-          if (typeof res === "string" && res.indexOf(".") > -1) {
-            return true;
-          }
-        } catch {}
-        return false;
-      })();
-
       let runner = "npx";
 
       switch (true) {
-        case isBunAvailable:
-          runner = "bunx";
-          break;
         case isWindows:
           runner = "npx.cmd";
           break;

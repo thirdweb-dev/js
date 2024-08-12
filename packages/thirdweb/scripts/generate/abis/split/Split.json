@@ -6,5 +6,6 @@
   "function shares(address account) view returns (uint256)",
   "function totalReleased() view returns (uint256)",
   "function distribute()",
-  "function release(address account)"
+  "function release(address account)",
+  "function totalShares() view returns (uint256)"
 ]

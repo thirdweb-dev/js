@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.45.1
+
+### Patch Changes
+
+- [#4040](https://github.com/thirdweb-dev/js/pull/4040) [`539bdab`](https://github.com/thirdweb-dev/js/commit/539bdab40321649b3d0163d31eaffe066d669046) Thanks [@jnsdls](https://github.com/jnsdls)! - remove bun options from CLI to increase stability
+
 ## 5.45.0
 
 ### Minor Changes

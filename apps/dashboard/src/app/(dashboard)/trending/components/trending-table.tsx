@@ -17,7 +17,7 @@ import { ChainIcon } from "../../(chain)/components/server/chain-icon";
 import { TablePagination } from "./pagination.client";
 import { SortingHeader } from "./sorting-header.client";
 
-export async function TrendingContractSection(props: {
+export function TrendingContractSection(props: {
   topContracts: TrendingContract[];
   chainId?: number;
   perPage?: number;

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { LoginPayload } from "../../../../auth/core/types.js";
 import type { VerifyLoginPayloadParams } from "../../../../auth/core/verify-login-payload.js";
+import { getCachedChain } from "../../../../chains/utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 
 /**
@@ -94,6 +95,12 @@ export function useSiweAuth(
         // we lazy-load this because it's only needed when logging in
         import("../../../../auth/core/sign-login-payload.js"),
       ]);
+
+      if (payload.chain_id) {
+        await activeWallet.switchChain(
+          getCachedChain(Number(payload.chain_id)),
+        );
+      }
 
       const signedPayload = await signLoginPayload({
         payload,
