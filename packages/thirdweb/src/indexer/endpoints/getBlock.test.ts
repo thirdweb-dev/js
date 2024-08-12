@@ -1,16 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { defineChain } from "../../chains/utils.js";
-import { createThirdwebClient } from "../../client/client.js";
 import { getBlock } from "./getBlock.js";
+import { TEST_CLIENT } from "~test/test-clients.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getBlock", () => {
-  const SECRET_KEY = process.env.TW_SECRET_KEY as string;
-  const client = createThirdwebClient({ secretKey: SECRET_KEY });
-
   it("gets block", async () => {
     const { block } = await getBlock({
-      client,
+      client: TEST_CLIENT,
       chain: defineChain(1),
       blockNumber: 20484878n,
     });

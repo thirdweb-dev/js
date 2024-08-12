@@ -1,5 +1,5 @@
+import type { ThirdwebContract } from "../../contract/contract.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { NFT } from "../../utils/nft/parseNft.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -25,13 +25,9 @@ export type GetNFTsByCollectionParams = Prettify<
      */
     client: ThirdwebClient;
     /**
-     * Addresses of NFT collections
+     * NFT collection contract
      */
-    contractAddresses: Address[];
-    /**
-     * Chain IDs to search from
-     */
-    chainIds?: number[];
+    contract: ThirdwebContract
     /**
      * Parameters to group results count by. Currently supports "ownerAddress"
      */
@@ -54,14 +50,17 @@ export type GetNFTsByCollectionResult = {
  *
  * @example
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
- * import { getNFTsByCollection } from "thirdweb/chainsaw";
+ * import { createThirdwebClient, defineChain, getNFTsByCollection, getContract } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
+ * const contract = getContract({
+ *  client,
+ *  address: "0x...",
+ *  chain: defineChain(1)
+ * });
  * const nfts = await getNFTsByCollection({
  *  client,
- *  contractAddresses: ["0x..."],
- *  chainIds: [1],
+ *  contract,
  *  groupBy: ["ownerAddress"],
  * });
  * ```
@@ -93,12 +92,8 @@ export async function getNFTsByCollection(
 
 function getEndpointUrl(params: GetNFTsByCollectionParams): URL {
   const url = getNftsByCollectionEndpoint();
-  for (const contractAddress of params.contractAddresses) {
-    url.searchParams.append("contractAddresses[]", contractAddress);
-  }
-  for (const chainId of params.chainIds || []) {
-    url.searchParams.append("chainIds[]", chainId.toString());
-  }
+  url.searchParams.append("contractAddress", params.contract.address);
+  url.searchParams.append("chainId", params.contract.chain.id.toString());
   if (params.groupBy) {
     url.searchParams.append("groupBy", params.groupBy);
   }

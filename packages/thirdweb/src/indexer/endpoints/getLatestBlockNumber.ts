@@ -33,8 +33,7 @@ export type GetLatestBlockNumberResult = {
  *
  * @example
  * ```ts
- * import { createThirdwebClient } from "thirdweb";
- * import { getLatestBlockNumber } from "thirdweb/chainsaw";
+ * import { createThirdwebClient, getLatestBlockNumber } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const { latestBlockNumber } = await getLatestBlockNumber({

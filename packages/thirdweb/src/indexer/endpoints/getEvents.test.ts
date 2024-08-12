@@ -2,14 +2,10 @@ import { assert, describe, expect, it } from "vitest";
 
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { defineChain } from "../../chains/utils.js";
-import { createThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { getEvents } from "./getEvents.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getEvents", () => {
-  const SECRET_KEY = process.env.TW_SECRET_KEY as string;
-  const client = createThirdwebClient({ secretKey: SECRET_KEY });
-
   it("gets events", async () => {
     const contractAddress = "0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC";
     const contract = getContract({
@@ -19,7 +15,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getEvents", () => {
     });
 
     const { events } = await getEvents({
-      client,
+      client: TEST_CLIENT,
       contract,
       startDate: new Date("2024-08-01T12:00:00.000Z"),
       endDate: new Date("2024-08-02T12:00:00.000Z"),
