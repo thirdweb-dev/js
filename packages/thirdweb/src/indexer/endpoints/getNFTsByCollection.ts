@@ -72,7 +72,7 @@ export async function getNFTsByCollection(
 
 function getEndpointUrl(params: GetNFTsByCollectionParams): URL {
   const url = getNftsByCollectionEndpoint();
-  url.searchParams.append("contractAddresses[]", params.contract.address);
-  url.searchParams.append("chainIds[]", params.contract.chain.id.toString());
+  url.searchParams.append("contractAddresses", params.contract.address);
+  url.searchParams.append("chainIds", params.contract.chain.id.toString());
   return addRequestPagination(url, params);
 }

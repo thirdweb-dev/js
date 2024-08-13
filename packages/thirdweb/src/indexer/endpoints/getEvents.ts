@@ -96,8 +96,8 @@ export async function getEvents(
 
 function getEndpointUrl(params: GetEventsParams): URL {
   const url = getEventsEndpoint();
-  url.searchParams.append("contractAddresses[]", params.contract.address);
-  url.searchParams.append("chainIds[]", params.contract.chain.id.toString());
+  url.searchParams.append("contractAddresses", params.contract.address);
+  url.searchParams.append("chainIds", params.contract.chain.id.toString());
   if (params.startDate) {
     url.searchParams.append("startDate", params.startDate.toISOString());
   }

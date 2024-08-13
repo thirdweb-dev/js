@@ -87,10 +87,10 @@ function getEndpointUrl(params: GetNFTsByOwnerParams): URL {
   if (params.chain) {
     if (Array.isArray(params.chain)) {
       for (const chain of params.chain) {
-        url.searchParams.append("chainIds[]", chain.id.toString());
+        url.searchParams.append("chainIds", chain.id.toString());
       }
     } else {
-      url.searchParams.append("chainIds[]", params.chain.id.toString());
+      url.searchParams.append("chainIds", params.chain.id.toString());
     }
   }
   return addRequestPagination(url, params);
