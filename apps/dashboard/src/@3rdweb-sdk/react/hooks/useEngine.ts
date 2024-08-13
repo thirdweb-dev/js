@@ -145,6 +145,42 @@ export function useEngineSystemHealth(
   );
 }
 
+export interface EngineSystemQueueMetrics {
+  result: {
+    queued: number;
+    pending: number;
+    latency?: {
+      msToSend: { p50: number; p90: number };
+      msToMine: { p50: number; p90: number };
+    };
+  };
+}
+
+export function useEngineSystemQueueMetrics(
+  instanceUrl: string,
+  pollInterval: number | false = false,
+) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+
+  return useQuery(
+    engineKeys.health(instanceUrl),
+    async () => {
+      const res = await fetch(`${instanceUrl}system/queue`, {
+        headers: getEngineRequestHeaders(token),
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      const json = (await res.json()) as EngineSystemQueueMetrics;
+      return json;
+    },
+    {
+      enabled: !!instanceUrl,
+      refetchInterval: pollInterval,
+    },
+  );
+}
+
 export function useEngineLatestVersion() {
   return useQuery(engineKeys.latestVersion(), async () => {
     const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
