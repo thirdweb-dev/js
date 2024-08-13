@@ -31,6 +31,8 @@ export type InAppWalletCreationOptions =
       auth?: {
         options: InAppWalletAuth[];
         mode?: "popup" | "redirect";
+        redirectUrl?: string;
+        redirectExternally?: boolean;
       };
       metadata?: {
         image?: {

@@ -63,6 +63,8 @@ export function SocialLogin(props: {
               partnerId: wallet.getConfig()?.partnerId,
             }
           : undefined,
+        redirectUrl: walletConfig?.auth?.redirectUrl,
+        redirectExternally: walletConfig?.auth?.redirectExternally,
       });
     }
 
