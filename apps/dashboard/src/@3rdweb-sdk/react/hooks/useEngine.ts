@@ -126,9 +126,9 @@ export function useEngineSystemHealth(
   instanceUrl: string,
   pollInterval: number | false = false,
 ) {
-  return useQuery(
-    engineKeys.health(instanceUrl),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.health(instanceUrl),
+    queryFn: async () => {
       const res = await fetch(`${instanceUrl}system/health`, {
         headers: getEngineRequestHeaders(null),
       });
@@ -138,11 +138,9 @@ export function useEngineSystemHealth(
       const json = (await res.json()) as EngineSystemHealth;
       return json;
     },
-    {
-      enabled: !!instanceUrl,
-      refetchInterval: pollInterval,
-    },
-  );
+    enabled: !!instanceUrl,
+    refetchInterval: pollInterval,
+  });
 }
 
 export interface EngineSystemQueueMetrics {
@@ -162,35 +160,35 @@ export function useEngineQueueMetrics(
 ) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.queueMetrics(instanceUrl),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.queueMetrics(instanceUrl),
+    queryFn: async () => {
       const res = await fetch(`${instanceUrl}system/queue`, {
         headers: getEngineRequestHeaders(token),
       });
       if (!res.ok) {
         throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
       }
-      const json = (await res.json()) as EngineSystemQueueMetrics;
-      return json;
+      return (await res.json()) as EngineSystemQueueMetrics;
     },
-    {
-      enabled: !!instanceUrl,
-      refetchInterval: pollInterval,
-    },
-  );
+    enabled: !!instanceUrl,
+    refetchInterval: pollInterval,
+  });
 }
 
 export function useEngineLatestVersion() {
-  return useQuery(engineKeys.latestVersion(), async () => {
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
-      method: "GET",
-    });
-    if (!res.ok) {
-      throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
-    }
-    const json = await res.json();
-    return json.data.version as string;
+  return useQuery({
+    queryKey: engineKeys.latestVersion(),
+    queryFn: async () => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
+        method: "GET",
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      const json = await res.json();
+      return json.data.version as string;
+    },
   });
 }
 
