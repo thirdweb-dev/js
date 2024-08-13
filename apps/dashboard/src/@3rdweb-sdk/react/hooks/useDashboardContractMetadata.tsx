@@ -12,27 +12,30 @@ import { getContractMetadata, name, symbol } from "thirdweb/extensions/common";
  * 2. our API endpoint
  */
 export function useDashboardContractMetadata(contract: ThirdwebContract) {
-  return useQuery([], async () => {
-    const [contractMetadata, _name, _symbol, compilerMetadata] =
-      await Promise.all([
-        getContractMetadata({ contract }).catch(() => ({
-          image: "",
-          name: "",
-          symbol: "",
-        })),
-        name({ contract }).catch(() => ""),
-        symbol({ contract }).catch(() => ""),
-        getCompilerMetadata(contract).catch(() => undefined),
-      ]);
+  return useQuery(
+    ["contract-metadata-header", contract.chain.id, contract.address],
+    async () => {
+      const [contractMetadata, _name, _symbol, compilerMetadata] =
+        await Promise.all([
+          getContractMetadata({ contract }).catch(() => ({
+            image: "",
+            name: "",
+            symbol: "",
+          })),
+          name({ contract }).catch(() => ""),
+          symbol({ contract }).catch(() => ""),
+          getCompilerMetadata(contract).catch(() => undefined),
+        ]);
 
-    const contractName =
-      contractMetadata?.name || _name || compilerMetadata?.name || "";
-    const contractSymbol = contractMetadata?.symbol || _symbol || "";
+      const contractName =
+        contractMetadata?.name || _name || compilerMetadata?.name || "";
+      const contractSymbol = contractMetadata?.symbol || _symbol || "";
 
-    return {
-      name: contractName,
-      symbol: contractSymbol,
-      image: contractMetadata.image || "",
-    };
-  });
+      return {
+        name: contractName,
+        symbol: contractSymbol,
+        image: contractMetadata.image || "",
+      };
+    },
+  );
 }
