@@ -27,9 +27,9 @@ export type GetNFTsByOwnerParams = Prettify<
      */
     owner: string;
     /**
-     * Chain to search from
+     * Chain(s) to search from
      */
-    chain?: Chain;
+    chain?: Chain | Chain[];
   } & IndexerPagingParams
 >;
 
@@ -87,7 +87,13 @@ function getEndpointUrl(params: GetNFTsByOwnerParams): URL {
   const url = getNftsByOwnerEndpoint();
   url.searchParams.append("ownerAddress", params.owner);
   if (params.chain) {
-    url.searchParams.append("chainId", params.chain?.id.toString());
+    if (Array.isArray(params.chain)) {
+      for (const chain of params.chain) {
+        url.searchParams.append("chainIds[]", chain.id.toString());
+      }
+    } else {
+      url.searchParams.append("chainIds[]", params.chain.id.toString());
+    }
   }
   return addRequestPagination(url, params);
 }
