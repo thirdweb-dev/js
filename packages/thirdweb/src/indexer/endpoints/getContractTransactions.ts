@@ -118,4 +118,3 @@ function getEndpointUrl(params: GetContractTransactionsParams): URL {
   }
   return addRequestPagination(url, params);
 }
-

@@ -62,7 +62,6 @@ const events = await getEvents({
  contract,
  startDate,
  endDate,
- interval: ["day"],
  pageSize: 20,
  page: 1
 });

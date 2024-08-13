@@ -293,8 +293,6 @@ export {
 export {
   getEvents,
   type GetEventsParams,
-  type GetEventsInterval,
-  type GetEventsGroupBy,
 } from "../indexer/endpoints/getEvents.js";
 export {
   getLatestBlockNumber,

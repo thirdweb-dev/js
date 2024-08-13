@@ -11,9 +11,6 @@ import type {
 } from "../types.js";
 import { getEventsEndpoint } from "../urls.js";
 
-export type GetEventsInterval = "hour" | "day" | "week" | "month";
-export type GetEventsGroupBy = "time" | "name" | "chainId" | "contractAddress";
-
 export type GetEventsParams = Prettify<
   {
     /**
@@ -28,25 +25,17 @@ export type GetEventsParams = Prettify<
      * End point for events date range. Default is current date
      */
     endDate?: Date;
-    /**
-     * If grouped by time, determines the bucket length
-     */
-    interval?: GetEventsInterval;
-    /**
-     * Parameters to group events by for the count
-     */
-    groupBy?: GetEventsGroupBy[];
   } & IndexerPagingParams
 >;
 
 export type GetEventsResult = {
   events: Prettify<
     Log &
-    DecodeEventLogReturnType & {
-      chainId?: number;
-      count: bigint;
-      time?: Date;
-    }
+      DecodeEventLogReturnType & {
+        chainId?: number;
+        count: bigint;
+        time?: Date;
+      }
   >[];
   page?: number;
 };
@@ -74,7 +63,6 @@ export type GetEventsResult = {
  *  contract,
  *  startDate,
  *  endDate,
- *  interval: ["day"],
  *  pageSize: 20,
  *  page: 1
  * });
@@ -115,9 +103,6 @@ function getEndpointUrl(params: GetEventsParams): URL {
   }
   if (params.endDate) {
     url.searchParams.append("endDate", params.endDate.toISOString());
-  }
-  if (params.interval) {
-    url.searchParams.append("interval", params.interval);
   }
   return addRequestPagination(url, params);
 }
