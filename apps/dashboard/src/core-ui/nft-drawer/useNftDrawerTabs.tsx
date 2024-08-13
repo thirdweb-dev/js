@@ -2,7 +2,6 @@ import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
   type DropContract,
   type NFTContract,
-  type SmartContract,
   getErcs,
 } from "@thirdweb-dev/react/evm";
 import { detectFeatures } from "components/contract-components/utils";
@@ -123,6 +122,12 @@ export function useNFTDrawerTabs({
       "ERC721LazyMintable",
     ]);
 
+    const isDropContract = detectFeatures(oldContract, [
+      "ERC721LazyMintable",
+      "ERC1155LazyMintableV1",
+      "ERC1155LazyMintableV2",
+    ]);
+
     const isOwner =
       (isERC1155 && balanceOfQuery?.data) ||
       (isERC721 && nft?.owner === address);
@@ -229,8 +234,9 @@ export function useNFTDrawerTabs({
             "You don't have minter permissions to be able to update metadata",
           children: (
             <UpdateMetadataTab
-              contract={oldContract as SmartContract}
+              contract={contract}
               nft={nft}
+              isDropContract={isDropContract}
             />
           ),
         },
@@ -247,6 +253,7 @@ export function useNFTDrawerTabs({
     address,
     tokenId,
     isMinterRole,
+    contract,
     contractInfo,
   ]);
 }
