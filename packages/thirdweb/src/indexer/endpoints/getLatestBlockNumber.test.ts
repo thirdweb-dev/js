@@ -12,7 +12,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         client: TEST_CLIENT,
         chain: defineChain(1),
       });
-      expect(latestBlockNumber).toBeTypeOf("number");
+      expect(latestBlockNumber).toBeTypeOf("bigint");
     });
   },
 );

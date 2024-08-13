@@ -19,7 +19,7 @@ export type GetLatestBlockNumberParams = {
   chain: Chain;
 };
 
-export type GetLatestBlockNumberResult = number;
+export type GetLatestBlockNumberResult = bigint;
 
 /**
  * @beta
@@ -63,7 +63,7 @@ export async function getLatestBlockNumber(
     if (!data.data) {
       throw new Error("Unable to fetch latest block number");
     }
-    return data.data;
+    return BigInt(data.data);
   } catch (error) {
     throw new Error("Failed to fetch latest block number", { cause: error });
   }
