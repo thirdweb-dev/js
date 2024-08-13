@@ -1,5 +1,4 @@
 import type { Transaction } from "viem";
-import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -12,16 +11,8 @@ import type {
 } from "../types.ts";
 import { getTransactionsEndpoint } from "../urls.js";
 
-export type GetTransactionsParams = Prettify<
+export type GetContractTransactionsParams = Prettify<
   {
-    /**
-     * A client is the entry point to the thirdweb SDK. It is required for all other actions.
-     *
-     * You can create a client using the `createThirdwebClient` function.
-     * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-     *
-     */
-    client: ThirdwebClient;
     /**
      * Contract fetch transactions for
      */
@@ -47,7 +38,7 @@ export type GetTransactionsResult = {
  *
  * Get transactions to a contract
  *
- * @param {GetTransactionsParams} params
+ * @param {GetContractTransactionsParams} params
  * @returns {Promise<GetTransactionsResult>}
  *
  * @example
@@ -94,11 +85,13 @@ export type GetTransactionsResult = {
  * @chainsaw
  */
 export async function getContractTransactions(
-  params: GetTransactionsParams,
+  params: GetContractTransactionsParams,
 ): Promise<GetTransactionsResult> {
   try {
     const url = getEndpointUrl(params);
-    const response = await getClientFetch(params.client)(url.toString());
+    const response = await getClientFetch(params.contract.client)(
+      url.toString(),
+    );
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -118,7 +111,7 @@ export async function getContractTransactions(
   }
 }
 
-function getEndpointUrl(params: GetTransactionsParams): URL {
+function getEndpointUrl(params: GetContractTransactionsParams): URL {
   const url = getTransactionsEndpoint();
   url.searchParams.append("to", params.contract.address);
   url.searchParams.append("chainId", params.contract.chain.id.toString());

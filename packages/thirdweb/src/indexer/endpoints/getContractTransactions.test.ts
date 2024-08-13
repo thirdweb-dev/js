@@ -17,7 +17,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       const { transactions } = await getContractTransactions({
-        client: TEST_CLIENT,
         contract,
         pageSize: 10,
       });

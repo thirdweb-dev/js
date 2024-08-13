@@ -1,5 +1,4 @@
 import type { DecodeEventLogReturnType, Log } from "viem";
-import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
@@ -17,14 +16,6 @@ export type GetEventsGroupBy = "time" | "name" | "chainId" | "contractAddress";
 
 export type GetEventsParams = Prettify<
   {
-    /**
-     * A client is the entry point to the thirdweb SDK. It is required for all other actions.
-     *
-     * You can create a client using the `createThirdwebClient` function.
-     * Refer to the [Creating a Client](https://portal.thirdweb.com/typescript/v5/client) documentation for more information.
-     *
-     */
-    client: ThirdwebClient;
     /**
      * Contract to fetch events for
      */
@@ -97,7 +88,9 @@ export async function getEvents(
 ): Promise<GetEventsResult> {
   try {
     const url = getEndpointUrl(params);
-    const response = await getClientFetch(params.client)(url.toString());
+    const response = await getClientFetch(params.contract.client)(
+      url.toString(),
+    );
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);

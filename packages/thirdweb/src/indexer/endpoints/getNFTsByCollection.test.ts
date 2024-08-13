@@ -17,7 +17,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       const { nfts } = await getNFTsByCollection({
-        client: TEST_CLIENT,
         contract,
       });
 
@@ -50,7 +49,6 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       await expect(
         getNFTsByCollection({
-          client: TEST_CLIENT,
           contract,
         }),
       ).rejects.toThrow("Fetch failed");

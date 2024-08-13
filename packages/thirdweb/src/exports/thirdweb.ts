@@ -311,5 +311,5 @@ export {
 } from "../indexer/endpoints/getNFTsByOwner.js";
 export {
   getContractTransactions,
-  type GetTransactionsParams,
+  type GetContractTransactionsParams,
 } from "../indexer/endpoints/getContractTransactions.js";

@@ -15,7 +15,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getEvents", () => {
     });
 
     const { events } = await getEvents({
-      client: TEST_CLIENT,
       contract,
       startDate: new Date("2024-08-01T12:00:00.000Z"),
       endDate: new Date("2024-08-02T12:00:00.000Z"),
