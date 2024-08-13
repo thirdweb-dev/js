@@ -322,7 +322,7 @@ function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
 }) {
   // TODO - improvement for later -> estimate gas required for transaction, and use that as the amount to give
-  const amountToGive = "0.1";
+  const amountToGive = "0.01";
 
   return (
     <div className="border border-border px-4 py-6 rounded-lg flex justify-center">

@@ -44,13 +44,13 @@ export const POST = async (req: Request) => {
     );
   }
 
-  // Store the claim request for 24 hours.
-  await cacheSet(cacheKey, "claimed", 24 * 60 * 60);
-
   // Assert max amount.
-  if (Number.parseFloat(amount) > 0.1) {
+  if (Number.parseFloat(amount) > 0.01) {
     return NextResponse.json({ error: "Invalid amount." }, { status: 400 });
   }
+
+  // Store the claim request for 24 hours.
+  await cacheSet(cacheKey, "claimed", 24 * 60 * 60);
 
   if (amount !== "0") {
     try {
