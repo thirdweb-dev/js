@@ -9,12 +9,12 @@ import {
   UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
-import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { getRecurringPaymentFailureResponse } from "lib/billing";
 import { useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
+import { LazyOnboardingBilling } from "../../../../onboarding/LazyOnboardingBilling";
 import { ManageBillingButton } from "../ManageButton";
 
 type RecurringPaymentFailureAlertProps = {
@@ -72,7 +72,7 @@ export const RecurringPaymentFailureAlert: React.FC<
           isOpen={isPaymentMethodOpen}
           onClose={onPaymentMethodClose}
         >
-          <OnboardingBilling
+          <LazyOnboardingBilling
             onSave={handlePaymentAdded}
             onCancel={onPaymentMethodClose}
           />

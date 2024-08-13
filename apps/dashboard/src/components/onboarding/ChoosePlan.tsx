@@ -111,3 +111,5 @@ export const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
     </>
   );
 };
+
+export default OnboardingChoosePlan;

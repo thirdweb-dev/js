@@ -268,3 +268,5 @@ export const OnboardingConfirmEmail: React.FC<OnboardingConfirmEmailProps> = ({
     </>
   );
 };
+
+export default OnboardingConfirmEmail;

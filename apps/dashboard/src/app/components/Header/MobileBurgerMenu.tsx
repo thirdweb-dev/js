@@ -1,23 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { Menu, XIcon } from "lucide-react";
 import Link from "next/link";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { headerLinks } from "./headerLinks";
 
 export function MobileBurgerMenu() {
   const [showBurgerMenu, setShowBurgerMenu] = useState(false);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (showBurgerMenu) {
+      // eslint-disable-next-line react-compiler/react-compiler
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
   }, [showBurgerMenu]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     return () => {
       document.body.style.overflow = "auto";
     };

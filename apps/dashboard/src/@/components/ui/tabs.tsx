@@ -1,6 +1,9 @@
+"use client";
+
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ScrollShadow } from "./ScrollShadow/ScrollShadow";
 import { Button } from "./button";
 
@@ -126,7 +129,7 @@ function useUnderline<El extends HTMLElement>() {
     setActiveTabEl(el);
   }, []);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (activeTabEl && containerRef.current && lineRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
       const lineEl = lineRef.current;
