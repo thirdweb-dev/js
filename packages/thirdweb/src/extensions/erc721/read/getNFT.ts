@@ -58,6 +58,8 @@ export async function getNFT(
         tokenUri: "",
         type: "ERC721",
         owner,
+        chainId: options.contract.chain.id,
+        contractAddress: options.contract.address,
       },
     );
   }
@@ -77,6 +79,8 @@ export async function getNFT(
       tokenUri: uri,
       type: "ERC721",
       owner,
+      chainId: options.contract.chain.id,
+      contractAddress: options.contract.address,
     },
   );
 }

@@ -64,6 +64,8 @@ export function formatIndexerNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
           ...common,
           type: "ERC1155" as const,
           supply: BigInt(0),
+          chainId: nft.chainId,
+          contractAddress: nft.contractAddress,
         };
         break;
       }
@@ -71,6 +73,8 @@ export function formatIndexerNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
         options = {
           ...common,
           type: "ERC721" as const,
+          chainId: nft.chainId,
+          contractAddress: nft.contractAddress,
         };
         break;
       }

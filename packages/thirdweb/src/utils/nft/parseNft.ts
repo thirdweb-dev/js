@@ -37,6 +37,8 @@ export type NFT =
       id: bigint;
       tokenURI: string;
       type: "ERC721";
+      chainId: number;
+      contractAddress: string;
     }
   | {
       metadata: NFTMetadata;
@@ -45,6 +47,8 @@ export type NFT =
       tokenURI: string;
       type: "ERC1155";
       supply: bigint;
+      chainId: number;
+      contractAddress: string;
     };
 
 /**
@@ -56,6 +60,8 @@ export type ParseNFTOptions =
       tokenUri: string;
       type: "ERC721";
       owner?: string | null;
+      chainId: number;
+      contractAddress: string;
     }
   | {
       tokenId: bigint;
@@ -63,6 +69,8 @@ export type ParseNFTOptions =
       type: "ERC1155";
       owner?: string | null;
       supply: bigint;
+      chainId: number;
+      contractAddress: string;
     };
 
 /**
@@ -81,6 +89,8 @@ export function parseNFT(base: NFTMetadata, options: ParseNFTOptions): NFT {
         id: options.tokenId,
         tokenURI: options.tokenUri,
         type: options.type,
+        chainId: options.chainId,
+        contractAddress: options.contractAddress,
       };
     case "ERC1155":
       return {
@@ -90,6 +100,8 @@ export function parseNFT(base: NFTMetadata, options: ParseNFTOptions): NFT {
         tokenURI: options.tokenUri,
         type: options.type,
         supply: options.supply,
+        chainId: options.chainId,
+        contractAddress: options.contractAddress,
       };
     default:
       throw new Error("Invalid NFT type");
