@@ -5,7 +5,7 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { useActiveWallet } from "../wallets/useActiveWallet.js";
 
 /**
- * @description Retrieves all linked profiles for the current wallet.
+ * Retrieves all linked profiles for the current wallet.
  *
  * @returns A React Query result containing the linked profiles for the connected in-app wallet.
  *

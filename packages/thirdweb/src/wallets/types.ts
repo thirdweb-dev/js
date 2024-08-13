@@ -29,12 +29,14 @@ export const socialAuthOptions = [
 ] as const;
 export type SocialAuthOption = (typeof socialAuthOptions)[number];
 
-export type AuthOption =
-  | "email"
-  | "phone"
-  | "passkey"
-  | "siwe"
-  | SocialAuthOption;
+export const authOptions = [
+  ...socialAuthOptions,
+  "email",
+  "phone",
+  "passkey",
+  "wallet",
+] as const;
+export type AuthOption = (typeof authOptions)[number];
 
 export type DisconnectFn = () => Promise<void>;
 export type SwitchChainFn = (chain: Chain) => Promise<void>;

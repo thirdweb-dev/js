@@ -1,3 +1,6 @@
+"use client";
+
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import {
@@ -11,7 +14,7 @@ import { defaultChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { IoChevronBack } from "react-icons/io5";
 import { useActiveAccount } from "thirdweb/react";
@@ -288,7 +291,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     window?.scrollTo({
       top: 0,
       behavior: "smooth",

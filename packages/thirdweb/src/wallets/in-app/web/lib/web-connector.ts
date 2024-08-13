@@ -222,12 +222,12 @@ export class InAppWebConnector implements InAppConnector {
           openedWindow: args.openedWindow,
         });
       }
-      case "siwe": {
+      case "wallet": {
         return siweAuthenticate({
-          client: this.wallet.client,
           ecosystem: this.wallet.ecosystem,
-          walletId: args.walletId,
-          chainId: args.chainId,
+          client: this.wallet.client,
+          wallet: args.wallet,
+          chain: args.chain,
         });
       }
     }
@@ -280,7 +280,7 @@ export class InAppWebConnector implements InAppConnector {
       }
       case "phone":
       case "email":
-      case "siwe":
+      case "wallet":
       case "apple":
       case "facebook":
       case "google":

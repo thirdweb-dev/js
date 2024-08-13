@@ -102,6 +102,8 @@ export const OnboardingBilling: React.FC<OnboardingBillingProps> = ({
   );
 };
 
+export default OnboardingBilling;
+
 const appearance = {
   variables: {
     fontFamily: "Inter, system-ui, sans-serif",

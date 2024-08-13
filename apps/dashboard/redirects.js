@@ -282,6 +282,13 @@ function redirects() {
         "https://support.thirdweb.com/troubleshooting-errors/7Y1BqKNvtLdBv5fZkRZZB3/issue-linking-device-on-the-authorization-page-via-thirdweb-cli/cn9LRA3ax7XCP6uxwRYdvx",
       permanent: false,
     },
+
+    // temporary redirect gas -> explore page
+    {
+      source: "/gas",
+      destination: "/explore",
+      permanent: false,
+    },
   ];
 }
 

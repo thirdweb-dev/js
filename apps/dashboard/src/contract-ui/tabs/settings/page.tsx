@@ -1,6 +1,9 @@
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { getContract } from "thirdweb";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
@@ -32,10 +35,21 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
     feature: "PlatformFee",
   });
 
+  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
+
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
+
+  const contract =
+    contractQuery.contract && chain
+      ? getContract({
+          address: contractQuery.contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : null;
 
   return (
     <Flex direction="column" gap={4}>
@@ -61,12 +75,14 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
             />
           </GridItem>
 
-          <GridItem order={detectedPlatformFees === "enabled" ? 4 : 103}>
-            <SettingsPlatformFees
-              contract={contractQuery.contract}
-              detectedState={detectedPlatformFees}
-            />
-          </GridItem>
+          {contract && (
+            <GridItem order={detectedPlatformFees === "enabled" ? 4 : 103}>
+              <SettingsPlatformFees
+                contract={contract}
+                detectedState={detectedPlatformFees}
+              />
+            </GridItem>
+          )}
         </SimpleGrid>
       </Flex>
     </Flex>

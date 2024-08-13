@@ -913,12 +913,7 @@ export function useAuthorizedWallets() {
 export async function fetchChainsFromApi() {
   // always fetch from prod for chains for now
   // TODO: re-visit this
-  const res = await fetch("https://api.thirdweb.com/v1/chains", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const res = await fetch("https://api.thirdweb.com/v1/chains");
   const json = await res.json();
 
   if (json.error) {

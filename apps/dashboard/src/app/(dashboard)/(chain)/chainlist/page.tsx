@@ -148,6 +148,10 @@ export const metadata: Metadata = {
     "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.",
 };
 
+// we use headers() to determine if we should default to table or grid view by checking viewport
+// so this page needs to be forced as dynamic
+export const dynamic = "force-dynamic";
+
 export default function ChainListPage(props: { searchParams: SearchParams }) {
   const headersList = headers();
   const viewportWithHint = Number(

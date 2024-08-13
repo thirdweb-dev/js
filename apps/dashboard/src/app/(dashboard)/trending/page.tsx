@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   },
 };
 
+// we're using searchParams here - use dynamic rendering
+export const dynamic = "force-dynamic";
+
 export default async function DashboardContractTrendingPage(props: {
   searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
 }) {

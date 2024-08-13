@@ -1,8 +1,9 @@
 import type { AuthType } from "@passwordless-id/webauthn/dist/esm/types.js";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Address } from "../../../../utils/address.js";
-import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
 import type { Account } from "../../../interfaces/wallet.js";
+import type { Wallet } from "../../../interfaces/wallet.js";
 import type { AuthOption, SocialAuthOption } from "../../../types.js";
 import type { Ecosystem } from "../../web/types.js";
 
@@ -42,9 +43,9 @@ export type SingleStepAuthArgsType =
       authenticatorType?: AuthType;
     }
   | {
-      strategy: "siwe";
-      walletId: InjectedSupportedWalletIds;
-      chainId: number;
+      strategy: "wallet";
+      wallet: Wallet;
+      chain: Chain;
     };
 
 export type AuthArgsType = (MultiStepAuthArgsType | SingleStepAuthArgsType) & {

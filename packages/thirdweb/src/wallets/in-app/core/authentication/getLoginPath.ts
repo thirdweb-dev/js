@@ -1,7 +1,19 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
-import type { AuthOption } from "../../../../wallets/types.js";
+import { type AuthOption, authOptions } from "../../../../wallets/types.js";
 import type { Ecosystem } from "../../web/types.js";
+
+const getLoginOptionRoute = (option: AuthOption) => {
+  if (!authOptions.includes(option)) {
+    throw new Error(`Unknown auth option ${option}`);
+  }
+  switch (option) {
+    case "wallet":
+      return "siwe";
+    default:
+      return option;
+  }
+};
 
 export const getLoginUrl = ({
   authOption,
@@ -16,7 +28,8 @@ export const getLoginUrl = ({
   mode?: "popup" | "redirect" | "mobile";
   redirectUrl?: string;
 }) => {
-  let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}?clientId=${client.clientId}`;
+  const route = getLoginOptionRoute(authOption);
+  let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${route}?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
     baseUrl = `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
   } else if (ecosystem) {
@@ -49,7 +62,8 @@ export const getLoginCallbackUrl = ({
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 }): string => {
-  let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${authOption}/callback?clientId=${client.clientId}`;
+  const route = getLoginOptionRoute(authOption);
+  let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${route}/callback?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
     baseUrl = `${baseUrl}&ecosystemId=${ecosystem.id}&ecosystemPartnerId=${ecosystem.partnerId}`;
   } else if (ecosystem) {

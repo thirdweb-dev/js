@@ -229,7 +229,10 @@ export const sidebar: SideBar = {
 		{
 			name: "Blockchain API",
 			isCollapsible: false,
-			links: [contracts, transactions],
+			links: [contracts, transactions, {
+				name: "Common Utils",
+				href: "/dotnet/utils",
+			}],
 		},
 		{ separator: true },
 		{

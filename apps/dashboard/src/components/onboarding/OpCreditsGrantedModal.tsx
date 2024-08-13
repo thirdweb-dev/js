@@ -195,3 +195,5 @@ Apply here!`,
     </Modal>
   );
 };
+
+export default OpCreditsGrantedModal;
