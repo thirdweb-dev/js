@@ -5,7 +5,7 @@ import { defineChain } from "../../chains/utils.js";
 import { getContract } from "../../contract/contract.js";
 import { getEvents } from "./getEvents.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getEvents", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("indexer.getEvents", () => {
   it("gets events", async () => {
     const contractAddress = "0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC";
     const contract = getContract({

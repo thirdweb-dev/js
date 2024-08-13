@@ -4,7 +4,7 @@ import { defineChain } from "../../chains/utils.js";
 import { createThirdwebClient } from "../../client/client.js";
 import { getNFTsByOwner } from "./getNFTsByOwner.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("indexer.getNFTsByOwner", () => {
   const SECRET_KEY = process.env.TW_SECRET_KEY as string;
   const client = createThirdwebClient({ secretKey: SECRET_KEY });
 

@@ -6,7 +6,7 @@ import { getContract } from "../../contract/contract.js";
 import { getContractTransactions } from "./getContractTransactions.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "chainsaw.getContractTransactions",
+  "indexer.getContractTransactions",
   () => {
     it("gets transactions", async () => {
       const contractAddress = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D"; // uniswap v2

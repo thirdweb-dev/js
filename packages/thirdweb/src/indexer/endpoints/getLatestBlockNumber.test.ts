@@ -5,7 +5,7 @@ import { defineChain } from "../../chains/utils.js";
 import { getLatestBlockNumber } from "./getLatestBlockNumber.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "chainsaw.getLatestBlockNumber",
+  "indexer.getLatestBlockNumber",
   () => {
     it("gets latest block number", async () => {
       const latestBlockNumber = await getLatestBlockNumber({

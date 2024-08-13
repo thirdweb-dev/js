@@ -4,7 +4,7 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { defineChain } from "../../chains/utils.js";
 import { getBlock } from "./getBlock.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getBlock", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("indexer.getBlock", () => {
   it("gets block", async () => {
     const block = await getBlock({
       client: TEST_CLIENT,

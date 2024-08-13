@@ -6,7 +6,7 @@ import { getContract } from "../../contract/contract.js";
 import { getNFTsByCollection } from "./getNFTsByCollection.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
-  "chainsaw.getNFTsByCollection",
+  "indexer.getNFTsByCollection",
   () => {
     it("gets NFTs for collection", async () => {
       const contractAddress = "0x00000000001594c61dd8a6804da9ab58ed2483ce";
