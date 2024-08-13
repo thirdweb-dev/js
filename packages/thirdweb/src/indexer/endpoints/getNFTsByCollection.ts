@@ -43,14 +43,11 @@ export type GetNFTsByCollectionResult = {
  * ```ts
  * import { createThirdwebClient, defineChain, getNFTsByCollection, getContract } from "thirdweb";
  *
- * const client = createThirdwebClient({ clientId: "..." });
  * const contract = getContract({
- *  client,
  *  address: "0x...",
  *  chain: defineChain(1)
  * });
  * const nfts = await getNFTsByCollection({
- *  client,
  *  contract,
  *  groupBy: ["ownerAddress"],
  * });

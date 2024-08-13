@@ -36,24 +36,22 @@ export type GetTransactionsResult = {
 /**
  * @beta
  *
- * Get transactions to a contract
+ * Get transactions for a contract
  *
  * @param {GetContractTransactionsParams} params
  * @returns {Promise<GetTransactionsResult>}
  *
  * @example
  * ```ts
- * import { createThirdwebClient, defineChain, getTransactions } from "thirdweb";
+ * import { createThirdwebClient, defineChain, getContractTransactions } from "thirdweb";
  *
  * const client = createThirdwebClient({ clientId: "..." });
  * const contract = getContract({
- *  client,
  *  chain: defineChain(1),
  *  address: "0x..."
  * });
  *
- * const block = await getTransactions({
- *  client,
+ * const block = await getContractTransactions({
  *  contract,
  *  pageSize: 20,
  *  page: 1
@@ -64,7 +62,6 @@ export type GetTransactionsResult = {
  * ```ts
  * import { createThirdwebClient, defineChain, getContractTransactions } from "thirdweb";
  *
- * const client = createThirdwebClient({ clientId: "..." });
  * const startDate = new Date(Date.now() - 24 * 60 * 60_000);
  * const endDate = new Date();
  * const contract = getContract({
@@ -74,7 +71,6 @@ export type GetTransactionsResult = {
  * });
  *
  * const block = await getContractTransactions({
- *  client,
  *  contract,
  *  startDate,
  *  endDate,
@@ -122,3 +118,4 @@ function getEndpointUrl(params: GetContractTransactionsParams): URL {
   }
   return addRequestPagination(url, params);
 }
+

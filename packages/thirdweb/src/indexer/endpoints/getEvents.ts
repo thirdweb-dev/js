@@ -42,11 +42,11 @@ export type GetEventsParams = Prettify<
 export type GetEventsResult = {
   events: Prettify<
     Log &
-      DecodeEventLogReturnType & {
-        chainId?: number;
-        count: bigint;
-        time?: Date;
-      }
+    DecodeEventLogReturnType & {
+      chainId?: number;
+      count: bigint;
+      time?: Date;
+    }
   >[];
   page?: number;
 };
@@ -63,7 +63,6 @@ export type GetEventsResult = {
  * ```ts
  * import { createThirdwebClient, getEvents, defineChain, getContract } from "thirdweb";
  *
- * const client = createThirdwebClient({ clientId: "..." });
  * const startDate = new Date(Date.now() - 48 * 60 * 60_000);
  * const endDate = new Date();
  * const contract = getContract({
@@ -72,7 +71,6 @@ export type GetEventsResult = {
  *  chain: defineChain(1)
  * });
  * const events = await getEvents({
- *  client,
  *  contract,
  *  startDate,
  *  endDate,
