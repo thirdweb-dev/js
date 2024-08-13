@@ -1,9 +1,11 @@
+"use client";
+
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { useColorModeValue } from "@chakra-ui/react";
-import { useLayoutEffect } from "react";
 
 export function useNativeColorMode() {
   const activeColorMode = useColorModeValue("light", "dark");
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     document
       .getElementById("tw-body-root")
       ?.style.setProperty("color-scheme", activeColorMode);
