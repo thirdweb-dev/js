@@ -18,7 +18,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
 
       const { transactions } = await getContractTransactions({
         contract,
-        pageSize: 10,
+        start: 10,
+        count: 10,
       });
       expect(transactions).toHaveLength(10);
       for (const transaction of transactions) {

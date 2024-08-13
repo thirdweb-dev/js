@@ -8,13 +8,13 @@ export type IndexerResponse<T = unknown> = {
 
 export type IndexerPagingParams = {
   /**
-   * Number of items per page
+   * Number of items
    */
-  pageSize?: number;
+  count?: number;
   /**
-   * Page number
+   * Item offset
    */
-  page?: number;
+  start?: number;
 };
 
 export type IndexerInternalBlock = {

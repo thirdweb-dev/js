@@ -7,11 +7,11 @@ export function addRequestPagination(
   url: URL,
   pagingParams: IndexerPagingParams,
 ): URL {
-  if (pagingParams.page) {
-    url.searchParams.append("page", pagingParams.page.toString());
+  if (pagingParams.start) {
+    url.searchParams.append("offset", pagingParams.start.toString());
   }
-  if (pagingParams.pageSize) {
-    url.searchParams.append("pageSize", pagingParams.pageSize.toString());
+  if (pagingParams.count) {
+    url.searchParams.append("limit", pagingParams.count.toString());
   }
   return url;
 }
