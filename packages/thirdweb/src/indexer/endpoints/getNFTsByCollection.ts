@@ -19,16 +19,11 @@ export type GetNFTsByCollectionParams = Prettify<
      * NFT collection contract
      */
     contract: ThirdwebContract;
-    /**
-     * Parameters to group results count by. Currently supports "ownerAddress"
-     */
-    groupBy?: GetNFTsGroupBy;
   } & IndexerPagingParams
 >;
 
 export type GetNFTsByCollectionResult = {
   nfts: NFT[];
-  page?: number;
 };
 
 /**
@@ -72,7 +67,6 @@ export async function getNFTsByCollection(
     }
     return {
       nfts: formatIndexerNFTs(data.data),
-      page: data.page,
     };
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });
@@ -83,8 +77,5 @@ function getEndpointUrl(params: GetNFTsByCollectionParams): URL {
   const url = getNftsByCollectionEndpoint();
   url.searchParams.append("contractAddress", params.contract.address);
   url.searchParams.append("chainId", params.contract.chain.id.toString());
-  if (params.groupBy) {
-    url.searchParams.append("groupBy", params.groupBy);
-  }
   return addRequestPagination(url, params);
 }

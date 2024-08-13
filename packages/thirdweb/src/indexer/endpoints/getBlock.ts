@@ -3,7 +3,7 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { formatIndexerBlock } from "../formatter.js";
-import type { IndexerInternalBlock, IndexerResponse } from "../types.ts";
+import type { IndexerInternalBlock, IndexerResponse } from "../types.js";
 import { getBlockEndpoint } from "../urls.js";
 
 export type GetBlockParams = {
@@ -25,9 +25,8 @@ export type GetBlockParams = {
   chain: Chain;
 };
 
-export type GetBlockResult<TBlockTag extends BlockTag = "latest"> = {
-  block: GetBlockReturnType<undefined, false, TBlockTag>;
-};
+export type GetBlockResult<TBlockTag extends BlockTag = "latest"> =
+  GetBlockReturnType<undefined, false, TBlockTag>;
 
 /**
  * @beta
@@ -70,7 +69,7 @@ export async function getBlock(
     if (!block) {
       throw new Error(`unable to fetch block ${params.blockNumber}`);
     }
-    return { block };
+    return block;
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });
   }

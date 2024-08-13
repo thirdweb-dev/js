@@ -35,7 +35,6 @@ export type GetNFTsByOwnerParams = Prettify<
 
 export type GetNFTsByOwnerResult = {
   nfts: NFT[];
-  page?: number;
 };
 
 /**
@@ -76,7 +75,6 @@ export async function getNFTsByOwner(
     }
     return {
       nfts: formatIndexerNFTs(data.data),
-      page: data.page,
     };
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });

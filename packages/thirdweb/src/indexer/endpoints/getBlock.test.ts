@@ -6,7 +6,7 @@ import { getBlock } from "./getBlock.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getBlock", () => {
   it("gets block", async () => {
-    const { block } = await getBlock({
+    const block = await getBlock({
       client: TEST_CLIENT,
       chain: defineChain(1),
       blockNumber: 20484878n,

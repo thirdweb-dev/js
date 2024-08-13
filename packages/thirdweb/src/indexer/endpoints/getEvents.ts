@@ -37,7 +37,6 @@ export type GetEventsResult = {
         time?: Date;
       }
   >[];
-  page?: number;
 };
 
 /**
@@ -87,7 +86,6 @@ export async function getEvents(
     }
     return {
       events: formatIndexerEvents(data.data),
-      page: data.page,
     };
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });

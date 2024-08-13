@@ -8,7 +8,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
   "chainsaw.getLatestBlockNumber",
   () => {
     it("gets latest block number", async () => {
-      const { latestBlockNumber } = await getLatestBlockNumber({
+      const latestBlockNumber = await getLatestBlockNumber({
         client: TEST_CLIENT,
         chain: defineChain(1),
       });

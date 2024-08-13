@@ -30,7 +30,6 @@ export type GetContractTransactionsParams = Prettify<
 
 export type GetTransactionsResult = {
   transactions: Transaction[];
-  page?: number;
 };
 
 /**
@@ -99,7 +98,6 @@ export async function getContractTransactions(
     }
     return {
       transactions: formatIndexerTransactions(data.data),
-      page: data.page,
     };
   } catch (error) {
     throw new Error("Fetch failed", { cause: error });
