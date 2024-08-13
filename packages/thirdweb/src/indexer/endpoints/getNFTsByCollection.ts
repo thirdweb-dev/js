@@ -11,8 +11,6 @@ import type {
 } from "../types.js";
 import { getNftsByCollectionEndpoint } from "../urls.js";
 
-export type GetNFTsGroupBy = "ownerAddress";
-
 export type GetNFTsByCollectionParams = Prettify<
   {
     /**
@@ -44,7 +42,6 @@ export type GetNFTsByCollectionResult = {
  * });
  * const nfts = await getNFTsByCollection({
  *  contract,
- *  groupBy: ["ownerAddress"],
  * });
  * ```
  */
@@ -58,7 +55,7 @@ export async function getNFTsByCollection(
     );
     if (!response.ok) {
       response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`Failed to get NFTs: ${response.status}`);
     }
 
     const data: IndexerResponse<IndexerInternalNFT[]> = await response.json();
@@ -69,13 +66,13 @@ export async function getNFTsByCollection(
       nfts: formatIndexerNFTs(data.data),
     };
   } catch (error) {
-    throw new Error("Fetch failed", { cause: error });
+    throw new Error("Failed to get NFTs.", { cause: error });
   }
 }
 
 function getEndpointUrl(params: GetNFTsByCollectionParams): URL {
   const url = getNftsByCollectionEndpoint();
-  url.searchParams.append("contractAddress", params.contract.address);
-  url.searchParams.append("chainId", params.contract.chain.id.toString());
+  url.searchParams.append("contractAddresses[]", params.contract.address);
+  url.searchParams.append("chainIds[]", params.contract.chain.id.toString());
   return addRequestPagination(url, params);
 }

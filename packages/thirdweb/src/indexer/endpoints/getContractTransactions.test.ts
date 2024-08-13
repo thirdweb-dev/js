@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { getContract } from "src/contract/contract.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { defineChain } from "../../chains/utils.js";
-import { getContractTransactions } from "./getTransactions.js";
+import { getContract } from "../../contract/contract.js";
+import { getContractTransactions } from "./getContractTransactions.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
   "chainsaw.getContractTransactions",

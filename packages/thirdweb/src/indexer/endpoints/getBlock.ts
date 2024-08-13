@@ -58,7 +58,9 @@ export async function getBlock(
     const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `Failed to get block ${params.blockNumber} on chain ${params.chain.id}: ${response.status}`,
+      );
     }
 
     const data: IndexerResponse<IndexerInternalBlock> = await response.json();
@@ -67,10 +69,10 @@ export async function getBlock(
     }
     const block = formatIndexerBlock(data.data);
     if (!block) {
-      throw new Error(`unable to fetch block ${params.blockNumber}`);
+      throw new Error(`Failed to fetch block ${params.blockNumber}`);
     }
     return block;
   } catch (error) {
-    throw new Error("Fetch failed", { cause: error });
+    throw new Error("Failed to fetch block", { cause: error });
   }
 }

@@ -301,7 +301,6 @@ export {
 export {
   getNFTsByCollection,
   type GetNFTsByCollectionParams,
-  type GetNFTsGroupBy,
 } from "../indexer/endpoints/getNFTsByCollection.js";
 export {
   getNFTsByOwner,

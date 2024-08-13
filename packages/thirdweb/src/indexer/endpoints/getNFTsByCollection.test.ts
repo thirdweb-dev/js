@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { defineChain } from "src/chains/utils.js";
-import { getContract } from "src/contract/contract.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { defineChain } from "../../chains/utils.js";
+import { getContract } from "../../contract/contract.js";
 import { getNFTsByCollection } from "./getNFTsByCollection.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)(
@@ -51,7 +51,7 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         getNFTsByCollection({
           contract,
         }),
-      ).rejects.toThrow("Fetch failed");
+      ).rejects.toThrow("Failed to get NFTs.");
     });
   },
 );

@@ -88,7 +88,9 @@ export async function getContractTransactions(
     );
     if (!response.ok) {
       response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `Failed to get transactions for contract ${params.contract.address}: ${response.status}`,
+      );
     }
 
     const data: IndexerResponse<IndexerInternalTransaction[]> =
@@ -100,7 +102,7 @@ export async function getContractTransactions(
       transactions: formatIndexerTransactions(data.data),
     };
   } catch (error) {
-    throw new Error("Fetch failed", { cause: error });
+    throw new Error("Failed to get transactions", { cause: error });
   }
 }
 

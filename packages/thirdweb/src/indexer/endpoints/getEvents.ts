@@ -77,7 +77,9 @@ export async function getEvents(
     );
     if (!response.ok) {
       response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `Failed to get events for contract ${params.contract.address}: ${response.status}`,
+      );
     }
 
     const data: IndexerResponse<IndexerInternalEvent[]> = await response.json();
@@ -88,14 +90,14 @@ export async function getEvents(
       events: formatIndexerEvents(data.data),
     };
   } catch (error) {
-    throw new Error("Fetch failed", { cause: error });
+    throw new Error("Failed to get events", { cause: error });
   }
 }
 
 function getEndpointUrl(params: GetEventsParams): URL {
   const url = getEventsEndpoint();
-  url.searchParams.append("contractAddress", params.contract.address);
-  url.searchParams.append("chainId", params.contract.chain.id.toString());
+  url.searchParams.append("contractAddresses[]", params.contract.address);
+  url.searchParams.append("chainIds[]", params.contract.chain.id.toString());
   if (params.startDate) {
     url.searchParams.append("startDate", params.startDate.toISOString());
   }

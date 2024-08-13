@@ -66,7 +66,7 @@ export async function getNFTsByOwner(
     const response = await getClientFetch(params.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`Failed to get NFTs: ${response.status}`);
     }
 
     const data: IndexerResponse<IndexerInternalNFT[]> = await response.json();
@@ -83,7 +83,7 @@ export async function getNFTsByOwner(
 
 function getEndpointUrl(params: GetNFTsByOwnerParams): URL {
   const url = getNftsByOwnerEndpoint();
-  url.searchParams.append("ownerAddress", params.owner);
+  url.searchParams.append("ownerAddresses[]", params.owner);
   if (params.chain) {
     if (Array.isArray(params.chain)) {
       for (const chain of params.chain) {

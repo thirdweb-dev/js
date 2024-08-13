@@ -51,7 +51,9 @@ export async function getLatestBlockNumber(
     const response = await getClientFetch(params.client)(url);
     if (!response.ok) {
       response.body?.cancel();
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `Failed to get latest block number for chain ${params.chain.id}: ${response.status}`,
+      );
     }
 
     const data: IndexerResponse<number> = await response.json();
@@ -59,10 +61,10 @@ export async function getLatestBlockNumber(
       throw new Error(data.error);
     }
     if (!data.data) {
-      throw new Error("unable to fetch latest block number");
+      throw new Error("Unable to fetch latest block number");
     }
     return data.data;
   } catch (error) {
-    throw new Error("Fetch failed", { cause: error });
+    throw new Error("Failed to fetch latest block number", { cause: error });
   }
 }
