@@ -1,18 +1,17 @@
 import { getIpAddress } from "lib/ip";
-import { cacheDeleteKey, cacheExists, cacheSet } from "lib/redis";
+import { cacheExists, cacheSet } from "lib/redis";
 import { NextResponse } from "next/server";
 import { ZERO_ADDRESS } from "thirdweb";
 
 interface RequestTestnetFundsPayload {
   chainId: number;
   toAddress: string;
-  amount: string;
 }
 
 // Note: This handler cannot use "edge" runtime because of Redis usage.
 export const POST = async (req: Request) => {
   const requestBody = (await req.json()) as RequestTestnetFundsPayload;
-  const { chainId, toAddress, amount } = requestBody;
+  const { chainId, toAddress } = requestBody;
   if (Number.isNaN(chainId)) {
     throw new Error("Invalid chain ID.");
   }
@@ -44,44 +43,35 @@ export const POST = async (req: Request) => {
     );
   }
 
-  // Assert max amount.
-  if (Number.parseFloat(amount) > 0.01) {
-    return NextResponse.json({ error: "Invalid amount." }, { status: 400 });
-  }
+  try {
+    // Store the claim request for 24 hours.
+    await cacheSet(cacheKey, "claimed", 24 * 60 * 60);
+    // then actually transfer the funds
+    const url = `${THIRDWEB_ENGINE_URL}/backend-wallet/${chainId}/transfer`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
+        Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        to: toAddress,
+        currencyAddress: ZERO_ADDRESS,
+        amount: "0.01",
+      }),
+    });
 
-  // Store the claim request for 24 hours.
-  await cacheSet(cacheKey, "claimed", 24 * 60 * 60);
-
-  if (amount !== "0") {
-    try {
-      const url = `${THIRDWEB_ENGINE_URL}/backend-wallet/${chainId}/transfer`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-backend-wallet-address": NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET,
-          Authorization: `Bearer ${THIRDWEB_ACCESS_TOKEN}`,
-        },
-        body: JSON.stringify({
-          to: toAddress,
-          currencyAddress: ZERO_ADDRESS,
-          amount,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw error.error;
-      }
-    } catch (error) {
-      // Remove user from cache for retry on transfer failure.
-      cacheDeleteKey(cacheKey);
-      return NextResponse.json(
-        { error: `${(error as Error)?.message}` },
-        { status: 500 },
-      );
+    if (!response.ok) {
+      const error = await response.json();
+      throw error.error;
     }
+  } catch (error) {
+    return NextResponse.json(
+      { error: `${(error as Error)?.message}` },
+      { status: 500 },
+    );
   }
 
-  return NextResponse.json({ amount: amount.toString() }, { status: 200 });
+  return NextResponse.json({ amount: "0.01" }, { status: 200 });
 };

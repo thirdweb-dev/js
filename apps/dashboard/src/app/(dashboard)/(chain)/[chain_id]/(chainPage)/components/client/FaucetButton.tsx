@@ -64,7 +64,6 @@ export function FaucetButton({
         body: JSON.stringify({
           chainId: chainId,
           toAddress: address,
-          amount,
         }),
       });
 
