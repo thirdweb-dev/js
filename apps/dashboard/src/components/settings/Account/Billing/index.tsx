@@ -6,7 +6,6 @@ import {
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, HStack, Icon, useDisclosure } from "@chakra-ui/react";
 import { StepsCard } from "components/dashboard/StepsCard";
-import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { AccountForm } from "components/settings/Account/AccountForm";
 import { ManageBillingButton } from "components/settings/Account/Billing/ManageButton";
@@ -16,6 +15,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { FiExternalLink } from "react-icons/fi";
 import { Button, Heading, Text, TrackedLink } from "tw-components";
 import { PLANS } from "utils/pricing";
+import { LazyOnboardingBilling } from "../../../onboarding/LazyOnboardingBilling";
 import { BillingDowngradeDialog } from "./DowngradeDialog";
 import { BillingHeader } from "./Header";
 import { BillingPlanCard } from "./PlanCard";
@@ -258,7 +258,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
             isOpen={isPaymentMethodOpen}
             onClose={onPaymentMethodClose}
           >
-            <OnboardingBilling
+            <LazyOnboardingBilling
               onSave={handlePaymentAdded}
               onCancel={onPaymentMethodClose}
             />

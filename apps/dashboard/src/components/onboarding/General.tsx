@@ -99,3 +99,5 @@ export const OnboardingGeneral: React.FC<OnboardingGeneralProps> = ({
     </FocusLock>
   );
 };
+
+export default OnboardingGeneral;
