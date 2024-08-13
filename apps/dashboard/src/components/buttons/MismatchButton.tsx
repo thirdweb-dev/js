@@ -97,6 +97,7 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <CustomConnectWallet
           borderRadius="md"
+          loginRequired={false}
           colorScheme="primary"
           {...props}
         />
