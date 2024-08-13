@@ -76,6 +76,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         getNFT({ contract, tokenId: 0n }),
       ).resolves.toMatchInlineSnapshot(`
         {
+          "chainId": 31337,
+          "contractAddress": "${contract.address}",
           "id": 0n,
           "metadata": {
             "name": "Test NFT",

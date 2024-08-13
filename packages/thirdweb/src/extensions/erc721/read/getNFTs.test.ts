@@ -14,6 +14,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
     expect(nfts).toMatchInlineSnapshot(`
       [
         {
+          "chainId": 1,
+          "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
           "id": 0n,
           "metadata": {
             "attributes": [
@@ -47,6 +49,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
           "type": "ERC721",
         },
         {
+          "chainId": 1,
+          "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
           "id": 1n,
           "metadata": {
             "attributes": [
@@ -80,6 +84,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
           "type": "ERC721",
         },
         {
+          "chainId": 1,
+          "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
           "id": 2n,
           "metadata": {
             "attributes": [
@@ -113,6 +119,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
           "type": "ERC721",
         },
         {
+          "chainId": 1,
+          "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
           "id": 3n,
           "metadata": {
             "attributes": [
@@ -146,6 +154,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFTs", () => {
           "type": "ERC721",
         },
         {
+          "chainId": 1,
+          "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
           "id": 4n,
           "metadata": {
             "attributes": [

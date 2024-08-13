@@ -72,6 +72,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
       getNFT({ contract, tokenId: 0n }),
     ).resolves.toMatchInlineSnapshot(`
         {
+          "chainId": 31337,
+          "contractAddress": "${contract.address}",
           "id": 0n,
           "metadata": {
             "name": "Test NFT",
@@ -110,6 +112,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
       getNFT({ contract, tokenId: 0n }),
     ).resolves.toMatchInlineSnapshot(`
         {
+          "chainId": 31337,
+          "contractAddress": "${contract.address}",
           "id": 0n,
           "metadata": {
             "name": "Test NFT",
@@ -145,6 +149,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
     await expect(getNFTs({ contract })).resolves.toMatchInlineSnapshot(`
       [
         {
+          "chainId": 31337,
+          "contractAddress": "${contract.address}",
           "id": 0n,
           "metadata": {
             "name": "Test NFT",
@@ -155,6 +161,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("TokenERC1155", () => {
           "type": "ERC1155",
         },
         {
+          "chainId": 31337,
+          "contractAddress": "${contract.address}",
           "id": 1n,
           "metadata": {
             "name": "Test NFT 2",

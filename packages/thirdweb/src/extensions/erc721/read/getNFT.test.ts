@@ -12,6 +12,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
     });
     expect(nft).toMatchInlineSnapshot(`
       {
+        "chainId": 1,
+        "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
         "id": 1n,
         "metadata": {
           "attributes": [
@@ -55,6 +57,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc721.getNFT", () => {
     });
     expect(nft).toMatchInlineSnapshot(`
       {
+        "chainId": 1,
+        "contractAddress": "0x8a90cab2b38dba80c64b7734e58ee1db38b8992e",
         "id": 1n,
         "metadata": {
           "attributes": [

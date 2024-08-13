@@ -11,6 +11,8 @@ describe.runIf(process.env.TW_SECRET_KEY)("erc1155.getNFT", () => {
     });
     expect(nft).toMatchInlineSnapshot(`
       {
+        "chainId": 1,
+        "contractAddress": "${DROP1155_CONTRACT.address}",
         "id": 2n,
         "metadata": {
           "animation_url": "ipfs://QmYoM63qaumQznBRx38tQjkY4ewbymeFb2KWBhkfMqNHax/3.mp4",
