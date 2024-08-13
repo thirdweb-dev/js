@@ -3,7 +3,7 @@
 import { ColorModeToggle } from "@/components/color-mode-toggle";
 import { thirdwebClient } from "@/constants/client";
 import { useTheme } from "next-themes";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ConnectEmbed } from "thirdweb/react";
 import { ThirdwebMiniLogo } from "../components/ThirdwebMiniLogo";
@@ -39,19 +39,44 @@ function CustomConnectEmmbed() {
   const isLG = useMediaQuery("(min-width: 1024px)");
   const searchParams = useSearchParams();
   const { theme } = useTheme();
+  const router = useRouter();
   return (
     <ConnectEmbed
       auth={{
-        getLoginPayload,
-        doLogin: (params) => doLogin(params, searchParams?.get("next")),
-        doLogout,
-        isLoggedIn,
+        getLoginPayload: getLoginPayload,
+        doLogin: async (params) => {
+          const nextPath = searchParams?.get("next");
+          await doLogin(params);
+
+          // redirect to the page where the user was before login
+          if (nextPath && isValidRedirectPath(nextPath)) {
+            router.replace(nextPath);
+          } else {
+            // redirect to dashboard home
+            router.replace("/dashboard");
+          }
+        },
+        doLogout: doLogout,
+        isLoggedIn: isLoggedIn,
       }}
       client={thirdwebClient}
       modalSize={isLG ? "wide" : "compact"}
       theme={getSDKTheme(theme === "light" ? "light" : "dark")}
     />
   );
+}
+
+function isValidRedirectPath(encodedPath: string): boolean {
+  try {
+    // Decode the URI component
+    const decodedPath = decodeURIComponent(encodedPath);
+    // ensure the path always starts with a _single_ slash
+    // dobule slash could be interpreted as `//example.com` which is not allowed
+    return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
+  } catch (e) {
+    // If decoding fails, return false
+    return false;
+  }
 }
 
 function useMediaQuery(query: string) {

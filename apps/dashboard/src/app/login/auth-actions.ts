@@ -3,7 +3,6 @@ import "server-only";
 
 import { COOKIE_ACTIVE_ACCOUNT, COOKIE_PREFIX_TOKEN } from "@/constants/cookie";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { getAddress } from "thirdweb";
 import type {
   GenerateLoginPayloadParams,
@@ -34,10 +33,7 @@ export async function getLoginPayload(
   return (await res.json()).payload;
 }
 
-export async function doLogin(
-  payload: VerifyLoginPayloadParams,
-  nextPath?: string | null,
-) {
+export async function doLogin(payload: VerifyLoginPayloadParams) {
   // forward the request to the API server
   const res = await fetch(`${THIRDWEB_API_HOST}/v1/auth/login`, {
     method: "POST",
@@ -126,25 +122,6 @@ export async function doLogin(
     // 3 days
     maxAge: 3 * 24 * 60 * 60,
   });
-
-  // redirect to the nextPath (if set)
-  if (nextPath && isValidRedirectPath(nextPath)) {
-    return redirect(nextPath);
-  }
-  // if we do not have a next path, redirect to dashboard home
-  return redirect("/dashboard");
-}
-function isValidRedirectPath(encodedPath: string): boolean {
-  try {
-    // Decode the URI component
-    const decodedPath = decodeURIComponent(encodedPath);
-    // ensure the path always starts with a _single_ slash
-    // dobule slash could be interpreted as `//example.com` which is not allowed
-    return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
-  } catch (e) {
-    // If decoding fails, return false
-    return false;
-  }
 }
 
 export async function doLogout() {
@@ -190,12 +167,15 @@ export async function isLoggedIn(address: string) {
   }
   const json = await res.json();
 
+  console.log("isLoggedIn JSON data ------->", json);
+
   if (!json) {
     // not logged in
     // clear the cookie
     cookieStore.delete(cookieName);
     return false;
   }
+
   // if the address matches what we expect, we're logged in
   if (getAddress(json.address) === getAddress(address)) {
     // set the active account cookie again

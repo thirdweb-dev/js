@@ -1,7 +1,6 @@
 "use client";
 
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Button } from "@/components/ui/button";
 import { thirdwebClient } from "@/constants/client";
 import { useSupportedChains } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -12,11 +11,16 @@ import {
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import type { Chain } from "thirdweb";
 import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
 import { getSDKTheme } from "../../../../app/components/sdk-component-theme";
+import {
+  doLoginClient,
+  doLogoutClient,
+  getLoginPayloadClient,
+  // isLoggedInClient,
+} from "../../../../app/login/auth-actions-client";
 import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
 import { mapV4ChainToV5Chain } from "../../../../contexts/map-chains";
 import { useSetIsNetworkConfigModalOpen } from "../../../../hooks/networkConfigModal";
@@ -61,7 +65,6 @@ export const CustomConnectWallet = (props: {
 
   // ensures login status on pages that need it
   const { isLoading, isLoggedIn } = useLoggedInUser();
-  const pathname = usePathname();
 
   if (isLoading) {
     return (
@@ -69,22 +72,6 @@ export const CustomConnectWallet = (props: {
         <div className="w-[144px] h-[48px] bg-muted border border-border rounded-lg flex items-center justify-center">
           <Spinner className="size-4" />
         </div>
-        {/* need autoconnect here so that we actually connect */}
-        <AutoConnect client={thirdwebClient} />
-      </>
-    );
-  }
-
-  if (!isLoggedIn && loginRequired) {
-    return (
-      <>
-        <Button asChild variant="default" className="gap-2" size="lg">
-          <Link
-            href={`/login${pathname ? `?next=${encodeURIComponent(pathname)}` : ""}`}
-          >
-            Sign In
-          </Link>
-        </Button>
         {/* need autoconnect here so that we actually connect */}
         <AutoConnect client={thirdwebClient} />
       </>
@@ -132,6 +119,17 @@ export const CustomConnectWallet = (props: {
           },
         },
       }}
+      auth={
+        loginRequired
+          ? {
+              doLogin: doLoginClient,
+              doLogout: doLogoutClient,
+              getLoginPayload: getLoginPayloadClient,
+              // isLoggedInClient is not working here
+              isLoggedIn: async () => isLoggedIn,
+            }
+          : undefined
+      }
     />
   );
 };
