@@ -2,8 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { resolveAddress as resolveEnsAddress } from "../../../../extensions/ens/resolve-address.js";
-import { resolveAddress as resolveLensAddress } from "../../../../extensions/lens/read/resolveAddress.js";
 import { transfer } from "../../../../extensions/erc20/write/transfer.js";
+import { resolveAddress as resolveLensAddress } from "../../../../extensions/lens/read/resolveAddress.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../../../transaction/prepare-transaction.js";
 import { toWei } from "../../../../utils/units.js";
@@ -59,16 +59,19 @@ export function useSendToken(client: ThirdwebClient) {
       // There will never be a Lens handle that is the same as an ENS because Lens does not allow "." to be in the name
       // so we can avoid the scenario where there is a "vitalik.eth" for ENS and there is a "vitalik.eth" for Lens
       // and each is owned by a different person.
-      try {
-        const [ensAddress, lensAddress] = await Promise.all([
-          resolveEnsAddress({
-            client,
-            name: receiverAddress,
-          }),
-          resolveLensAddress({ client, handleOrLocalName: receiverAddress }),
-        ]);
-        to = ensAddress || lensAddress;
-      } catch (e) {
+      const [ensAddress, lensAddress] = await Promise.all([
+        resolveEnsAddress({
+          client,
+          name: receiverAddress,
+        }).catch(() => ""),
+        resolveLensAddress({
+          client,
+          handleOrLocalName: receiverAddress,
+        }).catch(() => ""),
+      ]);
+      to = ensAddress || lensAddress;
+
+      if (!to) {
         throw new Error("Failed to resolve address");
       }
 
