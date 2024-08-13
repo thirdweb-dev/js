@@ -6,9 +6,9 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalNFT,
-  ChainsawPagingParams,
-  ChainsawResponse,
+  IndexerInternalNFT,
+  IndexerPagingParams,
+  IndexerResponse,
 } from "../types.js";
 import { getNftsByOwnerEndpoint } from "../urls.js";
 
@@ -30,7 +30,7 @@ export type GetNFTsByOwnerParams = Prettify<
      * Chain to search from
      */
     chain?: Chain;
-  } & ChainsawPagingParams
+  } & IndexerPagingParams
 >;
 
 export type GetNFTsByOwnerResult = {
@@ -58,7 +58,6 @@ export type GetNFTsByOwnerResult = {
  *  page: 1
  * });
  * ```
- * @chainsaw
  */
 export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,
@@ -71,7 +70,7 @@ export async function getNFTsByOwner(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalNFT[]> = await response.json();
+    const data: IndexerResponse<IndexerInternalNFT[]> = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }

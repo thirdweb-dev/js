@@ -5,9 +5,9 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawNFTs } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalNFT,
-  ChainsawPagingParams,
-  ChainsawResponse,
+  IndexerInternalNFT,
+  IndexerPagingParams,
+  IndexerResponse,
 } from "../types.js";
 import { getNftsByCollectionEndpoint } from "../urls.js";
 
@@ -23,7 +23,7 @@ export type GetNFTsByCollectionParams = Prettify<
      * Parameters to group results count by. Currently supports "ownerAddress"
      */
     groupBy?: GetNFTsGroupBy;
-  } & ChainsawPagingParams
+  } & IndexerPagingParams
 >;
 
 export type GetNFTsByCollectionResult = {
@@ -55,22 +55,19 @@ export type GetNFTsByCollectionResult = {
  *  groupBy: ["ownerAddress"],
  * });
  * ```
- * @chainsaw
  */
 export async function getNFTsByCollection(
   params: GetNFTsByCollectionParams,
 ): Promise<GetNFTsByCollectionResult> {
   try {
     const url = getEndpointUrl(params);
-    const response = await getClientFetch(params.contract.client)(
-      url.toString(),
-    );
+    const response = await getClientFetch(params.contract.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalNFT[]> = await response.json();
+    const data: IndexerResponse<IndexerInternalNFT[]> = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }

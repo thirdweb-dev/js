@@ -15,17 +15,17 @@ import {
 } from "../utils/nft/parseNft.js";
 import type { Prettify } from "../utils/type-utils.js";
 import type {
-  ChainsawInternalBlock,
-  ChainsawInternalEvent,
-  ChainsawInternalNFT,
-  ChainsawInternalTransaction,
+  IndexerInternalBlock,
+  IndexerInternalEvent,
+  IndexerInternalNFT,
+  IndexerInternalTransaction,
 } from "./types.js";
 
 /**
  * @internal
  */
 export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
-  block?: ChainsawInternalBlock,
+  block?: IndexerInternalBlock,
 ): GetBlockReturnType<undefined, false, TBlockTag> | undefined {
   if (!block) {
     return;
@@ -47,7 +47,7 @@ export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
 /**
  * @internal
  */
-export function formatChainsawNFTs(nfts?: ChainsawInternalNFT[]): NFT[] {
+export function formatChainsawNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
   if (!nfts) {
     return [];
   }
@@ -101,7 +101,7 @@ export function formatChainsawNFTs(nfts?: ChainsawInternalNFT[]): NFT[] {
  * @internal
  */
 export function formatChainsawTransactions(
-  txs?: ChainsawInternalTransaction[],
+  txs?: IndexerInternalTransaction[],
 ): Transaction[] {
   if (!txs) {
     return [];
@@ -163,10 +163,10 @@ export function formatChainsawTransactions(
  * @internal
  */
 export function formatChainsawEvents(
-  events?: ChainsawInternalEvent[],
+  events?: IndexerInternalEvent[],
 ): Prettify<
   Log &
-    DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
+  DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
 >[] {
   if (!events?.length) {
     return [];

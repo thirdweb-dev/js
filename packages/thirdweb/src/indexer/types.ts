@@ -1,12 +1,12 @@
 import type { Hex } from "../utils/encoding/hex.js";
 
-export type ChainsawResponse<T = unknown> = {
+export type IndexerResponse<T = unknown> = {
   data?: T;
   error?: string;
   page?: number;
 };
 
-export type ChainsawPagingParams = {
+export type IndexerPagingParams = {
   /**
    * Number of items per page
    */
@@ -17,7 +17,7 @@ export type ChainsawPagingParams = {
   page?: number;
 };
 
-export type ChainsawInternalBlock = {
+export type IndexerInternalBlock = {
   hash: Hex;
   blockNumber: number;
   time: string;
@@ -32,7 +32,7 @@ export type ChainsawInternalBlock = {
   version: number;
 };
 
-export type ChainsawInternalEvent = {
+export type IndexerInternalEvent = {
   name: string;
   count: string;
   time?: string;
@@ -53,7 +53,7 @@ export type DecodedTransaction = {
   args?: string;
 };
 
-export type ChainsawInternalTransaction = {
+export type IndexerInternalTransaction = {
   chainId: number;
   time: string;
   to: Hex;
@@ -74,7 +74,7 @@ export type ChainsawInternalTransaction = {
   nonce: string;
 };
 
-export type ChainsawInternalNFT = {
+export type IndexerInternalNFT = {
   chainId: number;
   contractAddress: Hex;
   tokenId: string;

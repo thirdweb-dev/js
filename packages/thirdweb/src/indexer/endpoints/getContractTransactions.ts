@@ -5,9 +5,9 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawTransactions } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalTransaction,
-  ChainsawPagingParams,
-  ChainsawResponse,
+  IndexerInternalTransaction,
+  IndexerPagingParams,
+  IndexerResponse,
 } from "../types.ts";
 import { getTransactionsEndpoint } from "../urls.js";
 
@@ -25,7 +25,7 @@ export type GetContractTransactionsParams = Prettify<
      * End of the date range to search in. Default is current date
      */
     endDate?: Date;
-  } & ChainsawPagingParams
+  } & IndexerPagingParams
 >;
 
 export type GetTransactionsResult = {
@@ -82,7 +82,6 @@ export type GetTransactionsResult = {
  *  page: 1
  * });
  * ```
- * @chainsaw
  */
 export async function getContractTransactions(
   params: GetContractTransactionsParams,
@@ -97,7 +96,7 @@ export async function getContractTransactions(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalTransaction[]> =
+    const data: IndexerResponse<IndexerInternalTransaction[]> =
       await response.json();
     if (data.error) {
       throw new Error(data.error);

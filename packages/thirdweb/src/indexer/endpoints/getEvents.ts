@@ -5,9 +5,9 @@ import type { Prettify } from "../../utils/type-utils.js";
 import { formatChainsawEvents } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
-  ChainsawInternalEvent,
-  ChainsawPagingParams,
-  ChainsawResponse,
+  IndexerInternalEvent,
+  IndexerPagingParams,
+  IndexerResponse,
 } from "../types.js";
 import { getEventsEndpoint } from "../urls.js";
 
@@ -36,17 +36,17 @@ export type GetEventsParams = Prettify<
      * Parameters to group events by for the count
      */
     groupBy?: GetEventsGroupBy[];
-  } & ChainsawPagingParams
+  } & IndexerPagingParams
 >;
 
 export type GetEventsResult = {
   events: Prettify<
     Log &
-      DecodeEventLogReturnType & {
-        chainId?: number;
-        count: bigint;
-        time?: Date;
-      }
+    DecodeEventLogReturnType & {
+      chainId?: number;
+      count: bigint;
+      time?: Date;
+    }
   >[];
   page?: number;
 };
@@ -81,22 +81,19 @@ export type GetEventsResult = {
  *  page: 1
  * });
  * ```
- * @chainsaw
  */
 export async function getEvents(
   params: GetEventsParams,
 ): Promise<GetEventsResult> {
   try {
     const url = getEndpointUrl(params);
-    const response = await getClientFetch(params.contract.client)(
-      url.toString(),
-    );
+    const response = await getClientFetch(params.contract.client)(url.toString());
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalEvent[]> =
+    const data: IndexerResponse<IndexerInternalEvent[]> =
       await response.json();
     if (data.error) {
       throw new Error(data.error);

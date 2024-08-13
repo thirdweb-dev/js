@@ -3,7 +3,7 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { formatChainsawBlock } from "../formatter.js";
-import type { ChainsawInternalBlock, ChainsawResponse } from "../types.ts";
+import type { IndexerInternalBlock, IndexerResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
 
 export type GetBlockParams = {
@@ -48,7 +48,6 @@ export type GetBlockResult<TBlockTag extends BlockTag = "latest"> = {
  *  chain: defineChain(1)
  * });
  * ```
- * @chainsaw
  */
 export async function getBlock(
   params: GetBlockParams,
@@ -63,7 +62,7 @@ export async function getBlock(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<ChainsawInternalBlock> = await response.json();
+    const data: IndexerResponse<IndexerInternalBlock> = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }

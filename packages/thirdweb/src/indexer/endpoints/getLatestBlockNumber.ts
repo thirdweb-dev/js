@@ -1,7 +1,7 @@
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import type { ChainsawResponse } from "../types.ts";
+import type { IndexerResponse } from "../types.ts";
 import { getLatestBlockNumberEndpoint } from "../urls.js";
 
 export type GetLatestBlockNumberParams = {
@@ -41,7 +41,6 @@ export type GetLatestBlockNumberResult = {
  *  chain: defineChain(1)
  * });
  * ```
- * @chainsaw
  */
 export async function getLatestBlockNumber(
   params: GetLatestBlockNumberParams,
@@ -57,7 +56,7 @@ export async function getLatestBlockNumber(
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: ChainsawResponse<number> = await response.json();
+    const data: IndexerResponse<number> = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }

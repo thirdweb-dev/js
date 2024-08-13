@@ -1,11 +1,11 @@
-import type { ChainsawPagingParams } from "./types.js";
+import type { IndexerPagingParams } from "./types.js";
 
 /**
  * @internal
  */
 export function addRequestPagination(
   url: URL,
-  pagingParams: ChainsawPagingParams,
+  pagingParams: IndexerPagingParams,
 ): URL {
   if (pagingParams.page) {
     url.searchParams.append("page", pagingParams.page.toString());
