@@ -27,7 +27,7 @@
     "@coinbase/onchainkit": "^0.14.2",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
-    "@hookform/resolvers": "^3.6.0",
+    "@hookform/resolvers": "^3.9.0",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
