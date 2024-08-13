@@ -25,7 +25,7 @@ export type GetNFTsByOwnerParams = Prettify<
     /**
      * Address of the NFT owner
      */
-    ownerAddress: string;
+    owner: string;
     /**
      * Chain to search from
      */
@@ -85,7 +85,7 @@ export async function getNFTsByOwner(
 
 function getEndpointUrl(params: GetNFTsByOwnerParams): URL {
   const url = getNftsByOwnerEndpoint();
-  url.searchParams.append("ownerAddress", params.ownerAddress);
+  url.searchParams.append("ownerAddress", params.owner);
   if (params.chain) {
     url.searchParams.append("chainId", params.chain?.id.toString());
   }

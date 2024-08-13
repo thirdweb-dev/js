@@ -13,7 +13,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
     const { nfts } = await getNFTsByOwner({
       client,
       chain: defineChain(252),
-      ownerAddress: ownerAddress,
+      owner: ownerAddress,
     });
     for (const nft of nfts) {
       expect(nft.id).toBeTypeOf("bigint");
@@ -38,7 +38,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("chainsaw.getNFTsByOwner", () => {
       getNFTsByOwner({
         client,
         chain: defineChain(12312),
-        ownerAddress: ownerAddress,
+        owner: ownerAddress,
       }),
     ).rejects.toThrow("Fetch failed");
   });
