@@ -1,9 +1,8 @@
+import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { useEffect, useState } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
-import { getContractMetadata } from "thirdweb/extensions/common";
-import { useReadContract } from "thirdweb/react";
 import { MetadataHeader } from "./metadata-header";
 
 interface ContractMetadataProps {
@@ -16,10 +15,7 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
   chain,
 }) => {
   const [wasError, setWasError] = useState(false);
-  const contractMetadataQuery = useReadContract(getContractMetadata, {
-    contract,
-  });
-
+  const contractMetadataQuery = useDashboardContractMetadata(contract);
   const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
     contract.address,
     contract.chain.id,

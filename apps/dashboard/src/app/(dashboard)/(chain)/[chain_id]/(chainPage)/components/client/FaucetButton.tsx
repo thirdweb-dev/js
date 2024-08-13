@@ -4,7 +4,8 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
 import { useTrack } from "hooks/analytics/useTrack";
 import { thirdwebClient } from "lib/thirdweb-client";
 import { useRouter } from "next/navigation";
@@ -31,11 +32,9 @@ function formatTime(seconds: number) {
 
 export function FaucetButton({
   chain,
-  ttlSeconds,
   amount,
 }: {
   chain: ChainMetadata;
-  ttlSeconds: number;
   amount: string;
 }) {
   const address = useActiveAccount()?.address;
@@ -93,17 +92,32 @@ export function FaucetButton({
       });
     },
   });
+
+  const canClaimFaucetQuery = useQuery({
+    queryKey: ["testnet-faucet-can-claim", chainId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/testnet-faucet/can-claim?chainId=${chainId}`,
+      );
+      if (!response.ok) {
+        throw new Error("Failed to get claim status");
+      }
+      const data = (await response.json()) as CanClaimResponseType;
+      return data;
+    },
+  });
+
   const router = useRouter();
 
   const isFaucetEmpty =
     faucetWalletBalanceQuery.data !== undefined &&
     faucetWalletBalanceQuery.data.value < toUnits("1", 17);
 
-  // checking faucet balance
-  if (faucetWalletBalanceQuery.isLoading) {
+  // loading state
+  if (faucetWalletBalanceQuery.isLoading || canClaimFaucetQuery.isLoading) {
     return (
       <Button variant="secondary" className="w-full gap-2">
-        Checking Faucet Balance <Spinner className="size-3" />
+        Checking Faucet <Spinner className="size-3" />
       </Button>
     );
   }
@@ -111,17 +125,25 @@ export function FaucetButton({
   // faucet is empty
   if (isFaucetEmpty) {
     return (
-      <Button variant="outline" disabled className="w-full">
-        Faucet is empty right now, come back later
+      <Button variant="secondary" disabled className="w-full !opacity-100 ">
+        Faucet is empty right now
       </Button>
     );
   }
 
-  // not eligible to claim right now
-  if (ttlSeconds > 0) {
+  // Can not claim
+  if (canClaimFaucetQuery.data && canClaimFaucetQuery.data.canClaim === false) {
     return (
-      <Button variant="outline" className="w-full" disabled>
-        Your next claim is available {formatTime(ttlSeconds)}
+      <Button variant="secondary" className="w-full !opacity-100 " disabled>
+        {canClaimFaucetQuery.data.type === "throttle" && (
+          <>
+            Your next claim is available{" "}
+            {formatTime(canClaimFaucetQuery.data.ttlSeconds)}
+          </>
+        )}
+
+        {canClaimFaucetQuery.data.type === "unsupported-chain" &&
+          "Faucet is empty right now"}
       </Button>
     );
   }

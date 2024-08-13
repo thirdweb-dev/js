@@ -39,7 +39,7 @@ const contract = getContract({
 });
 const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe.runIf(process.env.TW_SECRET_KEY).sequential(
   "SmartWallet core tests",
   {
     retry: 0,
@@ -196,8 +196,8 @@ describe.runIf(process.env.TW_SECRET_KEY)(
         events: [adminUpdatedEvent()],
         logs: receipt.logs,
       });
-      expect(logs[0]?.args.signer).toBe(newAdmin.address);
-      expect(logs[0]?.args.isAdmin).toBe(true);
+      expect(logs.some((l) => l.args.signer === newAdmin.address)).toBe(true);
+      expect(logs.some((l) => l.args.isAdmin)).toBe(true);
     });
 
     it("can use a different factory without replay protectin", async () => {

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { thirdwebClient } from "@/constants/client";
 import { popularChains } from "@3rdweb-sdk/react/components/popularChains";
 import { useFavoriteChains } from "@3rdweb-sdk/react/hooks/useFavoriteChains";
@@ -18,7 +19,6 @@ import { useEffect, useMemo, useRef } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useActiveWallet } from "thirdweb/react";
 import { useNetworkSwitcherModal } from "thirdweb/react";
-import { Button } from "tw-components";
 import { getSDKTheme } from "../../app/components/sdk-component-theme";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
 import { CustomChainRenderer } from "./CustomChainRenderer";
@@ -106,20 +106,9 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   return (
     <>
       <Button
-        isDisabled={isDisabled || !wallet}
-        display="flex"
-        bg="inputBg"
-        _hover={{
-          bg: "inputBgHover",
-        }}
-        width="100%"
-        variant="solid"
-        style={{
-          textAlign: "left",
-          justifyContent: "start",
-          alignItems: "center",
-          gap: "0.5rem",
-        }}
+        variant="secondary"
+        disabled={isDisabled || !wallet}
+        className="w-full text-left justify-start gap-2"
         onClick={() => {
           networkSwitcherModal.open({
             theme: getSDKTheme(theme === "light" ? "light" : "dark"),
@@ -162,15 +151,11 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
             client: thirdwebClient,
           });
         }}
-        leftIcon={<ChainIcon ipfsSrc={chain?.icon?.url} size={20} />}
       >
+        <ChainIcon ipfsSrc={chain?.icon?.url} size={20} />
         {chain?.name || "Select Network"}
 
-        <BiChevronDown
-          style={{
-            marginLeft: "auto",
-          }}
-        />
+        <BiChevronDown className="ml-auto size-3" />
       </Button>
     </>
   );

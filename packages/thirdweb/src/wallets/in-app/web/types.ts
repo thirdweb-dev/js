@@ -3,7 +3,7 @@
 
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { EcosystemWalletId } from "../../wallet-types.js";
-import type { AuthAndWalletRpcReturnType } from "../core/authentication/type.js";
+import type { AuthAndWalletRpcReturnType } from "../core/authentication/types.js";
 import type { InAppWalletIframeCommunicator } from "./utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type Ecosystem = {

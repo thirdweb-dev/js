@@ -13,6 +13,16 @@ export const metadata = createMetadata({
 
 It makes for a fantastic [SmartWallet](/unity/wallets/account-abstraction) admin/signer and will make sure your users can have the same wallet address across all your games, apps and blockchains.
 
+## Login Methods
+
+In-App Wallets support a variety of login methods:
+- Email (OTP Login)
+- Phone (OTP Login)
+- Socials (Google, Apple, Facebook, Telegram, Farcaster, etc.)
+- SIWE (Sign-In with Ethereum)
+- Custom Auth (OIDC Compatible)
+- Custom Auth (Generic Auth Endpoint)
+
 ### Login with Email
 
 ```csharp
@@ -54,6 +64,65 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
 ```
 
 Will open a native browser or oauth session to authenticate the user and redirect back to the game.
+
+### Login with SIWE
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.Siwe, siweSigner: anyExternalWallet);
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+Will use the external wallet to sign a message and login to the InAppWallet.
+
+### Login with Custom Auth - OIDC Compatible
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.JWT, jwtOrPayload: "myjwt", encryptionKey: "myencryptionkey");
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+### Login with Custom Auth - Generic Auth Endpoint
+
+```csharp
+var inAppWalletOptions = new InAppWalletOptions(authprovider: AuthProvider.AuthEndpoint, jwtOrPayload: "mypayload", encryptionKey: "myencryptionkey");
+var options = new WalletOptions(
+    provider: WalletProvider.InAppWallet, 
+    chainId: 1, 
+    inAppWalletOptions: inAppWalletOptions
+);
+var wallet = await ThirdwebManager.Instance.ConnectWallet(options);
+```
+
+## Account Linking
+
+InAppWallets support linking multiple authentication methods to a single wallet, for instance linking Google to your Email-based In-App-Wallet. This is useful to have a unified identity across platforms.
+
+```csharp
+// Your main InAppWallet account, already authenticated and connected
+InAppWallet mainInAppWallet = ...
+
+// An InAppWallet with a new auth provider to be linked to the main account, not connected
+InAppWallet walletToLink = await InAppWallet.Create(client: Client, authProvider: AuthProvider.Telegram);
+
+// Link Account - Headless version
+var linkedAccounts = await mainInAppWallet.LinkAccount(walletToLink: walletToLink);
+
+// Link Account - Unity wrapper version
+var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainInAppWallet, walletToLink);
+
+// You can also fetch linked accounts at any time
+List<LinkedAccount> linkedAccounts = await mainInAppWallet.GetLinkedAccounts();
+```
 
 <ArticleIconCard
 	href="/dotnet/wallets/providers/in-app-wallet"

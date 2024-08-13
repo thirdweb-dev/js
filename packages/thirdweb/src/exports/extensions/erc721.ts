@@ -167,3 +167,7 @@ export {
   updateMetadata,
   type UpdateMetadataParams,
 } from "../../extensions/erc721/drops/write/updateMetadata.js";
+export {
+  updateTokenURI,
+  type UpdateTokenURIParams,
+} from "../../extensions/erc721/write/updateTokenURI.js";

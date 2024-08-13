@@ -14,7 +14,11 @@ export const metadata = createMetadata({
 ### Instantiating a ThirdwebContract
 
 ```csharp
-var contract = await ThirdwebManager.Instance.GetContract(address: "contract-address", chainId: 1, abi: "optional-abi");
+var contract = await ThirdwebManager.Instance.GetContract(
+	address: "contract-address", 
+	chainId: 1, 
+	abi: "optional-abi"
+);
 ```
 
 That's it! You can now interact with the contract using the `ThirdwebContract`.

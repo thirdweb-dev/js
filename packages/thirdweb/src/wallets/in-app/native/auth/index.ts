@@ -5,7 +5,7 @@ import {
   type GetAuthenticatedUserParams,
   type PreAuthArgsType,
   UserWalletStatus,
-} from "../../core/authentication/type.js";
+} from "../../core/authentication/types.js";
 import { getOrCreateInAppWalletConnector } from "../../core/wallet/in-app-core.js";
 
 // ---- KEEP IN SYNC WITH /wallets/in-app/web/lib/auth/index.ts ---- //
@@ -137,5 +137,5 @@ export async function authenticate(
   args: AuthArgsType,
 ): Promise<AuthLoginReturnType> {
   const connector = await getInAppWalletConnector(args.client);
-  return connector.authenticate(args);
+  return connector.connect(args);
 }

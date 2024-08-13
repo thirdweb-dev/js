@@ -1,13 +1,13 @@
-import { OpenSourceCard, ArticleIconCard, ArticleCard, Grid } from "@doc";
+import { OpenSourceCard, ArticleIconCard } from "@doc";
 import { GraduationCap } from "lucide-react";
 
-# Unreal Plugin
+# Unreal SDK
 
-A plugin for Unreal Engine that enables developers to create thirdweb Private Key Wallets, In-App Wallets and Smart Wallets for their games and applications. The plugin provides a simple API integrating blueprints to interact with wallets, login with email or socials as well as create Smart Wallet session keys. 
+A Code Plugin for Unreal Engine that enables developers to create thirdweb Private Key Wallets, In-App Wallets and Smart Wallets for their games and applications. The plugin provides a simple API and blueprints to interact with wallets, login with email or socials as well as create Smart Wallet session keys. 
 
-With this plugin, you can keep the onboarding of your users in-client and grant a session key to your thirdweb Engine powered backend to interact with the blockchain, no signature in sight.
+With this plugin, you can keep the onboarding of your users in-client and grant a session key to your [thirdweb Engine](https://portal.thirdweb.com/engine) powered backend to interact with the blockchain, no signature in sight.
 
-The plugin is still a work in progress and will be updated with more features and improvements.
+The Thirdweb Unreal Plugin is distributed as an [Unreal Marketplace Code Plugin](https://www.unrealengine.com/marketplace/en-US/product/f21200c2610146f3888172994448e50d).
 
 <OpenSourceCard
 	title="Unreal SDK"
@@ -15,23 +15,22 @@ The plugin is still a work in progress and will be updated with more features an
 	isLibrary={true}
 />
 
+## Features
+
+- **Generate or Create Private Key Wallets** - ephemereal guest wallets.
+- **Create and Login to In-App Wallets** - unlocking email and social authentication to create persistent, cross-platform, cross-device and cross-sdk signless embedded wallets.
+- **Unlock the power of Account Abstraction** - unlock the ability to sponsor gas and interact on behalf of users by upgrading any wallet to a Smart Wallet, and using Session Keys to grant scoped access to your backend - fully compatible with [thirdweb Engine](https://portal.thirdweb.com/engine) or other SDKs.
+- **Rust Core** - the plugin's core logic is built from Rust, making it lightning-fast and minimizing the clutter in your Unreal project.
+- **Compatible with Unreal Engine 5.4** - the plugin is compatible with the latest version of Unreal Engine, allowing you to leverage the latest features and improvements.
+
 ## Installation
 
-The Unreal SDK is distributed as an [Unreal Marketplace Plugin](https://www.unrealengine.com/marketplace/).
+Download and install the Thirdweb Unreal Plugin from the [Unreal Marketplace](https://www.unrealengine.com/marketplace/en-US/product/f21200c2610146f3888172994448e50d).
 
-The plugin's core logic is built from Rust, making it lightning-fast and minimizing the clutter in your Unreal project.
+Our Plugin is programmed as a subsystem, allowing you to interact with it very easily.
 
-It currently is built to support Win64 platforms and was tested in UE 5.4.
-
-
-## Get Started
-
-`BP_Thirdweb_OAuth` showcases social login with socials, defaulting to Google for the example. You may test it in `Level_Thirdweb_OAuth`.
-
-`Level_Thirdweb` that will trigger Email Login, make sure `BP_Thirdweb` has the Email set.
-
-`BP_Thirdweb` is the main blueprint that will handle wallet initialization, you may also set your thirdweb API key settings in its Class Defaults.
-
-`BP_Thirdweb` showcases general wallet creation, interaction and email login as well as session resuming.
-
-`BP_Thirdweb_VerificationWidget` has a graph that showcases the flow to verify an OTP and subsequently create a wallet. It also updates some basic UI.
+<ArticleIconCard
+	href="/unreal/getting-started"
+	icon={GraduationCap}
+	title="Get started with the Unreal SDK"
+/>

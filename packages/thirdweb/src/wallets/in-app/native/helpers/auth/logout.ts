@@ -1,4 +1,4 @@
-import type { LogoutReturnType } from "../../../core/authentication/type.js";
+import type { LogoutReturnType } from "../../../core/authentication/types.js";
 import {
   removeAuthTokenInClient,
   removeLoggedInWalletUserId,

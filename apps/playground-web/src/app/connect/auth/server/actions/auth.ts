@@ -9,6 +9,7 @@ const privateKey = process.env.THIRDWEB_ADMIN_PRIVATE_KEY;
 
 const thirdwebAuth = createAuth({
   domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
+  client: THIRDWEB_CLIENT,
   adminAccount: privateKey
     ? privateKeyToAccount({ client: THIRDWEB_CLIENT, privateKey })
     : await generateAccount({ client: THIRDWEB_CLIENT }),

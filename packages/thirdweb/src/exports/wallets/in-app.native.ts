@@ -9,7 +9,7 @@ export {
   getUserPhoneNumber,
 } from "../../wallets/in-app/native/auth/index.js";
 
-export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/type.js";
+export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
 
 // NOT SUPPORTED (yet)
 

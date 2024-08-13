@@ -53,6 +53,7 @@ import type {
 } from "../../../core/utils/defaultTokens.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
+import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { Img } from "../components/Img.js";
@@ -68,6 +69,7 @@ import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
+import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
@@ -84,6 +86,8 @@ import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
+import { LinkProfileScreen } from "./screens/LinkProfileScreen.js";
+import { LinkedProfilesScreen } from "./screens/LinkedProfilesScreen.js";
 import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
@@ -276,6 +280,12 @@ function DetailsModal(props: {
   const chainFaucetsQuery = useChainFaucets(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
+
+  const screenSetup = useSetupScreen({
+    size: "compact",
+    welcomeScreen: undefined,
+    wallets: activeWallet ? [activeWallet] : [],
+  });
 
   function closeModal() {
     setIsOpen(false);
@@ -778,6 +788,25 @@ function DetailsModal(props: {
         client={client}
       />
     );
+  } else if (screen === "linked-profiles") {
+    content = (
+      <LinkedProfilesScreen
+        onBack={() => setScreen("manage-wallet")}
+        client={client}
+        locale={locale}
+        setScreen={setScreen}
+      />
+    );
+  } else if (screen === "link-profile") {
+    content = (
+      <LinkProfileScreen
+        onBack={() => {
+          setScreen("linked-profiles");
+        }}
+        client={client}
+        locale={locale}
+      />
+    );
   }
 
   // send funds
@@ -832,17 +861,21 @@ function DetailsModal(props: {
 
   return (
     <CustomThemeProvider theme={props.theme}>
-      <Modal
-        size={"compact"}
-        open={isOpen}
-        setOpen={(_open) => {
-          if (!_open) {
-            closeModal();
-          }
-        }}
-      >
-        {content}
-      </Modal>
+      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
+        <ScreenSetupContext.Provider value={screenSetup}>
+          <Modal
+            size={"compact"}
+            open={isOpen}
+            setOpen={(_open) => {
+              if (!_open) {
+                closeModal();
+              }
+            }}
+          >
+            {content}
+          </Modal>
+        </ScreenSetupContext.Provider>
+      </WalletUIStatesProvider>
     </CustomThemeProvider>
   );
 }
@@ -1191,6 +1224,7 @@ export type UseWalletDetailsModalOptions = {
    * ```
    */
   chains?: Chain[];
+
   /**
    * Show a "Request Testnet funds" link in Wallet Details Modal when user is connected to a testnet.
    *

@@ -1,192 +1,204 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
 import {
-  Center,
-  Flex,
-  Icon,
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  Spinner,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { createContext, useContext, useState } from "react";
-import { FiActivity, FiCheck } from "react-icons/fi";
-import invariant from "tiny-invariant";
-import { Card, Heading, Text } from "tw-components";
-import type { ComponentWithChildren } from "types/component-with-children";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { CircleCheck, CircleIcon } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useState } from "react";
 
-interface DeployModalStep {
-  title: string;
-  description: string | JSX.Element;
-  action?:
-    | {
-        type: "link";
-        label: string;
-        href: string;
-      }
-    | {
-        type: "button";
-        label: string;
-        onClick: () => void;
-      };
-}
+export type DeployModalStep = {
+  type: "deploy" | "setNFTMetadata" | "import";
+  signatureCount: number;
+};
 
-interface DeployModalContext {
-  nextStep: () => void;
+export type DeployStatusModal = {
   open: (steps: DeployModalStep[]) => void;
   close: () => void;
-  _inProvider: true;
-}
+  nextStep: () => void;
+  isModalOpen: boolean;
+  steps: DeployModalStep[];
+  activeStep: number;
+  setIsModalOpen: (isOpen: boolean) => void;
+  viewContractLink: string | undefined;
+  setViewContractLink: (link: string) => void;
+};
 
-const DeployModalContext = createContext<DeployModalContext>(
-  {} as DeployModalContext,
-);
-
-export const DeployModalProvider: ComponentWithChildren = ({ children }) => {
-  const modalState = useDisclosure();
-
+export function useDeployStatusModal(): DeployStatusModal {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [steps, setSteps] = useState<DeployModalStep[]>([]);
   const [activeStep, setActiveStep] = useState(0);
-  return (
-    <DeployModalContext.Provider
-      value={{
-        open: (steps_) => {
-          setSteps(steps_);
-          modalState.onOpen();
-        },
-        close: () => {
-          modalState.onClose();
-          setSteps([]);
-          setActiveStep(0);
-        },
-        nextStep: () => {
-          setActiveStep((currStep) => {
-            return currStep + 1;
-          });
-        },
+  const [viewContractLink, setViewContractLink] = useState<
+    string | undefined
+  >();
 
-        _inProvider: true,
-      }}
-    >
-      {children}
-      <Modal
-        closeOnEsc
-        closeOnOverlayClick
-        // can only be closed by the context
-        onClose={() => undefined}
-        isOpen={modalState.isOpen}
-        isCentered
+  const open = useCallback((steps_: DeployModalStep[]) => {
+    setSteps(steps_);
+    setIsModalOpen(true);
+  }, []);
+
+  const close = useCallback(() => {
+    setIsModalOpen(false);
+    setSteps([]);
+    setActiveStep(0);
+  }, []);
+
+  const nextStep = useCallback(() => {
+    setActiveStep((currStep) => {
+      return currStep + 1;
+    });
+  }, []);
+
+  return {
+    open,
+    close,
+    nextStep,
+    isModalOpen,
+    steps,
+    activeStep,
+    setIsModalOpen,
+    viewContractLink,
+    setViewContractLink,
+  };
+}
+
+export function DeployStatusModal(props: {
+  deployStatusModal: DeployStatusModal;
+}) {
+  const { steps, activeStep, isModalOpen, viewContractLink, setIsModalOpen } =
+    props.deployStatusModal;
+
+  // DO not close modal on outside click
+  return (
+    <Dialog open={isModalOpen}>
+      <DialogContent
+        dialogCloseClassName="hidden"
+        className="max-w-[480px] p-0 gap-0"
       >
-        <ModalOverlay />
-        <ModalContent as={Card} borderRadius="xl">
-          <Flex flexDir="column" gap={4}>
-            <Heading size="subtitle.sm">Deploy Status</Heading>
+        <div className="p-6 flex flex-col gap-6">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-semibold tracking-tight">
+              Deploy Status
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-4">
             {steps.map((step, i) => {
               const isActive = i === activeStep;
               const hasCompleted = i < activeStep;
               return (
-                <DeployModalStep
-                  key={step.title}
-                  {...step}
+                <RenderDeployModalStep
+                  key={step.type}
+                  step={step}
                   isActive={isActive}
                   hasCompleted={hasCompleted}
                 />
               );
             })}
-          </Flex>
-        </ModalContent>
-      </Modal>
-    </DeployModalContext.Provider>
-  );
-};
+          </div>
+        </div>
 
-export function useDeployContextModal() {
-  const { _inProvider, ...context } = useContext(DeployModalContext);
-  invariant(
-    _inProvider,
-    "useDeployContextModal must be used within DeployModalProvider",
+        {viewContractLink && (
+          <div className="flex justify-between mt-2 border-border border-t p-6 gap-4">
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+              Close
+            </Button>
+            <Button variant="primary" asChild>
+              <Link href={viewContractLink}>View Contract</Link>
+            </Button>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
-  return context;
 }
 
-interface DeployModalStepProps extends DeployModalStep {
+type DeployModalStepProps = {
   isActive: boolean;
   hasCompleted: boolean;
-}
-
-const DeployModalStep: React.FC<DeployModalStepProps> = ({
-  title,
-  description,
-  isActive,
-  hasCompleted,
-}) => {
-  return (
-    <Flex
-      as={Card}
-      flexDir="row"
-      gap={4}
-      opacity={isActive ? 1 : hasCompleted ? 0.8 : 0.3}
-      align="center"
-    >
-      {isActive ? (
-        <Center boxSize={5} flexShrink={0}>
-          <Spinner size="sm" />
-        </Center>
-      ) : hasCompleted ? (
-        <Icon as={FiCheck} color="green.500" boxSize={5} flexShrink={0} />
-      ) : (
-        <Icon as={FiActivity} boxSize={5} flexShrink={0} />
-      )}
-      <Flex flexDir="column">
-        <Heading size="label.lg" mb={3}>
-          {title}
-        </Heading>
-        <Text size="body.md">{description}</Text>
-      </Flex>
-    </Flex>
-  );
+  step: DeployModalStep;
 };
 
-export function getStepDeploy(
-  transactionsNumber: number,
-  requiresSignature = true,
-): DeployModalStep {
-  return {
-    title: "Deploying contract",
-    description: requiresSignature
-      ? `Your wallet will prompt you to sign ${
-          transactionsNumber === 1 ? "the" : transactionsNumber || 1
-        } transaction${transactionsNumber > 1 ? "s" : ""}.`
-      : "This may take a few seconds.",
-  };
+function RenderDeployModalStep(props: DeployModalStepProps) {
+  const { isActive, hasCompleted } = props;
+  const { title, description } = getStepInfo(props.step);
+  return (
+    <div className="rounded-lg border border-border">
+      <div
+        className={cn(
+          "flex gap-4 p-4 items-center",
+          !isActive && !hasCompleted && "opacity-30",
+        )}
+      >
+        <div className="flex items-center justify-center shrink-0">
+          {isActive ? (
+            <Spinner className="size-6 text-link-foreground" />
+          ) : hasCompleted ? (
+            <CircleCheck className="size-6 text-green-500" />
+          ) : (
+            <CircleIcon className="size-6 text-secondary-foreground" />
+          )}
+        </div>
+
+        <div className="flex flex-col">
+          <h3 className="text-semibold mb-1 font-semibold">{title}</h3>
+          <p className="text-muted-foreground text-sm">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
 }
-export function getStepSetNFTMetadata(
-  requiresSignature = true,
-): DeployModalStep {
-  return {
-    title: "Setting NFT metadata",
-    description: (
-      <>
-        {requiresSignature
-          ? "Your wallet will prompt you to sign the transaction. "
-          : "This may take a few seconds."}
-      </>
-    ),
-  };
-}
-export function getStepAddToRegistry(
-  requiresSignature = true,
-): DeployModalStep {
-  return {
-    title: "Adding to dashboard",
-    description: (
-      <>
-        {requiresSignature
-          ? "Your wallet will prompt you to sign the transaction. "
-          : ""}
-        <i>
-          This step is <b>gasless</b>.
-        </i>
-      </>
-    ),
-  };
+
+type TitleAndDesc = {
+  title: string;
+  description: React.ReactNode;
+};
+
+function getStepInfo(step: DeployModalStep): TitleAndDesc {
+  switch (step.type) {
+    case "deploy": {
+      return {
+        title: "Deploying contract",
+        description:
+          step.signatureCount > 0
+            ? `Your wallet will prompt you to sign ${
+                step.signatureCount === 1 ? "the" : step.signatureCount || 1
+              } transaction${step.signatureCount > 1 ? "s" : ""}.`
+            : "This may take a few seconds",
+      };
+    }
+
+    case "setNFTMetadata": {
+      return {
+        title: "Setting NFT metadata",
+        description: (
+          <>
+            {step.signatureCount > 0
+              ? "Your wallet will prompt you to sign the transaction. "
+              : "This may take a few seconds."}
+          </>
+        ),
+      };
+    }
+
+    case "import": {
+      return {
+        title: "Adding to dashboard",
+        description: (
+          <>
+            {step.signatureCount > 0
+              ? "Your wallet will prompt you to sign the transaction. "
+              : ""}
+            <i>
+              This step is <b>gasless</b>.
+            </i>
+          </>
+        ),
+      };
+    }
+  }
 }

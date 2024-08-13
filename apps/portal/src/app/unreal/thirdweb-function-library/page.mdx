@@ -1,0 +1,65 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "ThirdwebFunctionLibrary | Thirdweb Unreal SDK",
+    description: "Blueprint functions for wallet and blockchain interactions.",
+});
+
+# ThirdwebFunctionLibrary
+
+The `UThirdwebFunctionLibrary` class provides a comprehensive set of Blueprint functions to interact with Thirdweb's wallet functionalities within Unreal Engine. This includes utilities for wallet creation, session management, signing messages, and more.
+
+## Key Components
+
+### `UThirdwebFunctionLibrary`
+- A class derived from `UBlueprintFunctionLibrary`, which offers various Blueprint functions related to wallet operations and validations.
+
+### Wallet Functions
+
+- **`Conv_StringToWalletHandle(FString PrivateKey)`**: Converts a private key string into a wallet handle.
+- **`Conv_TextToWalletHandle(FText PrivateKey)`**: Converts a private key text into a wallet handle.
+- **`BP_GenerateWallet()`**: Generates a new private key wallet handle.
+- **`Conv_WalletHandleToString(FWalletHandle Wallet)`**: Converts a wallet handle into its associated public address string.
+- **`Conv_WalletHandleToText(FWalletHandle Wallet)`**: Converts a wallet handle into its associated public address text.
+- **`BP_SignMessage(const FWalletHandle& Wallet, const FString& Message)`**: Signs a message with the specified wallet handle.
+- **`BP_WalletIsConnected(const FWalletHandle& Wallet)`**: Checks if the wallet handle is connected to a session.
+- **`BP_DisconnectWallet(const FWalletHandle& Wallet)`**: Disconnects the wallet handle from its session.
+
+### In-App Wallet Functions
+
+- **`BP_VerifyOTP(FWalletHandle Wallet, const FString& OTP, FString& Error)`**: Verifies an OTP for the in-app wallet.
+- **`BP_SendOTP(FWalletHandle Wallet, FString& Error)`**: Sends an OTP for the in-app wallet.
+- **`BP_FetchOAuthLoginLink(FWalletHandle Wallet, const FString& RedirectUrl, FString& LoginLink, FString& Error)`**: Fetches the OAuth login link for the in-app wallet.
+
+### Smart Wallet Functions
+
+- **`BP_IsSmartWalletDeployed(FWalletHandle Wallet, FString& Error)`**: Checks if the smart wallet is deployed.
+- **`BP_CreateSmartWalletSessionKey(FWalletHandle Wallet, const FString& Signer, const TArray<FString>& ApprovedTargets, const FString& NativeTokenLimitPerTransactionInWei, const FDateTime& PermissionStart, const FDateTime& PermissionEnd, const FDateTime& RequestValidityStart, const FDateTime& RequestValidityEnd, FString& TransactionHash, FString& Error)`**: Creates a session key for the smart wallet.
+- **`BP_GetSmartWalletAdmins(FWalletHandle Wallet, TArray<FString>& Admins, FString& Error)`**: Retrieves the list of admins for the smart wallet.
+- **`BP_GetSmartWalletActiveSigners(FWalletHandle Wallet, TArray<FSigner>& Signers, FString& Error)`**: Retrieves the list of active signers for the smart wallet.
+- **`BP_RevokeSmartWalletSessionKey(FWalletHandle Wallet, const FString& Signer, FString& Error)`**: Revokes a session key for a smart wallet signer.
+- **`BP_AddSmartWalletAdmin(FWalletHandle Wallet, const FString& Signer, FString& Error)`**: Adds an admin signer to the smart wallet.
+- **`BP_RemoveSmartWalletAdmin(FWalletHandle Wallet, const FString& Signer, FString& Error)`**: Removes an admin signer from the smart wallet.
+
+### Utility Functions
+
+- **`EqualEqual_WalletHandleWalletHandle(FWalletHandle A, FWalletHandle B)`**: Checks if two wallet handles are equal.
+- **`NotEqual_WalletHandleWalletHandle(FWalletHandle A, FWalletHandle B)`**: Checks if two wallet handles are not equal.
+- **`Conv_ThirdwebOAuthProviderToText(EThirdwebOAuthProvider Provider)`**: Converts a Thirdweb OAuth provider enum to text.
+- **`Conv_ThirdwebOAuthProviderToString(EThirdwebOAuthProvider Provider)`**: Converts a Thirdweb OAuth provider enum to string.
+- **`BP_IsStringValidAddress(const FString& Address, const bool bWithChecksum)`**: Validates if a string is a valid Ethereum address.
+- **`BP_IsStringChecksummedAddress(const FString& Address)`**: Checks if a string is a checksummed Ethereum address.
+- **`BP_IsStringValidPrivateKey(const FString& PrivateKey)`**: Validates if a string is a valid private key.
+- **`Conv_StringAddressToStringChecksummedAddress(const FString& Address)`**: Converts an Ethereum address string to its checksummed format.
+- **`BP_IsTextValidAddress(const FText& Address, const bool bWithChecksum)`**: Validates if a text is a valid Ethereum address.
+- **`BP_IsTextChecksummedAddress(const FText& Address)`**: Checks if a text is a checksummed Ethereum address.
+- **`BP_IsTextValidPrivateKey(const FText& PrivateKey)`**: Validates if a text is a valid private key.
+- **`Conv_TextAddressToStringChecksummedAddress(const FText& Address)`**: Converts an Ethereum address text to its checksummed format.
+- **`BP_ZeroAddress()`**: Returns the Ethereum zero address (`0x0000000000000000000000000000000000000000`).
+
+## Internal Implementation Notes
+
+- The `UThirdwebFunctionLibrary` provides a convenient interface for Unreal Engine developers to interact with Thirdweb’s blockchain functionalities without needing to write custom code.
+- These functions are exposed as Blueprint nodes, making it easy to integrate blockchain capabilities into Unreal Engine projects.
+

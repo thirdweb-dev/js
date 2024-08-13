@@ -12,7 +12,7 @@ import type {
   WalletAutoConnectionOption,
   WalletConnectionOption,
 } from "../../../wallet-types.js";
-import { UserWalletStatus } from "../authentication/type.js";
+import { UserWalletStatus } from "../authentication/types.js";
 import type { InAppConnector } from "../interfaces/connector.js";
 
 /**
@@ -52,7 +52,7 @@ export async function connectInAppWallet(
   // IF WE EVER ADD MORE CONNECTOR TYPES, this could cause redirect to be ignored despite being specified
   // TODO: In V6, make everything redirect auth
 
-  const authResult = await connector.authenticate(options);
+  const authResult = await connector.connect(options);
   const authAccount = authResult.user.account;
 
   if (

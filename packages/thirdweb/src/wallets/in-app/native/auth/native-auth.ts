@@ -1,214 +1,62 @@
-import type { CognitoUser } from "amazon-cognito-identity-js";
-
-import { Auth } from "aws-amplify";
 import * as WebBrowser from "expo-web-browser";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import { getSocialAuthLoginPath } from "../../core/authentication/getLoginPath.js";
-import {
-  AuthProvider,
-  type AuthStoredTokenWithCookieReturnType,
-  type OauthOption,
-  RecoveryShareManagement,
-  type SendEmailOtpReturnType,
-} from "../../core/authentication/type.js";
+import type { Wallet } from "../../../interfaces/wallet.js";
+import { getLoginUrl } from "../../core/authentication/getLoginPath.js";
+import { siweAuthenticate } from "../../core/authentication/siwe.js";
+import type {
+  AuthStoredTokenWithCookieReturnType,
+  MultiStepAuthArgsType,
+  OauthOption,
+} from "../../core/authentication/types.js";
+import { verifyOtp } from "../../web/lib/auth/otp.js";
+import type { Ecosystem } from "../../web/types.js";
 import {
   deleteAccount,
-  fetchUserDetails,
-  generateAuthTokenFromCognitoEmailOtp,
   getSessionHeaders,
   verifyClientId,
 } from "../helpers/api/fetchers.js";
-import {
-  cognitoEmailSignIn,
-  cognitoEmailSignUp,
-  cognitoPhoneSignIn,
-  cognitoPhoneSignUp,
-} from "../helpers/auth/cognitoAuth.js";
-import {
-  postAuth,
-  postAuthUserManaged,
-  preAuth,
-} from "../helpers/auth/middleware.js";
+import { postAuth, postAuthUserManaged } from "../helpers/auth/middleware.js";
 import {
   ROUTE_AUTH_ENDPOINT_CALLBACK,
   ROUTE_AUTH_JWT_CALLBACK,
 } from "../helpers/constants.js";
 import { createErrorMessage } from "../helpers/errors.js";
-import { isDeviceSharePresentForUser } from "../helpers/storage/local.js";
-import { getCognitoUser, setCognitoUser } from "../helpers/storage/state.js";
-import type { VerifiedTokenResponse } from "../helpers/types.js";
 
-export async function sendVerificationEmail(options: {
-  email: string;
-  client: ThirdwebClient;
-}): Promise<SendEmailOtpReturnType> {
-  await verifyClientId(options.client);
-
-  await preAuth({
-    authenticationMethod: AuthProvider.COGNITO,
-    email: options.email,
-  });
-
-  let result: Awaited<ReturnType<typeof fetchUserDetails>>;
+export async function otpLogin(
+  options: MultiStepAuthArgsType & {
+    client: ThirdwebClient;
+    ecosystem?: Ecosystem;
+  },
+): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { storedToken } = await verifyOtp(options);
   try {
-    result = await fetchUserDetails({
-      email: options.email,
-      client: options.client,
-    });
-  } catch (e) {
-    throw new Error(
-      createErrorMessage("Malformed response from the send email OTP API", e),
-    );
-  }
-
-  let cognitoUser: CognitoUser;
-  try {
-    cognitoUser = await cognitoEmailSignIn(
-      options.email,
-      options.client.clientId,
-    );
-  } catch (e) {
-    await cognitoEmailSignUp(options.email, options.client.clientId);
-    cognitoUser = await cognitoEmailSignIn(
-      options.email,
-      options.client.clientId,
-    );
-  }
-  setCognitoUser(cognitoUser);
-
-  return {
-    isNewUser: false, // TODO (rn) check this assumption is ok
-    isNewDevice: !(await isDeviceSharePresentForUser(
-      options.client.clientId,
-      result.walletUserId ?? "",
-    )),
-    recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
-  };
-}
-
-export async function sendVerificationSms(options: {
-  phoneNumber: string;
-  client: ThirdwebClient;
-}): Promise<SendEmailOtpReturnType> {
-  await verifyClientId(options.client);
-
-  await preAuth({
-    authenticationMethod: AuthProvider.COGNITO,
-    phone: options.phoneNumber,
-  });
-
-  let result: Awaited<ReturnType<typeof fetchUserDetails>>;
-  try {
-    result = await fetchUserDetails({
-      email: options.phoneNumber, // TODO should cleanup the API here
-      client: options.client,
-    });
-  } catch (e) {
-    throw new Error(
-      createErrorMessage("Malformed response from the send email OTP API", e),
-    );
-  }
-
-  let cognitoUser: CognitoUser;
-  try {
-    cognitoUser = await cognitoPhoneSignIn(
-      options.phoneNumber,
-      options.client.clientId,
-    );
-  } catch (e) {
-    await cognitoPhoneSignUp(options.phoneNumber, options.client.clientId);
-    cognitoUser = await cognitoPhoneSignIn(
-      options.phoneNumber,
-      options.client.clientId,
-    );
-  }
-  setCognitoUser(cognitoUser);
-
-  return {
-    isNewUser: false, // TODO (rn) check this assumption is ok
-    isNewDevice: !(await isDeviceSharePresentForUser(
-      options.client.clientId,
-      result.walletUserId ?? "",
-    )),
-    recoveryShareManagement: RecoveryShareManagement.CLOUD_MANAGED,
-  };
-}
-
-export async function validateEmailOTP(options: {
-  email: string;
-  otp: string;
-  client: ThirdwebClient;
-  recoveryCode?: string;
-}): Promise<AuthStoredTokenWithCookieReturnType> {
-  try {
-    await fetchUserDetails({
-      email: options.email,
-      client: options.client,
-    });
-  } catch (e) {
-    throw new Error(
-      createErrorMessage("Malformed response validating the OTP", e),
-    );
-  }
-  let verifiedTokenResponse: VerifiedTokenResponse;
-
-  try {
-    let cognitoUser = getCognitoUser();
-    if (!cognitoUser) {
-      throw new Error("MISSING COGNITO USER");
-    }
-    cognitoUser = await Auth.sendCustomChallengeAnswer(
-      cognitoUser,
-      options.otp,
-    );
-
-    // It we get here, the answer was sent successfully,
-    // but it might have been wrong (1st or 2nd time)
-    // So we should test if the user is authenticated now
-    const session = await Auth.currentSession();
-
-    verifiedTokenResponse = await generateAuthTokenFromCognitoEmailOtp(
-      session,
-      options.client.clientId,
-    );
-  } catch (e) {
-    throw new Error(`Invalid OTP ${e}`);
-  }
-
-  try {
-    const storedToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
-      jwtToken: verifiedTokenResponse.verifiedToken.jwtToken,
-      authDetails: verifiedTokenResponse.verifiedToken.authDetails,
-      authProvider: verifiedTokenResponse.verifiedToken.authProvider,
-      developerClientId: verifiedTokenResponse.verifiedToken.developerClientId,
-      cookieString: verifiedTokenResponse.verifiedTokenJwtString,
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: storedToken.jwtToken,
+      authDetails: storedToken.authDetails,
+      authProvider: storedToken.authProvider,
+      developerClientId: storedToken.developerClientId,
+      cookieString: storedToken.cookieString,
       // we should always store the jwt cookie since there's no concept of cookie in react native
       shouldStoreCookieString: true,
-      isNewUser: verifiedTokenResponse.verifiedToken.isNewUser,
+      isNewUser: storedToken.isNewUser,
     };
 
-    await postAuth({
-      storedToken,
-      client: options.client,
-      recoveryCode: options.recoveryCode,
-    });
+    await postAuth({ storedToken: toStoreToken, client: options.client });
 
     return { storedToken };
   } catch (e) {
     throw new Error(
-      createErrorMessage(
-        "Malformed response from the verify one time password",
-        e,
-      ),
+      createErrorMessage("Malformed response from post authentication", e),
     );
   }
 }
 
-export async function socialLogin(
+export async function authenticate(
   auth: OauthOption,
   client: ThirdwebClient,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
-  const loginUrl = getSocialAuthLoginPath({
+  const loginUrl = getLoginUrl({
     authOption: auth.strategy,
     client,
     mode: "mobile",
@@ -246,8 +94,48 @@ export async function socialLogin(
   if (!authResult) {
     throw new Error("No auth result found");
   }
-  const { storedToken } = JSON.parse(authResult);
+  return JSON.parse(authResult);
+}
 
+export async function socialLogin(
+  auth: OauthOption,
+  client: ThirdwebClient,
+): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { storedToken } = await authenticate(auth, client);
+  try {
+    const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+      jwtToken: storedToken.jwtToken,
+      authDetails: storedToken.authDetails,
+      authProvider: storedToken.authProvider,
+      developerClientId: storedToken.developerClientId,
+      cookieString: storedToken.cookieString,
+      // we should always store the jwt cookie since there's no concept of cookie in react native
+      shouldStoreCookieString: true,
+      isNewUser: storedToken.isNewUser,
+    };
+
+    await postAuth({ storedToken: toStoreToken, client });
+
+    return { storedToken };
+  } catch (e) {
+    throw new Error(
+      createErrorMessage("Malformed response from post authentication", e),
+    );
+  }
+}
+
+export async function siweLogin(
+  client: ThirdwebClient,
+  wallet: Wallet,
+  chain: Chain,
+  ecosystem?: Ecosystem,
+): Promise<AuthStoredTokenWithCookieReturnType> {
+  const { storedToken } = await siweAuthenticate({
+    client,
+    ecosystem,
+    wallet,
+    chain,
+  });
   try {
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
       jwtToken: storedToken.jwtToken,

@@ -6,7 +6,7 @@ import type {
   AuthStoredTokenWithCookieReturnType,
   MultiStepAuthArgsType,
   SingleStepAuthArgsType,
-} from "../authentication/type.js";
+} from "../authentication/types.js";
 
 export type InAppWalletConnectionOptions = (
   | MultiStepAuthArgsType

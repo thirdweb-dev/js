@@ -41,7 +41,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-300 rounded-lg border-border",
+        "fixed grid w-full max-w-lg gap-4 border bg-background p-6 shadow-lg duration-300 rounded-t-xl md:rounded-lg border-border",
         // on mobile - put the dialog at the bottom of the screen, animate - slide up and fade in
         "bottom-0 left-0 right-0",
         "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",

@@ -37,6 +37,10 @@ const connectLocaleVi: ConnectLocale = {
   smartWallet: "Ví Thông Minh",
   or: "hoặc",
   goBackButton: "Quay lại",
+  passkeys: {
+    title: "Khóa truy cập",
+    linkPasskey: "Liên kết khóa truy cập",
+  },
   welcomeScreen: {
     defaultTitle: "Cánh cổng dẫn tới thế giới phi tập trung",
     defaultSubtitle: "Kết nối ví để bắt đầu",
@@ -102,6 +106,8 @@ const connectLocaleVi: ConnectLocale = {
   },
   manageWallet: {
     title: "Quản lý ví",
+    linkedProfiles: "Tài khoản",
+    linkProfile: "Thêm tính năng xác thực",
     connectAnApp: "Kết nối ứng dụng",
     exportPrivateKey: "Sao lưu private key",
   },

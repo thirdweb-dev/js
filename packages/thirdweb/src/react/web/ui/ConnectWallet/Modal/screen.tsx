@@ -70,7 +70,7 @@ export function useScreenContext() {
   const ctx = useContext(ScreenSetupContext);
   if (!ctx) {
     throw new Error(
-      "useScreenContext must be used within a <ScreenProvider />",
+      "useScreenContext must be used within a <ScreenSetupContext.Provider />",
     );
   }
   return ctx;

@@ -82,7 +82,7 @@
     "@microsoft/tsdoc": "^0.15.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@preconstruct/cli": "2.7.0",
-    "@swc-node/register": "^1.10.0",
+    "@swc-node/register": "^1.10.9",
     "@swc/core": "^1.6.6",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "@types/bn.js": "^5.1.5",

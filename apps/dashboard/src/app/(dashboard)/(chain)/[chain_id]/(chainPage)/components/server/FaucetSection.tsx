@@ -1,5 +1,3 @@
-import { getIpAddress } from "lib/ip";
-import { cacheTtl } from "lib/redis";
 import type { ChainMetadata } from "thirdweb/chains";
 import { ChainIcon } from "../../../../components/server/chain-icon";
 import { FaucetButton } from "../client/FaucetButton";
@@ -12,9 +10,6 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
   const { chain } = props;
 
   // Check eligibilty.
-  const ipAddress = getIpAddress();
-  const cacheKey = `testnet-faucet:${chain.chainId}:${ipAddress}`;
-  const ttlSeconds = await cacheTtl(cacheKey);
   const sanitizedChainName = chain.name.replace("Mainnet", "").trim();
 
   return (
@@ -45,11 +40,7 @@ export async function FaucetSection(props: { chain: ChainMetadata }) {
 
           <div className="h-8" />
 
-          <FaucetButton
-            chain={chain}
-            ttlSeconds={ttlSeconds}
-            amount={amountToGive}
-          />
+          <FaucetButton chain={chain} amount={amountToGive} />
         </div>
       </div>
     </section>

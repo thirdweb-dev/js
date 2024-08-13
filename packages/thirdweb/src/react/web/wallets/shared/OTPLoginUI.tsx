@@ -4,7 +4,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
-import type { SendEmailOtpReturnType } from "../../../../wallets/in-app/core/authentication/type.js";
+import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import { preAuthenticate } from "../../../../wallets/in-app/web/lib/auth/index.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../wallets/wallet-types.js";
@@ -24,10 +24,11 @@ import type { InAppWalletLocale } from "./locale/types.js";
 type VerificationStatus =
   | "verifying"
   | "invalid"
+  | "linking_error"
   | "valid"
   | "idle"
   | "payment_required";
-type AccountStatus = "sending" | SendEmailOtpReturnType | "error";
+type AccountStatus = "sending" | "sent" | "error";
 type ScreenToShow = "base" | "enter-password-or-recovery-code";
 
 /**
@@ -42,12 +43,14 @@ export function OTPLoginUI(props: {
   client: ThirdwebClient;
   chain: Chain | undefined;
   size: "compact" | "wide";
+  isLinking?: boolean;
 }) {
   const { wallet, done, goBack, userInfo } = props;
   const isWideModal = props.size === "wide";
   const locale = props.locale;
   const [otpInput, setOtpInput] = useState("");
   const [verifyStatus, setVerifyStatus] = useState<VerificationStatus>("idle");
+  const [error, setError] = useState<string | undefined>();
   const [accountStatus, setAccountStatus] = useState<AccountStatus>("sending");
   const isEcosystem = useMemo(() => isEcosystemWallet(wallet.id), [wallet.id]);
 
@@ -60,7 +63,7 @@ export function OTPLoginUI(props: {
 
     try {
       if ("email" in userInfo) {
-        const status = await preAuthenticate({
+        await preAuthenticate({
           ecosystem: isEcosystem
             ? {
                 id: wallet.id as EcosystemWalletId,
@@ -72,9 +75,9 @@ export function OTPLoginUI(props: {
           strategy: "email",
           client: props.client,
         });
-        setAccountStatus(status);
+        setAccountStatus("sent");
       } else if ("phone" in userInfo) {
-        const status = await preAuthenticate({
+        await preAuthenticate({
           ecosystem: isEcosystem
             ? {
                 id: wallet.id as EcosystemWalletId,
@@ -86,7 +89,7 @@ export function OTPLoginUI(props: {
           strategy: "phone",
           client: props.client,
         });
-        setAccountStatus(status);
+        setAccountStatus("sent");
       } else {
         throw new Error("Invalid userInfo");
       }
@@ -121,69 +124,52 @@ export function OTPLoginUI(props: {
     }
   }
 
+  async function link(otp: string) {
+    if ("email" in userInfo) {
+      await linkProfile(wallet as Wallet<"inApp">, {
+        strategy: "email",
+        email: userInfo.email,
+        verificationCode: otp,
+      });
+    } else if ("phone" in userInfo) {
+      await linkProfile(wallet as Wallet<"inApp">, {
+        strategy: "phone",
+        phoneNumber: userInfo.phone,
+        verificationCode: otp,
+      });
+    }
+  }
+
   const verify = async (otp: string) => {
-    if (typeof accountStatus !== "object" || otp.length !== 6) {
+    if (otp.length !== 6) {
       return;
     }
-
-    setVerifyStatus("idle");
-
-    if (typeof accountStatus !== "object") {
-      return;
-    }
-
-    if (!wallet) {
-      return;
-    }
+    setVerifyStatus("verifying");
 
     try {
-      setVerifyStatus("verifying");
-
-      const needsRecoveryCode =
-        accountStatus.recoveryShareManagement === "USER_MANAGED" &&
-        (accountStatus.isNewUser || accountStatus.isNewDevice);
-
-      // USER_MANAGED
-      if (needsRecoveryCode) {
-        if (accountStatus.isNewUser) {
-          try {
-            await connect(otp);
-          } catch (e) {
-            if (e instanceof Error && e.message.includes("encryption key")) {
-              // setScreen("create-password");
-            } else {
-              throw e;
-            }
-          }
-        } else {
-          try {
-            // verifies otp for UI feedback
-            await connect(otp);
-          } catch (e) {
-            if (e instanceof Error && e.message.includes("encryption key")) {
-              // TODO: do we need this?
-              // setScreen("enter-password-or-recovery-code");
-            } else {
-              throw e;
-            }
-          }
-        }
-      }
-
-      // AWS_MANAGED
-      else {
-        // verifies otp for UI feedback
+      // verifies otp for UI feedback
+      if (props.isLinking) {
+        await link(otp);
+      } else {
         await connect(otp);
-        done();
       }
+      done();
 
       setVerifyStatus("valid");
     } catch (e) {
+      // TODO: More robust error handling
       if (
         e instanceof Error &&
         e?.message?.includes("PAYMENT_METHOD_REQUIRED")
       ) {
         setVerifyStatus("payment_required");
+      } else if (
+        e instanceof Error &&
+        (e.message.toLowerCase().includes("link") ||
+          e.message.toLowerCase().includes("profile"))
+      ) {
+        setVerifyStatus("linking_error");
+        setError(e.message);
       } else {
         setVerifyStatus("invalid");
       }
@@ -241,6 +227,15 @@ export function OTPLoginUI(props: {
                 <Spacer y="md" />
                 <Text size="sm" color="danger" center>
                   {locale.emailLoginScreen.invalidCode}
+                </Text>
+              </FadeIn>
+            )}
+
+            {verifyStatus === "linking_error" && (
+              <FadeIn>
+                <Spacer y="md" />
+                <Text size="sm" color="danger" center>
+                  {error || "Failed to verify code"}
                 </Text>
               </FadeIn>
             )}
@@ -306,7 +301,7 @@ export function OTPLoginUI(props: {
                 </Container>
               )}
 
-              {typeof accountStatus === "object" && (
+              {accountStatus === "sent" && (
                 <LinkButton onClick={sendEmailOrSms} type="button">
                   {locale.emailLoginScreen.resendCode}
                 </LinkButton>

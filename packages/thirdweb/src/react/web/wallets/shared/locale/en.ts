@@ -8,7 +8,7 @@ export default {
   emailPlaceholder: "Email address",
   submitEmail: "Continue",
   signIn: "Sign in",
-  or: "Or",
+  or: "or",
   emailRequired: "Email address is required",
   invalidEmail: "Invalid email address",
   maxAccountsExceeded:

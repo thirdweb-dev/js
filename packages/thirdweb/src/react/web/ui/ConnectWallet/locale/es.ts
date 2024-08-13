@@ -37,6 +37,10 @@ const connectWalletLocalEs: ConnectLocale = {
   smartWallet: "Cartera inteligente",
   or: "O",
   goBackButton: "Atras",
+  passkeys: {
+    title: "Clave de acceso",
+    linkPasskey: "Vincular una clave de acceso",
+  },
   welcomeScreen: {
     defaultTitle: "Tu puerta de entrada al mundo descentralizado",
     defaultSubtitle: "Conecta una cartera para empezar",
@@ -104,6 +108,8 @@ const connectWalletLocalEs: ConnectLocale = {
   },
   manageWallet: {
     title: "Gestionar Cartera",
+    linkedProfiles: "Perfiles vinculados",
+    linkProfile: "Vincular un perfil",
     connectAnApp: "Conectar una Aplicación",
     exportPrivateKey: "Exportar Clave Privada",
   },

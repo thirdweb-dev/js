@@ -4,7 +4,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import type { EcosystemWalletId } from "../../../../wallet-types.js";
-import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/type.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/types.js";
 import type { Ecosystem } from "../../types.js";
 import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 

@@ -1,24 +1,29 @@
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { Account } from "../../interfaces/wallet.js";
+import type { Account, Wallet } from "../../interfaces/wallet.js";
+import { siweAuthenticate } from "../core/authentication/siwe.js";
 import {
   type AuthArgsType,
   type AuthLoginReturnType,
+  type AuthStoredTokenWithCookieReturnType,
   type GetUser,
   type LogoutReturnType,
+  type MultiStepAuthArgsType,
+  type MultiStepAuthProviderType,
   type OauthOption,
-  type PreAuthArgsType,
-  type SendEmailOtpReturnType,
   UserWalletStatus,
-} from "../core/authentication/type.js";
+} from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
+import { sendOtp, verifyOtp } from "../web/lib/auth/otp.js";
+import type { Ecosystem } from "../web/types.js";
 import {
   authEndpoint,
+  authenticate,
   customJwt,
   deleteActiveAccount,
-  sendVerificationEmail,
-  sendVerificationSms,
+  otpLogin,
+  siweLogin,
   socialLogin,
-  validateEmailOTP,
 } from "./auth/native-auth.js";
 import { fetchUserDetails } from "./helpers/api/fetchers.js";
 import { logoutUser } from "./helpers/auth/logout.js";
@@ -70,40 +75,60 @@ export class InAppNativeConnector implements InAppConnector {
     return getExistingUserAccount({ client: this.options.client });
   }
 
-  preAuthenticate(params: PreAuthArgsType): Promise<SendEmailOtpReturnType> {
+  preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
+    return sendOtp({
+      ...args,
+      client: this.options.client,
+    });
+  }
+
+  async authenticate(
+    params: AuthArgsType,
+  ): Promise<AuthStoredTokenWithCookieReturnType> {
     const strategy = params.strategy;
     switch (strategy) {
-      case "email": {
-        return sendVerificationEmail({
-          email: params.email,
+      case "email":
+      case "phone": {
+        return verifyOtp(params);
+      }
+      case "wallet": {
+        return siweAuthenticate({
           client: this.options.client,
+          wallet: params.wallet,
+          chain: params.chain,
         });
       }
-      case "phone":
-        return sendVerificationSms({
-          phoneNumber: params.phoneNumber,
-          client: this.options.client,
-        });
+      case "google":
+      case "facebook":
+      case "discord":
+      case "apple": {
+        const ExpoLinking = require("expo-linking");
+        const redirectUrl =
+          params.redirectUrl || (ExpoLinking.createURL("") as string);
+        return authenticate({ strategy, redirectUrl }, this.options.client);
+      }
       default:
-        assertUnreachable(strategy);
+        throw new Error(`Unsupported authentication type: ${strategy}`);
     }
   }
 
-  async authenticate(params: AuthArgsType): Promise<AuthLoginReturnType> {
+  async connect(params: AuthArgsType): Promise<AuthLoginReturnType> {
     const strategy = params.strategy;
     switch (strategy) {
       case "email": {
-        return await this.validateEmailOTP({
+        return await this.validateOtp({
           email: params.email,
-          otp: params.verificationCode,
-          recoveryCode: params.verificationCode,
+          verificationCode: params.verificationCode,
+          strategy: "email",
+          client: this.options.client,
         });
       }
       case "phone": {
-        return await this.validateEmailOTP({
-          email: params.phoneNumber,
-          otp: params.verificationCode,
-          recoveryCode: params.verificationCode,
+        return await this.validateOtp({
+          phoneNumber: params.phoneNumber,
+          verificationCode: params.verificationCode,
+          strategy: "phone",
+          client: this.options.client,
         });
       }
       case "google":
@@ -118,6 +143,12 @@ export class InAppNativeConnector implements InAppConnector {
         return this.socialLogin({
           strategy,
           redirectUrl,
+        });
+      }
+      case "wallet": {
+        return this.siweLogin({
+          wallet: params.wallet,
+          chain: params.chain,
         });
       }
       case "jwt": {
@@ -146,18 +177,14 @@ export class InAppNativeConnector implements InAppConnector {
     }
   }
 
-  private async validateEmailOTP(options: {
-    email: string;
-    otp: string;
-    recoveryCode?: string;
-  }): Promise<AuthLoginReturnType> {
+  private async validateOtp(
+    options: MultiStepAuthArgsType & {
+      client: ThirdwebClient;
+      ecosystem?: Ecosystem;
+    },
+  ): Promise<AuthLoginReturnType> {
     try {
-      const { storedToken } = await validateEmailOTP({
-        email: options.email,
-        client: this.options.client,
-        otp: options.otp,
-        recoveryCode: options.recoveryCode,
-      });
+      const { storedToken } = await otpLogin(options);
       const account = await this.getAccount();
       return {
         user: {
@@ -199,6 +226,40 @@ export class InAppNativeConnector implements InAppConnector {
         throw new Error(`Error signing in with ${auth}: ${error.message}`);
       }
       throw new Error(`An unknown error occurred signing in with ${auth}`);
+    }
+  }
+
+  private async siweLogin(options: {
+    wallet: Wallet;
+    chain: Chain;
+  }): Promise<AuthLoginReturnType> {
+    try {
+      const { storedToken } = await siweLogin(
+        this.options.client,
+        options.wallet,
+        options.chain,
+      );
+      const account = await this.getAccount();
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          account,
+          authDetails: storedToken.authDetails,
+          walletAddress: account.address,
+        },
+      };
+    } catch (error) {
+      console.error(
+        `Error while signing in with: ${options.wallet.id}. ${error}`,
+      );
+      if (error instanceof Error) {
+        throw new Error(
+          `Error signing in with ${options.wallet.id}: ${error.message}`,
+        );
+      }
+      throw new Error(
+        `An unknown error occurred signing in with ${options.wallet.id}`,
+      );
     }
   }
 

@@ -1,0 +1,215 @@
+import type { AbiParameterToPrimitiveType } from "abitype";
+import type {
+  BaseTransactionOptions,
+  WithOverrides,
+} from "../../../../../transaction/types.js";
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { once } from "../../../../../utils/promise/once.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+
+/**
+ * Represents the parameters for the "castVoteWithReasonAndParamsBySig" function.
+ */
+export type CastVoteWithReasonAndParamsBySigParams = WithOverrides<{
+  proposalId: AbiParameterToPrimitiveType<{
+    type: "uint256";
+    name: "proposalId";
+  }>;
+  support: AbiParameterToPrimitiveType<{ type: "uint8"; name: "support" }>;
+  reason: AbiParameterToPrimitiveType<{ type: "string"; name: "reason" }>;
+  params: AbiParameterToPrimitiveType<{ type: "bytes"; name: "params" }>;
+  v: AbiParameterToPrimitiveType<{ type: "uint8"; name: "v" }>;
+  r: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "r" }>;
+  s: AbiParameterToPrimitiveType<{ type: "bytes32"; name: "s" }>;
+}>;
+
+export const FN_SELECTOR = "0x03420181" as const;
+const FN_INPUTS = [
+  {
+    type: "uint256",
+    name: "proposalId",
+  },
+  {
+    type: "uint8",
+    name: "support",
+  },
+  {
+    type: "string",
+    name: "reason",
+  },
+  {
+    type: "bytes",
+    name: "params",
+  },
+  {
+    type: "uint8",
+    name: "v",
+  },
+  {
+    type: "bytes32",
+    name: "r",
+  },
+  {
+    type: "bytes32",
+    name: "s",
+  },
+] as const;
+const FN_OUTPUTS = [
+  {
+    type: "uint256",
+  },
+] as const;
+
+/**
+ * Checks if the `castVoteWithReasonAndParamsBySig` method is supported by the given contract.
+ * @param contract The ThirdwebContract.
+ * @returns A promise that resolves to a boolean indicating if the `castVoteWithReasonAndParamsBySig` method is supported.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { isCastVoteWithReasonAndParamsBySigSupported } from "thirdweb/extensions/vote";
+ *
+ * const supported = await isCastVoteWithReasonAndParamsBySigSupported(contract);
+ * ```
+ */
+export async function isCastVoteWithReasonAndParamsBySigSupported(
+  contract: ThirdwebContract<any>,
+) {
+  return detectMethod({
+    contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+  });
+}
+
+/**
+ * Encodes the parameters for the "castVoteWithReasonAndParamsBySig" function.
+ * @param options - The options for the castVoteWithReasonAndParamsBySig function.
+ * @returns The encoded ABI parameters.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeCastVoteWithReasonAndParamsBySigParams } "thirdweb/extensions/vote";
+ * const result = encodeCastVoteWithReasonAndParamsBySigParams({
+ *  proposalId: ...,
+ *  support: ...,
+ *  reason: ...,
+ *  params: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ * });
+ * ```
+ */
+export function encodeCastVoteWithReasonAndParamsBySigParams(
+  options: CastVoteWithReasonAndParamsBySigParams,
+) {
+  return encodeAbiParameters(FN_INPUTS, [
+    options.proposalId,
+    options.support,
+    options.reason,
+    options.params,
+    options.v,
+    options.r,
+    options.s,
+  ]);
+}
+
+/**
+ * Encodes the "castVoteWithReasonAndParamsBySig" function into a Hex string with its parameters.
+ * @param options - The options for the castVoteWithReasonAndParamsBySig function.
+ * @returns The encoded hexadecimal string.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeCastVoteWithReasonAndParamsBySig } "thirdweb/extensions/vote";
+ * const result = encodeCastVoteWithReasonAndParamsBySig({
+ *  proposalId: ...,
+ *  support: ...,
+ *  reason: ...,
+ *  params: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ * });
+ * ```
+ */
+export function encodeCastVoteWithReasonAndParamsBySig(
+  options: CastVoteWithReasonAndParamsBySigParams,
+) {
+  // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+  // we can do this because we know the specific formats of the values
+  return (FN_SELECTOR +
+    encodeCastVoteWithReasonAndParamsBySigParams(options).slice(
+      2,
+    )) as `${typeof FN_SELECTOR}${string}`;
+}
+
+/**
+ * Prepares a transaction to call the "castVoteWithReasonAndParamsBySig" function on the contract.
+ * @param options - The options for the "castVoteWithReasonAndParamsBySig" function.
+ * @returns A prepared transaction object.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { castVoteWithReasonAndParamsBySig } from "thirdweb/extensions/vote";
+ *
+ * const transaction = castVoteWithReasonAndParamsBySig({
+ *  contract,
+ *  proposalId: ...,
+ *  support: ...,
+ *  reason: ...,
+ *  params: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * ...
+ *
+ * ```
+ */
+export function castVoteWithReasonAndParamsBySig(
+  options: BaseTransactionOptions<
+    | CastVoteWithReasonAndParamsBySigParams
+    | {
+        asyncParams: () => Promise<CastVoteWithReasonAndParamsBySigParams>;
+      }
+  >,
+) {
+  const asyncOptions = once(async () => {
+    return "asyncParams" in options ? await options.asyncParams() : options;
+  });
+
+  return prepareContractCall({
+    contract: options.contract,
+    method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
+    params: async () => {
+      const resolvedOptions = await asyncOptions();
+      return [
+        resolvedOptions.proposalId,
+        resolvedOptions.support,
+        resolvedOptions.reason,
+        resolvedOptions.params,
+        resolvedOptions.v,
+        resolvedOptions.r,
+        resolvedOptions.s,
+      ] as const;
+    },
+    value: async () => (await asyncOptions()).overrides?.value,
+    accessList: async () => (await asyncOptions()).overrides?.accessList,
+    gas: async () => (await asyncOptions()).overrides?.gas,
+    gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+    maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+    maxPriorityFeePerGas: async () =>
+      (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+    nonce: async () => (await asyncOptions()).overrides?.nonce,
+    extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+    erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+  });
+}

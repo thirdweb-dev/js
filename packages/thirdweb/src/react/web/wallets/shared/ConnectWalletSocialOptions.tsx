@@ -7,6 +7,8 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import { getEcosystemWalletAuthOptions } from "../../../../wallets/ecosystem/get-ecosystem-wallet-auth-options.js";
 import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wallet.js";
+import type { Profile } from "../../../../wallets/in-app/core/authentication/types.js";
+import { linkProfile } from "../../../../wallets/in-app/core/wallet/profiles.js";
 import { loginWithOauthRedirect } from "../../../../wallets/in-app/web/lib/auth/oauth.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
@@ -21,13 +23,13 @@ import {
   iconSize,
   spacing,
 } from "../../../core/design-system/index.js";
+import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import {
   emailIcon,
   passkeyIcon,
   phoneIcon,
   socialIcons,
-} from "../../../core/utils/socialIcons.js";
-import { setLastAuthProvider } from "../../../core/utils/storage.js";
+} from "../../../core/utils/walletIcon.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import { Img } from "../../ui/components/Img.js";
@@ -47,7 +49,7 @@ export type ConnectWalletSelectUIState =
       phoneLogin?: string;
       socialLogin?: {
         type: SocialAuthOption;
-        connectionPromise: Promise<Account>;
+        connectionPromise: Promise<Account | Profile[]>;
       };
       passkeyLogin?: boolean;
     };
@@ -70,6 +72,7 @@ export type ConnectWalletSocialOptionsProps = {
   chain: Chain | undefined;
   client: ThirdwebClient;
   size: "compact" | "wide";
+  isLinking?: boolean;
 };
 
 /**
@@ -171,7 +174,8 @@ export const ConnectWalletSocialOptions = (
     if (
       walletConfig &&
       "auth" in walletConfig &&
-      walletConfig?.auth?.mode === "redirect"
+      walletConfig?.auth?.mode === "redirect" &&
+      !props.isLinking // We do not support redirects for linking
     ) {
       return loginWithOauthRedirect({
         authOption: strategy,
@@ -200,17 +204,18 @@ export const ConnectWalletSocialOptions = (
         },
       };
 
-      const connectPromise = isEcosystemWallet(wallet)
-        ? wallet.connect({
-            ...connectOptions,
-            ecosystem: {
-              id: wallet.id,
-              partnerId: wallet.getConfig()?.partnerId,
-            },
-          })
-        : wallet.connect(connectOptions);
-
-      await setLastAuthProvider(strategy, webLocalStorage);
+      const connectPromise = (() => {
+        if (props.isLinking) {
+          if (wallet.id !== "inApp") {
+            throw new Error("Only in-app wallets support multi-auth");
+          }
+          return linkProfile(wallet, connectOptions);
+        } else {
+          const connectPromise = wallet.connect(connectOptions);
+          setLastAuthProvider(strategy, webLocalStorage);
+          return connectPromise;
+        }
+      })();
 
       setData({
         socialLogin: {

@@ -36,6 +36,10 @@ const connectLocaleKr: ConnectLocale = {
   smartWallet: "스마트 지갑",
   or: "또는",
   goBackButton: "뒤로",
+  passkeys: {
+    title: "패스키",
+    linkPasskey: "패스키 연결",
+  },
   welcomeScreen: {
     defaultTitle: "분산된 세계로의 게이트웨이",
     defaultSubtitle: "시작하려면 지갑을 연결하십시오",
@@ -101,6 +105,8 @@ const connectLocaleKr: ConnectLocale = {
   },
   manageWallet: {
     title: "지갑 관리",
+    linkedProfiles: "연결된 프로필",
+    linkProfile: "링크 프로필",
     connectAnApp: "앱 연결",
     exportPrivateKey: "개인 키 내보내기",
   },

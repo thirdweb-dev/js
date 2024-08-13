@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
-import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
+import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/types.js";
 import type { InAppWalletAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";

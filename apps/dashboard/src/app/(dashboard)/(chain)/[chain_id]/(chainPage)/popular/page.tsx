@@ -4,6 +4,9 @@ import React from "react";
 import { TrendingContractSection } from "../../../../trending/components/trending-table";
 import { getChain } from "../../../utils";
 
+// we're using searchParams here - use dynamic rendering
+export const dynamic = "force-dynamic";
+
 export default async function Page(props: {
   params: { chain_id: string };
   searchParams: { page?: number; sortBy?: SortBy };

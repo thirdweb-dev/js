@@ -4,7 +4,7 @@ import type {
   AuthLoginReturnType,
   AuthProvider,
   SendEmailOtpReturnType,
-} from "../../../core/authentication/type.js";
+} from "../../../core/authentication/types.js";
 import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
@@ -26,11 +26,6 @@ export type LoginQuerierTypes = {
   };
   injectDeveloperClientId: undefined;
   getHeadlessOauthLoginLink: { authProvider: AuthProvider };
-};
-
-type OauthLoginType = {
-  openedWindow?: Window | null;
-  closeOpenedWindow?: (openedWindow: Window) => void;
 };
 
 /**
@@ -90,10 +85,7 @@ export abstract class AbstractLogin<
     encryptionKey: string;
   }): Promise<AuthLoginReturnType>;
   abstract loginWithModal(args?: MODAL): Promise<AuthLoginReturnType>;
-  abstract loginWithEmailOtp(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
-  abstract loginWithOauth(
-    args: OauthLoginType & { oauthProvider: AuthProvider },
-  ): Promise<AuthLoginReturnType>;
+  abstract loginWithIframe(args: EMAIL_MODAL): Promise<AuthLoginReturnType>;
 
   /**
    * @internal
@@ -101,7 +93,6 @@ export abstract class AbstractLogin<
   async sendEmailLoginOtp({
     email,
   }: LoginQuerierTypes["sendThirdwebEmailLoginOtp"]): Promise<SendEmailOtpReturnType> {
-    await this.preLogin();
     const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
       procedureName: "sendThirdwebEmailLoginOtp",
       params: { email },
@@ -116,7 +107,6 @@ export abstract class AbstractLogin<
   async sendSmsLoginOtp({
     phoneNumber,
   }: LoginQuerierTypes["sendThirdwebSmsLoginOtp"]): Promise<SendEmailOtpReturnType> {
-    await this.preLogin();
     const result = await this.LoginQuerier.call<SendEmailOtpReturnType>({
       procedureName: "sendThirdwebSmsLoginOtp",
       params: { phoneNumber },
@@ -124,11 +114,11 @@ export abstract class AbstractLogin<
     return result;
   }
 
-  abstract verifyEmailLoginOtp(
+  abstract loginWithEmailOtp(
     args: EMAIL_VERIFICATION,
   ): Promise<AuthLoginReturnType>;
 
-  abstract verifySmsLoginOtp(args: {
+  abstract loginWithSmsOtp(args: {
     phoneNumber: string;
     otp: string;
     recoveryCode?: string;

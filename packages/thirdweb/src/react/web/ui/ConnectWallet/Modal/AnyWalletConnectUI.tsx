@@ -16,7 +16,6 @@ import type { Wallet } from "../../../../../wallets/interfaces/wallet.js";
 import type { EcosystemWalletId } from "../../../../../wallets/wallet-types.js";
 import { iconSize } from "../../../../core/design-system/index.js";
 import { useWalletInfo } from "../../../../core/utils/wallet.js";
-import EcosystemWalletConnectUI from "../../../wallets/ecosystem/EcosystemWalletConnectUI.js";
 import { getInjectedWalletLocale } from "../../../wallets/injected/locale/getInjectedWalletLocale.js";
 import { GetStartedScreen } from "../../../wallets/shared/GetStartedScreen.js";
 import { LoadingScreen } from "../../../wallets/shared/LoadingScreen.js";
@@ -37,6 +36,9 @@ const CoinbaseSDKWalletConnectUI = /* @__PURE__ */ lazy(
 );
 const InAppWalletConnectUI = /* @__PURE__ */ lazy(
   () => import("../../../wallets/in-app/InAppWalletConnectUI.js"),
+);
+const EcosystemWalletConnectUI = /* @__PURE__ */ lazy(
+  () => import("../../../wallets/ecosystem/EcosystemWalletConnectUI.js"),
 );
 
 /**

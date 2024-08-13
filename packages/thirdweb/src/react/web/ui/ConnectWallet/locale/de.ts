@@ -37,6 +37,10 @@ const connectLocaleDe: ConnectLocale = {
   smartWallet: "Smart Wallet",
   or: "Oder",
   goBackButton: "Zurück",
+  passkeys: {
+    title: "Passkeys",
+    linkPasskey: "Passkey verknüpfen",
+  },
   welcomeScreen: {
     defaultTitle: "Dein Tor zur dezentralen Welt",
     defaultSubtitle: "Verbinde ein Wallet, um loszulegen",
@@ -104,6 +108,8 @@ const connectLocaleDe: ConnectLocale = {
   manageWallet: {
     title: "Wallet verwalten",
     connectAnApp: "App verbinden",
+    linkProfile: "Profil verknüpfen",
+    linkedProfiles: "Verknüpfte Profile",
     exportPrivateKey: "PrivateKey exportieren",
   },
   viewFunds: {

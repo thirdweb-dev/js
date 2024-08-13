@@ -226,8 +226,8 @@ export const CmdKSearch: React.FC = () => {
       {/* modal below here */}
 
       <DialogContent
-        className="z-[10000001] p-0 gap-0"
-        dialogOverlayClassName="z-[10000000] backdrop-blur-sm"
+        className="p-0 gap-0 z-[10000001]"
+        dialogOverlayClassName="z-[10000000]"
       >
         {/* Title */}
         <DynamicHeight>
@@ -235,7 +235,7 @@ export const CmdKSearch: React.FC = () => {
             <DialogHeader>
               <DialogTitle className="mb-1">Search Contracts</DialogTitle>
               <DialogDescription>
-                Search a contract by name or contract address accross all
+                Search a contract by name or contract address across all
                 blockchains
               </DialogDescription>
             </DialogHeader>

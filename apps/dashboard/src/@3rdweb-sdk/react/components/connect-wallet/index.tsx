@@ -66,7 +66,7 @@ export const CustomConnectWallet = (props: {
   if (isLoading) {
     return (
       <>
-        <div className="w-[144px] h-[48px] bg-muted border rounded-lg flex items-center justify-center">
+        <div className="w-[144px] h-[48px] bg-muted border border-border rounded-lg flex items-center justify-center">
           <Spinner className="size-4" />
         </div>
         {/* need autoconnect here so that we actually connect */}

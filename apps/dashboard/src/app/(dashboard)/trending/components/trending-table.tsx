@@ -17,14 +17,16 @@ import { ChainIcon } from "../../(chain)/components/server/chain-icon";
 import { TablePagination } from "./pagination.client";
 import { SortingHeader } from "./sorting-header.client";
 
-export async function TrendingContractSection(props: {
+export function TrendingContractSection(props: {
   topContracts: TrendingContract[];
   chainId?: number;
   perPage?: number;
-  searchParams: { timeRange?: TimeRange; page?: number; sortBy?: SortBy };
+  searchParams:
+    | { timeRange?: TimeRange; page?: number; sortBy?: SortBy }
+    | undefined;
   showPagination: boolean;
 }) {
-  const { page } = props.searchParams;
+  const { page } = props.searchParams || {};
   const firstIndex = Math.max(0, ((page || 1) - 1) * (props.perPage || 10));
   const showChainColumn = !props.chainId;
 
@@ -44,16 +46,29 @@ export async function TrendingContractSection(props: {
                   <SortingHeader
                     title="Transactions"
                     sortBy="transactionCount"
+                    searchParams={props.searchParams}
                   />
                 </TableHead>
                 <TableHead>
-                  <SortingHeader title="Wallets" sortBy="walletCount" />
+                  <SortingHeader
+                    title="Wallets"
+                    sortBy="walletCount"
+                    searchParams={props.searchParams}
+                  />
                 </TableHead>
                 <TableHead>
-                  <SortingHeader title="Gas Usage" sortBy="gasUsage" />
+                  <SortingHeader
+                    title="Gas Usage"
+                    sortBy="gasUsage"
+                    searchParams={props.searchParams}
+                  />
                 </TableHead>
                 <TableHead>
-                  <SortingHeader title="Value Moved" sortBy="totalValueMoved" />
+                  <SortingHeader
+                    title="Value Moved"
+                    sortBy="totalValueMoved"
+                    searchParams={props.searchParams}
+                  />
                 </TableHead>
               </TableRow>
             </TableHeader>

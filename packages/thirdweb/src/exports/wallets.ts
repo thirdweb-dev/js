@@ -97,6 +97,11 @@ export type {
   InAppWalletSocialAuth as EmbeddedWalletSocialAuth,
 } from "../wallets/in-app/core/wallet/types.js";
 
+export {
+  getProfiles,
+  linkProfile,
+} from "../wallets/in-app/core/wallet/profiles.js";
+
 export type {
   CoinbaseWalletCreationOptions,
   CoinbaseSDKWalletConnectionOptions,

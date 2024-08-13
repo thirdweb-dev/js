@@ -8,7 +8,7 @@ import { useScreenContext } from "../../ui/ConnectWallet/Modal/screen.js";
 import { PoweredByThirdweb } from "../../ui/ConnectWallet/PoweredByTW.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
-import { Container } from "../../ui/components/basic.js";
+import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { ConnectWalletSocialOptions } from "../shared/ConnectWalletSocialOptions.js";
 import type { InAppWalletLocale } from "../shared/locale/types.js";
 import { EcosystemWalletHeader } from "./EcosystemWalletHeader.js";
@@ -30,6 +30,7 @@ export type EcosystemWalletFormUIProps = {
   client: ThirdwebClient;
   chain: Chain | undefined;
   connectLocale: ConnectLocale;
+  isLinking?: boolean;
 };
 
 /**
@@ -54,11 +55,18 @@ export function EcosystemWalletFormUIScreen(props: EcosystemWalletFormUIProps) {
         minHeight: "250px",
       }}
     >
-      <EcosystemWalletHeader
-        client={props.client}
-        onBack={isCompact ? onBack : undefined}
-        wallet={props.wallet}
-      />
+      {props.isLinking ? (
+        <ModalHeader
+          title={props.connectLocale.manageWallet.linkProfile}
+          onBack={onBack}
+        />
+      ) : (
+        <EcosystemWalletHeader
+          client={props.client}
+          onBack={isCompact ? onBack : undefined}
+          wallet={props.wallet}
+        />
+      )}
       <Spacer y="lg" />
 
       <Container

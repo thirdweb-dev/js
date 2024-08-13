@@ -6,7 +6,7 @@ import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type {
   MultiStepAuthProviderType,
   PreAuthArgsType,
-} from "../../../../wallets/in-app/core/authentication/type.js";
+} from "../../../../wallets/in-app/core/authentication/types.js";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,

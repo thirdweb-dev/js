@@ -2,7 +2,8 @@ import { FormControl } from "@chakra-ui/react";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import type { UseFormRegisterReturn } from "react-hook-form";
-import { FormErrorMessage, FormLabel } from "tw-components";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { Fieldset } from "./common";
 
 export function RoyaltyFieldset(props: {
   royaltyRecipient: {
@@ -19,13 +20,8 @@ export function RoyaltyFieldset(props: {
 }) {
   const bpsNumValue = Number.parseInt(props.royaltyBps.value);
   return (
-    <div>
-      <h3 className="text-lg mb-1 font-semibold">Royalties</h3>
-      <p className="text-muted-foreground text-sm mb-3">
-        The wallet address that should receive the revenue from royalties earned
-        from secondary sales of the assets.
-      </p>
-      <div className="flex flex-col gap-2 md:gap-4 md:flex-row">
+    <Fieldset legend="Royalties">
+      <div className="flex flex-col gap-4 md:flex-row">
         <FormControl isRequired isInvalid={props.royaltyRecipient.isInvalid}>
           <FormLabel>Recipient Address</FormLabel>
           <SolidityInput
@@ -36,6 +32,10 @@ export function RoyaltyFieldset(props: {
           <FormErrorMessage>
             {props.royaltyRecipient.errorMessage}
           </FormErrorMessage>
+          <FormHelperText className="!text-sm text-muted-foreground">
+            The wallet address that should receive the revenue from royalties
+            earned from secondary sales of the assets.
+          </FormHelperText>
         </FormControl>
         <FormControl
           isRequired
@@ -52,6 +52,6 @@ export function RoyaltyFieldset(props: {
           <FormErrorMessage>{props.royaltyBps.errorMessage}</FormErrorMessage>
         </FormControl>
       </div>
-    </div>
+    </Fieldset>
   );
 }

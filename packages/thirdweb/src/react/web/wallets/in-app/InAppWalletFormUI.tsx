@@ -22,7 +22,7 @@ export type InAppWalletFormUIProps = {
   wallet: Wallet<"inApp">;
   goBack?: () => void;
   size: "compact" | "wide";
-  meta: {
+  meta?: {
     title?: string;
     titleIconUrl?: string;
     showThirdwebBranding?: boolean;
@@ -31,6 +31,7 @@ export type InAppWalletFormUIProps = {
   };
   client: ThirdwebClient;
   chain: Chain | undefined;
+  isLinking?: boolean;
 };
 
 /**
@@ -43,7 +44,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const isInitialScreen =
     screen === props.wallet && initialScreen === props.wallet;
 
-  const onBack = isInitialScreen ? undefined : props.goBack;
+  const onBack = isInitialScreen && !props.isLinking ? undefined : props.goBack;
 
   return (
     <Container
@@ -60,19 +61,19 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
           <>
             <ModalHeader
               onBack={onBack}
-              leftAligned={true}
+              leftAligned={!props.isLinking}
               title={
                 <>
-                  {!props.meta.titleIconUrl ? null : (
+                  {!props.meta?.titleIconUrl ? null : (
                     <Img
-                      src={props.meta.titleIconUrl}
+                      src={props.meta?.titleIconUrl}
                       width={iconSize.md}
                       height={iconSize.md}
                       client={props.client}
                     />
                   )}
                   <ModalTitle>
-                    {props.meta.title ??
+                    {props.meta?.title ??
                       props.inAppWalletLocale.emailLoginScreen.title}
                   </ModalTitle>
                 </>
@@ -97,18 +98,18 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
       </Container>
 
       {isCompact &&
-        (props.meta.showThirdwebBranding !== false ||
-          props.meta.termsOfServiceUrl ||
-          props.meta.privacyPolicyUrl) && <Spacer y="xl" />}
+        (props.meta?.showThirdwebBranding !== false ||
+          props.meta?.termsOfServiceUrl ||
+          props.meta?.privacyPolicyUrl) && <Spacer y="xl" />}
 
       <Container flex="column" gap="lg">
         <TOS
-          termsOfServiceUrl={props.meta.termsOfServiceUrl}
-          privacyPolicyUrl={props.meta.privacyPolicyUrl}
+          termsOfServiceUrl={props.meta?.termsOfServiceUrl}
+          privacyPolicyUrl={props.meta?.privacyPolicyUrl}
           locale={props.connectLocale.agreement}
         />
 
-        {props.meta.showThirdwebBranding !== false && <PoweredByThirdweb />}
+        {props.meta?.showThirdwebBranding !== false && <PoweredByThirdweb />}
       </Container>
     </Container>
   );

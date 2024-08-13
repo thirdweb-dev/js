@@ -20,7 +20,7 @@ import {
   type SetUpWalletRpcReturnType,
   UserWalletStatus,
   type WalletAddressObjectType,
-} from "../../core/authentication/type.js";
+} from "../../core/authentication/types.js";
 import type {
   ClientIdWithQuerierType,
   Ecosystem,

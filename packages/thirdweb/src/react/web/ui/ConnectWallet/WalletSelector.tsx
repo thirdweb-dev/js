@@ -16,7 +16,7 @@ import {
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
-import { genericWalletIcon } from "../../../core/utils/socialIcons.js";
+import { genericWalletIcon } from "../../../core/utils/walletIcon.js";
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { sortWallets } from "../../utils/sortWallets.js";
 import { LoadingScreen } from "../../wallets/shared/LoadingScreen.js";

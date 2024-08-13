@@ -20,48 +20,75 @@ import rootStockCTABG from "./temp-assets/rootstock-cta.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
 import superpositionCTA from "./temp-assets/superpositionCTA.png";
 import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
+import treasureBanner from "./temp-assets/treasureBanner.png";
+import treasureCTA from "./temp-assets/treasureCta.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 
-import type { ChainMetadataWithServices } from "./types/chain";
-
 // END TEMPORARY
+
+import type { ChainMetadata } from "thirdweb/chains";
+import type {
+  ChainMetadataWithServices,
+  ChainService,
+  ChainServices,
+} from "./types/chain";
 
 const THIRDWEB_API_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export async function getChains() {
-  const response = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains?includeServices=true`,
-    // revalidate every hour
-    { next: { revalidate: 60 * 60 } },
-  );
+  const [chains, chainServices] = await Promise.all([
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains`,
+      // revalidate every 60 minutes
+      { next: { revalidate: 60 * 60 } },
+    ).then((res) => res.json()) as Promise<{ data: ChainMetadata[] }>,
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains/services`,
+      // revalidate every 60 minutes
+      { next: { revalidate: 60 * 60 } },
+    ).then((res) => res.json()) as Promise<{
+      data: Record<number, Array<ChainService>>;
+    }>,
+  ]);
 
-  if (!response.ok) {
-    response.body?.cancel();
+  if (!chains.data.length) {
     throw new Error("Failed to fetch chains");
   }
-  return (await response.json()).data as ChainMetadataWithServices[];
+  return chains.data.map((c) => ({
+    ...c,
+    services: chainServices.data[c.chainId] || [],
+  })) satisfies ChainMetadataWithServices[];
 }
 
 export async function getChain(
   chainIdOrSlug: string,
 ): Promise<ChainMetadataWithServices> {
-  const res = await fetch(
-    `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}?includeServices=true`,
-    // revalidate every 15 minutes
-    { next: { revalidate: 15 * 60 } },
-  );
+  const [chain, chainServices] = await Promise.all([
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}`,
+      // revalidate every 15 minutes
+      { next: { revalidate: 15 * 60 } },
+    ).then((res) => res.json()) as Promise<{ data: ChainMetadata }>,
+    fetch(
+      `${THIRDWEB_API_HOST}/v1/chains/${chainIdOrSlug}/services`,
+      // revalidate every 15 minutes
+      { next: { revalidate: 15 * 60 } },
+    ).then((res) => res.json()) as Promise<{ data: ChainServices }>,
+  ]);
 
-  const result = await res.json();
-  if (!result.data) {
+  if (!chain.data) {
     redirect("/404");
   }
-  return result.data as ChainMetadataWithServices;
+  return {
+    ...chain.data,
+    services: chainServices.data.services,
+  } satisfies ChainMetadataWithServices;
 }
 
-type ChainMetadata = Partial<{
+type ExtraChainMetadata = Partial<{
   headerImgUrl: string;
   about: string;
   gasSponsored: boolean;
@@ -321,12 +348,24 @@ const chainMetaRecord = {
       buttonText: "Learn more",
     },
   },
-} satisfies Record<number, ChainMetadata>;
+  //treasure
+  978657: {
+    headerImgUrl: treasureBanner.src,
+    about:
+      'Treasure is the decentralized game console. Powered by $MAGIC, the Treasure L2 serves as the base layer for the best cryptonative games and projects. Treasure and its network of "Infinity Chains" L3s offers EVM compatibility, massive scale, and decentralized infrastructure enshrined throughout. Combined with a passionate community and builder support, developers on Treasure are equipped with all of the tools they need to not only build great games and products, but also distribute to the masses.',
+    cta: {
+      backgroundImageUrl: treasureCTA.src,
+      title: "Start building on Treasure!",
+      buttonLink: "https://portal.treasure.lol",
+      buttonText: "Learn more",
+    },
+  },
+} satisfies Record<number, ExtraChainMetadata>;
 // END TEMPORARY
 
 export async function getChainMetadata(
   chainId: number,
-): Promise<ChainMetadata | null> {
+): Promise<ExtraChainMetadata | null> {
   // TODO: fetch this from the API
   if (chainId in chainMetaRecord) {
     return chainMetaRecord[chainId as keyof typeof chainMetaRecord];

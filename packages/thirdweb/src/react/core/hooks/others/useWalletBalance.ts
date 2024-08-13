@@ -19,7 +19,7 @@ export type UseWalletBalanceOptions = Prettify<
 >;
 export type UseWalletBalanceQueryOptions = Omit<
   UseQueryOptions<GetWalletBalanceResult>,
-  "queryFn" | "queryKey" | "enabled"
+  "queryFn" | "queryKey"
 >;
 
 /**
@@ -85,6 +85,10 @@ export function useWalletBalance(
         tokenAddress,
       });
     },
-    enabled: !!chain && !!client && !!address,
+    enabled:
+      (queryOptions?.enabled === undefined || queryOptions.enabled) &&
+      !!chain &&
+      !!client &&
+      !!address,
   });
 }

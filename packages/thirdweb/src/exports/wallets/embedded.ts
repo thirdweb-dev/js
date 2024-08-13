@@ -12,4 +12,4 @@ export {
   getUserEmail,
 } from "../../wallets/in-app/web/lib/auth/index.js";
 
-export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/type.js";
+export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
