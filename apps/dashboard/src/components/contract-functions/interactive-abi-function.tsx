@@ -32,6 +32,11 @@ import {
 } from "tw-components";
 
 function formatResponseData(data: unknown): string {
+  // Early exit if data is already a string,
+  // otherwise JSON.stringify(data) will wrap it in extra quotes - which will affect the value for [Copy button]
+  if (typeof data === "string") {
+    return data;
+  }
   if (BigNumber.isBigNumber(data)) {
     // biome-ignore lint/style/noParameterAssign: FIXME
     data = data.toString();
