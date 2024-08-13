@@ -99,6 +99,12 @@ export {
   updateMetadata,
   type UpdateMetadataParams,
 } from "../../extensions/erc1155/drops/write/updateMetadata.js";
+
+export {
+  updateTokenURI,
+  type UpdateTokenURIParams,
+} from "../../extensions/erc1155/write/updateTokenURI.js";
+
 export {
   getClaimConditionById,
   type GetClaimConditionByIdParams,

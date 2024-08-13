@@ -24,8 +24,8 @@ import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import type { ThirdwebContract } from "thirdweb";
-import { mintTo as erc721MintTo } from "thirdweb/extensions/erc721";
-import { mintTo as erc1155MintTo } from "thirdweb/extensions/erc1155";
+import { lazyMint as lazyMint721 } from "thirdweb/extensions/erc721";
+import { lazyMint as lazyMint1155 } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   Button,
@@ -37,16 +37,21 @@ import {
 import type { NFTMetadataInputLimited } from "types/modified-types";
 import { parseAttributes } from "utils/parseAttributes";
 
-const MINT_FORM_ID = "nft-mint-form";
+const LAZY_MINT_FORM_ID = "nft-lazy-mint-form";
 
-type NFTMintForm = {
+type LazyMintNftFormParams = {
   contract: ThirdwebContract;
   isErc721: boolean;
 };
 
-export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
+export const LazyMintNftForm: React.FC<LazyMintNftFormParams> = ({
+  contract,
+  isErc721,
+}) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
+  const { mutate, isPending } = useSendAndConfirmTransaction();
+
   const {
     setValue,
     control,
@@ -63,10 +68,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
   >();
 
   const modalContext = useModalContext();
-
   const { onSuccess, onError } = useTxNotifications(
-    "NFT minted successfully",
-    "Failed to mint NFT",
+    "NFT Lazy minted successfully",
+    "Failed to lazy mint NFT",
     contract,
   );
 
@@ -135,18 +139,16 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
 
-  const { mutate, isPending } = useSendAndConfirmTransaction();
-
   return (
     <>
       <DrawerHeader>
-        <Heading>Mint NFT</Heading>
+        <Heading>"Mint NFT"</Heading>
       </DrawerHeader>
       <DrawerBody>
         <Stack
           spacing={6}
           as="form"
-          id={MINT_FORM_ID}
+          id={LAZY_MINT_FORM_ID}
           onSubmit={handleSubmit((data) => {
             if (!address) {
               onError("Please connect your wallet to mint.");
@@ -161,33 +163,27 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
 
             trackEvent({
               category: "nft",
-              action: "mint",
+              action: "lazy-mint",
               label: "attempt",
             });
-            const nft = parseAttributes(dataWithCustom);
+            const nfts = [parseAttributes(dataWithCustom)];
             const transaction = isErc721
-              ? erc721MintTo({ contract, to: address, nft })
-              : erc1155MintTo({
-                  contract,
-                  to: address,
-                  nft,
-                  supply: BigInt(data.supply),
-                });
+              ? lazyMint721({ contract, nfts })
+              : lazyMint1155({ contract, nfts });
             mutate(transaction, {
               onSuccess: () => {
                 trackEvent({
                   category: "nft",
-                  action: "mint",
+                  action: "lazy-mint",
                   label: "success",
                 });
                 onSuccess();
                 modalContext.onClose();
               },
-              // biome-ignore lint/suspicious/noExplicitAny: FIXME
-              onError: (error: any) => {
+              onError: (error) => {
                 trackEvent({
                   category: "nft",
-                  action: "mint",
+                  action: "lazy-mint",
                   label: "error",
                   error,
                 });
@@ -251,18 +247,6 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
             <Textarea {...register("description")} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
-          {!isErc721 && (
-            <FormControl isRequired isInvalid={!!errors.supply}>
-              <FormLabel>Initial Supply</FormLabel>
-              <Input
-                type="number"
-                step="1"
-                pattern="[0-9]"
-                {...register("supply")}
-              />
-              <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
-            </FormControl>
-          )}
           <PropertiesFormControl
             watch={watch}
             // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -349,13 +333,13 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract, isErc721 }) => {
         </Button>
         <TransactionButton
           transactionCount={1}
-          isLoading={isPending}
-          form={MINT_FORM_ID}
+          isLoading={isPending || false}
+          form={LAZY_MINT_FORM_ID}
           type="submit"
           colorScheme="primary"
           isDisabled={!isDirty}
         >
-          Mint NFT
+          Lazy Mint NFT
         </TransactionButton>
       </DrawerFooter>
     </>

@@ -16,7 +16,6 @@ import {
 } from "@tanstack/react-query-persist-client";
 import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
 import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
-import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
 import { AppShell, type AppShellProps } from "components/layout/app-shell";
 import { Onboarding as OnboardingModal } from "components/onboarding";
 import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
@@ -125,25 +124,23 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
     >
       <Hydrate state={props.dehydratedState}>
         <ErrorProvider>
-          <DeployModalProvider>
-            <AllChainsProvider>
-              <ChainsProvider>
-                <EVMContractInfoProvider value={props.contractInfo}>
-                  <DashboardThirdwebProvider>
-                    <SanctionedAddressesChecker>
-                      <PosthogIdentifier />
-                      <ConfigModal />
+          <AllChainsProvider>
+            <ChainsProvider>
+              <EVMContractInfoProvider value={props.contractInfo}>
+                <DashboardThirdwebProvider>
+                  <SanctionedAddressesChecker>
+                    <PosthogIdentifier />
+                    <ConfigModal />
 
-                      <OnboardingModal />
-                      <OpCreditsGrantedModalWrapper />
+                    <OnboardingModal />
+                    <OpCreditsGrantedModalWrapper />
 
-                      <AppShell {...props} />
-                    </SanctionedAddressesChecker>
-                  </DashboardThirdwebProvider>
-                </EVMContractInfoProvider>
-              </ChainsProvider>
-            </AllChainsProvider>
-          </DeployModalProvider>
+                    <AppShell {...props} />
+                  </SanctionedAddressesChecker>
+                </DashboardThirdwebProvider>
+              </EVMContractInfoProvider>
+            </ChainsProvider>
+          </AllChainsProvider>
         </ErrorProvider>
       </Hydrate>
     </PersistQueryClientProvider>
