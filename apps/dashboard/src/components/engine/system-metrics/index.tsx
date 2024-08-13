@@ -118,7 +118,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   }
 
   return (
-    <div className="flex-col gap-y-8">
+    <div className="space-y-8">
       {systemMetricsPanel}
       {queueMetricsPanel}
     </div>
