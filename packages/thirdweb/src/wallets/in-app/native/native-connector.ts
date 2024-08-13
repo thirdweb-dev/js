@@ -1,6 +1,6 @@
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { InjectedSupportedWalletIds } from "../../../wallets/__generated__/wallet-ids.js";
-import type { Account } from "../../interfaces/wallet.js";
+import type { Account, Wallet } from "../../interfaces/wallet.js";
 import { siweAuthenticate } from "../core/authentication/siwe.js";
 import {
   type AuthArgsType,
@@ -91,11 +91,11 @@ export class InAppNativeConnector implements InAppConnector {
       case "phone": {
         return verifyOtp(params);
       }
-      case "siwe": {
+      case "wallet": {
         return siweAuthenticate({
           client: this.options.client,
-          walletId: params.walletId,
-          chainId: params.chainId,
+          wallet: params.wallet,
+          chain: params.chain,
         });
       }
       case "google":
@@ -145,10 +145,10 @@ export class InAppNativeConnector implements InAppConnector {
           redirectUrl,
         });
       }
-      case "siwe": {
+      case "wallet": {
         return this.siweLogin({
-          walletId: params.walletId,
-          chainId: params.chainId,
+          wallet: params.wallet,
+          chain: params.chain,
         });
       }
       case "jwt": {
@@ -230,14 +230,14 @@ export class InAppNativeConnector implements InAppConnector {
   }
 
   private async siweLogin(options: {
-    walletId: InjectedSupportedWalletIds;
-    chainId: number;
+    wallet: Wallet;
+    chain: Chain;
   }): Promise<AuthLoginReturnType> {
     try {
       const { storedToken } = await siweLogin(
         this.options.client,
-        options.walletId,
-        options.chainId,
+        options.wallet,
+        options.chain,
       );
       const account = await this.getAccount();
       return {
@@ -250,15 +250,15 @@ export class InAppNativeConnector implements InAppConnector {
       };
     } catch (error) {
       console.error(
-        `Error while signing in with: ${options.walletId}. ${error}`,
+        `Error while signing in with: ${options.wallet.id}. ${error}`,
       );
       if (error instanceof Error) {
         throw new Error(
-          `Error signing in with ${options.walletId}: ${error.message}`,
+          `Error signing in with ${options.wallet.id}: ${error.message}`,
         );
       }
       throw new Error(
-        `An unknown error occurred signing in with ${options.walletId}`,
+        `An unknown error occurred signing in with ${options.wallet.id}`,
       );
     }
   }

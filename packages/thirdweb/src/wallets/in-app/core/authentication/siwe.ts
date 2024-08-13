@@ -1,9 +1,9 @@
 import { signLoginPayload } from "../../../../auth/core/sign-login-payload.js";
 import type { LoginPayload } from "../../../../auth/core/types.js";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getClientFetch } from "../../../../utils/fetch.js";
-import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
-import { createWallet } from "../../../../wallets/create-wallet.js";
+import type { Wallet } from "../../../interfaces/wallet.js";
 import type { Ecosystem } from "../../web/types.js";
 import { getLoginCallbackUrl, getLoginUrl } from "./getLoginPath.js";
 import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
@@ -12,23 +12,23 @@ import type { AuthStoredTokenWithCookieReturnType } from "./types.js";
  * @internal
  */
 export async function siweAuthenticate(args: {
-  walletId: InjectedSupportedWalletIds;
-  chainId: number;
+  wallet: Wallet;
+  chain: Chain;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 }): Promise<AuthStoredTokenWithCookieReturnType> {
-  const wallet = createWallet(args.walletId);
+  const { wallet, chain } = args;
   const account = await wallet.connect({ client: args.client });
   const clientFetch = getClientFetch(args.client, args.ecosystem);
 
   const payload = await (async () => {
     const path = getLoginUrl({
-      authOption: "siwe",
+      authOption: "wallet",
       client: args.client,
       ecosystem: args.ecosystem,
     });
     const res = await clientFetch(
-      `${path}&address=${account.address}&chainId=${args.chainId}`,
+      `${path}&address=${account.address}&chainId=${chain.id}`,
     );
 
     if (!res.ok) throw new Error("Failed to generate SIWE login payload");
@@ -39,7 +39,7 @@ export async function siweAuthenticate(args: {
 
   const authResult = await (async () => {
     const path = getLoginCallbackUrl({
-      authOption: "siwe",
+      authOption: "wallet",
       client: args.client,
       ecosystem: args.ecosystem,
     });
