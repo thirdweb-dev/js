@@ -24,7 +24,7 @@ import type {
 /**
  * @internal
  */
-export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
+export function formatIndexerBlock<TBlockTag extends BlockTag = "latest">(
   block?: IndexerInternalBlock,
 ): GetBlockReturnType<undefined, false, TBlockTag> | undefined {
   if (!block) {
@@ -47,7 +47,7 @@ export function formatChainsawBlock<TBlockTag extends BlockTag = "latest">(
 /**
  * @internal
  */
-export function formatChainsawNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
+export function formatIndexerNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
   if (!nfts) {
     return [];
   }
@@ -100,7 +100,7 @@ export function formatChainsawNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
 /**
  * @internal
  */
-export function formatChainsawTransactions(
+export function formatIndexerTransactions(
   txs?: IndexerInternalTransaction[],
 ): Transaction[] {
   if (!txs) {
@@ -162,11 +162,11 @@ export function formatChainsawTransactions(
 /**
  * @internal
  */
-export function formatChainsawEvents(
+export function formatIndexerEvents(
   events?: IndexerInternalEvent[],
 ): Prettify<
   Log &
-  DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
+    DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
 >[] {
   if (!events?.length) {
     return [];

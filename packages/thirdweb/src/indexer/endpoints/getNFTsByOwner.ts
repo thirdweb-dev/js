@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { NFT } from "../../utils/nft/parseNft.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import { formatChainsawNFTs } from "../formatter.js";
+import { formatIndexerNFTs } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
   IndexerInternalNFT,
@@ -75,7 +75,7 @@ export async function getNFTsByOwner(
       throw new Error(data.error);
     }
     return {
-      nfts: formatChainsawNFTs(data.data),
+      nfts: formatIndexerNFTs(data.data),
       page: data.page,
     };
   } catch (error) {

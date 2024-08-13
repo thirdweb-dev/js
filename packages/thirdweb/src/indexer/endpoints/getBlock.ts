@@ -2,7 +2,7 @@ import type { BlockTag, GetBlockReturnType } from "viem";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getClientFetch } from "../../utils/fetch.js";
-import { formatChainsawBlock } from "../formatter.js";
+import { formatIndexerBlock } from "../formatter.js";
 import type { IndexerInternalBlock, IndexerResponse } from "../types.ts";
 import { getBlockEndpoint } from "../urls.js";
 
@@ -66,7 +66,7 @@ export async function getBlock(
     if (data.error) {
       throw new Error(data.error);
     }
-    const block = formatChainsawBlock(data.data);
+    const block = formatIndexerBlock(data.data);
     if (!block) {
       throw new Error(`unable to fetch block ${params.blockNumber}`);
     }

@@ -2,7 +2,7 @@ import type { Transaction } from "viem";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import { formatChainsawTransactions } from "../formatter.js";
+import { formatIndexerTransactions } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
   IndexerInternalTransaction,
@@ -102,7 +102,7 @@ export async function getContractTransactions(
       throw new Error(data.error);
     }
     return {
-      transactions: formatChainsawTransactions(data.data),
+      transactions: formatIndexerTransactions(data.data),
       page: data.page,
     };
   } catch (error) {

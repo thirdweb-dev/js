@@ -2,7 +2,7 @@ import type { DecodeEventLogReturnType, Log } from "viem";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import type { Prettify } from "../../utils/type-utils.js";
-import { formatChainsawEvents } from "../formatter.js";
+import { formatIndexerEvents } from "../formatter.js";
 import { addRequestPagination } from "../paging.js";
 import type {
   IndexerInternalEvent,
@@ -42,11 +42,11 @@ export type GetEventsParams = Prettify<
 export type GetEventsResult = {
   events: Prettify<
     Log &
-    DecodeEventLogReturnType & {
-      chainId?: number;
-      count: bigint;
-      time?: Date;
-    }
+      DecodeEventLogReturnType & {
+        chainId?: number;
+        count: bigint;
+        time?: Date;
+      }
   >[];
   page?: number;
 };
@@ -87,19 +87,20 @@ export async function getEvents(
 ): Promise<GetEventsResult> {
   try {
     const url = getEndpointUrl(params);
-    const response = await getClientFetch(params.contract.client)(url.toString());
+    const response = await getClientFetch(params.contract.client)(
+      url.toString(),
+    );
     if (!response.ok) {
       response.body?.cancel();
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: IndexerResponse<IndexerInternalEvent[]> =
-      await response.json();
+    const data: IndexerResponse<IndexerInternalEvent[]> = await response.json();
     if (data.error) {
       throw new Error(data.error);
     }
     return {
-      events: formatChainsawEvents(data.data),
+      events: formatIndexerEvents(data.data),
       page: data.page,
     };
   } catch (error) {
