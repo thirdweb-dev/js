@@ -171,7 +171,7 @@ export function useEngineQueueMetrics(
       }
       return (await res.json()) as EngineSystemQueueMetrics;
     },
-    enabled: !!instanceUrl,
+    enabled: !!instanceUrl && !!token,
     refetchInterval: pollInterval,
   });
 }
