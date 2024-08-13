@@ -70,8 +70,8 @@ export async function getNFTsByOwner(
     }
 
     const data: IndexerResponse<IndexerInternalNFT[]> = await response.json();
-    if (data.error) {
-      throw new Error(data.error);
+    if (data.error || !data.data) {
+      throw new Error(data.error || "Failed to get NFTs");
     }
     return {
       nfts: formatIndexerNFTs(data.data),

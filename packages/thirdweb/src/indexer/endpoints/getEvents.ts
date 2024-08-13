@@ -83,7 +83,7 @@ export async function getEvents(
     }
 
     const data: IndexerResponse<IndexerInternalEvent[]> = await response.json();
-    if (data.error) {
+    if (data.error || !data.data) {
       throw new Error(data.error);
     }
     return {

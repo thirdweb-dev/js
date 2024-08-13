@@ -64,8 +64,8 @@ export async function getBlock(
     }
 
     const data: IndexerResponse<IndexerInternalBlock> = await response.json();
-    if (data.error) {
-      throw new Error(data.error);
+    if (data.error || !data.data) {
+      throw new Error(data.error || "Failed to get block");
     }
     const block = formatIndexerBlock(data.data);
     if (!block) {

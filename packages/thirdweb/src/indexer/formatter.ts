@@ -25,11 +25,8 @@ import type {
  * @internal
  */
 export function formatIndexerBlock<TBlockTag extends BlockTag = "latest">(
-  block?: IndexerInternalBlock,
+  block: IndexerInternalBlock,
 ): GetBlockReturnType<undefined, false, TBlockTag> | undefined {
-  if (!block) {
-    return;
-  }
   return formatBlock({
     number: numberToHex(block.blockNumber),
     hash: block.hash,
@@ -47,10 +44,7 @@ export function formatIndexerBlock<TBlockTag extends BlockTag = "latest">(
 /**
  * @internal
  */
-export function formatIndexerNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
-  if (!nfts) {
-    return [];
-  }
+export function formatIndexerNFTs(nfts: IndexerInternalNFT[]): NFT[] {
   return nfts.map((nft) => {
     const common = {
       tokenId: BigInt(nft.tokenId),
@@ -105,11 +99,8 @@ export function formatIndexerNFTs(nfts?: IndexerInternalNFT[]): NFT[] {
  * @internal
  */
 export function formatIndexerTransactions(
-  txs?: IndexerInternalTransaction[],
+  txs: IndexerInternalTransaction[],
 ): Transaction[] {
-  if (!txs) {
-    return [];
-  }
   return txs.map((tx) => {
     const common = {
       blockHash: tx.blockHash,
@@ -167,14 +158,11 @@ export function formatIndexerTransactions(
  * @internal
  */
 export function formatIndexerEvents(
-  events?: IndexerInternalEvent[],
+  events: IndexerInternalEvent[],
 ): Prettify<
   Log &
     DecodeEventLogReturnType & { chainId?: number; count: bigint; time?: Date }
 >[] {
-  if (!events?.length) {
-    return [];
-  }
   return events.map((event) => {
     let args = [];
     try {
