@@ -5,7 +5,7 @@ import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { isAddress } from "../../utils/address.js";
 import { deploySplitContract } from "./deploy-split.js";
 
-describe("deploy-split contract", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("deploy-split contract", () => {
   it("should deploy Split contract", async () => {
     const address = await deploySplitContract({
       account: TEST_ACCOUNT_A,
