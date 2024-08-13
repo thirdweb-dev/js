@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { resolveAddress } from "./resolveAddress.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
+import { resolveAddress } from "./resolveAddress.js";
 
 describe("resolve lens address", () => {
-
   // Will remove this test later since this is flaky
   it("should resolve to correct address", async () => {
     const address = await resolveAddress({
