@@ -122,6 +122,12 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
               loadingText={loadingText}
               onClick={(e) => {
                 e.stopPropagation();
+
+                if (networksMismatch) {
+                  eventRef.current = e;
+                  return;
+                }
+
                 if (notEnoughBalance) {
                   trackEvent({
                     category: "no-funds",
@@ -130,11 +136,6 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
                   });
                   setDialog("no-funds");
                   return;
-                }
-
-                if (networksMismatch) {
-                  eventRef.current = e;
-                  return undefined;
                 }
 
                 if (onClick) {
