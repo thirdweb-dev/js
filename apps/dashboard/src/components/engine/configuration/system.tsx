@@ -1,7 +1,7 @@
 import {
   type EngineInstance,
-  useEngineResourceMetrics,
   useEngineSystemHealth,
+  useEngineSystemMetrics,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Text } from "tw-components";
 
@@ -11,7 +11,7 @@ interface EngineSystemProps {
 
 export const EngineSystem: React.FC<EngineSystemProps> = ({ instance }) => {
   const healthQuery = useEngineSystemHealth(instance.url);
-  const metricsQuery = useEngineResourceMetrics(instance.id);
+  const metricsQuery = useEngineSystemMetrics(instance.id);
   if (!healthQuery.data) {
     return null;
   }

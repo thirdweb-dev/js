@@ -156,14 +156,14 @@ export interface EngineSystemQueueMetrics {
   };
 }
 
-export function useEngineSystemQueueMetrics(
+export function useEngineQueueMetrics(
   instanceUrl: string,
   pollInterval: number | false = false,
 ) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
   return useQuery(
-    engineKeys.health(instanceUrl),
+    engineKeys.queueMetrics(instanceUrl),
     async () => {
       const res = await fetch(`${instanceUrl}system/queue`, {
         headers: getEngineRequestHeaders(token),
@@ -1498,11 +1498,11 @@ export interface EngineResourceMetrics {
   };
 }
 
-export function useEngineResourceMetrics(engineId: string) {
+export function useEngineSystemMetrics(engineId: string) {
   const [enabled, setEnabled] = useState(true);
 
   return useQuery(
-    engineKeys.metrics(engineId),
+    engineKeys.systemMetrics(engineId),
     async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,

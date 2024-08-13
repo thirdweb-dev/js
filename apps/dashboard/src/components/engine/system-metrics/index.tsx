@@ -1,8 +1,8 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type EngineInstance,
-  useEngineResourceMetrics,
-  useEngineSystemQueueMetrics,
+  useEngineQueueMetrics,
+  useEngineSystemMetrics,
 } from "@3rdweb-sdk/react/hooks/useEngine";
 import { Flex, Icon, Stack } from "@chakra-ui/react";
 import { FaChartArea } from "react-icons/fa";
@@ -19,8 +19,8 @@ interface EngineStatusProps {
 export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
   instance,
 }) => {
-  const systemMetricsQuery = useEngineResourceMetrics(instance.id);
-  const queueMetricsQuery = useEngineSystemQueueMetrics(instance.url, 10_000);
+  const systemMetricsQuery = useEngineSystemMetrics(instance.id);
+  const queueMetricsQuery = useEngineQueueMetrics(instance.url, 10_000);
 
   let systemMetricsPanel = <Spinner className="h-4 w-4" />;
   if (!systemMetricsQuery.data || systemMetricsQuery.isError) {
@@ -80,32 +80,45 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
     queueMetricsPanel = (
       <Card p={16}>
         <Stack spacing={4}>
-          <Flex gap={2} align="center" pb={-2}>
+          <Flex gap={2} align="center">
             <Icon as={FaChartArea} />
             <Heading size="title.md">Queue Metrics</Heading>
+          </Flex>
 
-            <Text>Transactions in queue: {numQueued}</Text>
-            <Text>Transactions in flight: {numPending}</Text>
+          <div className="flex gap-x-24">
+            <div className="flex-col gap-y-4">
+              <h2 className="font-semibold"># queued</h2>
+              <p>{numQueued}</p>
+            </div>
+            <div className="flex-col gap-y-4">
+              <h2 className="font-semibold"># pending</h2>
+              <p>{numPending}</p>
+            </div>
+
             {msToSend && (
-              <>
-                <Text>Time to send (p50): {msToSend.p50 / 1000}s</Text>
-                <Text>Time to send (p90): {msToSend.p90 / 1000}s</Text>
-              </>
+              <div className="flex-col gap-y-4">
+                <h2 className="font-semibold">Time to send</h2>
+                <p>
+                  p50 {(msToSend.p50 / 1000).toFixed(2)}s, p90{" "}
+                  {(msToSend.p90 / 1000).toFixed(2)}s
+                </p>
+              </div>
             )}
             {msToMine && (
-              <>
-                <Text>Time to send (p50): {msToMine.p50 / 1000}s</Text>
-                <Text>Time to send (p90): {msToMine.p90 / 1000}s</Text>
-              </>
+              <div className="flex-col gap-y-4">
+                <h2 className="font-semibold">Time to mine</h2>
+                p50 {(msToMine.p50 / 1000).toFixed(2)}s, p90{" "}
+                {(msToMine.p90 / 1000).toFixed(2)}s
+              </div>
             )}
-          </Flex>
+          </div>
         </Stack>
       </Card>
     );
   }
 
   return (
-    <div className="flex-col gap-y-4">
+    <div className="flex-col gap-y-8">
       {systemMetricsPanel}
       {queueMetricsPanel}
     </div>
