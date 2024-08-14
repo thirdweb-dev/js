@@ -117,3 +117,5 @@ export const OnboardingLinkWallet: React.FC<OnboardingLinkWalletProps> = ({
     </>
   );
 };
+
+export default OnboardingLinkWallet;

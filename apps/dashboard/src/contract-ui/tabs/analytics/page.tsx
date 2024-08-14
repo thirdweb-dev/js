@@ -1,3 +1,5 @@
+"use client";
+
 import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import {
   Alert,
@@ -33,8 +35,9 @@ import {
   useTransactionAnalytics,
   useUniqueWalletsAnalytics,
 } from "data/analytics/hooks";
-import { Suspense, useLayoutEffect, useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { Card, Heading, Text } from "tw-components";
+import { useIsomorphicLayoutEffect } from "../../../@/lib/useIsomorphicLayoutEffect";
 
 interface ContractAnalyticsPageProps {
   contractAddress?: string;
@@ -52,7 +55,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
   );
   const [endDate] = useState(new Date());
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

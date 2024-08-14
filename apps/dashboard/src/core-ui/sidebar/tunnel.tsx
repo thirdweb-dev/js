@@ -1,4 +1,7 @@
-import { useLayoutEffect, useRef, useState } from "react";
+"use client";
+
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { ComponentWithChildren } from "types/component-with-children";
 
@@ -21,7 +24,7 @@ const ClientOnlyPortal: ComponentWithChildren<ClientOnlyPortalProps> = ({
   const ref = useRef<Element | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     ref.current = document.getElementById(selector);
     setMounted(true);
   }, [selector]);

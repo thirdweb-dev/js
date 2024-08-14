@@ -122,6 +122,12 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
               loadingText={loadingText}
               onClick={(e) => {
                 e.stopPropagation();
+
+                if (networksMismatch) {
+                  eventRef.current = e;
+                  return;
+                }
+
                 if (notEnoughBalance) {
                   trackEvent({
                     category: "no-funds",
@@ -130,11 +136,6 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
                   });
                   setDialog("no-funds");
                   return;
-                }
-
-                if (networksMismatch) {
-                  eventRef.current = e;
-                  return undefined;
                 }
 
                 if (onClick) {
@@ -321,7 +322,7 @@ function GetFundsFromFaucet(props: {
   chain: ChainMetadata;
 }) {
   // TODO - improvement for later -> estimate gas required for transaction, and use that as the amount to give
-  const amountToGive = "0.1";
+  const amountToGive = "0.01";
 
   return (
     <div className="border border-border px-4 py-6 rounded-lg flex justify-center">

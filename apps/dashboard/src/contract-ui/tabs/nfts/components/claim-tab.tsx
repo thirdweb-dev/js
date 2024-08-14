@@ -94,7 +94,18 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
             isInvalid={!!form.getFieldState("amount", form.formState).error}
           >
             <FormLabel>Amount</FormLabel>
-            <Input type="text" {...form.register("amount")} />
+            <Input
+              type="text"
+              {...form.register("amount", {
+                validate: (value) => {
+                  // must be an integer
+                  const valueNum = Number(value);
+                  if (!Number.isInteger(valueNum)) {
+                    return "Amount must be an integer";
+                  }
+                },
+              })}
+            />
             <FormHelperText>How many would you like to claim?</FormHelperText>
             <FormErrorMessage>
               {form.getFieldState("amount", form.formState).error?.message}
