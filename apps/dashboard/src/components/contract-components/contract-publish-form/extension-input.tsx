@@ -15,21 +15,17 @@ import { useAllVersions, usePublishedContractsQuery } from "../hooks";
 
 interface ExtensionInputProps {
   index: number;
-  isModular: boolean;
   remove: (index: number) => void;
 }
 
 export const ExtensionInput: React.FC<ExtensionInputProps> = ({
   index,
-  isModular,
   remove,
 }) => {
   const form = useFormContext();
-  const feature = isModular ? "ModularExtension" : undefined;
 
   const publishedContractsQuery = usePublishedContractsQuery(
     form.watch(`defaultExtensions.${index}.publisherAddress`),
-    feature,
   );
 
   const allVersions = useAllVersions(

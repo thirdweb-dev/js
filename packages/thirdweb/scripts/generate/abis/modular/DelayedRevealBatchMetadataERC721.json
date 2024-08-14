@@ -1,216 +1,216 @@
 [
-    {
-      "type": "function",
-      "name": "encodeBytesUploadMetadata",
-      "inputs": [
-        { "name": "encryptedURI", "type": "bytes", "internalType": "bytes" },
-        {
-          "name": "provenanceHash",
-          "type": "bytes32",
-          "internalType": "bytes32"
-        }
-      ],
-      "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "getAllMetadataBatches",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "",
-          "type": "tuple[]",
-          "internalType": "struct DelayedRevealBatchMetadataERC721.DelayedRevealMetadataBatch[]",
-          "components": [
-            {
-              "name": "startTokenIdInclusive",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            {
-              "name": "endTokenIdInclusive",
-              "type": "uint256",
-              "internalType": "uint256"
-            },
-            { "name": "baseURI", "type": "string", "internalType": "string" },
-            {
-              "name": "encryptedData",
-              "type": "bytes",
-              "internalType": "bytes"
-            }
-          ]
-        }
-      ],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "getExtensionConfig",
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "config",
-          "type": "tuple",
-          "internalType": "struct IExtensionConfig.ExtensionConfig",
-          "components": [
-            {
-              "name": "registerInstallationCallback",
-              "type": "bool",
-              "internalType": "bool"
-            },
-            {
-              "name": "requiredInterfaces",
-              "type": "bytes4[]",
-              "internalType": "bytes4[]"
-            },
-            {
-              "name": "supportedInterfaces",
-              "type": "bytes4[]",
-              "internalType": "bytes4[]"
-            },
-            {
-              "name": "callbackFunctions",
-              "type": "tuple[]",
-              "internalType": "struct IExtensionConfig.CallbackFunction[]",
-              "components": [
-                {
-                  "name": "selector",
-                  "type": "bytes4",
-                  "internalType": "bytes4"
-                }
-              ]
-            },
-            {
-              "name": "fallbackFunctions",
-              "type": "tuple[]",
-              "internalType": "struct IExtensionConfig.FallbackFunction[]",
-              "components": [
-                {
-                  "name": "selector",
-                  "type": "bytes4",
-                  "internalType": "bytes4"
-                },
-                {
-                  "name": "permissionBits",
-                  "type": "uint256",
-                  "internalType": "uint256"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "stateMutability": "pure"
-    },
-    {
-      "type": "function",
-      "name": "onTokenURI",
-      "inputs": [
-        { "name": "_id", "type": "uint256", "internalType": "uint256" }
-      ],
-      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
-      "stateMutability": "view"
-    },
-    {
-      "type": "function",
-      "name": "reveal",
-      "inputs": [
-        { "name": "_index", "type": "uint256", "internalType": "uint256" },
-        { "name": "_key", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [
-        { "name": "revealedURI", "type": "string", "internalType": "string" }
-      ],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
-      "name": "uploadMetadata",
-      "inputs": [
-        { "name": "_amount", "type": "uint256", "internalType": "uint256" },
-        { "name": "_baseURI", "type": "string", "internalType": "string" },
-        { "name": "_data", "type": "bytes", "internalType": "bytes" }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "event",
-      "name": "BatchMetadataUpdate",
-      "inputs": [
-        {
-          "name": "_fromTokenId",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        },
-        {
-          "name": "_toTokenId",
-          "type": "uint256",
-          "indexed": false,
-          "internalType": "uint256"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "NewMetadataBatch",
-      "inputs": [
-        {
-          "name": "startTokenIdInclusive",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "endTokenIdNonInclusive",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "baseURI",
-          "type": "string",
-          "indexed": false,
-          "internalType": "string"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
-      "name": "TokenURIRevealed",
-      "inputs": [
-        {
-          "name": "index",
-          "type": "uint256",
-          "indexed": true,
-          "internalType": "uint256"
-        },
-        {
-          "name": "revealedURI",
-          "type": "string",
-          "indexed": false,
-          "internalType": "string"
-        }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "error",
-      "name": "BatchMetadataNoMetadataForTokenId",
-      "inputs": []
-    },
-    { "type": "error", "name": "BatchMetadataZeroAmount", "inputs": [] },
-    {
-      "type": "error",
-      "name": "DelayedRevealIncorrectDecryptionKey",
-      "inputs": [
-        { "name": "expected", "type": "bytes32", "internalType": "bytes32" },
-        { "name": "actual", "type": "bytes32", "internalType": "bytes32" }
-      ]
-    },
-    { "type": "error", "name": "DelayedRevealNothingToReveal", "inputs": [] }
-  ]
+  {
+    "type": "function",
+    "name": "encodeBytesUploadMetadata",
+    "inputs": [
+      { "name": "encryptedURI", "type": "bytes", "internalType": "bytes" },
+      {
+        "name": "provenanceHash",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bytes", "internalType": "bytes" }],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "getAllMetadataBatches",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct DelayedRevealBatchMetadataERC721.DelayedRevealMetadataBatch[]",
+        "components": [
+          {
+            "name": "startTokenIdInclusive",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "endTokenIdInclusive",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          { "name": "baseURI", "type": "string", "internalType": "string" },
+          {
+            "name": "encryptedData",
+            "type": "bytes",
+            "internalType": "bytes"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getModuleConfig",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "config",
+        "type": "tuple",
+        "internalType": "struct IModuleConfig.ModuleConfig",
+        "components": [
+          {
+            "name": "registerInstallationCallback",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "requiredInterfaces",
+            "type": "bytes4[]",
+            "internalType": "bytes4[]"
+          },
+          {
+            "name": "supportedInterfaces",
+            "type": "bytes4[]",
+            "internalType": "bytes4[]"
+          },
+          {
+            "name": "callbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IModuleConfig.CallbackFunction[]",
+            "components": [
+              {
+                "name": "selector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              }
+            ]
+          },
+          {
+            "name": "fallbackFunctions",
+            "type": "tuple[]",
+            "internalType": "struct IModuleConfig.FallbackFunction[]",
+            "components": [
+              {
+                "name": "selector",
+                "type": "bytes4",
+                "internalType": "bytes4"
+              },
+              {
+                "name": "permissionBits",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "stateMutability": "pure"
+  },
+  {
+    "type": "function",
+    "name": "onTokenURI",
+    "inputs": [
+      { "name": "_id", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "reveal",
+    "inputs": [
+      { "name": "_index", "type": "uint256", "internalType": "uint256" },
+      { "name": "_key", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [
+      { "name": "revealedURI", "type": "string", "internalType": "string" }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "uploadMetadata",
+    "inputs": [
+      { "name": "_amount", "type": "uint256", "internalType": "uint256" },
+      { "name": "_baseURI", "type": "string", "internalType": "string" },
+      { "name": "_data", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "BatchMetadataUpdate",
+    "inputs": [
+      {
+        "name": "_fromTokenId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "_toTokenId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "NewMetadataBatch",
+    "inputs": [
+      {
+        "name": "startTokenIdInclusive",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "endTokenIdNonInclusive",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "baseURI",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TokenURIRevealed",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "revealedURI",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "BatchMetadataNoMetadataForTokenId",
+    "inputs": []
+  },
+  { "type": "error", "name": "BatchMetadataZeroAmount", "inputs": [] },
+  {
+    "type": "error",
+    "name": "DelayedRevealIncorrectDecryptionKey",
+    "inputs": [
+      { "name": "expected", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "actual", "type": "bytes32", "internalType": "bytes32" }
+    ]
+  },
+  { "type": "error", "name": "DelayedRevealNothingToReveal", "inputs": [] }
+]
