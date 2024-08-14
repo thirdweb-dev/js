@@ -4,7 +4,7 @@
 
 Get NFTs by a wallet address.
 ```ts
-import { createThirdwebClient, getNFTsByOwnert } from "thirdweb";
+import { createThirdwebClient, getNFTsByOwner } from "thirdweb";
 
 const client = createThirdwebClient({ clientId: "..." });
 const nfts = await getNFTsByOwner({
