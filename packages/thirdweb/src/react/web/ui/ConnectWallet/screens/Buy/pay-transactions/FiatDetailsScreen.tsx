@@ -73,6 +73,8 @@ export function FiatDetailsScreen(props: {
           setStopPolling(true);
         }}
         payer={props.payer}
+        // viewing history - ignore onSuccess
+        onSuccess={undefined}
       />
     );
   }
