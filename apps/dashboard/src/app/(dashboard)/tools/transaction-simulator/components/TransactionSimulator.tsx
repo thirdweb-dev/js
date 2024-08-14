@@ -11,12 +11,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import type { Abi, AbiFunction } from "abitype";
 import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { ArrowDown } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import {
-  defineChain,
   getContract,
   prepareContractCall,
   resolveMethod,
@@ -57,17 +57,19 @@ export const TransactionSimulator = (props: {
     codeExample: "",
     shareUrl: "",
   });
-  const { register, handleSubmit, setValue } =
-    useForm<SimulateTransactionForm>();
+  const form = useForm<SimulateTransactionForm>();
+  const chainId = form.watch("chainId");
+  const chain = useV5DashboardChain(
+    Number.isInteger(Number(chainId)) ? chainId : undefined,
+  );
 
   async function handleSimulation(data: SimulateTransactionForm) {
     try {
       setIsLoading(true);
-      const { from, to, value, functionArgs, functionName, chainId } = data;
-      if (Number.isNaN(Number(chainId)) || !Number.isInteger(Number(chainId))) {
+      const { from, to, value, functionArgs, functionName } = data;
+      if (!chain) {
         throw new Error("Invalid chainId");
       }
-      const chain = defineChain(Number(chainId));
       const contract = getContract({
         client: thirdwebClient,
         chain,
@@ -161,7 +163,7 @@ ${Object.keys(populatedTransaction)
       </p>
 
       <form
-        onSubmit={handleSubmit(handleSimulation)}
+        onSubmit={form.handleSubmit(handleSimulation)}
         className="space-y-4 flex-col"
       >
         <Card className="flex flex-col gap-4 p-4">
@@ -174,7 +176,7 @@ ${Object.keys(populatedTransaction)
               required
               placeholder="The chain ID of the sender wallet"
               defaultValue={initialFormValues.chainId}
-              {...register("chainId", { required: true })}
+              {...form.register("chainId", { required: true })}
               // Hide spinner.
               className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
@@ -188,14 +190,14 @@ ${Object.keys(populatedTransaction)
               required
               placeholder="The sender wallet address"
               defaultValue={initialFormValues.from}
-              {...register("from", { required: true })}
+              {...form.register("from", { required: true })}
             />
             {activeAccount && (
               <ToolTipLabel label="Use current wallet address">
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => setValue("from", activeAccount.address)}
+                  onClick={() => form.setValue("from", activeAccount.address)}
                 >
                   <MdOutlineAccountBalanceWallet />
                 </Button>
@@ -216,7 +218,7 @@ ${Object.keys(populatedTransaction)
             <Input
               placeholder="The contract address to call"
               defaultValue={initialFormValues.to}
-              {...register("to", { required: true })}
+              {...form.register("to", { required: true })}
             />
           </div>
           <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
@@ -226,7 +228,7 @@ ${Object.keys(populatedTransaction)
             <Input
               placeholder="The contract function name (i.e. mintTo)"
               defaultValue={initialFormValues.functionName}
-              {...register("functionName", { required: true })}
+              {...form.register("functionName", { required: true })}
             />
           </div>
           <div className="flex gap-2 sm:items-center flex-col sm:flex-row">
@@ -237,7 +239,7 @@ ${Object.keys(populatedTransaction)
               placeholder="Comma-separated arguments to call the function"
               rows={3}
               className="bg-transparent"
-              {...register("functionArgs")}
+              {...form.register("functionArgs")}
               defaultValue={
                 initialFormValues.functionArgs
                   ? decodeURIComponent(initialFormValues.functionArgs)
@@ -250,7 +252,7 @@ ${Object.keys(populatedTransaction)
               Value
             </Label>
             <Input
-              {...register("value")}
+              {...form.register("value")}
               placeholder={`The amount of native currency to send (e.g "0.01")`}
             />
           </div>
