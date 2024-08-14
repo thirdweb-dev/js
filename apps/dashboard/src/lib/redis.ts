@@ -13,22 +13,18 @@ function getRedis() {
   return redis_;
 }
 
-export async function cacheSet(key: string, value: string, ttlSeconds: number) {
-  return await getRedis().setex(key, ttlSeconds, value);
+export function cacheSet(key: string, value: string, ttlSeconds: number) {
+  return getRedis().set(key, value, "EX", ttlSeconds);
 }
 
-export async function cacheGet(key: string) {
-  return await getRedis().get(key);
+export function cacheGet(key: string) {
+  return getRedis().get(key);
 }
 
-export async function cacheExists(key: string) {
-  return await getRedis().exists(key);
+export function cacheTtl(key: string) {
+  return getRedis().ttl(key);
 }
 
-export async function cacheTtl(key: string) {
-  return await getRedis().ttl(key);
-}
-
-export async function cacheDeleteKey(key: string) {
-  return await getRedis().del(key);
+export function cacheDeleteKey(key: string) {
+  return getRedis().del(key);
 }

@@ -1,6 +1,5 @@
-import { getIpAddress } from "lib/ip";
-import { cacheExists, cacheSet } from "lib/redis";
-import { NextResponse } from "next/server";
+import { cacheGet, cacheSet } from "lib/redis";
+import { type NextRequest, NextResponse } from "next/server";
 import { ZERO_ADDRESS } from "thirdweb";
 
 interface RequestTestnetFundsPayload {
@@ -9,7 +8,7 @@ interface RequestTestnetFundsPayload {
 }
 
 // Note: This handler cannot use "edge" runtime because of Redis usage.
-export const POST = async (req: Request) => {
+export const POST = async (req: NextRequest) => {
   const requestBody = (await req.json()) as RequestTestnetFundsPayload;
   const { chainId, toAddress } = requestBody;
   if (Number.isNaN(chainId)) {
@@ -32,11 +31,24 @@ export const POST = async (req: Request) => {
     );
   }
 
-  const ipAddress = getIpAddress();
+  // vercel provides this for us in the request object || fall back to the header
+  const ipAddress = req.ip || req.headers.get("X-Forwarded-For");
+  if (!ipAddress) {
+    return NextResponse.json(
+      {
+        error: "Could not validate elligibility.",
+      },
+      { status: 400 },
+    );
+  }
+
   const cacheKey = `testnet-faucet:${chainId}:${ipAddress}`;
 
   // Assert 1 request per IP/chain every 24 hours.
-  if (await cacheExists(cacheKey)) {
+  // get the cached value
+  const cachedValue = await cacheGet(cacheKey);
+  // if we have a cached value, return an error
+  if (cachedValue !== null) {
     return NextResponse.json(
       { error: "Already requested funds on this chain in the past 24 hours." },
       { status: 429 },

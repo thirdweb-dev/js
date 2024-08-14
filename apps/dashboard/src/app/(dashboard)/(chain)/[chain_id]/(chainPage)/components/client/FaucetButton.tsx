@@ -4,16 +4,15 @@ import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { THIRDWEB_ENGINE_FAUCET_WALLET } from "@/constants/env";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CanClaimResponseType } from "app/api/testnet-faucet/can-claim/CanClaimResponseType";
+import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { thirdwebClient } from "lib/thirdweb-client";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { toUnits } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { useActiveAccount, useWalletBalance } from "thirdweb/react";
-import { mapV4ChainToV5Chain } from "../../../../../../../contexts/map-chains";
 
 function formatTime(seconds: number) {
   const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
@@ -48,6 +47,9 @@ export function FaucetButton({
     client: thirdwebClient,
   });
   const trackEvent = useTrack();
+
+  const queryClient = useQueryClient();
+
   const claimMutation = useMutation({
     mutationFn: async () => {
       trackEvent({
@@ -79,7 +81,6 @@ export function FaucetButton({
         label: "success",
         chain_id: chainId,
       });
-      router.refresh();
     },
     onError: (error) => {
       trackEvent({
@@ -89,6 +90,12 @@ export function FaucetButton({
         chain_id: chainId,
         errorMsg: error instanceof Error ? error.message : "Unknown error",
       });
+    },
+    onSettled: () => {
+      return queryClient.invalidateQueries([
+        "testnet-faucet-can-claim",
+        chainId,
+      ]);
     },
   });
 
@@ -105,8 +112,6 @@ export function FaucetButton({
       return data;
     },
   });
-
-  const router = useRouter();
 
   const isFaucetEmpty =
     faucetWalletBalanceQuery.data !== undefined &&

@@ -1,4 +1,3 @@
-import { getIpAddress } from "lib/ip";
 import { cacheTtl } from "lib/redis";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -46,7 +45,16 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(res);
   }
 
-  const ipAddress = getIpAddress();
+  // vercel provides this for us in the request object || fall back to the header
+  const ipAddress = req.ip || req.headers.get("X-Forwarded-For");
+  if (!ipAddress) {
+    return NextResponse.json(
+      {
+        error: "Could not validate elligibility.",
+      },
+      { status: 400 },
+    );
+  }
   const cacheKey = `testnet-faucet:${chainId}:${ipAddress}`;
   const ttlSeconds = await cacheTtl(cacheKey);
 
