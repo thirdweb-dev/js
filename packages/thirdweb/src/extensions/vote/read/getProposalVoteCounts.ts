@@ -21,9 +21,9 @@ export type ProposalVoteInfo = { [K in keyof typeof VoteType]: bigint };
  *
  * // Example result
  * {
- *   Against: 12, // 12 users voted against the proposal
- *   For: 104, // 104 users support the proposal
- *   Abstain: 3, // 3 users voted abstain on this proposal
+ *   against: 12, // 12 users voted against the proposal
+ *   for: 104, // 104 users support the proposal
+ *   abstain: 3, // 3 users voted abstain on this proposal
  * }
  * ```
  */
@@ -32,8 +32,8 @@ export async function getProposalVoteCounts(
 ): Promise<ProposalVoteInfo> {
   const votes = await proposalVotes(options);
   return {
-    Against: votes[0],
-    For: votes[1],
-    Abstain: votes[2],
+    against: votes[0],
+    for: votes[1],
+    abstain: votes[2],
   };
 }

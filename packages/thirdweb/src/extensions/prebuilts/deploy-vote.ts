@@ -9,14 +9,14 @@ import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { decimals } from "../erc20/read/decimals.js";
 
 /**
- * @extension PREBUILT
+ * @extension DEPLOY
  */
 export type VoteContractParams = {
   name: string;
   /**
    * The contract address for the ERC20 that will be used as voting power
    */
-  token: string;
+  tokenAddress: string;
   /**
    * The number of blocks after a proposal is created that voting on the proposal starts.
    * A block is a series of blockchain transactions and occurs every ~1 seconds.
@@ -24,23 +24,23 @@ export type VoteContractParams = {
    *
    * Defaults to 0 (zero)
    */
-  initialVotingDelay?: bigint;
+  initialVotingDelay?: number;
   /**
    * The number of blocks that voters have to vote on any new proposal.
    */
-  initialVotingPeriod: bigint;
+  initialVotingPeriod: number;
   /**
    * The minimum number of voting tokens a wallet needs in order to create proposals.
    * This amount that you have to enter is _not_ in wei. If you want users to have a least 0.5 ERC20 token to create proposals,
-   * enter `"0.5"`. The deploy script will fetch the ERC20 token's decimals and do the unit conversion for you.
+   * enter `"0.5"` or `0.5`. The deploy script will fetch the ERC20 token's decimals and do the unit conversion for you.
    */
-  initialProposalThreshold: string;
+  initialProposalThreshold: string | number;
   /**
    * The fraction of the total voting power that is required for a proposal to pass.
    * A value of 0 indicates that no voting power is sufficient,
    * whereas a value of 100 indicates that the entirety of voting power must vote for a proposal to pass.
    */
-  initialVoteQuorumFraction: bigint;
+  minVoteQuorumRequiredPercent: number;
   description?: string;
   image?: FileOrBufferOrString;
   external_link?: string;
@@ -76,9 +76,12 @@ export type DeployVoteContractOptions = Prettify<
  *  account,
  *  params: {
  *    token: "0x...",
- *    initialProposalThreshold: "0.5", // user needs 0.5 <token> to vote
- *    initialVotingPeriod: 10n, // vote expires 10 blocks later
- *    initialVoteQuorumFraction: 12n,
+ *    // user needs 0.5 <token> to create proposal
+ *    initialProposalThreshold: "0.5",
+ *    // vote expires 10 blocks later
+ *    initialVotingPeriod: 10,
+ *    // Requires 51% of users who voted, voted "For", for this proposal to pass
+ *    minVoteQuorumRequiredPercent: 51,
  *  }
  * });
  * ```
@@ -120,9 +123,9 @@ async function getInitializeTransaction(options: {
   const { client, implementationContract, params, chain } = options;
   const {
     name,
-    token,
+    tokenAddress,
     initialProposalThreshold,
-    initialVoteQuorumFraction,
+    minVoteQuorumRequiredPercent,
     initialVotingDelay,
     initialVotingPeriod,
     description,
@@ -132,7 +135,7 @@ async function getInitializeTransaction(options: {
     social_urls,
   } = params;
   const tokenErc20Contract = getContract({
-    address: token,
+    address: tokenAddress,
     client,
     chain,
   });
@@ -144,7 +147,7 @@ async function getInitializeTransaction(options: {
    */
   const _decimals = await decimals({ contract: tokenErc20Contract });
   if (!_decimals) {
-    throw new Error(`Could not fetch decimals for contract: ${token}`);
+    throw new Error(`Could not fetch decimals for contract: ${tokenAddress}`);
   }
   const [{ toUnits }, { upload }, { initialize }] = await Promise.all([
     import("../../utils/units.js"),
@@ -152,7 +155,7 @@ async function getInitializeTransaction(options: {
     import("./__generated__/VoteERC20/write/initialize.js"),
   ]);
   const initialProposalThresholdInWei = toUnits(
-    initialProposalThreshold,
+    String(initialProposalThreshold),
     _decimals,
   );
   const contractURI =
@@ -174,12 +177,12 @@ async function getInitializeTransaction(options: {
   return initialize({
     contract: implementationContract,
     name,
-    token,
+    token: tokenAddress,
     // Make sure the final value passed to `initialProposalThreshold` is in wei
     initialProposalThreshold: initialProposalThresholdInWei,
-    initialVoteQuorumFraction,
-    initialVotingDelay: initialVotingDelay || 0n,
-    initialVotingPeriod,
+    initialVoteQuorumFraction: BigInt(minVoteQuorumRequiredPercent),
+    initialVotingDelay: BigInt(initialVotingDelay || 0),
+    initialVotingPeriod: BigInt(initialVotingPeriod),
     contractURI,
     trustedForwarders: params.trustedForwarders || [],
   });

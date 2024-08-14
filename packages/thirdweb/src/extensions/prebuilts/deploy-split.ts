@@ -9,7 +9,7 @@ import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize } from "./__generated__/Split/write/initialize.js";
 
 /**
- * @extension PREBUILT
+ * @extension DEPLOY
  */
 export type SplitContractParams = {
   name: string;
