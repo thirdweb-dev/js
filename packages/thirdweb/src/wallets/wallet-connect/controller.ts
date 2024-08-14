@@ -15,12 +15,21 @@ import {
   getChainMetadata,
   getRpcUrlForChain,
 } from "../../chains/utils.js";
+import type { ThirdwebClient } from "../../client/client.js";
+import { getAddress } from "../../utils/address.js";
 import {
   type Hex,
   numberToHex,
   stringToHex,
   uint8ArrayToHex,
 } from "../../utils/encoding/hex.js";
+import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
+import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
+import {
+  getSavedConnectParamsFromStorage,
+  saveConnectParamsToStorage,
+} from "../../utils/storage/walletStorage.js";
+import { formatWalletConnectUrl } from "../../utils/url.js";
 import { getWalletInfo } from "../__generated__/getWalletInfo.js";
 import type { WCSupportedWalletIds } from "../__generated__/wallet-ids.js";
 import type {
@@ -33,19 +42,9 @@ import { getValidPublicRPCUrl } from "../utils/chains.js";
 import { getDefaultAppMetadata } from "../utils/defaultDappMetadata.js";
 import { normalizeChainId } from "../utils/normalizeChainId.js";
 import type { WalletEmitter } from "../wallet-emitter.js";
-import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
-
-import type { ThirdwebClient } from "../../client/client.js";
-import { getAddress } from "../../utils/address.js";
-import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
-import type { AsyncStorage } from "../../utils/storage/AsyncStorage.js";
-import {
-  getSavedConnectParamsFromStorage,
-  saveConnectParamsToStorage,
-} from "../../utils/storage/walletStorage.js";
-import { formatWalletConnectUrl } from "../../utils/url.js";
 import type { WalletId } from "../wallet-types.js";
 import { DEFAULT_PROJECT_ID, NAMESPACE } from "./constants.js";
+import type { WCAutoConnectOptions, WCConnectOptions } from "./types.js";
 
 type WCProvider = InstanceType<typeof EthereumProvider>;
 
@@ -109,10 +108,21 @@ export async function connectWC(
     provider.events.addListener("display_uri", onDisplayUri);
   }
 
+  let optionalChains: Chain[] | undefined = wcOptions?.optionalChains;
+  let chainToRequest = options.chain;
+
+  // ignore the given options chains - and set the safe supported chains
+  if (walletId === "global.safe") {
+    optionalChains = chainsToRequestForSafe.map(getCachedChain);
+    if (chainToRequest && !optionalChains.includes(chainToRequest)) {
+      chainToRequest = undefined;
+    }
+  }
+
   const { rpcMap, chainsToRequest } = getChainsToRequest({
     client: options.client,
-    chain: options.chain,
-    optionalChains: options.walletConnect?.optionalChains,
+    chain: chainToRequest,
+    optionalChains: optionalChains,
   });
 
   if (provider.session) {
@@ -121,8 +131,8 @@ export async function connectWC(
         ? { pairingTopic: wcOptions?.pairingTopic }
         : {}),
       optionalChains: chainsToRequest,
-      chains: options.chain
-        ? [options.chain.id]
+      chains: chainToRequest
+        ? [chainToRequest.id]
         : chainsToRequest.length > 0
           ? [chainsToRequest[0]]
           : [1],
@@ -228,10 +238,21 @@ async function initProvider(
     "@walletconnect/ethereum-provider"
   );
 
+  let optionalChains: Chain[] | undefined = wcOptions?.optionalChains;
+  let chainToRequest = options.chain;
+
+  // ignore the given options chains - and set the safe supported chains
+  if (walletId === "global.safe") {
+    optionalChains = chainsToRequestForSafe.map(getCachedChain);
+    if (chainToRequest && !optionalChains.includes(chainToRequest)) {
+      chainToRequest = undefined;
+    }
+  }
+
   const { rpcMap, chainsToRequest } = getChainsToRequest({
     client: options.client,
-    chain: options.chain,
-    optionalChains: options.walletConnect?.optionalChains,
+    chain: chainToRequest,
+    optionalChains: optionalChains,
   });
 
   const provider = await EthereumProvider.init({
@@ -245,8 +266,8 @@ async function initProvider(
     optionalMethods: OPTIONAL_METHODS,
     optionalEvents: OPTIONAL_EVENTS,
     optionalChains: chainsToRequest,
-    chains: options.chain
-      ? [options.chain.id]
+    chains: chainToRequest
+      ? [chainToRequest.id]
       : chainsToRequest.length > 0
         ? [chainsToRequest[0]]
         : [1],
@@ -546,3 +567,21 @@ function getChainsToRequest(options: {
     chainsToRequest,
   };
 }
+
+const chainsToRequestForSafe = [
+  1, // Ethereum Mainnet
+  11155111, // Sepolia Testnet
+  42161, // Arbitrum One Mainnet
+  43114, // Avalanche Mainnet
+  8453, // Base Mainnet
+  1313161554, // Aurora Mainnet
+  84532, // Base Sepolia Testnet
+  56, // Binance Smart Chain Mainnet
+  42220, // Celo Mainnet
+  100, // Gnosis Mainnet
+  10, // Optimism Mainnet
+  137, // Polygon Mainnet
+  1101, // Polygon zkEVM Mainnet
+  324, // zkSync Era mainnet
+  534352, // Scroll mainnet
+];
