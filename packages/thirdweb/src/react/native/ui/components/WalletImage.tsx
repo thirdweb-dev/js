@@ -5,14 +5,13 @@ import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { getStoredActiveWalletId } from "../../../../wallets/manager/index.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { getLastAuthProvider } from "../../../core/utils/storage.js";
+import { getWalletIcon } from "../../../core/utils/walletIcon.js";
 import {
   APPLE_ICON,
   DISCORD_ICON,
-  EMAIL_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GOOGLE_ICON,
-  PHONE_ICON,
   TELEGRAM_ICON,
   WALLET_ICON,
 } from "../icons/svgs.js";
@@ -67,9 +66,9 @@ export const WalletImage = (props: {
 export function getAuthProviderImage(lastAuthProvider: string | null): string {
   switch (lastAuthProvider) {
     case "phone":
-      return PHONE_ICON;
     case "email":
-      return EMAIL_ICON;
+    case "passkey":
+      return getWalletIcon(lastAuthProvider);
     case "google":
       return GOOGLE_ICON;
     case "apple":
@@ -83,6 +82,6 @@ export function getAuthProviderImage(lastAuthProvider: string | null): string {
     case "telegram":
       return TELEGRAM_ICON;
     default:
-      return WALLET_ICON;
+      return getWalletIcon("");
   }
 }

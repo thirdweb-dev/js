@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
@@ -20,7 +21,7 @@ export type ExternalWalletsUiProps = {
   client: ThirdwebClient;
   connector: (args: {
     wallet: Wallet;
-    connectFn: () => Promise<Wallet>;
+    connectFn: (chain?: Chain) => Promise<Wallet>;
   }) => Promise<void>;
   containerType: ContainerType;
 };
@@ -32,9 +33,10 @@ export function ExternalWalletsList(
   const connectWallet = (wallet: Wallet) => {
     connector({
       wallet,
-      connectFn: async () => {
+      connectFn: async (chain) => {
         await wallet.connect({
           client,
+          chain,
         });
         return wallet;
       },
