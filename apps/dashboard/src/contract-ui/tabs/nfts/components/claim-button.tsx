@@ -8,6 +8,10 @@ interface NFTClaimButtonProps {
   chainId: number;
 }
 
+/**
+ * This button is used for claiming NFT Drop contract (erc721) only!
+ * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
+ */
 export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
   contractAddress,
   chainId,

@@ -132,6 +132,7 @@ export function useSendTransaction(config: SendTransactionConfig = {}) {
           mode: "transaction",
           transaction: data.tx,
           metadata: payModal?.metadata,
+          onPurchaseSuccess: payModal?.onPurchaseSuccess,
         }}
       />,
     );

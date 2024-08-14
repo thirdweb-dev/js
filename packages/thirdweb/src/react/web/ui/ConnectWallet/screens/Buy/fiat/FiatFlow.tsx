@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithFiatQuote } from "../../../../../../../pay/buyWithFiat/getQuote.js";
-import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
+import {
+  type BuyWithFiatStatus,
+  getBuyWithFiatStatus,
+} from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { openOnrampPopup } from "../openOnRamppopup.js";
 import { addPendingTx } from "../swap/pendingSwapTx.js";
@@ -48,6 +51,7 @@ export function FiatFlow(props: {
   transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
+  onSuccess: (status: BuyWithFiatStatus) => void;
 }) {
   const hasTwoSteps = isSwapRequiredPostOnramp(props.quote);
   const [screen, setScreen] = useState<Screen>(
@@ -101,9 +105,20 @@ export function FiatFlow(props: {
         }}
         transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
+        onSuccess={props.onSuccess}
       />
     );
   }
+
+  const onPostOnrampSuccess = useCallback(() => {
+    // report the status of fiat status instead of post onramp swap status when post onramp swap is successful
+    getBuyWithFiatStatus({
+      intentId: props.quote.intentId,
+      client: props.client,
+    }).then((status) => {
+      props.onSuccess(status);
+    });
+  }, [props.onSuccess, props.quote.intentId, props.client]);
 
   if (screen.id === "postonramp-swap") {
     return (
@@ -120,6 +135,7 @@ export function FiatFlow(props: {
         transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={props.payer}
+        onSuccess={onPostOnrampSuccess}
       />
     );
   }
