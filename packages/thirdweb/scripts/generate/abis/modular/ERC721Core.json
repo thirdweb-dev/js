@@ -1,6 +1,6 @@
 [
   "function burn(uint256 tokenId, bytes data) payable",
-  "function initialize(string _name, string _symbol, string _contractURI, address _owner, address[] _extensions, bytes[] _extensionInstallData) payable",
+  "function initialize(string _name, string _symbol, string _contractURI, address _owner, address[] _modules, bytes[] _moduleInstallData) payable",
   "function mint(address to, uint256 quantity, bytes data) payable",
   "function totalMinted() view returns (uint256)"
 ]

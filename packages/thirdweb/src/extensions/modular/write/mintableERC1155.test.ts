@@ -13,7 +13,7 @@ import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and
 import { getAddress } from "../../../utils/address.js";
 import { balanceOf } from "../../erc1155/__generated__/IERC1155/read/balanceOf.js";
 import { deployERC1155Contract } from "../../prebuilts/deploy-erc1155.js";
-import { getInstalledExtensions } from "../__generated__/ModularCore/read/getInstalledExtensions.js";
+import { getInstalledModules } from "../__generated__/ModularCore/read/getInstalledModules.js";
 import { grantMinterRole } from "./grantMinterRole.js";
 import {
   generateMintSignature,
@@ -41,9 +41,9 @@ describe("ModularTokenERC1155", () => {
     });
   }, 11155000);
 
-  it("should have erc1155 extension", async () => {
-    const extensions = await getInstalledExtensions({ contract });
-    expect(extensions.length).toBe(3);
+  it("should have erc1155 module", async () => {
+    const modules = await getInstalledModules({ contract });
+    expect(modules.length).toBe(3);
   });
 
   it("should not mint without signature", async () => {

@@ -13,7 +13,7 @@ import {
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
-import { getInstalledExtensions } from "../__generated__/ModularCore/read/getInstalledExtensions.js";
+import { getInstalledModules } from "../__generated__/ModularCore/read/getInstalledModules.js";
 import { claimTo, setClaimCondition } from "./claimableERC20.js";
 
 describe("ModularDropERC20", () => {
@@ -36,9 +36,9 @@ describe("ModularDropERC20", () => {
     });
   }, 120000);
 
-  it("should have erc20 extension", async () => {
-    const extensions = await getInstalledExtensions({ contract });
-    expect(extensions.length).toBe(2);
+  it("should have erc20 module", async () => {
+    const modules = await getInstalledModules({ contract });
+    expect(modules.length).toBe(2);
   });
 
   it("should not claim without claim conditions", async () => {

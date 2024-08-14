@@ -12,7 +12,7 @@ import {
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { balanceOf } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
 import { deployERC721Contract } from "../../prebuilts/deploy-erc721.js";
-import { getInstalledExtensions } from "../__generated__/ModularCore/read/getInstalledExtensions.js";
+import { getInstalledModules } from "../__generated__/ModularCore/read/getInstalledModules.js";
 import { grantMinterRole } from "./grantMinterRole.js";
 import {
   generateMintSignature,
@@ -40,9 +40,9 @@ describe("ModularTokenERC721", () => {
     });
   }, 1721000);
 
-  it("should have erc721 extension", async () => {
-    const extensions = await getInstalledExtensions({ contract });
-    expect(extensions.length).toBe(3);
+  it("should have erc721 module", async () => {
+    const modules = await getInstalledModules({ contract });
+    expect(modules.length).toBe(3);
   });
 
   it("should not mint without signature", async () => {

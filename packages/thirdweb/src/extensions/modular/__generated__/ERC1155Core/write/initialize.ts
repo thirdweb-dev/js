@@ -20,13 +20,10 @@ export type InitializeParams = WithOverrides<{
     name: "_contractURI";
   }>;
   owner: AbiParameterToPrimitiveType<{ type: "address"; name: "_owner" }>;
-  extensions: AbiParameterToPrimitiveType<{
-    type: "address[]";
-    name: "_extensions";
-  }>;
-  extensionInstallData: AbiParameterToPrimitiveType<{
+  modules: AbiParameterToPrimitiveType<{ type: "address[]"; name: "_modules" }>;
+  moduleInstallData: AbiParameterToPrimitiveType<{
     type: "bytes[]";
-    name: "_extensionInstallData";
+    name: "_moduleInstallData";
   }>;
 }>;
 
@@ -50,11 +47,11 @@ const FN_INPUTS = [
   },
   {
     type: "address[]",
-    name: "_extensions",
+    name: "_modules",
   },
   {
     type: "bytes[]",
-    name: "_extensionInstallData",
+    name: "_moduleInstallData",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
@@ -91,8 +88,8 @@ export async function isInitializeSupported(contract: ThirdwebContract<any>) {
  *  symbol: ...,
  *  contractURI: ...,
  *  owner: ...,
- *  extensions: ...,
- *  extensionInstallData: ...,
+ *  modules: ...,
+ *  moduleInstallData: ...,
  * });
  * ```
  */
@@ -102,8 +99,8 @@ export function encodeInitializeParams(options: InitializeParams) {
     options.symbol,
     options.contractURI,
     options.owner,
-    options.extensions,
-    options.extensionInstallData,
+    options.modules,
+    options.moduleInstallData,
   ]);
 }
 
@@ -120,8 +117,8 @@ export function encodeInitializeParams(options: InitializeParams) {
  *  symbol: ...,
  *  contractURI: ...,
  *  owner: ...,
- *  extensions: ...,
- *  extensionInstallData: ...,
+ *  modules: ...,
+ *  moduleInstallData: ...,
  * });
  * ```
  */
@@ -149,8 +146,8 @@ export function encodeInitialize(options: InitializeParams) {
  *  symbol: ...,
  *  contractURI: ...,
  *  owner: ...,
- *  extensions: ...,
- *  extensionInstallData: ...,
+ *  modules: ...,
+ *  moduleInstallData: ...,
  *  overrides: {
  *    ...
  *  }
@@ -183,8 +180,8 @@ export function initialize(
         resolvedOptions.symbol,
         resolvedOptions.contractURI,
         resolvedOptions.owner,
-        resolvedOptions.extensions,
-        resolvedOptions.extensionInstallData,
+        resolvedOptions.modules,
+        resolvedOptions.moduleInstallData,
       ] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,

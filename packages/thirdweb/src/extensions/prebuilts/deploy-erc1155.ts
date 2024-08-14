@@ -177,27 +177,27 @@ async function getInitializeTransaction(options: {
         client,
         contractId: type,
       });
-      const extensionNames =
-        extendedMetadata?.defaultExtensions?.map((e) => e.extensionName) || [];
+      const moduleNames =
+        extendedMetadata?.defaultmodules?.map((e) => e.moduleName) || [];
       // can't promise all this unfortunately, needs to be sequential because of nonces
-      const extensions: string[] = [];
-      const extensionInstallData: Hex[] = [];
-      for (const extension of extensionNames) {
+      const modules: string[] = [];
+      const moduleInstallData: Hex[] = [];
+      for (const module of moduleNames) {
         const contract = await getOrDeployInfraContract({
           client,
           chain,
           account,
-          contractId: extension,
+          contractId: module,
           constructorParams: [],
         });
-        extensions.push(contract.address);
+        modules.push(contract.address);
         // TODO (modular) this should be more dynamic
-        switch (extension) {
+        switch (module) {
           case "MintableERC1155": {
             const { encodeBytesOnInstallParams } = await import(
               "../../extensions/modular/__generated__/MintableERC1155/encode/encodeBytesOnInstall.js"
             );
-            extensionInstallData.push(
+            moduleInstallData.push(
               encodeBytesOnInstallParams({
                 primarySaleRecipient: params.saleRecipient || accountAddress,
               }),
@@ -208,7 +208,7 @@ async function getInitializeTransaction(options: {
             const { encodeBytesOnInstallParams } = await import(
               "../../extensions/modular/__generated__/RoyaltyERC1155/encode/encodeBytesOnInstall.js"
             );
-            extensionInstallData.push(
+            moduleInstallData.push(
               encodeBytesOnInstallParams({
                 royaltyRecipient: params.royaltyRecipient || accountAddress,
                 royaltyBps: params.royaltyBps || 0n,
@@ -220,7 +220,7 @@ async function getInitializeTransaction(options: {
             const { encodeBytesOnInstallParams } = await import(
               "../../extensions/modular/__generated__/ClaimableERC1155/encode/encodeBytesOnInstall.js"
             );
-            extensionInstallData.push(
+            moduleInstallData.push(
               encodeBytesOnInstallParams({
                 primarySaleRecipient: params.saleRecipient || accountAddress,
               }),
@@ -228,7 +228,7 @@ async function getInitializeTransaction(options: {
             break;
           }
           default: {
-            extensionInstallData.push("0x");
+            moduleInstallData.push("0x");
           }
         }
       }
@@ -238,8 +238,8 @@ async function getInitializeTransaction(options: {
         symbol: params.symbol || "",
         contractURI,
         owner: params.defaultAdmin || accountAddress,
-        extensions,
-        extensionInstallData,
+        modules,
+        moduleInstallData,
       });
     }
   }

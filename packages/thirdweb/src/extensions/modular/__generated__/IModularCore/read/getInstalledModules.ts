@@ -6,13 +6,13 @@ import type { Hex } from "../../../../../utils/encoding/hex.js";
 import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-export const FN_SELECTOR = "0x5357aa5e" as const;
+export const FN_SELECTOR = "0x3e429396" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
     name: "",
     type: "tuple[]",
-    internalType: "struct IModularCore.InstalledExtension[]",
+    internalType: "struct IModularCore.InstalledModule[]",
     components: [
       {
         name: "implementation",
@@ -22,7 +22,7 @@ const FN_OUTPUTS = [
       {
         name: "config",
         type: "tuple",
-        internalType: "struct IExtensionConfig.ExtensionConfig",
+        internalType: "struct IModuleConfig.ModuleConfig",
         components: [
           {
             name: "registerInstallationCallback",
@@ -42,7 +42,7 @@ const FN_OUTPUTS = [
           {
             name: "callbackFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionConfig.CallbackFunction[]",
+            internalType: "struct IModuleConfig.CallbackFunction[]",
             components: [
               {
                 name: "selector",
@@ -54,7 +54,7 @@ const FN_OUTPUTS = [
           {
             name: "fallbackFunctions",
             type: "tuple[]",
-            internalType: "struct IExtensionConfig.FallbackFunction[]",
+            internalType: "struct IModuleConfig.FallbackFunction[]",
             components: [
               {
                 name: "selector",
@@ -75,18 +75,18 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
- * Checks if the `getInstalledExtensions` method is supported by the given contract.
+ * Checks if the `getInstalledModules` method is supported by the given contract.
  * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `getInstalledExtensions` method is supported.
+ * @returns A promise that resolves to a boolean indicating if the `getInstalledModules` method is supported.
  * @extension MODULAR
  * @example
  * ```ts
- * import { isGetInstalledExtensionsSupported } from "thirdweb/extensions/modular";
+ * import { isGetInstalledModulesSupported } from "thirdweb/extensions/modular";
  *
- * const supported = await isGetInstalledExtensionsSupported(contract);
+ * const supported = await isGetInstalledModulesSupported(contract);
  * ```
  */
-export async function isGetInstalledExtensionsSupported(
+export async function isGetInstalledModulesSupported(
   contract: ThirdwebContract<any>,
 ) {
   return detectMethod({
@@ -96,36 +96,36 @@ export async function isGetInstalledExtensionsSupported(
 }
 
 /**
- * Decodes the result of the getInstalledExtensions function call.
+ * Decodes the result of the getInstalledModules function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MODULAR
  * @example
  * ```ts
- * import { decodeGetInstalledExtensionsResult } from "thirdweb/extensions/modular";
- * const result = decodeGetInstalledExtensionsResult("...");
+ * import { decodeGetInstalledModulesResult } from "thirdweb/extensions/modular";
+ * const result = decodeGetInstalledModulesResult("...");
  * ```
  */
-export function decodeGetInstalledExtensionsResult(result: Hex) {
+export function decodeGetInstalledModulesResult(result: Hex) {
   return decodeAbiParameters(FN_OUTPUTS, result)[0];
 }
 
 /**
- * Calls the "getInstalledExtensions" function on the contract.
- * @param options - The options for the getInstalledExtensions function.
+ * Calls the "getInstalledModules" function on the contract.
+ * @param options - The options for the getInstalledModules function.
  * @returns The parsed result of the function call.
  * @extension MODULAR
  * @example
  * ```ts
- * import { getInstalledExtensions } from "thirdweb/extensions/modular";
+ * import { getInstalledModules } from "thirdweb/extensions/modular";
  *
- * const result = await getInstalledExtensions({
+ * const result = await getInstalledModules({
  *  contract,
  * });
  *
  * ```
  */
-export async function getInstalledExtensions(options: BaseTransactionOptions) {
+export async function getInstalledModules(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

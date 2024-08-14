@@ -1,13 +1,13 @@
 [
   {
     "type": "function",
-    "name": "getExtensionConfig",
+    "name": "getModuleConfig",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "tuple",
-        "internalType": "struct IExtensionConfig.ExtensionConfig",
+        "internalType": "struct IModuleConfig.ModuleConfig",
         "components": [
           {
             "name": "registerInstallationCallback",
@@ -27,7 +27,7 @@
           {
             "name": "callbackFunctions",
             "type": "tuple[]",
-            "internalType": "struct IExtensionConfig.CallbackFunction[]",
+            "internalType": "struct IModuleConfig.CallbackFunction[]",
             "components": [
               {
                 "name": "selector",
@@ -39,7 +39,7 @@
           {
             "name": "fallbackFunctions",
             "type": "tuple[]",
-            "internalType": "struct IExtensionConfig.FallbackFunction[]",
+            "internalType": "struct IModuleConfig.FallbackFunction[]",
             "components": [
               {
                 "name": "selector",

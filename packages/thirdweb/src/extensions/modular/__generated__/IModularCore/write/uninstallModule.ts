@@ -10,30 +10,30 @@ import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
- * Represents the parameters for the "uninstallExtension" function.
+ * Represents the parameters for the "uninstallModule" function.
  */
-export type UninstallExtensionParams = WithOverrides<{
-  extension: AbiParameterToPrimitiveType<{
-    name: "_extension";
+export type UninstallModuleParams = WithOverrides<{
+  moduleContract: AbiParameterToPrimitiveType<{
+    name: "moduleContract";
     type: "address";
     internalType: "address";
   }>;
   data: AbiParameterToPrimitiveType<{
-    name: "_data";
+    name: "data";
     type: "bytes";
     internalType: "bytes";
   }>;
 }>;
 
-export const FN_SELECTOR = "0x42b7d0c8" as const;
+export const FN_SELECTOR = "0x70c109cd" as const;
 const FN_INPUTS = [
   {
-    name: "_extension",
+    name: "moduleContract",
     type: "address",
     internalType: "address",
   },
   {
-    name: "_data",
+    name: "data",
     type: "bytes",
     internalType: "bytes",
   },
@@ -41,18 +41,18 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
- * Checks if the `uninstallExtension` method is supported by the given contract.
+ * Checks if the `uninstallModule` method is supported by the given contract.
  * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `uninstallExtension` method is supported.
+ * @returns A promise that resolves to a boolean indicating if the `uninstallModule` method is supported.
  * @extension MODULAR
  * @example
  * ```ts
- * import { isUninstallExtensionSupported } from "thirdweb/extensions/modular";
+ * import { isUninstallModuleSupported } from "thirdweb/extensions/modular";
  *
- * const supported = await isUninstallExtensionSupported(contract);
+ * const supported = await isUninstallModuleSupported(contract);
  * ```
  */
-export async function isUninstallExtensionSupported(
+export async function isUninstallModuleSupported(
   contract: ThirdwebContract<any>,
 ) {
   return detectMethod({
@@ -62,60 +62,58 @@ export async function isUninstallExtensionSupported(
 }
 
 /**
- * Encodes the parameters for the "uninstallExtension" function.
- * @param options - The options for the uninstallExtension function.
+ * Encodes the parameters for the "uninstallModule" function.
+ * @param options - The options for the uninstallModule function.
  * @returns The encoded ABI parameters.
  * @extension MODULAR
  * @example
  * ```ts
- * import { encodeUninstallExtensionParams } "thirdweb/extensions/modular";
- * const result = encodeUninstallExtensionParams({
- *  extension: ...,
+ * import { encodeUninstallModuleParams } "thirdweb/extensions/modular";
+ * const result = encodeUninstallModuleParams({
+ *  moduleContract: ...,
  *  data: ...,
  * });
  * ```
  */
-export function encodeUninstallExtensionParams(
-  options: UninstallExtensionParams,
-) {
-  return encodeAbiParameters(FN_INPUTS, [options.extension, options.data]);
+export function encodeUninstallModuleParams(options: UninstallModuleParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.moduleContract, options.data]);
 }
 
 /**
- * Encodes the "uninstallExtension" function into a Hex string with its parameters.
- * @param options - The options for the uninstallExtension function.
+ * Encodes the "uninstallModule" function into a Hex string with its parameters.
+ * @param options - The options for the uninstallModule function.
  * @returns The encoded hexadecimal string.
  * @extension MODULAR
  * @example
  * ```ts
- * import { encodeUninstallExtension } "thirdweb/extensions/modular";
- * const result = encodeUninstallExtension({
- *  extension: ...,
+ * import { encodeUninstallModule } "thirdweb/extensions/modular";
+ * const result = encodeUninstallModule({
+ *  moduleContract: ...,
  *  data: ...,
  * });
  * ```
  */
-export function encodeUninstallExtension(options: UninstallExtensionParams) {
+export function encodeUninstallModule(options: UninstallModuleParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeUninstallExtensionParams(options).slice(
+    encodeUninstallModuleParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Prepares a transaction to call the "uninstallExtension" function on the contract.
- * @param options - The options for the "uninstallExtension" function.
+ * Prepares a transaction to call the "uninstallModule" function on the contract.
+ * @param options - The options for the "uninstallModule" function.
  * @returns A prepared transaction object.
  * @extension MODULAR
  * @example
  * ```ts
- * import { uninstallExtension } from "thirdweb/extensions/modular";
+ * import { uninstallModule } from "thirdweb/extensions/modular";
  *
- * const transaction = uninstallExtension({
+ * const transaction = uninstallModule({
  *  contract,
- *  extension: ...,
+ *  moduleContract: ...,
  *  data: ...,
  *  overrides: {
  *    ...
@@ -127,11 +125,11 @@ export function encodeUninstallExtension(options: UninstallExtensionParams) {
  *
  * ```
  */
-export function uninstallExtension(
+export function uninstallModule(
   options: BaseTransactionOptions<
-    | UninstallExtensionParams
+    | UninstallModuleParams
     | {
-        asyncParams: () => Promise<UninstallExtensionParams>;
+        asyncParams: () => Promise<UninstallModuleParams>;
       }
   >,
 ) {
@@ -144,7 +142,7 @@ export function uninstallExtension(
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
       const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.extension, resolvedOptions.data] as const;
+      return [resolvedOptions.moduleContract, resolvedOptions.data] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,

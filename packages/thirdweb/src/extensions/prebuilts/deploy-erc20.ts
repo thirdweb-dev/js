@@ -168,27 +168,27 @@ async function getInitializeTransaction(options: {
         client,
         contractId: type,
       });
-      const extensionNames =
-        extendedMetadata?.defaultExtensions?.map((e) => e.extensionName) || [];
+      const moduleNames =
+        extendedMetadata?.defaultModules?.map((e) => e.moduleName) || [];
       // can't promise all this unfortunately, needs to be sequential because of nonces
-      const extensions: string[] = [];
-      const extensionInstallData: Hex[] = [];
-      for (const extension of extensionNames) {
+      const modules: string[] = [];
+      const moduleInstallData: Hex[] = [];
+      for (const module of moduleNames) {
         const contract = await getOrDeployInfraContract({
           client,
           chain,
           account,
-          contractId: extension,
+          contractId: module,
           constructorParams: [],
         });
-        extensions.push(contract.address);
+        modules.push(contract.address);
         // TODO (modular) this should be more dynamic
-        switch (extension) {
+        switch (module) {
           case "MintableERC20": {
             const { encodeBytesOnInstallParams } = await import(
               "../../extensions/modular/__generated__/MintableERC20/encode/encodeBytesOnInstall.js"
             );
-            extensionInstallData.push(
+            moduleInstallData.push(
               encodeBytesOnInstallParams({
                 primarySaleRecipient: params.saleRecipient || accountAddress,
               }),
@@ -199,7 +199,7 @@ async function getInitializeTransaction(options: {
             const { encodeBytesOnInstallParams } = await import(
               "../../extensions/modular/__generated__/ClaimableERC20/encode/encodeBytesOnInstall.js"
             );
-            extensionInstallData.push(
+            moduleInstallData.push(
               encodeBytesOnInstallParams({
                 primarySaleRecipient: params.saleRecipient || accountAddress,
               }),
@@ -207,7 +207,7 @@ async function getInitializeTransaction(options: {
             break;
           }
           default: {
-            extensionInstallData.push("0x");
+            moduleInstallData.push("0x");
           }
         }
       }
@@ -218,8 +218,8 @@ async function getInitializeTransaction(options: {
         name: params.name || "",
         symbol: params.symbol || "",
         contractURI,
-        extensions,
-        extensionInstallData,
+        modules,
+        moduleInstallData,
       });
     }
   }

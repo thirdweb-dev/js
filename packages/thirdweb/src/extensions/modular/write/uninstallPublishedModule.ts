@@ -2,66 +2,66 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getDeployedInfraContract } from "../../../contract/deployment/utils/infra.js";
-import { uninstallExtension } from "../__generated__/ModularCore/write/uninstallExtension.js";
+import { uninstallModule } from "../__generated__/ModularCore/write/uninstallModule.js";
 
 /**
  * @extension MODULAR
  */
-export type UninstallPublishedExtensionOptions = {
+export type UninstallPublishedModuleOptions = {
   client: ThirdwebClient;
   chain: Chain;
   contract: ThirdwebContract;
-  extensionName: string;
+  moduleName: string;
   publisherAddress?: string;
   version?: string;
   constructorParams?: unknown[];
-  extensionData?: `0x${string}`;
+  moduleData?: `0x${string}`;
 };
 
 /**
- * Uninstall a published extension
- * @param options - The options for uninstalling a published extension
+ * Uninstall a published module
+ * @param options - The options for uninstalling a published module
  * @returns A prepared transaction to send
  * @extension MODULAR
  * @example
  * ```ts
- * import { uninstallPublishedExtension } from "thirdweb/extensions/modular";
- * const transaction = uninstallPublishedExtension({
+ * import { uninstallPublishedModule } from "thirdweb/extensions/modular";
+ * const transaction = uninstallPublishedModule({
  *  client,
  *  chain,
  *  contract,
- *  extensionName: "MyExtension",
+ *  moduleName: "MyModule",
  *  publisherAddress: "0x...",
  * });
  * await sendTransaction({ transaction, account });
  * ```
  */
-export function uninstallPublishedExtension(
-  options: UninstallPublishedExtensionOptions,
+export function uninstallPublishedModule(
+  options: UninstallPublishedModuleOptions,
 ) {
   const {
     client,
     chain,
     contract,
-    extensionName,
+    moduleName,
     publisherAddress,
     constructorParams,
-    extensionData,
+    moduleData,
   } = options;
 
-  return uninstallExtension({
+  return uninstallModule({
     contract,
     asyncParams: async () => {
-      const deployedExtension = await getDeployedInfraContract({
+      const deployedModule = await getDeployedInfraContract({
         chain,
         client,
-        contractId: extensionName,
+        contractId: moduleName,
         constructorParams: constructorParams || [],
         publisher: publisherAddress,
       });
       return {
-        extension: deployedExtension?.address as string,
-        data: extensionData || "0x",
+        module: deployedModule?.address as string,
+        data: moduleData || "0x",
       };
     },
   });

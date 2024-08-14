@@ -10,11 +10,11 @@ import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
- * Represents the parameters for the "installExtension" function.
+ * Represents the parameters for the "installModule" function.
  */
-export type InstallExtensionParams = WithOverrides<{
-  extension: AbiParameterToPrimitiveType<{
-    name: "_extension";
+export type InstallModuleParams = WithOverrides<{
+  module: AbiParameterToPrimitiveType<{
+    name: "_module";
     type: "address";
     internalType: "address";
   }>;
@@ -25,10 +25,10 @@ export type InstallExtensionParams = WithOverrides<{
   }>;
 }>;
 
-export const FN_SELECTOR = "0xaca696f5" as const;
+export const FN_SELECTOR = "0x8da798da" as const;
 const FN_INPUTS = [
   {
-    name: "_extension",
+    name: "_module",
     type: "address",
     internalType: "address",
   },
@@ -41,18 +41,18 @@ const FN_INPUTS = [
 const FN_OUTPUTS = [] as const;
 
 /**
- * Checks if the `installExtension` method is supported by the given contract.
+ * Checks if the `installModule` method is supported by the given contract.
  * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `installExtension` method is supported.
+ * @returns A promise that resolves to a boolean indicating if the `installModule` method is supported.
  * @extension MODULAR
  * @example
  * ```ts
- * import { isInstallExtensionSupported } from "thirdweb/extensions/modular";
+ * import { isInstallModuleSupported } from "thirdweb/extensions/modular";
  *
- * const supported = await isInstallExtensionSupported(contract);
+ * const supported = await isInstallModuleSupported(contract);
  * ```
  */
-export async function isInstallExtensionSupported(
+export async function isInstallModuleSupported(
   contract: ThirdwebContract<any>,
 ) {
   return detectMethod({
@@ -62,58 +62,58 @@ export async function isInstallExtensionSupported(
 }
 
 /**
- * Encodes the parameters for the "installExtension" function.
- * @param options - The options for the installExtension function.
+ * Encodes the parameters for the "installModule" function.
+ * @param options - The options for the installModule function.
  * @returns The encoded ABI parameters.
  * @extension MODULAR
  * @example
  * ```ts
- * import { encodeInstallExtensionParams } "thirdweb/extensions/modular";
- * const result = encodeInstallExtensionParams({
- *  extension: ...,
+ * import { encodeInstallModuleParams } "thirdweb/extensions/modular";
+ * const result = encodeInstallModuleParams({
+ *  module: ...,
  *  data: ...,
  * });
  * ```
  */
-export function encodeInstallExtensionParams(options: InstallExtensionParams) {
-  return encodeAbiParameters(FN_INPUTS, [options.extension, options.data]);
+export function encodeInstallModuleParams(options: InstallModuleParams) {
+  return encodeAbiParameters(FN_INPUTS, [options.module, options.data]);
 }
 
 /**
- * Encodes the "installExtension" function into a Hex string with its parameters.
- * @param options - The options for the installExtension function.
+ * Encodes the "installModule" function into a Hex string with its parameters.
+ * @param options - The options for the installModule function.
  * @returns The encoded hexadecimal string.
  * @extension MODULAR
  * @example
  * ```ts
- * import { encodeInstallExtension } "thirdweb/extensions/modular";
- * const result = encodeInstallExtension({
- *  extension: ...,
+ * import { encodeInstallModule } "thirdweb/extensions/modular";
+ * const result = encodeInstallModule({
+ *  module: ...,
  *  data: ...,
  * });
  * ```
  */
-export function encodeInstallExtension(options: InstallExtensionParams) {
+export function encodeInstallModule(options: InstallModuleParams) {
   // we do a "manual" concat here to avoid the overhead of the "concatHex" function
   // we can do this because we know the specific formats of the values
   return (FN_SELECTOR +
-    encodeInstallExtensionParams(options).slice(
+    encodeInstallModuleParams(options).slice(
       2,
     )) as `${typeof FN_SELECTOR}${string}`;
 }
 
 /**
- * Prepares a transaction to call the "installExtension" function on the contract.
- * @param options - The options for the "installExtension" function.
+ * Prepares a transaction to call the "installModule" function on the contract.
+ * @param options - The options for the "installModule" function.
  * @returns A prepared transaction object.
  * @extension MODULAR
  * @example
  * ```ts
- * import { installExtension } from "thirdweb/extensions/modular";
+ * import { installModule } from "thirdweb/extensions/modular";
  *
- * const transaction = installExtension({
+ * const transaction = installModule({
  *  contract,
- *  extension: ...,
+ *  module: ...,
  *  data: ...,
  *  overrides: {
  *    ...
@@ -125,11 +125,11 @@ export function encodeInstallExtension(options: InstallExtensionParams) {
  *
  * ```
  */
-export function installExtension(
+export function installModule(
   options: BaseTransactionOptions<
-    | InstallExtensionParams
+    | InstallModuleParams
     | {
-        asyncParams: () => Promise<InstallExtensionParams>;
+        asyncParams: () => Promise<InstallModuleParams>;
       }
   >,
 ) {
@@ -142,7 +142,7 @@ export function installExtension(
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
       const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.extension, resolvedOptions.data] as const;
+      return [resolvedOptions.module, resolvedOptions.data] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,

@@ -6,13 +6,13 @@ import type { Hex } from "../../../../../utils/encoding/hex.js";
 import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
-export const FN_SELECTOR = "0x7c173ecc" as const;
+export const FN_SELECTOR = "0x89e04e0e" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
     name: "",
     type: "tuple",
-    internalType: "struct IExtensionConfig.ExtensionConfig",
+    internalType: "struct IModuleConfig.ModuleConfig",
     components: [
       {
         name: "registerInstallationCallback",
@@ -32,7 +32,7 @@ const FN_OUTPUTS = [
       {
         name: "callbackFunctions",
         type: "tuple[]",
-        internalType: "struct IExtensionConfig.CallbackFunction[]",
+        internalType: "struct IModuleConfig.CallbackFunction[]",
         components: [
           {
             name: "selector",
@@ -44,7 +44,7 @@ const FN_OUTPUTS = [
       {
         name: "fallbackFunctions",
         type: "tuple[]",
-        internalType: "struct IExtensionConfig.FallbackFunction[]",
+        internalType: "struct IModuleConfig.FallbackFunction[]",
         components: [
           {
             name: "selector",
@@ -63,18 +63,18 @@ const FN_OUTPUTS = [
 ] as const;
 
 /**
- * Checks if the `getExtensionConfig` method is supported by the given contract.
+ * Checks if the `getModuleConfig` method is supported by the given contract.
  * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `getExtensionConfig` method is supported.
+ * @returns A promise that resolves to a boolean indicating if the `getModuleConfig` method is supported.
  * @extension MODULAR
  * @example
  * ```ts
- * import { isGetExtensionConfigSupported } from "thirdweb/extensions/modular";
+ * import { isGetModuleConfigSupported } from "thirdweb/extensions/modular";
  *
- * const supported = await isGetExtensionConfigSupported(contract);
+ * const supported = await isGetModuleConfigSupported(contract);
  * ```
  */
-export async function isGetExtensionConfigSupported(
+export async function isGetModuleConfigSupported(
   contract: ThirdwebContract<any>,
 ) {
   return detectMethod({
@@ -84,36 +84,36 @@ export async function isGetExtensionConfigSupported(
 }
 
 /**
- * Decodes the result of the getExtensionConfig function call.
+ * Decodes the result of the getModuleConfig function call.
  * @param result - The hexadecimal result to decode.
  * @returns The decoded result as per the FN_OUTPUTS definition.
  * @extension MODULAR
  * @example
  * ```ts
- * import { decodeGetExtensionConfigResult } from "thirdweb/extensions/modular";
- * const result = decodeGetExtensionConfigResult("...");
+ * import { decodeGetModuleConfigResult } from "thirdweb/extensions/modular";
+ * const result = decodeGetModuleConfigResult("...");
  * ```
  */
-export function decodeGetExtensionConfigResult(result: Hex) {
+export function decodeGetModuleConfigResult(result: Hex) {
   return decodeAbiParameters(FN_OUTPUTS, result)[0];
 }
 
 /**
- * Calls the "getExtensionConfig" function on the contract.
- * @param options - The options for the getExtensionConfig function.
+ * Calls the "getModuleConfig" function on the contract.
+ * @param options - The options for the getModuleConfig function.
  * @returns The parsed result of the function call.
  * @extension MODULAR
  * @example
  * ```ts
- * import { getExtensionConfig } from "thirdweb/extensions/modular";
+ * import { getModuleConfig } from "thirdweb/extensions/modular";
  *
- * const result = await getExtensionConfig({
+ * const result = await getModuleConfig({
  *  contract,
  * });
  *
  * ```
  */
-export async function getExtensionConfig(options: BaseTransactionOptions) {
+export async function getModuleConfig(options: BaseTransactionOptions) {
   return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,

@@ -12,7 +12,7 @@ import {
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { getWalletBalance } from "../../../wallets/utils/getWalletBalance.js";
 import { deployERC20Contract } from "../../prebuilts/deploy-erc20.js";
-import { getInstalledExtensions } from "../__generated__/ModularCore/read/getInstalledExtensions.js";
+import { getInstalledModules } from "../__generated__/ModularCore/read/getInstalledModules.js";
 import { grantMinterRole } from "./grantMinterRole.js";
 import {
   generateMintSignature,
@@ -40,9 +40,9 @@ describe("ModularTokenERC20", () => {
     });
   }, 120000);
 
-  it("should have erc20 extension", async () => {
-    const extensions = await getInstalledExtensions({ contract });
-    expect(extensions.length).toBe(2);
+  it("should have erc20 module", async () => {
+    const moduless = await getInstalledModules({ contract });
+    expect(moduless.length).toBe(2);
   });
 
   it("should not mint without signature", async () => {

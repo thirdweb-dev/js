@@ -1,13 +1,13 @@
 [
   {
     "type": "function",
-    "name": "getInstalledExtensions",
+    "name": "getInstalledModules",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "tuple[]",
-        "internalType": "struct IModularCore.InstalledExtension[]",
+        "internalType": "struct IModularCore.InstalledModule[]",
         "components": [
           {
             "name": "implementation",
@@ -17,7 +17,7 @@
           {
             "name": "config",
             "type": "tuple",
-            "internalType": "struct IExtensionConfig.ExtensionConfig",
+            "internalType": "struct IModuleConfig.ModuleConfig",
             "components": [
               {
                 "name": "registerInstallationCallback",
@@ -37,7 +37,7 @@
               {
                 "name": "callbackFunctions",
                 "type": "tuple[]",
-                "internalType": "struct IExtensionConfig.CallbackFunction[]",
+                "internalType": "struct IModuleConfig.CallbackFunction[]",
                 "components": [
                   {
                     "name": "selector",
@@ -49,7 +49,7 @@
               {
                 "name": "fallbackFunctions",
                 "type": "tuple[]",
-                "internalType": "struct IExtensionConfig.FallbackFunction[]",
+                "internalType": "struct IModuleConfig.FallbackFunction[]",
                 "components": [
                   {
                     "name": "selector",
@@ -93,10 +93,10 @@
   },
   {
     "type": "function",
-    "name": "installExtension",
+    "name": "installModule",
     "inputs": [
       {
-        "name": "extensionContract",
+        "name": "moduleContract",
         "type": "address",
         "internalType": "address"
       },
@@ -116,10 +116,10 @@
   },
   {
     "type": "function",
-    "name": "uninstallExtension",
+    "name": "uninstallModule",
     "inputs": [
       {
-        "name": "extensionContract",
+        "name": "moduleContract",
         "type": "address",
         "internalType": "address"
       },
