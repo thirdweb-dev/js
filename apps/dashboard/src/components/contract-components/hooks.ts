@@ -41,7 +41,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
-import { useMemo, version } from "react";
+import { useMemo } from "react";
 import {
   abstractTestnet,
   polygon,
@@ -604,6 +604,7 @@ export function useCustomContractDeployMutation(options: {
 }) {
   const {
     ipfsHash,
+    version,
     hasContractURI,
     hasRoyalty,
     isSplit,
