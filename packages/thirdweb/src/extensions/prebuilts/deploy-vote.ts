@@ -1,12 +1,12 @@
+import type { Chain } from "src/chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { ThirdwebContract } from "../../contract/contract.js";
+import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
 import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
-import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import { initialize } from "./__generated__/VoteERC20/write/initialize.js";
+import { decimals } from "../erc20/read/decimals.js";
 
 /**
  * @extension PREBUILT
@@ -31,6 +31,8 @@ export type VoteContractParams = {
   initialVotingPeriod: bigint;
   /**
    * The minimum number of voting tokens a wallet needs in order to create proposals.
+   * This amount that you have to enter is _not_ in wei. If you want users to have a least 1 ERC20 token to create proposals,
+   * enter `1n`. The deploy script will fetch the ERC20 token's decimals and do the unit conversion for you.
    */
   initialProposalThreshold: bigint;
   /**
@@ -96,6 +98,7 @@ export async function deployVoteContract(options: DeployVoteContractOptions) {
     implementationContract,
     params,
     accountAddress: account.address,
+    chain,
   });
 
   return deployViaAutoFactory({
@@ -112,8 +115,9 @@ async function getInitializeTransaction(options: {
   implementationContract: ThirdwebContract;
   params: VoteContractParams;
   accountAddress: string;
+  chain: Chain;
 }) {
-  const { client, implementationContract, params } = options;
+  const { client, implementationContract, params, chain } = options;
   const {
     name,
     token,
@@ -127,6 +131,30 @@ async function getInitializeTransaction(options: {
     external_link,
     social_urls,
   } = params;
+  const tokenErc20Contract = getContract({
+    address: token,
+    client,
+    chain,
+  });
+
+  /**
+   * A good side effect for checking for token decimals (instead of just taking in value in wei)
+   * is that it validates the token address that user entered. In case they enter an invalid ERC20 contract address,
+   * the extension will throw.
+   */
+  const _decimals = await decimals({ contract: tokenErc20Contract });
+  if (!_decimals) {
+    throw new Error(`Could not fetch decimals for contract: ${token}`);
+  }
+  const [{ toUnits }, { upload }, { initialize }] = await Promise.all([
+    import("../../utils/units.js"),
+    import("../../storage/upload.js"),
+    import("./__generated__/VoteERC20/write/initialize.js"),
+  ]);
+  const initialProposalThresholdInWei = toUnits(
+    String(initialProposalThreshold),
+    _decimals,
+  );
   const contractURI =
     params.contractURI ||
     (await upload({
@@ -147,7 +175,8 @@ async function getInitializeTransaction(options: {
     contract: implementationContract,
     name,
     token,
-    initialProposalThreshold,
+    // Make sure the final value passed to `initialProposalThreshold` is in wei
+    initialProposalThreshold: initialProposalThresholdInWei,
     initialVoteQuorumFraction,
     initialVotingDelay: initialVotingDelay || 0n,
     initialVotingPeriod,
