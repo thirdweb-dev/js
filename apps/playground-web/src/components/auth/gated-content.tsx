@@ -9,7 +9,7 @@ import { AuthButton } from "./auth-button";
 
 export async function GatedContentPreview() {
   const jwt = cookies().get("jwt");
-  const authResult = await getAuthResult(jwt?.value || "");
+  const authResult = jwt?.value ? await getAuthResult(jwt.value) : undefined;
   if (!authResult) {
     return (
       <div className="flex flex-col gap-5">

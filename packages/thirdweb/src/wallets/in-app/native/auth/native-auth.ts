@@ -1,6 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
-import type { InjectedSupportedWalletIds } from "../../../../wallets/__generated__/wallet-ids.js";
+import type { Wallet } from "../../../interfaces/wallet.js";
 import { getLoginUrl } from "../../core/authentication/getLoginPath.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
 import type {
@@ -125,15 +126,15 @@ export async function socialLogin(
 
 export async function siweLogin(
   client: ThirdwebClient,
-  walletId: InjectedSupportedWalletIds,
-  chainId: number,
+  wallet: Wallet,
+  chain: Chain,
   ecosystem?: Ecosystem,
 ): Promise<AuthStoredTokenWithCookieReturnType> {
   const { storedToken } = await siweAuthenticate({
     client,
     ecosystem,
-    walletId,
-    chainId,
+    wallet,
+    chain,
   });
   try {
     const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {

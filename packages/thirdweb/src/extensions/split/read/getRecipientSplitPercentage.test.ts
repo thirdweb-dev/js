@@ -9,7 +9,7 @@ import { getRecipientSplitPercentage } from "./getRecipientSplitPercentage.js";
 const chain = ANVIL_CHAIN;
 const client = TEST_CLIENT;
 
-describe("getRecipientSplitPercentage", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("getRecipientSplitPercentage", () => {
   it("should work", async () => {
     const payees = [
       "0x12345674b599ce99958242b3D3741e7b01841DF3",

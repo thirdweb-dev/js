@@ -6,7 +6,6 @@ import type {
 } from "../authentication/types.js";
 
 /**
- * @description
  * Gets the linked profiles for the provided wallet.
  * This method is only available for in-app wallets.
  *
@@ -24,6 +23,7 @@ import type {
  * console.log(profiles[0].type);
  * console.log(profiles[0].details.email);
  * ```
+ * @wallet
  */
 export async function getProfiles(wallet: Wallet<"inApp">) {
   if (wallet.id !== "inApp") {
@@ -36,10 +36,9 @@ export async function getProfiles(wallet: Wallet<"inApp">) {
 }
 
 /**
- * @description
  * Connects a new profile (authentication method) to the current user.
  * The connected profile can be any valid in-app wallet including email, phone, passkey, etc.
- * The inputs mirror those used when authenticating normally, @see {@link Wallet.connect}
+ * The inputs mirror those used when authenticating normally.
  *
  * **When a profile is linked to the account, that profile can then be used to sign into the account.**
  *
@@ -57,6 +56,7 @@ export async function getProfiles(wallet: Wallet<"inApp">) {
  * await wallet.connect({ strategy: "google" });
  * const profiles = await linkProfile(wallet, { strategy: "discord" });
  * ```
+ * @wallet
  */
 export async function linkProfile(
   wallet: Wallet<"inApp">,

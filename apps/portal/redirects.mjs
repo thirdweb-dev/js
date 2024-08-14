@@ -689,7 +689,9 @@ const otherRedirects = {
 	"/ui-components/nft-renderer": "/react/v4/components/ThirdwebNftMedia",
 	"/ui-components/ipfs-media-renderer": "/react/v4/components/MediaRenderer",
 	"/templates": "https://thirdweb.com/templates",
-	"/gaming": "/solutions/gaming/overview",
+	"/gaming": "/",
+	"/solutions": "/",
+	"/solutions/gaming": "/",
 	"/signature-minting": "/contracts/design-docs/signature-mint",
 	// in-app wallet
 	"/references/typescript/v5/embeddedWallet": "/references/typescript/v5/inAppWallet",

@@ -17,7 +17,7 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import { ApplyForOpCreditsForm } from "./ApplyForOpCreditsForm";
-import { OnboardingBilling } from "./Billing";
+import { LazyOnboardingBilling } from "./LazyOnboardingBilling";
 import { OnboardingModal } from "./Modal";
 import { PlanCard } from "./PlanCard";
 
@@ -223,7 +223,7 @@ export const ApplyForOpCreditsModal: React.FC = () => {
         isOpen={paymentMethodModalState.isOpen}
         onClose={paymentMethodModalState.onClose}
       >
-        <OnboardingBilling
+        <LazyOnboardingBilling
           onSave={() => {
             setHasAddedPaymentMethod(true);
             paymentMethodModalState.onClose();

@@ -16,7 +16,8 @@ export function AuthButton() {
       auth={{
         isLoggedIn: (address) => isLoggedIn(address),
         doLogin: (params) => login(params),
-        getLoginPayload: ({ address }) => generatePayload({ address }),
+        getLoginPayload: ({ address }) =>
+          generatePayload({ address, chainId: 84532 }),
         doLogout: () => logout(),
       }}
     />

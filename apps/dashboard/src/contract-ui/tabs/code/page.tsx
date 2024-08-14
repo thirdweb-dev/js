@@ -1,7 +1,9 @@
+"use client";
+
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
-import { useLayoutEffect } from "react";
 import { CodeOverview } from "./components/code-overview";
 
 interface ContractCodePageProps {
@@ -13,7 +15,7 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
 }) => {
   const contractQuery = useContract(contractAddress);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 

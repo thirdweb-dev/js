@@ -197,7 +197,7 @@ export async function isLoggedIn(address: string) {
     return false;
   }
   // if the address matches what we expect, we're logged in
-  if (getAddress(json.address) === getAddress(address)) {
+  if (getAddress(json.data.creatorWalletAddress) === getAddress(address)) {
     // set the active account cookie again
     cookieStore.set(COOKIE_ACTIVE_ACCOUNT, getAddress(address), {
       httpOnly: false,

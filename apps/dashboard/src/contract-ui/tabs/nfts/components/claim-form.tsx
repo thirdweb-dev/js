@@ -70,7 +70,17 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({
             </FormControl>
             <FormControl isRequired isInvalid={!!errors.amount}>
               <FormLabel>Amount</FormLabel>
-              <Input type="text" {...register("amount")} />
+              <Input
+                type="text"
+                {...register("amount", {
+                  validate: (value) => {
+                    const valueNum = Number(value);
+                    if (!Number.isInteger(valueNum)) {
+                      return "Amount must be an integer";
+                    }
+                  },
+                })}
+              />
               <FormHelperText>How many would you like to claim?</FormHelperText>
               <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
             </FormControl>

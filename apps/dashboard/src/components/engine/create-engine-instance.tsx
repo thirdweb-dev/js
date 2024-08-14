@@ -15,7 +15,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -23,6 +22,7 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button, Heading, Text } from "tw-components";
+import { LazyOnboardingBilling } from "../onboarding/LazyOnboardingBilling";
 import { EngineTierCard, MONTHLY_PRICE_USD } from "./tier-card";
 
 interface CreateEngineInstanceButtonProps {
@@ -140,7 +140,7 @@ export const CreateEngineInstanceButton = ({
         isOpen={paymentDisclosure.isOpen}
         onClose={paymentDisclosure.onClose}
       >
-        <OnboardingBilling
+        <LazyOnboardingBilling
           onSave={async () => {
             await addCloudHostedEngine();
             paymentDisclosure.onClose();

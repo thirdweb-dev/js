@@ -4,7 +4,7 @@ import { FaucetButton } from "../client/FaucetButton";
 import { GiftIcon } from "../icons/GiftIcon";
 import { SectionTitle } from "./SectionTitle";
 
-const amountToGive = "0.1";
+const amountToGive = "0.01";
 
 export async function FaucetSection(props: { chain: ChainMetadata }) {
   const { chain } = props;

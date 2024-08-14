@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { type SortBy, fetchTopContracts } from "lib/search";
+import { fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { TrendingContractSection } from "../../../trending/components/trending-table";
@@ -14,7 +14,6 @@ import { ExplorersSection } from "./components/server/explorer-section";
 
 export default async function Page(props: {
   params: { chain_id: string };
-  searchParams: { page?: number; sortBy?: SortBy };
 }) {
   const chain = await getChain(props.params.chain_id);
   const chainMetadata = await getChainMetadata(chain.chainId);
@@ -22,8 +21,6 @@ export default async function Page(props: {
 
   const topContracts = await fetchTopContracts({
     chainId: chain.chainId,
-    page: props.searchParams.page,
-    sortBy: props.searchParams.sortBy,
     perPage: 3,
     timeRange: "month",
   });
@@ -83,8 +80,8 @@ export default async function Page(props: {
           <TrendingContractSection
             topContracts={topContracts}
             chainId={chain.chainId}
-            searchParams={props.searchParams}
             showPagination={false}
+            searchParams={undefined}
           />
         </section>
       )}

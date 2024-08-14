@@ -45,6 +45,10 @@ import {
 import { Fieldset } from "./common";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
 import {
+  DeployStatusModal,
+  useDeployStatusModal,
+} from "./deploy-context-modal";
+import {
   ModularContractDefaultExtensionsFieldset,
   showPrimarySaleFiedset,
   showRoyaltyFieldset,
@@ -320,18 +324,18 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     (extension) => extension.name === "ERC721SharedMetadata",
   );
 
-  const deploy = useCustomContractDeployMutation(
+  const deployStatusModal = useDeployStatusModal();
+  const deploy = useCustomContractDeployMutation({
     ipfsHash,
     version,
-    isImplementationDeploy,
-    {
-      hasContractURI,
-      hasRoyalty,
-      isSplit,
-      isVote,
-      isErc721SharedMetadadata,
-    },
-  );
+    forceDirectDeploy: isImplementationDeploy,
+    hasContractURI,
+    hasRoyalty,
+    isSplit,
+    isVote,
+    isErc721SharedMetadadata,
+    deployStatusModal,
+  });
 
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(
@@ -484,7 +488,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     networkInfo,
                     `Network not found for chainId ${selectedChain}`,
                   );
-                  router.replace(
+                  deployStatusModal.setViewContractLink(
                     `/${networkInfo.slug}/${deployedContractAddress}`,
                   );
                 }
@@ -871,6 +875,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           </div>
         </Fieldset>
       </Flex>
+
+      <DeployStatusModal deployStatusModal={deployStatusModal} />
     </FormProvider>
   );
 };
