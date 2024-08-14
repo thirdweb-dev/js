@@ -1,15 +1,9 @@
 import { thirdwebClient } from "@/constants/client";
-import {
-  Center,
-  Flex,
-  Image,
-  Skeleton,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Center, Flex, Skeleton, useBreakpointValue } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
-import { resolveScheme } from "thirdweb/storage";
+import { MediaRenderer } from "thirdweb/react";
 import { Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
@@ -72,18 +66,18 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
           position="relative"
         >
           {data?.image ? (
-            <Image
-              position="absolute"
-              top={0}
-              bottom={0}
-              right={0}
-              left={0}
-              objectFit="contain"
-              src={resolveScheme({
-                client: thirdwebClient,
-                uri: data.image,
-              })}
+            <MediaRenderer
+              src={data.image}
+              client={thirdwebClient}
               alt={data?.name?.toString() || ""}
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                right: 0,
+                left: 0,
+                objectFit: "contain",
+              }}
             />
           ) : null}
         </Skeleton>
