@@ -7,7 +7,7 @@ import { proposalExists } from "../read/proposalExists.js";
 
 /**
  * Execute a Proposal
- * @extension VOTEA
+ * @extension VOTE
  * @returns a prepared transaction for the `execute` method
  *
  * @example
