@@ -31,10 +31,10 @@ export type VoteContractParams = {
   initialVotingPeriod: bigint;
   /**
    * The minimum number of voting tokens a wallet needs in order to create proposals.
-   * This amount that you have to enter is _not_ in wei. If you want users to have a least 1 ERC20 token to create proposals,
-   * enter `1n`. The deploy script will fetch the ERC20 token's decimals and do the unit conversion for you.
+   * This amount that you have to enter is _not_ in wei. If you want users to have a least 0.5 ERC20 token to create proposals,
+   * enter `"0.5"`. The deploy script will fetch the ERC20 token's decimals and do the unit conversion for you.
    */
-  initialProposalThreshold: bigint;
+  initialProposalThreshold: string;
   /**
    * The fraction of the total voting power that is required for a proposal to pass.
    * A value of 0 indicates that no voting power is sufficient,
@@ -76,7 +76,7 @@ export type DeployVoteContractOptions = Prettify<
  *  account,
  *  params: {
  *    token: "0x...",
- *    initialProposalThreshold: 1n, // user needs 1 <token> to vote
+ *    initialProposalThreshold: "0.5", // user needs 0.5 <token> to vote
  *    initialVotingPeriod: 10n, // vote expires 10 blocks later
  *    initialVoteQuorumFraction: 12n,
  *  }
@@ -152,7 +152,7 @@ async function getInitializeTransaction(options: {
     import("./__generated__/VoteERC20/write/initialize.js"),
   ]);
   const initialProposalThresholdInWei = toUnits(
-    String(initialProposalThreshold),
+    initialProposalThreshold,
     _decimals,
   );
   const contractURI =
