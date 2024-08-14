@@ -1,6 +1,12 @@
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
+import { stringify } from "../../../utils/json.js";
+import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
 import type { Account, Wallet } from "../../interfaces/wallet.js";
+import {
+  loginWithPasskey,
+  registerPasskey,
+} from "../core/authentication/passkeys.js";
 import { siweAuthenticate } from "../core/authentication/siwe.js";
 import {
   type AuthArgsType,
@@ -27,12 +33,14 @@ import {
 } from "./auth/native-auth.js";
 import { fetchUserDetails } from "./helpers/api/fetchers.js";
 import { logoutUser } from "./helpers/auth/logout.js";
+import { postAuth } from "./helpers/auth/middleware.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
 import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
 export type NativeConnectorOptions = {
   client: ThirdwebClient;
   partnerId?: string | undefined;
+  passkeyDomain?: string;
 };
 
 export class InAppNativeConnector implements InAppConnector {
@@ -107,6 +115,8 @@ export class InAppNativeConnector implements InAppConnector {
           params.redirectUrl || (ExpoLinking.createURL("") as string);
         return authenticate({ strategy, redirectUrl }, this.options.client);
       }
+      case "passkey":
+        return this.passkeyAuth(params);
       default:
         throw new Error(`Unsupported authentication type: ${strategy}`);
     }
@@ -164,7 +174,16 @@ export class InAppNativeConnector implements InAppConnector {
         });
       }
       case "passkey": {
-        throw new Error("Passkey authentication is not implemented yet");
+        const authToken = await this.passkeyAuth(params);
+        const account = await this.getAccount();
+        return {
+          user: {
+            status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+            account,
+            authDetails: authToken.storedToken.authDetails,
+            walletAddress: account.address,
+          },
+        };
       }
       case "iframe": {
         throw new Error("iframe_email_verification is not supported in native");
@@ -174,6 +193,75 @@ export class InAppNativeConnector implements InAppConnector {
       }
       default:
         assertUnreachable(strategy);
+    }
+  }
+
+  private async passkeyAuth(args: {
+    type: "sign-up" | "sign-in";
+    passkeyName?: string;
+    client: ThirdwebClient;
+    ecosystem?: Ecosystem;
+  }): Promise<AuthStoredTokenWithCookieReturnType> {
+    const { type, passkeyName, client, ecosystem } = args;
+    const domain = this.options.passkeyDomain;
+    if (!domain) {
+      throw new Error(
+        "Passkey domain is required for native platforms. Please pass it in the 'auth' options when creating the inAppWallet().",
+      );
+    }
+    try {
+      const { PasskeyNativeClient } = await import("./auth/passkeys.js");
+      const passkeyClient = new PasskeyNativeClient();
+      const storage = nativeLocalStorage;
+      let authToken: AuthStoredTokenWithCookieReturnType;
+
+      if (type === "sign-up") {
+        authToken = await registerPasskey({
+          client,
+          ecosystem,
+          username: passkeyName,
+          passkeyClient,
+          storage,
+          rp: {
+            id: domain,
+            name: domain,
+          },
+        });
+      } else {
+        authToken = await loginWithPasskey({
+          client,
+          ecosystem,
+          passkeyClient,
+          storage,
+          rp: {
+            id: domain,
+            name: domain,
+          },
+        });
+      }
+
+      const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+        jwtToken: authToken.storedToken.jwtToken,
+        authDetails: authToken.storedToken.authDetails,
+        authProvider: authToken.storedToken.authProvider,
+        developerClientId: authToken.storedToken.developerClientId,
+        cookieString: authToken.storedToken.cookieString,
+        // we should always store the jwt cookie since there's no concept of cookie in react native
+        shouldStoreCookieString: true,
+        isNewUser: authToken.storedToken.isNewUser,
+      };
+
+      await postAuth({ storedToken: toStoreToken, client });
+
+      return authToken;
+    } catch (error) {
+      console.error(
+        `Error while signing in with passkey. ${(error as Error)?.message || typeof error === "object" ? stringify(error) : error}`,
+      );
+      if (error instanceof Error) {
+        throw new Error(`Error signing in with passkey: ${error.message}`);
+      }
+      throw new Error("An unknown error occurred signing in with passkey");
     }
   }
 

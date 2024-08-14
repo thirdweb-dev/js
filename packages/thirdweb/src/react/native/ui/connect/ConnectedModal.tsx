@@ -173,7 +173,7 @@ const AccountHeader = (props: ConnectedModalProps) => {
     <View style={styles.accountHeaderContainer}>
       <WalletImage
         theme={theme}
-        size={64}
+        size={70}
         wallet={wallet}
         ensAvatar={ensAvatarQuery.data}
       />
@@ -287,7 +287,7 @@ const Transactions = (props: ConnectedModalPropsInner) => {
     </TouchableOpacity>
   );
 };
- */
+*/
 
 const ViewFunds = (props: ConnectedModalPropsInner) => {
   const { theme, setModalState } = props;

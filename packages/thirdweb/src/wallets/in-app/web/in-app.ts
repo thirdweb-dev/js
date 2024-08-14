@@ -187,6 +187,7 @@ export function inAppWallet(
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({
         client,
+        passkeyDomain: createOptions?.auth?.passkeyDomain,
       });
     },
   });

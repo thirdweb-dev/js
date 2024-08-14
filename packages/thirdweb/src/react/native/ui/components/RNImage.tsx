@@ -1,9 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Image } from "react-native";
 import { SvgXml } from "react-native-svg";
 import type { Theme } from "../../../core/design-system/index.js";
 import { radius } from "../../design-system/index.js";
-import { Skeleton } from "./Skeleton.js";
 
 export type ImageInfo = {
   size: number;
@@ -34,7 +33,6 @@ function getImage(data: string): {
 
 export const RNImage = (props: ImageInfo) => {
   const { data, size, color, placeholder } = props;
-  const [loading, setLoading] = useState(true);
   if (!data) {
     return null;
   }
@@ -44,22 +42,12 @@ export const RNImage = (props: ImageInfo) => {
     case "image":
       return (
         <>
-          {loading && (
-            <Skeleton
-              theme={props.theme}
-              style={{ width: size, height: size }}
-            />
-          )}
           <Image
             source={{ uri: image }}
             loadingIndicatorSource={{ uri: placeholder }}
             width={size}
             height={size}
-            onLoadStart={() => setLoading(true)}
-            onLoadEnd={() => setLoading(false)}
-            style={[
-              { borderRadius: radius.md, display: loading ? "none" : "flex" },
-            ]}
+            style={[{ borderRadius: radius.md }]}
           />
         </>
       );

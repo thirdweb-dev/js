@@ -1,4 +1,6 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
+import { webLocalStorage } from "../../../../../utils/storage/webStorage.js";
+import { ClientScopedStorage } from "../../../core/authentication/client-scoped-storage.js";
 import type {
   AuthAndWalletRpcReturnType,
   AuthLoginReturnType,
@@ -7,7 +9,6 @@ import type {
   SendEmailOtpReturnType,
 } from "../../../core/authentication/types.js";
 import type { ClientIdWithQuerierType, Ecosystem } from "../../types.js";
-import { LocalStorage } from "../../utils/Storage/LocalStorage.js";
 import type { InAppWalletIframeCommunicator } from "../../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 import { BaseLogin } from "./base-login.js";
 
@@ -33,7 +34,7 @@ export type AuthQuerierTypes = {
 export class Auth {
   protected client: ThirdwebClient;
   protected AuthQuerier: InAppWalletIframeCommunicator<AuthQuerierTypes>;
-  protected localStorage: LocalStorage;
+  protected localStorage: ClientScopedStorage;
   protected onAuthSuccess: (
     authResults: AuthAndWalletRpcReturnType,
   ) => Promise<AuthLoginReturnType>;
@@ -59,7 +60,8 @@ export class Auth {
     this.client = client;
 
     this.AuthQuerier = querier;
-    this.localStorage = new LocalStorage({
+    this.localStorage = new ClientScopedStorage({
+      storage: webLocalStorage,
       clientId: client.clientId,
       ecosystemId: ecosystem?.id,
     });

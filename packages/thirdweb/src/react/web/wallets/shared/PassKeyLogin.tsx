@@ -217,9 +217,6 @@ function SignupScreen(props: {
         await linkProfile(wallet as Wallet<"inApp">, {
           strategy: "passkey",
           type: "sign-up",
-        }).catch((e) => {
-          setError(e.message);
-          throw e;
         });
       } else {
         await wallet.connect({
@@ -231,7 +228,11 @@ function SignupScreen(props: {
         await setLastAuthProvider("passkey", webLocalStorage);
       }
       done();
-    } catch {
+    } catch (e) {
+      console.error(e);
+      if (e instanceof Error) {
+        setError(`Error creating passkey: ${e.message}`);
+      }
       setStatus("error");
     }
   }

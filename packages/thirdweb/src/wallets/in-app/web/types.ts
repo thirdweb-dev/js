@@ -39,6 +39,11 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
    * @param ecosystem - An optional set of options to connect to an ecosystem wallet.
    */
   ecosystem?: Ecosystem;
+
+  /**
+   * The domain of the passkey to use for authentication
+   */
+  passkeyDomain?: string;
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {

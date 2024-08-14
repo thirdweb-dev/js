@@ -15,6 +15,7 @@ interface Props {
   imageSize: number;
   showError?: boolean;
   animate: boolean;
+  roundLoader?: boolean;
 }
 
 function WalletLoadingThumbnail({
@@ -23,6 +24,7 @@ function WalletLoadingThumbnail({
   showError,
   imageSize,
   animate,
+  roundLoader,
 }: Props) {
   const spinValue = useRef(new Animated.Value(0));
 
@@ -48,6 +50,8 @@ function WalletLoadingThumbnail({
     outputRange: [0, -400],
   });
 
+  const rx = roundLoader ? imageSize / 2 : 15;
+
   return (
     <View style={styles.container}>
       <Svg
@@ -62,8 +66,8 @@ function WalletLoadingThumbnail({
             y="2"
             width={imageSize + INTERNAL_PADDING}
             height={imageSize + INTERNAL_PADDING}
-            rx={15}
-            stroke={showError ? "transparent" : theme.colors.accentButtonBg}
+            rx={rx}
+            stroke={showError ? "transparent" : theme.colors.accentText}
             strokeWidth={3}
             fill="transparent"
             strokeDasharray={"100 300"}
