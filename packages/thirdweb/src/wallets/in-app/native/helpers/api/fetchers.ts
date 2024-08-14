@@ -87,9 +87,8 @@ export async function fetchUserDetails(args: {
 }): Promise<UserDetailsApiType> {
   const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   if (args) {
-    if (args.email) {
-      url.searchParams.append("email", args.email);
-    }
+    // TODO (inapp) remove this, unused in the backend but still required
+    url.searchParams.append("email", args.email ?? "none");
     url.searchParams.append("clientId", args.client.clientId);
   }
   const resp = await authFetchEmbeddedWalletUser(args.client, url.href, {

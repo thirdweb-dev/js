@@ -3,7 +3,7 @@
 
 // TODO: re-enable typescript and properly type this
 
-// @ts-nocheck
+// @ts-nocheck - TODO: re-enable typescript and properly type this
 
 let src;
 let srcEnd;
@@ -31,6 +31,60 @@ const defaultOptions = {
   useRecords: false,
   mapsAsObjects: true,
 };
+
+function readFixedString(length) {
+	let result
+	if (length < 16) {
+		if (result = shortStringInJS(length))
+			return result
+	}
+	if (length > 64 && decoder)
+		return decoder.decode(src.subarray(position, position += length))
+	const end = position + length
+	const units = []
+	result = ''
+	while (position < end) {
+		const byte1 = src[position++]
+		if ((byte1 & 0x80) === 0) {
+			// 1 byte
+			units.push(byte1)
+		} else if ((byte1 & 0xe0) === 0xc0) {
+			// 2 bytes
+			const byte2 = src[position++] & 0x3f
+			units.push(((byte1 & 0x1f) << 6) | byte2)
+		} else if ((byte1 & 0xf0) === 0xe0) {
+			// 3 bytes
+			const byte2 = src[position++] & 0x3f
+			const byte3 = src[position++] & 0x3f
+			units.push(((byte1 & 0x1f) << 12) | (byte2 << 6) | byte3)
+		} else if ((byte1 & 0xf8) === 0xf0) {
+			// 4 bytes
+			const byte2 = src[position++] & 0x3f
+			const byte3 = src[position++] & 0x3f
+			const byte4 = src[position++] & 0x3f
+			let unit = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0c) | (byte3 << 0x06) | byte4
+			if (unit > 0xffff) {
+				unit -= 0x10000
+				units.push(((unit >>> 10) & 0x3ff) | 0xd800)
+				unit = 0xdc00 | (unit & 0x3ff)
+			}
+			units.push(unit)
+		} else {
+			units.push(byte1)
+		}
+
+		if (units.length >= 0x1000) {
+			result += fromCharCode.apply(String, units)
+			units.length = 0
+		}
+	}
+
+	if (units.length > 0) {
+		result += fromCharCode.apply(String, units)
+	}
+
+	return result
+}
 
 class Decoder {
   constructor() {

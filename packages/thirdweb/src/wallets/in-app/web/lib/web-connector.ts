@@ -1,7 +1,12 @@
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { SocialAuthOption } from "../../../../wallets/types.js";
 import type { Account } from "../../../interfaces/wallet.js";
+import {
+  loginWithPasskey,
+  registerPasskey,
+} from "../../core/authentication/passkeys.js";
 import { siweAuthenticate } from "../../core/authentication/siwe.js";
 import {
   type AuthLoginReturnType,
@@ -19,7 +24,6 @@ import { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAp
 import { Auth, type AuthQuerierTypes } from "./auth/iframe-auth.js";
 import { loginWithOauth, loginWithOauthRedirect } from "./auth/oauth.js";
 import { sendOtp, verifyOtp } from "./auth/otp.js";
-import { loginWithPasskey, registerPasskey } from "./auth/passkeys.js";
 import { IFrameWallet } from "./in-app-account.js";
 
 /**
@@ -34,6 +38,7 @@ export class InAppWebConnector implements InAppConnector {
    * Used to manage the Auth state of the user.
    */
   auth: Auth;
+  private passkeyDomain?: string;
 
   private isClientIdLegacyPaper(clientId: string): boolean {
     if (clientId.indexOf("-") > 0 && clientId.length === 36) {
@@ -51,6 +56,7 @@ export class InAppWebConnector implements InAppConnector {
     client,
     onAuthSuccess,
     ecosystem,
+    passkeyDomain,
   }: InAppWalletConstructorType) {
     if (this.isClientIdLegacyPaper(client.clientId)) {
       throw new Error(
@@ -59,6 +65,7 @@ export class InAppWebConnector implements InAppConnector {
     }
     const baseUrl = getThirdwebBaseUrl("inAppWallet");
     this.client = client;
+    this.passkeyDomain = passkeyDomain;
     this.querier = new InAppWalletIframeCommunicator({
       clientId: client.clientId,
       ecosystem,
@@ -180,20 +187,9 @@ export class InAppWebConnector implements InAppConnector {
           jwt: args.jwt,
           encryptionKey: args.encryptionKey,
         });
-      case "passkey":
-        if (args.type === "sign-up") {
-          return registerPasskey({
-            client: this.wallet.client,
-            ecosystem: this.wallet.ecosystem,
-            authenticatorType: args.authenticatorType,
-            username: args.passkeyName,
-          });
-        }
-        return loginWithPasskey({
-          client: this.wallet.client,
-          ecosystem: this.wallet.ecosystem,
-          authenticatorType: args.authenticatorType,
-        });
+      case "passkey": {
+        return this.passkeyAuth(args);
+      }
       case "auth_endpoint": {
         return this.auth.authenticateWithCustomAuthEndpoint({
           payload: args.payload,
@@ -262,20 +258,7 @@ export class InAppWebConnector implements InAppConnector {
         return this.auth.loginWithModal();
       }
       case "passkey": {
-        if (args.type === "sign-up") {
-          const authToken = await registerPasskey({
-            client: this.wallet.client,
-            ecosystem: this.wallet.ecosystem,
-            authenticatorType: args.authenticatorType,
-            username: args.passkeyName,
-          });
-          return this.loginWithAuthToken(authToken);
-        }
-        const authToken = await loginWithPasskey({
-          client: this.wallet.client,
-          ecosystem: this.wallet.ecosystem,
-          authenticatorType: args.authenticatorType,
-        });
+        const authToken = await this.passkeyAuth(args);
         return this.loginWithAuthToken(authToken);
       }
       case "phone":
@@ -298,6 +281,37 @@ export class InAppWebConnector implements InAppConnector {
 
   async logout(): Promise<LogoutReturnType> {
     return await this.auth.logout();
+  }
+
+  private async passkeyAuth(
+    args: Extract<SingleStepAuthArgsType, { strategy: "passkey" }>,
+  ) {
+    const { PasskeyWebClient } = await import("./auth/passkeys.js");
+    const passkeyClient = new PasskeyWebClient();
+    const storage = webLocalStorage;
+    if (args.type === "sign-up") {
+      return registerPasskey({
+        client: this.wallet.client,
+        ecosystem: this.wallet.ecosystem,
+        username: args.passkeyName,
+        passkeyClient,
+        storage,
+        rp: {
+          id: this.passkeyDomain ?? window.location.hostname,
+          name: this.passkeyDomain ?? window.document.title,
+        },
+      });
+    }
+    return loginWithPasskey({
+      client: this.wallet.client,
+      ecosystem: this.wallet.ecosystem,
+      passkeyClient,
+      storage,
+      rp: {
+        id: args.domain?.hostname ?? window.location.hostname,
+        name: args.domain?.displayName ?? window.document.title,
+      },
+    });
   }
 }
 

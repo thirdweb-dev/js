@@ -18,6 +18,7 @@ export const WALLETS = [
         "facebook",
       ],
       mode: "redirect",
+      passkeyDomain: process.env.VERCEL_ENV ? "thirdweb.com" : undefined,
     },
   }),
   createWallet("io.metamask"),

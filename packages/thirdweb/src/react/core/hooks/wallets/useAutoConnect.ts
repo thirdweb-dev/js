@@ -96,6 +96,9 @@ export function useAutoConnectCore(
           setConnectionStatus("disconnected");
         }
       } catch (e) {
+        if (e instanceof Error) {
+          console.warn("Error auto connecting wallet:", e.message);
+        }
         setConnectionStatus("disconnected");
       }
     } else {

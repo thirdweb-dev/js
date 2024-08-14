@@ -1,52 +1,55 @@
-import type { EcosystemWalletId } from "../../../../wallet-types.js";
+import type { AsyncStorage } from "../../../../utils/storage/AsyncStorage.js";
+import type { EcosystemWalletId } from "../../../wallet-types.js";
 import {
   AUTH_TOKEN_LOCAL_STORAGE_NAME,
   DEVICE_SHARE_LOCAL_STORAGE_NAME,
   PASSKEY_CREDENTIAL_ID_LOCAL_STORAGE_NAME,
   WALLET_CONNECT_SESSIONS_LOCAL_STORAGE_NAME,
   WALLET_USER_ID_LOCAL_STORAGE_NAME,
-} from "../../../core/constants/settings.js";
+} from "../constants/settings.js";
 
 const data = new Map<string, string>();
 
 /**
  * @internal
  */
-export class LocalStorage {
-  protected isSupported: boolean;
+export class ClientScopedStorage {
   protected key: string;
+  protected storage: AsyncStorage | null;
   /**
    * @internal
    */
   constructor({
+    storage,
     clientId,
     ecosystemId,
   }: {
+    storage: AsyncStorage | null;
     clientId: string;
     ecosystemId?: EcosystemWalletId;
   }) {
-    this.isSupported = typeof window !== "undefined" && !!window.localStorage;
+    this.storage = storage;
     this.key = getLocalStorageKey(clientId, ecosystemId);
   }
 
   protected async getItem(key: string): Promise<string | null> {
-    if (this.isSupported) {
-      return window.localStorage.getItem(key);
+    if (this.storage) {
+      return this.storage.getItem(key);
     }
     return data.get(key) ?? null;
   }
 
   protected async setItem(key: string, value: string): Promise<void> {
-    if (this.isSupported) {
-      return window.localStorage.setItem(key, value);
+    if (this.storage) {
+      return this.storage.setItem(key, value);
     }
     data.set(key, value);
   }
 
   protected async removeItem(key: string): Promise<boolean> {
     const item = await this.getItem(key);
-    if (this.isSupported && item) {
-      window.localStorage.removeItem(key);
+    if (this.storage && item) {
+      this.storage.removeItem(key);
       return true;
     }
     return false;
