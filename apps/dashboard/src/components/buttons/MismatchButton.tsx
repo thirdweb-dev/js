@@ -77,7 +77,6 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
     const wallet = useActiveWallet();
     const activeWalletChain = useActiveWalletChain();
     const [dialog, setDialog] = useState<undefined | "no-funds" | "pay">();
-
     const { theme } = useTheme();
     const evmBalance = useWalletBalance({
       address: account?.address,
@@ -200,7 +199,14 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
               {dialog === "no-funds" && (
                 <NoFundsDialogContent
                   chain={activeWalletChain}
-                  openPayModal={() => setDialog("pay")}
+                  openPayModal={() => {
+                    trackEvent({
+                      category: "pay",
+                      action: "buy",
+                      label: "attempt",
+                    });
+                    setDialog("pay");
+                  }}
                   onCloseModal={() => setDialog(undefined)}
                 />
               )}
@@ -211,6 +217,37 @@ export const MismatchButton = forwardRef<HTMLButtonElement, ButtonProps>(
                   theme={getSDKTheme(theme === "dark" ? "dark" : "light")}
                   className="!w-auto"
                   payOptions={{
+                    onPurchaseSuccess(info) {
+                      if (
+                        info.type === "crypto" &&
+                        info.status.status !== "NOT_FOUND"
+                      ) {
+                        trackEvent({
+                          category: "pay",
+                          action: "buy",
+                          label: "success",
+                          type: info.type,
+                          chainId: info.status.quote.toToken.chainId,
+                          tokenAddress: info.status.quote.toToken.tokenAddress,
+                          amount: info.status.quote.toAmount,
+                        });
+                      }
+
+                      if (
+                        info.type === "fiat" &&
+                        info.status.status !== "NOT_FOUND"
+                      ) {
+                        trackEvent({
+                          category: "pay",
+                          action: "buy",
+                          label: "success",
+                          type: info.type,
+                          chainId: info.status.quote.toToken.chainId,
+                          tokenAddress: info.status.quote.toToken.tokenAddress,
+                          amount: info.status.quote.estimatedToTokenAmount,
+                        });
+                      }
+                    },
                     prefillBuy: {
                       chain: activeWalletChain,
                     },
