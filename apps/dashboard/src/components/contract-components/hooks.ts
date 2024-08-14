@@ -34,6 +34,7 @@ import {
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
+import type { providers } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
@@ -55,6 +56,7 @@ import {
 } from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
+import { Web3Provider } from "zksync-ethers";
 import type { z } from "zod";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import type {
@@ -719,6 +721,47 @@ export function useCustomContractDeployMutation(options: {
 
         // deploy contract
         if (isZkSync) {
+          // Get metamask signer using zksync-ethers library -- for custom fields in signature
+          let deploySigner = signer;
+
+          if (fullPublishMetadata?.data?.deployType === "standard") {
+            // if its a direct deploy AND its zksync, use the ethers zksync signer for now
+            // NOTE: this only works with injected wallets
+            // TODO - implement deploying to zksync in v5 account and remove this
+            const fakeExternalProvider: providers.ExternalProvider = {
+              // fake tell it its metamask always (lul)
+              isMetaMask: true,
+              request({ method, params }) {
+                switch (method) {
+                  case "eth_accounts": {
+                    return Promise.resolve([walletAddress]);
+                  }
+                  case "eth_signTypedData_v4": {
+                    invariant(params?.[1], "invalid signTypedData call");
+                    // yo dawg, I heard you like signing typed data
+                    const { domain, types, message, primaryType } = JSON.parse(
+                      params[1],
+                    );
+                    return (signer as providers.JsonRpcSigner)._signTypedData(
+                      domain,
+                      // don't ask...
+                      { [primaryType]: types[primaryType] },
+                      message,
+                    );
+                  }
+                  default: {
+                    return (signer as providers.JsonRpcSigner)?.provider?.send(
+                      method,
+                      params ?? [],
+                    );
+                  }
+                }
+              },
+            };
+            const zkSigner = new Web3Provider(fakeExternalProvider).getSigner();
+            deploySigner = zkSigner;
+          }
+
           const publishUri = ipfsHash.startsWith("ipfs://")
             ? ipfsHash
             : `ipfs://${ipfsHash}`;
@@ -739,7 +782,7 @@ export function useCustomContractDeployMutation(options: {
               contractAddress = await zkDeployContractFromUri(
                 publishUri,
                 Object.values(data.deployParams),
-                signer,
+                deploySigner,
                 StorageSingleton,
                 chainId as number,
                 {
@@ -754,7 +797,7 @@ export function useCustomContractDeployMutation(options: {
               contractAddress = await zkDeployContractFromUri(
                 publishUri,
                 Object.values(data.deployParams),
-                signer,
+                deploySigner,
                 StorageSingleton,
                 chainId as number,
                 {
