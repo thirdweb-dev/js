@@ -291,10 +291,6 @@ export {
   type GetBlockParams,
 } from "../indexer/endpoints/getBlock.js";
 export {
-  getEvents,
-  type GetEventsParams,
-} from "../indexer/endpoints/getEvents.js";
-export {
   getLatestBlockNumber,
   type GetLatestBlockNumberParams,
 } from "../indexer/endpoints/getLatestBlockNumber.js";

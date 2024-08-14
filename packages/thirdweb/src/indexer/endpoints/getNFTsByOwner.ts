@@ -57,6 +57,7 @@ export type GetNFTsByOwnerResult = {
  *  page: 1
  * });
  * ```
+ * @contract
  */
 export async function getNFTsByOwner(
   params: GetNFTsByOwnerParams,

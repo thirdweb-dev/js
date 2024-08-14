@@ -47,6 +47,7 @@ export type GetBlockResult<TBlockTag extends BlockTag = "latest"> =
  *  chain: defineChain(1)
  * });
  * ```
+ * @chain
  */
 export async function getBlock(
   params: GetBlockParams,

@@ -44,6 +44,7 @@ export type GetNFTsByCollectionResult = {
  *  contract,
  * });
  * ```
+ * @contract
  */
 export async function getNFTsByCollection(
   params: GetNFTsByCollectionParams,

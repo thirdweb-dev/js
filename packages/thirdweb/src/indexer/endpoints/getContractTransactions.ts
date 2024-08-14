@@ -77,6 +77,7 @@ export type GetTransactionsResult = {
  *  page: 1
  * });
  * ```
+ * @contract
  */
 export async function getContractTransactions(
   params: GetContractTransactionsParams,

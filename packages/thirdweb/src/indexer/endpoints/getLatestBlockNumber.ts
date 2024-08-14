@@ -39,6 +39,7 @@ export type GetLatestBlockNumberResult = bigint;
  *  chain: defineChain(1)
  * });
  * ```
+ * @chain
  */
 export async function getLatestBlockNumber(
   params: GetLatestBlockNumberParams,

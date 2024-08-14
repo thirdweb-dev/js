@@ -36,7 +36,7 @@ const nfts = await getNFTsByCollection({
 
 Get latest block number for a chain.
 ```ts
-import { createThirdwebClient, getLatestBlockNumber } from "thirdweb";
+import { createThirdwebClient, defineChain, getLatestBlockNumber } from "thirdweb";
 
 const client = createThirdwebClient({ clientId: "..." });
 const { latestBlockNumber } = await getLatestBlockNumber({

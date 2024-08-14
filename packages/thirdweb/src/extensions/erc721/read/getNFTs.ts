@@ -31,7 +31,9 @@ export type GetNFTsParams = {
 };
 
 /**
- * Retrieves an array of NFTs ("ERC721") based on the provided options.
+ * Retrieves an array of NFTs ("ERC721") based on the provided options using RPC.
+ * **For a more efficient way to fetch NFTs, use `getNFTsByCollection` which uses our indexer.**
+ *
  * @param options - The options for retrieving the NFTs.
  * @returns A promise that resolves to an array of NFTs.
  * @throws An error if the contract requires either `nextTokenIdToMint` or `totalSupply` function to determine the next token ID to mint.
