@@ -14,7 +14,8 @@ interface FactoryFieldsetProps {
   abi: Abi;
   setCustomFactoryAbi: Dispatch<SetStateAction<Abi>>;
   shouldShowDynamicFactoryInput: boolean;
-  shouldShowExtensionsParamInput: boolean;
+  shouldShowModularFactoryInput: boolean;
+  shouldShowModulesParamInput: boolean;
   deployParams:
     | ReturnType<typeof useFunctionParamsFromABI>
     | ReturnType<typeof useConstructorParamsFromABI>;
@@ -24,7 +25,8 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
   abi,
   setCustomFactoryAbi,
   shouldShowDynamicFactoryInput,
-  shouldShowExtensionsParamInput,
+  shouldShowModularFactoryInput,
+  shouldShowModulesParamInput,
   deployParams,
 }) => {
   const form = useFormContext();
@@ -63,7 +65,8 @@ export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({
           <DefaultFactory
             abi={abi}
             shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
-            shouldShowExtensionsParamInput={shouldShowExtensionsParamInput}
+            shouldShowModularFactoryInput={shouldShowModularFactoryInput}
+            shouldShowModulesParamInput={shouldShowModulesParamInput}
             deployParams={deployParams}
           />
         )}

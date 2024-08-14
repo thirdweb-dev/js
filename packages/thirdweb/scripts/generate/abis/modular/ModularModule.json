@@ -1,0 +1,61 @@
+[
+    {
+      "type": "function",
+      "name": "getModuleConfig",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct IModuleConfig.ModuleConfig",
+          "components": [
+            {
+              "name": "registerInstallationCallback",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "requiredInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "supportedInterfaces",
+              "type": "bytes4[]",
+              "internalType": "bytes4[]"
+            },
+            {
+              "name": "callbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IModuleConfig.CallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                }
+              ]
+            },
+            {
+              "name": "fallbackFunctions",
+              "type": "tuple[]",
+              "internalType": "struct IModuleConfig.FallbackFunction[]",
+              "components": [
+                {
+                  "name": "selector",
+                  "type": "bytes4",
+                  "internalType": "bytes4"
+                },
+                {
+                  "name": "permissionBits",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "pure"
+    }
+  ]

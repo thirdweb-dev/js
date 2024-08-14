@@ -1953,7 +1953,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         (i) => i.type === "implementation",
       )?.transaction.predictedAddress as string;
 
-      // 3. direct deploy infra + extensions + implementation
+      // 3. direct deploy infra + modules + implementation
 
       // filter out already deployed contracts (data is empty)
       const transactionsToSend = deploymentInfo.filter(
@@ -2005,16 +2005,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       );
 
       // add extensions
-      const extensionsParam: string[] = [];
+      const modulesParam: string[] = [];
       for (const info of deploymentInfo) {
-        if (info.type === "extension") {
-          extensionsParam.push(info.transaction.predictedAddress);
+        if (info.type === "module") {
+          modulesParam.push(info.transaction.predictedAddress);
         }
       }
 
-      const extensionsParamName =
+      const modulesParamName =
         deployMetadata.extendedMetadata?.factoryDeploymentData
-          ?.modularFactoryInput?.extensionsParamName;
+          ?.modularFactoryInput?.modulesParamName;
 
       invariant(
         deployMetadata.extendedMetadata?.factoryDeploymentData
@@ -2033,15 +2033,15 @@ export class ContractDeployer extends RPCConnectionHandler {
         "Wrong number of constructor arguments",
       );
 
-      const extensionsParamIndex = initializerParams.findIndex(
-        (p) => p.name === extensionsParamName,
+      const modulesParamIndex = initializerParams.findIndex(
+        (p) => p.name === modulesParamName,
       );
 
       if (
-        constructorParamValues[extensionsParamIndex].length === 0 ||
-        constructorParamValues[extensionsParamIndex] === "[]"
+        constructorParamValues[modulesParamIndex].length === 0 ||
+        constructorParamValues[modulesParamIndex] === "[]"
       ) {
-        constructorParamValues[extensionsParamIndex] = extensionsParam;
+        constructorParamValues[modulesParamIndex] = modulesParam;
       }
 
       const initializerParamTypes = extractFunctionParamsFromAbi(

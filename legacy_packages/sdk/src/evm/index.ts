@@ -102,7 +102,7 @@ export * from "./common/feature-detection/detectContractFeature";
 export * from "./common/feature-detection/hasFunction";
 export * from "./common/plugin/joinABIs";
 export * from "./common/plugin/getCompositePluginABI";
-export * from "./common/modular/compatibleExtensions";
+export * from "./common/modular/compatibleModules";
 export * from "./common/version-checker";
 export * from "./common/fetchSourceFilesFromMetadata";
 export { isNativeToken } from "./common/currency/isNativeToken";
