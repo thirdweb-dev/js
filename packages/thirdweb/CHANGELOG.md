@@ -1,5 +1,11 @@
 # thirdweb
 
+## 5.46.1
+
+### Patch Changes
+
+- [#4099](https://github.com/thirdweb-dev/js/pull/4099) [`79260c8`](https://github.com/thirdweb-dev/js/commit/79260c8cd0e48cb2f613a8872d72a3abde4a9b2d) Thanks [@WyattMufson](https://github.com/WyattMufson)! - Add new auth fields to support redirect in web and electron applications
+
 ## 5.46.0
 
 ### Minor Changes
