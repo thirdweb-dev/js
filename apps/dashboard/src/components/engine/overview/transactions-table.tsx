@@ -18,6 +18,7 @@ import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useState } from "react";
 import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
+import { toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
   Badge,
@@ -311,6 +312,8 @@ const TransactionDetailsDrawer = ({
 
   const chain: ChainMetadata | undefined =
     chainIdToChainRecord[Number.parseInt(transaction.chainId)];
+  const decimals = chain.nativeCurrency.decimals || 18;
+  const symbol = chain.nativeCurrency.symbol || "ETH";
   const explorer = chain?.explorers?.[0];
 
   const status = statusDetails[transaction.status as EngineStatus];
@@ -320,12 +323,15 @@ const TransactionDetailsDrawer = ({
       : transaction.functionName ?? null;
 
   let txFeeDisplay = "N/A";
-  if (transaction.gasLimit && transaction.gasPrice) {
-    const txFee =
-      (Number.parseFloat(transaction.gasLimit) *
-        Number.parseFloat(transaction.gasPrice)) /
-      10 ** (chain?.nativeCurrency.decimals || 18);
-    txFeeDisplay = `${txFee} ${chain?.nativeCurrency.symbol || "ETH"}`;
+  if (transaction.gasLimit) {
+    const gasPrice =
+      transaction.effectiveGasPrice ||
+      transaction.gasPrice ||
+      transaction.maxFeePerGas;
+    if (gasPrice) {
+      const txFeeWei = BigInt(transaction.gasLimit) * BigInt(gasPrice);
+      txFeeDisplay = `${toTokens(txFeeWei, decimals)} ${symbol}`;
+    }
   }
 
   return (
@@ -397,7 +403,9 @@ const TransactionDetailsDrawer = ({
         )}
 
         <FormControl>
-          <FormLabel>From Address</FormLabel>
+          <FormLabel>
+            {transaction.accountAddress ? "Signer Address" : "From Address"}
+          </FormLabel>
           <LinkButton
             variant="ghost"
             isExternal
@@ -412,8 +420,31 @@ const TransactionDetailsDrawer = ({
           </LinkButton>
         </FormControl>
 
+        {transaction.accountAddress && (
+          <FormControl>
+            <FormLabel>Account Address</FormLabel>
+            <LinkButton
+              variant="ghost"
+              isExternal
+              size="xs"
+              href={
+                explorer
+                  ? `${explorer.url}/address/${transaction.accountAddress}`
+                  : "#"
+              }
+            >
+              <Text fontFamily="mono">{transaction.accountAddress}</Text>
+            </LinkButton>
+          </FormControl>
+        )}
+
         <FormControl>
-          <FormLabel>To Address</FormLabel>
+          {/* The "to" address is usually a contract except for native token transfers. */}
+          <FormLabel>
+            {functionCalled === "transfer"
+              ? "Recipient Address"
+              : "Contract Address"}
+          </FormLabel>
           <LinkButton
             variant="ghost"
             isExternal
@@ -455,6 +486,24 @@ const TransactionDetailsDrawer = ({
         <Divider />
 
         {/* On-chain details */}
+
+        <FormControl>
+          <Flex>
+            <FormLabel>Value</FormLabel>
+            <Tooltip
+              label={`The amount of ${symbol} sent to the "To" .`}
+              shouldWrapChildren
+            >
+              <FiInfo />
+            </Tooltip>
+          </Flex>
+          <Text>
+            {transaction.value
+              ? toTokens(BigInt(transaction.value), decimals)
+              : 0}{" "}
+            {symbol}
+          </Text>
+        </FormControl>
 
         {transaction.transactionHash && (
           <>
@@ -526,6 +575,25 @@ const TransactionDetailsDrawer = ({
                       </Tooltip>
                     </Flex>
                     <Text>{Number(transaction.gasPrice).toLocaleString()}</Text>
+                  </FormControl>
+                )}
+
+                {transaction.blockNumber && (
+                  <FormControl>
+                    <FormLabel>Block</FormLabel>
+                    <LinkButton
+                      variant="ghost"
+                      isExternal
+                      size="xs"
+                      href={
+                        explorer
+                          ? `${explorer.url}/block/${transaction.blockNumber}`
+                          : "#"
+                      }
+                      maxW="100%"
+                    >
+                      <Text>{transaction.blockNumber}</Text>
+                    </LinkButton>
                   </FormControl>
                 )}
               </Stack>

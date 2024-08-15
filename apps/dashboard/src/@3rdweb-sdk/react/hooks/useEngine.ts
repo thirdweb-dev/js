@@ -333,6 +333,7 @@ export type Transaction = {
   gasPrice?: string | null;
   maxFeePerGas?: string | null;
   maxPriorityFeePerGas?: string | null;
+  effectiveGasPrice?: string | null;
   transactionType?: number | null;
   transactionHash?: string | null;
   queuedAt?: string | null;
