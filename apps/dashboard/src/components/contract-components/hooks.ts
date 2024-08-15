@@ -14,7 +14,6 @@ import {
   type ExtraPublishMetadata,
   type FeatureName,
   type FeatureWithEnabled,
-  type ProfileMetadata,
   type PublishedContract,
   type ThirdwebSDK,
   detectFeatures,
@@ -34,6 +33,7 @@ import {
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
+import type { ProfileMetadataInput } from "constants/schemas";
 import type { providers } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
@@ -569,7 +569,7 @@ export function useEditProfileMutation() {
   const address = useActiveAccount()?.address;
 
   return useMutationWithInvalidate(
-    async (data: ProfileMetadata) => {
+    async (data: ProfileMetadataInput) => {
       invariant(sdk, "sdk not provided");
       await sdk.getPublisher().updatePublisherProfile(data);
     },
