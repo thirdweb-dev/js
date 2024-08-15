@@ -1,3 +1,4 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import { thirdwebClient } from "@/constants/client";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Box } from "@chakra-ui/react";
@@ -6,12 +7,11 @@ import {
   useResetClaimConditions,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
+import { CircleHelpIcon } from "lucide-react";
 import { getContract } from "thirdweb";
-import { Text } from "tw-components";
 
 interface ResetClaimEligibilityProps {
   isErc20: boolean;
@@ -88,18 +88,19 @@ export const ResetClaimEligibility: React.FC<ResetClaimEligibilityProps> = ({
         size="sm"
       >
         Reset Eligibility{" "}
-        <TooltipBox
-          iconColor="secondary.500"
-          content={
-            <Text>
-              This contract&apos;s claim eligibility stores who has already
+        <ToolTipLabel
+          label={
+            <>
+              This {`contract's`} claim eligibility stores who has already
               claimed {isErc20 ? "tokens" : "NFTs"} from this contract and
               carries across claim phases. Resetting claim eligibility will
               reset this state permanently, and wallets that have already
               claimed to their limit will be able to claim again.
-            </Text>
+            </>
           }
-        />
+        >
+          <CircleHelpIcon className="size-4 text-muted-foreground ml-2" />
+        </ToolTipLabel>
       </TransactionButton>
     </AdminOnly>
   );

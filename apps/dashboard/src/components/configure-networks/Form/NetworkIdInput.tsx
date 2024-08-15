@@ -1,19 +1,13 @@
-import { FormControl, Input } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { FormControl } from "@chakra-ui/react";
 import { useAllChainsData } from "hooks/chains/allChains";
 import type { UseFormReturn } from "react-hook-form";
-import {
-  CodeBlock,
-  FormErrorMessage,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 import { TooltipBox } from "./TooltipBox";
 
 export const NetworkIDInput: React.FC<{
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<NetworkConfigFormData, any>;
+  form: UseFormReturn<NetworkConfigFormData>;
   disabled?: boolean;
 }> = ({ form, disabled }) => {
   const slug = form.watch("slug");
@@ -25,23 +19,16 @@ export const NetworkIDInput: React.FC<{
       mt={6}
       isInvalid={form.formState.errors.slug?.type === "taken"}
     >
-      <FormLabel display="flex">
+      <FormLabel className="!flex items-center gap-1">
         Network ID
         <TooltipBox
           content={
             <>
-              <Text color="heading" mb={4}>
-                Network ID is used to identify the network in the URL{" "}
-              </Text>
-              <Heading fontSize="14px" mb={3}>
-                Example
-              </Heading>
-              <CodeBlock
-                fontSize="14px"
-                code="thirdweb.com/<network-id>/<contract-address>"
-                language="bash"
-                canCopy={false}
-              />
+              Network ID is used to identify the network in the URL
+              <p className="font-semibold mt-2 mb-1">Example</p>
+              <p className="text-link-foreground text-xs">
+                {"thirdweb.com/<network-id>/<contract-address>"}
+              </p>
             </>
           }
         />
@@ -50,9 +37,6 @@ export const NetworkIDInput: React.FC<{
         disabled={disabled}
         autoComplete="off"
         placeholder="e.g. ethereum"
-        _placeholder={{
-          fontWeight: 500,
-        }}
         onKeyDown={(e) => {
           // only allow alphanumeric characters and dashes
           if (!/^[a-z0-9-]*$/i.test(e.key)) {

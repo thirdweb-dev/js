@@ -31,7 +31,7 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
 
 export function ToolTipLabel(props: {
   children: React.ReactNode;
-  label: string | undefined;
+  label: React.ReactNode;
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
 }) {
@@ -47,7 +47,7 @@ export function ToolTipLabel(props: {
         </TooltipTrigger>
         <TooltipContent
           sideOffset={10}
-          className="max-w-[300px] leading-relaxed"
+          className="max-w-[400px] leading-relaxed"
         >
           <div className="p-2 text-sm flex items-center gap-1.5">
             {props.leftIcon}

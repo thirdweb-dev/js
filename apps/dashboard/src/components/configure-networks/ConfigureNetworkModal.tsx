@@ -1,10 +1,4 @@
-import {
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
-} from "@chakra-ui/react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import type { StoredChain } from "contexts/configured-chains";
 import { useSetEditChain } from "hooks/networkConfigModal";
 import { ConfigureNetworks } from "./ConfigureNetworks";
@@ -24,31 +18,26 @@ export const ConfigureNetworkModal: React.FC<AddNetworkModalProps> = (
   };
 
   return (
-    <Modal isOpen={true} onClose={onModalClose} isCentered>
-      <ModalOverlay />
-      <ModalContent
-        borderRadius="xl"
-        overflow="hidden"
-        w="500px"
-        mt={{ base: 8, md: 16 }}
-        mb={{ base: 0, md: 16 }}
-        maxW={{ base: "100vw", md: "calc(100vw - 40px)" }}
+    <Dialog
+      open={true}
+      onOpenChange={(v) => {
+        if (!v) {
+          onModalClose();
+        }
+      }}
+    >
+      <DialogContent
+        className="p-0 z-[10001] max-w-[480px]"
+        dialogOverlayClassName="z-[10000]"
       >
-        <ModalCloseButton />
-        <ModalBody
-          p={0}
-          _dark={{ background: "backgroundBody" }}
-          _light={{ background: "white" }}
-        >
-          <ConfigureNetworks
-            onNetworkAdded={(chain) => {
-              props.onNetworkAdded?.(chain);
-              onModalClose();
-            }}
-            onNetworkConfigured={onModalClose}
-          />
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+        <ConfigureNetworks
+          onNetworkAdded={(chain) => {
+            props.onNetworkAdded?.(chain);
+            onModalClose();
+          }}
+          onNetworkConfigured={onModalClose}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
