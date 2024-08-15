@@ -49,3 +49,19 @@ const AddressSchema = z.custom<string>(
 export const AddressOrEnsSchema = z.union([AddressSchema, EnsSchema], {
   invalid_type_error: "Provided value was not a valid address or ENS name",
 });
+
+const FileSchema = z.instanceof(File) as z.ZodType<InstanceType<typeof File>>;
+
+const FileOrStringSchema = z.union([FileSchema, z.string()]);
+
+export const CommonContractSchema = z
+  .object({
+    name: z.string(),
+    description: z.string().optional(),
+    image: FileOrStringSchema.optional(),
+    external_link: z.string().optional(),
+    app_uri: z.string().optional(),
+    social_urls: z.record(z.string()).optional(),
+    defaultAdmin: AddressOrEnsSchema.optional(),
+  })
+  .catchall(z.unknown());

@@ -55,12 +55,14 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
         <SimpleGrid columns={1} w="100%" gap={8}>
-          <GridItem order={detectedMetadata === "enabled" ? 0 : 100}>
-            <SettingsMetadata
-              contract={contractQuery.contract}
-              detectedState={detectedMetadata}
-            />
-          </GridItem>
+          {contract && (
+            <GridItem order={detectedMetadata === "enabled" ? 0 : 100}>
+              <SettingsMetadata
+                contract={contract}
+                detectedState={detectedMetadata}
+              />
+            </GridItem>
+          )}
           {contract && (
             <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
               <SettingsPrimarySale

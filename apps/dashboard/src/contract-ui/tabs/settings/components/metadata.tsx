@@ -9,26 +9,23 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContractMetadata } from "@thirdweb-dev/react";
-import {
-  CommonContractSchema,
-  type ValidContractInstance,
-} from "@thirdweb-dev/sdk/evm";
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
+import { CommonContractSchema } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useInvalidatev4Contract } from "hooks/invalidate-v4-contract";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { thirdwebClient } from "lib/thirdweb-client";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlus, FiTrash } from "react-icons/fi";
-import { getContract } from "thirdweb";
-import { setContractMetadata } from "thirdweb/extensions/common";
-import { useSendAndConfirmTransaction } from "thirdweb/react";
+import type { ThirdwebContract } from "thirdweb";
+import {
+  getContractMetadata,
+  setContractMetadata,
+} from "thirdweb/extensions/common";
+import { useReadContract, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
   Button,
   Card,
@@ -63,27 +60,41 @@ function extractDomain(url: string) {
   }
 }
 
-export const SettingsMetadata = <
-  TContract extends ValidContractInstance | undefined,
->({
+const SocialUrlSchema = z.record(z.string(), z.string());
+
+export const SettingsMetadata = ({
   contract,
   detectedState,
 }: {
-  contract: TContract;
+  contract: ThirdwebContract;
   detectedState: ExtensionDetectedState;
 }) => {
   const trackEvent = useTrack();
-  const metadata = useContractMetadata(contract);
+  const metadata = useReadContract(getContractMetadata, { contract });
   const sendTransaction = useSendAndConfirmTransaction();
   const invalidateContract = useInvalidatev4Contract();
 
   const transformedQueryData = useMemo(() => {
+    let socialUrls: z.infer<typeof SocialUrlSchema> = {
+      twitter: "",
+      discord: "",
+    };
+    if (metadata.data?.social_urls) {
+      try {
+        const parsed = SocialUrlSchema.parse(metadata.data.social_urls);
+        socialUrls = parsed;
+      } catch (err) {
+        console.error(err);
+      }
+    }
     return {
       ...metadata.data,
       name: metadata.data?.name || "",
-      dashboard_social_urls: Object.entries(
-        metadata.data?.social_urls || { twitter: "", discord: "" },
-      ).map(([key, value]) => ({ key, value })),
+      image: metadata.data?.image || "",
+      dashboard_social_urls: Object.entries(socialUrls).map(([key, value]) => ({
+        key,
+        value,
+      })),
     };
   }, [metadata.data]);
 
@@ -111,20 +122,10 @@ export const SettingsMetadata = <
     name: "dashboard_social_urls",
   });
 
-  const chain = useV5DashboardChain(contract?.chainId);
-  const contractV5 =
-    contract && chain
-      ? getContract({
-          address: contract.getAddress(),
-          chain: chain,
-          client: thirdwebClient,
-        })
-      : null;
-
   const { onSuccess, onError } = useTxNotifications(
     "Successfully updated metadata",
     "Error updating metadata",
-    contractV5,
+    contract,
   );
 
   return (
@@ -153,9 +154,6 @@ export const SettingsMetadata = <
             },
             {},
           );
-          if (!contract || !contractV5) {
-            return;
-          }
 
           trackEvent({
             category: "settings",
@@ -164,7 +162,7 @@ export const SettingsMetadata = <
           });
 
           const tx = setContractMetadata({
-            contract: contractV5,
+            contract,
             ...data,
             social_urls: socialUrlsObj,
           });
@@ -189,8 +187,8 @@ export const SettingsMetadata = <
             },
             onSettled: () => {
               return invalidateContract({
-                contractAddress: contract.getAddress(),
-                chainId: contract.chainId,
+                contractAddress: contract.address,
+                chainId: contract.chain.id,
               });
             },
           });
@@ -323,24 +321,22 @@ export const SettingsMetadata = <
           </Flex>
         </Flex>
 
-        {contractV5 && (
-          <AdminOnly contract={contractV5}>
-            <TransactionButton
-              colorScheme="primary"
-              transactionCount={1}
-              isDisabled={metadata.isLoading || !formState.isDirty}
-              type="submit"
-              isLoading={sendTransaction.isPending}
-              loadingText="Saving..."
-              size="md"
-              borderRadius="xl"
-              borderTopLeftRadius="0"
-              borderTopRightRadius="0"
-            >
-              Update Metadata
-            </TransactionButton>
-          </AdminOnly>
-        )}
+        <AdminOnly contract={contract}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={metadata.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={sendTransaction.isPending}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Metadata
+          </TransactionButton>
+        </AdminOnly>
       </Flex>
     </Card>
   );
