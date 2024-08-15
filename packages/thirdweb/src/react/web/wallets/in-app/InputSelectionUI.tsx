@@ -70,8 +70,8 @@ export function InputSelectionUI(props: {
           placeholder={props.placeholder}
           style={{
             flexGrow: 1,
-            padding: `${spacing.md} ${
-              props.format === "phone" ? 0 : spacing.md
+            padding: `${spacing.sm} ${
+              props.format === "phone" ? 0 : spacing.sm
             }`,
           }}
           variant="transparent"
@@ -97,8 +97,8 @@ export function InputSelectionUI(props: {
           onClick={handleSelect}
           disabled={props.disabled}
           style={{
-            padding: spacing.md,
-            borderRadius: `0 ${radius.lg} ${radius.lg} 0`,
+            padding: spacing.sm,
+            borderRadius: `0 ${radius.md} ${radius.md} 0`,
           }}
         >
           <ArrowRightIcon width={iconSize.md} height={iconSize.md} />
