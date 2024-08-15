@@ -1,6 +1,9 @@
 import { Flex } from "@chakra-ui/react";
 import { getErcs, useContract, useContractType } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { getContract } from "thirdweb";
 import { EmbedSetup } from "./components/embed-setup";
 
 interface ContractEmbedPageProps {
@@ -33,18 +36,27 @@ export const ContractEmbedPage: React.FC<ContractEmbedPageProps> = ({
               ? "erc721"
               : null;
 
+  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
+
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
+  if (!contractQuery.contract || !chain) {
+    return null;
+  }
+
+  const contract = getContract({
+    address: contractQuery.contract.getAddress(),
+    chain,
+    client: thirdwebClient,
+  });
+
   return (
     <Flex direction="column" gap={6}>
       {contractQuery?.contract && ercOrMarketplace && (
-        <EmbedSetup
-          contract={contractQuery.contract}
-          ercOrMarketplace={ercOrMarketplace}
-        />
+        <EmbedSetup contract={contract} ercOrMarketplace={ercOrMarketplace} />
       )}
     </Flex>
   );
