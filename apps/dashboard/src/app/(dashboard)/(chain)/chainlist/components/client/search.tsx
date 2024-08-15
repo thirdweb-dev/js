@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { SearchIcon, XCircleIcon } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -15,7 +16,7 @@ function cleanUrl(url: string) {
 }
 
 export const SearchInput: React.FC = () => {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 

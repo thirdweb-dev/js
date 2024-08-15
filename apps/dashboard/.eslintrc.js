@@ -80,6 +80,12 @@ module.exports = {
             message:
               "Import from `@chakra-ui/react` instead of `@chakra-ui/menu`.",
           },
+          {
+            name: "next/navigation",
+            importNames: ["useRouter"],
+            message:
+              'Use `import { useDashboardRouter } from "@/lib/DashboardRouter";` instead',
+          },
         ],
       },
     ],

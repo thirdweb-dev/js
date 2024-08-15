@@ -1,8 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { Grid2X2Icon, ListIcon } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 type hainListViewProps = {
@@ -12,7 +13,7 @@ type hainListViewProps = {
 export const ChainListView: React.FC<hainListViewProps> = ({ activeView }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   const createPageURL = useCallback(
     (view: "grid" | "table") => {

@@ -1,7 +1,8 @@
 "use client";
 
 import { PaginationButtons } from "@/components/pagination-buttons";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 type ChainlistPaginationProps = {
@@ -15,7 +16,7 @@ export const ChainlistPagination: React.FC<ChainlistPaginationProps> = ({
 }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   const createPageURL = useCallback(
     (pageNumber: number) => {

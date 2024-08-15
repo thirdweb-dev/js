@@ -6,10 +6,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export function TablePagination() {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
   const page = Number(searchParams?.get("page") || 1);
