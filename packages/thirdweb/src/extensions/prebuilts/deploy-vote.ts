@@ -75,7 +75,7 @@ export type DeployVoteContractOptions = Prettify<
  *  client,
  *  account,
  *  params: {
- *    token: "0x...",
+ *    tokenAddress: "0x...",
  *    // user needs 0.5 <token> to create proposal
  *    initialProposalThreshold: "0.5",
  *    // vote expires 10 blocks later

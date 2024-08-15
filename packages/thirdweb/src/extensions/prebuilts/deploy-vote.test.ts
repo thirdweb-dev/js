@@ -2,13 +2,23 @@ import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { USDT_CONTRACT_ADDRESS } from "~test/test-contracts.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { isAddress } from "../../utils/address.js";
+import { deployERC20Contract } from "./deploy-erc20.js";
 import { deployVoteContract } from "./deploy-vote.js";
 
-describe("deploy-voteERC20 contract", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("deploy-voteERC20 contract", () => {
   it("should deploy Vote contract", async () => {
+    const tokenAddress = await deployERC20Contract({
+      client: TEST_CLIENT,
+      chain: ANVIL_CHAIN,
+      account: TEST_ACCOUNT_A,
+      type: "TokenERC20",
+      params: {
+        name: "Token",
+        contractURI: TEST_CONTRACT_URI,
+      },
+    });
     const address = await deployVoteContract({
       account: TEST_ACCOUNT_A,
       client: TEST_CLIENT,
@@ -16,11 +26,13 @@ describe("deploy-voteERC20 contract", () => {
       params: {
         name: "",
         contractURI: TEST_CONTRACT_URI,
-        token: USDT_CONTRACT_ADDRESS,
-        initialVotingDelay: 0n,
-        initialVotingPeriod: 10n,
-        initialProposalThreshold: 50n,
-        initialVoteQuorumFraction: 25n,
+        tokenAddress: tokenAddress,
+        // user needs 0.5 <token> to create proposal
+        initialProposalThreshold: "0.5",
+        // vote expires 10 blocks later
+        initialVotingPeriod: 10,
+        // Requires 51% of users who voted, voted "For", for this proposal to pass
+        minVoteQuorumRequiredPercent: 51,
       },
     });
     expect(address).toBeDefined();
