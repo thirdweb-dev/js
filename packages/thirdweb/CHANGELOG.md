@@ -1,5 +1,91 @@
 # thirdweb
 
+## 5.46.0
+
+### Minor Changes
+
+- [#4045](https://github.com/thirdweb-dev/js/pull/4045) [`3c32b99`](https://github.com/thirdweb-dev/js/commit/3c32b99b3addf91ec2fa8aaa02da27c6baf361a2) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update SIWE interface
+
+  ```ts
+  import { inAppWallet, createWallet } from "thirdweb/wallets";
+  import { mainnet } from "thirdweb/chains";
+
+  const rabby = createWallet("io.rabby");
+  const wallet = inAppWallet();
+
+  const account = await wallet.connect({
+    client: MY_CLIENT,
+    strategy: "wallet",
+    wallet: rabby,
+    chain: mainnet,
+  });
+  ```
+
+- [#4077](https://github.com/thirdweb-dev/js/pull/4077) [`ef9c7df`](https://github.com/thirdweb-dev/js/commit/ef9c7df2205fd9efa3afe1ccc57c25952e88401f) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Passkey login support in React Native
+
+### Patch Changes
+
+- [#4033](https://github.com/thirdweb-dev/js/pull/4033) [`141fd53`](https://github.com/thirdweb-dev/js/commit/141fd53759f1b5515e38688fe96364edc4c76644) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add more Split contract extensions
+
+- [#3998](https://github.com/thirdweb-dev/js/pull/3998) [`db8695d`](https://github.com/thirdweb-dev/js/commit/db8695d0e8f366e7c577a5098c45fa40e96850b0) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add NFT extension: updateTokenURI
+
+- [#4101](https://github.com/thirdweb-dev/js/pull/4101) [`03a809a`](https://github.com/thirdweb-dev/js/commit/03a809a33f5a026162bda15586ad8f6d00a45b3a) Thanks [@MananTank](https://github.com/MananTank)! - Add `onPurchaseSuccess` callback to `PayEmbed`, `ConnectButton`, `TransactionButton` and `useSendTransaction` and gets called when user completes the purchase using thirdweb pay.
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      onPurchaseSuccess(info) {
+        console.log("purchase success", info);
+      },
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      payOptions: {
+        onPurchaseSuccess(info) {
+          console.log("purchase success", info);
+        },
+      },
+    }}
+  />
+  ```
+
+  ```tsx
+  <TransactionButton
+    transaction={...}
+    payModal={{
+      onPurchaseSuccess(info) {
+        console.log("purchase success", info);
+      },
+    }}
+  >
+    Some Transaction
+  </TransactionButton>
+  ```
+
+  ```ts
+  const sendTransaction = useSendTransaction({
+    payModal: {
+      onPurchaseSuccess(info) {
+        console.log("purchase success", info);
+      },
+    },
+  });
+  ```
+
+- [#4047](https://github.com/thirdweb-dev/js/pull/4047) [`7a68e3b`](https://github.com/thirdweb-dev/js/commit/7a68e3b8ed71e7fa0ca64d5a58162817d4b0703b) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Switch to the proper chain prior to signing SIWE payloads
+
+- [#4092](https://github.com/thirdweb-dev/js/pull/4092) [`0ca1a79`](https://github.com/thirdweb-dev/js/commit/0ca1a79342384dd4a0990ec309c2272cc10d9570) Thanks [@gregfromstl](https://github.com/gregfromstl)! - UI cosmetic improvements
+
+- [#4091](https://github.com/thirdweb-dev/js/pull/4091) [`b9ed753`](https://github.com/thirdweb-dev/js/commit/b9ed7535a4b37c9e74567c939abbea88a935e692) Thanks [@MananTank](https://github.com/MananTank)! - Fix connection with Safe using WalletConnect link
+
+- [#4070](https://github.com/thirdweb-dev/js/pull/4070) [`e5a046e`](https://github.com/thirdweb-dev/js/commit/e5a046ecdde1d421a9f15ca52cdb2e955fcb8374) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add contract util method: `getCompilerMetadata()`
+
 ## 5.45.1
 
 ### Patch Changes
