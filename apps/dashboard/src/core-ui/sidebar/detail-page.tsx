@@ -65,6 +65,7 @@ export const ContractSidebar: React.FC<ContractSidebarProps> = ({
                 href: `/${r.path.replace("overview", "")}`,
                 isBeta: r.isBeta,
                 isDeprecated: r.isDeprecated,
+                extensionDetectedState: r.isEnabled,
                 onClick: () => {
                   openState.onClose();
                 },
@@ -131,25 +132,25 @@ const NavLinkSection: React.FC<NavLinkSectionProps> = ({
         </Text>
       </Flex>
       {filteredLinks.map((link) => (
-        <Flex gap={2} key={link.href}>
-          <DetailNavLink key={link.href} {...link}>
+        <DetailNavLink key={link.href} {...link}>
+          <Flex gap={2} as="span">
             {link.title}
-          </DetailNavLink>
-          {link.isBeta && (
-            <Box>
-              <Badge colorScheme="green" variant="subtle">
-                Beta
-              </Badge>
-            </Box>
-          )}
-          {link.isDeprecated && (
-            <Box>
-              <Badge colorScheme="orange" variant="subtle">
-                Deprecated
-              </Badge>
-            </Box>
-          )}
-        </Flex>
+            {link.isBeta && (
+              <Box>
+                <Badge colorScheme="green" variant="subtle">
+                  Beta
+                </Badge>
+              </Box>
+            )}
+            {link.isDeprecated && (
+              <Box>
+                <Badge colorScheme="orange" variant="subtle">
+                  Deprecated
+                </Badge>
+              </Box>
+            )}
+          </Flex>
+        </DetailNavLink>
       ))}
     </Flex>
   );
