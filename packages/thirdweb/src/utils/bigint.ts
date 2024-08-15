@@ -19,6 +19,7 @@ export function min(a: bigint, b: bigint) {
  * @param a - The first BigInt value.
  * @param b - The second BigInt value.
  * @returns The larger of the two BigInt values.
+ * @utils
  * @example
  * ```ts
  * max(1n, 2n)
