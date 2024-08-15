@@ -22,9 +22,9 @@ const account = TEST_ACCOUNT_A;
 const client = TEST_CLIENT;
 const chain = ANVIL_CHAIN;
 
-describe("proposal exists", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("proposal exists", () => {
   beforeEach(async () => {
-    const token = await deployERC20Contract({
+    const tokenAddress = await deployERC20Contract({
       client: TEST_CLIENT,
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
@@ -41,11 +41,11 @@ describe("proposal exists", () => {
       params: {
         name: "",
         contractURI: TEST_CONTRACT_URI,
-        token,
-        initialVotingDelay: 0n,
-        initialVotingPeriod: 10n,
-        initialProposalThreshold: 50n,
-        initialVoteQuorumFraction: 25n,
+        tokenAddress,
+        initialVotingDelay: 0,
+        initialVotingPeriod: 10,
+        initialProposalThreshold: 51,
+        minVoteQuorumRequiredPercent: 25,
       },
     });
 
@@ -56,7 +56,7 @@ describe("proposal exists", () => {
     });
 
     tokenContract = getContract({
-      address: token,
+      address: tokenAddress,
       chain,
       client,
     });
