@@ -55,25 +55,31 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
         <SimpleGrid columns={1} w="100%" gap={8}>
-          <GridItem order={detectedMetadata === "enabled" ? 0 : 100}>
-            <SettingsMetadata
-              contract={contractQuery.contract}
-              detectedState={detectedMetadata}
-            />
-          </GridItem>
-          <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
-            <SettingsPrimarySale
-              contract={contractQuery.contract}
-              detectedState={detectedPrimarySale}
-            />
-          </GridItem>
+          {contract && (
+            <GridItem order={detectedMetadata === "enabled" ? 0 : 100}>
+              <SettingsMetadata
+                contract={contract}
+                detectedState={detectedMetadata}
+              />
+            </GridItem>
+          )}
+          {contract && (
+            <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
+              <SettingsPrimarySale
+                contract={contract}
+                detectedState={detectedPrimarySale}
+              />
+            </GridItem>
+          )}
 
-          <GridItem order={detectedRoyalties === "enabled" ? 3 : 102}>
-            <SettingsRoyalties
-              contract={contractQuery.contract}
-              detectedState={detectedRoyalties}
-            />
-          </GridItem>
+          {contract && (
+            <GridItem order={detectedRoyalties === "enabled" ? 3 : 102}>
+              <SettingsRoyalties
+                contract={contract}
+                detectedState={detectedRoyalties}
+              />
+            </GridItem>
+          )}
 
           {contract && (
             <GridItem order={detectedPlatformFees === "enabled" ? 4 : 103}>

@@ -43,7 +43,7 @@ export const Input = /* @__PURE__ */ StyledInput<InputProps>((props) => {
     width: "100%",
     outline: "none",
     border: "none",
-    borderRadius: radius.lg,
+    borderRadius: radius.md,
     color: theme.colors.primaryText,
     WebkitAppearance: "none",
     appearance: "none",
@@ -109,7 +109,7 @@ export const InputContainer = /* @__PURE__ */ StyledDiv(() => {
   const theme = useCustomTheme();
   return {
     display: "flex",
-    borderRadius: radius.lg,
+    borderRadius: radius.md,
     boxShadow: `0 0 0px 1.5px ${theme.colors.borderColor}`,
     "&:focus-within": {
       boxShadow: `0 0 0px 2px ${theme.colors.accentText}`,

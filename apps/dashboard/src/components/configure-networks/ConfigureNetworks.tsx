@@ -1,10 +1,9 @@
-import { Box, useToast } from "@chakra-ui/react";
 import type { StoredChain } from "contexts/configured-chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAddRecentlyUsedChainId } from "hooks/chains/recentlyUsedChains";
 import { useModifyChain } from "hooks/chains/useModifyChain";
 import { useEditChain } from "hooks/networkConfigModal";
-import { Heading } from "tw-components";
+import { toast } from "sonner";
 import { ConfigureNetworkForm } from "./ConfigureNetworkForm";
 
 function useChainConfigTrack() {
@@ -31,17 +30,6 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
   const modifyChain = useModifyChain();
   const editChain = useEditChain();
 
-  const toast = useToast();
-
-  const successToast = (message: string) => {
-    toast({
-      title: message,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-
   const handleSubmit = (chain: StoredChain) => {
     modifyChain(chain);
     addRecentlyUsedChainId(chain.chainId);
@@ -52,44 +40,29 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
       }
 
       trackChainConfig("add", chain);
-      successToast("Network Added Successfully");
+      toast.success("Network Added Successfully");
     } else {
       if (props.onNetworkConfigured) {
         props.onNetworkConfigured(chain);
       }
 
       trackChainConfig("update", chain);
-      successToast("Network Updated Successfully");
+      toast.success("Network Updated Successfully");
     }
   };
 
   return (
-    <Box
-      p={{ base: 4, md: 8 }}
-      minH="600px"
-      borderTop={{ md: "none", base: "1px solid" }}
-      marginTop={{ base: 6, md: 0 }}
-      borderColor="inputBg"
-    >
-      <Heading
-        as={"h3"}
-        size="label.xl"
-        mb={8}
-        display="flex"
-        gap={2}
-        alignItems="center"
-      >
+    <div className="p-6">
+      <h3 className="text-2xl font-semibold tracking-tight mb-5">
         {editChain ? "Edit Network" : "Add Custom Network"}
-      </Heading>
+      </h3>
 
       {/* Modify the given chain */}
       {editChain && (
-        <Box mt={9}>
-          <ConfigureNetworkForm
-            editingChain={editChain}
-            onSubmit={handleSubmit}
-          />
-        </Box>
+        <ConfigureNetworkForm
+          editingChain={editChain}
+          onSubmit={handleSubmit}
+        />
       )}
 
       {/* Custom chain */}
@@ -100,6 +73,6 @@ export const ConfigureNetworks: React.FC<ConfigureNetworksProps> = (props) => {
           onSubmit={handleSubmit}
         />
       )}
-    </Box>
+    </div>
   );
 };

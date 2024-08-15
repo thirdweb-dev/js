@@ -290,7 +290,7 @@ export function ConnectButton(props: ConnectButtonProps) {
   const size = useMemo(() => {
     return !canFitWideModal() || wallets.length === 1
       ? "compact"
-      : props.connectModal?.size || "wide";
+      : props.connectModal?.size || "compact";
   }, [wallets.length, props.connectModal?.size]);
 
   const autoConnectComp = props.autoConnect !== false && (
@@ -318,7 +318,8 @@ export function ConnectButton(props: ConnectButtonProps) {
         variant="primary"
         type="button"
         style={{
-          minWidth: "140px",
+          minWidth: "150px",
+          minHeight: "52px",
           ...props.connectButton?.style,
         }}
       >
@@ -419,7 +420,9 @@ function ConnectButtonInner(
         variant="primary"
         type="button"
         style={{
-          minWidth: "140px",
+          minWidth: "150px",
+          minHeight: "52px",
+          fontSize: "16px",
           ...props.connectButton?.style,
         }}
         aria-label={
@@ -456,7 +459,8 @@ function ConnectButtonInner(
           variant="primary"
           type="button"
           style={{
-            minWidth: "140px",
+            minWidth: "150px",
+            minHeight: "52px",
             ...props.connectButton?.style,
           }}
         >
@@ -476,7 +480,8 @@ function ConnectButtonInner(
             }}
             className={props.signInButton?.className}
             style={{
-              minWidth: "140px",
+              minWidth: "150px",
+              minHeight: "52px",
               ...props.signInButton?.style,
             }}
           >

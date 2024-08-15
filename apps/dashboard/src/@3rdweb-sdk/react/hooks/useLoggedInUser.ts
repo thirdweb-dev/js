@@ -1,7 +1,8 @@
 import { isLoginRequired } from "@/constants/auth";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { useQuery } from "@tanstack/react-query";
 import type { EnsureLoginResponse } from "app/api/auth/ensure-login/route";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import {
   useActiveAccount,
@@ -20,7 +21,7 @@ export function useLoggedInUser(): {
   isLoggedIn: boolean;
   user: { address: string; jwt?: string } | null;
 } {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const pathname = usePathname();
   const connectedAddress = useActiveAccount()?.address;
   const connectionStatus = useActiveWalletConnectionStatus();

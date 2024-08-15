@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ChevronDown } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import type { SortBy, TimeRange } from "../../../../lib/search";
 
 export type SortingHeaderProps = {
@@ -13,7 +14,7 @@ export type SortingHeaderProps = {
 };
 
 export function SortingHeader(props: SortingHeaderProps) {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const path = usePathname();
   const enableSorting = !!props.searchParams;
   const { timeRange, page, sortBy } = props.searchParams || {};

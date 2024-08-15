@@ -24,13 +24,13 @@ export function WalletTypeRowButton(props: WalletTypeRowProps) {
       style={{
         display: "flex",
         justifyContent: "flex-start",
-        padding: spacing.md,
+        padding: spacing.sm,
       }}
       onClick={() => {
         props.onClick();
       }}
     >
-      <Container flex="row" gap="md" center="y" color="accentText">
+      <Container flex="row" gap="sm" center="y" color="accentText">
         <Img
           client={props.client}
           src={props.icon}

@@ -615,7 +615,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                                   // TODO: Automatically start editing the new phase after adding it
                                 }}
                               >
-                                <Flex>
+                                <div className="flex items-center gap-1">
                                   {ClaimConditionTypeData[type].name}
                                   <TooltipBox
                                     content={
@@ -627,7 +627,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
                                       </Text>
                                     }
                                   />
-                                </Flex>
+                                </div>
                               </MenuItem>
                             );
                           })}

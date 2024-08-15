@@ -27,9 +27,9 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: radius.lg,
+    borderRadius: radius.md,
     padding: `${fontSize.sm} ${fontSize.sm}`,
-    fontSize: fontSize.md,
+    fontSize: fontSize.sm,
     fontWeight: 500,
     boxSizing: "border-box",
     WebkitTapHighlightColor: "transparent",
@@ -90,7 +90,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
     ...(() => {
       if (props.variant === "outline") {
         return {
-          border: `1.5px solid ${theme.colors.borderColor}`,
+          border: `1px solid ${theme.colors.borderColor}`,
           "&:hover": {
             borderColor: theme.colors.accentText,
           },
@@ -102,7 +102,7 @@ export const Button = /* @__PURE__ */ StyledButton((props: ButtonProps) => {
 
       if (props.variant === "ghost") {
         return {
-          border: "1.5px solid transparent",
+          border: "1px solid transparent",
           "&:hover": {
             borderColor: theme.colors.accentText,
           },

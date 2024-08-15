@@ -33,7 +33,6 @@ export const WALLETS = [
   }),
   createWallet("io.metamask"),
   createWallet("com.coinbase.wallet"),
-  createWallet("me.rainbow"),
   createWallet("io.rabby"),
   createWallet("com.trustwallet.app"),
 ];

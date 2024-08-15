@@ -103,7 +103,7 @@ export const CustomChainRenderer = ({
         {!disableChainConfig && storedChain && (
           <Button
             variant="ghost"
-            className="ml-auto p-2 leading-4 opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
+            className="ml-auto p-2 leading-4 md:opacity-0 group-hover:opacity-100 hover:bg-transparent transition-opacity"
             aria-label="Configure Network"
             onClick={() => {
               setEditChain(storedChain);
