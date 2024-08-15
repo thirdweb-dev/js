@@ -7,6 +7,8 @@ export type EcosystemWalletCreationOptions = {
   partnerId?: string;
   auth?: {
     mode?: "popup" | "redirect";
+    redirectUrl?: string;
+    redirectExternally?: boolean;
   };
 };
 
