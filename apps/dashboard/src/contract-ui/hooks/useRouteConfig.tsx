@@ -162,6 +162,12 @@ export function useContractRouteConfig(
     "ERC20ClaimPhasesV2",
   ]);
 
+  // AccountPage
+  const detectedAccountFeature = extensionDetectedState({
+    contractQuery,
+    feature: ["Account"],
+  });
+
   return [
     {
       title: "Overview",
@@ -301,7 +307,16 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["Account"],
       }),
-      component: LazyContractAccountPage,
+      component: (
+        <>
+          {contract && (
+            <LazyContractAccountPage
+              contract={contract}
+              detectedAccountFeature={detectedAccountFeature}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Account Permissions",

@@ -32,8 +32,7 @@ export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
 
   return (
     <MarketplaceTable
-      contractAddress={contract.address}
-      chainId={contract.chain.id}
+      contract={contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
       totalCountQuery={totalCountQuery}
