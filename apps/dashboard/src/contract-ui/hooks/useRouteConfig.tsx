@@ -1,5 +1,5 @@
 import { thirdwebClient } from "@/constants/client";
-import { contractType, useContract } from "@thirdweb-dev/react";
+import { contractType, getErcs, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { detectFeatures } from "components/contract-components/utils";
@@ -167,6 +167,25 @@ export function useContractRouteConfig(
     contractQuery,
     feature: ["Account"],
   });
+
+  // ContractEmbedPage
+  const { erc20, erc1155, erc721 } = getErcs(contractQuery?.contract);
+  const isMarketplaceV3 = detectFeatures(contractQuery?.contract, [
+    "DirectListings",
+    "EnglishAuctions",
+  ]);
+  const ercOrMarketplace =
+    contractTypeQuery.data === "marketplace"
+      ? "marketplace"
+      : isMarketplaceV3
+        ? "marketplace-v3"
+        : erc20
+          ? "erc20"
+          : erc1155
+            ? "erc1155"
+            : erc721
+              ? "erc721"
+              : null;
 
   return [
     {
@@ -342,7 +361,16 @@ export function useContractRouteConfig(
     {
       title: "Embed",
       path: "embed",
-      component: LazyContractEmbedPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractEmbedPage
+              contract={contract}
+              ercOrMarketplace={ercOrMarketplace}
+            />
+          )}
+        </>
+      ),
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "marketplace"
