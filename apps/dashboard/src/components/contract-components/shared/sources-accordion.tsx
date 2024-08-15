@@ -5,7 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
 } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { CodeBlock, Heading } from "tw-components";
 import type { SourceFile } from "../types";
 

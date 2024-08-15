@@ -15,12 +15,15 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContract } from "@thirdweb-dev/react";
-import type { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
+import { useResolveContractAbi } from "hooks/useResolveContractAbi";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo, useState } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { toast } from "sonner";
+import { getContract } from "thirdweb";
 import { Badge, Button, Card, Heading } from "tw-components";
 import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
@@ -192,7 +195,16 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
 
   const { contract } = useContract(contractAddress);
 
-  const abi = useMemo(() => contract?.abi as Abi, [contract]);
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : undefined;
+  const abiQuery = useResolveContractAbi(contractV5);
 
   // clean up the source filenames and filter out libraries
   const sources = useMemo(() => {
@@ -246,7 +258,7 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
           </Button>
         </Flex>
         <Card p={0}>
-          <SourcesPanel sources={sources} abi={abi} />
+          <SourcesPanel sources={sources} abi={abiQuery.data} />
         </Card>
       </Flex>
     </>
