@@ -1,4 +1,4 @@
-import type { Chain } from "src/chains/types.js";
+import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
