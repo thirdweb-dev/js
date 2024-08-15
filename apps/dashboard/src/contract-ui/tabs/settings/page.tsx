@@ -61,12 +61,14 @@ export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
               detectedState={detectedMetadata}
             />
           </GridItem>
-          <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
-            <SettingsPrimarySale
-              contract={contractQuery.contract}
-              detectedState={detectedPrimarySale}
-            />
-          </GridItem>
+          {contract && (
+            <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
+              <SettingsPrimarySale
+                contract={contract}
+                detectedState={detectedPrimarySale}
+              />
+            </GridItem>
+          )}
 
           {contract && (
             <GridItem order={detectedRoyalties === "enabled" ? 3 : 102}>
