@@ -35,7 +35,7 @@ const lightColors = {
   base4: "#dbd8e0",
   primaryText: "#211f26",
   secondaryText: "#6f6d78",
-  accentText: "hsl(216 100% 45%)",
+  accentText: "#3385FF",
   success: "#30A46C",
   danger: "#e5484D",
   overlay: "rgba(0, 0, 0, 0.7)",

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import type { BuyWithCryptoQuote } from "../../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import { getPostOnRampQuote } from "../../../../../../../pay/buyWithFiat/getPostOnRampQuote.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
@@ -23,6 +24,7 @@ export function PostOnRampSwap(props: {
   transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
+  onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
 }) {
   const [lockedOnRampQuote, setLockedOnRampQuote] = useState<
     BuyWithCryptoQuote | undefined
@@ -130,6 +132,7 @@ export function PostOnRampSwap(props: {
       }}
       transactionMode={props.transactionMode}
       isEmbed={props.isEmbed}
+      onSuccess={props.onSuccess}
     />
   );
 }

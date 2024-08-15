@@ -7,6 +7,7 @@ const links: {
   name: string;
   segment: string;
 }[] = [
+  { name: "Transaction Simulator", segment: "transaction-simulator" },
   { name: "Wei Converter", segment: "wei-converter" },
   { name: "Hex Converter", segment: "hex-converter" },
   { name: "Unix Time Converter", segment: "unixtime-converter" },

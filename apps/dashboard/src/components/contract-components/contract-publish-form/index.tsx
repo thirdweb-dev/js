@@ -148,6 +148,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       defaultExtensions:
         prePublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata?.defaultExtensions || [],
+      defaultModules:
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata?.defaultModules || [],
       extensionsParamName:
         prePublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata.factoryDeploymentData?.modularFactoryInput
@@ -283,7 +286,12 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
     [isPluginRouter, isDynamicContract, isModularContract, hasExtensionsParam],
   );
 
-  const shouldShowExtensionsParamInput = useMemo(
+  const shouldShowModularFactoryInput = useMemo(
+    () => isModularContract,
+    [isModularContract],
+  );
+
+  const shouldShowModulesParamInput = useMemo(
     () => isModularContract,
     [isModularContract],
   );
@@ -357,9 +365,9 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                           ?.customFactoryAddresses,
                     },
                     modularFactoryInput: {
-                      extensionsParamName:
+                      modulesParamName:
                         data.factoryDeploymentData?.modularFactoryInput
-                          ?.extensionsParamName || "",
+                          ?.modulesParamName || "",
                     },
                   },
                 },
@@ -440,7 +448,8 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
                 abi={publishMetadata.data?.abi || []}
                 setCustomFactoryAbi={setCustomFactoryAbi}
                 shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
-                shouldShowExtensionsParamInput={shouldShowExtensionsParamInput}
+                shouldShowModularFactoryInput={shouldShowModularFactoryInput}
+                shouldShowModulesParamInput={shouldShowModulesParamInput}
                 deployParams={deployParams}
               />
             </Flex>

@@ -1,5 +1,5 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
-import { getInstalledExtensions } from "../../extensions/modular/__generated__/ModularCore/read/getInstalledExtensions.js";
+import { getInstalledModules } from "../../extensions/modular/__generated__/ModularCore/read/getInstalledModules.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { getClientFetch } from "../../utils/fetch.js";
@@ -292,7 +292,7 @@ export async function resolveCompositeAbi(
     // check these all at the same time
     resolvePluginPatternAddresses(contract),
     resolveBaseRouterAddresses(contract),
-    resolveModularExtensionAddresses(contract),
+    resolveModularModuleAddresses(contract),
     resolveDiamondFacetAddresses(contract),
   ]);
 
@@ -362,17 +362,17 @@ async function resolveBaseRouterAddresses(
   return [];
 }
 
-async function resolveModularExtensionAddresses(
+async function resolveModularModuleAddresses(
   contract: ThirdwebContract,
 ): Promise<string[]> {
   try {
-    const extensions = await getInstalledExtensions({ contract });
+    const modules = await getInstalledModules({ contract });
     // if there are no plugins, return the root ABI
-    if (!extensions.length) {
+    if (!modules.length) {
       return [];
     }
     // get all the plugin addresses
-    return [...new Set(extensions.map((item) => item.implementation))];
+    return [...new Set(modules.map((item) => item.implementation))];
   } catch {
     // no-op, expected because not everything supports this
   }

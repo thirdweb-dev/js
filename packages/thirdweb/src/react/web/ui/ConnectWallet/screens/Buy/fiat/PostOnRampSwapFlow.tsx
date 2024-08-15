@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { BuyWithCryptoStatus } from "../../../../../../../pay/buyWithCrypto/getStatus.js";
 import type { BuyWithFiatStatus } from "../../../../../../../pay/buyWithFiat/getStatus.js";
 import type { PayerInfo } from "../types.js";
 import { type BuyWithFiatPartialQuote, FiatSteps } from "./FiatSteps.js";
@@ -22,6 +23,7 @@ export function PostOnRampSwapFlow(props: {
   transactionMode: boolean;
   isEmbed: boolean;
   payer: PayerInfo;
+  onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
 }) {
   const [statusForSwap, setStatusForSwap] = useState<
     BuyWithFiatStatus | undefined
@@ -38,6 +40,7 @@ export function PostOnRampSwapFlow(props: {
         transactionMode={props.transactionMode}
         isEmbed={props.isEmbed}
         payer={props.payer}
+        onSuccess={props.onSuccess}
       />
     );
   }

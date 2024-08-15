@@ -1,5 +1,7 @@
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
+import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -89,6 +91,21 @@ export type PayUIOptions = Prettify<
      * This details will be stored with the purchase and can be retrieved later via the status API or Webhook
      */
     purchaseData?: object;
+
+    /**
+     * Callback to be called when the user successfully completes the purchase.
+     */
+    onPurchaseSuccess?: (
+      info:
+        | {
+            type: "crypto";
+            status: BuyWithCryptoStatus;
+          }
+        | {
+            type: "fiat";
+            status: BuyWithFiatStatus;
+          },
+    ) => void;
   } & (FundWalletOptions | DirectPaymentOptions | TranasctionOptions)
 >;
 

@@ -182,7 +182,7 @@ export function ConnectButton(props: ConnectButtonProps) {
 }
 
 const screenHeight = Dimensions.get("window").height;
-const modalHeight = 480;
+const modalHeight = 520;
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({

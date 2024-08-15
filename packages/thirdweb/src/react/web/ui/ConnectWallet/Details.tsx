@@ -196,25 +196,25 @@ export const ConnectedWalletDetails: React.FC<{
       {ensAvatarQuery.data ? (
         <Img
           src={ensAvatarQuery.data}
-          width={iconSize.lg}
-          height={iconSize.lg}
+          width={iconSize.sm}
+          height={iconSize.sm}
           style={{
-            borderRadius: radius.sm,
+            borderRadius: radius.xs,
           }}
           client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
+        <WalletImage size={iconSize.md} id={activeWallet.id} client={client} />
       ) : (
-        <GenericWalletIcon size={iconSize.lg} />
+        <GenericWalletIcon size={iconSize.md} />
       )}
 
-      <Container flex="column" gap="xxs">
+      <Container flex="column" gap="3xs">
         {/* Address */}
 
         {addressOrENS ? (
           <Text
-            size="sm"
+            size="xs"
             color="primaryText"
             weight={500}
             className={`${TW_CONNECTED_WALLET}__address`}
@@ -222,7 +222,7 @@ export const ConnectedWalletDetails: React.FC<{
             {addressOrENS}
           </Text>
         ) : (
-          <Skeleton height={fontSize.sm} width="88px" />
+          <Skeleton height={fontSize.sm} width="80px" />
         )}
 
         {/* Balance */}
@@ -236,7 +236,7 @@ export const ConnectedWalletDetails: React.FC<{
             {balanceQuery.data.symbol}
           </Text>
         ) : (
-          <Skeleton height={fontSize.xs} width="82px" />
+          <Skeleton height={fontSize.xs} width="70px" />
         )}
       </Container>
     </WalletInfoButton>
@@ -886,20 +886,21 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
     all: "unset",
     background: theme.colors.connectedButtonBg,
     border: `1px solid ${theme.colors.borderColor}`,
-    padding: `${spacing.sm} ${spacing.sm}`,
-    borderRadius: radius.lg,
+    padding: `${spacing.xs} ${spacing.sm}`,
+    borderRadius: radius.md,
     cursor: "pointer",
     display: "inline-flex",
     alignItems: "center",
-    minWidth: "180px",
-    gap: spacing.sm,
+    minWidth: "150px",
+    minHeight: "52px",
+    gap: spacing.xs,
     boxSizing: "border-box",
     WebkitTapHighlightColor: "transparent",
     lineHeight: "normal",
     animation: `${fadeInAnimation} 300ms ease`,
     [media.mobile]: {
       gap: spacing.sm,
-      padding: `${spacing.xs} ${spacing.sm}`,
+      padding: `${spacing.xs} ${spacing.xs}`,
       img: {
         width: `${iconSize.md}px`,
         height: `${iconSize.md}px`,

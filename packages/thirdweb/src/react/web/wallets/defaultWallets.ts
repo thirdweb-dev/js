@@ -24,6 +24,7 @@ export function getDefaultWallets(options?: {
       chains: options?.chains,
     }),
     createWallet(RAINBOW),
+    createWallet("io.rabby"),
     createWallet(ZERION),
   ];
 }

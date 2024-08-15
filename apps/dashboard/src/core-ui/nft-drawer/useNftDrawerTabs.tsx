@@ -39,7 +39,7 @@ const ClaimConditionTab = dynamic(() =>
     ({ ClaimConditions }) => ClaimConditions,
   ),
 );
-const ClaimTab = dynamic(
+const ClaimTabERC1155 = dynamic(
   () => import("contract-ui/tabs/nfts/components/claim-tab"),
 );
 const UpdateMetadataTab = dynamic(
@@ -216,12 +216,18 @@ export function useNFTDrawerTabs({
         },
       ]);
     }
-    if (isClaimable && isERC1155) {
+    if (isClaimable && isERC1155 && oldContract) {
       tabs = tabs.concat([
         {
           title: "Claim",
           isDisabled: false,
-          children: <ClaimTab contract={oldContract} tokenId={tokenId} />,
+          children: (
+            <ClaimTabERC1155
+              contractAddress={oldContract.getAddress()}
+              chainId={oldContract.chainId}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }

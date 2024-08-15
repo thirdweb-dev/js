@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { LocalStorage } from "../../in-app/web/utils/Storage/LocalStorage.js";
+import { ClientScopedStorage } from "../../in-app/core/authentication/client-scoped-storage.js";
 import * as SessionStore from "./session-store.js";
 
 vi.mock("../../in-app/web/utils/Storage/LocalStorage.js");
@@ -19,12 +19,14 @@ describe("SessionStore", () => {
     it("initializes the session store with a new LocalStorage instance if not already initialized", () => {
       expect(SessionStore.walletConnectSessions).toBeUndefined();
       SessionStore.initializeSessionStore({ clientId: "test-client-id" });
-      expect(SessionStore.walletConnectSessions).toBeInstanceOf(LocalStorage);
+      expect(SessionStore.walletConnectSessions).toBeInstanceOf(
+        ClientScopedStorage,
+      );
     });
 
     it("does not reinitialize the session store if it is already initialized", () => {
       SessionStore.setWalletConnectSessions(
-        mockLocalStorage as unknown as LocalStorage,
+        mockLocalStorage as unknown as ClientScopedStorage,
       );
       SessionStore.initializeSessionStore({ clientId: "test-client-id" });
       expect(SessionStore.walletConnectSessions).toBe(mockLocalStorage);
@@ -39,7 +41,7 @@ describe("SessionStore", () => {
 
     it("returns parsed sessions from storage", async () => {
       SessionStore.setWalletConnectSessions(
-        mockLocalStorage as unknown as LocalStorage,
+        mockLocalStorage as unknown as ClientScopedStorage,
       );
       mockLocalStorage.getWalletConnectSessions.mockResolvedValue(
         JSON.stringify([{ topic: "123" }]),
@@ -57,7 +59,7 @@ describe("SessionStore", () => {
 
     it("saves a new session to the existing sessions", async () => {
       SessionStore.setWalletConnectSessions(
-        mockLocalStorage as unknown as LocalStorage,
+        mockLocalStorage as unknown as ClientScopedStorage,
       );
       mockLocalStorage.getWalletConnectSessions.mockResolvedValue(
         JSON.stringify([{ topic: "123" }]),
@@ -77,7 +79,7 @@ describe("SessionStore", () => {
 
     it("removes a session from the existing sessions", async () => {
       SessionStore.setWalletConnectSessions(
-        mockLocalStorage as unknown as LocalStorage,
+        mockLocalStorage as unknown as ClientScopedStorage,
       );
       mockLocalStorage.getWalletConnectSessions.mockResolvedValue(
         JSON.stringify([{ topic: "123" }, { topic: "456" }]),

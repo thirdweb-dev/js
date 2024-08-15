@@ -1,5 +1,4 @@
 import { Flex, FormControl, Input } from "@chakra-ui/react";
-import { type DropContract, useClaimNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -7,38 +6,41 @@ import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { claimTo } from "thirdweb/extensions/erc1155";
+import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface ClaimTabProps {
-  contract: DropContract;
+  contractAddress: string;
+  chainId: number;
   tokenId: string;
 }
 
-const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
+const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
+  contractAddress,
+  chainId,
+  tokenId,
+}) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1", to: address },
   });
+  const chain = useV5DashboardChain(chainId);
 
-  const claim = useClaimNFT(contract);
-  const chain = useV5DashboardChain(contract?.chainId);
-
-  const contractV5 =
-    contract && chain
-      ? getContract({
-          address: contract.getAddress(),
-          chain: chain,
-          client: thirdwebClient,
-        })
-      : null;
+  const contract = getContract({
+    address: contractAddress,
+    chain: chain,
+    client: thirdwebClient,
+  });
 
   const { onSuccess, onError } = useTxNotifications(
     "Claimed successfully",
     "Failed to claim",
-    contractV5,
+    contract,
   );
+
+  const mutation = useSendAndConfirmTransaction();
 
   return (
     <Flex
@@ -53,11 +55,13 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
         });
 
         try {
-          await claim.mutateAsync({
-            tokenId,
-            quantity: data.amount,
+          const transaction = claimTo({
+            contract,
+            tokenId: BigInt(tokenId),
+            quantity: BigInt(data.amount),
             to: data.to,
           });
+          await mutation.mutateAsync(transaction);
           trackEvent({
             category: "nft",
             action: "claim",
@@ -115,7 +119,7 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
 
         <TransactionButton
           transactionCount={1}
-          isLoading={claim.isLoading || form.formState.isSubmitting}
+          isLoading={mutation.isPending || form.formState.isSubmitting}
           type="submit"
           colorScheme="primary"
           alignSelf="flex-end"
@@ -127,4 +131,4 @@ const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   );
 };
 
-export default ClaimTab;
+export default ClaimTabERC1155;

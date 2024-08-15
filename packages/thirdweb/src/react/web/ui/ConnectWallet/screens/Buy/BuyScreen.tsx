@@ -4,6 +4,8 @@ import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
 import type { GetBuyWithCryptoQuoteParams } from "../../../../../../pay/buyWithCrypto/getQuote.js";
+import type { BuyWithCryptoStatus } from "../../../../../../pay/buyWithCrypto/getStatus.js";
+import type { BuyWithFiatStatus } from "../../../../../../pay/buyWithFiat/getStatus.js";
 import { isSwapRequiredPostOnramp } from "../../../../../../pay/buyWithFiat/isSwapRequiredPostOnramp.js";
 import { formatNumber } from "../../../../../../utils/formatNumber.js";
 import type { Account } from "../../../../../../wallets/interfaces/wallet.js";
@@ -204,6 +206,26 @@ function BuyScreenContent(props: BuyScreenContentProps) {
 
   // screens ----------------------------
 
+  const onSwapSuccess = useCallback(
+    (_status: BuyWithCryptoStatus) => {
+      props.payOptions.onPurchaseSuccess?.({
+        type: "crypto",
+        status: _status,
+      });
+    },
+    [props.payOptions.onPurchaseSuccess],
+  );
+
+  const onFiatSuccess = useCallback(
+    (_status: BuyWithFiatStatus) => {
+      props.payOptions.onPurchaseSuccess?.({
+        type: "fiat",
+        status: _status,
+      });
+    },
+    [props.payOptions.onPurchaseSuccess],
+  );
+
   if (screen.id === "connect-payer-wallet") {
     return (
       <WalletSwitcherConnectionScreen
@@ -259,6 +281,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             id: "buy-with-crypto",
           });
         }}
+        onSuccess={onSwapSuccess}
       />
     );
   }
@@ -284,6 +307,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         onDone={onDone}
         isEmbed={props.isEmbed}
         payer={payer}
+        onSuccess={onFiatSuccess}
       />
     );
   }

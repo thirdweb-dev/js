@@ -29,9 +29,22 @@ export type InAppWalletAuth = AuthOption;
 export type InAppWalletCreationOptions =
   | {
       auth?: {
+        /**
+         * List of authentication options to display in the Connect Modal
+         */
         options: InAppWalletAuth[];
+        /**
+         * Whether to display the social auth prompt in a popup or redirect
+         */
         mode?: "popup" | "redirect";
+        /**
+         * The domain of the passkey to use for authentication
+         */
+        passkeyDomain?: string;
       };
+      /**
+       * Metadata to display in the Connect Modal
+       */
       metadata?: {
         image?: {
           src: string;
@@ -40,8 +53,17 @@ export type InAppWalletCreationOptions =
           alt?: string;
         };
       };
+      /**
+       * The partnerId of the ecosystem wallet to connect to
+       */
       partnerId?: string;
+      /**
+       * The smart account options to convert the wallet to a smart account
+       **/
       smartAccount?: SmartWalletOptions;
+      /**
+       * Whether to hide the private key export button in the Connect Modal
+       */
       hidePrivateKeyExport?: boolean;
     }
   | undefined;
