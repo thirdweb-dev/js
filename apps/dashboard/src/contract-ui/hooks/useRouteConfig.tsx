@@ -1,13 +1,11 @@
-import { thirdwebClient } from "@/constants/client";
 import { contractType, getErcs, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { detectFeatures } from "components/contract-components/utils";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import dynamic from "next/dynamic";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 
 const LazyContractExplorerPage = dynamic(() =>
   import("../tabs/explorer/page").then(
@@ -99,19 +97,11 @@ const LazyContractEditModulesPage = dynamic(() =>
 
 export function useContractRouteConfig(
   contractAddress: string,
+  contract?: ThirdwebContract,
 ): EnhancedRoute[] {
   const ensQuery = useEns(contractAddress);
   const contractQuery = useContract(ensQuery.data?.address);
   const contractTypeQuery = contractType.useQuery(contractAddress);
-  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
-  const contract =
-    contractQuery.contract && chain
-      ? getContract({
-          address: contractQuery.contract.getAddress(),
-          chain,
-          client: thirdwebClient,
-        })
-      : undefined;
 
   const claimconditionExtensionDetection = extensionDetectedState({
     contractQuery,
