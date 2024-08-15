@@ -3,7 +3,10 @@ import { contractType, useContract } from "@thirdweb-dev/react";
 import { type Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
 import { PublishedBy } from "components/contract-components/shared/published-by";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
+import { getContract } from "thirdweb";
 import { AnalyticsOverview } from "./components/Analytics";
 import { BuildYourApp } from "./components/BuildYourApp";
 import { ContractChecklist } from "./components/ContractChecklist";
@@ -39,9 +42,20 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
     [detectedFeatureNames, contractTypeData],
   );
 
+  const chain = useV5DashboardChain(contract?.chainId);
+
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
+
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : undefined;
 
   return (
     <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
@@ -77,12 +91,9 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
               features={detectedFeatureNames}
             />
           )}
-        {contract &&
+        {contractV5 &&
           ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
-            <TokenDetails
-              contractAddress={contractAddress}
-              chainId={contract.chainId}
-            />
+            <TokenDetails contract={contractV5} />
           )}
         <LatestEvents
           address={contractAddress}
