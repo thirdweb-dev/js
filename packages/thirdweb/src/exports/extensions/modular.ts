@@ -2,9 +2,9 @@
  * READ
  */
 export {
-  getInstalledExtensions,
-  isGetInstalledExtensionsSupported,
-} from "../../extensions/modular/__generated__/ModularCore/read/getInstalledExtensions.js";
+  getInstalledModules,
+  isGetInstalledModulesSupported,
+} from "../../extensions/modular/__generated__/ModularCore/read/getInstalledModules.js";
 export {
   getSupportedCallbackFunctions,
   isGetSupportedCallbackFunctionsSupported,
@@ -40,10 +40,10 @@ export {
   type GrantRolesParams,
 } from "../../extensions/modular/__generated__/ModularCore/write/grantRoles.js";
 export {
-  installExtension,
-  isInstallExtensionSupported,
-  type InstallExtensionParams,
-} from "../../extensions/modular/__generated__/ModularCore/write/installExtension.js";
+  installModule,
+  isInstallModuleSupported,
+  type InstallModuleParams,
+} from "../../extensions/modular/__generated__/ModularCore/write/installModule.js";
 export { renounceOwnership } from "../../extensions/modular/__generated__/ModularCore/write/renounceOwnership.js";
 export { requestOwnershipHandover } from "../../extensions/modular/__generated__/ModularCore/write/requestOwnershipHandover.js";
 export {
@@ -59,20 +59,20 @@ export {
   type TransferOwnershipParams,
 } from "../../extensions/modular/__generated__/ModularCore/write/transferOwnership.js";
 export {
-  uninstallExtension,
-  isUninstallExtensionSupported,
-  type UninstallExtensionParams,
-} from "../../extensions/modular/__generated__/ModularCore/write/uninstallExtension.js";
-export { getExtensionConfig } from "../../extensions/modular/__generated__/ModularExtension/read/getExtensionConfig.js";
+  uninstallModule,
+  isUninstallModuleSupported,
+  type UninstallModuleParams,
+} from "../../extensions/modular/__generated__/ModularCore/write/uninstallModule.js";
+export { getModuleConfig } from "../../extensions/modular/__generated__/ModularModule/read/getModuleConfig.js";
 export {
-  installPublishedExtension,
-  type InstallPublishedExtensionOptions,
-} from "../../extensions/modular/ModularCore/write/installPublishedExtension.js";
+  installPublishedModule,
+  type InstallPublishedModuleOptions,
+} from "../../extensions/modular/ModularCore/write/installPublishedModule.js";
 export {
-  uninstallPublishedExtension,
-  type UninstallPublishedExtensionOptions,
-} from "../../extensions/modular/ModularCore/write/uninstallPublishedExtension.js";
+  uninstallPublishedModule,
+  type UninstallPublishedModuleOptions,
+} from "../../extensions/modular/ModularCore/write/uninstallPublishedModule.js";
 export {
-  uninstallExtensionByProxy,
-  type UninstallExtensionByProxyOptions,
-} from "../../extensions/modular/ModularCore/write/uninstallExtensionByProxy.js";
+  uninstallModuleByProxy,
+  type UninstallModuleByProxyOptions,
+} from "../../extensions/modular/ModularCore/write/uninstallModuleByProxy.js";

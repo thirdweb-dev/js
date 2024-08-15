@@ -5,10 +5,10 @@ import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { installPublishedExtension } from "../modular/ModularCore/write/installPublishedExtension.js";
-import { uninstallExtensionByProxy } from "../modular/ModularCore/write/uninstallExtensionByProxy.js";
-import { uninstallPublishedExtension } from "../modular/ModularCore/write/uninstallPublishedExtension.js";
-import { getInstalledExtensions } from "../modular/__generated__/ModularCore/read/getInstalledExtensions.js";
+import { installPublishedModule } from "../modular/ModularCore/write/installPublishedModule.js";
+import { uninstallModuleByProxy } from "../modular/ModularCore/write/uninstallModuleByProxy.js";
+import { uninstallPublishedModule } from "../modular/ModularCore/write/uninstallPublishedModule.js";
+import { getInstalledModules } from "../modular/__generated__/ModularCore/read/getInstalledModules.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
 describe.skip(
@@ -29,18 +29,18 @@ describe.skip(
       expect(address).toBeDefined();
       expect(address.length).toBe(42);
 
-      const installedExtensions = await getInstalledExtensions({
+      const installedModules = await getInstalledModules({
         contract: getContract({
           client: TEST_CLIENT,
           chain: ANVIL_CHAIN,
           address,
         }),
       });
-      expect(installedExtensions.length).toBe(0);
+      expect(installedModules.length).toBe(0);
     });
 
-    it("should install and uninstall an extension by proxy address", async () => {
-      // deploy core contract with extension
+    it("should install and uninstall a module by proxy address", async () => {
+      // deploy core contract with module
       const address = await deployPublishedContract({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
@@ -56,13 +56,13 @@ describe.skip(
         address,
       });
 
-      // install extension with published name
-      const installTransaction = installPublishedExtension({
+      // install module with published name
+      const installTransaction = installPublishedModule({
         contract: core,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         account: TEST_ACCOUNT_A,
-        extensionName: "DemoExtensionWithFunctions",
+        moduleName: "DemoModuleWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
       await sendAndConfirmTransaction({
@@ -70,35 +70,35 @@ describe.skip(
         account: TEST_ACCOUNT_A,
       });
 
-      // get installed extension proxy address
-      let installedExtensions = await getInstalledExtensions({
+      // get installed module proxy address
+      let installedModules = await getInstalledModules({
         contract: core,
       });
-      const extensionAddress = installedExtensions[0]?.implementation;
-      expect(extensionAddress).to.not.equal(ZERO_ADDRESS);
+      const moduleAddress = installedModules[0]?.implementation;
+      expect(moduleAddress).to.not.equal(ZERO_ADDRESS);
 
-      // uninstall extension
-      const uninstallTransaction = uninstallExtensionByProxy({
+      // uninstall module
+      const uninstallTransaction = uninstallModuleByProxy({
         contract: core,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        extensionProxyAddress: extensionAddress as string,
-        extensionData: "0x",
+        moduleProxyAddress: moduleAddress as string,
+        moduleData: "0x",
       });
       await sendAndConfirmTransaction({
         transaction: uninstallTransaction,
         account: TEST_ACCOUNT_A,
       });
 
-      installedExtensions = await getInstalledExtensions({
+      installedModules = await getInstalledModules({
         contract: core,
       });
 
-      expect(installedExtensions.length).toBe(0);
+      expect(installedModules.length).toBe(0);
     });
 
-    it("should install and uninstall extensions by publish name", async () => {
-      // deploy core contract with extension
+    it("should install and uninstall modules by publish name", async () => {
+      // deploy core contract with module
       const address = await deployPublishedContract({
         client: TEST_CLIENT,
         chain: ANVIL_CHAIN,
@@ -114,13 +114,13 @@ describe.skip(
         address,
       });
 
-      // install extension with published name
-      const installTransaction = installPublishedExtension({
+      // install module with published name
+      const installTransaction = installPublishedModule({
         contract: core,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         account: TEST_ACCOUNT_A,
-        extensionName: "DemoExtensionWithFunctions",
+        moduleName: "DemoModuleWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
       await sendAndConfirmTransaction({
@@ -128,31 +128,31 @@ describe.skip(
         account: TEST_ACCOUNT_A,
       });
 
-      let installedExtensions = await getInstalledExtensions({
+      let installedModules = await getInstalledModules({
         contract: core,
       });
 
-      expect(installedExtensions.length).toBe(1);
+      expect(installedModules.length).toBe(1);
 
-      // uninstall extension
-      const uninstallTransaction = uninstallPublishedExtension({
+      // uninstall module
+      const uninstallTransaction = uninstallPublishedModule({
         contract: core,
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
-        extensionName: "DemoExtensionWithFunctions",
+        moduleName: "DemoModuleWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
-        extensionData: "0x",
+        moduleData: "0x",
       });
       await sendAndConfirmTransaction({
         transaction: uninstallTransaction,
         account: TEST_ACCOUNT_A,
       });
 
-      installedExtensions = await getInstalledExtensions({
+      installedModules = await getInstalledModules({
         contract: core,
       });
 
-      expect(installedExtensions.length).toBe(0);
+      expect(installedModules.length).toBe(0);
     });
   },
 );
