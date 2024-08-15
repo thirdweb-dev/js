@@ -19,7 +19,6 @@ import { EditProfile } from "components/contract-components/publisher/edit-profi
 import { PublisherAvatar } from "components/contract-components/publisher/masked-avatar";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { PublishedContracts } from "components/contract-components/tables/published-contracts";
-import type { ProfileMetadata } from "constants/schemas";
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAddress, isAddress } from "ethers/lib/utils";
@@ -151,18 +150,14 @@ const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
                   <PublisherSocials
                     mt={1}
                     size="md"
-                    // todo: remove type-casting once we have replaced `sdk.getPublisher().getPublisherProfile(address)`
-                    publisherProfile={publisherProfile.data as ProfileMetadata}
+                    publisherProfile={publisherProfile.data}
                   />
                 )}
               </Flex>
             </Flex>
             {ens.data?.address === address && publisherProfile.data && (
               <Box flexShrink={0}>
-                <EditProfile
-                  // todo: remove type-casting once we have replaced `sdk.getPublisher().getPublisherProfile(address)`
-                  publisherProfile={publisherProfile.data as ProfileMetadata}
-                />
+                <EditProfile publisherProfile={publisherProfile.data} />
               </Box>
             )}
           </Flex>

@@ -33,7 +33,7 @@ import {
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
-import type { ProfileMetadataInput } from "constants/schemas";
+import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import type { providers } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
@@ -300,7 +300,10 @@ async function fetchPublisherProfile(publisherAddress?: string | null) {
     getDashboardChainRpc(polygon.id, undefined),
   );
   invariant(publisherAddress, "address is not defined");
-  return await sdk.getPublisher().getPublisherProfile(publisherAddress);
+  return (await sdk
+    .getPublisher()
+    // todo: remove type-casting once we have replaced this method
+    .getPublisherProfile(publisherAddress)) as ProfileMetadata;
 }
 
 export function publisherProfileQuery(publisherAddress?: string) {
