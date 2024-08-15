@@ -1,9 +1,13 @@
+import { thirdwebClient } from "@/constants/client";
 import { contractType, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
+import { detectFeatures } from "components/contract-components/utils";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import dynamic from "next/dynamic";
+import { getContract } from "thirdweb";
 
 const LazyContractExplorerPage = dynamic(() =>
   import("../tabs/explorer/page").then(
@@ -99,6 +103,15 @@ export function useContractRouteConfig(
   const ensQuery = useEns(contractAddress);
   const contractQuery = useContract(ensQuery.data?.address);
   const contractTypeQuery = contractType.useQuery(contractAddress);
+  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
+  const contract =
+    contractQuery.contract && chain
+      ? getContract({
+          address: contractQuery.contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : undefined;
 
   const claimconditionExtensionDetection = extensionDetectedState({
     contractQuery,
@@ -116,6 +129,39 @@ export function useContractRouteConfig(
       "ERC20ClaimPhasesV2",
     ],
   });
+
+  // ContractSettingsPage
+  const detectedMetadata = extensionDetectedState({
+    contractQuery,
+    feature: "ContractMetadata",
+  });
+  const detectedPrimarySale = extensionDetectedState({
+    contractQuery,
+    feature: "PrimarySale",
+  });
+  const detectedRoyalties = extensionDetectedState({
+    contractQuery,
+    feature: "Royalty",
+  });
+  const detectedPlatformFees = extensionDetectedState({
+    contractQuery,
+    feature: "PlatformFee",
+  });
+
+  // ContractTokensPage
+  const isERC20 = detectFeatures(contractQuery.contract, ["ERC20"]);
+
+  const isERC20Mintable = detectFeatures(contractQuery.contract, [
+    "ERC20Mintable",
+  ]);
+
+  const isERC20Claimable = detectFeatures(contractQuery.contract, [
+    "ERC20ClaimConditionsV1",
+    "ERC20ClaimConditionsV2",
+    "ERC20ClaimPhasesV1",
+    "ERC20ClaimPhasesV2",
+  ]);
+
   return [
     {
       title: "Overview",
@@ -172,7 +218,18 @@ export function useContractRouteConfig(
       title: "Tokens",
       path: "tokens",
       isEnabled: extensionDetectedState({ contractQuery, feature: "ERC20" }),
-      component: LazyContractTokensPage,
+      component: (
+        <>
+          {contract && (
+            <LazyContractTokensPage
+              contract={contract}
+              isERC20={isERC20}
+              isERC20Claimable={isERC20Claimable}
+              isERC20Mintable={isERC20Mintable}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Direct Listings",
@@ -181,7 +238,11 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "DirectListings",
       }),
-      component: LazyContractDirectListingsPage,
+      component: (
+        <>
+          {contract && <LazyContractDirectListingsPage contract={contract} />}
+        </>
+      ),
     },
     {
       title: "English Auctions",
@@ -190,7 +251,11 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "EnglishAuctions",
       }),
-      component: LazyContractEnglishAuctionsPage,
+      component: (
+        <>
+          {contract && <LazyContractEnglishAuctionsPage contract={contract} />}
+        </>
+      ),
     },
     {
       title: "Balances",
@@ -200,7 +265,9 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "split"
           ? "enabled"
           : "disabled",
-      component: LazyContractSplitPage,
+      component: (
+        <>{contract && <LazyContractSplitPage contract={contract} />}</>
+      ),
     },
     {
       title: "Proposals",
@@ -294,7 +361,19 @@ export function useContractRouteConfig(
     {
       title: "Settings",
       path: "settings",
-      component: LazyContractSettingsPage,
+      component: (
+        <>
+          {contract && (
+            <LazyContractSettingsPage
+              contract={contract}
+              detectedMetadata={detectedMetadata}
+              detectedPlatformFees={detectedPlatformFees}
+              detectedPrimarySale={detectedPrimarySale}
+              detectedRoyalties={detectedRoyalties}
+            />
+          )}
+        </>
+      ),
       isDefault: true,
     },
     {

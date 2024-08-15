@@ -1,7 +1,5 @@
-import { thirdwebClient } from "@/constants/client";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
-import { getContract, toTokens } from "thirdweb";
+import { type ThirdwebContract, toTokens } from "thirdweb";
 import {
   getBalance,
   getCurrencyMetadata,
@@ -11,27 +9,11 @@ import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { TokenSupplyLayout } from "./supply-layout";
 
 interface TokenBalancesProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
 }
 
-export const TokenSupply: React.FC<TokenBalancesProps> = ({
-  contractAddress,
-  chainId,
-}) => {
+export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
   const address = useActiveAccount()?.address;
-
-  const chain = useV5DashboardChain(chainId);
-
-  const contract = useMemo(
-    () =>
-      getContract({
-        address: contractAddress,
-        chain,
-        client: thirdwebClient,
-      }),
-    [chain, contractAddress],
-  );
 
   const tokenBalanceQuery = useReadContract(getBalance, {
     contract,

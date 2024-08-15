@@ -1,56 +1,26 @@
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { thirdwebClient } from "lib/thirdweb-client";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { getContract } from "thirdweb";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ThirdwebContract } from "thirdweb";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
 import { SettingsRoyalties } from "./components/royalties";
 
 interface ContractSettingsPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
+  detectedMetadata: ExtensionDetectedState;
+  detectedPrimarySale: ExtensionDetectedState;
+  detectedRoyalties: ExtensionDetectedState;
+  detectedPlatformFees: ExtensionDetectedState;
 }
 
 export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
-  contractAddress,
+  contract,
+  detectedMetadata,
+  detectedPlatformFees,
+  detectedPrimarySale,
+  detectedRoyalties,
 }) => {
-  const contractQuery = useContract(contractAddress);
-
-  const detectedMetadata = extensionDetectedState({
-    contractQuery,
-    feature: "ContractMetadata",
-  });
-  const detectedPrimarySale = extensionDetectedState({
-    contractQuery,
-    feature: "PrimarySale",
-  });
-  const detectedRoyalties = extensionDetectedState({
-    contractQuery,
-    feature: "Royalty",
-  });
-  const detectedPlatformFees = extensionDetectedState({
-    contractQuery,
-    feature: "PlatformFee",
-  });
-
-  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
-
-  if (contractQuery.isLoading) {
-    // TODO build a skeleton for this
-    return <div>Loading...</div>;
-  }
-
-  const contract =
-    contractQuery.contract && chain
-      ? getContract({
-          address: contractQuery.contract.getAddress(),
-          chain,
-          client: thirdwebClient,
-        })
-      : null;
-
   return (
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">

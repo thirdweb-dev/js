@@ -1,10 +1,8 @@
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { thirdwebClient } from "lib/thirdweb-client";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiPlus } from "react-icons/fi";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { CreateListingsForm } from "../listings/components/list-form";
@@ -12,8 +10,7 @@ import { CreateListingsForm } from "../listings/components/list-form";
 const LIST_FORM_ID = "marketplace-list-form";
 
 interface CreateListingButtonProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
   createText?: string;
   type?: "direct-listings" | "english-auctions";
 }
@@ -21,19 +18,13 @@ interface CreateListingButtonProps {
 export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
   createText = "Create",
   type,
-  contractAddress,
-  chainId,
+  contract,
   ...restButtonProps
 }) => {
   const address = useActiveAccount()?.address;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { mutate, isPending } = useSendAndConfirmTransaction();
-  const chain = useV5DashboardChain(chainId);
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
-  });
+
   return (
     <ListerOnly contract={contract}>
       <Drawer

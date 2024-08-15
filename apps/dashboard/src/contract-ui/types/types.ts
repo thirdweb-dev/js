@@ -1,5 +1,5 @@
 import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import type { ComponentType } from "react";
+import type { ComponentType, ReactElement } from "react";
 
 // biome-ignore lint/suspicious/noExplicitAny: FIXME
 export type EnhancedRoute<T = any> = {
@@ -9,7 +9,7 @@ export type EnhancedRoute<T = any> = {
   isBeta?: true;
   isDeprecated?: true;
   isEnabled?: ExtensionDetectedState;
-  component: ComponentType<T>;
+  component: ComponentType<T> | ReactElement;
 };
 
 export type BasicContract = {
