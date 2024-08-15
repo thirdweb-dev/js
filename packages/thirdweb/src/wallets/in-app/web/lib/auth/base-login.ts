@@ -58,6 +58,10 @@ export class BaseLogin extends AbstractLogin<
     encryptionKey,
     jwt,
   }: LoginQuerierTypes["loginWithCustomJwt"]): Promise<AuthAndWalletRpcReturnType> {
+    if (!encryptionKey || encryptionKey.length === 0) {
+      throw new Error("Encryption key is required for custom jwt auth");
+    }
+
     return this.LoginQuerier.call<AuthAndWalletRpcReturnType>({
       procedureName: "loginWithCustomJwt",
       params: { encryptionKey, jwt },
@@ -71,6 +75,10 @@ export class BaseLogin extends AbstractLogin<
     encryptionKey,
     jwt,
   }: LoginQuerierTypes["loginWithCustomJwt"]): Promise<AuthLoginReturnType> {
+    if (!encryptionKey || encryptionKey.length === 0) {
+      throw new Error("Encryption key is required for custom jwt auth");
+    }
+
     await this.preLogin();
     const result = await this.authenticateWithCustomJwt({ encryptionKey, jwt });
     return this.postLogin(result);
@@ -93,6 +101,10 @@ export class BaseLogin extends AbstractLogin<
     encryptionKey,
     payload,
   }: LoginQuerierTypes["loginWithCustomAuthEndpoint"]): Promise<AuthLoginReturnType> {
+    if (!encryptionKey || encryptionKey.length === 0) {
+      throw new Error("Encryption key is required for custom auth");
+    }
+
     await this.preLogin();
     const result = await this.authenticateWithCustomAuthEndpoint({
       encryptionKey,
