@@ -218,13 +218,15 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["ERC1155", "ERC721"],
       }),
-      component: LazyContractNFTPage,
+      component: () => (
+        <>{contract && <LazyContractNFTPage contract={contract} />}</>
+      ),
     },
     {
       title: "Tokens",
       path: "tokens",
       isEnabled: extensionDetectedState({ contractQuery, feature: "ERC20" }),
-      component: (
+      component: () => (
         <>
           {contract && (
             <LazyContractTokensPage
@@ -244,7 +246,7 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "DirectListings",
       }),
-      component: (
+      component: () => (
         <>
           {contract && <LazyContractDirectListingsPage contract={contract} />}
         </>
@@ -257,7 +259,7 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "EnglishAuctions",
       }),
-      component: (
+      component: () => (
         <>
           {contract && <LazyContractEnglishAuctionsPage contract={contract} />}
         </>
@@ -271,7 +273,7 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "split"
           ? "enabled"
           : "disabled",
-      component: (
+      component: () => (
         <>{contract && <LazyContractSplitPage contract={contract} />}</>
       ),
     },
@@ -307,7 +309,7 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["Account"],
       }),
-      component: (
+      component: () => (
         <>
           {contract && (
             <LazyContractAccountPage
@@ -376,7 +378,7 @@ export function useContractRouteConfig(
     {
       title: "Settings",
       path: "settings",
-      component: (
+      component: () => (
         <>
           {contract && (
             <LazyContractSettingsPage
