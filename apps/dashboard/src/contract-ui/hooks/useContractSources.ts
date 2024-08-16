@@ -5,11 +5,7 @@ import invariant from "tiny-invariant";
 
 export function useContractSources(contract?: ThirdwebContract) {
   return useQuery(
-    [
-      "contract-sources",
-      contract?.chain.id || "",
-      contract?.address || "",
-    ],
+    ["contract-sources", contract?.chain.id || "", contract?.address || ""],
     async (): Promise<Array<{ filename: string; source: string }>> => {
       invariant(contract, "contract is required");
       const data = await getCompilerMetadata(contract);
