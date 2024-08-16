@@ -1,8 +1,5 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import {
-  type EngineInstance,
-  useEngineInstances,
-} from "@3rdweb-sdk/react/hooks/useEngine";
+import { useEngineInstances } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
   CloudDownloadIcon,
@@ -107,7 +104,7 @@ export const EngineInstancesList = () => {
       <div className="h-6" />
 
       <EngineInstancesTable
-        instances={instancesQuery.data ?? ([] as EngineInstance[])}
+        instances={instances}
         isFetched={instancesQuery.isFetched}
         isLoading={instancesQuery.isLoading}
         refetch={instancesQuery.refetch}
