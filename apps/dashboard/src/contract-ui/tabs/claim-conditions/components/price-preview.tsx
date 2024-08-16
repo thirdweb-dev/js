@@ -1,5 +1,5 @@
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex } from "@chakra-ui/react";
-import { useSDKChainId } from "@thirdweb-dev/react";
 import { CURRENCIES } from "constants/currencies";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { Text } from "tw-components";
@@ -15,7 +15,7 @@ export const PricePreview: React.FC<PricePreviewProps> = ({
   price,
   currencyAddress,
 }) => {
-  const chainId = useSDKChainId();
+  const chainId = useDashboardEVMChainId();
   const configuredChainsRecord = useSupportedChainsRecord();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
 
