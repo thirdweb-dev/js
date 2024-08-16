@@ -1,17 +1,32 @@
-import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
-import { useSDK } from "@thirdweb-dev/react";
+import { useQuery } from "@tanstack/react-query";
+import type { ThirdwebContract } from "thirdweb";
+import { getCompilerMetadata } from "thirdweb/contract";
+import invariant from "tiny-invariant";
 
-export function useContractSources(contractAddress?: string) {
-  const sdk = useSDK();
-  return useQueryWithNetwork(
-    ["contract-sources", contractAddress],
-    async () => {
-      return sdk
-        ?.getPublisher()
-        .fetchContractSourcesFromAddress(contractAddress || "");
+/**
+ * Fetch all the .sol files (and their content) for a contract
+ * We cannot reuse `getCompilerMetadata` from the SDK here because the `sources` field is omitted
+ * because we are using `formatCompilerMetadata` in that method
+ *
+ * Which raises the question where we should do that in the first place
+ */
+export function useContractSources(contract?: ThirdwebContract) {
+  return useQuery(
+    [
+      "dashboard-contract-sources",
+      contract?.chain.id || "",
+      contract?.address || "",
+    ],
+    async (): Promise<Array<{ filename: string; source: string }>> => {
+      invariant(contract, "contract is required");
+      const data = await getCompilerMetadata(contract);
+      const sources = data.metadata.sources || {};
+      const arr = Object.keys(sources).map((key) => ({
+        filename: key,
+        source: sources[key]?.content || "",
+      }));
+      return arr;
     },
-    {
-      enabled: !!contractAddress,
-    },
+    { enabled: !!contract },
   );
 }
