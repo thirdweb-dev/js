@@ -3,13 +3,6 @@ import type { ThirdwebContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
 import invariant from "tiny-invariant";
 
-/**
- * Fetch all the .sol files (and their content) for a contract
- * We cannot reuse `getCompilerMetadata` from the SDK here because the `sources` field is omitted
- * because we are using `formatCompilerMetadata` in that method
- *
- * Which raises the question where we should do that in the first place
- */
 export function useContractSources(contract?: ThirdwebContract) {
   return useQuery(
     [
