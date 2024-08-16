@@ -868,7 +868,7 @@ export function useCustomContractDeployMutation(options: {
                   )
                 : data.saltForCreate2;
               if (compilerMetadata?.data?.analytics?.command === "deploy") {
-                contractAddress = directDeployDeterministic(
+                contractAddress = await directDeployDeterministic(
                   compilerMetadata.data?.bytecode,
                   compilerMetadata.data?.abi,
                   signer,
