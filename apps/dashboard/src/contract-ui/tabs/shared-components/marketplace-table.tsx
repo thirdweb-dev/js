@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { ListingDrawer } from "contract-ui/tabs/shared-components/listing-drawer";
-import { BigNumber } from "ethers";
 import {
   type Dispatch,
   type SetStateAction,
@@ -39,6 +38,7 @@ import type {
   DirectListing,
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
+import { max } from "thirdweb/utils";
 import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { LISTING_STATUS } from "./types";
@@ -163,8 +163,10 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
       manualPagination: true,
       pageCount: Math.max(
         Math.ceil(
-          BigNumber.from(totalCountQuery.data || 0).toNumber() /
-            queryParams.count,
+          Number(
+            // To avoid overflow issue
+            max(totalCountQuery.data || 0n, BigInt(Number.MAX_SAFE_INTEGER)),
+          ) / queryParams.count,
         ),
         1,
       ),

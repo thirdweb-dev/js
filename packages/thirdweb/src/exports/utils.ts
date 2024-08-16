@@ -174,3 +174,8 @@ export {
 export type { NFTMetadata, NFTInput } from "../utils/nft/parseNft.js";
 
 export { parseAbiParams } from "../utils/contract/parse-abi-params.js";
+
+// ------------------------------------------------
+// bigint
+// ------------------------------------------------
+export { max } from "../utils/bigint.js";
