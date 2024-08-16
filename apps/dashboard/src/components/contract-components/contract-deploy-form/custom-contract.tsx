@@ -773,7 +773,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               </div>
             </FormControl>
 
-            {(fullPublishMetadata.data?.deployType === "standard" || compilerMetadata?.data?.analytics?.command === "deploy") && (
+            {(fullPublishMetadata.data?.deployType === "standard" || 
+              compilerMetadata?.data?.analytics?.command === "deploy") && (
               <>
                 {/* Deterministic deploy */}
                 <CheckboxWithLabel>
