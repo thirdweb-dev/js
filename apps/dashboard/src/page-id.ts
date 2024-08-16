@@ -144,6 +144,7 @@ export enum PageId {
 
   // thirdweb.com/dashboard/engine
   EngineManage = "engine-manage",
+  EngineCreate = "engine-create",
 
   // ---------------------------------------------------------------------------
   //  settings pages

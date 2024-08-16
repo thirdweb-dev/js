@@ -36,7 +36,7 @@ export const EngineSystemMetrics: React.FC<EngineStatusProps> = ({
           <Text>
             Upgrade to a{" "}
             <TrackedLink
-              href="/dashboard/engine?requestCloudHosted"
+              href="/dashboard/engine/create"
               isExternal
               color="blue.500"
               category="engine"

@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Alert,
   AlertDescription,
@@ -20,8 +21,9 @@ import {
 import { THIRDWEB_API_HOST } from "constants/urls";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Button, FormLabel, Text, TrackedLink } from "tw-components";
+import { FormLabel, Text, TrackedLink } from "tw-components";
 
 interface ImportEngineInstanceButtonProps {
   refetch: () => void;
@@ -48,10 +50,10 @@ export const ImportEngineInstanceButton = ({
           });
           disclosure.onOpen();
         }}
-        variant="outline"
-        px={6}
-        width="fit-content"
+        variant="default"
+        className="gap-2"
       >
+        <PlusIcon className="size-4" />
         Import
       </Button>
 
@@ -172,10 +174,10 @@ const ModalImportEngine = ({
           </ModalBody>
 
           <ModalFooter as={Flex} gap={3}>
-            <Button onClick={disclosure.onClose} variant="ghost">
+            <Button onClick={disclosure.onClose} variant="outline">
               Cancel
             </Button>
-            <Button type="submit" colorScheme="primary">
+            <Button type="submit" variant="primary">
               Import
             </Button>
           </ModalFooter>
