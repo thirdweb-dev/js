@@ -18,6 +18,7 @@ import {
   type PublishedContract,
   type ThirdwebSDK,
   detectFeatures,
+  directDeployDeterministic,
   extractConstructorParamsFromAbi,
   extractEventsFromAbi,
   extractFunctionParamsFromAbi,
@@ -622,6 +623,7 @@ export function useCustomContractDeployMutation(options: {
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
   const rawPredeployMetadata = useContractRawPredeployMetadataFromURI(ipfsHash);
+  const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const router = useRouter();
 
   const walletId = useActiveWallet()?.id;
@@ -848,15 +850,25 @@ export function useCustomContractDeployMutation(options: {
             const salt = data.signerAsSalt
               ? (await signer?.getAddress())?.concat(data.saltForCreate2 || "")
               : data.saltForCreate2;
-            contractAddress =
-              await sdk.deployer.deployPublishedContractDeterministic(
-                fullPublishMetadata.data?.name as string,
-                Object.values(data.deployParams),
-                fullPublishMetadata.data?.publisher as string,
-                // this is either the contract version or it falls back to "latest"
-                version,
-                salt,
-              );
+            if(compilerMetadata?.data?.analytics?.command === "deploy") {
+                contractAddress = directDeployDeterministic(
+                  compilerMetadata.data?.bytecode,
+                  compilerMetadata.data?.abi,
+                  signer,
+                  Object.values(data.deployParams),
+                  salt
+                );
+              } else  {
+                contractAddress =
+                  await sdk.deployer.deployPublishedContractDeterministic(
+                    fullPublishMetadata.data?.name as string,
+                    Object.values(data.deployParams),
+                    fullPublishMetadata.data?.publisher as string,
+                    // this is either the contract version or it falls back to "latest"
+                    version,
+                    salt,
+                  );
+            }
           } else {
             contractAddress = await sdk.deployer.deployContractFromUri(
               ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
