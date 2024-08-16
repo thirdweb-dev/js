@@ -94,19 +94,22 @@
 /* shadcn charts */
 @layer base {
   :root {
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-  }
-
-  .dark {
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    /* below is ai generated based on the initial */
+    --chart-6: 200 65% 50%;
+    --chart-7: 120 70% 45%;
+    --chart-8: 45 75% 55%;
+    --chart-9: 260 60% 60%;
+    --chart-10: 0 70% 50%;
+    --chart-11: 180 60% 50%;
+    --chart-12: 100 65% 55%;
+    --chart-13: 360 70% 55%;
+    --chart-14: 240 65% 50%;
+    --chart-15: 80 60% 50%;
   }
 }
 

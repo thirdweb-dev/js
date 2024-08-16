@@ -30,12 +30,18 @@ export const loginWithOauthRedirect = (options: {
   authOption: SocialAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
+  redirectUrl?: string;
+  redirectExternally?: boolean;
 }): void => {
   const loginUrl = getLoginUrl({
     ...options,
     mode: "redirect",
   });
-  window.location.href = loginUrl;
+  if (options.redirectExternally === true) {
+    window.open(loginUrl);
+  } else {
+    window.location.href = loginUrl;
+  }
 };
 
 export const loginWithOauth = async (options: {

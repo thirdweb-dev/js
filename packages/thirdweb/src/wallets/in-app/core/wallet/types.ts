@@ -38,6 +38,14 @@ export type InAppWalletCreationOptions =
          */
         mode?: "popup" | "redirect";
         /**
+         * Optional url to redirect to after authentication
+         */
+        redirectUrl?: string;
+        /**
+         * Whether to handle the redirect in a new window
+         */
+        redirectExternally?: boolean;
+        /**
          * The domain of the passkey to use for authentication
          */
         passkeyDomain?: string;

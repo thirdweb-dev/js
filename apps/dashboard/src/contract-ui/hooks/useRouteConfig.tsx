@@ -6,6 +6,7 @@ import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
 import type { ThirdwebContract } from "thirdweb";
+import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
 
 const LazyContractExplorerPage = dynamic(() =>
   import("../tabs/explorer/page").then(
@@ -102,6 +103,10 @@ export function useContractRouteConfig(
   const ensQuery = useEns(contractAddress);
   const contractQuery = useContract(ensQuery.data?.address);
   const contractTypeQuery = contractType.useQuery(contractAddress);
+
+  const analyticsSupported = useAnalyticsSupportedForChain(
+    contractQuery.contract?.chainId,
+  );
 
   const claimconditionExtensionDetection = extensionDetectedState({
     contractQuery,
@@ -225,6 +230,11 @@ export function useContractRouteConfig(
       component: LazyContractAnalyticsPage,
       isDefault: true,
       isBeta: true,
+      isEnabled: analyticsSupported.isLoading
+        ? "loading"
+        : analyticsSupported.data
+          ? "enabled"
+          : "disabled",
     },
     {
       title: "NFTs",
