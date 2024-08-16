@@ -850,33 +850,39 @@ export function useCustomContractDeployMutation(options: {
             const salt = data.signerAsSalt
               ? (await signer?.getAddress())?.concat(data.saltForCreate2 || "")
               : data.saltForCreate2;
-            if(compilerMetadata?.data?.analytics?.command === "deploy") {
-                contractAddress = directDeployDeterministic(
-                  compilerMetadata.data?.bytecode,
-                  compilerMetadata.data?.abi,
-                  signer,
+            
+              contractAddress =
+                await sdk.deployer.deployPublishedContractDeterministic(
+                  fullPublishMetadata.data?.name as string,
                   Object.values(data.deployParams),
-                  salt
+                  fullPublishMetadata.data?.publisher as string,
+                  // this is either the contract version or it falls back to "latest"
+                  version,
+                  salt,
                 );
-              } else  {
-                contractAddress =
-                  await sdk.deployer.deployPublishedContractDeterministic(
-                    fullPublishMetadata.data?.name as string,
+          } else {
+            if (data.deployDeterministic) {
+              const salt = data.signerAsSalt
+                ? (await signer?.getAddress())?.concat(data.saltForCreate2 || "")
+                : data.saltForCreate2;
+              if(compilerMetadata?.data?.analytics?.command === "deploy") {
+                  contractAddress = directDeployDeterministic(
+                    compilerMetadata.data?.bytecode,
+                    compilerMetadata.data?.abi,
+                    signer,
                     Object.values(data.deployParams),
-                    fullPublishMetadata.data?.publisher as string,
-                    // this is either the contract version or it falls back to "latest"
-                    version,
                     salt,
                   );
+              }
+            } else {
+              contractAddress = await sdk.deployer.deployContractFromUri(
+                ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+                Object.values(data.deployParams),
+                {
+                  forceDirectDeploy,
+                },
+              );
             }
-          } else {
-            contractAddress = await sdk.deployer.deployContractFromUri(
-              ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
-              Object.values(data.deployParams),
-              {
-                forceDirectDeploy,
-              },
-            );
           }
         }
 
