@@ -1,5 +1,5 @@
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
-import { useSDKChainId } from "@thirdweb-dev/react";
 import { formatDistance } from "date-fns/formatDistance";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useActiveAccount } from "thirdweb/react";
@@ -19,7 +19,7 @@ interface AccountSignerProps {
 
 export const AccountSigner: React.FC<AccountSignerProps> = ({ item }) => {
   const address = useActiveAccount()?.address;
-  const chainId = useSDKChainId();
+  const chainId = useDashboardEVMChainId();
   const configuredChainsRecord = useSupportedChainsRecord();
   const chain = chainId ? configuredChainsRecord[chainId] : undefined;
   const isMobile = useBreakpointValue({ base: true, md: false });
