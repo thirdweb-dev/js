@@ -8,19 +8,21 @@ import { getAddress } from "../../../../utils/address.js";
 import { getThirdwebDomains } from "../../../../utils/domains.js";
 import { type Hex, hexToString } from "../../../../utils/encoding/hex.js";
 import { parseTypedData } from "../../../../utils/signatures/helpers/parseTypedData.js";
+import { webLocalStorage } from "../../../../utils/storage/webStorage.js";
 import type { Prettify } from "../../../../utils/type-utils.js";
 import { getEcosystemPartnerPermissions } from "../../../ecosystem/get-ecosystem-partner-permissions.js";
 import type {
   Account,
   SendTransactionOption,
 } from "../../../interfaces/wallet.js";
+import { ClientScopedStorage } from "../../core/authentication/client-scoped-storage.js";
 import {
   type GetUser,
   type GetUserWalletStatusRpcReturnType,
   type SetUpWalletRpcReturnType,
   UserWalletStatus,
   type WalletAddressObjectType,
-} from "../../core/authentication/type.js";
+} from "../../core/authentication/types.js";
 import type {
   ClientIdWithQuerierType,
   Ecosystem,
@@ -29,7 +31,6 @@ import type {
   SignTransactionReturnType,
   SignedTypedDataReturnType,
 } from "../types.js";
-import { LocalStorage } from "../utils/Storage/LocalStorage.js";
 import type { InAppWalletIframeCommunicator } from "../utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type WalletManagementTypes = {
@@ -82,7 +83,7 @@ export class IFrameWallet {
   protected walletManagerQuerier: InAppWalletIframeCommunicator<
     WalletManagementTypes & WalletManagementUiTypes
   >;
-  protected localStorage: LocalStorage;
+  protected localStorage: ClientScopedStorage;
 
   /**
    * Not meant to be initialized directly. Call {@link initializeUser} to get an instance
@@ -101,7 +102,8 @@ export class IFrameWallet {
     this.ecosystem = ecosystem;
     this.walletManagerQuerier = querier;
 
-    this.localStorage = new LocalStorage({
+    this.localStorage = new ClientScopedStorage({
+      storage: webLocalStorage,
       clientId: client.clientId,
       ecosystemId: ecosystem?.id,
     });

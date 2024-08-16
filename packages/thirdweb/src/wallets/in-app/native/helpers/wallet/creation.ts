@@ -2,7 +2,7 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { publicKeyToAddress } from "viem/utils";
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { stringToHex, toHex } from "../../../../../utils/encoding/hex.js";
-import type { SetUpWalletRpcReturnType } from "../../../core/authentication/type.js";
+import type { SetUpWalletRpcReturnType } from "../../../core/authentication/types.js";
 import { storeUserShares } from "../api/fetchers.js";
 import { logoutUser } from "../auth/logout.js";
 import {

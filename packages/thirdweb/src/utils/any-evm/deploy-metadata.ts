@@ -1,5 +1,6 @@
 import type { Abi } from "abitype";
 import type { ThirdwebClient } from "../../client/client.js";
+import { formatCompilerMetadata } from "../../contract/actions/compiler-metadata.js";
 import { download } from "../../storage/download.js";
 import type { Hex } from "../encoding/hex.js";
 import type { Prettify } from "../type-utils.js";
@@ -89,34 +90,6 @@ async function fetchAndParseCompilerMetadata(
   return formatCompilerMetadata(metadata);
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-function formatCompilerMetadata(metadata: any): ParsedCompilerMetadata {
-  const abi = metadata.output.abi;
-  const compilationTarget = metadata.settings.compilationTarget;
-  const targets = Object.keys(compilationTarget);
-  const name = compilationTarget[targets[0] as keyof typeof compilationTarget];
-  const info = {
-    title: metadata.output.devdoc.title,
-    author: metadata.output.devdoc.author,
-    details: metadata.output.devdoc.detail,
-    notice: metadata.output.userdoc.notice,
-  };
-  const licenses: string[] = [
-    ...new Set(
-      // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
-    ),
-  ];
-  return {
-    name,
-    abi,
-    metadata,
-    info,
-    licenses,
-    isPartialAbi: metadata.isPartialAbi,
-  };
-}
-
 // types
 
 type RawCompilerMetadata = {
@@ -162,6 +135,11 @@ export type ExtendedMetadata = {
         publisherAddress: string;
       }[]
     | undefined;
+  defaultModules?: {
+    moduleName: string;
+    moduleVersion: string;
+    publisherAddress: string;
+  }[];
   publisher?: string | undefined;
   audit?: string | undefined;
   logo?: string | undefined;

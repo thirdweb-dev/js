@@ -1,6 +1,9 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
+import { getContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { AccountSigners } from "./components/account-signers";
 
@@ -18,9 +21,17 @@ export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
     feature: ["AccountPermissions", "AccountPermissionsV1"],
   });
 
-  if (contractQuery.isLoading) {
+  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
+
+  if (contractQuery.isLoading || !contractQuery.contract || !chain) {
     return null;
   }
+
+  const contract = getContract({
+    address: contractQuery.contract.getAddress(),
+    chain,
+    client: thirdwebClient,
+  });
 
   if (!detectedFeature) {
     return (
@@ -46,7 +57,7 @@ export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Account Signers</Heading>
       </Flex>
-      <AccountSigners contractQuery={contractQuery} />
+      <AccountSigners contract={contract} />
     </Flex>
   );
 };

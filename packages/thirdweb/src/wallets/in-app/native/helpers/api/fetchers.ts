@@ -3,7 +3,7 @@ import type { ThirdwebClient } from "../../../../../client/client.js";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
 import { getClientFetch } from "../../../../../utils/fetch.js";
 import { randomBytesHex } from "../../../../../utils/random.js";
-import type { UserDetailsApiType } from "../../../core/authentication/type.js";
+import type { UserDetailsApiType } from "../../../core/authentication/types.js";
 import {
   ROUTE_EMBEDDED_WALLET_DETAILS,
   ROUTE_IS_VALID_USER_MANAGED_OTP,
@@ -87,9 +87,8 @@ export async function fetchUserDetails(args: {
 }): Promise<UserDetailsApiType> {
   const url = new URL(ROUTE_EMBEDDED_WALLET_DETAILS);
   if (args) {
-    if (args.email) {
-      url.searchParams.append("email", args.email);
-    }
+    // TODO (inapp) remove this, unused in the backend but still required
+    url.searchParams.append("email", args.email ?? "none");
     url.searchParams.append("clientId", args.client.clientId);
   }
   const resp = await authFetchEmbeddedWalletUser(args.client, url.href, {

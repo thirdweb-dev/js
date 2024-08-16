@@ -1,20 +1,13 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Box,
-  Code,
-  Flex,
-  FormControl,
-  IconButton,
-} from "@chakra-ui/react";
-import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
-import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
+import { Button } from "@/components/ui/button";
+import { FormControl } from "@chakra-ui/react";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
+import { InfoIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray } from "react-hook-form";
 import { ZERO_ADDRESS } from "thirdweb";
-import { Button, FormErrorMessage, Heading, Text } from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
+import { Alert, AlertTitle } from "../../../@/components/ui/alert";
+import { Fieldset } from "./common";
 import type { CustomContractDeploymentForm } from "./custom-contract";
 
 interface SplitFieldsetProps {
@@ -38,23 +31,12 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
       ?.reduce((a: number, b: Recipient) => a + b.sharesBps, 0) || 0;
 
   return (
-    <>
-      <Flex px={0} as="section" direction="column" gap={4}>
-        <Flex direction="column" gap={2}>
-          <Heading size="label.lg">Split Settings</Heading>
-          <Text size="body.md" fontStyle="italic">
-            Define the recipients and share percentages for this Split contract.
-          </Text>
-        </Flex>
-
-        <Flex direction="column" gap={2}>
+    <Fieldset legend="Split Settings">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           {fields.map((field, index) => {
             return (
-              <Flex
-                key={field.id}
-                gap={2}
-                direction={{ base: "column", md: "row" }}
-              >
+              <div key={field.id} className="flex gap-3 items-end">
                 <FormControl
                   isInvalid={
                     !!form.getFieldState(
@@ -63,6 +45,7 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                     ).error
                   }
                 >
+                  <FormLabel>Recipient Address</FormLabel>
                   <SolidityInput
                     solidityType="address"
                     formContext={form}
@@ -79,8 +62,9 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                     }
                   </FormErrorMessage>
                 </FormControl>
+
                 <FormControl
-                  w="35%"
+                  className="max-w-[160px]"
                   isInvalid={
                     !!form.getFieldState(
                       `recipients.${index}.sharesBps`,
@@ -88,6 +72,7 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                     ).error
                   }
                 >
+                  <FormLabel> Percentage </FormLabel>
                   <BasisPointsInput
                     variant="filled"
                     value={form.watch(`recipients.${index}.sharesBps`)}
@@ -108,57 +93,45 @@ export const SplitFieldset: React.FC<SplitFieldsetProps> = ({ form }) => {
                     }
                   </FormErrorMessage>
                 </FormControl>
-                <IconButton
-                  borderRadius="md"
-                  isDisabled={
-                    fields.length === 1 || form.formState.isSubmitting
-                  }
-                  colorScheme="red"
-                  icon={<IoMdRemove />}
+
+                <Button
+                  variant="destructive"
+                  disabled={fields.length === 1 || form.formState.isSubmitting}
                   aria-label="remove row"
                   onClick={() => remove(index)}
-                />
-              </Flex>
+                >
+                  <Trash2Icon className="size-4" />
+                </Button>
+              </div>
             );
           })}
-        </Flex>
+        </div>
 
-        {/* then render high level controls */}
-        <Flex align="center" gap={2}>
-          <Box w="50%">
-            <Button
-              size="sm"
-              leftIcon={<IoMdAdd />}
-              onClick={() => append({ address: "", sharesBps: 0 })}
-            >
-              Add Recipient
-            </Button>
-          </Box>
-          <Flex w="50%" direction="column">
-            <Heading as="label" textTransform="uppercase" size="label.sm">
-              Total Shares
-            </Heading>
-            <Code p={0} bg="transparent">
-              {Math.round(totalShares / 100)}%
-            </Code>
-          </Flex>
-          <Box flexShrink={0} boxSize={8} />
-        </Flex>
-      </Flex>
-      {totalShares < 10000 ? (
-        <Alert status="warning" borderRadius="lg">
-          <AlertIcon />
-          <AlertDescription>
-            Total shares need to add up to 100%. Total shares currently add up
-            to {totalShares / 100}%.
-          </AlertDescription>
-        </Alert>
-      ) : totalShares > 10000 ? (
-        <Alert status="warning">
-          <AlertIcon />
-          <AlertDescription>Total shares cannot go over 100%.</AlertDescription>
-        </Alert>
-      ) : null}
-    </>
+        {/* div added to avoid full-width button */}
+        <div>
+          <Button
+            className="gap-2"
+            variant="outline"
+            onClick={() => append({ address: "", sharesBps: 0 })}
+          >
+            <PlusIcon className="size-4" />
+            Add Recipient
+          </Button>
+        </div>
+
+        {totalShares !== 10000 && (
+          <Alert
+            variant="destructive"
+            className="h-auto flex items-center gap-2"
+          >
+            <InfoIcon className="size-5 !text-destructive-text shrink-0 !static" />
+            <AlertTitle className="!m-0 !p-0 !text-destructive-text">
+              Total shares need to add up to 100%, Total shares currently add up
+              to {totalShares / 100}%
+            </AlertTitle>
+          </Alert>
+        )}
+      </div>
+    </Fieldset>
   );
 };

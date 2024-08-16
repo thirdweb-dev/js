@@ -6,7 +6,7 @@ import {
   type GetAuthenticatedUserParams,
   type PreAuthArgsType,
   UserWalletStatus,
-} from "../../../core/authentication/type.js";
+} from "../../../core/authentication/types.js";
 import { getOrCreateInAppWalletConnector } from "../../../core/wallet/in-app-core.js";
 import type { Ecosystem } from "../../types.js";
 
@@ -158,5 +158,5 @@ export async function authenticate(
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
   if (args.redirect && connector.authenticateWithRedirect)
     return connector.authenticateWithRedirect(args.strategy);
-  return connector.authenticate(args);
+  return connector.connect(args);
 }

@@ -1,11 +1,11 @@
-import { FormControl, Input } from "@chakra-ui/react";
+import { Input } from "@/components/ui/input";
+import { FormControl } from "@chakra-ui/react";
 import type { UseFormReturn } from "react-hook-form";
 import { FormLabel } from "tw-components";
 import type { NetworkConfigFormData } from "../ConfigureNetworkForm";
 
 export const ChainIdInput: React.FC<{
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  form: UseFormReturn<NetworkConfigFormData, any>;
+  form: UseFormReturn<NetworkConfigFormData>;
   disabled: boolean;
 }> = ({ form, disabled }) => {
   return (
@@ -18,9 +18,6 @@ export const ChainIdInput: React.FC<{
         disabled={disabled}
         placeholder="e.g. 152"
         autoComplete="off"
-        _placeholder={{
-          fontWeight: 500,
-        }}
         onKeyDown={(e) => {
           // prevent typing e, +, -
           if (e.key === "e" || e.key === "+" || e.key === "-") {

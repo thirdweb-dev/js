@@ -2,7 +2,6 @@ import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
   type DropContract,
   type NFTContract,
-  type SmartContract,
   getErcs,
 } from "@thirdweb-dev/react/evm";
 import { detectFeatures } from "components/contract-components/utils";
@@ -40,7 +39,7 @@ const ClaimConditionTab = dynamic(() =>
     ({ ClaimConditions }) => ClaimConditions,
   ),
 );
-const ClaimTab = dynamic(
+const ClaimTabERC1155 = dynamic(
   () => import("contract-ui/tabs/nfts/components/claim-tab"),
 );
 const UpdateMetadataTab = dynamic(
@@ -73,6 +72,27 @@ export function useNFTDrawerTabs({
   );
 
   const isMinterRole = useIsMinter(contract);
+  const hasNewClaimConditions = useMemo(
+    () =>
+      detectFeatures(oldContract, [
+        // erc721
+        "ERC721ClaimConditionsV2",
+        "ERC721ClaimPhasesV2",
+        // erc1155
+        "ERC1155ClaimConditionsV2",
+        "ERC1155ClaimPhasesV2",
+        // erc20
+        "ERC20ClaimConditionsV2",
+        "ERC20ClaimPhasesV2",
+      ]),
+    [oldContract],
+  );
+  const contractInfo = useMemo(() => {
+    return {
+      hasNewClaimConditions,
+      isErc20: detectFeatures(oldContract, ["ERC20"]),
+    };
+  }, [oldContract, hasNewClaimConditions]);
 
   return useMemo(() => {
     const isMintable = detectFeatures(oldContract, ["ERC1155Mintable"]);
@@ -102,6 +122,12 @@ export function useNFTDrawerTabs({
       "ERC721LazyMintable",
     ]);
 
+    const isDropContract = detectFeatures(oldContract, [
+      "ERC721LazyMintable",
+      "ERC1155LazyMintableV1",
+      "ERC1155LazyMintableV2",
+    ]);
+
     const isOwner =
       (isERC1155 && balanceOfQuery?.data) ||
       (isERC721 && nft?.owner === address);
@@ -115,6 +141,7 @@ export function useNFTDrawerTabs({
           isDisabled: false,
           children: (
             <ClaimConditionTab
+              contractInfo={contractInfo}
               contract={oldContract}
               tokenId={tokenId}
               isColumn
@@ -189,12 +216,18 @@ export function useNFTDrawerTabs({
         },
       ]);
     }
-    if (isClaimable && isERC1155) {
+    if (isClaimable && isERC1155 && oldContract) {
       tabs = tabs.concat([
         {
           title: "Claim",
           isDisabled: false,
-          children: <ClaimTab contract={oldContract} tokenId={tokenId} />,
+          children: (
+            <ClaimTabERC1155
+              contractAddress={oldContract.getAddress()}
+              chainId={oldContract.chainId}
+              tokenId={tokenId}
+            />
+          ),
         },
       ]);
     }
@@ -207,8 +240,9 @@ export function useNFTDrawerTabs({
             "You don't have minter permissions to be able to update metadata",
           children: (
             <UpdateMetadataTab
-              contract={oldContract as SmartContract}
+              contract={contract}
               nft={nft}
+              isDropContract={isDropContract}
             />
           ),
         },
@@ -225,5 +259,7 @@ export function useNFTDrawerTabs({
     address,
     tokenId,
     isMinterRole,
+    contract,
+    contractInfo,
   ]);
 }

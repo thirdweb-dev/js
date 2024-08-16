@@ -3,14 +3,7 @@ import {
   useEVMContractInfo,
   useSetEVMContractInfo,
 } from "@3rdweb-sdk/react";
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Container,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import {
   type DehydratedState,
   QueryClient,
@@ -20,7 +13,6 @@ import { AppLayout } from "components/app-layouts/app";
 import { ConfigureNetworks } from "components/configure-networks/ConfigureNetworks";
 import { ensQuery } from "components/contract-components/hooks";
 import { ContractMetadata } from "components/custom-contract/contract-header/contract-metadata";
-import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { THIRDWEB_DOMAIN } from "constants/urls";
 import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
@@ -47,6 +39,8 @@ import { isERC1155 } from "thirdweb/extensions/erc1155";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
+import { Spinner } from "../../@/components/ui/Spinner/Spinner";
+import { Alert } from "../../@/components/ui/alert";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
@@ -187,35 +181,25 @@ const ContractPage: ThirdwebNextPage = () => {
 
   if (!contractInfo) {
     return (
-      <Flex h="100%" justifyContent="center" alignItems="center">
-        <Spinner size="xl" />
-      </Flex>
+      <div className="h-full flex items-center justify-center">
+        <Spinner className="size-10" />
+      </div>
     );
   }
 
   if (chainNotFound) {
     return (
-      <HomepageSection maxW="container.md" mx="auto">
-        <Box mb={8} mt={8}>
-          <Alert borderRadius="md" background="backgroundHighlight">
-            <AlertIcon />
-            You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID{" "}
-            {`"`}
-            {chainSlug}
-            {`"`} but it is not configured yet. Please configure it and try
-            again.
-          </Alert>
-        </Box>
+      <div className="mx-auto max-w-[500px]">
+        <Alert variant="warning">
+          You tried to connecting to {isSlugNumber ? "Chain" : "Network"} ID{" "}
+          {`"`}
+          {chainSlug}
+          {`"`} but it is not configured yet. Please configure it and try again
+        </Alert>
 
-        <Box
-          border="1px solid"
-          borderRadius="md"
-          borderColor="backgroundHighlight"
-          overflow="hidden"
-          _light={{
-            background: "white",
-          }}
-        >
+        <div className="h-10" />
+
+        <div className="border border-border rounded-lg">
           <ConfigureNetworks
             prefillSlug={isSlugNumber ? undefined : chainSlug}
             prefillChainId={isSlugNumber ? chainSlug : undefined}
@@ -228,16 +212,16 @@ const ContractPage: ThirdwebNextPage = () => {
               }
             }}
           />
-        </Box>
-      </HomepageSection>
+        </div>
+      </div>
     );
   }
 
   if (!isSupportedChainsReady) {
     return (
-      <Flex h="100%" justifyContent="center" alignItems="center">
-        <Spinner size="xl" />
-      </Flex>
+      <div className="h-full flex items-center justify-center">
+        <Spinner className="size-10" />
+      </div>
     );
   }
 
@@ -256,10 +240,9 @@ const ContractPage: ThirdwebNextPage = () => {
               direction={{ base: "column", md: "row" }}
               gap={4}
             >
-              <ContractMetadata
-                contractAddress={contractAddress}
-                chain={chain}
-              />
+              {contract && (
+                <ContractMetadata contract={contract} chain={chain} />
+              )}
               <PrimaryDashboardButton contractAddress={contractAddress} />
             </Flex>
             <DeprecatedAlert chain={chain} />
@@ -370,9 +353,9 @@ ContractPage.getLayout = (page, props: EVMContractProps) => {
 
 function PageSkeleton() {
   return (
-    <Flex h="100%" justifyContent="center" alignItems="center">
-      <Spinner size="xl" />
-    </Flex>
+    <div className="h-full flex items-center justify-center">
+      <Spinner className="size-10" />
+    </div>
   );
 }
 

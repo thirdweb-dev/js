@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { SvgXml } from "react-native-svg";
-import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/type.js";
+import type { Chain } from "../../../../chains/types.js";
+import type { MultiStepAuthProviderType } from "../../../../wallets/in-app/core/authentication/types.js";
 import type { InAppWalletAuth } from "../../../../wallets/in-app/core/wallet/types.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
@@ -14,6 +15,7 @@ import { useActiveWallet } from "../../../core/hooks/wallets/useActiveWallet.js"
 import { useDisconnect } from "../../../core/hooks/wallets/useDisconnect.js";
 import { useConnectionManager } from "../../../core/providers/connection-manager.js";
 import { useWalletInfo } from "../../../core/utils/wallet.js";
+import { getWalletIcon } from "../../../core/utils/walletIcon.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { getDefaultWallets } from "../../wallets/defaultWallets.js";
 import { type ContainerType, Header } from "../components/Header.js";
@@ -26,10 +28,10 @@ import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
 import { Spacer } from "../components/spacer.js";
 import { ThemedText } from "../components/text.js";
 import { ThemedView } from "../components/view.js";
-import { TW_ICON, WALLET_ICON } from "../icons/svgs.js";
+import { TW_ICON } from "../icons/svgs.js";
 import { ErrorView } from "./ErrorView.js";
 import { ExternalWalletsList } from "./ExternalWalletsList.js";
-import { InAppWalletUI, OtpLogin } from "./InAppWalletUI.js";
+import { InAppWalletUI, OtpLogin, PasskeyView } from "./InAppWalletUI.js";
 import WalletLoadingThumbnail from "./WalletLoadingThumbnail.js";
 
 export type ModalState =
@@ -37,6 +39,7 @@ export type ModalState =
   | { screen: "connecting"; wallet: Wallet; authMethod?: InAppWalletAuth }
   | { screen: "error"; error: string }
   | { screen: "otp"; auth: MultiStepAuthProviderType; wallet: Wallet<"inApp"> }
+  | { screen: "passkey"; wallet: Wallet<"inApp"> }
   | { screen: "external_wallets" }
   | { screen: "auth" };
 
@@ -112,7 +115,7 @@ export function ConnectModal(
   const connector = useCallback(
     async (args: {
       wallet: Wallet;
-      connectFn: () => Promise<Wallet>;
+      connectFn: (chain?: Chain) => Promise<Wallet>;
       authMethod?: InAppWalletAuth;
     }) => {
       setModalState({
@@ -121,7 +124,7 @@ export function ConnectModal(
         authMethod: args.authMethod,
       });
       try {
-        const w = await args.connectFn();
+        const w = await args.connectFn(props.chain);
         await connectionManager.connect(w, {
           client,
           accountAbstraction,
@@ -155,6 +158,7 @@ export function ConnectModal(
       onClose,
       siweAuth,
       connectionManager,
+      props.chain,
     ],
   );
 
@@ -238,6 +242,37 @@ export function ConnectModal(
             theme={theme}
             wallet={modalState.wallet}
             authProvider={modalState.authMethod}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="md" />
+          )}
+        </>
+      );
+      break;
+    }
+    case "passkey": {
+      content = (
+        <>
+          <Header
+            theme={theme}
+            onClose={props.onClose}
+            containerType={containerType}
+            onBack={() => setModalState({ screen: "base" })}
+            title={props.connectModal?.title || "Sign in"}
+          />
+          {containerType === "modal" ? (
+            <View style={{ flex: 1 }} />
+          ) : (
+            <Spacer size="lg" />
+          )}
+          <PasskeyView
+            wallet={modalState.wallet}
+            client={client}
+            setScreen={setModalState}
+            theme={theme}
+            connector={connector}
           />
           {containerType === "modal" ? (
             <View style={{ flex: 1 }} />
@@ -339,7 +374,7 @@ export function ConnectModal(
                     <OrDivider theme={theme} />
                     <ThemedButtonWithIcon
                       theme={theme}
-                      icon={WALLET_ICON}
+                      icon={getWalletIcon("")}
                       title="Connect a wallet"
                       onPress={() =>
                         setModalState({ screen: "external_wallets" })
@@ -412,7 +447,12 @@ function WalletLoadingView({
         paddingVertical: spacing.xl,
       }}
     >
-      <WalletLoadingThumbnail theme={theme} imageSize={100} animate={true}>
+      <WalletLoadingThumbnail
+        theme={theme}
+        imageSize={100}
+        animate={true}
+        roundLoader={authProvider === "passkey"}
+      >
         {authProvider ? (
           <View
             style={{

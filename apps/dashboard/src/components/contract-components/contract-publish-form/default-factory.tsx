@@ -8,13 +8,15 @@ import type {
 } from "../hooks";
 import { AbiSelector } from "./abi-selector";
 import { DynamicContractsFieldset } from "./dynamic-contract-fieldset";
-import { ExtensionsParamSelector } from "./extensions-param-selector";
+import { ModularContractsFieldset } from "./modular-contract-fieldset";
+import { ModulesParamSelector } from "./modules-param-selector";
 import { NetworksFieldset } from "./networks-fieldset";
 
 interface DefaultFactoryProps {
   abi: Abi;
   shouldShowDynamicFactoryInput: boolean;
-  shouldShowExtensionsParamInput: boolean;
+  shouldShowModularFactoryInput: boolean;
+  shouldShowModulesParamInput: boolean;
   deployParams:
     | ReturnType<typeof useFunctionParamsFromABI>
     | ReturnType<typeof useConstructorParamsFromABI>;
@@ -23,7 +25,8 @@ interface DefaultFactoryProps {
 export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
   abi,
   shouldShowDynamicFactoryInput,
-  shouldShowExtensionsParamInput,
+  shouldShowModularFactoryInput,
+  shouldShowModulesParamInput,
   deployParams,
 }) => {
   const form = useFormContext();
@@ -78,24 +81,24 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
           />
         </FormControl>
 
-        {shouldShowExtensionsParamInput && (
+        {shouldShowModulesParamInput && (
           <>
             <Flex flexDir="column" gap={2} mt={4}>
-              <Heading size="title.md">Extension Param</Heading>
+              <Heading size="title.md">Modules Param</Heading>
               <Text>
-                The contract uses extensions. Choose the extension param name
-                from the initializer params below.
+                The contract uses modules. Choose the modules param name from
+                the initializer params below.
               </Text>
             </Flex>
             <FormControl isRequired>
-              <ExtensionsParamSelector
+              <ModulesParamSelector
                 deployParams={deployParams}
                 value={form.watch(
-                  "factoryDeploymentData.modularFactoryInput.extensionsParamName",
+                  "factoryDeploymentData.modularFactoryInput.modulesParamName",
                 )}
                 onChange={(selectedParam) =>
                   form.setValue(
-                    "factoryDeploymentData.modularFactoryInput.extensionsParamName",
+                    "factoryDeploymentData.modularFactoryInput.modulesParamName",
                     selectedParam,
                   )
                 }
@@ -105,9 +108,8 @@ export const DefaultFactory: React.FC<DefaultFactoryProps> = ({
         )}
       </Flex>
       <NetworksFieldset />
-      {shouldShowDynamicFactoryInput && (
-        <DynamicContractsFieldset isModular={shouldShowExtensionsParamInput} />
-      )}
+      {shouldShowDynamicFactoryInput && <DynamicContractsFieldset />}
+      {shouldShowModularFactoryInput && <ModularContractsFieldset />}
     </Flex>
   );
 };

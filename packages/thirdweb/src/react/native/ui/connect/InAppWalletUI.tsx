@@ -1,17 +1,19 @@
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { nativeLocalStorage } from "../../../../utils/storage/nativeStorage.js";
 import type {
   MultiStepAuthProviderType,
   PreAuthArgsType,
-} from "../../../../wallets/in-app/core/authentication/type.js";
+} from "../../../../wallets/in-app/core/authentication/types.js";
 import type {
   InAppWalletAuth,
   InAppWalletSocialAuth,
 } from "../../../../wallets/in-app/core/wallet/types.js";
 import { preAuthenticate } from "../../../../wallets/in-app/native/auth/index.js";
+import { hasStoredPasskey } from "../../../../wallets/in-app/native/auth/passkeys.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import {
   type SocialAuthOption,
@@ -19,6 +21,7 @@ import {
 } from "../../../../wallets/types.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
+import { getWalletIcon } from "../../../core/utils/walletIcon.js";
 import { radius, spacing } from "../../design-system/index.js";
 import { RNImage } from "../components/RNImage.js";
 import { ThemedButton, ThemedButtonWithIcon } from "../components/button.js";
@@ -28,18 +31,18 @@ import { ThemedText } from "../components/text.js";
 import {
   APPLE_ICON,
   DISCORD_ICON,
-  EMAIL_ICON,
   FACEBOOK_ICON,
   FARCASTER_ICON,
   GOOGLE_ICON,
-  PHONE_ICON,
   TELEGRAM_ICON,
 } from "../icons/svgs.js";
 import type { ModalState } from "./ConnectModal.js";
+import { LoadingView } from "./LoadingView.js";
 
 const defaultAuthOptions: InAppWalletAuth[] = [
   "email",
   "phone",
+  "passkey",
   "google",
   "facebook",
   "apple",
@@ -61,7 +64,7 @@ type InAppWalletFormUIProps = {
   setScreen: (screen: ModalState) => void;
   connector: (args: {
     wallet: Wallet;
-    connectFn: () => Promise<Wallet>;
+    connectFn: (chain?: Chain) => Promise<Wallet>;
     authMethod?: InAppWalletAuth;
   }) => Promise<void>;
 };
@@ -90,7 +93,7 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <ThemedButtonWithIcon
             theme={theme}
             title="Email address"
-            icon={EMAIL_ICON}
+            icon={getWalletIcon("email")}
             onPress={() => setInputMode("email")}
           />
         )
@@ -102,10 +105,20 @@ export function InAppWalletUI(props: InAppWalletFormUIProps) {
           <ThemedButtonWithIcon
             theme={theme}
             title="Phone number"
-            icon={PHONE_ICON}
+            icon={getWalletIcon("phone")}
             onPress={() => setInputMode("phone")}
           />
         )
+      ) : null}
+      {authOptions.includes("passkey") ? (
+        <ThemedButtonWithIcon
+          theme={theme}
+          title="Passkey"
+          icon={getWalletIcon("passkey")}
+          onPress={() => {
+            props.setScreen({ screen: "passkey", wallet });
+          }}
+        />
       ) : null}
     </View>
   );
@@ -120,10 +133,11 @@ function SocialLogin(
   const connectInAppWallet = useCallback(() => {
     connector({
       wallet,
-      connectFn: async () => {
+      connectFn: async (chain) => {
         await wallet.connect({
           client,
           strategy: auth,
+          chain,
         });
         await setLastAuthProvider(auth, nativeLocalStorage);
         return wallet;
@@ -237,13 +251,14 @@ export function OtpLogin(
     if (!verificationCode || !verificationCode) return;
     await connector({
       wallet,
-      connectFn: async () => {
+      connectFn: async (chain) => {
         if (auth.strategy === "phone") {
           await wallet.connect({
             client,
             strategy: auth.strategy,
             phoneNumber: auth.phoneNumber,
             verificationCode,
+            chain,
           });
         } else {
           await wallet.connect({
@@ -251,6 +266,7 @@ export function OtpLogin(
             strategy: auth.strategy,
             email: auth.email,
             verificationCode,
+            chain,
           });
         }
         await setLastAuthProvider(auth.strategy, nativeLocalStorage);
@@ -295,6 +311,135 @@ export function OtpLogin(
       </ThemedButton>
     </>
   );
+}
+
+export function PasskeyView(props: InAppWalletFormUIProps) {
+  const { theme, wallet, client } = props;
+
+  const [screen, setScreen] = useState<
+    "select" | "login" | "loading" | "signup"
+  >("loading");
+
+  const triggered = useRef(false);
+  useEffect(() => {
+    if (triggered.current) {
+      return;
+    }
+    triggered.current = true;
+    hasStoredPasskey(client)
+      .then((isStored) => {
+        if (isStored) {
+          setScreen("login");
+        } else {
+          setScreen("select");
+        }
+      })
+      .catch(() => {
+        setScreen("select");
+      });
+  }, [client]);
+
+  if (screen === "loading") {
+    return <LoadingView theme={theme} />;
+  }
+
+  if (screen === "login" || screen === "signup") {
+    return (
+      <PasskeyLoadingView
+        {...props}
+        type={screen === "login" ? "sign-in" : "sign-up"}
+      />
+    );
+  }
+
+  return (
+    wallet && (
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          padding: spacing.xl,
+        }}
+      >
+        <RNImage theme={theme} size={90} data={getWalletIcon("passkey")} />
+        <Spacer size="xxl" />
+        <ThemedButton
+          theme={theme}
+          variant="accent"
+          style={{ width: "100%" }}
+          onPress={async () => {
+            setScreen("signup");
+          }}
+        >
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{
+              color: theme.colors.accentButtonText,
+            }}
+          >
+            Create a Passkey
+          </ThemedText>
+        </ThemedButton>
+        <Spacer size="md" />
+        <ThemedButton
+          theme={theme}
+          variant="secondary"
+          style={{ width: "100%" }}
+          onPress={async () => {
+            setScreen("login");
+          }}
+        >
+          <ThemedText
+            theme={theme}
+            type="defaultSemiBold"
+            style={{
+              color: theme.colors.secondaryButtonText,
+            }}
+          >
+            I have a Passkey
+          </ThemedText>
+        </ThemedButton>
+      </View>
+    )
+  );
+}
+
+function PasskeyLoadingView(
+  props: InAppWalletFormUIProps & {
+    type: "sign-in" | "sign-up";
+  },
+) {
+  const { theme, type, wallet, client, connector } = props;
+
+  const triggered = useRef(false);
+  useEffect(() => {
+    if (triggered.current) {
+      return;
+    }
+    triggered.current = true;
+    const connectInAppWallet = async (type: "sign-in" | "sign-up") => {
+      await connector({
+        wallet,
+        connectFn: async (chain) => {
+          await wallet.connect({
+            client,
+            strategy: "passkey",
+            type,
+            chain,
+          });
+          await setLastAuthProvider("passkey", nativeLocalStorage);
+          return wallet;
+        },
+        authMethod: "passkey",
+      });
+    };
+    connectInAppWallet(type);
+  }, [client, type, wallet, connector]);
+
+  return <LoadingView theme={theme} />;
 }
 
 const styles = StyleSheet.create({

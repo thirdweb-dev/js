@@ -1,9 +1,5 @@
 import { thirdwebClient } from "@/constants/client";
-import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
-import {
-  useSplitBalances,
-  useSplitData,
-} from "@3rdweb-sdk/react/hooks/useSplit";
+import { useSplitBalances } from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Center,
   Flex,
@@ -15,11 +11,21 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { BigNumber, ethers } from "ethers";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
-import { ZERO_ADDRESS } from "thirdweb";
-import { useActiveAccount, useWalletBalance } from "thirdweb/react";
+import {
+  type ThirdwebContract,
+  ZERO_ADDRESS,
+  getContract,
+  toEther,
+  toTokens,
+} from "thirdweb";
+import { getAllRecipientsPercentages } from "thirdweb/extensions/split";
+import {
+  useActiveAccount,
+  useReadContract,
+  useWalletBalance,
+} from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { useV5DashboardChain } from "../../../lib/v5-adapter";
@@ -40,21 +46,45 @@ interface SplitPageProps {
 export const ContractSplitPage: React.FC<SplitPageProps> = ({
   contractAddress,
 }) => {
-  const address = useActiveAccount()?.address;
   const contractQuery = useContract(contractAddress, "split");
-  const configuredChainsRecord = useSupportedChainsRecord();
-  const chainId = useDashboardEVMChainId();
-  const v4Chain = chainId ? configuredChainsRecord[chainId] : undefined;
-  const splitQuery = useSplitData(contractQuery.contract);
-  const v5Chain = useV5DashboardChain(chainId);
+  const v5Chain = useV5DashboardChain(contractQuery.contract?.chainId);
 
-  const nativeBalanceQuery = useWalletBalance({
-    address: contractAddress,
+  if (contractQuery.isLoading) {
+    // TODO build a skeleton for this
+    return <div>Loading...</div>;
+  }
+
+  if (!contractQuery?.contract || !v5Chain) {
+    return null;
+  }
+  const contract = getContract({
+    address: contractQuery.contract.getAddress(),
     client: thirdwebClient,
     chain: v5Chain,
   });
-  const balanceQuery = useSplitBalances(contractAddress);
+  return <ContractSplitContent contract={contract} />;
+};
 
+type SplitContentProps = {
+  contract: ThirdwebContract;
+};
+
+const ContractSplitContent: React.FC<SplitContentProps> = ({ contract }) => {
+  const address = useActiveAccount()?.address;
+  const configuredChainsRecord = useSupportedChainsRecord();
+  const chainId = contract.chain.id;
+  const v4Chain = configuredChainsRecord[chainId];
+  const contractAddress = contract.address;
+  const nativeBalanceQuery = useWalletBalance({
+    address: contractAddress,
+    client: thirdwebClient,
+    chain: contract.chain,
+  });
+  const { data: allRecipientsPercentages } = useReadContract(
+    getAllRecipientsPercentages,
+    { contract },
+  );
+  const balanceQuery = useSplitBalances(contract);
   const balances = useMemo(() => {
     if (!balanceQuery.data && !nativeBalanceQuery.data) {
       return [];
@@ -73,37 +103,30 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
   }, [balanceQuery.data, nativeBalanceQuery.data]);
 
   const shareOfBalancesForConnectedWallet = useMemo(() => {
-    const activeRecipient = splitQuery.data?.find((r) => r.address === address);
+    const activeRecipient = (allRecipientsPercentages || []).find(
+      (r) => r.address.toLowerCase() === address?.toLowerCase(),
+    );
     if (!activeRecipient || !balances) {
       return {};
     }
 
     return balances.reduce(
       (acc, curr) => {
+        // For native token balance, Moralis returns the zero address
+        // this logic will potentially have to change if we decide to replace the service
+        const isNativeToken = curr.token_address === ZERO_ADDRESS;
+        const displayBalance = isNativeToken
+          ? toEther(BigInt(curr.balance))
+          : toTokens(BigInt(curr.balance), curr.decimals);
         return {
           // biome-ignore lint/performance/noAccumulatingSpread: FIXME
           ...acc,
-          // convert to bps for BigNumber calculations
-          [curr.token_address]: ethers.utils.formatUnits(
-            BigNumber.from(curr.balance)
-              .mul(activeRecipient.splitPercentage * 100)
-              .div(10000),
-            curr.decimals,
-          ),
+          [curr.token_address]: displayBalance,
         };
       },
       {} as { [address: string]: string },
     );
-  }, [splitQuery.data, balances, address]);
-
-  if (contractQuery.isLoading) {
-    // TODO build a skeleton for this
-    return <div>Loading...</div>;
-  }
-
-  if (!contractQuery?.contract) {
-    return null;
-  }
+  }, [allRecipientsPercentages, balances, address]);
 
   return (
     <Flex direction="column" gap={6}>
@@ -116,7 +139,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
               balanceQuery.isLoading || nativeBalanceQuery.isLoading
             }
             balancesIsError={balanceQuery.isError && nativeBalanceQuery.isError}
-            contractQuery={contractQuery}
+            contract={contract}
           />
         </Flex>
       </Flex>
@@ -188,6 +211,11 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
             The Split can receive funds in the native token or in any ERC20.
             Balances may take a couple of minutes to display after being
             received.
+            <br />
+            {/* We currently use Moralis and high chances are they don't recognize all ERC20 tokens in the contract */}
+            If you are looking to distribute an ERC20 token and it's not being
+            recognized on this page, you can manually call the `distribute`
+            method in the Explorer page
           </Text>
         </Flex>
 
@@ -195,7 +223,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
           <Heading size="label.lg" mb="8px">
             Split Recipients
           </Heading>
-          {splitQuery.data?.map((split) => (
+          {(allRecipientsPercentages || []).map((split) => (
             <Card key={split.address}>
               <Text>
                 <Text as="span" size="label.md">

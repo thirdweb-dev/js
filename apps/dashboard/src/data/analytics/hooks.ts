@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { THIRDWEB_ANALYTICS_API_HOSTNAME } from "./constants";
 
 export type AnalyticsQueryParams = {
   chainId: number;
@@ -17,7 +16,7 @@ async function makeQuery(
     .filter(([, value]) => !!value)
     .map(([key, value]) => `${key}=${value}`)
     .join("&")}`;
-  return fetch(`${THIRDWEB_ANALYTICS_API_HOSTNAME}${path}${queryString}`, {
+  return fetch(`/api/server-proxy/chainsaw/${path}${queryString}`, {
     method: "GET",
   });
 }
@@ -374,17 +373,24 @@ export function useTotalWalletsAnalytics(params: AnalyticsQueryParams) {
   });
 }
 
-export function useAnalyticsSupportedChains() {
-  return useQuery(
-    ["analytics-supported-chains"] as const,
-    async (): Promise<number[]> => {
-      const res = await makeQuery("/api/v1/supported-chains", {});
-      if (!res.ok) {
-        throw new Error(`Unexpected status ${res.status}`);
-      }
+export function useAnalyticsSupportedForChain(chainId: number | undefined) {
+  return useQuery({
+    queryKey: ["analytics-supported-chains", chainId] as const,
+    queryFn: async (): Promise<boolean> => {
+      try {
+        const res = await makeQuery(`/service/chains/${chainId}`, {});
+        if (!res.ok) {
+          // assume not supported if we get a non-200 response
+          return false;
+        }
 
-      const { results } = await res.json();
-      return results;
+        const { data } = await res.json();
+        return data;
+      } catch (e) {
+        console.error("Error checking if analytics is supported for chain", e);
+        return false;
+      }
     },
-  );
+    enabled: !!chainId,
+  });
 }

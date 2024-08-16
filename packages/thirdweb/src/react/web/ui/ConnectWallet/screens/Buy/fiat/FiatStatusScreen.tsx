@@ -41,9 +41,10 @@ export function OnrampStatusScreen(props: {
   onShowSwapFlow: (status: BuyWithFiatStatus) => void;
   transactionMode: boolean;
   isEmbed: boolean;
+  onSuccess: ((status: BuyWithFiatStatus) => void) | undefined;
 }) {
   const queryClient = useQueryClient();
-  const { openedWindow } = props;
+  const { openedWindow, onSuccess } = props;
   const statusQuery = useBuyWithFiatStatus({
     intentId: props.intentId,
     client: props.client,
@@ -61,6 +62,18 @@ export function OnrampStatusScreen(props: {
   } else if (statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED") {
     uiStatus = "completed";
   }
+
+  const purchaseCbCalled = useRef(false);
+  useEffect(() => {
+    if (purchaseCbCalled.current || !onSuccess) {
+      return;
+    }
+
+    if (statusQuery.data?.status === "ON_RAMP_TRANSFER_COMPLETED") {
+      purchaseCbCalled.current = true;
+      onSuccess(statusQuery.data);
+    }
+  }, [onSuccess, statusQuery.data]);
 
   // close the onramp popup if onramp is completed
   useEffect(() => {

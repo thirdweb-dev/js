@@ -23,6 +23,7 @@ import { generateBreakpointTypographyCssVars } from "tw-components/utils/typogra
 import type { ThirdwebNextPage } from "utils/types";
 import chakraTheme from "../theme";
 import "@/styles/globals.css";
+import { DashboardRouterTopProgressBar } from "@/lib/DashboardRouter";
 
 const inter = interConstructor({
   subsets: ["latin"],
@@ -268,6 +269,8 @@ const ConsoleApp = memo(function ConsoleApp({
         transitionDuration={500}
         transitionTimingFunction="ease"
       />
+
+      <DashboardRouterTopProgressBar />
 
       <TailwindTheme>
         <ChakraProvider theme={chakraThemeWithFonts}>

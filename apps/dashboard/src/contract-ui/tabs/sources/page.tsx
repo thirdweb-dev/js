@@ -18,11 +18,11 @@ import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
-import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { toast } from "sonner";
 import { Badge, Button, Card, Heading } from "tw-components";
+import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
 interface ContractSourcesPageProps {
   contractAddress?: string;
@@ -257,7 +257,7 @@ function RefreshContractMetadataButton(props: {
   chainId: number;
   contractAddress: string;
 }) {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const queryClient = useQueryClient();
   const contractCacheMutation = useMutation({
     mutationFn: async () => {

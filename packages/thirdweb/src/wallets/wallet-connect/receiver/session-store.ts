@@ -1,10 +1,10 @@
-import { LocalStorage } from "../../in-app/web/utils/Storage/LocalStorage.js";
+import { ClientScopedStorage } from "../../in-app/core/authentication/client-scoped-storage.js";
 import type { WalletConnectSession } from "./types.js";
 
 /**
  * @internal
  */
-export let walletConnectSessions: LocalStorage | undefined;
+export let walletConnectSessions: ClientScopedStorage | undefined;
 
 /**
  * @internal
@@ -25,7 +25,8 @@ export function initializeSessionStore(options: {
   clientId: string;
 }) {
   if (!walletConnectSessions) {
-    walletConnectSessions = new LocalStorage({
+    walletConnectSessions = new ClientScopedStorage({
+      storage: null, // TODO: inject storage
       clientId: options.clientId,
     });
   }
@@ -73,7 +74,7 @@ export async function removeSession(
  * @internal FOR TESTING ONLY
  */
 export function setWalletConnectSessions(
-  storage: LocalStorage | undefined,
+  storage: ClientScopedStorage | undefined,
 ): void {
   walletConnectSessions = storage;
 }

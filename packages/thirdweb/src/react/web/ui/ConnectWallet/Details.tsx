@@ -53,6 +53,7 @@ import type {
 } from "../../../core/utils/defaultTokens.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
 import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
+import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
 import { Img } from "../components/Img.js";
@@ -68,6 +69,7 @@ import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
+import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
 import {
   NetworkSelectorContent,
   type NetworkSelectorProps,
@@ -84,6 +86,8 @@ import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
 import { WalletManagerScreen } from "./screens/Details/WalletManagerScreen.js";
+import { LinkProfileScreen } from "./screens/LinkProfileScreen.js";
+import { LinkedProfilesScreen } from "./screens/LinkedProfilesScreen.js";
 import { ManageWalletScreen } from "./screens/ManageWalletScreen.js";
 import { PrivateKey } from "./screens/PrivateKey.js";
 import { ReceiveFunds } from "./screens/ReceiveFunds.js";
@@ -192,25 +196,25 @@ export const ConnectedWalletDetails: React.FC<{
       {ensAvatarQuery.data ? (
         <Img
           src={ensAvatarQuery.data}
-          width={iconSize.lg}
-          height={iconSize.lg}
+          width={iconSize.sm}
+          height={iconSize.sm}
           style={{
-            borderRadius: radius.sm,
+            borderRadius: radius.xs,
           }}
           client={client}
         />
       ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.lg} id={activeWallet.id} client={client} />
+        <WalletImage size={iconSize.md} id={activeWallet.id} client={client} />
       ) : (
-        <GenericWalletIcon size={iconSize.lg} />
+        <GenericWalletIcon size={iconSize.md} />
       )}
 
-      <Container flex="column" gap="xxs">
+      <Container flex="column" gap="3xs">
         {/* Address */}
 
         {addressOrENS ? (
           <Text
-            size="sm"
+            size="xs"
             color="primaryText"
             weight={500}
             className={`${TW_CONNECTED_WALLET}__address`}
@@ -218,7 +222,7 @@ export const ConnectedWalletDetails: React.FC<{
             {addressOrENS}
           </Text>
         ) : (
-          <Skeleton height={fontSize.sm} width="88px" />
+          <Skeleton height={fontSize.sm} width="80px" />
         )}
 
         {/* Balance */}
@@ -232,7 +236,7 @@ export const ConnectedWalletDetails: React.FC<{
             {balanceQuery.data.symbol}
           </Text>
         ) : (
-          <Skeleton height={fontSize.xs} width="82px" />
+          <Skeleton height={fontSize.xs} width="70px" />
         )}
       </Container>
     </WalletInfoButton>
@@ -276,6 +280,12 @@ function DetailsModal(props: {
   const chainFaucetsQuery = useChainFaucets(walletChain);
 
   const disableSwitchChain = !activeWallet?.switchChain;
+
+  const screenSetup = useSetupScreen({
+    size: "compact",
+    welcomeScreen: undefined,
+    wallets: activeWallet ? [activeWallet] : [],
+  });
 
   function closeModal() {
     setIsOpen(false);
@@ -778,6 +788,25 @@ function DetailsModal(props: {
         client={client}
       />
     );
+  } else if (screen === "linked-profiles") {
+    content = (
+      <LinkedProfilesScreen
+        onBack={() => setScreen("manage-wallet")}
+        client={client}
+        locale={locale}
+        setScreen={setScreen}
+      />
+    );
+  } else if (screen === "link-profile") {
+    content = (
+      <LinkProfileScreen
+        onBack={() => {
+          setScreen("linked-profiles");
+        }}
+        client={client}
+        locale={locale}
+      />
+    );
   }
 
   // send funds
@@ -832,17 +861,21 @@ function DetailsModal(props: {
 
   return (
     <CustomThemeProvider theme={props.theme}>
-      <Modal
-        size={"compact"}
-        open={isOpen}
-        setOpen={(_open) => {
-          if (!_open) {
-            closeModal();
-          }
-        }}
-      >
-        {content}
-      </Modal>
+      <WalletUIStatesProvider theme={props.theme} isOpen={false}>
+        <ScreenSetupContext.Provider value={screenSetup}>
+          <Modal
+            size={"compact"}
+            open={isOpen}
+            setOpen={(_open) => {
+              if (!_open) {
+                closeModal();
+              }
+            }}
+          >
+            {content}
+          </Modal>
+        </ScreenSetupContext.Provider>
+      </WalletUIStatesProvider>
     </CustomThemeProvider>
   );
 }
@@ -853,20 +886,21 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
     all: "unset",
     background: theme.colors.connectedButtonBg,
     border: `1px solid ${theme.colors.borderColor}`,
-    padding: `${spacing.sm} ${spacing.sm}`,
-    borderRadius: radius.lg,
+    padding: `${spacing.xs} ${spacing.sm}`,
+    borderRadius: radius.md,
     cursor: "pointer",
     display: "inline-flex",
     alignItems: "center",
-    minWidth: "180px",
-    gap: spacing.sm,
+    minWidth: "150px",
+    minHeight: "52px",
+    gap: spacing.xs,
     boxSizing: "border-box",
     WebkitTapHighlightColor: "transparent",
     lineHeight: "normal",
     animation: `${fadeInAnimation} 300ms ease`,
     [media.mobile]: {
       gap: spacing.sm,
-      padding: `${spacing.xs} ${spacing.sm}`,
+      padding: `${spacing.xs} ${spacing.xs}`,
       img: {
         width: `${iconSize.md}px`,
         height: `${iconSize.md}px`,
@@ -1191,6 +1225,7 @@ export type UseWalletDetailsModalOptions = {
    * ```
    */
   chains?: Chain[];
+
   /**
    * Show a "Request Testnet funds" link in Wallet Details Modal when user is connected to a testnet.
    *

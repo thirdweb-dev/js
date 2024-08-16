@@ -27,7 +27,20 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
+  optimize_ci:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check_skip.outputs.skip }}
+    steps:
+      - name: Optimize CI
+        id: check_skip
+        uses: withgraphite/graphite-ci-action@main
+        with:
+          graphite_token: ${{ secrets.GRAPHITE_OMTIMIZE_TOKEN }}
+
   build:
+    needs: optimize_ci
+    if: needs.optimize_ci.outputs.skip == 'false'
     runs-on: ubuntu-latest
     name: Build Packages
     steps:
@@ -41,6 +54,8 @@ jobs:
         run: pnpm build:legacy_packages
 
   lint:
+    needs: optimize_ci
+    if: needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: Lint Packages
     runs-on: ubuntu-latest
@@ -54,6 +69,8 @@ jobs:
       - run: pnpm lint:legacy
 
   test:
+    needs: optimize_ci
+    if: needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -74,6 +91,8 @@ jobs:
           verbose: true
 
   e2e:
+    needs: optimize_ci
+    if: needs.optimize_ci.outputs.skip == 'false'
     timeout-minutes: 15
     name: E2E Tests
     runs-on: ubuntu-latest

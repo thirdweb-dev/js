@@ -1,6 +1,8 @@
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { detectFeatures as _detectFeatures } from "components/contract-components/utils";
+import { useMemo } from "react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { ClaimConditions } from "./components/claim-conditions";
 
@@ -29,6 +31,29 @@ export const ContractClaimConditionsPage: React.FC<
       "ERC20ClaimPhasesV2",
     ],
   });
+
+  const hasNewClaimConditions = useMemo(
+    () =>
+      _detectFeatures(contractQuery.contract, [
+        // erc721
+        "ERC721ClaimConditionsV2",
+        "ERC721ClaimPhasesV2",
+        // erc1155
+        "ERC1155ClaimConditionsV2",
+        "ERC1155ClaimPhasesV2",
+        // erc20
+        "ERC20ClaimConditionsV2",
+        "ERC20ClaimPhasesV2",
+      ]),
+    [contractQuery.contract],
+  );
+
+  const contractInfo = useMemo(() => {
+    return {
+      hasNewClaimConditions,
+      isErc20: _detectFeatures(contractQuery.contract, ["ERC20"]),
+    };
+  }, [contractQuery.contract, hasNewClaimConditions]);
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
@@ -63,7 +88,10 @@ export const ContractClaimConditionsPage: React.FC<
 
   return (
     <Flex direction="column" gap={6}>
-      <ClaimConditions contract={contractQuery.contract} />
+      <ClaimConditions
+        contract={contractQuery.contract}
+        contractInfo={contractInfo}
+      />
     </Flex>
   );
 };

@@ -74,6 +74,7 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
    * ```
    */
   getAccount(): Account | undefined;
+
   /**
    * Re-connect the wallet automatically without prompting the user for connection.
    *

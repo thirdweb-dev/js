@@ -50,12 +50,19 @@ export const AccountPage: React.FC<AccountPageProps> = ({
     );
   }
 
+  const contract = contractQuery.contract;
+
   return (
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Balances</Heading>
       </Flex>
-      <AccountBalance address={contractAddress || ""} />
+      {contract && (
+        <AccountBalance
+          address={contract.getAddress()}
+          chainId={contract.chainId}
+        />
+      )}
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Deposit {symbol}</Heading>
       </Flex>

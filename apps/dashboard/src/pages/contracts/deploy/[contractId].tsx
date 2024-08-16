@@ -10,7 +10,6 @@ import {
   LinkOverlay,
   Skeleton,
 } from "@chakra-ui/react";
-import type { FeatureWithEnabled } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import {
@@ -150,6 +149,11 @@ ContractDeployDetailPage.pageId = PageId.DeploySingle;
 
 export default ContractDeployDetailPage;
 
+// biome-ignore lint/suspicious/noExplicitAny: This will be removed once we fully migrate to v5
+type FeatureWithEnabled = any & {
+  features: Record<string, FeatureWithEnabled>;
+  enabled: boolean;
+};
 interface EnabledFeatureProps {
   feature: FeatureWithEnabled;
 }

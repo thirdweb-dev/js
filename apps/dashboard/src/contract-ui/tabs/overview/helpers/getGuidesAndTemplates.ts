@@ -1,4 +1,3 @@
-import type { FeatureName } from "@thirdweb-dev/sdk";
 import type { ContractType } from "constants/contracts";
 
 type Item = {
@@ -151,7 +150,7 @@ const GUIDES_FOR_TYPE: Record<ContractType, Item[]> = {
   token: [],
 };
 
-const GUIDES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
+const GUIDES_FOR_EXTENSION: Record<string, Item[]> = {
   ERC20ClaimConditionsV1: [
     ALL_GUIDES.claimErc20TokenNextjs,
     ALL_GUIDES.tokenButtonReact,
@@ -269,7 +268,7 @@ const GUIDES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   PluginRouter: [],
   DynamicContract: [],
   ModularCore: [],
-  ModularExtension: [],
+  ModularModule: [],
   DirectListings: [],
   EnglishAuctions: [],
   Offers: [],
@@ -359,7 +358,7 @@ const TEMPLATES_FOR_TYPE: Record<ContractType, Item[]> = {
   token: [],
 };
 
-const TEMPLATES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
+const TEMPLATES_FOR_EXTENSION: Record<string, Item[]> = {
   ERC20ClaimConditionsV1: [ALL_TEMPLATES.tokenDrop],
   ERC20ClaimConditionsV2: [ALL_TEMPLATES.tokenDrop],
   ERC20ClaimPhasesV1: [ALL_TEMPLATES.tokenDrop],
@@ -431,7 +430,7 @@ const TEMPLATES_FOR_EXTENSION: Record<FeatureName, Item[]> = {
   PluginRouter: [],
   DynamicContract: [],
   ModularCore: [],
-  ModularExtension: [],
+  ModularModule: [],
   DirectListings: [],
   EnglishAuctions: [],
   Offers: [],

@@ -89,7 +89,7 @@ function AllWalletsUI(props: {
 
           <Input
             style={{
-              padding: `${spacing.sm} ${spacing.md} ${spacing.sm} ${spacing.xxl}`,
+              padding: `${spacing.sm} ${spacing.sm} ${spacing.sm} ${spacing.xxl}`,
             }}
             tabIndex={-1}
             variant="outline"

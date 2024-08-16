@@ -1,33 +1,46 @@
+import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
-import type { Account } from "../../interfaces/wallet.js";
+import { stringify } from "../../../utils/json.js";
+import { nativeLocalStorage } from "../../../utils/storage/nativeStorage.js";
+import type { Account, Wallet } from "../../interfaces/wallet.js";
+import {
+  loginWithPasskey,
+  registerPasskey,
+} from "../core/authentication/passkeys.js";
+import { siweAuthenticate } from "../core/authentication/siwe.js";
 import {
   type AuthArgsType,
   type AuthLoginReturnType,
+  type AuthStoredTokenWithCookieReturnType,
   type GetUser,
   type LogoutReturnType,
+  type MultiStepAuthArgsType,
+  type MultiStepAuthProviderType,
   type OauthOption,
-  type PreAuthArgsType,
-  type SendEmailOtpReturnType,
   UserWalletStatus,
-} from "../core/authentication/type.js";
+} from "../core/authentication/types.js";
 import type { InAppConnector } from "../core/interfaces/connector.js";
+import { sendOtp, verifyOtp } from "../web/lib/auth/otp.js";
+import type { Ecosystem } from "../web/types.js";
 import {
   authEndpoint,
+  authenticate,
   customJwt,
   deleteActiveAccount,
-  sendVerificationEmail,
-  sendVerificationSms,
+  otpLogin,
+  siweLogin,
   socialLogin,
-  validateEmailOTP,
 } from "./auth/native-auth.js";
 import { fetchUserDetails } from "./helpers/api/fetchers.js";
 import { logoutUser } from "./helpers/auth/logout.js";
+import { postAuth } from "./helpers/auth/middleware.js";
 import { getWalletUserDetails } from "./helpers/storage/local.js";
 import { getExistingUserAccount } from "./helpers/wallet/retrieval.js";
 
 export type NativeConnectorOptions = {
   client: ThirdwebClient;
   partnerId?: string | undefined;
+  passkeyDomain?: string;
 };
 
 export class InAppNativeConnector implements InAppConnector {
@@ -70,40 +83,62 @@ export class InAppNativeConnector implements InAppConnector {
     return getExistingUserAccount({ client: this.options.client });
   }
 
-  preAuthenticate(params: PreAuthArgsType): Promise<SendEmailOtpReturnType> {
+  preAuthenticate(args: MultiStepAuthProviderType): Promise<void> {
+    return sendOtp({
+      ...args,
+      client: this.options.client,
+    });
+  }
+
+  async authenticate(
+    params: AuthArgsType,
+  ): Promise<AuthStoredTokenWithCookieReturnType> {
     const strategy = params.strategy;
     switch (strategy) {
-      case "email": {
-        return sendVerificationEmail({
-          email: params.email,
+      case "email":
+      case "phone": {
+        return verifyOtp(params);
+      }
+      case "wallet": {
+        return siweAuthenticate({
           client: this.options.client,
+          wallet: params.wallet,
+          chain: params.chain,
         });
       }
-      case "phone":
-        return sendVerificationSms({
-          phoneNumber: params.phoneNumber,
-          client: this.options.client,
-        });
+      case "google":
+      case "facebook":
+      case "discord":
+      case "apple": {
+        const ExpoLinking = require("expo-linking");
+        const redirectUrl =
+          params.redirectUrl || (ExpoLinking.createURL("") as string);
+        return authenticate({ strategy, redirectUrl }, this.options.client);
+      }
+      case "passkey":
+        return this.passkeyAuth(params);
       default:
-        assertUnreachable(strategy);
+        throw new Error(`Unsupported authentication type: ${strategy}`);
     }
   }
 
-  async authenticate(params: AuthArgsType): Promise<AuthLoginReturnType> {
+  async connect(params: AuthArgsType): Promise<AuthLoginReturnType> {
     const strategy = params.strategy;
     switch (strategy) {
       case "email": {
-        return await this.validateEmailOTP({
+        return await this.validateOtp({
           email: params.email,
-          otp: params.verificationCode,
-          recoveryCode: params.verificationCode,
+          verificationCode: params.verificationCode,
+          strategy: "email",
+          client: this.options.client,
         });
       }
       case "phone": {
-        return await this.validateEmailOTP({
-          email: params.phoneNumber,
-          otp: params.verificationCode,
-          recoveryCode: params.verificationCode,
+        return await this.validateOtp({
+          phoneNumber: params.phoneNumber,
+          verificationCode: params.verificationCode,
+          strategy: "phone",
+          client: this.options.client,
         });
       }
       case "google":
@@ -120,6 +155,12 @@ export class InAppNativeConnector implements InAppConnector {
           redirectUrl,
         });
       }
+      case "wallet": {
+        return this.siweLogin({
+          wallet: params.wallet,
+          chain: params.chain,
+        });
+      }
       case "jwt": {
         return this.customJwt({
           jwt: params.jwt,
@@ -133,7 +174,16 @@ export class InAppNativeConnector implements InAppConnector {
         });
       }
       case "passkey": {
-        throw new Error("Passkey authentication is not implemented yet");
+        const authToken = await this.passkeyAuth(params);
+        const account = await this.getAccount();
+        return {
+          user: {
+            status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+            account,
+            authDetails: authToken.storedToken.authDetails,
+            walletAddress: account.address,
+          },
+        };
       }
       case "iframe": {
         throw new Error("iframe_email_verification is not supported in native");
@@ -146,18 +196,83 @@ export class InAppNativeConnector implements InAppConnector {
     }
   }
 
-  private async validateEmailOTP(options: {
-    email: string;
-    otp: string;
-    recoveryCode?: string;
-  }): Promise<AuthLoginReturnType> {
+  private async passkeyAuth(args: {
+    type: "sign-up" | "sign-in";
+    passkeyName?: string;
+    client: ThirdwebClient;
+    ecosystem?: Ecosystem;
+  }): Promise<AuthStoredTokenWithCookieReturnType> {
+    const { type, passkeyName, client, ecosystem } = args;
+    const domain = this.options.passkeyDomain;
+    if (!domain) {
+      throw new Error(
+        "Passkey domain is required for native platforms. Please pass it in the 'auth' options when creating the inAppWallet().",
+      );
+    }
     try {
-      const { storedToken } = await validateEmailOTP({
-        email: options.email,
-        client: this.options.client,
-        otp: options.otp,
-        recoveryCode: options.recoveryCode,
-      });
+      const { PasskeyNativeClient } = await import("./auth/passkeys.js");
+      const passkeyClient = new PasskeyNativeClient();
+      const storage = nativeLocalStorage;
+      let authToken: AuthStoredTokenWithCookieReturnType;
+
+      if (type === "sign-up") {
+        authToken = await registerPasskey({
+          client,
+          ecosystem,
+          username: passkeyName,
+          passkeyClient,
+          storage,
+          rp: {
+            id: domain,
+            name: domain,
+          },
+        });
+      } else {
+        authToken = await loginWithPasskey({
+          client,
+          ecosystem,
+          passkeyClient,
+          storage,
+          rp: {
+            id: domain,
+            name: domain,
+          },
+        });
+      }
+
+      const toStoreToken: AuthStoredTokenWithCookieReturnType["storedToken"] = {
+        jwtToken: authToken.storedToken.jwtToken,
+        authDetails: authToken.storedToken.authDetails,
+        authProvider: authToken.storedToken.authProvider,
+        developerClientId: authToken.storedToken.developerClientId,
+        cookieString: authToken.storedToken.cookieString,
+        // we should always store the jwt cookie since there's no concept of cookie in react native
+        shouldStoreCookieString: true,
+        isNewUser: authToken.storedToken.isNewUser,
+      };
+
+      await postAuth({ storedToken: toStoreToken, client });
+
+      return authToken;
+    } catch (error) {
+      console.error(
+        `Error while signing in with passkey. ${(error as Error)?.message || typeof error === "object" ? stringify(error) : error}`,
+      );
+      if (error instanceof Error) {
+        throw new Error(`Error signing in with passkey: ${error.message}`);
+      }
+      throw new Error("An unknown error occurred signing in with passkey");
+    }
+  }
+
+  private async validateOtp(
+    options: MultiStepAuthArgsType & {
+      client: ThirdwebClient;
+      ecosystem?: Ecosystem;
+    },
+  ): Promise<AuthLoginReturnType> {
+    try {
+      const { storedToken } = await otpLogin(options);
       const account = await this.getAccount();
       return {
         user: {
@@ -199,6 +314,40 @@ export class InAppNativeConnector implements InAppConnector {
         throw new Error(`Error signing in with ${auth}: ${error.message}`);
       }
       throw new Error(`An unknown error occurred signing in with ${auth}`);
+    }
+  }
+
+  private async siweLogin(options: {
+    wallet: Wallet;
+    chain: Chain;
+  }): Promise<AuthLoginReturnType> {
+    try {
+      const { storedToken } = await siweLogin(
+        this.options.client,
+        options.wallet,
+        options.chain,
+      );
+      const account = await this.getAccount();
+      return {
+        user: {
+          status: UserWalletStatus.LOGGED_IN_WALLET_INITIALIZED,
+          account,
+          authDetails: storedToken.authDetails,
+          walletAddress: account.address,
+        },
+      };
+    } catch (error) {
+      console.error(
+        `Error while signing in with: ${options.wallet.id}. ${error}`,
+      );
+      if (error instanceof Error) {
+        throw new Error(
+          `Error signing in with ${options.wallet.id}: ${error.message}`,
+        );
+      }
+      throw new Error(
+        `An unknown error occurred signing in with ${options.wallet.id}`,
+      );
     }
   }
 

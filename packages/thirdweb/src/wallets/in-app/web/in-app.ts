@@ -63,6 +63,21 @@ import { createInAppWallet } from "../core/wallet/in-app-core.js";
  * });
  * ```
  *
+ * ### Login with SIWE
+ * ```ts
+ * import { inAppWallet, createWallet } from "thirdweb/wallets";
+ *
+ * const rabby = createWallet("io.rabby");
+ * const inAppWallet = inAppWallet();
+ *
+ * const account = await inAppWallet.connect({
+ *    strategy: "wallet",
+ *    chain: mainnet,
+ *    wallet: rabby,
+ *    client: MY_CLIENT
+ * });
+ * ```
+ *
  * ### Login with phone number
  * ```ts
  * import { inAppWallet, preAuthenticate } from "thirdweb/wallets/in-app";
@@ -172,6 +187,7 @@ export function inAppWallet(
       const { InAppWebConnector } = await import("./lib/web-connector.js");
       return new InAppWebConnector({
         client,
+        passkeyDomain: createOptions?.auth?.passkeyDomain,
       });
     },
   });

@@ -1,8 +1,8 @@
 import type { ThirdwebClient } from "../../../../../client/client.js";
 import { getThirdwebBaseUrl } from "../../../../../utils/domains.js";
-import type { AuthStoredTokenWithCookieReturnType } from "../../../../../wallets/in-app/core/authentication/type.js";
 import type { SocialAuthOption } from "../../../../../wallets/types.js";
-import { getSocialAuthLoginPath } from "../../../core/authentication/getLoginPath.js";
+import { getLoginUrl } from "../../../core/authentication/getLoginPath.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../../core/authentication/types.js";
 import type { Ecosystem } from "../../types.js";
 import { DEFAULT_POP_UP_SIZE } from "./constants.js";
 
@@ -30,12 +30,18 @@ export const loginWithOauthRedirect = (options: {
   authOption: SocialAuthOption;
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
+  redirectUrl?: string;
+  redirectExternally?: boolean;
 }): void => {
-  const loginUrl = getSocialAuthLoginPath({
+  const loginUrl = getLoginUrl({
     ...options,
     mode: "redirect",
   });
-  window.location.href = loginUrl;
+  if (options.redirectExternally === true) {
+    window.open(loginUrl);
+  } else {
+    window.location.href = loginUrl;
+  }
 };
 
 export const loginWithOauth = async (options: {
@@ -49,7 +55,7 @@ export const loginWithOauth = async (options: {
   let isWindowOpenedByFn = false;
   if (!win) {
     win = window.open(
-      getSocialAuthLoginPath({ ...options, mode: "popup" }),
+      getLoginUrl({ ...options, mode: "popup" }),
       `Login to ${options.authOption}`,
       DEFAULT_POP_UP_SIZE,
     );

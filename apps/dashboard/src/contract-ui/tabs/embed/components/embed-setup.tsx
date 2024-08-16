@@ -11,13 +11,13 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import type { DropContract } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
+import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
   Button,
@@ -31,7 +31,7 @@ import {
 import type { StoredChain } from "../../../../contexts/configured-chains";
 
 interface EmbedSetupProps {
-  contract: DropContract;
+  contract: ThirdwebContract;
   ercOrMarketplace: string;
 }
 
@@ -81,7 +81,7 @@ const isValidUrl = (url: string | undefined) => {
 };
 
 const buildIframeSrc = (
-  contract?: DropContract,
+  contract: ThirdwebContract,
   ercOrMarketplace?: string,
   options?: IframeSrcOptions,
 ): string => {
@@ -114,7 +114,7 @@ const buildIframeSrc = (
     `https://embed.ipfscdn.io/ipfs/${contractEmbedHash}/${contractPath}`,
   );
 
-  url.searchParams.append("contract", contract.getAddress());
+  url.searchParams.append("contract", contract.address);
   url.searchParams.append("chain", chain);
   url.searchParams.append("clientId", clientId);
 
@@ -565,7 +565,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
                 category: "embed",
                 action: "click",
                 label: "copy-code",
-                address: contract?.getAddress(),
+                address: contract.address,
                 chainId,
               });
             }}

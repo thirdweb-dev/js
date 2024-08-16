@@ -178,7 +178,7 @@ async function getInitializeTransaction(options: {
         contractId: type,
       });
       const moduleNames =
-        extendedMetadata?.defaultmodules?.map((e) => e.moduleName) || [];
+        extendedMetadata?.defaultModules?.map((e) => e.moduleName) || [];
       // can't promise all this unfortunately, needs to be sequential because of nonces
       const modules: string[] = [];
       const moduleInstallData: Hex[] = [];

@@ -2,8 +2,9 @@ import { useAccount, useAccountCredits } from "@3rdweb-sdk/react/hooks/useApi";
 import { DelayedDisplay } from "components/delayed-display/delayed-display";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import { useMemo } from "react";
-import { OpCreditsGrantedModal } from "./OpCreditsGrantedModal";
+import { Suspense, lazy, useMemo } from "react";
+
+const OpCreditsGrantedModal = lazy(() => import("./OpCreditsGrantedModal"));
 
 export const OpCreditsGrantedModalWrapper = () => {
   const trackEvent = useTrack();
@@ -37,10 +38,12 @@ export const OpCreditsGrantedModalWrapper = () => {
 
   return (
     <DelayedDisplay delay={500}>
-      <OpCreditsGrantedModal
-        setSawYouGotCredits={setSawYouGotCredits}
-        creditValue={opCredit?.originalGrantUsdCents}
-      />
+      <Suspense fallback={null}>
+        <OpCreditsGrantedModal
+          setSawYouGotCredits={setSawYouGotCredits}
+          creditValue={opCredit?.originalGrantUsdCents}
+        />
+      </Suspense>
     </DelayedDisplay>
   );
 };

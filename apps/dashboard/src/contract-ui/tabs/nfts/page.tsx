@@ -120,22 +120,26 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           {detectedRevealableState === "enabled" && contractQuery?.contract && (
             <NFTRevealButton contractQuery={contractQuery} />
           )}
-          {detectedClaimState && contractQuery?.contract && (
+          {detectedClaimState && contractQuery?.contract && isErc721 && (
+            /**
+             * This button is used for claiming NFT Drop contract (erc721) only!
+             * For Edition Drop we have a dedicated ClaimTabERC1155 inside each Edition's page
+             */
             <NFTClaimButton
               contractAddress={contractQuery.contract.getAddress()}
               chainId={contractQuery.contract.chainId}
             />
           )}
           {detectedMintableState === "enabled" && contractQuery?.contract && (
-            <NFTMintButton contractQuery={contractQuery} />
+            <NFTMintButton contract={contract} isErc721={isErc721} />
           )}
           {detectedSharedMetadataState === "enabled" &&
             contractQuery?.contract && (
-              <NFTSharedMetadataButton contractQuery={contractQuery} />
+              <NFTSharedMetadataButton contract={contract} />
             )}
           {detectedLazyMintableState === "enabled" &&
             contractQuery?.contract && (
-              <NFTLazyMintButton contractQuery={contractQuery} />
+              <NFTLazyMintButton contract={contract} isErc721={isErc721} />
             )}
           {detectedLzyMintState === "enabled" && contractQuery?.contract && (
             <BatchLazyMintButton

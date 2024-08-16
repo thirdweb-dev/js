@@ -3,7 +3,7 @@
 
 import type { ThirdwebClient } from "../../../client/client.js";
 import type { EcosystemWalletId } from "../../wallet-types.js";
-import type { AuthAndWalletRpcReturnType } from "../core/authentication/type.js";
+import type { AuthAndWalletRpcReturnType } from "../core/authentication/types.js";
 import type { InAppWalletIframeCommunicator } from "./utils/iFrameCommunication/InAppWalletIframeCommunicator.js";
 
 export type Ecosystem = {
@@ -39,6 +39,11 @@ export type InAppWalletConstructorType = ClientIdConstructorType & {
    * @param ecosystem - An optional set of options to connect to an ecosystem wallet.
    */
   ecosystem?: Ecosystem;
+
+  /**
+   * The domain of the passkey to use for authentication
+   */
+  passkeyDomain?: string;
 };
 
 export type ClientIdWithQuerierType = ClientIdConstructorType & {

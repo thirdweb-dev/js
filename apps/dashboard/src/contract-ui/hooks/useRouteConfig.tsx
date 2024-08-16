@@ -4,6 +4,7 @@ import { useEns } from "components/contract-components/hooks";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
+import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
 
 const LazyContractExplorerPage = dynamic(() =>
   import("../tabs/explorer/page").then(
@@ -87,9 +88,9 @@ const LazyContractSourcesPage = dynamic(() =>
     ({ ContractSourcesPage }) => ContractSourcesPage,
   ),
 );
-const LazyContractEditExtensionsPage = dynamic(() =>
+const LazyContractEditModulesPage = dynamic(() =>
   import("../tabs/manage/page").then(
-    ({ ContractEditExtensionsPage }) => ContractEditExtensionsPage,
+    ({ ContractEditModulesPage }) => ContractEditModulesPage,
   ),
 );
 
@@ -99,6 +100,10 @@ export function useContractRouteConfig(
   const ensQuery = useEns(contractAddress);
   const contractQuery = useContract(ensQuery.data?.address);
   const contractTypeQuery = contractType.useQuery(contractAddress);
+
+  const analyticsSupported = useAnalyticsSupportedForChain(
+    contractQuery.contract?.chainId,
+  );
 
   const claimconditionExtensionDetection = extensionDetectedState({
     contractQuery,
@@ -125,13 +130,14 @@ export function useContractRouteConfig(
       isDefault: true,
     },
     {
-      title: "Manage",
-      path: "manage",
+      title: "Modules",
+      path: "modules",
       isEnabled: extensionDetectedState({
         contractQuery,
         feature: ["ModularCore"],
       }),
-      component: LazyContractEditExtensionsPage,
+      isDefault: true,
+      component: LazyContractEditModulesPage,
     },
     {
       title: "Code Snippets",
@@ -157,6 +163,11 @@ export function useContractRouteConfig(
       component: LazyContractAnalyticsPage,
       isDefault: true,
       isBeta: true,
+      isEnabled: analyticsSupported.isLoading
+        ? "loading"
+        : analyticsSupported.data
+          ? "enabled"
+          : "disabled",
     },
     {
       title: "NFTs",

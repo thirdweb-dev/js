@@ -6,12 +6,14 @@ import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { getInstalledModules } from "../modular/__generated__/ModularCore/read/getInstalledModules.js";
+import { claimableERC20Module } from "../modular/write/claimableERC20.js";
 import { installPublishedModule } from "../modular/write/installPublishedModule.js";
 import { uninstallModuleByProxy } from "../modular/write/uninstallModuleByProxy.js";
 import { uninstallPublishedModule } from "../modular/write/uninstallPublishedModule.js";
+import { deployModularContract } from "./deploy-modular.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)(
+describe(
   "deployModularCore",
   {
     timeout: 120000,
@@ -138,6 +140,33 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       });
 
       expect(installedModules.length).toBe(0);
+    });
+
+    it("should deploy a modular contract with a module", async () => {
+      const address = await deployModularContract({
+        chain: ANVIL_CHAIN,
+        client: TEST_CLIENT,
+        account: TEST_ACCOUNT_A,
+        core: "ERC20CoreInitializable", // FIXME use ERC20 core from tw deployer
+        publisher: "0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264",
+        coreParams: {
+          name: "TestModularERC20",
+          symbol: "TT",
+        },
+        modules: [
+          claimableERC20Module({
+            primarySaleRecipient: TEST_ACCOUNT_A.address,
+          }),
+        ],
+      });
+      const installedModules = await getInstalledModules({
+        contract: getContract({
+          client: TEST_CLIENT,
+          chain: ANVIL_CHAIN,
+          address,
+        }),
+      });
+      expect(installedModules.length).toBe(1);
     });
   },
 );

@@ -37,6 +37,10 @@ const connectLocaleEn: ConnectLocale = {
   smartWallet: "Smart Wallet",
   or: "OR",
   goBackButton: "Back",
+  passkeys: {
+    title: "Passkeys",
+    linkPasskey: "Link a Passkey",
+  },
   welcomeScreen: {
     defaultTitle: "Your gateway to the decentralized world",
     defaultSubtitle: "Connect a wallet to get started",
@@ -102,6 +106,8 @@ const connectLocaleEn: ConnectLocale = {
   },
   manageWallet: {
     title: "Manage Wallet",
+    linkedProfiles: "Linked Profiles",
+    linkProfile: "Link a Profile",
     connectAnApp: "Connect an App",
     exportPrivateKey: "Export Private Key",
   },

@@ -1,7 +1,6 @@
 "use client";
 import { ShuffleIcon } from "@radix-ui/react-icons";
 import type { ThirdwebClient } from "../../../../../client/client.js";
-import { isEcosystemWallet } from "../../../../../wallets/ecosystem/is-ecosystem-wallet.js";
 import { isInAppWallet } from "../../../../../wallets/in-app/core/wallet/index.js";
 import { injectedProvider } from "../../../../../wallets/injected/mipdStore.js";
 import { fontSize, iconSize } from "../../../../core/design-system/index.js";
@@ -11,6 +10,7 @@ import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
 import { MenuButton } from "../MenuButton.js";
 import { KeyIcon } from "../icons/KeyIcon.js";
+import { MultiUserIcon } from "../icons/MultiUserIcon.js";
 import { WalletConnectIcon } from "../icons/WalletConnectIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
 import type { WalletDetailsModalScreen } from "./types.js";
@@ -55,6 +55,23 @@ export function ManageWalletScreen(props: {
             connectLocale={props.locale}
           />
 
+          {/* Multi-auth */}
+          {activeWallet?.id === "inApp" && (
+            <MenuButton
+              onClick={() => {
+                props.setScreen("linked-profiles");
+              }}
+              style={{
+                fontSize: fontSize.sm,
+              }}
+            >
+              <MultiUserIcon size={iconSize.md} />
+              <Text color="primaryText">
+                {props.locale.manageWallet.linkedProfiles}
+              </Text>
+            </MenuButton>
+          )}
+
           {/* Wallet Connect Receiver */}
           <MenuButton
             onClick={() => {
@@ -72,9 +89,8 @@ export function ManageWalletScreen(props: {
 
           {/* Private Key Export (if enabled) */}
           {activeWallet &&
-            ((isInAppWallet(activeWallet) &&
-              !activeWallet.getConfig()?.hidePrivateKeyExport) ||
-              isEcosystemWallet(activeWallet)) && (
+            isInAppWallet(activeWallet) &&
+            !activeWallet.getConfig()?.hidePrivateKeyExport && (
               <MenuButton
                 onClick={() => {
                   props.setScreen("private-key");

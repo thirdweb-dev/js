@@ -52,6 +52,7 @@ PublishPage.getLayout = (page, props: PublishPageProps) => {
       noOverflowX
       pageContainerClassName={props.isDeploy ? "!container" : ""}
       mainClassName={props.isDeploy ? "!pt-0" : ""}
+      hasSidebar={!props.isDeploy}
     >
       {!props.isDeploy && <ContractsSidebar />}
       {page}

@@ -1,10 +1,11 @@
 "use client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import type { TimeRange } from "lib/search";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export function TimeRangeSwitcher() {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
   const currentSort = searchParams?.get("sortBy") || "transactionCount";

@@ -126,9 +126,9 @@ export function useEngineSystemHealth(
   instanceUrl: string,
   pollInterval: number | false = false,
 ) {
-  return useQuery(
-    engineKeys.health(instanceUrl),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.health(instanceUrl),
+    queryFn: async () => {
       const res = await fetch(`${instanceUrl}system/health`, {
         headers: getEngineRequestHeaders(null),
       });
@@ -138,23 +138,57 @@ export function useEngineSystemHealth(
       const json = (await res.json()) as EngineSystemHealth;
       return json;
     },
-    {
-      enabled: !!instanceUrl,
-      refetchInterval: pollInterval,
+    enabled: !!instanceUrl,
+    refetchInterval: pollInterval,
+  });
+}
+
+export interface EngineSystemQueueMetrics {
+  result: {
+    queued: number;
+    pending: number;
+    latency?: {
+      msToSend: { p50: number; p90: number };
+      msToMine: { p50: number; p90: number };
+    };
+  };
+}
+
+export function useEngineQueueMetrics(
+  instanceUrl: string,
+  pollInterval: number | false = false,
+) {
+  const token = useLoggedInUser().user?.jwt ?? null;
+
+  return useQuery({
+    queryKey: engineKeys.queueMetrics(instanceUrl),
+    queryFn: async () => {
+      const res = await fetch(`${instanceUrl}system/queue`, {
+        headers: getEngineRequestHeaders(token),
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      return (await res.json()) as EngineSystemQueueMetrics;
     },
-  );
+    enabled: !!instanceUrl && !!token,
+    refetchInterval: pollInterval,
+  });
 }
 
 export function useEngineLatestVersion() {
-  return useQuery(engineKeys.latestVersion(), async () => {
-    const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
-      method: "GET",
-    });
-    if (!res.ok) {
-      throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
-    }
-    const json = await res.json();
-    return json.data.version as string;
+  return useQuery({
+    queryKey: engineKeys.latestVersion(),
+    queryFn: async () => {
+      const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine/latest-version`, {
+        method: "GET",
+      });
+      if (!res.ok) {
+        throw new Error(`Unexpected status ${res.status}: ${await res.text()}`);
+      }
+      const json = await res.json();
+      return json.data.version as string;
+    },
   });
 }
 
@@ -299,6 +333,7 @@ export type Transaction = {
   gasPrice?: string | null;
   maxFeePerGas?: string | null;
   maxPriorityFeePerGas?: string | null;
+  effectiveGasPrice?: string | null;
   transactionType?: number | null;
   transactionHash?: string | null;
   queuedAt?: string | null;
@@ -1462,11 +1497,11 @@ export interface EngineResourceMetrics {
   };
 }
 
-export function useEngineResourceMetrics(engineId: string) {
+export function useEngineSystemMetrics(engineId: string) {
   const [enabled, setEnabled] = useState(true);
 
   return useQuery(
-    engineKeys.metrics(engineId),
+    engineKeys.systemMetrics(engineId),
     async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,

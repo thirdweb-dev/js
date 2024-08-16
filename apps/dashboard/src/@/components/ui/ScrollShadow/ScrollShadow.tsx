@@ -1,7 +1,8 @@
 "use client";
 
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { cn } from "@/lib/utils";
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import styles from "./ScrollShadow.module.css";
 
 export function ScrollShadow(props: {
@@ -17,7 +18,7 @@ export function ScrollShadow(props: {
   const shadowRightEl = useRef<HTMLDivElement>(null);
   const wrapperEl = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const content = scrollableEl.current;
     const shadowTop = shadowTopEl.current;
     const shadowBottom = shadowBottomEl.current;

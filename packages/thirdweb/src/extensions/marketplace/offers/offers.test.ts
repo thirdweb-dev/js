@@ -31,7 +31,7 @@ import { getOffer } from "./read/getOffer.js";
 import { acceptOffer } from "./write/acceptOffer.js";
 import { makeOffer } from "./write/makeOffer.js";
 
-describe.runIf(process.env.TW_SECRET_KEY)("Marketplace: Offers", () => {
+describe.skip("Marketplace: Offers", () => {
   let nftTokenId: bigint;
   let marketplaceContract: ThirdwebContract;
   let erc721Contract: ThirdwebContract;

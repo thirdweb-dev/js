@@ -1,5 +1,7 @@
 import { type UseMutationResult, useMutation } from "@tanstack/react-query";
 import type { Chain } from "../../../../chains/types.js";
+import type { BuyWithCryptoStatus } from "../../../../pay/buyWithCrypto/getStatus.js";
+import type { BuyWithFiatStatus } from "../../../../pay/buyWithFiat/getStatus.js";
 import type { GaslessOptions } from "../../../../transaction/actions/gasless/types.js";
 import { sendTransaction } from "../../../../transaction/actions/send-transaction.js";
 import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait-for-tx-receipt.js";
@@ -46,6 +48,20 @@ export type SendTransactionPayModalConfig =
             testMode?: boolean;
           };
       purchaseData?: object;
+      /**
+       * Callback to be called when the user successfully completes the purchase.
+       */
+      onPurchaseSuccess?: (
+        info:
+          | {
+              type: "crypto";
+              status: BuyWithCryptoStatus;
+            }
+          | {
+              type: "fiat";
+              status: BuyWithFiatStatus;
+            },
+      ) => void;
     }
   | false;
 

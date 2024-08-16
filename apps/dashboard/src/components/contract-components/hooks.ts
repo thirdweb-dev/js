@@ -34,11 +34,13 @@ import {
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
 import type { SnippetApiResponse } from "components/contract-tabs/code/types";
+import type { providers } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import type { StaticImageData } from "next/image";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 import {
   abstractTestnet,
@@ -54,13 +56,12 @@ import {
 } from "thirdweb/react";
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
+import { Web3Provider } from "zksync-ethers";
 import type { z } from "zod";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
-import {
-  getStepAddToRegistry,
-  getStepDeploy,
-  getStepSetNFTMetadata,
-  useDeployContextModal,
+import type {
+  DeployModalStep,
+  DeployStatusModal,
 } from "./contract-deploy-form/deploy-context-modal";
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
 import type { ContractId } from "./types";
@@ -590,34 +591,38 @@ type ContractDeployMutationParams = CustomContractDeploymentFormData & {
   addToDashboard: boolean;
 };
 
-export function useCustomContractDeployMutation(
-  ipfsHash: string,
-  version?: string,
-  forceDirectDeploy?: boolean,
-  {
+export function useCustomContractDeployMutation(options: {
+  ipfsHash: string;
+  version?: string;
+  forceDirectDeploy?: boolean;
+  hasContractURI?: boolean;
+  hasRoyalty?: boolean;
+  isSplit?: boolean;
+  isVote?: boolean;
+  isErc721SharedMetadadata?: boolean;
+  deployStatusModal: DeployStatusModal;
+}) {
+  const {
+    ipfsHash,
+    version,
     hasContractURI,
     hasRoyalty,
     isSplit,
     isVote,
     isErc721SharedMetadadata,
-  }: {
-    hasContractURI?: boolean;
-    hasRoyalty?: boolean;
-    isSplit?: boolean;
-    isVote?: boolean;
-    isErc721SharedMetadadata?: boolean;
-  } = {},
-) {
+    deployStatusModal,
+    forceDirectDeploy,
+  } = options;
   const sdk = useSDK();
   const queryClient = useQueryClient();
   const account = useActiveAccount();
   const walletAddress = account?.address;
   const chainId = useActiveWalletChain()?.id;
   const signer = useSigner();
-  const deployContext = useDeployContextModal();
   const { data: transactions } = useTransactionsForDeploy(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
   const rawPredeployMetadata = useContractRawPredeployMetadataFromURI(ipfsHash);
+  const router = useRouter();
 
   const walletId = useActiveWallet()?.id;
 
@@ -634,27 +639,29 @@ export function useCustomContractDeployMutation(
 
       const requiresSignature = walletId !== "inApp";
 
-      const stepDeploy = getStepDeploy(
-        transactions?.length || 1,
-        requiresSignature,
-      );
-
-      const stepAddToRegistry = getStepAddToRegistry(requiresSignature);
-
-      const stepSetNFTMetadata = getStepSetNFTMetadata(requiresSignature);
+      const stepDeploy: DeployModalStep = {
+        signatureCount: requiresSignature ? transactions?.length || 1 : 0,
+        type: "deploy",
+      };
 
       const steps = [stepDeploy];
 
       if (isErc721SharedMetadadata) {
-        steps.push(stepSetNFTMetadata);
+        steps.push({
+          type: "setNFTMetadata",
+          signatureCount: requiresSignature ? 1 : 0,
+        });
       }
 
       if (data.addToDashboard) {
-        steps.push(stepAddToRegistry);
+        steps.push({
+          type: "import",
+          signatureCount: requiresSignature ? 1 : 0,
+        });
       }
 
       // open the modal with the appropriate steps
-      deployContext.open(steps);
+      deployStatusModal.open(steps);
 
       const isZkSync = isChainIdZkSync(chainId);
 
@@ -715,6 +722,47 @@ export function useCustomContractDeployMutation(
 
         // deploy contract
         if (isZkSync) {
+          // Get metamask signer using zksync-ethers library -- for custom fields in signature
+          let deploySigner = signer;
+
+          if (fullPublishMetadata?.data?.deployType === "standard") {
+            // if its a direct deploy AND its zksync, use the ethers zksync signer for now
+            // NOTE: this only works with injected wallets
+            // TODO - implement deploying to zksync in v5 account and remove this
+            const fakeExternalProvider: providers.ExternalProvider = {
+              // fake tell it its metamask always (lul)
+              isMetaMask: true,
+              request({ method, params }) {
+                switch (method) {
+                  case "eth_accounts": {
+                    return Promise.resolve([walletAddress]);
+                  }
+                  case "eth_signTypedData_v4": {
+                    invariant(params?.[1], "invalid signTypedData call");
+                    // yo dawg, I heard you like signing typed data
+                    const { domain, types, message, primaryType } = JSON.parse(
+                      params[1],
+                    );
+                    return (signer as providers.JsonRpcSigner)._signTypedData(
+                      domain,
+                      // don't ask...
+                      { [primaryType]: types[primaryType] },
+                      message,
+                    );
+                  }
+                  default: {
+                    return (signer as providers.JsonRpcSigner)?.provider?.send(
+                      method,
+                      params ?? [],
+                    );
+                  }
+                }
+              },
+            };
+            const zkSigner = new Web3Provider(fakeExternalProvider).getSigner();
+            deploySigner = zkSigner;
+          }
+
           const publishUri = ipfsHash.startsWith("ipfs://")
             ? ipfsHash
             : `ipfs://${ipfsHash}`;
@@ -735,7 +783,7 @@ export function useCustomContractDeployMutation(
               contractAddress = await zkDeployContractFromUri(
                 publishUri,
                 Object.values(data.deployParams),
-                signer,
+                deploySigner,
                 StorageSingleton,
                 chainId as number,
                 {
@@ -750,7 +798,7 @@ export function useCustomContractDeployMutation(
               contractAddress = await zkDeployContractFromUri(
                 publishUri,
                 Object.values(data.deployParams),
-                signer,
+                deploySigner,
                 StorageSingleton,
                 chainId as number,
                 {
@@ -781,9 +829,6 @@ export function useCustomContractDeployMutation(
             const { compilerMetadata } = await fetchAndCacheDeployMetadata(
               publishUri,
               StorageSingleton,
-              {
-                compilerType: "zksolc",
-              },
             );
             uriToRegister = compilerMetadata.fetchedMetadataUri;
           }
@@ -823,10 +868,10 @@ export function useCustomContractDeployMutation(
           }
         }
 
-        deployContext.nextStep();
+        deployStatusModal.nextStep();
       } catch (e) {
         // failed to deploy contract - close modal for now
-        deployContext.close();
+        deployStatusModal.close();
         // re-throw error
         throw e;
       }
@@ -841,10 +886,10 @@ export function useCustomContractDeployMutation(
             image: data.contractMetadata?.image || "",
           });
 
-          deployContext.nextStep();
+          deployStatusModal.nextStep();
         } catch (e) {
           // failed to set metadata - for now just close the modal
-          deployContext.close();
+          deployStatusModal.close();
           // not re-throwing the error, this is not technically a failure to deploy, just to set metadata - the contract is deployed already at this stage
         }
       }
@@ -862,16 +907,15 @@ export function useCustomContractDeployMutation(
             300000n,
           );
 
-          deployContext.nextStep();
+          deployStatusModal.nextStep();
         }
       } catch (e) {
         // failed to add to dashboard - for now just close the modal
-        deployContext.close();
+        deployStatusModal.close();
+        router.replace(`/${chainId}/${contractAddress}`);
+
         // not re-throwing the error, this is not technically a failure to deploy, just to add to dashboard - the contract is deployed already at this stage
       }
-
-      // always close the modal
-      deployContext.close();
 
       return contractAddress;
     },

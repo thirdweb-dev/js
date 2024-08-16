@@ -14,7 +14,6 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { OnboardingBilling } from "components/onboarding/Billing";
 import { OnboardingModal } from "components/onboarding/Modal";
 import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -23,6 +22,7 @@ import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
+import { LazyOnboardingBilling } from "../../../../onboarding/LazyOnboardingBilling";
 import { ManageBillingButton } from "../ManageButton";
 import { RecurringPaymentFailureAlert } from "./RecurringPaymentFailureAlert";
 
@@ -323,7 +323,7 @@ export const BillingAlertNotification: React.FC<
           isOpen={isPaymentMethodOpen}
           onClose={onPaymentMethodClose}
         >
-          <OnboardingBilling
+          <LazyOnboardingBilling
             onSave={handlePaymentAdded}
             onCancel={onPaymentMethodClose}
           />

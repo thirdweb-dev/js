@@ -4,6 +4,7 @@ import {
   ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
+import { getOrDeployInfraContract } from "../../../contract/deployment/utils/bootstrap.js";
 import { download } from "../../../storage/download.js";
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -13,8 +14,40 @@ import { padHex, toHex } from "../../../utils/encoding/hex.js";
 import { processOverrideList } from "../../../utils/extensions/drops/process-override-list.js";
 import type { ClaimConditionInput } from "../../../utils/extensions/drops/types.js";
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
+import type { Module } from "../../prebuilts/deploy-modular.js";
+import {
+  type EncodeBytesOnInstallParams,
+  encodeBytesOnInstallParams,
+} from "../__generated__/ClaimableERC20/encode/encodeBytesOnInstall.js";
 import { setClaimCondition as generatedSetClaimCondition } from "../__generated__/ClaimableERC20/write/setClaimCondition.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
+
+export const claimableERC20Module = (
+  args: EncodeBytesOnInstallParams,
+): Module => {
+  const { primarySaleRecipient } = args;
+  return {
+    getInstallData: async ({ client, chain, account }) => {
+      const contract = await getOrDeployInfraContract({
+        client,
+        chain,
+        account,
+        contractId: "ClaimableERC20",
+        constructorParams: [],
+      });
+      const address = getAddress(contract.address);
+      const params = encodeBytesOnInstallParams({
+        primarySaleRecipient: primarySaleRecipient
+          ? getAddress(primarySaleRecipient)
+          : account.address,
+      });
+      return {
+        address,
+        encodedParams: params,
+      };
+    },
+  };
+};
 
 export type TokenClaimParams = {
   to: string;

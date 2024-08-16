@@ -15,11 +15,11 @@ import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItemButton } from "@/components/ui/radio-group";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -49,7 +49,7 @@ export function CreateEcosystemForm() {
   >();
   const { data: billingAccountInfo } = useAccount();
 
-  const router = useRouter();
+  const router = useDashboardRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

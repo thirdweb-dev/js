@@ -3,7 +3,7 @@ import {
   AuthProvider,
   type AuthStoredTokenWithCookieReturnType,
   RecoveryShareManagement,
-} from "../../../core/authentication/type.js";
+} from "../../../core/authentication/types.js";
 import { ErrorMessages } from "../errors.js";
 import {
   getDeviceShare,
@@ -152,14 +152,13 @@ async function getRecoveryCode(
         );
       }
       return recoveryCode;
-    } else {
-      try {
-        return await getCognitoRecoveryPasswordV2(client);
-      } catch (e) {
-        return await getCognitoRecoveryPasswordV1(client).catch(() => {
-          throw new Error("Something went wrong getting cognito recovery code");
-        });
-      }
+    }
+    try {
+      return await getCognitoRecoveryPasswordV2(client);
+    } catch (e) {
+      return await getCognitoRecoveryPasswordV1(client).catch(() => {
+        throw new Error("Something went wrong getting cognito recovery code");
+      });
     }
   } else if (
     storedToken.authDetails.recoveryShareManagement ===

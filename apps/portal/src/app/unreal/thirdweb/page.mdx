@@ -1,0 +1,61 @@
+import { Details, Callout, createMetadata } from "@doc";
+import { GraduationCap } from "lucide-react";
+
+export const metadata = createMetadata({
+    title: "Thirdweb | Thirdweb Unreal SDK",
+    description: "The Core Rust Wrapper.",
+});
+
+# Thirdweb
+
+This is a low-level wrapper around the `Thirdweb` Rust library, providing a set of utility functions and classes to interact with the Thirdweb SDK.
+
+It should not be used directly, but rather through our plugin's Blueprint functions.
+
+## Key Components
+
+### `FFIResult`
+- Encapsulates operation results, handling success status and messages.
+- Key Methods: `AssignResult`, `AssignRetryResult`, `GetOutput`, `Free`, `Log`.
+
+### Utility Functions
+- `IsChecksummedAddress`: Validates if an address is checksummed.
+- `IsValidAddress`: Checks if an address is valid.
+- `IsValidPrivateKey`: Validates a private key.
+- `ToChecksummedAddress`: Converts an address to a checksummed format.
+
+## Internal Functions
+
+The `Thirdweb` namespace in `Thirdweb.h` offers various methods for managing wallets and interacting with smart contracts. Note that inputs may change in future versions, so always refer to the latest documentation or source code for the most accurate information.
+
+### Wallet Management
+- **`create_private_key_wallet(private_key)`**: Creates a wallet using a private key.
+- **`generate_private_key_wallet()`**: Generates a new private key wallet.
+- **`create_in_app_wallet(client_id, bundle_id, secret_key, email, storage_directory_path, oauth_provider)`**: Creates an in-app wallet.
+- **`in_app_wallet_send_otp(handle_id)`**: Sends an OTP for in-app wallet.
+- **`in_app_wallet_verify_otp(handle_id, otp)`**: Verifies an OTP for in-app wallet.
+- **`in_app_wallet_fetch_oauth_login_link(handle_id, redirect_url)`**: Fetches an OAuth login link for in-app wallet.
+- **`in_app_wallet_sign_in_with_oauth(handle_id, auth_result)`**: Signs in with OAuth for in-app wallet.
+- **`get_wallet_address(handle_id)`**: Retrieves the wallet address.
+- **`sign_message(handle_id, message)`**: Signs a message with the wallet.
+- **`is_connected(handle_id)`**: Checks if the wallet is connected.
+- **`disconnect(handle_id)`**: Disconnects the wallet.
+- **`free_wallet(handle_id)`**: Frees the wallet handle.
+
+### Smart Wallet Management
+- **`create_smart_wallet(client_id, bundle_id, secret_key, personal_wallet_handle_id, chain_id, gasless, factory, account_override)`**: Creates a smart wallet.
+- **`smart_wallet_is_deployed(handle_id)`**: Checks if the smart wallet is deployed.
+- **`smart_wallet_get_all_admins(handle_id)`**: Retrieves all admins of the smart wallet.
+- **`smart_wallet_get_all_active_signers(handle_id)`**: Retrieves all active signers of the smart wallet.
+- **`smart_wallet_create_session_key(handle_id, signer_address, approved_targets, approved_targets_count, native_token_limit_per_transaction_in_wei, permission_start_timestamp, permission_end_timestamp, req_validity_start_timestamp, req_validity_end_timestamp)`**: Creates a session key for the smart wallet.
+- **`smart_wallet_revoke_session_key(handle_id, signer_address)`**: Revokes a session key for the smart wallet.
+- **`smart_wallet_add_admin(handle_id, signer_address)`**: Adds an admin to the smart wallet.
+- **`smart_wallet_remove_admin(handle_id, signer_address)`**: Removes an admin from the smart wallet.
+
+### Utility Methods
+- **`free_ffi_result(result)`**: Frees the FFI result.
+- **`get_unix_timestamp_now()`**: Gets the current Unix timestamp.
+- **`get_unix_timestamp_in_ten_years()`**: Gets the Unix timestamp for ten years in the future.
+- **`is_valid_address(address, check_checksum)`**: Validates an Ethereum address.
+- **`to_checksummed_address(address)`**: Converts an address to checksummed format.
+- **`is_valid_private_key(private_key)`**: Validates a private key.

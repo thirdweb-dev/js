@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { ConnectManagerOptions } from "../../../../wallets/manager/index.js";
 import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
+import { useSetActiveWalletConnectionStatus } from "./useSetActiveWalletConnectionStatus.js";
 
 /**
  * A hook to set a wallet as active wallet
@@ -36,6 +37,7 @@ import { useConnectionManagerCtx } from "../../providers/connection-manager.js";
 export function useConnect(options?: ConnectManagerOptions) {
   const manager = useConnectionManagerCtx("useConnect");
   const { connect } = manager;
+  const setConnectionStatus = useSetActiveWalletConnectionStatus();
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -43,23 +45,29 @@ export function useConnect(options?: ConnectManagerOptions) {
     async (walletOrFn: Wallet | (() => Promise<Wallet>)) => {
       // reset error state
       setError(null);
+      setConnectionStatus("connecting");
       if (typeof walletOrFn !== "function") {
-        return await connect(walletOrFn, options);
+        const account = await connect(walletOrFn, options);
+        setConnectionStatus("connected");
+        return account;
       }
 
       setIsConnecting(true);
       try {
         const w = await walletOrFn();
-        return await connect(w, options);
+        const account = await connect(w, options);
+        setConnectionStatus("connected");
+        return account;
       } catch (e) {
         console.error(e);
         setError(e as Error);
+        setConnectionStatus("disconnected");
       } finally {
         setIsConnecting(false);
       }
       return null;
     },
-    [connect, options],
+    [connect, options, setConnectionStatus],
   );
 
   return { connect: handleConnection, isConnecting, error } as const;

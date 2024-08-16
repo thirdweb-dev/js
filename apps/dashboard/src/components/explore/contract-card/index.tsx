@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton, SkeletonContainer } from "@/components/ui/skeleton";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ import {
 import { ensQuery } from "components/contract-components/hooks";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
-import { ShieldCheckIcon } from "lucide-react";
+import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { polygon } from "thirdweb/chains";
@@ -60,7 +61,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   return (
     <article
       className={cn(
-        "min-h-[200px] p-4 border border-border relative rounded-lg flex flex-col",
+        "min-h-[220px] p-4 border border-border relative rounded-lg flex flex-col",
         !showSkeleton ? "bg-secondary hover:bg-muted" : "pointer-events-none",
       )}
     >
@@ -137,25 +138,37 @@ export const ContractCard: React.FC<ContractCardProps> = ({
         }}
       />
 
-      <div className="h-1" />
-
-      {publishedContractResult.data?.description ? (
-        <p className="text-sm text-secondary-foreground leading-5">
+      {publishedContractResult.data ? (
+        <p className="text-sm text-secondary-foreground leading-5 mt-1">
           {publishedContractResult.data?.description}
         </p>
       ) : (
-        <div>
+        <div className="mt-1">
           <Skeleton className="h-4 w-[80%]" />
           <div className="h-1" />
           <Skeleton className="h-4 w-[60%]" />
         </div>
       )}
 
-      <div className="mt-auto pt-3 relative z-1 flex">
+      <div className="mt-auto pt-3 relative z-1 flex gap-2 justify-between">
         <ContractPublisher
           addressOrEns={publishedContractResult.data?.publisher}
           showSkeleton={showSkeleton}
         />
+
+        <div className="flex justify-between items-center">
+          <Button
+            variant="primary"
+            size="sm"
+            className="gap-1.5 py-1.5 px-2.5 text-xs h-auto relative z-10"
+            asChild
+          >
+            <Link href={`${href}/deploy`}>
+              <RocketIcon className="size-3" />
+              Deploy
+            </Link>
+          </Button>
+        </div>
       </div>
     </article>
   );

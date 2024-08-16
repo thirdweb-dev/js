@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { ChevronDownIcon, Filter, XIcon } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import type React from "react";
 import { type PropsWithChildren, useCallback, useMemo } from "react";
 import { products } from "../../../components/server/products";
@@ -73,7 +74,7 @@ type FilterResetButtonProps = {
 const FilterResetButton: React.FC<
   PropsWithChildren<FilterResetButtonProps>
 > = ({ filters, children }) => {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const mutableSearchParams = useMemo(() => {
@@ -124,7 +125,7 @@ type ChainTypeFilterProps = { sectionOnly?: boolean };
 export const ChainTypeFilter: React.FC<ChainTypeFilterProps> = ({
   sectionOnly,
 }) => {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -228,7 +229,7 @@ type ChainOptionsFilterProps = { sectionOnly?: boolean };
 export const ChainOptionsFilter: React.FC<ChainOptionsFilterProps> = ({
   sectionOnly,
 }) => {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const mutableSearchParams = useMemo(() => {
@@ -332,7 +333,7 @@ type ChainServiceFilterProps = { sectionOnly?: boolean };
 export const ChainServiceFilter: React.FC<ChainServiceFilterProps> = ({
   sectionOnly,
 }) => {
-  const router = useRouter();
+  const router = useDashboardRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const mutableSearchParams = useMemo(() => {

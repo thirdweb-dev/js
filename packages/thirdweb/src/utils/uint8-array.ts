@@ -116,8 +116,17 @@ function assertString(value: unknown): asserts value is string {
   }
 }
 
-function base64UrlToBase64(base64url: string) {
-  return base64url.replaceAll("-", "+").replaceAll("_", "/");
+export function base64UrlToBase64(base64url: string): string {
+  // Replace Base64URL characters with Base64 characters
+  let base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+
+  // Add padding if necessary
+  const padding = base64.length % 4;
+  if (padding !== 0) {
+    base64 += "=".repeat(4 - padding);
+  }
+
+  return base64;
 }
 
 /**

@@ -33,3 +33,8 @@ export {
   type PrepareDirectDeployTransactionOptions,
 } from "../contract/deployment/deploy-with-abi.js";
 export { computePublishedContractAddress } from "../utils/any-evm/compute-published-contract-address.js";
+export {
+  deploySplitContract,
+  type SplitContractParams,
+  type DeploySplitContractOptions,
+} from "../extensions/prebuilts/deploy-split.js";

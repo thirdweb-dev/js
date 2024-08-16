@@ -5,7 +5,7 @@ import type { ThirdwebClient } from "../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../constants/addresses.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { useChainIconUrl } from "../../../core/hooks/others/useChainQuery.js";
-import { genericTokenIcon } from "../../../core/utils/socialIcons.js";
+import { genericTokenIcon } from "../../../core/utils/walletIcon.js";
 import {
   type NativeToken,
   isNativeToken,

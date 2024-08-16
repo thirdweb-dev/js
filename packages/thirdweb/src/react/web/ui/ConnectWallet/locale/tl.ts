@@ -37,7 +37,10 @@ const connectWalletLocalTl: ConnectLocale = {
   smartWallet: "Smart Wallet",
   or: "O",
   goBackButton: "Bumalik",
-
+  passkeys: {
+    title: "Mga Passkey",
+    linkPasskey: "I-link ang Passkey",
+  },
   welcomeScreen: {
     defaultTitle: "Ang iyong daan patungo sa decentralized na mundo",
     defaultSubtitle: "Kumonekta ng wallet para magsimula",
@@ -104,6 +107,8 @@ const connectWalletLocalTl: ConnectLocale = {
   },
   manageWallet: {
     title: "Pamahalaan ang Wallet",
+    linkedProfiles: "Linked Profiles",
+    linkProfile: "Link a Profile",
     connectAnApp: "Ikonekta ang isang App",
     exportPrivateKey: "I-export ang Pribadong Susi",
   },

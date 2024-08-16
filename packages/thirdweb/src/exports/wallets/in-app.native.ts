@@ -9,10 +9,12 @@ export {
   getUserPhoneNumber,
 } from "../../wallets/in-app/native/auth/index.js";
 
-export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/type.js";
+export { type GetAuthenticatedUserParams } from "../../wallets/in-app/core/authentication/types.js";
+export type {
+  InAppWalletCreationOptions,
+  InAppWalletAuth,
+  InAppWalletSocialAuth,
+  InAppWalletConnectionOptions,
+} from "../../wallets/in-app/core/wallet/types.js";
 
-// NOT SUPPORTED (yet)
-
-export const hasStoredPasskey = () => {
-  throw new Error("Not supported in native");
-};
+export { hasStoredPasskey } from "../../wallets/in-app/native/auth/passkeys.js";

@@ -1,0 +1,438 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+    title: "Common Utils | Thirdweb .NET SDK",
+    description: "Useful utilities offered by thirdweb.",
+});
+
+## Constants.ADDRESS_ZERO
+
+A `string` representing the zero address `0x0000000000000000000000000000000000000000`.
+
+Useful for passing the zero address to various functions.
+
+## Constants.NATIVE_TOKEN_ADDRESS
+
+A `string` representing the native token address `0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE`.
+
+Useful for passing the native token address to various functions.
+
+## FetchThirdwebChainDataAsync
+
+Fetches chain data for a specified chain ID using a Thirdweb client.
+
+```csharp
+var chainData = await Utils.FetchThirdwebChainDataAsync(client, chainId);
+```
+
+<Details summary="Parameters">
+
+### client
+
+A `ThirdwebClient` object representing the client to use for fetching chain data.
+
+### chainId
+
+A `BigInteger` representing the chain ID to fetch data for.
+
+</Details>
+
+<Details summary="Return Value">
+
+### chainData
+
+A `ThirdwebChainData` object containing the fetched chain data such as native token name, symbol, decimals, etc.
+
+</Details>
+
+## HexConcat
+
+Concatenates the given hex strings into a single hex string.
+
+```csharp
+var concatenatedHex = Utils.HexConcat("0x1234", "0x5678");
+```
+
+<Details summary="Parameters">
+
+### hexStrings
+
+An array of hexadecimal `string` values to concatenate.
+
+</Details>
+
+<Details summary="Return Value">
+
+### concatenatedHex
+
+The concatenated hexadecimal `string`.
+
+</Details>
+
+## HashPrefixedMessage
+
+Hashes the given message bytes with a prefixed message for Ethereum signing.
+
+```csharp
+var hashedMessage = messageBytes.HashPrefixedMessage();
+```
+
+<Details summary="Parameters">
+
+### messageBytes
+
+A `byte[]` representing the message to hash.
+
+</Details>
+
+<Details summary="Return Value">
+
+### hashedMessage
+
+A `byte[]` representing the hashed message.
+
+</Details>
+
+## HashMessage
+
+Hashes the given message using SHA3 Keccak hashing.
+
+```csharp
+var hashedMessage = message.HashMessage();
+```
+
+<Details summary="Parameters">
+
+### message
+
+A `string` representing the message to hash.
+
+</Details>
+
+<Details summary="Return Value">
+
+### hashedMessage
+
+A `string` representing the hashed message in hexadecimal format.
+
+</Details>
+
+## BytesToHex
+
+Converts a byte array to a hexadecimal string.
+
+```csharp
+var hexString = byteArray.BytesToHex();
+```
+
+<Details summary="Parameters">
+
+### bytes
+
+A `byte[]` representing the byte array to convert.
+
+</Details>
+
+<Details summary="Return Value">
+
+### hexString
+
+A `string` representing the converted hexadecimal string.
+
+</Details>
+
+## HexToBytes
+
+Converts a hexadecimal string to a byte array.
+
+```csharp
+var byteArray = hexString.HexToBytes();
+```
+
+<Details summary="Parameters">
+
+### hex
+
+A `string` representing the hexadecimal string to convert.
+
+</Details>
+
+<Details summary="Return Value">
+
+### byteArray
+
+A `byte[]` representing the converted byte array.
+
+</Details>
+
+## StringToHex
+
+Converts a regular string to a hexadecimal string.
+
+```csharp
+var hexString = "Hello".StringToHex();
+```
+
+<Details summary="Parameters">
+
+### str
+
+A `string` representing the regular string to convert.
+
+</Details>
+
+<Details summary="Return Value">
+
+### hexString
+
+A `string` representing the converted hexadecimal string.
+
+</Details>
+
+## GetUnixTimeStampNow
+
+Gets the current Unix timestamp in seconds.
+
+```csharp
+var timestampNow = Utils.GetUnixTimeStampNow();
+```
+
+<Details summary="Return Value">
+
+### timestampNow
+
+A `long` representing the current Unix timestamp.
+
+</Details>
+
+## GetUnixTimeStampIn10Years
+
+Gets the Unix timestamp for 10 years from now.
+
+```csharp
+var timestampIn10Years = Utils.GetUnixTimeStampIn10Years();
+```
+
+<Details summary="Return Value">
+
+### timestampIn10Years
+
+A `long` representing the Unix timestamp 10 years from now.
+
+</Details>
+
+## ReplaceIPFS
+
+Replaces an IPFS URI with a specified gateway.
+
+```csharp
+var gatewayUri = ipfsUri.ReplaceIPFS("https://ipfs.io/ipfs/");
+```
+
+<Details summary="Parameters">
+
+### uri
+
+A `string` representing the IPFS URI to replace.
+
+### gateway
+
+A `string` representing the gateway to use. Default is `Constants.FALLBACK_IPFS_GATEWAY`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### gatewayUri
+
+A `string` representing the replaced URI with the specified gateway.
+
+</Details>
+
+## ToWei
+
+Converts Ether values to Wei.
+
+```csharp
+var weiValue = ethValue.ToWei();
+```
+
+<Details summary="Parameters">
+
+### eth
+
+A `string` representing the Ether value to convert.
+
+</Details>
+
+<Details summary="Return Value">
+
+### weiValue
+
+A `string` representing the converted Wei value.
+
+</Details>
+
+## ToEth
+
+Converts Wei values to Ether.
+
+```csharp
+var ethValue = weiValue.ToEth();
+```
+
+<Details summary="Parameters">
+
+### wei
+
+A `string` representing the Wei value to convert.
+
+### decimalsToDisplay
+
+An `int` specifying the number of decimals to display. Default is `4`.
+
+### addCommas
+
+A `bool` indicating whether to add commas to the output. Default is `false`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ethValue
+
+A `string` representing the converted Ether value.
+
+</Details>
+
+## GenerateSIWE
+
+Generates a Sign-In With Ethereum (SIWE) message.
+
+```csharp
+var siweMessage = Utils.GenerateSIWE(loginPayloadData);
+```
+
+<Details summary="Parameters">
+
+### loginPayloadData
+
+A `LoginPayloadData` object containing the payload data for generating the SIWE message.
+
+</Details>
+
+<Details summary="Return Value">
+
+### siweMessage
+
+A `string` representing the generated SIWE message.
+
+</Details>
+
+## IsZkSync
+
+Checks if a given chain ID corresponds to zkSync.
+
+```csharp
+var isZkSync = Utils.IsZkSync(chainId);
+```
+
+<Details summary="Parameters">
+
+### chainId
+
+A `BigInteger` representing the chain ID to check.
+
+</Details>
+
+<Details summary="Return Value">
+
+### isZkSync
+
+A `bool` indicating whether the chain ID corresponds to zkSync.
+
+</Details>
+
+## ToChecksumAddress
+
+Converts an Ethereum address to its checksum format.
+
+```csharp
+var checksummedAddress = address.ToChecksumAddress();
+```
+
+<Details summary="Parameters">
+
+### address
+
+A `string` representing the Ethereum address to convert.
+
+</Details>
+
+<Details summary="Return Value">
+
+### checksummedAddress
+
+A `string` representing the checksummed Ethereum address.
+
+</Details>
+
+## AdjustDecimals
+
+Adjusts the decimal places of a value.
+
+```csharp
+var adjustedValue = value.AdjustDecimals(18, 6);
+```
+
+<Details summary="Parameters">
+
+### value
+
+A `BigInteger` representing the value to adjust.
+
+### fromDecimals
+
+An `int` specifying the original number of decimals.
+
+### toDecimals
+
+An `int` specifying the target number of decimals.
+
+</Details>
+
+<Details summary="Return Value">
+
+### adjustedValue
+
+A `BigInteger` representing the value adjusted to the new decimals.
+
+</Details>
+
+## ToJsonExternalWalletFriendly
+
+Converts typed data into a JSON string suitable for external wallet interaction.
+
+```csharp
+var jsonString = Utils.ToJsonExternalWalletFriendly(typedData, message);
+```
+
+<Details summary="Parameters">
+
+### typedData
+
+A `TypedData<TDomain>` object representing the typed data to convert.
+
+### message
+
+A `TMessage` object representing the message to include in the JSON.
+
+</Details>
+
+<Details summary="Return Value">
+
+### jsonString
+
+A `string` representing the JSON formatted data.
+
+</Details>

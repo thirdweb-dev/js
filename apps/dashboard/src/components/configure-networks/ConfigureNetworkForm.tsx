@@ -1,13 +1,11 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Alert,
   AlertIcon,
-  Flex,
   FormControl,
-  Input,
   Radio,
   RadioGroup,
-  SimpleGrid,
-  Stack,
 } from "@chakra-ui/react";
 import { ChainIcon } from "components/icons/ChainIcon";
 import type { StoredChain } from "contexts/configured-chains";
@@ -16,7 +14,7 @@ import { useSupportedChainsNameRecord } from "hooks/chains/configureChains";
 import { useRemoveChainModification } from "hooks/chains/useModifyChain";
 import { getDashboardChainRpc } from "lib/rpc";
 import { useForm } from "react-hook-form";
-import { Button, FormErrorMessage, FormLabel, Text } from "tw-components";
+import { FormErrorMessage, FormLabel } from "tw-components";
 import { ChainIdInput } from "./Form/ChainIdInput";
 import { ConfirmationPopover } from "./Form/ConfirmationPopover";
 import { IconUpload } from "./Form/IconUpload";
@@ -217,11 +215,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
 
   const submitBtn = (
     <Button
-      background="bgBlack"
-      color="bgWhite"
-      _hover={{
-        background: "bgBlack",
-      }}
+      variant="primary"
       type={disableSubmit ? "submit" : overwritingChain ? "button" : "submit"}
       disabled={disableSubmit}
     >
@@ -243,9 +237,6 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         <Input
           autoComplete="off"
           placeholder="e.g. My Network"
-          _placeholder={{
-            fontWeight: 500,
-          }}
           type="text"
           onChange={(e) => {
             const value = e.target.value;
@@ -272,9 +263,9 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
       {/* Slug URL */}
       <NetworkIDInput form={form} disabled={!isFullyEditable} />
 
-      <Flex direction="column" gap={6} mt={6}>
+      <div className="flex flex-col gap-6 mt-6">
         {/* Chain ID + Currency Symbol */}
-        <SimpleGrid columns={{ md: 2, base: 1 }} gap={4}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ChainIdInput form={form} disabled={!isFullyEditable} />
 
           {/* Currency Symbol */}
@@ -284,33 +275,29 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               disabled={!isFullyEditable}
               placeholder="e.g. ETH"
               autoComplete="off"
-              _placeholder={{
-                fontWeight: 500,
-              }}
               type="text"
               {...form.register("currencySymbol", { required: true })}
             />
           </FormControl>
-        </SimpleGrid>
+        </div>
 
-        <SimpleGrid columns={{ md: 2, base: 1 }} gap={4}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Testnet / Mainnet */}
           <FormControl>
-            <FormLabel display="flex">
+            <FormLabel className="!flex gap-1 items-center">
               Network type
               <TooltipBox
                 content={
                   <>
-                    <Text color="heading" display="inline-block" mb={2}>
-                      {" "}
+                    <span className="mb-2 block">
                       The network type indicates whether it is intended for
                       production or testing.
-                    </Text>
+                    </span>
 
-                    <Text color="heading">
+                    <span className="block">
                       It{`'`}s only used for displaying network type on the
                       dashboard and does not affect functionality.
-                    </Text>
+                    </span>
                   </>
                 }
               />
@@ -324,10 +311,10 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               }}
               value={form.watch("type")}
             >
-              <Stack direction="row" gap={4} mt={3}>
+              <div className="flex gap-4 mt-3">
                 <Radio value="mainnet">Mainnet</Radio>
                 <Radio value="testnet">Testnet</Radio>
-              </Stack>
+              </div>
             </RadioGroup>
           </FormControl>
 
@@ -335,19 +322,19 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
           <FormControl isInvalid={!!form.formState.errors.icon}>
             <FormLabel>Icon</FormLabel>
 
-            <Flex gap={3} alignItems="center">
+            <div className="flex gap-1 items-center">
               <ChainIcon size={24} ipfsSrc={form.watch("icon")} />
               <IconUpload
                 onUpload={(uri) => {
                   form.setValue("icon", uri, { shouldDirty: true });
                 }}
               />
-            </Flex>
+            </div>
           </FormControl>
-        </SimpleGrid>
+        </div>
 
         {editingChain?.status === "deprecated" && (
-          <SimpleGrid columns={{ md: 2, base: 1 }} gap={4}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Active / Deprecated */}
             <FormControl>
               <FormLabel display="flex">Network status</FormLabel>
@@ -360,13 +347,13 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
                 }}
                 value={form.watch("status")}
               >
-                <Stack direction="row" gap={4} mt={3}>
+                <div className="flex mt-3 gap-4">
                   <Radio value="active">Live</Radio>
                   <Radio value="deprecated">Deprecated</Radio>
-                </Stack>
+                </div>
               </RadioGroup>
             </FormControl>
-          </SimpleGrid>
+          </div>
         )}
 
         {/* RPC URL */}
@@ -382,11 +369,7 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
         )}
 
         {/* Buttons  */}
-        <Flex
-          gap={4}
-          direction={{ base: "column", md: "row" }}
-          justifyContent={{ base: "center", md: "flex-end" }}
-        >
+        <div className="flex gap-4 flex-col md:flex-row justify-end">
           {/* Add / Update Button */}
           {overwritingChain && !disableSubmit ? (
             <ConfirmationPopover
@@ -417,8 +400,8 @@ export const ConfigureNetworkForm: React.FC<NetworkConfigFormProps> = ({
               Reset
             </Button>
           )}
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </form>
   );
 };

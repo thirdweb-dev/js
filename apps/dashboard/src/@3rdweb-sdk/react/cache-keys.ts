@@ -90,8 +90,10 @@ export const engineKeys = {
   health: (instance: string) =>
     [...engineKeys.all, instance, "health"] as const,
   latestVersion: () => [...engineKeys.all, "latestVersion"] as const,
-  metrics: (engineId: string) =>
-    [...engineKeys.all, engineId, "metrics"] as const,
+  systemMetrics: (engineId: string) =>
+    [...engineKeys.all, engineId, "systemMetrics"] as const,
+  queueMetrics: (engineId: string) =>
+    [...engineKeys.all, engineId, "queueMetrics"] as const,
 };
 
 export const contractKeys = {

@@ -1,3 +1,4 @@
+import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { Skeleton } from "@chakra-ui/react";
 import type { BasicContract } from "contract-ui/types/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
@@ -5,8 +6,6 @@ import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { memo } from "react";
 import { getContract } from "thirdweb";
-import { getContractMetadata } from "thirdweb/extensions/common";
-import { useReadContract } from "thirdweb/react";
 import { ChakraNextLink, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { usePublishedContractsFromDeploy } from "../hooks";
@@ -14,6 +13,9 @@ import { usePublishedContractsFromDeploy } from "../hooks";
 interface AsyncContractNameCellProps {
   cell: BasicContract;
 }
+
+// The row components for the contract table, in the <Your contracts> page
+// url: /dashboard/contracts/deploy
 
 export const AsyncContractNameCell = memo(
   ({ cell }: AsyncContractNameCellProps) => {
@@ -26,9 +28,7 @@ export const AsyncContractNameCell = memo(
       chain,
     });
 
-    const contractMetadata = useReadContract(getContractMetadata, {
-      contract,
-    });
+    const contractMetadata = useDashboardContractMetadata(contract);
 
     return (
       <Skeleton isLoaded={!contractMetadata.isFetching}>
@@ -60,10 +60,19 @@ export const AsyncContractTypeCell = memo(
       cell.chainId,
     );
 
+    const chain = useV5DashboardChain(cell.chainId);
+
+    const contract = getContract({
+      client: thirdwebClient,
+      address: cell.address,
+      chain,
+    });
+
+    const contractMetadata = useDashboardContractMetadata(contract);
+
     const contractType =
       publishedContractsFromDeployQuery.data?.[0]?.displayName ||
       publishedContractsFromDeployQuery.data?.[0]?.name;
-
     return (
       <Skeleton
         isLoaded={
@@ -77,7 +86,7 @@ export const AsyncContractTypeCell = memo(
           </Text>
         ) : (
           <Text fontStyle="italic" opacity={0.5}>
-            Custom
+            {contractMetadata.data?.contractType || "Custom"}
           </Text>
         )}
       </Skeleton>

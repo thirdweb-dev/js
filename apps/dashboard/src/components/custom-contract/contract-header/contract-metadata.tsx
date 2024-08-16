@@ -1,26 +1,24 @@
-import { useContract, useContractMetadata } from "@thirdweb-dev/react";
+import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { usePublishedContractsFromDeploy } from "components/contract-components/hooks";
 import { useEffect, useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import { MetadataHeader } from "./metadata-header";
 
 interface ContractMetadataProps {
-  contractAddress: string;
-  chain: ChainMetadata | undefined;
+  contract: ThirdwebContract;
+  chain?: ChainMetadata;
 }
 
 export const ContractMetadata: React.FC<ContractMetadataProps> = ({
+  contract,
   chain,
-  contractAddress,
 }) => {
   const [wasError, setWasError] = useState(false);
-
-  const contractQuery = useContract(contractAddress);
-  const contractMetadataQuery = useContractMetadata(contractQuery.contract);
-
+  const contractMetadataQuery = useDashboardContractMetadata(contract);
   const publishedContractsFromDeploy = usePublishedContractsFromDeploy(
-    contractAddress,
-    chain?.chainId,
+    contract.address,
+    contract.chain.id,
   );
   const latestPublished = publishedContractsFromDeploy.data?.slice(-1)[0];
 
@@ -40,7 +38,7 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
       isLoaded={contractMetadataQuery.isSuccess}
       data={contractMetadataQuery.data}
       chain={chain}
-      address={contractAddress}
+      address={contract.address}
       externalLinks={latestPublished?.externalLinks}
     />
   );

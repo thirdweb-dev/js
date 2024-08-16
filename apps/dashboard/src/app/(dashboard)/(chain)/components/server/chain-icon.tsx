@@ -5,6 +5,7 @@ import {
   DASHBOARD_THIRDWEB_SECRET_KEY,
   IPFS_GATEWAY_URL,
 } from "@/constants/env";
+import { cn } from "@/lib/utils";
 import { createThirdwebClient } from "thirdweb";
 import { resolveScheme } from "thirdweb/storage";
 
@@ -42,9 +43,15 @@ export async function ChainIcon(props: {
       <img
         alt=""
         src={res?.status === 200 ? resolved : fallbackChainIcon}
-        className={props.className}
+        className={cn("object-contain", props.className)}
       />
     );
   }
-  return <img alt="" src={fallbackChainIcon} className={props.className} />;
+  return (
+    <img
+      alt=""
+      src={fallbackChainIcon}
+      className={cn("object-contain", props.className)}
+    />
+  );
 }
