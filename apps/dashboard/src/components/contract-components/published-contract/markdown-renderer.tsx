@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   type BoxProps,
@@ -35,8 +34,7 @@ export const MarkdownRenderer: React.FC<
       {...restProps}
       remarkPlugins={[remarkGfm]}
       components={{
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        h1: (props: any) => (
+        h1: (props) => (
           <Heading
             as="h2"
             size="title.lg"
@@ -44,11 +42,11 @@ export const MarkdownRenderer: React.FC<
             borderBottomColor="borderColor"
             {...commonHeadingProps}
             mb={4}
-            {...props}
+            {...cleanedProps(props)}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        h2: (props: any) => (
+
+        h2: (props) => (
           <Heading
             as="h3"
             size="title.md"
@@ -57,51 +55,51 @@ export const MarkdownRenderer: React.FC<
             {...commonHeadingProps}
             mt={8}
             mb={4}
-            {...props}
+            {...cleanedProps(props)}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        h3: (props: any) => (
+
+        h3: (props) => (
           <Heading
             as="h4"
             size="title.sm"
             {...commonHeadingProps}
-            {...props}
+            {...cleanedProps(props)}
             mt={4}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        h4: (props: any) => (
+
+        h4: (props) => (
           <Heading
             as="h5"
             size="subtitle.md"
             {...commonHeadingProps}
-            {...props}
+            {...cleanedProps(props)}
             mt={4}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        h5: (props: any) => (
+
+        h5: (props) => (
           <Heading
             as="h6"
             size="subtitle.sm"
             {...commonHeadingProps}
-            {...props}
+            {...cleanedProps(props)}
             mt={4}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        h6: (props: any) => (
+
+        h6: (props) => (
           <Heading
             as="p"
             size="label.md"
             {...commonHeadingProps}
-            {...props}
+            {...cleanedProps(props)}
             mt={4}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        a: (props: any) => (
+
+        a: (props) => (
           <Link
             _dark={{
               color: "blue.400",
@@ -116,13 +114,12 @@ export const MarkdownRenderer: React.FC<
               },
             }}
             isExternal
-            {...props}
+            {...cleanedProps(props)}
             mt={4}
           />
         ),
 
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        code: ({ inline, ...props }: any) => {
+        code: ({ ...props }) => {
           if (props?.className) {
             const language = props.className.replace("language-", "");
             return (
@@ -130,7 +127,7 @@ export const MarkdownRenderer: React.FC<
                 code={onlyText(props.children).trim()}
                 language={language}
                 mb={4}
-                {...props}
+                {...cleanedProps(props)}
               />
             );
           }
@@ -145,16 +142,21 @@ export const MarkdownRenderer: React.FC<
               _dark={{ bg: "whiteAlpha.100" }}
               borderRadius="md"
               fontFamily="mono"
-              {...props}
+              {...cleanedProps(props)}
             />
           );
         },
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        p: (props: any) => (
-          <Text size="body.md" mb={4} {...props} lineHeight={1.5} />
+
+        p: (props) => (
+          <Text
+            size="body.md"
+            mb={4}
+            {...cleanedProps(props)}
+            lineHeight={1.5}
+          />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        table: (props: any) => (
+
+        table: (props) => (
           <Box
             maxW="100%"
             overflowX="auto"
@@ -164,53 +166,44 @@ export const MarkdownRenderer: React.FC<
             mb={4}
             borderTopRadius="lg"
           >
-            <Table {...props} />
+            <Table {...cleanedProps(props)} />
           </Box>
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        th: ({ children: c, ...props }: any) => (
-          <Th
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME
-            {...(props as unknown as any)}
-            textAlign="left!important"
-            border="none"
-          >
-            <Text as="label" size="label.sm" color="faded">
+
+        th: ({ children: c, ...props }) => (
+          <Th {...cleanedProps(props)} textAlign="left" border="none">
+            <Text as="span" size="label.sm" color="faded">
               {c}
             </Text>
           </Th>
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        td: (props: any) => (
+
+        td: (props) => (
           <Td
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME
-            {...(props as unknown as any)}
+            {...cleanedProps(props)}
             borderColor="borderColor"
-            textAlign="left!important"
+            textAlign="left"
             borderBottomWidth={"inherit"}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        thead: (props: any) => <Thead {...props} />,
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        tbody: (props: any) => <Tbody {...props} />,
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        tr: (props: any) => (
+        thead: (props) => <Thead {...cleanedProps(props)} />,
+        tbody: (props) => <Tbody {...cleanedProps(props)} />,
+        tr: (props) => (
           <Tr
-            {...props}
+            {...cleanedProps(props)}
             transition="all 0.1s"
             borderBottomWidth={1}
             _last={{ borderBottomWidth: 0 }}
           />
         ),
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        ul: ({ ordered, ...props }: any) => <UnorderedList {...props} mb={4} />,
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        ol: ({ ordered, ...props }: any) => <OrderedList {...props} mb={4} />,
-        // biome-ignore lint/suspicious/noExplicitAny: FIXME
-        li: ({ children: c, ordered, ...props }: any) => (
-          <ListItem {...props}>
-            <Text>{c}</Text>
+        ul: (props) => {
+          return <UnorderedList {...cleanedProps(props)} mb={4} />;
+        },
+        ol: (props) => <OrderedList {...cleanedProps(props)} mb={4} />,
+        li: ({ children: c, ...props }) => (
+          <ListItem {...cleanedProps(props)}>
+            {/* hydration error - can not render p > p, so use span instead - remove extra span when we move to tailwind */}
+            <Text as="span">{c}</Text>
           </ListItem>
         ),
       }}
@@ -219,3 +212,11 @@ export const MarkdownRenderer: React.FC<
     </ChakraReactMarkdown>
   );
 };
+
+function cleanedProps<T extends object & { node?: unknown }>(
+  props: T,
+): Omit<T, "node"> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { node, ...rest } = props;
+  return rest;
+}
