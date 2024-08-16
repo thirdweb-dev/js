@@ -79,3 +79,6 @@ export default async function DashboardConnectPayPage() {
     </div>
   );
 }
+
+// because cookies() is used
+export const dynamic = "force-dynamic";
