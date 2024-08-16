@@ -49,13 +49,13 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
   }
 
   const contractV5 =
-    chain && contract
+    contract && chain
       ? getContract({
           address: contract.getAddress(),
           chain,
           client: thirdwebClient,
         })
-      : null;
+      : undefined;
 
   return (
     <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
@@ -91,12 +91,9 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
               features={detectedFeatureNames}
             />
           )}
-        {contract &&
+        {contractV5 &&
           ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
-            <TokenDetails
-              contractAddress={contractAddress}
-              chainId={contract.chainId}
-            />
+            <TokenDetails contract={contractV5} />
           )}
         <LatestEvents
           address={contractAddress}

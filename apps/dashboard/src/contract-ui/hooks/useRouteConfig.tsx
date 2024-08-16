@@ -1,9 +1,11 @@
-import { contractType, useContract } from "@thirdweb-dev/react";
+import { contractType, getErcs, useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
+import { detectFeatures } from "components/contract-components/utils";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
+import type { ThirdwebContract } from "thirdweb";
 import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
 
 const LazyContractExplorerPage = dynamic(() =>
@@ -96,6 +98,7 @@ const LazyContractEditModulesPage = dynamic(() =>
 
 export function useContractRouteConfig(
   contractAddress: string,
+  contract?: ThirdwebContract,
 ): EnhancedRoute[] {
   const ensQuery = useEns(contractAddress);
   const contractQuery = useContract(ensQuery.data?.address);
@@ -121,6 +124,70 @@ export function useContractRouteConfig(
       "ERC20ClaimPhasesV2",
     ],
   });
+
+  // ContractSettingsPage
+  const detectedMetadata = extensionDetectedState({
+    contractQuery,
+    feature: "ContractMetadata",
+  });
+  const detectedPrimarySale = extensionDetectedState({
+    contractQuery,
+    feature: "PrimarySale",
+  });
+  const detectedRoyalties = extensionDetectedState({
+    contractQuery,
+    feature: "Royalty",
+  });
+  const detectedPlatformFees = extensionDetectedState({
+    contractQuery,
+    feature: "PlatformFee",
+  });
+
+  // ContractTokensPage
+  const isERC20 = detectFeatures(contractQuery.contract, ["ERC20"]);
+
+  const isERC20Mintable = detectFeatures(contractQuery.contract, [
+    "ERC20Mintable",
+  ]);
+
+  const isERC20Claimable = detectFeatures(contractQuery.contract, [
+    "ERC20ClaimConditionsV1",
+    "ERC20ClaimConditionsV2",
+    "ERC20ClaimPhasesV1",
+    "ERC20ClaimPhasesV2",
+  ]);
+
+  // AccountPage
+  const detectedAccountFeature = extensionDetectedState({
+    contractQuery,
+    feature: ["Account"],
+  });
+
+  // ContractEmbedPage
+  const { erc20, erc1155, erc721 } = getErcs(contractQuery?.contract);
+  const isMarketplaceV3 = detectFeatures(contractQuery?.contract, [
+    "DirectListings",
+    "EnglishAuctions",
+  ]);
+  const ercOrMarketplace =
+    contractTypeQuery.data === "marketplace"
+      ? "marketplace"
+      : isMarketplaceV3
+        ? "marketplace-v3"
+        : erc20
+          ? "erc20"
+          : erc1155
+            ? "erc1155"
+            : erc721
+              ? "erc721"
+              : null;
+
+  // AccountPermissionsPage
+  const detectedPermissionFeature = extensionDetectedState({
+    contractQuery,
+    feature: ["AccountPermissions", "AccountPermissionsV1"],
+  });
+
   return [
     {
       title: "Overview",
@@ -176,13 +243,26 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["ERC1155", "ERC721"],
       }),
-      component: LazyContractNFTPage,
+      component: () => (
+        <>{contract && <LazyContractNFTPage contract={contract} />}</>
+      ),
     },
     {
       title: "Tokens",
       path: "tokens",
       isEnabled: extensionDetectedState({ contractQuery, feature: "ERC20" }),
-      component: LazyContractTokensPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractTokensPage
+              contract={contract}
+              isERC20={isERC20}
+              isERC20Claimable={isERC20Claimable}
+              isERC20Mintable={isERC20Mintable}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Direct Listings",
@@ -191,7 +271,11 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "DirectListings",
       }),
-      component: LazyContractDirectListingsPage,
+      component: () => (
+        <>
+          {contract && <LazyContractDirectListingsPage contract={contract} />}
+        </>
+      ),
     },
     {
       title: "English Auctions",
@@ -200,7 +284,11 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "EnglishAuctions",
       }),
-      component: LazyContractEnglishAuctionsPage,
+      component: () => (
+        <>
+          {contract && <LazyContractEnglishAuctionsPage contract={contract} />}
+        </>
+      ),
     },
     {
       title: "Balances",
@@ -210,7 +298,9 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "split"
           ? "enabled"
           : "disabled",
-      component: LazyContractSplitPage,
+      component: () => (
+        <>{contract && <LazyContractSplitPage contract={contract} />}</>
+      ),
     },
     {
       title: "Proposals",
@@ -244,7 +334,16 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["Account"],
       }),
-      component: LazyContractAccountPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractAccountPage
+              contract={contract}
+              detectedAccountFeature={detectedAccountFeature}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Account Permissions",
@@ -253,7 +352,16 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["AccountPermissions", "AccountPermissionsV1"],
       }),
-      component: LazyContractAccountPermissionsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractAccountPermissionsPage
+              contract={contract}
+              detectedPermissionFeature={detectedPermissionFeature}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Permissions",
@@ -268,7 +376,16 @@ export function useContractRouteConfig(
     {
       title: "Embed",
       path: "embed",
-      component: LazyContractEmbedPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractEmbedPage
+              contract={contract}
+              ercOrMarketplace={ercOrMarketplace}
+            />
+          )}
+        </>
+      ),
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "marketplace"
@@ -304,7 +421,19 @@ export function useContractRouteConfig(
     {
       title: "Settings",
       path: "settings",
-      component: LazyContractSettingsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractSettingsPage
+              contract={contract}
+              detectedMetadata={detectedMetadata}
+              detectedPlatformFees={detectedPlatformFees}
+              detectedPrimarySale={detectedPrimarySale}
+              detectedRoyalties={detectedRoyalties}
+            />
+          )}
+        </>
+      ),
       isDefault: true,
     },
     {

@@ -1,32 +1,22 @@
 import { MarketplaceTable } from "contract-ui/tabs/shared-components/marketplace-table";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import {
   getAllListings,
   getAllValidListings,
   totalListings,
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
-import { thirdwebClient } from "../../../../lib/thirdweb-client";
 
 interface DirectListingsTableProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
 }
 
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
-  contractAddress,
-  chainId,
+  contract,
 }) => {
-  const chain = useV5DashboardChain(chainId);
-  const contract = getContract({
-    client: thirdwebClient,
-    address: contractAddress,
-    chain: chain,
-  });
   const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
   const getAllQueryResult = useReadContract(getAllListings, {
     contract,
@@ -42,8 +32,7 @@ export const DirectListingsTable: React.FC<DirectListingsTableProps> = ({
 
   return (
     <MarketplaceTable
-      contractAddress={contractAddress}
-      chainId={chainId}
+      contract={contract}
       getAllQueryResult={getAllQueryResult}
       getValidQueryResult={getValidQueryResult}
       totalCountQuery={totalCountQuery}

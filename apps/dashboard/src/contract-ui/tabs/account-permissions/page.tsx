@@ -1,39 +1,19 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { thirdwebClient } from "lib/thirdweb-client";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { getContract } from "thirdweb";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 import { AccountSigners } from "./components/account-signers";
 
 interface AccountPermissionsPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
+  detectedPermissionFeature: ExtensionDetectedState;
 }
 
 export const AccountPermissionsPage: React.FC<AccountPermissionsPageProps> = ({
-  contractAddress,
+  contract,
+  detectedPermissionFeature,
 }) => {
-  const contractQuery = useContract(contractAddress);
-
-  const detectedFeature = extensionDetectedState({
-    contractQuery,
-    feature: ["AccountPermissions", "AccountPermissionsV1"],
-  });
-
-  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
-
-  if (contractQuery.isLoading || !contractQuery.contract || !chain) {
-    return null;
-  }
-
-  const contract = getContract({
-    address: contractQuery.contract.getAddress(),
-    chain,
-    client: thirdwebClient,
-  });
-
-  if (!detectedFeature) {
+  if (!detectedPermissionFeature) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}

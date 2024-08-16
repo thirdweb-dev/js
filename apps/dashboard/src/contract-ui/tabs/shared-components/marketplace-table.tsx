@@ -34,6 +34,7 @@ import {
 } from "react-icons/md";
 import type { UseQueryResult } from "react-query-v5";
 import { type Cell, type Column, usePagination, useTable } from "react-table";
+import type { ThirdwebContract } from "thirdweb";
 import type {
   DirectListing,
   EnglishAuction,
@@ -87,8 +88,7 @@ const tableColumns: Column<DirectListing | EnglishAuction>[] = [
 ];
 
 interface MarketplaceTableProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
   getAllQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
   getValidQueryResult: UseQueryResult<DirectListing[] | EnglishAuction[]>;
   totalCountQuery: UseQueryResult<bigint>;
@@ -108,8 +108,7 @@ interface MarketplaceTableProps {
 const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
 
 export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
-  contractAddress,
-  chainId,
+  contract,
   getAllQueryResult,
   getValidQueryResult,
   totalCountQuery,
@@ -215,8 +214,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
           />
         )}
         <ListingDrawer
-          contractAddress={contractAddress}
-          chainId={chainId}
+          contract={contract}
           data={tokenRow}
           isOpen={!!tokenRow}
           onClose={() => setTokenRow(null)}

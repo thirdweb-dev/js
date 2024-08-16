@@ -10,13 +10,11 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 import {
   type ThirdwebContract,
   ZERO_ADDRESS,
-  getContract,
   toEther,
   toTokens,
 } from "thirdweb";
@@ -28,7 +26,6 @@ import {
 } from "thirdweb/react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
-import { useV5DashboardChain } from "../../../lib/v5-adapter";
 import { DistributeButton } from "./components/distribute-button";
 
 export type Balance = {
@@ -40,28 +37,10 @@ export type Balance = {
 };
 
 interface SplitPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
-export const ContractSplitPage: React.FC<SplitPageProps> = ({
-  contractAddress,
-}) => {
-  const contractQuery = useContract(contractAddress, "split");
-  const v5Chain = useV5DashboardChain(contractQuery.contract?.chainId);
-
-  if (contractQuery.isLoading) {
-    // TODO build a skeleton for this
-    return <div>Loading...</div>;
-  }
-
-  if (!contractQuery?.contract || !v5Chain) {
-    return null;
-  }
-  const contract = getContract({
-    address: contractQuery.contract.getAddress(),
-    client: thirdwebClient,
-    chain: v5Chain,
-  });
+export const ContractSplitPage: React.FC<SplitPageProps> = ({ contract }) => {
   return <ContractSplitContent contract={contract} />;
 };
 
