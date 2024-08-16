@@ -1,12 +1,12 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, Stack } from "@chakra-ui/react";
 import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
-import { FiArrowLeft } from "react-icons/fi";
 import invariant from "tiny-invariant";
-import { Heading, Text } from "tw-components";
+import { CopyTextButton } from "../../@/components/ui/CopyTextButton";
+import { Button } from "../../@/components/ui/button";
+import { Separator } from "../../@/components/ui/separator";
 import { useDashboardRouter } from "../../@/lib/DashboardRouter";
 import {
   type EngineInstance,
@@ -235,24 +235,50 @@ function RenderInstance(props: {
     <>
       <SidebarNav links={links} activePage={activePage} title="Engine" />
 
-      <Stack spacing={4}>
-        <Link href="/dashboard/engine" aria-label="Go Back">
-          <FiArrowLeft />
-        </Link>
+      <div className="flex">
+        <Button
+          variant="ghost"
+          className="px-2 py-1 -translate-x-2 flex items-center gap-2 text-muted-foreground hover:text-foreground h-auto"
+        >
+          <Link
+            href="/dashboard/engine"
+            aria-label="Go Back"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeftIcon className="size-4" /> Back
+          </Link>
+        </Button>
+      </div>
 
-        <Stack>
-          <Heading size="title.lg" as="h1" isTruncated>
+      <div className="h-5" />
+
+      <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:justify-between">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter">
             {instance.name}
-          </Heading>
+          </h1>
 
-          <Flex gap={3} alignItems="center">
+          <div className="h-1" />
+
+          <div className="flex gap-3 items-center">
             {!instance.name.startsWith("https://") && (
-              <Text color="gray.600">{instance.url}</Text>
+              <CopyTextButton
+                copyIconPosition="right"
+                textToShow={instance.url}
+                textToCopy={instance.url}
+                tooltip="Copy Engine URL"
+                variant="ghost"
+                className="px-2 py-1 -translate-x-2 h-auto text-muted-foreground"
+              />
             )}
-            <EngineVersionBadge instance={instance} />
-          </Flex>
-        </Stack>
-      </Stack>
+          </div>
+        </div>
+        <EngineVersionBadge instance={instance} />
+      </div>
+
+      <div className="h-5" />
+      <Separator />
+      <div className="h-10 " />
 
       <props.content instance={instance} />
     </>
