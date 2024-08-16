@@ -6,7 +6,7 @@ import invariant from "tiny-invariant";
 export function useContractSources(contract?: ThirdwebContract) {
   return useQuery(
     [
-      "dashboard-contract-sources",
+      "contract-sources",
       contract?.chain.id || "",
       contract?.address || "",
     ],
