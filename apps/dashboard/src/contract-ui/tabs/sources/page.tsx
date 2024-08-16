@@ -1,5 +1,6 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
+import { useContractSources } from "@3rdweb-sdk/react/hooks/useContractSources";
 import {
   Divider,
   Flex,
@@ -14,21 +15,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useContract } from "@thirdweb-dev/react";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { useContractSources } from "contract-ui/hooks/useContractSources";
 import { useResolveContractAbi } from "hooks/useResolveContractAbi";
-import { thirdwebClient } from "lib/thirdweb-client";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo, useState } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { toast } from "sonner";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { Badge, Button, Card, Heading } from "tw-components";
 import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
 interface ContractSourcesPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
 type ContractParams = {
@@ -179,7 +176,7 @@ const VerifyContractModal: React.FC<
 };
 
 export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
-  contractAddress,
+  contract,
 }) => {
   const [resetSignal, setResetSignal] = useState(0);
 
@@ -190,22 +187,8 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
     // Increment to reset the query in the child component
     setResetSignal((prev: number) => prev + 1);
   };
-
-  const contractSourcesQuery = useContractSources(contractAddress);
-
-  const { contract } = useContract(contractAddress);
-
-  const chain = useV5DashboardChain(contract?.chainId);
-  const contractV5 =
-    contract && chain
-      ? getContract({
-          address: contract.getAddress(),
-          chain,
-          client: thirdwebClient,
-        })
-      : undefined;
-  const abiQuery = useResolveContractAbi(contractV5);
-
+  const abiQuery = useResolveContractAbi(contract);
+  const contractSourcesQuery = useContractSources(contract);
   // clean up the source filenames and filter out libraries
   const sources = useMemo(() => {
     if (!contractSourcesQuery.data) {
@@ -222,10 +205,6 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
       .reverse();
   }, [contractSourcesQuery.data]);
 
-  if (!contractAddress || !contract) {
-    return <div>No contract address provided</div>;
-  }
-
   if (!contractSourcesQuery || contractSourcesQuery?.isLoading) {
     return (
       <Flex direction="row" align="center" gap={2}>
@@ -240,7 +219,7 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
       <VerifyContractModal
         isOpen={isOpen}
         onClose={() => handleClose()}
-        contractAddress={contractAddress}
+        contractAddress={contract.address}
         resetSignal={resetSignal}
       />
 
@@ -250,8 +229,8 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
             Sources
           </Heading>
           <RefreshContractMetadataButton
-            chainId={contract.chainId}
-            contractAddress={contract.getAddress()}
+            chainId={contract.chain.id}
+            contractAddress={contract.address}
           />
           <Button variant="solid" colorScheme="purple" onClick={onOpen}>
             Verify contract
