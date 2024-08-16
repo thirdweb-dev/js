@@ -773,7 +773,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               </div>
             </FormControl>
 
-            {(fullPublishMetadata.data?.deployType === "standard" || 
+            {(fullPublishMetadata.data?.deployType === "standard" ||
               compilerMetadata?.data?.analytics?.command === "deploy") && (
               <>
                 {/* Deterministic deploy */}
