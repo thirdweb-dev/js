@@ -1,10 +1,13 @@
 import { useRouter } from "next/router";
-import { Spinner } from "../../@/components/ui/Spinner/Spinner";
 import type { EngineInstance } from "../../@3rdweb-sdk/react/hooks/useEngine";
 import { PageId } from "../../page-id";
 import type { ThirdwebNextPage } from "../../utils/types";
 import { AppLayout } from "../app-layouts/app";
-import { type ActivePage, EnginePageLayout } from "./EnginePageLayout";
+import {
+  type ActivePage,
+  EnginePageLayout,
+  PageLoading,
+} from "./EnginePageLayout";
 
 export function createEnginePage(
   activePage: ActivePage,
@@ -15,11 +18,7 @@ export function createEnginePage(
     const engineId = router.query.engineId;
 
     if (typeof engineId !== "string") {
-      return (
-        <div className="flex h-[300px] items-center justify-center">
-          <Spinner className="size-10" />
-        </div>
-      );
+      return <PageLoading />;
     }
 
     return (

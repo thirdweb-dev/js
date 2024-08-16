@@ -7,11 +7,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { AccountStatus, useAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import { RocketIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../../../@/components/ui/button";
 import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 import { AppLayout } from "../../../components/app-layouts/app";
+import { EngineSidebar } from "../../../components/engine/EngineSidebar";
 import {
   EngineTierCard,
   MONTHLY_PRICE_USD,
@@ -19,7 +21,6 @@ import {
 import { LazyOnboardingBilling } from "../../../components/onboarding/LazyOnboardingBilling";
 import { OnboardingModal } from "../../../components/onboarding/Modal";
 import { THIRDWEB_API_HOST } from "../../../constants/urls";
-import { SidebarNav } from "../../../core-ui/sidebar/nav";
 import { useTrack } from "../../../hooks/analytics/useTrack";
 import { PageId } from "../../../page-id";
 import type { ThirdwebNextPage } from "../../../utils/types";
@@ -196,7 +197,8 @@ const ConfirmEngineTierDialog = (props: {
           <Button onClick={() => onOpenChange(false)} variant="outline">
             Cancel
           </Button>
-          <Button onClick={onConfirm} variant="primary">
+          <Button onClick={onConfirm} variant="primary" className="gap-2">
+            <RocketIcon className="size-3" />
             Deploy now
           </Button>
         </DialogFooter>
@@ -211,21 +213,7 @@ export default Page;
 
 Page.getLayout = (page, props) => (
   <AppLayout {...props} hasSidebar={true}>
-    <SidebarNav
-      title="Engine"
-      links={[
-        {
-          name: "overview",
-          path: "/dashboard/engine",
-          title: "Overview",
-        },
-        {
-          name: "create",
-          path: "/dashboard/engine/create",
-          title: "Create Engine",
-        },
-      ]}
-    />
+    <EngineSidebar />
     {page}
   </AppLayout>
 );

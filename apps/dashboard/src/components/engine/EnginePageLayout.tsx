@@ -1,7 +1,7 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex, Stack } from "@chakra-ui/react";
-import { CircleAlertIcon } from "lucide-react";
+import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
 import { FiArrowLeft } from "react-icons/fi";
@@ -74,22 +74,11 @@ function QueryAndRenderInstance(props: {
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
 
   if (instancesQuery.isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (!instance) {
-    return (
-      <div className="h-[300px] flex items-center justify-center border border-border rounded-lg">
-        <div className="flex items-center gap-2">
-          <CircleAlertIcon className="size-5 text-destructive-text" />
-          <p> Engine Instance Not Found </p>
-        </div>
-      </div>
-    );
+    return <EngineErrorPage>Engine Instance Not Found</EngineErrorPage>;
   }
 
   return (
@@ -111,28 +100,25 @@ function EnsurePermissionAndRenderInstance(props: {
   });
 
   if (permissionQuery.isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (permissionQuery.error instanceof Error) {
     if (permissionQuery.error.message.includes("Failed to fetch")) {
       return (
-        <div>
-          Unable to connect to Engine. Ensure that your Engine is publicly
-          accessible.
-        </div>
+        <EngineErrorPage>
+          <p>Unable to connect to Engine</p>
+
+          <p>Ensure that your Engine is publicly accessible</p>
+        </EngineErrorPage>
       );
     }
 
     return (
-      <div>
-        There was an unexpected error reaching your Engine instance. Try again
-        or contact us if this issue persists.
-      </div>
+      <EngineErrorPage>
+        <p>There was an unexpected error reaching your Engine instance</p>
+        <p>Try again or contact us if this issue persists.</p>
+      </EngineErrorPage>
     );
   }
 
@@ -270,5 +256,50 @@ function RenderInstance(props: {
 
       <props.content instance={instance} />
     </>
+  );
+}
+
+function EngineErrorPage(props: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <Link
+        href="/dashboard/engine"
+        className="gap-2 flex items-center text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeftIcon className="size-5" />
+        Back
+      </Link>
+
+      <div className="border rounded-lg border-border mt-5">
+        <MessageContainer>
+          <div className="flex flex-col gap-4 items-center">
+            <CircleAlertIcon className="size-16 text-destructive-text" />
+            <p className="text-secondary-foreground text-center">
+              {props.children}
+            </p>
+          </div>
+        </MessageContainer>
+      </div>
+    </div>
+  );
+}
+
+export function MessageContainer(props: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="h-[300px] lg:h-[400px] flex items-center justify-center">
+      {props.children}
+    </div>
+  );
+}
+
+export function PageLoading() {
+  return (
+    <MessageContainer>
+      <Spinner className="size-10" />
+    </MessageContainer>
   );
 }
