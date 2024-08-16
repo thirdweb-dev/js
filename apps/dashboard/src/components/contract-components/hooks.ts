@@ -864,10 +864,10 @@ export function useCustomContractDeployMutation(options: {
             if (data.deployDeterministic) {
               const salt = data.signerAsSalt
                 ? (await signer?.getAddress())?.concat(
-                    data.saltForCreate2 || ""
+                    data.saltForCreate2 || "",
                   )
                 : data.saltForCreate2;
-              if(compilerMetadata?.data?.analytics?.command === "deploy") {
+              if (compilerMetadata?.data?.analytics?.command === "deploy") {
                 contractAddress = directDeployDeterministic(
                   compilerMetadata.data?.bytecode,
                   compilerMetadata.data?.abi,
@@ -879,7 +879,7 @@ export function useCustomContractDeployMutation(options: {
             } else {
               contractAddress = await sdk.deployer.deployContractFromUri(
                 ipfsHash.startsWith("ipfs://")
-                  ? ipfsHash 
+                  ? ipfsHash
                   : `ipfs://${ipfsHash}`,
                 Object.values(data.deployParams),
                 {
