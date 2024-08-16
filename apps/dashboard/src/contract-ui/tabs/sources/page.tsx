@@ -1,5 +1,7 @@
+import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
+import { useContractSources } from "@3rdweb-sdk/react/hooks/useContractSources";
 import {
   Divider,
   Flex,
@@ -17,10 +19,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
-import { useContractSources } from "contract-ui/hooks/useContractSources";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo, useState } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { toast } from "sonner";
+import { getContract } from "thirdweb";
 import { Badge, Button, Card, Heading } from "tw-components";
 import { useDashboardRouter } from "../../../@/lib/DashboardRouter";
 
@@ -188,10 +191,18 @@ export const ContractSourcesPage: React.FC<ContractSourcesPageProps> = ({
     setResetSignal((prev: number) => prev + 1);
   };
 
-  const contractSourcesQuery = useContractSources(contractAddress);
-
   const { contract } = useContract(contractAddress);
 
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    contract && chain
+      ? getContract({
+          address: contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : undefined;
+  const contractSourcesQuery = useContractSources(contractV5);
   const abi = useMemo(() => contract?.abi as Abi, [contract]);
 
   // clean up the source filenames and filter out libraries
