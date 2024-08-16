@@ -1,7 +1,5 @@
-import {
-  useVoteProposalList,
-  useVoteTokenBalances,
-} from "@3rdweb-sdk/react/hooks/useVote";
+import { useVoteTokenBalances } from "@3rdweb-sdk/react/hooks/useVote";
+import { useVoteProposalList } from "@3rdweb-sdk/react/hooks/useVote2";
 import {
   Divider,
   Flex,
@@ -11,7 +9,10 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
+import { thirdwebClient } from "lib/thirdweb-client";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
+import { getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading } from "tw-components";
 import { DelegateButton } from "./components/delegate-button";
@@ -27,9 +28,16 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
 }) => {
   const address = useActiveAccount()?.address;
   const contractQuery = useContract(contractAddress, "vote");
-
-  const data = useVoteProposalList(contractQuery.contract);
-
+  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
+  const contract =
+    contractQuery.contract && chain
+      ? getContract({
+          address: contractQuery.contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : undefined;
+  const data = useVoteProposalList(contract);
   const balanceAddresses: string[] = useMemo(() => {
     return [address, contractAddress].filter((a) => !!a) as string[];
   }, [address, contractAddress]);

@@ -9,16 +9,6 @@ import {
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 
-export function useVoteProposalList(contract?: Vote) {
-  return useQueryWithNetwork(
-    voteKeys.proposals(contract?.getAddress()),
-    async () => await contract?.getAll(),
-    {
-      enabled: !!contract,
-    },
-  );
-}
-
 export function useHasVotedOnProposal(
   contract: RequiredParam<Vote>,
   proposalId: string,
