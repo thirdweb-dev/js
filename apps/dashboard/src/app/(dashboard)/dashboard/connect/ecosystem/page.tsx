@@ -113,3 +113,6 @@ export default async function Page() {
     </main>
   );
 }
+
+// because cookies() is used
+export const dynamic = "force-dynamic";

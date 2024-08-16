@@ -51,3 +51,6 @@ export default async function Layout({
     </div>
   );
 }
+
+// because cookies() is used
+export const dynamic = "force-dynamic";

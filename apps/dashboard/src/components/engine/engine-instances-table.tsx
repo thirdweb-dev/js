@@ -7,7 +7,6 @@ import {
   useEngineRemoveCloudHosted,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import {
   Alert,
   AlertDescription,
@@ -31,20 +30,14 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
-import {
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-  useState,
-} from "react";
+import Link from "next/link";
+import { type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
 import { FiArrowRight, FiTrash } from "react-icons/fi";
-import { useActiveAccount } from "thirdweb/react";
 import { Badge, Button, FormLabel, Heading, Text } from "tw-components";
 
 interface EngineInstancesTableProps {
@@ -52,7 +45,6 @@ interface EngineInstancesTableProps {
   isLoading: boolean;
   isFetched: boolean;
   refetch: ReturnType<typeof useEngineInstances>["refetch"];
-  setConnectedInstance: Dispatch<SetStateAction<EngineInstance | undefined>>;
 }
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
@@ -60,85 +52,14 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   isLoading,
   isFetched,
   refetch,
-  setConnectedInstance,
 }) => {
   const editDisclosure = useDisclosure();
   const removeDisclosure = useDisclosure();
   const trackEvent = useTrack();
-  const token = useLoggedInUser().user?.jwt ?? null;
-  const address = useActiveAccount()?.address;
-  const toast = useToast();
 
   const [instanceToUpdate, setInstanceToUpdate] = useState<
     EngineInstance | undefined
   >();
-
-  const { mutate: connectToInstance } = useMutation({
-    mutationFn: async (instance: EngineInstance) => {
-      // Make an authed request.
-      // If it fails to fetch, the server is unreachable.
-      // If it returns a 401, the user is not a valid admin.
-      const res = await fetch(`${instance.url}auth/permissions/get-all`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.ok) {
-        return instance;
-      }
-      if (res.status === 401) {
-        throw new Error("Unauthorized");
-      }
-      throw new Error(`Unexpected status code ${res.status}`);
-    },
-    onSuccess: (instance) => {
-      trackEvent({
-        category: "engine",
-        action: "connect",
-        label: "success",
-      });
-      setConnectedInstance(instance);
-    },
-    onError: (error, instance) => {
-      const e = error as Error;
-      if (e?.message === "Failed to fetch") {
-        trackEvent({
-          category: "engine",
-          action: "connect",
-          label: "unreachable",
-        });
-        toast({
-          status: "error",
-          description: `Unable to connect to ${instance.url}. Ensure that your Engine is publicly accessible.`,
-          duration: null,
-          isClosable: true,
-        });
-      } else if (e?.message.indexOf("Unauthorized") > -1) {
-        trackEvent({
-          category: "engine",
-          action: "connect",
-          label: "unauthorized",
-        });
-        toast({
-          status: "error",
-          title: "Unauthorized",
-          description: `You are not an admin for this Engine instance. Contact the owner to add your wallet as an admin: ${address}`,
-          duration: null,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          status: "error",
-          description:
-            "There was an unexpected error reaching your Engine instance. Try again or contact us if this issue persists.",
-          duration: null,
-          isClosable: true,
-        });
-      }
-    },
-  });
 
   const columnHelper = createColumnHelper<EngineInstance>();
   const columns = [
@@ -206,21 +127,13 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
               </HStack>
             ) : (
               <>
-                <Button
-                  onClick={() => {
-                    const instance = instances.find((i) => i.id === id);
-                    if (instance) {
-                      connectToInstance(instance);
-                    }
-                  }}
-                  variant="link"
-                  colorScheme="blue"
-                  w="fit-content"
-                  rightIcon={<FiArrowRight />}
-                  justifyContent="flex-start"
+                <Link
+                  href={`/dashboard/engine/${id}`}
+                  className="text-link-foreground flex gap-2 items-center"
                 >
                   {name}
-                </Button>
+                  <FiArrowRight />
+                </Link>
                 <Text size="body.sm" color="gray.700">
                   {url}
                 </Text>

@@ -1,0 +1,25 @@
+.unorderedList,
+.orderedList {
+  @apply pl-5 leading-relaxed list-none text-secondary-foreground;
+}
+
+.unorderedList > li {
+  @apply pb-1 pl-2 list-disc;
+}
+
+.orderedList > li {
+  @apply pb-1 pl-2 list-decimal;
+}
+
+.unorderedList > li::marker {
+  @apply text-muted-foreground !m-0 text-left;
+}
+
+.orderedList > li::marker {
+  @apply text-muted-foreground text-left;
+}
+
+.unorderedList > li:hover::marker,
+.orderedList > li:hover::marker {
+  @apply text-foreground;
+}
