@@ -177,6 +177,12 @@ export function useContractRouteConfig(
               ? "erc721"
               : null;
 
+  // AccountPermissionsPage
+  const detectedPermissionFeature = extensionDetectedState({
+    contractQuery,
+    feature: ["AccountPermissions", "AccountPermissionsV1"],
+  });
+
   return [
     {
       title: "Overview",
@@ -336,7 +342,16 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["AccountPermissions", "AccountPermissionsV1"],
       }),
-      component: LazyContractAccountPermissionsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractAccountPermissionsPage
+              contract={contract}
+              detectedPermissionFeature={detectedPermissionFeature}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Permissions",
