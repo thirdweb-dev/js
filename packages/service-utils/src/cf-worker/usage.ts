@@ -89,6 +89,7 @@ const usageEventSchema = z.object({
   // Used to identify the ecosystem that the an ecosystem wallet belongs too
   ecosystemId: z.string().optional(),
   ecosystemPartnerId: z.string().optional(),
+  authenticationMethod: z.string().optional(),
   chainName: z.string().optional(),
   tokenSymbol: z.string().optional(),
   dstChainId: z.number().optional(),
