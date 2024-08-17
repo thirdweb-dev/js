@@ -5,6 +5,8 @@ import { getCompilerMetadata } from "thirdweb/contract";
 import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 
+// An example for a contract that has IPFS URIs in its metadata: abstract-testnet/0x8A24a7Df38fA5fCCcFD1259e90Fb6996fDdfcADa
+
 export function useContractSources(contract?: ThirdwebContract) {
   return useQuery({
     queryKey: [
