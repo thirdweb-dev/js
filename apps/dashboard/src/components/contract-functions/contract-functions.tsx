@@ -104,6 +104,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           )}
           {(sources || abi) && (
             <TabPanel>
+              {/* @ts-expect-error This won't cause any error and will auto-resolve itself once we have fully migrated to v5 */}
               <SourcesPanel sources={sources} abi={abi} />
             </TabPanel>
           )}
