@@ -1,6 +1,8 @@
+import { thirdwebClient } from "@/constants/client";
 import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebContract } from "thirdweb";
 import { getCompilerMetadata } from "thirdweb/contract";
+import { download } from "thirdweb/storage";
 import invariant from "tiny-invariant";
 
 export function useContractSources(contract?: ThirdwebContract) {
@@ -14,11 +16,30 @@ export function useContractSources(contract?: ThirdwebContract) {
       invariant(contract, "contract is required");
       const data = await getCompilerMetadata(contract);
       const sources = data.metadata.sources || {};
-      const arr = Object.keys(sources).map((key) => ({
-        filename: key,
-        source: sources[key]?.content || "",
-      }));
-      return arr;
+      return await Promise.all(
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        Object.entries(sources).map(async ([path, info]: [string, any]) => {
+          const urls = info.urls as string[];
+          const ipfsLink = urls
+            ? urls.find((url) => url.includes("ipfs"))
+            : undefined;
+          if (ipfsLink) {
+            const ipfsHash = ipfsLink.split("ipfs/")[1];
+            const source = await download({
+              uri: `ipfs://${ipfsHash}`,
+              client: thirdwebClient,
+            }).then((r) => r.text());
+            return {
+              filename: path,
+              source,
+            };
+          }
+          return {
+            filename: path,
+            source: info.content || "Could not find source for this contract",
+          };
+        }),
+      );
     },
     enabled: !!contract,
   });
