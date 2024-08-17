@@ -1,49 +1,16 @@
 "use client";
 import { hexToNumber } from "@noble/curves/abstract/utils";
 import { useId, useMemo } from "react";
-import type { Address } from "viem";
-
-const colorSet = [
-  "#ef4444",
-  "#f97316",
-  "#f59e0b",
-  "#eab308",
-  "#84cc16",
-  "#06b6d4",
-  "#3b82f6",
-  "#a855f7",
-  "#ec4899",
-  "#ec4899",
-  "#f43f5e",
-];
+import { type Address, numberToHex } from "viem";
 
 // Distance between 2 colors (in RGB)
 type Color = [number, number, number];
-function distance(a: Color, b: Color) {
-  return Math.sqrt(
-    (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2,
-  );
-}
 function hexToRgb(hex: string) {
   return [
     Number(hexToNumber(hex.slice(0, 2))),
     Number(hexToNumber(hex.slice(2, 4))),
     Number(hexToNumber(hex.slice(4, 6))),
   ] satisfies [number, number, number];
-}
-
-function nearestColor(colorHex: string) {
-  let lowest = Number.POSITIVE_INFINITY;
-  let tmp: number;
-  let index = 0;
-  colorSet.forEach((el, i) => {
-    tmp = distance(hexToRgb(colorHex), hexToRgb(el.replace("#", "")));
-    if (tmp < lowest) {
-      lowest = tmp;
-      index = i;
-    }
-  });
-  return colorSet[index] as string;
 }
 
 /**
@@ -54,16 +21,33 @@ function nearestColor(colorHex: string) {
  */
 export function Blobbie(props: { address: Address; size: number }) {
   const id = useId();
-  const colors = useMemo(() => {
-    const _colors: string[] = [];
-    let i = 2;
-    while (i <= 30) {
-      const color = nearestColor(props.address.slice(i, i + 6));
-      _colors.push(color);
+  const colors: [string, string, string] = useMemo(() => {
+    const color = props.address.slice(2, 8);
+    const rgb = hexToRgb(color);
+
+    // To get well-paired colors, we use the first rgb hex sequence as our main color then find its two best pairs (split color wheel into thirds)
+    // To prevent extremely dark colors, which tend to clash, we don't allow values less than 55
+    const pairing1 = rgb.map((n) => (n + 85 > 255 ? n + 85 - 200 : n + 85));
+    const pairing2 = rgb.map((n) => (n - 85 < 55 ? n - 85 + 200 : n - 85));
+    return [
+      color,
+      pairing1.map((n) => numberToHex(n).replace("0x", "")).join(""),
+      pairing2.map((n) => numberToHex(n).replace("0x", "")).join(""),
+    ];
+  }, [props.address]);
+
+  const positions: [Color, Color, Color, Color, Color] = useMemo(() => {
+    const _positions: Color[] = [];
+    let i = 8;
+    while (i < 44) {
+      const values = hexToRgb(props.address.slice(i, i + 6));
+      _positions.push(values);
       i += 6;
     }
-    return _colors;
+    return _positions as [Color, Color, Color, Color, Color];
   }, [props.address]);
+
+  console.log(colors);
 
   return (
     <svg
@@ -89,23 +73,62 @@ export function Blobbie(props: { address: Address; size: number }) {
             >
               <stop
                 offset="0%"
-                style={{ stopColor: `${color}`, stopOpacity: 1 }}
+                style={{ stopColor: `#${color}`, stopOpacity: 0.9 }}
               />
               <stop
                 offset="100%"
-                style={{ stopColor: `${color}`, stopOpacity: 0 }}
+                style={{ stopColor: `#${color}`, stopOpacity: 0 }}
               />
             </radialGradient>
           );
         })}
       </defs>
-      <ellipse cx="100" cy="100" rx="600" ry="600" fill={`url(#${id}_grad1)`} />
-      <ellipse cx="300" cy="0" rx="400" ry="400" fill={`url(#${id}_grad2)`} />
-      <ellipse cx="100" cy="550" rx="200" ry="200" fill={`url(#${id}_grad3)`} />
-      <ellipse cx="300" cy="450" rx="400" ry="400" fill={`url(#${id}_grad4)`} />
-      <ellipse cx="50" cy="250" rx="200" ry="200" fill={`url(#${id}_grad5)`} />
-      <ellipse cx="400" cy="220" rx="400" ry="400" fill={`url(#${id}_grad6)`} />
-      <ellipse cx="100" cy="290" rx="500" ry="500" fill={`url(#${id}_grad7)`} />
+
+      <ellipse
+        cx="250"
+        cy="250"
+        rx="500"
+        ry="500"
+        fill={`url(#${id}_grad1)`}
+        opacity={0.5}
+      />
+      <ellipse
+        cx={400 + positions[0][0]}
+        cy={400 + positions[0][1]}
+        rx={350 + positions[0][2]}
+        ry={350 + positions[0][2]}
+        fill={`url(#${id}_grad1)`}
+      />
+      <ellipse
+        cx={positions[1][0]}
+        cy={positions[1][1]}
+        rx={350 + positions[1][2]}
+        ry={350 + positions[1][2]}
+        fill={`url(#${id}_grad2)`}
+      />
+      <ellipse
+        cx={400 + positions[2][0]}
+        cy={positions[2][1]}
+        rx={350 + positions[2][2]}
+        ry={350 + positions[2][2]}
+        fill={`url(#${id}_grad3)`}
+      />
+      <ellipse
+        cx={positions[3][0]}
+        cy={positions[3][1]}
+        rx={100 + positions[3][2]}
+        ry={100 + positions[3][2]}
+        fill={`url(#${id}_grad2)`}
+        opacity={0.5}
+      />
+      <ellipse
+        cx={positions[4][0]}
+        cy={positions[4][1]}
+        rx={100 + positions[4][2]}
+        ry={100 + positions[4][2]}
+        fill={`url(#${id}_grad3)`}
+        opacity={0.5}
+      />
     </svg>
   );
 }
