@@ -8,8 +8,8 @@ export function useResolveContractAbi(contract?: ThirdwebContract) {
   return useQuery({
     queryKey: [
       "full-contract-abi",
-      contract?.address || "",
       contract?.chain.id || "",
+      contract?.address || "",
     ],
     queryFn: async () => {
       invariant(contract, "contract is required");
