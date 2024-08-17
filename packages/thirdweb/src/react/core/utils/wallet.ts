@@ -4,12 +4,12 @@ import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { resolveAvatar } from "../../../extensions/ens/resolve-avatar.js";
 import { resolveName } from "../../../extensions/ens/resolve-name.js";
+import { shortenAddress } from "../../../utils/address.js";
 import { getWalletInfo } from "../../../wallets/__generated__/getWalletInfo.js";
 import type { Account, Wallet } from "../../../wallets/interfaces/wallet.js";
 import type { WalletInfo } from "../../../wallets/wallet-info.js";
 import type { WalletId } from "../../../wallets/wallet-types.js";
 import { useWalletBalance } from "../hooks/others/useWalletBalance.js";
-import { shortenString } from "./addresses.js";
 
 /**
  * Get the ENS name and avatar for an address
@@ -99,7 +99,7 @@ export function useConnectedWalletDetails(
   });
 
   const shortAddress = activeAccount?.address
-    ? shortenString(activeAccount.address, false)
+    ? shortenAddress(activeAccount.address, 4)
     : "";
 
   const balanceQuery = useWalletBalance({
