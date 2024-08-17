@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ANVIL_CHAIN } from "~test/chains.js";
+import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../../contract/contract.js";
@@ -20,6 +21,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("getRecipientSplitPercentage", () => {
       chain: ANVIL_CHAIN,
       params: {
         name: "split-contract",
+        contractURI: TEST_CONTRACT_URI, // just to speed up the test
         payees,
         shares: [
           5100n, // 51%
