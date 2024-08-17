@@ -214,6 +214,7 @@ export const ConnectedWalletDetails: React.FC<{
           border: `1px solid ${theme.colors.borderColor}`,
           textOverflow: "ellipsis",
           width: "115px",
+          whiteSpace: "nowrap",
           borderRadius: `0 ${radius.md} ${radius.md} 0`,
         }}
       >
