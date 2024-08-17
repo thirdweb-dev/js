@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { useQuery } from "@tanstack/react-query";
-import { useSDK, useSDKChainId } from "@thirdweb-dev/react";
+import { useSDKChainId } from "@thirdweb-dev/react";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
 import type {
@@ -33,6 +33,7 @@ import type {
   ChainServices,
 } from "app/(dashboard)/(chain)/types/chain";
 import { getSDKTheme } from "app/components/sdk-component-theme";
+import { LOCAL_NODE_PKEY } from "constants/misc";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { ExternalLinkIcon } from "lucide-react";
@@ -41,6 +42,7 @@ import Link from "next/link";
 import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { toast } from "sonner";
+import { prepareTransaction, sendTransaction, toWei } from "thirdweb";
 import { type Chain, type ChainMetadata, localhost } from "thirdweb/chains";
 import {
   PayEmbed,
@@ -51,6 +53,7 @@ import {
   useSwitchActiveWalletChain,
   useWalletBalance,
 } from "thirdweb/react";
+import { privateKeyToAccount } from "thirdweb/wallets";
 import { Button, type ButtonProps, Card, Heading, Text } from "tw-components";
 import { THIRDWEB_API_HOST } from "../../constants/urls";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
@@ -485,16 +488,30 @@ const MismatchNotice: React.FC<{
 };
 
 const GetLocalHostTestnetFunds: React.FC = () => {
-  const sdk = useSDK();
+  const address = useActiveAccount()?.address;
   const requestFunds = async () => {
-    if (sdk) {
-      try {
-        await sdk.wallet.requestFunds(10);
-        toast.success("Successfully got funds from localhost");
-      } catch (e) {
-        toast.error("Failed to get funds from localhost");
-      }
+    if (!address) {
+      return toast.error("No active account detected");
     }
+    const faucet = privateKeyToAccount({
+      privateKey: LOCAL_NODE_PKEY,
+      client: thirdwebClient,
+    });
+    const transaction = prepareTransaction({
+      to: address,
+      chain: localhost,
+      client: thirdwebClient,
+      value: toWei("10"),
+    });
+    const promise = sendTransaction({
+      account: faucet,
+      transaction,
+    });
+    toast.promise(promise, {
+      error: "Failed to get funds from localhost",
+      success: "Successfully got funds from localhost",
+      loading: "Requesting funds",
+    });
   };
 
   return (
