@@ -20,6 +20,34 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
 }) => {
   return (
     <Accordion allowMultiple defaultIndex={[]}>
+      {/* Show the ABI first for potentially better UX */}
+      {abi && (
+        <AccordionItem
+          gap={4}
+          flexDirection="column"
+          borderColor="borderColor"
+          _first={{ borderTopWidth: 0 }}
+          _last={{ borderBottomWidth: 0 }}
+        >
+          {({ isExpanded }) => (
+            <>
+              <AccordionButton justifyContent="space-between" py={2}>
+                <Heading size="label.md">ABI</Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                {isExpanded && (
+                  <CodeBlock
+                    code={JSON.stringify(abi, null, 2)}
+                    language="json"
+                    overflow="auto"
+                  />
+                )}
+              </AccordionPanel>
+            </>
+          )}
+        </AccordionItem>
+      )}
       {sources.map((signature) => (
         <AccordionItem
           gap={4}
@@ -48,33 +76,6 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           )}
         </AccordionItem>
       ))}
-      {abi && (
-        <AccordionItem
-          gap={4}
-          flexDirection="column"
-          borderColor="borderColor"
-          _first={{ borderTopWidth: 0 }}
-          _last={{ borderBottomWidth: 0 }}
-        >
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton justifyContent="space-between" py={2}>
-                <Heading size="label.md">ABI</Heading>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel>
-                {isExpanded && (
-                  <CodeBlock
-                    code={JSON.stringify(abi, null, 2)}
-                    language="json"
-                    overflow="auto"
-                  />
-                )}
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
-      )}
     </Accordion>
   );
 };
