@@ -67,6 +67,19 @@ export { votingDelay } from "../../extensions/vote/__generated__/Vote/read/votin
 
 export { votingPeriod } from "../../extensions/vote/__generated__/Vote/read/votingPeriod.js";
 
+export { proposalExists } from "../../extensions/vote/read/proposalExists.js";
+
+export { VoteType, ProposalState } from "../../extensions/vote/types.js";
+
+export { getProposalVoteCounts } from "../../extensions/vote/read/getProposalVoteCounts.js";
+
+export {
+  getAll,
+  type ProposalItem,
+} from "../../extensions/vote/read/getAll.js";
+
+export { canExecute } from "../../extensions/vote/read/canExecute.js";
+
 /**
  * WRITE Methods
  */
@@ -129,3 +142,4 @@ export {
   updateQuorumNumerator,
   type UpdateQuorumNumeratorParams,
 } from "../../extensions/vote/__generated__/Vote/write/updateQuorumNumerator.js";
+export { executeProposal } from "../../extensions/vote/write/executeProposal.js";

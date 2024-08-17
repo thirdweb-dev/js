@@ -136,7 +136,7 @@ export function TransactionButton(props: TransactionButtonProps) {
           !unstyled
             ? {
                 opacity: !account || disabled ? 0.5 : 1,
-                minWidth: "150px",
+                minWidth: "165px",
                 position: "relative",
                 ...buttonProps.style,
               }

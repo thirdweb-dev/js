@@ -9,7 +9,7 @@ import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import { initialize } from "./__generated__/Split/write/initialize.js";
 
 /**
- * @extension PREBUILT
+ * @extension DEPLOY
  */
 export type SplitContractParams = {
   name: string;
@@ -71,6 +71,7 @@ export type DeploySplitContractOptions = Prettify<
  *    name: "Split contract",
  *    payees: ["0x...123", "0x...456"],
  *    shares: [5100, 4900], // See type `SplitContractParams` for more context
+ *  },
  * });
  * ```
  */

@@ -752,6 +752,20 @@ export function useCustomContractDeployMutation(options: {
                       message,
                     );
                   }
+                  case "eth_sendTransaction": {
+                    const tx = params?.[0];
+                    if (!tx) {
+                      throw new Error("No transaction provided");
+                    }
+                    return signer.sendTransaction(tx);
+                  }
+                  case "personal_sign": {
+                    const data = params?.[0];
+                    if (!data) {
+                      throw new Error("Nothing to sign");
+                    }
+                    return signer.signMessage(data);
+                  }
                   default: {
                     return (signer as providers.JsonRpcSigner)?.provider?.send(
                       method,

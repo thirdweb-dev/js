@@ -1,16 +1,17 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import {
-  type EngineInstance,
-  useEngineInstances,
-} from "@3rdweb-sdk/react/hooks/useEngine";
+import { useEngineInstances } from "@3rdweb-sdk/react/hooks/useEngine";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ExternalLinkIcon, RocketIcon } from "lucide-react";
+import {
+  CloudDownloadIcon,
+  ExternalLinkIcon,
+  PlusIcon,
+  RocketIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { UnorderedList } from "../../@/components/ui/List/List";
 import { Button } from "../../@/components/ui/button";
 import { EngineInstancesTable } from "./engine-instances-table";
-import { ImportEngineInstanceButton } from "./import-engine-instance";
 
 export const EngineInstancesList = () => {
   const instancesQuery = useEngineInstances();
@@ -81,7 +82,7 @@ export const EngineInstancesList = () => {
             Already have an Engine Instance?
           </p>
 
-          <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
+          <ImportEngineLink label="Import" />
         </div>
 
         <div className="h-20" />
@@ -95,7 +96,7 @@ export const EngineInstancesList = () => {
       <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
         <h1 className="text-4xl font-bold">Engine</h1>
         <div className="flex flex-row gap-2">
-          <ImportEngineInstanceButton refetch={instancesQuery.refetch} />
+          <ImportEngineLink label="Import" />
           <CreateEngineLink label="Create Engine Instance" />
         </div>
       </div>
@@ -103,7 +104,7 @@ export const EngineInstancesList = () => {
       <div className="h-6" />
 
       <EngineInstancesTable
-        instances={instancesQuery.data ?? ([] as EngineInstance[])}
+        instances={instances}
         isFetched={instancesQuery.isFetched}
         isLoading={instancesQuery.isLoading}
         refetch={instancesQuery.refetch}
@@ -154,7 +155,34 @@ function CreateEngineLink(props: {
         });
       }}
     >
-      <Link href={"/dashboard/engine/create"}>{props.label}</Link>
+      <Link href={"/dashboard/engine/create"} className="gap-2">
+        <PlusIcon className="size-4" />
+        {props.label}
+      </Link>
+    </Button>
+  );
+}
+
+function ImportEngineLink(props: {
+  label: string;
+}) {
+  const trackEvent = useTrack();
+
+  return (
+    <Button
+      asChild
+      variant="outline"
+      onClick={() => {
+        trackEvent({
+          category: "engine",
+          action: "import",
+        });
+      }}
+    >
+      <Link href={"/dashboard/engine/import"} className="gap-2">
+        <CloudDownloadIcon className="size-4" />
+        {props.label}
+      </Link>
     </Button>
   );
 }

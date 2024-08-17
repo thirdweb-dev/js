@@ -35,15 +35,23 @@ const securityHeaders = [
   },
 ];
 
+export async function headers() {
+  return [
+    {
+      source: "/(.*)",
+      headers: securityHeaders,
+    },
+  ];
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: securityHeaders,
-      },
-    ];
+  webpack: (config) => {
+    config.externals.push("pino-pretty", "lokijs", "encoding");
+    return config;
+  },
+  images: {
+    dangerouslyAllowSVG: true,
   },
 };
 

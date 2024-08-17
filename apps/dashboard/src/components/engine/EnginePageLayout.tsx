@@ -1,12 +1,12 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, Stack } from "@chakra-ui/react";
-import { CircleAlertIcon } from "lucide-react";
+import { ArrowLeftIcon, CircleAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo } from "react";
-import { FiArrowLeft } from "react-icons/fi";
 import invariant from "tiny-invariant";
-import { Heading, Text } from "tw-components";
+import { CopyTextButton } from "../../@/components/ui/CopyTextButton";
+import { Button } from "../../@/components/ui/button";
+import { Separator } from "../../@/components/ui/separator";
 import { useDashboardRouter } from "../../@/lib/DashboardRouter";
 import {
   type EngineInstance,
@@ -74,22 +74,11 @@ function QueryAndRenderInstance(props: {
   const instance = instancesQuery.data?.find((x) => x.id === props.engineId);
 
   if (instancesQuery.isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (!instance) {
-    return (
-      <div className="h-[300px] flex items-center justify-center border border-border rounded-lg">
-        <div className="flex items-center gap-2">
-          <CircleAlertIcon className="size-5 text-destructive-text" />
-          <p> Engine Instance Not Found </p>
-        </div>
-      </div>
-    );
+    return <EngineErrorPage>Engine Instance Not Found</EngineErrorPage>;
   }
 
   return (
@@ -111,28 +100,25 @@ function EnsurePermissionAndRenderInstance(props: {
   });
 
   if (permissionQuery.isLoading) {
-    return (
-      <div className="h-[300px] flex items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
+    return <PageLoading />;
   }
 
   if (permissionQuery.error instanceof Error) {
     if (permissionQuery.error.message.includes("Failed to fetch")) {
       return (
-        <div>
-          Unable to connect to Engine. Ensure that your Engine is publicly
-          accessible.
-        </div>
+        <EngineErrorPage>
+          <p>Unable to connect to Engine</p>
+
+          <p>Ensure that your Engine is publicly accessible</p>
+        </EngineErrorPage>
       );
     }
 
     return (
-      <div>
-        There was an unexpected error reaching your Engine instance. Try again
-        or contact us if this issue persists.
-      </div>
+      <EngineErrorPage>
+        <p>There was an unexpected error reaching your Engine instance</p>
+        <p>Try again or contact us if this issue persists.</p>
+      </EngineErrorPage>
     );
   }
 
@@ -249,26 +235,97 @@ function RenderInstance(props: {
     <>
       <SidebarNav links={links} activePage={activePage} title="Engine" />
 
-      <Stack spacing={4}>
-        <Link href="/dashboard/engine" aria-label="Go Back">
-          <FiArrowLeft />
-        </Link>
+      <div className="flex">
+        <Button
+          variant="ghost"
+          className="px-2 py-1 -translate-x-2 flex items-center gap-2 text-muted-foreground hover:text-foreground h-auto"
+        >
+          <Link
+            href="/dashboard/engine"
+            aria-label="Go Back"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeftIcon className="size-4" /> Back
+          </Link>
+        </Button>
+      </div>
 
-        <Stack>
-          <Heading size="title.lg" as="h1" isTruncated>
+      <div className="h-5" />
+
+      <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:justify-between">
+        <div>
+          <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter">
             {instance.name}
-          </Heading>
+          </h1>
 
-          <Flex gap={3} alignItems="center">
+          <div className="h-1" />
+
+          <div className="flex gap-3 items-center">
             {!instance.name.startsWith("https://") && (
-              <Text color="gray.600">{instance.url}</Text>
+              <CopyTextButton
+                copyIconPosition="right"
+                textToShow={instance.url}
+                textToCopy={instance.url}
+                tooltip="Copy Engine URL"
+                variant="ghost"
+                className="px-2 py-1 -translate-x-2 h-auto text-muted-foreground"
+              />
             )}
-            <EngineVersionBadge instance={instance} />
-          </Flex>
-        </Stack>
-      </Stack>
+          </div>
+        </div>
+        <EngineVersionBadge instance={instance} />
+      </div>
+
+      <div className="h-5" />
+      <Separator />
+      <div className="h-10 " />
 
       <props.content instance={instance} />
     </>
+  );
+}
+
+function EngineErrorPage(props: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <Link
+        href="/dashboard/engine"
+        className="gap-2 flex items-center text-muted-foreground hover:text-foreground"
+      >
+        <ArrowLeftIcon className="size-5" />
+        Back
+      </Link>
+
+      <div className="border rounded-lg border-border mt-5">
+        <MessageContainer>
+          <div className="flex flex-col gap-4 items-center">
+            <CircleAlertIcon className="size-16 text-destructive-text" />
+            <p className="text-secondary-foreground text-center">
+              {props.children}
+            </p>
+          </div>
+        </MessageContainer>
+      </div>
+    </div>
+  );
+}
+
+export function MessageContainer(props: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="h-[300px] lg:h-[400px] flex items-center justify-center">
+      {props.children}
+    </div>
+  );
+}
+
+export function PageLoading() {
+  return (
+    <MessageContainer>
+      <Spinner className="size-10" />
+    </MessageContainer>
   );
 }
