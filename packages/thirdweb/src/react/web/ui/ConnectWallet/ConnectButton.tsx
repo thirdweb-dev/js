@@ -318,8 +318,8 @@ export function ConnectButton(props: ConnectButtonProps) {
         variant="primary"
         type="button"
         style={{
-          minWidth: "150px",
-          minHeight: "52px",
+          minWidth: "165px",
+          height: "50px",
           ...props.connectButton?.style,
         }}
       >
@@ -420,8 +420,8 @@ function ConnectButtonInner(
         variant="primary"
         type="button"
         style={{
-          minWidth: "150px",
-          minHeight: "52px",
+          minWidth: "165px",
+          height: "50px",
           fontSize: "16px",
           ...props.connectButton?.style,
         }}
@@ -459,8 +459,8 @@ function ConnectButtonInner(
           variant="primary"
           type="button"
           style={{
-            minWidth: "150px",
-            minHeight: "52px",
+            minWidth: "165px",
+            height: "50px",
             ...props.connectButton?.style,
           }}
         >
@@ -480,8 +480,8 @@ function ConnectButtonInner(
             }}
             className={props.signInButton?.className}
             style={{
-              minWidth: "150px",
-              minHeight: "52px",
+              minWidth: "165px",
+              minHeight: "50px",
               ...props.signInButton?.style,
             }}
           >

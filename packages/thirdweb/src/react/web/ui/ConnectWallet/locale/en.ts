@@ -3,7 +3,7 @@ import type { ConnectLocale } from "./types.js";
 const connectLocaleEn: ConnectLocale = {
   id: "en_US",
   signIn: "Sign in",
-  defaultButtonTitle: "Connect Wallet",
+  defaultButtonTitle: "Connect",
   connecting: "Connecting",
   switchNetwork: "Switch Network",
   switchingNetwork: "Switching Network",

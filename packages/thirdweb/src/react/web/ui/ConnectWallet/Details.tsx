@@ -25,7 +25,6 @@ import {
   type Theme,
   fontSize,
   iconSize,
-  media,
   radius,
   spacing,
 } from "../../../core/design-system/index.js";
@@ -61,13 +60,13 @@ import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
-import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
+import { Blobbie } from "./Blobbie.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
 import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
 import {
@@ -78,7 +77,6 @@ import { TransactionsScreen } from "./TransactionsScreen.js";
 import { onModalUnmount } from "./constants.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
-import { GenericWalletIcon } from "./icons/GenericWalletIcon.js";
 import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
 import { ShuffleIconLucide } from "./icons/ShuffleIconLucide.js";
 import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
@@ -125,9 +123,9 @@ export const ConnectedWalletDetails: React.FC<{
   const { connectLocale: locale, client } = props;
 
   const setRootEl = useContext(SetRootElementContext);
-  const activeWallet = useActiveWallet();
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
+  const theme = useCustomTheme();
 
   const { ensAvatarQuery, addressOrENS, balanceQuery } =
     useConnectedWalletDetails(
@@ -196,20 +194,29 @@ export const ConnectedWalletDetails: React.FC<{
       {ensAvatarQuery.data ? (
         <Img
           src={ensAvatarQuery.data}
-          width={iconSize.sm}
-          height={iconSize.sm}
+          width="50px"
+          height="50px"
           style={{
-            borderRadius: radius.xs,
+            width: 50,
+            height: 50,
           }}
           client={client}
         />
-      ) : activeWallet?.id ? (
-        <WalletImage size={iconSize.md} id={activeWallet.id} client={client} />
       ) : (
-        <GenericWalletIcon size={iconSize.md} />
+        activeAccount && <Blobbie address={activeAccount.address} size={50} />
       )}
-
-      <Container flex="column" gap="3xs">
+      <Container
+        flex="column"
+        gap="3xs"
+        px="sm"
+        py="xs"
+        style={{
+          border: `1px solid ${theme.colors.borderColor}`,
+          textOverflow: "ellipsis",
+          width: "115px",
+          borderRadius: `0 ${radius.md} ${radius.md} 0`,
+        }}
+      >
         {/* Address */}
 
         {addressOrENS ? (
@@ -376,25 +383,37 @@ function DetailsModal(props: {
       </IconButton>
 
       <Container px="lg" flex="column" center="x">
-        {ensAvatarQuery.data ? (
-          <Img
-            src={ensAvatarQuery.data}
-            width={iconSize.xxl}
-            height={iconSize.xxl}
-            style={{
-              borderRadius: radius.lg,
-            }}
-            client={client}
-          />
-        ) : activeWallet?.id ? (
-          <WalletImage
-            size={iconSize.xxl}
-            id={activeWallet.id}
-            client={client}
-          />
-        ) : (
-          <GenericWalletIcon size={iconSize.xxl} />
-        )}
+        <Container
+          style={{
+            position: "relative",
+            height: `${iconSize.xxl}px`,
+            width: `${iconSize.xxl}px`,
+            overflow: "visible",
+          }}
+        >
+          {ensAvatarQuery.data ? (
+            <Img
+              src={ensAvatarQuery.data}
+              width={iconSize.xxl}
+              height={iconSize.xxl}
+              style={{
+                borderRadius: radius.md,
+              }}
+              client={client}
+            />
+          ) : (
+            activeAccount && (
+              <Container
+                style={{ borderRadius: radius.md, overflow: "hidden" }}
+              >
+                <Blobbie
+                  address={activeAccount.address}
+                  size={Number(iconSize.xxl)}
+                />
+              </Container>
+            )
+          )}
+        </Container>
 
         <Spacer y="md" />
 
@@ -885,27 +904,17 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
   return {
     all: "unset",
     background: theme.colors.connectedButtonBg,
-    border: `1px solid ${theme.colors.borderColor}`,
-    padding: `${spacing.xs} ${spacing.sm}`,
+    overflow: "hidden",
     borderRadius: radius.md,
     cursor: "pointer",
     display: "inline-flex",
     alignItems: "center",
-    minWidth: "150px",
-    minHeight: "52px",
-    gap: spacing.xs,
+    minWidth: "165px",
+    height: "50px",
     boxSizing: "border-box",
     WebkitTapHighlightColor: "transparent",
     lineHeight: "normal",
     animation: `${fadeInAnimation} 300ms ease`,
-    [media.mobile]: {
-      gap: spacing.sm,
-      padding: `${spacing.xs} ${spacing.xs}`,
-      img: {
-        width: `${iconSize.md}px`,
-        height: `${iconSize.md}px`,
-      },
-    },
     "&:hover": {
       transition: "background 250ms ease",
       background: theme.colors.connectedButtonBgHover,
