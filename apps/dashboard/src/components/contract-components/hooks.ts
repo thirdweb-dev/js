@@ -868,6 +868,9 @@ export function useCustomContractDeployMutation(options: {
                   )
                 : data.saltForCreate2;
               if (compilerMetadata?.data?.analytics?.command === "deploy") {
+                invariant(compilerMetadata.data?.bytecode, "Bytecode not found");
+                invariant(compilerMetadata.data?.abi, "ABI not found");
+                
                 contractAddress = await directDeployDeterministic(
                   compilerMetadata.data?.bytecode,
                   compilerMetadata.data?.abi,
@@ -875,6 +878,8 @@ export function useCustomContractDeployMutation(options: {
                   Object.values(data.deployParams),
                   salt,
                 );
+              } else {
+                throw new Error("Deterministic deploy not available");
               }
             } else {
               contractAddress = await sdk.deployer.deployContractFromUri(
