@@ -1,6 +1,5 @@
 import { BigNumber } from "ethers";
-import { isBytesLike } from "ethers/lib/utils";
-import { isAddress } from "thirdweb/utils";
+import { isAddress, isBytes, isHex } from "thirdweb/utils";
 
 // int and uint
 const calculateIntMinValues = (solidityType: string) => {
@@ -120,7 +119,7 @@ const isValidBytes = (value: string, solidityType: string) => {
   }
 
   if (isBytesType) {
-    return isBytesLike(value);
+    return isHex(value) || isBytes(value);
   }
   if (value.length !== maxLength * 2 + 2) {
     return false;

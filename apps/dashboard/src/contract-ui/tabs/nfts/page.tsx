@@ -141,12 +141,15 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
             contractQuery?.contract && (
               <NFTLazyMintButton contract={contract} isErc721={isErc721} />
             )}
-          {detectedLzyMintState === "enabled" && contractQuery?.contract && (
-            <BatchLazyMintButton
-              contractQuery={contractQuery}
-              isRevealable={isRevealable}
-            />
-          )}
+          {detectedLzyMintState === "enabled" &&
+            contractQuery?.contract &&
+            contract && (
+              <BatchLazyMintButton
+                contractQuery={contractQuery}
+                isRevealable={isRevealable}
+                contract={contract}
+              />
+            )}
         </Flex>
       </Flex>
       {!detectedState ? (

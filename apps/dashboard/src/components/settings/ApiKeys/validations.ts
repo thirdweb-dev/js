@@ -1,4 +1,4 @@
-import { isAddress } from "ethers/lib/utils";
+import { isAddress } from "thirdweb/utils";
 import { RE_BUNDLE_ID, RE_DOMAIN } from "utils/regex";
 import { validStrList } from "utils/validations";
 import { z } from "zod";

@@ -17,12 +17,12 @@ import {
   type PublishWithVersionPageProps,
 } from "components/pages/publish";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { getAddress, isAddress } from "ethers/lib/utils";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { PageId } from "page-id";
 import { polygon } from "thirdweb/chains";
+import { getAddress, isAddress } from "thirdweb/utils";
 import type { ThirdwebNextPage } from "utils/types";
 import { ContractsSidebar } from "../../core-ui/sidebar/contracts";
 

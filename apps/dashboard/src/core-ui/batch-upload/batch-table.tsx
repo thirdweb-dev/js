@@ -54,7 +54,7 @@ const FileVideo: React.FC<
 interface BatchTableProps {
   data: NFTInput[];
   portalRef: React.RefObject<HTMLDivElement>;
-  nextTokenIdToMint?: number;
+  nextTokenIdToMint?: bigint;
 }
 
 export const BatchTable: React.FC<BatchTableProps> = ({
@@ -67,7 +67,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
     if (nextTokenIdToMint !== undefined) {
       cols = cols.concat({
         Header: "Token ID",
-        accessor: (_row, index) => nextTokenIdToMint + index,
+        accessor: (_row, index) => String(nextTokenIdToMint + BigInt(index)),
       });
     }
 

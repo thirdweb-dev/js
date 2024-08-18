@@ -55,7 +55,7 @@ type InstantSubmit = {
 type SubmitType = DelayedSubmit | InstantSubmit;
 
 interface BatchLazyMintEVMProps {
-  nextTokenIdToMint: number;
+  nextTokenIdToMint: bigint;
   isRevealable: boolean;
   onSubmit: (formData: SubmitType) => Promise<unknown>;
 }

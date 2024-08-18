@@ -131,6 +131,8 @@ export {
   type AddressInput,
 } from "../utils/address.js";
 
+export { isBytes } from "viem";
+
 // ------------------------------------------------
 // abi
 // ------------------------------------------------

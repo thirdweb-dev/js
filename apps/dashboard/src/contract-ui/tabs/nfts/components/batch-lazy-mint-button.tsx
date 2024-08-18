@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
@@ -6,43 +5,40 @@ import {
   type useContract,
   useDelayedRevealLazyMint,
   useLazyMint,
-  useTotalCount,
 } from "@thirdweb-dev/react";
 import type { UploadProgressEvent } from "@thirdweb-dev/sdk";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
 import { ProgressBox } from "core-ui/batch-upload/progress-box";
-import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
+import { nextTokenIdToMint } from "thirdweb/extensions/erc721";
+import { useReadContract } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 
 interface BatchLazyMintButtonProps {
   contractQuery: ReturnType<typeof useContract>;
   isRevealable: boolean;
+  contract: ThirdwebContract;
 }
 
 export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   contractQuery,
+  contract,
   isRevealable,
   ...restButtonProps
 }) => {
   const contractV4 = contractQuery.contract;
-  const chain = useV5DashboardChain(contractV4?.chainId);
-  const contract =
-    contractV4 && chain
-      ? getContract({
-          address: contractV4.getAddress(),
-          chain: chain,
-          client: thirdwebClient,
-        })
-      : null;
   const trackEvent = useTrack();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const nextTokenIdToMint = useTotalCount(contractV4);
+
+  // Both ERC721 and ERC1155 have the same function signature for nextTokenIdToMint,
+  // so we can just use either one.
+  const nextTokenIdToMintQuery = useReadContract(nextTokenIdToMint, {
+    contract,
+  });
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
     total: 100,
@@ -124,9 +120,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
               });
             }
           }}
-          nextTokenIdToMint={BigNumber.from(
-            nextTokenIdToMint.data || 0,
-          ).toNumber()}
+          nextTokenIdToMint={nextTokenIdToMintQuery.data || 0n}
           isRevealable={isRevealable}
         >
           {mintBatchMutation.isLoading ? (

@@ -1,9 +1,13 @@
 import type { SUPPORTED_CHAIN_ID } from "constants/chains";
 import { DASHBOARD_THIRDWEB_SECRET_KEY } from "constants/rpc";
-import { utils } from "ethers";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ZERO_ADDRESS, createThirdwebClient, isAddress } from "thirdweb";
+import {
+  ZERO_ADDRESS,
+  createThirdwebClient,
+  isAddress,
+  toTokens,
+} from "thirdweb";
 import { getWalletBalance } from "thirdweb/wallets";
 import { IPFS_GATEWAY_URL } from "../../../lib/sdk";
 
@@ -53,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         name: "Native Token",
         decimals: balance.decimals,
         balance: balance.value.toString(),
-        display_balance: balance.displayValue,
+        display_balance: toTokens(balance.value, balance.decimals),
       },
     ];
   };
@@ -77,9 +81,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return json.map((balance: any) => ({
       ...balance,
-      display_balance: utils
-        .formatUnits(balance.balance, balance.decimals)
-        .toString(),
+      display_balance: toTokens(BigInt(balance.balance), balance.decimals),
     }));
   };
 
