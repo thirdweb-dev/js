@@ -18,7 +18,6 @@ import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ContractSidebar } from "core-ui/sidebar/detail-page";
-import { getAddress, isAddress } from "ethers/lib/utils";
 import {
   useSupportedChainsRecord,
   useSupportedChainsSlugRecord,
@@ -31,11 +30,11 @@ import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { getContract } from "thirdweb";
+import { getAddress, getContract, isAddress } from "thirdweb";
 import { getContractMetadata } from "thirdweb/extensions/common";
+import { isERC1155 } from "thirdweb/extensions/erc1155";
 import { isERC20 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
-import { isERC1155 } from "thirdweb/extensions/erc1155";
 import { fetchChain } from "utils/fetchChain";
 import type { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
