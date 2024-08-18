@@ -2,11 +2,7 @@ import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import {
-  getOrDeployInfraContract,
-  getOrDeployInfraForPublishedContract,
-} from "../../contract/deployment/utils/bootstrap.js";
+import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
 import { type Address, getAddress } from "../../utils/address.js";
@@ -49,7 +45,7 @@ export type Module = {
 export type DeployModularContractOptions = Prettify<
   ClientAndChainAndAccount & {
     core: CoreType;
-    coreParams: ModularContractParams;
+    params: ModularContractParams;
     modules: Module[];
     publisher?: string;
   }
@@ -68,19 +64,36 @@ export type DeployModularContractOptions = Prettify<
  *  chain,
  *  client,
  *  account,
- *  type: "TokenERC20",
+ *  core: "ERC20",
  *  params: {
  *    name: "MyToken",
  *    description: "My Token contract",
  *    symbol: "MT",
+ * },
+ * modules: [
+ *   claimableERC721Module({
+ *     primarySaleRecipient: "0x...",
+ *   }),
+ *   royaltyModule({
+ *     royaltyRecipient: "0x...",
+ *     royaltyBps: 500n,
+ *   }),
+ * ],
  * });
  * ```
  */
 export async function deployModularContract(
   options: DeployModularContractOptions,
 ) {
-  const { chain, client, account, publisher, core, coreParams, modules } =
-    options;
+  const {
+    chain,
+    client,
+    account,
+    publisher,
+    core,
+    params: coreParams,
+    modules,
+  } = options;
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,

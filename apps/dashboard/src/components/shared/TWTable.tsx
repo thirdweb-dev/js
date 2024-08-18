@@ -1,13 +1,17 @@
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import {
   ButtonGroup,
   Center,
   Divider,
   Flex,
   Icon,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
   Spinner,
   Table,
   Tbody,
@@ -29,7 +33,7 @@ import { type SetStateAction, useMemo, useState } from "react";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
 import type { IconType } from "react-icons/lib";
-import { Button, MenuItem, TableContainer, Text } from "tw-components";
+import { TableContainer, Text } from "tw-components";
 
 type CtaMenuItem<TRowData> = {
   icon?: IconType;
@@ -54,6 +58,7 @@ type TWTableProps<TRowData> = {
     showLess?: boolean;
   };
   title: string;
+  bodyRowClassName?: string;
 };
 
 export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
@@ -148,13 +153,13 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                 </Th>
               ))}
               {(tableProps.onRowClick || tableProps.onMenuClick) && (
-                <Th border="none" />
+                <Th border="none" className="w-0" />
               )}
             </Tr>
           ))}
         </Thead>
 
-        <Tbody>
+        <Tbody className="!bg-background">
           {table.getRowModel().rows.map((row) => {
             return (
               <Tr
@@ -176,6 +181,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                       },
                     }
                   : {})}
+                className={tableProps.bodyRowClassName}
               >
                 {row.getVisibleCells().map((cell) => {
                   return (
@@ -207,30 +213,37 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     borderBottomWidth="inherit"
                     borderBottomColor="accent.100"
                   >
-                    <Menu>
-                      <MenuButton
-                        as={IconButton}
-                        variant="outline"
-                        icon={<Icon as={FaEllipsisVertical} boxSize={4} />}
-                        aria-label="Actions"
-                      />
-                      <MenuList>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          aria-label="Actions"
+                          className="relative z-10 p-2.5 !h-auto"
+                        >
+                          <FaEllipsisVertical className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
                         {tableProps.onMenuClick.map(
                           ({ icon, text, onClick, isDestructive }) => {
                             return (
-                              <MenuItem
+                              <DropdownMenuItem
                                 key={text}
                                 onClick={() => onClick(row.original)}
-                                icon={icon && <Icon as={icon} boxSize={4} />}
-                                color={isDestructive ? "red.500" : undefined}
+                                className={cn(
+                                  "gap-3 px-3 py-3 min-w-[170px] cursor-pointer",
+                                  isDestructive &&
+                                    "!text-destructive-text hover:!bg-destructive",
+                                )}
                               >
+                                {icon && <Icon as={icon} boxSize={4} />}
                                 {text}
-                              </MenuItem>
+                              </DropdownMenuItem>
                             );
                           },
                         )}
-                      </MenuList>
-                    </Menu>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </Td>
                 ) : null}
               </Tr>

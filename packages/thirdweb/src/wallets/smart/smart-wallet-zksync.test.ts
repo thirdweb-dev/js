@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { ANVIL_PKEY_B } from "../../../test/src/test-wallets.js";
+import { abstractTestnet } from "../../chains/chain-definitions/abstract-testnet.js";
 import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js";
 import { defineChain } from "../../chains/utils.js";
 import { getContract } from "../../contract/contract.js";
@@ -61,7 +62,7 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
       expect(tx.transactionHash.length).toBe(66);
     });
 
-    it("should send a transaction on zkcandy", async () => {
+    it.skip("should send a transaction on zkcandy", async () => {
       const zkCandy = defineChain(302);
       const zkCandySmartWallet = smartWallet({
         chain: zkCandy,
@@ -83,6 +84,32 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
         transaction: preparedTx,
         account: zkCandySmartAccount,
       });
+      expect(tx.transactionHash.length).toBe(66);
+    });
+
+    it("should send a transaction on abstract", async () => {
+      const abstractSmartWallet = smartWallet({
+        chain: abstractTestnet,
+        gasless: true,
+      });
+      const account = await abstractSmartWallet.connect({
+        client: TEST_CLIENT,
+        personalAccount,
+      });
+      const tx = await sendTransaction({
+        transaction: claimTo({
+          contract: getContract({
+            address: "0x8A24a7Df38fA5fCCcFD1259e90Fb6996fDdfcADa", // edition drop
+            chain: abstractTestnet,
+            client,
+          }),
+          quantity: 1n,
+          to: account.address,
+          tokenId: 0n,
+        }),
+        account: smartAccount,
+      });
+      console.log("tx", tx.transactionHash);
       expect(tx.transactionHash.length).toBe(66);
     });
   },

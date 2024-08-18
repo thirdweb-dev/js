@@ -172,3 +172,8 @@ export {
 } from "../react/web/ui/prebuilt/thirdweb/CreateDirectListingButton/index.js";
 
 export { useConnectionManager } from "../react/core/providers/connection-manager.js";
+
+/**
+ * Blobbie
+ */
+export { Blobbie } from "../react/web/ui/ConnectWallet/Blobbie.js";

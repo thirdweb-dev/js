@@ -47,7 +47,7 @@ export function ToolTipLabel(props: {
         </TooltipTrigger>
         <TooltipContent
           sideOffset={10}
-          className="max-w-[400px] leading-relaxed"
+          className="max-w-[400px] leading-relaxed whitespace-normal"
         >
           <div className="p-2 text-sm flex items-center gap-1.5">
             {props.leftIcon}

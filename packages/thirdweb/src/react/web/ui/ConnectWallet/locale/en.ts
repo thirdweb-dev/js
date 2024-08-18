@@ -3,7 +3,7 @@ import type { ConnectLocale } from "./types.js";
 const connectLocaleEn: ConnectLocale = {
   id: "en_US",
   signIn: "Sign in",
-  defaultButtonTitle: "Connect Wallet",
+  defaultButtonTitle: "Connect",
   connecting: "Connecting",
   switchNetwork: "Switch Network",
   switchingNetwork: "Switching Network",
@@ -95,7 +95,7 @@ const connectLocaleEn: ConnectLocale = {
     },
     signingScreen: {
       title: "Signing In",
-      prompt: "Sign the signature request in your wallet",
+      prompt: "Signing the signature request in your wallet",
       promptForSafe:
         "Sign signature request in your wallet & approve transaction in Safe",
       approveTransactionInSafe: "Approve transaction in Safe",

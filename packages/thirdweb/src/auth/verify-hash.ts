@@ -8,6 +8,8 @@ import {
 } from "viem";
 import type { Chain } from "../chains/types.js";
 import type { ThirdwebClient } from "../client/client.js";
+import { type ThirdwebContract, getContract } from "../contract/contract.js";
+import { isValidSignature } from "../extensions/erc1271/__generated__/isValidSignature/read/isValidSignature.js";
 import { eth_call } from "../rpc/actions/eth_call.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { fromBytes } from "../utils/encoding/from-bytes.js";
@@ -110,8 +112,39 @@ export async function verifyHash({
     const hexResult = isHex(result) ? toBytes(result) : result;
     return equalBytes(hexResult, toBytes("0x1"));
   } catch (error) {
+    // Some chains do not support the eth_call simulation and will fail, so we fall back to regular EIP1271 validation
+    const validEip1271 = await verifyEip1271Signature({
+      hash,
+      signature: signatureHex,
+      contract: getContract({
+        chain,
+        address,
+        client,
+      }),
+    }).catch(() => false);
+    if (validEip1271) {
+      return true;
+    }
     // TODO: Improve overall RPC error handling so we can tell if this was an actual verification failure or some other error
     // Verification failed somehow
     return false;
   }
+}
+
+const EIP_1271_MAGIC_VALUE = "0x1626ba7e";
+async function verifyEip1271Signature({
+  hash,
+  signature,
+  contract,
+}: {
+  hash: Hex;
+  signature: Hex;
+  contract: ThirdwebContract;
+}): Promise<boolean> {
+  const result = await isValidSignature({
+    hash,
+    signature,
+    contract,
+  });
+  return result === EIP_1271_MAGIC_VALUE;
 }

@@ -1,7 +1,4 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
-  "extends": ["../../biome.json"],
-  "files": {
-    "ignore": []
-  }
+  "extends": ["../../biome.json"]
 }

@@ -1,3 +1,13 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   type EditEngineInstanceInput,
   type EngineInstance,
@@ -7,52 +17,38 @@ import {
   useEngineRemoveCloudHosted,
   useEngineRemoveFromDashboard,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-  Flex,
-  FormControl,
-  HStack,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Radio,
-  RadioGroup,
-  Stack,
-  Textarea,
-  Tooltip,
-  type UseDisclosureReturn,
-  useDisclosure,
-  useToast,
-} from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { FormControl, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { DialogDescription } from "@radix-ui/react-dialog";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { useTrack } from "hooks/analytics/useTrack";
 import {
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-  useState,
-} from "react";
+  CircleAlertIcon,
+  SendIcon,
+  Trash2Icon,
+  TriangleAlertIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiPencil } from "react-icons/bi";
-import { FiArrowRight, FiTrash } from "react-icons/fi";
-import { useActiveAccount } from "thirdweb/react";
-import { Badge, Button, FormLabel, Heading, Text } from "tw-components";
+import { FiTrash } from "react-icons/fi";
+import { toast } from "sonner";
+import { FormLabel } from "tw-components";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../@/components/ui/alert";
+import { Button } from "../../@/components/ui/button";
+import { Input } from "../../@/components/ui/input";
+import { Textarea } from "../../@/components/ui/textarea";
 
 interface EngineInstancesTableProps {
   instances: EngineInstance[];
   isLoading: boolean;
   isFetched: boolean;
   refetch: ReturnType<typeof useEngineInstances>["refetch"];
-  setConnectedInstance: Dispatch<SetStateAction<EngineInstance | undefined>>;
 }
 
 export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
@@ -60,85 +56,14 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   isLoading,
   isFetched,
   refetch,
-  setConnectedInstance,
 }) => {
-  const editDisclosure = useDisclosure();
-  const removeDisclosure = useDisclosure();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
   const trackEvent = useTrack();
-  const token = useLoggedInUser().user?.jwt ?? null;
-  const address = useActiveAccount()?.address;
-  const toast = useToast();
 
   const [instanceToUpdate, setInstanceToUpdate] = useState<
     EngineInstance | undefined
   >();
-
-  const { mutate: connectToInstance } = useMutation({
-    mutationFn: async (instance: EngineInstance) => {
-      // Make an authed request.
-      // If it fails to fetch, the server is unreachable.
-      // If it returns a 401, the user is not a valid admin.
-      const res = await fetch(`${instance.url}auth/permissions/get-all`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.ok) {
-        return instance;
-      }
-      if (res.status === 401) {
-        throw new Error("Unauthorized");
-      }
-      throw new Error(`Unexpected status code ${res.status}`);
-    },
-    onSuccess: (instance) => {
-      trackEvent({
-        category: "engine",
-        action: "connect",
-        label: "success",
-      });
-      setConnectedInstance(instance);
-    },
-    onError: (error, instance) => {
-      const e = error as Error;
-      if (e?.message === "Failed to fetch") {
-        trackEvent({
-          category: "engine",
-          action: "connect",
-          label: "unreachable",
-        });
-        toast({
-          status: "error",
-          description: `Unable to connect to ${instance.url}. Ensure that your Engine is publicly accessible.`,
-          duration: null,
-          isClosable: true,
-        });
-      } else if (e?.message.indexOf("Unauthorized") > -1) {
-        trackEvent({
-          category: "engine",
-          action: "connect",
-          label: "unauthorized",
-        });
-        toast({
-          status: "error",
-          title: "Unauthorized",
-          description: `You are not an admin for this Engine instance. Contact the owner to add your wallet as an admin: ${address}`,
-          duration: null,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          status: "error",
-          description:
-            "There was an unexpected error reaching your Engine instance. Try again or contact us if this issue persists.",
-          duration: null,
-          isClosable: true,
-        });
-      }
-    },
-  });
 
   const columnHelper = createColumnHelper<EngineInstance>();
   const columns = [
@@ -150,83 +75,62 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
         let badge: ReactNode | undefined;
         if (status === "requested") {
           badge = (
-            <Tooltip label="Deployment will begin shortly.">
-              <Badge
-                borderRadius="full"
-                size="label.sm"
-                variant="subtle"
-                px={3}
-                py={1.5}
-                colorScheme="yellow"
-              >
-                Pending
-              </Badge>
-            </Tooltip>
+            <ToolTipLabel label="Deployment will begin shortly.">
+              <div>
+                <Badge variant="outline" className="gap-1.5">
+                  <Spinner className="size-3" />
+                  Pending
+                </Badge>
+              </div>
+            </ToolTipLabel>
           );
         } else if (status === "deploying") {
           badge = (
-            <Tooltip label="This step may take up to 30 minutes.">
-              <Badge
-                borderRadius="full"
-                size="label.sm"
-                variant="subtle"
-                px={3}
-                py={1.5}
-                colorScheme="green"
-              >
-                Deploying
-              </Badge>
-            </Tooltip>
+            <ToolTipLabel label="This step may take up to 30 minutes.">
+              <div>
+                <Badge variant="default" className="gap-1.5">
+                  <Spinner className="size-3" />
+                  Deploying
+                </Badge>
+              </div>
+            </ToolTipLabel>
           );
         } else if (status === "paymentFailed") {
           badge = (
-            <Tooltip label="There was an error charging your payment method. Please contact support@thirdweb.com.">
-              <Badge
-                borderRadius="full"
-                size="label.sm"
-                variant="subtle"
-                px={3}
-                py={1.5}
-                colorScheme="red"
-              >
-                Payment Failed
-              </Badge>
-            </Tooltip>
+            <ToolTipLabel
+              label={
+                "There was an error charging your payment method. Please contact support@thirdweb.com."
+              }
+            >
+              <div>
+                <Badge variant="destructive" className="gap-1.5">
+                  <CircleAlertIcon className="size-3" />
+                  Payment Failed
+                </Badge>
+              </div>
+            </ToolTipLabel>
           );
         }
 
         return (
-          <Stack py={2}>
+          <div className="py-3">
             {badge ? (
-              <HStack spacing={4}>
-                <Text fontWeight="600" size="body.lg">
-                  {name}
-                </Text>
+              <div className="flex items-center gap-4 py-2">
+                <p className="font-semibold text-lg"> {name} </p>
                 {badge}
-              </HStack>
+              </div>
             ) : (
-              <>
-                <Button
-                  onClick={() => {
-                    const instance = instances.find((i) => i.id === id);
-                    if (instance) {
-                      connectToInstance(instance);
-                    }
-                  }}
-                  variant="link"
-                  colorScheme="blue"
-                  w="fit-content"
-                  rightIcon={<FiArrowRight />}
-                  justifyContent="flex-start"
+              <div className="flex flex-col gap-0.5">
+                <Link
+                  href={`/dashboard/engine/${id}`}
+                  className="text-foreground flex text-lg font-semibold items-center before:absolute before:inset-0 before:bg-transparent"
                 >
                   {name}
-                </Button>
-                <Text size="body.sm" color="gray.700">
-                  {url}
-                </Text>
-              </>
+                </Link>
+                <p className="text-muted-foreground text-sm">{url}</p>
+              </div>
             )}
-          </Stack>
+          </div>
         );
       },
     }),
@@ -251,7 +155,7 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
                 label: "open-modal",
               });
               setInstanceToUpdate(instance);
-              editDisclosure.onOpen();
+              setIsEditModalOpen(true);
             },
           },
           {
@@ -264,24 +168,28 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
                 label: "open-modal",
               });
               setInstanceToUpdate(instance);
-              removeDisclosure.onOpen();
+              setIsRemoveModalOpen(true);
             },
             isDestructive: true,
           },
         ]}
+        bodyRowClassName="hover:bg-secondary relative"
       />
 
-      {editDisclosure.isOpen && instanceToUpdate && (
+      {instanceToUpdate && (
         <EditModal
           instance={instanceToUpdate}
-          disclosure={editDisclosure}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
           refetch={refetch}
         />
       )}
-      {removeDisclosure.isOpen && instanceToUpdate && (
+
+      {instanceToUpdate && (
         <RemoveModal
           instance={instanceToUpdate}
-          disclosure={removeDisclosure}
+          onOpenChange={setIsRemoveModalOpen}
+          open={isRemoveModalOpen}
           refetch={refetch}
         />
       )}
@@ -289,18 +197,14 @@ export const EngineInstancesTable: React.FC<EngineInstancesTableProps> = ({
   );
 };
 
-const EditModal = ({
-  instance,
-  disclosure,
-  refetch,
-}: {
-  disclosure: UseDisclosureReturn;
+const EditModal = (props: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   instance: EngineInstance;
   refetch: () => void;
 }) => {
-  const toast = useToast();
-  const { mutate: editInstance } = useEngineEditInstance();
-  const { onClose } = disclosure;
+  const editInstance = useEngineEditInstance();
+  const { onOpenChange, instance, open, refetch } = props;
 
   const form = useForm<EditEngineInstanceInput>({
     defaultValues: {
@@ -308,242 +212,298 @@ const EditModal = ({
       name: instance.name,
       url: instance.url,
     },
+    reValidateMode: "onChange",
   });
 
   return (
-    <Modal isOpen onClose={onClose} isCentered size="lg">
-      <ModalOverlay />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
+        <DialogHeader className="mb-3">
+          <DialogTitle className="text-2xl font-semibold tracking-tight">
+            Edit Engine Instance
+          </DialogTitle>
+        </DialogHeader>
 
-      <ModalContent>
         <form
           onSubmit={form.handleSubmit((data) =>
-            editInstance(data, {
+            editInstance.mutate(data, {
               onSuccess: () => {
-                toast({
-                  status: "success",
-                  description: "Successfully updated this Engine.",
-                });
+                toast.success("Engine updated successfully");
                 refetch();
-                onClose();
+                onOpenChange(false);
               },
               onError: () => {
-                toast({
-                  status: "error",
-                  description: "Error updating this Engine.",
-                });
+                toast.error("Failed to update Engine");
               },
             }),
           )}
         >
-          <ModalHeader>Edit Engine Instance</ModalHeader>
+          <div className="flex flex-col gap-6">
+            <FormControl isRequired>
+              <FormLabel>Name</FormLabel>
+              <Input
+                type="text"
+                placeholder="Enter a descriptive label"
+                autoFocus
+                {...form.register("name", {
+                  required: true,
+                })}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>URL</FormLabel>
+              <Input
+                type="url"
+                placeholder="Enter your Engine URL"
+                {...form.register("url", {
+                  required: true,
+                })}
+              />
+            </FormControl>
+          </div>
 
-          <ModalBody>
-            <Stack spacing={4}>
-              <FormControl>
-                <FormLabel>Name</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Enter a descriptive label"
-                  autoFocus
-                  {...form.register("name")}
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <FormLabel>URL</FormLabel>
-                <Input
-                  type="url"
-                  placeholder="Enter your Engine URL"
-                  {...form.register("url")}
-                />
-              </FormControl>
-            </Stack>
-          </ModalBody>
-
-          <ModalFooter as={Flex} gap={3}>
-            <Button onClick={onClose} variant="ghost">
+          <DialogFooter className="mt-10 gap-2">
+            <Button onClick={() => onOpenChange(false)} variant="outline">
               Cancel
             </Button>
-            <Button type="submit" colorScheme="blue">
+            <Button
+              type="submit"
+              variant="primary"
+              className="gap-2"
+              disabled={!form.formState.isDirty}
+            >
+              {editInstance.isLoading ? (
+                <Spinner className="size-4" />
+              ) : (
+                <SendIcon className="size-4" />
+              )}
               Update
             </Button>
-          </ModalFooter>
+          </DialogFooter>
         </form>
-      </ModalContent>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-const RemoveModal = ({
-  instance,
-  disclosure,
-  refetch,
-}: {
+const RemoveModal = (props: {
   instance: EngineInstance;
-  disclosure: UseDisclosureReturn;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   refetch: () => void;
 }) => {
-  const toast = useToast();
-  const { mutate: removeFromDashboard } = useEngineRemoveFromDashboard();
-  const { mutate: removeCloudHosted } = useEngineRemoveCloudHosted();
-  const { onClose } = disclosure;
+  const { instance, open, onOpenChange, refetch } = props;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
+        {instance.status === "paymentFailed" ||
+        (instance.status === "active" && !instance.cloudDeployedAt) ? (
+          <RemoveFromDashboardModalContent
+            refetch={refetch}
+            instance={instance}
+            close={() => onOpenChange(false)}
+          />
+        ) : (
+          <CancelSubscriptionModalContent
+            refetch={refetch}
+            instance={instance}
+            close={() => onOpenChange(false)}
+          />
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+function RemoveFromDashboardModalContent(props: {
+  refetch: () => void;
+  instance: EngineInstance;
+  close: () => void;
+}) {
+  const { refetch, instance, close } = props;
+  const removeFromDashboard = useEngineRemoveFromDashboard();
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle className="text-2xl font-semibold tracking-tight mb-3">
+          Remove Engine Instance
+        </DialogTitle>
+        <DialogDescription className="text-muted-foreground">
+          <span className="block mb-2">
+            Are you sure you want to remove{" "}
+            <em className="not-italic font-semibold">"{instance.name}"</em> from
+            your dashboard?
+          </span>
+          <span className="block">
+            This action does not modify your Engine infrastructure. You can
+            re-add it at any time.
+          </span>
+        </DialogDescription>
+      </DialogHeader>
+
+      <DialogFooter className="mt-8 gap-1">
+        <Button onClick={close} variant="outline">
+          Close
+        </Button>
+        <Button
+          onClick={() => {
+            removeFromDashboard.mutate(instance.id, {
+              onSuccess: () => {
+                toast.success("Removed an Engine instance from your dashboard");
+                refetch();
+                close();
+              },
+              onError: () => {
+                toast.error(
+                  "Error removing an Engine instance from your dashboard",
+                );
+              },
+            });
+          }}
+          variant="destructive"
+          className="gap-2"
+        >
+          {removeFromDashboard.isLoading ? (
+            <Spinner className="size-4" />
+          ) : (
+            <Trash2Icon className="size-4" />
+          )}
+          Remove
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+function CancelSubscriptionModalContent(props: {
+  refetch: () => void;
+  instance: EngineInstance;
+  close: () => void;
+}) {
+  const { refetch, instance, close } = props;
+  const removeCloudHosted = useEngineRemoveCloudHosted();
 
   const form = useForm<RemoveCloudHostedInput>({
     defaultValues: {
       instanceId: instance.id,
     },
+    reValidateMode: "onChange",
   });
 
   return (
-    <Modal isOpen onClose={onClose} isCentered size="lg">
-      <ModalOverlay />
-      <ModalContent>
-        {instance.status === "paymentFailed" ||
-        (instance.status === "active" && !instance.cloudDeployedAt) ? (
-          <>
-            <ModalHeader>Remove Engine Instance</ModalHeader>
+    <div>
+      <DialogHeader>
+        <DialogTitle className="text-2xl font-semibold tracking-tight mb-1">
+          Cancel Engine Subscription
+        </DialogTitle>
+        <DialogDescription className="text-muted-foreground">
+          Complete this form to request to cancel your Engine subscription. This
+          may take up to 2 business days.
+        </DialogDescription>
+      </DialogHeader>
 
-            <ModalBody as={Flex} flexDir="column" gap={2}>
-              <Text>
-                Are you sure you want to remove{" "}
-                <strong>{instance?.name}</strong> from your dashboard?
-              </Text>
-              <Text>
-                This action does not modify your Engine infrastructure. You can
-                re-add it at any time.
-              </Text>
-            </ModalBody>
+      <div className="h-3" />
 
-            <ModalFooter as={Flex} gap={3}>
-              <Button onClick={onClose} variant="ghost">
-                Close
-              </Button>
-              <Button
-                onClick={() => {
-                  removeFromDashboard(instance.id, {
-                    onSuccess: () => {
-                      toast({
-                        status: "success",
-                        description:
-                          "Removed an Engine instance from your dashboard.",
-                      });
-                      refetch();
-                      onClose();
-                    },
-                    onError: () => {
-                      toast({
-                        status: "error",
-                        description:
-                          "Error removing an Engine instance from your dashboard.",
-                      });
-                    },
-                  });
-                }}
-                colorScheme="red"
-              >
-                Remove
-              </Button>
-            </ModalFooter>
-          </>
-        ) : (
-          <form
-            onSubmit={form.handleSubmit((data) =>
-              removeCloudHosted(data, {
-                onSuccess: () => {
-                  toast({
-                    status: "success",
-                    description:
-                      "Submitted a request to cancel your Engine subscription. This may take up to 2 business days.",
-                  });
-                  refetch();
-                  onClose();
+      <Alert variant="destructive">
+        <TriangleAlertIcon className="size-5 !text-destructive-text" />
+        <AlertTitle>This action is irreversible!</AlertTitle>
+        <AlertDescription>
+          You will no longer be able to access this Engine's local backend
+          wallets. <strong>Any remaining mainnet funds will be lost.</strong>
+        </AlertDescription>
+      </Alert>
+
+      <div className="h-5" />
+
+      <form
+        onSubmit={form.handleSubmit((data) =>
+          removeCloudHosted.mutate(data, {
+            onSuccess: () => {
+              toast.success(
+                "Submitted a request to cancel your Engine subscription. This may take up to 2 business days.",
+                {
+                  dismissible: true,
+                  duration: 10000,
                 },
-                onError: () => {
-                  toast({
-                    status: "error",
-                    description:
-                      "Error requesting to cancel your Engine subscription.",
-                  });
-                },
-              }),
-            )}
-          >
-            <ModalHeader>Cancel Engine Subscription</ModalHeader>
+              );
 
-            <ModalBody as={Stack} gap={4}>
-              <Text>
-                Complete this form to request to cancel your Engine
-                subscription. This may take up to 2 business days.
-              </Text>
-
-              {/* Form */}
-              <FormControl>
-                <FormLabel>
-                  Please share any feedback to help us improve
-                </FormLabel>
-                <RadioGroup>
-                  <Stack>
-                    <Radio
-                      value="USING_SELF_HOSTED"
-                      {...form.register("reason", { required: true })}
-                    >
-                      <Text>Migrating to self-hosted</Text>
-                    </Radio>
-                    <Radio
-                      value="TOO_EXPENSIVE"
-                      {...form.register("reason", { required: true })}
-                    >
-                      <Text>Too expensive</Text>
-                    </Radio>
-                    <Radio
-                      value="MISSING_FEATURES"
-                      {...form.register("reason", { required: true })}
-                    >
-                      <Text>Missing features</Text>
-                    </Radio>
-                    <Radio
-                      value="OTHER"
-                      {...form.register("reason", { required: true })}
-                    >
-                      <Text>Other</Text>
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-                <Textarea
-                  placeholder="Provide additional feedback"
-                  mt={2}
-                  {...form.register("feedback")}
-                />
-              </FormControl>
-
-              <Alert status="warning" variant="left-accent">
-                <Flex direction="column" gap={2}>
-                  <Heading as={AlertTitle} size="label.md">
-                    This action is irreversible!
-                  </Heading>
-                  <Text as={AlertDescription} size="body.md">
-                    You will no longer be able to access this Engine&apos;s
-                    local backend wallets.{" "}
-                    <strong>Any remaining mainnet funds will be lost.</strong>
-                  </Text>
-                </Flex>
-              </Alert>
-            </ModalBody>
-
-            <ModalFooter as={Flex} gap={3}>
-              <Button onClick={onClose} variant="ghost">
-                Close
-              </Button>
-              <Button
-                type="submit"
-                colorScheme="primary"
-                isDisabled={!form.formState.isValid}
-              >
-                Request to cancel
-              </Button>
-            </ModalFooter>
-          </form>
+              refetch();
+              close();
+            },
+            onError: () => {
+              toast.error(
+                "Error requesting to cancel your Engine subscription",
+              );
+            },
+          }),
         )}
-      </ModalContent>
-    </Modal>
+      >
+        {/* Form */}
+        <FormControl isRequired>
+          <FormLabel className="!text-base">
+            Please share any feedback to help us improve
+          </FormLabel>
+          <RadioGroup>
+            <Stack>
+              <Radio
+                value="USING_SELF_HOSTED"
+                {...form.register("reason", { required: true })}
+              >
+                <span className="text-sm"> Migrating to self-hosted </span>
+              </Radio>
+              <Radio
+                value="TOO_EXPENSIVE"
+                {...form.register("reason", { required: true })}
+              >
+                <span className="text-sm"> Too expensive </span>
+              </Radio>
+              <Radio
+                value="MISSING_FEATURES"
+                {...form.register("reason", { required: true })}
+              >
+                <span className="text-sm"> Missing features </span>
+              </Radio>
+              <Radio
+                value="OTHER"
+                {...form.register("reason", { required: true })}
+              >
+                <span className="text-sm"> Other </span>
+              </Radio>
+            </Stack>
+          </RadioGroup>
+        </FormControl>
+
+        <div className="h-2" />
+
+        <Textarea
+          className="mt-3"
+          placeholder="Provide additional feedback"
+          {...form.register("feedback")}
+        />
+
+        <div className="h-8" />
+
+        <DialogFooter className="gap-2">
+          <Button onClick={close} variant="outline">
+            Close
+          </Button>
+          <Button
+            type="submit"
+            variant="destructive"
+            disabled={!form.formState.isValid}
+            className="gap-2"
+          >
+            {removeCloudHosted.isLoading ? (
+              <Spinner className="size-4" />
+            ) : (
+              <SendIcon className="size-4" />
+            )}
+            Request to cancel
+          </Button>
+        </DialogFooter>
+      </form>
+    </div>
   );
-};
+}
