@@ -19,6 +19,17 @@ import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitc
  * sendTx(tx);
  * ```
  *
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
+ * ```tsx
+ * import { useSendTransaction } from "thirdweb/react";
+ * const mutation = useSendTransaction({
+ *   gasless: {
+ *     provider: "engine",
+ *     relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+ *     relayerForwarderAddress: "0x...",
+ *   }
+ * });
+ * ```
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {

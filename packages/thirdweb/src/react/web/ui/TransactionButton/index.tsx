@@ -15,6 +15,8 @@ import { Button } from "../components/buttons.js";
  * @param props - The props for this component.
  * Refer to [TransactionButtonProps](https://portal.thirdweb.com/references/typescript/v5/TransactionButtonProps) for details.
  * @example
+ *
+ * ### Basic usage
  * ```tsx
  * <TransactionButton
  *   transaction={() => {}}
@@ -24,7 +26,8 @@ import { Button } from "../components/buttons.js";
  *   Confirm Transaction
  * </TransactionButton>
  * ```
- * Customize the styling by passing the `unstyled` prop and your inline styles and/or classes:
+ *
+ * ### Customize the styling by passing the `unstyled` prop and your inline styles and/or classes:
  * ```tsx
  * <TransactionButton
  *   transaction={() => {}}
@@ -35,7 +38,7 @@ import { Button } from "../components/buttons.js";
  * </TransactionButton>
  * ```
  *
- * Handle errors
+ * ### Handle errors
  * ```tsx
  * <TransactionButton
  *   transaction={() => ...}
@@ -48,7 +51,7 @@ import { Button } from "../components/buttons.js";
  * </TransactionButton>
  * ```
  *
- * Alert when a transaction is sent
+ * ### Alert when a transaction is sent
  * ```tsx
  * <TransactionButton
  *   transaction={() => ...}
@@ -61,7 +64,7 @@ import { Button } from "../components/buttons.js";
  * </TransactionButton>
  * ```
  *
- * Alert when a transaction is completed
+ * ### Alert when a transaction is completed
  * ```tsx
  * <TransactionButton
  *   transaction={() => ...}
@@ -75,7 +78,7 @@ import { Button } from "../components/buttons.js";
  * </TransactionButton>
  * ```
  *
- * The onClick prop, if provided, will be called before the transaction is sent.
+ * ### The onClick prop, if provided, will be called before the transaction is sent.
  * ```tsx
  * <TransactionButton
  *   onClick={() => alert("Transaction is about to be sent")}
@@ -85,7 +88,7 @@ import { Button } from "../components/buttons.js";
  * </TransactionButton>
  * ```
  *
- * Attach custom Pay metadata
+ * ### Attach custom Pay metadata
  * ```tsx
  * <TransactionButton
  *   payModal={{
@@ -94,6 +97,19 @@ import { Button } from "../components/buttons.js";
  *       name: "Van Gogh Starry Night",
  *       image: "https://unsplash.com/starry-night.png"
  *     }
+ *   }}
+ * >
+ *   ...
+ * </TransactionButton>
+ * ```
+ *
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
+ * ```tsx
+ * <TransactionButton
+ *   gasless={{
+ *     provider: "engine",
+ *     relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+ *     relayerForwarderAddress: "0x...",
  *   }}
  * >
  *   ...
