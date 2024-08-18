@@ -2,7 +2,6 @@ import { polygon } from "../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
 import { getHandle } from "../__generated__/LensHandle/read/getHandle.js";
 import { getDefaultHandle } from "../__generated__/TokenHandleRegistry/read/getDefaultHandle.js";
 import {
@@ -16,9 +15,19 @@ import {
 export type GetHandleFromProfileIdParams = {
   profileId: bigint;
   client: ThirdwebClient;
+  /**
+   * Override variables for LensHandle contract and TokenHandleRegistry contract
+   * Make sure both of them have to be on the same network
+   */
   overrides?: {
-    lensHandleAddress?: Hex;
-    tokenHandleRegistryAddress?: Hex;
+    /**
+     * Contract address for the LensHandle contract
+     */
+    lensHandleAddress?: string;
+    /**
+     * Contract address for the TokenHandleRegistry contract
+     */
+    tokenHandleRegistryAddress?: string;
     chain?: Chain;
   };
 };

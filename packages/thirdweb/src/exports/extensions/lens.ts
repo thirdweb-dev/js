@@ -119,6 +119,8 @@ export {
 /**
  * Custom extension
  */
+
+// Read
 export {
   getHandleFromProfileId,
   type GetHandleFromProfileIdParams,
@@ -133,6 +135,10 @@ export {
   type GetFullProfileParams,
   type FullProfileResponse,
 } from "../../extensions/lens/read/getFullProfile.js";
+export {
+  resolveAddress,
+  type ResolveLensAddressParams,
+} from "../../extensions/lens/read/resolveAddress.js";
 
 /**
  * Contract addresses
