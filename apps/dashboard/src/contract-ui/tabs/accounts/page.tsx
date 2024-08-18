@@ -1,7 +1,7 @@
 import { thirdwebClient } from "@/constants/client";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";
@@ -18,10 +18,12 @@ import { CreateAccountButton } from "./components/create-account-button";
 
 interface AccountsPageProps {
   contractAddress?: string;
+  detectedAccountFactory: ExtensionDetectedState;
 }
 
 export const AccountsPage: React.FC<AccountsPageProps> = ({
   contractAddress,
+  detectedAccountFactory,
 }) => {
   const contractQuery = useContract(contractAddress);
   const chain = useV5DashboardChain(contractQuery.contract?.chainId);
@@ -37,16 +39,11 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
     });
   }, [contractQuery.contract, chain]);
 
-  const detectedFeature = extensionDetectedState({
-    contractQuery,
-    feature: ["AccountFactory"],
-  });
-
   if (contractQuery.isLoading || !v5Contract) {
     return null;
   }
 
-  if (!detectedFeature) {
+  if (!detectedAccountFactory) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}

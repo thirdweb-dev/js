@@ -423,7 +423,12 @@ export function useContractRouteConfig(
       title: "Accounts",
       path: "accounts",
       isEnabled: contractData.detectedAccountFactory,
-      component: LazyContractAccountsPage,
+      component: () => (
+        <LazyContractAccountsPage
+          contractAddress={contractAddress}
+          detectedAccountFactory={contractData.detectedAccountFactory}
+        />
+      ),
     },
     {
       title: "Balance",
