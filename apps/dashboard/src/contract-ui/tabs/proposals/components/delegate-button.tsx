@@ -1,15 +1,15 @@
+import { ToolTipLabel } from "@/components/ui/tooltip";
 import {
   useDelegateMutation,
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Tooltip } from "@chakra-ui/react";
-import type { Vote } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import type { ThirdwebContract } from "thirdweb";
 
 interface VoteButtonProps {
-  contract?: Vote;
+  contract: ThirdwebContract;
 }
 
 export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
@@ -28,7 +28,7 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
   }
 
   return (
-    <Tooltip label="You need to delegate tokens to this contract before you can make proposals and vote.">
+    <ToolTipLabel label="You need to delegate tokens to this contract before you can make proposals and vote.">
       <TransactionButton
         transactionCount={1}
         onClick={() =>
@@ -56,6 +56,6 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
       >
         Delegate Tokens
       </TransactionButton>
-    </Tooltip>
+    </ToolTipLabel>
   );
 };

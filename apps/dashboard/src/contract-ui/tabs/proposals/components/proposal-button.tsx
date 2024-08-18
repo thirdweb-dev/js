@@ -1,13 +1,13 @@
 import { useProposalCreateMutation } from "@3rdweb-sdk/react/hooks/useVote";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import type { Vote } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
+import type { ThirdwebContract } from "thirdweb";
 import { Button, Drawer } from "tw-components";
 import { CreateProposalForm } from "./proposal-form";
 
 interface VoteButtonProps {
-  contract?: Vote;
+  contract: ThirdwebContract;
 }
 
 const PROPOSAL_FORM_ID = "proposal-form-id";
@@ -15,7 +15,7 @@ const PROPOSAL_FORM_ID = "proposal-form-id";
 export const ProposalButton: React.FC<VoteButtonProps> = ({ contract }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const propose = useProposalCreateMutation(contract?.getAddress());
+  const propose = useProposalCreateMutation(contract);
 
   return (
     <>

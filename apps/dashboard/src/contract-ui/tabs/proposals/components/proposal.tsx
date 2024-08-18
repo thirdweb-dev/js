@@ -4,116 +4,54 @@ import {
   useExecuteProposalMutation,
   useHasVotedOnProposal,
   useTokensDelegated,
+  useVotingTokenDecimals,
 } from "@3rdweb-sdk/react/hooks/useVote";
 import { Flex, Icon } from "@chakra-ui/react";
-import {
-  ProposalState,
-  type Proposal as ProposalType,
-  type Vote,
-  VoteType,
-} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { utils } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { FiCheck, FiMinus, FiX } from "react-icons/fi";
+import { type ThirdwebContract, toTokens } from "thirdweb";
+import {
+  type ProposalItem,
+  ProposalState,
+  type VoteType,
+} from "thirdweb/extensions/vote";
 import { Button, Card, Text } from "tw-components";
 
-interface IProposalMetadata {
-  color: string;
-  title: string;
-}
-
-const ProposalStateToMetadataMap: Record<ProposalState, IProposalMetadata> = {
-  [ProposalState.Pending]: {
-    // Vote hasnt started yet
-    color: "gray.500",
-    title: "Pending",
-  },
-  [ProposalState.Active]: {
-    // Vote is ongoing
-    color: "primary.500",
-    title: "Active",
-  },
-  [ProposalState.Canceled]: {
-    // Proposal cancelled before vote was closed
-    color: "red.500",
-    title: "Canceled",
-  },
-  [ProposalState.Defeated]: {
-    // Proposal was defeated
-    color: "red.500",
-    title: "Defeated",
-  },
-  [ProposalState.Succeeded]: {
-    // Proposal was successful
-    color: "green.500",
-    title: "Succeeded",
-  },
-  [ProposalState.Queued]: {
-    // Proposal execution transaction is pending
-    color: "yellow.500",
-    title: "Queued",
-  },
-  [ProposalState.Expired]: {
-    // Proposal expired?
-    color: "gray.500",
-    title: "Expired",
-  },
-  [ProposalState.Executed]: {
-    // Proposal has been executed
-    color: "green.500",
-    title: "Executed",
-  },
+const ProposalStateToMetadataMap: Record<keyof typeof ProposalState, string> = {
+  pending: "gray.500",
+  active: "primary.500",
+  canceled: "red.500",
+  defeated: "red.500",
+  succeeded: "green.500",
+  queued: "yellow.500",
+  expired: "gray.500",
+  executed: "green.500",
 };
 
 interface IProposal {
-  proposal: ProposalType;
-  contract?: Vote;
+  proposal: ProposalItem;
+  contract: ThirdwebContract;
 }
 
 export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
   const { data: hasVoted, isLoading: hasVotedLoading } = useHasVotedOnProposal(
     contract,
-    proposal.proposalId.toString(),
+    proposal.proposalId,
   );
   const { data: canExecute } = useCanExecuteProposal(
     contract,
-    proposal.proposalId.toString(),
+    proposal.proposalId,
   );
   const { data: delegated } = useTokensDelegated(contract);
   const { mutate: execute, isLoading: isExecuting } =
-    useExecuteProposalMutation(contract, proposal.proposalId.toString());
+    useExecuteProposalMutation(contract, proposal.proposalId);
   const {
     mutate: vote,
     isLoading: isVoting,
     variables,
-  } = useCastVoteMutation(contract, proposal.proposalId.toString());
-  const votes = useMemo(() => {
-    return {
-      for: Number.parseFloat(
-        utils.formatUnits(
-          proposal.votes.find((voteData) => voteData.type === VoteType.For)
-            ?.count || 0,
-          18,
-        ),
-      ),
-      against: Number.parseFloat(
-        utils.formatUnits(
-          proposal.votes.find((voteData) => voteData.type === VoteType.Against)
-            ?.count || 0,
-          18,
-        ),
-      ),
-      abstain: Number.parseFloat(
-        utils.formatUnits(
-          proposal.votes.find((voteData) => voteData.type === VoteType.Abstain)
-            ?.count || 0,
-          18,
-        ),
-      ),
-    };
-  }, [proposal]);
+  } = useCastVoteMutation(contract, proposal.proposalId);
 
   const { onSuccess: castVoteSuccess, onError: castVoteError } =
     useTxNotifications("Vote cast successfully", "Error casting vote");
@@ -144,6 +82,8 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
     });
   }, [execute, executeError, executeSuccess]);
 
+  const decimalQuery = useVotingTokenDecimals(contract);
+
   return (
     <Card key={proposal.proposalId.toString()}>
       <Flex mb="8px">
@@ -151,10 +91,14 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
           paddingY="0px"
           paddingX="16px"
           borderRadius="25px"
-          bg={ProposalStateToMetadataMap[proposal.state].color}
+          bg={
+            ProposalStateToMetadataMap[
+              proposal.stateLabel as keyof typeof ProposalState
+            ] || "gray.500"
+          }
         >
           <Text color="white">
-            {ProposalStateToMetadataMap[proposal.state].title}
+            {`${proposal.stateLabel?.charAt(0).toUpperCase()}${proposal.stateLabel?.slice(1)}`}
           </Text>
         </Flex>
       </Flex>
@@ -166,21 +110,32 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
         {proposal.proposer}
       </Text>
 
-      {(votes.for > 0 || votes.against > 0 || votes.abstain > 0) && (
+      {(proposal.votes.for > 0n ||
+        proposal.votes.against > 0n ||
+        proposal.votes.abstain > 0n) && (
         <>
           <Text mt="16px">
-            <strong>For:</strong> {votes.for}
+            <strong>For:</strong>{" "}
+            {decimalQuery.isLoading
+              ? "Loading..."
+              : toTokens(proposal.votes.for, decimalQuery.data || 18)}
           </Text>
           <Text>
-            <strong>Against:</strong> {votes.against}
+            <strong>Against:</strong>{" "}
+            {decimalQuery.isLoading
+              ? "Loading..."
+              : toTokens(proposal.votes.against, decimalQuery.data || 18)}
           </Text>
           <Text>
-            <strong>Abstained:</strong> {votes.abstain}
+            <strong>Abstained:</strong>{" "}
+            {decimalQuery.isLoading
+              ? "Loading..."
+              : toTokens(proposal.votes.abstain, decimalQuery.data || 18)}
           </Text>
         </>
       )}
 
-      {proposal.state === ProposalState.Active &&
+      {proposal.state === ProposalState.active &&
       !hasVoted &&
       !hasVotedLoading &&
       delegated ? (
