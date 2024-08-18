@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { thirdwebClient } from "@/constants/client";
 import { cn } from "@/lib/utils";
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
@@ -25,7 +26,6 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { useQuery } from "@tanstack/react-query";
-import { useSDKChainId } from "@thirdweb-dev/react";
 import { FaucetButton } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/client/FaucetButton";
 import { GiftIcon } from "app/(dashboard)/(chain)/[chain_id]/(chainPage)/components/icons/GiftIcon";
 import type {
@@ -65,7 +65,7 @@ const GAS_FREE_CHAINS = [
 
 function useNetworkMismatchAdapter() {
   const walletChainId = useActiveWalletChain()?.id;
-  const v4SDKChainId = useSDKChainId();
+  const v4SDKChainId = useDashboardEVMChainId();
   if (!walletChainId || !v4SDKChainId) {
     // simply not ready yet, assume false
     return false;
@@ -400,7 +400,7 @@ const MismatchNotice: React.FC<{
   onClose: (hasSwitched: boolean) => void;
 }> = ({ initialFocusRef, onClose }) => {
   const connectedChainId = useActiveWalletChain()?.id;
-  const desiredChainId = useSDKChainId();
+  const desiredChainId = useDashboardEVMChainId();
   const switchNetwork = useSwitchActiveWalletChain();
   const connectionStatus = useActiveWalletConnectionStatus();
   const activeWallet = useActiveWallet();
