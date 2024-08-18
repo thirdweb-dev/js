@@ -1,22 +1,7 @@
-import type { providers } from "ethers";
-import { getDashboardChainRpc } from "lib/rpc";
 import { isAddress } from "thirdweb";
-import { ethereum } from "thirdweb/chains";
+import { resolveAddress, resolveName } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
-import { getThirdwebSDK } from "./sdk";
-
-let THIRDWEB_PROVIDER: providers.Provider | null = null;
-
-function getMainnetProvider(): providers.Provider {
-  if (THIRDWEB_PROVIDER) {
-    return THIRDWEB_PROVIDER;
-  }
-  THIRDWEB_PROVIDER = getThirdwebSDK(
-    ethereum.id,
-    getDashboardChainRpc(ethereum.id, undefined),
-  ).getProvider();
-  return THIRDWEB_PROVIDER;
-}
+import { thirdwebClient } from "./thirdweb-client";
 
 export interface ENSResolveResult {
   ensName: string | null;
@@ -31,9 +16,12 @@ async function resolveAddressToEnsName(
   address: string,
 ): Promise<ENSResolveResult> {
   invariant(isAddress(address), "address must be a valid address");
-
+  const ensName = await resolveName({
+    client: thirdwebClient,
+    address,
+  });
   return {
-    ensName: await getMainnetProvider().lookupAddress(address),
+    ensName,
     address,
   };
 }
@@ -42,10 +30,13 @@ async function resolveEnsNameToAddress(
   ensName: string,
 ): Promise<ENSResolveResult> {
   invariant(isEnsName(ensName), "ensName must be a valid ens name");
-
+  const address = await resolveAddress({
+    client: thirdwebClient,
+    name: ensName,
+  });
   return {
     ensName,
-    address: await getMainnetProvider().resolveName(ensName),
+    address,
   };
 }
 
