@@ -1,5 +1,12 @@
-import { contractType, getErcs, useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import {
+  type ContractWrapper,
+  type FeatureName,
+  contractType,
+  detectContractFeature,
+  getErcs,
+  useContract,
+} from "@thirdweb-dev/react";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { detectFeatures } from "components/contract-components/utils";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
@@ -255,6 +262,69 @@ export function useContractRouteConfig(
       "ERC20ClaimPhasesV2",
     ]);
 
+    const isRevealable = detectFeatures(contractQuery.contract, [
+      "ERC721Revealable",
+      "ERC1155Revealable",
+    ]);
+
+    const detectedSharedMetadataState = extensionDetectedState({
+      contractQuery,
+      feature: ["ERC721SharedMetadata"],
+    });
+
+    const detectedClaimState = extensionDetectedState({
+      contractQuery,
+      feature: [
+        "ERC721ClaimPhasesV1",
+        "ERC721ClaimPhasesV2",
+        "ERC721ClaimConditionsV1",
+        "ERC721ClaimConditionsV2",
+        "ERC721ClaimCustom",
+      ],
+    });
+
+    const isErc721Claimable = detectFeatures(contractQuery?.contract, [
+      "ERC721ClaimPhasesV1",
+      "ERC721ClaimPhasesV2",
+      "ERC721ClaimConditionsV1",
+      "ERC721ClaimConditionsV2",
+      "ERC721ClaimCustom",
+    ]);
+
+    const detectedStateEnumerable = detectFeatures(contractQuery?.contract, [
+      "ERC721Enumerable",
+      "ERC1155Enumerable",
+      "ERC721Supply",
+    ]);
+
+    const detectedLazyMintState = extensionDetectedState({
+      contractQuery,
+      feature: [
+        "ERC721LazyMintable",
+        "ERC1155LazyMintableV1",
+        "ERC1155LazyMintableV2",
+      ],
+    });
+
+    const detectedRevealableState = extensionDetectedState({
+      contractQuery,
+      feature: ["ERC721Revealable", "ERC1155Revealable"],
+    });
+
+    const detectedMintableState = extensionDetectedState({
+      contractQuery,
+      feature: ["ERC721Mintable", "ERC1155Mintable"],
+    });
+
+    const detectedLazyMintableState = extensionDetectedState({
+      contractQuery,
+      feature: [
+        "ERC721LazyMintable",
+        "ERC1155LazyMintableV1",
+        "ERC1155LazyMintableV2",
+      ],
+    });
+
     return {
       claimconditionExtensionDetection,
       detectedMetadata,
@@ -279,6 +349,15 @@ export function useContractRouteConfig(
       detectedErc20Extension,
       detectedModularExtension,
       hasNewClaimConditions,
+      isRevealable,
+      detectedSharedMetadataState,
+      detectedClaimState,
+      isErc721Claimable,
+      detectedStateEnumerable,
+      detectedLazyMintState,
+      detectedRevealableState,
+      detectedMintableState,
+      detectedLazyMintableState,
     };
   }, [contractQuery]);
 
@@ -345,7 +424,24 @@ export function useContractRouteConfig(
       path: "nfts",
       isEnabled: contractData.detectedNftExtensions,
       component: () => (
-        <>{contract && <LazyContractNFTPage contract={contract} />}</>
+        <>
+          {contract && (
+            <LazyContractNFTPage
+              contract={contract}
+              isRevealable={contractData.isRevealable}
+              detectedSharedMetadataState={
+                contractData.detectedSharedMetadataState
+              }
+              detectedClaimState={contractData.detectedClaimState}
+              detectedLazyMintState={contractData.detectedLazyMintState}
+              detectedLazyMintableState={contractData.detectedLazyMintableState}
+              detectedRevealableState={contractData.detectedRevealableState}
+              detectedStateEnumerable={contractData.detectedStateEnumerable}
+              isErc721Claimable={contractData.isErc721Claimable}
+              detectedMintableState={contractData.detectedMintableState}
+            />
+          )}
+        </>
       ),
     },
     {
@@ -510,4 +606,61 @@ export function useContractRouteConfig(
       isDefault: true,
     },
   ];
+}
+
+interface ExtensionDetectedStateParams {
+  /**
+   * The feature or features to check
+   */
+  feature: FeatureName | FeatureName[];
+
+  /**
+   * The contract instance to check
+   */
+  contractQuery: ReturnType<typeof useContract>;
+
+  /**
+   * the feature match strategy (default: any)
+   * - any: any of the features must be available
+   * - all: all of the features must be available
+   */
+  matchStrategy?: "any" | "all";
+}
+
+export function extensionDetectedState({
+  contractQuery,
+  feature,
+  matchStrategy = "any",
+}: ExtensionDetectedStateParams): ExtensionDetectedState {
+  // if contract is loading return "loading"
+  if ("contract" in contractQuery && contractQuery.isLoading) {
+    return "loading";
+  }
+
+  const actualContract =
+    "contract" in contractQuery ? contractQuery.contract : contractQuery;
+
+  // we're not loading but don't have a contract, so we'll assumed feature is disabled (really this is an error state?)
+  if (!actualContract) {
+    return "disabled";
+  }
+
+  // biome-ignore lint/suspicious/noExplicitAny: FIXME
+  const contractWrapper = // biome-ignore lint/suspicious/noExplicitAny: FIXME
+    (actualContract as any).contractWrapper as ContractWrapper<any>;
+
+  if (!Array.isArray(feature)) {
+    return detectContractFeature(contractWrapper, feature)
+      ? "enabled"
+      : "disabled";
+  }
+
+  if (matchStrategy === "all") {
+    return feature.every((f) => detectContractFeature(contractWrapper, f))
+      ? "enabled"
+      : "disabled";
+  }
+  return feature.some((f) => detectContractFeature(contractWrapper, f))
+    ? "enabled"
+    : "disabled";
 }

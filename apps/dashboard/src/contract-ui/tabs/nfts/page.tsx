@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { useRouter } from "next/router";
 import type { ThirdwebContract } from "thirdweb";
@@ -17,6 +17,15 @@ import { TokenIdPage } from "./components/token-id";
 
 interface NftOverviewPageProps {
   contract: ThirdwebContract;
+  isRevealable: boolean;
+  detectedSharedMetadataState: ExtensionDetectedState;
+  detectedClaimState: ExtensionDetectedState;
+  isErc721Claimable: boolean;
+  detectedStateEnumerable: boolean;
+  detectedLazyMintState: ExtensionDetectedState;
+  detectedRevealableState: ExtensionDetectedState;
+  detectedLazyMintableState: ExtensionDetectedState;
+  detectedMintableState: ExtensionDetectedState;
 }
 
 function isOnlyNumbers(str: string) {
@@ -25,6 +34,15 @@ function isOnlyNumbers(str: string) {
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contract,
+  isRevealable,
+  detectedSharedMetadataState,
+  detectedClaimState,
+  isErc721Claimable,
+  detectedStateEnumerable,
+  detectedLazyMintState,
+  detectedRevealableState,
+  detectedLazyMintableState,
+  detectedMintableState,
 }) => {
   const contractQuery = useContract(contract.address);
   const router = useRouter();
@@ -46,69 +64,6 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
-
-  const detectedClaimState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721ClaimPhasesV1",
-      "ERC721ClaimPhasesV2",
-      "ERC721ClaimConditionsV1",
-      "ERC721ClaimConditionsV2",
-      "ERC721ClaimCustom",
-    ],
-  });
-
-  const isErc721Claimable = detectFeatures(contractQuery?.contract, [
-    "ERC721ClaimPhasesV1",
-    "ERC721ClaimPhasesV2",
-    "ERC721ClaimConditionsV1",
-    "ERC721ClaimConditionsV2",
-    "ERC721ClaimCustom",
-  ]);
-
-  const detectedState = detectFeatures(contractQuery?.contract, [
-    "ERC721Enumerable",
-    "ERC1155Enumerable",
-    "ERC721Supply",
-  ]);
-
-  const detectedLzyMintState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721LazyMintable",
-      "ERC1155LazyMintableV1",
-      "ERC1155LazyMintableV2",
-    ],
-  });
-
-  const isRevealable = detectFeatures(contractQuery.contract, [
-    "ERC721Revealable",
-    "ERC1155Revealable",
-  ]);
-
-  const detectedRevealableState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721Revealable", "ERC1155Revealable"],
-  });
-
-  const detectedMintableState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721Mintable", "ERC1155Mintable"],
-  });
-
-  const detectedLazyMintableState = extensionDetectedState({
-    contractQuery,
-    feature: [
-      "ERC721LazyMintable",
-      "ERC1155LazyMintableV1",
-      "ERC1155LazyMintableV2",
-    ],
-  });
-
-  const detectedSharedMetadataState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC721SharedMetadata"],
-  });
 
   return (
     <Flex direction="column" gap={6}>
@@ -139,7 +94,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
             contractQuery?.contract && (
               <NFTLazyMintButton contract={contract} isErc721={isErc721} />
             )}
-          {detectedLzyMintState === "enabled" && contractQuery?.contract && (
+          {detectedLazyMintState === "enabled" && contractQuery?.contract && (
             <BatchLazyMintButton
               contractQuery={contractQuery}
               isRevealable={isRevealable}
@@ -147,7 +102,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           )}
         </Flex>
       </Flex>
-      {!detectedState ? (
+      {!detectedStateEnumerable ? (
         <Card as={Flex} flexDir="column" gap={3}>
           {/* TODO  extract this out into it's own component and make it better */}
           <Heading size="subtitle.md">
