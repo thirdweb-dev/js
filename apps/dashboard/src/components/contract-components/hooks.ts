@@ -1142,7 +1142,7 @@ export function ensQuery(addressOrEnsName?: string) {
           ensName: null,
         }),
       );
-
+      console.log({ address, ensName });
       if (isEnsName(addressOrEnsName) && !address) {
         throw new Error("Failed to resolve ENS name.");
       }

@@ -378,12 +378,14 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   const checksummedAddress = isAddress(lowercaseAddress)
     ? getAddress(lowercaseAddress)
     : lowercaseAddress;
-
+  console.log({ lowercaseAddress, checksummedAddress });
   try {
     const queryResult = await queryClient.fetchQuery(
       ensQuery(checksummedAddress),
     );
+
     address = queryResult?.address;
+    console.log({ queryRes: queryResult?.address });
   } catch {
     return {
       notFound: true,

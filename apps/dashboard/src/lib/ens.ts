@@ -20,6 +20,7 @@ async function resolveAddressToEnsName(
     client: thirdwebClient,
     address,
   });
+  console.log({ label: "resolveAddressToEnsName", address, ensName });
   return {
     ensName,
     address,
@@ -34,6 +35,7 @@ async function resolveEnsNameToAddress(
     client: thirdwebClient,
     name: ensName,
   });
+  console.log({ label: "resolveEnsNameToAddress", address, ensName });
   return {
     ensName,
     address,
