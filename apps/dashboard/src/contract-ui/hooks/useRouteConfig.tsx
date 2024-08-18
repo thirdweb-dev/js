@@ -243,6 +243,18 @@ export function useContractRouteConfig(
       feature: ["ModularCore"],
     });
 
+    const hasNewClaimConditions = detectFeatures(contractQuery.contract, [
+      // erc721
+      "ERC721ClaimConditionsV2",
+      "ERC721ClaimPhasesV2",
+      // erc1155
+      "ERC1155ClaimConditionsV2",
+      "ERC1155ClaimPhasesV2",
+      // erc20
+      "ERC20ClaimConditionsV2",
+      "ERC20ClaimPhasesV2",
+    ]);
+
     return {
       claimconditionExtensionDetection,
       detectedMetadata,
@@ -266,6 +278,7 @@ export function useContractRouteConfig(
       detectedNftExtensions,
       detectedErc20Extension,
       detectedModularExtension,
+      hasNewClaimConditions,
     };
   }, [contractQuery]);
 
@@ -398,7 +411,13 @@ export function useContractRouteConfig(
       title: "Claim Conditions",
       path: "claim-conditions",
       isEnabled: contractData.claimconditionExtensionDetection,
-      component: LazyContractClaimConditionsPage,
+      component: () => (
+        <LazyContractClaimConditionsPage
+          contractAddress={contractAddress}
+          detectedClaimFeature={contractData.claimconditionExtensionDetection}
+          hasNewClaimConditions={contractData.hasNewClaimConditions}
+        />
+      ),
     },
     {
       title: "Accounts",
