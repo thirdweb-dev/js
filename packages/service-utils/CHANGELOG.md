@@ -1,5 +1,13 @@
 # @thirdweb-dev/service-utils
 
+## 0.4.38
+
+### Patch Changes
+
+- [#4147](https://github.com/thirdweb-dev/js/pull/4147) [`997c394`](https://github.com/thirdweb-dev/js/commit/997c3945a7673517fb28273a9985f70ff892b365) Thanks [@iuwqyir](https://github.com/iuwqyir)! - exported usageEventSchema for cf worker and also UsageEvent for node
+
+- [#4146](https://github.com/thirdweb-dev/js/pull/4146) [`214a74c`](https://github.com/thirdweb-dev/js/commit/214a74c36aefee1db47eddd459943241c4e3740e) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - add `authenticationMethod` to usageTracker types
+
 ## 0.4.37
 
 ### Patch Changes

@@ -1,5 +1,25 @@
 # thirdweb
 
+## 5.47.0
+
+### Minor Changes
+
+- [#4139](https://github.com/thirdweb-dev/js/pull/4139) [`5fda794`](https://github.com/thirdweb-dev/js/commit/5fda794569e799cebdf8bb36bc45263f7f517988) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose ERC20Vote extensions and add more Vote contract extensions
+
+### Patch Changes
+
+- [#4120](https://github.com/thirdweb-dev/js/pull/4120) [`8253524`](https://github.com/thirdweb-dev/js/commit/825352476cfc7259fe336d7d06bd53ee5dcca8c7) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Throw error when no encryption key is provided to custom auth
+
+- [#4159](https://github.com/thirdweb-dev/js/pull/4159) [`cf4443a`](https://github.com/thirdweb-dev/js/commit/cf4443a9ebb152f815700e6da3bf0a64a8c0faa4) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Improves the Blobbie algorithm
+
+- [#4126](https://github.com/thirdweb-dev/js/pull/4126) [`13764f1`](https://github.com/thirdweb-dev/js/commit/13764f1abb95fe03199c5802b3bd909c58590c25) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Connect UI cosmetic improvements
+
+- [#4157](https://github.com/thirdweb-dev/js/pull/4157) [`355795a`](https://github.com/thirdweb-dev/js/commit/355795a2d419791a2a17bedb26f5d794ef19cbec) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix text wrapping on Connect Button
+
+- [#4160](https://github.com/thirdweb-dev/js/pull/4160) [`e0dcc64`](https://github.com/thirdweb-dev/js/commit/e0dcc642564c2456fe3163c98c4b504bac508359) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix connect button border on firefox browser
+
+- [#4156](https://github.com/thirdweb-dev/js/pull/4156) [`f0d6e34`](https://github.com/thirdweb-dev/js/commit/f0d6e343eea28cd49863ba4794b89d6b070c52b2) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix smart contract wallet signature validation on older chains
+
 ## 5.46.1
 
 ### Patch Changes
