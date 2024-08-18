@@ -1,5 +1,12 @@
 {
-  "applinks": {},
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["XYHGSFAMHX.com.thirdweb.demo"],
+        "paths": ["/mobile-wallet-protocol", "NOT *"]
+      }
+    ]
+  },
   "webcredentials": {
     "apps": ["XYHGSFAMHX.com.thirdweb.demo"]
   },
