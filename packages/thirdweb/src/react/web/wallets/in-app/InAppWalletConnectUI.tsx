@@ -14,6 +14,7 @@ import { OTPLoginUI } from "../shared/OTPLoginUI.js";
 import { PassKeyLogin } from "../shared/PassKeyLogin.js";
 import { SocialLogin } from "../shared/SocialLogin.js";
 import { InAppWalletFormUIScreen } from "./InAppWalletFormUI.js";
+import { WalletAuth } from "./WalletAuth.js";
 import { useInAppWalletLocale } from "./useInAppWalletLocale.js";
 
 /**
@@ -36,6 +37,7 @@ function InAppWalletConnectUI(props: {
   chain: Chain | undefined;
   connectLocale: ConnectLocale;
   isLinking?: boolean;
+  walletConnect: { projectId?: string } | undefined;
 }) {
   const data = useSelectionData();
   const setSelectionData = useSetSelectionData();
@@ -95,6 +97,22 @@ function InAppWalletConnectUI(props: {
         client={props.client}
         size={props.size}
         isLinking={props.isLinking}
+      />
+    );
+  }
+
+  if (state?.walletLogin) {
+    return (
+      <WalletAuth
+        meta={props.meta}
+        inAppLocale={locale}
+        walletConnect={props.walletConnect}
+        wallet={props.wallet}
+        client={props.client}
+        size={props.size}
+        done={done}
+        onBack={goBackToMain || (() => setSelectionData({}))}
+        locale={props.connectLocale}
       />
     );
   }

@@ -7,15 +7,14 @@ import { isEcosystemWallet } from "../../../../wallets/ecosystem/is-ecosystem-wa
 import { hasStoredPasskey } from "../../../../wallets/in-app/web/lib/auth/passkeys.js";
 import { iconSize } from "../../../core/design-system/index.js";
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
-import { AccentFailIcon } from "../../ui/ConnectWallet/icons/AccentFailIcon.js";
 import { FingerPrintIcon } from "../../ui/ConnectWallet/icons/FingerPrintIcon.js";
 import type { ConnectLocale } from "../../ui/ConnectWallet/locale/types.js";
 import { Spacer } from "../../ui/components/Spacer.js";
-import { Spinner } from "../../ui/components/Spinner.js";
 import { Container, ModalHeader } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
-import { Text } from "../../ui/components/text.js";
+import { ErrorState } from "./ErrorState.js";
 import { LoadingScreen } from "./LoadingScreen.js";
+import { LoadingState } from "./LoadingState.js";
 
 // is passkey stored?
 // - login
@@ -179,6 +178,7 @@ function LoginScreen(props: {
       <LoadingState
         title="Requesting Passkey"
         subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
+        icon={<FingerPrintIcon size={iconSize.xxl} />}
       />
     );
   }
@@ -252,6 +252,7 @@ function SignupScreen(props: {
       <LoadingState
         title="Creating Passkey"
         subtitle="A pop-up prompt will appear to sign-in and verify your passkey"
+        icon={<FingerPrintIcon size={iconSize.xxl} />}
       />
     );
   }
@@ -294,70 +295,6 @@ function SelectLoginMethod(props: {
       </Button>
 
       <Spacer y="lg" />
-    </Container>
-  );
-}
-
-function ErrorState(props: {
-  onTryAgain: () => void;
-  title: string;
-}) {
-  return (
-    <Container animate="fadein">
-      <Spacer y="xxl" />
-      <Container flex="row" center="x">
-        <AccentFailIcon size={iconSize["3xl"]} />
-      </Container>
-      <Spacer y="lg" />
-      <Text center color="primaryText" size="md">
-        {props.title}
-      </Text>
-      <Spacer y="xl" />
-      <Spacer y="xxl" />
-      <Button variant="accent" fullWidth onClick={props.onTryAgain}>
-        Try Again
-      </Button>
-    </Container>
-  );
-}
-
-function LoadingState(props: {
-  title: string;
-  subtitle: string;
-}) {
-  return (
-    <Container animate="fadein">
-      <Spacer y="xxl" />
-      <Container
-        flex="row"
-        center="x"
-        style={{
-          position: "relative",
-        }}
-      >
-        <Spinner size="4xl" color="accentText" />
-        <Container
-          color="accentText"
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <FingerPrintIcon size={iconSize.xxl} />
-        </Container>
-      </Container>
-      <Spacer y="xl" />
-      <Text center color="primaryText" size="lg">
-        {props.title}
-      </Text>
-      <Spacer y="md" />
-      <Text multiline center>
-        {props.subtitle}
-      </Text>
-      <Spacer y="xxl" />
-      <Spacer y="xxl" />
     </Container>
   );
 }

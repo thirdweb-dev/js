@@ -826,6 +826,7 @@ function DetailsModal(props: {
         }}
         client={client}
         locale={locale}
+        walletConnect={props.connectOptions?.walletConnect}
       />
     );
   }

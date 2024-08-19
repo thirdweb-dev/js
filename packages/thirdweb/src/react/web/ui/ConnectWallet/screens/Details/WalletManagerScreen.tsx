@@ -1,4 +1,4 @@
-import { CheckIcon, CrossCircledIcon, PlusIcon } from "@radix-ui/react-icons";
+import { CheckIcon, MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -187,11 +187,11 @@ function WalletManangerButton(props: {
                 disconnect(props.wallet);
               }}
             >
-              <CrossCircledIcon
+              <MinusIcon
                 width={iconSize.md}
                 height={iconSize.md}
                 style={{
-                  color: theme.colors.danger,
+                  color: theme.colors.secondaryText,
                 }}
               />
             </IconButton>

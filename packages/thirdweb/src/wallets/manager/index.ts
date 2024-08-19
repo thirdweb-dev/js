@@ -138,8 +138,6 @@ export function createConnectionManager(storage: AsyncStorage) {
       });
     }
 
-    handleSetActiveWallet(activeWallet);
-
     // add personal wallet to connected wallets list
     addConnectedWallet(personalWallet);
 

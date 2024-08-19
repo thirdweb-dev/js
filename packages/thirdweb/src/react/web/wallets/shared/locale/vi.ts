@@ -55,4 +55,5 @@ export default {
   signInWithPhone: "Đăng nhập bằng số điện thoại",
   phoneRequired: "Vui lòng nhập số điện thoại",
   passkey: "Passkey",
+  linkWallet: "Link a Wallet",
 } satisfies InAppWalletLocale;

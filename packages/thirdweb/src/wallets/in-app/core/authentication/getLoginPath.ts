@@ -3,8 +3,8 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { type AuthOption, authOptions } from "../../../../wallets/types.js";
 import type { Ecosystem } from "../../web/types.js";
 
-const getLoginOptionRoute = (option: AuthOption) => {
-  if (!authOptions.includes(option)) {
+const getLoginOptionRoute = (option: AuthOption | "wallet") => {
+  if (!authOptions.includes(option as AuthOption) && option !== "wallet") {
     throw new Error(`Unknown auth option ${option}`);
   }
   switch (option) {
@@ -22,7 +22,7 @@ export const getLoginUrl = ({
   mode = "popup",
   redirectUrl,
 }: {
-  authOption: AuthOption;
+  authOption: AuthOption | "wallet";
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   mode?: "popup" | "redirect" | "mobile";
@@ -58,7 +58,7 @@ export const getLoginCallbackUrl = ({
   client,
   ecosystem,
 }: {
-  authOption: AuthOption;
+  authOption: AuthOption | "wallet";
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 }): string => {

@@ -26,6 +26,7 @@ import {
 import { setLastAuthProvider } from "../../../core/utils/storage.js";
 import {
   emailIcon,
+  getWalletIcon,
   passkeyIcon,
   phoneIcon,
   socialIcons,
@@ -52,6 +53,7 @@ export type ConnectWalletSelectUIState =
         connectionPromise: Promise<Account | Profile[]>;
       };
       passkeyLogin?: boolean;
+      walletLogin?: boolean;
     };
 
 const defaultAuthOptions: AuthOption[] = [
@@ -242,6 +244,13 @@ export const ConnectWalletSocialOptions = (
     props.select();
   }
 
+  function handleWalletLogin() {
+    setData({
+      walletLogin: true,
+    });
+    props.select();
+  }
+
   const showOnlyIcons = socialLogins.length > 2;
 
   return (
@@ -387,6 +396,19 @@ export const ConnectWalletSocialOptions = (
               handlePassKeyLogin();
             }}
             title={locale.passkey}
+          />
+        </>
+      )}
+
+      {props.isLinking && (
+        <>
+          <WalletTypeRowButton
+            client={props.client}
+            icon={getWalletIcon("")}
+            onClick={() => {
+              handleWalletLogin();
+            }}
+            title={locale.linkWallet}
           />
         </>
       )}
