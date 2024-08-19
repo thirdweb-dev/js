@@ -72,11 +72,11 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           (contractTypeData === "marketplace" ||
             ["DirectListings", "EnglishAuctions"].some((type) =>
               detectedFeatureNames.includes(type),
-            )) && (
+            )) &&
+          contractV5 && (
             <MarketplaceDetails
-              contractAddress={contractAddress}
+              contract={contractV5}
               trackingCategory={TRACKING_CATEGORY}
-              contractType={contractTypeData as "marketplace"}
               features={detectedFeatureNames}
             />
           )}

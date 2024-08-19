@@ -1,30 +1,22 @@
 import { Skeleton, Stack, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
-import {
-  useDirectListingsCount,
-  useEnglishAuctionsCount,
-} from "@thirdweb-dev/react";
-import type { MarketplaceV3 } from "@thirdweb-dev/sdk";
-import { BigNumber } from "ethers";
 import { useMemo } from "react";
+import type { ThirdwebContract } from "thirdweb";
+import { totalAuctions, totalListings } from "thirdweb/extensions/marketplace";
+import { useReadContract } from "thirdweb/react";
 import { Card } from "tw-components";
 
-interface ListingStatsV3Props {
-  contract?: MarketplaceV3;
-  features: string[];
-}
-
-const TotalListingsStat: React.FC<{ contract?: MarketplaceV3 }> = ({
+const TotalListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
   contract,
 }) => {
-  const directListingsQuery = useDirectListingsCount(contract);
-  const englishAuctionsQuery = useEnglishAuctionsCount(contract);
-
-  const totalListings = useMemo(
-    () =>
-      BigNumber.from(directListingsQuery?.data || 0).add(
-        BigNumber.from(englishAuctionsQuery?.data || 0),
-      ),
-    [directListingsQuery?.data, englishAuctionsQuery?.data],
+  const directListingsQuery = useReadContract(totalListings, {
+    contract,
+  });
+  const englishAuctionsQuery = useReadContract(totalAuctions, {
+    contract,
+  });
+  const combinedListingCount = useMemo(
+    () => (directListingsQuery.data || 0n) + (englishAuctionsQuery.data || 0n),
+    [directListingsQuery.data, englishAuctionsQuery.data],
   );
 
   return (
@@ -32,56 +24,63 @@ const TotalListingsStat: React.FC<{ contract?: MarketplaceV3 }> = ({
       <StatLabel mb={{ base: 1, md: 0 }}>Total Listings</StatLabel>
       <Skeleton
         isLoaded={
-          !contract ||
-          (directListingsQuery.isSuccess && englishAuctionsQuery.isSuccess)
+          directListingsQuery.isSuccess && englishAuctionsQuery.isSuccess
         }
       >
-        <StatNumber>{totalListings.toString()}</StatNumber>
+        <StatNumber>{combinedListingCount.toString()}</StatNumber>
       </Skeleton>
     </Card>
   );
 };
 
-const DirectListingsStat: React.FC<{ contract?: MarketplaceV3 }> = ({
+const DirectListingsStat: React.FC<{ contract: ThirdwebContract }> = ({
   contract,
 }) => {
-  const directListingsQuery = useDirectListingsCount(contract);
+  const directListingsQuery = useReadContract(totalListings, {
+    contract,
+  });
 
   return (
     <Card as={Stat}>
       <StatLabel mb={{ base: 1, md: 0 }}>Direct Listings</StatLabel>
-      <Skeleton isLoaded={!contract || directListingsQuery.isSuccess}>
-        <StatNumber>{(directListingsQuery.data || 0).toString()}</StatNumber>
+      <Skeleton isLoaded={directListingsQuery.isSuccess}>
+        <StatNumber>{(directListingsQuery.data || 0n).toString()}</StatNumber>
       </Skeleton>
     </Card>
   );
 };
 
-const EnglishAuctionsStat: React.FC<{ contract?: MarketplaceV3 }> = ({
+const EnglishAuctionsStat: React.FC<{ contract: ThirdwebContract }> = ({
   contract,
 }) => {
-  const englishAuctionsQuery = useEnglishAuctionsCount(contract);
+  const englishAuctionsQuery = useReadContract(totalAuctions, {
+    contract,
+  });
 
   return (
     <Card as={Stat}>
       <StatLabel mb={{ base: 1, md: 0 }}>English Auctions</StatLabel>
-      <Skeleton isLoaded={!contract || englishAuctionsQuery.isSuccess}>
-        <StatNumber>{(englishAuctionsQuery.data || 0).toString()}</StatNumber>
+      <Skeleton isLoaded={englishAuctionsQuery.isSuccess}>
+        <StatNumber>{(englishAuctionsQuery.data || 0n).toString()}</StatNumber>
       </Skeleton>
     </Card>
   );
 };
 
+interface ListingStatsV3Props {
+  contract: ThirdwebContract;
+  hasDirectListings: boolean;
+  hasEnglishAuctions: boolean;
+}
+
 export const ListingStatsV3: React.FC<ListingStatsV3Props> = ({
   contract,
-  features,
+  hasDirectListings,
+  hasEnglishAuctions,
 }) => {
-  const hasDirectListings = features.includes("DirectListings");
-  const hasEnglishAuctions = features.includes("EnglishAuctions");
-
   return (
     <Stack spacing={{ base: 3, md: 6 }} direction="row">
-      {hasDirectListings && hasEnglishAuctions && (
+      {hasDirectListings && hasEnglishAuctions && contract && (
         <TotalListingsStat contract={contract} />
       )}
       {hasDirectListings && <DirectListingsStat contract={contract} />}
