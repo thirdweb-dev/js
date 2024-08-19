@@ -213,7 +213,7 @@ export const ConnectedWalletDetails: React.FC<{
         style={{
           border: `1px solid ${theme.colors.borderColor}`,
           textOverflow: "ellipsis",
-          width: "115px",
+          minWidth: "115px",
           height: "50px",
           whiteSpace: "nowrap",
           borderRadius: `0 ${radius.md} ${radius.md} 0`,
