@@ -21,7 +21,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useSupportedChain } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceTemplateValues } from "lib/deployment/template-values";
-import { ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon, InfoIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
@@ -349,15 +349,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     (isErc721SharedMetadadata ? 1 : 0);
 
   const isCreate2Deployment = form.watch("deployDeterministic");
-
-  if (fullPublishMetadata.isLoading) {
-    return (
-      <div className="min-h-[200px] flex items-center justify-center">
-        <Spinner className="size-10" />
-      </div>
-    );
-  }
-
   const advancedParams = Object.keys(formDeployParams)
     .map((paramKey) => {
       const deployParam = deployParams.find((p) => p.name === paramKey);
@@ -382,6 +373,19 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   return (
     <FormProvider {...form}>
+      {fullPublishMetadata.isLoading && (
+        <div className="min-h-[200px] flex items-center justify-center">
+          <Spinner className="size-10" />
+        </div>
+      )}
+
+      {fullPublishMetadata.isError && (
+        <div className="bg-destructive p-4 border border-destructive-text/30 rounded-lg text-destructive-text flex gap-2 items-center">
+          <InfoIcon className="size-4" />
+          Failed to fetch Publish metadata
+        </div>
+      )}
+
       <Flex
         flexGrow={1}
         minH="full"
