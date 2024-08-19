@@ -8,6 +8,7 @@ import type { WaitForReceiptOptions } from "../../../../transaction/actions/wait
 import type { PreparedTransaction } from "../../../../transaction/prepare-transaction.js";
 import { resolvePromisedValue } from "../../../../utils/promise/resolve-promised-value.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
+import { getWalletBalance } from "../../../../wallets/utils/getWalletBalance.js";
 import type { LocaleId } from "../../../web/ui/types.js";
 import type { Theme } from "../../design-system/index.js";
 import type { SupportedTokens } from "../../utils/defaultTokens.js";
@@ -157,7 +158,18 @@ export function useSendTransactionCore(args: {
             const nativeValue = _nativeValue || 0n;
             const erc20Value = _erc20Value?.amountWei || 0n;
 
-            if (nativeValue > 0n || erc20Value > 0n) {
+            const balance = await getWalletBalance({
+              client: tx.client,
+              address: account.address,
+              chain: tx.chain,
+              tokenAddress: _erc20Value?.tokenAddress,
+            });
+
+            const shouldShowModal =
+              (erc20Value > 0n && balance.value < erc20Value) ||
+              (nativeValue > 0n && balance.value < nativeValue);
+
+            if (shouldShowModal) {
               showPayModal({
                 tx,
                 sendTx,
