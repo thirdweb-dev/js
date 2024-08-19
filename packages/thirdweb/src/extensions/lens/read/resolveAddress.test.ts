@@ -3,7 +3,7 @@ import { TEST_CLIENT } from "~test/test-clients.js";
 import { isAddress } from "../../../utils/address.js";
 import { resolveAddress } from "./resolveAddress.js";
 
-describe("resolve lens address", () => {
+describe.runIf(process.env.TW_SECRET_KEY)("resolve lens address", () => {
   it("should resolve to correct address", async () => {
     const address = await resolveAddress({
       client: TEST_CLIENT,
