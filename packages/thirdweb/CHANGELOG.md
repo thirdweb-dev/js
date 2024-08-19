@@ -1,5 +1,19 @@
 # thirdweb
 
+## 5.47.1
+
+### Patch Changes
+
+- [#4173](https://github.com/thirdweb-dev/js/pull/4173) [`7778063`](https://github.com/thirdweb-dev/js/commit/7778063458fc69a2e0a21fb58a89b34b36b16cdb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update Blobbie appearance
+
+- [#4154](https://github.com/thirdweb-dev/js/pull/4154) [`9133b45`](https://github.com/thirdweb-dev/js/commit/9133b45700cfe50bb275bb8ef676491f9e39fd5d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update tsdocs for Vote extensions
+
+- [#4150](https://github.com/thirdweb-dev/js/pull/4150) [`a43907e`](https://github.com/thirdweb-dev/js/commit/a43907e2df9c412b5c73c706ca4e4165b7273f68) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Lens's resolveAddress for sending crypto with lens handles
+
+- [#4163](https://github.com/thirdweb-dev/js/pull/4163) [`fc8daaa`](https://github.com/thirdweb-dev/js/commit/fc8daaa2bc469c04ee62182e5813ad7c78d101ec) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export util method: isBytes
+
+- [#4165](https://github.com/thirdweb-dev/js/pull/4165) [`43f9319`](https://github.com/thirdweb-dev/js/commit/43f9319ac7ddab288ebcc5b5dbdd6b004c3bcf77) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add GaslessOptions to useSendAndConfirmTransaction
+
 ## 5.47.0
 
 ### Minor Changes
