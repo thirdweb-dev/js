@@ -30,7 +30,9 @@ export function useContractSources(contract?: ThirdwebContract) {
             const source = await download({
               uri: `ipfs://${ipfsHash}`,
               client: thirdwebClient,
-            }).then((r) => r.text());
+            })
+              .then((r) => r.text())
+              .catch(() => "Failed to fetch source from IPFS");
             return {
               filename: path,
               source,
