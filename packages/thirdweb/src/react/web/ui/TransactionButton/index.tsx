@@ -11,7 +11,7 @@ import { Button } from "../components/buttons.js";
 
 /**
  * TransactionButton component is used to render a button that triggers a transaction.
- * - It shows a "Switch Network" button if the connected wallet is on a different chain than the transaction.
+ * It shows a "Switch Network" button if the connected wallet is on a different chain than the transaction.
  * @param props - The props for this component.
  * Refer to [TransactionButtonProps](https://portal.thirdweb.com/references/typescript/v5/TransactionButtonProps) for details.
  * @example

@@ -10,6 +10,9 @@ import type { PreparedTransaction } from "../../../prepare-transaction.js";
 import { readContract } from "../../../read-contract.js";
 import type { WaitForReceiptOptions } from "../../wait-for-tx-receipt.js";
 
+/**
+ * @transaction
+ */
 export type BiconomyOptions = {
   provider: "biconomy";
   // you can find the correct forwarder for your network here: https://docs-gasless.biconomy.io/misc/contract-addresses
