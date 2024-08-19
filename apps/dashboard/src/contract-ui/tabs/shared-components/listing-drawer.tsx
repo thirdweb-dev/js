@@ -10,6 +10,7 @@ import {
   usePrevious,
 } from "@chakra-ui/react";
 import { useMemo } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import type {
   DirectListing,
   EnglishAuction,
@@ -23,8 +24,7 @@ import { CancelEnglishAuction } from "../english-auctions/components/cancel";
 import { LISTING_STATUS } from "./types";
 
 interface NFTDrawerProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
   isOpen: boolean;
   onClose: () => void;
   data: DirectListing | EnglishAuction | null;
@@ -32,8 +32,7 @@ interface NFTDrawerProps {
 }
 
 export const ListingDrawer: React.FC<NFTDrawerProps> = ({
-  contractAddress,
-  chainId,
+  contract,
   isOpen,
   onClose,
   data,
@@ -176,14 +175,12 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
         children: () =>
           type === "direct-listings" ? (
             <CancelDirectListing
-              contractAddress={contractAddress}
-              chainId={chainId}
+              contract={contract}
               listingId={renderData.id.toString()}
             />
           ) : (
             <CancelEnglishAuction
-              contractAddress={contractAddress}
-              chainId={chainId}
+              contract={contract}
               auctionId={renderData.id.toString()}
             />
           ),
@@ -197,8 +194,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
     tokenId,
     data?.asset.metadata.properties,
     type,
-    contractAddress,
-    chainId,
+    contract,
   ]);
 
   if (!renderData) {

@@ -162,7 +162,7 @@ const ContractPage: ThirdwebNextPage = () => {
   const v5Chain = useV5DashboardChain(chain?.chainId);
   const contract = useMemo(() => {
     if (!contractAddress || !v5Chain) {
-      return null;
+      return undefined;
     }
     return getContract({
       address: contractAddress,
@@ -171,7 +171,7 @@ const ContractPage: ThirdwebNextPage = () => {
     });
   }, [contractAddress, v5Chain]);
 
-  const routes = useContractRouteConfig(contractAddress);
+  const routes = useContractRouteConfig(contractAddress, contract);
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.path === activeTab),
