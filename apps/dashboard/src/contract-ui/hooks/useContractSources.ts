@@ -17,11 +17,18 @@ export function useContractSources(contract?: ThirdwebContract) {
     queryFn: async (): Promise<Array<{ filename: string; source: string }>> => {
       invariant(contract, "contract is required");
       const data = await getCompilerMetadata(contract);
-      const sources = data.metadata.sources || {};
+      if (!data.metadata.sources) {
+        return [];
+      }
       return await Promise.all(
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        Object.entries(sources).map(async ([path, info]: [string, any]) => {
-          const urls = info.urls as string[];
+        Object.entries(data.metadata.sources).map(async ([path, info]) => {
+          if ("content" in info) {
+            return {
+              filename: path,
+              source: info.content || "Could not find source for this file",
+            };
+          }
+          const urls = info.urls;
           const ipfsLink = urls
             ? urls.find((url) => url.includes("ipfs"))
             : undefined;
@@ -40,7 +47,7 @@ export function useContractSources(contract?: ThirdwebContract) {
           }
           return {
             filename: path,
-            source: info.content || "Could not find source for this contract",
+            source: "Could not find source for this file",
           };
         }),
       );

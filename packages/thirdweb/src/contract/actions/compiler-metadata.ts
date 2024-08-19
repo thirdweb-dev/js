@@ -7,7 +7,9 @@ export type PublishedMetadata = {
   name: string;
   abi: Abi;
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-  metadata: Record<string, any>;
+  metadata: Record<string, any> & {
+    sources: Record<string, { content: string } | { urls: string[] }>;
+  };
   info: {
     title?: string;
     author?: string;
