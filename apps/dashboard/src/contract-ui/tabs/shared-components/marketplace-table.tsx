@@ -39,7 +39,7 @@ import type {
   DirectListing,
   EnglishAuction,
 } from "thirdweb/extensions/marketplace";
-import { max } from "thirdweb/utils";
+import { min } from "thirdweb/utils";
 import { Button, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { LISTING_STATUS } from "./types";
@@ -164,7 +164,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         Math.ceil(
           Number(
             // To avoid overflow issue
-            max(totalCountQuery.data || 0n, BigInt(Number.MAX_SAFE_INTEGER)),
+            min(totalCountQuery.data || 0n, BigInt(Number.MAX_SAFE_INTEGER)),
           ) / queryParams.count,
         ),
         1,
