@@ -44,9 +44,55 @@ function assertEthers5(
   }
 }
 
+/**
+ * The ethers5 adapter provides a way to convert between Thirdweb contracts, accounts, and providers.
+ * @example
+ *
+ * ### Converting a Thirdweb account to an ethers.js signer
+ * ```ts
+ * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+ * const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
+ * ```
+ *
+ * ### Converting an ethers.js signer into a Thirdweb account
+ * ```ts
+ * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+ * const account = ethers5Adapter.signer.fromEthers({ signer });
+ * ```
+ *
+ * ### Converting a Thirdweb contract to an ethers.js Contract
+ * ```ts
+ * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+ * const ethersContract = await ethers5Adapter.contract.toEthers({ thirdwebContract });
+ * ```
+ *
+ * ### Converting a Thirdweb client and chain ID into an ethers.js provider
+ * ```ts
+ * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+ * const provider = ethers5Adapter.provider.toEthers({ client, chain });
+ * ```
+ */
 export const ethers5Adapter = /* @__PURE__ */ (() => {
   const ethers = universalethers;
   return {
+    /**
+     * Converts a Thirdweb client and chain ID into an ethers.js provider.
+     * @param options - The options for converting the Thirdweb client and chain ID into an ethers.js provider.
+     * @param options.client - The Thirdweb client.
+     * @param options.chain - The chain.
+     * @returns The ethers.js provider.
+     * @example
+     * ```ts
+     * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+     * const provider = ethers5Adapter.provider.toEthers({ client, chainId });
+     * ```
+     *
+     * Once you have converted a thirdweb Client to ethers Provider,
+     * you can use it like any other ethers provider:
+     * ```ts
+     * const blockNumber = await provider.getBlockNumber();
+     * ```
+     */
     provider: {
       /**
        * Converts a Thirdweb client and chain ID into an ethers.js provider.
@@ -71,6 +117,30 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
         return toEthersProvider(ethers, options.client, options.chain);
       },
     },
+    /**
+     * Converts a ThirdwebContract to an ethers.js Contract or the other way around.
+     * @example
+     *
+     * ### toEthers
+     * ```ts
+     * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+     * const ethersContract = await ethers5Adapter.contract.toEthers({
+     *   thirdwebContract,
+     * });
+     * ```
+     *
+     * ### fromEthers
+     * ```ts
+     * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+     *
+     * const twContract = await ethers5Adapter.contract.fromEthers({
+     *  client,
+     *  ethersContract,
+     *  chain: defineChain(1), // Replace with your chain
+     * });
+     * ```
+     *
+     */
     contract: {
       /**
        * Converts a ThirdwebContract to an ethers.js Contract.
@@ -111,7 +181,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
        * ```ts
        * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
        *
-       * const twContract = await ethers5Adapter.contract.fromEthersContract({
+       * const twContract = await ethers5Adapter.contract.fromEthers({
        *  client,
        *  ethersContract,
        *  chain: defineChain(1), // Replace with your chain
@@ -123,6 +193,22 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
         return fromEthersContract(options);
       },
     },
+    /**
+     * Converts an ethers5 Signer into a Wallet object or the other way around.
+     * @example
+     *
+     * ### fromEthers
+     * ```ts
+     * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+     * const wallet = await ethers5Adapter.signer.fromEthers({ signer });
+     * ```
+     *
+     * ### toEthers
+     * ```ts
+     * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
+     * const signer = await ethers5Adapter.signer.toEthers({ client, chain, account });
+     * ```
+     */
     signer: {
       /**
        * Converts an ethers5 Signer into a Wallet object.
