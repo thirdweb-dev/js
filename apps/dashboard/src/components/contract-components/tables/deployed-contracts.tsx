@@ -416,6 +416,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
       overflowX={{ base: "auto", md: "initial" }}
       // to avoid clipping the network selector menu on mobile
       minH={{ base: "600px", md: "initial" }}
+      className="relative"
     >
       {isFetching && (
         <Spinner

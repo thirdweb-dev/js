@@ -56,7 +56,7 @@ export const DeployableContractTable: ComponentWithChildren<
     data: contractIds.map((contractId) => ({ contractId })),
   });
   return (
-    <TableContainer>
+    <TableContainer className="relative">
       {isFetching && (
         <Spinner
           color="primary"

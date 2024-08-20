@@ -230,7 +230,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
 
   return (
     <Flex gap={4} direction="column">
-      <TableContainer maxW="100%">
+      <TableContainer maxW="100%" className="relative">
         {getNFTsQuery.isFetching && (
           <Spinner
             color="primary"

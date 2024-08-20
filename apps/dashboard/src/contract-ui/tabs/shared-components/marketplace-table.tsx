@@ -202,7 +202,7 @@ export const MarketplaceTable: React.FC<MarketplaceTableProps> = ({
         </Button>
       </ButtonGroup>
 
-      <TableContainer maxW="100%">
+      <TableContainer maxW="100%" className="relative">
         {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
           (listingsToShow === "valid" && getValidQueryResult.isFetching)) && (
           <Spinner
