@@ -1,9 +1,5 @@
 import { useIsMinter } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import {
-  type DropContract,
-  type NFTContract,
-  getErcs,
-} from "@thirdweb-dev/react/evm";
+import type { DropContract, NFTContract } from "@thirdweb-dev/react/evm";
 import { detectFeatures } from "components/contract-components/utils";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
@@ -132,7 +128,6 @@ export function useNFTDrawerTabs({
       (isERC1155 && balanceOfQuery?.data) ||
       (isERC721 && nft?.owner === address);
 
-    const { erc1155 } = getErcs(oldContract);
     let tabs: NFTDrawerTab[] = [];
     if (hasClaimConditions && isERC1155) {
       tabs = tabs.concat([
@@ -155,7 +150,7 @@ export function useNFTDrawerTabs({
         {
           title: "Transfer",
           isDisabled: !isOwner,
-          disabledText: erc1155
+          disabledText: isERC1155
             ? "You don't own any copy of this NFT"
             : "You don't own this NFT",
           children: (
@@ -168,7 +163,7 @@ export function useNFTDrawerTabs({
         },
       ]);
     }
-    if (erc1155) {
+    if (isERC1155) {
       tabs = tabs.concat([
         {
           title: "Airdrop",
@@ -176,8 +171,8 @@ export function useNFTDrawerTabs({
           disabledText: "You don't own any copy of this NFT",
           children: (
             <AirdropTab
-              contractAddress={erc1155.getAddress()}
-              chainId={erc1155.chainId}
+              contractAddress={contract.address}
+              chainId={contract.chain.id}
               tokenId={tokenId}
             />
           ),
@@ -200,7 +195,7 @@ export function useNFTDrawerTabs({
         },
       ]);
     }
-    if (isMintable && erc1155) {
+    if (isMintable && isERC1155) {
       tabs = tabs.concat([
         {
           title: "Mint",
@@ -208,8 +203,8 @@ export function useNFTDrawerTabs({
           disabledText: "You don't have minter permissions",
           children: (
             <MintSupplyTab
-              contractAddress={erc1155.getAddress()}
-              chainId={erc1155.chainId}
+              contractAddress={contract.address}
+              chainId={contract.chain.id}
               tokenId={tokenId}
             />
           ),
