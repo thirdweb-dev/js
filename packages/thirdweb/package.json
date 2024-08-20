@@ -309,7 +309,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
-    "@aws-sdk/credential-providers": "3.577.0",
+    "@aws-sdk/credential-providers": "3.632.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-clipboard/clipboard": "1.14.1",

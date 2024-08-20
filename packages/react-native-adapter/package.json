@@ -26,7 +26,7 @@
   "files": ["dist/*", "src/*"],
   "dependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
-    "@aws-sdk/credential-providers": "3.577.0",
+    "@aws-sdk/credential-providers": "3.632.0",
     "@walletconnect/react-native-compat": "2.13.2",
     "aws-amplify": "5.3.18"
   },
