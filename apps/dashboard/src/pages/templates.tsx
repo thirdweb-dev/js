@@ -236,7 +236,7 @@ export const templates: TemplateCardProps[] = [
     id: "expo-starter",
     title: "Expo Starter",
     homepage: "",
-    repo: "https://github.com/thirdweb-example/node-starter",
+    repo: "https://github.com/thirdweb-example/expo-starter",
     description:
       "Starter kit to build with Expo and thirdweb without additional initial configuration.",
     img: "/assets/templates/expo-starter.png",
