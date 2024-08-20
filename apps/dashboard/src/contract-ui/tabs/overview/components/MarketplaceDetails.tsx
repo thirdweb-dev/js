@@ -20,7 +20,7 @@ import {
   totalListings,
 } from "thirdweb/extensions/marketplace";
 import { useReadContract } from "thirdweb/react";
-import { max } from "thirdweb/utils";
+import { min } from "thirdweb/utils";
 import { Badge, Card, Heading, Text, TrackedLink } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
@@ -77,7 +77,7 @@ const DirectListingCards: React.FC<ListingCardsSectionProps> = ({
     count: 3n,
     start: Math.max(
       Number(
-        max((countQuery?.data || 3n) - 3n, BigInt(Number.MAX_SAFE_INTEGER)),
+        min((countQuery?.data || 3n) - 3n, BigInt(Number.MAX_SAFE_INTEGER)),
       ),
       0,
     ),
@@ -139,7 +139,7 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
     count: 3n,
     start: Math.max(
       Number(
-        max((countQuery?.data || 3n) - 3n, BigInt(Number.MAX_SAFE_INTEGER)),
+        min((countQuery?.data || 3n) - 3n, BigInt(Number.MAX_SAFE_INTEGER)),
       ),
       0,
     ),

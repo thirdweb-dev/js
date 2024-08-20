@@ -1,7 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import type { ThirdwebContract } from "thirdweb";
 import { Heading } from "tw-components";
-/* import { CreateListingButton } from "./components/list-button"; */
 import { CreateListingButton } from "../shared-components/list-button";
 import { DirectListingsTable } from "./components/table";
 
