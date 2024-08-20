@@ -64,7 +64,7 @@
     "eslint-plugin-tailwindcss": "^3.15.1",
     "next-sitemap": "^4.2.3",
     "postcss": "^8",
-    "tailwindcss": "^3.4.4",
+    "tailwindcss": "^3.4.10",
     "typescript": "5.5.4"
   }
 }
