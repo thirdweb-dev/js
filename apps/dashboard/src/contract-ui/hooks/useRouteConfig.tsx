@@ -306,7 +306,16 @@ export function useContractRouteConfig(
     {
       title: "Explorer",
       path: "explorer",
-      component: LazyContractExplorerPage,
+      component: () => (
+        <>
+          {contract && contractQuery.contract?.abi && (
+            <LazyContractExplorerPage
+              contract={contract}
+              abi={contractQuery.contract.abi}
+            />
+          )}
+        </>
+      ),
       isDefault: true,
     },
     {
