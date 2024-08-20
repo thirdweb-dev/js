@@ -91,7 +91,7 @@ export const PublishWithVersionPage: React.FC<PublishWithVersionPageProps> = ({
       <SelectContent>
         {availableVersions.map((v, idx) => {
           return (
-            <SelectItem value={v} key={v}>
+            <SelectItem value={v || "latest"} key={v}>
               {v}
               {idx === 0 && (
                 <span className="text-muted-foreground"> (latest) </span>
