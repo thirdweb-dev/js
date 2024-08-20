@@ -11,7 +11,8 @@ const nameValidation = z
 const domainsValidation = z.string().refine(
   (str) =>
     validStrList(str, (domain) => {
-      return domain.split(":")[0] === "localhost" || RE_DOMAIN.test(domain);
+      // This isn't the strictest validation, but users keep running into cases where the validation is TOO strict
+      return domain.includes(":") || RE_DOMAIN.test(domain);
     }),
   {
     message: "Some of the domains are invalid",
