@@ -6,9 +6,11 @@ import {
   useDelayedRevealLazyMint,
   useLazyMint,
 } from "@thirdweb-dev/react";
-import type { UploadProgressEvent } from "@thirdweb-dev/sdk";
 import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
-import { ProgressBox } from "core-ui/batch-upload/progress-box";
+import {
+  ProgressBox,
+  type UploadProgressEvent,
+} from "core-ui/batch-upload/progress-box";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
