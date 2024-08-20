@@ -148,20 +148,19 @@ function WalletManangerButton(props: {
           justifyContent: "space-between",
         }}
       >
-        <Container flex="row" gap="sm" center="y">
-          <WalletImage client={props.client} id={walletId} size={iconSize.xl} />
+        <Container flex="row" gap="md" center="y">
+          <WalletImage client={props.client} id={walletId} size={iconSize.lg} />
 
-          <div>
+          <Container flex="column" gap="4xs">
             <Text color="primaryText">{shortenAddress(address || "")}</Text>
-            <Spacer y="xxs" />
             {balanceQuery.data ? (
-              <Text size="sm" color="secondaryText">
+              <Text size="xs" color="secondaryText" weight={400}>
                 {formatTokenBalance(balanceQuery.data)}
               </Text>
             ) : (
               <Skeleton width="100px" height={fontSize.sm} />
             )}
-          </div>
+          </Container>
         </Container>
       </WalletButtonEl>
 

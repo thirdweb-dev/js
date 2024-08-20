@@ -93,7 +93,7 @@ export type OauthOption = {
 };
 
 export type Profile = {
-  type: AuthOption;
+  type: AuthOption | "wallet";
   details: {
     id?: string;
     email?: string;

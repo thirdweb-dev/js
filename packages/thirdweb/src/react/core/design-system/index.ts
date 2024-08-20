@@ -170,6 +170,7 @@ export const fontSize = {
 };
 
 export const spacing = {
+  "4xs": "2px",
   "3xs": "4px",
   xxs: "6px",
   xs: "8px",

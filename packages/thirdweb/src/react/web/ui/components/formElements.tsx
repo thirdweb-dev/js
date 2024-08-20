@@ -110,16 +110,16 @@ export const InputContainer = /* @__PURE__ */ StyledDiv(() => {
   return {
     display: "flex",
     borderRadius: radius.md,
-    boxShadow: `0 0 0px 1.5px ${theme.colors.borderColor}`,
+    boxShadow: `0 0 0px 1px ${theme.colors.borderColor}`,
     "&:focus-within": {
-      boxShadow: `0 0 0px 2px ${theme.colors.accentText}`,
+      boxShadow: `0 0 0px 1px ${theme.colors.accentText}`,
     },
     "input:focus": {
       boxShadow: "none",
     },
     // show error ring on container instead of input
     "&[data-error='true']": {
-      boxShadow: `0 0 0px 2px ${theme.colors.danger}`,
+      boxShadow: `0 0 0px 1px ${theme.colors.danger}`,
     },
   };
 });

@@ -19,6 +19,7 @@ import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
 import {
   CustomThemeProvider,
+  parseTheme,
   useCustomTheme,
 } from "../../../core/design-system/CustomThemeProvider.js";
 import {
@@ -51,15 +52,20 @@ import type {
   SupportedTokens,
 } from "../../../core/utils/defaultTokens.js";
 import { hasSmartAccount } from "../../../core/utils/isSmartWallet.js";
-import { useConnectedWalletDetails } from "../../../core/utils/wallet.js";
+import {
+  useConnectedWalletDetails,
+  useWalletInfo,
+} from "../../../core/utils/wallet.js";
 import { WalletUIStatesProvider } from "../../providers/wallet-ui-states-provider.js";
 import { ChainIcon } from "../components/ChainIcon.js";
 import { CopyIcon } from "../components/CopyIcon.js";
-import { Img } from "../components/Img.js";
+import { IconContainer } from "../components/IconContainer.js";
 import { Modal } from "../components/Modal.js";
 import { Skeleton } from "../components/Skeleton.js";
 import { Spacer } from "../components/Spacer.js";
 import { Spinner } from "../components/Spinner.js";
+import { ToolTip } from "../components/Tooltip.js";
+import { WalletImage } from "../components/WalletImage.js";
 import { Container, Line } from "../components/basic.js";
 import { Button, IconButton } from "../components/buttons.js";
 import { Link, Text } from "../components/text.js";
@@ -78,8 +84,6 @@ import { onModalUnmount } from "./constants.js";
 import { CoinsIcon } from "./icons/CoinsIcon.js";
 import { FundsIcon } from "./icons/FundsIcon.js";
 import { OutlineWalletIcon } from "./icons/OutlineWalletIcon.js";
-import { ShuffleIconLucide } from "./icons/ShuffleIconLucide.js";
-import { SmartWalletBadgeIcon } from "./icons/SmartAccountBadgeIcon.js";
 import { getConnectLocale } from "./locale/getConnectLocale.js";
 import type { ConnectLocale } from "./locale/types.js";
 import { LazyBuyScreen } from "./screens/Buy/LazyBuyScreen.js";
@@ -125,7 +129,6 @@ export const ConnectedWalletDetails: React.FC<{
   const setRootEl = useContext(SetRootElementContext);
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
-  const theme = useCustomTheme();
 
   const { ensAvatarQuery, addressOrENS, balanceQuery } =
     useConnectedWalletDetails(
@@ -191,36 +194,37 @@ export const ConnectedWalletDetails: React.FC<{
       data-test="connected-wallet-details"
       onClick={openModal}
     >
-      {ensAvatarQuery.data ? (
-        <Img
-          src={ensAvatarQuery.data}
-          width="50px"
-          height="50px"
-          style={{
-            width: 50,
-            height: 50,
-          }}
-          client={client}
-        />
-      ) : (
-        activeAccount && <Blobbie address={activeAccount.address} size={50} />
-      )}
+      <Container
+        style={{
+          borderRadius: "100%",
+          overflow: "hidden",
+          width: "35px",
+          height: "35px",
+        }}
+      >
+        {ensAvatarQuery.data ? (
+          <img
+            alt=""
+            src={ensAvatarQuery.data}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        ) : (
+          activeAccount && <Blobbie address={activeAccount.address} size={35} />
+        )}
+      </Container>
       <Container
         flex="column"
-        gap="3xs"
-        px="sm"
-        py="xs"
+        gap="4xs"
         style={{
-          border: `1px solid ${theme.colors.borderColor}`,
           textOverflow: "ellipsis",
-          minWidth: "115px",
-          height: "50px",
           whiteSpace: "nowrap",
           borderRadius: `0 ${radius.md} ${radius.md} 0`,
         }}
       >
         {/* Address */}
-
         {addressOrENS ? (
           <Text
             size="xs"
@@ -231,7 +235,7 @@ export const ConnectedWalletDetails: React.FC<{
             {addressOrENS}
           </Text>
         ) : (
-          <Skeleton height={fontSize.sm} width="80px" />
+          <Skeleton height={fontSize.xs} width="80px" />
         )}
 
         {/* Balance */}
@@ -239,9 +243,12 @@ export const ConnectedWalletDetails: React.FC<{
           <Text
             className={`${TW_CONNECTED_WALLET}__balance`}
             size="xs"
-            weight={500}
+            color="secondaryText"
+            weight={400}
           >
-            {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+            {Number.parseFloat(
+              Number(balanceQuery.data.displayValue).toFixed(3),
+            )}{" "}
             {balanceQuery.data.symbol}
           </Text>
         ) : (
@@ -282,6 +289,7 @@ function DetailsModal(props: {
       activeAccount,
       props.displayBalanceToken,
     );
+  const theme = parseTheme(props.theme);
 
   const activeWallet = useActiveWallet();
   const chainIconQuery = useChainIconUrl(walletChain);
@@ -340,8 +348,18 @@ function DetailsModal(props: {
       {chainNameQuery.isLoading ? (
         <Skeleton height={"16px"} width={"150px"} />
       ) : (
-        <Text color="primaryText" multiline>
+        <Text color="primaryText" size="md" multiline>
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
+          <Text color="secondaryText" size="xs">
+            {balanceQuery.data ? (
+              Number.parseFloat(
+                Number(balanceQuery.data.displayValue).toFixed(3),
+              )
+            ) : (
+              <Skeleton height="1em" width="100px" />
+            )}{" "}
+            {balanceQuery.data?.symbol}
+          </Text>
         </Text>
       )}
 
@@ -358,114 +376,103 @@ function DetailsModal(props: {
 
   let content = (
     <div>
-      <Spacer y="xl" />
-
-      <IconButton
-        style={{
-          position: "absolute",
-          top: spacing.lg,
-          left: spacing.lg,
-          transform: "translateX(-6px)",
-        }}
-        onClick={() => {
-          setScreen("wallet-manager");
-        }}
-      >
-        <div
-          style={{
-            width: `${iconSize.md}px`,
-            height: `${iconSize.md}px`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <ShuffleIconLucide size="20" />
-        </div>
-      </IconButton>
-
-      <Container px="lg" flex="column" center="x">
-        <Container
-          style={{
-            position: "relative",
-            height: `${iconSize.xxl}px`,
-            width: `${iconSize.xxl}px`,
-            overflow: "visible",
-          }}
-        >
-          {ensAvatarQuery.data ? (
-            <Img
-              src={ensAvatarQuery.data}
-              width={iconSize.xxl}
-              height={iconSize.xxl}
-              style={{
-                borderRadius: radius.md,
-              }}
-              client={client}
-            />
-          ) : (
-            activeAccount && (
-              <Container
-                style={{ borderRadius: radius.md, overflow: "hidden" }}
-              >
-                <Blobbie
-                  address={activeAccount.address}
-                  size={Number(iconSize.xxl)}
-                />
-              </Container>
-            )
-          )}
-        </Container>
-
-        <Spacer y="md" />
-
-        <ConnectedToSmartWallet client={props.client} connectLocale={locale} />
-
-        {(activeWallet?.id === "embedded" || activeWallet?.id === "inApp") && (
-          <InAppWalletUserInfo client={props.client} />
-        )}
-
-        {/* Address */}
-        <div
-          style={{
-            display: "flex",
-            gap: spacing.xxs,
-            alignItems: "center",
-            transform: "translateX(10px)",
-          }}
-          data-test="connected-wallet-address"
-          data-address={activeAccount?.address}
-        >
-          <Text color="primaryText" weight={500} size="md">
-            {addressOrENS}
-          </Text>
-          <IconButton
+      <Spacer y="xs" />
+      <Container p="lg" gap="sm" flex="row" center="y">
+        <ToolTip tip="Switch wallet">
+          <div
             style={{
-              padding: "3px",
+              cursor: "pointer",
             }}
-            data-test="copy-address"
+            onKeyDown={(e) => {
+              if (e.key === "w") {
+                setScreen("wallet-manager");
+              }
+            }}
+            onClick={() => {
+              setScreen("wallet-manager");
+            }}
           >
-            <CopyIcon
-              text={activeAccount?.address || ""}
-              tip={locale.copyAddress}
-              side="top"
-            />
-          </IconButton>
-        </div>
+            <Container
+              style={{
+                position: "relative",
+                height: `${iconSize.xl}px`,
+                width: `${iconSize.xl}px`,
+              }}
+            >
+              <Container
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "100%",
+                  overflow: "hidden",
+                }}
+              >
+                {ensAvatarQuery.data ? (
+                  <img
+                    src={ensAvatarQuery.data}
+                    style={{
+                      width: iconSize.xxl,
+                      height: iconSize.xxl,
+                    }}
+                    alt=""
+                  />
+                ) : (
+                  activeAccount && (
+                    <Blobbie
+                      address={activeAccount.address}
+                      size={Number(iconSize.xxl)}
+                    />
+                  )
+                )}
+              </Container>
+              <Container
+                style={{
+                  position: "absolute",
+                  bottom: -2,
+                  right: -2,
+                }}
+              >
+                <IconContainer
+                  style={{
+                    background: theme.colors.modalBg,
+                  }}
+                  padding="4px"
+                >
+                  {activeWallet && (
+                    <WalletImage
+                      style={{ borderRadius: 0 }}
+                      id={activeWallet.id}
+                      client={client}
+                      size="12"
+                    />
+                  )}
+                </IconContainer>
+              </Container>
+            </Container>
+          </div>
+        </ToolTip>
 
-        <Spacer y="xxs" />
-
-        {/* Balance */}
-        <Text weight={500} size="sm">
-          {balanceQuery.data ? (
-            Number(balanceQuery.data.displayValue).toFixed(3)
-          ) : (
-            <Skeleton height="1em" width="100px" />
-          )}{" "}
-          {balanceQuery.data?.symbol}{" "}
-        </Text>
+        <Container flex="column" gap="3xs">
+          <div
+            style={{
+              display: "flex",
+              gap: spacing.xxs,
+              alignItems: "center",
+            }}
+          >
+            <Text color="primaryText" weight={500} size="md">
+              {addressOrENS}
+            </Text>
+            <IconButton>
+              <CopyIcon
+                text={activeAccount?.address || ""}
+                tip={locale.copyAddress}
+              />
+            </IconButton>
+          </div>
+          <InAppWalletUserInfo client={client} locale={locale} />
+        </Container>
       </Container>
-      <Spacer y="lg" />
       <Container px="lg">
         {/* Send, Receive, Swap */}
         <Container
@@ -911,10 +918,13 @@ const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {
     borderRadius: radius.md,
     cursor: "pointer",
     display: "inline-flex",
+    gap: spacing.xs,
+    padding: spacing.xs,
     alignItems: "center",
     minWidth: "165px",
     height: "50px",
     boxSizing: "border-box",
+    border: `1px solid ${theme.colors.borderColor}`,
     WebkitTapHighlightColor: "transparent",
     lineHeight: "normal",
     animation: `${fadeInAnimation} 300ms ease`,
@@ -963,20 +973,8 @@ function ConnectedToSmartWallet(props: {
   }, [activeAccount, chain, client, isSmartWallet]);
 
   const content = (
-    <Container
-      flex="row"
-      bg="secondaryButtonBg"
-      gap="xxs"
-      style={{
-        borderRadius: radius.md,
-        padding: `${spacing.xxs} ${spacing.sm} ${spacing.xxs} ${spacing.xs}`,
-      }}
-      center="y"
-    >
-      <Container flex="row" color="accentText" center="both">
-        <SmartWalletBadgeIcon size={iconSize.xs} />
-      </Container>
-      <Text size="xs" color="secondaryButtonText">
+    <Container flex="row" gap="3xs" center="y">
+      <Text size="xs" weight={400} color="secondaryText">
         {locale.connectedToSmartWallet}
       </Text>
     </Container>
@@ -998,8 +996,6 @@ function ConnectedToSmartWallet(props: {
         ) : (
           <Text size="sm"> {content}</Text>
         )}
-
-        <Spacer y="xs" />
       </>
     );
   }
@@ -1007,9 +1003,15 @@ function ConnectedToSmartWallet(props: {
   return null;
 }
 
-function InAppWalletUserInfo(props: { client: ThirdwebClient }) {
-  const { client } = props;
+function InAppWalletUserInfo(props: {
+  client: ThirdwebClient;
+  locale: ConnectLocale;
+}) {
+  const { client, locale } = props;
   const account = useActiveAccount();
+  const activeWallet = useActiveWallet();
+  const { data: walletInfo } = useWalletInfo(activeWallet?.id);
+  const isSmartWallet = hasSmartAccount(activeWallet);
 
   const userInfoQuery = useQuery({
     queryKey: ["in-app-wallet-user", client, account?.address],
@@ -1031,21 +1033,19 @@ function InAppWalletUserInfo(props: { client: ThirdwebClient }) {
     },
   });
 
-  if (userInfoQuery.data) {
+  if (isSmartWallet) {
+    return <ConnectedToSmartWallet client={client} connectLocale={locale} />;
+  }
+
+  if (userInfoQuery.data || walletInfo) {
     return (
-      <Container
-        flex="row"
-        center="x"
-        style={{
-          paddingBottom: spacing.xs,
-        }}
-      >
-        <Text size="sm">{userInfoQuery.data}</Text>
-      </Container>
+      <Text size="xs" weight={400}>
+        {userInfoQuery.data || walletInfo?.name}
+      </Text>
     );
   }
 
-  return null;
+  return <Skeleton width="50px" height="10px" />;
 }
 
 /**
