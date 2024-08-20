@@ -300,7 +300,9 @@ export function useContractRouteConfig(
     {
       title: "Code Snippets",
       path: "code",
-      component: LazyContractCodePage,
+      component: () => (
+        <>{contract && <LazyContractCodePage contract={contract} />}</>
+      ),
       isDefault: true,
     },
     {
