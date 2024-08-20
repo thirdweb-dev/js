@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   Box,
   Divider,
@@ -29,8 +30,10 @@ import {
 import { useContractEnabledExtensions } from "components/contract-components/hooks";
 import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { useRouter } from "next/router";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import { getContract } from "thirdweb";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import {
   COMMANDS,
@@ -65,6 +68,16 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
     }
     return undefined;
   }, [enabledExtensions]);
+
+  const chain = useV5DashboardChain(contract?.chainId);
+  const contractV5 =
+    chain && contract
+      ? getContract({
+          address: contract.getAddress(),
+          chain,
+          client: thirdwebClient,
+        })
+      : undefined;
 
   if (!fn) {
     return null;
@@ -164,10 +177,10 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
         </>
       ) : null}
 
-      {contract && isFunction && (
+      {contractV5 && isFunction && (
         <InteractiveAbiFunction
           key={JSON.stringify(fn)}
-          contract={contract}
+          contract={contractV5}
           abiFunction={fn}
         />
       )}
