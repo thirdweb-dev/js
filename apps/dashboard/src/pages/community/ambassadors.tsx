@@ -6,7 +6,7 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import { PageId } from "page-id";
-import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
+import { Heading, LinkButton } from "tw-components";
 import { MaskedAvatar } from "tw-components/masked-avatar";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -15,77 +15,62 @@ const TRACKING_CATEGORY = "ambassadors_page";
 const ambassadors = [
   {
     name: "Bankk",
-    twitter: "bankkroll_eth",
     profileImage: "/assets/ambassadors/bank.jpg",
   },
   {
     name: "Danny Roberts",
-    twitter: "danny_roberts",
     profileImage: "/assets/ambassadors/danny.jpeg",
   },
   {
     name: "Frank Ramos",
-    twitter: "frankramosdev",
     profileImage: "/assets/ambassadors/frankramos.jpeg",
   },
   {
     name: "Creative Owls",
-    twitter: "MyCreativeOwls",
     profileImage: "/assets/ambassadors/myCreativeOwl.jpg",
   },
   {
     name: "Matt Wong",
-    twitter: "mattwong_ca",
     profileImage: "/assets/ambassadors/matt.png",
   },
   {
     name: "Myk",
-    twitter: "mykcryptodev",
     profileImage: "/assets/ambassadors/myk.png",
   },
   {
     name: "Naman Garg",
-    twitter: "namn_grg",
     profileImage: "/assets/ambassadors/naman.jpg",
   },
   {
     name: "Paula Signo",
-    twitter: "codewithpau",
     profileImage: "/assets/ambassadors/paula.png",
   },
   {
     name: "Gi",
-    twitter: "Gi_Chacon",
     profileImage: "/assets/ambassadors/gi.jpg",
   },
   {
     name: "Rexan",
-    twitter: "rexan_wong",
     profileImage: "/assets/ambassadors/rexan.jpg",
   },
   {
     name: "Tanay Patel",
-    twitter: "tonydoteth",
     profileImage: "/assets/ambassadors/tanay.png",
   },
   {
     name: "Samu ​​Sarmiento",
-    twitter: "SamuSarmiento_",
     profileImage: "/assets/ambassadors/samu.jpeg",
   },
   {
     name: "Takaji",
-    twitter: "taka_miraki",
     profileImage: "/assets/ambassadors/takaji.jpg",
   },
   {
     name: "Alfredo",
-    twitter: "brolag",
     profileImage: "/assets/ambassadors/brolag.jpg",
   },
   {
     name: "Yuki",
-    twitter: "stand_english",
     profileImage: "/assets/ambassadors/yuki.png",
   },
 ].sort((a, b) => a.name.localeCompare(b.name));
@@ -616,30 +601,7 @@ const Ambassadors: ThirdwebNextPage = () => {
                     alt=""
                     boxSize={20}
                   />
-                  <Flex flexDir="column" gap={1}>
-                    <Heading size="title.sm">{ambassador.name}</Heading>
-                    {ambassador.twitter ? (
-                      <TrackedLink
-                        href={`https://twitter.com/${ambassador.twitter}`}
-                        isExternal
-                        category={TRACKING_CATEGORY}
-                        label={ambassador.name}
-                      >
-                        <Text size="label.md" color="gray.500">
-                          @{ambassador.twitter}
-                        </Text>
-                      </TrackedLink>
-                    ) : (
-                      <Text
-                        size="label.md"
-                        color="gray.700"
-                        fontWeight={400}
-                        fontStyle="italic"
-                      >
-                        no twitter
-                      </Text>
-                    )}
-                  </Flex>
+                  <Heading size="title.sm">{ambassador.name}</Heading>
                 </Flex>
               ))}
             </Flex>
