@@ -1,7 +1,7 @@
+import { thirdwebClient } from "@/constants/client";
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { SupplyCards } from "contract-ui/tabs/nfts/components/supply-cards";
 import { useTabHref } from "contract-ui/utils";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { getContract } from "thirdweb";

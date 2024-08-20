@@ -1,6 +1,6 @@
+import { thirdwebClient } from "@/constants/client";
 import { useQuery } from "@tanstack/react-query";
 import type { Abi } from "abitype";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { type Address, getContract } from "thirdweb";
 import { resolveContractAbi } from "thirdweb/contract";

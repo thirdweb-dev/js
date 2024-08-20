@@ -1,3 +1,4 @@
+import { isProd } from "@/constants/env";
 import {
   type EVMContractInfo,
   EVMContractInfoProvider,
@@ -20,7 +21,6 @@ import { AppShell, type AppShellProps } from "components/layout/app-shell";
 import { Onboarding as OnboardingModal } from "components/onboarding";
 import { OpCreditsGrantedModalWrapper } from "components/onboarding/OpCreditsGrantedModalWrapper";
 import { PosthogIdentifier } from "components/wallets/PosthogIdentifier";
-import { isProd } from "constants/rpc";
 import { AllChainsProvider } from "contexts/all-chains";
 import { ChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";

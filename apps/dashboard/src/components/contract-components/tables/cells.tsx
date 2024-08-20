@@ -1,8 +1,8 @@
+import { thirdwebClient } from "@/constants/client";
 import { useDashboardContractMetadata } from "@3rdweb-sdk/react/hooks/useDashboardContractMetadata";
 import { Skeleton } from "@chakra-ui/react";
 import type { BasicContract } from "contract-ui/types/types";
 import { useChainSlug } from "hooks/chains/chainSlug";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { memo } from "react";
 import { getContract } from "thirdweb";

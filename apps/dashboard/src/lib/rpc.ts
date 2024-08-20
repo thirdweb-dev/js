@@ -1,5 +1,5 @@
 import { thirdwebClient } from "@/constants/client";
-import { isProd } from "constants/rpc";
+import { isProd } from "@/constants/env";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { type ChainMetadata, getRpcUrlForChain } from "thirdweb/chains";
 import { hostnameEndsWith } from "../utils/url";

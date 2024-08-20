@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
@@ -6,7 +7,6 @@ import {
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";

@@ -1,8 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { IPFS_GATEWAY_URL } from "@/constants/env";
-import { DASHBOARD_THIRDWEB_SECRET_KEY } from "constants/rpc";
-import { ZERO_ADDRESS, createThirdwebClient, toTokens } from "thirdweb";
+import { thirdwebClient } from "@/constants/client";
+import { ZERO_ADDRESS, toTokens } from "thirdweb";
 import {
   eth_getBlockByHash,
   eth_getTransactionByHash,
@@ -16,14 +15,6 @@ import { getChain } from "../../../utils";
 export default async function Page(props: {
   params: { chain_id: string; txHash: `0x${string}` };
 }) {
-  const thirdwebClient = createThirdwebClient({
-    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
-    config: {
-      storage: {
-        gatewayUrl: IPFS_GATEWAY_URL,
-      },
-    },
-  });
   const chain = await getChain(props.params.chain_id);
 
   const rpcRequest = getRpcClient({

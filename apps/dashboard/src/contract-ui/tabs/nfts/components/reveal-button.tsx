@@ -1,7 +1,7 @@
+import { thirdwebClient } from "@/constants/client";
 import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { useBatchesToReveal, type useContract } from "@thirdweb-dev/react";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { FiEye } from "react-icons/fi";
 import { getContract } from "thirdweb";

@@ -1,4 +1,4 @@
-import { thirdwebClient } from "lib/thirdweb-client";
+import { thirdwebClient } from "@/constants/client";
 import { type ThirdwebContract, getContract, toTokens } from "thirdweb";
 import {
   balanceOf,

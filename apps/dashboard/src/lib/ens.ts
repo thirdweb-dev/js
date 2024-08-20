@@ -1,7 +1,7 @@
+import { thirdwebClient } from "@/constants/client";
 import { isAddress } from "thirdweb";
 import { resolveAddress, resolveName } from "thirdweb/extensions/ens";
 import invariant from "tiny-invariant";
-import { thirdwebClient } from "./thirdweb-client";
 
 export interface ENSResolveResult {
   ensName: string | null;

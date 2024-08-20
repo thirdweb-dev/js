@@ -1,4 +1,4 @@
-import { isProd } from "constants/rpc";
+import { isProd } from "@/constants/env";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { createContext, useCallback, useEffect, useState } from "react";
 import type { ChainMetadata } from "thirdweb/chains";

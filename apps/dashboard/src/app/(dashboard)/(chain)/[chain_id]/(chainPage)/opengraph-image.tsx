@@ -1,10 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-  DASHBOARD_THIRDWEB_SECRET_KEY,
-  IPFS_GATEWAY_URL,
-} from "@/constants/env";
+import { thirdwebClient } from "@/constants/client";
 import { ImageResponse } from "next/og";
-import { createThirdwebClient } from "thirdweb";
 import { download } from "thirdweb/storage";
 import { fetchChain } from "utils/fetchChain";
 
@@ -66,15 +62,6 @@ const TWLogo: React.FC = () => (
 export default async function Image({
   params,
 }: { params: { chain_id: string } }) {
-  const thirdwebClient = createThirdwebClient({
-    secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
-    config: {
-      storage: {
-        gatewayUrl: IPFS_GATEWAY_URL,
-      },
-    },
-  });
-
   const chain = await fetchChain(params.chain_id);
   if (!chain) {
     return new Response("Chain not found", { status: 400 });

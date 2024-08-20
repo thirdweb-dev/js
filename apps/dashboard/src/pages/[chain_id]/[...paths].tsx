@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   type EVMContractInfo,
   useEVMContractInfo,
@@ -23,7 +24,6 @@ import {
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { thirdwebClient } from "lib/thirdweb-client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";

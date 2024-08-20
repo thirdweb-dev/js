@@ -1,4 +1,4 @@
-import { thirdwebClient } from "lib/thirdweb-client";
+import { thirdwebClient } from "@/constants/client";
 import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
 

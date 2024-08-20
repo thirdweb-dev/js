@@ -3,9 +3,9 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToolTipLabel } from "@/components/ui/tooltip";
+import { thirdwebClient } from "@/constants/client";
+import { isProd } from "@/constants/env";
 import { useQuery } from "@tanstack/react-query";
-import { isProd } from "constants/rpc";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { CircleCheck, XIcon } from "lucide-react";
 import { useState } from "react";
 import { hostnameEndsWith } from "utils/url";

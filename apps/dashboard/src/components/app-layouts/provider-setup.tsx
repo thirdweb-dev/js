@@ -2,15 +2,15 @@
 
 import { thirdwebClient } from "@/constants/client";
 import {
+  DASHBOARD_THIRDWEB_CLIENT_ID,
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+} from "@/constants/env";
+import {
   type EVMContractInfo,
   useEVMContractInfo,
 } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider } from "@thirdweb-dev/react";
-import {
-  DASHBOARD_THIRDWEB_CLIENT_ID,
-  DASHBOARD_THIRDWEB_SECRET_KEY,
-} from "constants/rpc";
 import type { Signer } from "ethers";
 import { useSupportedChains } from "hooks/chains/configureChains";
 import { useNativeColorMode } from "hooks/useNativeColorMode";

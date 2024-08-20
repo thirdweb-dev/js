@@ -10,3 +10,9 @@ export const IPFS_GATEWAY_URL =
 
 export const THIRDWEB_ENGINE_FAUCET_WALLET =
   process.env.NEXT_PUBLIC_THIRDWEB_ENGINE_FAUCET_WALLET || "";
+
+export const isProd =
+  (process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV) ===
+  "production";
+
+export const PROD_OR_DEV_URL = isProd ? "thirdweb.com" : "thirdweb-dev.com";

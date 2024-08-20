@@ -1,3 +1,4 @@
+import { DASHBOARD_THIRDWEB_CLIENT_ID } from "@/constants/env";
 import {
   ThirdwebProvider,
   type WalletConfig,
@@ -5,7 +6,6 @@ import {
   es,
   ja,
 } from "@thirdweb-dev/react";
-import { DASHBOARD_THIRDWEB_CLIENT_ID } from "constants/rpc";
 import { THIRDWEB_API_HOST, THIRDWEB_DOMAIN } from "constants/urls";
 import { StorageSingleton } from "lib/sdk";
 

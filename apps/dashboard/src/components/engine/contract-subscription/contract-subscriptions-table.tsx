@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   type EngineContractSubscription,
   useEngineRemoveContractSubscription,
@@ -26,7 +27,6 @@ import { format } from "date-fns";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useState } from "react";
 import { FiInfo, FiTrash } from "react-icons/fi";
