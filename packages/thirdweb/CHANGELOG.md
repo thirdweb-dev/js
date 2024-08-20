@@ -1,5 +1,31 @@
 # thirdweb
 
+## 5.48.0
+
+### Minor Changes
+
+- [#4191](https://github.com/thirdweb-dev/js/pull/4191) [`42cdc3a`](https://github.com/thirdweb-dev/js/commit/42cdc3a2bcfa44de46c48fa2e5c8b2a279eac8bb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates connect modal styles
+
+- [#4124](https://github.com/thirdweb-dev/js/pull/4124) [`246701d`](https://github.com/thirdweb-dev/js/commit/246701d615041a1dd1b8aca0a7aab62f261ac1ca) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to link a wallet in the Connect UI
+
+### Patch Changes
+
+- [#4128](https://github.com/thirdweb-dev/js/pull/4128) [`ef9cc55`](https://github.com/thirdweb-dev/js/commit/ef9cc55b69e77e310e600a3403ac0b2bae4b901e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose max() & min() util methods for bigints
+
+- [#4172](https://github.com/thirdweb-dev/js/pull/4172) [`cb591aa`](https://github.com/thirdweb-dev/js/commit/cb591aa6afffa57de31e5bdce91ad9964856e81c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Only show pay modal if active wallet does not have enough funds for a paid transaction
+
+- [#4177](https://github.com/thirdweb-dev/js/pull/4177) [`bd46699`](https://github.com/thirdweb-dev/js/commit/bd4669984dab9973ae1ecc6c7351a5040461e595) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expsose GaslessConfigs type
+
+  ```ts
+  const gaslessOptions: GaslessOptions = {
+    provider: "engine",
+    relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+    relayerForwarderAddress: "0x...",
+  };
+  ```
+
+- [#4211](https://github.com/thirdweb-dev/js/pull/4211) [`4abf7a7`](https://github.com/thirdweb-dev/js/commit/4abf7a7f25182af964f0130c3ff1db574fd5ebc5) Thanks [@MananTank](https://github.com/MananTank)! - Fix Conditionally rendered hook error when Buying funds using fiat
+
 ## 5.47.1
 
 ### Patch Changes
