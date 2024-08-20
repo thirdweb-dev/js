@@ -1,7 +1,9 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   type AddContractSubscriptionInput,
   useEngineAddContractSubscription,
 } from "@3rdweb-sdk/react/hooks/useEngine";
+import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {
   CheckboxGroup,
   Collapse,
@@ -25,11 +27,12 @@ import {
 } from "@chakra-ui/react";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useContractAbiItems } from "hooks/useContractAbiItems";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { getContract } from "thirdweb";
 import {
   Button,
   Card,
@@ -421,32 +424,66 @@ const FilterSelector = ({
   filter: string[];
   setFilter: (value: string[]) => void;
 }) => {
-  const abiItemsQuery = useContractAbiItems(
-    form.getValues("chainId"),
-    form.getValues("contractAddress") as `0x${string}`,
-  );
+  const chain = useV5DashboardChain(form.getValues("chainId"));
+  const contract = chain
+    ? getContract({
+        address: form.getValues("contractAddress"),
+        chain,
+        client: thirdwebClient,
+      })
+    : undefined;
+
+  const abiQuery = useResolveContractAbi(contract);
+
+  const abiItems = useMemo(() => {
+    if (!abiQuery.data) {
+      return {
+        readFunctions: [],
+        writeFunctions: [],
+        events: [],
+      };
+    }
+    const readFunctions: string[] = [];
+    const writeFunctions: string[] = [];
+    const events: string[] = [];
+    for (const abiItem of abiQuery.data) {
+      if (abiItem.type === "function") {
+        if (
+          abiItem.stateMutability === "pure" ||
+          abiItem.stateMutability === "view"
+        ) {
+          readFunctions.push(abiItem.name);
+        } else {
+          writeFunctions.push(abiItem.name);
+        }
+      } else if (abiItem.type === "event") {
+        events.push(abiItem.name);
+      }
+    }
+    return {
+      readFunctions: [...new Set(readFunctions)].sort(),
+      writeFunctions: [...new Set(writeFunctions)].sort(),
+      events: [...new Set(events)].sort(),
+    };
+  }, [abiQuery.data]);
 
   const filterNames = useMemo(() => {
     switch (abiItemType) {
       case "function": {
-        return abiItemsQuery.data.writeFunctions;
+        return abiItems.writeFunctions;
       }
       case "event": {
-        return abiItemsQuery.data.events;
+        return abiItems.events;
       }
       default: {
         return [];
       }
     }
-  }, [
-    abiItemType,
-    abiItemsQuery.data.events,
-    abiItemsQuery.data.writeFunctions,
-  ]);
+  }, [abiItemType, abiItems.events, abiItems.writeFunctions]);
 
   return (
     <Card>
-      {abiItemsQuery.isLoading ? (
+      {abiQuery.isLoading ? (
         <Spinner size="sm" />
       ) : filterNames.length === 0 ? (
         <Text>

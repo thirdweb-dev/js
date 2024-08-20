@@ -482,7 +482,9 @@ export function useContractRouteConfig(
     {
       title: "Sources",
       path: "sources",
-      component: LazyContractSourcesPage,
+      component: () => (
+        <>{contract && <LazyContractSourcesPage contract={contract} />}</>
+      ),
       isDefault: true,
     },
   ];
