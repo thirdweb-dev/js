@@ -34,6 +34,7 @@ import {
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import { Img } from "../../ui/components/Img.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
@@ -90,6 +91,13 @@ export const ConnectWalletSocialOptions = (
   ) => void;
 
   const themeObj = useCustomTheme();
+  const optionalImageMetadata = useMemo(
+    () =>
+      props.wallet.id === "inApp"
+        ? props.wallet.getConfig()?.metadata?.image
+        : undefined,
+    [props.wallet],
+  );
 
   const loginMethodsLabel = {
     google: locale.signInWithGoogle,
@@ -261,6 +269,19 @@ export const ConnectWalletSocialOptions = (
         position: "relative",
       }}
     >
+      {optionalImageMetadata && (
+        <>
+          <Img
+            client={props.client}
+            src={optionalImageMetadata.src}
+            alt={optionalImageMetadata.alt}
+            width={`${optionalImageMetadata.width}`}
+            height={`${optionalImageMetadata.height}`}
+            style={{ margin: "auto" }}
+          />
+          <Spacer y="xxs" />
+        </>
+      )}
       {/* Social Login */}
       {hasSocialLogins && (
         <Container
