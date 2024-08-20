@@ -23,7 +23,7 @@ export const COMMUNITY: FooterLinkInfo[] = [
   {
     name: "Report Abuse",
     label: "abuse",
-    link: "/abuse",
+    link: "mailto:abuse@thirdweb.com",
   },
 ];
 
