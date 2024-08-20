@@ -238,7 +238,7 @@ export const ExtraPublishMetadataSchemaInput = /* @__PURE__ */ (() =>
             message: `'${out}' is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
           };
         },
-      ),
+      ).optional(),
       displayName: z.string().optional(),
       description: z.string().optional(),
       externalLinks: z
