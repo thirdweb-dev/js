@@ -15,10 +15,8 @@ import {
 } from "@chakra-ui/react";
 import {
   type DropContract,
-  type TokenContract,
   useClaimConditions,
   useSetClaimConditions,
-  useTokenDecimals,
 } from "@thirdweb-dev/react";
 import {
   type ClaimConditionInput,
@@ -44,7 +42,8 @@ import {
   type ThirdwebContract,
   ZERO_ADDRESS,
 } from "thirdweb";
-import { useActiveAccount } from "thirdweb/react";
+import { decimals } from "thirdweb/extensions/erc20";
+import { useActiveAccount, useReadContract } from "thirdweb/react";
 import invariant from "tiny-invariant";
 import { Button, Heading, MenuItem, Text } from "tw-components";
 import * as z from "zod";
@@ -233,9 +232,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   const [openSnapshotIndex, setOpenSnapshotIndex] = useState(-1);
   const setClaimConditionsQuery = useSetClaimConditions(contract, tokenId);
 
-  const tokenDecimals = useTokenDecimals(
-    isErc20 ? (contract as TokenContract) : undefined,
-  );
+  const tokenDecimals = useReadContract(decimals, { contract: contractV5 });
   const tokenDecimalsData = tokenDecimals.data ?? 0;
   const saveClaimPhaseNotification = useTxNotifications(
     "Saved claim phases",
