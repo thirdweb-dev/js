@@ -24,10 +24,6 @@ var smartWallet = await SmartWallet.Create(personalWallet, chainId);
 
 <Details summary="Parameters">
 
-### client (required)
-
-An instance of `ThirdwebClient`. Facilitates communication with the blockchain.
-
 ### personalWallet (required)
 
 An instance of IThirdwebWallet (e.g., `PrivateKeyWallet` or `InAppWallet`). Represents the personal wallet connected to the SmartWallet.
@@ -60,6 +56,10 @@ URL of the bundler server used for processing User Operations.
 
 URL of the paymaster service that sponsors gas for User Operations.
 
+### tokenPaymaster (optional)
+
+The `TokenPaymaster` (enum) representing the ERC20 token you want users to pay gas fees with.
+
 </Details>
 
 <Details summary="Return Value">
@@ -77,20 +77,12 @@ Here's how you can create a SmartWallet for a user, assuming you already have a 
 var client = ThirdwebClient.Create(clientId: "yourClientId", bundleId: "yourBundleId");
 var personalWallet = await PrivateKeyWallet.Create(client, "yourPrivateKeyHex");
 
-BigInteger chainId = 1; // Ethereum mainnet
-string factoryAddress = "0xFactoryContractAddress";
+BigInteger chainId = 137; // Polygon mainnet
 bool gasless = true; // Enable gasless transactions
 
 var smartWallet = await SmartWallet.Create(
-    client,
     personalWallet,
-    factoryAddress,
     gasless,
-    chainId,
-    null, // Optional: accountAddressOverride
-    "0xEntryPointAddress", // Optional: entryPoint
-    null, // Optional: bundlerUrl
-    null // Optional: paymasterUrl
 );
 
 Console.WriteLine($"SmartWallet address: {await smartWallet.GetAddress()}");
@@ -100,5 +92,3 @@ var message = "Hello, Thirdweb!";
 var signature = await wallet.PersonalSign(message);
 Console.WriteLine($"Signature: {signature}");
 ```
-
-**Note:** This documentation covers the setup of a `SmartWallet` for advanced blockchain interactions. The optional gasless feature, powered by account abstraction, can significantly enhance the user experience by abstracting away the complexities of gas fees.
