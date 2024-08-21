@@ -152,11 +152,13 @@ export async function authenticate(
         client: ThirdwebClient;
         ecosystem?: Ecosystem;
         redirect: boolean;
+        redirectUrl?: string;
+        redirectExternally?: boolean;
       }
   >,
 ) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
   if (args.redirect && connector.authenticateWithRedirect)
-    return connector.authenticateWithRedirect(args.strategy);
+    return connector.authenticateWithRedirect(args.strategy, args?.redirectUrl, args?.redirectExternally);
   return connector.connect(args);
 }

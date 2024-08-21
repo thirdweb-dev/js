@@ -83,6 +83,11 @@ export type Wallet<TWalletId extends WalletId = WalletId> = {
    */
   autoConnect(options: WalletAutoConnectionOption<TWalletId>): Promise<Account>;
   /**
+   * Prompt the user to connect the wallet outside of the app.
+   * @param options - Options to connect the wallet. Depending on the wallet id, The options can be different. MUST include the auth params redirectExternal and redirectUrl
+   */
+  connectExternal?(options: WalletConnectionOption<TWalletId>): Promise<void>;
+  /**
    * Prompt the user to connect the wallet.
    * @param options - Options to connect the wallet. Depending on the wallet id, The options can be different.
    */

@@ -15,7 +15,7 @@ export interface InAppConnector {
   getAccount(): Promise<Account>;
   preAuthenticate(args: PreAuthArgsType): Promise<void>;
   // Authenticate generates an auth token, when redirecting it returns void as the user is redirected to a new page and the token is stored in the callback url
-  authenticateWithRedirect?(strategy: SocialAuthOption): void;
+  authenticateWithRedirect?(strategy: SocialAuthOption, redirectUrl?: string, redirectExternally?: boolean): void;
   // Login takes an auth token and connects a user with it
   loginWithAuthToken?(
     authResult: AuthStoredTokenWithCookieReturnType,

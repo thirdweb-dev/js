@@ -150,11 +150,13 @@ export class InAppWebConnector implements InAppConnector {
     });
   }
 
-  authenticateWithRedirect(strategy: SocialAuthOption): void {
+  authenticateWithRedirect(strategy: SocialAuthOption, redirectUrl?: string, redirectExternally?: boolean): void {
     loginWithOauthRedirect({
       authOption: strategy,
       client: this.wallet.client,
       ecosystem: this.wallet.ecosystem,
+      redirectUrl,
+      redirectExternally,
     });
   }
 

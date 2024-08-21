@@ -116,12 +116,35 @@ export function createInAppWallet(args: {
       // return only the account
       return account;
     },
+    connectExternal: async (options) => {
+      const { connectInAppWallet } = await import("./index.js");
+      const connector = await getOrCreateInAppWalletConnector(
+        options.client,
+        connectorFactory,
+      );
+
+      if (createOptions?.auth?.redirectExternally !== true) {
+        throw new Error('Invalid function, please use connect instead');
+      }
+
+      await connectInAppWallet(
+        options,
+        createOptions,
+        connector,
+      );
+      // set the states
+      client = options.client;
+    },
     connect: async (options) => {
       const { connectInAppWallet } = await import("./index.js");
       const connector = await getOrCreateInAppWalletConnector(
         options.client,
         connectorFactory,
       );
+
+      if (createOptions?.auth?.redirectExternally === true) {
+        throw new Error('Invalid function, please use connectExternal instead');
+      }
 
       const [connectedAccount, connectedChain] = await connectInAppWallet(
         options,
@@ -130,7 +153,7 @@ export function createInAppWallet(args: {
       );
       // set the states
       client = options.client;
-      account = connectedAccount;
+      account = connectedAccount!;
       chain = connectedChain;
       trackConnect({
         client: options.client,

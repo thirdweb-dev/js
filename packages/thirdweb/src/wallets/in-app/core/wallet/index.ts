@@ -38,14 +38,18 @@ export async function connectInAppWallet(
     | CreateWalletArgs<"inApp">[1]
     | CreateWalletArgs<EcosystemWalletId>[1],
   connector: InAppConnector,
-): Promise<[Account, Chain]> {
+): Promise<[Account | undefined, Chain | undefined]> {
   if (
     createOptions?.auth?.mode === "redirect" &&
     connector.authenticateWithRedirect
   ) {
     const strategy = options.strategy;
     if (socialAuthOptions.includes(strategy as SocialAuthOption)) {
-      connector.authenticateWithRedirect(strategy as SocialAuthOption);
+      connector.authenticateWithRedirect(strategy as SocialAuthOption, createOptions?.auth?.redirectUrl, createOptions?.auth?.redirectExternally);
+      // Return [undefined, undefined] here if authenticating externally and redirecting back into the app
+      if (createOptions?.auth?.redirectExternally === true) {
+        return [undefined, undefined];
+      }
     }
   }
   // If we don't have authenticateWithRedirect then it's likely react native, so the default is to redirect and we can carry on
