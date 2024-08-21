@@ -255,6 +255,11 @@ export function useContractRouteConfig(
       "ERC20ClaimPhasesV2",
     ]);
 
+    const detectedPermissionEnumerable = detectFeatures(
+      contractQuery.contract,
+      ["PermissionsEnumerable"],
+    );
+
     return {
       claimconditionExtensionDetection,
       detectedMetadata,
@@ -279,6 +284,7 @@ export function useContractRouteConfig(
       detectedErc20Extension,
       detectedModularExtension,
       hasNewClaimConditions,
+      detectedPermissionEnumerable,
     };
   }, [contractQuery]);
 
@@ -479,7 +485,18 @@ export function useContractRouteConfig(
       title: "Permissions",
       path: "permissions",
       isEnabled: contractData.detectedPermissionFeatures,
-      component: LazyContractPermissionsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractPermissionsPage
+              contract={contract}
+              detectedPermissionEnumerable={
+                contractData.detectedPermissionEnumerable
+              }
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Embed",
