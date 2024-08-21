@@ -1,56 +1,70 @@
-import { useContract, useContractEvents } from "@thirdweb-dev/react";
-import type { ContractEvent } from "@thirdweb-dev/sdk";
+import { type AbiEvent, formatAbiItem } from "abitype";
 import { useMemo } from "react";
+import {
+  type PreparedEvent,
+  type ThirdwebContract,
+  prepareEvent,
+} from "thirdweb";
+import { useContractEvents } from "thirdweb/react";
+import { useResolveContractAbi } from "./useResolveContractAbi";
 
-interface InternalTransaction {
-  transactionHash: ContractEvent["transaction"]["transactionHash"];
-  blockNumber: ContractEvent["transaction"]["blockNumber"];
-  events: ContractEvent[];
+export interface InternalTransaction {
+  transactionHash: string;
+  blockNumber: bigint;
+  events: Array<{
+    logIndex: number;
+    address: string;
+    eventName: string;
+    args: readonly unknown[] | Record<string, unknown>;
+  }>;
 }
 
-export function useActivity(contractAddress?: string, autoUpdate?: boolean) {
-  // const provider = useProvider();
-  const contractQuery = useContract(contractAddress);
+export function useActivity(contract: ThirdwebContract, autoUpdate?: boolean) {
+  const abiQuery = useResolveContractAbi(contract);
 
-  const eventsQuery = useContractEvents(contractQuery.contract, undefined, {
-    subscribe: autoUpdate,
-    queryFilter: {
-      fromBlock: -20000,
-    },
+  // Get all the PreprareEvents from the contract abis
+  const events: PreparedEvent<AbiEvent>[] = useMemo(() => {
+    const eventsItems = (abiQuery.data || []).filter((o) => o.type === "event");
+    const eventSignatures = eventsItems.map((event) => formatAbiItem(event));
+    return eventSignatures.map((signature) =>
+      prepareEvent({ signature: signature as `event ${string}` }),
+    );
+  }, [abiQuery.data]);
+
+  const eventsQuery = useContractEvents({
+    contract,
+    events,
+    blockRange: 20000,
+    watch: autoUpdate,
   });
 
   return useMemo(() => {
     if (!eventsQuery.data) {
       return [];
     }
-
     const obj = eventsQuery.data.slice(0, 100).reduce(
       (acc, curr) => {
-        if (acc[curr.transaction.transactionHash]) {
-          acc[curr.transaction.transactionHash].events.push(curr);
-          acc[curr.transaction.transactionHash].events.sort(
-            // biome-ignore lint/suspicious/noExplicitAny: FIXME
-            (a: any, b: any) => b.transaction.logIndex - a.transaction.logIndex,
+        if (acc[curr.transactionHash]) {
+          acc[curr.transactionHash].events.push(curr);
+          acc[curr.transactionHash].events.sort(
+            (a, b) => b.logIndex - a.logIndex,
           );
-          if (
-            acc[curr.transaction.transactionHash].blockNumber >
-            curr.transaction.blockNumber
-          ) {
-            acc[curr.transaction.transactionHash].blockNumber =
-              curr.transaction.blockNumber;
+          if (acc[curr.transactionHash].blockNumber > curr.blockNumber) {
+            acc[curr.transactionHash].blockNumber = curr.blockNumber;
           }
         } else {
-          acc[curr.transaction.transactionHash] = {
-            transactionHash: curr.transaction.transactionHash,
-            blockNumber: curr.transaction.blockNumber,
+          acc[curr.transactionHash] = {
+            transactionHash: curr.transactionHash,
+            blockNumber: curr.blockNumber,
             events: [curr],
           };
         }
-
         return acc;
       },
       {} as Record<string, InternalTransaction>,
     );
-    return Object.values(obj).sort((a, b) => b.blockNumber - a.blockNumber);
+    return Object.values(obj).sort((a, b) =>
+      a.blockNumber > b.blockNumber ? -1 : 1,
+    );
   }, [eventsQuery.data]);
 }

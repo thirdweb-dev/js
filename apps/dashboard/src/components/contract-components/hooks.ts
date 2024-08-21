@@ -1,4 +1,8 @@
-import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
+import {
+  contractKeys,
+  networkKeys,
+  useDashboardEVMChainId,
+} from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import {
   type QueryClient,
@@ -6,7 +10,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useSDK, useSDKChainId, useSigner } from "@thirdweb-dev/react";
+import { useSDK, useSigner } from "@thirdweb-dev/react";
 import {
   type Abi,
   type ContractInfoSchema,
@@ -214,7 +218,7 @@ export function useDefaultForwarders() {
   const provider = sdk?.getProvider();
   invariant(provider, "Require provider");
 
-  const chainId = useSDKChainId();
+  const chainId = useDashboardEVMChainId();
 
   return useQuery(["default-forwarders", chainId], async () => {
     const forwarders = await getTrustedForwarders(provider, StorageSingleton);
@@ -385,7 +389,7 @@ export function usePublishedContractsFromDeploy(
   contractAddress?: string,
   chainId?: number,
 ) {
-  const activeChainId = useSDKChainId();
+  const activeChainId = useDashboardEVMChainId();
   const cId = chainId || activeChainId;
   const chainInfo = useSupportedChain(cId || -1);
 

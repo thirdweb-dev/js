@@ -95,10 +95,12 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
             <TokenDetails contract={contractV5} />
           )}
-        <LatestEvents
-          address={contractAddress}
-          trackingCategory={TRACKING_CATEGORY}
-        />
+        {contractV5 && (
+          <LatestEvents
+            contract={contractV5}
+            trackingCategory={TRACKING_CATEGORY}
+          />
+        )}
         {contract &&
           ["PermissionsEnumerable"].some((type) =>
             detectedFeatureNames.includes(type),
