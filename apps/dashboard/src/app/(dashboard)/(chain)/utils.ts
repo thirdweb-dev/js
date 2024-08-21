@@ -2,6 +2,8 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
+import zeroGBanner from "./temp-assets/0GLabsBanner.png";
+import zeroGCTA from "./temp-assets/0gCTA.png";
 import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
@@ -302,13 +304,13 @@ const chainMetaRecord = {
   },
   //0G-Newton-Testnet
   16600: {
-    headerImgUrl: thirdwebBanner.src,
+    headerImgUrl: zeroGBanner.src,
     about:
-      "0G is an infinitely scalable data availability layer and data storage system that provides the necessary infrastructure to scale Web3 and bring novel use cases on-chain.",
+      "ZeroGravity (0G) is the first infinitely scalable and decentralized data availability layer with a built-in general-purpose storage layer.",
     cta: {
-      backgroundImageUrl: thirdwebCTA.src,
-      title: "",
-      buttonLink: "https://0g.ai/",
+      backgroundImageUrl: zeroGCTA.src,
+      title: "Unlock web3's full potential with 0G",
+      buttonLink: "https://docs.0g.ai/0g-doc",
       buttonText: "Learn more",
     },
   },
