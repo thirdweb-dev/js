@@ -4,6 +4,7 @@ import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
+import type { Address } from "../../utils/address.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoTransferEndpoint } from "../utils/definitions.js";
 import type {
@@ -18,7 +19,7 @@ export type { QuoteApprovalParams } from "./commonTypes.js";
 /**
  * The parameters for [`getBuyWithCryptoTransfer`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoTransfer) function
  * It facilitates a token transfer.
- * @transferCrypto
+ * @buyCrypto
  */
 export type GetBuyWithCryptoTransferParams = {
   /**
@@ -64,7 +65,7 @@ export type GetBuyWithCryptoTransferParams = {
 };
 
 /**
- * @transferCrypto
+ * @buyCrypto
  */
 type BuyWithCryptoTransferResponse = {
   quoteId: string;
@@ -79,21 +80,22 @@ type BuyWithCryptoTransferResponse = {
 };
 
 /**
- * @transferCrypto
+ * @buyCrypto
  */
 export type BuyWithCryptoTransfer = {
   transactionRequest: PrepareTransactionOptions;
   approval?: PrepareTransactionOptions;
   fromAddress: string;
   toAddress: string;
-
   paymentToken: QuotePaymentToken;
   processingFee: QuotePaymentToken;
-
   estimatedGasCostUSDCents: number;
   client: ThirdwebClient;
 };
 
+/**
+ * @buyCrypto
+ */
 export async function getBuyWithCryptoTransfer(
   params: GetBuyWithCryptoTransferParams,
 ): Promise<BuyWithCryptoTransfer> {
@@ -131,7 +133,7 @@ export async function getBuyWithCryptoTransfer(
         chain: getCachedChain(data.transactionRequest.chainId),
         client: params.client,
         data: data.transactionRequest.data as Hash,
-        to: data.transactionRequest.to,
+        to: data.transactionRequest.to as Address,
         value: BigInt(data.transactionRequest.value),
         gas: BigInt(data.transactionRequest.gasLimit),
         gasPrice: BigInt(data.transactionRequest.gasPrice),
@@ -143,16 +145,14 @@ export async function getBuyWithCryptoTransfer(
               address: data.approval.tokenAddress,
               chain: getCachedChain(data.approval.chainId),
             }),
-            spender: data.approval?.spenderAddress,
+            spender: data.approval.spenderAddress as Address,
             amountWei: BigInt(data.approval.amountWei),
           })
         : undefined,
-
       fromAddress: data.fromAddress,
       toAddress: data.toAddress,
       paymentToken: data.paymentToken,
       processingFee: data.processingFee,
-
       estimatedGasCostUSDCents: data.estimatedGasCostUSDCents,
       client: params.client,
     };
