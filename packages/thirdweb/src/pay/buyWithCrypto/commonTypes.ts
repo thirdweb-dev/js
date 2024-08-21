@@ -1,7 +1,5 @@
+import type { ApproveParams } from "../../extensions/erc20/write/approve.js";
 import type { BaseTransactionOptions } from "../../transaction/types.js";
-import type {
-   ApproveParams,
-} from "../../extensions/erc20/write/approve.js";
 
 export type QuoteTokenInfo = {
   chainId: number;

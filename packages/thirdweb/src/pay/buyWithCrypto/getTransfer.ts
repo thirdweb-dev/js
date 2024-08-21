@@ -1,17 +1,19 @@
-
 import type { Hash } from "viem";
 import { getCachedChain } from "../../chains/utils.js";
-import { getClientFetch } from "src/utils/fetch.js";
 import type { ThirdwebClient } from "../../client/client.js";
-import type { QuoteApprovalInfo, QuoteTokenInfo, QuoteTransactionRequest, QuotePaymentToken } from "./commonTypes.js";
-import { getPayBuyWithCryptoTransferEndpoint } from "../utils/definitions.js";
-import type { PrepareTransactionOptions } from "src/transaction/prepare-transaction.js";
 import { getContract } from "../../contract/contract.js";
-import {
-  approve,
-} from "../../extensions/erc20/write/approve.js";
+import { approve } from "../../extensions/erc20/write/approve.js";
+import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
+import { getClientFetch } from "../../utils/fetch.js";
+import { getPayBuyWithCryptoTransferEndpoint } from "../utils/definitions.js";
+import type {
+  QuoteApprovalInfo,
+  QuotePaymentToken,
+  QuoteTokenInfo,
+  QuoteTransactionRequest,
+} from "./commonTypes.js";
 // re-export
-export type { QuoteApprovalParams  } from "./commonTypes.js";
+export type { QuoteApprovalParams } from "./commonTypes.js";
 
 /**
  * The parameters for [`getBuyWithCryptoTransfer`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoTransfer) function
@@ -19,8 +21,7 @@ export type { QuoteApprovalParams  } from "./commonTypes.js";
  * @transferCrypto
  */
 export type GetBuyWithCryptoTransferParams = {
-
-    /**
+  /**
    * A client is the entry point to the thirdweb SDK. It is required for all other actions.
    *
    * You can create a client using the `createThirdwebClient` function.
@@ -91,15 +92,13 @@ export type BuyWithCryptoTransfer = {
 
   estimatedGasCostUSDCents: number;
   client: ThirdwebClient;
-}
-
+};
 
 export async function getBuyWithCryptoTransfer(
   params: GetBuyWithCryptoTransferParams,
 ): Promise<BuyWithCryptoTransfer> {
-
   try {
-    const clientFetch = getClientFetch(params.client)
+    const clientFetch = getClientFetch(params.client);
 
     const response = await clientFetch(getPayBuyWithCryptoTransferEndpoint(), {
       method: "POST",
@@ -113,7 +112,7 @@ export async function getBuyWithCryptoTransfer(
         chainId: params.chainId,
         tokenAddress: params.tokenAddress,
         amount: params.amount,
-        purchaseData: params.purchaseData
+        purchaseData: params.purchaseData,
       }),
     });
 
@@ -138,28 +137,28 @@ export async function getBuyWithCryptoTransfer(
         gasPrice: BigInt(data.transactionRequest.gasPrice),
       },
       approval: data.approval
-      ? approve({
-          contract: getContract({
-            client: params.client,
-            address: data.approval.tokenAddress,
-            chain: getCachedChain(data.approval.chainId),
-          }),
-          spender: data.approval?.spenderAddress,
-          amountWei: BigInt(data.approval.amountWei),
-        })
-      : undefined,
-      
+        ? approve({
+            contract: getContract({
+              client: params.client,
+              address: data.approval.tokenAddress,
+              chain: getCachedChain(data.approval.chainId),
+            }),
+            spender: data.approval?.spenderAddress,
+            amountWei: BigInt(data.approval.amountWei),
+          })
+        : undefined,
+
       fromAddress: data.fromAddress,
       toAddress: data.toAddress,
       paymentToken: data.paymentToken,
       processingFee: data.processingFee,
-      
+
       estimatedGasCostUSDCents: data.estimatedGasCostUSDCents,
-      client: params.client
+      client: params.client,
     };
 
     return transfer;
-  } catch(error) {
+  } catch (error) {
     console.error("Error getting buy with crypto transfer", error);
     throw error;
   }

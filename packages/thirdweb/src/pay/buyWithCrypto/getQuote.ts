@@ -2,15 +2,18 @@ import type { Hash } from "viem";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
-import {
-  approve,
-} from "../../extensions/erc20/write/approve.js";
+import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
-import type { QuoteTokenInfo, QuoteTransactionRequest, QuoteApprovalInfo, QuotePaymentToken } from "./commonTypes.js";
+import type {
+  QuoteApprovalInfo,
+  QuotePaymentToken,
+  QuoteTokenInfo,
+  QuoteTransactionRequest,
+} from "./commonTypes.js";
 // re-export
-export type { QuoteApprovalParams  } from "./commonTypes.js";
+export type { QuoteApprovalParams } from "./commonTypes.js";
 
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
@@ -142,8 +145,6 @@ type BuyWithCryptoQuoteRouteResponse = {
   maxSlippageBPS: number;
   bridge?: string;
 };
-
-
 
 /**
  * @buyCrypto
