@@ -195,6 +195,21 @@ export function TransferFlow(props: TrasnferFlowProps) {
             try {
               setStatus("pending");
 
+              // TODO (pay): use buy with crypto transfer
+              // const trasnferResponse = await getBuyWithCryptoTransfer({
+              //   client,
+              //   fromAddress: payer.account.address,
+              //   toAddress: receiverAddress,
+              //   chainId: chain.id,
+              //   tokenAddress: isNativeToken(token)
+              //     ? NATIVE_TOKEN_ADDRESS
+              //     : token.address,
+              //   amount: tokenAmount,
+              //   purchaseData: undefined, // TODO (pay): add purchase data
+              // });
+
+              // console.log("transferResponse", trasnferResponse);
+
               const transaction = isNativeToken(token)
                 ? prepareTransaction({
                     client,
