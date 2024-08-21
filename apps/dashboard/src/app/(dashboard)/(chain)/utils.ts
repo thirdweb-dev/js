@@ -2,8 +2,8 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { ChainCTAProps } from "./[chain_id]/(chainPage)/components/server/cta-card";
-import zeroGBanner from "./temp-assets/0GLabsBanner.png";
 import zeroGCTA from "./temp-assets/0gCTA.png";
+import zeroGBanner from "./temp-assets/0gLabsBanner.png";
 import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
