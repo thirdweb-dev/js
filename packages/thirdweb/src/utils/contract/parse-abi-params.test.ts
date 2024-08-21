@@ -156,5 +156,17 @@ describe("parseAbiParams", () => {
       const result = parseAbiParams(["bytes64"], [value]);
       expect(result).toStrictEqual([value]);
     });
+
+    it("should return a string for type string", () => {
+      const value = "this is a string";
+      const result = parseAbiParams(["string"], [value]);
+      expect(result).toStrictEqual(["this is a string"]);
+    });
+
+    it("should return the value itself if it falls through to the end", () => {
+      const value = { whatever: true };
+      const result = parseAbiParams(["non-existent-type"], [value]);
+      expect(result).toStrictEqual([{ whatever: true }]);
+    });
   });
 });

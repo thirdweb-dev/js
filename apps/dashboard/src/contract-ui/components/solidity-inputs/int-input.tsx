@@ -3,6 +3,7 @@ import { parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
 import { Button } from "tw-components";
 import type { SolidityInputWithTypeProps } from ".";
+
 import { validateInt } from "./helpers";
 
 export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
