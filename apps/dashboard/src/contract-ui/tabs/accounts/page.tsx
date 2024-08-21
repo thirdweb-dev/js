@@ -1,10 +1,6 @@
-import { thirdwebClient } from "@/constants/client";
 import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { useMemo } from "react";
-import { getContract } from "thirdweb";
+import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import type { ThirdwebContract } from "thirdweb";
 import {
   Card,
   Heading,
@@ -17,36 +13,15 @@ import { AccountsTable } from "./components/accounts-table";
 import { CreateAccountButton } from "./components/create-account-button";
 
 interface AccountsPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
+  detectedAccountFactory: ExtensionDetectedState;
 }
 
 export const AccountsPage: React.FC<AccountsPageProps> = ({
-  contractAddress,
+  contract,
+  detectedAccountFactory,
 }) => {
-  const contractQuery = useContract(contractAddress);
-  const chain = useV5DashboardChain(contractQuery.contract?.chainId);
-
-  const v5Contract = useMemo(() => {
-    if (!contractQuery.contract || !chain) {
-      return null;
-    }
-    return getContract({
-      address: contractQuery.contract.getAddress(),
-      chain: chain,
-      client: thirdwebClient,
-    });
-  }, [contractQuery.contract, chain]);
-
-  const detectedFeature = extensionDetectedState({
-    contractQuery,
-    feature: ["AccountFactory"],
-  });
-
-  if (contractQuery.isLoading || !v5Contract) {
-    return null;
-  }
-
-  if (!detectedFeature) {
+  if (!detectedAccountFactory) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}
@@ -91,11 +66,11 @@ export const AccountsPage: React.FC<AccountsPageProps> = ({
           >
             View Documentation
           </TrackedLinkButton>
-          <CreateAccountButton contractQuery={contractQuery} />
+          <CreateAccountButton contract={contract} />
         </ButtonGroup>
       </Flex>
-      <AccountsCount contract={v5Contract} />
-      <AccountsTable contract={v5Contract} />
+      <AccountsCount contract={contract} />
+      <AccountsTable contract={contract} />
     </Flex>
   );
 };
