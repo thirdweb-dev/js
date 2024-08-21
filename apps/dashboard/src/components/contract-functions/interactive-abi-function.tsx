@@ -25,7 +25,7 @@ import {
   toWei,
 } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";
-import { parseAbiParams, stringify } from "thirdweb/utils";
+import { stringify } from "thirdweb/utils";
 import {
   Button,
   Card,
@@ -118,16 +118,13 @@ interface InteractiveAbiFunctionProps {
 }
 
 function useAsyncRead(contract: ThirdwebContract, functionName: string) {
-  return useMutation(
-    async ({ args, types }: { args: unknown[]; types: string[] }) => {
-      const params = parseAbiParams(types, args);
-      return readContract({
-        contract,
-        method: resolveMethod(functionName),
-        params,
-      });
-    },
-  );
+  return useMutation(async ({ params }: { params: unknown[] }) => {
+    return readContract({
+      contract,
+      method: resolveMethod(functionName),
+      params,
+    });
+  });
 }
 
 export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
@@ -189,8 +186,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         abiFunction.stateMutability === "pure")
     ) {
       readFn({
-        args: [],
-        types: [],
+        params: [],
       });
     }
   }, [abiFunction, form, readFn]);
@@ -225,18 +221,16 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 (abiFunction.stateMutability === "view" ||
                   abiFunction.stateMutability === "pure")
               ) {
-                const types = abiFunction.inputs.map((o) => o.type);
-                readFn({ args: formatted, types });
+                readFn({ params: formatted });
               } else {
                 if (!abiFunction.name) {
                   return toast.error("Cannot detect function name");
                 }
-                const types = abiFunction.inputs.map((o) => o.type);
-                const params = parseAbiParams(types, formatted);
+
                 const transaction = prepareContractCall({
                   contract,
                   method: resolveMethod(abiFunction.name),
-                  params,
+                  params: formatted,
                   value: d.value ? toWei(d.value) : undefined,
                 });
                 mutate(transaction);
