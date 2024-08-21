@@ -2,16 +2,16 @@
 
 import { base } from "thirdweb/chains";
 import { PayEmbed, getDefaultToken } from "thirdweb/react";
+import { setThirdwebDomains } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
-import { setThirdwebDomains } from "thirdweb/utils";
 
 setThirdwebDomains({
   domains: {
-    pay: 'pay.thirdweb-dev.com',
-    rpc: 'rpc.thirdweb-dev.com',
-    inAppWallet: 'embedded-wallet.thirdweb-dev.com',
-  }
+    pay: "pay.thirdweb-dev.com",
+    rpc: "rpc.thirdweb-dev.com",
+    inAppWallet: "embedded-wallet.thirdweb-dev.com",
+  },
 });
 
 export function BuyMerchPreview() {
