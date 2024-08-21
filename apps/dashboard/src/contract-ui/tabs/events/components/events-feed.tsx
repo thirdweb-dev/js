@@ -1,5 +1,8 @@
 import { useEVMContractInfo } from "@3rdweb-sdk/react";
-import { useActivity } from "@3rdweb-sdk/react/hooks/useActivity";
+import {
+  type InternalTransaction,
+  useActivity,
+} from "@3rdweb-sdk/react/hooks/useActivity";
 import {
   Accordion,
   AccordionButton,
@@ -24,12 +27,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
-import type { ContractEvent } from "@thirdweb-dev/sdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { Fragment, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
+import type { ThirdwebContract } from "thirdweb";
+import { stringify } from "thirdweb/utils";
 import {
   Button,
   Card,
@@ -38,21 +42,14 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { bigNumberReplacer } from "utils/bignumber";
-
-interface ContractTransaction {
-  transactionHash: ContractEvent["transaction"]["transactionHash"];
-  blockNumber: ContractEvent["transaction"]["blockNumber"];
-  events: ContractEvent[];
-}
 
 interface EventsFeedProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
-export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
+export const EventsFeed: React.FC<EventsFeedProps> = ({ contract }) => {
   const [autoUpdate, setAutoUpdate] = useState(true);
-  const allEvents = useActivity(contractAddress, autoUpdate);
+  const allEvents = useActivity(contract, autoUpdate);
   const event = useSingleQueryParam("event");
   const [selectedEvent, setSelectedEvent] = useState(event || "all");
 
@@ -97,8 +94,8 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
               if (eventTypes.includes(val)) {
                 const path =
                   e.target.value === "all"
-                    ? `/${chainSlug}/${contractAddress}/events`
-                    : `/${chainSlug}/${contractAddress}/events?event=${val}`;
+                    ? `/${chainSlug}/${contract.address}/events`
+                    : `/${chainSlug}/${contract.address}/events?event=${val}`;
                 router.push(path);
                 setSelectedEvent(val);
               }
@@ -127,64 +124,62 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
           </FormControl>
         </Box>
       </Flex>
-      {contractAddress && (
-        <Card p={0} overflow="hidden">
-          <SimpleGrid
-            gap={2}
-            columns={12}
-            borderBottomWidth="1px"
-            borderColor="borderColor"
-            padding={4}
-            bg="blackAlpha.50"
-            _dark={{ bg: "whiteAlpha.50" }}
-          >
-            <Heading gridColumn="span 4" size="label.md">
-              Transaction Hash
-            </Heading>
-            <Heading gridColumn="span 5" size="label.md">
-              Events
-            </Heading>
-            <Heading gridColumn="span 3" size="label.md">
-              Block Number
-            </Heading>
-          </SimpleGrid>
+      <Card p={0} overflow="hidden">
+        <SimpleGrid
+          gap={2}
+          columns={12}
+          borderBottomWidth="1px"
+          borderColor="borderColor"
+          padding={4}
+          bg="blackAlpha.50"
+          _dark={{ bg: "whiteAlpha.50" }}
+        >
+          <Heading gridColumn="span 4" size="label.md">
+            Transaction Hash
+          </Heading>
+          <Heading gridColumn="span 5" size="label.md">
+            Events
+          </Heading>
+          <Heading gridColumn="span 3" size="label.md">
+            Block Number
+          </Heading>
+        </SimpleGrid>
 
-          <List overflow="auto">
-            {filteredEvents.length === 0 && (
-              <Center py={4}>
-                <Flex align="center" gap={2}>
-                  {autoUpdate && <Spinner size="sm" speed="0.69s" />}
-                  <Text size="body.md" fontStyle="italic">
-                    {autoUpdate ? "listening for events" : "no events to show"}
-                  </Text>
-                </Flex>
-              </Center>
-            )}
-            <Accordion
-              as={AnimatePresence}
-              initial={false}
-              allowMultiple
-              defaultIndex={[]}
-            >
-              {filteredEvents?.slice(0, 10).map((e) => (
-                <EventsFeedItem
-                  key={e.transactionHash}
-                  transaction={e}
-                  setSelectedEvent={setSelectedEvent}
-                  contractAddress={contractAddress}
-                  chainSlug={chainSlug}
-                />
-              ))}
-            </Accordion>
-          </List>
-        </Card>
-      )}
+        <List overflow="auto">
+          {filteredEvents.length === 0 && (
+            <Center py={4}>
+              <Flex align="center" gap={2}>
+                {autoUpdate && <Spinner size="sm" speed="0.69s" />}
+                <Text size="body.md" fontStyle="italic">
+                  {autoUpdate ? "listening for events" : "no events to show"}
+                </Text>
+              </Flex>
+            </Center>
+          )}
+          <Accordion
+            as={AnimatePresence}
+            initial={false}
+            allowMultiple
+            defaultIndex={[]}
+          >
+            {filteredEvents?.slice(0, 10).map((e) => (
+              <EventsFeedItem
+                key={e.transactionHash}
+                transaction={e}
+                setSelectedEvent={setSelectedEvent}
+                contractAddress={contract.address}
+                chainSlug={chainSlug}
+              />
+            ))}
+          </Accordion>
+        </List>
+      </Card>
     </Flex>
   );
 };
 
 interface EventsFeedItemProps {
-  transaction: ContractTransaction;
+  transaction: InternalTransaction;
   setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
   contractAddress: string;
   chainSlug?: string;
@@ -361,7 +356,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
 
             {transaction.events.map((event, idx, arr) => (
               <Fragment
-                key={`${event.transaction.transactionHash}_${event.transaction.logIndex}`}
+                key={`${transaction.transactionHash}_${event.logIndex}`}
               >
                 <SimpleGrid columns={12} gap={2}>
                   <Box gridColumn="span 3">
@@ -370,7 +365,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
 
                   <CodeBlock
                     gridColumn="span 9"
-                    code={JSON.stringify(event.data, bigNumberReplacer, 2)}
+                    code={stringify(event.args)}
                     language="json"
                   />
                 </SimpleGrid>
@@ -387,7 +382,7 @@ const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
 
 interface TransactionDataProps {
   name: string;
-  value: string | number;
+  value: bigint | string;
   description: string;
 }
 
@@ -418,7 +413,7 @@ const TransactionData: React.FC<TransactionDataProps> = ({
           <Text fontWeight="bold">{name}</Text>
         </Stack>
 
-        <Text gridColumn="span 9">{value}</Text>
+        <Text gridColumn="span 9">{value.toString()}</Text>
       </SimpleGrid>
       <Divider />
     </>

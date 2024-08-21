@@ -336,7 +336,9 @@ export function useContractRouteConfig(
     {
       title: "Events",
       path: "events",
-      component: LazyContractEventsPage,
+      component: () => (
+        <>{contract && <LazyContractEventsPage contract={contract} />}</>
+      ),
       isDefault: true,
     },
     {
