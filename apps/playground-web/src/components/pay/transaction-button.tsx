@@ -13,6 +13,13 @@ import {
 } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
+import { setThirdwebDomains } from "thirdweb/utils";
+
+setThirdwebDomains({
+  pay: 'pay.thirdweb-dev.com',
+  rpc: 'rpc.thirdweb-dev.com',
+  inAppWallet: 'embedded-wallet.thirdweb-dev.com',
+});
 
 const nftContract = getContract({
   address: "0x827c1c3889923015C1FC31BF677D00FbE6F01D52",
