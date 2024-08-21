@@ -1,14 +1,12 @@
-import { thirdwebClient } from "@/constants/client";
 import { Flex, Stack } from "@chakra-ui/react";
-import type { DropContract } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import { UpdateNotice } from "core-ui/update-notice/update-notice";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { Heading, Text } from "tw-components";
 import { ClaimConditionsForm } from "./claim-conditions-form/index";
 
 interface ClaimConditionsProps {
-  contract?: DropContract;
+  contract: ThirdwebContract;
   tokenId?: string;
   isColumn?: true;
   contractInfo: {
@@ -22,7 +20,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   isColumn,
   contractInfo,
 }) => {
-  const chain = useV5DashboardChain(contract?.chainId);
+  const contractQuery = useContract(contract.address);
 
   return (
     <Stack spacing={8}>
@@ -58,16 +56,12 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           </Flex>
 
           {/* Set Claim Conditions */}
-          {contract && chain && (
+          {contractQuery.contract && (
             <ClaimConditionsForm
-              contract={contract}
+              contract={contractQuery.contract}
               tokenId={tokenId}
               isColumn={isColumn}
-              contractV5={getContract({
-                address: contract.getAddress(),
-                chain,
-                client: thirdwebClient,
-              })}
+              contractV5={contract}
             />
           )}
         </Flex>

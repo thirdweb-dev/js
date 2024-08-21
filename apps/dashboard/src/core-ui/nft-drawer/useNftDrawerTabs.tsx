@@ -137,7 +137,7 @@ export function useNFTDrawerTabs({
           children: (
             <ClaimConditionTab
               contractInfo={contractInfo}
-              contract={oldContract}
+              contract={contract}
               tokenId={tokenId}
               isColumn
             />
