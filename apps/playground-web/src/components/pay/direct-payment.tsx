@@ -7,11 +7,9 @@ import { THIRDWEB_CLIENT } from "../../lib/client";
 import { StyledConnectButton } from "../styled-connect-button";
 
 setThirdwebDomains({
-  domains: {
-    pay: "pay.thirdweb-dev.com",
-    rpc: "rpc.thirdweb-dev.com",
-    inAppWallet: "embedded-wallet.thirdweb-dev.com",
-  },
+  pay: "pay.thirdweb-dev.com",
+  rpc: "rpc.thirdweb-dev.com",
+  inAppWallet: "embedded-wallet.thirdweb-dev.com",
 });
 
 export function BuyMerchPreview() {
