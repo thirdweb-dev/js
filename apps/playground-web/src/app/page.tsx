@@ -5,9 +5,8 @@ import {
   WalletsInAppIcon,
   WalletsSmartIcon,
 } from "@/icons";
-import { CodeIcon, ConstructionIcon } from "lucide-react";
+import { CodeIcon } from "lucide-react";
 import Link from "next/link";
-import type { PropsWithChildren } from "react";
 
 export default function Page() {
   return (
@@ -88,17 +87,3 @@ function ArticleCardIndex(props: {
     </Link>
   );
 }
-
-const ComingSoonWrapper: React.FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <div className="relative pointer-events-none rounded-lg overflow-hidden">
-      {children}
-      <div className="absolute top-0 left-0 h-full w-full backdrop-blur-[2px] bg-color-overlay">
-        <div className="flex items-center justify-center h-full space-x-2">
-          <ConstructionIcon className="opacity-80" strokeWidth={1} />
-          <p className="font-semibold">Coming Soon</p>
-        </div>
-      </div>
-    </div>
-  );
-};

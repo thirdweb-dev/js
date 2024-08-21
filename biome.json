@@ -8,7 +8,11 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "useHookAtTopLevel": "error"
+        "useHookAtTopLevel": "error",
+        "noNewSymbol": "error",
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "useArrayLiterals": "error"
       }
     }
   },

@@ -1,7 +1,6 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 import type { ChainMetadata } from "thirdweb/chains";
 import { ChainLiveStats } from "../client/live-stats";
 import { SectionTitle } from "./SectionTitle";

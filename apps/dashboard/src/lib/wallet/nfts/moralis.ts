@@ -42,7 +42,7 @@ export async function transformMoralisResponseToNFT(
             supply: moralisNft.amount || "1",
             type: moralisNft.contract_type,
           } as WalletNFT;
-        } catch (e) {
+        } catch {
           return undefined as unknown as WalletNFT;
         }
       }),

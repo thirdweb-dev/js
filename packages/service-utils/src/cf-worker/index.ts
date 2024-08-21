@@ -213,5 +213,5 @@ export async function logHttpRequest({
     if (statusMessage) {
       console.log(`statusMessage=${statusMessage}`);
     }
-  } catch (err) {}
+  } catch {}
 }

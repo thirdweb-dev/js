@@ -2,7 +2,6 @@
 
 import { THIRDWEB_CLIENT } from "@/lib/client";
 import { useTheme } from "next-themes";
-import { baseSepolia } from "thirdweb/chains";
 import { ConnectButton } from "thirdweb/react";
 import type { ConnectButtonProps } from "thirdweb/react";
 import { inAppWallet } from "thirdweb/wallets/in-app";

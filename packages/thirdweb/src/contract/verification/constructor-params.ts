@@ -115,7 +115,7 @@ export async function fetchConstructorParams(
     // sanity check that the constructor params are valid
     // TODO: should we sanity check after each attempt?
     decodeAbiParameters(constructorParamTypes, `0x${constructorArgs}`);
-  } catch (e) {
+  } catch {
     throw new Error(
       "Verifying this contract requires it to be published. Run `npx thirdweb publish` to publish this contract, then try again.",
     );

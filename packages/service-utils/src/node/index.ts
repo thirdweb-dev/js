@@ -216,5 +216,5 @@ export function logHttpRequest({
         latencyMs,
       }),
     );
-  } catch (err) {}
+  } catch {}
 }

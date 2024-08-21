@@ -37,7 +37,7 @@ function getBorderRadius(
   try {
     // biome-ignore lint/suspicious/noExplicitAny: FIXME
     return (borderRadiusMap as any)[borderRadius as any];
-  } catch (e) {
+  } catch {
     return borderRadius;
   }
 }

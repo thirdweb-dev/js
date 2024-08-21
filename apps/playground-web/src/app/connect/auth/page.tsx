@@ -15,9 +15,7 @@ export const metadata: Metadata = {
   description: "lorem ipsum",
 };
 
-export default function Page({
-  searchParams,
-}: { searchParams: { message: string } }) {
+export default function Page() {
   return (
     <main className="flex-1 content-center relative py-12 md:py-24 lg:py-32 xl:py-48 space-y-12 md:space-y-24">
       <section className="container px-4 md:px-6">
@@ -169,7 +167,7 @@ export async function GatedContentPreview() {
   // Finally! We can load the gated content for them now
   return (
     <div>
-      Congratulations!  
+      Congratulations!
       You can see this message because you own more than 10 TWCOIN.
     </div>
   );

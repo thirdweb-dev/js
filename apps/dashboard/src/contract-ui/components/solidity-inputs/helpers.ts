@@ -82,7 +82,7 @@ export const validateInt = (value: any, solidityType: string) => {
         message: `Value is higher than what ${solidityType} can store.`,
       };
     }
-  } catch (error) {
+  } catch {
     return {
       type: "pattern",
       message: "Input is not a valid number.",
@@ -113,7 +113,7 @@ const isValidBytes = (value: string, solidityType: string) => {
     try {
       const arrayify = JSON.parse(value);
       return isBytesType ? !!arrayify.length : arrayify.length === maxLength;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

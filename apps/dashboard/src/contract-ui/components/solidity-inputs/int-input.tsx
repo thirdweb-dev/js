@@ -36,7 +36,7 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
         shouldValidate: true,
       });
       form.clearErrors(inputName);
-    } catch (e) {
+    } catch {
       form.setError(inputName, {
         type: "pattern",
         message: "Can't be converted to WEI.",

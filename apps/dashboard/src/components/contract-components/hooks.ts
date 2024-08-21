@@ -905,7 +905,7 @@ export function useCustomContractDeployMutation(options: {
           });
 
           deployStatusModal.nextStep();
-        } catch (e) {
+        } catch {
           // failed to set metadata - for now just close the modal
           deployStatusModal.close();
           // not re-throwing the error, this is not technically a failure to deploy, just to set metadata - the contract is deployed already at this stage
@@ -927,7 +927,7 @@ export function useCustomContractDeployMutation(options: {
 
           deployStatusModal.nextStep();
         }
-      } catch (e) {
+      } catch {
         // failed to add to dashboard - for now just close the modal
         deployStatusModal.close();
         router.replace(`/${chainId}/${contractAddress}`);

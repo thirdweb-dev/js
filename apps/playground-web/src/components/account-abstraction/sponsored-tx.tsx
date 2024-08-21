@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
@@ -22,7 +21,6 @@ export function SponsoredTxPreview() {
       disconnect(wallet);
     }
   }, [wallet, disconnect]);
-  const { theme } = useTheme();
   const smartAccount = useActiveAccount();
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
     contract: editionDropContract,

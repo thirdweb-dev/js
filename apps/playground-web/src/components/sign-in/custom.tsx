@@ -1,6 +1,6 @@
 "use client";
 import { ConnectButton } from "thirdweb/react";
-import { darkTheme, lightTheme } from "thirdweb/react";
+import { darkTheme } from "thirdweb/react";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 
 export const CustomizedConnect = () => {

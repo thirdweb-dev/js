@@ -68,7 +68,7 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
     try {
       newValue = utils.parseUnits(_value, decimals);
       parsedMax = utils.parseUnits(_max, decimals);
-    } catch (e) {
+    } catch {
       // don't update the input on invalid values
       return;
     }

@@ -64,7 +64,7 @@ export async function postAuth({
     try {
       // existing device share
       await getDeviceShare(client.clientId);
-    } catch (e) {
+    } catch {
       const _recoveryCode = await getRecoveryCode(
         storedToken,
         client,
@@ -116,7 +116,7 @@ export async function postAuthUserManaged(
     try {
       // existing device share
       await getDeviceShare(client.clientId);
-    } catch (e) {
+    } catch {
       // trying to recreate device share from recovery code to derive wallet
       try {
         await setUpShareForNewDevice({
@@ -155,7 +155,7 @@ async function getRecoveryCode(
     }
     try {
       return await getCognitoRecoveryPasswordV2(client);
-    } catch (e) {
+    } catch {
       return await getCognitoRecoveryPasswordV1(client).catch(() => {
         throw new Error("Something went wrong getting cognito recovery code");
       });

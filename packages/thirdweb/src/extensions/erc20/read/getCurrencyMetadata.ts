@@ -51,7 +51,7 @@ export async function getCurrencyMetadata(
       symbol: symbol_,
       decimals: decimals_,
     };
-  } catch (e) {
+  } catch {
     throw new Error("Invalid currency token");
   }
 }

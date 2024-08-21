@@ -1,4 +1,3 @@
-import { ThemeSelector } from "@/components/theme-selector";
 import { ThirdwebIcon } from "@/icons/thirdweb";
 import { GithubIcon } from "lucide-react";
 import Link from "next/link";
