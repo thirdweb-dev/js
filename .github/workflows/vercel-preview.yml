@@ -1,0 +1,66 @@
+name: Vercel Staging
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+  TW_SECRET_KEY: ${{ secrets.TW_SECRET_KEY }}
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_TEAM_ID }}
+
+jobs:
+  optimize_ci:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check_skip.outputs.skip }}
+    steps:
+      - name: Optimize CI
+        id: check_skip
+        uses: withgraphite/graphite-ci-action@main
+        with:
+          graphite_token: ${{ secrets.GRAPHITE_OMTIMIZE_TOKEN }}
+
+
+  # deploy the dashboard
+  dashboard:
+    needs: optimize_ci
+    if: needs.optimize_ci.outputs.skip == 'false'
+    runs-on: ubuntu-latest
+    name: Deploy Dashboard (Staging)
+    env: 
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_DASHBOARD_PROJECT_ID }}
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Setup & Install
+        uses: ./.github/composite-actions/install
+
+        # decide if this has to be built or not based on turbo status
+      - name: Check Turbo Status
+        id: check_turbo_status
+        working-directory: apps/dashboard
+        run: pnpm dlx turbo-ignore
+        # this will mean that the job will continue if this fails
+        continue-on-error: true
+
+      - name: Install Vercel CLI
+        # we only want to continue if the turbo status is a failure (meaning we need to build)
+        if: ${{ steps.check_turbo_status.outcome == 'failure' }}
+        run: pnpm install --global vercel@latest
+
+      - name: Deploy Project Artifacts to Vercel
+        # we only want to continue if the turbo status is a failure (meaning we need to build)
+        if: ${{ steps.check_turbo_status.outcome == 'failure' }}
+        run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
+        
+
+  
