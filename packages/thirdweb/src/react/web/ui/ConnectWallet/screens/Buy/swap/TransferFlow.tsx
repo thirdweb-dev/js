@@ -3,11 +3,8 @@ import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../../constants/addresses.js";
-import { getContract } from "../../../../../../../contract/contract.js";
-import { transfer } from "../../../../../../../extensions/erc20/write/transfer.js";
+import { getBuyWithCryptoTransfer } from "../../../../../../../pay/buyWithCrypto/getTransfer.js";
 import { sendAndConfirmTransaction } from "../../../../../../../transaction/actions/send-and-confirm-transaction.js";
-import { prepareTransaction } from "../../../../../../../transaction/prepare-transaction.js";
-import { toWei } from "../../../../../../../utils/units.js";
 import { iconSize } from "../../../../../../core/design-system/index.js";
 import { useChainSymbol } from "../../../../../../core/hooks/others/useChainQuery.js";
 import { Spacer } from "../../../../components/Spacer.js";
@@ -196,36 +193,44 @@ export function TransferFlow(props: TrasnferFlowProps) {
               setStatus("pending");
 
               // TODO (pay): use buy with crypto transfer
-              // const trasnferResponse = await getBuyWithCryptoTransfer({
-              //   client,
-              //   fromAddress: payer.account.address,
-              //   toAddress: receiverAddress,
-              //   chainId: chain.id,
-              //   tokenAddress: isNativeToken(token)
-              //     ? NATIVE_TOKEN_ADDRESS
-              //     : token.address,
-              //   amount: tokenAmount,
-              //   purchaseData: undefined, // TODO (pay): add purchase data
-              // });
+              const transferResponse = await getBuyWithCryptoTransfer({
+                client,
+                fromAddress: payer.account.address,
+                toAddress: receiverAddress,
+                chainId: chain.id,
+                tokenAddress: isNativeToken(token)
+                  ? NATIVE_TOKEN_ADDRESS
+                  : token.address,
+                amount: tokenAmount,
+                purchaseData: undefined, // TODO (pay): add purchase data
+              });
+
+              console.log("transferResponse", transferResponse);
+
+              if (transferResponse.approval) {
+                throw new Error("Approval step not implemented");
+              }
+
+              const transaction = transferResponse.transactionRequest;
 
               // console.log("transferResponse", trasnferResponse);
 
-              const transaction = isNativeToken(token)
-                ? prepareTransaction({
-                    client,
-                    chain,
-                    to: receiverAddress,
-                    value: toWei(tokenAmount),
-                  })
-                : transfer({
-                    contract: getContract({
-                      address: token.address,
-                      chain: chain,
-                      client: client,
-                    }),
-                    to: receiverAddress,
-                    amount: tokenAmount,
-                  });
+              // const transaction = isNativeToken(token)
+              //   ? prepareTransaction({
+              //       client,
+              //       chain,
+              //       to: receiverAddress,
+              //       value: toWei(tokenAmount),
+              //     })
+              //   : transfer({
+              //       contract: getContract({
+              //         address: token.address,
+              //         chain: chain,
+              //         client: client,
+              //       }),
+              //       to: receiverAddress,
+              //       amount: tokenAmount,
+              //     });
 
               await sendAndConfirmTransaction({
                 account: props.payer.account,
