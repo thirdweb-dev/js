@@ -349,7 +349,6 @@ export function ConnectButton(props: ConnectButtonProps) {
         }}
         welcomeScreen={props.connectModal?.welcomeScreen}
         size={size}
-        isEmbed={false}
         localeId={props.locale || "en_US"}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}

@@ -29,12 +29,8 @@ export function ReadContractRawPreview() {
   });
 
   return (
-    <div className="rounded-2xl backdrop-blur">
-      <MediaRenderer
-        client={THIRDWEB_CLIENT}
-        src={encodeUriData(data ?? "")}
-        className="shadow-gray-100"
-      />
+    <div className="rounded-2xl bg-secondary shadow-xl border">
+      <MediaRenderer client={THIRDWEB_CLIENT} src={encodeUriData(data ?? "")} />
     </div>
   );
 }

@@ -103,7 +103,7 @@ export function WalletAuth(props: {
         setModalVisibility={() => {}}
         client={props.client}
         connectLocale={props.locale}
-        isEmbed={false}
+        hideHeader={false}
         recommendedWallets={undefined}
         chain={wallet.getChain()}
         showAllWallets={true}
