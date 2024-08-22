@@ -7,7 +7,7 @@ import { SiMedium } from "@react-icons/all-files/si/SiMedium";
 import { SiReddit } from "@react-icons/all-files/si/SiReddit";
 import { SiTelegram } from "@react-icons/all-files/si/SiTelegram";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import type { ProfileMetadata } from "@thirdweb-dev/sdk";
+import type { ProfileMetadata } from "constants/schemas";
 import { FiGlobe } from "react-icons/fi";
 import { LinkButton, TrackedIconButton } from "tw-components";
 import { hostnameEndsWith } from "../../../utils/url";
