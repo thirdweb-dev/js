@@ -220,9 +220,11 @@ export function useDefaultForwarders() {
 
   const chainId = useDashboardEVMChainId();
 
-  return useQuery(["default-forwarders", chainId], async () => {
-    const forwarders = await getTrustedForwarders(provider, StorageSingleton);
-    return forwarders;
+  return useQuery({
+    queryKey: ["default-forwarders", chainId],
+    queryFn: () => {
+      return getTrustedForwarders(provider, StorageSingleton);
+    },
   });
 }
 
@@ -1193,17 +1195,20 @@ export function useFeatureContractCodeSnippetQuery(language: string) {
     language = "react";
   }
 
-  return useQuery(["feature-code-snippet", language], async () => {
-    // only allow specific languages
-    if (
-      ["go", "python", "react", "sdk", "unity"].includes(language) === false
-    ) {
-      throw new Error("Invalid language");
-    }
-    const res = await fetch(
-      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_${language}.json`,
-    );
-    return (await res.json()) as SnippetApiResponse;
+  return useQuery({
+    queryKey: ["feature-code-snippet", language],
+    queryFn: async () => {
+      // only allow specific languages
+      if (
+        ["go", "python", "react", "sdk", "unity"].includes(language) === false
+      ) {
+        throw new Error("Invalid language");
+      }
+      const res = await fetch(
+        `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_${language}.json`,
+      );
+      return (await res.json()) as SnippetApiResponse;
+    },
   });
 }
 

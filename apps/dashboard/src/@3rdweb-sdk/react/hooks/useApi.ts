@@ -923,7 +923,10 @@ export async function fetchChainsFromApi() {
 }
 
 export function useApiChains() {
-  return useQuery(["all-chains"], async () => {
-    return fetchChainsFromApi();
+  return useQuery({
+    queryKey: ["all-chains"],
+    queryFn: () => {
+      return fetchChainsFromApi();
+    },
   });
 }
