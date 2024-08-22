@@ -30,6 +30,7 @@ export type SingleStepAuthArgsType =
       openedWindow?: Window;
       closeOpenedWindow?: (window: Window) => void;
       redirectUrl?: string;
+      mode?: "redirect" | "popup" | "window";
     }
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
