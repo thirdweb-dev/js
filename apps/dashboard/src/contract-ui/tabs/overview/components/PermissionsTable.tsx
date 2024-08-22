@@ -11,13 +11,12 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { useAllRoleMembers } from "@thirdweb-dev/react";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import { useAllRoleMembers, useContract } from "@thirdweb-dev/react";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
-import { ZERO_ADDRESS } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import {
   Button,
   Card,
@@ -29,7 +28,7 @@ import {
 import { shortenIfAddress } from "utils/usedapp-external";
 
 interface PermissionsTableProps {
-  contract: SmartContract;
+  contract: ThirdwebContract;
   trackingCategory: TrackedLinkProps["category"];
 }
 
@@ -37,7 +36,8 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
   contract,
   trackingCategory,
 }) => {
-  const allRoleMembers = useAllRoleMembers(contract);
+  const contractQuery = useContract(contract.address);
+  const allRoleMembers = useAllRoleMembers(contractQuery.contract);
   const permissionsHref = useTabHref("permissions");
 
   const members = useMemo(() => {

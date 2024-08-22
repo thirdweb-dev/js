@@ -1,15 +1,15 @@
-import { thirdwebClient } from "@/constants/client";
 import {
   useIsAdmin,
   useIsMinter,
 } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { useBatchesToReveal, useClaimConditions } from "@thirdweb-dev/react";
-import type { SmartContract } from "@thirdweb-dev/sdk";
+import {
+  useBatchesToReveal,
+  useClaimConditions,
+  useContract,
+} from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { StepsCard } from "components/dashboard/StepsCard";
 import { useTabHref } from "contract-ui/utils";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { getContract } from "thirdweb";
 import { totalSupply } from "thirdweb/extensions/erc20";
 import {
   getNFTs as erc721GetNfts,
@@ -19,10 +19,12 @@ import {
 import { getNFTs as erc1155Nfts } from "thirdweb/extensions/erc1155";
 import { getAccounts } from "thirdweb/extensions/erc4337";
 import { useReadContract } from "thirdweb/react";
+
+import type { ThirdwebContract } from "thirdweb";
 import { Link, Text } from "tw-components";
 
 interface ContractChecklistProps {
-  contract: SmartContract;
+  contract: ThirdwebContract;
 }
 
 type Step = {
@@ -34,42 +36,37 @@ type Step = {
 export const ContractChecklist: React.FC<ContractChecklistProps> = ({
   contract,
 }) => {
-  const chain = useV5DashboardChain(contract.chainId);
-  const contractv5 = getContract({
-    address: contract.getAddress(),
-    chain: chain,
-    client: thirdwebClient,
-  });
+  const contractQuery = useContract(contract.address);
   const nftHref = useTabHref("nfts");
   const tokenHref = useTabHref("tokens");
   const accountsHref = useTabHref("accounts");
   const claimConditionsHref = useTabHref("claim-conditions");
 
   const erc721Claimed = useReadContract(getTotalClaimedSupply, {
-    contract: contractv5,
+    contract: contract,
   });
-  const erc20Supply = useReadContract(totalSupply, { contract: contractv5 });
+  const erc20Supply = useReadContract(totalSupply, { contract });
   const accounts = useReadContract(getAccounts, {
-    contract: contractv5,
+    contract,
     start: 0n,
     end: 1n,
   });
   const erc721NftQuery = useReadContract(erc721GetNfts, {
-    contract: contractv5,
+    contract,
     start: 0,
     count: 1,
   });
   const erc1155NftQuery = useReadContract(erc1155Nfts, {
-    contract: contractv5,
+    contract,
     start: 0,
     count: 1,
   });
   const sharedMetadataQuery = useReadContract(sharedMetadata, {
-    contract: contractv5,
+    contract,
   });
 
-  const claimConditions = useClaimConditions(contract);
-  const batchesToReveal = useBatchesToReveal(contract);
+  const claimConditions = useClaimConditions(contractQuery.contract);
+  const batchesToReveal = useBatchesToReveal(contractQuery.contract);
 
   const steps: Step[] = [
     {
@@ -79,14 +76,14 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     },
   ];
 
-  const isAdmin = useIsAdmin(contractv5);
-  const isMinter = useIsMinter(contractv5);
+  const isAdmin = useIsAdmin(contract);
+  const isMinter = useIsMinter(contract);
 
   if (!isAdmin) {
     return null;
   }
 
-  const isLazyMintable = detectFeatures(contract, [
+  const isLazyMintable = detectFeatures(contractQuery.contract, [
     "ERC721LazyMintable",
     "ERC1155LazyMintableV2",
     "ERC1155LazyMintableV1",
@@ -109,7 +106,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const isErc721SharedMetadadata = detectFeatures(contract, [
+  const isErc721SharedMetadadata = detectFeatures(contractQuery.contract, [
     "ERC721SharedMetadata",
   ]);
   if (isErc721SharedMetadadata) {
@@ -128,14 +125,14 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const erc721hasClaimConditions = detectFeatures(contract, [
+  const erc721hasClaimConditions = detectFeatures(contractQuery.contract, [
     "ERC721ClaimPhasesV1",
     "ERC721ClaimPhasesV2",
     "ERC721ClaimConditionsV1",
     "ERC721ClaimConditionsV2",
     "ERC721ClaimCustom",
   ]);
-  const erc20HasClaimConditions = detectFeatures(contract, [
+  const erc20HasClaimConditions = detectFeatures(contractQuery.contract, [
     "ERC20ClaimPhasesV1",
     "ERC20ClaimPhasesV2",
     "ERC20ClaimConditionsV1",
@@ -178,7 +175,9 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const tokenIsMintable = detectFeatures(contract, ["ERC20Mintable"]);
+  const tokenIsMintable = detectFeatures(contractQuery.contract, [
+    "ERC20Mintable",
+  ]);
   if (tokenIsMintable && isMinter) {
     steps.push({
       title: "First token minted",
@@ -195,7 +194,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const nftIsMintable = detectFeatures(contract, [
+  const nftIsMintable = detectFeatures(contractQuery.contract, [
     "ERC721Mintable",
     "ERC1155Mintable",
   ]);
@@ -217,7 +216,9 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const isAccountFactory = detectFeatures(contract, ["AccountFactory"]);
+  const isAccountFactory = detectFeatures(contractQuery.contract, [
+    "AccountFactory",
+  ]);
   if (isAccountFactory) {
     steps.push({
       title: "First account created",
@@ -234,7 +235,7 @@ export const ContractChecklist: React.FC<ContractChecklistProps> = ({
     });
   }
 
-  const isRevealable = detectFeatures(contract, [
+  const isRevealable = detectFeatures(contractQuery.contract, [
     "ERC721Revealable",
     "ERC1155Revealable",
   ]);
