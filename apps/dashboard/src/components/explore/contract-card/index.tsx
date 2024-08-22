@@ -9,13 +9,18 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { ensQuery } from "components/contract-components/hooks";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
+import { replaceIpfsUrl } from "lib/sdk";
 import { RocketIcon, ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
+import { getContract } from "thirdweb";
 import { polygon } from "thirdweb/chains";
-import invariant from "tiny-invariant";
+import {
+  getPublishedContract,
+  getPublishedContractVersions,
+} from "thirdweb/extensions/thirdweb";
+import { download } from "thirdweb/storage";
+import { thirdwebClient } from "../../../@/constants/client";
 import { ContractPublisher, replaceDeployerAddress } from "../publisher";
 
 interface ContractCardProps {
@@ -179,17 +184,62 @@ type PublishedContractId =
   | `${string}/${string}`
   | `${string}/${string}/${string}`;
 
+const contractPublisherContract = getContract({
+  address: "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808",
+  chain: polygon,
+  client: thirdwebClient,
+});
+
+async function getLatest(publisher: string, contractId: string) {
+  const version = await getPublishedContract({
+    contract: contractPublisherContract,
+    publisher: publisher,
+    contractId: contractId,
+  });
+  return {
+    ...version,
+    ...(await download({
+      uri: version.publishMetadataUri,
+      client: thirdwebClient,
+    }).then((r) => r.json())),
+  };
+}
+
+async function getPublishedVersion(
+  publisher: string,
+  contractId: string,
+  version = "latest",
+) {
+  if (version === "latest") {
+    return getLatest(publisher, contractId);
+  }
+  const allVersions = await getPublishedContractVersions({
+    contract: contractPublisherContract,
+    publisher: publisher,
+    contractId: contractId,
+  });
+
+  const versionsWithMetadata = await Promise.all(
+    allVersions.map(async (v) => ({
+      ...v,
+      ...(await download({
+        uri: v.publishMetadataUri,
+        client: thirdwebClient,
+      }).then((r) => r.json())),
+    })),
+  );
+
+  return versionsWithMetadata.find(
+    (v) => v.publishedMetadata.version === version,
+  );
+}
+
 async function publishedContractQueryFn(
   publisher: string,
   contractId: string,
   version: string,
   queryClient: QueryClient,
 ) {
-  const polygonSdk = getThirdwebSDK(
-    polygon.id,
-    getDashboardChainRpc(polygon.id, undefined),
-  );
-
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
   // START prefill both publisher ens variations
   if (publisherEns.address) {
@@ -205,18 +255,9 @@ async function publishedContractQueryFn(
     );
   }
   // END prefill both publisher ens variations
-  invariant(publisherEns.address, "publisher address not found");
-  const latestPublishedVersion = await polygonSdk
-    .getPublisher()
-    .getVersion(publisherEns.address, contractId, version);
-  invariant(latestPublishedVersion, "no published version found");
-  const contractInfo = await polygonSdk
-    .getPublisher()
-    .fetchPublishedContractInfo(latestPublishedVersion);
-  return {
-    ...latestPublishedVersion,
-    ...contractInfo.publishedMetadata,
 
+  return {
+    ...(await getPublishedVersion(publisher, contractId, version)),
     publishedContractId: `${publisher}/${contractId}/${version}`,
   };
 }

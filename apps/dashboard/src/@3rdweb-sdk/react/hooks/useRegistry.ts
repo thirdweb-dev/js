@@ -15,7 +15,7 @@ import { remove } from "thirdweb/extensions/thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 
-function useMultiChainRegContractList(walletAddress?: string) {
+export function useMultiChainRegContractList(walletAddress?: string) {
   return useQuery(
     ["dashboard-registry", walletAddress, "multichain-contract-list"],
     async () => {

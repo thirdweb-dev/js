@@ -1,33 +1,27 @@
+import { thirdwebClient } from "@/constants/client";
 import { Skeleton } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import type { BasicContract } from "contract-ui/types/types";
-import { useAllChainsData } from "hooks/chains/allChains";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
+import { useV5DashboardChain } from "lib/v5-adapter";
 import { memo } from "react";
+import { getContract } from "thirdweb";
+import { getAllAccounts } from "thirdweb/extensions/erc4337";
+import { useReadContract } from "thirdweb/react";
 import { Text } from "tw-components";
 
 interface AsyncFactoryAccountCellProps {
   cell: BasicContract;
 }
 
-const useAccountCount = (address: string, chainId: number) => {
-  const { chainIdToChainRecord } = useAllChainsData();
-  return useQuery({
-    queryKey: ["account-count", chainId, address],
-    queryFn: async () => {
-      const chain = chainIdToChainRecord[chainId];
-      if (!chain) {
-        throw new Error("chain not found");
-      }
-      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId, chain));
-      const contract = await sdk.getContract(address);
-      const accounts = await contract.accountFactory.getAllAccounts();
-      return accounts.length;
-    },
-    enabled: !!address && !!chainId,
+function useAccountCount(address: string, chainId: number) {
+  const dashboardChain = useV5DashboardChain(chainId);
+  return useReadContract(getAllAccounts, {
+    contract: getContract({
+      chain: dashboardChain,
+      address,
+      client: thirdwebClient,
+    }),
   });
-};
+}
 
 export const AsyncFactoryAccountCell = memo(
   ({ cell }: AsyncFactoryAccountCellProps) => {

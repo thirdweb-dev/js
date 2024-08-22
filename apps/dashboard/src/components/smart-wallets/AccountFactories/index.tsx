@@ -1,19 +1,21 @@
+import { thirdwebClient } from "@/constants/client";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
+import { useMultiChainRegContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { getAllDetectedExtensionNames } from "@thirdweb-dev/sdk";
 import type { BasicContract } from "contract-ui/types/types";
-import { useSupportedChains } from "hooks/chains/configureChains";
-import { getDashboardChainRpc } from "lib/rpc";
-import { getThirdwebSDK } from "lib/sdk";
+import { defineDashboardChain } from "lib/defineDashboardChain";
 import { FiPlus } from "react-icons/fi";
-import { polygon } from "thirdweb/chains";
+import { getContract } from "thirdweb";
+import { resolveContractAbi } from "thirdweb/contract";
 import invariant from "tiny-invariant";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 import { FactoryContracts } from "./factory-contracts";
 
-const useFactories = () => {
+function useFactories() {
   const { user, isLoggedIn } = useLoggedInUser();
-  const configuredChains = useSupportedChains();
+  const multiChainContracts = useMultiChainRegContractList(user?.address);
   return useQuery(
     [
       "dashboard-registry",
@@ -23,30 +25,44 @@ const useFactories = () => {
     ],
     async () => {
       invariant(user?.address, "user should be logged in");
-      const polygonSDK = getThirdwebSDK(
-        polygon.id,
-        getDashboardChainRpc(polygon.id, undefined),
-      );
-      const contractList = await polygonSDK.getMultichainContractList(
-        user.address,
-        configuredChains,
+      invariant(
+        multiChainContracts.data?.length,
+        "contracts should be fetched",
       );
 
-      const contractWithExtensions = await Promise.all(
-        contractList.map(async (c) => {
-          const extensions =
-            "extensions" in c ? await c.extensions().catch(() => []) : [];
-          return extensions.includes("AccountFactory") ? c : null;
+      // get abi for each contract
+      const contractsWithExtensions = await Promise.all(
+        multiChainContracts.data.map(async (basicContract) => {
+          // define the contract
+          const contract = getContract({
+            client: thirdwebClient,
+            // needed in this case
+            // eslint-disable-next-line no-restricted-syntax
+            chain: defineDashboardChain(basicContract.chainId, undefined),
+            address: basicContract.address,
+          });
+          // get the abi
+          const abi = await resolveContractAbi(contract);
+          // get the extensions based on the abi
+          const contractExtensions = getAllDetectedExtensionNames(abi);
+          return {
+            ...basicContract,
+            extensions: contractExtensions,
+          };
         }),
       );
 
-      return contractWithExtensions.filter((f) => f !== null);
+      // filter for contracts with AccountFactory extension
+      return contractsWithExtensions.filter((c) =>
+        c.extensions.includes("AccountFactory"),
+      );
     },
     {
-      enabled: !!user?.address && isLoggedIn,
+      enabled:
+        !!user?.address && isLoggedIn && !!multiChainContracts.data?.length,
     },
   );
-};
+}
 
 interface AccountFactoriesProps {
   trackingCategory: string;

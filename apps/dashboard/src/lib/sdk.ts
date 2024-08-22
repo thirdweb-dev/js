@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   DASHBOARD_THIRDWEB_CLIENT_ID,
   DASHBOARD_THIRDWEB_SECRET_KEY,
@@ -13,14 +14,18 @@ import {
   ThirdwebStorage,
 } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
+import { resolveScheme } from "thirdweb/storage";
 import { getAbsoluteUrl } from "./vercel-utils";
 
-export function replaceIpfsUrl(url: string) {
+export function replaceIpfsUrl(uri: string) {
   try {
-    return StorageSingleton.resolveScheme(url);
+    return resolveScheme({
+      uri,
+      client: thirdwebClient,
+    });
   } catch (err) {
-    console.error("error resolving ipfs url", url, err);
-    return url;
+    console.error("error resolving ipfs uri", uri, err);
+    return uri;
   }
 }
 
