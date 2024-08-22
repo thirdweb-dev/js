@@ -36,7 +36,6 @@ import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
-import type { SnippetApiResponse } from "components/contract-tabs/code/types";
 import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import type { providers } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -1184,35 +1183,6 @@ export function useContractFunctions(abi: Abi) {
 
 export function useContractEvents(abi: Abi) {
   return abi ? extractEventsFromAbi(abi) : undefined;
-}
-
-// TODO: this points to very old snippets, we need to update this!
-export function useFeatureContractCodeSnippetQuery(language: string) {
-  if (language === "javascript") {
-    // biome-ignore lint/style/noParameterAssign: FIXME
-    language = "sdk";
-  }
-
-  if (language === "react-native") {
-    // biome-ignore lint/style/noParameterAssign: FIXME
-    language = "react";
-  }
-
-  return useQuery({
-    queryKey: ["feature-code-snippet", language],
-    queryFn: async () => {
-      // only allow specific languages
-      if (
-        ["go", "python", "react", "sdk", "unity"].includes(language) === false
-      ) {
-        throw new Error("Invalid language");
-      }
-      const res = await fetch(
-        `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/feature_snippets_${language}.json`,
-      );
-      return (await res.json()) as SnippetApiResponse;
-    },
-  });
 }
 
 export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
