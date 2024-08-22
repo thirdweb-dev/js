@@ -57,6 +57,7 @@ export const NavLink: ComponentWithChildren<NavLinkProps> = ({
       height={7}
       display="flex"
       alignItems="center"
+      isExternal={href.startsWith("https")}
     >
       <Skeleton isLoaded={!loading}>
         <Heading

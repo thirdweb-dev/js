@@ -172,7 +172,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
             titleWithGradient="connect users to web3"
             subtitle="Onboard every user, connect to any wallet, and build apps that anyone can use — with in-app wallets, account abstraction, and fiat & crypto payments."
             trackingCategory={TRACKING_CATEGORY}
-            ctaLink="/dashboard/connect/playground"
+            ctaLink="https://playground.thirdweb.com/connect/sign-in/button"
             contactUsTitle="Book Demo"
             gradient="linear(to-r, #4490FF, #4490FF)"
             lottie={connectLottie}
@@ -361,7 +361,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                 mobileImage={require("../../public/assets/product-pages/connect/mobile-connection.png")}
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
                 direction="horizontal"
-                href="/dashboard/connect/playground"
+                href="https://playground.thirdweb.com/connect/sign-in/button"
               />
               <LandingCardWithImage
                 title="Production-grade infrastructure"
@@ -369,7 +369,7 @@ const ConnectLanding: ThirdwebNextPage = () => {
                 image={require("../../public/assets/product-pages/connect/desktop-scale.png")}
                 mobileImage={require("../../public/assets/product-pages/connect/mobile-scale.png")}
                 TRACKING_CATEGORY={TRACKING_CATEGORY}
-                href="/dashboard/connect/playground"
+                href="https://playground.thirdweb.com/connect/sign-in/button"
               />
             </LandingGridSection>
           </Flex>

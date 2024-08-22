@@ -157,7 +157,7 @@ export const sidebar: SideBar = {
 						},
 						{
 							name: "Playground",
-							href: "https://thirdweb.com/dashboard/connect/playground",
+							href: "https://playground.thirdweb.com/connect/sign-in/button",
 						},
 					],
 				},
