@@ -5,7 +5,6 @@ import { CodeExample } from "../../../components/code/code-example";
 import { BuyMerchPreview } from "../../../components/pay/direct-payment";
 import { StyledPayEmbedPreview } from "../../../components/pay/embed";
 import { PayTransactionButtonPreview } from "../../../components/pay/transaction-button";
-import { PayDirectPayments } from "@/components/pay/pay-direct-payment";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -43,9 +42,6 @@ export default function Page() {
 
       <section className="space-y-8">
         <BuyOnchainAsset />
-      </section>
-      <section className="container px-4 md:px-6 space-y-8">
-        <PayDirectPayments/>
       </section>
     </main>
   );
