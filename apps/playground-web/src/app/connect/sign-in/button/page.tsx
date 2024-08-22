@@ -68,7 +68,7 @@ export default function Page() {
         heroLink="/connectors.png"
       />
 
-      <div className="flex flex-col xl:flex-row xl:min-h-[900px] gap-6 xl:gap-6 relative">
+      <div className="flex flex-col-reverse xl:flex-row xl:min-h-[900px] gap-6 xl:gap-6 relative">
         <div className="grow xl:border-r xl:pr-6 pb-10 border-b xl:border-b-0 xl:mb-0">
           <LeftSection
             connectOptions={connectOptions}
