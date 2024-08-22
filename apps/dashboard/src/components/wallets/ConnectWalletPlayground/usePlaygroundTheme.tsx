@@ -1,14 +1,11 @@
-import {
-  type ThemeOverrides,
-  darkTheme,
-  lightTheme,
-} from "@thirdweb-dev/react";
 import { useState } from "react";
+import { type ThemeOverrides, darkTheme, lightTheme } from "thirdweb/react";
 
 export function usePlaygroundTheme(selectedTheme: "light" | "dark") {
   const [colorOverrides, setColorOverrides] = useState<
     NonNullable<ThemeOverrides["colors"]>
   >({});
+
   const themeObj =
     selectedTheme === "light"
       ? lightTheme({
