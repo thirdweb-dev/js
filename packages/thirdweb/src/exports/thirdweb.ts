@@ -184,10 +184,10 @@ export {
   type BuyWithCryptoHistoryParams,
 } from "../pay/buyWithCrypto/getHistory.js";
 
-export { 
+export {
   getBuyWithCryptoTransfer,
   type GetBuyWithCryptoTransferParams,
-  type BuyWithCryptoTransfer
+  type BuyWithCryptoTransfer,
 } from "../pay/buyWithCrypto/getTransfer.js";
 
 export type {
