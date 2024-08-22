@@ -1,5 +1,28 @@
 # thirdweb
 
+## 5.48.1
+
+### Patch Changes
+
+- [#4237](https://github.com/thirdweb-dev/js/pull/4237) [`b38308d`](https://github.com/thirdweb-dev/js/commit/b38308d893aa571d910ae5f76c6538eb83e1dce5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enable external redirects for electron support
+
+  ```ts
+  import { authenticate } from "thirdweb/wallets/in-app";
+
+  const result = await authenticate({
+    client,
+    strategy: "google",
+    redirectUrl: "https://example.org",
+    mode: "window",
+  });
+  ```
+
+- [#4213](https://github.com/thirdweb-dev/js/pull/4213) [`6c87d7b`](https://github.com/thirdweb-dev/js/commit/6c87d7ba3a28e136bdd4580ab15e7407ad78f6b3) Thanks [@MananTank](https://github.com/MananTank)! - Fix "conditionally rendereed hooks error" in various components in `thirdweb/react` and `thirdweb/react-native`
+
+- [#4214](https://github.com/thirdweb-dev/js/pull/4214) [`0a1bce8`](https://github.com/thirdweb-dev/js/commit/0a1bce8fa84259264cbac0820b45dd3989cfec73) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix custom image metadata on in-app wallets
+
+- [#4239](https://github.com/thirdweb-dev/js/pull/4239) [`d93ec63`](https://github.com/thirdweb-dev/js/commit/d93ec63cd742fc7dff559d3f4325bb3350a233d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix passkey domain not being respected on login
+
 ## 5.48.0
 
 ### Minor Changes
