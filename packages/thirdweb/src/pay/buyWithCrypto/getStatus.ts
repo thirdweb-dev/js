@@ -56,7 +56,7 @@ export type BuyWithCryptoSubStatuses =
   | "UNKNOWN_ERROR"
   | "REFUNDED";
 
-export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN";
+export type SwapType = "SAME_CHAIN" | "CROSS_CHAIN" | "TRANSFER";
 
 /**
  * The object returned by the [`getBuyWithCryptoStatus`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoStatus) function to represent the status of a quoted transaction
