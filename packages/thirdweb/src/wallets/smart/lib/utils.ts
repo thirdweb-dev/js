@@ -44,7 +44,7 @@ export function hexlifyUserOp(
     Object.entries(userOp).map(([key, val]) => [
       key,
       // turn any value that's not hex into hex
-      val === undefined ? undefined : isHex(val) ? val : toHex(val),
+      (val === undefined || isHex(val)) ? val : toHex(val),
     ]),
   ) as UserOperationV06Hexed | UserOperationV07Hexed;
 }
