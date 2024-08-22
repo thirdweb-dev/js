@@ -34,6 +34,7 @@ import {
 import { useSetSelectionData } from "../../providers/wallet-ui-states-provider.js";
 import { WalletTypeRowButton } from "../../ui/ConnectWallet/WalletTypeRowButton.js";
 import { Img } from "../../ui/components/Img.js";
+import { Spacer } from "../../ui/components/Spacer.js";
 import { TextDivider } from "../../ui/components/TextDivider.js";
 import { Container } from "../../ui/components/basic.js";
 import { Button } from "../../ui/components/buttons.js";
@@ -90,6 +91,13 @@ export const ConnectWalletSocialOptions = (
   ) => void;
 
   const themeObj = useCustomTheme();
+  const optionalImageMetadata = useMemo(
+    () =>
+      props.wallet.id === "inApp"
+        ? props.wallet.getConfig()?.metadata?.image
+        : undefined,
+    [props.wallet],
+  );
 
   const loginMethodsLabel = {
     google: locale.signInWithGoogle,
@@ -173,10 +181,11 @@ export const ConnectWalletSocialOptions = (
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
     const walletConfig = wallet.getConfig();
+    const authMode = walletConfig?.auth?.mode ?? "popup";
     if (
       walletConfig &&
       "auth" in walletConfig &&
-      walletConfig?.auth?.mode === "redirect" &&
+      authMode !== "popup" &&
       !props.isLinking // We do not support redirects for linking
     ) {
       return loginWithOauthRedirect({
@@ -184,7 +193,7 @@ export const ConnectWalletSocialOptions = (
         client: props.client,
         ecosystem: ecosystemInfo,
         redirectUrl: walletConfig?.auth?.redirectUrl,
-        redirectExternally: walletConfig?.auth?.redirectExternally,
+        mode: authMode,
       });
     }
 
@@ -261,6 +270,19 @@ export const ConnectWalletSocialOptions = (
         position: "relative",
       }}
     >
+      {optionalImageMetadata && (
+        <>
+          <Img
+            client={props.client}
+            src={optionalImageMetadata.src}
+            alt={optionalImageMetadata.alt}
+            width={`${optionalImageMetadata.width}`}
+            height={`${optionalImageMetadata.height}`}
+            style={{ margin: "auto" }}
+          />
+          <Spacer y="xxs" />
+        </>
+      )}
       {/* Social Login */}
       {hasSocialLogins && (
         <Container

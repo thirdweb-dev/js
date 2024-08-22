@@ -55,7 +55,7 @@ export const ConnectModalContent = (props: {
   welcomeScreen: WelcomeScreen | undefined;
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
-  isEmbed: boolean;
+  hideHeader: boolean;
   recommendedWallets: Wallet[] | undefined;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
@@ -149,7 +149,7 @@ export const ConnectModalContent = (props: {
       setModalVisibility={setModalVisibility}
       client={props.client}
       connectLocale={props.connectLocale}
-      isEmbed={props.isEmbed}
+      hideHeader={props.hideHeader}
       recommendedWallets={props.recommendedWallets}
       accountAbstraction={props.accountAbstraction}
       chain={props.chain}

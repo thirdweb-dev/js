@@ -270,7 +270,7 @@ async function createSmartAccount(
           params: [originalMsgHash],
         });
         factorySupports712 = true;
-      } catch (e) {
+      } catch {
         // ignore
       }
 
@@ -358,7 +358,7 @@ async function createSmartAccount(
           params: [originalMsgHash],
         });
         factorySupports712 = true;
-      } catch (e) {
+      } catch {
         // ignore
       }
 

@@ -111,7 +111,7 @@ export async function fetchKeyMetadataFromApi(
   try {
     text = await response.text();
     return JSON.parse(text);
-  } catch (e) {
+  } catch {
     throw new Error(
       `Error fetching key metadata from API: ${response.status} - ${text}`,
     );
@@ -140,7 +140,7 @@ export async function fetchAccountFromApi(
   try {
     text = await response.text();
     return JSON.parse(text);
-  } catch (e) {
+  } catch {
     throw new Error(
       `Error fetching account from API: ${response.status} - ${text}`,
     );

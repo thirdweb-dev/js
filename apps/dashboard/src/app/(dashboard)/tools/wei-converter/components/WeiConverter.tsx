@@ -26,7 +26,7 @@ export const WeiConverter = () => {
       setWei(_wei.toString());
       setGwei(toTokens(_wei, 9));
       setEther(toEther(_wei));
-    } catch (e) {}
+    } catch {}
   };
 
   return (

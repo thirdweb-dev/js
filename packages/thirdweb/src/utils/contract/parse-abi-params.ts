@@ -32,6 +32,17 @@ export function parseAbiParams(
   constructorParamTypes: string[],
   constructorParamValues: unknown[],
 ): Array<string | bigint | boolean> {
+  /**
+   * Internal Solidity type checklist
+   * 1. tuple, array -> JSON.parse | todo: Recursively parse the content
+   * 2. uint, int -> bigint
+   * 3. address -> string
+   * 4. string -> string
+   * 5. bytes, bytes32 etc. -> string
+   * 6. bool -> boolean
+   * >>> Make sure to return the original value at the end of the function <<<
+   */
+
   // Make sure they have the same length
   if (constructorParamTypes.length !== constructorParamValues.length) {
     throw new Error(
@@ -45,6 +56,9 @@ export function parseAbiParams(
         return JSON.parse(value);
       }
       return value;
+    }
+    if (type === "string") {
+      return String(value);
     }
     if (type === "bytes32") {
       if (!isHex(value)) {
@@ -86,5 +100,8 @@ export function parseAbiParams(
         "Invalid boolean value. Expecting either 'true' or 'false'",
       );
     }
+
+    // Return the value here if none of the types match
+    return value;
   });
 }

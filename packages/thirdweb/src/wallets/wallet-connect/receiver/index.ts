@@ -344,7 +344,7 @@ export async function disconnectWalletConnectSession(options: {
         message: "Disconnected",
       },
     });
-  } catch (error) {
+  } catch {
     // ignore, the session doesn't exist already
   }
 }

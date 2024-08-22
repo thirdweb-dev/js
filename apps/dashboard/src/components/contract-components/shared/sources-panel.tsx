@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { Link, Text } from "tw-components";
 import type { SourceFile } from "../types";
 import { SourcesAccordion } from "./sources-accordion";

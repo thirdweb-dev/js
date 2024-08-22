@@ -243,6 +243,23 @@ export function useContractRouteConfig(
       feature: ["ModularCore"],
     });
 
+    const hasNewClaimConditions = detectFeatures(contractQuery.contract, [
+      // erc721
+      "ERC721ClaimConditionsV2",
+      "ERC721ClaimPhasesV2",
+      // erc1155
+      "ERC1155ClaimConditionsV2",
+      "ERC1155ClaimPhasesV2",
+      // erc20
+      "ERC20ClaimConditionsV2",
+      "ERC20ClaimPhasesV2",
+    ]);
+
+    const detectedPermissionEnumerable = detectFeatures(
+      contractQuery.contract,
+      ["PermissionsEnumerable"],
+    );
+
     return {
       claimconditionExtensionDetection,
       detectedMetadata,
@@ -266,6 +283,8 @@ export function useContractRouteConfig(
       detectedNftExtensions,
       detectedErc20Extension,
       detectedModularExtension,
+      hasNewClaimConditions,
+      detectedPermissionEnumerable,
     };
   }, [contractQuery]);
 
@@ -300,19 +319,32 @@ export function useContractRouteConfig(
     {
       title: "Code Snippets",
       path: "code",
-      component: LazyContractCodePage,
+      component: () => (
+        <>{contract && <LazyContractCodePage contract={contract} />}</>
+      ),
       isDefault: true,
     },
     {
       title: "Explorer",
       path: "explorer",
-      component: LazyContractExplorerPage,
+      component: () => (
+        <>
+          {contract && contractQuery.contract?.abi && (
+            <LazyContractExplorerPage
+              contract={contract}
+              abi={contractQuery.contract.abi}
+            />
+          )}
+        </>
+      ),
       isDefault: true,
     },
     {
       title: "Events",
       path: "events",
-      component: LazyContractEventsPage,
+      component: () => (
+        <>{contract && <LazyContractEventsPage contract={contract} />}</>
+      ),
       isDefault: true,
     },
     {
@@ -398,13 +430,35 @@ export function useContractRouteConfig(
       title: "Claim Conditions",
       path: "claim-conditions",
       isEnabled: contractData.claimconditionExtensionDetection,
-      component: LazyContractClaimConditionsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractClaimConditionsPage
+              contract={contract}
+              claimconditionExtensionDetection={
+                contractData.claimconditionExtensionDetection
+              }
+              isERC20={contractData.isERC20}
+              hasNewClaimConditions={contractData.hasNewClaimConditions}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Accounts",
       path: "accounts",
       isEnabled: contractData.detectedAccountFactory,
-      component: LazyContractAccountsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractAccountsPage
+              contract={contract}
+              detectedAccountFactory={contractData.detectedAccountFactory}
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Balance",
@@ -440,7 +494,18 @@ export function useContractRouteConfig(
       title: "Permissions",
       path: "permissions",
       isEnabled: contractData.detectedPermissionFeatures,
-      component: LazyContractPermissionsPage,
+      component: () => (
+        <>
+          {contract && (
+            <LazyContractPermissionsPage
+              contract={contract}
+              detectedPermissionEnumerable={
+                contractData.detectedPermissionEnumerable
+              }
+            />
+          )}
+        </>
+      ),
     },
     {
       title: "Embed",
@@ -482,7 +547,9 @@ export function useContractRouteConfig(
     {
       title: "Sources",
       path: "sources",
-      component: LazyContractSourcesPage,
+      component: () => (
+        <>{contract && <LazyContractSourcesPage contract={contract} />}</>
+      ),
       isDefault: true,
     },
   ];

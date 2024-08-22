@@ -1,5 +1,4 @@
 import { encodePacked } from "viem/utils";
-import type { ThirdwebContract } from "../../../../contract/contract.js";
 import { upload } from "../../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { encodeAbiParameters } from "../../../../utils/abi/encodeAbiParameters.js";

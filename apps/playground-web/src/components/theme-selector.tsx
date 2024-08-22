@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import * as React from "react";
 
 export function ThemeSelector() {
   const { setTheme } = useTheme();

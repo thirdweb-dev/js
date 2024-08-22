@@ -20,6 +20,9 @@ export const ENTRYPOINT_ADDRESS_v0_7 =
 
 export const MANAGED_ACCOUNT_GAS_BUFFER = 50000n;
 
+/*
+ * @internal
+ */
 export const getDefaultAccountFactory = (entryPointAddress?: string) => {
   const version = getEntryPointVersion(
     entryPointAddress || ENTRYPOINT_ADDRESS_v0_6,
@@ -35,14 +38,9 @@ export const getDefaultAccountFactory = (entryPointAddress?: string) => {
  */
 export const getDefaultBundlerUrl = (chain: Chain, version: "v1" | "v2") => {
   const domain = getThirdwebDomains().bundler;
-  return `https://${chain.id}.${domain}/${version ?? "v1"}/`;
-};
-
-/**
- * @internal
- */
-export const getDefaultPaymasterUrl = (chain: Chain, version: "v1" | "v2") => {
-  const domain = getThirdwebDomains().bundler;
+  if (domain.startsWith("localhost:")) {
+    return `http://${domain}/${version ?? "v1"}?chain=${chain.id}`;
+  }
   return `https://${chain.id}.${domain}/${version ?? "v1"}`;
 };
 

@@ -534,7 +534,7 @@ class ThirdwebBridge implements TWBridge {
           (arg.startsWith("{") || arg.startsWith("["))
           ? JSON.parse(arg)
           : arg;
-      } catch (e) {
+      } catch {
         return arg;
       }
     });
@@ -586,7 +586,7 @@ class ThirdwebBridge implements TWBridge {
         try {
           typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
           isAbi = true;
-        } catch (e) {
+        } catch {
           typeOrAbi = firstArg[1];
           isAbi = false;
         }
@@ -716,7 +716,7 @@ class ThirdwebBridge implements TWBridge {
           (arg.startsWith("{") || arg.startsWith("["))
           ? JSON.parse(arg)
           : arg;
-      } catch (e) {
+      } catch {
         return arg;
       }
     });
@@ -727,7 +727,7 @@ class ThirdwebBridge implements TWBridge {
       if (firstArg.length > 1) {
         try {
           typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
-        } catch (e) {
+        } catch {
           typeOrAbi = firstArg[1];
         }
       }
@@ -1017,7 +1017,7 @@ class ThirdwebBridge implements TWBridge {
           stroke-width="4"
         />
       </svg>
-      
+
       <style>
         body,
         html {
@@ -1025,23 +1025,23 @@ class ThirdwebBridge implements TWBridge {
           margin: 0;
           padding: 0;
         }
-      
+
         body {
           display: flex;
           justify-content: center;
           align-items: center;
         }
-      
+
         .loader {
           width: 15vw;
           height: 15vw;
           animation: spin 2s linear infinite;
         }
-      
+
         .loader circle {
           animation: loading 1.5s linear infinite;
         }
-      
+
         @keyframes loading {
           0% {
             stroke-dasharray: 1, 150;
@@ -1056,7 +1056,7 @@ class ThirdwebBridge implements TWBridge {
             stroke-dashoffset: -124;
           }
         }
-      
+
         @keyframes spin {
           100% {
             transform: rotate(360deg);

@@ -6,7 +6,7 @@ import {
 } from "@/constants/env";
 import { type SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import {
-  type GatewayUrls,
+  // type GatewayUrls,
   type IStorageDownloader,
   type SingleDownloadOptions,
   StorageDownloader,
@@ -34,7 +34,7 @@ const defaultDownloader = new StorageDownloader({
 class SpecialDownloader implements IStorageDownloader {
   async download(
     url: string,
-    gatewayUrls?: GatewayUrls,
+    // gatewayUrls?: GatewayUrls,
     options?: SingleDownloadOptions,
   ): Promise<Response> {
     if (url.startsWith("ipfs://")) {
@@ -68,7 +68,7 @@ class SpecialDownloader implements IStorageDownloader {
         ProxyHostNames.add(u.hostname);
 
         throw new Error("not ok");
-      } catch (e) {
+      } catch {
         // this is a bit scary but hey, it works
         return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
       }

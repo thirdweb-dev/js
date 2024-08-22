@@ -1,8 +1,8 @@
+import { Book, CodeIcon, ZapIcon } from "lucide-react";
 import type { FunctionDoc } from "typedoc-better-json";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
 import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
 import { getCustomTag } from "../../references/components/TDoc/utils/getSidebarLinkgroups";
-import { Book, CodeIcon, ZapIcon } from "lucide-react";
 
 const slug = "/typescript/v5";
 const docs = await fetchTypeScriptDoc("v5");
@@ -50,7 +50,7 @@ export const sidebar: SideBar = {
 							icon: <Book />,
 							href: `${slug}/adapters`,
 						},
-						...["viemAdapter", "ethers6Adapter", "ethers5Adapter"].map(
+						...["createWalletAdapter", "viemAdapter", "ethers6Adapter", "ethers5Adapter"].map(
 							(name) => ({
 								name,
 								href: `${slug}/${name}`,

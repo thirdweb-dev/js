@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import * as React from "react";
 import { Skeleton } from "./ui/skeleton";
 
 export function ColorModeToggle() {

@@ -417,7 +417,7 @@ const MismatchNotice: React.FC<{
       try {
         await switchNetwork(chainV5);
         onClose(true);
-      } catch (e) {
+      } catch {
         //  failed to switch network
         onClose(false);
       }

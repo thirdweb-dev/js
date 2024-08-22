@@ -47,7 +47,7 @@ export async function transformAlchemyResponseToNFT(
             supply: alchemyNFT.balance || "1",
             type: alchemyNFT.id.tokenMetadata.tokenType,
           } as WalletNFT;
-        } catch (e) {
+        } catch {
           return undefined as unknown as WalletNFT;
         }
       }),

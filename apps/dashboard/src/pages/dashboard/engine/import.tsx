@@ -55,7 +55,7 @@ const Page: ThirdwebNextPage = () => {
 
       toast.success("Engine imported successfully");
       router.push("/dashboard/engine");
-    } catch (e) {
+    } catch {
       toast.error(
         "Error importing Engine. Please check if the details are correct.",
       );

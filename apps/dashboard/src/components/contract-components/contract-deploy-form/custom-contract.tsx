@@ -458,7 +458,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                     contractAddress: deployedContractAddress,
                     chainId: selectedChain,
                   });
-                } catch (e) {
+                } catch {
                   // ignore
                 }
 

@@ -59,7 +59,7 @@ export function useRpcValidation(rpcUrl: string) {
           mainnet: !r.testnet,
           infoURL: "infoURL" in r ? r.infoURL : undefined,
         });
-      } catch (err) {
+      } catch {
         setExistingChain(null);
       }
 

@@ -40,12 +40,16 @@ export async function connectInAppWallet(
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
   if (
-    createOptions?.auth?.mode === "redirect" &&
+    createOptions?.auth?.mode !== "popup" &&
     connector.authenticateWithRedirect
   ) {
     const strategy = options.strategy;
     if (socialAuthOptions.includes(strategy as SocialAuthOption)) {
-      connector.authenticateWithRedirect(strategy as SocialAuthOption);
+      connector.authenticateWithRedirect(
+        strategy as SocialAuthOption,
+        createOptions?.auth?.mode,
+        createOptions?.auth?.redirectUrl,
+      );
     }
   }
   // If we don't have authenticateWithRedirect then it's likely react native, so the default is to redirect and we can carry on

@@ -725,7 +725,7 @@ export const getStaticProps: GetStaticProps<TemplatePageProps> = async (
         template,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       notFound: true,
     };

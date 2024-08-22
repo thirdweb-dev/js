@@ -55,7 +55,7 @@ function extractDomain(url: string) {
     const domain =
       segments.length > 2 ? segments[segments.length - 2] : segments[0];
     return domain;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

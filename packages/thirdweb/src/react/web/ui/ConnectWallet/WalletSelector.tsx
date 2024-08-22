@@ -71,7 +71,7 @@ export type WalletSelectorProps = {
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
   recommendedWallets: Wallet[] | undefined;
-  isEmbed: boolean;
+  hideHeader: boolean;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   showAllWallets: boolean | undefined;
@@ -472,7 +472,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     }
   }
 
-  const showHeader = !props.isEmbed || props.modalHeader;
+  // hide the header for embed - unless it's customized
+  const showHeader = !props.hideHeader || props.modalHeader;
 
   return (
     <Container
@@ -515,7 +516,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               }
         }
       >
-        {!props.modalHeader && props.isEmbed && isWalletGroupExpanded && (
+        {!showHeader && isWalletGroupExpanded && (
           <Container
             flex="row"
             center="y"
@@ -593,6 +594,7 @@ const WalletSelection: React.FC<{
     <WalletList
       style={{
         minHeight: "100%",
+        maxHeight: "370px",
       }}
     >
       {wallets.map((wallet) => {

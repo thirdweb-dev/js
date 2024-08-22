@@ -253,7 +253,7 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     const info = await queryClient.fetchQuery(ensQuery(checksummedAddress));
     address = info.address;
     ensName = info.ensName;
-  } catch (e) {
+  } catch {
     // if profileAddress is not a valid address, ensQuery throws
     // in that case - redirect to 404
     return {

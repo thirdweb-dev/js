@@ -1,8 +1,8 @@
 import { Book, BookIcon, CodeIcon, ExternalLink, ZapIcon } from "lucide-react";
 import type { SideBar } from "../../../components/Layouts/DocLayout";
+import { TypeScriptIcon } from "../../../icons";
 import { fetchTypeScriptDoc } from "../../references/components/TDoc/fetchDocs/fetchTypeScriptDoc";
 import { getCustomTag } from "../../references/components/TDoc/utils/getSidebarLinkgroups";
-import { TypeScriptIcon } from "../../../icons";
 
 const slug = "/react/v5";
 const docs = await fetchTypeScriptDoc("v5");
@@ -60,6 +60,26 @@ export const sidebar: SideBar = {
                 href: `${slug}/${f.name}`,
                 icon: <CodeIcon />,
               })) || []),
+          ],
+        },
+        {
+          name: "Adapters",
+          links: [
+            {
+              name: "Introduction",
+              icon: <Book />,
+              href: `${slug}/adapters`,
+            },
+            ...[
+              "createWalletAdapter",
+              "viemAdapter",
+              "ethers6Adapter",
+              "ethers5Adapter",
+            ].map((name) => ({
+              name,
+              href: `${slug}/${name}`,
+              icon: <CodeIcon />,
+            })),
           ],
         },
         {

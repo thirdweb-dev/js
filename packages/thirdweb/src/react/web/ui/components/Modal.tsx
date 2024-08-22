@@ -114,7 +114,7 @@ export const Modal: React.FC<{
               {!props.hideCloseIcon && (
                 <CrossContainer>
                   <Dialog.Close asChild>
-                    <IconButton type="button" aria-label="Close">
+                    <IconButton autoFocus type="button" aria-label="Close">
                       <Cross2Icon
                         width={iconSize.md}
                         height={iconSize.md}

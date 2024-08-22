@@ -69,7 +69,7 @@ export function useSendToken(client: ThirdwebClient) {
           client,
           name: receiverAddress,
         });
-      } catch (e) {
+      } catch {
         throw new Error("Failed to resolve address");
       }
 

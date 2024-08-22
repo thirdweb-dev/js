@@ -6,7 +6,14 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "correctness": {
+        "useHookAtTopLevel": "error",
+        "noNewSymbol": "error",
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "useArrayLiterals": "error"
+      }
     }
   },
   "formatter": {

@@ -139,6 +139,8 @@ export function useReadContract<
       ...queryOptions,
     });
 
+    // TODO - FIX LATER
+    // biome-ignore lint/correctness/useHookAtTopLevel: <explanation>
     return useQuery(query);
   }
   // raw tx case
@@ -157,6 +159,8 @@ export function useReadContract<
       ...queryOptions,
     });
 
+    // TODO - FIX LATER
+    // biome-ignore lint/correctness/useHookAtTopLevel: <explanation>
     return useQuery(query);
   }
 

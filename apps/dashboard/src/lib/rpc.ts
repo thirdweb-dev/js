@@ -21,7 +21,7 @@ export function getDashboardChainRpc(
       }
     }
     return rpcUrl;
-  } catch (e) {
+  } catch {
     // if this fails we already know there's no possible rpc url available so we should just return an empty string
     return "";
   }

@@ -41,7 +41,7 @@ export const SolidityTupleInput: React.FC<SolidityInputWithTypeProps> = ({
         } else {
           form.clearErrors(inputName);
         }
-      } catch (error) {
+      } catch {
         form.setError(inputName, invalidInputError);
       }
     } else {

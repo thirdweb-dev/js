@@ -2,10 +2,11 @@ import { Flex, Progress } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Text } from "tw-components";
 
-type UploadProgressEvent = {
+export type UploadProgressEvent = {
   progress: number;
   total: number;
 };
+
 interface ProgressBoxProps {
   progress: UploadProgressEvent;
 }

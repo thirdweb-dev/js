@@ -10,7 +10,7 @@ import type {
 import {
   DEBUG,
   ENTRYPOINT_ADDRESS_v0_6,
-  getDefaultPaymasterUrl,
+  getDefaultBundlerUrl,
   getEntryPointVersion,
 } from "./constants.js";
 import { hexlifyUserOp } from "./utils.js";
@@ -55,7 +55,7 @@ export async function getPaymasterAndData(args: {
   const entrypoint = entrypointAddress ?? ENTRYPOINT_ADDRESS_v0_6;
   const entrypointVersion = getEntryPointVersion(entrypoint);
   const paymasterVersion = entrypointVersion === "v0.6" ? "v1" : "v2";
-  const paymasterUrl = getDefaultPaymasterUrl(chain, paymasterVersion);
+  const paymasterUrl = getDefaultBundlerUrl(chain, paymasterVersion);
 
   // Ask the paymaster to sign the transaction and return a valid paymasterAndData value.
   const fetchWithHeaders = getClientFetch(client);

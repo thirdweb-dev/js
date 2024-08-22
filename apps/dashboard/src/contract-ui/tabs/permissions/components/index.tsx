@@ -1,9 +1,9 @@
-import { thirdwebClient } from "@/constants/client";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
 import {
   type ContractWithRoles,
   type RolesForContract,
   useAllRoleMembers,
+  useContract,
   useContractType,
   useSetAllRoleMembers,
 } from "@thirdweb-dev/react";
@@ -11,10 +11,9 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import type { roleMap } from "thirdweb/extensions/permissions";
 import { Button } from "tw-components";
 import { ContractPermission } from "./contract-permission";
@@ -26,11 +25,12 @@ type PermissionFormContext<TContract extends ContractWithRoles> = {
 export const Permissions = <TContract extends ContractWithRoles>({
   contract,
 }: {
-  contract: TContract;
+  contract: ThirdwebContract;
 }) => {
   const trackEvent = useTrack();
-  const allRoleMembers = useAllRoleMembers(contract);
-  const setAllRoleMembers = useSetAllRoleMembers(contract);
+  const { contract: contractV4 } = useContract(contract.address);
+  const allRoleMembers = useAllRoleMembers(contractV4);
+  const setAllRoleMembers = useSetAllRoleMembers(contractV4 as TContract);
 
   const transformedQueryData = useMemo(() => {
     if (!allRoleMembers.data) {
@@ -44,7 +44,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
     values: transformedQueryData,
   });
 
-  const { data: contractType } = useContractType(contract.getAddress());
+  const { data: contractType } = useContractType(contract.address);
   const contractData =
     BuiltinContractMap[contractType as keyof typeof BuiltinContractMap];
 
@@ -66,12 +66,6 @@ export const Permissions = <TContract extends ContractWithRoles>({
     BuiltinContractMap[contractType as keyof typeof BuiltinContractMap]
       .contractType !== "custom";
 
-  const chain = useV5DashboardChain(contract.chainId);
-  const contractV5 = getContract({
-    address: contract.getAddress(),
-    chain,
-    client: thirdwebClient,
-  });
   return (
     <FormProvider {...form}>
       <Flex
@@ -115,7 +109,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
               role={role}
               description={ROLE_DESCRIPTION_MAP[role] || ""}
               isPrebuilt={isPrebuilt}
-              contract={contractV5}
+              contract={contract}
             />
           );
         })}

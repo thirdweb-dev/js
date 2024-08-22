@@ -1,5 +1,4 @@
 import { Highlight } from "prism-react-renderer";
-import React from "react";
 import { cn } from "../../lib/utils";
 import { CopyButton } from "./CopyButton";
 import { Card } from "./card";

@@ -46,7 +46,10 @@ const FooterLinkGroup: React.FC<FooterLinkGroupProps> = (props) => {
       <Flex gap={3} direction="column">
         {props.links.map((linkData) => (
           <TrackedLink
-            isExternal={linkData.link.startsWith("http")}
+            isExternal={
+              linkData.link.startsWith("http") ||
+              linkData.link.startsWith("mailto")
+            }
             key={linkData.label}
             href={linkData.link}
             category="footer"

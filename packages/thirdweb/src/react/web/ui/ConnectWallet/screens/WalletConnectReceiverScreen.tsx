@@ -60,7 +60,7 @@ export function WalletConnectReceiverScreen(props: {
           },
         });
         return client;
-      } catch (e) {
+      } catch {
         setErrorConnecting("Failed to establish WalletConnect connection");
         return;
       }
@@ -164,7 +164,7 @@ export function WalletConnectReceiverScreen(props: {
                           uri: value,
                           walletConnectClient,
                         });
-                      } catch (e) {
+                      } catch {
                         setErrorConnecting(
                           "Error creating WalletConnect session",
                         );

@@ -16,7 +16,7 @@ export function getValidPublicRPCUrl(chain: ChainMetadata) {
         url.search = "";
       }
       return url.toString();
-    } catch (e) {
+    } catch {
       return rpc;
     }
   });

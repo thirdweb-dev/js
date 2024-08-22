@@ -63,7 +63,7 @@ type NFT = {
   owner: string;
   type: "ERC1155" | "ERC721";
   supply: string;
-  quantityOwned?: string;
+  quantityOwned?: bigint;
 };
 
 export type WalletNFT = NFT & {

@@ -1,4 +1,7 @@
-import { AccountPlan, useUpdateAccount } from "@3rdweb-sdk/react/hooks/useApi";
+import {
+  AccountPlan,
+  useUpdateAccountPlan,
+} from "@3rdweb-sdk/react/hooks/useApi";
 import { SimpleGrid } from "@chakra-ui/react";
 import { PricingCard } from "components/homepage/sections/PricingCard";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -12,7 +15,7 @@ export const OnboardingChoosePlan: React.FC<OnboardingChoosePlanProps> = ({
   onSave,
 }) => {
   const trackEvent = useTrack();
-  const mutation = useUpdateAccount();
+  const mutation = useUpdateAccountPlan();
 
   const handleSave = (plan: AccountPlan) => {
     trackEvent({

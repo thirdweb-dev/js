@@ -1,4 +1,6 @@
+import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
+import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
   Box,
@@ -13,7 +15,6 @@ import {
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
-import { useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 import type { NewAuctionListing, NewDirectListing } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
@@ -32,6 +33,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
   type ThirdwebContract,
+  getContract,
 } from "thirdweb";
 import type { TransactionReceipt } from "thirdweb/dist/types/transaction/types";
 import { createAuction, createListing } from "thirdweb/extensions/marketplace";
@@ -89,7 +91,6 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   const trackEvent = useTrack();
   const network = useEVMContractInfo()?.chain;
   const chainId = useDashboardEVMChainId();
-
   const isSupportedChain =
     chainId &&
     (isSimpleHashSupported(chainId) ||
@@ -114,14 +115,25 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     },
   });
 
-  const { contract: selectedContract } = useContract(
-    form.watch("contractAddress"),
-  );
   const address = useActiveAccount()?.address;
-  const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } = useOwnedNFTs(
-    selectedContract,
-    address,
-  );
+
+  const selectedContract = getContract({
+    address: form.watch("contractAddress"),
+    chain: contract.chain,
+    client: thirdwebClient,
+  });
+
+  const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } =
+    useDashboardOwnedNFTs({
+      contract: selectedContract,
+      owner: address,
+      // Only run this hook as the last resort if this chain is not supported by the API services we are using
+      disabled:
+        !form.watch("contractAddress") ||
+        isSupportedChain ||
+        isWalletNFTsLoading ||
+        (walletNFTs?.result || []).length > 0,
+    });
 
   const isSelected = (nft: WalletNFT) => {
     return (
@@ -132,10 +144,18 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const ownedWalletNFTs: WalletNFT[] = useMemo(() => {
     return ownedNFTs?.map((nft) => {
+      if (nft.type === "ERC721") {
+        return {
+          ...nft,
+          supply: "1",
+          contractAddress: form.watch("contractAddress"),
+          tokenId: nft.metadata.id.toString(),
+        };
+      }
       return {
         ...nft,
         contractAddress: form.watch("contractAddress"),
-        tokenId: nft.metadata.id,
+        tokenId: nft.metadata.id.toString(),
       };
     }) as WalletNFT[];
   }, [ownedNFTs, form]);
