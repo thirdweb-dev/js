@@ -47,14 +47,6 @@ export type SingleStepAuthArgsType =
        * Optional name of the passkey to create, defaults to a generated name
        */
       passkeyName?: string;
-      /**
-       * Optional domain, defaults to current window location.
-       * NOTE: this is required on native platforms.
-       */
-      domain?: {
-        displayName: string;
-        hostname: string;
-      };
     }
   | {
       strategy: "wallet";

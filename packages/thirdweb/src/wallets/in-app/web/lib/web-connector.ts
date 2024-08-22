@@ -314,8 +314,8 @@ export class InAppWebConnector implements InAppConnector {
       passkeyClient,
       storage,
       rp: {
-        id: args.domain?.hostname ?? window.location.hostname,
-        name: args.domain?.displayName ?? window.document.title,
+        id: this.passkeyDomain ?? window.location.hostname,
+        name: this.passkeyDomain ?? window.document.title,
       },
     });
   }
