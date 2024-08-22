@@ -12,8 +12,6 @@ import type {
   QuoteTokenInfo,
   QuoteTransactionRequest,
 } from "./commonTypes.js";
-// re-export
-export type { QuoteApprovalParams } from "./commonTypes.js";
 
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
