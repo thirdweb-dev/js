@@ -34,6 +34,7 @@ function AllWalletsUI(props: {
   client: ThirdwebClient;
   recommendedWallets: Wallet[] | undefined;
   connectLocale: ConnectLocale;
+  disableSelectionDataReset?: boolean;
 }) {
   const { itemsToShow, lastItemRef } = useShowMore<HTMLLIElement>(10, 10);
   const setSelectionData = useSetSelectionData();
@@ -143,7 +144,9 @@ function AllWalletsUI(props: {
                       selectWallet={() => {
                         const wallet = createWallet(walletInfo.id);
                         props.onSelect(wallet);
-                        setSelectionData({});
+                        if (!props.disableSelectionDataReset) {
+                          setSelectionData({});
+                        }
                       }}
                       client={props.client}
                       recommendedWallets={props.recommendedWallets}

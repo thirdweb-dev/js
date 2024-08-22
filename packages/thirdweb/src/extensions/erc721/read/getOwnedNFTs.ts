@@ -13,6 +13,7 @@ export type GetOwnedNFTsParams = GetOwnedTokenIdsParams;
 
 /**
  * Retrieves the owned NFTs for a given owner.
+ * This extension only works with ERC721 contracts that support the [`tokenOfOwnerByIndex`](https://portal.thirdweb.com/references/typescript/v5/erc721/tokenOfOwnerByIndex) method
  * @param options - The options for retrieving the owned NFTs.
  * @returns A promise that resolves to an array of NFTs owned by the specified owner.
  * @extension ERC721

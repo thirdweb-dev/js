@@ -59,7 +59,7 @@ export async function authenticate(
   const loginUrl = getLoginUrl({
     authOption: auth.strategy,
     client,
-    mode: "mobile",
+    mode: "window",
     redirectUrl: auth.redirectUrl,
   });
 

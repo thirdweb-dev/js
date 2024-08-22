@@ -1,3 +1,4 @@
+import { useResolveContractAbi } from "@3rdweb-sdk/react/hooks/useResolveContractAbi";
 import {
   Box,
   Divider,
@@ -22,7 +23,6 @@ import {
 import {
   type AbiEvent,
   type AbiFunction,
-  type SmartContract,
   extractFunctionsFromAbi,
   joinABIs,
 } from "@thirdweb-dev/sdk";
@@ -31,6 +31,7 @@ import { MarkdownRenderer } from "components/contract-components/published-contr
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { useRouter } from "next/router";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 import {
   COMMANDS,
@@ -42,7 +43,7 @@ import { InteractiveAbiFunction } from "./interactive-abi-function";
 
 interface ContractFunctionProps {
   fn?: AbiFunction | AbiEvent;
-  contract?: SmartContract;
+  contract?: ThirdwebContract;
 }
 
 const ContractFunction: React.FC<ContractFunctionProps> = ({
@@ -50,8 +51,8 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
   contract,
 }) => {
   const [environment, setEnvironment] = useState<CodeEnvironment>("javascript");
-
-  const enabledExtensions = useContractEnabledExtensions(contract?.abi);
+  const abiQuery = useResolveContractAbi(contract);
+  const enabledExtensions = useContractEnabledExtensions(abiQuery.data);
 
   const extensionNamespace = useMemo(() => {
     if (enabledExtensions.some((e) => e.name === "ERC20")) {
@@ -164,7 +165,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
         </>
       ) : null}
 
-      {contract && isFunction && (
+      {isFunction && contract && (
         <InteractiveAbiFunction
           key={JSON.stringify(fn)}
           contract={contract}
@@ -176,28 +177,32 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
         Use this function in your app
       </Heading>
       <Divider mb={2} />
-      <CodeSegment
-        environment={environment}
-        setEnvironment={setEnvironment}
-        snippet={formatSnippet(
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          COMMANDS[isFunction ? (isRead ? "read" : "write") : "events"] as any,
-          {
-            contractAddress: contract?.getAddress(),
-            fn,
-            args: fn.inputs?.map((i) => i.name),
-            chainId: contract?.chainId,
-            extensionNamespace,
-          },
-        )}
-      />
+      {contract && (
+        <CodeSegment
+          environment={environment}
+          setEnvironment={setEnvironment}
+          snippet={formatSnippet(
+            COMMANDS[
+              isFunction ? (isRead ? "read" : "write") : "events"
+              // biome-ignore lint/suspicious/noExplicitAny: FIXME
+            ] as any,
+            {
+              contractAddress: contract.address,
+              fn,
+              args: fn.inputs?.map((i) => i.name),
+              chainId: contract.chain.id,
+              extensionNamespace,
+            },
+          )}
+        />
+      )}
     </Flex>
   );
 };
 
 interface ContractFunctionsPanelProps {
   fnsOrEvents: (AbiFunction | AbiEvent)[];
-  contract?: SmartContract;
+  contract?: ThirdwebContract;
 }
 
 type ExtensionFunctions = {
@@ -209,7 +214,8 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   fnsOrEvents,
   contract,
 }) => {
-  const extensions = useContractEnabledExtensions(contract?.abi);
+  const abiQuery = useResolveContractAbi(contract);
+  const extensions = useContractEnabledExtensions(abiQuery.data);
   const isFunction = "stateMutability" in fnsOrEvents[0];
   const functionsWithExtension = useMemo(() => {
     let allFunctions = fnsOrEvents as AbiFunction[];

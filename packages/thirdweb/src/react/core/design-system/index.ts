@@ -98,9 +98,9 @@ export type Theme = {
 /**
  * @internal
  */
-function createThemeObj(colors: ThemeColors): Theme {
+function createThemeObj(type: "dark" | "light", colors: ThemeColors): Theme {
   return {
-    type: "dark" as "light" | "dark",
+    type,
     colors: {
       primaryText: colors.primaryText,
       secondaryText: colors.secondaryText,
@@ -149,8 +149,11 @@ function createThemeObj(colors: ThemeColors): Theme {
   };
 }
 
-export const darkThemeObj = /* @__PURE__ */ createThemeObj(darkColors);
-export const lightThemeObj = /* @__PURE__ */ createThemeObj(lightColors);
+export const darkThemeObj = /* @__PURE__ */ createThemeObj("dark", darkColors);
+export const lightThemeObj = /* @__PURE__ */ createThemeObj(
+  "light",
+  lightColors,
+);
 
 /**
  * @theme
@@ -170,6 +173,7 @@ export const fontSize = {
 };
 
 export const spacing = {
+  "4xs": "2px",
   "3xs": "4px",
   xxs: "6px",
   xs: "8px",

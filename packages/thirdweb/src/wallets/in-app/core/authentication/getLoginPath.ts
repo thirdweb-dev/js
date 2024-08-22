@@ -3,8 +3,8 @@ import { getThirdwebBaseUrl } from "../../../../utils/domains.js";
 import { type AuthOption, authOptions } from "../../../../wallets/types.js";
 import type { Ecosystem } from "../../web/types.js";
 
-const getLoginOptionRoute = (option: AuthOption) => {
-  if (!authOptions.includes(option)) {
+const getLoginOptionRoute = (option: AuthOption | "wallet") => {
+  if (!authOptions.includes(option as AuthOption) && option !== "wallet") {
     throw new Error(`Unknown auth option ${option}`);
   }
   switch (option) {
@@ -22,12 +22,20 @@ export const getLoginUrl = ({
   mode = "popup",
   redirectUrl,
 }: {
-  authOption: AuthOption;
+  authOption: AuthOption | "wallet";
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
-  mode?: "popup" | "redirect" | "mobile";
+  mode?: "popup" | "redirect" | "window";
   redirectUrl?: string;
 }) => {
+  if (mode === "popup" && redirectUrl) {
+    throw new Error("Redirect URL is not supported for popup mode");
+  }
+
+  if (mode === "window" && !redirectUrl) {
+    throw new Error("Redirect URL is required for window mode");
+  }
+
   const route = getLoginOptionRoute(authOption);
   let baseUrl = `${getThirdwebBaseUrl("inAppWallet")}/api/2024-05-05/login/${route}?clientId=${client.clientId}`;
   if (ecosystem?.partnerId) {
@@ -36,18 +44,12 @@ export const getLoginUrl = ({
     baseUrl = `${baseUrl}&ecosystemId=${ecosystem.id}`;
   }
 
-  if (mode === "redirect") {
+  // Always append redirectUrl to the baseUrl if mode is not popup
+  if (mode !== "popup") {
     const formattedRedirectUrl = new URL(redirectUrl || window.location.href);
     formattedRedirectUrl.searchParams.set("walletId", ecosystem?.id || "inApp");
     formattedRedirectUrl.searchParams.set("authProvider", authOption);
     baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(formattedRedirectUrl.toString())}`;
-  }
-
-  if (mode === "mobile") {
-    if (!redirectUrl) {
-      throw new Error("Redirect URL is required for mobile authentication");
-    }
-    baseUrl = `${baseUrl}&redirectUrl=${encodeURIComponent(redirectUrl)}`;
   }
 
   return baseUrl;
@@ -58,7 +60,7 @@ export const getLoginCallbackUrl = ({
   client,
   ecosystem,
 }: {
-  authOption: AuthOption;
+  authOption: AuthOption | "wallet";
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
 }): string => {

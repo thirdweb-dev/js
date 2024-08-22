@@ -1,6 +1,6 @@
+import { thirdwebClient } from "@/constants/client";
 import { Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { type ChangeEvent, useState } from "react";
 import { prepareTransaction, toWei } from "thirdweb";
 import { useSendAndConfirmTransaction } from "thirdweb/react";

@@ -276,7 +276,7 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
           connectLocale={localeQuery.data}
           size={modalSize}
           meta={meta}
-          isEmbed={true}
+          header={props.header}
           localeId={props.locale || "en_US"}
           onConnect={props.onConnect}
           recommendedWallets={props.recommendedWallets}
@@ -318,7 +318,13 @@ const ConnectEmbedContent = (props: {
     privacyPolicyUrl?: string;
   };
   size: "compact" | "wide";
-  isEmbed: boolean;
+  header:
+    | {
+        title?: string;
+        titleIcon?: string;
+      }
+    | true
+    | undefined;
   localeId: LocaleId;
   onConnect: ((wallet: Wallet) => void) | undefined;
   recommendedWallets: Wallet[] | undefined;
@@ -383,10 +389,18 @@ const ConnectEmbedContent = (props: {
         chains={props.chains}
         client={props.client}
         connectLocale={props.connectLocale}
-        meta={props.meta}
+        meta={{
+          ...props.meta,
+          title:
+            typeof props.header === "object" ? props.header.title : undefined,
+          titleIconUrl:
+            typeof props.header === "object"
+              ? props.header.titleIcon
+              : undefined,
+        }}
         size={props.size}
         welcomeScreen={props.welcomeScreen}
-        isEmbed={props.isEmbed}
+        hideHeader={!props.header}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         showAllWallets={props.showAllWallets}
@@ -431,8 +445,8 @@ export const EmbedContainer = /* @__PURE__ */ StyledDiv<{
     overflow: "hidden",
     fontFamily: theme.fontFamily,
     "& *::selection": {
-      backgroundColor: theme.colors.primaryText,
-      color: theme.colors.modalBg,
+      backgroundColor: theme.colors.selectedTextBg,
+      color: theme.colors.selectedTextColor,
     },
     "& *": {
       boxSizing: "border-box",

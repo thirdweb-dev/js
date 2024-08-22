@@ -10,6 +10,7 @@ import { Img } from "../../components/Img.js";
 import { Spacer } from "../../components/Spacer.js";
 import { Container, Line, ModalHeader } from "../../components/basic.js";
 import { Text } from "../../components/text.js";
+import { Blobbie } from "../Blobbie.js";
 import { MenuButton } from "../MenuButton.js";
 import { AddUserIcon } from "../icons/AddUserIcon.js";
 import type { ConnectLocale } from "../locale/types.js";
@@ -98,13 +99,26 @@ export function LinkedProfilesScreen(props: {
                 }}
                 disabled // disabled until we have more data to show on a dedicated profile screen
               >
-                <Img
-                  src={getWalletIcon(profile.type)}
-                  width={iconSize.md}
-                  height={iconSize.md}
-                  loading="eager"
-                  client={props.client}
-                />
+                {profile.type === "wallet" && profile.details.address ? (
+                  <Container
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      borderRadius: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Blobbie address={profile.details.address} size={24} />
+                  </Container>
+                ) : (
+                  <Img
+                    src={getWalletIcon(profile.type)}
+                    width={iconSize.md}
+                    height={iconSize.md}
+                    loading="eager"
+                    client={props.client}
+                  />
+                )}
                 <Text color="primaryText">
                   {getProfileDisplayName(profile)}
                 </Text>

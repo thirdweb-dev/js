@@ -12,7 +12,7 @@ const connectLocaleEn: ConnectLocale = {
   installed: "Installed",
   buy: "Buy",
   continueAsGuest: "Continue as guest",
-  connectAWallet: "Connect a wallet",
+  connectAWallet: "Connect a Wallet",
   newToWallets: "New to wallets?",
   getStarted: "Get started",
   guest: "Guest",

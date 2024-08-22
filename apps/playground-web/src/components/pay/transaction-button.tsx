@@ -65,6 +65,9 @@ export function PayTransactionButtonPreview() {
                 to: account?.address || "",
               });
             }}
+            onError={(e) => {
+              console.error(e);
+            }}
             payModal={{
               theme: theme === "light" ? "light" : "dark",
             }}

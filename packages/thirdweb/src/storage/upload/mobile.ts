@@ -77,7 +77,7 @@ export async function uploadBatchMobile(
           let body: any;
           try {
             body = JSON.parse(xhr.responseText);
-          } catch (err) {
+          } catch {
             return reject(
               new Error("Failed to parse JSON from upload response"),
             );

@@ -12,6 +12,7 @@ export type ProposalVoteInfo = { [K in keyof typeof VoteType]: bigint };
  * Get the info about Against, For and Abstain votes of a proposal
  * @param options
  * @returns the object containing the info about Against, For and Abstain votes of a proposal
+ * Note: the count is displayed in "wei"
  * @extension VOTE
  * @example
  * ```ts
@@ -21,9 +22,9 @@ export type ProposalVoteInfo = { [K in keyof typeof VoteType]: bigint };
  *
  * // Example result
  * {
- *   against: 12n, // 12 users voted against the proposal
- *   for: 104n, // 104 users support the proposal
- *   abstain: 3n, // 3 users voted abstain on this proposal
+ *   for: 12000000000000000000n, // 12 tokens (with a decimals of 18) were used to vote "for"
+ *   against: 7000000000000000000n, // 7 tokens (with a decimals of 18) were used to vote "against"
+ *   abstain: 0n, // no user has voted abstain on this proposal
  * }
  * ```
  */

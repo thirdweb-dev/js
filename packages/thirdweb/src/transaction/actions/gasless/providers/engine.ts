@@ -10,6 +10,9 @@ import {
   waitForReceipt,
 } from "../../wait-for-tx-receipt.js";
 
+/**
+ * @transaction
+ */
 export type EngineOptions = {
   provider: "engine";
   relayerUrl: string;

@@ -472,7 +472,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
         const latestVersion = latestMetadata.publishedMetadata.version;
         if (
-          !isIncrementalVersion(latestVersion, extraMetadataCleaned.version)
+          !isIncrementalVersion(latestVersion || "0.0.0", extraMetadataCleaned.version || "0.0.0")
         ) {
           throw Error(
             `Version ${extraMetadataCleaned.version} is not greater than ${latestVersion}`,

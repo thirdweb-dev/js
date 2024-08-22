@@ -137,7 +137,6 @@ function Modal(
         meta={meta}
         size={size}
         welcomeScreen={props.welcomeScreen}
-        isEmbed={false}
         localeId={props.locale || "en_US"}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}

@@ -6,8 +6,10 @@ import type { Abi } from "abitype";
 export type PublishedMetadata = {
   name: string;
   abi: Abi;
-  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later
-  metadata: Record<string, any>;
+  // biome-ignore lint/suspicious/noExplicitAny: TODO: fix later by updating this type to match the specs here: https://docs.soliditylang.org/en/latest/metadata.html
+  metadata: Record<string, any> & {
+    sources: Record<string, { content: string } | { urls: string[] }>;
+  };
   info: {
     title?: string;
     author?: string;

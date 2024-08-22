@@ -45,13 +45,12 @@ export default async function Page(props: {
         </section>
       )}
 
-      {/* Buy Funds */}
-      {chain.services.find((c) => c.service === "pay" && c.enabled) && (
+      {/* Faucet / Buy Funds */}
+      {chain.testnet ? (
+        <FaucetSection chain={chain} />
+      ) : chain.services.find((c) => c.service === "pay" && c.enabled) ? (
         <BuyFundsSection chain={chain} />
-      )}
-
-      {/* Faucet */}
-      {chain.testnet && <FaucetSection chain={chain} />}
+      ) : null}
 
       {/* Chain Overview */}
       <ChainOverviewSection chain={chain} />

@@ -16,7 +16,6 @@ import { NFTGetAllTable } from "./components/table";
 import { TokenIdPage } from "./components/token-id";
 
 interface NftOverviewPageProps {
-  contractAddress: string;
   contract: ThirdwebContract;
 }
 
@@ -25,10 +24,9 @@ function isOnlyNumbers(str: string) {
 }
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
-  contractAddress,
   contract,
 }) => {
-  const contractQuery = useContract(contractAddress);
+  const contractQuery = useContract(contract.address);
   const router = useRouter();
   const tokenId = router.query?.paths?.[2];
   const isErc721 = detectFeatures(contractQuery?.contract, ["ERC721"]);
@@ -141,12 +139,15 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
             contractQuery?.contract && (
               <NFTLazyMintButton contract={contract} isErc721={isErc721} />
             )}
-          {detectedLzyMintState === "enabled" && contractQuery?.contract && (
-            <BatchLazyMintButton
-              contractQuery={contractQuery}
-              isRevealable={isRevealable}
-            />
-          )}
+          {detectedLzyMintState === "enabled" &&
+            contractQuery?.contract &&
+            contract && (
+              <BatchLazyMintButton
+                contractQuery={contractQuery}
+                isRevealable={isRevealable}
+                contract={contract}
+              />
+            )}
         </Flex>
       </Flex>
       {!detectedState ? (

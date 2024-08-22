@@ -55,7 +55,7 @@ type InstantSubmit = {
 type SubmitType = DelayedSubmit | InstantSubmit;
 
 interface BatchLazyMintEVMProps {
-  nextTokenIdToMint: number;
+  nextTokenIdToMint: bigint;
   isRevealable: boolean;
   onSubmit: (formData: SubmitType) => Promise<unknown>;
 }
@@ -122,7 +122,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
         await processInputData(acceptedFiles, (data) =>
           form.setValue("metadatas", data),
         );
-      } catch (err) {
+      } catch {
         form.setError("metadatas", {
           message: "Invalid metadata files",
           type: "validate",

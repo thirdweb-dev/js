@@ -50,7 +50,7 @@ export async function transformSimpleHashResponseToNFT(
             supply: simpleHashNft.token_count.toString(),
             type: simpleHashNft.contract.type,
           } as WalletNFT;
-        } catch (e) {
+        } catch {
           return undefined as unknown as WalletNFT;
         }
       }),

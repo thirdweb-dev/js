@@ -10,8 +10,8 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
 import { useMemo } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Card, Heading } from "tw-components";
 import { DelegateButton } from "./components/delegate-button";
@@ -19,60 +19,40 @@ import { Proposal } from "./components/proposal";
 import { ProposalButton } from "./components/proposal-button";
 
 interface ProposalsPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
 export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
-  contractAddress,
+  contract,
 }) => {
   const address = useActiveAccount()?.address;
-  const contractQuery = useContract(contractAddress, "vote");
-
-  const data = useVoteProposalList(contractQuery.contract);
+  const data = useVoteProposalList(contract);
 
   const balanceAddresses: string[] = useMemo(() => {
-    return [address, contractAddress].filter((a) => !!a) as string[];
-  }, [address, contractAddress]);
+    return [address, contract.address].filter((a) => !!a) as string[];
+  }, [address, contract.address]);
 
-  const proposals = useMemo(() => {
-    if (!data.data || data.data.length < 1) {
-      return [];
-    }
+  const proposals = useMemo(() => (data.data || []).reverse(), [data]);
 
-    const allProposals = data.data;
-    return allProposals.map(
-      (p, index) => allProposals[allProposals.length - 1 - index],
-    );
-  }, [data]);
+  const { data: balances } = useVoteTokenBalances(contract, balanceAddresses);
 
-  const { data: balances } = useVoteTokenBalances(
-    contractQuery.contract,
-    balanceAddresses,
-  );
-
-  if (contractQuery.isLoading) {
-    // TODO build a skeleton for this
-    return <div>Loading...</div>;
-  }
-
-  if (!contractQuery?.contract) {
+  if (!contract) {
     return null;
   }
-
   return (
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Proposals</Heading>
         <Flex gap={4}>
-          <DelegateButton contract={contractQuery.contract} />
-          <ProposalButton contract={contractQuery.contract} />
+          <DelegateButton contract={contract} />
+          <ProposalButton contract={contract} />
         </Flex>
       </Flex>
       <Stack spacing={4}>
         {proposals.map((proposal) => (
           <Proposal
             key={proposal.proposalId.toString()}
-            contract={contractQuery.contract}
+            contract={contract}
             proposal={proposal}
           />
         ))}

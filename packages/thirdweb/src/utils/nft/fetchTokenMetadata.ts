@@ -63,7 +63,7 @@ export async function fetchTokenMetadata(
           ),
         })
       ).json();
-    } catch (err) {
+    } catch {
       // otherwise attempt the second format
       return await (
         await download({

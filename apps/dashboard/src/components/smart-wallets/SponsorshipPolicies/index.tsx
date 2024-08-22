@@ -22,12 +22,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NetworkDropdown } from "components/contract-components/contract-publish-form/NetworkDropdown";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
-import { isAddress } from "ethers/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { LuTrash2 } from "react-icons/lu";
+import { isAddress } from "thirdweb/utils";
 import {
   Button,
   FormErrorMessage,

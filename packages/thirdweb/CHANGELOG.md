@@ -1,5 +1,68 @@
 # thirdweb
 
+## 5.48.1
+
+### Patch Changes
+
+- [#4237](https://github.com/thirdweb-dev/js/pull/4237) [`b38308d`](https://github.com/thirdweb-dev/js/commit/b38308d893aa571d910ae5f76c6538eb83e1dce5) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Enable external redirects for electron support
+
+  ```ts
+  import { authenticate } from "thirdweb/wallets/in-app";
+
+  const result = await authenticate({
+    client,
+    strategy: "google",
+    redirectUrl: "https://example.org",
+    mode: "window",
+  });
+  ```
+
+- [#4213](https://github.com/thirdweb-dev/js/pull/4213) [`6c87d7b`](https://github.com/thirdweb-dev/js/commit/6c87d7ba3a28e136bdd4580ab15e7407ad78f6b3) Thanks [@MananTank](https://github.com/MananTank)! - Fix "conditionally rendereed hooks error" in various components in `thirdweb/react` and `thirdweb/react-native`
+
+- [#4214](https://github.com/thirdweb-dev/js/pull/4214) [`0a1bce8`](https://github.com/thirdweb-dev/js/commit/0a1bce8fa84259264cbac0820b45dd3989cfec73) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix custom image metadata on in-app wallets
+
+- [#4239](https://github.com/thirdweb-dev/js/pull/4239) [`d93ec63`](https://github.com/thirdweb-dev/js/commit/d93ec63cd742fc7dff559d3f4325bb3350a233d1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix passkey domain not being respected on login
+
+## 5.48.0
+
+### Minor Changes
+
+- [#4191](https://github.com/thirdweb-dev/js/pull/4191) [`42cdc3a`](https://github.com/thirdweb-dev/js/commit/42cdc3a2bcfa44de46c48fa2e5c8b2a279eac8bb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Updates connect modal styles
+
+- [#4124](https://github.com/thirdweb-dev/js/pull/4124) [`246701d`](https://github.com/thirdweb-dev/js/commit/246701d615041a1dd1b8aca0a7aab62f261ac1ca) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds the ability to link a wallet in the Connect UI
+
+### Patch Changes
+
+- [#4128](https://github.com/thirdweb-dev/js/pull/4128) [`ef9cc55`](https://github.com/thirdweb-dev/js/commit/ef9cc55b69e77e310e600a3403ac0b2bae4b901e) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expose max() & min() util methods for bigints
+
+- [#4172](https://github.com/thirdweb-dev/js/pull/4172) [`cb591aa`](https://github.com/thirdweb-dev/js/commit/cb591aa6afffa57de31e5bdce91ad9964856e81c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Only show pay modal if active wallet does not have enough funds for a paid transaction
+
+- [#4177](https://github.com/thirdweb-dev/js/pull/4177) [`bd46699`](https://github.com/thirdweb-dev/js/commit/bd4669984dab9973ae1ecc6c7351a5040461e595) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Expsose GaslessConfigs type
+
+  ```ts
+  const gaslessOptions: GaslessOptions = {
+    provider: "engine",
+    relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+    relayerForwarderAddress: "0x...",
+  };
+  ```
+
+- [#4211](https://github.com/thirdweb-dev/js/pull/4211) [`4abf7a7`](https://github.com/thirdweb-dev/js/commit/4abf7a7f25182af964f0130c3ff1db574fd5ebc5) Thanks [@MananTank](https://github.com/MananTank)! - Fix Conditionally rendered hook error when Buying funds using fiat
+
+## 5.47.1
+
+### Patch Changes
+
+- [#4173](https://github.com/thirdweb-dev/js/pull/4173) [`7778063`](https://github.com/thirdweb-dev/js/commit/7778063458fc69a2e0a21fb58a89b34b36b16cdb) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Update Blobbie appearance
+
+- [#4154](https://github.com/thirdweb-dev/js/pull/4154) [`9133b45`](https://github.com/thirdweb-dev/js/commit/9133b45700cfe50bb275bb8ef676491f9e39fd5d) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Update tsdocs for Vote extensions
+
+- [#4150](https://github.com/thirdweb-dev/js/pull/4150) [`a43907e`](https://github.com/thirdweb-dev/js/commit/a43907e2df9c412b5c73c706ca4e4165b7273f68) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Lens's resolveAddress for sending crypto with lens handles
+
+- [#4163](https://github.com/thirdweb-dev/js/pull/4163) [`fc8daaa`](https://github.com/thirdweb-dev/js/commit/fc8daaa2bc469c04ee62182e5813ad7c78d101ec) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Export util method: isBytes
+
+- [#4165](https://github.com/thirdweb-dev/js/pull/4165) [`43f9319`](https://github.com/thirdweb-dev/js/commit/43f9319ac7ddab288ebcc5b5dbdd6b004c3bcf77) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add GaslessOptions to useSendAndConfirmTransaction
+
 ## 5.47.0
 
 ### Minor Changes

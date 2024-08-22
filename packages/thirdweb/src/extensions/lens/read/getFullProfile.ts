@@ -2,7 +2,6 @@ import { polygon } from "../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../chains/types.js";
 import type { ThirdwebClient } from "../../../client/client.js";
 import { getContract } from "../../../contract/contract.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
 import { getProfile } from "../__generated__/LensHub/read/getProfile.js";
 import { getDefaultHandle } from "../__generated__/TokenHandleRegistry/read/getDefaultHandle.js";
 import {
@@ -19,10 +18,23 @@ export type GetFullProfileParams = {
   profileId: bigint;
   client: ThirdwebClient;
   includeJoinDate?: boolean;
+  /**
+   * Override variables for Lens smart contracts
+   * Make sure all of them have to be on the same network
+   */
   overrides?: {
-    lensHubAddress?: Hex;
-    lensHandleAddress?: Hex;
-    tokenHandleRegistryAddress?: Hex;
+    /**
+     * Contract address for the LensHub contract
+     */
+    lensHubAddress?: string;
+    /**
+     * Contract address for the LensHandle contract
+     */
+    lensHandleAddress?: string;
+    /**
+     * Contract address for the TokenHandleRegistry contract
+     */
+    tokenHandleRegistryAddress?: string;
     chain?: Chain;
   };
 };

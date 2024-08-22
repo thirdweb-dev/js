@@ -42,7 +42,7 @@ export type ProposalItem = {
    */
   stateLabel: string | undefined;
   /**
-   * The current vote info. See type ProposalVoteInfo for more context
+   * The current vote info. See type [`ProposalVoteInfo`](https://portal.thirdweb.com/references/typescript/v5/ProposalItem) for more context
    */
   votes: ProposalVoteInfo;
   /**

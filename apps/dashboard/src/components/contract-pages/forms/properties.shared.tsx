@@ -9,7 +9,6 @@ import {
   Stack,
   Tooltip,
 } from "@chakra-ui/react";
-import type { OptionalPropertiesInput } from "@thirdweb-dev/sdk";
 import { FileInput } from "components/shared/FileInput";
 import { useEffect } from "react";
 import {
@@ -27,10 +26,13 @@ import {
 } from "react-hook-form";
 import { FiPlus, FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
-import type { z } from "zod";
+
+type OptionalPropertiesInput = {
+  [key: string]: string | number;
+};
 
 interface IPropertyFieldValues extends FieldValues {
-  attributes?: z.input<typeof OptionalPropertiesInput>;
+  attributes?: OptionalPropertiesInput;
 }
 
 interface IPropertiesFormControlProps<

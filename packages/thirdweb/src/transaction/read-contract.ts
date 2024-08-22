@@ -70,7 +70,7 @@ export type ReadContractOptions<
 >;
 
 /**
- * Reads state from a deployed smart contract.
+ * ### Reads state from a deployed smart contract.
  *
  * You can use raw read calls or read [extensions](https://portal.thirdweb.com/typescript/v5/extensions/use) to read from a contract.
  *
@@ -111,7 +111,26 @@ export type ReadContractOptions<
  *
  * const { data, isLoading } = useReadContract({
  *   contract,
- *   method: "function tokenURI(uint256 tokenId) returns (string)"});
+ *   method: "function tokenURI(uint256 tokenId) returns (string)"}),
+ *   params: [1n],
+ * });
+ * ```
+ *
+ * ### Using `resolveMethod`
+ * ```ts
+ * import { getContract, resolveMethod } from "thirdweb";
+ * import { sepolia } from "thirdweb/chains";
+ * import { useReadContract } from "thirdweb/react";
+ *
+ * const contract = getContract({
+ *   client,
+ *   address: "0x...",
+ *   chain: sepolia,
+ * });
+ *
+ * const { data, isLoading } = useReadContract({
+ *   contract,
+ *   method: resolveMethod("tokenURI"),
  *   params: [1n],
  * });
  * ```

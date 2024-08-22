@@ -28,13 +28,23 @@ import { FormItem } from "../ConnectWalletPlayground/FormItem";
 import { ModalSizeButton } from "../ConnectWalletPlayground/ModalSizeButton";
 import { PreviewThirdwebProvider } from "../ConnectWalletPlayground/PreviewThirdwebProvider";
 import { ThemeButton } from "../ConnectWalletPlayground/ThemeButton";
-import { socialIconMapV2 } from "../ConnectWalletPlayground/WalletButton";
 import { usePlaygroundTheme } from "../ConnectWalletPlayground/usePlaygroundTheme";
 import { usePlaygroundWallets } from "../ConnectWalletPlayground/usePlaygroundWallets";
 import {
   type WalletId,
   walletInfoRecord,
 } from "../ConnectWalletPlayground/walletInfoRecord";
+
+const phoneIcon =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzM1ODlfODYwMikiPgo8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSI4IiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfMzU4OV84NjAyKSIvPgo8cmVjdCB4PSItMSIgeT0iLTEiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgcng9IjkuOCIgZmlsbD0idXJsKCNwYWludDFfbGluZWFyXzM1ODlfODYwMikiLz4KPHBhdGggZD0iTTE4Ljg2MjIgMjYuODY0NkwxOS41MTk0IDI3LjUxODlDMTkuNTE5NCAyNy41MTg5IDIxLjA4MzcgMjkuMDczMSAyNS4zNTIxIDI0LjgyOTNDMjkuNjIwNSAyMC41ODU1IDI4LjA1NjEgMTkuMDMxMyAyOC4wNTYxIDE5LjAzMTNMMjcuNjQzIDE4LjYxODFDMjYuNjIxOCAxNy42MDQxIDI2LjUyNSAxNS45NzQ4IDI3LjQxNjIgMTQuNzg0NkwyOS4yMzYyIDEyLjM1MzVDMzAuMzM5OCAxMC44ODAyIDMyLjQ3MDQgMTAuNjg1MiAzMy43MzQzIDExLjk0MTlMMzYuMDAyMSAxNC4xOTUyQzM2LjYyNzUgMTQuODE5MiAzNy4wNDY0IDE1LjYyNTIgMzYuOTk1OSAxNi41MjA4QzM2Ljg2NTkgMTguODEzMSAzNS44Mjg4IDIzLjc0MzEgMzAuMDQ1MSAyOS40OTQ5QzIzLjkxMDUgMzUuNTkzNCAxOC4xNTQ0IDM1LjgzNjEgMTUuODAxNCAzNS42MTY1QzE1LjA1NiAzNS41NDcyIDE0LjQwODkgMzUuMTY4NyAxMy44ODc0IDM0LjY0ODdMMTEuODM2MyAzMi42MDkyQzEwLjQ0OTYgMzEuMjMyNiAxMC44Mzk2IDI4Ljg3MDkgMTIuNjEzNCAyNy45MDc0TDE1LjM3MjMgMjYuNDA2N0MxNi41MzY2IDI1Ljc3NCAxNy45NTIxIDI1Ljk2MDMgMTguODYyMiAyNi44NjQ2WiIgZmlsbD0id2hpdGUiLz4KPC9nPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzM1ODlfODYwMiIgeDE9IjI1LjUiIHkxPSItNi4yOTU3MmUtMDYiIHgyPSIzMC4yMDE2IiB5Mj0iNDcuNTM1IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiM4MzU4QkEiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjN0IxQ0Y3Ii8+CjwvbGluZWFyR3JhZGllbnQ+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQxX2xpbmVhcl8zNTg5Xzg2MDIiIHgxPSIyNS41NjI1IiB5MT0iLTEuMDAwMDEiIHgyPSIzMC40NiIgeTI9IjQ4LjUxNTYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzgzNThCQSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QjFDRjciLz4KPC9saW5lYXJHcmFkaWVudD4KPGNsaXBQYXRoIGlkPSJjbGlwMF8zNTg5Xzg2MDIiPgo8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHJ4PSI4IiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=";
+
+const socialIconMapV2 = {
+  email: "/assets/connect/email.png",
+  google: "assets/connect/google.png",
+  facebook: "assets/connect/facebook.png",
+  apple: "assets/connect/apple.png",
+  phone: phoneIcon,
+};
 
 // If loading a variable font, you don't need to specify the font weight
 const nounsDaoFont = londrinaSolidConstructor({
@@ -287,7 +297,7 @@ export const MiniPlayground: React.FC<{
 
             <Flex alignItems="center" gap={1}>
               <TrackedLink
-                href="/dashboard/connect/playground"
+                href="https://playground.thirdweb.com/connect/sign-in/button"
                 color="blue.500"
                 category={trackingCategory}
                 label="see-all-wallets"
@@ -449,7 +459,7 @@ export const MiniPlayground: React.FC<{
 
                 <Button
                   as={Link}
-                  href="/dashboard/connect/playground"
+                  href="https://playground.thirdweb.com/connect/sign-in/button"
                   fontSize={20}
                   leftIcon={<Icon as={MdOutlineElectricBolt} />}
                   color="black"
@@ -505,7 +515,7 @@ export const MiniPlayground: React.FC<{
                     as={TrackedLink}
                     category={trackingCategory}
                     label="build-your-own"
-                    href="/dashboard/connect/playground"
+                    href="https://playground.thirdweb.com/connect/sign-in/button"
                     fontSize={20}
                     leftIcon={<Icon as={MdOutlineElectricBolt} />}
                     color="black"

@@ -1,23 +1,19 @@
+import {
+  DASHBOARD_THIRDWEB_CLIENT_ID,
+  DASHBOARD_THIRDWEB_SECRET_KEY,
+  IPFS_GATEWAY_URL,
+  isProd,
+} from "@/constants/env";
 import { type SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import {
-  type GatewayUrls,
+  // type GatewayUrls,
   type IStorageDownloader,
   type SingleDownloadOptions,
   StorageDownloader,
   ThirdwebStorage,
 } from "@thirdweb-dev/storage";
-import {
-  DASHBOARD_THIRDWEB_CLIENT_ID,
-  DASHBOARD_THIRDWEB_SECRET_KEY,
-  isProd,
-} from "constants/rpc";
 import type { Signer } from "ethers";
 import { getAbsoluteUrl } from "./vercel-utils";
-
-// use env var to set IPFS gateway or fallback to ipfscdn.io
-export const IPFS_GATEWAY_URL =
-  (process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string) ||
-  "https://{clientId}.ipfscdn.io/ipfs/{cid}/{path}";
 
 export function replaceIpfsUrl(url: string) {
   try {
@@ -38,7 +34,7 @@ const defaultDownloader = new StorageDownloader({
 class SpecialDownloader implements IStorageDownloader {
   async download(
     url: string,
-    gatewayUrls?: GatewayUrls,
+    // gatewayUrls?: GatewayUrls,
     options?: SingleDownloadOptions,
   ): Promise<Response> {
     if (url.startsWith("ipfs://")) {
@@ -72,7 +68,7 @@ class SpecialDownloader implements IStorageDownloader {
         ProxyHostNames.add(u.hostname);
 
         throw new Error("not ok");
-      } catch (e) {
+      } catch {
         // this is a bit scary but hey, it works
         return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
       }

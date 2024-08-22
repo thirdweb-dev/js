@@ -8,17 +8,24 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useContractWrite } from "@thirdweb-dev/react";
-import type { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
+import type { AbiFunction } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
-import { BigNumber, type CallOverrides, utils } from "ethers";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useId, useMemo } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { FiPlay } from "react-icons/fi";
-import invariant from "tiny-invariant";
+import { toast } from "sonner";
+import {
+  type ThirdwebContract,
+  prepareContractCall,
+  readContract,
+  resolveMethod,
+  toWei,
+} from "thirdweb";
+import { useSendAndConfirmTransaction } from "thirdweb/react";
+import { parseAbiParams, stringify } from "thirdweb/utils";
 import {
   Button,
   Card,
@@ -37,9 +44,8 @@ function formatResponseData(data: unknown): string {
   if (typeof data === "string") {
     return data;
   }
-  if (BigNumber.isBigNumber(data)) {
-    // biome-ignore lint/style/noParameterAssign: FIXME
-    data = data.toString();
+  if (typeof data === "bigint") {
+    return data.toString();
   }
 
   if (typeof data === "object") {
@@ -56,7 +62,7 @@ function formatResponseData(data: unknown): string {
     }
   }
 
-  return JSON.stringify(data, null, 2);
+  return stringify(data, null, 2);
 }
 
 function formatError(error: Error): string {
@@ -87,7 +93,6 @@ function formatContractCall(
         }[]
       | undefined;
   }[],
-  value?: BigNumber,
 ) {
   const parsedParams = params
     .map((p) => (p.type === "bool" ? p.value !== "false" : p.value))
@@ -104,31 +109,23 @@ function formatContractCall(
         return p;
       }
     });
-
-  if (value) {
-    parsedParams.push({
-      value,
-    });
-  }
-
   return parsedParams;
 }
 
 interface InteractiveAbiFunctionProps {
-  abiFunction?: AbiFunction;
-  contract: SmartContract;
+  abiFunction: AbiFunction;
+  contract: ThirdwebContract;
 }
 
-function useDelayedRead(
-  contract: Required<SmartContract> | undefined,
-  functionName?: string,
-) {
+function useAsyncRead(contract: ThirdwebContract, functionName: string) {
   return useMutation(
-    // biome-ignore lint/suspicious/noExplicitAny: FIXME
-    async ({ args, overrides }: { args: any[]; overrides?: CallOverrides }) => {
-      invariant(contract, "Contract is required");
-      invariant(functionName, "functionName is required");
-      return contract?.call(functionName, args, overrides);
+    async ({ args, types }: { args: unknown[]; types: string[] }) => {
+      const params = parseAbiParams(types, args);
+      return readContract({
+        contract,
+        method: resolveMethod(functionName),
+        params,
+      });
     },
   );
 }
@@ -141,7 +138,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   const form = useForm({
     defaultValues: {
       params:
-        abiFunction?.inputs.map((i) => ({
+        abiFunction.inputs.map((i) => ({
           key: i.name || "key",
           value: "",
           type: i.type,
@@ -166,15 +163,20 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     mutate,
     data,
     error: mutationError,
-    isLoading: mutationLoading,
-  } = useContractWrite(contract, abiFunction?.name);
+    isPending: mutationLoading,
+  } = useSendAndConfirmTransaction();
 
   const {
     mutate: readFn,
     data: readData,
     isLoading: readLoading,
     error: readError,
-  } = useDelayedRead(contract, abiFunction?.name);
+  } = useAsyncRead(contract, abiFunction.name);
+
+  const formattedReadData: string = useMemo(
+    () => (readData ? formatResponseData(readData) : ""),
+    [readData],
+  );
 
   const error = isView ? readError : mutationError;
 
@@ -183,12 +185,15 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   useEffect(() => {
     if (
       form.watch("params").length === 0 &&
-      (abiFunction?.stateMutability === "view" ||
-        abiFunction?.stateMutability === "pure")
+      (abiFunction.stateMutability === "view" ||
+        abiFunction.stateMutability === "pure")
     ) {
-      readFn({ args: [] });
+      readFn({
+        args: [],
+        types: [],
+      });
     }
-  }, [readFn, abiFunction?.stateMutability, form]);
+  }, [abiFunction, form, readFn]);
 
   return (
     <FormProvider {...form}>
@@ -217,19 +222,24 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               const formatted = formatContractCall(d.params);
               if (
                 contract &&
-                (abiFunction?.stateMutability === "view" ||
-                  abiFunction?.stateMutability === "pure")
+                (abiFunction.stateMutability === "view" ||
+                  abiFunction.stateMutability === "pure")
               ) {
-                readFn({
-                  args: formatted,
-                });
+                const types = abiFunction.inputs.map((o) => o.type);
+                readFn({ args: formatted, types });
               } else {
-                mutate({
-                  args: formatted,
-                  overrides: d.value
-                    ? { value: utils.parseEther(d.value) }
-                    : undefined,
+                if (!abiFunction.name) {
+                  return toast.error("Cannot detect function name");
+                }
+                const types = abiFunction.inputs.map((o) => o.type);
+                const params = parseAbiParams(types, formatted);
+                const transaction = prepareContractCall({
+                  contract,
+                  method: resolveMethod(abiFunction.name),
+                  params,
+                  value: d.value ? toWei(d.value) : undefined,
                 });
+                mutate(transaction);
               }
             }
           })}
@@ -258,7 +268,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                       solidityType={item.type}
                       solidityComponents={item.components}
                       {...form.register(`params.${index}.value`)}
-                      functionName={abiFunction?.name}
+                      functionName={abiFunction.name}
                     />
                     <FormErrorMessage>
                       {
@@ -274,7 +284,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
             </>
           )}
 
-          {abiFunction?.stateMutability === "payable" && (
+          {abiFunction.stateMutability === "payable" && (
             <>
               <Divider mb="8px" />
               <FormControl gap={0.5}>
@@ -318,19 +328,18 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 language="json"
                 code={formatResponseData(data || readData)}
               />
-              {typeof readData === "string" &&
-                readData?.startsWith("ipfs://") && (
-                  <Text size="label.sm">
-                    <TrackedLink
-                      href={replaceIpfsUrl(readData)}
-                      isExternal
-                      category="contract-explorer"
-                      label="open-in-gateway"
-                    >
-                      Open in gateway
-                    </TrackedLink>
-                  </Text>
-                )}
+              {formattedReadData.startsWith("ipfs://") && (
+                <Text size="label.sm">
+                  <TrackedLink
+                    href={replaceIpfsUrl(formattedReadData)}
+                    isExternal
+                    category="contract-explorer"
+                    label="open-in-gateway"
+                  >
+                    Open in gateway
+                  </TrackedLink>
+                </Text>
+              )}
             </>
           ) : null}
         </Flex>

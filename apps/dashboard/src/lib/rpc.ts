@@ -1,5 +1,5 @@
 import { thirdwebClient } from "@/constants/client";
-import { isProd } from "constants/rpc";
+import { isProd } from "@/constants/env";
 import { defineDashboardChain } from "lib/defineDashboardChain";
 import { type ChainMetadata, getRpcUrlForChain } from "thirdweb/chains";
 import { hostnameEndsWith } from "../utils/url";
@@ -21,7 +21,7 @@ export function getDashboardChainRpc(
       }
     }
     return rpcUrl;
-  } catch (e) {
+  } catch {
     // if this fails we already know there's no possible rpc url available so we should just return an empty string
     return "";
   }

@@ -58,7 +58,7 @@ describe("timeoutPromise", () => {
     });
     try {
       await timeoutPromise(mockPromise, options);
-    } catch (error) {}
+    } catch {}
     expect(clearTimeoutSpy).toHaveBeenCalled();
     clearTimeoutSpy.mockRestore();
   });

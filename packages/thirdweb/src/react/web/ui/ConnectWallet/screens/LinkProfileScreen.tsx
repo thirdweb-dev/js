@@ -23,6 +23,7 @@ export function LinkProfileScreen(props: {
   onBack: () => void;
   locale: ConnectLocale;
   client: ThirdwebClient;
+  walletConnect: { projectId?: string } | undefined;
 }) {
   const activeWallet = useActiveWallet();
   const chain = useActiveWalletChain();
@@ -36,6 +37,7 @@ export function LinkProfileScreen(props: {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <InAppWalletConnectUI
+          walletConnect={props.walletConnect}
           wallet={activeWallet as Wallet<"inApp">}
           done={() => {
             queryClient.invalidateQueries({ queryKey: ["profiles"] });

@@ -357,7 +357,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
                         strokeWidth={2}
                         stroke={"var(--chakra-colors-backgroundHighlight)"}
                       >
-                        {pieChartData.map((entry, index) => (
+                        {pieChartData.map((_entry, index) => (
                           <Cell
                             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
                             key={index}

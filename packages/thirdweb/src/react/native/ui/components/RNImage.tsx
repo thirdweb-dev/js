@@ -33,10 +33,19 @@ function getImage(data: string): {
 
 export const RNImage = (props: ImageInfo) => {
   const { data, size, color, placeholder } = props;
-  if (!data) {
+
+  const imageResult = useMemo(() => {
+    if (!data) {
+      return undefined;
+    }
+    return getImage(data);
+  }, [data]);
+
+  if (!imageResult) {
     return null;
   }
-  const { image, type } = useMemo(() => getImage(data), [data]);
+
+  const { image, type } = imageResult;
   switch (type) {
     case "url":
     case "image":

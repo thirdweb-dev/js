@@ -1,10 +1,14 @@
 import { type Hex, encodePacked, maxUint256 } from "viem";
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
 import {
   NATIVE_TOKEN_ADDRESS,
   ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
+import type { ThirdwebContract } from "../../../contract/contract.js";
 import { getOrDeployInfraContract } from "../../../contract/deployment/utils/bootstrap.js";
+import { getDeployedInfraContract } from "../../../contract/deployment/utils/infra.js";
 import { download } from "../../../storage/download.js";
 import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -14,6 +18,7 @@ import { padHex, toHex } from "../../../utils/encoding/hex.js";
 import { processOverrideList } from "../../../utils/extensions/drops/process-override-list.js";
 import type { ClaimConditionInput } from "../../../utils/extensions/drops/types.js";
 import { keccak256 } from "../../../utils/hashing/keccak256.js";
+import type { Account } from "../../../wallets/interfaces/wallet.js";
 import type { Module } from "../../prebuilts/deploy-modular.js";
 import {
   type EncodeBytesOnInstallParams,
@@ -21,6 +26,118 @@ import {
 } from "../__generated__/ClaimableERC20/encode/encodeBytesOnInstall.js";
 import { setClaimCondition as generatedSetClaimCondition } from "../__generated__/ClaimableERC20/write/setClaimCondition.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
+import { installModule } from "../__generated__/ModularCore/write/installModule.js";
+
+// TODO separate each function into its own file
+
+// ClaimableERC20
+// .getDeployedModule()
+// .deployModule()
+// .install()
+// .encodeInstall()
+// .mint()
+// .encodeMint()
+// .setClaimCondition()
+// .getClaimCondition()
+
+/**
+ * ```ts
+ * import { ClaimableERC20 } from "thirdweb/modules";
+ *
+ * // DEPLOY if needed
+ * let module = await ClimableERC20.getDeployedModule({ client, chain });
+ *
+ * if (!module) {
+ *   module = await ClaimableERC20.deployModule({ client, chain, account });
+ * }
+ *
+ * // INSTALL
+ * const installTransaction = installModule({
+ *   coreContract,
+ *   module: module.address,
+ *   data: ClaimableERC20.encodeInstall({
+ *     primarySaleRecipient: "0x...",
+ *   },
+ * });
+ *
+ * await sendTransaction({ transaction: installTransaction, account });
+ *
+ * // MINT
+ *
+ * // prebuilt extension
+ * const mintTx = ClaimableERC20.mint({
+ *   contract: coreContract,
+ *   to: "0x...",
+ *   quantity: 1n,
+ * });
+ *
+ * // or custom
+ * const mintTx = mint({
+ *   contract: coreContract,
+ *   to: "0x...",
+ *   quantity: 1n,
+ *   data: MyModule.encodeMint({
+ *     myData: "0x...",
+ *   },
+ * });
+ *
+ * await sendTransaction({ transaction: mintTx, account });
+ * ```
+ */
+
+export const deployModule = async (options: {
+  client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
+}) => {
+  const { client, chain, account } = options;
+  const contract = await getOrDeployInfraContract({
+    client,
+    chain,
+    account,
+    contractId: "ClaimableERC20",
+    constructorParams: [],
+  });
+  return contract;
+};
+
+export const getDeployedModule = (options: {
+  client: ThirdwebClient;
+  chain: Chain;
+}) => {
+  const { client, chain } = options;
+  return getDeployedInfraContract({
+    client,
+    chain,
+    contractId: "ClaimableERC20",
+    constructorParams: [],
+  });
+};
+
+export const prepareInstall = (options: {
+  coreContract: ThirdwebContract;
+  params: EncodeBytesOnInstallParams;
+}) => {
+  const { coreContract, params } = options;
+  return installModule({
+    contract: coreContract,
+    async asyncParams() {
+      const contract = await getDeployedModule({
+        client: coreContract.client,
+        chain: coreContract.chain,
+      });
+      if (!contract) {
+        throw new Error(
+          "No ClaimableERC20 module implementation found, deploy it first.",
+        );
+      }
+      return {
+        module: getAddress(contract.address),
+        data: encodeBytesOnInstallParams(params),
+      };
+    },
+  });
+};
 
 export const claimableERC20Module = (
   args: EncodeBytesOnInstallParams,

@@ -5,6 +5,7 @@ import { uint8ArrayToHex } from "./encoding/hex.js";
  * @param a - The first BigInt value.
  * @param b - The second BigInt value.
  * @returns The smaller of the two BigInt values.
+ * @utils
  * @example
  * ```ts
  * min(1n, 2n)
@@ -19,6 +20,7 @@ export function min(a: bigint, b: bigint) {
  * @param a - The first BigInt value.
  * @param b - The second BigInt value.
  * @returns The larger of the two BigInt values.
+ * @utils
  * @example
  * ```ts
  * max(1n, 2n)

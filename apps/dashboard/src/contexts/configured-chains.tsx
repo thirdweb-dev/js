@@ -1,4 +1,4 @@
-import { isProd } from "constants/rpc";
+import { isProd } from "@/constants/env";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { createContext, useCallback, useEffect, useState } from "react";
 import type { ChainMetadata } from "thirdweb/chains";
@@ -140,7 +140,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
         RECENTLY_USED_CHAIN_IDS_KEY,
         JSON.stringify(recentlyUsedChainIds),
       );
-    } catch (e) {
+    } catch {
       localStorage.clear();
       localStorage.setItem(
         RECENTLY_USED_CHAIN_IDS_KEY,
@@ -171,7 +171,7 @@ export function ChainsProvider(props: { children: React.ReactNode }) {
       ) as number[];
 
       setRecentlyUsedChainIds(_recentlyUsedChainIds);
-    } catch (e) {
+    } catch {
       localStorage.removeItem(RECENTLY_USED_CHAIN_IDS_KEY);
     }
   }, [isSupportedChainsReady]);
@@ -328,7 +328,7 @@ const chainStorage = {
     try {
       const networkListStr = localStorage.getItem(key);
       return networkListStr ? JSON.parse(networkListStr) : [];
-    } catch (e) {
+    } catch {
       // if parsing error, clear dirty storage
       localStorage.removeItem(key);
     }
@@ -340,7 +340,7 @@ const chainStorage = {
     const value = JSON.stringify(networkList);
     try {
       localStorage.setItem(key, value);
-    } catch (e) {
+    } catch {
       // if storage limit exceed
       // clear entire local storage and then try again
       localStorage.clear();

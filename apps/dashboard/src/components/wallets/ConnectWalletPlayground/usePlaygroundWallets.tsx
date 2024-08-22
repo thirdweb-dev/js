@@ -1,9 +1,9 @@
+import { isProd } from "@/constants/env";
 import {
   type WalletConfig,
   embeddedWallet,
   smartWallet,
 } from "@thirdweb-dev/react";
-import { isProd } from "constants/rpc";
 import { useState } from "react";
 import { type WalletId, walletInfoRecord } from "./walletInfoRecord";
 

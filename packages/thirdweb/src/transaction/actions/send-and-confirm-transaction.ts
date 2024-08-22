@@ -12,12 +12,27 @@ import { waitForReceipt } from "./wait-for-tx-receipt.js";
  * @throws An error if the wallet is not connected.
  * @transaction
  * @example
+ *
+ * ### Basic usage
  * ```ts
  * import { sendAndConfirmTransaction } from "thirdweb";
  *
  * const transactionReceipt = await sendAndConfirmTransaction({
  *  account,
  *  transaction
+ * });
+ * ```
+ *
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
+ * ```ts
+ * const transactionReceipt = await sendAndConfirmTransaction({
+ *  account,
+ *  transaction,
+ *  gasless: {
+ *    provider: "engine",
+ *    relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+ *    relayerForwarderAddress: "0x...",
+ *  }
  * });
  * ```
  */

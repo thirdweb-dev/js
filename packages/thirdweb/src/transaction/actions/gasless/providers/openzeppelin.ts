@@ -8,6 +8,9 @@ import type { PreparedTransaction } from "../../../prepare-transaction.js";
 import { readContract } from "../../../read-contract.js";
 import type { WaitForReceiptOptions } from "../../wait-for-tx-receipt.js";
 
+/**
+ * @transaction
+ */
 export type OpenZeppelinOptions = {
   provider: "openzeppelin";
   relayerUrl: string;

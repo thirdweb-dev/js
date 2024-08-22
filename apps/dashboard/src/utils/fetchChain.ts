@@ -11,7 +11,7 @@ export async function fetchChain(
   if (res.ok) {
     try {
       return (await res.json()).data as ChainMetadata;
-    } catch (err) {
+    } catch {
       return null;
     }
   }
@@ -25,7 +25,7 @@ export async function fetchAllChains() {
   if (res.ok) {
     try {
       return (await res.json()).data as ChainMetadata[];
-    } catch (err) {
+    } catch {
       return [];
     }
   }

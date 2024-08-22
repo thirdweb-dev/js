@@ -92,7 +92,7 @@ export async function authorize(
             accountMeta = parsed;
           }
         }
-      } catch (err) {
+      } catch {
         // ignore errors, proceed as if not in cache
       }
     }
@@ -181,7 +181,7 @@ export async function authorize(
           apiKeyMeta = parsed;
         }
       }
-    } catch (err) {
+    } catch {
       // ignore errors, proceed as if not in cache
     }
   }

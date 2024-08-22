@@ -131,7 +131,7 @@ export async function getWalletUserDetails(
   try {
     const parsed = JSON.parse(result);
     return parsed;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 }

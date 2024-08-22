@@ -13,23 +13,18 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setClaimConditionByTokenId" function.
  */
 export type SetClaimConditionByTokenIdParams = WithOverrides<{
-  id: AbiParameterToPrimitiveType<{
-    name: "_id";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
   claimCondition: AbiParameterToPrimitiveType<{
-    name: "_claimCondition";
     type: "tuple";
-    internalType: "struct ClaimableERC1155.ClaimCondition";
+    name: "_claimCondition";
     components: [
-      { name: "availableSupply"; type: "uint256"; internalType: "uint256" },
-      { name: "allowlistMerkleRoot"; type: "bytes32"; internalType: "bytes32" },
-      { name: "pricePerUnit"; type: "uint256"; internalType: "uint256" },
-      { name: "currency"; type: "address"; internalType: "address" },
-      { name: "startTimestamp"; type: "uint48"; internalType: "uint48" },
-      { name: "endTimestamp"; type: "uint48"; internalType: "uint48" },
-      { name: "auxData"; type: "string"; internalType: "string" },
+      { type: "uint256"; name: "availableSupply" },
+      { type: "bytes32"; name: "allowlistMerkleRoot" },
+      { type: "uint256"; name: "pricePerUnit" },
+      { type: "address"; name: "currency" },
+      { type: "uint48"; name: "startTimestamp" },
+      { type: "uint48"; name: "endTimestamp" },
+      { type: "string"; name: "auxData" },
     ];
   }>;
 }>;
@@ -37,49 +32,40 @@ export type SetClaimConditionByTokenIdParams = WithOverrides<{
 export const FN_SELECTOR = "0xb7720475" as const;
 const FN_INPUTS = [
   {
-    name: "_id",
     type: "uint256",
-    internalType: "uint256",
+    name: "_id",
   },
   {
-    name: "_claimCondition",
     type: "tuple",
-    internalType: "struct ClaimableERC1155.ClaimCondition",
+    name: "_claimCondition",
     components: [
       {
+        type: "uint256",
         name: "availableSupply",
-        type: "uint256",
-        internalType: "uint256",
       },
       {
-        name: "allowlistMerkleRoot",
         type: "bytes32",
-        internalType: "bytes32",
+        name: "allowlistMerkleRoot",
       },
       {
-        name: "pricePerUnit",
         type: "uint256",
-        internalType: "uint256",
+        name: "pricePerUnit",
       },
       {
-        name: "currency",
         type: "address",
-        internalType: "address",
+        name: "currency",
       },
       {
+        type: "uint48",
         name: "startTimestamp",
-        type: "uint48",
-        internalType: "uint48",
       },
       {
+        type: "uint48",
         name: "endTimestamp",
-        type: "uint48",
-        internalType: "uint48",
       },
       {
-        name: "auxData",
         type: "string",
-        internalType: "string",
+        name: "auxData",
       },
     ],
   },

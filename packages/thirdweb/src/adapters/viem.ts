@@ -21,34 +21,87 @@ import { sendTransaction } from "../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
 import type { Account } from "../wallets/interfaces/wallet.js";
 
+/**
+ * Converts thirdweb accounts and contracts to viem wallet clients and contract objects or the other way around.
+ * @example
+ *
+ * ### Converting a thirdweb account to a viem wallet client
+ *
+ * ```ts
+ * import { viemAdapter } from "thirdweb/adapters/viem";
+ *
+ * const walletClient = viemAdapter.walletClient.toViem({
+ *  account,
+ *  client,
+ *  chain: ethereum,
+ * });
+ * ```
+ *
+ * ### Converting a viem wallet client to a thirdweb account
+ * ```ts
+ * import { viemAdapter } from "thirdweb/adapters";
+ *
+ * const account = viemAdapter.walletClient.fromViem({
+ *   walletClient,
+ * });
+ * ```
+ *
+ * ### Converting a thirdweb contract to a viem contract
+ * ```ts
+ * import { viemAdapter } from "thirdweb/adapters";
+ *  const viemContract = await viemAdapter.contract.toViem({ thirdwebContract });
+ * ```
+ *
+ * ### Converting a viem contract to a thirdweb contract
+ * ```ts
+ * import { viemAdapter } from "thirdweb/adapters/viem";
+ *
+ * const contract = viemAdapter.contract.fromViem({
+ *  viemContract: viemContract,
+ *  chain: ethereum,
+ *  client,
+ * });
+ * ```
+ *
+ * ### Converting a thirdweb client to a public viem client
+ * ```ts
+ * import { viemAdapter } from "thirdweb/adapters";
+ *
+ * const publicClient = viemAdapter.publicClient.toViem({
+ *  chain: ethereum,
+ *  client,
+ * });
+ * ```
+ *
+ */
 export const viemAdapter = {
+  /**
+   * Creates a ThirdwebContract from a Viem contract or the other way around.
+   * @param options - The options for creating the contract.
+   * @returns The ThirdwebContract.
+   * @example
+   *
+   * ### fromViem
+   *
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters/viem";
+   *
+   * const contract = viemAdapter.contract.fromViem({
+   *  viemContract: viemContract,
+   *  chain: ethereum,
+   *  client,
+   * });
+   * ```
+   *
+   * ### toViem
+   *
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters";
+   *  const viemContract = await viemAdapter.contract.toViem({ thirdwebContract });
+   * ```
+   */
   contract: {
-    /**
-     * Creates a ThirdwebContract from a Viem contract.
-     * @param options - The options for creating the contract.
-     * @returns The ThirdwebContract.
-     * @example
-     * ```ts
-     * import { viemAdapter } from "thirdweb/adapters/viem";
-     *
-     * const contract = viemAdapter.contract.fromViem({
-     *  viemContract: viemContract,
-     *  chain: ethereum,
-     *  client,
-     * });
-     * ```
-     */
     fromViem: fromViemContract,
-    /**
-     * Converts a ThirdwebContract instance to a Viem contract representation.
-     * @param contract The ThirdwebContract instance to convert.
-     * @returns A promise that resolves to the Viem contract representation.
-     * @example
-     * ```ts
-     * import { viemAdapter } from "thirdweb/adapters";
-     *  const viemContract = await viemAdapter.contract.toViem({ thirdwebContract });
-     * ```
-     */
     toViem: toViemContract,
   },
 
@@ -70,35 +123,55 @@ export const viemAdapter = {
     toViem: toViemPublicClient,
   },
 
+  /**
+   * Converts a thirdweb account to a Viem Wallet client or the other way around.
+   * @param options - The options for creating the Viem Wallet client.
+   * @returns The Viem Wallet client.
+   * @example
+   *
+   * ### toViem
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters/viem";
+   *
+   * const walletClient = viemAdapter.walletClient.toViem({
+   *  account,
+   *  client,
+   *  chain: ethereum,
+   * });
+   * ```
+   *
+   * ### fromViem
+   * ```ts
+   * import { viemAdapter } from "thirdweb/adapters";
+   *
+   * const account = viemAdapter.walletClient.fromViem({
+   *   walletClient,
+   * });
+   * ```
+   */
   walletClient: {
     /**
-     * Converts options to a Viem Wallet client.
-     * @param options - The options for creating the Viem Wallet client.
-     * @returns The Viem Wallet client.
+     * Converts a Thirdweb wallet to a Viem wallet client.
+     * @param options - The options for converting a Thirdweb wallet to a Viem wallet client.
+     * @param options.account - The Thirdweb wallet to convert.
+     * @returns A Promise that resolves to a Viem wallet client.
      * @example
      * ```ts
-     * import { viemAdapter } from "thirdweb/adapters/viem";
-     *
-     * const walletClient = viemAdapter.walletClient.toViem({
-     *  account,
-     *  client,
-     *  chain: ethereum,
-     * });
+     * import { viemAdapter } from "thirdweb/adapters";
+     * const walletClient = viemAdapter.walletClient.toViem({ account, client, chain });
      * ```
      */
     toViem: toViemWalletClient,
-
     /**
-     * Converts a Viem Wallet client to an Account.
-     * @param options - The options for creating the Account.
-     * @returns The Account.
+     * Converts a Viem wallet client to a Thirdweb wallet.
+     * @param options - The options for converting a Viem wallet client to a Thirdweb wallet.
+     * @param options.walletClient - The Viem wallet client to convert.
+     * @returns A Promise that resolves to a Thirdweb wallet.
      * @example
      * ```ts
-     * import { viemAdapter } from "thirdweb/adapters/viem";
-     *
-     * const account = viemAdapter.walletClient.fromViem({
-     *   walletClient,
-     * });
+     * import { viemAdapter } from "thirdweb/adapters";
+     * const account = viemAdapter.walletClient.fromViem({ walletClient });
+     * ```
      */
     fromViem: fromViemWalletClient,
   },

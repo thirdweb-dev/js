@@ -71,7 +71,7 @@ export type WalletSelectorProps = {
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
   recommendedWallets: Wallet[] | undefined;
-  isEmbed: boolean;
+  hideHeader: boolean;
   chain: Chain | undefined;
   chains: Chain[] | undefined;
   showAllWallets: boolean | undefined;
@@ -87,6 +87,7 @@ export type WalletSelectorProps = {
       }
     | undefined;
   walletIdsToHide: WalletId[] | undefined;
+  disableSelectionDataReset?: boolean;
 };
 
 /**
@@ -278,6 +279,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         recommendedWallets={props.recommendedWallets}
         chain={props.chain}
         showAllWallets={props.showAllWallets}
+        diableSelectionDataReset={props.disableSelectionDataReset}
       />
     );
 
@@ -305,6 +307,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           recommendedWallets={props.recommendedWallets}
           chain={props.chain}
           showAllWallets={props.showAllWallets}
+          diableSelectionDataReset={props.disableSelectionDataReset}
         />
       );
 
@@ -348,6 +351,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               recommendedWallets={props.recommendedWallets}
               chain={props.chain}
               showAllWallets={props.showAllWallets}
+              diableSelectionDataReset={props.disableSelectionDataReset}
             />
             {eoaWallets.length > 0 && (
               <>
@@ -418,6 +422,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                     recommendedWallets={props.recommendedWallets}
                     chain={props.chain}
                     showAllWallets={props.showAllWallets}
+                    diableSelectionDataReset={props.disableSelectionDataReset}
                   />
                 </Container>
 
@@ -456,6 +461,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
             recommendedWallets={props.recommendedWallets}
             chain={props.chain}
             showAllWallets={props.showAllWallets}
+            diableSelectionDataReset={props.disableSelectionDataReset}
           />
         );
 
@@ -466,7 +472,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
     }
   }
 
-  const showHeader = !props.isEmbed || props.modalHeader;
+  // hide the header for embed - unless it's customized
+  const showHeader = !props.hideHeader || props.modalHeader;
 
   return (
     <Container
@@ -509,7 +516,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               }
         }
       >
-        {!props.modalHeader && props.isEmbed && isWalletGroupExpanded && (
+        {!showHeader && isWalletGroupExpanded && (
           <Container
             flex="row"
             center="y"
@@ -578,6 +585,7 @@ const WalletSelection: React.FC<{
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
   chain: Chain | undefined;
+  diableSelectionDataReset?: boolean;
 }> = (props) => {
   const wallets = sortWallets(props.wallets, props.recommendedWallets);
   const { screen } = useScreenContext();
@@ -586,6 +594,7 @@ const WalletSelection: React.FC<{
     <WalletList
       style={{
         minHeight: "100%",
+        maxHeight: "370px",
       }}
     >
       {wallets.map((wallet) => {
@@ -615,7 +624,9 @@ const WalletSelection: React.FC<{
               <WalletEntryButton
                 walletId={wallet.id}
                 selectWallet={() => {
-                  setSelectionData({});
+                  if (!props.diableSelectionDataReset) {
+                    setSelectionData({});
+                  }
                   props.selectWallet(wallet);
                 }}
                 connectLocale={props.connectLocale}

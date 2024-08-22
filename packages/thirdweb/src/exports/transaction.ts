@@ -69,3 +69,11 @@ export {
 export type { WaitForReceiptOptions } from "../transaction/actions/wait-for-tx-receipt.js";
 
 export type { TransactionReceipt } from "viem";
+
+/**
+ * Gasless types
+ */
+export type { GaslessOptions } from "../transaction/actions/gasless/types.js";
+export type { EngineOptions } from "../transaction/actions/gasless/providers/engine.js";
+export type { OpenZeppelinOptions } from "../transaction/actions/gasless/providers/openzeppelin.js";
+export type { BiconomyOptions } from "../transaction/actions/gasless/providers/biconomy.js";

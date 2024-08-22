@@ -1,5 +1,5 @@
+import { thirdwebClient } from "@/constants/client";
 import type { FrameValidationData } from "@coinbase/onchainkit";
-import { thirdwebClient } from "lib/thirdweb-client";
 import { encode, getContract } from "thirdweb";
 import type { Chain } from "thirdweb/chains";
 import { claimTo } from "thirdweb/extensions/erc721";

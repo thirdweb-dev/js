@@ -79,7 +79,7 @@ export const slides: Slide[] = [
           <ListItem>
             <TrackedLink
               category={TRACK_CATEGORY}
-              href="/dashboard/connect/playground"
+              href="https://playground.thirdweb.com/connect/sign-in/button"
               isExternal
               label="auth"
               color="blue.500"

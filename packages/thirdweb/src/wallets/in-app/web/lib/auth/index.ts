@@ -156,7 +156,12 @@ export async function authenticate(
   >,
 ) {
   const connector = await getInAppWalletConnector(args.client, args.ecosystem);
-  if (args.redirect && connector.authenticateWithRedirect)
-    return connector.authenticateWithRedirect(args.strategy);
+  const isRedirect = args.redirect || args.mode !== "popup";
+  if (isRedirect && connector.authenticateWithRedirect && args.strategy)
+    return connector.authenticateWithRedirect(
+      args.strategy as SocialAuthOption,
+      args.mode,
+      args.redirectUrl,
+    );
   return connector.connect(args);
 }

@@ -15,7 +15,6 @@ import { WalletImage } from "../../../components/WalletImage.js";
 import { Container } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
-import { SmartWalletBadgeIcon } from "../../icons/SmartAccountBadgeIcon.js";
 
 export function WalletSelectorButton(props: {
   address: string;
@@ -107,11 +106,6 @@ export function WalletRow(props: {
       <Text size="sm" color="primaryText">
         {addressOrENS || shortenAddress(props.address)}
       </Text>
-      {walletId === "smart" && (
-        <Container color="accentText" center="both">
-          <SmartWalletBadgeIcon size={iconSize.sm} />
-        </Container>
-      )}
     </Container>
   );
 }

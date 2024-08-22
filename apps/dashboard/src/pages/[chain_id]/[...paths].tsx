@@ -1,3 +1,4 @@
+import { thirdwebClient } from "@/constants/client";
 import {
   type EVMContractInfo,
   useEVMContractInfo,
@@ -18,20 +19,18 @@ import { SupportedChainsReadyContext } from "contexts/configured-chains";
 import { PrimaryDashboardButton } from "contract-ui/components/primary-dashboard-button";
 import { useContractRouteConfig } from "contract-ui/hooks/useRouteConfig";
 import { ContractSidebar } from "core-ui/sidebar/detail-page";
-import { getAddress, isAddress } from "ethers/lib/utils";
 import {
   useSupportedChainsRecord,
   useSupportedChainsSlugRecord,
 } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
-import { thirdwebClient } from "lib/thirdweb-client";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { getContract } from "thirdweb";
+import { getAddress, getContract, isAddress } from "thirdweb";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isERC20 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
@@ -163,7 +162,7 @@ const ContractPage: ThirdwebNextPage = () => {
   const v5Chain = useV5DashboardChain(chain?.chainId);
   const contract = useMemo(() => {
     if (!contractAddress || !v5Chain) {
-      return null;
+      return undefined;
     }
     return getContract({
       address: contractAddress,
@@ -172,7 +171,7 @@ const ContractPage: ThirdwebNextPage = () => {
     });
   }, [contractAddress, v5Chain]);
 
-  const routes = useContractRouteConfig(contractAddress);
+  const routes = useContractRouteConfig(contractAddress, contract);
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.path === activeTab),
@@ -430,7 +429,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       } else if (isErc1155) {
         detectedExtension = "erc1155";
       }
-    } catch (e) {
+    } catch {
       // ignore, most likely requires import
     }
   }

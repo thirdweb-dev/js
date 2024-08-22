@@ -1,8 +1,8 @@
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useSupportedChains } from "@thirdweb-dev/react";
 import type { BasicContract } from "contract-ui/types/types";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import { FiPlus } from "react-icons/fi";

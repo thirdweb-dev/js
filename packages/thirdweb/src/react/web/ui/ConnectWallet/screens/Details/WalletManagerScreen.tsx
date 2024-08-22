@@ -1,4 +1,4 @@
-import { CheckIcon, CrossCircledIcon, PlusIcon } from "@radix-ui/react-icons";
+import { CheckIcon, MinusIcon, PlusIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
@@ -148,20 +148,19 @@ function WalletManangerButton(props: {
           justifyContent: "space-between",
         }}
       >
-        <Container flex="row" gap="sm" center="y">
-          <WalletImage client={props.client} id={walletId} size={iconSize.xl} />
+        <Container flex="row" gap="md" center="y">
+          <WalletImage client={props.client} id={walletId} size={iconSize.lg} />
 
-          <div>
+          <Container flex="column" gap="4xs">
             <Text color="primaryText">{shortenAddress(address || "")}</Text>
-            <Spacer y="xxs" />
             {balanceQuery.data ? (
-              <Text size="sm" color="secondaryText">
+              <Text size="xs" color="secondaryText" weight={400}>
                 {formatTokenBalance(balanceQuery.data)}
               </Text>
             ) : (
               <Skeleton width="100px" height={fontSize.sm} />
             )}
-          </div>
+          </Container>
         </Container>
       </WalletButtonEl>
 
@@ -187,11 +186,11 @@ function WalletManangerButton(props: {
                 disconnect(props.wallet);
               }}
             >
-              <CrossCircledIcon
+              <MinusIcon
                 width={iconSize.md}
                 height={iconSize.md}
                 style={{
-                  color: theme.colors.danger,
+                  color: theme.colors.secondaryText,
                 }}
               />
             </IconButton>

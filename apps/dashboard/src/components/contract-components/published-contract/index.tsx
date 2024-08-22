@@ -59,7 +59,7 @@ export interface ExtendedPublishedContract extends PublishedContractType {
   name: string;
   displayName?: string;
   description: string;
-  version: string;
+  version: string | undefined;
   publisher: string;
   tags?: string[];
   logo?: string;
@@ -146,7 +146,7 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
       PublishedContractOG.toUrl({
         name: publishedContractName,
         description: contract.description,
-        version: contract.version,
+        version: contract.version || "latest",
         publisher: publisherEnsOrAddress,
         extension: extensionNames,
         license: licenses,

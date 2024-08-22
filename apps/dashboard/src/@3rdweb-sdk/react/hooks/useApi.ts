@@ -73,7 +73,6 @@ export type Account = {
 interface UpdateAccountInput {
   name?: string;
   email?: string;
-  plan?: AccountPlan;
   linkWallet?: boolean;
   subscribeToUpdates?: boolean;
   onboardSkipped?: boolean;
@@ -419,7 +418,7 @@ export function useUpdateAccountPlan(waitForWebhook?: boolean) {
   const queryClient = useQueryClient();
 
   return useMutationWithInvalidate(
-    async (input: { plan: string; feedback?: string; useTrial?: boolean }) => {
+    async (input: { plan: string; feedback?: string }) => {
       invariant(user?.address, "walletAddress is required");
 
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/account/plan`, {
@@ -924,7 +923,10 @@ export async function fetchChainsFromApi() {
 }
 
 export function useApiChains() {
-  return useQuery(["all-chains"], async () => {
-    return fetchChainsFromApi();
+  return useQuery({
+    queryKey: ["all-chains"],
+    queryFn: () => {
+      return fetchChainsFromApi();
+    },
   });
 }

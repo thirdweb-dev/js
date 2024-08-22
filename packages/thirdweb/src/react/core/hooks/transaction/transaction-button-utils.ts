@@ -15,6 +15,7 @@ import type {
 
 /**
  * Props for the [`TransactionButton`](https://portal.thirdweb.com/references/typescript/v5/TransactionButton) component.
+ * @transaction
  */
 export type TransactionButtonProps = {
   /**

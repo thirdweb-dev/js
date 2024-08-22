@@ -99,6 +99,19 @@ export type SendTransactionOptions = {
  *  transaction,
  * });
  * ```
+ *
+ * ### Gasless usage with [thirdweb Engine](https://portal.thirdweb.com/engine)
+ * ```ts
+ * const { transactionHash } = await sendTransaction({
+ *  account,
+ *  transaction,
+ *  gasless: {
+ *    provider: "engine",
+ *    relayerUrl: "https://thirdweb.engine-***.thirdweb.com/relayer/***",
+ *    relayerForwarderAddress: "0x...",
+ *  }
+ * });
+ * ```
  */
 export async function sendTransaction(
   options: SendTransactionOptions,

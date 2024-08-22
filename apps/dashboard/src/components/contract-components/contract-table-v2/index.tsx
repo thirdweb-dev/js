@@ -171,7 +171,7 @@ export const PublishedContractTable: ComponentWithChildren<
     data: rows,
   });
   return (
-    <TableContainer>
+    <TableContainer className="relative">
       {isFetching && (
         <Spinner
           color="primary"

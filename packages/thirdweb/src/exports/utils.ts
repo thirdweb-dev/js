@@ -131,6 +131,8 @@ export {
   type AddressInput,
 } from "../utils/address.js";
 
+export { isBytes } from "viem";
+
 // ------------------------------------------------
 // abi
 // ------------------------------------------------
@@ -174,3 +176,8 @@ export {
 export type { NFTMetadata, NFTInput } from "../utils/nft/parseNft.js";
 
 export { parseAbiParams } from "../utils/contract/parse-abi-params.js";
+
+// ------------------------------------------------
+// bigint
+// ------------------------------------------------
+export { max, min } from "../utils/bigint.js";

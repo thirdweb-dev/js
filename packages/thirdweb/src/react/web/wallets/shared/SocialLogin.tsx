@@ -48,10 +48,15 @@ export function SocialLogin(props: {
 
   const handleSocialLogin = async () => {
     const walletConfig = wallet.getConfig();
+    const authMode =
+      walletConfig && "auth" in walletConfig
+        ? walletConfig?.auth?.mode ?? "popup"
+        : "popup";
+
     if (
       walletConfig &&
       "auth" in walletConfig &&
-      walletConfig?.auth?.mode === "redirect" &&
+      authMode !== "popup" &&
       !props.isLinking // Redirect not supported for account linking (we need to maintain the aplication state)
     ) {
       return loginWithOauthRedirect({
@@ -64,7 +69,7 @@ export function SocialLogin(props: {
             }
           : undefined,
         redirectUrl: walletConfig?.auth?.redirectUrl,
-        redirectExternally: walletConfig?.auth?.redirectExternally,
+        mode: walletConfig?.auth?.mode,
       });
     }
 

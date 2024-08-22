@@ -28,9 +28,6 @@ export enum PageId {
   // thirdweb..com/tos
   ToS = "tos-page",
 
-  // thirdweb.com/cli/login
-  CliLoginPage = "cli-login-page",
-
   // thirdweb.com/contract-extensions
   // ContractExtensionsLanding = "contract-extensions-landing",
 
@@ -81,8 +78,6 @@ export enum PageId {
   // thirdweb.com/ui-components
   UIComponentsLanding = "ui-components-landing",
 
-  // thirdweb.com/build-base
-  BuildBaseLanding = "build-base-landing",
   // thirdweb.com/hackathon/earn
   HackathonEarnLanding = "earn-thirdweb-hacakthon",
   // thirdweb.com/grant/superchain
@@ -100,17 +95,12 @@ export enum PageId {
   // thirdweb.com/dashboard/infrastructure/storage
   DashboardSettingsStorage = "dashboard-storage",
 
-  // thirdweb.com/dashboard/connect/playground
-  DashboardConnectPlayground = "dashboard-wallets-connect",
   // thirdweb.com/dashboard/connect/smart-wallet
   DashboardConnectAccountAbstraction = "dashboard-wallets-smart-wallet",
   // thirdweb.com/dashboard/connect/embedded
   DashboardConnectEmbeddedWallets = "dashboard-wallets-embedded",
   // thirdweb.com/dashboard/connect/analytics
   DashboardConnectAnalytics = "dashboard-wallets-analytics",
-  // thirdweb.com/dashboard/connect/pay
-  DashboardConnectPay = "dashboard-wallets-pay",
-
   // thirdweb.com/dashboard/contracts/build
   DashboardContractsBuild = "dashboard-contracts-build",
 
@@ -131,9 +121,6 @@ export enum PageId {
 
   // thirdweb.com/gas
   GasEstimator = "gas-estimator",
-
-  // thirdweb.com/chainlist
-  ChainsLanding = "chains-landing",
 
   // thirdweb.com/404
   PageNotFound = "page-not-found",
@@ -204,10 +191,6 @@ export enum PageId {
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846
   DeployedContract = "deployed-contract",
 
-  // thirdweb.com/:network
-  // example: thirdweb.com/ethereum
-  ChainLanding = "chain-landing",
-
   // ---------------------------------------------------------------------------
   //  community pages
   // ---------------------------------------------------------------------------
@@ -215,5 +198,4 @@ export enum PageId {
   Ambassadors = "ambassadors",
   Community = "community",
   StartupProgram = "startup-program",
-  Support = "support",
 }

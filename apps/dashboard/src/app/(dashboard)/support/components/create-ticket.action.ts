@@ -73,7 +73,7 @@ function prepareEmailBody(
 }
 
 export async function createTicketAction(
-  previousState: State,
+  _previousState: State,
   formData: FormData,
 ) {
   const cookieManager = cookies();

@@ -113,7 +113,7 @@ export type PrepareContractCallOptions<
  * });
  * ```
  *
- * ### Usage with a the ABI defined on the contract:
+ * ### Usage with the ABI defined on the contract:
  *
  * ```ts
  * import { getContract, prepareContractCall } from "thirdweb";

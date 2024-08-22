@@ -115,7 +115,7 @@ export function useAutoConnectCore(
       try {
         await handleWalletConnection(wallet);
         manager.addConnectedWallet(wallet);
-      } catch (e) {
+      } catch {
         // no-op
       }
     }

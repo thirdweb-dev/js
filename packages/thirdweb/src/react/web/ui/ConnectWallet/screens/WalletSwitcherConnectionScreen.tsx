@@ -54,7 +54,7 @@ export function WalletSwitcherConnectionScreen(
       chains={props.chains}
       client={props.client}
       connectLocale={props.connectLocale}
-      isEmbed={props.isEmbed}
+      hideHeader={props.isEmbed}
       isOpen={true}
       meta={{
         showThirdwebBranding: false,
