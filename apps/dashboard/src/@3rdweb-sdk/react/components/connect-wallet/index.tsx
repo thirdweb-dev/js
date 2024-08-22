@@ -3,12 +3,16 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { thirdwebClient } from "@/constants/client";
-import { useSupportedChains } from "@thirdweb-dev/react";
+import { getSDKTheme } from "app/components/sdk-component-theme";
+import { CustomChainRenderer } from "components/selects/CustomChainRenderer";
+import { mapV4ChainToV5Chain } from "contexts/map-chains";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import {
   useAddRecentlyUsedChainId,
   useRecentlyUsedChains,
 } from "hooks/chains/recentlyUsedChains";
+import { useSetIsNetworkConfigModalOpen } from "hooks/networkConfigModal";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,10 +20,6 @@ import { usePathname } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import type { Chain } from "thirdweb";
 import { AutoConnect, ConnectButton, useConnectModal } from "thirdweb/react";
-import { getSDKTheme } from "../../../../app/components/sdk-component-theme";
-import { CustomChainRenderer } from "../../../../components/selects/CustomChainRenderer";
-import { mapV4ChainToV5Chain } from "../../../../contexts/map-chains";
-import { useSetIsNetworkConfigModalOpen } from "../../../../hooks/networkConfigModal";
 import { useFavoriteChains } from "../../hooks/useFavoriteChains";
 import { useLoggedInUser } from "../../hooks/useLoggedInUser";
 import { popularChains } from "../popularChains";
