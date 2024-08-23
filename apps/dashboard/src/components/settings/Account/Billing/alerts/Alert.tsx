@@ -142,13 +142,14 @@ export const BillingAlerts = () => {
       (usage.embeddedWallets.countWalletAddresses >= limits.embeddedWallets ||
         usage.storage.sumFileSizeBytes >= limits.storage);
 
+    const hasHardLimits = account?.status !== AccountStatus.ValidPayment;
     const isFreePlan = account?.plan === "free";
     const isGrowthPlan = account?.plan === "growth";
     const usageAlerts: AlertConditionType[] = [
       {
-        // Show alert if user has exceeded 50% of their usage limit and has not yet exceeded 100% of their usage limit and is on a free plan
+        // Show alert if user has exceeded 50% of their usage limit and has not yet exceeded 100% of their usage limit and has hard limits
         shouldShowAlert:
-          !!(exceededUsage_50 && !exceededUsage_100) && isFreePlan,
+          !!(exceededUsage_50 && !exceededUsage_100) && hasHardLimits,
         key: "usage_50_alert",
         title: "You are approaching your free monthly credits",
         description:
@@ -157,8 +158,8 @@ export const BillingAlerts = () => {
         componentType: "usage",
       },
       {
-        // if its a free plan and the user has exceeded 100% of their usage limit
-        shouldShowAlert: !!exceededUsage_100 && isFreePlan,
+        // if the user has exceeded 100% of their usage limit and is has hard limits enforced
+        shouldShowAlert: !!exceededUsage_100 && hasHardLimits,
         key: "usage_100_alert",
         title: "You have used all of your free monthly credits",
         description:
@@ -168,17 +169,17 @@ export const BillingAlerts = () => {
       },
       {
         // if its NOT a free plan and the user has exceeded 100% of their usage limit
-        shouldShowAlert: !!exceededUsage_100 && !isFreePlan,
+        shouldShowAlert: !!exceededUsage_100 && !hasHardLimits,
         key: "usage_100_alert",
-        title: "You have used all of your monthly credits",
-        // if growth plan, included the upgrade plan message
-        description: `You have exceeded your included monthly credits limit and are being charged for overages.${isGrowthPlan && " Consider upgrading your plan."}`,
+        title: "You have used your included monthly credits",
+        // if free or growth plan, included the upgrade plan message
+        description: `You have exceeded your included monthly credits limit and are being charged for overages.${isFreePlan || (isGrowthPlan && " Consider upgrading your plan.")}`,
         status: "warning",
         componentType: "usage",
       },
       {
-        // only show RPC warning if the user has exceeded their RPC rate limit and is on a free plan
-        shouldShowAlert: hasUsageData && !!rateLimitedAt?.rpc && isFreePlan,
+        // only show RPC warning if the user has exceeded their RPC rate limit and has hard limits
+        shouldShowAlert: hasUsageData && !!rateLimitedAt?.rpc && hasHardLimits,
         key: "rate_rpc_alert",
         title: "You have exceeded your RPC rate limit",
         description:
@@ -187,8 +188,9 @@ export const BillingAlerts = () => {
         componentType: "usage",
       },
       {
-        // only show Storage warning if the user has exceeded their Storage rate limit and is on a free plan
-        shouldShowAlert: hasUsageData && !!rateLimitedAt?.storage && isFreePlan,
+        // only show Storage warning if the user has exceeded their Storage rate limit and has hard limits
+        shouldShowAlert:
+          hasUsageData && !!rateLimitedAt?.storage && hasHardLimits,
         key: "rate_storage_alert",
         title: "You have exceeded your Storage Gateway rate limit",
         description:
