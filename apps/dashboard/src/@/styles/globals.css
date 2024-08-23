@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  [data-theme="light"] {
     /* bg - neutral  */
     --background: 0 0% 100%;
     --secondary: 0 0% 97%;
@@ -44,7 +45,8 @@
     --radius: 0.5rem;
   }
 
-  .dark {
+  .dark,
+  [data-theme="dark"] {
     /* bg - neutral  */
     --background: 0 0% 4.5%;
     --secondary: 0 0% 6.5%;

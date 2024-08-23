@@ -5,6 +5,7 @@ module.exports = {
     "plugin:import/typescript",
     "plugin:@next/next/recommended",
     "plugin:promise/recommended",
+    "plugin:storybook/recommended"
   ],
   rules: {
     "react-compiler/react-compiler": "error",
