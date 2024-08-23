@@ -1,4 +1,4 @@
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 
 const partnersCompanies = [
@@ -43,7 +43,7 @@ const partnersCompanies = [
 
 const Partners = () => {
   return (
-    <Box>
+    <>
       <SimpleGrid
         columns={{ base: 1, lg: 6 }}
         gap={{ base: 16, md: 24 }}
@@ -79,7 +79,7 @@ const Partners = () => {
           />
         ))}
       </SimpleGrid>
-    </Box>
+    </>
   );
 };
 
