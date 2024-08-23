@@ -151,9 +151,9 @@ export const BillingAlerts = () => {
         shouldShowAlert:
           !!(exceededUsage_50 && !exceededUsage_100) && hasHardLimits,
         key: "usage_50_alert",
-        title: "You are approaching your free monthly credits",
+        title: "You are nearing your usage limit",
         description:
-          "You are approaching your free monthly credits. Consider monitoring your usage to avoid service interruptions.",
+          "To prevent service interruptions, please add a valid payment method or upgrade your plan.",
         status: "warning",
         componentType: "usage",
       },
@@ -161,9 +161,9 @@ export const BillingAlerts = () => {
         // if the user has exceeded 100% of their usage limit and is has hard limits enforced
         shouldShowAlert: !!exceededUsage_100 && hasHardLimits,
         key: "usage_100_alert",
-        title: "You have used all of your free monthly credits",
+        title: "You have exceeded your usage limit",
         description:
-          "You have exceeded your free monthly credits limit. Please upgrade your plan to continue using services without interruption.",
+          "To continue using our services, add a valid payment method or upgrade your plan.",
         status: "error",
         componentType: "usage",
       },
@@ -171,9 +171,9 @@ export const BillingAlerts = () => {
         // if its NOT a free plan and the user has exceeded 100% of their usage limit
         shouldShowAlert: !!exceededUsage_100 && !hasHardLimits,
         key: "usage_100_alert",
-        title: "You have used your included monthly credits",
+        title: "You have exceeded your usage limit",
         // if free or growth plan, included the upgrade plan message
-        description: `You have exceeded your included monthly credits limit and are being charged for overages.${isFreePlan || (isGrowthPlan && " Consider upgrading your plan.")}`,
+        description: `Overages are now being charged.${isFreePlan || (isGrowthPlan && " Consider upgrading your plan to increase your included limits.")}`,
         status: "warning",
         componentType: "usage",
       },
@@ -183,7 +183,7 @@ export const BillingAlerts = () => {
         key: "rate_rpc_alert",
         title: "You have exceeded your RPC rate limit",
         description:
-          "You have exceeded your RPC rate limit. Please consider upgrading your plan to avoid service interruptions.",
+          "To prevent service interruptions, add a valid payment method or upgrade your plan.",
         status: "warning",
         componentType: "usage",
       },
@@ -194,7 +194,7 @@ export const BillingAlerts = () => {
         key: "rate_storage_alert",
         title: "You have exceeded your Storage Gateway rate limit",
         description:
-          "You have exceeded your Storage Gateway rate limit. Please consider upgrading your plan to avoid service interruptions.",
+          "To prevent service interruptions, add a valid payment method or upgrade your plan.",
         status: "warning",
         componentType: "usage",
       },
