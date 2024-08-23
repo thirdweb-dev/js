@@ -38,7 +38,7 @@ export type GetBuyWithFiatQuoteParams = {
   /**
    * Symbol of the fiat currency to buy the token with.
    */
-  fromCurrencySymbol: "USD" | "CAD" | "GBP" | "EUR";
+  fromCurrencySymbol: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
 
   /**
    * The maximum slippage in basis points (bps) allowed for the transaction.

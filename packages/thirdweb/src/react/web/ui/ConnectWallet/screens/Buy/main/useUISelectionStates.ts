@@ -8,7 +8,11 @@ import type {
 import { useActiveWalletChain } from "../../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import { useDebouncedValue } from "../../../../hooks/useDebouncedValue.js";
 import { type ERC20OrNativeToken, NATIVE_TOKEN } from "../../nativeToken.js";
-import { defaultSelectedCurrency } from "../fiat/currencies.js";
+import {
+  type CurrencyMeta,
+  currencies,
+  usdCurrency,
+} from "../fiat/currencies.js";
 import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
 
 // handle states for token and chain selection
@@ -71,10 +75,17 @@ export function useUISelectionStates(options: {
   );
 
   // --------------------------------------------------------------------------
+  const devSpecifiedDefaultCurrency =
+    payOptions.buyWithFiat !== false
+      ? payOptions.buyWithFiat?.prefillSource?.currency
+      : undefined;
 
-  // stripe only supports USD, so not using a state right now
+  const defaultSelectedCurrencyShorthand =
+    devSpecifiedDefaultCurrency || getDefaultCurrencyBasedOnLocation();
+
   const [selectedCurrency, setSelectedCurrency] = useState(
-    defaultSelectedCurrency,
+    currencies.find((x) => x.shorthand === defaultSelectedCurrencyShorthand) ||
+      usdCurrency,
   );
 
   return {
@@ -94,4 +105,37 @@ export function useUISelectionStates(options: {
 
     setSelectedCurrency,
   };
+}
+
+function getDefaultCurrencyBasedOnLocation(): CurrencyMeta["shorthand"] {
+  // if Intl is not supported - browser throws
+  try {
+    const timeZone = Intl.DateTimeFormat()
+      .resolvedOptions()
+      .timeZone.toLowerCase();
+
+    // Europe/London -> GBP
+    if (timeZone.includes("london")) {
+      return "GBP";
+    }
+
+    // Europe/* -> EUR
+    if (timeZone.includes("europe")) {
+      return "EUR";
+    }
+
+    // Japan
+    if (timeZone.includes("japan")) {
+      return "JPY";
+    }
+
+    // canada
+    if (timeZone.includes("canada")) {
+      return "CAD";
+    }
+
+    return "USD";
+  } catch {
+    return "USD";
+  }
 }

@@ -82,6 +82,9 @@ export type PayUIOptions = Prettify<
     buyWithFiat?:
       | {
           testMode?: boolean;
+          prefillSource?: {
+            currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+          };
         }
       | false;
 
