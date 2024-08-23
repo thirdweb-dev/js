@@ -1,6 +1,5 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -247,9 +246,7 @@ function CreateWebhookButton(props: PropsWithChildren<WebhooksPageProps>) {
 
             {/* Note: this is a "fake" form field since there is nothing to select yet */}
             <FormItem>
-              <FormLabel>
-                Event Type <Badge variant="outline">Coming Soon</Badge>
-              </FormLabel>
+              <FormLabel>Event Type</FormLabel>
               <Select disabled defaultValue="purchase_complete">
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Purchase Complete" />

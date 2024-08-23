@@ -96,7 +96,7 @@ export function RightSection(props: {
   }, [connectOptions.enableAuth, doLogout]);
 
   return (
-    <div className="flex flex-col xl:w-[764px] gap-4 shrink-0 xl:max-h-[100vh] sticky top-0">
+    <div className="flex flex-col xl:w-[764px] gap-4 shrink-0 xl:max-h-[100vh] xl:sticky xl:top-0">
       <TabButtons
         tabs={[
           {
@@ -252,7 +252,7 @@ function TabButtons(props: {
             onClick={tab.onClick}
             variant="ghost"
             className={cn(
-              "gap-2 px-4 shadow-inner text-base",
+              "gap-2 px-4 text-base",
               tab.isActive
                 ? "text-foreground bg-accent"
                 : "text-muted-foreground bg-transparent",

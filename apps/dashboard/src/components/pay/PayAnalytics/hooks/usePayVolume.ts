@@ -62,9 +62,9 @@ export function usePayVolume(options: {
 }) {
   const { user } = useLoggedInUser();
 
-  return useQuery(
-    ["usePayVolume", user?.address, options],
-    async () => {
+  return useQuery({
+    queryKey: ["usePayVolume", user?.address, options],
+    queryFn: async () => {
       const searchParams = new URLSearchParams();
       searchParams.append("intervalType", options.intervalType);
       searchParams.append("clientId", options.clientId);
@@ -89,6 +89,7 @@ export function usePayVolume(options: {
 
       return resJSON.result.data;
     },
-    { enabled: !!user?.jwt, retry: false },
-  );
+    enabled: !!user?.jwt,
+    retry: false,
+  });
 }

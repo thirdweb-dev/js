@@ -111,7 +111,7 @@ export const PRODUCTS: SectionItemProps[] = [
     description:
       "Flexible user sign-up flow with wallet and social sign-in methods",
     link: "/connect",
-    dashboardLink: "/dashboard/connect/playground",
+    dashboardLink: "https://playground.thirdweb.com/connect/sign-in/button",
     icon: require("../../../../../public/assets/product-icons/wallet-sdk.png"),
     section: "connect",
     inLandingPage: true,

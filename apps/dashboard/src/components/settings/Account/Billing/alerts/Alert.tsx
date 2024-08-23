@@ -141,40 +141,60 @@ export const BillingAlerts = () => {
       limits &&
       (usage.embeddedWallets.countWalletAddresses >= limits.embeddedWallets ||
         usage.storage.sumFileSizeBytes >= limits.storage);
+
+    const hasHardLimits = account?.status !== AccountStatus.ValidPayment;
+    const isFreePlan = account?.plan === "free";
+    const isGrowthPlan = account?.plan === "growth";
     const usageAlerts: AlertConditionType[] = [
       {
-        shouldShowAlert: !!(exceededUsage_50 && !exceededUsage_100),
+        // Show alert if user has exceeded 50% of their usage limit and has not yet exceeded 100% of their usage limit and has hard limits
+        shouldShowAlert:
+          !!(exceededUsage_50 && !exceededUsage_100) && hasHardLimits,
         key: "usage_50_alert",
-        title: "You are approaching your free monthly credits",
+        title: "You are nearing your usage limit",
         description:
-          "You are approaching your free monthly credits. Consider monitoring your usage to avoid service interruptions.",
+          "To prevent service interruptions, please add a valid payment method or upgrade your plan.",
         status: "warning",
         componentType: "usage",
       },
       {
-        shouldShowAlert: !!exceededUsage_100,
+        // if the user has exceeded 100% of their usage limit and is has hard limits enforced
+        shouldShowAlert: !!exceededUsage_100 && hasHardLimits,
         key: "usage_100_alert",
-        title: "You have used all of your free monthly credits",
+        title: "You have exceeded your usage limit",
         description:
-          "You have exceeded your free monthly credits limit. Please upgrade your plan to continue using services without interruption.",
+          "To continue using our services, add a valid payment method or upgrade your plan.",
         status: "error",
         componentType: "usage",
       },
       {
-        shouldShowAlert: hasUsageData && !!rateLimitedAt?.rpc,
-        key: "rate_rpc_alert",
-        title: "You have exceeded your RPC rate limit",
-        description:
-          "You have exceeded your RPC rate limit. Please consider upgrading your plan to avoid service interruptions.",
+        // if its NOT a free plan and the user has exceeded 100% of their usage limit
+        shouldShowAlert: !!exceededUsage_100 && !hasHardLimits,
+        key: "usage_100_alert",
+        title: "You have exceeded your usage limit",
+        // if free or growth plan, included the upgrade plan message
+        description: `Overages are now being charged.${isFreePlan || (isGrowthPlan && " Consider upgrading your plan to increase your included limits.")}`,
         status: "warning",
         componentType: "usage",
       },
       {
-        shouldShowAlert: hasUsageData && !!rateLimitedAt?.storage,
+        // only show RPC warning if the user has exceeded their RPC rate limit and has hard limits
+        shouldShowAlert: hasUsageData && !!rateLimitedAt?.rpc && hasHardLimits,
+        key: "rate_rpc_alert",
+        title: "You have exceeded your RPC rate limit",
+        description:
+          "To prevent service interruptions, add a valid payment method or upgrade your plan.",
+        status: "warning",
+        componentType: "usage",
+      },
+      {
+        // only show Storage warning if the user has exceeded their Storage rate limit and has hard limits
+        shouldShowAlert:
+          hasUsageData && !!rateLimitedAt?.storage && hasHardLimits,
         key: "rate_storage_alert",
         title: "You have exceeded your Storage Gateway rate limit",
         description:
-          "You have exceeded your Storage Gateway rate limit. Please consider upgrading your plan to avoid service interruptions.",
+          "To prevent service interruptions, add a valid payment method or upgrade your plan.",
         status: "warning",
         componentType: "usage",
       },

@@ -112,7 +112,10 @@ export function isThirdwebUrl(url: string): boolean {
 
     try {
       // special case for localhost in development only
-      if (process.env.NODE_ENV === "development") {
+      if (
+        process.env.NODE_ENV === "development" ||
+        process.env.NODE_ENV === "test"
+      ) {
         if (hostname === "localhost") {
           IS_THIRDWEB_URL_CACHE.set(url, true);
           return true;

@@ -181,10 +181,11 @@ export const ConnectWalletSocialOptions = (
   // Need to trigger login on button click to avoid popup from being blocked
   const handleSocialLogin = async (strategy: SocialAuthOption) => {
     const walletConfig = wallet.getConfig();
+    const authMode = walletConfig?.auth?.mode ?? "popup";
     if (
       walletConfig &&
       "auth" in walletConfig &&
-      walletConfig?.auth?.mode === "redirect" &&
+      authMode !== "popup" &&
       !props.isLinking // We do not support redirects for linking
     ) {
       return loginWithOauthRedirect({
@@ -192,7 +193,7 @@ export const ConnectWalletSocialOptions = (
         client: props.client,
         ecosystem: ecosystemInfo,
         redirectUrl: walletConfig?.auth?.redirectUrl,
-        redirectExternally: walletConfig?.auth?.redirectExternally,
+        mode: authMode,
       });
     }
 

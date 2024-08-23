@@ -1,5 +1,5 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { FiX } from "react-icons/fi";
 import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 import type { ThirdwebContract } from "thirdweb";
@@ -13,7 +13,6 @@ import { MaxClaimablePerWalletInput } from "./Inputs/MaxClaimablePerWalletInput"
 import { MaxClaimableSupplyInput } from "./Inputs/MaxClaimableSupplyInput";
 import { PhaseNameInput } from "./Inputs/PhaseNameInput";
 import { PhaseStartTimeInput } from "./Inputs/PhaseStartTimeInput";
-import { WaitingTimeInput } from "./Inputs/WaitingTimeInput";
 import { CustomFormGroup } from "./common";
 
 interface ClaimConditionsPhaseProps {
@@ -157,11 +156,6 @@ export const ClaimConditionsPhase: React.FC<ClaimConditionsPhaseProps> = ({
             claimConditionType === "creator" ? null : (
               <CustomFormGroup>
                 <MaxClaimablePerWalletInput />
-                {isClaimPhaseV1 ? (
-                  <WaitingTimeInput />
-                ) : (
-                  <Box w="100%" display={{ base: "none", md: "block" }} />
-                )}
               </CustomFormGroup>
             )}
 

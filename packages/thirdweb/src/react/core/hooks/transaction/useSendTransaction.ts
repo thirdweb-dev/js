@@ -49,6 +49,9 @@ export type SendTransactionPayModalConfig =
       buyWithFiat?:
         | false
         | {
+            prefillSource?: {
+              currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+            };
             testMode?: boolean;
           };
       purchaseData?: object;

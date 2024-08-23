@@ -31,16 +31,16 @@ export const loginWithOauthRedirect = (options: {
   client: ThirdwebClient;
   ecosystem?: Ecosystem;
   redirectUrl?: string;
-  redirectExternally?: boolean;
+  mode?: "redirect" | "popup" | "window";
 }): void => {
   const loginUrl = getLoginUrl({
     ...options,
-    mode: "redirect",
+    mode: options.mode || "redirect",
   });
-  if (options.redirectExternally === true) {
-    window.open(loginUrl);
-  } else {
+  if (options.mode === "redirect") {
     window.location.href = loginUrl;
+  } else {
+    window.open(loginUrl);
   }
 };
 

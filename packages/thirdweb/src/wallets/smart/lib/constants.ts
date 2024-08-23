@@ -19,6 +19,9 @@ export const MANAGED_ACCOUNT_GAS_BUFFER = 50000n;
  */
 export const getDefaultBundlerUrl = (chain: Chain) => {
   const domain = getThirdwebDomains().bundler;
+  if (domain.startsWith("localhost:")) {
+    return `http://${domain}?chain=${chain.id}`;
+  }
   return `https://${chain.id}.${domain}/`;
 };
 
@@ -27,5 +30,8 @@ export const getDefaultBundlerUrl = (chain: Chain) => {
  */
 export const getDefaultPaymasterUrl = (chain: Chain) => {
   const domain = getThirdwebDomains().bundler;
+  if (domain.startsWith("localhost:")) {
+    return `http://${domain}?chain=${chain.id}`;
+  }
   return `https://${chain.id}.${domain}/`;
 };

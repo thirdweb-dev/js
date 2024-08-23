@@ -36,15 +36,11 @@ export type InAppWalletCreationOptions =
         /**
          * Whether to display the social auth prompt in a popup or redirect
          */
-        mode?: "popup" | "redirect";
+        mode?: "popup" | "redirect" | "window";
         /**
          * Optional url to redirect to after authentication
          */
         redirectUrl?: string;
-        /**
-         * Whether to handle the redirect in a new window
-         */
-        redirectExternally?: boolean;
         /**
          * The domain of the passkey to use for authentication
          */

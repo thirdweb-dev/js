@@ -117,6 +117,9 @@
       "inputs": ["src/**", "test/**"],
       "dependsOn": ["^build"]
     },
+    "storybook": {
+      "inputs": ["src/**"]
+    },
     "test:legacy": {
       "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**"],

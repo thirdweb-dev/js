@@ -3,6 +3,9 @@ import {
 	FunctionParameter,
 	FunctionSignature,
 	getFunctionSignature,
+    InterfaceDoc,
+    Summary,
+    TypeInfo,
 } from "typedoc-better-json";
 import { CodeBlock, InlineCode } from "../../../../components/Document/Code";
 import { TypedocSummary } from "./Summary";
@@ -16,6 +19,7 @@ import invariant from "tiny-invariant";
 import { getTags } from "./utils/getTags";
 import { getTokenLinks } from "./utils/getTokenLinks";
 import { DocLink, Paragraph } from "@/components/Document";
+import fetchDocBySlug from "./fetchDocs/fetchDocBySlug";
 
 export function FunctionTDoc(props: {
 	doc: FunctionDoc;
@@ -124,7 +128,7 @@ async function RenderFunctionSignature(props: {
 				</>
 			)}
 
-			<Details id={slugger.slug("signature")} summary="Signature" noIndex>
+			<Details startExpanded id={slugger.slug("signature")} summary="Signature" noIndex>
 				<CodeBlock
 					code={signatureCode.code}
 					lang="ts"
@@ -148,6 +152,7 @@ async function RenderFunctionSignature(props: {
 								key={param.name}
 								level={props.level + 1}
 								summary={param.name}
+								startExpanded
 								tags={[
 									param.flags?.isOptional ? "optional" : "",
 									param.flags?.isPrivate ? "private" : "",
@@ -162,8 +167,8 @@ async function RenderFunctionSignature(props: {
 				</div>
 			)}
 
-			{signature.returns && (
-				<div className="mt-5">
+			{signature.returns && 
+			<div className="mt-5">
 					<Heading
 						level={subLevel}
 						id={slugger.slug(props.name + "-returns")}
@@ -174,19 +179,12 @@ async function RenderFunctionSignature(props: {
 					<div>
 						{signature.returns.type && (
 							<Details
+								startExpanded
 								id={slugger.slug(props.name + "-return-type")}
 								summary="Return Type"
 								noIndex
 							>
-								<CodeBlock
-									code={`let returnType: ${signature.returns.type.code}`}
-									lang="ts"
-									tokenLinks={
-										signature.returns.type.tokens
-											? await getTokenLinks(signature.returns.type.tokens)
-											: undefined
-									}
-								/>
+								<ReturnsTDoc returns={signature.returns} />
 							</Details>
 						)}
 
@@ -195,7 +193,8 @@ async function RenderFunctionSignature(props: {
 						)}
 					</div>
 				</div>
-			)}
+			}
+
 
 			{prepareTag && (
 				<div className="mt-8" data-noindex>
@@ -217,6 +216,34 @@ async function RenderFunctionSignature(props: {
 	);
 }
 
+async function ReturnsTDoc({returns}: {
+	returns: { type?: TypeInfo, summary?: Summary },
+}) {
+		const fullTypeDoc = await (async () => {
+		if (returns.type === undefined) return;
+		const maybeDoc = await fetchDocBySlug(returns.type.code);
+		if (!maybeDoc) {
+			if (returns.type.tokens?.[0]?.name === "Promise") {
+				const promisedTypeDoc = await fetchDocBySlug(returns.type.tokens[1]?.name || "");
+				return promisedTypeDoc ? promisedTypeDoc as InterfaceDoc : undefined;
+			}
+			return
+		}
+		return maybeDoc as InterfaceDoc;
+	})();
+
+	return <CodeBlock
+									code={`let returnType: ${fullTypeDoc?.type?.code || returns.type?.code}`}
+									lang="ts"
+									tokenLinks={
+										returns.type?.tokens
+											? await getTokenLinks([...returns.type.tokens, ...(fullTypeDoc?.type?.tokens || [])])
+											: undefined
+									}
+								/>
+					
+}
+
 async function ParameterTDoc(props: {
 	param: FunctionParameter;
 	level: number;
@@ -225,6 +252,15 @@ async function ParameterTDoc(props: {
 
 	const slugger = sluggerContext.get();
 	invariant(slugger, "slugger context not set");
+
+	const fullTypeDoc = await (async () => {
+		if (param.type === undefined) return;
+		const maybeDoc = await fetchDocBySlug(param.type?.code);
+		if (!maybeDoc) {
+			return
+		}
+		return maybeDoc as InterfaceDoc;
+	})();
 
 	const { deprecatedTag, remarksTag, seeTag, exampleTag } = getTags(
 		param.blockTags,
@@ -259,10 +295,11 @@ async function ParameterTDoc(props: {
 							</Heading>
 
 							<CodeBlock
-								code={`let ${param.name}: ${param.type.code}`}
+								// Prioritize the unrolled type when showing the parameter codeblock
+								code={`let ${param.name}: ${fullTypeDoc?.type?.code ?? param.type.code}`}
 								tokenLinks={
 									param.type.tokens
-										? await getTokenLinks(param.type.tokens)
+										? await getTokenLinks([...param.type.tokens, ...(fullTypeDoc?.type?.tokens || [])])
 										: undefined
 								}
 								lang="ts"

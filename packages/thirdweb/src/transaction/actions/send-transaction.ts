@@ -5,13 +5,22 @@ import type { GaslessOptions } from "./gasless/types.js";
 import { toSerializableTransaction } from "./to-serializable-transaction.js";
 import type { WaitForReceiptOptions } from "./wait-for-tx-receipt.js";
 
-export type SendTransactionOptions = {
+/** Send transaction options */
+export interface SendTransactionOptions {
+  /**
+   * The account to send the transaction with
+   */
   account: Account;
-  // TODO: update this to `Transaction<"prepared">` once the type is available to ensure only prepared transactions are accepted
+  /**
+   * The prepared transaction to send
+   */
   // biome-ignore lint/suspicious/noExplicitAny: library function that accepts any prepared transaction type
   transaction: PreparedTransaction<any>;
+  /**
+   * Gasless options for the transaction, if applicable
+   */
   gasless?: GaslessOptions;
-};
+}
 
 /**
  * Sends a transaction using the provided account.

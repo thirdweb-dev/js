@@ -1,8 +1,8 @@
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
 import { Flex, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useSupportedChains } from "@thirdweb-dev/react";
 import type { BasicContract } from "contract-ui/types/types";
+import { useSupportedChains } from "hooks/chains/configureChains";
 import { getDashboardChainRpc } from "lib/rpc";
 import { getThirdwebSDK } from "lib/sdk";
 import { FiPlus } from "react-icons/fi";
@@ -14,14 +14,14 @@ import { FactoryContracts } from "./factory-contracts";
 const useFactories = () => {
   const { user, isLoggedIn } = useLoggedInUser();
   const configuredChains = useSupportedChains();
-  return useQuery(
-    [
+  return useQuery({
+    queryKey: [
       "dashboard-registry",
       user?.address,
       "multichain-contract-list",
       "factories",
     ],
-    async () => {
+    queryFn: async () => {
       invariant(user?.address, "user should be logged in");
       const polygonSDK = getThirdwebSDK(
         polygon.id,
@@ -42,10 +42,9 @@ const useFactories = () => {
 
       return contractWithExtensions.filter((f) => f !== null);
     },
-    {
-      enabled: !!user?.address && isLoggedIn,
-    },
-  );
+
+    enabled: !!user?.address && isLoggedIn,
+  });
 };
 
 interface AccountFactoriesProps {

@@ -203,7 +203,7 @@ const AppHeader: React.FC = () => {
             Home
           </LinkButton>
           <LinkButton
-            href="/dashboard/connect/playground"
+            href="/dashboard/connect"
             isActive={
               pathname.startsWith("/dashboard/connect") ||
               pathname.startsWith("/dashboard/payments")
