@@ -325,12 +325,19 @@ function BuyScreenContent(props: BuyScreenContentProps) {
         onBack={goBack}
         payer={payer}
         client={props.client}
-        onDone={onDone}
         chain={toChain}
         token={toToken}
         tokenAmount={tokenAmount}
         receiverAddress={receiverAddress}
         transactionMode={props.payOptions.mode === "transaction"}
+        isEmbed={props.isEmbed}
+        onDone={onDone}
+        onTryAgain={() => {
+          setScreen({
+            id: "buy-with-crypto",
+          });
+        }}
+        onSuccess={onSwapSuccess}
       />
     );
   }
