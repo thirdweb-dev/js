@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
+import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useWalletBalance } from "../../../core/hooks/others/useWalletBalance.js";
 import { useActiveAccount } from "../../../core/hooks/wallets/useActiveAccount.js";
@@ -91,7 +92,7 @@ export const TokenRow = (props: {
           <>
             {balanceQuery.data ? (
               <ThemedText theme={theme} type="subtext">
-                {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+                {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
                 {balanceQuery.data?.symbol}
               </ThemedText>
             ) : (
@@ -124,6 +125,10 @@ export const TokenRow = (props: {
     <View style={styles.tokenRowContainer}>{inner}</View>
   );
 };
+
+function formatBalanceOnButton(num: number) {
+  return formatNumber(num, num < 1 ? 5 : 4);
+}
 
 const styles = StyleSheet.create({
   listContainer: {
