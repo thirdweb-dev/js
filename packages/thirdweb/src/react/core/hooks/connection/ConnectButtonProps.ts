@@ -230,6 +230,19 @@ export type ConnectButton_detailsModalOptions = {
   networkSelector?: NetworkSelectorProps;
 
   /**
+   * Hide the "Switch Wallet" button in the `ConnectButton` Details Modal.
+   *
+   * By default it is `false`
+   * @example
+   * ```tsx
+   * <ConnectButton detailsModal={{
+   *  hideSwitchWallet: true
+   * }} />
+   * ```
+   */
+  hideSwitchWallet?: boolean;
+
+  /**
    * Hide the "Disconnect Wallet" button in the `ConnectButton` Details Modal.
    *
    * By default it is `false`
