@@ -5,6 +5,12 @@ export {
 } from "../pay/buyWithCrypto/getQuote.js";
 
 export {
+  getBuyWithCryptoTransfer,
+  type BuyWithCryptoTransfer,
+  type GetBuyWithCryptoTransferParams,
+} from "../pay/buyWithCrypto/getTransfer.js";
+
+export {
   type QuoteApprovalParams,
   type QuoteTokenInfo,
 } from "../pay/buyWithCrypto/commonTypes.js";
