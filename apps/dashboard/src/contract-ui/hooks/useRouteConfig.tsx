@@ -316,7 +316,18 @@ export function useContractRouteConfig(
       title: "Overview",
       path: "overview",
       // not lazy because this is typically the landing spot so we want it to always be there immediately
-      component: ContractOverviewPage,
+      component: () => (
+        <>
+          {contract && (
+            <ContractOverviewPage
+              contract={contract}
+              contractType={contractTypeQuery.data || "custom"}
+              detectedFeatureNames={contractData.detectedFeatureNames}
+            />
+          )}
+        </>
+      ),
+      isEnabled: contractQuery.isLoading ? "loading" : "enabled",
       isDefault: true,
     },
     {
