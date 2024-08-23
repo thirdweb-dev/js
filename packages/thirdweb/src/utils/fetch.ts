@@ -94,7 +94,6 @@ const THIRDWEB_DOMAINS = [
   // dev domains
   ".thirdweb.dev",
   ".thirdweb-dev.com",
-  ".chainsaw-dev.zeet.app",
 ] as const;
 
 const IS_THIRDWEB_URL_CACHE = new LruMap<boolean>(4096);
