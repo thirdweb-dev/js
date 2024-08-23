@@ -14,6 +14,7 @@ import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { SmartWalletOptions } from "../../../../wallets/smart/types.js";
 import type { AppMetadata } from "../../../../wallets/types.js";
@@ -246,9 +247,7 @@ export const ConnectedWalletDetails: React.FC<{
             color="secondaryText"
             weight={400}
           >
-            {Number.parseFloat(
-              Number(balanceQuery.data.displayValue).toFixed(3),
-            )}{" "}
+            {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
             {balanceQuery.data.symbol}
           </Text>
         ) : (
@@ -352,9 +351,7 @@ function DetailsModal(props: {
           {chainNameQuery.name || `Unknown chain #${walletChain?.id}`}
           <Text color="secondaryText" size="xs">
             {balanceQuery.data ? (
-              Number.parseFloat(
-                Number(balanceQuery.data.displayValue).toFixed(3),
-              )
+              formatNumber(Number(balanceQuery.data.displayValue), 5)
             ) : (
               <Skeleton height="1em" width="100px" />
             )}{" "}
@@ -914,6 +911,10 @@ function DetailsModal(props: {
       </WalletUIStatesProvider>
     </CustomThemeProvider>
   );
+}
+
+function formatBalanceOnButton(num: number) {
+  return formatNumber(num, num < 1 ? 5 : 4);
 }
 
 const WalletInfoButton = /* @__PURE__ */ StyledButton((_) => {

@@ -1,4 +1,5 @@
 import { StyleSheet, View } from "react-native";
+import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import { parseTheme } from "../../../core/design-system/CustomThemeProvider.js";
 import type { ConnectButtonProps } from "../../../core/hooks/connection/ConnectButtonProps.js";
@@ -64,7 +65,7 @@ export function ConnectedButton(
                 fontSize: fontSize.sm,
               }}
             >
-              {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+              {formatBalanceOnButton(Number(balanceQuery.data.displayValue))}{" "}
               {balanceQuery.data?.symbol}
             </ThemedText>
           ) : (
@@ -78,6 +79,10 @@ export function ConnectedButton(
       </View>
     </ThemedButton>
   );
+}
+
+function formatBalanceOnButton(num: number) {
+  return formatNumber(num, num < 1 ? 5 : 4);
 }
 
 const styles = StyleSheet.create({
