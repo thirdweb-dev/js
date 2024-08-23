@@ -23,6 +23,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@shazow/whatsabi": "^0.14.1",
     "@chakra-ui/react": "^2.8.2",
     "@chakra-ui/styled-system": "^2.9.2",
     "@chakra-ui/theme-tools": "^2.1.2",
@@ -166,16 +167,8 @@
       "tw-components",
       "contract-ui"
     ],
-    "exclude": [
-      "node_modules",
-      "types",
-      "tw-components"
-    ],
+    "exclude": ["node_modules", "types", "tw-components"],
     "entrypoints": []
   },
-  "browserslist": [
-    "defaults",
-    "unreleased versions",
-    "not UCAndroid > 0"
-  ]
+  "browserslist": ["defaults", "unreleased versions", "not UCAndroid > 0"]
 }

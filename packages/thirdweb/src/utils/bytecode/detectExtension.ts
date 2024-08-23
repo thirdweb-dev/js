@@ -1,12 +1,10 @@
 import type { AbiFunction } from "abitype";
 import { toFunctionSelector } from "viem";
-import type { ThirdwebContract } from "../../contract/contract.js";
 import type { PreparedMethod } from "../abi/prepare-method.js";
-import { resolveImplementation } from "./resolveImplementation.js";
 
 type DetectExtensionOptions = {
-  contract: ThirdwebContract;
   method: string | AbiFunction | PreparedMethod<AbiFunction>;
+  availableSelectors: string[];
 };
 
 /**
@@ -23,33 +21,10 @@ type DetectExtensionOptions = {
  * ```
  * @contract
  */
-export async function detectMethod(
-  options: DetectExtensionOptions,
-): Promise<boolean> {
-  const { bytecode } = await resolveImplementation(options.contract);
-  return detectMethodInBytecode({ bytecode, method: options.method });
-}
-
-type DetectExtensionInBytecodeOptions = {
-  bytecode: string;
-  method: string | AbiFunction | PreparedMethod<AbiFunction>;
-};
-/**
- * Detects if a specific method is present in the bytecode of a contract.
- * @param options - The options for detecting the method in the bytecode.
- * @returns A boolean indicating whether the method is present in the bytecode.
- * @internal
- */
-function detectMethodInBytecode(options: DetectExtensionInBytecodeOptions) {
-  // if we can't get the bytecode we know the contract is not deployed
-  if (options.bytecode === "0x") {
-    return false;
-  }
-  // we strip the leading `0x` from the function selector
+export function detectMethod(options: DetectExtensionOptions): boolean {
   const fnSelector = Array.isArray(options.method)
     ? options.method[0]
     : toFunctionSelector(options.method);
 
-  // indexOf is slightly faster than includes
-  return options.bytecode.indexOf(fnSelector.slice(2)) > -1;
+  return options.availableSelectors.includes(fnSelector);
 }

@@ -1,7 +1,6 @@
 import type { BaseTransactionOptions } from "../../../../../transaction/types.js";
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 
-import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 export const FN_SELECTOR = "0xd111515d" as const;
@@ -10,21 +9,19 @@ const FN_OUTPUTS = [] as const;
 
 /**
  * Checks if the `freezeMetadata` method is supported by the given contract.
- * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `freezeMetadata` method is supported.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `freezeMetadata` method is supported.
  * @extension ERC1155
  * @example
  * ```ts
  * import { isFreezeMetadataSupported } from "thirdweb/extensions/erc1155";
  *
- * const supported = await isFreezeMetadataSupported(contract);
+ * const supported = isFreezeMetadataSupported(["0x..."]);
  * ```
  */
-export async function isFreezeMetadataSupported(
-  contract: ThirdwebContract<any>,
-) {
+export function isFreezeMetadataSupported(availableSelectors: string[]) {
   return detectMethod({
-    contract,
+    availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
   });
 }
