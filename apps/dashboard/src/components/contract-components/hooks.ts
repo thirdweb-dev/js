@@ -13,7 +13,6 @@ import {
 import { useSDK, useSigner } from "@thirdweb-dev/react";
 import {
   type Abi,
-  type ContractInfoSchema,
   type DeploymentTransaction,
   type ExtraPublishMetadata,
   type FeatureName,
@@ -42,7 +41,6 @@ import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
-import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import {
@@ -60,7 +58,6 @@ import {
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-ethers";
-import type { z } from "zod";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import type {
   DeployModalStep,
@@ -69,31 +66,6 @@ import type {
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
 import type { ContractId } from "./types";
 import { addContractToMultiChainRegistry } from "./utils";
-
-interface ContractPublishMetadata {
-  image: string | StaticImageData;
-  name: string;
-  description?: string;
-  abi?: Abi;
-  bytecode?: string;
-  deployDisabled?: boolean;
-  info?: z.infer<typeof ContractInfoSchema>;
-  licenses?: string[];
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  compilerMetadata?: Record<string, any>;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  analytics?: Record<string, any>;
-}
-
-interface RawPredeployMetadata {
-  name: string;
-  metadataUri: string;
-  bytecodeUri: string;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  analytics?: Record<string, any>;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  compilers?: Record<string, any>;
-}
 
 function isChainIdZkSync(chainId?: number) {
   switch (chainId) {
@@ -143,13 +115,12 @@ export async function fetchRawPredeployMetadataFromURI(contractId: ContractId) {
 }
 
 export function useContractRawPredeployMetadataFromURI(contractId: ContractId) {
-  return useQuery<RawPredeployMetadata>(
-    ["raw-predeploy-metadata", contractId],
-    () => fetchRawPredeployMetadataFromURI(contractId),
-    {
-      enabled: !!contractId,
-    },
-  );
+  return useQuery({
+    queryKey: ["raw-predeploy-metadata", contractId],
+    queryFn: () => fetchRawPredeployMetadataFromURI(contractId),
+
+    enabled: !!contractId,
+  });
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -203,13 +174,11 @@ export async function fetchContractPublishMetadataFromURI(
 }
 
 export function useContractPublishMetadataFromURI(contractId: ContractId) {
-  return useQuery<ContractPublishMetadata>(
-    ["publish-metadata", contractId],
-    () => fetchContractPublishMetadataFromURI(contractId),
-    {
-      enabled: !!contractId,
-    },
-  );
+  return useQuery({
+    queryKey: ["publish-metadata", contractId],
+    queryFn: () => fetchContractPublishMetadataFromURI(contractId),
+    enabled: !!contractId,
+  });
 }
 
 export function useDefaultForwarders() {
