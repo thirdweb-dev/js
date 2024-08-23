@@ -1,5 +1,4 @@
 import { createThirdwebClient } from "thirdweb";
-import { setThirdwebDomains } from "thirdweb/utils";
 
 export const THIRDWEB_CLIENT = createThirdwebClient(
   process.env.THIRDWEB_SECRET_KEY
