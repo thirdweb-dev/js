@@ -1,7 +1,6 @@
 export {
   getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
-  type QuoteApprovalParams,
   type GetBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/getQuote.js";
 
