@@ -2,4 +2,4 @@
 "thirdweb": patch
 ---
 
-Added overrides for connected wallet name and avatar in details modal
+Added overrides for connected wallet name and avatar in details button and modal
