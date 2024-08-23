@@ -92,6 +92,29 @@ export type BuyWithCryptoTransfer = {
 };
 
 /**
+ * Get a quote of type [`BuyWithCryptoTransfer`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransfer) to facilitate a token transfer transaction.
+ * Using this instead of a native transfer allows you to receive status and webhooks about successful or failed payments.
+ *
+ * Once you have the quote, you can use `prepareTransaction` and prepare the transaction for submission.
+ * @param params - object of type [`GetBuyWithCryptoTransferParams`](https://portal.thirdweb.com/references/typescript/v5/GetBuyWithCryptoTransferParams)
+ * @returns Object of type [`BuyWithCryptoTransfer`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoTransfer) which contains the information about the transfer
+ * @example
+ *
+ * ```ts
+ * import { getBuyWithCryptoTransfer } from "thirdweb/pay";
+ *
+ * const transfer = await getBuyWithCryptoTransfer({
+ *  client,
+ *  fromAddress: "0x...", // wallet address
+ *  toAddress: "0x...", // recipient address - likely to be your wallet
+ *  chainId: 10, // chain id of the token
+ *  tokenAddress: "0x...", // address of the token
+ *  amount: "10", // amount of token to transfer
+ *  purchaseData: {  // any metadata for you to attribute this purchase
+ *    "customerId": "yourId"
+ *  }
+ * });
+ * ```
  * @buyCrypto
  */
 export async function getBuyWithCryptoTransfer(
