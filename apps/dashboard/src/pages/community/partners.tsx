@@ -44,28 +44,24 @@ const partnersCompanies = [
   },
 ];
 
-const Partners = () => {
+export const Partners = () => {
   return (
-    <>
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        flexWrap="wrap" // Allows images to wrap to the next line if screen width is small
-        gap={10} // Space between images
-        mt="24px"
-      >
-        {partnersCompanies.slice(0, 10).map((partner, idx) => (
-          <ChakraNextImage
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            key={idx} // Unique key for each image
-            maxW={partner.maxWidth} // Set max width for each image
-            src={partner.src} // Source of the image
-            alt="partner" // Alt text for the image
-          />
-        ))}
-      </Flex>
-    </>
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      flexWrap="wrap" // Allows images to wrap to the next line if screen width is small
+      gap={10} // Space between images
+      mt="24px"
+    >
+      {partnersCompanies.slice(0, 10).map((partner, idx) => (
+        <ChakraNextImage
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          key={idx} // Unique key for each image
+          maxW={partner.maxWidth} // Set max width for each image
+          src={partner.src} // Source of the image
+          alt="partner" // Alt text for the image
+        />
+      ))}
+    </Flex>
   );
 };
-
-export default Partners;

@@ -2,7 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Heading, Text } from "tw-components";
 
-const ThreeBoxLayout = () => {
+export const ThreeBoxLayout = () => {
   const credits = {
     maxWidth: "252px",
     src: require("../../../public/assets/startup-program/buildandscale-image.png"),
@@ -233,5 +233,3 @@ const ThreeBoxLayout = () => {
     </Flex>
   );
 };
-
-export default ThreeBoxLayout;
