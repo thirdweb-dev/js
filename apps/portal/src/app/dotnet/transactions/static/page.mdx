@@ -84,7 +84,7 @@ Returns the estimated gas limit as a `BigInteger`.
 
 </Details>
 
-## ThirdwebTransaction.EstimateGasPrice
+## ThirdwebTransaction.EstimateGasPrice (Legacy)
 
 Estimate the gas price for a transaction, optionally adjusting the estimate by a bump ratio.
 
@@ -109,6 +109,34 @@ A Boolean indicating whether to adjust the estimated gas price by a factor to ac
 ### BigInteger
 
 Returns the estimated gas price as a `BigInteger`.
+
+</Details>
+
+## ThirdwebTransaction.EstimateGasFees (EIP-1559)
+
+Estimate the gas fees for a transaction, optionally adjusting the estimate by a bump ratio.
+
+```csharp
+(BigInteger maxFeePerGas, BigInteger maxPriorityFeePerGas) = await ThirdwebTransaction.EstimateGasFees(transaction, withBump);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction for which you are estimating the gas fees.
+
+### withBump (optional)
+
+A Boolean indicating whether to adjust the estimated gas fees by a factor to account for network conditions. Defaults to `true`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### (BigInteger maxFeePerGas, BigInteger maxPriorityFeePerGas)
+
+Returns a tuple containing the estimated maximum fee per gas and maximum priority fee per gas, both as `BigInteger`.
 
 </Details>
 
@@ -157,6 +185,30 @@ An instance of `ThirdwebTransaction`. The transaction you are signing.
 ### string
 
 Returns the signed transaction data as a `string` or the signed user operation json if using Account Abstraction.
+
+</Details>
+
+## ThirdwebTransaction.Prepare
+
+Prepares the transaction for sending by setting default values for any unset fields, such as gas limits and gas prices.
+
+```csharp
+ThirdwebTransaction preparedTransaction = await ThirdwebTransaction.Prepare(transaction);
+```
+
+<Details summary="Parameters">
+
+### transaction (required)
+
+An instance of `ThirdwebTransaction`. The transaction you want to prepare for sending.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransaction
+
+Returns the prepared transaction as an instance of `ThirdwebTransaction`, with all necessary fields populated.
 
 </Details>
 
