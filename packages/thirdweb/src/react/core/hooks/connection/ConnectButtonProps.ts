@@ -256,6 +256,19 @@ export type ConnectButton_detailsModalOptions = {
   hideDisconnect?: boolean;
 
   /**
+   * Hide the wallet image on the "Switch Wallet" button in the `ConnectButton` Details Modal.
+   *
+   * By default it is `false`
+   * @example
+   * ```tsx
+   * <ConnectButton detailsModal={{
+   *  hideWalletImage: true
+   * }} />
+   * ```
+   */
+  hideWalletImage?: boolean;
+
+  /**
    * Render custom UI at the bottom of the `ConnectButton` Details Modal
    * @param props - props passed to the footer component which includes a function to close the modal
    * @example
@@ -278,6 +291,16 @@ export type ConnectButton_detailsModalOptions = {
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
   payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
+
+  /**
+   * Render custom UI for the connected wallet name in the `ConnectButton` Details Modal, overriding ENS name or wallet address.
+   */
+  connectedWalletName?: React.ReactNode;
+
+  /**
+   * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
+   */
+  connectedWalletAvatarUrl?: string;
 };
 
 /**
@@ -325,6 +348,16 @@ export type ConnectButton_detailsButtonOptions = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Render custom UI for the connected wallet name in the `ConnectButton` details button, overriding ENS name or wallet address.
+   */
+  connectedWalletName?: React.ReactNode;
+
+  /**
+   * Use custom avatar URL for the connected wallet image in the `ConnectButton` details button, overriding ENS avatar or Blobbie icon.
+   */
+  connectedWalletAvatarUrl?: string;
 };
 
 /**
