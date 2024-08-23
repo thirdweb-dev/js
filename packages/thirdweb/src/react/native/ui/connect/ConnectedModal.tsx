@@ -3,6 +3,7 @@ import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import { getContract } from "../../../../contract/contract.js";
 import { isContractDeployed } from "../../../../utils/bytecode/is-contract-deployed.js";
+import { formatNumber } from "../../../../utils/formatNumber.js";
 import type { Account, Wallet } from "../../../../wallets/interfaces/wallet.js";
 import type { Theme } from "../../../core/design-system/index.js";
 import { useSiweAuth } from "../../../core/hooks/auth/useSiweAuth.js";
@@ -189,7 +190,7 @@ const AccountHeader = (props: ConnectedModalProps) => {
             fontSize: fontSize.sm,
           }}
         >
-          {Number(balanceQuery.data.displayValue).toFixed(3)}{" "}
+          {formatNumber(Number(balanceQuery.data.displayValue), 5)}{" "}
           {balanceQuery.data?.symbol}
         </ThemedText>
       ) : (
