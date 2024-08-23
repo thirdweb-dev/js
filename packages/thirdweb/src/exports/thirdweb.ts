@@ -166,11 +166,13 @@ export { toEther, toTokens, toUnits, toWei, fromGwei } from "../utils/units.js";
 export {
   getBuyWithCryptoQuote,
   type BuyWithCryptoQuote,
-  type QuoteApprovalParams,
   type GetBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/getQuote.js";
 
-export { type QuoteTokenInfo } from "../pay/buyWithCrypto/commonTypes.js";
+export {
+  type QuoteApprovalParams,
+  type QuoteTokenInfo,
+} from "../pay/buyWithCrypto/commonTypes.js";
 
 export {
   getBuyWithCryptoStatus,

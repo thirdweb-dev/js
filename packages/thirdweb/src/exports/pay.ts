@@ -4,7 +4,10 @@ export {
   type GetBuyWithCryptoQuoteParams,
 } from "../pay/buyWithCrypto/getQuote.js";
 
-export { type QuoteTokenInfo } from "../pay/buyWithCrypto/commonTypes.js";
+export {
+  type QuoteApprovalParams,
+  type QuoteTokenInfo,
+} from "../pay/buyWithCrypto/commonTypes.js";
 
 export {
   getBuyWithCryptoStatus,
