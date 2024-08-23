@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, useBreakpointValue } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { Heading, Text } from "tw-components";
 
@@ -38,74 +38,89 @@ const chainsIcons2 = [
   },
 ];
 
+const gradient = {
+  src: require("../../../public/assets/startup-program/gradient-1.png"),
+};
+
 const FastTrack = () => {
-  // Check if the screen is larger than "lg"
-  const isLargeScreen = useBreakpointValue({
-    base: false,
-    sm: false,
-    md: false,
-    lg: true,
-  });
   return (
-    <Box>
-      {!isLargeScreen && (
-        <Box>
-          <SimpleGrid columns={3} spacing={0}>
-            {chainsIcons.map((image) => (
-              <Box
-                key={image.id}
-                height="auto"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <ChakraNextImage
-                  src={image.src}
-                  alt={image.alt}
-                  height="auto"
-                  objectFit="contain"
-                  maxW="87px"
-                />
-              </Box>
-            ))}
-          </SimpleGrid>
-          <Box p="10px" maxW="545px" my="80px">
-            <Heading fontSize="32px" textAlign="center" mb="20px">
-              Fast track your application
-            </Heading>
-            <Text
-              mt={4}
-              fontSize="14px"
-              opacity={{ base: 0.7, lg: 1 }}
-              color="#fff"
-              fontWeight="medium"
-              textAlign="center"
+    <Box display={{ base: "block", sm: "block", md: "block", lg: "none" }}>
+      <Box>
+        <SimpleGrid columns={3} spacing={0}>
+          {chainsIcons.map((image) => (
+            <Box
+              key={image.id}
+              height="auto"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              Are you building on any of these ecosystems? If so, apply now to
-              get fast tracked to the next cohort.
-            </Text>
-          </Box>
-          <SimpleGrid columns={3} spacing={0}>
-            {chainsIcons2.map((image) => (
-              <Box
-                key={image.id}
+              <ChakraNextImage
+                src={image.src}
+                alt={image.alt}
                 height="auto"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <ChakraNextImage
-                  src={image.src}
-                  alt={image.alt}
-                  height="auto"
-                  objectFit="contain"
-                  maxW="87px"
-                />
-              </Box>
-            ))}
-          </SimpleGrid>
+                objectFit="contain"
+                maxW="87px"
+              />
+            </Box>
+          ))}
+        </SimpleGrid>
+        <Box p="10px" maxW="545px" my="80px">
+          <Heading fontSize="32px" textAlign="center" mb="20px">
+            Fast track your application
+          </Heading>
+          <Text
+            mt={4}
+            fontSize="14px"
+            opacity={{ base: 0.7, lg: 1 }}
+            color="#fff"
+            fontWeight="medium"
+            textAlign="center"
+          >
+            Are you building on any of these ecosystems? If so, apply now to get
+            fast tracked to the next cohort.
+          </Text>
         </Box>
-      )}
+        <SimpleGrid columns={3} spacing={0}>
+          {chainsIcons2.map((image) => (
+            <Box
+              key={image.id}
+              height="auto"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <ChakraNextImage
+                src={image.src}
+                alt={image.alt}
+                height="auto"
+                objectFit="contain"
+                maxW="87px"
+              />
+            </Box>
+          ))}
+        </SimpleGrid>
+        {/* Gradient Box */}
+        <Box
+          position="absolute"
+          bottom={{ base: "-50px", md: "-380px" }}
+          left="40%"
+          transform="translateX(-50%)"
+          zIndex="-1"
+          width="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <ChakraNextImage
+            src={gradient.src}
+            alt="description"
+            width="100%"
+            height="auto"
+            opacity={0.5}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };

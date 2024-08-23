@@ -1,11 +1,5 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Grid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageFooter } from "components/footer/Footer";
 import { Aurora } from "components/homepage/Aurora";
@@ -112,13 +106,7 @@ const rightColumnItems = [
 
 const StartupProgram: ThirdwebNextPage = () => {
   useForceDarkTheme();
-  // Check if the screen is larger than "lg"
-  const isLargeScreen = useBreakpointValue({
-    base: false,
-    sm: false,
-    md: false,
-    lg: true,
-  });
+
   return (
     <>
       <NextSeo {...SEO} />
@@ -287,7 +275,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               >
                 <Grid
                   templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-                  gap={6}
+                  gap={{ base: 0, md: 6 }}
                   w="full"
                 >
                   {/* Left Column */}
@@ -296,9 +284,9 @@ const StartupProgram: ThirdwebNextPage = () => {
                       <Text
                         key={item.id}
                         as="li"
-                        mb={4}
+                        mb={{ base: 0, md: 4 }}
                         color="white"
-                        fontSize="20px"
+                        fontSize={{ base: "14px", md: "20px" }}
                         fontWeight="medium"
                       >
                         {item.text}
@@ -312,9 +300,9 @@ const StartupProgram: ThirdwebNextPage = () => {
                       <Text
                         key={item.id}
                         as="li"
-                        mb={4}
+                        mb={{ base: 0, md: 4 }}
                         color="white"
-                        fontSize="20px"
+                        fontSize={{ base: "14px", md: "20px" }}
                         fontWeight="medium"
                       >
                         {item.text}
@@ -375,25 +363,23 @@ const StartupProgram: ThirdwebNextPage = () => {
         </HomepageSection>
 
         {/* Ellipse */}
-        {isLargeScreen && (
-          <Box
-            position="absolute"
-            bottom="34%"
-            left="50%"
-            transform="translateX(-50%)"
+        <Box
+          position="absolute"
+          bottom="34%"
+          left="50%"
+          transform="translateX(-50%)"
+          width="100%"
+          height="auto"
+          display={{ base: "none", sm: "none", md: "none", lg: "block" }}
+        >
+          <ChakraNextImage
+            src={ellipse.src}
+            alt="description"
             width="100%"
             height="auto"
-          >
-            <ChakraNextImage
-              src={ellipse.src}
-              alt="description"
-              width="100%"
-              height="auto"
-              objectFit="cover"
-            />
-          </Box>
-        )}
-
+            objectFit="cover"
+          />
+        </Box>
         <HomepageFooter />
       </Box>
     </>
