@@ -1,5 +1,89 @@
 # thirdweb
 
+## 5.48.2
+
+### Patch Changes
+
+- [#4250](https://github.com/thirdweb-dev/js/pull/4250) [`41fbdaf`](https://github.com/thirdweb-dev/js/commit/41fbdafcf777a58883e9f2daefb6bf4f77d5ecda) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Add overload to `signMessage` to pass an account rather than a private key
+
+  ```ts
+  import { signMessage } from "thirdweb/utils";
+  await signMessage({
+    message: "Hello, world!",
+    account,
+  });
+  ```
+
+- [#4267](https://github.com/thirdweb-dev/js/pull/4267) [`7a2de70`](https://github.com/thirdweb-dev/js/commit/7a2de7031077efba27b6bf74c1774a51e9151d22) Thanks [@alecananian](https://github.com/alecananian)! - Added `hideSwitchWallet` param to wallet details modal
+
+- [#4224](https://github.com/thirdweb-dev/js/pull/4224) [`1405598`](https://github.com/thirdweb-dev/js/commit/1405598e7e51e4d415fd57f8169012823db0cedf) Thanks [@IDubuque](https://github.com/IDubuque)! - Added support for direct transfers in Pay
+
+- [#4269](https://github.com/thirdweb-dev/js/pull/4269) [`120d61f`](https://github.com/thirdweb-dev/js/commit/120d61f41083198470b9dd4968d5914b644c6de5) Thanks [@MananTank](https://github.com/MananTank)! - Show wallet balance with upto 5 decimal places in UI components
+
+- [#4274](https://github.com/thirdweb-dev/js/pull/4274) [`a0aea23`](https://github.com/thirdweb-dev/js/commit/a0aea23e74ffce4cd20842603efa87a5c038feb8) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix popup and window auth modes conflicting on firefox
+
+- [#4244](https://github.com/thirdweb-dev/js/pull/4244) [`44e8e7b`](https://github.com/thirdweb-dev/js/commit/44e8e7bce21240156e55eec411dd461e746c3c8c) Thanks [@MananTank](https://github.com/MananTank)! - - Pay UI now selects the fiat currency based on the user's location / timezone
+
+  - Add Japanese Yen (JPY) as a supported fiat currency for thirdweb Pay
+  - Added option to configure the default fiat currency for the Pay UI
+
+  Examples
+
+  ```tsx
+  <PayEmbed
+    client={client}
+    payOptions={{
+      buyWithFiat: {
+        prefillSource: {
+          currency: "CAD",
+        },
+      },
+    }}
+  />
+  ```
+
+  ```tsx
+  <ConnectButton
+    client={client}
+    detailsModal={{
+      payOptions: {
+        buyWithFiat: {
+          prefillSource: {
+            currency: "JPY",
+          },
+        },
+      },
+    }}
+  />
+  ```
+
+  ```ts
+  const sendTransaction = useSendTransaction({
+    payModal: {
+      buyWithFiat: {
+        prefillSource: {
+          currency: "CAD",
+        },
+      },
+    },
+  });
+  ```
+
+  ```tsx
+  <TransactionButton
+    transaction={() => someTx}
+    payModal={{
+      buyWithFiat: {
+        prefillSource: {
+          currency: "CAD",
+        },
+      },
+    }}
+  >
+    some tx
+  </TransactionButton>
+  ```
+
 ## 5.48.1
 
 ### Patch Changes
