@@ -40,7 +40,9 @@ export async function connectInAppWallet(
   connector: InAppConnector,
 ): Promise<[Account, Chain]> {
   if (
+    // if auth mode is not specified, the default is popup
     createOptions?.auth?.mode !== "popup" &&
+    createOptions?.auth?.mode !== undefined &&
     connector.authenticateWithRedirect
   ) {
     const strategy = options.strategy;
