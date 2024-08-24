@@ -49,7 +49,10 @@ export const ContractCard: React.FC<ContractCardProps> = ({
 
   const href = useMemo(() => {
     let h: string;
-    if (version !== "latest") {
+    // TODO: don't include this, this is purely for PoC purposes
+    if (publisher === "thirdweb.eth" && contractId === "modularContracts") {
+      h = `/modularContracts`;
+    } else if (version !== "latest") {
       h = `/${publisher}/${contractId}/${version}`;
     } else {
       h = `/${publisher}/${contractId}`;

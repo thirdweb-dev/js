@@ -14,6 +14,17 @@ export interface ExploreCategory {
   isBeta?: boolean;
 }
 
+const MODULAR_CONTRACTS_POPULAR = {
+  id: "modularContractsPopular",
+  name: "Modular Contracts",
+  description: "A collection of our most deployed contracts.",
+  contracts: [
+    "thirdweb.eth/modularContracts",
+    "thirdweb.eth/modularContracts",
+    "thirdweb.eth/modularContracts",
+  ],
+} as const;
+
 const POPULAR = {
   id: "popular",
   name: "Popular",
@@ -187,6 +198,7 @@ const SMART_WALLET = {
 } as const;
 
 const CATEGORIES = {
+  [MODULAR_CONTRACTS_POPULAR.id]: MODULAR_CONTRACTS_POPULAR,
   [POPULAR.id]: POPULAR,
   [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
   [NFTS.id]: NFTS,
