@@ -12,7 +12,7 @@
   },
   "author": "thirdweb eng <eng@thirdweb.com>",
   "devDependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.25.4",
     "@preconstruct/cli": "2.7.0",
     "@thirdweb-dev/tsconfig": "workspace:*",
     "eslint": "8.57.0",
