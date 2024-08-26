@@ -18,25 +18,26 @@ const ContractCard = ({ title, href, description }: { title: string, href: strin
 const options = [
   {
     title: "Owner only mint",
-    description: "Mint a token to the owner of the contract",
-    href: "thirdweb.eth/ModularTokenERC721/deploy"
+    description: "Only the contract owners or wallets with the mint permission can mint",
+    href: "deployer.thirdweb.eth/ModularTokenERC721"
   },
   {
     title: "Allowlist mint",
-    description: "Mint a token with overrides to the conditions",
-    href: "thirdweb.eth/ModularDropERC721/deploy"
+    description: "Only wallets in the allow list can mint",
+    href: "deployer.thirdweb.eth/ModularDropERC721"
   },
   {
     title: "Open Mint",
-    description: "Public minting with no overrides",
-    href: "thirdweb.eth/ModularDropERC721/deploy"
+    description: "Any wallet can mint, as long as the claim conditions are met (price, max supply, etc)",
+    href: "deployer.thirdweb.eth/ModularDropERC721"
   },
   {
     title: "Signature Mint",
-    description: "Mint a token with a signature",
-    href: "thirdweb.eth/ModularTokenERC721/deploy"
+    description: "Contract owners can issue dynamic, signed 'vouchers' for others to mint",
+    href: "deployer.thirdweb.eth/ModularTokenERC721"
   },
 ]
+
 
 export default async function Page() {
   return (
