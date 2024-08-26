@@ -2,14 +2,16 @@ import type { Hash } from "viem";
 import { getCachedChain } from "../../chains/utils.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
-import {
-  type ApproveParams,
-  approve,
-} from "../../extensions/erc20/write/approve.js";
+import { approve } from "../../extensions/erc20/write/approve.js";
 import type { PrepareTransactionOptions } from "../../transaction/prepare-transaction.js";
-import type { BaseTransactionOptions } from "../../transaction/types.js";
 import { getClientFetch } from "../../utils/fetch.js";
 import { getPayBuyWithCryptoQuoteEndpoint } from "../utils/definitions.js";
+import type {
+  QuoteApprovalInfo,
+  QuotePaymentToken,
+  QuoteTokenInfo,
+  QuoteTransactionRequest,
+} from "./commonTypes.js";
 
 /**
  * The parameters for [`getBuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/getBuyWithCryptoQuote) function
@@ -107,40 +109,9 @@ export type GetBuyWithCryptoQuoteParams = {
 /**
  * @buyCrypto
  */
-export type QuoteTokenInfo = {
-  chainId: number;
-  tokenAddress: string;
-  decimals: number;
-  priceUSDCents: number;
-  name?: string;
-  symbol?: string;
-};
-
-type QuotePaymentToken = {
-  token: QuoteTokenInfo;
-  amountWei: string;
-  amount: string;
-  amountUSDCents: number;
-};
-
-type QuoteTransactionRequest = {
-  data: string;
-  to: string;
-  value: string;
-  from: string;
-  chainId: number;
-  gasPrice: string;
-  gasLimit: string;
-};
-
 type BuyWithCryptoQuoteRouteResponse = {
   transactionRequest: QuoteTransactionRequest;
-  approval?: {
-    chainId: number;
-    tokenAddress: string;
-    spenderAddress: string;
-    amountWei: string;
-  };
+  approval?: QuoteApprovalInfo;
 
   fromAddress: string;
   toAddress: string;
@@ -172,11 +143,6 @@ type BuyWithCryptoQuoteRouteResponse = {
   maxSlippageBPS: number;
   bridge?: string;
 };
-
-/**
- * @buyCrypto
- */
-export type QuoteApprovalParams = BaseTransactionOptions<ApproveParams>;
 
 /**
  * @buyCrypto

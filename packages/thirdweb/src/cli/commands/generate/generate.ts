@@ -181,7 +181,7 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * @example
  * \`\`\`
  * import { ${f.name} } from "TODO";
- * 
+ *
  * const transaction = ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
@@ -191,10 +191,10 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
          .join("\n * ")}\n * }`
      : ""
  });
- * 
+ *
  * // Send the transaction
  * ...
- * 
+ *
  * \`\`\`
  */
 export function ${f.name}(
@@ -239,7 +239,7 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
  * @example
  * \`\`\`
  * import { ${f.name} } from "TODO";
- * 
+ *
  * const result = await ${f.name}(${
    f.inputs.length > 0
      ? `{\n * ${f.inputs
@@ -249,7 +249,7 @@ export type ${uppercaseFirstLetter(f.name)}Params = {
          .join("\n * ")}\n * }`
      : ""
  });
- * 
+ *
  * \`\`\`
  */
 export async function ${f.name}(
@@ -295,7 +295,7 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  * \`\`\`
  * import { getContractEvents } from "thirdweb";
  * import { ${eventNameToPreparedEventName(e.name)} } from "TODO";
- * 
+ *
  * const events = await getContractEvents({
  * contract,
  * events: [
@@ -309,7 +309,7 @@ export type ${uppercaseFirstLetter(e.name)}EventFilters = Partial<{
  * ],
  * });
  * \`\`\`
- */ 
+ */
 export function ${eventNameToPreparedEventName(e.name)}(${
     indexedInputs.length > 0
       ? `filters: ${uppercaseFirstLetter(e.name)}EventFilters = {}`
@@ -348,7 +348,7 @@ async function prettifyCode(code: string, options: Options) {
   try {
     const { format } = await import("prettier/standalone.js");
     return await format(code, options);
-  } catch (e) {
+  } catch {
     if (!printedPrettierWarning) {
       console.info("Prettier not found, skipping code formatting.");
     }

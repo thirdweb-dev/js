@@ -179,9 +179,9 @@ Deploy it in one click`,
     return url.href;
   }, [publishedContractName, currentRoute]);
 
-  const sources = useQuery(
-    ["sources", contract],
-    async () => {
+  const sources = useQuery({
+    queryKey: ["sources", contract],
+    queryFn: async () => {
       invariant(
         contractPublishMetadata.data?.compilerMetadata?.sources,
         "no compilerMetadata sources available",
@@ -205,8 +205,8 @@ Deploy it in one click`,
         .slice()
         .reverse();
     },
-    { enabled: !!contractPublishMetadata.data?.compilerMetadata?.sources },
-  );
+    enabled: !!contractPublishMetadata.data?.compilerMetadata?.sources,
+  });
 
   const title = useMemo(() => {
     let clearType = "";

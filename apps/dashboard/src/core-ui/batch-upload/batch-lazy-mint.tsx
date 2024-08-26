@@ -122,7 +122,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
         await processInputData(acceptedFiles, (data) =>
           form.setValue("metadatas", data),
         );
-      } catch (err) {
+      } catch {
         form.setError("metadatas", {
           message: "Invalid metadata files",
           type: "validate",

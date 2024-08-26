@@ -14,7 +14,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { CommonContractSchema } from "constants/schemas";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useInvalidatev4Contract } from "hooks/invalidate-v4-contract";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
@@ -55,7 +54,7 @@ function extractDomain(url: string) {
     const domain =
       segments.length > 2 ? segments[segments.length - 2] : segments[0];
     return domain;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -72,7 +71,6 @@ export const SettingsMetadata = ({
   const trackEvent = useTrack();
   const metadata = useReadContract(getContractMetadata, { contract });
   const sendTransaction = useSendAndConfirmTransaction();
-  const invalidateContract = useInvalidatev4Contract();
 
   const transformedQueryData = useMemo(() => {
     let socialUrls: z.infer<typeof SocialUrlSchema> = {
@@ -184,12 +182,6 @@ export const SettingsMetadata = ({
                 error,
               });
               onError(error);
-            },
-            onSettled: () => {
-              return invalidateContract({
-                contractAddress: contract.address,
-                chainId: contract.chain.id,
-              });
             },
           });
         })}

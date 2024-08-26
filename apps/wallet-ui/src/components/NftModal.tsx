@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import type { Address } from "thirdweb";
 import { defineChain, getContract, isAddress, sendTransaction } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";

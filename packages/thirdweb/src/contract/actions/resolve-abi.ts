@@ -47,7 +47,7 @@ export function resolveContractAbi<abi extends Abi>(
     // try to get it from the api
     try {
       return await resolveAbiFromContractApi(contract, contractApiBaseUrl);
-    } catch (e) {
+    } catch {
       // if that fails, try to resolve it from the bytecode
       return await resolveCompositeAbi(contract as ThirdwebContract);
     }

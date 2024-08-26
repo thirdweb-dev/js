@@ -1,6 +1,6 @@
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { parseEther } from "ethers/lib/utils";
 import { useCallback } from "react";
+import { toWei } from "thirdweb";
 import { Button } from "tw-components";
 import type { SolidityInputWithTypeProps } from ".";
 import { validateInt } from "./helpers";
@@ -30,13 +30,13 @@ export const SolidityIntInput: React.FC<SolidityInputWithTypeProps> = ({
     const val: string = form.getValues(inputName);
 
     try {
-      const parsed = parseEther(val.replace(",", "."));
+      const parsed = toWei(val.replace(",", "."));
       form.setValue(inputName, parsed.toString(), {
         shouldDirty: true,
         shouldValidate: true,
       });
       form.clearErrors(inputName);
-    } catch (e) {
+    } catch {
       form.setError(inputName, {
         type: "pattern",
         message: "Can't be converted to WEI.",

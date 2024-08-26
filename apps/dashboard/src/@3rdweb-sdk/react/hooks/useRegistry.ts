@@ -16,9 +16,9 @@ import { useActiveAccount } from "thirdweb/react";
 import invariant from "tiny-invariant";
 
 function useMultiChainRegContractList(walletAddress?: string) {
-  return useQuery(
-    ["dashboard-registry", walletAddress, "multichain-contract-list"],
-    async () => {
+  return useQuery({
+    queryKey: ["dashboard-registry", walletAddress, "multichain-contract-list"],
+    queryFn: async () => {
       invariant(walletAddress, "walletAddress is required");
       const contracts = await getAllMultichainRegistry({
         contract: MULTICHAIN_REGISTRY_CONTRACT,
@@ -27,10 +27,9 @@ function useMultiChainRegContractList(walletAddress?: string) {
 
       return contracts;
     },
-    {
-      enabled: !!walletAddress,
-    },
-  );
+
+    enabled: !!walletAddress,
+  });
 }
 
 interface Options {

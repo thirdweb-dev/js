@@ -83,7 +83,7 @@ export async function fetchProofsERC20(options: {
       uri: constructedShardUri,
     });
     shardData = await shard.json();
-  } catch (e) {
+  } catch {
     // if the file can't be fetched it means claimer not in merkle tree
     return null;
   }

@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import type { Abi, AbiEvent, AbiFunction } from "@thirdweb-dev/sdk";
 import { formatAbiItem } from "abitype";
+import type { Abi as AbiType } from "abitype";
 import {
   useContractEnabledExtensions,
   useContractEvents,
@@ -32,7 +33,8 @@ import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface CodeOverviewProps {
-  abi?: Abi;
+  // TODO: Remove v4's `Abi` type
+  abi?: Abi | AbiType;
   contractAddress?: string;
   onlyInstall?: boolean;
   chainId?: number;

@@ -3,10 +3,10 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Fira_Code, Inter } from "next/font/google";
 import Script from "next/script";
-import { Footer } from "./features/Footer";
-import { Header } from "./features/Header";
-import "./globals.css";
+import { AppSidebar } from "./AppSidebar";
 import { Providers } from "./providers";
+import "./globals.css";
+import { MobileHeader } from "./MobileHeader";
 
 const sansFont = Inter({
   subsets: ["latin"],
@@ -41,26 +41,25 @@ export default function RootLayout({
           data-api="https://pl.thirdweb.com/api/event"
         />
       </head>
+
       <body
         className={cn(
-          "h-screen bg-background font-sans antialiased overflow-x-hidden",
+          "bg-background font-sans antialiased ",
           sansFont.variable,
           monoFont.variable,
         )}
       >
-        <Providers>
-          <div className="relative flex flex-col min-h-screen">
-            <Header />
-            {children}
-            <div
-              className="fixed bottom-0 left-0 right-0 h-[66%] z-[-1] bg-cover md:bg-[length:100%_100%] bg-no-repeat"
-              style={{
-                backgroundImage: "url(../../bottom-gradient.png)",
-              }}
-            />
-            <Footer />
+        <MobileHeader />
+        <div className="relative">
+          <div className="flex flex-col lg:flex-row">
+            <AppSidebar />
+            <div className="flex flex-col grow">
+              <div className="grow relative container px-4 md:px-6">
+                <Providers>{children}</Providers>
+              </div>
+            </div>
           </div>
-        </Providers>
+        </div>
       </body>
     </html>
   );

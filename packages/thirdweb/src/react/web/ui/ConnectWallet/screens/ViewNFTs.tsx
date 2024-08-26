@@ -108,10 +108,6 @@ export function ViewNFTsContent(props: {
   const activeAccount = useActiveAccount();
   const activeChain = useActiveWalletChain();
 
-  if (!activeChain?.id || !activeAccount?.address) {
-    return null;
-  }
-
   const nftList = useMemo(() => {
     const nfts = [];
     if (!props.supportedNFTs) return [];
@@ -131,10 +127,24 @@ export function ViewNFTsContent(props: {
   const results = useQueries({
     queries: nftList.map((nft) => ({
       queryKey: ["readContract", nft.chain.id, nft.address],
-      queryFn: () =>
-        fetchNFTs(props.client, nft.chain, nft.address, activeAccount?.address),
+      queryFn: () => {
+        if (!activeAccount) {
+          throw new Error("No active account");
+        }
+        return fetchNFTs(
+          props.client,
+          nft.chain,
+          nft.address,
+          activeAccount.address,
+        );
+      },
+      enabled: !!activeAccount,
     })),
   });
+
+  if (!activeChain?.id || !activeAccount?.address) {
+    return null;
+  }
 
   return (
     <>

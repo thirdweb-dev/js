@@ -14,19 +14,14 @@ type ConnectSidebarProps = {
 
 const links: Route[] = [
   {
-    path: "/dashboard/connect/playground",
-    title: "Playground",
-    name: "playground",
+    path: "/dashboard/connect/in-app-wallets",
+    title: "In-App Wallets",
+    name: "embedded-wallets",
   },
   {
     path: "/dashboard/connect/analytics",
     title: "Analytics",
     name: "analytics",
-  },
-  {
-    path: "/dashboard/connect/in-app-wallets",
-    title: "In-App Wallets",
-    name: "embedded-wallets",
   },
   {
     path: "/dashboard/connect/ecosystem",
@@ -38,11 +33,15 @@ const links: Route[] = [
     title: "Account Abstraction",
     name: "account-abstraction",
   },
-
   {
     path: "/dashboard/connect/pay",
     title: "Pay",
     name: "pay-settings",
+  },
+  {
+    name: "playground",
+    title: "Playground",
+    path: "https://playground.thirdweb.com/connect/sign-in/button",
   },
 ];
 

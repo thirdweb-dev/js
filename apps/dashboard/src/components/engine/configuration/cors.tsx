@@ -90,7 +90,7 @@ const parseOriginFromUrl = (url: string) => {
       throw new Error("Missing or invalid protocol");
     }
     return origin;
-  } catch (e) {
+  } catch {
     throw new Error(`Invalid URL: "${url}"`);
   }
 };

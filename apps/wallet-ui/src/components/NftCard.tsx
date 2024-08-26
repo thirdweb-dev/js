@@ -1,5 +1,4 @@
 import type { Erc721Token } from "@/types/Erc721Token";
-import React from "react";
 import { shortenAddress } from "thirdweb/utils";
 import { getChain } from "../lib/chains";
 import { ChainIcon } from "./ChainIcon";

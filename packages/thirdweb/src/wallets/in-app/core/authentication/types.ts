@@ -30,6 +30,7 @@ export type SingleStepAuthArgsType =
       openedWindow?: Window;
       closeOpenedWindow?: (window: Window) => void;
       redirectUrl?: string;
+      mode?: "redirect" | "popup" | "window";
     }
   | { strategy: "jwt"; jwt: string; encryptionKey: string }
   | { strategy: "auth_endpoint"; payload: string; encryptionKey: string }
@@ -46,14 +47,6 @@ export type SingleStepAuthArgsType =
        * Optional name of the passkey to create, defaults to a generated name
        */
       passkeyName?: string;
-      /**
-       * Optional domain, defaults to current window location.
-       * NOTE: this is required on native platforms.
-       */
-      domain?: {
-        displayName: string;
-        hostname: string;
-      };
     }
   | {
       strategy: "wallet";
@@ -93,7 +86,7 @@ export type OauthOption = {
 };
 
 export type Profile = {
-  type: AuthOption;
+  type: AuthOption | "wallet";
   details: {
     id?: string;
     email?: string;

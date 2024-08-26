@@ -31,4 +31,34 @@ describe.runIf(process.env.TW_SECRET_KEY)("transaction: read", () => {
       );
     }
   });
+
+  it("should work with string and number, not just bigint", async () => {
+    /**
+     * The following 3 readContracts all result in the same value because
+     * the param is still parsed and encoded properly downstream by `numberToHex`
+     * See this docs for more context: "../utils/encoding/hex.test.js"
+     */
+    const [bigintResult, numberResult, stringResult] = await Promise.all([
+      readContract({
+        contract: DOODLES_CONTRACT,
+        method: "function ownerOf(uint256 tokenId) view returns (address)",
+        params: [1n],
+      }),
+      readContract({
+        contract: DOODLES_CONTRACT,
+        method: "function ownerOf(uint256 tokenId) view returns (address)",
+        // @ts-ignore Intentional
+        params: [1], // <- supposed to be a bigint
+      }),
+      readContract({
+        contract: DOODLES_CONTRACT,
+        method: "function ownerOf(uint256 tokenId) view returns (address)",
+        // @ts-ignore Intentional
+        params: ["1"], // <- supposed to be a bigint
+      }),
+    ]);
+
+    expect(bigintResult === numberResult).toBe(true);
+    expect(bigintResult === stringResult).toBe(true);
+  });
 });

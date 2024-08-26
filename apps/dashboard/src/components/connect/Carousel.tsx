@@ -10,7 +10,7 @@ const showcaseMenus = [
   {
     id: "connect-icon",
     title: "Onboard users",
-    href: "/dashboard/connect/playground",
+    href: "https://playground.thirdweb.com/connect/sign-in/button",
     description: "Onboard anyone with every sign-in option for web2 & web3.",
     image: require("../../../public/assets/product-pages/connect/icon-connect.png"),
   },

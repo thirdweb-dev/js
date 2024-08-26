@@ -23,7 +23,7 @@ export async function getErc20Tokens({
     .map((id) => {
       try {
         return `${chainIdToName(id)},`;
-      } catch (e) {
+      } catch {
         // Ignore unsupported chains when fetching assets
       }
     })

@@ -1,3 +1,5 @@
+import { formatNumber } from "../../../../../utils/formatNumber.js";
+
 /**
  * @internal
  * @param balanceData
@@ -13,7 +15,7 @@ export function formatTokenBalance(
   showSymbol = true,
 ) {
   return (
-    Number(balanceData.displayValue).toFixed(3) +
+    formatNumber(Number(balanceData.displayValue), 5) +
     (showSymbol ? ` ${balanceData.symbol}` : "")
   );
 }

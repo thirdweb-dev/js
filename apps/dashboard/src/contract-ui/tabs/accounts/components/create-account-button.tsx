@@ -1,22 +1,24 @@
 import { Tooltip } from "@chakra-ui/react";
 import {
   useAccountsForAddress,
-  type useContract,
+  useContract,
   useCreateAccount,
   useIsAccountDeployed,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import type { ThirdwebContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, Text } from "tw-components";
 
 interface CreateAccountButtonProps {
-  contractQuery: ReturnType<typeof useContract>;
+  contract: ThirdwebContract;
 }
 
 export const CreateAccountButton: React.FC<CreateAccountButtonProps> = ({
-  contractQuery,
+  contract,
   ...restButtonProps
 }) => {
+  const contractQuery = useContract(contract.address);
   const { mutate: createAccount, isLoading } = useCreateAccount(
     contractQuery?.contract,
   );

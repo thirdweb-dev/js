@@ -1,0 +1,33 @@
+import { Details, createMetadata } from "@doc";
+
+export const metadata = createMetadata({
+	title: "IThirdwebWallet.ExecuteTransaction | Thirdweb .NET SDK",
+	description:
+		"Sends a raw transaction from the connected wallet and returns the receipt.",
+});
+
+# IThirdwebWallet.ExecuteTransaction
+
+Sends a raw transaction from the connected wallet (if supported), waits for it to be mined and returns the receipt. It is recommended to use `ThirdwebContract.Write` instead.
+
+## Usage
+
+```csharp
+var receipt = await wallet.ExecuteTransaction(new ThirdwebTransactionInput(...));
+```
+
+<Details summary="Parameters">
+
+### ThirdwebTransactionInput
+
+`ThirdwebTransactionInput` object containing necessary transaction details such as `To`, `Data`, `Value`.
+
+</Details>
+
+<Details summary="Return Value">
+
+### ThirdwebTransactionReceipt
+
+The transaction receipt as a `ThirdwebTransactionReceipt`.
+
+</Details>

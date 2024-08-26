@@ -37,7 +37,6 @@ type ConnectModalOptions = {
   };
   connectLocale: ConnectLocale;
   client: ThirdwebClient;
-  isEmbed: boolean;
   recommendedWallets: Wallet[] | undefined;
   localeId: LocaleId;
   chain: Chain | undefined;
@@ -142,7 +141,7 @@ const ConnectModal = (props: ConnectModalOptions) => {
         size={props.size}
         welcomeScreen={props.welcomeScreen}
         meta={props.meta}
-        isEmbed={props.isEmbed}
+        hideHeader={false}
         onConnect={props.onConnect}
         recommendedWallets={props.recommendedWallets}
         wallets={props.wallets}

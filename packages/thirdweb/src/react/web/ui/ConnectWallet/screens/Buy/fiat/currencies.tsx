@@ -2,23 +2,24 @@ import { RadiobuttonIcon } from "@radix-ui/react-icons";
 import { CADIcon } from "../../../icons/currencies/CADIcon.js";
 import { EURIcon } from "../../../icons/currencies/EURIcon.js";
 import { GBPIcon } from "../../../icons/currencies/GBPIcon.js";
+import { JPYIcon } from "../../../icons/currencies/JPYIcon.js";
 import { USDIcon } from "../../../icons/currencies/USDIcon.js";
 import type { IconFC } from "../../../icons/types.js";
 
 export type CurrencyMeta = {
-  shorthand: "USD" | "CAD" | "GBP" | "EUR";
+  shorthand: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
   name: string;
   icon: IconFC;
 };
 
-export const defaultSelectedCurrency: CurrencyMeta = {
+export const usdCurrency: CurrencyMeta = {
   shorthand: "USD",
   name: "US Dollar",
   icon: USDIcon,
 };
 
 export const currencies: CurrencyMeta[] = [
-  defaultSelectedCurrency,
+  usdCurrency,
   {
     shorthand: "CAD",
     name: "Canadian Dollar",
@@ -33,6 +34,11 @@ export const currencies: CurrencyMeta[] = [
     shorthand: "EUR",
     name: "Euro",
     icon: EURIcon,
+  },
+  {
+    shorthand: "JPY",
+    name: "Japanese Yen",
+    icon: JPYIcon,
   },
 ];
 

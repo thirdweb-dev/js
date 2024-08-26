@@ -49,6 +49,9 @@ export type SendTransactionPayModalConfig =
       buyWithFiat?:
         | false
         | {
+            prefillSource?: {
+              currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+            };
             testMode?: boolean;
           };
       purchaseData?: object;
@@ -225,7 +228,7 @@ export async function getTotalTxCostForBuy(
 
     // add 10% extra gas cost to the estimate to ensure user buys enough to cover the tx cost
     return gasCost.wei + bufferCost + (txValue || 0n);
-  } catch (e) {
+  } catch {
     if (from) {
       // try again without passing from
       return await getTotalTxCostForBuy(tx);

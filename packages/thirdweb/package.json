@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.47.1",
+  "version": "5.48.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -302,7 +302,9 @@
     "test:dev": "vitest run -c ./test/vitest.config.ts",
     "test:react": "vitest run -c ./test/vitest.config.ts dev --ui src/react",
     "typedoc": "bun run scripts/typedoc.mjs",
-    "update-version": "node scripts/version.mjs"
+    "update-version": "node scripts/version.mjs",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "engines": {
     "node": ">=18"
@@ -310,9 +312,18 @@
   "devDependencies": {
     "@aws-sdk/client-lambda": "3.577.0",
     "@aws-sdk/credential-providers": "3.577.0",
+    "@chromatic-com/storybook": "^1.5.0",
     "@coinbase/wallet-mobile-sdk": "1.0.13",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-clipboard/clipboard": "1.14.1",
+    "@storybook/addon-essentials": "^8.2.9",
+    "@storybook/addon-interactions": "^8.2.9",
+    "@storybook/addon-links": "^8.2.9",
+    "@storybook/addon-onboarding": "^8.2.9",
+    "@storybook/blocks": "^8.2.9",
+    "@storybook/react": "^8.2.9",
+    "@storybook/react-vite": "^8.2.9",
+    "@storybook/test": "^8.2.9",
     "@testing-library/jest-dom": "^6.4.7",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
@@ -333,6 +344,8 @@
     "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-svg": "15.3.0",
     "typescript": "5.5.4",
+    "storybook": "^8.2.9",
+    "vite": "^5.3.1",
     "vitest": "1.6.0"
   }
 }

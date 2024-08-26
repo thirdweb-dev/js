@@ -21,11 +21,13 @@ export { getPaymasterAndData } from "../../wallets/smart/lib/paymaster.js";
 export type {
   SmartWalletConnectionOptions,
   SmartWalletOptions,
-  UserOperation,
+  UserOperationV06 as UserOperation,
   PaymasterResult,
 } from "../../wallets/smart/types.js";
 
 export {
   ENTRYPOINT_ADDRESS_v0_6,
-  DEFAULT_ACCOUNT_FACTORY,
+  ENTRYPOINT_ADDRESS_v0_7,
+  DEFAULT_ACCOUNT_FACTORY_V0_6,
+  DEFAULT_ACCOUNT_FACTORY_V0_7,
 } from "../../wallets/smart/lib/constants.js";

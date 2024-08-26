@@ -1,3 +1,4 @@
+
 import { DocImage, createMetadata } from "@doc";
 import thirdwebManager from "./thirdwebmanager.png";
 
@@ -26,23 +27,31 @@ Below is a list of all the settings you can adjust.
 
 This section involves the basic settings to configure the SDK:
 
-- `Client ID`: Thirdweb [API Key](https://thirdweb.com/create-api-key). Used to access thirdweb services such as RPC, Storage and Account Abstraction.
-- `Bundle ID`: The bundle ID used to access thirdweb services from native platforms. Should be the same as the bundle ID in your Unity project e.g. `com.companyname.gamename`.
-- `Initialize On Awake`: Whether the SDK should initialize on awake or not. If not, you can call `ThirdwebManager.Instance.Initialize("chain-identifier")` to initialize it manually.
-- `Show Debug Logs`: Whether to show thirdweb sdk debug logs.
-- `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as amount of wallets connected to your game, etc.
+- `Client ID`: Thirdweb [API Key](https://thirdweb.com/create-api-key). Used to access thirdweb services such as RPC, Storage, and Account Abstraction.
+- `Bundle ID`: The bundle ID used to access thirdweb services from native platforms. Should be the same as the bundle ID in your Unity project, e.g., `com.companyname.gamename`.
+- `Initialize On Awake`: Whether the SDK should initialize on awake or not. If not, you can call `ThirdwebManager.Instance.Initialize()` to initialize it manually.
+- `Show Debug Logs`: Whether to show thirdweb SDK debug logs.
+- `Opt Out Usage Analytics`: Whether to opt out of Connect usage analytics, such as the number of wallets connected to your game.
 
 ### Wallet Settings
 
-This section allows you to define wallet specific settings:
+This section allows you to define wallet-specific settings:
 
-- `Supported Chains`: A list of chain IDs that the wallets should be able to connect to by default.
+- `Supported Chains`: A list of chains that the wallets should be able to connect to by default. Each chain is defined by a chain ID.
 
 ## Interacting with the ThirdwebManager
 
 Once your `ThirdwebManager` is set up, you can interact with it using the following methods:
 
-### Get Contract
+### Initialize
+
+```csharp
+ThirdwebManager.Instance.Initialize();
+```
+
+Initializes the SDK with the settings specified in the Unity Inspector.
+
+### GetContract
 
 ```csharp
 var contract = await ThirdwebManager.Instance.GetContract("contract-address", chainId, "optional-contract-abi");
@@ -51,7 +60,47 @@ var result = await contract.Read<string>("name");
 
 Returns a [ThirdwebContract](/dotnet/contracts/create) instance that can be used to interact with a smart contract.
 
-### Connect Wallet
+### GetActiveWallet
+
+```csharp
+var wallet = ThirdwebManager.Instance.GetActiveWallet();
+```
+
+Returns the currently active wallet as an `IThirdwebWallet`.
+
+### SetActiveWallet
+
+```csharp
+ThirdwebManager.Instance.SetActiveWallet(wallet);
+```
+
+Sets the specified wallet as the active wallet.
+
+### GetWallet
+
+```csharp
+var wallet = ThirdwebManager.Instance.GetWallet("wallet-address");
+```
+
+Returns a wallet from the manager's wallet mapping by its address.
+
+### AddWallet
+
+```csharp
+var wallet = await ThirdwebManager.Instance.AddWallet(wallet);
+```
+
+Adds a wallet to the manager's wallet mapping and returns the added wallet.
+
+### RemoveWallet
+
+```csharp
+ThirdwebManager.Instance.RemoveWallet("wallet-address");
+```
+
+Removes a wallet from the manager's wallet mapping by its address.
+
+### ConnectWallet
 
 ```csharp
 var walletOptions = new WalletOptions(WalletProvider.PrivateKeyWallet, 421614);
@@ -59,7 +108,23 @@ var wallet = await ThirdwebManager.Instance.ConnectWallet(walletOptions);
 var address = await wallet.GetAddress();
 ```
 
-Returns an `IThirdwebWallet` instance that can be used to interact with the blockchain, in this case, a [PrivateKeyWallet](/dotnet/wallets/providers/private-key).
+Connects a wallet based on the specified `WalletOptions` and returns an `IThirdwebWallet` instance that can be used to interact with the blockchain.
+
+### UpgradeToSmartWallet
+
+```csharp
+var smartWallet = await ThirdwebManager.Instance.UpgradeToSmartWallet(wallet, chainId, smartWalletOptions);
+```
+
+Upgrades the specified wallet to a `SmartWallet`, returning a `SmartWallet` instance.
+
+### LinkAccount
+
+```csharp
+var linkedAccounts = await ThirdwebManager.Instance.LinkAccount(mainWallet, walletToLink, otp, chainId, jwtOrPayload);
+```
+
+Links another `InAppWallet` account to the main wallet and returns a list of linked accounts, allowing you to login with either authentication method later.
 
 ## Child Prefabs
 
@@ -77,4 +142,4 @@ It will be automatically activated when connecting to a `WalletConnect` provider
 
 ## What Now?
 
-Explore the [.NET SDK](/dotnet) to learn more about interacting with smart contracts, wallets, storage, rpc, account abstraction and more.
+Explore the [.NET SDK](/dotnet) to learn more about interacting with smart contracts, wallets, storage, RPC, account abstraction, and more.

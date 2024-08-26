@@ -57,7 +57,7 @@ function assertEthers5(
  * ### Converting an ethers.js signer into a Thirdweb account
  * ```ts
  * import { ethers5Adapter } from "thirdweb/adapters/ethers5";
- * const account = ethers5Adapter.signer.fromEthers({ signer });
+ * const account = await ethers5Adapter.signer.fromEthers({ signer });
  * ```
  *
  * ### Converting a Thirdweb contract to an ethers.js Contract

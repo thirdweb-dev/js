@@ -429,7 +429,7 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
       } else if (isErc1155) {
         detectedExtension = "erc1155";
       }
-    } catch (e) {
+    } catch {
       // ignore, most likely requires import
     }
   }

@@ -141,7 +141,7 @@ function isValidRedirectPath(encodedPath: string): boolean {
     // ensure the path always starts with a _single_ slash
     // dobule slash could be interpreted as `//example.com` which is not allowed
     return decodedPath.startsWith("/") && !decodedPath.startsWith("//");
-  } catch (e) {
+  } catch {
     // If decoding fails, return false
     return false;
   }

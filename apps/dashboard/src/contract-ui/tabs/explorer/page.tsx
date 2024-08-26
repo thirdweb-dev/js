@@ -1,23 +1,20 @@
 import { Center, Flex, Skeleton } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
 import type { Abi } from "@thirdweb-dev/sdk";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
+import type { ThirdwebContract } from "thirdweb";
 import { Heading, Text } from "tw-components";
 
 interface ContractCodePageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
+  abi: Abi;
 }
 
 export const ContractExplorerPage: React.FC<ContractCodePageProps> = ({
-  contractAddress,
+  contract,
+  abi,
 }) => {
-  const { contract } = useContract(contractAddress);
-
-  const functions = useContractFunctions(contract?.abi as Abi);
-  if (!contractAddress) {
-    return <div>No contract address provided</div>;
-  }
+  const functions = useContractFunctions(abi);
   return (
     <Flex direction="column" h="70vh">
       <Skeleton height="100%" isLoaded={!!contract}>

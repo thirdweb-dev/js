@@ -58,7 +58,7 @@ function assertEthers6(
  * ### Converting an ethers.js signer into a Thirdweb account
  * ```ts
  * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
- * const account = ethers6Adapter.signer.fromEthers({ signer });
+ * const account = await ethers6Adapter.signer.fromEthers({ signer });
  * ```
  *
  * ### Converting a Thirdweb contract to an ethers.js Contract
@@ -182,14 +182,14 @@ export const ethers6Adapter = /* @__PURE__ */ (() => {
      */
     signer: {
       /**
-       * Converts an ethers6 Signer into an Wallet object.
-       * @param options - The options for converting the ethers6 Signer into a Wallet object.
+       * Converts an ethers6 Signer into an thirdweb account.
+       * @param options - The options for converting the ethers6 Signer into a thirdweb account.
        * @param options.signer - The ethers6 Signer object.
-       * @returns - A Promise that resolves to an Wallet object.
+       * @returns - A Promise that resolves to a thirdweb account.
        * @example
        * ```ts
        * import { ethers6Adapter } from "thirdweb/adapters/ethers6";
-       * const wallet = ethers6Adapter.signer.fromEthers({ signer });
+       * const account = await ethers6Adapter.signer.fromEthers({ signer });
        * ```
        */
       fromEthers: (options: { signer: ethers6.Signer }) => {

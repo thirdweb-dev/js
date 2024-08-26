@@ -2,11 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useCustomTheme } from "../../../core/design-system/CustomThemeProvider.js";
-import {
-  fontSize,
-  radius,
-  spacing,
-} from "../../../core/design-system/index.js";
+import { radius, spacing } from "../../../core/design-system/index.js";
 import { StyledOption, StyledSelect } from "../../ui/design-system/elements.js";
 
 export function CountrySelector({
@@ -47,8 +43,7 @@ export function CountrySelector({
           setCountryCode(e.target.value);
         }}
         style={{
-          paddingLeft: spacing.md,
-          paddingRight: "0",
+          padding: `${spacing.sm} ${spacing.md}`,
         }}
       >
         <Option
@@ -89,7 +84,6 @@ const Option = /* @__PURE__ */ StyledOption(() => {
 const Select = /* @__PURE__ */ StyledSelect((_) => {
   const theme = useCustomTheme();
   return {
-    fontSize: fontSize.sm,
     display: "block",
     padding: spacing.sm,
     boxSizing: "border-box",

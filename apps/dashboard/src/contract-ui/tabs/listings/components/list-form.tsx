@@ -1,4 +1,6 @@
+import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
+import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
   Box,
@@ -13,11 +15,9 @@ import {
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
-import { useContract, useOwnedNFTs } from "@thirdweb-dev/react";
 import type { NewAuctionListing, NewDirectListing } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { formatEther, parseEther } from "ethers/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { isAlchemySupported } from "lib/wallet/nfts/alchemy";
@@ -32,8 +32,12 @@ import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
   type ThirdwebContract,
+  getContract,
+  toUnits,
+  toWei,
 } from "thirdweb";
 import type { TransactionReceipt } from "thirdweb/dist/types/transaction/types";
+import { decimals } from "thirdweb/extensions/erc20";
 import { createAuction, createListing } from "thirdweb/extensions/marketplace";
 import { useActiveAccount } from "thirdweb/react";
 import {
@@ -89,7 +93,6 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   const trackEvent = useTrack();
   const network = useEVMContractInfo()?.chain;
   const chainId = useDashboardEVMChainId();
-
   const isSupportedChain =
     chainId &&
     (isSimpleHashSupported(chainId) ||
@@ -114,14 +117,25 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     },
   });
 
-  const { contract: selectedContract } = useContract(
-    form.watch("contractAddress"),
-  );
   const address = useActiveAccount()?.address;
-  const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } = useOwnedNFTs(
-    selectedContract,
-    address,
-  );
+
+  const selectedContract = getContract({
+    address: form.watch("contractAddress"),
+    chain: contract.chain,
+    client: thirdwebClient,
+  });
+
+  const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } =
+    useDashboardOwnedNFTs({
+      contract: selectedContract,
+      owner: address,
+      // Only run this hook as the last resort if this chain is not supported by the API services we are using
+      disabled:
+        !form.watch("contractAddress") ||
+        isSupportedChain ||
+        isWalletNFTsLoading ||
+        (walletNFTs?.result || []).length > 0,
+    });
 
   const isSelected = (nft: WalletNFT) => {
     return (
@@ -132,10 +146,18 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const ownedWalletNFTs: WalletNFT[] = useMemo(() => {
     return ownedNFTs?.map((nft) => {
+      if (nft.type === "ERC721") {
+        return {
+          ...nft,
+          supply: "1",
+          contractAddress: form.watch("contractAddress"),
+          tokenId: nft.metadata.id.toString(),
+        };
+      }
       return {
         ...nft,
         contractAddress: form.watch("contractAddress"),
-        tokenId: nft.metadata.id,
+        tokenId: nft.metadata.id.toString(),
       };
     }) as WalletNFT[];
   }, [ownedNFTs, form]);
@@ -156,7 +178,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       spacing={6}
       as="form"
       id={formId}
-      onSubmit={form.handleSubmit((formData) => {
+      onSubmit={form.handleSubmit(async (formData) => {
         if (!formData.selected) {
           return;
         }
@@ -183,6 +205,33 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             onError,
           });
         } else if (formData.listingType === "auction") {
+          let minimumBidAmountWei: bigint;
+          let buyoutBidAmountWei: bigint;
+          if (
+            formData.currencyContractAddress.toLowerCase() ===
+            NATIVE_TOKEN_ADDRESS.toLocaleLowerCase()
+          ) {
+            minimumBidAmountWei = toWei(
+              formData.reservePricePerToken.toString(),
+            );
+            buyoutBidAmountWei = toWei(formData.buyoutPricePerToken.toString());
+          } else {
+            const tokenContract = getContract({
+              address: formData.currencyContractAddress,
+              chain: contract.chain,
+              client: contract.client,
+            });
+            const _decimals = await decimals({ contract: tokenContract });
+            minimumBidAmountWei = toUnits(
+              formData.reservePricePerToken.toString(),
+              _decimals,
+            );
+            buyoutBidAmountWei = toUnits(
+              formData.buyoutPricePerToken.toString(),
+              _decimals,
+            );
+          }
+
           const transaction = createAuction({
             contract,
             assetContractAddress: formData.selected.contractAddress,
@@ -193,14 +242,9 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               new Date().getTime() +
                 Number.parseInt(formData.listingDurationInSeconds) * 1000,
             ),
-            minimumBidAmount: mulDecimalByQuantity(
-              formData.reservePricePerToken,
-              formData.quantity,
-            ),
-            buyoutBidAmount: mulDecimalByQuantity(
-              formData.buyoutPricePerToken,
-              formData.quantity,
-            ),
+            minimumBidAmountWei:
+              minimumBidAmountWei * BigInt(formData.quantity),
+            buyoutBidAmountWei: buyoutBidAmountWei * BigInt(formData.quantity),
           });
           mutate(transaction, {
             onSuccess: () => {
@@ -423,13 +467,3 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     </Stack>
   );
 };
-function mulDecimalByQuantity(a: string | number, b: string | number): string {
-  if (!a || a.toString() === "0" || !b || b.toString() === "0") {
-    return "0";
-  }
-
-  const aWei = parseEther(a.toString());
-  const result = aWei.mul(b);
-
-  return formatEther(result).toString();
-}

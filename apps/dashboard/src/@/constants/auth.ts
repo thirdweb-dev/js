@@ -8,10 +8,5 @@ const LOGGED_IN_ONLY_PATHS = [
 ];
 
 export function isLoginRequired(pathname: string) {
-  // exceptions from LOGGED_IN_ONLY_PATHS
-  if (pathname.startsWith("/dashboard/connect/playground")) {
-    return false;
-  }
-
   return LOGGED_IN_ONLY_PATHS.some((path) => pathname.startsWith(path));
 }

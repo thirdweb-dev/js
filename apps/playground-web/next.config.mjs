@@ -49,6 +49,15 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: "/connect/sign-in",
+        destination: "/connect/sign-in/button",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

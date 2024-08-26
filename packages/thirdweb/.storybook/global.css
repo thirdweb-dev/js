@@ -1,0 +1,12 @@
+/** I
+
+IMPORTANT: Do not add tailwind or any global CSS here - so that we can test the components properly without any interference.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "slnt" 0;
+}

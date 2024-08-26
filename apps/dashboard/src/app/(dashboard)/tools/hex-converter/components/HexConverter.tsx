@@ -21,7 +21,7 @@ export const HexConverter = () => {
         setHex(toHex(args.dec));
         setDec(args.dec);
       }
-    } catch (e) {}
+    } catch {}
   };
 
   return (

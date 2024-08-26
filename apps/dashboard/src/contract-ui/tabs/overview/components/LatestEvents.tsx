@@ -1,4 +1,7 @@
-import { useActivity } from "@3rdweb-sdk/react/hooks/useActivity";
+import {
+  type InternalTransaction,
+  useActivity,
+} from "@3rdweb-sdk/react/hooks/useActivity";
 import {
   Box,
   ButtonGroup,
@@ -13,11 +16,11 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import type { ContractEvent } from "@thirdweb-dev/sdk";
 import { useTabHref } from "contract-ui/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
+import type { ThirdwebContract } from "thirdweb";
 import {
   Button,
   Card,
@@ -29,25 +32,19 @@ import {
 } from "tw-components";
 import { shortenString } from "utils/usedapp-external";
 
-interface ContractTransaction {
-  transactionHash: ContractEvent["transaction"]["transactionHash"];
-  blockNumber: ContractEvent["transaction"]["blockNumber"];
-  events: ContractEvent[];
-}
-
 interface LatestEventsProps {
   trackingCategory: TrackedLinkProps["category"];
-  address?: string;
+  contract: ThirdwebContract;
 }
 
 export const LatestEvents: React.FC<LatestEventsProps> = ({
-  address,
+  contract,
   trackingCategory,
 }) => {
   const [autoUpdate] = useState(true);
   const eventsHref = useTabHref("events");
 
-  const allEvents = useActivity(address, autoUpdate);
+  const allEvents = useActivity(contract, autoUpdate);
 
   return (
     <Flex gap={6} flexDirection="column">
@@ -68,50 +65,48 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
           View all -&gt;
         </TrackedLink>
       </Flex>
-      {address && (
-        <Card p={0} overflow="hidden">
-          <SimpleGrid
-            gap={2}
-            columns={9}
-            borderBottomWidth="1px"
-            borderColor="borderColor"
-            padding={4}
-            bg="blackAlpha.50"
-            _dark={{ bg: "whiteAlpha.50" }}
-          >
-            <Heading gridColumn="span 3" size="label.md">
-              Transaction Hash
-            </Heading>
-            <Heading gridColumn="span 6" size="label.md">
-              Events
-            </Heading>
-          </SimpleGrid>
+      <Card p={0} overflow="hidden">
+        <SimpleGrid
+          gap={2}
+          columns={9}
+          borderBottomWidth="1px"
+          borderColor="borderColor"
+          padding={4}
+          bg="blackAlpha.50"
+          _dark={{ bg: "whiteAlpha.50" }}
+        >
+          <Heading gridColumn="span 3" size="label.md">
+            Transaction Hash
+          </Heading>
+          <Heading gridColumn="span 6" size="label.md">
+            Events
+          </Heading>
+        </SimpleGrid>
 
-          <List overflow="auto">
-            {allEvents.length === 0 ? (
-              <Center py={4}>
-                <Flex align="center" gap={2}>
-                  {autoUpdate && <Spinner size="sm" speed="0.69s" />}
-                  <Text size="body.md" fontStyle="italic">
-                    {autoUpdate ? "listening for events" : "no events to show"}
-                  </Text>
-                </Flex>
-              </Center>
-            ) : null}
-            <AnimatePresence initial={false}>
-              {allEvents?.slice(0, 3).map((e) => (
-                <EventsFeedItem key={e.transactionHash} transaction={e} />
-              ))}
-            </AnimatePresence>
-          </List>
-        </Card>
-      )}
+        <List overflow="auto">
+          {allEvents.length === 0 ? (
+            <Center py={4}>
+              <Flex align="center" gap={2}>
+                {autoUpdate && <Spinner size="sm" speed="0.69s" />}
+                <Text size="body.md" fontStyle="italic">
+                  {autoUpdate ? "listening for events" : "no events to show"}
+                </Text>
+              </Flex>
+            </Center>
+          ) : null}
+          <AnimatePresence initial={false}>
+            {allEvents?.slice(0, 3).map((e) => (
+              <EventsFeedItem key={e.transactionHash} transaction={e} />
+            ))}
+          </AnimatePresence>
+        </List>
+      </Card>
     </Flex>
   );
 };
 
 interface EventsFeedItemProps {
-  transaction: ContractTransaction;
+  transaction: InternalTransaction;
 }
 
 const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ transaction }) => {

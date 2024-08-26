@@ -28,7 +28,6 @@ export const MenuButton = /* @__PURE__ */ StyledButton((_) => {
     transition: "background-color 200ms ease, transform 200ms ease",
     "&:hover": {
       backgroundColor: theme.colors.tertiaryBg,
-      transform: "scale(1.01)",
       svg: {
         color: theme.colors.accentText,
       },

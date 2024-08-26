@@ -152,7 +152,7 @@ async function getShares<
     deviceShareToReturn = deviceShare.toRetrieve
       ? (await getDeviceShare(client.clientId)).deviceShare
       : undefined;
-  } catch (e) {
+  } catch {
     throw new Error(DEVICE_SHARE_MISSING_MESSAGE);
   }
 

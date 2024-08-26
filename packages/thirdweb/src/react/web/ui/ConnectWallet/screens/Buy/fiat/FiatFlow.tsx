@@ -68,6 +68,16 @@ export function FiatFlow(props: {
     props.openedWindow,
   );
 
+  const onPostOnrampSuccess = useCallback(() => {
+    // report the status of fiat status instead of post onramp swap status when post onramp swap is successful
+    getBuyWithFiatStatus({
+      intentId: props.quote.intentId,
+      client: props.client,
+    }).then((status) => {
+      props.onSuccess(status);
+    });
+  }, [props.onSuccess, props.quote.intentId, props.client]);
+
   if (screen.id === "step-1") {
     return (
       <FiatSteps
@@ -109,16 +119,6 @@ export function FiatFlow(props: {
       />
     );
   }
-
-  const onPostOnrampSuccess = useCallback(() => {
-    // report the status of fiat status instead of post onramp swap status when post onramp swap is successful
-    getBuyWithFiatStatus({
-      intentId: props.quote.intentId,
-      client: props.client,
-    }).then((status) => {
-      props.onSuccess(status);
-    });
-  }, [props.onSuccess, props.quote.intentId, props.client]);
 
   if (screen.id === "postonramp-swap") {
     return (

@@ -311,4 +311,16 @@ export type ConnectEmbedProps = {
    * ```
    */
   welcomeScreen?: WelcomeScreen;
+
+  /**
+   * Set custom title and icon to show for the embed
+   *
+   * Set it to `true` to show the default title and icon
+   */
+  header?:
+    | {
+        title?: string;
+        titleIcon?: string;
+      }
+    | true;
 };

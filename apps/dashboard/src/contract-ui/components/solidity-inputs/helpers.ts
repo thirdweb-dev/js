@@ -1,8 +1,7 @@
-import { BigNumber } from "ethers";
 import { isAddress, isBytes, isHex } from "thirdweb/utils";
 
 // int and uint
-const calculateIntMinValues = (solidityType: string) => {
+function calculateIntMinValues(solidityType: string) {
   const isIntType = solidityType.startsWith("int");
   const isUintType = solidityType.startsWith("uint");
 
@@ -11,16 +10,16 @@ const calculateIntMinValues = (solidityType: string) => {
     10,
   );
 
-  const min = BigNumber.from(2).pow(bitLength);
+  const min = 2n ** BigInt(bitLength);
 
   if (isIntType) {
-    return min.div(2).mul(-1);
+    return min / -2n;
   }
   if (isUintType) {
-    return BigNumber.from(0);
+    return 0n;
   }
-  return BigNumber.from(0);
-};
+  return 0n;
+}
 
 const calculateIntMaxValues = (solidityType: string) => {
   const isIntType = solidityType.startsWith("int");
@@ -31,15 +30,15 @@ const calculateIntMaxValues = (solidityType: string) => {
     10,
   );
 
-  const max = BigNumber.from(2).pow(bitLength);
+  const max = 2n ** BigInt(bitLength);
 
   if (isIntType) {
-    return max.div(2).sub(1);
+    return max / 2n - 1n;
   }
   if (isUintType) {
-    return max.sub(1);
+    return max - 1n;
   }
-  return BigNumber.from(0);
+  return 0n;
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -67,8 +66,8 @@ export const validateInt = (value: any, solidityType: string) => {
     };
   }
   try {
-    const bigNumber = BigNumber.from(value || 0);
-    if (bigNumber.lt(min)) {
+    const bigNumber = value || 0n;
+    if (bigNumber < min) {
       return {
         type: "minValue",
         message: solidityType.startsWith("uint")
@@ -76,13 +75,13 @@ export const validateInt = (value: any, solidityType: string) => {
           : `Value is lower than what ${solidityType} can store.}`,
       };
     }
-    if (bigNumber.gt(max)) {
+    if (bigNumber > max) {
       return {
         type: "maxValue",
         message: `Value is higher than what ${solidityType} can store.`,
       };
     }
-  } catch (error) {
+  } catch {
     return {
       type: "pattern",
       message: "Input is not a valid number.",
@@ -113,7 +112,7 @@ const isValidBytes = (value: string, solidityType: string) => {
     try {
       const arrayify = JSON.parse(value);
       return isBytesType ? !!arrayify.length : arrayify.length === maxLength;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

@@ -1,7 +1,12 @@
 import { concat } from "viem";
 import type { Chain } from "../../../chains/types.js";
 import { isHex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
-import type { UserOperation, UserOperationHexed } from "../types.js";
+import type {
+  UserOperationV06,
+  UserOperationV06Hexed,
+  UserOperationV07,
+  UserOperationV07Hexed,
+} from "../types.js";
 
 export const generateRandomUint192 = (): bigint => {
   const rand1 = BigInt(Math.floor(Math.random() * 0x100000000));
@@ -32,14 +37,16 @@ export const randomNonce = () => {
 /**
  * @internal
  */
-export function hexlifyUserOp(userOp: UserOperation): UserOperationHexed {
+export function hexlifyUserOp(
+  userOp: UserOperationV06 | UserOperationV07,
+): UserOperationV06Hexed | UserOperationV07Hexed {
   return Object.fromEntries(
     Object.entries(userOp).map(([key, val]) => [
       key,
       // turn any value that's not hex into hex
-      isHex(val) ? val : toHex(val),
+      val === undefined || val === null || isHex(val) ? val : toHex(val),
     ]),
-  ) as UserOperationHexed;
+  ) as UserOperationV06Hexed | UserOperationV07Hexed;
 }
 
 export function isNativeAAChain(chain: Chain) {

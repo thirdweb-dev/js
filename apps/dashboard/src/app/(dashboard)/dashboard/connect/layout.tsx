@@ -7,19 +7,14 @@ const SIDEBAR_SECTIONS = [
     title: "Connect",
     items: [
       {
-        id: "playground",
-        title: "Playground",
-        href: "/dashboard/connect/playground",
+        id: "embedded-wallets",
+        title: "In-App Wallets",
+        href: "/dashboard/connect/in-app-wallets",
       },
       {
         id: "analytics",
         title: "Analytics",
         href: "/dashboard/connect/analytics",
-      },
-      {
-        id: "embedded-wallets",
-        title: "In-App Wallets",
-        href: "/dashboard/connect/in-app-wallets",
       },
       {
         id: "ecosystem",
@@ -35,6 +30,11 @@ const SIDEBAR_SECTIONS = [
         id: "pay-settings",
         title: "Pay",
         href: "/dashboard/connect/pay",
+      },
+      {
+        id: "playground",
+        title: "Playground",
+        href: "https://playground.thirdweb.com/connect/sign-in/button",
       },
     ],
   },

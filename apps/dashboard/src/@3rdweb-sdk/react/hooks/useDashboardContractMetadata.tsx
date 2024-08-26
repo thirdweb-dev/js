@@ -12,9 +12,9 @@ import { getContractMetadata, name, symbol } from "thirdweb/extensions/common";
  * 2. our API endpoint
  */
 export function useDashboardContractMetadata(contract: ThirdwebContract) {
-  return useQuery(
-    ["contract-metadata-header", contract.chain.id, contract.address],
-    async () => {
+  return useQuery({
+    queryKey: ["contract-metadata-header", contract.chain.id, contract.address],
+    queryFn: async () => {
       const [contractMetadata, _name, _symbol, compilerMetadata] =
         await Promise.all([
           getContractMetadata({ contract }).catch(() => ({
@@ -50,5 +50,5 @@ export function useDashboardContractMetadata(contract: ThirdwebContract) {
         contractType: compilerMetadata?.name || "",
       };
     },
-  );
+  });
 }

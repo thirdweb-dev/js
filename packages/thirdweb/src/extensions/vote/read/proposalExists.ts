@@ -20,7 +20,7 @@ export async function proposalExists(
   try {
     await state(options);
     return true;
-  } catch (e) {
+  } catch {
     // If it throws an error then the proposal(id) doesn't exist
     return false;
   }

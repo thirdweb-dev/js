@@ -120,11 +120,6 @@ function redirects() {
       permanent: false,
     },
     {
-      source: "/abuse",
-      destination: "https://forms.gle/v9UJtHbVw8fXypcd7",
-      permanent: false,
-    },
-    {
       source: "/create-api-key",
       destination: "/dashboard/settings/api-keys",
       permanent: false,
@@ -136,12 +131,17 @@ function redirects() {
     },
     {
       source: "/dashboard/connect",
-      destination: "/dashboard/connect/playground",
+      destination: "/dashboard/connect/in-app-wallets",
+      permanent: false,
+    },
+    {
+      source: "/dashboard/connect/playground",
+      destination: "https://playground.thirdweb.com/connect/sign-in/button",
       permanent: false,
     },
     {
       source: "/dashboard/wallet",
-      destination: "/dashboard/connect/playground",
+      destination: "https://playground.thirdweb.com/connect/sign-in/button",
       permanent: false,
     },
     {
@@ -166,7 +166,7 @@ function redirects() {
     },
     {
       source: "/dashboard/wallets",
-      destination: "/dashboard/connect/playground",
+      destination: "https://playground.thirdweb.com/connect/sign-in/button",
       permanent: false,
     },
     {
@@ -186,7 +186,7 @@ function redirects() {
     },
     {
       source: "/dashboard/wallets/connect",
-      destination: "/dashboard/connect/playground",
+      destination: "https://playground.thirdweb.com/connect/sign-in/button",
       permanent: false,
     },
     {

@@ -55,9 +55,9 @@ const getEngineRequestHeaders = (token: string | null): HeadersInit => {
 export function useEngineInstances() {
   const { user, isLoggedIn } = useLoggedInUser();
 
-  return useQuery(
-    engineKeys.instances(user?.address as string),
-    async (): Promise<EngineInstance[]> => {
+  return useQuery({
+    queryKey: engineKeys.instances(user?.address as string),
+    queryFn: async (): Promise<EngineInstance[]> => {
       const res = await fetch(`${THIRDWEB_API_HOST}/v1/engine`, {
         method: "GET",
       });
@@ -79,8 +79,8 @@ export function useEngineInstances() {
         };
       });
     },
-    { enabled: !!user?.address && isLoggedIn },
-  );
+    enabled: !!user?.address && isLoggedIn,
+  });
 }
 
 // GET Requests
@@ -100,9 +100,9 @@ export type BackendWallet = {
 export function useEngineBackendWallets(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    [engineKeys.backendWallets(instance)],
-    async () => {
+  return useQuery({
+    queryKey: [engineKeys.backendWallets(instance)],
+    queryFn: async () => {
       const res = await fetch(`${instance}backend-wallet/get-all?limit=50`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -112,8 +112,8 @@ export function useEngineBackendWallets(instance: string) {
 
       return (json.result as BackendWallet[]) || [];
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 export interface EngineSystemHealth {
@@ -382,9 +382,9 @@ type TransactionResponse = {
 export function useEngineTransactions(instance: string, autoUpdate: boolean) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.transactions(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.transactions(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}transaction/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -394,11 +394,10 @@ export function useEngineTransactions(instance: string, autoUpdate: boolean) {
 
       return (json.result as TransactionResponse) || {};
     },
-    {
-      enabled: !!instance && !!token,
-      refetchInterval: autoUpdate ? 4_000 : false,
-    },
-  );
+
+    enabled: !!instance && !!token,
+    refetchInterval: autoUpdate ? 4_000 : false,
+  });
 }
 
 type WalletConfig =
@@ -423,9 +422,9 @@ type WalletConfig =
 export function useEngineWalletConfig(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.walletConfig(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.walletConfig(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}configuration/wallets`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -435,8 +434,8 @@ export function useEngineWalletConfig(instance: string) {
 
       return (json.result as WalletConfig) || {};
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 type CurrencyValue = {
@@ -456,9 +455,9 @@ export function useEngineBackendWalletBalance(
 
   invariant(chainId, "chainId is required");
 
-  return useQuery(
-    engineKeys.backendWalletBalance(address, chainId),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.backendWalletBalance(address, chainId),
+    queryFn: async () => {
       const res = await fetch(
         `${instance}backend-wallet/${chainId}/${address}/get-balance`,
         {
@@ -471,8 +470,8 @@ export function useEngineBackendWalletBalance(
 
       return (json.result as CurrencyValue) || {};
     },
-    { enabled: !!instance && !!address && !!chainId && !!token },
-  );
+    enabled: !!instance && !!address && !!chainId && !!token,
+  });
 }
 
 export type EngineAdmin = {
@@ -485,9 +484,9 @@ export function useEnginePermissions(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
   const address = useActiveAccount()?.address;
 
-  return useQuery(
-    engineKeys.permissions(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.permissions(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}auth/permissions/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -501,10 +500,9 @@ export function useEnginePermissions(instance: string) {
 
       return (json.result as EngineAdmin[]) || [];
     },
-    {
-      enabled: !!instance && !!token && !!address,
-    },
-  );
+
+    enabled: !!instance && !!token && !!address,
+  });
 }
 
 export type AccessToken = {
@@ -519,9 +517,9 @@ export type AccessToken = {
 export function useEngineAccessTokens(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.accessTokens(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.accessTokens(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}auth/access-tokens/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -531,8 +529,8 @@ export function useEngineAccessTokens(instance: string) {
 
       return (json.result as AccessToken[]) || [];
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 export type KeypairAlgorithm = "ES256" | "RS256" | "PS256";
@@ -549,9 +547,9 @@ export type Keypair = {
 export function useEngineKeypairs(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.keypairs(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.keypairs(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}auth/keypair/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -561,8 +559,8 @@ export function useEngineKeypairs(instance: string) {
 
       return (json.result as Keypair[]) || [];
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 type AddKeypairInput = {
@@ -645,9 +643,9 @@ export type EngineRelayer = {
 export function useEngineRelayer(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.relayers(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.relayers(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}relayer/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -657,8 +655,8 @@ export function useEngineRelayer(instance: string) {
 
       return (json.result as EngineRelayer[]) || [];
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 export type CreateRelayerInput = {
@@ -782,9 +780,9 @@ export interface EngineWebhook {
 export function useEngineWebhooks(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.webhooks(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.webhooks(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}webhooks/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -794,8 +792,8 @@ export function useEngineWebhooks(instance: string) {
 
       return (json.result as EngineWebhook[]) || [];
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 // POST REQUESTS
@@ -1241,9 +1239,9 @@ export function useEngineSendTokens(instance: string) {
 export function useEngineCorsConfiguration(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.corsUrls(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.corsUrls(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}configuration/cors`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -1253,8 +1251,8 @@ export function useEngineCorsConfiguration(instance: string) {
 
       return (json.result as string[]) || [];
     },
-    { enabled: !!instance && !!token },
-  );
+    enabled: !!instance && !!token,
+  });
 }
 
 interface SetCorsUrlInput {
@@ -1297,9 +1295,9 @@ export function useEngineIpAllowlistConfiguration(instance: string) {
   // if engine instance is not updated to have IP_ALLOWLIST
   const { data: health } = useEngineSystemHealth(instance);
 
-  return useQuery(
-    engineKeys.ipAllowlist(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.ipAllowlist(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}configuration/ip-allowlist`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -1308,11 +1306,10 @@ export function useEngineIpAllowlistConfiguration(instance: string) {
       const json = await res.json();
       return (json.result as string[]) || [];
     },
-    {
-      enabled:
-        !!instance && !!token && health?.features?.includes("IP_ALLOWLIST"),
-    },
-  );
+
+    enabled:
+      !!instance && !!token && health?.features?.includes("IP_ALLOWLIST"),
+  });
 }
 
 interface SetIpAllowlistInput {
@@ -1365,9 +1362,9 @@ export interface EngineContractSubscription {
 
 export function useEngineContractSubscription(instance: string) {
   const token = useLoggedInUser().user?.jwt ?? null;
-  return useQuery(
-    engineKeys.contractSubscriptions(instance),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.contractSubscriptions(instance),
+    queryFn: async () => {
       const res = await fetch(`${instance}contract-subscriptions/get-all`, {
         method: "GET",
         headers: getEngineRequestHeaders(token),
@@ -1376,10 +1373,9 @@ export function useEngineContractSubscription(instance: string) {
       const json = await res.json();
       return json.result as EngineContractSubscription[];
     },
-    {
-      enabled: !!instance && !!token,
-    },
-  );
+
+    enabled: !!instance && !!token,
+  });
 }
 
 export interface AddContractSubscriptionInput {
@@ -1465,9 +1461,9 @@ export function useEngineSubscriptionsLastBlock(
 ) {
   const token = useLoggedInUser().user?.jwt ?? null;
 
-  return useQuery(
-    engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.contractSubscriptionsLastBlock(instanceUrl, chainId),
+    queryFn: async () => {
       const response = await fetch(
         `${instanceUrl}contract-subscriptions/last-block?chain=${chainId}`,
         {
@@ -1479,11 +1475,10 @@ export function useEngineSubscriptionsLastBlock(
       const json = await response.json();
       return json.result.lastBlock as number;
     },
-    {
-      enabled: !!instanceUrl && !!token,
-      refetchInterval: autoUpdate ? 5_000 : false,
-    },
-  );
+
+    enabled: !!instanceUrl && !!token,
+    refetchInterval: autoUpdate ? 5_000 : false,
+  });
 }
 
 export interface EngineResourceMetrics {
@@ -1500,9 +1495,9 @@ export interface EngineResourceMetrics {
 export function useEngineSystemMetrics(engineId: string) {
   const [enabled, setEnabled] = useState(true);
 
-  return useQuery(
-    engineKeys.systemMetrics(engineId),
-    async () => {
+  return useQuery({
+    queryKey: engineKeys.systemMetrics(engineId),
+    queryFn: async () => {
       const res = await fetch(
         `${THIRDWEB_API_HOST}/v1/engine/${engineId}/metrics`,
       );
@@ -1513,10 +1508,9 @@ export function useEngineSystemMetrics(engineId: string) {
       const json = (await res.json()) as EngineResourceMetrics;
       return json;
     },
-    {
-      // Poll every 5s unless disabled.
-      enabled,
-      refetchInterval: 5_000,
-    },
-  );
+
+    // Poll every 5s unless disabled.
+    enabled,
+    refetchInterval: 5_000,
+  });
 }

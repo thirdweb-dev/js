@@ -73,7 +73,6 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         {
           plan,
           feedback,
-          useTrial: !account?.trialPeriodEndedAt,
         },
         {
           onSuccess: () => {
@@ -102,14 +101,7 @@ export const Billing: React.FC<BillingProps> = ({ account }) => {
         },
       );
     },
-    [
-      account?.trialPeriodEndedAt,
-      downgradePlan,
-      onError,
-      onSuccess,
-      trackEvent,
-      updatePlanMutation,
-    ],
+    [downgradePlan, onError, onSuccess, trackEvent, updatePlanMutation],
   );
 
   const handlePlanSelect = (plan: AccountPlan) => {
