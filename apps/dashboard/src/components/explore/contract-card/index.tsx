@@ -45,7 +45,9 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     return newContracts.includes(`${publisher}/${contractId}`);
   }, [publisher, contractId]);
 
-  const showSkeleton = publishedContractResult.isLoading;
+  const showSkeleton = publisher === "thirdweb.eth" && contractId === "modularContracts"
+    ? false
+    : publishedContractResult.isLoading;
 
   const href = useMemo(() => {
     let h: string;
