@@ -11,9 +11,9 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import { FastTrack } from "./fast-track";
-import { Partners } from "./partners";
-import { ThreeBoxLayout } from "./three-box-layout";
+import FastTrack from "./fast-track";
+import Partners from "./partners";
+import ThreeBoxLayout from "./three-box-layout";
 
 const TRACKING_CATEGORY = "startup-program";
 
