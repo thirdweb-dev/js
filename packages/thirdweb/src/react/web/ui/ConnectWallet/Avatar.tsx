@@ -1,7 +1,10 @@
 import type React from "react";
-import type { ThirdwebClient } from "src/client/client.js";
-import { useEnsAvatar, useEnsName } from "src/react/core/utils/wallet.js";
 import type { Address } from "viem";
+import type { ThirdwebClient } from "../../../../client/client.js";
+import {
+  useEnsAvatar,
+  useEnsName,
+} from "../../../../react/core/utils/wallet.js";
 import { Blobbie } from "./Blobbie.js";
 
 export type AvatarProps = {

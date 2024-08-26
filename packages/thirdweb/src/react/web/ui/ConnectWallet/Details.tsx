@@ -73,7 +73,7 @@ import { Link, Text } from "../components/text.js";
 import { fadeInAnimation } from "../design-system/animations.js";
 import { StyledButton } from "../design-system/elements.js";
 import type { LocaleId } from "../types.js";
-import { Blobbie } from "./Blobbie.js";
+import { Avatar } from "./Avatar.js";
 import { MenuButton, MenuLink } from "./MenuButton.js";
 import { ScreenSetupContext, useSetupScreen } from "./Modal/screen.js";
 import {
@@ -100,7 +100,6 @@ import { ViewNFTs } from "./screens/ViewNFTs.js";
 import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
 import type { WalletDetailsModalScreen } from "./screens/types.js";
-import { Avatar } from "./Avatar.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -132,13 +131,12 @@ export const ConnectedWalletDetails: React.FC<{
   const activeAccount = useActiveAccount();
   const walletChain = useActiveWalletChain();
 
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      client,
-      walletChain,
-      activeAccount,
-      props.detailsButton?.displayBalanceToken,
-    );
+  const { addressOrENS, balanceQuery } = useConnectedWalletDetails(
+    client,
+    walletChain,
+    activeAccount,
+    props.detailsButton?.displayBalanceToken,
+  );
 
   function closeModal() {
     setRootEl(null);
@@ -278,13 +276,12 @@ function DetailsModal(props: {
   const { client, locale } = props;
   const walletChain = useActiveWalletChain();
   const activeAccount = useActiveAccount();
-  const { ensAvatarQuery, addressOrENS, balanceQuery } =
-    useConnectedWalletDetails(
-      client,
-      walletChain,
-      activeAccount,
-      props.displayBalanceToken,
-    );
+  const { addressOrENS, balanceQuery } = useConnectedWalletDetails(
+    client,
+    walletChain,
+    activeAccount,
+    props.displayBalanceToken,
+  );
   const theme = parseTheme(props.theme);
 
   const activeWallet = useActiveWallet();
