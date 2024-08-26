@@ -136,7 +136,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+        version: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
       yalc:
         specifier: 1.0.0-pre.53
         version: 1.0.0-pre.53
@@ -220,10 +220,10 @@ importers:
         version: 8.26.0(@opentelemetry/api@1.9.0)(@opentelemetry/core@1.25.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.52.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.25.1(@opentelemetry/api@1.9.0))(next@14.2.5(@babel/core@7.24.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.44.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.92.1(@swc/core@1.6.6)(esbuild@0.21.5))
       '@stripe/react-stripe-js':
         specifier: ^2.7.3
-        version: 2.7.3(@stripe/stripe-js@3.5.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 2.7.3(@stripe/stripe-js@4.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@stripe/stripe-js':
-        specifier: ^3.5.0
-        version: 3.5.0
+        specifier: ^4.3.0
+        version: 4.3.0
       '@tanstack/react-query':
         specifier: ^4.36.1
         version: 4.36.1(react-dom@18.3.1(react@18.3.1))(react-native@0.74.5(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
@@ -8841,8 +8841,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  '@stripe/stripe-js@3.5.0':
-    resolution: {integrity: sha512-pKS3wZnJoL1iTyGBXAvCwduNNeghJHY6QSRSNNvpYnrrQrLZ6Owsazjyynu0e0ObRgks0i7Rv+pe2M7/MBTZpQ==}
+  '@stripe/stripe-js@4.3.0':
+    resolution: {integrity: sha512-bf8MxzzgD3dybtyIJUQSDMqxjEkJfsmj9IdRqDv609Zw08R41O7eoIy0f8KY41u8MbaFOYsn+XGJZtg1xwR2wQ==}
     engines: {node: '>=12.16'}
 
   '@swagger-api/apidom-ast@1.0.0-alpha.5':
@@ -25160,7 +25160,7 @@ snapshots:
     dependencies:
       '@codspeed/core': 3.1.0
       vite: 5.4.2(@types/node@20.14.9)(terser@5.31.0)
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
     transitivePeerDependencies:
       - debug
 
@@ -30997,14 +30997,14 @@ snapshots:
     dependencies:
       storybook: 8.2.9(@babel/preset-env@7.24.7(@babel/core@7.24.5))(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
-  '@stripe/react-stripe-js@2.7.3(@stripe/stripe-js@3.5.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@stripe/react-stripe-js@2.7.3(@stripe/stripe-js@4.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@stripe/stripe-js': 3.5.0
+      '@stripe/stripe-js': 4.3.0
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@stripe/stripe-js@3.5.0': {}
+  '@stripe/stripe-js@4.3.0': {}
 
   '@swagger-api/apidom-ast@1.0.0-alpha.5':
     dependencies:
@@ -31515,7 +31515,7 @@ snapshots:
       redent: 3.0.0
     optionalDependencies:
       '@types/bun': 1.0.12
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
 
   '@testing-library/jest-dom@6.4.5(@types/bun@1.0.12)(vitest@1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0))':
     dependencies:
@@ -32317,7 +32317,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -32352,7 +32352,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -45549,7 +45549,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.0
 
-  vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0):
+  vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0

@@ -49,7 +49,7 @@
     "@react-icons/all-files": "^4.1.0",
     "@sentry/nextjs": "^8.26.0",
     "@stripe/react-stripe-js": "^2.7.3",
-    "@stripe/stripe-js": "^3.5.0",
+    "@stripe/stripe-js": "^4.3.0",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-table": "^8.17.3",
     "@thirdweb-dev/react": "workspace:*",
