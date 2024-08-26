@@ -9,7 +9,7 @@ import { Blobbie } from "./Blobbie.js";
 
 export type AvatarProps = {
   client: ThirdwebClient;
-  walletAddress?: Address;
+  walletAddress: Address;
   style?: React.CSSProperties;
   className?: string;
 };
@@ -40,9 +40,7 @@ export function Avatar(props: AvatarProps) {
           className={props.className}
         />
       ) : (
-        props.walletAddress && (
-          <Blobbie address={props.walletAddress} style={props.style} />
-        )
+        <Blobbie address={props.walletAddress} style={props.style} />
       )}
     </>
   );

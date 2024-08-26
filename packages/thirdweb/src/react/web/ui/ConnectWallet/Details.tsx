@@ -202,14 +202,16 @@ export const ConnectedWalletDetails: React.FC<{
           height: "35px",
         }}
       >
-        <Avatar
-          client={client}
-          walletAddress={activeAccount?.address}
-          style={{
-            width: "100%",
-            height: "100%",
-          }}
-        />
+        {activeAccount?.address && (
+          <Avatar
+            client={client}
+            walletAddress={activeAccount?.address}
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          />
+        )}
       </Container>
       <Container
         flex="column"
@@ -381,14 +383,16 @@ function DetailsModal(props: {
           overflow: "hidden",
         }}
       >
-        <Avatar
-          client={client}
-          walletAddress={activeAccount?.address}
-          style={{
-            width: `${Number(iconSize.xxl)}px`,
-            height: `${Number(iconSize.xxl)}px`,
-          }}
-        />
+        {activeAccount?.address && (
+          <Avatar
+            client={client}
+            walletAddress={activeAccount.address}
+            style={{
+              width: `${iconSize.xxl}px`,
+              height: `${iconSize.xxl}px`,
+            }}
+          />
+        )}
       </Container>
       <Container
         style={{
