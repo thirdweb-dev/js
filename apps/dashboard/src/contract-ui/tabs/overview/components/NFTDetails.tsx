@@ -1,41 +1,25 @@
-import { thirdwebClient } from "@/constants/client";
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { SupplyCards } from "contract-ui/tabs/nfts/components/supply-cards";
 import { useTabHref } from "contract-ui/utils";
-import { useV5DashboardChain } from "lib/v5-adapter";
-import { useMemo } from "react";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { getNFTs } from "thirdweb/extensions/erc721";
 import { useReadContract } from "thirdweb/react";
 import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
 import { NFTCards } from "./NFTCards";
 
 interface NFTDetailsProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
   trackingCategory: TrackedLinkProps["category"];
   features: string[];
 }
 
 export const NFTDetails: React.FC<NFTDetailsProps> = ({
-  contractAddress,
-  chainId,
+  contract,
   trackingCategory,
   features,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const nftsHref = useTabHref("nfts");
-  const chain = useV5DashboardChain(chainId);
-
-  const contract = useMemo(
-    () =>
-      getContract({
-        client: thirdwebClient,
-        address: contractAddress,
-        chain,
-      }),
-    [contractAddress, chain],
-  );
 
   const nftQuery = useReadContract(getNFTs, {
     contract,
@@ -77,7 +61,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
       </Flex>
       {showSupplyCards && contract && <SupplyCards contract={contract} />}
       <NFTCards
-        contractAddress={contractAddress}
+        contractAddress={contract.address}
         nfts={displayableNFTs}
         trackingCategory={trackingCategory}
         isLoading={nftQuery.isLoading}

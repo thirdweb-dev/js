@@ -4,7 +4,7 @@ import {
   IPFS_GATEWAY_URL,
   isProd,
 } from "@/constants/env";
-import { type SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import {
   // type GatewayUrls,
   type IStorageDownloader,
@@ -12,7 +12,6 @@ import {
   StorageDownloader,
   ThirdwebStorage,
 } from "@thirdweb-dev/storage";
-import type { Signer } from "ethers";
 import { getAbsoluteUrl } from "./vercel-utils";
 
 export function replaceIpfsUrl(url: string) {
@@ -93,12 +92,7 @@ export const StorageSingleton = new ThirdwebStorage({
 // EVM SDK
 const EVM_SDK_MAP = new Map<string, ThirdwebSDK>();
 
-export function getThirdwebSDK(
-  chainId: number,
-  rpcUrl: string,
-  sdkOptions?: SDKOptions,
-  signer?: Signer,
-): ThirdwebSDK {
+export function getThirdwebSDK(chainId: number, rpcUrl: string): ThirdwebSDK {
   try {
     new URL(rpcUrl);
   } catch (e) {
@@ -122,8 +116,7 @@ export function getThirdwebSDK(
       : undefined;
 
   // PERF ISSUE - if the sdkOptions is a huge object, stringify will be slow
-  const sdkKey =
-    chainId + rpcUrl + (sdkOptions ? JSON.stringify(sdkOptions) : "");
+  const sdkKey = chainId + rpcUrl;
 
   let sdk: ThirdwebSDK | null = null;
 
@@ -133,7 +126,6 @@ export function getThirdwebSDK(
     sdk = new ThirdwebSDK(
       rpcUrl,
       {
-        ...sdkOptions,
         readonlySettings,
         clientId: DASHBOARD_THIRDWEB_CLIENT_ID,
         secretKey: DASHBOARD_THIRDWEB_SECRET_KEY,
@@ -142,10 +134,6 @@ export function getThirdwebSDK(
     );
 
     EVM_SDK_MAP.set(sdkKey, sdk);
-  }
-
-  if (signer) {
-    sdk.updateSignerOrProvider(signer);
   }
 
   return sdk;

@@ -13,39 +13,27 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setRoyaltyInfoForToken" function.
  */
 export type SetRoyaltyInfoForTokenParams = WithOverrides<{
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "_tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
   recipient: AbiParameterToPrimitiveType<{
-    name: "_recipient";
     type: "address";
-    internalType: "address";
+    name: "_recipient";
   }>;
-  bps: AbiParameterToPrimitiveType<{
-    name: "_bps";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  bps: AbiParameterToPrimitiveType<{ type: "uint16"; name: "_bps" }>;
 }>;
 
-export const FN_SELECTOR = "0x9bcf7a15" as const;
+export const FN_SELECTOR = "0xab8e8c44" as const;
 const FN_INPUTS = [
   {
+    type: "uint256",
     name: "_tokenId",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
-    name: "_recipient",
     type: "address",
-    internalType: "address",
+    name: "_recipient",
   },
   {
+    type: "uint16",
     name: "_bps",
-    type: "uint256",
-    internalType: "uint256",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

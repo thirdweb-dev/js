@@ -10,14 +10,10 @@ export const FN_SELECTOR = "0xb24f2d39" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "address",
-    internalType: "address",
   },
   {
-    name: "",
     type: "uint16",
-    internalType: "uint16",
   },
 ] as const;
 

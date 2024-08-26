@@ -33,7 +33,7 @@ type ReferenceSideBarProps = {
 
 export function Sidebar(props: ReferenceSideBarProps) {
   return (
-    <ul className="styled-scrollbar transform-gpu overflow-y-scroll pb-10">
+    <ul className="transform-gpu pb-10">
       {props.links.map((link, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         <li key={i}>

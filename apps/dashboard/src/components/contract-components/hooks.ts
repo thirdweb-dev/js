@@ -13,7 +13,6 @@ import {
 import { useSDK, useSigner } from "@thirdweb-dev/react";
 import {
   type Abi,
-  type ContractInfoSchema,
   type DeploymentTransaction,
   type ExtraPublishMetadata,
   type FeatureName,
@@ -42,7 +41,6 @@ import { useSupportedChain } from "hooks/chains/configureChains";
 import { isEnsName, resolveEns } from "lib/ens";
 import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
-import type { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import {
@@ -60,7 +58,6 @@ import {
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-ethers";
-import type { z } from "zod";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import type {
   DeployModalStep,
@@ -69,31 +66,6 @@ import type {
 import { uploadContractMetadata } from "./contract-deploy-form/deploy-form-utils";
 import type { ContractId } from "./types";
 import { addContractToMultiChainRegistry } from "./utils";
-
-interface ContractPublishMetadata {
-  image: string | StaticImageData;
-  name: string;
-  description?: string;
-  abi?: Abi;
-  bytecode?: string;
-  deployDisabled?: boolean;
-  info?: z.infer<typeof ContractInfoSchema>;
-  licenses?: string[];
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  compilerMetadata?: Record<string, any>;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  analytics?: Record<string, any>;
-}
-
-interface RawPredeployMetadata {
-  name: string;
-  metadataUri: string;
-  bytecodeUri: string;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  analytics?: Record<string, any>;
-  // biome-ignore lint/suspicious/noExplicitAny: FIXME
-  compilers?: Record<string, any>;
-}
 
 function isChainIdZkSync(chainId?: number) {
   switch (chainId) {
@@ -143,13 +115,12 @@ export async function fetchRawPredeployMetadataFromURI(contractId: ContractId) {
 }
 
 export function useContractRawPredeployMetadataFromURI(contractId: ContractId) {
-  return useQuery<RawPredeployMetadata>(
-    ["raw-predeploy-metadata", contractId],
-    () => fetchRawPredeployMetadataFromURI(contractId),
-    {
-      enabled: !!contractId,
-    },
-  );
+  return useQuery({
+    queryKey: ["raw-predeploy-metadata", contractId],
+    queryFn: () => fetchRawPredeployMetadataFromURI(contractId),
+
+    enabled: !!contractId,
+  });
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: FIXME
@@ -203,13 +174,11 @@ export async function fetchContractPublishMetadataFromURI(
 }
 
 export function useContractPublishMetadataFromURI(contractId: ContractId) {
-  return useQuery<ContractPublishMetadata>(
-    ["publish-metadata", contractId],
-    () => fetchContractPublishMetadataFromURI(contractId),
-    {
-      enabled: !!contractId,
-    },
-  );
+  return useQuery({
+    queryKey: ["publish-metadata", contractId],
+    queryFn: () => fetchContractPublishMetadataFromURI(contractId),
+    enabled: !!contractId,
+  });
 }
 
 export function useDefaultForwarders() {
@@ -232,9 +201,9 @@ export function useDefaultForwarders() {
 export function useContractPrePublishMetadata(uri: string, address?: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
 
-  return useQuery(
-    ["pre-publish-metadata", uri, address],
-    async () => {
+  return useQuery({
+    queryKey: ["pre-publish-metadata", uri, address],
+    queryFn: async () => {
       invariant(address, "address is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
@@ -246,10 +215,9 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
         ?.getPublisher()
         .fetchPrePublishMetadata(contractIdIpfsHash, address);
     },
-    {
-      enabled: !!uri && !!address,
-    },
-  );
+
+    enabled: !!uri && !!address,
+  });
 }
 
 async function fetchFullPublishMetadata(
@@ -281,9 +249,9 @@ export function useContractFullPublishMetadata(uri: string) {
   );
   const queryClient = useQueryClient();
 
-  return useQuery(
-    ["full-publish-metadata", uri],
-    async () => {
+  return useQuery({
+    queryKey: ["full-publish-metadata", uri],
+    queryFn: async () => {
       invariant(sdk, "sdk is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
@@ -293,10 +261,9 @@ export function useContractFullPublishMetadata(uri: string) {
         queryClient,
       );
     },
-    {
-      enabled: !!uri && !!sdk,
-    },
-  );
+
+    enabled: !!uri && !!sdk,
+  });
 }
 
 async function fetchPublisherProfile(publisherAddress?: string | null) {
@@ -380,13 +347,12 @@ export function useAllVersions(
     polygon.id,
     getDashboardChainRpc(polygon.id, undefined),
   );
-  return useQuery(
-    ["all-releases", publisherAddress, contractName],
-    () => fetchAllVersions(sdk, publisherAddress, contractName),
-    {
-      enabled: !!publisherAddress && !!contractName && !!sdk,
-    },
-  );
+  return useQuery({
+    queryKey: ["all-releases", publisherAddress, contractName],
+    queryFn: () => fetchAllVersions(sdk, publisherAddress, contractName),
+
+    enabled: !!publisherAddress && !!contractName && !!sdk,
+  });
 }
 
 export function usePublishedContractsFromDeploy(
@@ -397,12 +363,12 @@ export function usePublishedContractsFromDeploy(
   const cId = chainId || activeChainId;
   const chainInfo = useSupportedChain(cId || -1);
 
-  return useQuery(
-    (networkKeys.chain(cId) as readonly unknown[]).concat([
+  return useQuery({
+    queryKey: (networkKeys.chain(cId) as readonly unknown[]).concat([
       "release-from-deploy",
       contractAddress,
     ]),
-    async () => {
+    queryFn: async () => {
       invariant(contractAddress, "contractAddress is not defined");
       invariant(cId, "chain not defined");
 
@@ -426,11 +392,10 @@ export function usePublishedContractsFromDeploy(
         .getPublisher()
         .resolvePublishMetadataFromCompilerMetadata(contractUri);
     },
-    {
-      enabled: !!contractAddress && !!cId && !!chainInfo,
-      retry: false,
-    },
-  );
+
+    enabled: !!contractAddress && !!cId && !!chainInfo,
+    retry: false,
+  });
 }
 
 export async function fetchPublishedContractInfo(
@@ -447,13 +412,12 @@ export function usePublishedContractInfo(contract: PublishedContract) {
     polygon.id,
     getDashboardChainRpc(polygon.id, undefined),
   );
-  return useQuery(
-    ["released-contract", contract],
-    () => fetchPublishedContractInfo(sdk, contract),
-    {
-      enabled: !!contract,
-    },
-  );
+  return useQuery({
+    queryKey: ["released-contract", contract],
+    queryFn: () => fetchPublishedContractInfo(sdk, contract),
+
+    enabled: !!contract,
+  });
 }
 export function usePublishedContractFunctions(contract: PublishedContract) {
   const publishedContractInfo = usePublishedContractInfo(contract);
@@ -957,9 +921,9 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
   const sdk = useSDK();
   const chainId = useActiveWalletChain()?.id;
 
-  const queryResult = useQuery<DeploymentTransaction[]>(
-    ["transactions-for-deploy", publishMetadataOrUri, chainId],
-    async () => {
+  const queryResult = useQuery<DeploymentTransaction[]>({
+    queryKey: ["transactions-for-deploy", publishMetadataOrUri, chainId],
+    queryFn: async () => {
       invariant(sdk, "sdk not provided");
 
       // Handle separately for ZkSync
@@ -973,10 +937,9 @@ export function useTransactionsForDeploy(publishMetadataOrUri: string) {
           : `ipfs://${publishMetadataOrUri}`,
       );
     },
-    {
-      enabled: !!publishMetadataOrUri && !!sdk,
-    },
-  );
+
+    enabled: !!publishMetadataOrUri && !!sdk,
+  });
 
   return queryResult;
 }
@@ -1046,18 +1009,16 @@ export function usePublishedContractsQuery(
     getDashboardChainRpc(polygon.id, undefined),
   );
   const queryClient = useQueryClient();
-  return useQuery<PublishedContractDetails[]>(
-    ["published-contracts", address, feature],
-    () => {
+  return useQuery<PublishedContractDetails[]>({
+    queryKey: ["published-contracts", address, feature],
+    queryFn: () => {
       invariant(sdk, "sdk not provided");
       return feature && feature.length > 0
         ? fetchPublishedContractsWithFeature(sdk, queryClient, feature, address)
         : fetchPublishedContracts(sdk, queryClient, address);
     },
-    {
-      enabled: !!address && !!sdk,
-    },
-  );
+    enabled: !!address && !!sdk,
+  });
 }
 
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
@@ -1187,14 +1148,13 @@ export function useContractEvents(abi: Abi) {
 
 export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
   const chain = useSupportedChain(chainId);
-  return useQuery(
-    ["custom-factory-abi", { contractAddress, chainId }],
-    async () => {
+  return useQuery({
+    queryKey: ["custom-factory-abi", { contractAddress, chainId }],
+    queryFn: async () => {
       const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId, chain));
       return (await sdk.getContract(contractAddress)).abi;
     },
-    {
-      enabled: !!contractAddress && !!chainId,
-    },
-  );
+
+    enabled: !!contractAddress && !!chainId,
+  });
 }

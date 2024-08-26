@@ -5,11 +5,11 @@ import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import { getInstalledModules } from "../modular/__generated__/ModularCore/read/getInstalledModules.js";
-import { claimableERC20Module } from "../modular/write/claimableERC20.js";
-import { installPublishedModule } from "../modular/write/installPublishedModule.js";
-import { uninstallModuleByProxy } from "../modular/write/uninstallModuleByProxy.js";
-import { uninstallPublishedModule } from "../modular/write/uninstallPublishedModule.js";
+import * as ERC20Claimable from "../modular/ClaimableERC20/index.js";
+import { getInstalledModules } from "../modular/__generated__/IModularCore/read/getInstalledModules.js";
+import { installPublishedModule } from "../modular/common/installPublishedModule.js";
+import { uninstallModuleByProxy } from "../modular/common/uninstallModuleByProxy.js";
+import { uninstallPublishedModule } from "../modular/common/uninstallPublishedModule.js";
 import { deployModularContract } from "./deploy-modular.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
@@ -104,8 +104,6 @@ describe(
       // install module with published name
       const installTransaction = installPublishedModule({
         contract: core,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
         account: TEST_ACCOUNT_A,
         moduleName: "DemoModuleWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
@@ -147,14 +145,14 @@ describe(
         chain: ANVIL_CHAIN,
         client: TEST_CLIENT,
         account: TEST_ACCOUNT_A,
-        core: "ERC20CoreInitializable", // FIXME use ERC20 core from tw deployer
+        core: "ERC20", // FIXME use ERC20 core from tw deployer
         publisher: "0x4fA9230f4E8978462cE7Bf8e6b5a2588da5F4264",
         params: {
           name: "TestModularERC20",
           symbol: "TT",
         },
         modules: [
-          claimableERC20Module({
+          ERC20Claimable.module({
             primarySaleRecipient: TEST_ACCOUNT_A.address,
           }),
         ],

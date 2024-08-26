@@ -7,28 +7,32 @@ import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameter
  */
 export type EncodeBytesOnInstallParams = {
   royaltyRecipient: AbiParameterToPrimitiveType<{
-    name: "royaltyRecipient";
     type: "address";
-    internalType: "address";
+    name: "royaltyRecipient";
   }>;
   royaltyBps: AbiParameterToPrimitiveType<{
+    type: "uint16";
     name: "royaltyBps";
-    type: "uint256";
-    internalType: "uint256";
+  }>;
+  transferValidator: AbiParameterToPrimitiveType<{
+    type: "address";
+    name: "transferValidator";
   }>;
 };
 
-export const FN_SELECTOR = "0x9adb1e41" as const;
+export const FN_SELECTOR = "0x2fbb2623" as const;
 const FN_INPUTS = [
   {
-    name: "royaltyRecipient",
     type: "address",
-    internalType: "address",
+    name: "royaltyRecipient",
   },
   {
+    type: "uint16",
     name: "royaltyBps",
-    type: "uint256",
-    internalType: "uint256",
+  },
+  {
+    type: "address",
+    name: "transferValidator",
   },
 ] as const;
 
@@ -43,6 +47,7 @@ const FN_INPUTS = [
  * const result = encodeEncodeBytesOnInstallParams({
  *  royaltyRecipient: ...,
  *  royaltyBps: ...,
+ *  transferValidator: ...,
  * });
  * ```
  */
@@ -52,5 +57,6 @@ export function encodeBytesOnInstallParams(
   return encodeAbiParameters(FN_INPUTS, [
     options.royaltyRecipient,
     options.royaltyBps,
+    options.transferValidator,
   ]);
 }

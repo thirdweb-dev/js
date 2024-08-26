@@ -14,14 +14,14 @@ import { FactoryContracts } from "./factory-contracts";
 const useFactories = () => {
   const { user, isLoggedIn } = useLoggedInUser();
   const configuredChains = useSupportedChains();
-  return useQuery(
-    [
+  return useQuery({
+    queryKey: [
       "dashboard-registry",
       user?.address,
       "multichain-contract-list",
       "factories",
     ],
-    async () => {
+    queryFn: async () => {
       invariant(user?.address, "user should be logged in");
       const polygonSDK = getThirdwebSDK(
         polygon.id,
@@ -42,10 +42,9 @@ const useFactories = () => {
 
       return contractWithExtensions.filter((f) => f !== null);
     },
-    {
-      enabled: !!user?.address && isLoggedIn,
-    },
-  );
+
+    enabled: !!user?.address && isLoggedIn,
+  });
 };
 
 interface AccountFactoriesProps {

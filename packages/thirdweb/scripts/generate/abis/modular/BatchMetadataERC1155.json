@@ -1,0 +1,7 @@
+[
+  "function encodeBytesOnInstall() pure returns (bytes)",
+  "function getAllMetadataBatches() view returns ((uint256 startTokenIdInclusive, uint256 endTokenIdInclusive, string baseURI)[])",
+  "function uploadMetadata(uint256 _amount, string _baseURI)",
+  "event BatchMetadataUpdate(uint256 _fromTokenId, uint256 _toTokenId)",
+  "event NewMetadataBatch(uint256 indexed startTokenIdInclusive, uint256 indexed endTokenIdNonInclusive, string baseURI)"
+]

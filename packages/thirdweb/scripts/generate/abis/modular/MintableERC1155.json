@@ -3,5 +3,7 @@
   "function encodeBytesOnInstall(address primarySaleRecipient) pure returns (bytes)",
   "function getSaleConfig() view returns (address primarySaleRecipient)",
   "function setSaleConfig(address _primarySaleRecipient) nonpayable",
-  "function setTokenURI(uint256 _tokenId, string _tokenURI) nonpayable"
+  "function setTokenURI(uint256 _tokenId, string _tokenURI) nonpayable",
+  "event MetadataUpdate(uint256 id)",
+  "event MintableTokenURIUpdated(uint256 tokenId, string tokenURI)"
 ]

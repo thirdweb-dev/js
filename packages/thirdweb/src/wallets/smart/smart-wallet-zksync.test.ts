@@ -107,9 +107,8 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
           to: account.address,
           tokenId: 0n,
         }),
-        account: smartAccount,
+        account: account,
       });
-      console.log("tx", tx.transactionHash);
       expect(tx.transactionHash.length).toBe(66);
     });
   },

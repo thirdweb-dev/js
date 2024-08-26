@@ -25,12 +25,12 @@ export type EmbeddedWalletUser = {
 export function useEmbeddedWallets(clientId: string) {
   const { user, isLoggedIn } = useLoggedInUser();
 
-  return useQuery(
-    embeddedWalletsKeys.embeddedWallets(
+  return useQuery({
+    queryKey: embeddedWalletsKeys.embeddedWallets(
       user?.address as string,
       clientId as string,
     ),
-    async () => {
+    queryFn: async () => {
       const res = await fetch(
         `${THIRDWEB_EWS_API_HOST}/api/thirdweb/embedded-wallet?clientId=${clientId}&lastAccessedAt=0`,
         {
@@ -46,6 +46,6 @@ export function useEmbeddedWallets(clientId: string) {
 
       return json.walletUsers as EmbeddedWalletUser[];
     },
-    { enabled: !!user?.address && isLoggedIn && !!clientId },
-  );
+    enabled: !!user?.address && isLoggedIn && !!clientId,
+  });
 }

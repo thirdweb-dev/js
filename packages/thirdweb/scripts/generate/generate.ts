@@ -30,10 +30,15 @@ export async function generateFromAbi(
   const readFunctions: AbiFunction[] = [];
   const encodeFunctions: AbiFunction[] = [];
   const writeFunctions: AbiFunction[] = [];
+  const installFunctions: AbiFunction[] = [];
   for (const f of functions) {
     if (f.stateMutability === "view" || f.stateMutability === "pure") {
       if (overloadedReads.has(f.name)) {
         continue;
+      }
+      if (f.name.startsWith("encodeBytesOnInstall")) {
+        // installable modules all need a encodeBytesOnInstall function in the abi file
+        installFunctions.push(f);
       }
       if (f.name.startsWith("encode") && f.inputs.length > 0) {
         encodeFunctions.push(f);
@@ -99,6 +104,25 @@ export async function generateFromAbi(
         await writeFile(
           join(outFolder, extensionFileName, "./encode", `${f.name}.ts`),
           await format(generateEncodeFunction(f, extensionName), {
+            parser: "babel-ts",
+            trailingComma: "all",
+          }),
+          "utf-8",
+        );
+      }),
+    );
+  }
+  if (installFunctions.length) {
+    // make a folder for the read functions
+    await mkdir(join(outFolder, extensionFileName, "./module"), {
+      recursive: true,
+    });
+    // process every read function
+    await Promise.all(
+      installFunctions.map(async (f) => {
+        await writeFile(
+          join(outFolder, extensionFileName, "./module/install.ts"),
+          await format(generateInstallFunction(extensionFileName, f), {
             parser: "babel-ts",
             trailingComma: "all",
           }),
@@ -489,6 +513,126 @@ export async function ${f.name}(
       .join(", ")}]
   });
 };
+`;
+}
+
+function generateInstallFunction(moduleName: string, f: AbiFunction): string {
+  const needsParams =
+    f.name.startsWith("encodeBytesOnInstall") && f.inputs.length > 0;
+  return `
+import type { Chain } from "../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { ThirdwebContract } from "../../../../../contract/contract.js";
+import type { PreparedTransaction } from "../../../../../transaction/prepare-transaction.js";
+import type { Address } from "../../../../../utils/address.js";
+import type { Account } from "../../../../../wallets/interfaces/wallet.js";
+${
+  needsParams
+    ? `import {
+  type EncodeBytesOnInstallParams,
+  encodeBytesOnInstallParams,
+} from "../encode/encodeBytesOnInstall.js";`
+    : ""
+}
+import { getOrDeployModule } from "../../../common/getOrDeployModule.js";
+import { installPublishedModule } from "../../../common/installPublishedModule.js";
+
+const contractId = "${moduleName}";
+
+/**
+ * Convenience function to add the ${moduleName} module as a default module on a core contract.
+ * @param params - The parameters for the module.
+ * @returns - The module function.
+ * @example
+ * \`\`\`ts
+ * import { ${moduleName}, deployModularContract } from "@thirdweb/modules";
+ *
+ * const deployed = deployModularContract({
+ *   contract,
+ *   account,
+ *   params: {
+ *     name: "My Modular Contract",
+ *   },
+ *   modules: [
+ *     ${moduleName}.module(${
+   needsParams
+     ? `{\n * ${f.inputs
+         .map((x) => `       ${removeLeadingUnderscore(x.name)}: ...,`)
+         .join("\n * ")}\n *     })`
+     : ")"
+ },
+ *   ],
+ * });
+ * \`\`\`
+ * @module ${moduleName}
+ */
+export function module(${needsParams ? "params: EncodeBytesOnInstallParams" : ""}) {
+  return async (args: {
+    client: ThirdwebClient;
+    chain: Chain;
+    account: Account;
+  }) => {
+    // deploys if needed
+    const moduleContract = await getOrDeployModule({
+      account: args.account,
+      chain: args.chain,
+      client: args.client,
+      contractId,
+    });
+    return {
+      module: moduleContract.address as Address,
+      data: ${needsParams ? "encodeInstall(params)" : `"0x" as const`},
+    };
+  };
+}
+  
+/**
+ * Installs the ${moduleName} module on a core contract.
+ * @param options
+ * @returns the transaction to install the module
+ * @example
+ * \`\`\`ts
+ * import { ${moduleName} } from "@thirdweb/modules";
+ *
+ * const transaction  = ${moduleName}.install({
+ *  contract: coreContract,
+ *  account: account,
+ ${
+   needsParams
+     ? `*  params: {\n * ${f.inputs
+         .map((x) => `    ${removeLeadingUnderscore(x.name)}: ...,`)
+         .join("\n * ")}\n *  },`
+     : ""
+ }
+ * });
+ *
+ * await sendTransaction({
+ *  transaction,
+ *  account,
+ * });
+ * \`\`\`
+ * @module ${moduleName}
+ */
+export function install(options: {
+  contract: ThirdwebContract;
+  account: Account;
+  ${needsParams ? "params: EncodeBytesOnInstallParams;" : ""}
+}): PreparedTransaction {
+  return installPublishedModule({
+    account: options.account,
+    contract: options.contract,
+    moduleName: contractId,
+    moduleData: ${needsParams ? "encodeInstall(options.params)" : `"0x" as const`},
+  });
+}
+
+/**
+ * Encodes the install data for the ${moduleName} module.
+ * @param params - The parameters for the module.
+ * @returns - The encoded data.
+ * @module ${moduleName}
+ */
+export const encodeInstall = ${needsParams ? "encodeBytesOnInstallParams" : "() => '0x'"}
 `;
 }
 

@@ -1,12 +1,9 @@
-import { thirdwebClient } from "@/constants/client";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { contractType, useContract } from "@thirdweb-dev/react";
-import { type Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
 import { PublishedBy } from "components/contract-components/shared/published-by";
 import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
-import { useV5DashboardChain } from "lib/v5-adapter";
+import type { ContractType } from "constants/contracts";
 import { useMemo } from "react";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { AnalyticsOverview } from "./components/Analytics";
 import { BuildYourApp } from "./components/BuildYourApp";
 import { ContractChecklist } from "./components/ContractChecklist";
@@ -19,43 +16,22 @@ import { TokenDetails } from "./components/TokenDetails";
 import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 
 interface ContractOverviewPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
+  contractType: ContractType;
+  detectedFeatureNames: string[];
 }
 
 const TRACKING_CATEGORY = "contract_overview";
 
 export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
-  contractAddress,
+  contract,
+  contractType,
+  detectedFeatureNames,
 }) => {
-  const { contract } = useContract(contractAddress);
-  const contractTypeQuery = contractType.useQuery(contractAddress);
-  const contractTypeData = contractTypeQuery?.data || "custom";
-
-  const detectedFeatureNames = useMemo(
-    () =>
-      contract?.abi ? getAllDetectedFeatureNames(contract.abi as Abi) : [],
-    [contract?.abi],
-  );
-
   const { guides, templates } = useMemo(
-    () => getGuidesAndTemplates(detectedFeatureNames, contractTypeData),
-    [detectedFeatureNames, contractTypeData],
+    () => getGuidesAndTemplates(detectedFeatureNames, contractType),
+    [detectedFeatureNames, contractType],
   );
-
-  const chain = useV5DashboardChain(contract?.chainId);
-
-  if (!contractAddress) {
-    return <div>No contract address provided</div>;
-  }
-
-  const contractV5 =
-    contract && chain
-      ? getContract({
-          address: contract.getAddress(),
-          chain,
-          client: thirdwebClient,
-        })
-      : undefined;
 
   return (
     <SimpleGrid columns={{ base: 1, xl: 10 }} gap={20}>
@@ -63,19 +39,18 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
         {contract && <ContractChecklist contract={contract} />}
         {contract && (
           <AnalyticsOverview
-            contractAddress={contractAddress}
-            chainId={contract.chainId}
+            contractAddress={contract.address}
+            chainId={contract.chain.id}
             trackingCategory={TRACKING_CATEGORY}
           />
         )}
         {contract &&
-          (contractTypeData === "marketplace" ||
+          (contractType === "marketplace" ||
             ["DirectListings", "EnglishAuctions"].some((type) =>
               detectedFeatureNames.includes(type),
-            )) &&
-          contractV5 && (
+            )) && (
             <MarketplaceDetails
-              contract={contractV5}
+              contract={contract}
               trackingCategory={TRACKING_CATEGORY}
               features={detectedFeatureNames}
             />
@@ -85,35 +60,30 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
             detectedFeatureNames.includes(type),
           ) && (
             <NFTDetails
-              contractAddress={contract.getAddress()}
-              chainId={contract.chainId}
+              contract={contract}
               trackingCategory={TRACKING_CATEGORY}
               features={detectedFeatureNames}
             />
           )}
-        {contractV5 &&
-          ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
-            <TokenDetails contract={contractV5} />
-          )}
-        {contractV5 && (
-          <LatestEvents
-            contract={contractV5}
+        {["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
+          <TokenDetails contract={contract} />
+        )}
+        <LatestEvents
+          contract={contract}
+          trackingCategory={TRACKING_CATEGORY}
+        />
+        {["PermissionsEnumerable"].some((type) =>
+          detectedFeatureNames.includes(type),
+        ) && (
+          <PermissionsTable
+            contract={contract}
             trackingCategory={TRACKING_CATEGORY}
           />
         )}
-        {contract &&
-          ["PermissionsEnumerable"].some((type) =>
-            detectedFeatureNames.includes(type),
-          ) && (
-            <PermissionsTable
-              contract={contract}
-              trackingCategory={TRACKING_CATEGORY}
-            />
-          )}
         <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
       </GridItem>
       <GridItem colSpan={{ xl: 3 }} as={Flex} direction="column" gap={6}>
-        <PublishedBy contractAddress={contractAddress} />
+        <PublishedBy contractAddress={contract.address} />
         {contract?.abi && <Extensions abi={contract?.abi} />}
         {(guides.length > 0 || templates.length > 0) && <Divider />}
         <RelevantDataSection

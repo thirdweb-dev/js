@@ -1,6 +1,6 @@
 {
   "name": "thirdweb",
-  "version": "5.48.1",
+  "version": "5.48.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thirdweb-dev/js.git#main"
@@ -113,10 +113,10 @@
       "import": "./dist/esm/exports/wallets/*.js",
       "default": "./dist/cjs/exports/wallets/*.js"
     },
-    "./modular/*": {
-      "types": "./dist/types/exports/modular/*.d.ts",
-      "import": "./dist/esm/exports/modular/*.js",
-      "default": "./dist/cjs/exports/modular/*.js"
+    "./modules": {
+      "types": "./dist/types/exports/modules.d.ts",
+      "import": "./dist/esm/exports/modules.js",
+      "default": "./dist/cjs/exports/modules.js"
     },
     "./package.json": "./package.json"
   },
@@ -138,7 +138,7 @@
       "utils": ["./dist/types/exports/utils.d.ts"],
       "wallets": ["./dist/types/exports/wallets.d.ts"],
       "wallets/*": ["./dist/types/exports/wallets/*.d.ts"],
-      "modular/*": ["./dist/types/exports/modular/*.d.ts"]
+      "modules/*": ["./dist/types/exports/modules/*.d.ts"]
     }
   },
   "browser": {

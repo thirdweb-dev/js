@@ -26,7 +26,7 @@ export function SwapStatusScreen(props: {
   onDone: () => void;
   transactionMode: boolean;
   isEmbed: boolean;
-  quote: BuyWithCryptoQuote;
+  quote: BuyWithCryptoQuote | undefined;
   onSuccess: ((status: BuyWithCryptoStatus) => void) | undefined;
 }) {
   const { onSuccess } = props;
@@ -82,13 +82,13 @@ export function SwapStatusScreen(props: {
         hideStatusRow={true}
         client={props.client}
       />
-    ) : (
+    ) : props.quote ? (
       <SwapTxDetailsTable
         type="quote"
         quote={props.quote}
         client={props.client}
       />
-    );
+    ) : null;
 
   return (
     <Container animate="fadein">

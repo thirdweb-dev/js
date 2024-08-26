@@ -3,180 +3,6 @@ import { formatAbi } from "abitype";
 const input = [
   {
     type: "function",
-    name: "beforeMintERC721",
-    inputs: [
-      { name: "_to", type: "address", internalType: "address" },
-      {
-        name: "_startTokenId",
-        type: "uint256",
-        internalType: "uint256",
-      },
-      { name: "_quantity", type: "uint256", internalType: "uint256" },
-      { name: "_data", type: "bytes", internalType: "bytes" },
-    ],
-    outputs: [{ name: "", type: "bytes", internalType: "bytes" }],
-    stateMutability: "payable",
-  },
-  {
-    type: "function",
-    name: "eip712Domain",
-    inputs: [],
-    outputs: [
-      { name: "fields", type: "bytes1", internalType: "bytes1" },
-      { name: "name", type: "string", internalType: "string" },
-      { name: "version", type: "string", internalType: "string" },
-      { name: "chainId", type: "uint256", internalType: "uint256" },
-      {
-        name: "verifyingContract",
-        type: "address",
-        internalType: "address",
-      },
-      { name: "salt", type: "bytes32", internalType: "bytes32" },
-      {
-        name: "extensions",
-        type: "uint256[]",
-        internalType: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "encodeBytesBeforeMintERC721",
-    inputs: [
-      {
-        name: "params",
-        type: "tuple",
-        internalType: "struct ClaimableERC721.ClaimParamsERC721",
-        components: [
-          {
-            name: "request",
-            type: "tuple",
-            internalType: "struct ClaimableERC721.ClaimRequestERC721",
-            components: [
-              {
-                name: "startTimestamp",
-                type: "uint48",
-                internalType: "uint48",
-              },
-              {
-                name: "endTimestamp",
-                type: "uint48",
-                internalType: "uint48",
-              },
-              {
-                name: "recipient",
-                type: "address",
-                internalType: "address",
-              },
-              {
-                name: "quantity",
-                type: "uint256",
-                internalType: "uint256",
-              },
-              {
-                name: "currency",
-                type: "address",
-                internalType: "address",
-              },
-              {
-                name: "pricePerUnit",
-                type: "uint256",
-                internalType: "uint256",
-              },
-              { name: "uid", type: "bytes32", internalType: "bytes32" },
-            ],
-          },
-          { name: "signature", type: "bytes", internalType: "bytes" },
-          {
-            name: "currency",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "pricePerUnit",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "recipientAllowlistProof",
-            type: "bytes32[]",
-            internalType: "bytes32[]",
-          },
-        ],
-      },
-    ],
-    outputs: [{ name: "", type: "bytes", internalType: "bytes" }],
-    stateMutability: "pure",
-  },
-  {
-    type: "function",
-    name: "encodeBytesOnInstall",
-    inputs: [
-      {
-        name: "primarySaleRecipient",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [{ name: "", type: "bytes", internalType: "bytes" }],
-    stateMutability: "pure",
-  },
-  {
-    type: "function",
-    name: "encodeBytesOnUninstall",
-    inputs: [],
-    outputs: [{ name: "", type: "bytes", internalType: "bytes" }],
-    stateMutability: "pure",
-  },
-  {
-    type: "function",
-    name: "getClaimCondition",
-    inputs: [],
-    outputs: [
-      {
-        name: "claimCondition",
-        type: "tuple",
-        internalType: "struct ClaimableERC721.ClaimCondition",
-        components: [
-          {
-            name: "availableSupply",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "allowlistMerkleRoot",
-            type: "bytes32",
-            internalType: "bytes32",
-          },
-          {
-            name: "pricePerUnit",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "currency",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "startTimestamp",
-            type: "uint48",
-            internalType: "uint48",
-          },
-          {
-            name: "endTimestamp",
-            type: "uint48",
-            internalType: "uint48",
-          },
-          { name: "auxData", type: "string", internalType: "string" },
-        ],
-      },
-    ],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
     name: "getModuleConfig",
     inputs: [],
     outputs: [
@@ -205,11 +31,7 @@ const input = [
             type: "tuple[]",
             internalType: "struct IModuleConfig.CallbackFunction[]",
             components: [
-              {
-                name: "selector",
-                type: "bytes4",
-                internalType: "bytes4",
-              },
+              { name: "selector", type: "bytes4", internalType: "bytes4" },
             ],
           },
           {
@@ -217,11 +39,7 @@ const input = [
             type: "tuple[]",
             internalType: "struct IModuleConfig.FallbackFunction[]",
             components: [
-              {
-                name: "selector",
-                type: "bytes4",
-                internalType: "bytes4",
-              },
+              { name: "selector", type: "bytes4", internalType: "bytes4" },
               {
                 name: "permissionBits",
                 type: "uint256",
@@ -236,122 +54,31 @@ const input = [
   },
   {
     type: "function",
-    name: "getSaleConfig",
-    inputs: [],
-    outputs: [
-      {
-        name: "primarySaleRecipient",
-        type: "address",
-        internalType: "address",
-      },
-    ],
+    name: "onTokenURI",
+    inputs: [{ name: "_id", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "uri", type: "string", internalType: "string" }],
     stateMutability: "view",
   },
   {
     type: "function",
-    name: "onInstall",
-    inputs: [{ name: "data", type: "bytes", internalType: "bytes" }],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "onUninstall",
-    inputs: [{ name: "data", type: "bytes", internalType: "bytes" }],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "setClaimCondition",
+    name: "setTokenURI",
     inputs: [
-      {
-        name: "_claimCondition",
-        type: "tuple",
-        internalType: "struct ClaimableERC721.ClaimCondition",
-        components: [
-          {
-            name: "availableSupply",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "allowlistMerkleRoot",
-            type: "bytes32",
-            internalType: "bytes32",
-          },
-          {
-            name: "pricePerUnit",
-            type: "uint256",
-            internalType: "uint256",
-          },
-          {
-            name: "currency",
-            type: "address",
-            internalType: "address",
-          },
-          {
-            name: "startTimestamp",
-            type: "uint48",
-            internalType: "uint48",
-          },
-          {
-            name: "endTimestamp",
-            type: "uint48",
-            internalType: "uint48",
-          },
-          { name: "auxData", type: "string", internalType: "string" },
-        ],
-      },
+      { name: "_id", type: "uint256", internalType: "uint256" },
+      { name: "_uri", type: "string", internalType: "string" },
     ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
-    type: "function",
-    name: "setSaleConfig",
+    type: "event",
+    name: "MetadataUpdate",
     inputs: [
-      {
-        name: "_primarySaleRecipient",
-        type: "address",
-        internalType: "address",
-      },
+      { name: "id", type: "uint256", indexed: false, internalType: "uint256" },
     ],
-    outputs: [],
-    stateMutability: "nonpayable",
+    anonymous: false,
   },
-  {
-    type: "error",
-    name: "BeforeMintCallbackERC721NotImplemented",
-    inputs: [],
-  },
-  {
-    type: "error",
-    name: "ClaimableIncorrectNativeTokenSent",
-    inputs: [],
-  },
-  {
-    type: "error",
-    name: "ClaimableIncorrectPriceOrCurrency",
-    inputs: [],
-  },
-  { type: "error", name: "ClaimableNotInAllowlist", inputs: [] },
-  { type: "error", name: "ClaimableOutOfSupply", inputs: [] },
-  { type: "error", name: "ClaimableOutOfTimeWindow", inputs: [] },
-  { type: "error", name: "ClaimableRequestMismatch", inputs: [] },
-  {
-    type: "error",
-    name: "ClaimableRequestOutOfTimeWindow",
-    inputs: [],
-  },
-  { type: "error", name: "ClaimableRequestUidReused", inputs: [] },
-  {
-    type: "error",
-    name: "ClaimableRequestUnauthorizedSignature",
-    inputs: [],
-  },
+  { type: "error", name: "MetadataNoMetadataForTokenId", inputs: [] },
 ];
-
 const parsed = formatAbi(input);
 
 console.log(parsed);

@@ -1,4 +1,9 @@
-import { contractType, getErcs, useContract } from "@thirdweb-dev/react";
+import {
+  contractType,
+  getAllDetectedFeatureNames,
+  getErcs,
+  useContract,
+} from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { detectFeatures } from "components/contract-components/utils";
@@ -260,6 +265,10 @@ export function useContractRouteConfig(
       ["PermissionsEnumerable"],
     );
 
+    const detectedFeatureNames = contractQuery.contract?.abi
+      ? getAllDetectedFeatureNames(contractQuery.contract.abi)
+      : [];
+
     return {
       claimconditionExtensionDetection,
       detectedMetadata,
@@ -285,6 +294,7 @@ export function useContractRouteConfig(
       detectedModularExtension,
       hasNewClaimConditions,
       detectedPermissionEnumerable,
+      detectedFeatureNames,
     };
   }, [contractQuery]);
 
@@ -306,7 +316,18 @@ export function useContractRouteConfig(
       title: "Overview",
       path: "overview",
       // not lazy because this is typically the landing spot so we want it to always be there immediately
-      component: ContractOverviewPage,
+      component: () => (
+        <>
+          {contract && (
+            <ContractOverviewPage
+              contract={contract}
+              contractType={contractTypeQuery.data || "custom"}
+              detectedFeatureNames={contractData.detectedFeatureNames}
+            />
+          )}
+        </>
+      ),
+      isEnabled: contractQuery.isLoading ? "loading" : "enabled",
       isDefault: true,
     },
     {

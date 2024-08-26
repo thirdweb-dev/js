@@ -82,6 +82,9 @@ export type PayUIOptions = Prettify<
     buyWithFiat?:
       | {
           testMode?: boolean;
+          prefillSource?: {
+            currency?: "USD" | "CAD" | "GBP" | "EUR" | "JPY";
+          };
         }
       | false;
 
@@ -225,6 +228,19 @@ export type ConnectButton_detailsModalOptions = {
    * customize the Network selector shown in the `ConnectButton` Details Modal
    */
   networkSelector?: NetworkSelectorProps;
+
+  /**
+   * Hide the "Switch Wallet" button in the `ConnectButton` Details Modal.
+   *
+   * By default it is `false`
+   * @example
+   * ```tsx
+   * <ConnectButton detailsModal={{
+   *  hideSwitchWallet: true
+   * }} />
+   * ```
+   */
+  hideSwitchWallet?: boolean;
 
   /**
    * Hide the "Disconnect Wallet" button in the `ConnectButton` Details Modal.

@@ -1,19 +1,11 @@
-import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import type { ThirdwebContract } from "../../contract/contract.js";
 import { deployViaAutoFactory } from "../../contract/deployment/deploy-via-autofactory.js";
-import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
-import {
-  getOrDeployInfraContract,
-  getOrDeployInfraForPublishedContract,
-} from "../../contract/deployment/utils/bootstrap.js";
+import { getOrDeployInfraForPublishedContract } from "../../contract/deployment/utils/bootstrap.js";
 import { upload } from "../../storage/upload.js";
 import type { FileOrBufferOrString } from "../../storage/upload/types.js";
-import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
-import type { Account } from "../../wallets/interfaces/wallet.js";
-import { initialize as initCoreERC721 } from "../modular/__generated__/ERC721Core/write/initialize.js";
 import { initialize as initDropERC721 } from "./__generated__/DropERC721/write/initialize.js";
 import { initialize as initOpenEditionERC721 } from "./__generated__/OpenEditionERC721/write/initialize.js";
 import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write/initialize.js";
@@ -24,8 +16,7 @@ import { initialize as initTokenERC721 } from "./__generated__/TokenERC721/write
 export type ERC721ContractType =
   | "DropERC721"
   | "TokenERC721"
-  | "OpenEditionERC721"
-  | "ModularTokenERC721";
+  | "OpenEditionERC721";
 
 /**
  * @extension DEPLOY
@@ -94,8 +85,6 @@ export async function deployERC721Contract(
 
   const initializeTransaction = await getInitializeTransaction({
     client,
-    chain,
-    account,
     implementationContract,
     type,
     params,
@@ -113,22 +102,13 @@ export async function deployERC721Contract(
 
 async function getInitializeTransaction(options: {
   client: ThirdwebClient;
-  chain: Chain;
-  account: Account;
   implementationContract: ThirdwebContract;
   type: ERC721ContractType;
   params: ERC721ContractParams;
   accountAddress: string;
 }) {
-  const {
-    client,
-    implementationContract,
-    type,
-    params,
-    accountAddress,
-    chain,
-    account,
-  } = options;
+  const { client, implementationContract, type, params, accountAddress } =
+    options;
   const contractURI =
     options.params.contractURI ||
     (await upload({
@@ -188,75 +168,5 @@ async function getInitializeTransaction(options: {
         royaltyBps: params.royaltyBps || 0n,
         trustedForwarders: params.trustedForwarders || [],
       });
-    case "ModularTokenERC721": {
-      const { extendedMetadata } = await fetchPublishedContractMetadata({
-        client,
-        contractId: type,
-      });
-      const moduleNames =
-        extendedMetadata?.defaultModules?.map((e) => e.moduleName) || [];
-      // can't promise all this unfortunately, needs to be sequential because of nonces
-      const modules: string[] = [];
-      const moduleInstallData: Hex[] = [];
-      for (const module of moduleNames) {
-        const contract = await getOrDeployInfraContract({
-          client,
-          chain,
-          account,
-          contractId: module,
-          constructorParams: [],
-        });
-        modules.push(contract.address);
-        // TODO (modular) this should be more dynamic
-        switch (module) {
-          case "MintableERC721": {
-            const { encodeBytesOnInstallParams } = await import(
-              "../../extensions/modular/__generated__/MintableERC721/encode/encodeBytesOnInstall.js"
-            );
-            moduleInstallData.push(
-              encodeBytesOnInstallParams({
-                primarySaleRecipient: params.saleRecipient || accountAddress,
-              }),
-            );
-            break;
-          }
-          case "RoyaltyERC721": {
-            const { encodeBytesOnInstallParams } = await import(
-              "../../extensions/modular/__generated__/RoyaltyERC721/encode/encodeBytesOnInstall.js"
-            );
-            moduleInstallData.push(
-              encodeBytesOnInstallParams({
-                royaltyRecipient: params.royaltyRecipient || accountAddress,
-                royaltyBps: params.royaltyBps || 0n,
-              }),
-            );
-            break;
-          }
-          case "ClaimableERC721": {
-            const { encodeBytesOnInstallParams } = await import(
-              "../../extensions/modular/__generated__/ClaimableERC721/encode/encodeBytesOnInstall.js"
-            );
-            moduleInstallData.push(
-              encodeBytesOnInstallParams({
-                primarySaleRecipient: params.saleRecipient || accountAddress,
-              }),
-            );
-            break;
-          }
-          default: {
-            moduleInstallData.push("0x");
-          }
-        }
-      }
-      return initCoreERC721({
-        contract: implementationContract,
-        name: params.name || "",
-        symbol: params.symbol || "",
-        contractURI,
-        owner: params.defaultAdmin || accountAddress,
-        modules,
-        moduleInstallData,
-      });
-    }
   }
 }

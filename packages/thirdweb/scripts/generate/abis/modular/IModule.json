@@ -1,0 +1,3 @@
+[
+  "function getModuleConfig() pure returns ((bool registerInstallationCallback, bytes4[] requiredInterfaces, bytes4[] supportedInterfaces, (bytes4 selector)[] callbackFunctions, (bytes4 selector, uint256 permissionBits)[] fallbackFunctions))"
+]

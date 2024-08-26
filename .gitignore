@@ -30,3 +30,6 @@ sitemap*.xml
 # typedoc
 legacy_packages/*/typedoc/*
 packages/*/typedoc/*
+
+*storybook.log
+storybook-static

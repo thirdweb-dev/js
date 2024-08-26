@@ -1,29 +1,11 @@
-import type { FileOrBufferOrString } from "../../../storage/upload/types.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import {
   getBaseUriFromBatch,
   uploadOrExtractURIs,
 } from "../../../utils/ipfs.js";
-import type { Prettify } from "../../../utils/type-utils.js";
+import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { nextTokenIdToMint } from "../__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 import { lazyMint as generatedLazyMint } from "../__generated__/ILazyMint/write/lazyMint.js";
-
-/**
- * Represents the input data for creating an NFT (Non-Fungible Token).
- * @extension ERC721
- */
-type NFTInput = Prettify<
-  {
-    name?: string;
-    description?: string;
-    image?: FileOrBufferOrString;
-    animation_url?: FileOrBufferOrString;
-    external_url?: FileOrBufferOrString;
-    background_color?: string;
-    // TODO check if we truly need both of these?
-    properties?: Record<string, unknown> | Array<Record<string, unknown>>;
-  } & Record<string, unknown>
->;
 
 /**
  * @extension ERC721

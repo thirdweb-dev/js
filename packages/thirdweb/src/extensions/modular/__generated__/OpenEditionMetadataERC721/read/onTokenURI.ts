@@ -11,26 +11,19 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "onTokenURI" function.
  */
 export type OnTokenURIParams = {
-  id: AbiParameterToPrimitiveType<{
-    name: "_id";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
 };
 
 export const FN_SELECTOR = "0xcfc0cb96" as const;
 const FN_INPUTS = [
   {
-    name: "_id",
     type: "uint256",
-    internalType: "uint256",
+    name: "_id",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "string",
-    internalType: "string",
   },
 ] as const;
 

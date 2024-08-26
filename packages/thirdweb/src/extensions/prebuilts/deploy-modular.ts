@@ -10,9 +10,9 @@ import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { initialize as initCoreERC20 } from "../modular/__generated__/ERC20Core/write/initialize.js";
+import { initialize } from "../modular/__generated__/ERC20Core/write/initialize.js";
 
-export type CoreType = "ERC20";
+export type CoreType = "ERC20" | "ERC721" | "ERC1155";
 
 /**
  * @extension DEPLOY
@@ -28,15 +28,15 @@ export type ModularContractParams = {
   defaultAdmin?: string;
 };
 
-export type Module = {
-  getInstallData: (args: {
-    client: ThirdwebClient;
-    chain: Chain;
-    account: Account;
-  }) => Promise<{
-    address: Address;
-    encodedParams: Hex;
-  }>;
+export type ModuleInstaller = (args: {
+  client: ThirdwebClient;
+  chain: Chain;
+  account: Account;
+}) => Promise<ModuleInstallData>;
+
+export type ModuleInstallData = {
+  module: Address;
+  data: Hex;
 };
 
 /**
@@ -46,7 +46,7 @@ export type DeployModularContractOptions = Prettify<
   ClientAndChainAndAccount & {
     core: CoreType;
     params: ModularContractParams;
-    modules: Module[];
+    modules?: ModuleInstaller[];
     publisher?: string;
   }
 >;
@@ -71,10 +71,10 @@ export type DeployModularContractOptions = Prettify<
  *    symbol: "MT",
  * },
  * modules: [
- *   claimableERC721Module({
+ *   ClaimableERC721.module({
  *     primarySaleRecipient: "0x...",
  *   }),
- *   royaltyModule({
+ *   RoyaltyERC721.module({
  *     royaltyRecipient: "0x...",
  *     royaltyBps: 500n,
  *   }),
@@ -92,14 +92,15 @@ export async function deployModularContract(
     publisher,
     core,
     params: coreParams,
-    modules,
+    modules = [],
   } = options;
+  const contractId = getContractId(core);
   const { cloneFactoryContract, implementationContract } =
     await getOrDeployInfraForPublishedContract({
       chain,
       client,
       account,
-      contractId: core,
+      contractId,
       constructorParams: [],
       publisher,
     });
@@ -108,7 +109,7 @@ export async function deployModularContract(
     chain,
     account,
     implementationContract,
-    core,
+    contractId,
     coreParams,
     accountAddress: getAddress(account.address),
     modules,
@@ -127,15 +128,15 @@ async function getInitializeTransaction(options: {
   chain: Chain;
   account: Account;
   implementationContract: ThirdwebContract;
-  core: CoreType;
+  contractId: string;
   coreParams: ModularContractParams;
   accountAddress: Address;
-  modules: Module[];
+  modules: ModuleInstaller[];
 }) {
   const {
     client,
     implementationContract,
-    core,
+    contractId,
     coreParams,
     modules,
     accountAddress,
@@ -158,22 +159,25 @@ async function getInitializeTransaction(options: {
       ],
     })) ||
     "";
-  switch (core) {
-    case "ERC20CoreInitializable": // FIXME: remove
-    case "ERC20": {
+  switch (contractId) {
+    case "ERC20CoreInitializable":
+    case "ERC721CoreInitializable":
+    case "ERC1155CoreInitializable": {
       // can't promise all this unfortunately, needs to be sequential because of nonces
       const moduleAddresses: Hex[] = [];
       const moduleInstallData: Hex[] = [];
-      for (const module of modules) {
-        const { address, encodedParams } = await module.getInstallData({
+      for (const installer of modules) {
+        // this might deploy the module if not already deployed
+        const installData = await installer({
           client,
           chain,
           account,
         });
-        moduleAddresses.push(address);
-        moduleInstallData.push(encodedParams);
+        moduleAddresses.push(installData.module);
+        moduleInstallData.push(installData.data);
       }
-      return initCoreERC20({
+      // all 3 cores have the same initializer
+      return initialize({
         contract: implementationContract,
         owner: coreParams.defaultAdmin
           ? getAddress(coreParams.defaultAdmin)
@@ -185,5 +189,20 @@ async function getInitializeTransaction(options: {
         moduleInstallData,
       });
     }
+    default:
+      throw new Error(`Unsupported core type: ${contractId}`);
+  }
+}
+
+function getContractId(core: CoreType) {
+  switch (core) {
+    case "ERC20":
+      return "ERC20CoreInitializable";
+    case "ERC721":
+      return "ERC721CoreInitializable";
+    case "ERC1155":
+      return "ERC1155CoreInitializable";
+    default:
+      throw new Error(`Unsupported core type: ${core}`);
   }
 }

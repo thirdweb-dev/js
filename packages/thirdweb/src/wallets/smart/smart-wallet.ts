@@ -9,7 +9,7 @@ import type {
   CreateWalletArgs,
   WalletConnectionOption,
 } from "../wallet-types.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
+import { getDefaultAccountFactory } from "./lib/constants.js";
 
 /**
  * Creates a ERC4337 smart wallet based on a admin account.
@@ -170,7 +170,9 @@ export function smartWallet(
       }
       // check if factory is deployed
       const factory = getContract({
-        address: createOptions.factoryAddress || DEFAULT_ACCOUNT_FACTORY,
+        address:
+          createOptions.factoryAddress ||
+          getDefaultAccountFactory(createOptions.overrides?.entrypointAddress),
         chain: newChain,
         client: lastConnectOptions.client,
       });

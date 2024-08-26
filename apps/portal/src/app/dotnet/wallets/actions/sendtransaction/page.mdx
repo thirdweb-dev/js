@@ -1,19 +1,19 @@
 import { Details, createMetadata } from "@doc";
 
 export const metadata = createMetadata({
-	title: "SmartWallet.SendTransaction | Thirdweb .NET SDK",
+	title: "IThirdwebWallet.SendTransaction | Thirdweb .NET SDK",
 	description:
-		"Sends a raw transaction as a user operation from the connected Smart Wallet.",
+		"Sends a raw transaction from the connected wallet and returns a hash.",
 });
 
-# SmartWallet.SendTransaction
+# IThirdwebWallet.SendTransaction
 
-Sends a raw transaction as a user operation from the connected Smart Wallet. It is recommended to use `ThirdwebContract.Write` instead.
+Sends a raw transaction from the connected wallet (if supported) and returns the hash. It is recommended to use `ThirdwebContract.Write` instead.
 
 ## Usage
 
 ```csharp
-string transactionHash = await SmartWallet.SendTransaction(new ThirdwebTransactionInput(...));
+string transactionHash = await wallet.SendTransaction(new ThirdwebTransactionInput(...));
 ```
 
 <Details summary="Parameters">

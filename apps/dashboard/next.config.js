@@ -5,8 +5,8 @@ const ContentSecurityPolicy = `
   img-src * data: blob:;
   media-src * data: blob:;
   object-src 'none';
-  style-src 'self' 'unsafe-inline';
-  font-src 'self';
+  style-src 'self' 'unsafe-inline' https://vercel.live;
+  font-src 'self' https://vercel.live https://assets.vercel.com;
   frame-src * data:;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' 'inline-speculation-rules' *.thirdweb.com *.thirdweb-dev.com vercel.live js.stripe.com pg.paper.xyz portal.usecontext.io;
   connect-src * data: blob:;

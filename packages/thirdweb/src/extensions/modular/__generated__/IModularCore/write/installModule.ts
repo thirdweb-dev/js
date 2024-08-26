@@ -14,28 +14,21 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type InstallModuleParams = WithOverrides<{
   moduleContract: AbiParameterToPrimitiveType<{
-    name: "moduleContract";
     type: "address";
-    internalType: "address";
+    name: "moduleContract";
   }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
 export const FN_SELECTOR = "0x8da798da" as const;
 const FN_INPUTS = [
   {
-    name: "moduleContract",
     type: "address",
-    internalType: "address",
+    name: "moduleContract",
   },
   {
-    name: "data",
     type: "bytes",
-    internalType: "bytes",
+    name: "data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;
