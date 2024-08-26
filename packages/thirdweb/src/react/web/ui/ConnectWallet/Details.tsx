@@ -100,6 +100,7 @@ import { ViewNFTs } from "./screens/ViewNFTs.js";
 import { ViewTokens } from "./screens/ViewTokens.js";
 import { WalletConnectReceiverScreen } from "./screens/WalletConnectReceiverScreen.js";
 import type { WalletDetailsModalScreen } from "./screens/types.js";
+import { Avatar } from "./Avatar.js";
 
 const TW_CONNECTED_WALLET = "tw-connected-wallet";
 
@@ -203,18 +204,14 @@ export const ConnectedWalletDetails: React.FC<{
           height: "35px",
         }}
       >
-        {ensAvatarQuery.data ? (
-          <img
-            alt=""
-            src={ensAvatarQuery.data}
-            style={{
-              width: "100%",
-              height: "100%",
-            }}
-          />
-        ) : (
-          activeAccount && <Blobbie address={activeAccount.address} size={35} />
-        )}
+        <Avatar
+          client={client}
+          walletAddress={activeAccount?.address}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+        />
       </Container>
       <Container
         flex="column"
@@ -387,23 +384,14 @@ function DetailsModal(props: {
           overflow: "hidden",
         }}
       >
-        {ensAvatarQuery.data ? (
-          <img
-            src={ensAvatarQuery.data}
-            style={{
-              width: iconSize.xxl,
-              height: iconSize.xxl,
-            }}
-            alt=""
-          />
-        ) : (
-          activeAccount && (
-            <Blobbie
-              address={activeAccount.address}
-              size={Number(iconSize.xxl)}
-            />
-          )
-        )}
+        <Avatar
+          client={client}
+          walletAddress={activeAccount?.address}
+          style={{
+            width: `${Number(iconSize.xxl)}px`,
+            height: `${Number(iconSize.xxl)}px`,
+          }}
+        />
       </Container>
       <Container
         style={{

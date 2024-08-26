@@ -108,7 +108,10 @@ export function LinkedProfilesScreen(props: {
                       overflow: "hidden",
                     }}
                   >
-                    <Blobbie address={profile.details.address} size={24} />
+                    <Blobbie
+                      address={profile.details.address}
+                      style={{ width: "24px", height: "24px" }}
+                    />
                   </Container>
                 ) : (
                   <Img

@@ -178,4 +178,6 @@ export { useConnectionManager } from "../react/core/providers/connection-manager
  */
 export { Blobbie } from "../react/web/ui/ConnectWallet/Blobbie.js";
 
+export { Avatar } from "../react/web/ui/ConnectWallet/Avatar.js";
+
 export { useSiweAuth } from "../react/core/hooks/auth/useSiweAuth.js";
