@@ -33,7 +33,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@coinbase/cbpay-js": "^1.10.0"
+    "@coinbase/cbpay-js": "^2.2.1"
   },
   "devDependencies": {
     "@preconstruct/cli": "2.7.0",
