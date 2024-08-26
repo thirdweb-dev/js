@@ -25,11 +25,13 @@ const COLOR_OPTIONS = [
  * A unique gradient avatar based on the provided address.
  * @param props The component props.
  * @param props.address The address to generate the gradient with.
- * @param props.size The size of each side of the square avatar (in pixels)
+ * @param props.style The CSS style for the component - excluding `backgroundImage`
+ * @param props.className The className for the component
  */
 export function Blobbie(props: {
   address: Address;
   style?: Omit<React.CSSProperties, "backgroundImage">;
+  className?: string;
 }) {
   const id = useId();
   const colors = useMemo(
@@ -47,6 +49,7 @@ export function Blobbie(props: {
         ...props.style,
         backgroundImage: `radial-gradient(ellipse at left bottom, ${colors[0]}, ${colors[1]})`,
       }}
+      className={props.className}
     />
   );
 }
