@@ -42,7 +42,7 @@ import {
   prepareBatchExecute,
   prepareExecute,
 } from "./lib/calls.js";
-import { DEFAULT_ACCOUNT_FACTORY } from "./lib/constants.js";
+import { getDefaultAccountFactory } from "./lib/constants.js";
 import {
   createUnsignedUserOp,
   signUserOp,
@@ -50,11 +50,13 @@ import {
 } from "./lib/userop.js";
 import { isNativeAAChain } from "./lib/utils.js";
 import type {
+  BundlerOptions,
   PaymasterResult,
   SmartAccountOptions,
   SmartWalletConnectionOptions,
   SmartWalletOptions,
-  UserOperation,
+  UserOperationV06,
+  UserOperationV07,
 } from "./types.js";
 
 /**
@@ -95,7 +97,9 @@ export async function connectSmartWallet(
   }
 
   const options = creationOptions;
-  const factoryAddress = options.factoryAddress ?? DEFAULT_ACCOUNT_FACTORY;
+  const factoryAddress =
+    options.factoryAddress ??
+    getDefaultAccountFactory(creationOptions.overrides?.entrypointAddress);
   const chain = connectChain ?? options.chain;
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
@@ -182,7 +186,9 @@ async function createSmartAccount(
       const erc20Paymaster = options.overrides?.erc20Paymaster;
       let paymasterOverride:
         | undefined
-        | ((userOp: UserOperation) => Promise<PaymasterResult>) = undefined;
+        | ((
+            userOp: UserOperationV06 | UserOperationV07,
+          ) => Promise<PaymasterResult>) = undefined;
       if (erc20Paymaster) {
         await approveERC20({
           accountContract,
@@ -195,6 +201,9 @@ async function createSmartAccount(
               erc20Paymaster.address as Hex,
               erc20Paymaster?.token as Hex,
             ]),
+            // for 0.7 compatibility
+            paymaster: erc20Paymaster.address as Hex,
+            paymasterData: "0x",
           };
         };
         paymasterOverride = options.overrides?.paymaster || paymasterCallback;
@@ -567,13 +576,20 @@ async function _sendUserOp(args: {
     overrides: options.overrides,
   });
   const signedUserOp = await signUserOp({
+    client: options.client,
     chain: options.chain,
     adminAccount: options.personalAccount,
     entrypointAddress: options.overrides?.entrypointAddress,
     userOp: unsignedUserOp,
   });
+  const bundlerOptions: BundlerOptions = {
+    chain: options.chain,
+    client: options.client,
+    bundlerUrl: options.overrides?.bundlerUrl,
+    entrypointAddress: options.overrides?.entrypointAddress,
+  };
   const userOpHash = await bundleUserOp({
-    options,
+    options: bundlerOptions,
     userOp: signedUserOp,
   });
   // wait for tx receipt rather than return the userOp hash

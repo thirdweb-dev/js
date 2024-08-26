@@ -2,11 +2,10 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
 import { typedData } from "../../../test/src/typed-data.js";
 import { verifySignature } from "../../auth/verify-signature.js";
-import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
 import { type ThirdwebContract, getContract } from "../../contract/contract.js";
 import { parseEventLogs } from "../../event/actions/parse-logs.js";
-import { baseSepolia } from "../../exports/chains.js";
 
+import { sepolia } from "../../chains/chain-definitions/sepolia.js";
 import {
   addAdmin,
   adminUpdatedEvent,
@@ -19,9 +18,11 @@ import { estimateGasCost } from "../../transaction/actions/estimate-gas-cost.js"
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendBatchTransaction } from "../../transaction/actions/send-batch-transaction.js";
 import { waitForReceipt } from "../../transaction/actions/wait-for-tx-receipt.js";
+import { getAddress } from "../../utils/address.js";
 import { isContractDeployed } from "../../utils/bytecode/is-contract-deployed.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
 import { generateAccount } from "../utils/generateAccount.js";
+import { ENTRYPOINT_ADDRESS_v0_7 } from "./lib/constants.js";
 import { smartWallet } from "./smart-wallet.js";
 
 let wallet: Wallet;
@@ -30,17 +31,16 @@ let smartWalletAddress: string;
 let personalAccount: Account;
 let accountContract: ThirdwebContract;
 
-const chain = arbitrumSepolia;
+const chain = sepolia;
 const client = TEST_CLIENT;
 const contract = getContract({
   client,
   chain,
-  address: "0x6A7a26c9a595E6893C255C9dF0b593e77518e0c3",
+  address: "0xe2cb0eb5147b42095c2FfA6F7ec953bb0bE347D8",
 });
-const factoryAddress = "0x564cf6453a1b0FF8DB603E92EA4BbD410dea45F3"; // pre 712
 
 describe.runIf(process.env.TW_SECRET_KEY).sequential(
-  "SmartWallet core tests",
+  "SmartWallet 0.7 core tests",
   {
     retry: 0,
     timeout: 240_000,
@@ -53,6 +53,9 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       wallet = smartWallet({
         chain,
         gasless: true,
+        overrides: {
+          entrypointAddress: ENTRYPOINT_ADDRESS_v0_7,
+        },
       });
       smartAccount = await wallet.connect({
         client: TEST_CLIENT,
@@ -83,7 +86,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
         [TransactionError: Error - Not authorized
 
         contract: ${contract.address}
-        chainId: 421614]
+        chainId: 11155111]
       `);
     });
 
@@ -102,7 +105,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(isDeployed).toEqual(true);
       const balance = await balanceOf({
         contract,
-        owner: smartWalletAddress,
+        owner: getAddress(smartWalletAddress),
         tokenId: 0n,
       });
       expect(balance).toEqual(1n);
@@ -147,7 +150,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       });
       const balance = await balanceOf({
         contract,
-        owner: smartWalletAddress,
+        owner: getAddress(smartWalletAddress),
         tokenId: 0n,
       });
       expect(balance).toEqual(3n);
@@ -198,108 +201,6 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       });
       expect(logs.some((l) => l.args.signer === newAdmin.address)).toBe(true);
       expect(logs.some((l) => l.args.isAdmin)).toBe(true);
-    });
-
-    it("can use a different factory without replay protection", async () => {
-      const wallet = smartWallet({
-        chain,
-        factoryAddress: factoryAddress,
-        gasless: true,
-      });
-
-      // should not be able to switch chains before connecting
-      await expect(
-        wallet.switchChain(baseSepolia),
-      ).rejects.toMatchInlineSnapshot(
-        "[Error: Cannot switch chain without a previous connection]",
-      );
-
-      const newAccount = await wallet.connect({ client, personalAccount });
-      const message = "hello world";
-      const signature = await newAccount.signMessage({ message });
-      const isValidV1 = await verifySignature({
-        message,
-        signature,
-        address: newAccount.address,
-        chain,
-        client,
-      });
-      expect(isValidV1).toEqual(true);
-      const isValidV2 = await checkContractWalletSignature({
-        message,
-        signature,
-        contract: getContract({
-          address: newAccount.address,
-          chain,
-          client,
-        }),
-      });
-      expect(isValidV2).toEqual(true);
-
-      // sign typed data
-      const signatureTyped = await newAccount.signTypedData({
-        ...typedData.basic,
-        primaryType: "Mail",
-      });
-      expect(signatureTyped.length).toBe(132);
-
-      // add admin
-      const newAdmin = await generateAccount({ client });
-      const receipt = await sendAndConfirmTransaction({
-        account: newAccount,
-        transaction: addAdmin({
-          account: newAccount,
-          adminAddress: newAdmin.address,
-          contract: getContract({
-            address: newAccount.address,
-            chain,
-            client,
-          }),
-        }),
-      });
-      const logs = parseEventLogs({
-        events: [adminUpdatedEvent()],
-        logs: receipt.logs,
-      });
-      expect(logs[0]?.args.signer).toBe(newAdmin.address);
-      expect(logs[0]?.args.isAdmin).toBe(true);
-
-      // should not be able to switch chains since factory not deployed elsewhere
-      await expect(
-        wallet.switchChain(baseSepolia),
-      ).rejects.toMatchInlineSnapshot(
-        "[Error: Factory contract not deployed on chain: 84532]",
-      );
-
-      // check can disconnnect
-      await wallet.disconnect();
-      expect(wallet.getAccount()).toBeUndefined();
-    });
-
-    it("can switch chains", async () => {
-      const baseSepoliaEdition = getContract({
-        address: "0x638263e3eAa3917a53630e61B1fBa685308024fa",
-        chain: baseSepolia,
-        client: TEST_CLIENT,
-      });
-      await wallet.switchChain(baseSepolia);
-      const tx = await sendAndConfirmTransaction({
-        transaction: claimTo({
-          contract: baseSepoliaEdition,
-          quantity: 1n,
-          to: smartWalletAddress,
-          tokenId: 0n,
-        }),
-        // biome-ignore lint/style/noNonNullAssertion: should be set after switching chains
-        account: wallet.getAccount()!,
-      });
-      expect(tx.transactionHash).toHaveLength(66);
-      const balance = await balanceOf({
-        contract: baseSepoliaEdition,
-        owner: smartWalletAddress,
-        tokenId: 0n,
-      });
-      expect(balance).toEqual(1n);
     });
   },
 );

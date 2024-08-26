@@ -21,7 +21,9 @@ export type SmartWalletOptions = Prettify<
         address: string;
         token: string;
       };
-      paymaster?: (userOp: UserOperation) => Promise<PaymasterResult>;
+      paymaster?: (
+        userOp: UserOperationV06 | UserOperationV07,
+      ) => Promise<PaymasterResult>;
       predictAddress?: (factoryContract: ThirdwebContract) => Promise<string>;
       createAccount?: (
         factoryContract: ThirdwebContract,
@@ -74,21 +76,51 @@ export type SmartWalletConnectionOptions = {
   chain?: Chain;
 };
 
-export type UserOperation = {
+export type UserOperationV06 = {
   sender: Address;
   nonce: bigint;
-  initCode: Hex | Uint8Array;
-  callData: Hex | Uint8Array;
+  initCode: Hex;
+  callData: Hex;
   callGasLimit: bigint;
   verificationGasLimit: bigint;
   preVerificationGas: bigint;
   maxFeePerGas: bigint;
   maxPriorityFeePerGas: bigint;
-  paymasterAndData: Hex | Uint8Array;
-  signature: Hex | Uint8Array;
+  paymasterAndData: Hex;
+  signature: Hex;
 };
 
-export type UserOperationHexed = {
+export type UserOperationV07 = {
+  sender: string; // address
+  nonce: bigint; // uint256
+  factory: string | undefined; // address
+  factoryData: Hex; // bytes
+  callData: Hex; // bytes
+  callGasLimit: bigint; // uint256
+  verificationGasLimit: bigint; // uint256
+  preVerificationGas: bigint; // uint256
+  maxFeePerGas: bigint; // uint256
+  maxPriorityFeePerGas: bigint; // uint256
+  paymaster: string | undefined; // address
+  paymasterData: Hex; // bytes
+  paymasterVerificationGasLimit: bigint; // uint256
+  paymasterPostOpGasLimit: bigint; // uint256
+  signature: Hex; // bytes
+};
+
+export type PackedUserOperation = {
+  sender: string; // address
+  nonce: bigint; // uint256
+  initCode: Hex; // bytes
+  callData: Hex; // bytes
+  accountGasLimits: Hex; // bytes32
+  preVerificationGas: bigint; // uint256
+  gasFees: Hex; // bytes32
+  paymasterAndData: Hex; // bytes
+  signature: Hex; // bytes
+};
+
+export type UserOperationV06Hexed = {
   sender: Address;
   nonce: Hex;
   initCode: Hex;
@@ -102,18 +134,50 @@ export type UserOperationHexed = {
   signature: Hex;
 };
 
+export type UserOperationV07Hexed = {
+  sender: Hex;
+  nonce: Hex;
+  factory: Hex;
+  factoryData: Hex;
+  callData: Hex;
+  callGasLimit: Hex;
+  verificationGasLimit: Hex;
+  preVerificationGas: Hex;
+  maxFeePerGas: Hex;
+  maxPriorityFeePerGas: Hex;
+  paymaster: Hex;
+  paymasterVerificationGasLimit: Hex;
+  paymasterPostOpGasLimit: Hex;
+  paymasterData: Hex;
+  signature: Hex;
+};
+
 export type PaymasterResult = {
-  paymasterAndData: string;
   preVerificationGas?: bigint;
   verificationGasLimit?: bigint;
   callGasLimit?: bigint;
-};
+} & (
+  | {
+      // v0.6 types
+      paymasterAndData: string;
+    }
+  | {
+      // v0.7 types
+      paymaster: string;
+      paymasterData: string;
+      paymasterVerificationGasLimit?: bigint;
+      paymasterPostOpGasLimit?: bigint;
+    }
+);
 
 export type EstimationResult = {
   preVerificationGas: bigint;
   verificationGas: bigint;
   verificationGasLimit: bigint;
   callGasLimit: bigint;
+  // v0.7 types
+  paymasterVerificationGasLimit?: bigint;
+  paymasterPostOpGasLimit?: bigint;
 };
 
 export type GasPriceResult = {
