@@ -143,7 +143,7 @@
     "eslint": "8.57.0",
     "eslint-config-biome": "^1.7.3",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-promise": "^6.2.0",
+    "eslint-plugin-promise": "^7.1.0",
     "eslint-plugin-react-compiler": "0.0.0-experimental-51a85ea-20240601",
     "eslint-plugin-storybook": "^0.8.0",
     "knip": "^5.23.1",

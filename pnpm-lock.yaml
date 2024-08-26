@@ -136,7 +136,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+        version: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
       yalc:
         specifier: 1.0.0-pre.53
         version: 1.0.0-pre.53
@@ -499,8 +499,8 @@ importers:
         specifier: ^2.29.1
         version: 2.29.1(@typescript-eslint/parser@7.14.1(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)
       eslint-plugin-promise:
-        specifier: ^6.2.0
-        version: 6.2.0(eslint@8.57.0)
+        specifier: ^7.1.0
+        version: 7.1.0(eslint@8.57.0)
       eslint-plugin-react-compiler:
         specifier: 0.0.0-experimental-51a85ea-20240601
         version: 0.0.0-experimental-51a85ea-20240601(eslint@8.57.0)
@@ -12380,9 +12380,9 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-promise@6.2.0:
-    resolution: {integrity: sha512-QmAqwizauvnKOlifxyDj2ObfULpHQawlg/zQdgEixur9vl0CvZGv/LCJV2rtj3210QCoeGBzVMfMXqGAOr/4fA==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+  eslint-plugin-promise@7.1.0:
+    resolution: {integrity: sha512-8trNmPxdAy3W620WKDpaS65NlM5yAumod6XeC4LOb+jxlkG4IVcp68c6dXY2ev+uT4U1PtG57YDV6EGAXN0GbQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       eslint: 8.57.0
 
@@ -25160,7 +25160,7 @@ snapshots:
     dependencies:
       '@codspeed/core': 3.1.0
       vite: 5.4.2(@types/node@20.14.9)(terser@5.31.0)
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
     transitivePeerDependencies:
       - debug
 
@@ -31515,7 +31515,7 @@ snapshots:
       redent: 3.0.0
     optionalDependencies:
       '@types/bun': 1.0.12
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
 
   '@testing-library/jest-dom@6.4.5(@types/bun@1.0.12)(vitest@1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0))':
     dependencies:
@@ -32317,7 +32317,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -32352,7 +32352,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -35988,7 +35988,7 @@ snapshots:
       '@types/eslint': 8.56.10
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
 
-  eslint-plugin-promise@6.2.0(eslint@8.57.0):
+  eslint-plugin-promise@7.1.0(eslint@8.57.0):
     dependencies:
       eslint: 8.57.0
 
@@ -45549,7 +45549,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.0
 
-  vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0):
+  vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
