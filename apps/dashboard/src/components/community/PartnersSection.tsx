@@ -44,7 +44,7 @@ const partnersCompanies = [
   },
 ];
 
-const Partners = () => {
+const PartnersSection = () => {
   return (
     <Flex
       alignItems="center"
@@ -66,4 +66,4 @@ const Partners = () => {
   );
 };
 
-export default Partners;
+export default PartnersSection;

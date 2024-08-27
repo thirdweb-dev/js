@@ -1,8 +1,9 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { Aurora } from "components/homepage/Aurora";
 import { Heading, Text } from "tw-components";
 
-const ThreeBoxLayout = () => {
+const StartupCard = () => {
   const credits = {
     maxWidth: "252px",
     src: require("../../../public/assets/startup-program/buildandscale-image.png"),
@@ -24,41 +25,35 @@ const ThreeBoxLayout = () => {
     text: "Get connected to experts in the ecosystem, including proven founders, operators, VCs, angel investors and mentors who help founders in our program navigate challenges and opportunities.",
   };
 
-  const gradientOne = {
-    src: require("../../../public/assets/startup-program/gradient-1.png"),
-  };
-
   const cubeTopleft = {
     src: require("../../../public/assets/startup-program/cube-topleft.png"),
   };
 
-  const gradientThree = {
-    src: require("../../../public/assets/startup-program/gradient-3.png"),
-  };
-
   return (
     <Flex direction={{ base: "column", md: "row" }} wrap="wrap" gap={4} p={4}>
-      {/* Gradient Box */}
-      <Box position="absolute" top="312px" left="-238px" zIndex="-1">
-        <ChakraNextImage
-          src={gradientOne.src}
-          alt="description"
-          opacity={0.7}
-          display={{ base: "none", md: "block" }}
+      {/* Gradients */}
+      <Box display={{ base: "none", lg: "block" }}>
+        <Aurora
+          pos={{ left: "10%", top: "26%" }}
+          size={{ width: "100%", height: "700px" }}
+          color="hsl(330deg 85% 55% / 35%)"
+        />
+
+        <Aurora
+          pos={{ left: "98%", top: "20%" }}
+          size={{ width: "100%", height: "800px" }}
+          color="hsl(219deg 78% 30% / 75%)"
         />
       </Box>
       {/* Cube topleft */}
-      <Box position="absolute" top="1050px" left="-280" zIndex="-1">
+      <Box
+        position="absolute"
+        top="600px"
+        left="-280"
+        zIndex="-1"
+        display={{ base: "none", lg: "block" }}
+      >
         <ChakraNextImage src={cubeTopleft.src} alt="description" maxW="500px" />
-      </Box>
-      {/* Gradient Box */}
-      <Box position="absolute" top="80px" right="-400px" zIndex="1">
-        <ChakraNextImage
-          src={gradientThree.src}
-          alt="description"
-          maxW="1000px"
-          opacity={0.7}
-        />
       </Box>
 
       <Flex
@@ -163,10 +158,11 @@ const ThreeBoxLayout = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
+            height="100%"
           >
             <ChakraNextImage
-              width={{ base: "80%", lg: "100%" }}
-              height={{ base: "auto", lg: "300px" }}
+              width="100%"
+              height="100%"
               objectFit="cover"
               src={community.src}
               alt="community"
@@ -234,4 +230,4 @@ const ThreeBoxLayout = () => {
   );
 };
 
-export default ThreeBoxLayout;
+export default StartupCard;

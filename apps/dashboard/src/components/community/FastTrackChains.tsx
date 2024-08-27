@@ -42,7 +42,7 @@ const gradient = {
   src: require("../../../public/assets/startup-program/gradient-1.png"),
 };
 
-const FastTrack = () => {
+const FastTrackChains = () => {
   return (
     <Box display={{ base: "block", lg: "none" }}>
       <SimpleGrid columns={3} spacing={0}>
@@ -123,4 +123,4 @@ const FastTrack = () => {
   );
 };
 
-export default FastTrack;
+export default FastTrackChains;

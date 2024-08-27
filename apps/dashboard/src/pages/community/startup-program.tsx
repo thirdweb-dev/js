@@ -1,6 +1,9 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Container, Flex, Grid } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import FastTrackChains from "components/community/FastTrackChains";
+import PartnersSection from "components/community/PartnersSection";
+import StartupCard from "components/community/StartupCards";
 import { HomepageFooter } from "components/footer/Footer";
 import { Aurora } from "components/homepage/Aurora";
 import { LandingImages } from "components/landing-pages/card-with-image";
@@ -11,9 +14,6 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import FastTrack from "./fast-track";
-import Partners from "./partners";
-import ThreeBoxLayout from "./three-box-layout";
 
 const TRACKING_CATEGORY = "startup-program";
 
@@ -112,39 +112,52 @@ const StartupProgram: ThirdwebNextPage = () => {
       <NextSeo {...SEO} />
       <HomepageTopNav />
 
-      <Box overflow={"hidden"} position="relative">
-        {/* Image placed on the top top */}
-        <Box position="absolute" top="0" left="0" zIndex="1">
-          <ChakraNextImage src={gradientSecond.src} alt="description" />
-        </Box>
+      {/* Image placed on the top top */}
+      <Box position="absolute" top="0" left="0" zIndex="1">
+        <ChakraNextImage
+          src={gradientSecond.src}
+          width="100%"
+          height="auto"
+          objectFit="contain"
+          alt="description"
+        />
+      </Box>
 
-        {/* Cube Top */}
-        <Box
-          position="absolute"
-          top="-150px"
-          left="50%"
-          transform="translateX(-50%)"
-          zIndex="1"
-          display={{ base: "none", md: "block" }}
+      {/* Cube Top */}
+      <Box
+        position="absolute"
+        top="-150px"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="1"
+        display={{ base: "none", md: "block" }}
+      >
+        <ChakraNextImage src={cubeTop.src} alt="description" maxW="500px" />
+      </Box>
+
+      {/* Aurora gradient */}
+      <HomepageSection overflow={"hidden"}>
+        {/* top */}
+        <Aurora
+          pos={{ left: "50%", top: "0%" }}
+          size={{ width: "2400px", height: "1400px" }}
+          color="hsl(260deg 78% 35% / 20%)"
+        />
+      </HomepageSection>
+
+      {/* CTA hero */}
+      <HomepageSection pb={6} overflow={"hidden"}>
+        <Flex
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
         >
-          <ChakraNextImage src={cubeTop.src} alt="description" maxW="500px" />
-        </Box>
-
-        <HomepageSection overflow={"hidden"}>
-          {/* top */}
-          <Aurora
-            pos={{ left: "50%", top: "0%" }}
-            size={{ width: "2400px", height: "1400px" }}
-            color="hsl(260deg 78% 35% / 20%)"
-          />
-
           <Flex
             flexDir="column"
             alignItems={{ base: "center", md: "flex-start" }}
-            mt={{ base: 20, md: 140 }}
             width="100%"
             pt="50px"
-            px="20px"
+            px="30px"
           >
             <Heading
               fontSize={{ base: "48px", md: "80px" }}
@@ -191,73 +204,142 @@ const StartupProgram: ThirdwebNextPage = () => {
             >
               Apply Now
             </TrackedLinkButton>
-            {/* Cube Topright */}
-            <Box
-              position="absolute"
-              top={{ base: "400px", md: "-100px" }}
-              right={{ base: "-200px", md: "-150px" }}
-              zIndex="-1"
-            >
-              <ChakraNextImage
-                src={cubeRight.src}
-                alt="description"
-                maxW={{ base: "400px", md: "680px" }}
-              />
-            </Box>
           </Flex>
-
-          <Container
-            maxW="container.page"
-            as={Flex}
-            flexDir="column"
-            gap={{ base: "80px", md: "190px" }}
-            mt={{ base: "120px", md: "170px" }}
-            mb={60}
-            overflow="hidden"
+          <Box
+            position="absolute"
+            top="-15%"
+            right="-20%"
+            zIndex="-1"
+            display={{ base: "none", md: "none", lg: "block" }}
           >
-            <ThreeBoxLayout />
-
-            <LandingImages
-              title={
-                <Box maxW={"700px"}>
-                  <LandingSectionHeading
-                    title="The best startups launch with thirdweb"
-                    blackToWhiteTitle=""
-                  />
-                </Box>
-              }
-              gap="44px"
-              images={trustedCompanies}
+            <ChakraNextImage
+              src={cubeRight.src}
+              alt="description"
+              maxW={{ base: "400px", md: "650px" }}
             />
+          </Box>
+        </Flex>
+      </HomepageSection>
 
-            <Flex
-              flexDir="column"
-              alignItems="center"
-              w="full"
-              mb={{ base: "150px", xl: "600px" }}
+      {/* Boxes Layout */}
+      <HomepageSection pb={32} overflowX="hidden">
+        <Flex
+          pt={24}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <StartupCard />
+        </Flex>
+      </HomepageSection>
+
+      {/* Startups logos */}
+      <HomepageSection pb={32} overflow={"hidden"}>
+        <Flex
+          pt={24}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <LandingImages
+            title={
+              <Box maxW={"700px"}>
+                <LandingSectionHeading
+                  title="The best startups launch with thirdweb"
+                  blackToWhiteTitle=""
+                />
+              </Box>
+            }
+            gap="44px"
+            images={trustedCompanies}
+          />
+        </Flex>
+      </HomepageSection>
+
+      {/* Partners */}
+      <HomepageSection pb={32} overflow={"hidden"}>
+        <Flex
+          pt={24}
+          // mb={{ base: 24, md: -24 }}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <Flex
+            flexDir="column"
+            alignItems="center"
+            w="full"
+            mb={{ base: "150px", xl: "600px" }}
+          >
+            <Heading
+              fontSize={{ base: "32px", md: "48px" }}
+              textAlign="center"
+              mt={46}
             >
-              <Heading
-                fontSize={{ base: "32px", md: "48px" }}
-                textAlign="center"
-                mt={46}
-              >
-                Partners
-              </Heading>
+              Partners
+            </Heading>
 
-              <Partners />
-            </Flex>
+            <PartnersSection />
+          </Flex>
+        </Flex>
+      </HomepageSection>
 
-            <Flex
-              flexDir="column"
-              alignItems="center"
-              justifyContent="center"
-              width="100%"
-              position="relative"
-              my="40px"
-            >
-              <FastTrack />
-            </Flex>
+      {/* Fast Track */}
+      <HomepageSection pb={32} overflow={"hidden"}>
+        <Flex
+          pt={24}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <Flex
+            flexDir="column"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            position="relative"
+            my="40px"
+          >
+            <FastTrackChains />
+          </Flex>
+        </Flex>
+      </HomepageSection>
 
+      {/* CTA Founders */}
+      <HomepageSection pb={32} overflow={"hidden"}>
+        <Box position="relative" mb="20">
+          <ChakraNextImage
+            src={gradientFive.src}
+            alt="description"
+            width="100%"
+            opacity={0.6}
+            position="absolute"
+            bottom={0}
+            left="50%"
+            top="10%"
+            transform="translateX(-50%)"
+            zIndex={0}
+          />
+          <ChakraNextImage
+            src={cubeBottom.src}
+            alt="description"
+            maxW="500px"
+            position="absolute"
+            left="60%"
+            bottom="-100%"
+            transform="translateX(-50%)"
+            zIndex={1}
+            display={{ base: "none", lg: "block" }}
+          />
+
+          <Flex
+            pt={14}
+            flexDir="column"
+            gap={{ base: 6, md: 8 }}
+            align={{ base: "initial", md: "center" }}
+            zIndex={1}
+            position="relative"
+          >
             <Flex flexDir="column" alignItems="center" width="100%" px="20px">
               <Heading
                 fontSize={{ base: "48px", md: "80px" }}
@@ -272,6 +354,7 @@ const StartupProgram: ThirdwebNextPage = () => {
                 alignItems="center"
                 gap={8}
                 paddingTop={10}
+                pt={{ base: 0, md: 6 }}
               >
                 <Grid
                   templateColumns={{ base: "1fr", md: "1fr 1fr" }}
@@ -331,57 +414,30 @@ const StartupProgram: ThirdwebNextPage = () => {
                 Apply Now
               </TrackedLinkButton>
             </Flex>
-            {/* Gradient Box */}
-            <Box
-              position="absolute"
-              bottom="-380px"
-              left={{ base: 0, md: "50px" }}
-              zIndex="-1"
-            >
-              <ChakraNextImage
-                src={gradientFive.src}
-                alt="description"
-                maxW="1000px"
-                opacity={0.6}
-              />
-            </Box>
-            {/* Cube Bottom */}
-            <Box
-              position="absolute"
-              bottom="-450px"
-              left="60%"
-              transform="translateX(-50%)"
-              zIndex="1"
-            >
-              <ChakraNextImage
-                src={cubeBottom.src}
-                alt="description"
-                maxW="500px"
-              />
-            </Box>
-          </Container>
-        </HomepageSection>
+          </Flex>
+        </Box>
+      </HomepageSection>
 
-        {/* Ellipse */}
-        <Box
-          position="absolute"
-          bottom="34%"
-          left="50%"
-          transform="translateX(-50%)"
+      {/* Ellipse */}
+      <Box
+        position="absolute"
+        bottom="30%"
+        left="50%"
+        transform="translateX(-50%)"
+        width="100%"
+        height="auto"
+        display={{ base: "none", sm: "none", md: "none", lg: "block" }}
+        mb={{ base: "none", md: "100px" }}
+      >
+        <ChakraNextImage
+          src={ellipse.src}
+          alt="description"
           width="100%"
           height="auto"
-          display={{ base: "none", sm: "none", md: "none", lg: "block" }}
-        >
-          <ChakraNextImage
-            src={ellipse.src}
-            alt="description"
-            width="100%"
-            height="auto"
-            objectFit="cover"
-          />
-        </Box>
-        <HomepageFooter />
+          objectFit="cover"
+        />
       </Box>
+      <HomepageFooter />
     </>
   );
 };
