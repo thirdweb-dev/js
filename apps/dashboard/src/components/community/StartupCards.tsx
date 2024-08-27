@@ -1,6 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { Aurora } from "components/homepage/Aurora";
 import { Heading, Text } from "tw-components";
 
 const StartupCard = () => {
@@ -31,20 +30,6 @@ const StartupCard = () => {
 
   return (
     <Flex direction={{ base: "column", md: "row" }} wrap="wrap" gap={4} p={4}>
-      {/* Gradients */}
-      <Box display={{ base: "none", xl: "block" }} overflow="hidden">
-        <Aurora
-          pos={{ left: "10%", top: "26%" }}
-          size={{ width: "100%", height: "700px" }}
-          color="hsl(330deg 85% 55% / 35%)"
-        />
-
-        <Aurora
-          pos={{ left: "98%", top: "20%" }}
-          size={{ width: "100%", height: "800px" }}
-          color="hsl(219deg 78% 30% / 75%)"
-        />
-      </Box>
       {/* Cube topleft */}
       <Box
         position="absolute"

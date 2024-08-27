@@ -146,7 +146,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* CTA hero */}
-      <HomepageSection pb={6} overflowX="hidden">
+      <HomepageSection pb={6} overflowX="hidden" position="relative">
         <Flex flexDir="column" align={{ base: "initial", md: "center" }}>
           <Flex
             flexDir="column"
@@ -154,6 +154,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             width="100%"
             pt="50px"
             px="30px"
+            position="relative"
           >
             <Heading
               fontSize={{ base: "48px", md: "80px" }}
@@ -202,18 +203,21 @@ const StartupProgram: ThirdwebNextPage = () => {
             </TrackedLinkButton>
           </Flex>
 
+          {/* Cube Image */}
           <Box
             position="absolute"
-            top="-15%"
-            right="-20%"
+            top={0}
+            right={0}
             zIndex="-1"
-            display={{ base: "none", xl: "block" }}
-            width="auto"
+            display={{ base: "none", lg: "block" }}
+            width="60%"
+            maxWidth="500px"
           >
             <ChakraNextImage
               src={cubeRight.src}
               alt="description"
-              maxW={{ base: "400px", md: "650px" }}
+              objectFit="contain"
+              objectPosition="right"
             />
           </Box>
         </Flex>
