@@ -198,6 +198,7 @@
     "@walletconnect/ethereum-provider": "2.12.2",
     "@walletconnect/sign-client": "^2.13.3",
     "abitype": "1.0.5",
+    "aws-kms-signer": "^0.5.3",
     "fast-text-encoding": "^1.0.6",
     "fuse.js": "7.0.0",
     "input-otp": "^1.2.4",
@@ -310,6 +311,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@aws-sdk/client-kms": "^3.637.0",
     "@aws-sdk/client-lambda": "3.577.0",
     "@aws-sdk/credential-providers": "3.577.0",
     "@chromatic-com/storybook": "^1.5.0",
@@ -343,8 +345,8 @@
     "react-native-passkey": "3.0.0-beta2",
     "react-native-quick-crypto": "0.7.0-rc.6",
     "react-native-svg": "15.3.0",
-    "typescript": "5.5.4",
     "storybook": "^8.2.9",
+    "typescript": "5.5.4",
     "vite": "^5.3.1",
     "vitest": "1.6.0"
   }
