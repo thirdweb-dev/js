@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getContract } from "thirdweb";
-import { baseSepolia } from "thirdweb/chains";
+import { zkSyncSepolia } from "thirdweb/chains";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
   ConnectButton,
@@ -10,6 +10,7 @@ import {
   TransactionButton,
   useActiveAccount,
   useActiveWallet,
+  useActiveWalletChain,
   useDisconnect,
   useReadContract,
 } from "thirdweb/react";
@@ -17,25 +18,28 @@ import { shortenHex } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { WALLETS } from "../../lib/constants";
 
-export const chain = baseSepolia;
-export const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";
-export const editionDropTokenId = 1n;
-
-export const editionDropContract = getContract({
-  address: editionDropAddress,
-  chain,
+const chain = zkSyncSepolia;
+const editionDropContract = getContract({
   client: THIRDWEB_CLIENT,
+  address: "0xd563ACBeD80e63B257B2524562BdD7Ec666eEE77",
+  chain,
 });
+const editionDropTokenId = 0n;
 
-export function SponsoredTxPreview() {
+export function SponsoredTxZksyncPreview() {
   const [txHash, setTxHash] = useState<string | null>(null);
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
+  const activeChain = useActiveWalletChain();
   useEffect(() => {
-    if (wallet && wallet.id !== "smart") {
+    if (
+      wallet &&
+      (wallet.id !== "smart" ||
+        (activeChain && activeChain?.id !== zkSyncSepolia.id))
+    ) {
       disconnect(wallet);
     }
-  }, [wallet, disconnect]);
+  }, [wallet, disconnect, activeChain]);
   const smartAccount = useActiveAccount();
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
     contract: editionDropContract,

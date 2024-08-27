@@ -35,6 +35,19 @@ import { waitForReceipt } from "./wait-for-tx-receipt.js";
  *  }
  * });
  * ```
+ *
+ * ### Gasless usage with OpenZeppelin
+ * ```ts
+ * const transactionReceipt = await sendAndConfirmTransaction({
+ *  account,
+ *  transaction,
+ *  gasless: {
+ *    provider: "openzeppelin",
+ *    relayerUrl: "https://...",
+ *    relayerForwarderAddress: "0x...",
+ *  }
+ * });
+ * ```
  */
 export async function sendAndConfirmTransaction(
   options: SendTransactionOptions,

@@ -18,6 +18,15 @@ export type BuyWithCryptoQuoteQueryOptions = Omit<
 >;
 
 /**
+ * @internal
+ */
+type BuyWithCryptoQuoteError = {
+  status: string;
+  code: string;
+  statusCode: number;
+};
+
+/**
  * Hook to get a price quote for performing a "Buy with crypto" transaction that allows users to buy a token with another token - aka a swap.
  *
  * The price quote is an object of type [`BuyWithCryptoQuote`](https://portal.thirdweb.com/references/typescript/v5/BuyWithCryptoQuote).
@@ -94,7 +103,13 @@ export function useBuyWithCryptoQuote(
       }
       try {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        if ((error as any).error.code === "MINIMUM_PURCHASE_AMOUNT") {
+        const serverError = (error as any).error as BuyWithCryptoQuoteError;
+
+        if (serverError.code === "MINIMUM_PURCHASE_AMOUNT") {
+          return false;
+        }
+
+        if (serverError.statusCode === 404 || serverError.statusCode >= 500) {
           return false;
         }
       } catch {

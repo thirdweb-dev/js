@@ -30,6 +30,17 @@ import { useSwitchActiveWalletChain } from "../../../core/hooks/wallets/useSwitc
  *   }
  * });
  * ```
+ *
+ * ### Gasless usage with OpenZeppelin
+ * ```tsx
+ * import { useSendTransaction } from "thirdweb/react";
+ * const mutation = useSendTransaction({
+ *   gasless: {
+ *     provider: "openzeppelin",
+ *     relayerUrl: "https://...",
+ *     relayerForwarderAddress: "0x...",
+ *   }
+ * });
  * @transaction
  */
 export function useSendTransaction(config: SendTransactionConfig = {}) {
