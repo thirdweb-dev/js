@@ -1,7 +1,7 @@
-import { BurgerMenuButton } from "@/components/blocks/BurgerMenuButton";
+import { MobileSidebar } from "@/components/blocks/MobileSidebar";
 import { Sidebar } from "@/components/blocks/Sidebar";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, TicketCheckIcon } from "lucide-react";
+import { ArrowLeftIcon, MenuIcon, TicketCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -86,8 +86,13 @@ export default async function ChainPageLayout({
         />
 
         <div className="flex lg:hidden justify-end">
-          <BurgerMenuButton
+          <MobileSidebar
             links={sidebarLinks}
+            trigger={
+              <Button size="icon" variant="outline">
+                <MenuIcon strokeWidth={1} />
+              </Button>
+            }
             footer={
               <div className="mt-5 border-t pt-6 pb-2">
                 <Link

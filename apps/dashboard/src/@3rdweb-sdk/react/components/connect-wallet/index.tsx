@@ -27,6 +27,7 @@ import { popularChains } from "../popularChains";
 export const CustomConnectWallet = (props: {
   loginRequired?: boolean;
   connectButtonClassName?: string;
+  detailsButtonClassName?: string;
 }) => {
   const loginRequired =
     props.loginRequired === undefined ? true : props.loginRequired;
@@ -118,6 +119,9 @@ export const CustomConnectWallet = (props: {
       }}
       connectButton={{
         className: props.connectButtonClassName,
+      }}
+      detailsButton={{
+        className: props.detailsButtonClassName,
       }}
       chains={allChains}
       detailsModal={{
