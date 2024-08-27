@@ -112,14 +112,23 @@ const StartupProgram: ThirdwebNextPage = () => {
       <NextSeo {...SEO} />
       <HomepageTopNav />
 
-      {/* Image placed on the top top */}
-      <Box position="absolute" top="0" left="0" zIndex="1">
+      {/* gradient topleft */}
+      <Box
+        position="absolute"
+        top="0"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="1"
+        width="70%"
+        overflow="hidden"
+      >
         <ChakraNextImage
           src={gradientSecond.src}
           width="100%"
           height="auto"
           objectFit="contain"
           alt="description"
+          opacity={0.7}
         />
       </Box>
 
@@ -160,6 +169,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               fontSize={{ base: "48px", md: "80px" }}
               textAlign={{ base: "center", md: "left" }}
               mt={46}
+              letterSpacing="-0.04em"
             >
               Join our Startup <br />
               Program
@@ -169,7 +179,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               flexDir="column"
               alignItems={{ base: "center", md: "flex-start" }}
               gap={8}
-              paddingTop={10}
+              paddingTop={4}
             >
               <Text
                 textAlign={{ base: "center", md: "left" }}
@@ -196,7 +206,7 @@ const StartupProgram: ThirdwebNextPage = () => {
               category={TRACKING_CATEGORY}
               label="apply"
               fontWeight="bold"
-              mt={46}
+              mt={26}
               zIndex="1000"
             >
               Apply Now
@@ -211,7 +221,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             zIndex="-1"
             display={{ base: "none", lg: "block" }}
             width="60%"
-            maxWidth="500px"
+            maxWidth={{ base: 0, md: "420px", lg: "420px", xl: "500px" }}
           >
             <ChakraNextImage
               src={cubeRight.src}
@@ -236,7 +246,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* Startups logos */}
-      <HomepageSection pb={32} overflow={"hidden"}>
+      <HomepageSection pb={20} overflow={"hidden"}>
         <Flex
           pt={24}
           flexDir="column"
@@ -259,7 +269,7 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* Partners */}
-      <HomepageSection pb={32} overflow={"hidden"}>
+      <HomepageSection pb={4} overflow={"hidden"}>
         <Flex
           pt={24}
           flexDir="column"
@@ -270,7 +280,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             flexDir="column"
             alignItems="center"
             w="full"
-            mb={{ base: "150px", xl: "300px" }}
+            mb={{ base: "120px", xl: "200px" }}
           >
             <Heading
               fontSize={{ base: "32px", md: "48px" }}
@@ -299,14 +309,14 @@ const StartupProgram: ThirdwebNextPage = () => {
       </Flex>
 
       {/* Fast Track */}
-      <HomepageSection pb={32} overflow={"hidden"}>
+      <HomepageSection pb={22} overflow={"hidden"}>
         <Flex
-          pt={24}
           flexDir="column"
           gap={{ base: 6, md: 8 }}
           align={{ base: "initial", md: "center" }}
         >
           <Flex
+            pb="60px"
             flexDir="column"
             alignItems="center"
             justifyContent="center"
@@ -359,6 +369,7 @@ const StartupProgram: ThirdwebNextPage = () => {
                 fontSize={{ base: "48px", md: "80px" }}
                 textAlign="center"
                 mb="20px"
+                letterSpacing="-0.04em"
               >
                 We put founders first.
               </Heading>

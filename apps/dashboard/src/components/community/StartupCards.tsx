@@ -28,6 +28,10 @@ const StartupCard = () => {
     src: require("../../../public/assets/startup-program/cube-topleft.png"),
   };
 
+  const gradientPink = {
+    src: require("../../../public/assets/startup-program/gradient-1.png"),
+  };
+
   return (
     <Flex direction={{ base: "column", md: "row" }} wrap="wrap" gap={4} p={4}>
       {/* Cube topleft */}
@@ -49,13 +53,30 @@ const StartupCard = () => {
         alignItems={{ base: "stretch", md: "stretch" }}
         minWidth={{ base: "100%", md: "415px" }}
       >
+        {/* pink gradient */}
+        <Box
+          position="absolute"
+          top="-20%"
+          left="-30%"
+          zIndex="-1"
+          display={{ base: "none", lg: "block" }}
+        >
+          <ChakraNextImage
+            src={gradientPink.src}
+            maxW="100%"
+            height="auto"
+            objectFit="contain"
+            alt="gradient"
+            opacity={0.4}
+          />
+        </Box>
+
         {/* Credits Box */}
         <Box
           display="flex"
           flexDirection={{ base: "column", lg: "row" }}
           alignItems="center"
           justifyContent="space-between"
-          color="white"
           bg="#131418"
           borderRadius="8px"
           border="1px solid"
@@ -72,13 +93,17 @@ const StartupCard = () => {
             alignSelf="flex-end"
             p={6}
           >
-            <Heading fontSize={{ base: "22px", lg: "24px" }} fontWeight="bold">
+            <Heading
+              fontSize={{ base: "22px", lg: "24px" }}
+              fontWeight="bold"
+              letterSpacing="-0.025em"
+            >
               {credits.title}
             </Heading>
             <Text
               mt={4}
               fontSize="14px"
-              opacity={{ base: 0.7, lg: 1 }}
+              opacity={0.7}
               color="#fff"
               fontWeight="medium"
             >
@@ -107,7 +132,6 @@ const StartupCard = () => {
           flexDirection={{ base: "column", lg: "row" }}
           alignItems="center"
           justifyContent="space-between"
-          color="white"
           bg="#131418"
           borderRadius="8px"
           border="1px solid"
@@ -124,13 +148,17 @@ const StartupCard = () => {
             textAlign="left"
             p={6}
           >
-            <Heading fontSize={{ base: "22px", lg: "24px" }} fontWeight="bold">
+            <Heading
+              fontSize={{ base: "22px", lg: "24px" }}
+              fontWeight="bold"
+              letterSpacing="-0.025em"
+            >
               {community.title}
             </Heading>
             <Text
               mt={4}
               fontSize="14px"
-              opacity={{ base: 0.7, lg: 1 }}
+              opacity={0.7}
               color="#fff"
               fontWeight="medium"
             >
@@ -162,7 +190,6 @@ const StartupCard = () => {
         flexDirection="column"
         alignItems="center"
         justifyContent="flex-start"
-        color="white"
         bg="#131418"
         borderRadius="8px"
         border="1px solid"
@@ -196,13 +223,17 @@ const StartupCard = () => {
           </Box>
 
           <Box p={6} width="100%" mt={{ base: "0px", md: "30px" }}>
-            <Heading fontSize={{ base: "22px", md: "24px" }} fontWeight="bold">
+            <Heading
+              fontSize={{ base: "22px", md: "24px" }}
+              fontWeight="bold"
+              letterSpacing="-0.025em"
+            >
               {partners.title}
             </Heading>
             <Text
-              mt={{ base: 4, md: 0 }}
+              mt={4}
               fontSize="14px"
-              opacity={{ base: 0.7, md: 1 }}
+              opacity={0.7}
               color="#fff"
               fontWeight="medium"
             >

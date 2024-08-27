@@ -37,11 +37,6 @@ const chainsIcons2 = [
     alt: "chain",
   },
 ];
-
-const gradient = {
-  src: require("../../../public/assets/startup-program/gradient-1.png"),
-};
-
 const FastTrackChains = () => {
   return (
     <Box display={{ base: "block", lg: "none" }}>
@@ -99,26 +94,6 @@ const FastTrackChains = () => {
           </Box>
         ))}
       </SimpleGrid>
-      {/* Gradient Box */}
-      <Box
-        position="absolute"
-        bottom={{ base: "-50px", md: "-380px" }}
-        left="40%"
-        transform="translateX(-50%)"
-        zIndex="-1"
-        width="100%"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <ChakraNextImage
-          src={gradient.src}
-          alt="description"
-          width="100%"
-          height="auto"
-          opacity={0.5}
-        />
-      </Box>
     </Box>
   );
 };
