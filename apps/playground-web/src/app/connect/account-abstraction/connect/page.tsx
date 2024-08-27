@@ -3,10 +3,9 @@ import type { Metadata } from "next";
 import {
   ConnectSmartAccountCustomPreview,
   ConnectSmartAccountPreview,
-} from "../../../components/account-abstraction/connect-smart-account";
-import { SponsoredTxPreview } from "../../../components/account-abstraction/sponsored-tx";
-import { APIHeader } from "../../../components/blocks/APIHeader";
-import { CodeExample } from "../../../components/code/code-example";
+} from "../../../../components/account-abstraction/connect-smart-account";
+import { APIHeader } from "../../../../components/blocks/APIHeader";
+import { CodeExample } from "../../../../components/code/code-example";
 
 export const metadata: Metadata = {
   metadataBase,
@@ -33,12 +32,6 @@ export default function Page() {
 
       <section className="space-y-8">
         <ConnectSmartAccount />
-      </section>
-
-      <div className="h-14" />
-
-      <section className="space-y-8">
-        <SponsoredTx />
       </section>
     </main>
   );
@@ -84,40 +77,10 @@ accountAbstraction={{ chain, sponsorGas: true }} />
 <button onClick={() => connect(async () => {
   // any wallet connected here will be
   // converted to a smart account
-  const adminWallet = createWallet("io.metamask");
-  await adminWallet.connect({ client });
+  const adminWallet = inAppWallet();
+  await adminWallet.connect({ client, strategy: "google" });
   return adminWallet;
-})}>Connect (metamask)</button>
-</>);
-};`}
-        lang="tsx"
-      />
-    </>
-  );
-}
-
-function SponsoredTx() {
-  return (
-    <>
-      <div className="space-y-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
-          Sponsored transactions
-        </h2>
-        <p className="max-w-[600px]">
-          Set `sponsorGas: true` to enable gas-free transactions for your users.
-          <br />
-          Free on testnets, billed at the end of the month on mainnets.
-        </p>
-      </div>
-      <CodeExample
-        preview={<SponsoredTxPreview />}
-        code={`import { claimTo } from "thirdweb/extensions/erc1155";
-  import { TransactionButton } from "thirdweb/react";
-
-  function App(){
-    return (<>
-{/* transactions will be sponsored */}
-<TransactionButton transaction={() => claimTo({ contract, to: "0x123...", tokenId: 0n, quantity: 1n })}>Mint</TransactionButton>
+})}>Connect with Google</button>
 </>);
 };`}
         lang="tsx"
