@@ -121,6 +121,19 @@ export interface SendTransactionOptions {
  *  }
  * });
  * ```
+ *
+ * ### Gasless usage with OpenZeppelin
+ * ```ts
+ * const { transactionHash } = await sendTransaction({
+ *  account,
+ *  transaction,
+ *  gasless: {
+ *    provider: "openzeppelin",
+ *    relayerUrl: "https://...",
+ *    relayerForwarderAddress: "0x...",
+ *  }
+ * });
+ * ```
  */
 export async function sendTransaction(
   options: SendTransactionOptions,

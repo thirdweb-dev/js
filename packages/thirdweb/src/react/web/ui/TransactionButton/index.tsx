@@ -115,6 +115,19 @@ import { Button } from "../components/buttons.js";
  *   ...
  * </TransactionButton>
  * ```
+ *
+ * ### Gasless usage with OpenZeppelin
+ * ```tsx
+ * <TransactionButton
+ *   gasless={{
+ *     provider: "openzeppelin",
+ *     relayerUrl: "https://...",
+ *     relayerForwarderAddress: "0x...",
+ *   }}
+ * >
+ *   ...
+ * </TransactionButton>
+ * ```
  * @component
  */
 export function TransactionButton(props: TransactionButtonProps) {
