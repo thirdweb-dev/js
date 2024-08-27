@@ -131,7 +131,7 @@ export async function populateEip712Transaction(
     const baseFee = toBigInt(result.max_fee_per_gas);
     maxFeePerGas = baseFee * 2n; // bumping the base fee per gas to ensure fast inclusion
     maxPriorityFeePerGas = toBigInt(result.max_priority_fee_per_gas) || 1n;
-    gasPerPubdata = toBigInt(result.gas_per_pubdata_limit);
+    gasPerPubdata = toBigInt(result.gas_per_pubdata_limit) * 2n; // doubling for fast inclusion;
   }
 
   // serialize the transaction (with fees, gas, nonce)

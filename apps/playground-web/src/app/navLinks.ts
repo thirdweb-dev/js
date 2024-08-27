@@ -21,7 +21,21 @@ export const navLinks: SidebarLink[] = [
   },
   {
     name: "Account Abstraction",
-    href: "/connect/account-abstraction",
+    expanded: true,
+    links: [
+      {
+        name: "Connect",
+        href: "/connect/account-abstraction/connect",
+      },
+      {
+        name: "Sponsor Gas",
+        href: "/connect/account-abstraction/sponsor",
+      },
+      {
+        name: "Native AA (zkSync)",
+        href: "/connect/account-abstraction/native-aa",
+      },
+    ],
   },
   {
     name: "in-App wallet",
