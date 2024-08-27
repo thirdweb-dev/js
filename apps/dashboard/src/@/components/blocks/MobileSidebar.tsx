@@ -2,24 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { MenuIcon } from "lucide-react";
 import { useState } from "react";
 import { NavLink } from "../ui/NavLink";
 
-export function BurgerMenuButton(props: {
+export function MobileSidebar(props: {
   links?: { href: string; label: React.ReactNode }[];
   footer?: React.ReactNode;
+  trigger: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button size="icon" variant="outline">
-          <MenuIcon strokeWidth={1} />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{props.trigger}</DialogTrigger>
       <DialogContent
-        className="p-6 rounded-xl"
+        className="p-4 rounded-t-xl rounded-b-none"
         dialogCloseClassName="hidden"
         onClick={(e) => {
           if (e.target instanceof HTMLAnchorElement) {
