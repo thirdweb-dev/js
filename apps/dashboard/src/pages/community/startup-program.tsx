@@ -210,7 +210,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             top="-15%"
             right="-20%"
             zIndex="-1"
-            display={{ base: "none", md: "none", lg: "block" }}
+            display={{ base: "none", xl: "block" }}
           >
             <ChakraNextImage
               src={cubeRight.src}

@@ -32,7 +32,7 @@ const StartupCard = () => {
   return (
     <Flex direction={{ base: "column", md: "row" }} wrap="wrap" gap={4} p={4}>
       {/* Gradients */}
-      <Box display={{ base: "none", lg: "block" }}>
+      <Box display={{ base: "none", xl: "block" }} overflow="hidden">
         <Aurora
           pos={{ left: "10%", top: "26%" }}
           size={{ width: "100%", height: "700px" }}
