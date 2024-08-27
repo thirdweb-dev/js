@@ -23,6 +23,7 @@ const iframeBaseStyle = {
   right: "0px",
   zIndex: "2147483646",
   display: "none",
+  pointerEvents: "all",
 };
 
 // Global var to help track iframe state
