@@ -94,7 +94,13 @@ export function useBuyWithCryptoQuote(
       }
       try {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        if ((error as any).error.code === "MINIMUM_PURCHASE_AMOUNT") {
+        const serverError = (error as any).error;
+
+        if (serverError.code === "MINIMUM_PURCHASE_AMOUNT") {
+          return false;
+        }
+
+        if (serverError.statusCode === 404 || serverError.statusCode >= 500) {
           return false;
         }
       } catch {
