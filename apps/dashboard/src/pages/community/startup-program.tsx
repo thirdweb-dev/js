@@ -146,12 +146,8 @@ const StartupProgram: ThirdwebNextPage = () => {
       </HomepageSection>
 
       {/* CTA hero */}
-      <HomepageSection pb={6} overflow={"hidden"}>
-        <Flex
-          flexDir="column"
-          gap={{ base: 6, md: 8 }}
-          align={{ base: "initial", md: "center" }}
-        >
+      <HomepageSection pb={6} overflowX="hidden">
+        <Flex flexDir="column" align={{ base: "initial", md: "center" }}>
           <Flex
             flexDir="column"
             alignItems={{ base: "center", md: "flex-start" }}
@@ -205,12 +201,14 @@ const StartupProgram: ThirdwebNextPage = () => {
               Apply Now
             </TrackedLinkButton>
           </Flex>
+
           <Box
             position="absolute"
             top="-15%"
             right="-20%"
             zIndex="-1"
             display={{ base: "none", xl: "block" }}
+            width="auto"
           >
             <ChakraNextImage
               src={cubeRight.src}
@@ -260,7 +258,6 @@ const StartupProgram: ThirdwebNextPage = () => {
       <HomepageSection pb={32} overflow={"hidden"}>
         <Flex
           pt={24}
-          // mb={{ base: 24, md: -24 }}
           flexDir="column"
           gap={{ base: 6, md: 8 }}
           align={{ base: "initial", md: "center" }}
@@ -269,7 +266,7 @@ const StartupProgram: ThirdwebNextPage = () => {
             flexDir="column"
             alignItems="center"
             w="full"
-            mb={{ base: "150px", xl: "600px" }}
+            mb={{ base: "150px", xl: "300px" }}
           >
             <Heading
               fontSize={{ base: "32px", md: "48px" }}
@@ -283,6 +280,19 @@ const StartupProgram: ThirdwebNextPage = () => {
           </Flex>
         </Flex>
       </HomepageSection>
+
+      {/* Ellipse fast track */}
+      <Flex display={{ base: "none", lg: "block" }}>
+        <Box width="100%" mx="auto">
+          <ChakraNextImage
+            src={ellipse.src}
+            alt="description"
+            width="100%"
+            height="auto"
+            objectFit="cover"
+          />
+        </Box>
+      </Flex>
 
       {/* Fast Track */}
       <HomepageSection pb={32} overflow={"hidden"}>
@@ -418,25 +428,6 @@ const StartupProgram: ThirdwebNextPage = () => {
         </Box>
       </HomepageSection>
 
-      {/* Ellipse */}
-      <Box
-        position="absolute"
-        bottom="30%"
-        left="50%"
-        transform="translateX(-50%)"
-        width="100%"
-        height="auto"
-        display={{ base: "none", sm: "none", md: "none", lg: "block" }}
-        mb={{ base: "none", md: "100px" }}
-      >
-        <ChakraNextImage
-          src={ellipse.src}
-          alt="description"
-          width="100%"
-          height="auto"
-          objectFit="cover"
-        />
-      </Box>
       <HomepageFooter />
     </>
   );

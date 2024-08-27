@@ -182,8 +182,8 @@ const StartupCard = () => {
         borderRadius="8px"
         border="1px solid"
         borderColor="#26282F"
-        width={{ base: "100%", md: "491px" }}
-        minHeight={{ base: "361px", md: "100%" }}
+        width={{ base: "100%", md: "100%", lg: "491px" }}
+        minHeight={{ base: "auto", md: "auto", lg: "361px" }}
         borderTopLeftRadius="8px"
       >
         <Flex
