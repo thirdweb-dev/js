@@ -57,7 +57,7 @@ function SponsoredZksyncTx() {
               client={client}
               accountAbstraction={{
                 chain: zkSyncSepolia, // zkSync chain with native AA
-                sponsorGas: true,
+                sponsorGas: true, // sponsor gas for all transactions
               }}
               connectButton={{
                 label: "Login to mint this Kitten!",

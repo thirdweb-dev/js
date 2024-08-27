@@ -57,8 +57,8 @@ function SponsoredTx() {
 <ConnectButton
               client={client}
               accountAbstraction={{
-                chain: zkSyncSepolia,
-                sponsorGas: true,
+                chain,
+                sponsorGas: true, // sponsor gas for all transactions
               }}
               connectButton={{
                 label: "Login to mint this Kitten!",
