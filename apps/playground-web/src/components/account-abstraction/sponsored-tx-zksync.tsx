@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getContract } from "thirdweb";
 import { zkSyncSepolia } from "thirdweb/chains";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
@@ -14,6 +14,7 @@ import {
   useDisconnect,
   useReadContract,
 } from "thirdweb/react";
+import { shortenHex } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
 import { WALLETS } from "../../lib/constants";
 
@@ -26,6 +27,7 @@ const editionDropContract = getContract({
 const editionDropTokenId = 0n;
 
 export function SponsoredTxZksyncPreview() {
+  const [txHash, setTxHash] = useState<string | null>(null);
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   const activeChain = useActiveWalletChain();
@@ -98,12 +100,30 @@ export function SponsoredTxZksyncPreview() {
                 onError={(error) => {
                   alert(`Error: ${error.message}`);
                 }}
-                onTransactionConfirmed={async () => {
-                  alert("Minted successful!");
+                onClick={() => {
+                  setTxHash(null);
+                }}
+                onTransactionConfirmed={async (receipt) => {
+                  setTxHash(receipt.transactionHash);
                 }}
               >
                 Mint
               </TransactionButton>
+            </div>
+          ) : null}
+          {txHash ? (
+            <div className="flex flex-col justify-center p-2">
+              <p className="text-green-500 text-center mb-2">
+                Minted! Tx Hash:{" "}
+                <a
+                  href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  {shortenHex(txHash)}
+                </a>
+              </p>
             </div>
           ) : null}
         </>
