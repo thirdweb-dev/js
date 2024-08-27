@@ -2,6 +2,15 @@
 
 ## About Engine
 
+### Which contracts work with Engine?
+
+Engine supports reads and writes to any contract verified on the blockchain explorer, including any contract deployed via thirdweb.
+_Note: Some endpoints allow providing the contract ABI to support any unverified contract._
+
+Engine also supports deploys for thirdweb [prebuilt contracts](https://thirdweb.com/explore) including NFTs, tokens, marketplaces, and smart accounts.
+
+If you have a question about a particular contract type, [contact us](https://thirdweb.com/support).
+
 ### How are Engine and the thirdweb Contract SDK different?
 
 Engine is a server that manages your backend wallets and how they interact with contracts. This difference unlocks capabilities that thirdweb and other web3 SDKs, including:
@@ -13,14 +22,6 @@ Engine is a server that manages your backend wallets and how they interact with 
 - Webhooks on completed transactions to sync onchain and off-chain activity
 
 Additionally, Engine is built on top of the thirdweb SDK and has the same capabilities.
-
-### Does Engine work with all thirdweb smart contracts?
-
-Yes. Engine has intuitive interfaces to deploy prebuilt contracts, manage smart accounts, run a marketplace, and more.
-
-### Does Engine work with my non-thirdweb smart contract?
-
-Yes. Engine can read and write to any EVM contract with low-level API calls, including providing raw calldata. ERC-721 and ERC-1155 APIs can also be used for [contracts imported to thirdweb](https://support.thirdweb.com/smart-contracts/rtHYyzspnPaHmmANmJQz1k/importing-non-thirdweb-contracts-into-the-dashboard/hELLjgTc8TWrMdMEQkm2Es).
 
 ## Using Engine
 

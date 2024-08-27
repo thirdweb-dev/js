@@ -1,5 +1,5 @@
 import webhooksImage from "../../assets/engine-webhooks.webp";
-import { createMetadata, DocImage } from "@doc";
+import { createMetadata, Details, DocImage } from "@doc";
 
 export const metadata = createMetadata({
 	title: "Webhooks | thirdweb Engine",
@@ -15,19 +15,33 @@ Configure webhooks in Engine to notify your backend server of transaction or bac
 
 ### Transactions
 
-| Event                 | Description                                                                                                          |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `queued_transaction`  | A transaction is added to the Engine queue.                                                                          |
-| `sent_transaction`    | A transaction is submitted to an RPC provider. A transaction hash is provided, but it may not be mined onchain yet.  |
-| `mined_transaction`   | A transaction is mined on the blockchain. A transaction hash is provided, and it is mined onchain.                   |
-| `errored_transaction` | A transaction is unable to be submitted. There may be an error in the transaction params, backend wallet, or server. |
-| `all_transaction`     | All the above events. The `status` field will be one of: `queued`, `sent`, `mined`, `errored`.                       |
+Handle when a blockchain transaction is sent and mined onchain.
+
+| Event                 | Description                                                                                                                                                                  |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sent_transaction`    | A transaction is submitted to RPC. A transaction hash is provided, but it may not be mined onchain yet.                                                                      |
+| `mined_transaction`   | A transaction is mined on the blockchain. **Note: The transaction may have reverted onchain. Check the `onchainStatus` field to confirm if the transaction was successful.** |
+| `errored_transaction` | A transaction is unable to be submitted. There may be an error in the transaction params, backend wallet, or server.                                                         |
+| `all_transaction`     | All the above events.                                                                                                                                                        |
 
 <DocImage
 	src={webhooksImage}
 	alt="Webhooks lifecycle"
 	className="max-w-[500px] mx-auto"
 />
+
+The transaction payload contains a `status` field which is one of: `sent`, `mined`, `errored`
+
+Depending on the transaction, your backend will receive one of these webhook sequences:
+| Transaction statuses | Description |
+|-|-|
+| `sent` + `mined` | The transaction was sent and mined onchain. |
+| `errored` | The transaction errored before being sent. Common reasons: The transaction failed simulation, the backend wallet is out of funds, the network is down, or another internal error, transaction with a gas ceiling timed out. The errorMessage field will contain further details. |
+| `sent` + `errored` | The transaction was sent but was not mined onchain after some duration. Common reasons: The transaction was dropped from RPC mempool, another transaction was mined with the same nonce, or the nonce was too far ahead of the onchain nonce. |
+| `cancelled` | The transaction was in queue (not sent yet) and cancelled. |
+| `sent` + `cancelled` | The transaction was sent and waiting to be mined, but cancelled. |
+
+**Note:** Webhooks may come out of order. Treat later statuses as higher priority than earlier ones. For example if your backend receives a `sent` webhook after a `mined` webhook, treat this transaction as `mined`.
 
 ### Wallets
 
@@ -44,6 +58,128 @@ Configure webhooks in Engine to notify your backend server of transaction or bac
 1. Select **Create Webhook**.
 
 Webhook URLs must start with `https://`.
+
+## Payload format
+
+Method: `POST`
+
+Headers:
+
+- `Content-Type: application/json`
+- `X-Engine-Signature: <payload signature>`
+- `X-Engine-Timestamp: <Unix timestamp in seconds>`
+
+<Details id="sample-sent-transaction-payload" summary="Example sent transaction">
+
+```json
+{
+	// Queue details
+	"queueId": "1411246e-b1c8-4f5d-9a25-8c1f40b54e55",
+	"status": "sent",
+	"onchainStatus": null,
+	"queuedAt": "2023-09-29T22:01:31.031Z",
+	"sentAt": "2023-09-29T22:01:41.580Z",
+	"minedAt": null,
+	"errorMessage": null,
+	"cancelledAt": null,
+	"retryCount": 0,
+
+	// Onchain details
+	"chainId": 80001,
+	"fromAddress": "0x3ecdbf3b911d0e9052b64850693888b008e18373",
+	"toAddress": "0x365b83d67d5539c6583b9c0266a548926bf216f4",
+	"data": "0xa9059cbb0000000000000000000000003ecdbf3b911d0e9052b64850693888b008e183730000000000000000000000000000000000000000000000000000000000000064",
+	"value": "0x00",
+	"nonce": 1786,
+	"gasLimit": "39580",
+	"maxFeePerGas": "2063100466",
+	"maxPriorityFeePerGas": "1875545856",
+	"gasPrice": "1875545871",
+	"transactionType": null,
+	"transactionHash": "0xc3ffa42dd4734b017d483e1158a2e936c8a97dd1aa4e4ce11df80ac8e81d2c7e",
+	"sentAtBlockNumber": 40660021,
+	"blockNumber": null,
+
+	// User operation (account abstraction) details
+	"signerAddress": null,
+	"accountAddress": null,
+	"target": null,
+	"sender": null,
+	"initCode": null,
+	"callData": null,
+	"callGasLimit": null,
+	"verificationGasLimit": null,
+	"preVerificationGas": null,
+	"paymasterAndData": null,
+	"userOpHash": null,
+
+	// Off-chain details
+	"functionName": "transfer",
+	"functionArgs": "0x3ecdbf3b911d0e9052b64850693888b008e18373,100",
+	"extension": "none",
+	"deployedContractAddress": null,
+	"deployedContractType": null
+}
+```
+
+</Details>
+
+<Details id="sample-mined-transaction-payload" summary="Example mined transaction">
+
+Tip: Check the `onchainStatus` field. "success" means the transaction is mined onchain with no errors. "reverted" means the transaction or userOp was reverted.
+
+```json
+{
+	// Queue details
+	"queueId": "1411246e-b1c8-4f5d-9a25-8c1f40b54e55",
+	"status": "mined",
+	"onchainStatus": "success",
+	"queuedAt": "2023-09-29T22:01:31.031Z",
+	"sentAt": "2023-09-29T22:01:41.580Z",
+	"minedAt": "2023-09-29T22:01:44.000Z",
+	"errorMessage": null,
+	"cancelledAt": null,
+	"retryCount": 0,
+
+	// Onchain details
+	"chainId": 80001,
+	"fromAddress": "0x3ecdbf3b911d0e9052b64850693888b008e18373",
+	"toAddress": "0x365b83d67d5539c6583b9c0266a548926bf216f4",
+	"data": "0xa9059cbb0000000000000000000000003ecdbf3b911d0e9052b64850693888b008e183730000000000000000000000000000000000000000000000000000000000000064",
+	"value": "0x00",
+	"nonce": 1786,
+	"gasLimit": "39580",
+	"maxFeePerGas": "2063100466",
+	"maxPriorityFeePerGas": "1875545856",
+	"gasPrice": "1875545871",
+	"transactionType": 2,
+	"transactionHash": "0xc3ffa42dd4734b017d483e1158a2e936c8a97dd1aa4e4ce11df80ac8e81d2c7e",
+	"sentAtBlockNumber": 40660021,
+	"blockNumber": 40660026,
+
+	// User operation (account abstraction) details
+	"signerAddress": null,
+	"accountAddress": null,
+	"target": null,
+	"sender": null,
+	"initCode": null,
+	"callData": null,
+	"callGasLimit": null,
+	"verificationGasLimit": null,
+	"preVerificationGas": null,
+	"paymasterAndData": null,
+	"userOpHash": null,
+
+	// Off-chain details
+	"functionName": "transfer",
+	"functionArgs": "0x3ecdbf3b911d0e9052b64850693888b008e18373,100",
+	"extension": "none",
+	"deployedContractAddress": null,
+	"deployedContractType": null
+}
+```
+
+</Details>
 
 ## Webhook verification (recommended)
 
@@ -144,63 +280,4 @@ app.post("/webhook", (req, res) => {
 app.listen(port, () => {
 	console.log(`Server started on http://localhost:${port}`);
 });
-```
-
-## Payload format
-
-The webhook request to your backend follows this format.
-
-Method: `POST`
-
-Headers:
-
-- `Content-Type`: `application/json`
-- `X-Engine-Signature`: &lt;payload signature&gt;
-- `X-Engine-Timestamp`: &lt;Unix timestamp in seconds&gt;
-
-```json
-{
-	"chainId": 80001,
-	"data": "0xa9059cbb0000000000000000000000003ecdbf3b911d0e9052b64850693888b008e183730000000000000000000000000000000000000000000000000000000000000064",
-	"value": "0x00",
-	"gasLimit": "39580",
-	"nonce": 1786,
-	"maxFeePerGas": "2063100466",
-	"maxPriorityFeePerGas": "1875545856",
-	"fromAddress": "0x3ecdbf3b911d0e9052b64850693888b008e18373",
-	"toAddress": "0x365b83d67d5539c6583b9c0266a548926bf216f4",
-	"gasPrice": "1875545871",
-	"transactionType": 2,
-	"transactionHash": "0xc3ffa42dd4734b017d483e1158a2e936c8a97dd1aa4e4ce11df80ac8e81d2c7e",
-	"signerAddress": null,
-	"accountAddress": null,
-	"target": null,
-	"sender": null,
-	"initCode": null,
-	"callData": null,
-	"callGasLimit": null,
-	"verificationGasLimit": null,
-	"preVerificationGas": null,
-	"paymasterAndData": null,
-	"userOpHash": null,
-	"functionName": "transfer",
-	"functionArgs": "0x3ecdbf3b911d0e9052b64850693888b008e18373,100",
-	"extension": "none",
-	"deployedContractAddress": null,
-	"deployedContractType": null,
-	"queuedAt": "2023-09-29T22:01:31.031Z",
-	"processedAt": "2023-09-29T22:01:38.754Z",
-	"sentAt": "2023-09-29T22:01:41.580Z",
-	"minedAt": "2023-09-29T22:01:44.000Z",
-	"cancelledAt": null,
-	"retryCount": 0,
-	"retryGasValues": false,
-	"retryMaxPriorityFeePerGas": null,
-	"retryMaxFeePerGas": null,
-	"errorMessage": null,
-	"sentAtBlockNumber": 40660021,
-	"blockNumber": 40660026,
-	"queueId": "1411246e-b1c8-4f5d-9a25-8c1f40b54e55",
-	"status": "mined"
-}
 ```
