@@ -2,3 +2,4 @@ dist/
 coverage/
 .watchmanconfig
 *storybook.log
+.env.test
