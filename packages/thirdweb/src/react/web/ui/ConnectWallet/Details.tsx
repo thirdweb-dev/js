@@ -185,6 +185,9 @@ export const ConnectedWalletDetails: React.FC<{
     );
   }
 
+  const avatarSrc =
+    props.detailsButton?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
+
   return (
     <WalletInfoButton
       type="button"
@@ -203,10 +206,10 @@ export const ConnectedWalletDetails: React.FC<{
           height: "35px",
         }}
       >
-        {ensAvatarQuery.data ? (
+        {avatarSrc ? (
           <img
             alt=""
-            src={ensAvatarQuery.data}
+            src={avatarSrc}
             style={{
               width: "100%",
               height: "100%",
@@ -226,18 +229,14 @@ export const ConnectedWalletDetails: React.FC<{
         }}
       >
         {/* Address */}
-        {addressOrENS ? (
-          <Text
-            size="xs"
-            color="primaryText"
-            weight={500}
-            className={`${TW_CONNECTED_WALLET}__address`}
-          >
-            {addressOrENS}
-          </Text>
-        ) : (
-          <Skeleton height={fontSize.xs} width="80px" />
-        )}
+        <Text
+          size="xs"
+          color="primaryText"
+          weight={500}
+          className={`${TW_CONNECTED_WALLET}__address`}
+        >
+          {props.detailsButton?.connectedAccountName ?? addressOrENS}
+        </Text>
 
         {/* Balance */}
         {balanceQuery.data ? (
@@ -371,6 +370,9 @@ function DetailsModal(props: {
     </MenuButton>
   );
 
+  const avatarSrc =
+    props.detailsModal?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
+
   const avatarContent = (
     <Container
       style={{
@@ -387,9 +389,9 @@ function DetailsModal(props: {
           overflow: "hidden",
         }}
       >
-        {ensAvatarQuery.data ? (
+        {avatarSrc ? (
           <img
-            src={ensAvatarQuery.data}
+            src={avatarSrc}
             style={{
               width: iconSize.xxl,
               height: iconSize.xxl,
@@ -405,29 +407,31 @@ function DetailsModal(props: {
           )
         )}
       </Container>
-      <Container
-        style={{
-          position: "absolute",
-          bottom: -2,
-          right: -2,
-        }}
-      >
-        <IconContainer
+      {!props.detailsModal?.hideSwitchWallet ? (
+        <Container
           style={{
-            background: theme.colors.modalBg,
+            position: "absolute",
+            bottom: -2,
+            right: -2,
           }}
-          padding="4px"
         >
-          {activeWallet && (
-            <WalletImage
-              style={{ borderRadius: 0 }}
-              id={activeWallet.id}
-              client={client}
-              size="12"
-            />
-          )}
-        </IconContainer>
-      </Container>
+          <IconContainer
+            style={{
+              background: theme.colors.modalBg,
+            }}
+            padding="4px"
+          >
+            {activeWallet && (
+              <WalletImage
+                style={{ borderRadius: 0 }}
+                id={activeWallet.id}
+                client={client}
+                size="12"
+              />
+            )}
+          </IconContainer>
+        </Container>
+      ) : null}
     </Container>
   );
 
@@ -465,7 +469,7 @@ function DetailsModal(props: {
             }}
           >
             <Text color="primaryText" weight={500} size="md">
-              {addressOrENS}
+              {props.detailsModal?.connectedAccountName ?? addressOrENS}
             </Text>
             <IconButton>
               <CopyIcon
@@ -1039,6 +1043,7 @@ function InAppWalletUserInfo(props: {
 
       return email || phone || null;
     },
+    enabled: !isSmartWallet,
   });
 
   if (isSmartWallet) {
@@ -1330,6 +1335,16 @@ export type UseWalletDetailsModalOptions = {
    * Options to configure the Connect UI shown when user clicks the "Connect Wallet" button in the Wallet Switcher screen.
    */
   connectOptions?: DetailsModalConnectOptions;
+
+  /**
+   * Render custom UI for the connected wallet name in the `ConnectButton` Details Modal, overriding ENS name or wallet address.
+   */
+  connectedAccountName?: React.ReactNode;
+
+  /**
+   * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
+   */
+  connectedAccountAvatarUrl?: string;
 };
 
 /**
@@ -1382,6 +1397,8 @@ export function useWalletDetailsModal() {
               networkSelector: props.networkSelector,
               payOptions: props.payOptions,
               showTestnetFaucet: props.showTestnetFaucet,
+              connectedAccountName: props.connectedAccountName,
+              connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}
