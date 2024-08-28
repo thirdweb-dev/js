@@ -1,5 +1,6 @@
 import type { KMSClientConfig } from "@aws-sdk/client-kms";
 import { KmsSigner } from "aws-kms-signer";
+import { getAddress } from "src/utils/address.js";
 import type {
   SignableMessage,
   TransactionSerializable,
@@ -12,7 +13,6 @@ import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { serializeTransaction } from "../transaction/serialize-transaction.js";
-import type { Address } from "../utils/address.js";
 import type { Hex } from "../utils/encoding/hex.js";
 import { keccak256 } from "../utils/hashing/keccak256.js";
 import type { Account } from "./interfaces/wallet.js";
@@ -45,14 +45,12 @@ export async function getAwsKmsAccount(
 
   // Populate address immediately
   const addressUnprefixed = await signer.getAddress();
-  const address = `0x${addressUnprefixed}` as Address;
+  const address = getAddress(`0x${addressUnprefixed}`);
 
   async function signTransaction(tx: TransactionSerializable): Promise<Hex> {
     const serializedTx = serializeTransaction({ transaction: tx });
     const txHash = keccak256(serializedTx);
 
-    // we don't polyfill buffer, but signer.sign explicitly requires a buffer
-    // what do we do here?
     const signature = await signer.sign(Buffer.from(txHash.slice(2), "hex"));
 
     const r = `0x${signature.r.toString("hex")}` as Hex;
