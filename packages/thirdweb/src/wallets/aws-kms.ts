@@ -37,7 +37,7 @@ export async function getAwsKmsAccount(
   options: AwsKmsAccountOptions,
 ): Promise<Account> {
   if (typeof Buffer === "undefined") {
-    throw new Error("AwsKmsAccount only works in Node.js environment");
+    throw new Error("AwsKmsAccount is not supported in the browser");
   }
 
   const { keyId, config, client } = options;
