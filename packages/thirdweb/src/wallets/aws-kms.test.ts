@@ -66,9 +66,6 @@ test("sign transaction", async () => {
 
   const signedTx = await account.signTransaction?.(tx);
   expect(signedTx).toMatch(/^0x[a-fA-F0-9]+$/);
-
-  // Optionally, you can use viem to parse the transaction and verify its contents
-  // This step depends on the exact format of your signed transaction
 });
 
 test("sign typed data", async () => {
