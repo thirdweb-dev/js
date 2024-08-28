@@ -226,23 +226,10 @@ export async function getERC721ClaimTo({
   account: Account | undefined;
   claimParams: Erc721ClaimParams;
 }) {
-  const [{ isERC721 }, { isClaimSupported }, { claimTo }] = await Promise.all([
-    import("../../../../../../extensions/erc721/read/isERC721.js"),
-    import(
-      "../../../../../../extensions/erc721/__generated__/IDrop/write/claim.js"
-    ),
-    import("../../../../../../extensions/erc721/drops/write/claimTo.js"),
-  ]);
-  const [is721, claimSupported] = await Promise.all([
-    isERC721({ contract }).catch(() => false),
-    isClaimSupported(contract).catch(() => false),
-  ]);
-  if (!is721) {
-    throw new Error("Not an ERC721 contract");
-  }
-  if (!claimSupported) {
-    throw new Error("Not a valid NFT Drop (ERC721) contract");
-  }
+  const { claimTo } = await import(
+    "../../../../../../extensions/erc721/drops/write/claimTo.js"
+  );
+
   return claimTo({
     contract,
     to: account?.address || "",
@@ -262,23 +249,10 @@ export async function getERC1155ClaimTo({
   account: Account | undefined;
   claimParams: Erc1155ClaimParams;
 }) {
-  const [{ isERC1155 }, { isClaimSupported }, { claimTo }] = await Promise.all([
-    import("../../../../../../extensions/erc1155/read/isERC1155.js"),
-    import(
-      "../../../../../../extensions/erc1155/__generated__/IDrop1155/write/claim.js"
-    ),
-    import("../../../../../../extensions/erc1155/drops/write/claimTo.js"),
-  ]);
-  const [is1155, claimSupported] = await Promise.all([
-    isERC1155({ contract }).catch(() => false),
-    isClaimSupported(contract).catch(() => false),
-  ]);
-  if (!is1155) {
-    throw new Error("Not a valid ERC1155 contract");
-  }
-  if (!claimSupported) {
-    throw new Error("Not a valid thirdweb Edition Drop contract");
-  }
+  const { claimTo } = await import(
+    "../../../../../../extensions/erc1155/drops/write/claimTo.js"
+  );
+
   return claimTo({
     contract,
     to: account?.address || "",
@@ -301,16 +275,10 @@ export async function getERC20ClaimTo({
 }) {
   // Ideally we should check if the contract is ERC20 using `isERC20`
   // however TokenDrop doesn't have `supportsInterface` so it doesn't work
-  const [{ isClaimSupported }, { claimTo }] = await Promise.all([
-    import(
-      "../../../../../../extensions/erc20/__generated__/IDropERC20/write/claim.js"
-    ),
-    import("../../../../../../extensions/erc20/drops/write/claimTo.js"),
-  ]);
-  const claimSupported = await isClaimSupported(contract).catch(() => false);
-  if (!claimSupported) {
-    throw new Error("Not a valid thirdweb Token Drop contract");
-  }
+  const { claimTo } = await import(
+    "../../../../../../extensions/erc20/drops/write/claimTo.js"
+  );
+
   if ("quantity" in claimParams) {
     return claimTo({
       contract,

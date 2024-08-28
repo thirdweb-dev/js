@@ -3,7 +3,6 @@ import { ANVIL_CHAIN } from "~test/chains.js";
 import { TEST_CONTRACT_URI } from "~test/ipfs-uris.js";
 import { render, screen } from "~test/react-render.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
-import { DOODLES_CONTRACT, USDT_CONTRACT } from "~test/test-contracts.js";
 import { TEST_ACCOUNT_A } from "~test/test-wallets.js";
 import { getContract } from "../../../../../../contract/contract.js";
 import { deployERC20Contract } from "../../../../../../extensions/prebuilts/deploy-erc20.js";
@@ -26,27 +25,6 @@ const chain = ANVIL_CHAIN;
  */
 describe.runIf(process.env.TW_SECRET_KEY)("ClaimButton", () => {
   // ERC721
-  it("should throw an error if not an ERC721 contract", async () => {
-    const contract = USDT_CONTRACT;
-    await expect(() =>
-      getERC721ClaimTo({
-        contract,
-        account,
-        claimParams: { type: "ERC721", quantity: 1n },
-      }),
-    ).rejects.toThrowError("Not an ERC721 contract");
-  });
-
-  it("should throw an error if is an ERC721 but not an NFT Drop contract", async () => {
-    const contract = DOODLES_CONTRACT;
-    await expect(() =>
-      getERC721ClaimTo({
-        contract,
-        account,
-        claimParams: { type: "ERC721", quantity: 1n },
-      }),
-    ).rejects.toThrowError("Not a valid NFT Drop (ERC721) contract");
-  });
 
   it("should work for an NFT Drop contract", async () => {
     const address = await deployERC721Contract({
@@ -86,43 +64,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("ClaimButton", () => {
     expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
-  // ERC1155
-  it("should throw an error if not an ERC1155 contract", async () => {
-    const contract = USDT_CONTRACT;
-    await expect(() =>
-      getERC1155ClaimTo({
-        contract,
-        account,
-        claimParams: { type: "ERC1155", quantity: 1n, tokenId: 0n },
-      }),
-    ).rejects.toThrowError("Not a valid ERC1155 contract");
-  });
-
-  it("should throw an error if is an ERC1155 but not an Edition Drop contract", async () => {
-    const address = await deployERC1155Contract({
-      client,
-      chain,
-      account,
-      type: "TokenERC1155",
-      params: {
-        name: "",
-        contractURI: TEST_CONTRACT_URI,
-      },
-    });
-    const contract = getContract({
-      address,
-      client,
-      chain,
-    });
-    await expect(() =>
-      getERC1155ClaimTo({
-        contract,
-        account,
-        claimParams: { type: "ERC1155", quantity: 1n, tokenId: 0n },
-      }),
-    ).rejects.toThrowError("Not a valid thirdweb Edition Drop contract");
-  });
-
   it("should work for an Edition Drop contract", async () => {
     const address = await deployERC1155Contract({
       client,
@@ -158,18 +99,6 @@ describe.runIf(process.env.TW_SECRET_KEY)("ClaimButton", () => {
     );
     expect(screen.queryByText("Claim")).toBeInTheDocument();
     expect(screen.getByRole("button")).toBeInTheDocument();
-  });
-
-  // ERC20
-  it("should throw an error if not an DropERC20 contract", async () => {
-    const contract = DOODLES_CONTRACT;
-    await expect(() =>
-      getERC20ClaimTo({
-        contract,
-        account,
-        claimParams: { type: "ERC20", quantity: "1" },
-      }),
-    ).rejects.toThrowError("Not a valid thirdweb Token Drop contract");
   });
 
   it("should throw an error if claim quantity / quantityInWei is not passed", async () => {

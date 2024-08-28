@@ -26,6 +26,7 @@ export {
 
 // write
 export {
+  isMintToSupported,
   mintTo,
   type MintToParams,
 } from "../../extensions/erc20/write/mintTo.js";
@@ -63,6 +64,7 @@ export { getActiveClaimCondition } from "../../extensions/erc20/drops/read/getAc
 export {
   claimTo,
   type ClaimToParams,
+  isClaimToSupported,
 } from "../../extensions/erc20/drops/write/claimTo.js";
 export {
   setClaimConditions,

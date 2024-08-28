@@ -4,6 +4,8 @@ import { contractURI } from "../__generated__/IContractMetadata/read/contractURI
 import { name } from "./name.js";
 import { symbol } from "./symbol.js";
 
+export { isContractURISupported as isGetContractMetadataSupported } from "../__generated__/IContractMetadata/read/contractURI.js";
+
 /**
  * Retrieves the contract metadata including name and symbol.
  * @param options The transaction options.
