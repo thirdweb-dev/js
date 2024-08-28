@@ -167,7 +167,7 @@ export function LeftSection(props: {
             {/* Require Approval */}
             <section className="flex items-center gap-2">
               <Checkbox
-                id="show-thirdweb-branding"
+                id="require-approval"
                 checked={connectOptions.requireApproval}
                 onCheckedChange={(checkState) => {
                   setConnectOptions((v) => ({
@@ -176,9 +176,7 @@ export function LeftSection(props: {
                   }));
                 }}
               />
-              <Label htmlFor="show-thirdweb-branding">
-                Require TOS approval
-              </Label>
+              <Label htmlFor="require-approval">Require TOS approval</Label>
             </section>
           </div>
         </div>

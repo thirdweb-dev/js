@@ -369,6 +369,7 @@ export const ConnectWalletSocialOptions = (
                 setManualInputMode("email");
               }}
               title={locale.emailPlaceholder}
+              disabled={props.disabled}
             />
           )}
         </>
@@ -409,6 +410,7 @@ export const ConnectWalletSocialOptions = (
                 setManualInputMode("phone");
               }}
               title={locale.phonePlaceholder}
+              disabled={props.disabled}
             />
           )}
         </>
@@ -423,6 +425,7 @@ export const ConnectWalletSocialOptions = (
               handlePassKeyLogin();
             }}
             title={locale.passkey}
+            disabled={props.disabled}
           />
         </>
       )}
