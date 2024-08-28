@@ -88,6 +88,10 @@ export async function middleware(request: NextRequest) {
     }
     // if we have more than 1 path part, we're in the <address>/<slug> case -> publish page
     if (paths.length > 1) {
+      // deploy case
+      if (paths.at(-1) === "deploy") {
+        return rewrite(request, `/new-deploy${pathname}`);
+      }
       return rewrite(request, `/publish${pathname}`);
     }
   }

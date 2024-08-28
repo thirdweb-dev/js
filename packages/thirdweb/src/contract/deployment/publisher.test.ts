@@ -15,7 +15,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("fetchPublishedContract", () => {
       client: TEST_CLIENT,
     });
 
-    expect(result.extendedMetadata?.version).toEqual("1.0.2");
+    expect(result?.version).toEqual("1.0.2");
   });
 
   it("fetches a specific version when specified", async () => {
@@ -26,7 +26,7 @@ describe.runIf(process.env.TW_SECRET_KEY)("fetchPublishedContract", () => {
       version: "1.0.1",
     });
 
-    expect(result.extendedMetadata?.version).toEqual("1.0.1");
+    expect(result?.version).toEqual("1.0.1");
   });
 
   it("throws an error when an invalid version is specified", async () => {

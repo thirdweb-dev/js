@@ -20,10 +20,6 @@ import type { FetchDeployMetadataResult } from "./deploy-metadata.js";
  * ```ts
  * import { computePublishedContractAddress } from "thirdweb/deploys";
  *
- * const contractMetadata = await fetchPublishedContractMetadata({
- *  client,
- *  chain,
- * });
  * const address = await computePublishedContractAddress({
  *   client,
  *   chain,

@@ -46,7 +46,7 @@ export async function getOrDeployInfraForPublishedContract(
       client,
       account,
     });
-    const { compilerMetadata } = await fetchPublishedContractMetadata({
+    const compilerMetadata = await fetchPublishedContractMetadata({
       client,
       contractId: `${contractId}_ZkSync`, // different contract id for zkSync
       publisher,

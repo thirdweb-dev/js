@@ -28,6 +28,12 @@ export {
   fetchDeployBytecodeFromPublishedContractMetadata,
 } from "../contract/deployment/publisher.js";
 
+// contract metadata
+export {
+  fetchDeployMetadata,
+  type FetchDeployMetadataResult,
+} from "../utils/any-evm/deploy-metadata.js";
+
 // deployment - TODO: these end up looking more like extensions -> should they be?
 export {
   prepareDirectDeployTransaction,

@@ -22,6 +22,8 @@ export {
 export {
   deployPublishedContract,
   type DeployPublishedContractOptions,
+  deployContractfromDeployMetadata,
+  type DeployContractfromDeployMetadataOptions,
 } from "../extensions/prebuilts/deploy-published.js";
 
 export { prepareDirectDeployTransaction } from "../contract/deployment/deploy-with-abi.js";

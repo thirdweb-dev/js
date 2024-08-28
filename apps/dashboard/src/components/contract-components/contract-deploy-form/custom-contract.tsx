@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox, CheckboxWithLabel } from "@/components/ui/checkbox";
@@ -12,36 +14,24 @@ import {
   Flex,
   FormControl,
 } from "@chakra-ui/react";
-import type { Abi } from "abitype";
-import { TransactionButton } from "components/buttons/TransactionButton";
+import { useMutation } from "@tanstack/react-query";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
-import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
-import { verifyContract } from "contract-ui/tabs/sources/page";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useSupportedChain } from "hooks/chains/configureChains";
-import { useTxNotifications } from "hooks/useTxNotifications";
+// import { useTrack } from "hooks/analytics/useTrack";
 import { replaceTemplateValues } from "lib/deployment/template-values";
-import { ExternalLinkIcon, InfoIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { FormProvider, type UseFormReturn, useForm } from "react-hook-form";
 import { FiHelpCircle } from "react-icons/fi";
-import { useActiveAccount } from "thirdweb/react";
-import { encodeAbiParameters } from "thirdweb/utils";
-import invariant from "tiny-invariant";
+import type { FetchDeployMetadataResult } from "thirdweb/contract";
+import { deployContractfromDeployMetadata } from "thirdweb/deploys";
+import { useActiveAccount, useActiveWalletChain } from "thirdweb/react";
+import { parseAbiParams } from "thirdweb/utils";
+// import { encodeAbiParameters } from "thirdweb/utils";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
-import {
-  useContractEnabledExtensions,
-  useContractFullPublishMetadata,
-  useContractPublishMetadataFromURI,
-  useCustomContractDeployMutation,
-  useCustomFactoryAbi,
-  useEns,
-  useFunctionParamsFromABI,
-  useTransactionsForDeploy,
-} from "../hooks";
+import { thirdwebClient } from "../../../@/constants/client";
+import { useCustomFactoryAbi, useFunctionParamsFromABI } from "../hooks";
 import { Fieldset } from "./common";
 import { ContractMetadataFieldset } from "./contract-metadata-fieldset";
 import {
@@ -59,16 +49,9 @@ import { PlatformFeeFieldset } from "./platform-fee-fieldset";
 import { PrimarySaleFieldset } from "./primary-sale-fieldset";
 import { RoyaltyFieldset } from "./royalty-fieldset";
 import { type Recipient, SplitFieldset } from "./split-fieldset";
-import { TrustedForwardersFieldset } from "./trusted-forwarders-fieldset";
 
 interface CustomContractFormProps {
-  ipfsHash: string;
-  version?: string;
-  selectedChain: number | undefined;
-  onChainSelect: (chainId: number) => void;
-  isImplementationDeploy?: true;
-  onSuccessCallback?: (contractAddress: string) => void;
-  walletAddress: string | undefined;
+  metadata: FetchDeployMetadataResult;
 }
 
 export type CustomContractDeploymentFormData = {
@@ -106,29 +89,21 @@ const voteParamsSet = new Set([
 ]);
 
 const CustomContractForm: React.FC<CustomContractFormProps> = ({
-  ipfsHash,
-  version,
-  selectedChain,
-  onChainSelect,
-  isImplementationDeploy,
-  onSuccessCallback,
-  walletAddress,
+  metadata,
 }) => {
-  const { data: transactions } = useTransactionsForDeploy(ipfsHash);
-  const networkInfo = useSupportedChain(selectedChain || -1);
-  const ensQuery = useEns(walletAddress);
-  const connectedWallet = ensQuery.data?.address || walletAddress;
-  const trackEvent = useTrack();
-  const activeAccount = useActiveAccount();
+  // const { data: transactions } = useTransactionsForDeploy(ipfsHash);
 
-  const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
-  const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
+  // const trackEvent = useTrack();
+  const activeAccount = useActiveAccount();
+  const walletChain = useActiveWalletChain();
+  // TODO: get a way to get all the tx for the deploy or something
+  // const transactions = [];
+
   const constructorParams =
-    compilerMetadata.data?.abi?.find((c) => c.type === "constructor")?.inputs ||
-    [];
+    metadata.abi.find((a) => a.type === "constructor")?.inputs || [];
 
   const [customFactoryNetwork, customFactoryAddress] = Object.entries(
-    fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
+    metadata?.factoryDeploymentData?.customFactoryInput
       ?.customFactoryAddresses || {},
   )[0] || ["", ""];
 
@@ -137,30 +112,27 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     Number(customFactoryNetwork),
   );
 
-  const isTWPublisher =
-    fullPublishMetadata.data?.publisher === "deployer.thirdweb.eth";
+  const isTWPublisher = metadata?.publisher === "deployer.thirdweb.eth";
 
   const initializerParams = useFunctionParamsFromABI(
-    (fullPublishMetadata.data?.deployType === "customFactory" &&
-    customFactoryAbi?.data
+    metadata?.deployType === "customFactory" && customFactoryAbi?.data
       ? customFactoryAbi.data
-      : compilerMetadata.data?.abi) as Abi | undefined,
-    fullPublishMetadata.data?.deployType === "customFactory"
-      ? fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
-          ?.factoryFunction || "deployProxyByImplementation"
-      : fullPublishMetadata.data?.factoryDeploymentData
-          ?.implementationInitializerFunction || "initialize",
+      : metadata?.abi,
+    metadata?.deployType === "customFactory"
+      ? metadata?.factoryDeploymentData?.customFactoryInput?.factoryFunction ||
+          "deployProxyByImplementation"
+      : metadata?.factoryDeploymentData?.implementationInitializerFunction ||
+          "initialize",
   );
 
   const isFactoryDeployment =
-    ((fullPublishMetadata.data?.isDeployableViaFactory ||
-      fullPublishMetadata.data?.isDeployableViaProxy) &&
-      !isImplementationDeploy) ||
-    fullPublishMetadata.data?.deployType === "autoFactory" ||
-    fullPublishMetadata.data?.deployType === "customFactory";
+    metadata?.isDeployableViaFactory ||
+    metadata?.isDeployableViaProxy ||
+    metadata?.deployType === "autoFactory" ||
+    metadata?.deployType === "customFactory";
 
-  const isModular = fullPublishMetadata.data?.routerType === "modular";
-  const defaultModules = fullPublishMetadata.data?.defaultModules;
+  const isModular = metadata?.routerType === "modular";
+  const defaultModules = metadata?.defaultModules || [];
 
   const modularContractDefaultModulesInstallParams =
     useModularContractsDefaultModulesInstallParams({
@@ -173,7 +145,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const isAccountFactory =
     !isFactoryDeployment &&
-    (fullPublishMetadata.data?.name.includes("AccountFactory") || false);
+    (metadata?.name.includes("AccountFactory") || false);
 
   const parsedDeployParams = useMemo(
     () => ({
@@ -184,17 +156,15 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           }
 
           acc[param.name] = replaceTemplateValues(
-            fullPublishMetadata.data?.constructorParams?.[param.name]
-              ?.defaultValue
-              ? fullPublishMetadata.data?.constructorParams?.[param.name]
-                  ?.defaultValue || ""
+            metadata?.constructorParams?.[param.name]?.defaultValue
+              ? metadata?.constructorParams?.[param.name]?.defaultValue || ""
               : param.name === "_royaltyBps" || param.name === "_platformFeeBps"
                 ? "0"
                 : "",
             param.type,
             {
-              connectedWallet,
-              chainId: selectedChain,
+              connectedWallet: activeAccount?.address,
+              chainId: walletChain?.id,
             },
           );
           return acc;
@@ -202,12 +172,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         {} as Record<string, string>,
       ),
     }),
-    [
-      deployParams,
-      fullPublishMetadata.data?.constructorParams,
-      connectedWallet,
-      selectedChain,
-    ],
+    [deployParams, metadata?.constructorParams, activeAccount, walletChain?.id],
   );
 
   const transformedQueryData = useMemo(
@@ -217,7 +182,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       saltForCreate2: "",
       signerAsSalt: true,
       deployParams: parsedDeployParams,
-      recipients: [{ address: connectedWallet || "", sharesBps: 10000 }],
+      recipients: [{ address: activeAccount?.address || "", sharesBps: 10000 }],
       // set default values for modular contract modules with custom components
       modularContractDefaultModulesInstallParams:
         (activeAccount &&
@@ -243,10 +208,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     [
       parsedDeployParams,
       isAccountFactory,
-      connectedWallet,
+      activeAccount,
       modularContractDefaultModulesInstallParams.data,
       isTWPublisher,
-      activeAccount,
     ],
   );
 
@@ -271,13 +235,13 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "_platformFeeRecipient" in formDeployParams;
   const isSplit =
     "_payees" in formDeployParams && "_shares" in formDeployParams;
-  const isVote =
-    "_initialVotingDelay" in formDeployParams &&
-    "_initialVotingPeriod" in formDeployParams &&
-    "_initialProposalThreshold" in formDeployParams &&
-    "_initialVoteQuorumFraction" in formDeployParams &&
-    "_token" in formDeployParams;
-  const hasTrustedForwarders = "_trustedForwarders" in formDeployParams;
+  // const isVote =
+  //   "_initialVotingDelay" in formDeployParams &&
+  //   "_initialVotingPeriod" in formDeployParams &&
+  //   "_initialProposalThreshold" in formDeployParams &&
+  //   "_initialVoteQuorumFraction" in formDeployParams &&
+  //   "_token" in formDeployParams;
+  // const hasTrustedForwarders = "_trustedForwarders" in formDeployParams;
 
   const rewardDeployParams = Object.keys(formDeployParams).filter((paramKey) =>
     rewardParamsSet.has(paramKey),
@@ -318,43 +282,68 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     return false;
   };
 
-  const extensions = useContractEnabledExtensions(
-    compilerMetadata.data?.abi as Abi | undefined,
-  );
-  const isErc721SharedMetadadata = extensions.some(
-    (extension) => extension.name === "ERC721SharedMetadata",
-  );
+  // const extensions = useContractEnabledExtensions(metadata?.abi);
+  // const isErc721SharedMetadadata = extensions.some(
+  //   (extension) => extension.name === "ERC721SharedMetadata",
+  // );
 
   const deployStatusModal = useDeployStatusModal();
-  const deploy = useCustomContractDeployMutation({
-    ipfsHash,
-    version,
-    forceDirectDeploy: isImplementationDeploy,
-    hasContractURI,
-    hasRoyalty,
-    isSplit,
-    isVote,
-    isErc721SharedMetadadata,
-    deployStatusModal,
+
+  // TODO: figure this shit out
+  const deploy = useMutation({
+    mutationFn: async (contractParams: unknown[]) => {
+      if (!activeAccount) {
+        throw new Error("no account");
+      }
+      if (!walletChain) {
+        throw new Error("no chain");
+      }
+
+      console.log("*** deploy params", contractParams);
+
+      const address = await deployContractfromDeployMetadata({
+        account: activeAccount,
+        chain: walletChain,
+        client: thirdwebClient,
+        deployMetadata: metadata,
+        // todo
+        contractParams,
+        implementationConstructorParams: [],
+      });
+
+      console.log("*** address", address);
+      return address;
+    },
   });
 
-  const router = useRouter();
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully deployed contract",
-    "Failed to deploy contract",
-  );
+  // const deploy = useCustomContractDeployMutation({
+  //   ipfsHash,
+  //   version,
+  //   forceDirectDeploy: isImplementationDeploy,
+  //   hasContractURI,
+  //   hasRoyalty,
+  //   isSplit,
+  //   isVote,
+  //   isErc721SharedMetadadata,
+  //   deployStatusModal,
+  // });
 
-  const transactionCount =
-    (transactions?.length || 0) +
-    (form.watch("addToDashboard") ? 1 : 0) +
-    (isErc721SharedMetadadata ? 1 : 0);
+  // const router = useRouter();
+  // const { onSuccess, onError } = useTxNotifications(
+  //   "Successfully deployed contract",
+  //   "Failed to deploy contract",
+  // );
+
+  // const transactionCount =
+  //   (transactions?.length || 0) +
+  //   (form.watch("addToDashboard") ? 1 : 0) +
+  //   (isErc721SharedMetadadata ? 1 : 0);
 
   const isCreate2Deployment = form.watch("deployDeterministic");
   const advancedParams = Object.keys(formDeployParams)
     .map((paramKey) => {
       const deployParam = deployParams.find((p) => p.name === paramKey);
-      const contructorParams =
-        fullPublishMetadata.data?.constructorParams || {};
+      const contructorParams = metadata?.constructorParams || {};
       const extraMetadataParam = contructorParams[paramKey];
 
       if (shouldHide(paramKey) || !extraMetadataParam?.hidden) {
@@ -374,19 +363,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   return (
     <FormProvider {...form}>
-      {fullPublishMetadata.isLoading && (
-        <div className="min-h-[200px] flex items-center justify-center">
-          <Spinner className="size-10" />
-        </div>
-      )}
-
-      {fullPublishMetadata.isError && (
-        <div className="bg-destructive p-4 border border-destructive-text/30 rounded-lg text-destructive-text flex gap-2 items-center">
-          <InfoIcon className="size-4" />
-          Failed to fetch Publish metadata
-        </div>
-      )}
-
       <Flex
         flexGrow={1}
         minH="full"
@@ -395,120 +371,133 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         id="custom-contract-form"
         as="form"
         onSubmit={form.handleSubmit(async (formData) => {
-          if (!selectedChain) {
+          if (!walletChain?.id) {
             return;
           }
-          const deployData = {
-            ipfsHash,
-            constructorParams: formData.deployParams,
-            contractMetadata: formData,
-            publishMetadata: compilerMetadata.data,
-            chainId: selectedChain,
-            is_proxy: fullPublishMetadata.data?.isDeployableViaProxy,
-            is_factory: fullPublishMetadata.data?.isDeployableViaProxy,
-          };
-          // always respect this since even factory deployments cannot auto-add to registry anymore
-          const addToDashboard = formData.addToDashboard;
-          trackEvent({
-            category: "custom-contract",
-            action: "deploy",
-            label: "attempt",
-            deployData,
-          });
+          // // TODO bruv
+          // const deployData = {};
 
-          const deployParams = { ...formData.deployParams };
-
-          // if Modular contract has modules
-          if (isModular && modularContractDefaultModulesInstallParams.data) {
-            const moduleInstallData: string[] =
-              modularContractDefaultModulesInstallParams.data.map(
-                (ext, extIndex) => {
-                  return encodeAbiParameters(
-                    // param name+type []
-                    ext.params.map((p) => ({ name: p.name, type: p.type })),
-                    // value []
-                    Object.values(
-                      formData.modularContractDefaultModulesInstallParams[
-                        extIndex
-                      ] || {},
-                    ),
-                  );
-                },
-              );
-
-            deployParams._moduleInstallData = JSON.stringify(moduleInstallData);
-          }
+          console.log("*** deploy data", deployParams, formData.deployParams);
 
           deploy.mutate(
-            {
-              ...formData,
-              address: walletAddress,
-              addToDashboard,
-              deployParams,
-            },
-            {
-              onSuccess: (deployedContractAddress) => {
-                console.info("contract deployed:", {
-                  chainId: selectedChain,
-                  address: deployedContractAddress,
-                });
-
-                try {
-                  // we don't await this, just kick it off and be done with it
-                  verifyContract({
-                    contractAddress: deployedContractAddress,
-                    chainId: selectedChain,
-                  });
-                } catch {
-                  // ignore
-                }
-
-                trackEvent({
-                  category: "custom-contract",
-                  action: "deploy",
-                  label: "success",
-                  deployData,
-                  contractAddress: deployedContractAddress,
-                  addToDashboard,
-                  deployer: connectedWallet,
-                  contractName: compilerMetadata.data?.name,
-                  deployerAndContractName: `${connectedWallet}__${compilerMetadata.data?.name}`,
-                  publisherAndContractName: `${
-                    fullPublishMetadata.data?.publisher || "deploy-form"
-                  }/${compilerMetadata.data?.name}`,
-                  releaseAsPath: router.asPath,
-                });
-                trackEvent({
-                  category: "custom-contract",
-                  action: "add-to-dashboard",
-                  label: "success",
-                  contractAddress: deployedContractAddress,
-                });
-                onSuccess();
-                if (onSuccessCallback) {
-                  onSuccessCallback(deployedContractAddress || "");
-                } else {
-                  invariant(
-                    networkInfo,
-                    `Network not found for chainId ${selectedChain}`,
-                  );
-                  deployStatusModal.setViewContractLink(
-                    `/${networkInfo.slug}/${deployedContractAddress}`,
-                  );
-                }
-              },
-              onError: (err) => {
-                trackEvent({
-                  category: "custom-contract",
-                  action: "deploy",
-                  label: "error",
-                  deployData,
-                  error: err,
-                });
-                onError(err);
-              },
-            },
+            parseAbiParams(
+              deployParams.map((p) => p.type),
+              Object.values(formData.deployParams),
+            ),
           );
+          return;
+
+          // // const deployData = {
+          // //   ipfsHash,
+          // //   constructorParams: formData.deployParams,
+          // //   contractMetadata: formData,
+          // //   publishMetadata: compilerMetadata.data,
+          // //   chainId: selectedChain,
+          // //   is_proxy: fullPublishMetadata.data?.isDeployableViaProxy,
+          // //   is_factory: fullPublishMetadata.data?.isDeployableViaProxy,
+          // // };
+          // // always respect this since even factory deployments cannot auto-add to registry anymore
+          // // const addToDashboard = formData.addToDashboard;
+          // trackEvent({
+          //   category: "custom-contract",
+          //   action: "deploy",
+          //   label: "attempt",
+          //   deployData,
+          // });
+
+          // const deployParams = { ...formData.deployParams };
+
+          // // if Modular contract has modules
+          // if (isModular && modularContractDefaultModulesInstallParams.data) {
+          //   const moduleInstallData: string[] =
+          //     modularContractDefaultModulesInstallParams.data.map(
+          //       (ext, extIndex) => {
+          //         return encodeAbiParameters(
+          //           // param name+type []
+          //           ext.params.map((p) => ({ name: p.name, type: p.type })),
+          //           // value []
+          //           Object.values(
+          //             formData.modularContractDefaultModulesInstallParams[
+          //               extIndex
+          //             ] || {},
+          //           ),
+          //         );
+          //       },
+          //     );
+
+          //   deployParams._moduleInstallData = JSON.stringify(moduleInstallData);
+          // }
+
+          // // deploy.mutate(
+          // //   {
+          // //     ...formData,
+          // //     address: walletAddress,
+          // //     addToDashboard,
+          // //     deployParams,
+          // //   },
+          // //   {
+          // //     onSuccess: (deployedContractAddress) => {
+          // //       console.info("contract deployed:", {
+          // //         chainId: selectedChain,
+          // //         address: deployedContractAddress,
+          // //       });
+
+          // //       try {
+          // //         // we don't await this, just kick it off and be done with it
+          // //         verifyContract({
+          // //           contractAddress: deployedContractAddress,
+          // //           chainId: selectedChain,
+          // //         });
+          // //       } catch {
+          // //         // ignore
+          // //       }
+
+          // //       trackEvent({
+          // //         category: "custom-contract",
+          // //         action: "deploy",
+          // //         label: "success",
+          // //         deployData,
+          // //         contractAddress: deployedContractAddress,
+          // //         addToDashboard,
+          // //         deployer: connectedWallet,
+          // //         contractName: compilerMetadata.data?.name,
+          // //         deployerAndContractName: `${connectedWallet}__${compilerMetadata.data?.name}`,
+          // //         publisherAndContractName: `${
+          // //           fullPublishMetadata.data?.publisher || "deploy-form"
+          // //         }/${compilerMetadata.data?.name}`,
+          // //         releaseAsPath: router.asPath,
+          // //       });
+          // //       trackEvent({
+          // //         category: "custom-contract",
+          // //         action: "add-to-dashboard",
+          // //         label: "success",
+          // //         contractAddress: deployedContractAddress,
+          // //       });
+          // //       onSuccess();
+          // //       if (onSuccessCallback) {
+          // //         onSuccessCallback(deployedContractAddress || "");
+          // //       } else {
+          // //         invariant(
+          // //           networkInfo,
+          // //           `Network not found for chainId ${selectedChain}`,
+          // //         );
+          // //         deployStatusModal.setViewContractLink(
+          // //           `/${networkInfo.slug}/${deployedContractAddress}`,
+          // //         );
+          // //       }
+          // //     },
+          // //     onError: (err) => {
+          // //       trackEvent({
+          // //         category: "custom-contract",
+          // //         action: "deploy",
+          // //         label: "error",
+          // //         deployData,
+          // //         error: err,
+          // //       });
+          // //       onError(err);
+          // //     },
+          // //   },
+          // // );
         })}
       >
         {Object.keys(formDeployParams).length > 0 && (
@@ -517,7 +506,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             {hasContractURI && (
               <ContractMetadataFieldset
                 form={form}
-                metadata={compilerMetadata}
+                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                metadata={metadata as any}
               />
             )}
 
@@ -595,7 +585,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
             {isSplit && <SplitFieldset form={form} />}
 
-            {hasTrustedForwarders && <TrustedForwardersFieldset form={form} />}
+            {/* {hasTrustedForwarders && <TrustedForwardersFieldset form={form} />} */}
 
             {/* for StakeERC721 */}
             {showRewardsSection && (
@@ -606,8 +596,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       (p) => p.name === paramKey,
                     );
 
-                    const contructorParams =
-                      fullPublishMetadata.data?.constructorParams || {};
+                    const contructorParams = metadata?.constructorParams || {};
                     const extraMetadataParam = contructorParams[paramKey];
 
                     return (
@@ -632,8 +621,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                       (p) => p.name === paramKey,
                     );
 
-                    const contructorParams =
-                      fullPublishMetadata.data?.constructorParams || {};
+                    const contructorParams = metadata?.constructorParams || {};
                     const extraMetadataParam = contructorParams[paramKey];
 
                     return (
@@ -665,8 +653,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 const deployParam = deployParams.find(
                   (p) => p.name === paramKey,
                 );
-                const contructorParams =
-                  fullPublishMetadata.data?.constructorParams || {};
+                const contructorParams = metadata?.constructorParams || {};
                 const extraMetadataParam = contructorParams[paramKey];
 
                 if (shouldHide(paramKey) || extraMetadataParam?.hidden) {
@@ -748,22 +735,12 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col md:flex-row gap-4">
                   <NetworkSelectorButton
-                    isDisabled={
-                      isImplementationDeploy ||
-                      deploy.isLoading ||
-                      !compilerMetadata.isSuccess
-                    }
-                    onSwitchChain={(chain) => {
-                      onChainSelect(chain.chainId);
-                    }}
                     networksEnabled={
-                      fullPublishMetadata.data?.name === "AccountFactory" ||
-                      fullPublishMetadata.data?.networksForDeployment
-                        ?.allNetworks ||
-                      !fullPublishMetadata.data?.networksForDeployment
+                      metadata?.name === "AccountFactory" ||
+                      metadata?.networksForDeployment?.allNetworks ||
+                      !metadata?.networksForDeployment
                         ? undefined
-                        : fullPublishMetadata.data?.networksForDeployment
-                            ?.networksEnabled
+                        : metadata?.networksForDeployment?.networksEnabled
                     }
                   />
 
@@ -774,11 +751,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                   </Button>
                 </div>
 
-                <DeprecatedAlert chain={networkInfo} />
+                {/* <DeprecatedAlert chain={networkInfo} /> */}
               </div>
             </FormControl>
 
-            {fullPublishMetadata.data?.deployType === "standard" && (
+            {metadata?.deployType === "standard" && (
               <>
                 {/* Deterministic deploy */}
                 <CheckboxWithLabel>
@@ -859,7 +836,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
             {/* Depoy */}
             <div className="flex md:justify-end">
-              <TransactionButton
+              <Button type="submit">Deploy!</Button>
+              {/* <TransactionButton
                 onChainSelect={onChainSelect}
                 upsellTestnet
                 flexShrink={0}
@@ -872,7 +850,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 className="w-full md:w-auto"
               >
                 Deploy Now
-              </TransactionButton>
+              </TransactionButton> */}
             </div>
           </div>
         </Fieldset>
