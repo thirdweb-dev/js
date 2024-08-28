@@ -186,7 +186,7 @@ export const ConnectedWalletDetails: React.FC<{
   }
 
   const avatarSrc =
-    props.detailsButton?.connectedWalletAvatarUrl ?? ensAvatarQuery.data;
+    props.detailsButton?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
 
   return (
     <WalletInfoButton
@@ -235,7 +235,7 @@ export const ConnectedWalletDetails: React.FC<{
           weight={500}
           className={`${TW_CONNECTED_WALLET}__address`}
         >
-          {props.detailsButton?.connectedWalletName ?? addressOrENS}
+          {props.detailsButton?.connectedAccountName ?? addressOrENS}
         </Text>
 
         {/* Balance */}
@@ -371,7 +371,7 @@ function DetailsModal(props: {
   );
 
   const avatarSrc =
-    props.detailsModal?.connectedWalletAvatarUrl ?? ensAvatarQuery.data;
+    props.detailsModal?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
 
   const avatarContent = (
     <Container
@@ -407,7 +407,7 @@ function DetailsModal(props: {
           )
         )}
       </Container>
-      {!props.detailsModal?.hideWalletImage ? (
+      {!props.detailsModal?.hideSwitchWallet ? (
         <Container
           style={{
             position: "absolute",
@@ -469,7 +469,7 @@ function DetailsModal(props: {
             }}
           >
             <Text color="primaryText" weight={500} size="md">
-              {props.detailsModal?.connectedWalletName ?? addressOrENS}
+              {props.detailsModal?.connectedAccountName ?? addressOrENS}
             </Text>
             <IconButton>
               <CopyIcon
@@ -1278,13 +1278,6 @@ export type UseWalletDetailsModalOptions = {
   hideSwitchWallet?: boolean;
 
   /**
-   * Hide the wallet image on the "Switch Wallet" button in the Wallet Details Modal.
-   *
-   * By default it is `false`
-   */
-  hideWalletImage?: boolean;
-
-  /**
    * Callback to be called when a wallet is disconnected by clicking the "Disconnect Wallet" button in the Wallet Details Modal.
    *
    * ```tsx
@@ -1346,12 +1339,12 @@ export type UseWalletDetailsModalOptions = {
   /**
    * Render custom UI for the connected wallet name in the `ConnectButton` Details Modal, overriding ENS name or wallet address.
    */
-  connectedWalletName?: React.ReactNode;
+  connectedAccountName?: React.ReactNode;
 
   /**
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
    */
-  connectedWalletAvatarUrl?: string;
+  connectedAccountAvatarUrl?: string;
 };
 
 /**
@@ -1401,12 +1394,11 @@ export function useWalletDetailsModal() {
               footer: props.footer,
               hideDisconnect: props.hideDisconnect,
               hideSwitchWallet: props.hideSwitchWallet,
-              hideWalletImage: props.hideWalletImage,
               networkSelector: props.networkSelector,
               payOptions: props.payOptions,
               showTestnetFaucet: props.showTestnetFaucet,
-              connectedWalletName: props.connectedWalletName,
-              connectedWalletAvatarUrl: props.connectedWalletAvatarUrl,
+              connectedAccountName: props.connectedAccountName,
+              connectedAccountAvatarUrl: props.connectedAccountAvatarUrl,
             }}
             displayBalanceToken={props.displayBalanceToken}
             theme={props.theme || "dark"}

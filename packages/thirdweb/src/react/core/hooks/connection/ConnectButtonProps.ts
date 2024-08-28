@@ -256,19 +256,6 @@ export type ConnectButton_detailsModalOptions = {
   hideDisconnect?: boolean;
 
   /**
-   * Hide the wallet image on the "Switch Wallet" button in the `ConnectButton` Details Modal.
-   *
-   * By default it is `false`
-   * @example
-   * ```tsx
-   * <ConnectButton detailsModal={{
-   *  hideWalletImage: true
-   * }} />
-   * ```
-   */
-  hideWalletImage?: boolean;
-
-  /**
    * Render custom UI at the bottom of the `ConnectButton` Details Modal
    * @param props - props passed to the footer component which includes a function to close the modal
    * @example
@@ -295,12 +282,12 @@ export type ConnectButton_detailsModalOptions = {
   /**
    * Render custom UI for the connected wallet name in the `ConnectButton` Details Modal, overriding ENS name or wallet address.
    */
-  connectedWalletName?: React.ReactNode;
+  connectedAccountName?: React.ReactNode;
 
   /**
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
    */
-  connectedWalletAvatarUrl?: string;
+  connectedAccountAvatarUrl?: string;
 };
 
 /**
@@ -352,12 +339,12 @@ export type ConnectButton_detailsButtonOptions = {
   /**
    * Render custom UI for the connected wallet name in the `ConnectButton` details button, overriding ENS name or wallet address.
    */
-  connectedWalletName?: React.ReactNode;
+  connectedAccountName?: React.ReactNode;
 
   /**
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` details button, overriding ENS avatar or Blobbie icon.
    */
-  connectedWalletAvatarUrl?: string;
+  connectedAccountAvatarUrl?: string;
 };
 
 /**
