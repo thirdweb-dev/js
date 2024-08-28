@@ -50,13 +50,16 @@ export const sidebar: SideBar = {
 							icon: <Book />,
 							href: `${slug}/adapters`,
 						},
-						...["createWalletAdapter", "viemAdapter", "ethers6Adapter", "ethers5Adapter"].map(
-							(name) => ({
-								name,
-								href: `${slug}/${name}`,
-								icon: <CodeIcon />,
-							}),
-						),
+						...[
+							"createWalletAdapter",
+							"viemAdapter",
+							"ethers6Adapter",
+							"ethers5Adapter",
+						].map((name) => ({
+							name,
+							href: `${slug}/${name}`,
+							icon: <CodeIcon />,
+						})),
 					],
 				},
 			],
@@ -361,6 +364,24 @@ export const sidebar: SideBar = {
 							name: "Writing Extensions",
 							href: `${slug}/extensions/create`,
 							icon: <Book />,
+						},
+						{
+							name: "Examples",
+							icon: <Book />,
+							links: [
+								{
+									name: "Lens Protocol",
+									href: `${slug}/extensions/examples/lens-protocol`,
+								},
+								{
+									name: "Transfering tokens",
+									href: `${slug}/extensions/examples/transfering-tokens`
+								},
+								{
+									name: "Ethereum Name Service",
+									href: `${slug}/extensions/examples/ethereum-name-service`
+								}
+							]
 						},
 						{
 							name: "Available Extensions",
