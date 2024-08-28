@@ -6,6 +6,7 @@ import { zkSyncSepolia } from "../../chains/chain-definitions/zksync-sepolia.js"
 import { defineChain } from "../../chains/utils.js";
 import { getContract } from "../../contract/contract.js";
 import { claimTo } from "../../extensions/erc1155/drops/write/claimTo.js";
+import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { sendTransaction } from "../../transaction/actions/send-transaction.js";
 import { prepareTransaction } from "../../transaction/prepare-transaction.js";
 import type { Account, Wallet } from "../interfaces/wallet.js";
@@ -50,7 +51,7 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
     });
 
     it("should send a transactions", async () => {
-      const tx = await sendTransaction({
+      const tx = await sendAndConfirmTransaction({
         transaction: claimTo({
           contract,
           quantity: 1n,
@@ -107,9 +108,8 @@ describe.runIf(process.env.TW_SECRET_KEY).skip(
           to: account.address,
           tokenId: 0n,
         }),
-        account: smartAccount,
+        account: account,
       });
-      console.log("tx", tx.transactionHash);
       expect(tx.transactionHash.length).toBe(66);
     });
   },

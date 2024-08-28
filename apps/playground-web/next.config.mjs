@@ -56,6 +56,11 @@ const nextConfig = {
         destination: "/connect/sign-in/button",
         permanent: false,
       },
+      {
+        source: "/connect/account-abstraction",
+        destination: "/connect/account-abstraction/connect",
+        permanent: false,
+      },
     ];
   },
 };

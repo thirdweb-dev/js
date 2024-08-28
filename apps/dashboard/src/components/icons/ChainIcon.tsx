@@ -1,25 +1,26 @@
-import { Image, type ImageProps, forwardRef } from "@chakra-ui/react";
+/* eslint-disable @next/next/no-img-element */
 import { replaceIpfsUrl } from "lib/sdk";
+import { forwardRef } from "react";
 
 const fallbackIcon = replaceIpfsUrl(
   "ipfs://QmU1r24UsmGg2w2RePz98zV5hR3CnjvakLZzB6yH4prPFh/globe.svg",
 );
 
-type ChainIconProps = {
+type ImageProps = React.ComponentProps<"img">;
+
+type ChainIconProps = ImageProps & {
   ipfsSrc?: string;
   size: ImageProps["width"];
 };
 
-export const ChainIcon = forwardRef<ChainIconProps, typeof Image>(
+export const ChainIcon = forwardRef<HTMLImageElement, ChainIconProps>(
   ({ ipfsSrc, size, ...restProps }, ref) => {
     const src = ipfsSrc ? replaceIpfsUrl(ipfsSrc) : fallbackIcon;
     // treat size of number as "px"
     size = typeof size === "number" ? `${size}px` : size;
 
-    // TODO - use sizes to create srcset
-
     return (
-      <Image
+      <img
         {...restProps}
         ref={ref}
         // render different image element if src changes to avoid showing old image while loading new one
@@ -30,7 +31,7 @@ export const ChainIcon = forwardRef<ChainIconProps, typeof Image>(
         style={{
           objectFit: "contain",
         }}
-        loading="lazy"
+        loading={restProps.loading || "lazy"}
         decoding="async"
         alt=""
         // fallbackSrc is not working

@@ -136,7 +136,7 @@ importers:
         version: 5.5.4
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+        version: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
       yalc:
         specifier: 1.0.0-pre.53
         version: 1.0.0-pre.53
@@ -1187,8 +1187,8 @@ importers:
   legacy_packages/chains:
     devDependencies:
       '@babel/runtime':
-        specifier: ^7.24.5
-        version: 7.24.5
+        specifier: ^7.25.4
+        version: 7.25.4
       '@preconstruct/cli':
         specifier: 2.7.0
         version: 2.7.0
@@ -1595,8 +1595,8 @@ importers:
         version: 1.3.3
     devDependencies:
       '@babel/runtime':
-        specifier: ^7.24.5
-        version: 7.24.5
+        specifier: ^7.25.4
+        version: 7.25.4
       '@microsoft/api-documenter':
         specifier: ^7.25.4
         version: 7.25.4(@types/node@22.0.2)
@@ -1704,8 +1704,8 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.24.5)
       '@babel/runtime':
-        specifier: ^7.24.5
-        version: 7.24.5
+        specifier: ^7.25.4
+        version: 7.25.4
       '@microsoft/api-documenter':
         specifier: ^7.25.4
         version: 7.25.4(@types/node@22.0.2)
@@ -4211,6 +4211,10 @@ packages:
 
   '@babel/runtime@7.24.5':
     resolution: {integrity: sha512-Nms86NXrsaeU9vbBJKni6gXiEXZ4CVpYVzEjDH9Sb8vmZ3UljyA1GSOJl/6LGPO8EHLuSF9H+IxNXHPX8QHJ4g==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.25.4':
+    resolution: {integrity: sha512-DSgLeL/FNcpXuzav5wfYvHCGvynXkJbn3Zvc3823AEe9nPwW9IK4UoCSS5yGymmQzN0pCPvivtgS6/8U2kkm1w==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.24.7':
@@ -24154,6 +24158,10 @@ snapshots:
     dependencies:
       regenerator-runtime: 0.14.1
 
+  '@babel/runtime@7.25.4':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
   '@babel/template@7.24.7':
     dependencies:
       '@babel/code-frame': 7.24.7
@@ -24964,7 +24972,7 @@ snapshots:
 
   '@changesets/apply-release-plan@7.0.3':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/config': 3.0.1
       '@changesets/get-version-range-type': 0.4.0
       '@changesets/git': 3.0.0
@@ -24981,7 +24989,7 @@ snapshots:
 
   '@changesets/assemble-release-plan@6.0.2':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/errors': 0.2.0
       '@changesets/get-dependents-graph': 2.1.0
       '@changesets/should-skip-package': 0.1.0
@@ -25003,7 +25011,7 @@ snapshots:
 
   '@changesets/cli@2.27.6':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/apply-release-plan': 7.0.3
       '@changesets/assemble-release-plan': 6.0.2
       '@changesets/changelog-git': 0.2.0
@@ -25067,7 +25075,7 @@ snapshots:
 
   '@changesets/get-release-plan@4.0.2':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/assemble-release-plan': 6.0.2
       '@changesets/config': 3.0.1
       '@changesets/pre': 2.0.0
@@ -25079,7 +25087,7 @@ snapshots:
 
   '@changesets/git@3.0.0':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/errors': 0.2.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
@@ -25098,7 +25106,7 @@ snapshots:
 
   '@changesets/pre@2.0.0':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/errors': 0.2.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
@@ -25106,7 +25114,7 @@ snapshots:
 
   '@changesets/read@0.6.0':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/git': 3.0.0
       '@changesets/logger': 0.1.0
       '@changesets/parse': 0.4.0
@@ -25117,7 +25125,7 @@ snapshots:
 
   '@changesets/should-skip-package@0.1.0':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
 
@@ -25127,7 +25135,7 @@ snapshots:
 
   '@changesets/write@0.3.1':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/types': 6.0.0
       fs-extra: 7.0.1
       human-id: 1.0.2
@@ -25160,7 +25168,7 @@ snapshots:
     dependencies:
       '@codspeed/core': 3.1.0
       vite: 5.4.2(@types/node@20.14.9)(terser@5.31.0)
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
     transitivePeerDependencies:
       - debug
 
@@ -25263,7 +25271,7 @@ snapshots:
   '@emotion/babel-plugin@11.11.0':
     dependencies:
       '@babel/helper-module-imports': 7.24.3
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@emotion/hash': 0.9.1
       '@emotion/memoize': 0.8.1
       '@emotion/serialize': 1.1.4
@@ -25935,7 +25943,7 @@ snapshots:
 
   '@expo/cli@0.18.11(bufferutil@4.0.8)(expo-modules-autolinking@1.11.1)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@expo/code-signing-certificates': 0.0.5
       '@expo/config': 9.0.1
       '@expo/config-plugins': 8.0.4
@@ -26591,7 +26599,7 @@ snapshots:
 
   '@manypkg/find-root@1.1.0':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -26604,7 +26612,7 @@ snapshots:
 
   '@manypkg/get-packages@1.1.3':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@changesets/types': 4.1.0
       '@manypkg/find-root': 1.1.0
       fs-extra: 8.1.0
@@ -27739,7 +27747,7 @@ snapshots:
 
   '@radix-ui/primitive@1.0.1':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
 
   '@radix-ui/primitive@1.1.0': {}
 
@@ -27838,7 +27846,7 @@ snapshots:
 
   '@radix-ui/react-compose-refs@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
@@ -27851,7 +27859,7 @@ snapshots:
 
   '@radix-ui/react-context@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
@@ -27864,7 +27872,7 @@ snapshots:
 
   '@radix-ui/react-dialog@1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       '@radix-ui/react-context': 1.0.1(@types/react@18.3.3)(react@18.3.1)
@@ -27915,7 +27923,7 @@ snapshots:
 
   '@radix-ui/react-dismissable-layer@1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -27957,7 +27965,7 @@ snapshots:
 
   '@radix-ui/react-focus-guards@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
@@ -27970,7 +27978,7 @@ snapshots:
 
   '@radix-ui/react-focus-scope@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.3.3)(react@18.3.1)
@@ -27997,7 +28005,7 @@ snapshots:
 
   '@radix-ui/react-id@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
@@ -28088,7 +28096,7 @@ snapshots:
 
   '@radix-ui/react-portal@1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -28108,7 +28116,7 @@ snapshots:
 
   '@radix-ui/react-presence@1.0.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
@@ -28129,7 +28137,7 @@ snapshots:
 
   '@radix-ui/react-primitive@1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-slot': 1.0.2(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -28238,7 +28246,7 @@ snapshots:
 
   '@radix-ui/react-slot@1.0.2(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
@@ -28350,7 +28358,7 @@ snapshots:
 
   '@radix-ui/react-use-callback-ref@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
@@ -28363,7 +28371,7 @@ snapshots:
 
   '@radix-ui/react-use-controllable-state@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
@@ -28378,7 +28386,7 @@ snapshots:
 
   '@radix-ui/react-use-escape-keydown@1.0.3(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
     optionalDependencies:
@@ -28393,7 +28401,7 @@ snapshots:
 
   '@radix-ui/react-use-layout-effect@1.0.1(@types/react@18.3.3)(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
@@ -31495,7 +31503,7 @@ snapshots:
   '@testing-library/dom@10.1.0':
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -31506,7 +31514,7 @@ snapshots:
   '@testing-library/jest-dom@6.4.5(@types/bun@1.0.12)(vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0))':
     dependencies:
       '@adobe/css-tools': 4.4.0
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       aria-query: 5.3.0
       chalk: 3.0.0
       css.escape: 1.5.1
@@ -31515,12 +31523,12 @@ snapshots:
       redent: 3.0.0
     optionalDependencies:
       '@types/bun': 1.0.12
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
 
   '@testing-library/jest-dom@6.4.5(@types/bun@1.0.12)(vitest@1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0))':
     dependencies:
       '@adobe/css-tools': 4.4.0
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       aria-query: 5.3.0
       chalk: 3.0.0
       css.escape: 1.5.1
@@ -31534,7 +31542,7 @@ snapshots:
   '@testing-library/jest-dom@6.4.7(@types/bun@1.0.12)(vitest@1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0))':
     dependencies:
       '@adobe/css-tools': 4.4.0
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       aria-query: 5.3.0
       chalk: 3.0.0
       css.escape: 1.5.1
@@ -31547,7 +31555,7 @@ snapshots:
 
   '@testing-library/react@16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@testing-library/dom': 10.1.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -32317,7 +32325,7 @@ snapshots:
       std-env: 3.7.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -32352,7 +32360,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
+      vitest: 1.6.0(@types/node@22.0.2)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0)
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -33714,7 +33722,7 @@ snapshots:
 
   babel-plugin-macros@3.1.0:
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       cosmiconfig: 7.1.0
       resolve: 1.22.8
 
@@ -35276,7 +35284,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       csstype: 3.1.3
 
   dom-serializer@0.2.2:
@@ -35939,7 +35947,7 @@ snapshots:
 
   eslint-plugin-jsx-a11y@6.8.0(eslint@8.57.0):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       aria-query: 5.3.0
       array-includes: 3.1.8
       array.prototype.flatmap: 1.3.2
@@ -36509,7 +36517,7 @@ snapshots:
 
   expo@51.0.5(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@expo/cli': 0.18.11(bufferutil@4.0.8)(expo-modules-autolinking@1.11.1)(utf-8-validate@5.0.10)
       '@expo/config': 9.0.1
       '@expo/config-plugins': 8.0.4
@@ -39749,7 +39757,7 @@ snapshots:
 
   metro-runtime@0.80.9:
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
 
   metro-source-map@0.80.9:
     dependencies:
@@ -41661,7 +41669,7 @@ snapshots:
 
   polished@4.3.1:
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
 
   possible-typed-array-names@1.0.0: {}
 
@@ -42145,7 +42153,7 @@ snapshots:
 
   react-clientside-effect@1.2.6(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       react: 18.3.1
 
   react-colorful@5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
@@ -42239,7 +42247,7 @@ snapshots:
 
   react-focus-lock@2.12.1(@types/react@18.3.3)(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       focus-lock: 1.3.5
       prop-types: 15.8.1
       react: 18.3.1
@@ -42508,7 +42516,7 @@ snapshots:
 
   react-native-windows@0.73.16(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(bufferutil@4.0.8)(react-native@0.74.1(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(utf-8-validate@5.0.10):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@jest/create-cache-key-function': 29.7.0
       '@react-native-community/cli': 12.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@react-native-community/cli-platform-android': 12.3.6
@@ -42562,7 +42570,7 @@ snapshots:
 
   react-native-windows@0.73.16(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(bufferutil@4.0.8)(react-native@0.74.5(@babel/core@7.24.5)(@babel/preset-env@7.24.7(@babel/core@7.24.5))(@types/react@18.3.3)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(utf-8-validate@5.0.10):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@jest/create-cache-key-function': 29.7.0
       '@react-native-community/cli': 12.3.6(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       '@react-native-community/cli-platform-android': 12.3.6
@@ -42779,7 +42787,7 @@ snapshots:
 
   react-select@5.8.0(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       '@emotion/cache': 11.11.0
       '@emotion/react': 11.11.4(@types/react@18.3.3)(react@18.3.1)
       '@floating-ui/dom': 1.6.5
@@ -42818,7 +42826,7 @@ snapshots:
 
   react-syntax-highlighter@15.5.0(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       highlight.js: 10.7.3
       lowlight: 1.20.0
       prismjs: 1.29.0
@@ -42831,7 +42839,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -43008,7 +43016,7 @@ snapshots:
 
   regenerator-transform@0.15.2:
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.4
 
   regex-parser@2.3.0: {}
 
@@ -45549,7 +45557,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.0
 
-  vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(happy-dom@14.12.3)(terser@5.31.0):
+  vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0(vitest@1.6.0))(happy-dom@14.12.3)(terser@5.31.0):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0

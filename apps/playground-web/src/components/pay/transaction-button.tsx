@@ -2,12 +2,13 @@
 
 import { useTheme } from "next-themes";
 import { getContract } from "thirdweb";
-import { base, polygon } from "thirdweb/chains";
+import { polygon, sepolia } from "thirdweb/chains";
 import { transfer } from "thirdweb/extensions/erc20";
 import { claimTo, getNFT } from "thirdweb/extensions/erc1155";
 import {
   PayEmbed,
   TransactionButton,
+  getDefaultToken,
   useActiveAccount,
   useReadContract,
 } from "thirdweb/react";
@@ -21,8 +22,9 @@ const nftContract = getContract({
 });
 
 const usdcContract = getContract({
-  address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-  chain: base,
+  // biome-ignore lint/style/noNonNullAssertion: its there
+  address: getDefaultToken(sepolia, "USDC")!.address,
+  chain: sepolia,
   client: THIRDWEB_CLIENT,
 });
 

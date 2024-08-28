@@ -1,6 +1,9 @@
 import { useForceDarkTheme } from "@/components/theme-provider";
-import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex, Grid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import FastTrackChains from "components/community/FastTrackChains";
+import PartnersSection from "components/community/PartnersSection";
+import StartupCard from "components/community/StartupCards";
 import { HomepageFooter } from "components/footer/Footer";
 import { Aurora } from "components/homepage/Aurora";
 import { LandingImages } from "components/landing-pages/card-with-image";
@@ -11,7 +14,6 @@ import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLinkButton } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
-import ThreeBoxLayout from "./three-box-layout";
 
 const TRACKING_CATEGORY = "startup-program";
 
@@ -23,10 +25,10 @@ const SEO = {
 
 const trustedCompanies = [
   {
-    title: "Coinbase",
+    title: "Rug Radio",
     height: 74,
     width: 74,
-    src: require("../../../public/assets/partners/coinbase.png"),
+    src: require("../../../public/assets/startup-program/logo-rugradio.png"),
   },
   {
     title: "Treasure",
@@ -41,68 +43,28 @@ const trustedCompanies = [
     src: require("../../../public/assets/partners/layer3.png"),
   },
   {
-    title: "Courtyard",
+    title: "CoolCats",
     height: 74,
     width: 74,
-    src: require("../../../public/assets/partners/courtyard.png"),
+    src: require("../../../public/assets/startup-program/rarible-icon.png"),
   },
   {
-    title: "Rarible",
+    title: "Fnatic",
     height: 74,
     width: 74,
-    src: require("../../../public/assets/partners/rarible.png"),
-  },
-];
-
-const partnersCompanies = [
-  { maxWidth: "99px", src: require("../../../public/assets/partners/cpg.png") },
-  {
-    maxWidth: "252px",
-    src: require("../../../public/assets/partners/coinbaseventures.png"),
+    src: require("../../../public/assets/startup-program/treasure-icon.png"),
   },
   {
-    maxWidth: "256px",
-    src: require("../../../public/assets/partners/finc.png"),
+    title: "Mynaswap",
+    height: 74,
+    width: 74,
+    src: require("../../../public/assets/startup-program/layer3-icon.png"),
   },
   {
-    maxWidth: "180px",
-    src: require("../../../public/assets/partners/optimism.png"),
-  },
-  {
-    maxWidth: "207px",
-    src: require("../../../public/assets/partners/polygon.png"),
-  },
-  {
-    maxWidth: "180px",
-    src: require("../../../public/assets/partners/techstars.png"),
-  },
-  {
-    maxWidth: "207px",
-    src: require("../../../public/assets/partners/haun.png"),
-  },
-  {
-    maxWidth: "207px",
-    src: require("../../../public/assets/partners/monad.png"),
-  },
-  {
-    maxWidth: "256px",
-    src: require("../../../public/assets/partners/bitkraft.png"),
-  },
-  {
-    maxWidth: "256",
-    src: require("../../../public/assets/partners/helika.png"),
-  },
-  {
-    maxWidth: "99px",
-    src: require("../../../public/assets/partners/play.png"),
-  },
-  {
-    maxWidth: "200px",
-    src: require("../../../public/assets/startup-program/ava1anche_logo.png"),
-  },
-  {
-    maxWidth: "150px",
-    src: require("../../../public/assets/startup-program/powered-by-aws-white.png"),
+    title: "XAI",
+    height: 74,
+    width: 74,
+    src: require("../../../public/assets/startup-program/courtyard-icon.png"),
   },
 ];
 
@@ -112,6 +74,10 @@ const gradientSecond = {
 
 const gradientFive = {
   src: require("../../../public/assets/startup-program/gradient-5.png"),
+};
+
+const ellipse = {
+  src: require("../../../public/assets/startup-program/ellipse-track.png"),
 };
 
 const cubeTop = {
@@ -126,72 +92,97 @@ const cubeBottom = {
   src: require("../../../public/assets/startup-program/cube-bottom.png"),
 };
 
+const leftColumnItems = [
+  { id: "1", text: "The program is only for startups." },
+  { id: "2", text: "We don't take any equity in your company." },
+  { id: "3", text: "We don't take weeks/months to decide." },
+];
+
+const rightColumnItems = [
+  { id: "4", text: "We don't charge any fees." },
+  { id: "5", text: "We don't tell you what to do." },
+  { id: "6", text: "We don't require decks, business plans, or MBAs." },
+];
+
 const StartupProgram: ThirdwebNextPage = () => {
   useForceDarkTheme();
+
   return (
     <>
       <NextSeo {...SEO} />
       <HomepageTopNav />
 
-      <Box overflow={"hidden"} position="relative">
-        {/* Image placed on the top top */}
-        <Box position="absolute" top="0" left="0" zIndex="1">
-          <ChakraNextImage src={gradientSecond.src} alt="description" />
-        </Box>
+      {/* gradient topleft */}
+      <Box
+        position="absolute"
+        top="0"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="1"
+        width="70%"
+        overflow="hidden"
+      >
+        <ChakraNextImage
+          src={gradientSecond.src}
+          width="100%"
+          height="auto"
+          objectFit="contain"
+          alt="description"
+          opacity={0.7}
+        />
+      </Box>
 
-        {/* Cube Top */}
-        <Box
-          position="absolute"
-          top="-150px"
-          left="50%"
-          transform="translateX(-50%)"
-          zIndex="1"
-          display={{ base: "none", md: "block" }}
-        >
-          <ChakraNextImage src={cubeTop.src} alt="description" maxW="500px" />
-        </Box>
+      {/* Cube Top */}
+      <Box
+        position="absolute"
+        top="-150px"
+        left="50%"
+        transform="translateX(-50%)"
+        zIndex="1"
+        display={{ base: "none", md: "block" }}
+      >
+        <ChakraNextImage src={cubeTop.src} alt="description" maxW="500px" />
+      </Box>
 
-        {/* Cube Topright */}
-        <Box
-          position="absolute"
-          top={{ base: "420px", md: "50px" }}
-          right={{ base: "0px", md: "-200px" }}
-          zIndex="1"
-        >
-          <ChakraNextImage
-            src={cubeRight.src}
-            alt="description"
-            maxW={{ base: "400px", md: "600px" }}
-          />
-        </Box>
+      {/* Aurora gradient */}
+      <HomepageSection overflow={"hidden"}>
+        {/* top */}
+        <Aurora
+          pos={{ left: "50%", top: "0%" }}
+          size={{ width: "2400px", height: "1400px" }}
+          color="hsl(260deg 78% 35% / 20%)"
+        />
+      </HomepageSection>
 
-        <HomepageSection overflow={"hidden"}>
-          {/* top */}
-          <Aurora
-            pos={{ left: "50%", top: "0%" }}
-            size={{ width: "2400px", height: "1400px" }}
-            color="hsl(260deg 78% 35% / 20%)"
-          />
-
+      {/* CTA hero */}
+      <HomepageSection pb={6} overflowX="hidden" position="relative">
+        <Flex flexDir="column" align={{ base: "initial", md: "center" }}>
           <Flex
             flexDir="column"
-            alignItems="center"
-            mt={{ base: 20, md: 140 }}
+            alignItems={{ base: "center", md: "flex-start" }}
             width="100%"
             pt="50px"
-            px="20px"
+            px="30px"
+            position="relative"
           >
             <Heading
               fontSize={{ base: "48px", md: "80px" }}
-              textAlign="center"
+              textAlign={{ base: "center", md: "left" }}
               mt={46}
+              letterSpacing="-0.04em"
             >
-              Startup Program
+              Join our Startup <br />
+              Program
             </Heading>
 
-            <Flex flexDir="column" alignItems="center" gap={8} paddingTop={10}>
+            <Flex
+              flexDir="column"
+              alignItems={{ base: "center", md: "flex-start" }}
+              gap={8}
+              paddingTop={4}
+            >
               <Text
-                textAlign="center"
+                textAlign={{ base: "center", md: "left" }}
                 size="body.xl"
                 color="white"
                 maxW="800px"
@@ -215,91 +206,170 @@ const StartupProgram: ThirdwebNextPage = () => {
               category={TRACKING_CATEGORY}
               label="apply"
               fontWeight="bold"
-              mt={46}
+              mt={26}
               zIndex="1000"
             >
               Apply Now
             </TrackedLinkButton>
           </Flex>
 
-          <Container
-            maxW="container.page"
-            as={Flex}
-            flexDir="column"
-            gap={{ base: "80px", md: "190px" }}
-            mt={{ base: "120px", md: "170px" }}
-            mb={60}
-            overflow="hidden"
+          {/* Cube Image */}
+          <Box
+            position="absolute"
+            top={0}
+            right={0}
+            zIndex="-1"
+            display={{ base: "none", lg: "block" }}
+            width="60%"
+            maxWidth={{ base: 0, md: "420px", lg: "420px", xl: "500px" }}
           >
-            <ThreeBoxLayout />
+            <ChakraNextImage
+              src={cubeRight.src}
+              alt="description"
+              objectFit="contain"
+              objectPosition="right"
+            />
+          </Box>
+        </Flex>
+      </HomepageSection>
 
-            <LandingImages
-              title={
+      {/* Boxes Layout */}
+      <HomepageSection pb={32} overflowX="hidden">
+        <Flex
+          pt={24}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <StartupCard />
+        </Flex>
+      </HomepageSection>
+
+      {/* Startups logos */}
+      <HomepageSection pb={20} overflow={"hidden"}>
+        <Flex
+          pt={24}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <LandingImages
+            title={
+              <Box maxW={"700px"}>
                 <LandingSectionHeading
-                  title="Trusted by the best"
+                  title="The best startups launch with thirdweb"
                   blackToWhiteTitle=""
                 />
-              }
-              gap="44px"
-              images={trustedCompanies}
-            />
+              </Box>
+            }
+            gap="44px"
+            images={trustedCompanies}
+          />
+        </Flex>
+      </HomepageSection>
 
-            <Flex flexDir="column" alignItems="center" w="full">
-              <Heading
-                fontSize={{ base: "32px", md: "48px" }}
-                textAlign="center"
-                mt={46}
-              >
-                Partners
-              </Heading>
-
-              <SimpleGrid
-                columns={{ base: 1, lg: 4 }}
-                gap={{ base: 16, md: 24 }}
-                w="full"
-                placeItems="center"
-                mb={{ base: 16, md: "61px" }}
-                mt="57px"
-              >
-                {partnersCompanies.slice(0, 4).map((partner, idx) => (
-                  <ChakraNextImage
-                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    key={idx}
-                    maxW={partner.maxWidth}
-                    src={partner.src}
-                    alt="partner"
-                  />
-                ))}
-              </SimpleGrid>
-
-              <SimpleGrid
-                columns={{ base: 1, lg: 4 }}
-                gap={{ base: 16, md: 24 }}
-                w="full"
-                placeItems="center"
-              >
-                {partnersCompanies.slice(4).map((partner, idx) => (
-                  <ChakraNextImage
-                    // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                    key={idx}
-                    maxW={partner.maxWidth}
-                    src={partner.src}
-                    alt="partner"
-                  />
-                ))}
-              </SimpleGrid>
-            </Flex>
-
-            <Flex
-              flexDir="column"
-              alignItems="center"
-              mt={{ base: 20, md: 140 }}
-              width="100%"
-              px="20px"
+      {/* Partners */}
+      <HomepageSection pb={4} overflow={"hidden"}>
+        <Flex
+          pt={24}
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <Flex
+            flexDir="column"
+            alignItems="center"
+            w="full"
+            mb={{ base: "120px", xl: "200px" }}
+          >
+            <Heading
+              fontSize={{ base: "32px", md: "48px" }}
+              textAlign="center"
+              mt={46}
             >
+              Partners
+            </Heading>
+
+            <PartnersSection />
+          </Flex>
+        </Flex>
+      </HomepageSection>
+
+      {/* Ellipse fast track */}
+      <Flex display={{ base: "none", lg: "block" }}>
+        <Box width="100%" mx="auto">
+          <ChakraNextImage
+            src={ellipse.src}
+            alt="description"
+            width="100%"
+            height="auto"
+            objectFit="cover"
+          />
+        </Box>
+      </Flex>
+
+      {/* Fast Track */}
+      <HomepageSection pb={22} overflow={"hidden"}>
+        <Flex
+          flexDir="column"
+          gap={{ base: 6, md: 8 }}
+          align={{ base: "initial", md: "center" }}
+        >
+          <Flex
+            pb="60px"
+            flexDir="column"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            position="relative"
+            my="40px"
+          >
+            <FastTrackChains />
+          </Flex>
+        </Flex>
+      </HomepageSection>
+
+      {/* CTA Founders */}
+      <HomepageSection pb={32} overflow={"hidden"}>
+        <Box position="relative" mb="20">
+          <ChakraNextImage
+            src={gradientFive.src}
+            alt="description"
+            width="100%"
+            opacity={0.6}
+            position="absolute"
+            bottom={0}
+            left="50%"
+            top="10%"
+            transform="translateX(-50%)"
+            zIndex={0}
+          />
+          <ChakraNextImage
+            src={cubeBottom.src}
+            alt="description"
+            maxW="500px"
+            position="absolute"
+            left="60%"
+            bottom="-100%"
+            transform="translateX(-50%)"
+            zIndex={1}
+            display={{ base: "none", lg: "block" }}
+          />
+
+          <Flex
+            pt={14}
+            flexDir="column"
+            gap={{ base: 6, md: 8 }}
+            align={{ base: "initial", md: "center" }}
+            zIndex={1}
+            position="relative"
+          >
+            <Flex flexDir="column" alignItems="center" width="100%" px="20px">
               <Heading
                 fontSize={{ base: "48px", md: "80px" }}
                 textAlign="center"
+                mb="20px"
+                letterSpacing="-0.04em"
               >
                 We put founders first.
               </Heading>
@@ -309,19 +379,45 @@ const StartupProgram: ThirdwebNextPage = () => {
                 alignItems="center"
                 gap={8}
                 paddingTop={10}
+                pt={{ base: 0, md: 6 }}
               >
-                <Text
-                  textAlign="center"
-                  size="body.xl"
-                  color="white"
-                  maxW="800px"
+                <Grid
+                  templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+                  gap={{ base: 0, md: 6 }}
+                  w="full"
                 >
-                  The program is only for startups. We don&apos;t take any
-                  equity in your company. We don&apos;t take weeks/months to
-                  decide. We don&apos;t charge any fees. We don&apos;t tell you
-                  what to do. We don&apos;t require decks, business plans, or
-                  MBAs.
-                </Text>
+                  {/* Left Column */}
+                  <Box flex="1">
+                    {leftColumnItems.map((item) => (
+                      <Text
+                        key={item.id}
+                        as="li"
+                        mb={{ base: 0, md: 4 }}
+                        color="white"
+                        fontSize={{ base: "14px", md: "20px" }}
+                        fontWeight="medium"
+                      >
+                        {item.text}
+                      </Text>
+                    ))}
+                  </Box>
+
+                  {/* Right Column */}
+                  <Box flex="1">
+                    {rightColumnItems.map((item) => (
+                      <Text
+                        key={item.id}
+                        as="li"
+                        mb={{ base: 0, md: 4 }}
+                        color="white"
+                        fontSize={{ base: "14px", md: "20px" }}
+                        fontWeight="medium"
+                      >
+                        {item.text}
+                      </Text>
+                    ))}
+                  </Box>
+                </Grid>
               </Flex>
 
               <TrackedLinkButton
@@ -343,39 +439,11 @@ const StartupProgram: ThirdwebNextPage = () => {
                 Apply Now
               </TrackedLinkButton>
             </Flex>
-            {/* Gradient Box */}
-            <Box
-              position="absolute"
-              bottom="-280px"
-              left={{ base: 0, md: "150px" }}
-              zIndex="-1"
-            >
-              <ChakraNextImage
-                src={gradientFive.src}
-                alt="description"
-                maxW="800px"
-                opacity={0.6}
-              />
-            </Box>
-            {/* Cube Top */}
-            <Box
-              position="absolute"
-              bottom="-450px"
-              left="60%"
-              transform="translateX(-50%)"
-              zIndex="1"
-            >
-              <ChakraNextImage
-                src={cubeBottom.src}
-                alt="description"
-                maxW="500px"
-              />
-            </Box>
-          </Container>
-        </HomepageSection>
+          </Flex>
+        </Box>
+      </HomepageSection>
 
-        <HomepageFooter />
-      </Box>
+      <HomepageFooter />
     </>
   );
 };

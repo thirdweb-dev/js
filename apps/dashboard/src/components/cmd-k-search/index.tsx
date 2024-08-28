@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useDashboardRouter } from "@/lib/DashboardRouter";
 import { cn } from "@/lib/utils";
 import {
   type QueryClient,
@@ -23,7 +24,6 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { type TrendingContract, fetchTopContracts } from "lib/search";
 import { ArrowRightIcon, CommandIcon, SearchIcon, XIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -77,8 +77,11 @@ function contractTypesenseSearchQuery(
   };
 }
 
-export const CmdKSearch: React.FC = () => {
-  const [open, setOpen] = useState(false);
+export const CmdKSearchModal = (props: {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const { open, setOpen } = props;
   const trackEvent = useTrack();
   const queryClient = useQueryClient();
 
@@ -93,7 +96,7 @@ export const CmdKSearch: React.FC = () => {
 
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [setOpen]);
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -133,13 +136,13 @@ export const CmdKSearch: React.FC = () => {
   }, [debouncedSearchValue, searchValue, typesenseSearchQuery.isFetching]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const router = useRouter();
+  const router = useDashboardRouter();
 
   const handleClose = useCallback(() => {
     setOpen(false);
     setSearchValue("");
     setActiveIndex(0);
-  }, []);
+  }, [setOpen]);
 
   // legitimate use-case
   // eslint-disable-next-line no-restricted-syntax
@@ -203,28 +206,6 @@ export const CmdKSearch: React.FC = () => {
         }
       }}
     >
-      <div className="hidden lg:block w-[300px] relative">
-        <Input
-          onClick={() => setOpen(true)}
-          placeholder="Search any contract"
-          className="bg-transparent pr-4"
-        />
-        <div className="flex items-center text-sm text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 gap-[2px]">
-          <CommandIcon className="size-3" /> K
-        </div>
-      </div>
-
-      <Button
-        className="lg:hidden p-2"
-        aria-label="Search any contract"
-        variant="ghost"
-        onClick={() => setOpen(true)}
-      >
-        <SearchIcon className="size-4" />
-      </Button>
-
-      {/* modal below here */}
-
       <DialogContent
         className="p-0 gap-0 z-[10000001]"
         dialogOverlayClassName="z-[10000000]"
@@ -305,6 +286,36 @@ export const CmdKSearch: React.FC = () => {
         </DynamicHeight>
       </DialogContent>
     </Dialog>
+  );
+};
+
+export const CmdKSearch: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <div className="hidden lg:block w-[300px] relative">
+        <Input
+          onClick={() => setOpen(true)}
+          placeholder="Search any contract"
+          className="bg-transparent pr-4"
+        />
+        <div className="flex items-center text-sm text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2 gap-[2px]">
+          <CommandIcon className="size-3" /> K
+        </div>
+      </div>
+
+      <Button
+        className="lg:hidden p-2"
+        aria-label="Search any contract"
+        variant="ghost"
+        onClick={() => setOpen(true)}
+      >
+        <SearchIcon className="size-4" />
+      </Button>
+
+      <CmdKSearchModal open={open} setOpen={setOpen} />
+    </>
   );
 };
 

@@ -338,7 +338,7 @@ export function useAccountCredits() {
       const credits = (json.data as BillingCredit[]).filter(
         (credit) =>
           credit.remainingValueUsdCents > 0 &&
-          credit.expiresAt > new Date().toISOString() &&
+          (!credit.expiresAt || credit.expiresAt > new Date().toISOString()) &&
           credit.isActive,
       );
 

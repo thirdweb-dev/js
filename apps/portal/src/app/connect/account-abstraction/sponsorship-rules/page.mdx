@@ -48,6 +48,11 @@ The thirdweb infrastructure will send a POST request to the URL you specify with
   		targets: string[]; // the addresses of the target contracts or wallets
   		gasLimit: string; // the gas limit of the transaction
   		gasPrice: string; // the gas price of the transaction in wei
+                data: {
+		  targets: string[], // the targets contracts or wallets called in this operation
+		  callDatas: string[], // the call data of each transaction
+		  values: string[], // the values (in wei) of each transaction
+                }
 	};
 }
 ```

@@ -200,7 +200,7 @@ describe.runIf(process.env.TW_SECRET_KEY).sequential(
       expect(logs.some((l) => l.args.isAdmin)).toBe(true);
     });
 
-    it("can use a different factory without replay protectin", async () => {
+    it("can use a different factory without replay protection", async () => {
       const wallet = smartWallet({
         chain,
         factoryAddress: factoryAddress,

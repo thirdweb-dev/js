@@ -72,7 +72,7 @@
   },
   "sideEffects:": false,
   "devDependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.25.4",
     "@microsoft/api-documenter": "^7.25.4",
     "@microsoft/api-extractor": "^7.47.0",
     "@microsoft/tsdoc": "^0.15.0",
