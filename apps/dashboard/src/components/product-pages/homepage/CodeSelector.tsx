@@ -53,7 +53,7 @@ import { useReadContract } from "thirdweb/react";
 
 // initialize the client
 const client = createThirdwebClient({ clientId });
-  
+
 // connect to your smart contract
 const contract = getContract({ client, chain: sepolia, address: "0x..." });
 
@@ -63,7 +63,7 @@ export default function App() {
 
   // Render NFTs
   return (nfts.data || []).map((nft) => (
-    <Image key={nft.metadata.id.toString()} source={{uri: resolveScheme({ url: nft.metadata.image, client }}} />
+    <Image key={nft.id.toString()} source={{uri: resolveScheme({ url: nft.metadata.image, client }}} />
   ));
 }`,
   unity: `using Thirdweb;
