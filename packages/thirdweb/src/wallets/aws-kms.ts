@@ -1,19 +1,21 @@
 import type { KMSClientConfig } from "@aws-sdk/client-kms";
 import { KmsSigner } from "aws-kms-signer";
-import { getAddress } from "src/utils/address.js";
 import type {
   SignableMessage,
   TransactionSerializable,
   TypedData,
   TypedDataDefinition,
 } from "viem";
-import { hashTypedData, toBytes } from "viem";
+
 import { getCachedChain } from "../chains/utils.js";
 import type { ThirdwebClient } from "../client/client.js";
 import { eth_sendRawTransaction } from "../rpc/actions/eth_sendRawTransaction.js";
 import { getRpcClient } from "../rpc/rpc.js";
 import { serializeTransaction } from "../transaction/serialize-transaction.js";
+import { getAddress } from "../utils/address.js";
 import type { Hex } from "../utils/encoding/hex.js";
+import { stringToBytes } from "../utils/encoding/to-bytes.js";
+import { hashTypedData } from "../utils/hashing/hashTypedData.js";
 import { keccak256 } from "../utils/hashing/keccak256.js";
 import type { Account } from "./interfaces/wallet.js";
 
@@ -79,7 +81,7 @@ export async function getAwsKmsAccount(
     let messageHash: Hex;
     if (typeof message === "string") {
       const prefixedMessage = `\x19Ethereum Signed Message:\n${message.length}${message}`;
-      messageHash = keccak256(toBytes(prefixedMessage));
+      messageHash = keccak256(stringToBytes(prefixedMessage));
     } else if ("raw" in message) {
       messageHash = keccak256(message.raw);
     } else {

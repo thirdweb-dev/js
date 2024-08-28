@@ -1,21 +1,18 @@
+import { http, createTestClient } from "viem";
 import { beforeAll, expect, test } from "vitest";
+
+import { TEST_AWS_KMS_CONFIG } from "~test/test-aws-kms-config.js";
 import { TEST_CLIENT } from "~test/test-clients.js";
 import { typedData } from "~test/typed-data.js";
+
 import { ANVIL_CHAIN } from "../../test/src/chains.js";
-import { sendTransaction } from "../exports/thirdweb.js";
+import { verifyEOASignature } from "../auth/verify-signature.js";
+import { verifyTypedData } from "../auth/verify-typed-data.js";
+import { sendAndConfirmTransaction } from "../transaction/actions/send-and-confirm-transaction.js";
 import { prepareTransaction } from "../transaction/prepare-transaction.js";
+import { toUnits, toWei } from "../utils/units.js";
 import { getAwsKmsAccount } from "./aws-kms.js";
 import { getWalletBalance } from "./utils/getWalletBalance.js";
-
-import {
-  http,
-  createTestClient,
-  parseUnits,
-  verifyMessage,
-  verifyTypedData,
-} from "viem";
-import { TEST_AWS_KMS_CONFIG } from "~test/test-aws-kms-config.js";
-import { toWei } from "../utils/units.js";
 
 let account: Awaited<ReturnType<typeof getAwsKmsAccount>>;
 
@@ -48,7 +45,7 @@ test("sign message", async () => {
 
   expect(signature).toMatch(/^0x[a-fA-F0-9]{130}$/);
 
-  const isValid = await verifyMessage({
+  const isValid = await verifyEOASignature({
     address: account.address,
     message,
     signature,
@@ -59,10 +56,10 @@ test("sign message", async () => {
 test("sign transaction", async () => {
   const tx = {
     chainId: ANVIL_CHAIN.id,
-    maxFeePerGas: parseUnits("20", 9),
+    maxFeePerGas: toUnits("20", 9),
     gas: 21000n,
     to: "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
-    value: parseUnits("1", 18),
+    value: toUnits("1", 18),
   };
 
   expect(account.signTransaction).toBeDefined();
@@ -87,6 +84,8 @@ test("sign typed data", async () => {
     ...typedData.basic,
     primaryType: "Mail",
     signature,
+    client: TEST_CLIENT,
+    chain: ANVIL_CHAIN,
   });
   expect(isValid).toBe(true);
 });
@@ -115,10 +114,10 @@ test("send transaction", async () => {
     client: TEST_CLIENT,
     chain: ANVIL_CHAIN,
     to: recipient,
-    value: parseUnits("1", 18),
+    value: toUnits("1", 18),
   });
 
-  const result = await sendTransaction({
+  const result = await sendAndConfirmTransaction({
     account,
     transaction: tx,
   });
