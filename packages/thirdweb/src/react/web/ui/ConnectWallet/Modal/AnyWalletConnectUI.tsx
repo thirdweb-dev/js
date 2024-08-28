@@ -59,6 +59,7 @@ export function AnyWalletConnectUI(props: {
     showThirdwebBranding?: boolean;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    requireApproval?: boolean;
   };
   walletConnect:
     | {

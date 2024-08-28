@@ -346,6 +346,7 @@ export function ConnectButton(props: ConnectButtonProps) {
           showThirdwebBranding: props.connectModal?.showThirdwebBranding,
           termsOfServiceUrl: props.connectModal?.termsOfServiceUrl,
           privacyPolicyUrl: props.connectModal?.privacyPolicyUrl,
+          requireApproval: props.connectModal?.requireApproval,
         }}
         welcomeScreen={props.connectModal?.welcomeScreen}
         size={size}

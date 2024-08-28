@@ -146,22 +146,41 @@ export function LeftSection(props: {
             </div>
           </div>
 
-          {/* Thirdweb Branding */}
-          <section className="flex items-center gap-2">
-            <Checkbox
-              id="show-thirdweb-branding"
-              checked={connectOptions.ShowThirdwebBranding}
-              onCheckedChange={(checkState) => {
-                setConnectOptions((v) => ({
-                  ...v,
-                  ShowThirdwebBranding: checkState === true,
-                }));
-              }}
-            />
-            <Label htmlFor="show-thirdweb-branding">
-              Show thirdweb branding
-            </Label>
-          </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
+            {/* Thirdweb Branding */}
+            <section className="flex items-center gap-2">
+              <Checkbox
+                id="show-thirdweb-branding"
+                checked={connectOptions.ShowThirdwebBranding}
+                onCheckedChange={(checkState) => {
+                  setConnectOptions((v) => ({
+                    ...v,
+                    ShowThirdwebBranding: checkState === true,
+                  }));
+                }}
+              />
+              <Label htmlFor="show-thirdweb-branding">
+                Show thirdweb branding
+              </Label>
+            </section>
+
+            {/* Require Approval */}
+            <section className="flex items-center gap-2">
+              <Checkbox
+                id="show-thirdweb-branding"
+                checked={connectOptions.requireApproval}
+                onCheckedChange={(checkState) => {
+                  setConnectOptions((v) => ({
+                    ...v,
+                    requireApproval: checkState === true,
+                  }));
+                }}
+              />
+              <Label htmlFor="show-thirdweb-branding">
+                Require TOS approval
+              </Label>
+            </section>
+          </div>
         </div>
       </CollapsibleSection>
 

@@ -152,6 +152,7 @@ export function RightSection(props: {
               termsOfServiceUrl={connectOptions.termsOfServiceLink}
               privacyPolicyUrl={connectOptions.privacyPolicyLink}
               showThirdwebBranding={connectOptions.ShowThirdwebBranding}
+              requireApproval={connectOptions.requireApproval}
             />
             {/* Fake X icon to make it looks exactly like a modal  */}
             <XIcon
@@ -179,6 +180,7 @@ export function RightSection(props: {
               termsOfServiceUrl: connectOptions.termsOfServiceLink,
               privacyPolicyUrl: connectOptions.privacyPolicyLink,
               showThirdwebBranding: connectOptions.ShowThirdwebBranding,
+              requireApproval: connectOptions.requireApproval,
             }}
             wallets={wallets}
             auth={connectOptions.enableAuth ? playgroundAuth : undefined}

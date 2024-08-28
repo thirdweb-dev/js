@@ -76,6 +76,8 @@ export type ConnectWalletSocialOptionsProps = {
   client: ThirdwebClient;
   size: "compact" | "wide";
   isLinking?: boolean;
+  // If true, all options will be disabled. Used for things like requiring TOS approval.
+  disabled?: boolean;
 };
 
 /**
@@ -313,6 +315,7 @@ export const ConnectWalletSocialOptions = (
                 data-variant={showOnlyIcons ? "icon" : "full"}
                 key={loginMethod}
                 variant={"outline"}
+                disabled={props.disabled}
                 onClick={() => {
                   handleSocialLogin(loginMethod as SocialAuthOption);
                 }}
@@ -354,6 +357,7 @@ export const ConnectWalletSocialOptions = (
                 }
                 return undefined;
               }}
+              disabled={props.disabled}
               emptyErrorMessage={emptyErrorMessage}
               submitButtonText={locale.submitEmail}
             />
@@ -393,6 +397,7 @@ export const ConnectWalletSocialOptions = (
 
                 return undefined;
               }}
+              disabled={props.disabled}
               emptyErrorMessage={emptyErrorMessage}
               submitButtonText={locale.submitEmail}
             />

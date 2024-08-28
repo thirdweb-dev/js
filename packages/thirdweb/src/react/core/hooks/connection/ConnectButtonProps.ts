@@ -388,6 +388,19 @@ export type ConnectButton_connectModalOptions = {
   privacyPolicyUrl?: string;
 
   /**
+   * Require terms of service and privacy policy to be accepted before connecting an in-app wallet.
+   *
+   * By default it's `false`
+   * @example
+   * ```tsx
+   * <ConnectButton connectModal={{
+   *  requireApproval: true
+   * }} />
+   * ```
+   */
+  requireApproval?: boolean;
+
+  /**
    * Customize the welcome screen. This prop is only applicable when modalSize prop is set to "wide". On "wide" Modal size, a welcome screen is shown on the right side of the modal.
    *
    * This screen can be customized in two ways
