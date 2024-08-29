@@ -59,6 +59,7 @@ export const authFetchEmbeddedWalletUser = async (
   client: ThirdwebClient,
   url: string,
   props: Parameters<typeof fetch>[1],
+  retries = 3,
 ): Promise<Response> => {
   const authTokenClient = await getAuthTokenClient(client.clientId);
   const params = { ...props };
@@ -78,7 +79,22 @@ export const authFetchEmbeddedWalletUser = async (
         [PAPER_CLIENT_ID_HEADER]: client.clientId,
         ...getSessionHeaders(),
       };
-  return getClientFetch(client)(url, params);
+
+  try {
+    return await getClientFetch(client)(url, params);
+  } catch (e) {
+    if (retries > 0) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return await authFetchEmbeddedWalletUser(
+        client,
+        url,
+        params,
+        retries - 1,
+      );
+    } else {
+      throw e;
+    }
+  }
 };
 
 export async function fetchUserDetails(args: {
