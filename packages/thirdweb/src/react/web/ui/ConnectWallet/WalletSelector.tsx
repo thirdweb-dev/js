@@ -67,6 +67,7 @@ export type WalletSelectorProps = {
     showThirdwebBranding?: boolean;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    requireApproval?: boolean;
   };
   client: ThirdwebClient;
   connectLocale: ConnectLocale;
@@ -136,6 +137,8 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   const { walletIdsToHide } = props;
   const isCompact = props.size === "compact";
   const [isWalletGroupExpanded, setIsWalletGroupExpanded] = useState(false);
+  // This is only used if requireApproval is true
+  const [approvedTOS, setApprovedTOS] = useState(false);
 
   const installedWallets = getInstalledWallets();
   const propsWallets = props.wallets;
@@ -253,11 +256,16 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
   );
 
   const tos =
-    props.meta.termsOfServiceUrl || props.meta.privacyPolicyUrl ? (
+    props.meta.requireApproval ||
+    props.meta.termsOfServiceUrl ||
+    props.meta.privacyPolicyUrl ? (
       <TOS
         termsOfServiceUrl={props.meta.termsOfServiceUrl}
         privacyPolicyUrl={props.meta.privacyPolicyUrl}
         locale={props.connectLocale.agreement}
+        requireApproval={props.meta.requireApproval}
+        isApproved={approvedTOS}
+        onApprove={() => setApprovedTOS(!approvedTOS)}
       />
     ) : undefined;
 
@@ -280,6 +288,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
         chain={props.chain}
         showAllWallets={props.showAllWallets}
         diableSelectionDataReset={props.disableSelectionDataReset}
+        disabled={props.meta.requireApproval && !approvedTOS}
       />
     );
 
@@ -308,6 +317,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
           chain={props.chain}
           showAllWallets={props.showAllWallets}
           diableSelectionDataReset={props.disableSelectionDataReset}
+          disabled={props.meta.requireApproval && !approvedTOS}
         />
       );
 
@@ -352,6 +362,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
               chain={props.chain}
               showAllWallets={props.showAllWallets}
               diableSelectionDataReset={props.disableSelectionDataReset}
+              disabled={props.meta.requireApproval && !approvedTOS}
             />
             {eoaWallets.length > 0 && (
               <>
@@ -423,6 +434,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
                     chain={props.chain}
                     showAllWallets={props.showAllWallets}
                     diableSelectionDataReset={props.disableSelectionDataReset}
+                    disabled={props.meta.requireApproval && !approvedTOS}
                   />
                 </Container>
 
@@ -462,6 +474,7 @@ const WalletSelectorInner: React.FC<WalletSelectorProps> = (props) => {
             chain={props.chain}
             showAllWallets={props.showAllWallets}
             diableSelectionDataReset={props.disableSelectionDataReset}
+            disabled={props.meta.requireApproval && !approvedTOS}
           />
         );
 
@@ -586,6 +599,8 @@ const WalletSelection: React.FC<{
   client: ThirdwebClient;
   chain: Chain | undefined;
   diableSelectionDataReset?: boolean;
+  // If true, all options will be disabled. Used for things like requiring TOS approval.
+  disabled?: boolean;
 }> = (props) => {
   const wallets = sortWallets(props.wallets, props.recommendedWallets);
   const { screen } = useScreenContext();
@@ -618,6 +633,7 @@ const WalletSelection: React.FC<{
                   size={props.size}
                   recommendedWallets={props.recommendedWallets}
                   chain={props.chain}
+                  disabled={props.disabled}
                 />
               </Suspense>
             ) : (

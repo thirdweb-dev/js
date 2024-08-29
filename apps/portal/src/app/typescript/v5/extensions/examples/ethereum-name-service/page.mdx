@@ -1,0 +1,37 @@
+# Interacting with ENS
+
+## Resolve an ENS name to an Ethereum address
+```ts
+import { resolveAddress } from "thirdweb/extensions/ens";
+
+const address = await resolveAddress({
+  client,
+  name: "vitalik.eth",
+});
+
+// Expected result: "0x..."
+```
+
+## Resolve the primary name for a specified address
+```ts
+import { resolveName } from "thirdweb/extensions/ens";
+
+const name = await resolveName({
+  client,
+  address: "0x1234...",
+});
+
+// Expected result: "something.eth"
+```
+
+## Resolve an ENS name to the avatar URL.
+```ts
+import { resolveAvatar } from "thirdweb/extensions/ens";
+
+const address = await resolveAvatar({
+   client,
+  name: "vitalik.eth",
+});
+
+// Expected result: An URL that points to the image of the ENS
+```

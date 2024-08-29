@@ -22,4 +22,5 @@ export type ConnectPlaygroundOptions = {
   privacyPolicyLink: string | undefined;
   buttonLabel: string | undefined;
   ShowThirdwebBranding: boolean;
+  requireApproval: boolean;
 };

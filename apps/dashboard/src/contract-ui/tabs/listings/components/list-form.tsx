@@ -151,13 +151,13 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
           ...nft,
           supply: "1",
           contractAddress: form.watch("contractAddress"),
-          tokenId: nft.metadata.id.toString(),
+          tokenId: nft.id.toString(),
         };
       }
       return {
         ...nft,
         contractAddress: form.watch("contractAddress"),
-        tokenId: nft.metadata.id.toString(),
+        tokenId: nft.id.toString(),
       };
     }) as WalletNFT[];
   }, [ownedNFTs, form]);

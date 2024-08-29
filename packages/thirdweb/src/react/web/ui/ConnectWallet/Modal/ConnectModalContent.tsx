@@ -51,6 +51,7 @@ export const ConnectModalContent = (props: {
     showThirdwebBranding?: boolean;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    requireApproval?: boolean;
   };
   welcomeScreen: WelcomeScreen | undefined;
   connectLocale: ConnectLocale;

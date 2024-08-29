@@ -2,6 +2,8 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { withCache } from "../../../utils/promise/withCache.js";
 import { symbol as generatedSymbol } from "../__generated__/IContractMetadata/read/symbol.js";
 
+export { isSymbolSupported } from "../__generated__/IContractMetadata/read/symbol.js";
+
 /**
  * Retrieves the name associated with the given contract.
  * @param options - The options for the transaction.

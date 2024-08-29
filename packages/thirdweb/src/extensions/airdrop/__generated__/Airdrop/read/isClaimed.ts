@@ -4,7 +4,6 @@ import type { BaseTransactionOptions } from "../../../../../transaction/types.js
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { decodeAbiParameters } from "viem";
 import type { Hex } from "../../../../../utils/encoding/hex.js";
-import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
@@ -56,19 +55,19 @@ const FN_OUTPUTS = [
 
 /**
  * Checks if the `isClaimed` method is supported by the given contract.
- * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `isClaimed` method is supported.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `isClaimed` method is supported.
  * @extension AIRDROP
  * @example
  * ```ts
  * import { isIsClaimedSupported } from "thirdweb/extensions/airdrop";
  *
- * const supported = await isIsClaimedSupported(contract);
+ * const supported = isIsClaimedSupported(["0x..."]);
  * ```
  */
-export async function isIsClaimedSupported(contract: ThirdwebContract<any>) {
+export function isIsClaimedSupported(availableSelectors: string[]) {
   return detectMethod({
-    contract,
+    availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
   });
 }

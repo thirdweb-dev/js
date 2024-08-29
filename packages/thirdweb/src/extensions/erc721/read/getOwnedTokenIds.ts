@@ -3,14 +3,8 @@ import {
   type BalanceOfParams,
   balanceOf,
 } from "../__generated__/IERC721A/read/balanceOf.js";
-import {
-  isTokensOfOwnerSupported,
-  tokensOfOwner,
-} from "../__generated__/IERC721AQueryable/read/tokensOfOwner.js";
-import {
-  isTokenOfOwnerByIndexSupported,
-  tokenOfOwnerByIndex,
-} from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
+import { tokensOfOwner } from "../__generated__/IERC721AQueryable/read/tokensOfOwner.js";
+import { tokenOfOwnerByIndex } from "../__generated__/IERC721Enumerable/read/tokenOfOwnerByIndex.js";
 
 /**
  * @extension ERC721
@@ -35,28 +29,26 @@ export type GetOwnedTokenIdsParams = BalanceOfParams;
 export async function getOwnedTokenIds(
   options: BaseTransactionOptions<GetOwnedTokenIdsParams>,
 ): Promise<bigint[]> {
-  const balanceOfResult = await balanceOf(options);
+  // try both paths, we take whichever one resolves first
+  const result = await Promise.any([
+    // get all the tokens owned by the owner
+    tokensOfOwner({ ...options }) as Promise<bigint[]>,
+    // get the balance of the owner and then fetch each token ID
+    // this is the "fallback" path really
+    (async () => {
+      const balanceOfResult = await balanceOf(options);
+      const promises: ReturnType<typeof tokenOfOwnerByIndex>[] = [];
 
-  const supportsTokensOfOwnerByIndex = await isTokenOfOwnerByIndexSupported(
-    options.contract,
-  );
+      for (let i = 0n; i < balanceOfResult; i++) {
+        promises.push(tokenOfOwnerByIndex({ ...options, index: i }));
+      }
 
-  if (supportsTokensOfOwnerByIndex) {
-    const promises: ReturnType<typeof tokenOfOwnerByIndex>[] = [];
+      return Promise.all(promises);
+    })(),
+  ]).catch(() => null);
 
-    for (let i = 0n; i < balanceOfResult; i++) {
-      promises.push(tokenOfOwnerByIndex({ ...options, index: i }));
-    }
-
-    return Promise.all(promises);
-  }
-
-  const supportsTokensOfOwner = await isTokensOfOwnerSupported(
-    options.contract,
-  );
-
-  if (supportsTokensOfOwner) {
-    return (await tokensOfOwner({ ...options })).map((token) => token); // Unfortunate map to make this return a mutable array
+  if (result) {
+    return result;
   }
 
   throw new Error(

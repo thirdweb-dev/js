@@ -71,7 +71,7 @@ export async function getClaimParams(options: GetClaimParamsOptions) {
 
     // lazy-load the getActiveClaimCondition function
     const { getActiveClaimCondition } = await import(
-      "../../../extensions/erc721/drops/read/getActiveClaimCondition.js"
+      "../../../extensions/erc20/drops/read/getActiveClaimCondition.js"
     );
     return await getActiveClaimCondition({
       contract: options.contract,

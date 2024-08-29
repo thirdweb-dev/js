@@ -278,6 +278,16 @@ export type ConnectButton_detailsModalOptions = {
    * thirdweb Pay allows users to buy tokens using crypto or fiat currency.
    */
   payOptions?: Extract<PayUIOptions, { mode?: "fund_wallet" }>;
+
+  /**
+   * Render custom UI for the connected wallet name in the `ConnectButton` Details Modal, overriding ENS name or wallet address.
+   */
+  connectedAccountName?: React.ReactNode;
+
+  /**
+   * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
+   */
+  connectedAccountAvatarUrl?: string;
 };
 
 /**
@@ -325,6 +335,16 @@ export type ConnectButton_detailsButtonOptions = {
    * ```
    */
   displayBalanceToken?: Record<number, string>;
+
+  /**
+   * Render custom UI for the connected wallet name in the `ConnectButton` details button, overriding ENS name or wallet address.
+   */
+  connectedAccountName?: React.ReactNode;
+
+  /**
+   * Use custom avatar URL for the connected wallet image in the `ConnectButton` details button, overriding ENS avatar or Blobbie icon.
+   */
+  connectedAccountAvatarUrl?: string;
 };
 
 /**
@@ -386,6 +406,19 @@ export type ConnectButton_connectModalOptions = {
    * ```
    */
   privacyPolicyUrl?: string;
+
+  /**
+   * Require terms of service and privacy policy to be accepted before connecting an in-app wallet.
+   *
+   * By default it's `false`
+   * @example
+   * ```tsx
+   * <ConnectButton connectModal={{
+   *  requireApproval: true
+   * }} />
+   * ```
+   */
+  requireApproval?: boolean;
 
   /**
    * Customize the welcome screen. This prop is only applicable when modalSize prop is set to "wide". On "wide" Modal size, a welcome screen is shown on the right side of the modal.
