@@ -103,17 +103,25 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
         </Text>
       </Flex>
 
-      {!hasApiKeys && <NoApiKeys service="in-app wallets" />}
+      {keysQuery.isLoading ? (
+        <div className="flex h-[500px] items-center justify-center">
+          <Spinner className="size-10" />
+        </div>
+      ) : (
+        <>
+          {!hasApiKeys && <NoApiKeys service="in-app wallets" />}
 
-      {hasApiKeys && selectedKey && (
-        <EmbeddedWallets
-          apiKey={selectedKey}
-          wallets={wallets}
-          isLoading={walletsQuery.isLoading}
-          isFetched={walletsQuery.isFetched}
-          trackingCategory={TRACKING_CATEGORY}
-          defaultTabIndex={defaultTabIndex}
-        />
+          {hasApiKeys && selectedKey && (
+            <EmbeddedWallets
+              apiKey={selectedKey}
+              wallets={wallets}
+              isLoading={walletsQuery.isLoading}
+              isFetched={walletsQuery.isFetched}
+              trackingCategory={TRACKING_CATEGORY}
+              defaultTabIndex={defaultTabIndex}
+            />
+          )}
+        </>
       )}
 
       <Spacer height={20} />
