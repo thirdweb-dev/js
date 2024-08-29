@@ -97,22 +97,26 @@ export const CreditsItem: React.FC<CreditsItemProps> = ({
               {formatToDollars(credit?.remainingValueUsdCents || 0)}
             </Text>
           </Flex>
-          <Flex flexDir="column" gap={1}>
-            <Text>Claimed Credits (All-Time)</Text>
-            <Text color="bgBlack">
-              {formatToDollars(credit?.originalGrantUsdCents || 0)}
-            </Text>
-          </Flex>
-          <Flex flexDir="column" gap={1}>
-            <Text>Expires</Text>
-            <Text color="bgBlack" textTransform="capitalize">
-              {credit?.expiresAt
-                ? formatDistance(new Date(credit.expiresAt), Date.now(), {
-                    addSuffix: true,
-                  })
-                : "N/A"}
-            </Text>
-          </Flex>
+          {!isTwCredit && (
+            <Flex flexDir="column" gap={1}>
+              <Text>Claimed Credits (All-Time)</Text>
+              <Text color="bgBlack">
+                {formatToDollars(credit?.originalGrantUsdCents || 0)}
+              </Text>
+            </Flex>
+          )}
+          {credit?.expiresAt && (
+            <Flex flexDir="column" gap={1}>
+              <Text>Expires</Text>
+              <Text color="bgBlack" textTransform="capitalize">
+                {credit?.expiresAt
+                  ? formatDistance(new Date(credit.expiresAt), Date.now(), {
+                      addSuffix: true,
+                    })
+                  : "N/A"}
+              </Text>
+            </Flex>
+          )}
         </Flex>
         {hasAppliedForOpGrant && !credit && isOpCredit && (
           <Alert

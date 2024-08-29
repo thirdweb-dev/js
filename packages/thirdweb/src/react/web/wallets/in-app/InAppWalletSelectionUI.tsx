@@ -25,6 +25,8 @@ function InAppWalletSelectionUI(props: {
   recommendedWallets: Wallet[] | undefined;
   chain: Chain | undefined;
   size: "compact" | "wide";
+  // If true, all options will be disabled. Used for things like requiring TOS approval.
+  disabled?: boolean;
 }) {
   const { screen } = useScreenContext();
   const setData = useSetSelectionData();
@@ -59,6 +61,7 @@ function InAppWalletSelectionUI(props: {
 
   return (
     <ConnectWalletSocialOptions
+      disabled={props.disabled}
       locale={locale}
       wallet={props.wallet}
       done={props.done}

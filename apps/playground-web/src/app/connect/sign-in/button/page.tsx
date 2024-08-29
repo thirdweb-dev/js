@@ -46,6 +46,7 @@ const defaultConnectOptions: ConnectPlaygroundOptions = {
   enableAccountAbstraction: false,
   buttonLabel: undefined,
   ShowThirdwebBranding: true,
+  requireApproval: false,
 };
 
 export default function Page() {

@@ -171,7 +171,6 @@ ${
 import { once } from "../../../../../utils/promise/once.js";`
     : ""
 }
-import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 
@@ -200,8 +199,8 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
 
 /**
  * Checks if the \`${f.name}\` method is supported by the given contract.
- * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the \`${f.name}\` method is supported.
  * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
@@ -209,11 +208,11 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
    f.name,
  )}Supported } from "thirdweb/extensions/${extensionName}";
  * 
- * const supported = await is${uppercaseFirstLetter(f.name)}Supported(contract);
+ * const supported = is${uppercaseFirstLetter(f.name)}Supported(["0x..."]);
  * \`\`\`
  */
-export async function is${uppercaseFirstLetter(f.name)}Supported(contract: ThirdwebContract<any>) {
-  return detectMethod({contract, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
+export function is${uppercaseFirstLetter(f.name)}Supported(availableSelectors: string[]) {
+  return detectMethod({availableSelectors, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
 }
 
 ${
@@ -356,7 +355,6 @@ ${
 import type { Hex } from "../../../../../utils/encoding/hex.js";`
     : ""
 }
-import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 ${
@@ -383,8 +381,8 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
 
 /**
  * Checks if the \`${f.name}\` method is supported by the given contract.
- * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the \`${f.name}\` method is supported.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the \`${f.name}\` method is supported.
  * @extension ${extensionName.toUpperCase()}
  * @example
  * \`\`\`ts
@@ -392,11 +390,11 @@ const FN_OUTPUTS = ${JSON.stringify(preparedMethod[2], null, 2)} as const;
    f.name,
  )}Supported } from "thirdweb/extensions/${extensionName}";
  * 
- * const supported = await is${uppercaseFirstLetter(f.name)}Supported(contract);
+ * const supported = is${uppercaseFirstLetter(f.name)}Supported(["0x..."]);
  * \`\`\`
  */
-export async function is${uppercaseFirstLetter(f.name)}Supported(contract: ThirdwebContract<any>) {
-  return detectMethod({contract, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
+export function is${uppercaseFirstLetter(f.name)}Supported(availableSelectors: string[]) {
+  return detectMethod({availableSelectors, method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const});
 }
 
 ${

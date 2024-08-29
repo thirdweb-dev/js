@@ -2,6 +2,8 @@ import { upload } from "../../../storage/upload.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { setContractURI } from "../__generated__/IContractMetadata/write/setContractURI.js";
 
+export { isSetContractURISupported as isSetContractMetadataSupported } from "../__generated__/IContractMetadata/write/setContractURI.js";
+
 /**
  * @extension COMMON
  */

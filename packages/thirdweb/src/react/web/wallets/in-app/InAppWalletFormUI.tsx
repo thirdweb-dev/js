@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import type { Chain } from "../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../client/client.js";
 import type { Wallet } from "../../../../wallets/interfaces/wallet.js";
@@ -28,6 +29,7 @@ export type InAppWalletFormUIProps = {
     showThirdwebBranding?: boolean;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    requireApproval?: boolean;
   };
   client: ThirdwebClient;
   chain: Chain | undefined;
@@ -40,6 +42,8 @@ export type InAppWalletFormUIProps = {
 export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
   const isCompact = props.size === "compact";
   const { initialScreen, screen } = useScreenContext();
+  // This is only used when requireApproval is true to accept the TOS
+  const [isApproved, setIsApproved] = useState(false);
 
   const isInitialScreen =
     screen === props.wallet && initialScreen === props.wallet;
@@ -84,7 +88,6 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         ) : (
           <ModalHeader onBack={onBack} title={props.inAppWalletLocale.signIn} />
         ))}
-
       <Container
         expand
         flex="column"
@@ -94,6 +97,7 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         <ConnectWalletSocialOptions
           {...props}
           locale={props.inAppWalletLocale}
+          disabled={props.meta?.requireApproval && !isApproved}
         />
       </Container>
 
@@ -101,12 +105,16 @@ export function InAppWalletFormUIScreen(props: InAppWalletFormUIProps) {
         (props.meta?.showThirdwebBranding !== false ||
           props.meta?.termsOfServiceUrl ||
           props.meta?.privacyPolicyUrl) && <Spacer y="xl" />}
-
       <Container flex="column" gap="lg">
         <TOS
           termsOfServiceUrl={props.meta?.termsOfServiceUrl}
           privacyPolicyUrl={props.meta?.privacyPolicyUrl}
           locale={props.connectLocale.agreement}
+          requireApproval={props.meta?.requireApproval}
+          onApprove={() => {
+            setIsApproved(!isApproved);
+          }}
+          isApproved={isApproved}
         />
 
         {props.meta?.showThirdwebBranding !== false && <PoweredByThirdweb />}

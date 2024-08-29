@@ -4,6 +4,7 @@ import { eth_getStorageAt } from "../../rpc/actions/eth_getStorageAt.js";
 import { getRpcClient } from "../../rpc/rpc.js";
 import { readContract } from "../../transaction/read-contract.js";
 import { isAddress } from "../address.js";
+import type { Hex } from "../encoding/hex.js";
 import { extractMinimalProxyImplementationAddress } from "./extractMnimalProxyImplementationAddress.js";
 
 // TODO: move to const exports
@@ -23,7 +24,7 @@ const AddressZero = "0x0000000000000000000000000000000000000000";
 export async function resolveImplementation(
   // biome-ignore lint/suspicious/noExplicitAny: TODO: fix any
   contract: ThirdwebContract<any>,
-): Promise<{ address: string; bytecode: string }> {
+): Promise<{ address: string; bytecode: Hex }> {
   const [originalBytecode, beacon] = await Promise.all([
     getBytecode(contract),
     getBeaconFromStorageSlot(contract),

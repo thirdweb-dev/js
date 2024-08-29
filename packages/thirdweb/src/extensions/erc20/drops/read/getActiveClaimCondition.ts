@@ -1,8 +1,8 @@
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import type { ClaimCondition } from "../../../../utils/extensions/drops/types.js";
-import { claimCondition } from "../../__generated__/DropSinglePhase/read/claimCondition.js";
-import { getActiveClaimConditionId } from "../../__generated__/IDropERC20/read/getActiveClaimConditionId.js";
-import { getClaimConditionById } from "../../__generated__/IDropERC20/read/getClaimConditionById.js";
+import * as Single from "../../__generated__/DropSinglePhase/read/claimCondition.js";
+import * as MultiActiveId from "../../__generated__/IDropERC20/read/getActiveClaimConditionId.js";
+import * as MultiById from "../../__generated__/IDropERC20/read/getClaimConditionById.js";
 
 /**
  * Retrieves the active claim condition.
@@ -20,8 +20,8 @@ export async function getActiveClaimCondition(
   options: BaseTransactionOptions,
 ): Promise<ClaimCondition> {
   const getActiveClaimConditionMultiPhase = async () => {
-    const conditionId = await getActiveClaimConditionId(options);
-    return getClaimConditionById({ ...options, conditionId });
+    const conditionId = await MultiActiveId.getActiveClaimConditionId(options);
+    return MultiById.getClaimConditionById({ ...options, conditionId });
   };
   const getActiveClaimConditionSinglePhase = async () => {
     const [
@@ -33,7 +33,7 @@ export async function getActiveClaimCondition(
       pricePerToken,
       currency,
       metadata,
-    ] = await claimCondition(options);
+    ] = await Single.claimCondition(options);
     return {
       startTimestamp,
       maxClaimableSupply,
@@ -57,4 +57,19 @@ export async function getActiveClaimCondition(
     return condition.value;
   }
   throw new Error("Claim condition not found");
+}
+
+export function isGetActiveClaimConditionSupported(
+  availableSelectors: string[],
+) {
+  // either needs to have the single-phase claim condition or the multi-phase claim condition
+  return [
+    // either the single-phase claim condition is supported
+    Single.isClaimConditionSupported(availableSelectors),
+    // or the multi-phase claim condition is supported (both methods are required)
+    [
+      MultiActiveId.isGetActiveClaimConditionIdSupported(availableSelectors),
+      MultiById.isGetClaimConditionByIdSupported(availableSelectors),
+    ].every(Boolean),
+  ].some(Boolean);
 }

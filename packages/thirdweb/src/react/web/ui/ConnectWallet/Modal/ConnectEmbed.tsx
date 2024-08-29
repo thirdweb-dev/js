@@ -229,11 +229,13 @@ export function ConnectEmbed(props: ConnectEmbedProps) {
       termsOfServiceUrl: props.termsOfServiceUrl,
       title: undefined,
       titleIconUrl: undefined,
+      requireApproval: props.requireApproval,
     };
   }, [
     props.privacyPolicyUrl,
     props.showThirdwebBranding,
     props.termsOfServiceUrl,
+    props.requireApproval,
   ]);
 
   const autoConnectComp = props.autoConnect !== false && (

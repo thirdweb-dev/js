@@ -6,7 +6,6 @@ import type {
 import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
 import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
 import { once } from "../../../../../utils/promise/once.js";
-import type { ThirdwebContract } from "../../../../../contract/contract.js";
 import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 
 /**
@@ -79,21 +78,19 @@ const FN_OUTPUTS = [
 
 /**
  * Checks if the `createListing` method is supported by the given contract.
- * @param contract The ThirdwebContract.
- * @returns A promise that resolves to a boolean indicating if the `createListing` method is supported.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `createListing` method is supported.
  * @extension MARKETPLACE
  * @example
  * ```ts
  * import { isCreateListingSupported } from "thirdweb/extensions/marketplace";
  *
- * const supported = await isCreateListingSupported(contract);
+ * const supported = isCreateListingSupported(["0x..."]);
  * ```
  */
-export async function isCreateListingSupported(
-  contract: ThirdwebContract<any>,
-) {
+export function isCreateListingSupported(availableSelectors: string[]) {
   return detectMethod({
-    contract,
+    availableSelectors,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
   });
 }

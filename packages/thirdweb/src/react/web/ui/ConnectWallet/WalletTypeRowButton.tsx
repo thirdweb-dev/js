@@ -14,6 +14,7 @@ type WalletTypeRowProps = {
   onClick: () => void;
   title: string;
   icon: string;
+  disabled?: boolean;
 };
 
 export function WalletTypeRowButton(props: WalletTypeRowProps) {
@@ -29,6 +30,7 @@ export function WalletTypeRowButton(props: WalletTypeRowProps) {
       onClick={() => {
         props.onClick();
       }}
+      disabled={props.disabled}
     >
       <Container flex="row" gap="sm" center="y" color="accentText">
         <Img

@@ -202,6 +202,11 @@ export type ConnectEmbedProps = {
   privacyPolicyUrl?: string;
 
   /**
+   * If provided, users will be required to accept the Terms of Service before connecting an in-app wallet.
+   */
+  requireApproval?: boolean;
+
+  /**
    * Callback to be called on successful connection of wallet - including auto-connect.
    * The callback is called with the connected wallet
    *

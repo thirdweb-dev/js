@@ -223,6 +223,7 @@ export class IFrameWallet {
         nonce: tx.nonce,
         chainId: tx.chainId,
       };
+
       if (tx.maxFeePerGas) {
         // ethers (in the iframe) rejects any type 0 trasaction with unknown keys
         // TODO remove this once iframe is upgraded to v5
@@ -304,6 +305,7 @@ export class IFrameWallet {
         return signedMessage as Hex;
       },
       async signTypedData(_typedData) {
+        console.log("signTypedData", _typedData);
         const parsedTypedData = parseTypedData(_typedData);
         // deleting EIP712 Domain as it results in ambiguous primary type on some cases
         // this happens when going from viem to ethers via the iframe
@@ -312,8 +314,11 @@ export class IFrameWallet {
         }
         const domain = parsedTypedData.domain as TypedDataDefinition["domain"];
         const chainId = domain?.chainId;
+        const verifyingContract = domain?.verifyingContract
+          ? { verifyingContract: domain?.verifyingContract }
+          : {};
         const domainData = {
-          verifyingContract: domain?.verifyingContract,
+          ...verifyingContract,
           name: domain?.name,
           version: domain?.version,
         };

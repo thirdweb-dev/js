@@ -40,6 +40,18 @@ export type SendAndConfirmTransactionConfig = {
  *   }
  * });
  * ```
+ *
+ * ### Gasless usage with OpenZeppelin
+ * ```tsx
+ * import { useSendAndConfirmTransaction } from "thirdweb/react";
+ * const mutation = useSendAndConfirmTransaction({
+ *   gasless: {
+ *     provider: "openzeppelin",
+ *     relayerUrl: "https://...",
+ *     relayerForwarderAddress: "0x...",
+ *   }
+ * });
+ * ```
  * @transaction
  */
 export function useSendAndConfirmTransaction(

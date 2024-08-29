@@ -4,7 +4,7 @@ import { NavLink } from "../ui/NavLink";
 
 export type SidebarContentProps = {
   header?: React.ReactNode;
-  links?: { href: string; label: React.ReactNode }[];
+  links: { href: string; label: React.ReactNode }[];
   className?: string;
 };
 

@@ -1,9 +1,10 @@
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import type { ThirdwebContract } from "thirdweb";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { Button, Drawer } from "tw-components";
 import { CreateListingsForm } from "../listings/components/list-form";
 
@@ -23,7 +24,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
 }) => {
   const address = useActiveAccount()?.address;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const [isFormLoading, setIsFormLoading] = useState(false);
 
   return (
     <ListerOnly contract={contract}>
@@ -38,7 +39,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           children: (
             <>
               <Button
-                isDisabled={isPending}
+                isDisabled={isFormLoading}
                 variant="outline"
                 mr={3}
                 onClick={onClose}
@@ -46,7 +47,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
                 Cancel
               </Button>
               <TransactionButton
-                isLoading={isPending}
+                isLoading={isFormLoading}
                 transactionCount={2}
                 form={LIST_FORM_ID}
                 type="submit"
@@ -62,7 +63,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           contract={contract}
           formId={LIST_FORM_ID}
           type={type}
-          mutate={mutate}
+          setIsFormLoading={setIsFormLoading}
         />
       </Drawer>
       <Button

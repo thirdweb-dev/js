@@ -34,6 +34,7 @@ type ConnectModalOptions = {
     showThirdwebBranding?: boolean;
     termsOfServiceUrl?: string;
     privacyPolicyUrl?: string;
+    requireApproval?: boolean;
   };
   connectLocale: ConnectLocale;
   client: ThirdwebClient;

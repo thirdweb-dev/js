@@ -18,7 +18,6 @@ export type NFTInput = Prettify<
 >;
 
 export type NFTMetadata = {
-  id: bigint;
   uri: string;
   name?: string;
   description?: string;

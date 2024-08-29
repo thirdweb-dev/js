@@ -72,24 +72,6 @@ const DROPS = {
   ],
 } as const;
 
-const MODULAR_CONTRACTS = {
-  id: "modular-contracts",
-  name: "Drop",
-  displayName: "Modular Contracts (Beta)",
-  description:
-    "Collection of highly customizable and upgradeable smart contracts built with the modular contracts framework.",
-  isBeta: true,
-  contracts: [
-    "deployer.thirdweb.eth/ModularDropERC721",
-    "deployer.thirdweb.eth/ModularTokenERC721",
-    "deployer.thirdweb.eth/ModularDropERC1155",
-    "deployer.thirdweb.eth/ModularTokenERC1155",
-    "deployer.thirdweb.eth/ModularDropERC20",
-    "deployer.thirdweb.eth/ModularTokenERC20",
-    "deployer.thirdweb.eth/ModularOpenEditionERC721",
-  ],
-} as const;
-
 const MARKETS = {
   id: "marketplace",
   name: "Marketplace",
@@ -188,7 +170,6 @@ const SMART_WALLET = {
 
 const CATEGORIES = {
   [POPULAR.id]: POPULAR,
-  [MODULAR_CONTRACTS.id]: MODULAR_CONTRACTS,
   [NFTS.id]: NFTS,
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,

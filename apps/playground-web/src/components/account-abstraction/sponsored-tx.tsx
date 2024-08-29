@@ -1,8 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getContract } from "thirdweb";
+import { baseSepolia } from "thirdweb/chains";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
 import {
+  ConnectButton,
   MediaRenderer,
   TransactionButton,
   useActiveAccount,
@@ -10,10 +13,22 @@ import {
   useDisconnect,
   useReadContract,
 } from "thirdweb/react";
+import { shortenHex } from "thirdweb/utils";
 import { THIRDWEB_CLIENT } from "../../lib/client";
-import { editionDropContract, editionDropTokenId } from "./constants";
+import { WALLETS } from "../../lib/constants";
+
+export const chain = baseSepolia;
+export const editionDropAddress = "0x638263e3eAa3917a53630e61B1fBa685308024fa";
+export const editionDropTokenId = 1n;
+
+export const editionDropContract = getContract({
+  address: editionDropAddress,
+  chain,
+  client: THIRDWEB_CLIENT,
+});
 
 export function SponsoredTxPreview() {
+  const [txHash, setTxHash] = useState<string | null>(null);
   const wallet = useActiveWallet();
   const { disconnect } = useDisconnect();
   useEffect(() => {
@@ -34,11 +49,25 @@ export function SponsoredTxPreview() {
   });
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col justify-center items-center">
       {isNftLoading ? (
         <div className="w-full mt-24">Loading...</div>
       ) : (
         <>
+          <div className="flex flex-col justify-center p-2 gap-2">
+            <ConnectButton
+              client={THIRDWEB_CLIENT}
+              chain={chain}
+              wallets={WALLETS}
+              accountAbstraction={{
+                chain,
+                sponsorGas: true,
+              }}
+              connectButton={{
+                label: "Login to mint this Kitten!",
+              }}
+            />
+          </div>
           {nft ? (
             <MediaRenderer
               client={THIRDWEB_CLIENT}
@@ -47,7 +76,7 @@ export function SponsoredTxPreview() {
             />
           ) : null}
           {smartAccount ? (
-            <div className="flex flex-col justify-center p-8">
+            <div className="flex flex-col justify-center p-2">
               <p className="font-semibold text-center mb-2">
                 You own {ownedNfts?.[0]?.quantityOwned.toString() || "0"}{" "}
                 Kittens
@@ -67,24 +96,32 @@ export function SponsoredTxPreview() {
                 onError={(error) => {
                   alert(`Error: ${error.message}`);
                 }}
-                onTransactionConfirmed={async () => {
-                  alert("Minted successful!");
+                onClick={() => {
+                  setTxHash(null);
+                }}
+                onTransactionConfirmed={async (receipt) => {
+                  setTxHash(receipt.transactionHash);
                 }}
               >
                 Mint
               </TransactionButton>
             </div>
-          ) : (
-            <p
-              style={{
-                textAlign: "center",
-                width: "400px",
-                marginTop: "10px",
-              }}
-            >
-              Login to mint this Kitten!
-            </p>
-          )}
+          ) : null}
+          {txHash ? (
+            <div className="flex flex-col justify-center p-2">
+              <p className="text-green-500 text-center mb-2">
+                Minted! Tx Hash:{" "}
+                <a
+                  href={`${chain.blockExplorers?.[0]?.url}/tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  {shortenHex(txHash)}
+                </a>
+              </p>
+            </div>
+          ) : null}
         </>
       )}
     </div>

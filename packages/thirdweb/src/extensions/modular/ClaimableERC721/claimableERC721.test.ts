@@ -14,7 +14,6 @@ import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and
 import { balanceOf } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
 import { deployModularContract } from "../../prebuilts/deploy-modular.js";
 import * as BatchMetadataERC721 from "../BatchMetadataERC721/index.js";
-import * as OpenEditionMetadataERC721 from "../OpenEditionMetadataERC721/index.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
 import * as ClaimableERC721 from "./index.js";
 
@@ -34,7 +33,7 @@ describe("ModularClaimableERC721", () => {
         ClaimableERC721.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
         }),
-        OpenEditionMetadataERC721.module(),
+        BatchMetadataERC721.module(),
       ],
     });
     contract = getContract({
