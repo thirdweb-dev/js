@@ -23,7 +23,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
 }) => {
   const address = useActiveAccount()?.address;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const mutation = useSendAndConfirmTransaction();
 
   return (
     <ListerOnly contract={contract}>
@@ -38,7 +38,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           children: (
             <>
               <Button
-                isDisabled={isPending}
+                isDisabled={mutation.isPending}
                 variant="outline"
                 mr={3}
                 onClick={onClose}
@@ -46,7 +46,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
                 Cancel
               </Button>
               <TransactionButton
-                isLoading={isPending}
+                isLoading={mutation.isPending}
                 transactionCount={2}
                 form={LIST_FORM_ID}
                 type="submit"
@@ -62,7 +62,7 @@ export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
           contract={contract}
           formId={LIST_FORM_ID}
           type={type}
-          mutate={mutate}
+          mutation={mutation}
         />
       </Drawer>
       <Button

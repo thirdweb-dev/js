@@ -27,7 +27,8 @@ import type { WalletNFT } from "lib/wallet/nfts/types";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
-import type { UseMutateFunction } from "react-query-v5";
+import type { UseMutationResult } from "react-query-v5";
+import { toast } from "sonner";
 import {
   NATIVE_TOKEN_ADDRESS,
   type PreparedTransaction,
@@ -38,6 +39,14 @@ import {
 } from "thirdweb";
 import type { TransactionReceipt } from "thirdweb/dist/types/transaction/types";
 import { decimals } from "thirdweb/extensions/erc20";
+import {
+  isApprovedForAll as isApprovedForAll721,
+  setApprovalForAll as setApprovalForAll721,
+} from "thirdweb/extensions/erc721";
+import {
+  isApprovedForAll as isApprovedForAll1155,
+  setApprovalForAll as setApprovalForAll1155,
+} from "thirdweb/extensions/erc1155";
 import { createAuction, createListing } from "thirdweb/extensions/marketplace";
 import { useActiveAccount } from "thirdweb/react";
 import {
@@ -55,8 +64,6 @@ interface ListForm
   extends Omit<NewDirectListing, "type">,
     Omit<NewAuctionListing, "type"> {
   selected?: WalletNFT;
-  contractAddress: string;
-  tokenId: string;
   listingType: "direct" | "auction";
   listingDurationInSeconds: string;
   quantity: string;
@@ -66,12 +73,7 @@ type CreateListingsFormProps = {
   contract: ThirdwebContract;
   formId: string;
   type?: "direct-listings" | "english-auctions";
-  mutate: UseMutateFunction<
-    TransactionReceipt,
-    Error,
-    PreparedTransaction,
-    unknown
-  >;
+  mutation: UseMutationResult<TransactionReceipt, Error, PreparedTransaction>;
 };
 
 const auctionTimes = [
@@ -88,7 +90,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   contract,
   formId,
   type,
-  mutate,
+  mutation,
 }) => {
   const trackEvent = useTrack();
   const network = useEVMContractInfo()?.chain;
@@ -104,8 +106,6 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
   const form = useForm<ListForm>({
     defaultValues: {
       selected: undefined,
-      contractAddress: "",
-      tokenId: "",
       currencyContractAddress: NATIVE_TOKEN_ADDRESS,
       quantity: "1",
       buyoutPricePerToken: "0",
@@ -117,21 +117,23 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
     },
   });
 
-  const address = useActiveAccount()?.address;
+  const account = useActiveAccount();
 
-  const selectedContract = getContract({
-    address: form.watch("contractAddress"),
-    chain: contract.chain,
-    client: thirdwebClient,
-  });
+  const selectedContract = form.watch("selected.contractAddress")
+    ? getContract({
+        address: form.watch("selected.contractAddress"),
+        chain: contract.chain,
+        client: thirdwebClient,
+      })
+    : undefined;
 
   const { data: ownedNFTs, isLoading: isOwnedNFTsLoading } =
     useDashboardOwnedNFTs({
       contract: selectedContract,
-      owner: address,
+      owner: account?.address,
       // Only run this hook as the last resort if this chain is not supported by the API services we are using
       disabled:
-        !form.watch("contractAddress") ||
+        !selectedContract ||
         isSupportedChain ||
         isWalletNFTsLoading ||
         (walletNFTs?.result || []).length > 0,
@@ -150,13 +152,13 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         return {
           ...nft,
           supply: "1",
-          contractAddress: form.watch("contractAddress"),
+          contractAddress: form.watch("selected.contractAddress"),
           tokenId: nft.id.toString(),
         };
       }
       return {
         ...nft,
-        contractAddress: form.watch("contractAddress"),
+        contractAddress: form.watch("selected.contractAddress"),
         tokenId: nft.id.toString(),
       };
     }) as WalletNFT[];
@@ -179,9 +181,42 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       as="form"
       id={formId}
       onSubmit={form.handleSubmit(async (formData) => {
-        if (!formData.selected) {
+        if (!formData.selected || !selectedContract) {
           return;
         }
+
+        if (!account) {
+          return toast.error("No account detected");
+        }
+
+        const isNftApproved =
+          formData.selected.type === "ERC1155"
+            ? isApprovedForAll1155
+            : isApprovedForAll721;
+        const isApproved = await isNftApproved({
+          contract: selectedContract,
+          operator: contract.address,
+          owner: account.address,
+        });
+
+        if (!isApproved) {
+          const setNftApproval =
+            formData.selected.type === "ERC1155"
+              ? setApprovalForAll1155
+              : setApprovalForAll721;
+          const approveTx = setNftApproval({
+            contract: selectedContract,
+            operator: contract.address,
+            approved: true,
+          });
+
+          try {
+            await mutation.mutateAsync(approveTx);
+          } catch {
+            return toast.error("Failed to approve NFT for marketplace");
+          }
+        }
+
         if (formData.listingType === "direct") {
           // Hard code to 100 years for now
           const endTimestamp = new Date(
@@ -197,7 +232,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             pricePerToken: String(formData.buyoutPricePerToken),
             endTimestamp,
           });
-          mutate(transaction, {
+          mutation.mutate(transaction, {
             onSuccess: () => {
               onSuccess();
               modalContext.onClose();
@@ -246,7 +281,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
               minimumBidAmountWei * BigInt(formData.quantity),
             buyoutBidAmountWei: buyoutBidAmountWei * BigInt(formData.quantity),
           });
-          mutate(transaction, {
+          mutation.mutate(transaction, {
             onSuccess: () => {
               onSuccess();
               trackEvent({
@@ -305,18 +340,20 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                 contract address of the NFT you want to list.
               </Text>
             </Stack>
-            <FormControl isInvalid={!!form.formState.errors.contractAddress}>
+            <FormControl
+              isInvalid={!!form.formState.errors.selected?.contractAddress}
+            >
               <Heading as={FormLabel} size="label.lg">
                 Contract address
               </Heading>
               <SolidityInput
                 solidityType="address"
                 formContext={form}
-                {...form.register("contractAddress")}
+                {...form.register("selected.contractAddress")}
                 placeholder=""
               />
               <FormErrorMessage>
-                {form.formState.errors.contractAddress?.message}
+                {form.formState.errors.selected?.contractAddress?.message}
               </FormErrorMessage>
               <FormHelperText>
                 This will display all the NFTs you own from this contract.
@@ -327,7 +364,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         {isWalletNFTsLoading ||
         (isOwnedNFTsLoading &&
           !isSupportedChain &&
-          form.watch("contractAddress")) ? (
+          form.watch("selected.contractAddress")) ? (
           <Center height="60px">
             <Spinner />
           </Center>
