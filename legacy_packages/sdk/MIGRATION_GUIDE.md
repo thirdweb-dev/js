@@ -4,7 +4,7 @@ If you are looking to upgrade from an earlier version of the SDK, below are the 
 
 ## Upgrading to Version 3
 
-Version 3 of the SDK introduces a significant (87%) reduction in package size and first-class support for using custom contracts with the SDK. Learn more about why we made these changes and how it improves the SDK in our [blog post](https://blog.thirdweb.com/sdk-major-update/).
+Version 3 of the SDK introduces a significant (87%) reduction in package size and first-class support for using custom contracts with the SDK. Learn more about why we made these changes and how they improve the SDK in our [blog post](https://blog.thirdweb.com/sdk-major-update/).
 
 ### Getting Contracts is now Async
 
