@@ -1,4 +1,4 @@
-import { createMetadata } from "@doc";
+import { createMetadata, Details } from "@doc";
 
 export const metadata = createMetadata({
 	title: "Backend Wallets | thirdweb Engine",
@@ -20,7 +20,9 @@ A [local wallet](/references/wallets/v2/LocalWallet) is a wallet created or impo
 
 ## AWS KMS wallet
 
-An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely stored in your AWS account.
+An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely stored in your AWS account. Engine can create and transact with the wallet, but not delete it.
+
+#### Setup
 
 1. [Create an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html#id_users_create_console) with programmatic access.
 1. [Grant the following KMS permissions](https://docs.aws.amazon.com/kms/latest/developerguide/control-access.html) to this user.
@@ -29,54 +31,128 @@ An [AWS KMS Wallet](/references/wallets/v2/AwsKmsWallet) is a wallet securely st
    - `kms:Sign`
    - `kms:CreateAlias`
    - `kms:Verify`
+1. On the user page, navigate to **Security credentials > Access keys**. 
+1. Select **Create access key** to get an **Access Key** and **Secret Key**.
+1. In the dashboard, navigate to **Configuration > Backend Wallets**.
+1. Select **AWS KMS** and provide the following:
+   - Access Key (example: `AKIA...`)
+   - Secret Key (example: `UW7A...`)
+   - Region (example: `us-west-1`)
 
-The IAM user credentials are required by Engine to create, import, and transact with AWS KMS wallets.
+#### Import an existing wallet
 
-#### KMS key settings
+1. Ensure your [KMS key is created](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) with the following settings:
+   - Key type: `Asymmetric`
+   - Key spec: `ECC_SECG_P256K1`
+   - Key usage: `Sign and verify`
+1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. Select **Import** and provide the following:
+   - AWS KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
+   - AWS KMS ARN (example: `arn:aws:kms:us-west-1:632186309261:key/0489da75-9830-4a5a-97e3-e4a6df7775b3`)
 
-If creating AWS KMS wallets with Engine, skip this step.
-
-To import an existing KMS key, ensure your [KMS key is created](https://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) with the following settings:
-
-- Key type: `Asymmetric`
-- Key spec: `ECC_SECG_P256K1`
-- Key usage: `Sign and verify`
 
 ## Google Cloud KMS wallet
 
-1. [Enable Google KMS API](https://cloud.google.com/kms/docs/create-encryption-keys#before-you-begin) for your Google project.
+#### Setup
+
+1. [Enable Google KMS API](https://cloud.google.com/kms/docs/create-encryption-keys#before-you-begin) for your GCP account.
 1. [Create a Service Account](https://cloud.google.com/iam/docs/service-accounts-create).
-1. Navigate to **IAM & Admin > IAM**. Find the service account and select **Edit Principal** to add the following roles:
+1. Navigate to the [IAM](https://console.cloud.google.com/iam-admin/iam) page. Find the service account and select **Edit Principal** to add the following roles:
    - Cloud KMS Admin
    - Cloud KMS CryptoKey Signer/Verifier
-1. Select the created service account and navigate to the **Keys** tab.
-1. Select **Add Key**
-1. Select **Create new key**
-1. Select **JSON** to download the JSON file. This file authenticates Google Cloud KMS.
-1. [Create a keyring](https://cloud.google.com/kms/docs/create-key-ring) in Google KMS.
-   - Optional: Create a key in the keyring or call `POST /wallet/create`.
+1. Navigate to the [Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts) page. Select the above service account.
+1. Navigate to the **Keys** tab. Select **Add Key > Create new key**.
+1. Select **JSON** to download the JSON file. This file contains the key's private key in plaintext.
+1. In the dashboard, navigate to **Configuration > Backend Wallets**.
+1. Select **Google KMS** and provide the following:
+
+   <Details id="gcpApplicationProjectId" summary="gcpApplicationProjectId">
+
+   This is the Project ID of the GCP project where the key was created.
+
+   **Where to find**:
+   - Navigate to the Google Cloud Console.
+   - Click on the project dropdown at the top of the page.
+   - The Project ID is displayed under your project's name.
+
+   </Details>
+
+   <Details id="gcpKmsLocationId" summary="gcpKmsLocationId">
+
+   This is the location where the keyring was created (e.g., us-central1, europe-west1).
+
+   **Where to find**:
+   - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
+   - Click on the keyring that contains your key.
+   - The location is displayed in the Location field.
+
+   </Details>
+
+   <Details id="gcpKmsKeyRingId" summary="gcpKmsKeyRingId">
+
+   This is the ID of the keyring where your key is stored.
+
+   **Where to find**:
+   - In the Google Cloud Console, go to **Security > Cryptographic Keys**.
+   - Select the keyring that contains your key.
+   - The KeyRing ID is displayed in the list or the URL.
+
+   </Details>
+
+   <Details id="gcpApplicationCredentialEmail" summary="gcpApplicationCredentialEmail">
+
+   This is the email associated with the service account used for accessing the KMS key.
+
+   **Where to find**:
+   - In the Google Cloud Console, go to **IAM & Admin > Service Accounts**.
+   - Find the service account you are using. its email will be in the format: `name@project.iam.gserviceaccount.com`
+
+   </Details>
+
+   <Details id="gcpApplicationCredentialPrivateKey" summary="gcpApplicationCredentialPrivateKey">
+
+   This is the private key of the service account that is used for authenticating API requests.
+
+   **Where to find**:
+   - Open the JSON file downloaded above.
+   - Copy the value of the `private_key` field.
+
+   </Details>
+
+#### Import an existing wallet
+
+1. Ensure your [keyring is created](https://cloud.google.com/kms/docs/create-key-ring) with the following settings:
+   - Purpose: `Asymmetric sign`
+   - Algorithm: `Elliptic Curve P-256 - SHA256 Digest`
+1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. Select **Import** and provide the following:
+   - GCP KMS Key ID (example: `0489da75-9830-4a5a-97e3-e4a6df7775b3`)
+   - GCP KMS Version ID (example: `1`)
 
 ## Create a wallet
 
-> For AWS or Google Cloud KMS wallets, you must provide your credentials.
+For AWS or Google Cloud KMS wallets, you must provide your credentials.
 
-Call `POST /backend-wallet/create` or create a wallet from the [Engine dashboard page](https://thirdweb.com/dashboard/engine).
+1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. Select **Create**.
+1. (Optional) Provide a label to organize your wallets.
 
 ## Import a wallet
 
-> For AWS or Google Cloud KMS wallets, you must provide your credentials.
+For AWS or Google Cloud KMS wallets, you must provide your credentials.
 
-Call `POST /backend-wallet/import` or import a wallet from the [Engine dashboard page](https://thirdweb.com/dashboard/engine).
+1. In the dashboard, navigate to **Overview > Backend Wallets**.
+1. Select **Import**.
+1. Provide the requested fields.
+   - See above for instructions for specific wallet types.
 
 ## List wallets
 
-Backend wallets are listed in the **Backend Wallets** table on the [Engine dashboard page](https://thirdweb.com/dashboard/engine).
-
-Or call `GET /backend-wallet/get-all` to list all backend wallets.
+In the dashboard, navigate to **Overview > Backend Wallets** to view your wallets created by or imported to Engine.
 
 ## Best practices
 
-- It is recommend to use AWS or Google Cloud KMS wallets for production use. Private keys are not exposed and the wallet is backed up securely by the cloud provider.
+- It is recommend to use AWS or Google Cloud KMS wallets for production use. Private keys are never exposed and the wallet is backed up securely by the cloud provider.
 - Use labels and multiple backend wallets to organize and track usage.
   - Example: Use one wallet to pay out creators on your platform and another to airdrop NFTs to users.
 - If your wallets require topping up gas or ERC20 tokens regularly, consider a separate "funds storage" backend wallet that transfers funds to other wallets via the dashboard UI or API.
