@@ -7,7 +7,6 @@ import zeroGBanner from "./temp-assets/0gLabsBanner.png";
 import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
-import assetChainBanner from "./temp-assets/assetChainBanner.png";
 import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 // TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
@@ -174,8 +173,7 @@ const chainMetaRecord = {
   },
   // mantle
   5000: {
-    about:
-      "Build dApps with exceptional UX, all while relying on Ethereum's unrivaled security, with our high-performance Ethereum layer-2 network built with modular architecture.\n\nWhy build on Mantle?\n\n- Largest onchain treasury\n\n- Robust Ecosystem Fund\n\n- Responsive Grants Program\n\n- Supportive Team",
+    about: `Build dApps with exceptional UX, all while relying on Ethereum's unrivaled security, with our high-performance Ethereum layer-2 network built with modular architecture.\n\nWhy build on Mantle?\n\n- Largest onchain treasury\n\n- Robust Ecosystem Fund\n\n- Responsive Grants Program\n\n- Supportive Team`,
     headerImgUrl: mantleBanner.src,
     cta: {
       backgroundImageUrl: mantleBanner.src,
@@ -366,7 +364,7 @@ const chainMetaRecord = {
   },
   //AssetChain
   42421: {
-    headerImgUrl: assetChainBanner.src,
+    headerImgUrl: assetChainCTABG.src,
     about:
       "Asset Chain is the native blockchain for Xend Finance's Real-World Asset OAE (Onchain Asset Environment), with its consensus based on Fantom's Lachesis consensus mechanism.",
     cta: {
