@@ -64,6 +64,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
             tokenId: BigInt(tokenId),
             quantity: BigInt(data.amount),
             to: data.to,
+            from: account.address,
           });
           const approveTx = await getApprovalForTransaction({
             transaction,
