@@ -223,6 +223,7 @@ export class IFrameWallet {
         nonce: tx.nonce,
         chainId: tx.chainId,
       };
+
       if (tx.maxFeePerGas) {
         // ethers (in the iframe) rejects any type 0 trasaction with unknown keys
         // TODO remove this once iframe is upgraded to v5

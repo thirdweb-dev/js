@@ -26,7 +26,6 @@ import {
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { LuTrash2 } from "react-icons/lu";
 import {
@@ -70,7 +69,7 @@ export const Configure: React.FC<ConfigureProps> = ({
 
   const form = useForm<ApiKeyEmbeddedWalletsValidationSchema>({
     resolver: zodResolver(apiKeyEmbeddedWalletsValidationSchema),
-    defaultValues: {
+    values: {
       customAuthEndpoint: config.customAuthEndpoint,
       customAuthentication: config.customAuthentication,
       ...(hasCustomBranding
@@ -84,27 +83,11 @@ export const Configure: React.FC<ConfigureProps> = ({
       redirectUrls: apiKey.redirectUrls.join("\n"),
     },
   });
+
   const customHeaderFields = useFieldArray({
     control: form.control,
     name: "customAuthEndpoint.customHeaders",
   });
-
-  // FIXME: jesus do we need this? - there has to be a better way
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    form.reset({
-      customAuthEndpoint: config.customAuthEndpoint,
-      customAuthentication: config.customAuthentication,
-      ...(hasCustomBranding
-        ? {
-            branding: {
-              applicationName: config.applicationName,
-              applicationImageUrl: config.applicationImageUrl,
-            },
-          }
-        : undefined),
-    });
-  }, [config, form, hasCustomBranding]);
 
   const { onSuccess, onError } = useTxNotifications(
     "In-App Wallet API Key configuration updated",
@@ -630,7 +613,11 @@ export const Configure: React.FC<ConfigureProps> = ({
           <Divider />
 
           <Box alignSelf="flex-end">
-            <Button type="submit" colorScheme="primary">
+            <Button
+              type="submit"
+              colorScheme="primary"
+              isLoading={mutation.isLoading}
+            >
               Save changes
             </Button>
           </Box>

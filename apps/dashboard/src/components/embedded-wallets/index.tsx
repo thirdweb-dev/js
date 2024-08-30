@@ -1,6 +1,7 @@
+import { TabButtons } from "@/components/ui/tabs";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import type { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import { useState } from "react";
 import { Configure } from "./Configure";
 import { Users } from "./Users";
 
@@ -21,26 +22,55 @@ export const EmbeddedWallets: React.FC<EmbeddedWalletsProps> = ({
   trackingCategory,
   defaultTabIndex,
 }) => {
-  return (
-    <Tabs defaultIndex={defaultTabIndex || 0}>
-      <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
-        <Tab>Users</Tab>
-        <Tab>Configuration</Tab>
-      </TabList>
+  const [selectedTab, setSelectedTab] = useState<"users" | "config">(
+    defaultTabIndex === 0 ? "users" : "config",
+  );
 
-      <TabPanels pt={6}>
-        <TabPanel px={0}>
-          <Users
-            wallets={wallets}
-            isLoading={isLoading}
-            isFetched={isFetched}
-            trackingCategory={trackingCategory}
-          />
-        </TabPanel>
-        <TabPanel px={0}>
-          <Configure apiKey={apiKey} trackingCategory={trackingCategory} />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
+  function updateSearchParams(value: string) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", value);
+    window.history.pushState(null, "", url.toString());
+  }
+
+  return (
+    <div>
+      <TabButtons
+        tabs={[
+          {
+            name: "Users",
+            onClick: () => {
+              setSelectedTab("users");
+              updateSearchParams("0");
+            },
+            isActive: selectedTab === "users",
+            isEnabled: true,
+          },
+          {
+            name: "Configuration",
+            onClick: () => {
+              setSelectedTab("config");
+              updateSearchParams("1");
+            },
+            isActive: selectedTab === "config",
+            isEnabled: true,
+          },
+        ]}
+      />
+
+      <div className="h-6" />
+
+      {selectedTab === "users" && (
+        <Users
+          wallets={wallets}
+          isLoading={isLoading}
+          isFetched={isFetched}
+          trackingCategory={trackingCategory}
+        />
+      )}
+
+      {selectedTab === "config" && (
+        <Configure apiKey={apiKey} trackingCategory={trackingCategory} />
+      )}
+    </div>
   );
 };

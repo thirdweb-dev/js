@@ -1,3 +1,4 @@
+import { PaginationButtons } from "@/components/pagination-buttons";
 import type { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { Flex, Switch } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -104,6 +105,19 @@ export const Users: React.FC<UsersProps> = ({
     tempLink.click();
   }, [theWalletsWeWant]);
 
+  const [activePage, setActivePage] = useState(1);
+  const itemsPerPage = 20;
+  const totalPages =
+    theWalletsWeWant.length <= itemsPerPage
+      ? 1
+      : Math.ceil(theWalletsWeWant.length / itemsPerPage);
+
+  const itemsToShow = useMemo(() => {
+    const startIndex = (activePage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return theWalletsWeWant.slice(startIndex, endIndex);
+  }, [activePage, theWalletsWeWant]);
+
   return (
     <Flex flexDir="column" gap={10}>
       <Flex flexDir="column" gap={6}>
@@ -129,11 +143,19 @@ export const Users: React.FC<UsersProps> = ({
 
         <TWTable
           title="active in-app wallets"
-          data={theWalletsWeWant}
+          data={itemsToShow}
           columns={columns}
           isLoading={isLoading}
           isFetched={isFetched}
         />
+
+        {totalPages > 1 && (
+          <PaginationButtons
+            activePage={activePage}
+            onPageClick={setActivePage}
+            totalPages={totalPages}
+          />
+        )}
       </Flex>
 
       <Analytics trackingCategory={trackingCategory} />

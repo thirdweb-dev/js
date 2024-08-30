@@ -34,6 +34,8 @@ const FORCE_GAS_PRICE_CHAIN_IDS = [
   9372, // Oasys Testnet
   841, // Taraxa Mainnet
   842, // Taraxa Testnet
+  2016, // MainnetZ Mainnet
+  9768, // MainnetZ Testnet
 ];
 
 /**

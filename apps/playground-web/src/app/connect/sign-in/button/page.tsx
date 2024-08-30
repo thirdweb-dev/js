@@ -1,5 +1,6 @@
 "use client";
 
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { useState } from "react";
 import { APIHeader } from "../../../../components/blocks/APIHeader";
 import type { ConnectPlaygroundOptions } from "../components/types";
@@ -54,31 +55,34 @@ export default function Page() {
     useState<ConnectPlaygroundOptions>(defaultConnectOptions);
 
   return (
-    <div className="">
-      <APIHeader
-        title="Connect Button"
-        description={
-          <>
-            A fully featured wallet connection component that allows to Connect
-            to 350+ external wallets, connect via email, phone number, passkey
-            or social logins, Convert any wallet to a ERC4337 smart wallet for
-            gasless transactions and provides SIWE (Sign In With Ethereum)
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
-        heroLink="/connectors.png"
-      />
+    <ThirdwebProvider>
+      <div className="">
+        <APIHeader
+          title="Connect Button"
+          description={
+            <>
+              A fully featured wallet connection component that allows to
+              Connect to 350+ external wallets, connect via email, phone number,
+              passkey or social logins, Convert any wallet to a ERC4337 smart
+              wallet for gasless transactions and provides SIWE (Sign In With
+              Ethereum)
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
+          heroLink="/connectors.png"
+        />
 
-      <div className="flex flex-col-reverse xl:flex-row xl:min-h-[900px] gap-6 xl:gap-6 relative">
-        <div className="grow xl:border-r xl:pr-6 pb-10 border-b xl:border-b-0 xl:mb-0">
-          <LeftSection
-            connectOptions={connectOptions}
-            setConnectOptions={setConnectOptions}
-          />
+        <div className="flex flex-col-reverse xl:flex-row xl:min-h-[900px] gap-6 xl:gap-6 relative">
+          <div className="grow xl:border-r xl:pr-6 pb-10 border-b xl:border-b-0 xl:mb-0">
+            <LeftSection
+              connectOptions={connectOptions}
+              setConnectOptions={setConnectOptions}
+            />
+          </div>
+
+          <RightSection connectOptions={connectOptions} />
         </div>
-
-        <RightSection connectOptions={connectOptions} />
       </div>
-    </div>
+    </ThirdwebProvider>
   );
 }

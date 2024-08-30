@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getContract } from "thirdweb";
 import { zkSyncSepolia } from "thirdweb/chains";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
@@ -9,9 +9,6 @@ import {
   MediaRenderer,
   TransactionButton,
   useActiveAccount,
-  useActiveWallet,
-  useActiveWalletChain,
-  useDisconnect,
   useReadContract,
 } from "thirdweb/react";
 import { shortenHex } from "thirdweb/utils";
@@ -28,18 +25,6 @@ const editionDropTokenId = 0n;
 
 export function SponsoredTxZksyncPreview() {
   const [txHash, setTxHash] = useState<string | null>(null);
-  const wallet = useActiveWallet();
-  const { disconnect } = useDisconnect();
-  const activeChain = useActiveWalletChain();
-  useEffect(() => {
-    if (
-      wallet &&
-      (wallet.id !== "smart" ||
-        (activeChain && activeChain?.id !== zkSyncSepolia.id))
-    ) {
-      disconnect(wallet);
-    }
-  }, [wallet, disconnect, activeChain]);
   const smartAccount = useActiveAccount();
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
     contract: editionDropContract,

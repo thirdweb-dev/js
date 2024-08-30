@@ -86,7 +86,7 @@ export const Modal: React.FC<{
         )}
 
         <FocusScope trapped={!props.hide}>
-          <Dialog.Content asChild>
+          <Dialog.Content asChild aria-describedby={undefined}>
             <DialogContent
               ref={contentRef}
               style={
@@ -102,6 +102,22 @@ export const Modal: React.FC<{
                     }
               }
             >
+              {/* Mimics Tailwind's sr-only tag */}
+              <Dialog.Title
+                style={{
+                  position: "absolute",
+                  width: "1px",
+                  height: "1px",
+                  padding: 0,
+                  margin: "-1px",
+                  overflow: "hidden",
+                  clip: "rect(0, 0, 0, 0)",
+                  whiteSpace: "nowrap",
+                  borderWidth: 0,
+                }}
+              >
+                Connect Modal
+              </Dialog.Title>
               {props.size === "compact" ? (
                 <DynamicHeight maxHeight={compactModalMaxHeight}>
                   {props.children}{" "}
