@@ -175,7 +175,7 @@ const chainMetaRecord = {
   },
   // mantle
   5000: {
-    about: `Build dApps with exceptional UX, all while relying on Ethereum's unrivaled security, with our high-performance Ethereum layer-2 network built with modular architecture.\n\n Why build on Mantle? \n\n - Largest onchain treasury \n\n - Robust Ecosystem Fund\n\n - Responsive Grants Program\n\n- Supportive Team`,
+    about: `Build dApps with exceptional UX, all while relying on Ethereum's unrivaled security, with our high-performance Ethereum layer-2 network built with modular architecture.`,
     headerImgUrl: mantleBanner.src,
     cta: {
       backgroundImageUrl: mantleBanner.src,
