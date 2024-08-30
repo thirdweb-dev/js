@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIdGatewaySupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isIdGatewaySupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isIdGatewaySupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeIdGatewayResult } from "thirdweb/extensions/farcaster";
- * const result = decodeIdGatewayResult("...");
+ * const result = decodeIdGatewayResultResult("...");
  * ```
  */
 export function decodeIdGatewayResult(result: Hex) {

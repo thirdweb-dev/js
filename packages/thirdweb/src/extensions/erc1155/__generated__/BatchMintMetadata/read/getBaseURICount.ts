@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetBaseURICountSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isGetBaseURICountSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isGetBaseURICountSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetBaseURICountResult } from "thirdweb/extensions/erc1155";
- * const result = decodeGetBaseURICountResult("...");
+ * const result = decodeGetBaseURICountResultResult("...");
  * ```
  */
 export function decodeGetBaseURICountResult(result: Hex) {

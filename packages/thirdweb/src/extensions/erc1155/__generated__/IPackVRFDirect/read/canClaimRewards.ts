@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isCanClaimRewardsSupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isCanClaimRewardsSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isCanClaimRewardsSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeCanClaimRewardsParams } "thirdweb/extensions/erc1155";
+ * import { encodeCanClaimRewardsParams } from "thirdweb/extensions/erc1155";
  * const result = encodeCanClaimRewardsParams({
  *  opener: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeCanClaimRewardsParams(options: CanClaimRewardsParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeCanClaimRewards } "thirdweb/extensions/erc1155";
+ * import { encodeCanClaimRewards } from "thirdweb/extensions/erc1155";
  * const result = encodeCanClaimRewards({
  *  opener: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeCanClaimRewards(options: CanClaimRewardsParams) {
  * @example
  * ```ts
  * import { decodeCanClaimRewardsResult } from "thirdweb/extensions/erc1155";
- * const result = decodeCanClaimRewardsResult("...");
+ * const result = decodeCanClaimRewardsResultResult("...");
  * ```
  */
 export function decodeCanClaimRewardsResult(result: Hex) {

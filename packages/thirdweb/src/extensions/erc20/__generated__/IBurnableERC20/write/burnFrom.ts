@@ -55,7 +55,7 @@ export function isBurnFromSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeBurnFromParams } "thirdweb/extensions/erc20";
+ * import { encodeBurnFromParams } from "thirdweb/extensions/erc20";
  * const result = encodeBurnFromParams({
  *  account: ...,
  *  amount: ...,
@@ -73,7 +73,7 @@ export function encodeBurnFromParams(options: BurnFromParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeBurnFrom } "thirdweb/extensions/erc20";
+ * import { encodeBurnFrom } from "thirdweb/extensions/erc20";
  * const result = encodeBurnFrom({
  *  account: ...,
  *  amount: ...,
@@ -94,6 +94,7 @@ export function encodeBurnFrom(options: BurnFromParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { burnFrom } from "thirdweb/extensions/erc20";
  *
  * const transaction = burnFrom({
@@ -106,8 +107,7 @@ export function encodeBurnFrom(options: BurnFromParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function burnFrom(

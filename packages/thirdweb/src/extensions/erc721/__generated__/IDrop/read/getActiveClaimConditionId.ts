@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetActiveClaimConditionIdSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isGetActiveClaimConditionIdSupported(["0x..."]);
  * ```
  */
@@ -42,7 +41,7 @@ export function isGetActiveClaimConditionIdSupported(
  * @example
  * ```ts
  * import { decodeGetActiveClaimConditionIdResult } from "thirdweb/extensions/erc721";
- * const result = decodeGetActiveClaimConditionIdResult("...");
+ * const result = decodeGetActiveClaimConditionIdResultResult("...");
  * ```
  */
 export function decodeGetActiveClaimConditionIdResult(result: Hex) {

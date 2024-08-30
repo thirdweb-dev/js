@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isREGISTER_TYPEHASHSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isREGISTER_TYPEHASHSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isREGISTER_TYPEHASHSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeREGISTER_TYPEHASHResult } from "thirdweb/extensions/farcaster";
- * const result = decodeREGISTER_TYPEHASHResult("...");
+ * const result = decodeREGISTER_TYPEHASHResultResult("...");
  * ```
  */
 export function decodeREGISTER_TYPEHASHResult(result: Hex) {

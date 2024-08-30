@@ -109,7 +109,7 @@ export function isTryBlockAndAggregateSupported(availableSelectors: string[]) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeTryBlockAndAggregateParams } "thirdweb/extensions/multicall3";
+ * import { encodeTryBlockAndAggregateParams } from "thirdweb/extensions/multicall3";
  * const result = encodeTryBlockAndAggregateParams({
  *  requireSuccess: ...,
  *  calls: ...,
@@ -132,7 +132,7 @@ export function encodeTryBlockAndAggregateParams(
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeTryBlockAndAggregate } "thirdweb/extensions/multicall3";
+ * import { encodeTryBlockAndAggregate } from "thirdweb/extensions/multicall3";
  * const result = encodeTryBlockAndAggregate({
  *  requireSuccess: ...,
  *  calls: ...,
@@ -157,6 +157,7 @@ export function encodeTryBlockAndAggregate(
  * @extension MULTICALL3
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { tryBlockAndAggregate } from "thirdweb/extensions/multicall3";
  *
  * const transaction = tryBlockAndAggregate({
@@ -169,8 +170,7 @@ export function encodeTryBlockAndAggregate(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function tryBlockAndAggregate(

@@ -56,13 +56,13 @@ export function isClaimRewardsSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claimRewards } from "thirdweb/extensions/erc1155";
  *
  * const transaction = claimRewards();
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claimRewards(options: BaseTransactionOptions) {

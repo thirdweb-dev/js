@@ -56,7 +56,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllExtensionsSupported } from "thirdweb/extensions/erc7504";
- *
  * const supported = isGetAllExtensionsSupported(["0x..."]);
  * ```
  */
@@ -75,7 +74,7 @@ export function isGetAllExtensionsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetAllExtensionsResult } from "thirdweb/extensions/erc7504";
- * const result = decodeGetAllExtensionsResult("...");
+ * const result = decodeGetAllExtensionsResultResult("...");
  * ```
  */
 export function decodeGetAllExtensionsResult(result: Hex) {

@@ -95,7 +95,7 @@ export function isClaimERC1155Supported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeClaimERC1155Params } "thirdweb/extensions/airdrop";
+ * import { encodeClaimERC1155Params } from "thirdweb/extensions/airdrop";
  * const result = encodeClaimERC1155Params({
  *  token: ...,
  *  receiver: ...,
@@ -122,7 +122,7 @@ export function encodeClaimERC1155Params(options: ClaimERC1155Params) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeClaimERC1155 } "thirdweb/extensions/airdrop";
+ * import { encodeClaimERC1155 } from "thirdweb/extensions/airdrop";
  * const result = encodeClaimERC1155({
  *  token: ...,
  *  receiver: ...,
@@ -148,6 +148,7 @@ export function encodeClaimERC1155(options: ClaimERC1155Params) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claimERC1155 } from "thirdweb/extensions/airdrop";
  *
  * const transaction = claimERC1155({
@@ -163,8 +164,7 @@ export function encodeClaimERC1155(options: ClaimERC1155Params) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claimERC1155(

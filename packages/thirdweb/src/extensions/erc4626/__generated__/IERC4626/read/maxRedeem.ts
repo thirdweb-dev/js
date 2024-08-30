@@ -41,7 +41,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxRedeemSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isMaxRedeemSupported(["0x..."]);
  * ```
  */
@@ -59,7 +58,7 @@ export function isMaxRedeemSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxRedeemParams } "thirdweb/extensions/erc4626";
+ * import { encodeMaxRedeemParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxRedeemParams({
  *  owner: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeMaxRedeemParams(options: MaxRedeemParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxRedeem } "thirdweb/extensions/erc4626";
+ * import { encodeMaxRedeem } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxRedeem({
  *  owner: ...,
  * });
@@ -99,7 +98,7 @@ export function encodeMaxRedeem(options: MaxRedeemParams) {
  * @example
  * ```ts
  * import { decodeMaxRedeemResult } from "thirdweb/extensions/erc4626";
- * const result = decodeMaxRedeemResult("...");
+ * const result = decodeMaxRedeemResultResult("...");
  * ```
  */
 export function decodeMaxRedeemResult(result: Hex) {

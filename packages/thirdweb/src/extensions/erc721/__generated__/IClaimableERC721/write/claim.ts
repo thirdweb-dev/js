@@ -55,7 +55,7 @@ export function isClaimSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeClaimParams } "thirdweb/extensions/erc721";
+ * import { encodeClaimParams } from "thirdweb/extensions/erc721";
  * const result = encodeClaimParams({
  *  receiver: ...,
  *  quantity: ...,
@@ -73,7 +73,7 @@ export function encodeClaimParams(options: ClaimParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeClaim } "thirdweb/extensions/erc721";
+ * import { encodeClaim } from "thirdweb/extensions/erc721";
  * const result = encodeClaim({
  *  receiver: ...,
  *  quantity: ...,
@@ -94,6 +94,7 @@ export function encodeClaim(options: ClaimParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claim } from "thirdweb/extensions/erc721";
  *
  * const transaction = claim({
@@ -106,8 +107,7 @@ export function encodeClaim(options: ClaimParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claim(

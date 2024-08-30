@@ -35,7 +35,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAccountsOfSignerSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetAccountsOfSignerSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isGetAccountsOfSignerSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetAccountsOfSignerParams } "thirdweb/extensions/erc4337";
+ * import { encodeGetAccountsOfSignerParams } from "thirdweb/extensions/erc4337";
  * const result = encodeGetAccountsOfSignerParams({
  *  signer: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeGetAccountsOfSignerParams(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeGetAccountsOfSigner } "thirdweb/extensions/erc4337";
+ * import { encodeGetAccountsOfSigner } from "thirdweb/extensions/erc4337";
  * const result = encodeGetAccountsOfSigner({
  *  signer: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeGetAccountsOfSigner(options: GetAccountsOfSignerParams) {
  * @example
  * ```ts
  * import { decodeGetAccountsOfSignerResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetAccountsOfSignerResult("...");
+ * const result = decodeGetAccountsOfSignerResultResult("...");
  * ```
  */
 export function decodeGetAccountsOfSignerResult(result: Hex) {

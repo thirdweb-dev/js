@@ -38,7 +38,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetPublisherProfileUriSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetPublisherProfileUriSupported(["0x..."]);
  * ```
  */
@@ -58,7 +57,7 @@ export function isGetPublisherProfileUriSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetPublisherProfileUriParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetPublisherProfileUriParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublisherProfileUriParams({
  *  publisher: ...,
  * });
@@ -77,7 +76,7 @@ export function encodeGetPublisherProfileUriParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetPublisherProfileUri } "thirdweb/extensions/thirdweb";
+ * import { encodeGetPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetPublisherProfileUri({
  *  publisher: ...,
  * });
@@ -102,7 +101,7 @@ export function encodeGetPublisherProfileUri(
  * @example
  * ```ts
  * import { decodeGetPublisherProfileUriResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetPublisherProfileUriResult("...");
+ * const result = decodeGetPublisherProfileUriResultResult("...");
  * ```
  */
 export function decodeGetPublisherProfileUriResult(result: Hex) {

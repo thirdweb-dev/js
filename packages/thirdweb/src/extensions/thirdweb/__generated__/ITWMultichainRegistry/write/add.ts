@@ -71,7 +71,7 @@ export function isAddSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeAddParams } "thirdweb/extensions/thirdweb";
+ * import { encodeAddParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeAddParams({
  *  deployer: ...,
  *  deployment: ...,
@@ -96,7 +96,7 @@ export function encodeAddParams(options: AddParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeAdd } "thirdweb/extensions/thirdweb";
+ * import { encodeAdd } from "thirdweb/extensions/thirdweb";
  * const result = encodeAdd({
  *  deployer: ...,
  *  deployment: ...,
@@ -119,6 +119,7 @@ export function encodeAdd(options: AddParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { add } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = add({
@@ -133,8 +134,7 @@ export function encodeAdd(options: AddParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function add(

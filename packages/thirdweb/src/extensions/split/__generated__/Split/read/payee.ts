@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPayeeSupported } from "thirdweb/extensions/split";
- *
  * const supported = isPayeeSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isPayeeSupported(availableSelectors: string[]) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodePayeeParams } "thirdweb/extensions/split";
+ * import { encodePayeeParams } from "thirdweb/extensions/split";
  * const result = encodePayeeParams({
  *  index: ...,
  * });
@@ -69,7 +68,7 @@ export function encodePayeeParams(options: PayeeParams) {
  * @extension SPLIT
  * @example
  * ```ts
- * import { encodePayee } "thirdweb/extensions/split";
+ * import { encodePayee } from "thirdweb/extensions/split";
  * const result = encodePayee({
  *  index: ...,
  * });
@@ -90,7 +89,7 @@ export function encodePayee(options: PayeeParams) {
  * @example
  * ```ts
  * import { decodePayeeResult } from "thirdweb/extensions/split";
- * const result = decodePayeeResult("...");
+ * const result = decodePayeeResultResult("...");
  * ```
  */
 export function decodePayeeResult(result: Hex) {

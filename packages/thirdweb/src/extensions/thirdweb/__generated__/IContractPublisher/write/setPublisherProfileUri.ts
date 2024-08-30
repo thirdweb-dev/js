@@ -60,7 +60,7 @@ export function isSetPublisherProfileUriSupported(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeSetPublisherProfileUriParams } "thirdweb/extensions/thirdweb";
+ * import { encodeSetPublisherProfileUriParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeSetPublisherProfileUriParams({
  *  publisher: ...,
  *  uri: ...,
@@ -80,7 +80,7 @@ export function encodeSetPublisherProfileUriParams(
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeSetPublisherProfileUri } "thirdweb/extensions/thirdweb";
+ * import { encodeSetPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  * const result = encodeSetPublisherProfileUri({
  *  publisher: ...,
  *  uri: ...,
@@ -105,6 +105,7 @@ export function encodeSetPublisherProfileUri(
  * @extension THIRDWEB
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setPublisherProfileUri } from "thirdweb/extensions/thirdweb";
  *
  * const transaction = setPublisherProfileUri({
@@ -117,8 +118,7 @@ export function encodeSetPublisherProfileUri(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setPublisherProfileUri(

@@ -41,7 +41,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewWithdrawSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewWithdrawSupported(["0x..."]);
  * ```
  */
@@ -59,7 +58,7 @@ export function isPreviewWithdrawSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewWithdrawParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewWithdrawParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewWithdrawParams({
  *  assets: ...,
  * });
@@ -76,7 +75,7 @@ export function encodePreviewWithdrawParams(options: PreviewWithdrawParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewWithdraw } "thirdweb/extensions/erc4626";
+ * import { encodePreviewWithdraw } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewWithdraw({
  *  assets: ...,
  * });
@@ -99,7 +98,7 @@ export function encodePreviewWithdraw(options: PreviewWithdrawParams) {
  * @example
  * ```ts
  * import { decodePreviewWithdrawResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewWithdrawResult("...");
+ * const result = decodePreviewWithdrawResultResult("...");
  * ```
  */
 export function decodePreviewWithdrawResult(result: Hex) {

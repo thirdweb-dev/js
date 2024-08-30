@@ -41,7 +41,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxMintSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isMaxMintSupported(["0x..."]);
  * ```
  */
@@ -59,7 +58,7 @@ export function isMaxMintSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxMintParams } "thirdweb/extensions/erc4626";
+ * import { encodeMaxMintParams } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxMintParams({
  *  receiver: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeMaxMintParams(options: MaxMintParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeMaxMint } "thirdweb/extensions/erc4626";
+ * import { encodeMaxMint } from "thirdweb/extensions/erc4626";
  * const result = encodeMaxMint({
  *  receiver: ...,
  * });
@@ -97,7 +96,7 @@ export function encodeMaxMint(options: MaxMintParams) {
  * @example
  * ```ts
  * import { decodeMaxMintResult } from "thirdweb/extensions/erc4626";
- * const result = decodeMaxMintResult("...");
+ * const result = decodeMaxMintResultResult("...");
  * ```
  */
 export function decodeMaxMintResult(result: Hex) {

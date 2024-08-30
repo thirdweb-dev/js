@@ -60,7 +60,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllProposalsSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isGetAllProposalsSupported(["0x..."]);
  * ```
  */
@@ -79,7 +78,7 @@ export function isGetAllProposalsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetAllProposalsResult } from "thirdweb/extensions/vote";
- * const result = decodeGetAllProposalsResult("...");
+ * const result = decodeGetAllProposalsResultResult("...");
  * ```
  */
 export function decodeGetAllProposalsResult(result: Hex) {

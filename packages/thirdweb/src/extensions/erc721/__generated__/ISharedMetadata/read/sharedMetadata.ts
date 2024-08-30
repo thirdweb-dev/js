@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isSharedMetadataSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isSharedMetadataSupported(["0x..."]);
  * ```
  */
@@ -53,7 +52,7 @@ export function isSharedMetadataSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeSharedMetadataResult } from "thirdweb/extensions/erc721";
- * const result = decodeSharedMetadataResult("...");
+ * const result = decodeSharedMetadataResultResult("...");
  * ```
  */
 export function decodeSharedMetadataResult(result: Hex) {

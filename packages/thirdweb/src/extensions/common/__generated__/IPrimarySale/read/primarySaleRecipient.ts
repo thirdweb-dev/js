@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPrimarySaleRecipientSupported } from "thirdweb/extensions/common";
- *
  * const supported = isPrimarySaleRecipientSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isPrimarySaleRecipientSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodePrimarySaleRecipientResult } from "thirdweb/extensions/common";
- * const result = decodePrimarySaleRecipientResult("...");
+ * const result = decodePrimarySaleRecipientResultResult("...");
  * ```
  */
 export function decodePrimarySaleRecipientResult(result: Hex) {

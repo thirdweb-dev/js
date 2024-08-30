@@ -68,7 +68,7 @@ export function isLazyMintSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeLazyMintParams } "thirdweb/extensions/erc721";
+ * import { encodeLazyMintParams } from "thirdweb/extensions/erc721";
  * const result = encodeLazyMintParams({
  *  amount: ...,
  *  baseURIForTokens: ...,
@@ -91,7 +91,7 @@ export function encodeLazyMintParams(options: LazyMintParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeLazyMint } "thirdweb/extensions/erc721";
+ * import { encodeLazyMint } from "thirdweb/extensions/erc721";
  * const result = encodeLazyMint({
  *  amount: ...,
  *  baseURIForTokens: ...,
@@ -113,6 +113,7 @@ export function encodeLazyMint(options: LazyMintParams) {
  * @extension ERC721
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { lazyMint } from "thirdweb/extensions/erc721";
  *
  * const transaction = lazyMint({
@@ -126,8 +127,7 @@ export function encodeLazyMint(options: LazyMintParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function lazyMint(

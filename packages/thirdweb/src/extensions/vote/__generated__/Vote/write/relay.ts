@@ -60,7 +60,7 @@ export function isRelaySupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeRelayParams } "thirdweb/extensions/vote";
+ * import { encodeRelayParams } from "thirdweb/extensions/vote";
  * const result = encodeRelayParams({
  *  target: ...,
  *  value: ...,
@@ -83,7 +83,7 @@ export function encodeRelayParams(options: RelayParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeRelay } "thirdweb/extensions/vote";
+ * import { encodeRelay } from "thirdweb/extensions/vote";
  * const result = encodeRelay({
  *  target: ...,
  *  value: ...,
@@ -105,6 +105,7 @@ export function encodeRelay(options: RelayParams) {
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { relay } from "thirdweb/extensions/vote";
  *
  * const transaction = relay({
@@ -118,8 +119,7 @@ export function encodeRelay(options: RelayParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function relay(

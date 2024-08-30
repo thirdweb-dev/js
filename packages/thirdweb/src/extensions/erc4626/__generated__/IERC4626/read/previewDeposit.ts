@@ -41,7 +41,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewDepositSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewDepositSupported(["0x..."]);
  * ```
  */
@@ -59,7 +58,7 @@ export function isPreviewDepositSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewDepositParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewDepositParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewDepositParams({
  *  assets: ...,
  * });
@@ -76,7 +75,7 @@ export function encodePreviewDepositParams(options: PreviewDepositParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewDeposit } "thirdweb/extensions/erc4626";
+ * import { encodePreviewDeposit } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewDeposit({
  *  assets: ...,
  * });
@@ -99,7 +98,7 @@ export function encodePreviewDeposit(options: PreviewDepositParams) {
  * @example
  * ```ts
  * import { decodePreviewDepositResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewDepositResult("...");
+ * const result = decodePreviewDepositResultResult("...");
  * ```
  */
 export function decodePreviewDepositResult(result: Hex) {

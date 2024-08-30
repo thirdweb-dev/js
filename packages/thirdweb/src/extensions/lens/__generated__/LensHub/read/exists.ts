@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isExistsSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isExistsSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isExistsSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeExistsParams } "thirdweb/extensions/lens";
+ * import { encodeExistsParams } from "thirdweb/extensions/lens";
  * const result = encodeExistsParams({
  *  tokenId: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeExistsParams(options: ExistsParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeExists } "thirdweb/extensions/lens";
+ * import { encodeExists } from "thirdweb/extensions/lens";
  * const result = encodeExists({
  *  tokenId: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeExists(options: ExistsParams) {
  * @example
  * ```ts
  * import { decodeExistsResult } from "thirdweb/extensions/lens";
- * const result = decodeExistsResult("...");
+ * const result = decodeExistsResultResult("...");
  * ```
  */
 export function decodeExistsResult(result: Hex) {

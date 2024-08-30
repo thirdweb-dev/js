@@ -125,7 +125,7 @@ export function isSimulateHandleOpSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeSimulateHandleOpParams } "thirdweb/extensions/erc4337";
+ * import { encodeSimulateHandleOpParams } from "thirdweb/extensions/erc4337";
  * const result = encodeSimulateHandleOpParams({
  *  op: ...,
  *  target: ...,
@@ -148,7 +148,7 @@ export function encodeSimulateHandleOpParams(options: SimulateHandleOpParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeSimulateHandleOp } "thirdweb/extensions/erc4337";
+ * import { encodeSimulateHandleOp } from "thirdweb/extensions/erc4337";
  * const result = encodeSimulateHandleOp({
  *  op: ...,
  *  target: ...,
@@ -172,6 +172,7 @@ export function encodeSimulateHandleOp(options: SimulateHandleOpParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { simulateHandleOp } from "thirdweb/extensions/erc4337";
  *
  * const transaction = simulateHandleOp({
@@ -185,8 +186,7 @@ export function encodeSimulateHandleOp(options: SimulateHandleOpParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function simulateHandleOp(

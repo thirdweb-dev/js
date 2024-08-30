@@ -22,7 +22,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllAdminsSupported } from "thirdweb/extensions/erc4337";
- *
  * const supported = isGetAllAdminsSupported(["0x..."]);
  * ```
  */
@@ -41,7 +40,7 @@ export function isGetAllAdminsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetAllAdminsResult } from "thirdweb/extensions/erc4337";
- * const result = decodeGetAllAdminsResult("...");
+ * const result = decodeGetAllAdminsResultResult("...");
  * ```
  */
 export function decodeGetAllAdminsResult(result: Hex) {

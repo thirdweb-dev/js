@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTokenByIndexSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isTokenByIndexSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isTokenByIndexSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeTokenByIndexParams } "thirdweb/extensions/erc721";
+ * import { encodeTokenByIndexParams } from "thirdweb/extensions/erc721";
  * const result = encodeTokenByIndexParams({
  *  index: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeTokenByIndexParams(options: TokenByIndexParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeTokenByIndex } "thirdweb/extensions/erc721";
+ * import { encodeTokenByIndex } from "thirdweb/extensions/erc721";
  * const result = encodeTokenByIndex({
  *  index: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeTokenByIndex(options: TokenByIndexParams) {
  * @example
  * ```ts
  * import { decodeTokenByIndexResult } from "thirdweb/extensions/erc721";
- * const result = decodeTokenByIndexResult("...");
+ * const result = decodeTokenByIndexResultResult("...");
  * ```
  */
 export function decodeTokenByIndexResult(result: Hex) {

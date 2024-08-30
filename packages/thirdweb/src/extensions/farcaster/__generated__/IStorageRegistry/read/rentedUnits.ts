@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isRentedUnitsSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isRentedUnitsSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isRentedUnitsSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeRentedUnitsResult } from "thirdweb/extensions/farcaster";
- * const result = decodeRentedUnitsResult("...");
+ * const result = decodeRentedUnitsResultResult("...");
  * ```
  */
 export function decodeRentedUnitsResult(result: Hex) {

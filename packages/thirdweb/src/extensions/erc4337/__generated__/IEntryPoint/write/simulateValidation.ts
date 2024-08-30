@@ -112,7 +112,7 @@ export function isSimulateValidationSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeSimulateValidationParams } "thirdweb/extensions/erc4337";
+ * import { encodeSimulateValidationParams } from "thirdweb/extensions/erc4337";
  * const result = encodeSimulateValidationParams({
  *  userOp: ...,
  * });
@@ -131,7 +131,7 @@ export function encodeSimulateValidationParams(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeSimulateValidation } "thirdweb/extensions/erc4337";
+ * import { encodeSimulateValidation } from "thirdweb/extensions/erc4337";
  * const result = encodeSimulateValidation({
  *  userOp: ...,
  * });
@@ -153,6 +153,7 @@ export function encodeSimulateValidation(options: SimulateValidationParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { simulateValidation } from "thirdweb/extensions/erc4337";
  *
  * const transaction = simulateValidation({
@@ -164,8 +165,7 @@ export function encodeSimulateValidation(options: SimulateValidationParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function simulateValidation(

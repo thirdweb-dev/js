@@ -98,7 +98,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetAllValidAuctionsSupported } from "thirdweb/extensions/marketplace";
- *
  * const supported = isGetAllValidAuctionsSupported(["0x..."]);
  * ```
  */
@@ -116,7 +115,7 @@ export function isGetAllValidAuctionsSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeGetAllValidAuctionsParams } "thirdweb/extensions/marketplace";
+ * import { encodeGetAllValidAuctionsParams } from "thirdweb/extensions/marketplace";
  * const result = encodeGetAllValidAuctionsParams({
  *  startId: ...,
  *  endId: ...,
@@ -136,7 +135,7 @@ export function encodeGetAllValidAuctionsParams(
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeGetAllValidAuctions } "thirdweb/extensions/marketplace";
+ * import { encodeGetAllValidAuctions } from "thirdweb/extensions/marketplace";
  * const result = encodeGetAllValidAuctions({
  *  startId: ...,
  *  endId: ...,
@@ -160,7 +159,7 @@ export function encodeGetAllValidAuctions(options: GetAllValidAuctionsParams) {
  * @example
  * ```ts
  * import { decodeGetAllValidAuctionsResult } from "thirdweb/extensions/marketplace";
- * const result = decodeGetAllValidAuctionsResult("...");
+ * const result = decodeGetAllValidAuctionsResultResult("...");
  * ```
  */
 export function decodeGetAllValidAuctionsResult(result: Hex) {

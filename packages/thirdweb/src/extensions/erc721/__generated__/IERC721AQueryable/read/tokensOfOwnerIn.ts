@@ -44,7 +44,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTokensOfOwnerInSupported } from "thirdweb/extensions/erc721";
- *
  * const supported = isTokensOfOwnerInSupported(["0x..."]);
  * ```
  */
@@ -62,7 +61,7 @@ export function isTokensOfOwnerInSupported(availableSelectors: string[]) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeTokensOfOwnerInParams } "thirdweb/extensions/erc721";
+ * import { encodeTokensOfOwnerInParams } from "thirdweb/extensions/erc721";
  * const result = encodeTokensOfOwnerInParams({
  *  owner: ...,
  *  start: ...,
@@ -85,7 +84,7 @@ export function encodeTokensOfOwnerInParams(options: TokensOfOwnerInParams) {
  * @extension ERC721
  * @example
  * ```ts
- * import { encodeTokensOfOwnerIn } "thirdweb/extensions/erc721";
+ * import { encodeTokensOfOwnerIn } from "thirdweb/extensions/erc721";
  * const result = encodeTokensOfOwnerIn({
  *  owner: ...,
  *  start: ...,
@@ -110,7 +109,7 @@ export function encodeTokensOfOwnerIn(options: TokensOfOwnerInParams) {
  * @example
  * ```ts
  * import { decodeTokensOfOwnerInResult } from "thirdweb/extensions/erc721";
- * const result = decodeTokensOfOwnerInResult("...");
+ * const result = decodeTokensOfOwnerInResultResult("...");
  * ```
  */
 export function decodeTokensOfOwnerInResult(result: Hex) {

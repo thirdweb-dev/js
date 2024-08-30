@@ -73,7 +73,7 @@ export function isSafeBatchTransferFromSupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSafeBatchTransferFromParams } "thirdweb/extensions/erc1155";
+ * import { encodeSafeBatchTransferFromParams } from "thirdweb/extensions/erc1155";
  * const result = encodeSafeBatchTransferFromParams({
  *  from: ...,
  *  to: ...,
@@ -102,7 +102,7 @@ export function encodeSafeBatchTransferFromParams(
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeSafeBatchTransferFrom } "thirdweb/extensions/erc1155";
+ * import { encodeSafeBatchTransferFrom } from "thirdweb/extensions/erc1155";
  * const result = encodeSafeBatchTransferFrom({
  *  from: ...,
  *  to: ...,
@@ -130,6 +130,7 @@ export function encodeSafeBatchTransferFrom(
  * @extension ERC1155
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { safeBatchTransferFrom } from "thirdweb/extensions/erc1155";
  *
  * const transaction = safeBatchTransferFrom({
@@ -145,8 +146,7 @@ export function encodeSafeBatchTransferFrom(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function safeBatchTransferFrom(

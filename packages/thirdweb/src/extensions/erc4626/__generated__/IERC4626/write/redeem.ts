@@ -81,7 +81,7 @@ export function isRedeemSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeRedeemParams } "thirdweb/extensions/erc4626";
+ * import { encodeRedeemParams } from "thirdweb/extensions/erc4626";
  * const result = encodeRedeemParams({
  *  shares: ...,
  *  receiver: ...,
@@ -104,7 +104,7 @@ export function encodeRedeemParams(options: RedeemParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeRedeem } "thirdweb/extensions/erc4626";
+ * import { encodeRedeem } from "thirdweb/extensions/erc4626";
  * const result = encodeRedeem({
  *  shares: ...,
  *  receiver: ...,
@@ -126,6 +126,7 @@ export function encodeRedeem(options: RedeemParams) {
  * @extension ERC4626
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { redeem } from "thirdweb/extensions/erc4626";
  *
  * const transaction = redeem({
@@ -139,8 +140,7 @@ export function encodeRedeem(options: RedeemParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function redeem(

@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isDOMAIN_SEPARATORSupported } from "thirdweb/extensions/erc20";
- *
  * const supported = isDOMAIN_SEPARATORSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isDOMAIN_SEPARATORSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeDOMAIN_SEPARATORResult } from "thirdweb/extensions/erc20";
- * const result = decodeDOMAIN_SEPARATORResult("...");
+ * const result = decodeDOMAIN_SEPARATORResultResult("...");
  * ```
  */
 export function decodeDOMAIN_SEPARATORResult(result: Hex) {

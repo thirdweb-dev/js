@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalSupplySupported } from "thirdweb/extensions/erc1155";
- *
  * const supported = isTotalSupplySupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isTotalSupplySupported(availableSelectors: string[]) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeTotalSupplyParams } "thirdweb/extensions/erc1155";
+ * import { encodeTotalSupplyParams } from "thirdweb/extensions/erc1155";
  * const result = encodeTotalSupplyParams({
  *  id: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeTotalSupplyParams(options: TotalSupplyParams) {
  * @extension ERC1155
  * @example
  * ```ts
- * import { encodeTotalSupply } "thirdweb/extensions/erc1155";
+ * import { encodeTotalSupply } from "thirdweb/extensions/erc1155";
  * const result = encodeTotalSupply({
  *  id: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeTotalSupply(options: TotalSupplyParams) {
  * @example
  * ```ts
  * import { decodeTotalSupplyResult } from "thirdweb/extensions/erc1155";
- * const result = decodeTotalSupplyResult("...");
+ * const result = decodeTotalSupplyResultResult("...");
  * ```
  */
 export function decodeTotalSupplyResult(result: Hex) {

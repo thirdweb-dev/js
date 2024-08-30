@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isAddrSupported } from "thirdweb/extensions/ens";
- *
  * const supported = isAddrSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isAddrSupported(availableSelectors: string[]) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeAddrParams } "thirdweb/extensions/ens";
+ * import { encodeAddrParams } from "thirdweb/extensions/ens";
  * const result = encodeAddrParams({
  *  name: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeAddrParams(options: AddrParams) {
  * @extension ENS
  * @example
  * ```ts
- * import { encodeAddr } "thirdweb/extensions/ens";
+ * import { encodeAddr } from "thirdweb/extensions/ens";
  * const result = encodeAddr({
  *  name: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeAddr(options: AddrParams) {
  * @example
  * ```ts
  * import { decodeAddrResult } from "thirdweb/extensions/ens";
- * const result = decodeAddrResult("...");
+ * const result = decodeAddrResultResult("...");
  * ```
  */
 export function decodeAddrResult(result: Hex) {

@@ -101,7 +101,7 @@ export function isUpdateListingSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeUpdateListingParams } "thirdweb/extensions/marketplace";
+ * import { encodeUpdateListingParams } from "thirdweb/extensions/marketplace";
  * const result = encodeUpdateListingParams({
  *  listingId: ...,
  *  quantityToList: ...,
@@ -132,7 +132,7 @@ export function encodeUpdateListingParams(options: UpdateListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeUpdateListing } "thirdweb/extensions/marketplace";
+ * import { encodeUpdateListing } from "thirdweb/extensions/marketplace";
  * const result = encodeUpdateListing({
  *  listingId: ...,
  *  quantityToList: ...,
@@ -160,6 +160,7 @@ export function encodeUpdateListing(options: UpdateListingParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { updateListing } from "thirdweb/extensions/marketplace";
  *
  * const transaction = updateListing({
@@ -177,8 +178,7 @@ export function encodeUpdateListing(options: UpdateListingParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function updateListing(

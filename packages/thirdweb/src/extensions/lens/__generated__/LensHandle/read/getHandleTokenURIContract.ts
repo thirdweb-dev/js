@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetHandleTokenURIContractSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isGetHandleTokenURIContractSupported(["0x..."]);
  * ```
  */
@@ -42,7 +41,7 @@ export function isGetHandleTokenURIContractSupported(
  * @example
  * ```ts
  * import { decodeGetHandleTokenURIContractResult } from "thirdweb/extensions/lens";
- * const result = decodeGetHandleTokenURIContractResult("...");
+ * const result = decodeGetHandleTokenURIContractResultResult("...");
  * ```
  */
 export function decodeGetHandleTokenURIContractResult(result: Hex) {

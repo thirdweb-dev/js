@@ -109,7 +109,7 @@ export function isSetPermissionsForSignerSupported(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeSetPermissionsForSignerParams } "thirdweb/extensions/erc4337";
+ * import { encodeSetPermissionsForSignerParams } from "thirdweb/extensions/erc4337";
  * const result = encodeSetPermissionsForSignerParams({
  *  req: ...,
  *  signature: ...,
@@ -129,7 +129,7 @@ export function encodeSetPermissionsForSignerParams(
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeSetPermissionsForSigner } "thirdweb/extensions/erc4337";
+ * import { encodeSetPermissionsForSigner } from "thirdweb/extensions/erc4337";
  * const result = encodeSetPermissionsForSigner({
  *  req: ...,
  *  signature: ...,
@@ -154,6 +154,7 @@ export function encodeSetPermissionsForSigner(
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setPermissionsForSigner } from "thirdweb/extensions/erc4337";
  *
  * const transaction = setPermissionsForSigner({
@@ -166,8 +167,7 @@ export function encodeSetPermissionsForSigner(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setPermissionsForSigner(

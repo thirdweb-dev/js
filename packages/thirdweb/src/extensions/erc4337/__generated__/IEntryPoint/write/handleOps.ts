@@ -120,7 +120,7 @@ export function isHandleOpsSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeHandleOpsParams } "thirdweb/extensions/erc4337";
+ * import { encodeHandleOpsParams } from "thirdweb/extensions/erc4337";
  * const result = encodeHandleOpsParams({
  *  ops: ...,
  *  beneficiary: ...,
@@ -138,7 +138,7 @@ export function encodeHandleOpsParams(options: HandleOpsParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeHandleOps } "thirdweb/extensions/erc4337";
+ * import { encodeHandleOps } from "thirdweb/extensions/erc4337";
  * const result = encodeHandleOps({
  *  ops: ...,
  *  beneficiary: ...,
@@ -161,6 +161,7 @@ export function encodeHandleOps(options: HandleOpsParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { handleOps } from "thirdweb/extensions/erc4337";
  *
  * const transaction = handleOps({
@@ -173,8 +174,7 @@ export function encodeHandleOps(options: HandleOpsParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function handleOps(

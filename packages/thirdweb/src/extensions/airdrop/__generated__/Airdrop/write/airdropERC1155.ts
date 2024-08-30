@@ -87,7 +87,7 @@ export function isAirdropERC1155Supported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC1155Params } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC1155Params } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC1155Params({
  *  tokenAddress: ...,
  *  contents: ...,
@@ -108,7 +108,7 @@ export function encodeAirdropERC1155Params(options: AirdropERC1155Params) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropERC1155 } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropERC1155 } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropERC1155({
  *  tokenAddress: ...,
  *  contents: ...,
@@ -131,6 +131,7 @@ export function encodeAirdropERC1155(options: AirdropERC1155Params) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { airdropERC1155 } from "thirdweb/extensions/airdrop";
  *
  * const transaction = airdropERC1155({
@@ -143,8 +144,7 @@ export function encodeAirdropERC1155(options: AirdropERC1155Params) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function airdropERC1155(

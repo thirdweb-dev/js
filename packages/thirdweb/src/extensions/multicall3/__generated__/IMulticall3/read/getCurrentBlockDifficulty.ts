@@ -23,7 +23,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockDifficultySupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockDifficultySupported(["0x..."]);
  * ```
  */
@@ -44,7 +43,7 @@ export function isGetCurrentBlockDifficultySupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockDifficultyResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockDifficultyResult("...");
+ * const result = decodeGetCurrentBlockDifficultyResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockDifficultyResult(result: Hex) {

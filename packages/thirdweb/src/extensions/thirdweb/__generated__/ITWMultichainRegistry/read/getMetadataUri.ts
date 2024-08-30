@@ -43,7 +43,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetMetadataUriSupported } from "thirdweb/extensions/thirdweb";
- *
  * const supported = isGetMetadataUriSupported(["0x..."]);
  * ```
  */
@@ -61,7 +60,7 @@ export function isGetMetadataUriSupported(availableSelectors: string[]) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetMetadataUriParams } "thirdweb/extensions/thirdweb";
+ * import { encodeGetMetadataUriParams } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetMetadataUriParams({
  *  chainId: ...,
  *  deployment: ...,
@@ -79,7 +78,7 @@ export function encodeGetMetadataUriParams(options: GetMetadataUriParams) {
  * @extension THIRDWEB
  * @example
  * ```ts
- * import { encodeGetMetadataUri } "thirdweb/extensions/thirdweb";
+ * import { encodeGetMetadataUri } from "thirdweb/extensions/thirdweb";
  * const result = encodeGetMetadataUri({
  *  chainId: ...,
  *  deployment: ...,
@@ -103,7 +102,7 @@ export function encodeGetMetadataUri(options: GetMetadataUriParams) {
  * @example
  * ```ts
  * import { decodeGetMetadataUriResult } from "thirdweb/extensions/thirdweb";
- * const result = decodeGetMetadataUriResult("...");
+ * const result = decodeGetMetadataUriResultResult("...");
  * ```
  */
 export function decodeGetMetadataUriResult(result: Hex) {

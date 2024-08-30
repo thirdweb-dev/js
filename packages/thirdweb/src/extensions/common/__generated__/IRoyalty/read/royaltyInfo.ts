@@ -47,7 +47,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isRoyaltyInfoSupported } from "thirdweb/extensions/common";
- *
  * const supported = isRoyaltyInfoSupported(["0x..."]);
  * ```
  */
@@ -65,7 +64,7 @@ export function isRoyaltyInfoSupported(availableSelectors: string[]) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeRoyaltyInfoParams } "thirdweb/extensions/common";
+ * import { encodeRoyaltyInfoParams } from "thirdweb/extensions/common";
  * const result = encodeRoyaltyInfoParams({
  *  tokenId: ...,
  *  salePrice: ...,
@@ -83,7 +82,7 @@ export function encodeRoyaltyInfoParams(options: RoyaltyInfoParams) {
  * @extension COMMON
  * @example
  * ```ts
- * import { encodeRoyaltyInfo } "thirdweb/extensions/common";
+ * import { encodeRoyaltyInfo } from "thirdweb/extensions/common";
  * const result = encodeRoyaltyInfo({
  *  tokenId: ...,
  *  salePrice: ...,
@@ -107,7 +106,7 @@ export function encodeRoyaltyInfo(options: RoyaltyInfoParams) {
  * @example
  * ```ts
  * import { decodeRoyaltyInfoResult } from "thirdweb/extensions/common";
- * const result = decodeRoyaltyInfoResult("...");
+ * const result = decodeRoyaltyInfoResultResult("...");
  * ```
  */
 export function decodeRoyaltyInfoResult(result: Hex) {

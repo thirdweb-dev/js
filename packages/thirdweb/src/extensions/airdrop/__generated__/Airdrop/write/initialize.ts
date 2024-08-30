@@ -55,7 +55,7 @@ export function isInitializeSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeInitializeParams } "thirdweb/extensions/airdrop";
+ * import { encodeInitializeParams } from "thirdweb/extensions/airdrop";
  * const result = encodeInitializeParams({
  *  defaultAdmin: ...,
  * });
@@ -72,7 +72,7 @@ export function encodeInitializeParams(options: InitializeParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeInitialize } "thirdweb/extensions/airdrop";
+ * import { encodeInitialize } from "thirdweb/extensions/airdrop";
  * const result = encodeInitialize({
  *  defaultAdmin: ...,
  * });
@@ -94,6 +94,7 @@ export function encodeInitialize(options: InitializeParams) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { initialize } from "thirdweb/extensions/airdrop";
  *
  * const transaction = initialize({
@@ -105,8 +106,7 @@ export function encodeInitialize(options: InitializeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function initialize(

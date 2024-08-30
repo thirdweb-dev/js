@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isREMOVE_TYPEHASHSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isREMOVE_TYPEHASHSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isREMOVE_TYPEHASHSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeREMOVE_TYPEHASHResult } from "thirdweb/extensions/farcaster";
- * const result = decodeREMOVE_TYPEHASHResult("...");
+ * const result = decodeREMOVE_TYPEHASHResultResult("...");
  * ```
  */
 export function decodeREMOVE_TYPEHASHResult(result: Hex) {

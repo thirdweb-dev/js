@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTotalSharesSupported } from "thirdweb/extensions/split";
- *
  * const supported = isTotalSharesSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isTotalSharesSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeTotalSharesResult } from "thirdweb/extensions/split";
- * const result = decodeTotalSharesResult("...");
+ * const result = decodeTotalSharesResultResult("...");
  * ```
  */
 export function decodeTotalSharesResult(result: Hex) {

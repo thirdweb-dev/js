@@ -61,7 +61,7 @@ export function isBidInAuctionSupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeBidInAuctionParams } "thirdweb/extensions/marketplace";
+ * import { encodeBidInAuctionParams } from "thirdweb/extensions/marketplace";
  * const result = encodeBidInAuctionParams({
  *  auctionId: ...,
  *  bidAmount: ...,
@@ -79,7 +79,7 @@ export function encodeBidInAuctionParams(options: BidInAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeBidInAuction } "thirdweb/extensions/marketplace";
+ * import { encodeBidInAuction } from "thirdweb/extensions/marketplace";
  * const result = encodeBidInAuction({
  *  auctionId: ...,
  *  bidAmount: ...,
@@ -102,6 +102,7 @@ export function encodeBidInAuction(options: BidInAuctionParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { bidInAuction } from "thirdweb/extensions/marketplace";
  *
  * const transaction = bidInAuction({
@@ -114,8 +115,7 @@ export function encodeBidInAuction(options: BidInAuctionParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function bidInAuction(

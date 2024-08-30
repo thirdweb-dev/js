@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isQuorumSupported } from "thirdweb/extensions/vote";
- *
  * const supported = isQuorumSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isQuorumSupported(availableSelectors: string[]) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeQuorumParams } "thirdweb/extensions/vote";
+ * import { encodeQuorumParams } from "thirdweb/extensions/vote";
  * const result = encodeQuorumParams({
  *  blockNumber: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeQuorumParams(options: QuorumParams) {
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeQuorum } "thirdweb/extensions/vote";
+ * import { encodeQuorum } from "thirdweb/extensions/vote";
  * const result = encodeQuorum({
  *  blockNumber: ...,
  * });
@@ -93,7 +92,7 @@ export function encodeQuorum(options: QuorumParams) {
  * @example
  * ```ts
  * import { decodeQuorumResult } from "thirdweb/extensions/vote";
- * const result = decodeQuorumResult("...");
+ * const result = decodeQuorumResultResult("...");
  * ```
  */
 export function decodeQuorumResult(result: Hex) {

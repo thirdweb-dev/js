@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMintTimestampOfSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isMintTimestampOfSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isMintTimestampOfSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeMintTimestampOfParams } "thirdweb/extensions/lens";
+ * import { encodeMintTimestampOfParams } from "thirdweb/extensions/lens";
  * const result = encodeMintTimestampOfParams({
  *  tokenId: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeMintTimestampOfParams(options: MintTimestampOfParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeMintTimestampOf } "thirdweb/extensions/lens";
+ * import { encodeMintTimestampOf } from "thirdweb/extensions/lens";
  * const result = encodeMintTimestampOf({
  *  tokenId: ...,
  * });
@@ -92,7 +91,7 @@ export function encodeMintTimestampOf(options: MintTimestampOfParams) {
  * @example
  * ```ts
  * import { decodeMintTimestampOfResult } from "thirdweb/extensions/lens";
- * const result = decodeMintTimestampOfResult("...");
+ * const result = decodeMintTimestampOfResultResult("...");
  * ```
  */
 export function decodeMintTimestampOfResult(result: Hex) {

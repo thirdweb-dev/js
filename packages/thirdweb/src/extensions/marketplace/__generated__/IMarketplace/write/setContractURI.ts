@@ -50,7 +50,7 @@ export function isSetContractURISupported(availableSelectors: string[]) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeSetContractURIParams } "thirdweb/extensions/marketplace";
+ * import { encodeSetContractURIParams } from "thirdweb/extensions/marketplace";
  * const result = encodeSetContractURIParams({
  *  uri: ...,
  * });
@@ -67,7 +67,7 @@ export function encodeSetContractURIParams(options: SetContractURIParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
- * import { encodeSetContractURI } "thirdweb/extensions/marketplace";
+ * import { encodeSetContractURI } from "thirdweb/extensions/marketplace";
  * const result = encodeSetContractURI({
  *  uri: ...,
  * });
@@ -89,6 +89,7 @@ export function encodeSetContractURI(options: SetContractURIParams) {
  * @extension MARKETPLACE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { setContractURI } from "thirdweb/extensions/marketplace";
  *
  * const transaction = setContractURI({
@@ -100,8 +101,7 @@ export function encodeSetContractURI(options: SetContractURIParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function setContractURI(

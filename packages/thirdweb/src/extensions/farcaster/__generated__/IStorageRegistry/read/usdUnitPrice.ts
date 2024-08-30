@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isUsdUnitPriceSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isUsdUnitPriceSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isUsdUnitPriceSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeUsdUnitPriceResult } from "thirdweb/extensions/farcaster";
- * const result = decodeUsdUnitPriceResult("...");
+ * const result = decodeUsdUnitPriceResultResult("...");
  * ```
  */
 export function decodeUsdUnitPriceResult(result: Hex) {

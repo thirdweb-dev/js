@@ -71,7 +71,7 @@ export function isAirdropNativeTokenSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropNativeTokenParams } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropNativeTokenParams } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropNativeTokenParams({
  *  contents: ...,
  * });
@@ -90,7 +90,7 @@ export function encodeAirdropNativeTokenParams(
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeAirdropNativeToken } "thirdweb/extensions/airdrop";
+ * import { encodeAirdropNativeToken } from "thirdweb/extensions/airdrop";
  * const result = encodeAirdropNativeToken({
  *  contents: ...,
  * });
@@ -112,6 +112,7 @@ export function encodeAirdropNativeToken(options: AirdropNativeTokenParams) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { airdropNativeToken } from "thirdweb/extensions/airdrop";
  *
  * const transaction = airdropNativeToken({
@@ -123,8 +124,7 @@ export function encodeAirdropNativeToken(options: AirdropNativeTokenParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function airdropNativeToken(

@@ -10,7 +10,7 @@ import type { Hex } from "../../utils/encoding/hex.js";
 import type { Prettify } from "../../utils/type-utils.js";
 import type { ClientAndChainAndAccount } from "../../utils/types.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
-import { initialize } from "../modular/__generated__/ERC20Core/write/initialize.js";
+import { initialize } from "../modules/__generated__/ERC20Core/write/initialize.js";
 
 export type CoreType = "ERC20" | "ERC721" | "ERC1155";
 

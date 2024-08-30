@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isStateSupported } from "thirdweb/extensions/erc6551";
- *
  * const supported = isStateSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isStateSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeStateResult } from "thirdweb/extensions/erc6551";
- * const result = decodeStateResult("...");
+ * const result = decodeStateResultResult("...");
  * ```
  */
 export function decodeStateResult(result: Hex) {

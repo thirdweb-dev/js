@@ -23,7 +23,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetBlockNumberSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetBlockNumberSupported(["0x..."]);
  * ```
  */
@@ -42,7 +41,7 @@ export function isGetBlockNumberSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeGetBlockNumberResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetBlockNumberResult("...");
+ * const result = decodeGetBlockNumberResultResult("...");
  * ```
  */
 export function decodeGetBlockNumberResult(result: Hex) {

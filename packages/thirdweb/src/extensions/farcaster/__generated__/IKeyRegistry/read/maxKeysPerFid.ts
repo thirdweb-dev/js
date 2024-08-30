@@ -21,7 +21,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isMaxKeysPerFidSupported } from "thirdweb/extensions/farcaster";
- *
  * const supported = isMaxKeysPerFidSupported(["0x..."]);
  * ```
  */
@@ -40,7 +39,7 @@ export function isMaxKeysPerFidSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeMaxKeysPerFidResult } from "thirdweb/extensions/farcaster";
- * const result = decodeMaxKeysPerFidResult("...");
+ * const result = decodeMaxKeysPerFidResultResult("...");
  * ```
  */
 export function decodeMaxKeysPerFidResult(result: Hex) {

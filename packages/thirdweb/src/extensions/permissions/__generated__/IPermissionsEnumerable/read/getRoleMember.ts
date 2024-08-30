@@ -39,7 +39,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetRoleMemberSupported } from "thirdweb/extensions/permissions";
- *
  * const supported = isGetRoleMemberSupported(["0x..."]);
  * ```
  */
@@ -57,7 +56,7 @@ export function isGetRoleMemberSupported(availableSelectors: string[]) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeGetRoleMemberParams } "thirdweb/extensions/permissions";
+ * import { encodeGetRoleMemberParams } from "thirdweb/extensions/permissions";
  * const result = encodeGetRoleMemberParams({
  *  role: ...,
  *  index: ...,
@@ -75,7 +74,7 @@ export function encodeGetRoleMemberParams(options: GetRoleMemberParams) {
  * @extension PERMISSIONS
  * @example
  * ```ts
- * import { encodeGetRoleMember } "thirdweb/extensions/permissions";
+ * import { encodeGetRoleMember } from "thirdweb/extensions/permissions";
  * const result = encodeGetRoleMember({
  *  role: ...,
  *  index: ...,
@@ -99,7 +98,7 @@ export function encodeGetRoleMember(options: GetRoleMemberParams) {
  * @example
  * ```ts
  * import { decodeGetRoleMemberResult } from "thirdweb/extensions/permissions";
- * const result = decodeGetRoleMemberResult("...");
+ * const result = decodeGetRoleMemberResultResult("...");
  * ```
  */
 export function decodeGetRoleMemberResult(result: Hex) {

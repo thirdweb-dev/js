@@ -23,7 +23,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isGetCurrentBlockCoinbaseSupported } from "thirdweb/extensions/multicall3";
- *
  * const supported = isGetCurrentBlockCoinbaseSupported(["0x..."]);
  * ```
  */
@@ -44,7 +43,7 @@ export function isGetCurrentBlockCoinbaseSupported(
  * @example
  * ```ts
  * import { decodeGetCurrentBlockCoinbaseResult } from "thirdweb/extensions/multicall3";
- * const result = decodeGetCurrentBlockCoinbaseResult("...");
+ * const result = decodeGetCurrentBlockCoinbaseResultResult("...");
  * ```
  */
 export function decodeGetCurrentBlockCoinbaseResult(result: Hex) {

@@ -89,7 +89,7 @@ export function isCastVoteWithReasonAndParamsBySigSupported(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteWithReasonAndParamsBySigParams } "thirdweb/extensions/vote";
+ * import { encodeCastVoteWithReasonAndParamsBySigParams } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteWithReasonAndParamsBySigParams({
  *  proposalId: ...,
  *  support: ...,
@@ -122,7 +122,7 @@ export function encodeCastVoteWithReasonAndParamsBySigParams(
  * @extension VOTE
  * @example
  * ```ts
- * import { encodeCastVoteWithReasonAndParamsBySig } "thirdweb/extensions/vote";
+ * import { encodeCastVoteWithReasonAndParamsBySig } from "thirdweb/extensions/vote";
  * const result = encodeCastVoteWithReasonAndParamsBySig({
  *  proposalId: ...,
  *  support: ...,
@@ -152,6 +152,7 @@ export function encodeCastVoteWithReasonAndParamsBySig(
  * @extension VOTE
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { castVoteWithReasonAndParamsBySig } from "thirdweb/extensions/vote";
  *
  * const transaction = castVoteWithReasonAndParamsBySig({
@@ -169,8 +170,7 @@ export function encodeCastVoteWithReasonAndParamsBySig(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function castVoteWithReasonAndParamsBySig(

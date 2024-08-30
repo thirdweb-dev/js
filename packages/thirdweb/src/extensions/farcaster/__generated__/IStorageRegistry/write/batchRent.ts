@@ -55,7 +55,7 @@ export function isBatchRentSupported(availableSelectors: string[]) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeBatchRentParams } "thirdweb/extensions/farcaster";
+ * import { encodeBatchRentParams } from "thirdweb/extensions/farcaster";
  * const result = encodeBatchRentParams({
  *  fids: ...,
  *  units: ...,
@@ -73,7 +73,7 @@ export function encodeBatchRentParams(options: BatchRentParams) {
  * @extension FARCASTER
  * @example
  * ```ts
- * import { encodeBatchRent } "thirdweb/extensions/farcaster";
+ * import { encodeBatchRent } from "thirdweb/extensions/farcaster";
  * const result = encodeBatchRent({
  *  fids: ...,
  *  units: ...,
@@ -96,6 +96,7 @@ export function encodeBatchRent(options: BatchRentParams) {
  * @extension FARCASTER
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { batchRent } from "thirdweb/extensions/farcaster";
  *
  * const transaction = batchRent({
@@ -108,8 +109,7 @@ export function encodeBatchRent(options: BatchRentParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function batchRent(

@@ -53,7 +53,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isEip712DomainSupported } from "thirdweb/extensions/airdrop";
- *
  * const supported = isEip712DomainSupported(["0x..."]);
  * ```
  */
@@ -72,7 +71,7 @@ export function isEip712DomainSupported(availableSelectors: string[]) {
  * @example
  * ```ts
  * import { decodeEip712DomainResult } from "thirdweb/extensions/airdrop";
- * const result = decodeEip712DomainResult("...");
+ * const result = decodeEip712DomainResultResult("...");
  * ```
  */
 export function decodeEip712DomainResult(result: Hex) {

@@ -95,7 +95,7 @@ export function isAggregate3Supported(availableSelectors: string[]) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeAggregate3Params } "thirdweb/extensions/multicall3";
+ * import { encodeAggregate3Params } from "thirdweb/extensions/multicall3";
  * const result = encodeAggregate3Params({
  *  calls: ...,
  * });
@@ -112,7 +112,7 @@ export function encodeAggregate3Params(options: Aggregate3Params) {
  * @extension MULTICALL3
  * @example
  * ```ts
- * import { encodeAggregate3 } "thirdweb/extensions/multicall3";
+ * import { encodeAggregate3 } from "thirdweb/extensions/multicall3";
  * const result = encodeAggregate3({
  *  calls: ...,
  * });
@@ -134,6 +134,7 @@ export function encodeAggregate3(options: Aggregate3Params) {
  * @extension MULTICALL3
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { aggregate3 } from "thirdweb/extensions/multicall3";
  *
  * const transaction = aggregate3({
@@ -145,8 +146,7 @@ export function encodeAggregate3(options: Aggregate3Params) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function aggregate3(

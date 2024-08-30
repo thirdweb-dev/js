@@ -61,7 +61,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isIsClaimedSupported } from "thirdweb/extensions/airdrop";
- *
  * const supported = isIsClaimedSupported(["0x..."]);
  * ```
  */
@@ -79,7 +78,7 @@ export function isIsClaimedSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeIsClaimedParams } "thirdweb/extensions/airdrop";
+ * import { encodeIsClaimedParams } from "thirdweb/extensions/airdrop";
  * const result = encodeIsClaimedParams({
  *  receiver: ...,
  *  token: ...,
@@ -102,7 +101,7 @@ export function encodeIsClaimedParams(options: IsClaimedParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeIsClaimed } "thirdweb/extensions/airdrop";
+ * import { encodeIsClaimed } from "thirdweb/extensions/airdrop";
  * const result = encodeIsClaimed({
  *  receiver: ...,
  *  token: ...,
@@ -127,7 +126,7 @@ export function encodeIsClaimed(options: IsClaimedParams) {
  * @example
  * ```ts
  * import { decodeIsClaimedResult } from "thirdweb/extensions/airdrop";
- * const result = decodeIsClaimedResult("...");
+ * const result = decodeIsClaimedResultResult("...");
  * ```
  */
 export function decodeIsClaimedResult(result: Hex) {

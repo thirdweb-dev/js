@@ -85,7 +85,7 @@ export function isClaimERC20Supported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeClaimERC20Params } "thirdweb/extensions/airdrop";
+ * import { encodeClaimERC20Params } from "thirdweb/extensions/airdrop";
  * const result = encodeClaimERC20Params({
  *  token: ...,
  *  receiver: ...,
@@ -110,7 +110,7 @@ export function encodeClaimERC20Params(options: ClaimERC20Params) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeClaimERC20 } "thirdweb/extensions/airdrop";
+ * import { encodeClaimERC20 } from "thirdweb/extensions/airdrop";
  * const result = encodeClaimERC20({
  *  token: ...,
  *  receiver: ...,
@@ -135,6 +135,7 @@ export function encodeClaimERC20(options: ClaimERC20Params) {
  * @extension AIRDROP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { claimERC20 } from "thirdweb/extensions/airdrop";
  *
  * const transaction = claimERC20({
@@ -149,8 +150,7 @@ export function encodeClaimERC20(options: ClaimERC20Params) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function claimERC20(

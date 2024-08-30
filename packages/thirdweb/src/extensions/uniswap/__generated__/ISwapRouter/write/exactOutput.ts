@@ -87,7 +87,7 @@ export function isExactOutputSupported(availableSelectors: string[]) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeExactOutputParams } "thirdweb/extensions/uniswap";
+ * import { encodeExactOutputParams } from "thirdweb/extensions/uniswap";
  * const result = encodeExactOutputParams({
  *  params: ...,
  * });
@@ -104,7 +104,7 @@ export function encodeExactOutputParams(options: ExactOutputParams) {
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeExactOutput } "thirdweb/extensions/uniswap";
+ * import { encodeExactOutput } from "thirdweb/extensions/uniswap";
  * const result = encodeExactOutput({
  *  params: ...,
  * });
@@ -126,6 +126,7 @@ export function encodeExactOutput(options: ExactOutputParams) {
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { exactOutput } from "thirdweb/extensions/uniswap";
  *
  * const transaction = exactOutput({
@@ -137,8 +138,7 @@ export function encodeExactOutput(options: ExactOutputParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function exactOutput(

@@ -41,7 +41,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isConvertToAssetsSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isConvertToAssetsSupported(["0x..."]);
  * ```
  */
@@ -59,7 +58,7 @@ export function isConvertToAssetsSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeConvertToAssetsParams } "thirdweb/extensions/erc4626";
+ * import { encodeConvertToAssetsParams } from "thirdweb/extensions/erc4626";
  * const result = encodeConvertToAssetsParams({
  *  shares: ...,
  * });
@@ -76,7 +75,7 @@ export function encodeConvertToAssetsParams(options: ConvertToAssetsParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodeConvertToAssets } "thirdweb/extensions/erc4626";
+ * import { encodeConvertToAssets } from "thirdweb/extensions/erc4626";
  * const result = encodeConvertToAssets({
  *  shares: ...,
  * });
@@ -99,7 +98,7 @@ export function encodeConvertToAssets(options: ConvertToAssetsParams) {
  * @example
  * ```ts
  * import { decodeConvertToAssetsResult } from "thirdweb/extensions/erc4626";
- * const result = decodeConvertToAssetsResult("...");
+ * const result = decodeConvertToAssetsResultResult("...");
  * ```
  */
 export function decodeConvertToAssetsResult(result: Hex) {

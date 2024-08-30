@@ -53,7 +53,7 @@ export function isDelegateSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeDelegateParams } "thirdweb/extensions/erc20";
+ * import { encodeDelegateParams } from "thirdweb/extensions/erc20";
  * const result = encodeDelegateParams({
  *  delegatee: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeDelegateParams(options: DelegateParams) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeDelegate } "thirdweb/extensions/erc20";
+ * import { encodeDelegate } from "thirdweb/extensions/erc20";
  * const result = encodeDelegate({
  *  delegatee: ...,
  * });
@@ -90,6 +90,7 @@ export function encodeDelegate(options: DelegateParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { delegate } from "thirdweb/extensions/erc20";
  *
  * const transaction = delegate({
@@ -101,8 +102,7 @@ export function encodeDelegate(options: DelegateParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function delegate(

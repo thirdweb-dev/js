@@ -41,7 +41,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isPreviewMintSupported } from "thirdweb/extensions/erc4626";
- *
  * const supported = isPreviewMintSupported(["0x..."]);
  * ```
  */
@@ -59,7 +58,7 @@ export function isPreviewMintSupported(availableSelectors: string[]) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewMintParams } "thirdweb/extensions/erc4626";
+ * import { encodePreviewMintParams } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewMintParams({
  *  shares: ...,
  * });
@@ -76,7 +75,7 @@ export function encodePreviewMintParams(options: PreviewMintParams) {
  * @extension ERC4626
  * @example
  * ```ts
- * import { encodePreviewMint } "thirdweb/extensions/erc4626";
+ * import { encodePreviewMint } from "thirdweb/extensions/erc4626";
  * const result = encodePreviewMint({
  *  shares: ...,
  * });
@@ -99,7 +98,7 @@ export function encodePreviewMint(options: PreviewMintParams) {
  * @example
  * ```ts
  * import { decodePreviewMintResult } from "thirdweb/extensions/erc4626";
- * const result = decodePreviewMintResult("...");
+ * const result = decodePreviewMintResultResult("...");
  * ```
  */
 export function decodePreviewMintResult(result: Hex) {

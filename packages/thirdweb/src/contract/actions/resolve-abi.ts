@@ -1,5 +1,5 @@
 import { type Abi, formatAbi, parseAbi } from "abitype";
-import { getInstalledModules } from "../../extensions/modular/__generated__/IModularCore/read/getInstalledModules.js";
+import { getInstalledModules } from "../../extensions/modules/__generated__/IModularCore/read/getInstalledModules.js";
 import { download } from "../../storage/download.js";
 import { extractIPFSUri } from "../../utils/bytecode/extractIPFS.js";
 import { getClientFetch } from "../../utils/fetch.js";

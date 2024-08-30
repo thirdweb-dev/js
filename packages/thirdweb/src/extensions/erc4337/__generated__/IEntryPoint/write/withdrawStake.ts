@@ -53,7 +53,7 @@ export function isWithdrawStakeSupported(availableSelectors: string[]) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeWithdrawStakeParams } "thirdweb/extensions/erc4337";
+ * import { encodeWithdrawStakeParams } from "thirdweb/extensions/erc4337";
  * const result = encodeWithdrawStakeParams({
  *  withdrawAddress: ...,
  * });
@@ -70,7 +70,7 @@ export function encodeWithdrawStakeParams(options: WithdrawStakeParams) {
  * @extension ERC4337
  * @example
  * ```ts
- * import { encodeWithdrawStake } "thirdweb/extensions/erc4337";
+ * import { encodeWithdrawStake } from "thirdweb/extensions/erc4337";
  * const result = encodeWithdrawStake({
  *  withdrawAddress: ...,
  * });
@@ -92,6 +92,7 @@ export function encodeWithdrawStake(options: WithdrawStakeParams) {
  * @extension ERC4337
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { withdrawStake } from "thirdweb/extensions/erc4337";
  *
  * const transaction = withdrawStake({
@@ -103,8 +104,7 @@ export function encodeWithdrawStake(options: WithdrawStakeParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function withdrawStake(

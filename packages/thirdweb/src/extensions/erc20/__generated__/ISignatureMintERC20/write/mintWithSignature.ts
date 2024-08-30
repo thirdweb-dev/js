@@ -102,7 +102,7 @@ export function isMintWithSignatureSupported(availableSelectors: string[]) {
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeMintWithSignatureParams } "thirdweb/extensions/erc20";
+ * import { encodeMintWithSignatureParams } from "thirdweb/extensions/erc20";
  * const result = encodeMintWithSignatureParams({
  *  payload: ...,
  *  signature: ...,
@@ -122,7 +122,7 @@ export function encodeMintWithSignatureParams(
  * @extension ERC20
  * @example
  * ```ts
- * import { encodeMintWithSignature } "thirdweb/extensions/erc20";
+ * import { encodeMintWithSignature } from "thirdweb/extensions/erc20";
  * const result = encodeMintWithSignature({
  *  payload: ...,
  *  signature: ...,
@@ -145,6 +145,7 @@ export function encodeMintWithSignature(options: MintWithSignatureParams) {
  * @extension ERC20
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { mintWithSignature } from "thirdweb/extensions/erc20";
  *
  * const transaction = mintWithSignature({
@@ -157,8 +158,7 @@ export function encodeMintWithSignature(options: MintWithSignatureParams) {
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function mintWithSignature(

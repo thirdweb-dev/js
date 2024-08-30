@@ -34,7 +34,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isResolveSupported } from "thirdweb/extensions/lens";
- *
  * const supported = isResolveSupported(["0x..."]);
  * ```
  */
@@ -52,7 +51,7 @@ export function isResolveSupported(availableSelectors: string[]) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeResolveParams } "thirdweb/extensions/lens";
+ * import { encodeResolveParams } from "thirdweb/extensions/lens";
  * const result = encodeResolveParams({
  *  handleId: ...,
  * });
@@ -69,7 +68,7 @@ export function encodeResolveParams(options: ResolveParams) {
  * @extension LENS
  * @example
  * ```ts
- * import { encodeResolve } "thirdweb/extensions/lens";
+ * import { encodeResolve } from "thirdweb/extensions/lens";
  * const result = encodeResolve({
  *  handleId: ...,
  * });
@@ -90,7 +89,7 @@ export function encodeResolve(options: ResolveParams) {
  * @example
  * ```ts
  * import { decodeResolveResult } from "thirdweb/extensions/lens";
- * const result = decodeResolveResult("...");
+ * const result = decodeResolveResultResult("...");
  * ```
  */
 export function decodeResolveResult(result: Hex) {

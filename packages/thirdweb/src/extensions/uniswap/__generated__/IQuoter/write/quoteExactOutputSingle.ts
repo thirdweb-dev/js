@@ -83,7 +83,7 @@ export function isQuoteExactOutputSingleSupported(
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeQuoteExactOutputSingleParams } "thirdweb/extensions/uniswap";
+ * import { encodeQuoteExactOutputSingleParams } from "thirdweb/extensions/uniswap";
  * const result = encodeQuoteExactOutputSingleParams({
  *  tokenIn: ...,
  *  tokenOut: ...,
@@ -112,7 +112,7 @@ export function encodeQuoteExactOutputSingleParams(
  * @extension UNISWAP
  * @example
  * ```ts
- * import { encodeQuoteExactOutputSingle } "thirdweb/extensions/uniswap";
+ * import { encodeQuoteExactOutputSingle } from "thirdweb/extensions/uniswap";
  * const result = encodeQuoteExactOutputSingle({
  *  tokenIn: ...,
  *  tokenOut: ...,
@@ -140,6 +140,7 @@ export function encodeQuoteExactOutputSingle(
  * @extension UNISWAP
  * @example
  * ```ts
+ * import { sendTransaction } from "thirdweb";
  * import { quoteExactOutputSingle } from "thirdweb/extensions/uniswap";
  *
  * const transaction = quoteExactOutputSingle({
@@ -155,8 +156,7 @@ export function encodeQuoteExactOutputSingle(
  * });
  *
  * // Send the transaction
- * ...
- *
+ * await sendTransaction({ transaction, account });
  * ```
  */
 export function quoteExactOutputSingle(

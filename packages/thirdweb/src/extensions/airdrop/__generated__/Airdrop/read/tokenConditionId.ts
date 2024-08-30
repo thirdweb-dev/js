@@ -37,7 +37,6 @@ const FN_OUTPUTS = [
  * @example
  * ```ts
  * import { isTokenConditionIdSupported } from "thirdweb/extensions/airdrop";
- *
  * const supported = isTokenConditionIdSupported(["0x..."]);
  * ```
  */
@@ -55,7 +54,7 @@ export function isTokenConditionIdSupported(availableSelectors: string[]) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeTokenConditionIdParams } "thirdweb/extensions/airdrop";
+ * import { encodeTokenConditionIdParams } from "thirdweb/extensions/airdrop";
  * const result = encodeTokenConditionIdParams({
  *  tokenAddress: ...,
  * });
@@ -72,7 +71,7 @@ export function encodeTokenConditionIdParams(options: TokenConditionIdParams) {
  * @extension AIRDROP
  * @example
  * ```ts
- * import { encodeTokenConditionId } "thirdweb/extensions/airdrop";
+ * import { encodeTokenConditionId } from "thirdweb/extensions/airdrop";
  * const result = encodeTokenConditionId({
  *  tokenAddress: ...,
  * });
@@ -95,7 +94,7 @@ export function encodeTokenConditionId(options: TokenConditionIdParams) {
  * @example
  * ```ts
  * import { decodeTokenConditionIdResult } from "thirdweb/extensions/airdrop";
- * const result = decodeTokenConditionIdResult("...");
+ * const result = decodeTokenConditionIdResultResult("...");
  * ```
  */
 export function decodeTokenConditionIdResult(result: Hex) {
