@@ -13,7 +13,9 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import {
@@ -41,19 +43,20 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({
   });
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ defaultValues: { amount: "1", to: address } });
+  const { register, handleSubmit, formState } = useForm({
+    defaultValues: { amount: "1", to: address },
+  });
+  const { errors } = formState;
   const modalContext = useModalContext();
 
-  const { onSuccess, onError } = useTxNotifications(
+  const txNotifications = useTxNotifications(
     "Successfully claimed NFTs",
     "Failed to claim NFT",
     contract,
   );
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const account = useActiveAccount();
+
   return (
     <>
       <DrawerHeader>
@@ -91,45 +94,63 @@ export const NFTClaimForm: React.FC<NFTClaimFormProps> = ({
         <TransactionButton
           transactionCount={1}
           form={CLAIM_FORM_ID}
-          isLoading={isPending}
+          isLoading={formState.isSubmitting}
           type="submit"
           colorScheme="primary"
-          onClick={handleSubmit((d) => {
+          onClick={handleSubmit(async (d) => {
             trackEvent({
               category: "nft",
               action: "claim",
               label: "attempt",
             });
+            if (!account) {
+              return toast.error("No account detected");
+            }
             if (!d.to) {
-              return onError(
+              return txNotifications.onError(
                 new Error("Please enter the address that will receive the NFT"),
               );
             }
-            const transaction = claimTo({
-              contract,
-              to: d.to,
-              quantity: BigInt(d.amount),
-            });
-            mutate(transaction, {
-              onSuccess: () => {
-                trackEvent({
-                  category: "nft",
-                  action: "claim",
-                  label: "success",
-                });
-                onSuccess();
-                modalContext.onClose();
-              },
-              onError: (error) => {
-                trackEvent({
-                  category: "nft",
-                  action: "claim",
-                  label: "error",
-                  error,
-                });
-                onError(error);
-              },
-            });
+
+            try {
+              const transaction = claimTo({
+                contract,
+                to: d.to,
+                quantity: BigInt(d.amount),
+              });
+
+              const approveTx = await getApprovalForTransaction({
+                transaction,
+                account,
+              });
+
+              if (approveTx) {
+                try {
+                  await sendAndConfirmTx.mutateAsync(approveTx);
+                } catch {
+                  return toast.error("Error approving ERC20 token");
+                }
+              }
+
+              await sendAndConfirmTx.mutateAsync(transaction);
+
+              trackEvent({
+                category: "nft",
+                action: "claim",
+                label: "success",
+              });
+              txNotifications.onSuccess();
+              modalContext.onClose();
+            } catch (error) {
+              trackEvent({
+                category: "nft",
+                action: "claim",
+                label: "error",
+                error,
+              });
+
+              txNotifications.onError(error);
+            }
           })}
         >
           Claim NFT
