@@ -1,5 +1,6 @@
 import { CodeExample } from "@/components/code/code-example";
 import { StyledConnectEmbed } from "@/components/styled-connect-embed";
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { APIHeader } from "../../../../components/blocks/APIHeader";
@@ -13,22 +14,24 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="pb-20 container px-0">
-      <APIHeader
-        title="Sign in"
-        description={
-          <>
-            Create a login experience tailor-made for your app. Add your wallets
-            of choice, enable web2 sign-in options and create a modal that fits
-            your brand.
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
-        heroLink="/connectors.png"
-      />
+    <ThirdwebProvider>
+      <main className="pb-20 container px-0">
+        <APIHeader
+          title="Sign in"
+          description={
+            <>
+              Create a login experience tailor-made for your app. Add your
+              wallets of choice, enable web2 sign-in options and create a modal
+              that fits your brand.
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/connect/sign-in/overview"
+          heroLink="/connectors.png"
+        />
 
-      <EmbedComponent />
-    </main>
+        <EmbedComponent />
+      </main>
+    </ThirdwebProvider>
   );
 }
 

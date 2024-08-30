@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { BasicAuthPreview } from "@/components/auth/basic-auth";
 import { GatedContentPreview } from "@/components/auth/gated-content";
 import { CodeExample } from "@/components/code/code-example";
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { APIHeader } from "../../../components/blocks/APIHeader";
@@ -15,30 +16,32 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="pb-20 container px-0">
-      <APIHeader
-        title="Auth"
-        description={
-          <>
-            Authenticate users to your backend using only their wallet. This is
-            a secure and easy way to authenticate users without requiring them
-            to create an additional account.
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/typescript/v5/auth"
-        heroLink="/auth.png"
-      />
+    <ThirdwebProvider>
+      <main className="pb-20 container px-0">
+        <APIHeader
+          title="Auth"
+          description={
+            <>
+              Authenticate users to your backend using only their wallet. This
+              is a secure and easy way to authenticate users without requiring
+              them to create an additional account.
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/typescript/v5/auth"
+          heroLink="/auth.png"
+        />
 
-      <section className="space-y-8">
-        <BasicAuth />
-      </section>
+        <section className="space-y-8">
+          <BasicAuth />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <GatedContent />
-      </section>
-    </main>
+        <section className="space-y-8">
+          <GatedContent />
+        </section>
+      </main>
+    </ThirdwebProvider>
   );
 }
 

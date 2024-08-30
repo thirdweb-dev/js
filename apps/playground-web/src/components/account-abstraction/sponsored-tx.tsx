@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getContract } from "thirdweb";
 import { baseSepolia } from "thirdweb/chains";
 import { claimTo, getNFT, getOwnedNFTs } from "thirdweb/extensions/erc1155";
@@ -9,8 +9,6 @@ import {
   MediaRenderer,
   TransactionButton,
   useActiveAccount,
-  useActiveWallet,
-  useDisconnect,
   useReadContract,
 } from "thirdweb/react";
 import { shortenHex } from "thirdweb/utils";
@@ -29,13 +27,6 @@ export const editionDropContract = getContract({
 
 export function SponsoredTxPreview() {
   const [txHash, setTxHash] = useState<string | null>(null);
-  const wallet = useActiveWallet();
-  const { disconnect } = useDisconnect();
-  useEffect(() => {
-    if (wallet && wallet.id !== "smart") {
-      disconnect(wallet);
-    }
-  }, [wallet, disconnect]);
   const smartAccount = useActiveAccount();
   const { data: nft, isLoading: isNftLoading } = useReadContract(getNFT, {
     contract: editionDropContract,
