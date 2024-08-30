@@ -17,7 +17,7 @@ export function ClaimChainSection() {
         <Button variant="outline" asChild>
           <Link
             className="gap-2"
-            href="https://share.hsforms.com/1o01TyfsZRAao2eCrzuXSVgea58c"
+            href="https://share.hsforms.com/1qAViW3U5SoKbabNhRZy4Kgea58c"
             target="_blank"
           >
             <span>Claim Chain</span>
