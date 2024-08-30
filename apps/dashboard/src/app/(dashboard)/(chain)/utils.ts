@@ -7,8 +7,8 @@ import zeroGBanner from "./temp-assets/0gLabsBanner.png";
 import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
-import assetChainBanner from "./temp-assets/assetChainBannerbanner.png";
-import assetChainCTABG from "./temp-assets/assetChainCTABannerpng";
+import assetChainBanner from "./temp-assets/assetChainBanner.png";
+import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
 // TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
@@ -30,7 +30,7 @@ import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
 import zytronBanner from "./temp-assets/zytronBanner.png";
-import zytronCTA from "./temp-assets/zytronCTA.png";
+import zytronCTA from "./temp-assets/zytronCTA.jpg";
 
 // END TEMPORARY
 
