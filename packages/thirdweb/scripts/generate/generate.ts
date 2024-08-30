@@ -626,8 +626,10 @@ const contractId = "${moduleName}";
  * import { ${moduleName}, deployModularContract } from "thirdweb/modules";
  *
  * const deployed = deployModularContract({
- *   contract,
+ *   client,
+ *   chain,
  *   account,
+ *   core: "${moduleName.slice(moduleName.indexOf("ERC"))}",
  *   params: {
  *     name: "My Modular Contract",
  *   },

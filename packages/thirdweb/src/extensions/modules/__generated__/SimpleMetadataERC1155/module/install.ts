@@ -19,8 +19,10 @@ const contractId = "SimpleMetadataERC1155";
  * import { SimpleMetadataERC1155, deployModularContract } from "thirdweb/modules";
  *
  * const deployed = deployModularContract({
- *   contract,
+ *   client,
+ *   chain,
  *   account,
+ *   core: "ERC1155",
  *   params: {
  *     name: "My Modular Contract",
  *   },

@@ -22,8 +22,10 @@ const contractId = "MintableERC1155";
  * import { MintableERC1155, deployModularContract } from "thirdweb/modules";
  *
  * const deployed = deployModularContract({
- *   contract,
+ *   client,
+ *   chain,
  *   account,
+ *   core: "ERC1155",
  *   params: {
  *     name: "My Modular Contract",
  *   },

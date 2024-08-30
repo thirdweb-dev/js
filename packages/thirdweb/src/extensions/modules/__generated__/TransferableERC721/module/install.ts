@@ -19,8 +19,10 @@ const contractId = "TransferableERC721";
  * import { TransferableERC721, deployModularContract } from "thirdweb/modules";
  *
  * const deployed = deployModularContract({
- *   contract,
+ *   client,
+ *   chain,
  *   account,
+ *   core: "ERC721",
  *   params: {
  *     name: "My Modular Contract",
  *   },

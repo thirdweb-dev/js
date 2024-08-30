@@ -19,8 +19,10 @@ const contractId = "DelayedRevealBatchMetadataERC721";
  * import { DelayedRevealBatchMetadataERC721, deployModularContract } from "thirdweb/modules";
  *
  * const deployed = deployModularContract({
- *   contract,
+ *   client,
+ *   chain,
  *   account,
+ *   core: "ERC721",
  *   params: {
  *     name: "My Modular Contract",
  *   },
