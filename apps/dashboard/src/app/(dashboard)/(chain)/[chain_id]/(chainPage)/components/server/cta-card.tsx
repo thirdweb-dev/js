@@ -25,7 +25,7 @@ export function ChainCTA(props: ChainCTAProps) {
           {props.description && (
             <p className="max-w-[600px] text-secondary-foreground leading-relaxed text-sm md:text-base">
               {props.description}
-            </p
+            </p>
           )}
         </div>
         <Button asChild>
