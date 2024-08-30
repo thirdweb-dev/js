@@ -1,11 +1,8 @@
 import { encodePacked, getAddress, keccak256 } from "viem";
-import {
-  ZERO_ADDRESS,
-  isNativeTokenAddress,
-} from "../../../constants/addresses.js";
+import { isNativeTokenAddress } from "../../../constants/addresses.js";
 import { download } from "../../../storage/download.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { type Hex, padHex, toHex } from "../../../utils/encoding/hex.js";
+import { type Hex, padHex } from "../../../utils/encoding/hex.js";
 import { encodeBytesBeforeMintERC20Params } from "../__generated__/ClaimableERC20/encode/encodeBytesBeforeMintERC20.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
 
@@ -32,16 +29,6 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
         chain: options.contract.chain,
         erc20Address: options.contract.address,
       });
-
-      const emptyPayload = {
-        pricePerUnit: 0n,
-        quantity: 0n,
-        uid: toHex("", { size: 32 }),
-        currency: ZERO_ADDRESS,
-        startTimestamp: 0,
-        endTimestamp: 0,
-        recipient: ZERO_ADDRESS,
-      };
 
       const [cc, tokenDecimals] = await Promise.all([
         getClaimCondition({ contract: options.contract }),
@@ -105,8 +92,6 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
         amount,
         data: encodeBytesBeforeMintERC20Params({
           params: {
-            request: emptyPayload, // TODO (modular) signature claiming
-            signature: "0x", // TODO (modular) signature claiming
             currency: cc.currency,
             pricePerUnit: cc.pricePerUnit,
             recipientAllowlistProof,

@@ -10,20 +10,6 @@ export type EncodeBytesBeforeMintERC721Params = {
     type: "tuple";
     name: "params";
     components: [
-      {
-        type: "tuple";
-        name: "request";
-        components: [
-          { type: "uint48"; name: "startTimestamp" },
-          { type: "uint48"; name: "endTimestamp" },
-          { type: "address"; name: "recipient" },
-          { type: "uint256"; name: "quantity" },
-          { type: "address"; name: "currency" },
-          { type: "uint256"; name: "pricePerUnit" },
-          { type: "bytes32"; name: "uid" },
-        ];
-      },
-      { type: "bytes"; name: "signature" },
       { type: "address"; name: "currency" },
       { type: "uint256"; name: "pricePerUnit" },
       { type: "bytes32[]"; name: "recipientAllowlistProof" },
@@ -31,50 +17,12 @@ export type EncodeBytesBeforeMintERC721Params = {
   }>;
 };
 
-export const FN_SELECTOR = "0x00599982" as const;
+export const FN_SELECTOR = "0xd9584651" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
     name: "params",
     components: [
-      {
-        type: "tuple",
-        name: "request",
-        components: [
-          {
-            type: "uint48",
-            name: "startTimestamp",
-          },
-          {
-            type: "uint48",
-            name: "endTimestamp",
-          },
-          {
-            type: "address",
-            name: "recipient",
-          },
-          {
-            type: "uint256",
-            name: "quantity",
-          },
-          {
-            type: "address",
-            name: "currency",
-          },
-          {
-            type: "uint256",
-            name: "pricePerUnit",
-          },
-          {
-            type: "bytes32",
-            name: "uid",
-          },
-        ],
-      },
-      {
-        type: "bytes",
-        name: "signature",
-      },
       {
         type: "address",
         name: "currency",

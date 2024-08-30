@@ -74,17 +74,10 @@ import { TransactionModal } from "../../ui/TransactionButton/TransactionModal.js
  * import { getContract, prepareTransaction } from "thirdweb";
  * import { sepolia } from "thirdweb/chains";
  *
- * const contract = getContract({
- *   address: "0x...",
- *   chain: sepolia,
- *   client,
- * });
- *
  * const { mutate: sendTx, data: transactionResult } = useSendTransaction();
  *
  * const onClick = () => {
  *   const transaction = prepareTransaction({
- *       contract,
  *       to: "0x...",
  *       value: toWei("0.1"),
  *     }),

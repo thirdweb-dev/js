@@ -10,21 +10,6 @@ export type EncodeBytesBeforeMintERC1155Params = {
     type: "tuple";
     name: "params";
     components: [
-      {
-        type: "tuple";
-        name: "request";
-        components: [
-          { type: "uint256"; name: "tokenId" },
-          { type: "uint48"; name: "startTimestamp" },
-          { type: "uint48"; name: "endTimestamp" },
-          { type: "address"; name: "recipient" },
-          { type: "uint256"; name: "quantity" },
-          { type: "address"; name: "currency" },
-          { type: "uint256"; name: "pricePerUnit" },
-          { type: "bytes32"; name: "uid" },
-        ];
-      },
-      { type: "bytes"; name: "signature" },
       { type: "address"; name: "currency" },
       { type: "uint256"; name: "pricePerUnit" },
       { type: "bytes32[]"; name: "recipientAllowlistProof" },
@@ -32,54 +17,12 @@ export type EncodeBytesBeforeMintERC1155Params = {
   }>;
 };
 
-export const FN_SELECTOR = "0x81be3fb8" as const;
+export const FN_SELECTOR = "0x819ed5a3" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
     name: "params",
     components: [
-      {
-        type: "tuple",
-        name: "request",
-        components: [
-          {
-            type: "uint256",
-            name: "tokenId",
-          },
-          {
-            type: "uint48",
-            name: "startTimestamp",
-          },
-          {
-            type: "uint48",
-            name: "endTimestamp",
-          },
-          {
-            type: "address",
-            name: "recipient",
-          },
-          {
-            type: "uint256",
-            name: "quantity",
-          },
-          {
-            type: "address",
-            name: "currency",
-          },
-          {
-            type: "uint256",
-            name: "pricePerUnit",
-          },
-          {
-            type: "bytes32",
-            name: "uid",
-          },
-        ],
-      },
-      {
-        type: "bytes",
-        name: "signature",
-      },
       {
         type: "address",
         name: "currency",

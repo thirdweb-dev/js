@@ -12,7 +12,8 @@ import { resolveImplementation } from "../../utils/bytecode/resolveImplementatio
 import { type ThirdwebContract, getContract } from "../contract.js";
 
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
-export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
+// export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024"; // FIXME
+export const THIRDWEB_DEPLOYER = "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7";
 
 /**
  * @internal

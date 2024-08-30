@@ -1,10 +1,7 @@
-import { padHex } from "viem";
-import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import {} from "../../../utils/date.js";
+import { getAddress } from "../../../utils/address.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { mint as generatedMint } from "../__generated__/ERC1155Core/write/mint.js";
-import { encodeBytesBeforeMintERC1155Params } from "../__generated__/MintableERC1155/encode/encodeBytesBeforeMintERC1155.js";
 
 export type EditionMintParams = {
   to: string;
@@ -34,29 +31,12 @@ export function mintWithRole(
       }
 
       const tokenId = options.tokenId;
-      const emptyPayload = {
-        tokenId,
-        pricePerUnit: 0n,
-        quantity: 0n,
-        uid: padHex("0x", { size: 32 }),
-        currency: ZERO_ADDRESS,
-        recipient: ZERO_ADDRESS,
-        startTimestamp: 0,
-        endTimestamp: 0,
-        metadataURI: "",
-      };
-
       return {
-        to: options.to,
+        to: getAddress(options.to),
         tokenId,
-        value: options.amount,
-        data: encodeBytesBeforeMintERC1155Params({
-          params: {
-            request: emptyPayload,
-            signature: "0x",
-            metadataURI,
-          },
-        }),
+        amount: options.amount,
+        baseURI: metadataURI,
+        data: "0x",
       };
     },
   });

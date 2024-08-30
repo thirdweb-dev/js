@@ -14,11 +14,12 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 export type MintParams = WithOverrides<{
   to: AbiParameterToPrimitiveType<{ type: "address"; name: "to" }>;
   tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
-  value: AbiParameterToPrimitiveType<{ type: "uint256"; name: "value" }>;
+  amount: AbiParameterToPrimitiveType<{ type: "uint256"; name: "amount" }>;
+  baseURI: AbiParameterToPrimitiveType<{ type: "string"; name: "baseURI" }>;
   data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
-export const FN_SELECTOR = "0x731133e9" as const;
+export const FN_SELECTOR = "0xa4b645eb" as const;
 const FN_INPUTS = [
   {
     type: "address",
@@ -30,7 +31,11 @@ const FN_INPUTS = [
   },
   {
     type: "uint256",
-    name: "value",
+    name: "amount",
+  },
+  {
+    type: "string",
+    name: "baseURI",
   },
   {
     type: "bytes",
@@ -69,7 +74,8 @@ export function isMintSupported(availableSelectors: string[]) {
  * const result = ERC1155Core.encodeMintParams({
  *  to: ...,
  *  tokenId: ...,
- *  value: ...,
+ *  amount: ...,
+ *  baseURI: ...,
  *  data: ...,
  * });
  * ```
@@ -78,7 +84,8 @@ export function encodeMintParams(options: MintParams) {
   return encodeAbiParameters(FN_INPUTS, [
     options.to,
     options.tokenId,
-    options.value,
+    options.amount,
+    options.baseURI,
     options.data,
   ]);
 }
@@ -94,7 +101,8 @@ export function encodeMintParams(options: MintParams) {
  * const result = ERC1155Core.encodeMint({
  *  to: ...,
  *  tokenId: ...,
- *  value: ...,
+ *  amount: ...,
+ *  baseURI: ...,
  *  data: ...,
  * });
  * ```
@@ -120,7 +128,8 @@ export function encodeMint(options: MintParams) {
  *  contract,
  *  to: ...,
  *  tokenId: ...,
- *  value: ...,
+ *  amount: ...,
+ *  baseURI: ...,
  *  data: ...,
  *  overrides: {
  *    ...
@@ -151,7 +160,8 @@ export function mint(
       return [
         resolvedOptions.to,
         resolvedOptions.tokenId,
-        resolvedOptions.value,
+        resolvedOptions.amount,
+        resolvedOptions.baseURI,
         resolvedOptions.data,
       ] as const;
     },

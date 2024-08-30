@@ -43,7 +43,7 @@ const contract = getContract({
   address,
 });
 
-const transaction = await ClaimableERC721.mint({
+const transaction = ClaimableERC721.mint({
   contract,
   to: account.address,
   quantity: 1,

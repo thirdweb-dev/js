@@ -1,7 +1,7 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { getAddress } from "../../../utils/address.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import {
@@ -14,7 +14,10 @@ import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { startTokenId } from "../../erc721/__generated__/IERC721A/read/startTokenId.js";
 import { totalMinted } from "../__generated__/ERC721Core/read/totalMinted.js";
 import { mint as generatedMint } from "../__generated__/ERC721Core/write/mint.js";
-import { encodeBytesBeforeMintERC721Params } from "../__generated__/MintableERC721/encode/encodeBytesBeforeMintERC721.js";
+import {
+  type EncodeBytesBeforeMintWithSignatureERC721Params,
+  encodeBytesBeforeMintWithSignatureERC721Params,
+} from "../__generated__/MintableERC721/encode/encodeBytesBeforeMintWithSignatureERC721.js";
 
 export function mintWithSignature(
   options: BaseTransactionOptions<
@@ -24,17 +27,15 @@ export function mintWithSignature(
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature, baseURI } = options;
+      const { payload, signature, mintParams } = options;
       return {
-        to: payload.recipient,
-        quantity: payload.quantity,
-        data: encodeBytesBeforeMintERC721Params({
-          params: {
-            request: payload,
-            signature,
-            baseURI,
-          },
+        to: payload.to,
+        amount: payload.amount,
+        baseURI: payload.baseURI,
+        data: encodeBytesBeforeMintWithSignatureERC721Params({
+          params: mintParams,
         }),
+        signature,
       };
     },
   });
@@ -81,7 +82,7 @@ export async function generateMintSignature(
   options: GenerateMintSignatureOptions,
 ) {
   const { mintRequest, account, contract } = options;
-  const currency = mintRequest.currency || NATIVE_TOKEN_ADDRESS;
+  const currency = getAddress(mintRequest.currency || NATIVE_TOKEN_ADDRESS);
   const quantity = BigInt(options.nfts.length);
   const pricePerUnit = options.mintRequest.pricePerUnit || 0n;
   const uid = options.mintRequest.uid || randomBytesHex();
@@ -100,15 +101,20 @@ export async function generateMintSignature(
   );
   const baseURI = getBaseUriFromBatch(batchOfUris);
 
-  const payload: PayloadType = {
+  const mintParams: EncodeBytesBeforeMintWithSignatureERC721Params["params"] = {
     pricePerUnit,
-    quantity,
     uid,
     currency,
-    recipient: mintRequest.recipient,
     startTimestamp: Number(dateToSeconds(startTime)),
     endTimestamp: Number(dateToSeconds(endTime)),
-    baseURI: baseURI,
+  };
+  const payload = {
+    to: getAddress(mintRequest.recipient),
+    amount: quantity,
+    baseURI,
+    data: encodeBytesBeforeMintWithSignatureERC721Params({
+      params: mintParams,
+    }),
   };
 
   const signature = await account.signTypedData({
@@ -122,14 +128,8 @@ export async function generateMintSignature(
     primaryType: "MintRequestERC721",
     message: payload,
   });
-  return { payload, signature, baseURI };
+  return { payload, signature, mintParams };
 }
-
-type PayloadType = AbiParameterToPrimitiveType<{
-  type: "tuple";
-  name: "payload";
-  components: typeof MintRequestERC721;
-}>;
 
 type GeneratePayloadInput = {
   recipient: string;
@@ -141,12 +141,8 @@ type GeneratePayloadInput = {
 };
 
 export const MintRequestERC721 = [
-  { name: "startTimestamp", type: "uint48" },
-  { name: "endTimestamp", type: "uint48" },
-  { name: "recipient", type: "address" },
-  { name: "quantity", type: "uint256" },
-  { name: "currency", type: "address" },
-  { name: "pricePerUnit", type: "uint256" },
-  { name: "baseURI", type: "string" },
-  { name: "uid", type: "bytes32" },
+  { type: "address", name: "to" },
+  { type: "uint256", name: "amount" },
+  { type: "string", name: "baseURI" },
+  { type: "bytes", name: "data" },
 ] as const;

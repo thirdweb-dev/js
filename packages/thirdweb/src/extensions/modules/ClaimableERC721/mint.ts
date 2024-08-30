@@ -1,11 +1,8 @@
 import { encodePacked, getAddress, keccak256 } from "viem";
-import {
-  ZERO_ADDRESS,
-  isNativeTokenAddress,
-} from "../../../constants/addresses.js";
+import { isNativeTokenAddress } from "../../../constants/addresses.js";
 import { download } from "../../../storage/download.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { type Hex, padHex, toHex } from "../../../utils/encoding/hex.js";
+import { type Hex, padHex } from "../../../utils/encoding/hex.js";
 import { encodeBytesBeforeMintERC721Params } from "../__generated__/ClaimableERC721/encode/encodeBytesBeforeMintERC721.js";
 import { getClaimCondition } from "../__generated__/ClaimableERC721/read/getClaimCondition.js";
 import { mint as generatedMint } from "../__generated__/ERC721Core/write/mint.js";
@@ -15,20 +12,11 @@ export type MintParams = {
   quantity: string | number;
 };
 
+// TODO (modular): tsdoc
 export function mint(options: BaseTransactionOptions<MintParams>) {
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const emptyPayload = {
-        pricePerUnit: 0n,
-        quantity: 0n,
-        uid: toHex("", { size: 32 }),
-        currency: ZERO_ADDRESS,
-        startTimestamp: 0,
-        endTimestamp: 0,
-        recipient: ZERO_ADDRESS,
-      };
-
       const cc = await getClaimCondition({ contract: options.contract });
 
       const totalPrice = cc.pricePerUnit * BigInt(options.quantity);
@@ -84,11 +72,10 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
 
       return {
         to: getAddress(options.to),
-        quantity: BigInt(options.quantity),
+        amount: BigInt(options.quantity),
+        baseURI: "",
         data: encodeBytesBeforeMintERC721Params({
           params: {
-            request: emptyPayload, // TODO (modular) signature claiming
-            signature: "0x", // TODO (modular) signature claiming
             currency: cc.currency,
             pricePerUnit: cc.pricePerUnit,
             recipientAllowlistProof,

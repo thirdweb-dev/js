@@ -1,9 +1,7 @@
-import { ZERO_ADDRESS } from "../../../constants/addresses.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
+import { getAddress } from "../../../utils/address.js";
 import {} from "../../../utils/date.js";
-import { randomBytesHex } from "../../../utils/random.js";
 import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
-import { encodeBytesBeforeMintERC20Params } from "../__generated__/MintableERC20/encode/encodeBytesBeforeMintERC20.js";
 
 // TODO (modular) - this should be its own module
 
@@ -33,25 +31,10 @@ export function mintWithRole(options: BaseTransactionOptions<TokenMintParams>) {
         });
       }
 
-      const emptyPayload = {
-        pricePerUnit: 0n,
-        quantity: 0n,
-        uid: randomBytesHex(),
-        currency: ZERO_ADDRESS,
-        recipient: ZERO_ADDRESS,
-        startTimestamp: 0,
-        endTimestamp: 0,
-      };
-
       return {
-        to: options.to,
+        to: getAddress(options.to),
         amount: BigInt(amount),
-        data: encodeBytesBeforeMintERC20Params({
-          params: {
-            request: emptyPayload,
-            signature: "0x",
-          },
-        }),
+        data: "0x",
       };
     },
   });

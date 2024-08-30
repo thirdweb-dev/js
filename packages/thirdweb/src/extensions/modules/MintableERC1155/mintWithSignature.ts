@@ -1,4 +1,3 @@
-import type { AbiParameterToPrimitiveType } from "abitype";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
@@ -9,7 +8,10 @@ import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { mint as generatedMint } from "../__generated__/ERC1155Core/write/mint.js";
-import { encodeBytesBeforeMintERC1155Params } from "../__generated__/MintableERC1155/encode/encodeBytesBeforeMintERC1155.js";
+import {
+  type EncodeBytesBeforeMintWithSignatureERC1155Params,
+  encodeBytesBeforeMintWithSignatureERC1155Params,
+} from "../__generated__/MintableERC1155/encode/encodeBytesBeforeMintWithSignatureERC1155.js";
 
 export function mintWithSignature(
   options: BaseTransactionOptions<
@@ -19,18 +21,16 @@ export function mintWithSignature(
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature, metadataURI } = options;
+      const { payload, signature, mintParams } = options;
       return {
-        to: payload.recipient,
+        to: payload.to,
         tokenId: payload.tokenId,
-        value: payload.quantity,
-        data: encodeBytesBeforeMintERC1155Params({
-          params: {
-            request: payload,
-            signature,
-            metadataURI,
-          },
+        baseURI: payload.baseURI,
+        amount: payload.amount,
+        data: encodeBytesBeforeMintWithSignatureERC1155Params({
+          params: mintParams,
         }),
+        signature,
       };
     },
   });
@@ -93,16 +93,23 @@ export async function generateMintSignature(
     });
   }
 
-  const payload: PayloadType = {
-    pricePerUnit,
-    uid,
-    currency,
+  const mintParams: EncodeBytesBeforeMintWithSignatureERC1155Params["params"] =
+    {
+      pricePerUnit,
+      uid,
+      currency,
+      startTimestamp: Number(dateToSeconds(startTime)),
+      endTimestamp: Number(dateToSeconds(endTime)),
+    };
+
+  const payload = {
+    to: mintRequest.recipient,
     tokenId: mintRequest.tokenId,
-    recipient: mintRequest.recipient,
-    quantity: mintRequest.quantity,
-    startTimestamp: Number(dateToSeconds(startTime)),
-    endTimestamp: Number(dateToSeconds(endTime)),
-    metadataURI: metadataURI,
+    amount: mintRequest.quantity,
+    baseURI: metadataURI,
+    data: encodeBytesBeforeMintWithSignatureERC1155Params({
+      params: mintParams,
+    }),
   };
 
   const signature = await account.signTypedData({
@@ -116,14 +123,8 @@ export async function generateMintSignature(
     primaryType: "MintRequestERC1155",
     message: payload,
   });
-  return { payload, signature, metadataURI };
+  return { payload, signature, mintParams };
 }
-
-type PayloadType = AbiParameterToPrimitiveType<{
-  type: "tuple";
-  name: "payload";
-  components: typeof MintRequestERC1155;
-}>;
 
 type GeneratePayloadInput = {
   recipient: Address;
@@ -137,13 +138,9 @@ type GeneratePayloadInput = {
 };
 
 export const MintRequestERC1155 = [
-  { name: "tokenId", type: "uint256" },
-  { name: "startTimestamp", type: "uint48" },
-  { name: "endTimestamp", type: "uint48" },
-  { name: "recipient", type: "address" },
-  { name: "quantity", type: "uint256" },
-  { name: "currency", type: "address" },
-  { name: "pricePerUnit", type: "uint256" },
-  { name: "metadataURI", type: "string" },
-  { name: "uid", type: "bytes32" },
+  { type: "address", name: "to" },
+  { type: "uint256", name: "tokenId" },
+  { type: "uint256", name: "amount" },
+  { type: "string", name: "baseURI" },
+  { type: "bytes", name: "data" },
 ] as const;

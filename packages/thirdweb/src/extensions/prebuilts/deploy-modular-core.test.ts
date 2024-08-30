@@ -7,9 +7,9 @@ import { getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import * as ERC20Claimable from "../modular/ClaimableERC20/index.js";
 import { getInstalledModules } from "../modular/__generated__/IModularCore/read/getInstalledModules.js";
-import { installPublishedModule } from "../modular/common/installPublishedModule.js";
-import { uninstallModuleByProxy } from "../modular/common/uninstallModuleByProxy.js";
-import { uninstallPublishedModule } from "../modular/common/uninstallPublishedModule.js";
+import { installPublishedModule } from "../modules/common/installPublishedModule.js";
+import { uninstallModuleByProxy } from "../modules/common/uninstallModuleByProxy.js";
+import { uninstallPublishedModule } from "../modules/common/uninstallPublishedModule.js";
 import { deployModularContract } from "./deploy-modular.js";
 import { deployPublishedContract } from "./deploy-published.js";
 
