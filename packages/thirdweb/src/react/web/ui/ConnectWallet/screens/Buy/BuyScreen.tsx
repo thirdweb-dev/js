@@ -185,12 +185,22 @@ function BuyScreenContent(props: BuyScreenContentProps) {
       return undefined;
     }
 
+    const supportedSources = supportedSourcesQuery.data;
+    if (supportedSources[0]?.chain) {
+      setFromChain(supportedSources[0]?.chain);
+    }
+
     return createSupportedTokens(
-      supportedSourcesQuery.data,
+      supportedSources,
       payOptions,
       props.supportedTokens,
     );
-  }, [props.supportedTokens, supportedSourcesQuery.data, payOptions]);
+  }, [
+    props.supportedTokens,
+    supportedSourcesQuery.data,
+    payOptions,
+    setFromChain,
+  ]);
 
   const enabledPaymentMethods = useEnabledPaymentMethods({
     payOptions: props.payOptions,
