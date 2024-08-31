@@ -77,7 +77,7 @@ export const EngineInstancesList = () => {
 
         <div className="h-10" />
 
-        <div className="flex items-center gap-4 justify-between rounded-lg border border-border p-6 bg-secondary">
+        <div className="flex items-center gap-4 justify-between rounded-lg border border-border p-6 bg-muted/50">
           <p className="text-lg font-semibold tracking-tight">
             Already have an Engine Instance?
           </p>
@@ -118,7 +118,7 @@ export const EngineInstancesList = () => {
 
 function LearnMoreCard() {
   return (
-    <div className="p-4 border border-border rounded-lg relative hover:bg-secondary">
+    <div className="p-4 border border-border rounded-lg relative hover:bg-muted/50">
       <h3 className="font-semibold tracking-tight mb-1">
         <Link
           href="https://portal.thirdweb.com/engine"
@@ -146,7 +146,7 @@ function CreateEngineLink(props: {
   return (
     <Button
       asChild
-      variant="primary"
+      variant="default"
       onClick={() => {
         trackEvent({
           category: "engine",

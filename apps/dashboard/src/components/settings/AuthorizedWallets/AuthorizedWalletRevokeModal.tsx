@@ -21,7 +21,7 @@ export const AuthorizedWalletRevokeModal: React.FC<
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Are you sure you want to revoke this device?</ModalHeader>
         <ModalCloseButton />
 

@@ -50,6 +50,7 @@ export default async function ChainPageLayout({
     {
       href: `/${chain.slug}`,
       label: "Overview",
+      exactMatch: true,
     },
     {
       href: `/${chain.slug}/popular`,
@@ -64,11 +65,11 @@ export default async function ChainPageLayout({
           <div className="flex items-center gap-1.5 mb-5 flex-wrap">
             <Link
               href="/chainlist"
-              className="text-secondary-foreground hover:text-foreground text-sm"
+              className="text-muted-foreground hover:text-foreground text-sm"
             >
               Chainlist
             </Link>
-            <span className="text-secondary-foreground text-sm"> / </span>
+            <span className="text-muted-foreground text-sm"> / </span>
             <Link href={`/${chain.slug}`} className="text-foreground text-sm">
               {chain.name.replace("Mainnet", "")}
             </Link>
@@ -77,7 +78,7 @@ export default async function ChainPageLayout({
         links={sidebarLinks}
       />
 
-      <div className="flex flex-col w-full lg:px-6 lg:border-x pb-10">
+      <div className="flex flex-col w-full pb-10">
         {/* Icon + Background */}
         <ChainHeader
           headerImageUrl={chainMetadata?.headerImgUrl}
@@ -97,7 +98,7 @@ export default async function ChainPageLayout({
               <div className="mt-5 border-t pt-6 pb-2">
                 <Link
                   href="/chainlist"
-                  className="px-2 text-sm flex justify-start gap-2 items-center text-secondary-foreground hover:text-foreground"
+                  className="px-2 text-sm flex justify-start gap-2 items-center text-muted-foreground hover:text-foreground"
                 >
                   <ArrowLeftIcon className="size-4" />
                   View all chains
@@ -140,7 +141,7 @@ export default async function ChainPageLayout({
 
           {/* description */}
           {chainMetadata?.about && (
-            <p className="text-secondary-foreground text-sm lg:text-base mb-2">
+            <p className="text-muted-foreground text-sm lg:text-base mb-2">
               {chainMetadata.about}
             </p>
           )}

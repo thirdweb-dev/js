@@ -25,7 +25,7 @@ export default async function Page(props: {
         Popular Contracts
       </h2>
 
-      <p className="text-sm text-secondary-foreground">
+      <p className="text-sm text-muted-foreground">
         Explore contracts on Ethereum and sort them by your preferred metrics
       </p>
 
@@ -41,7 +41,7 @@ export default async function Page(props: {
       )}
 
       {topContracts.length === 0 && (
-        <div className="text-secondary-foreground text-lg flex border rounded-lg h-[200px] border-border items-center justify-center">
+        <div className="text-muted-foreground text-lg flex border rounded-lg h-[200px] border-border items-center justify-center">
           <div className="flex items-center gap-2">
             <CircleAlertIcon className="size-5 text-destructive-text" />
             No contracts found

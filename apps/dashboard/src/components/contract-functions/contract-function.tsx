@@ -86,7 +86,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
       >
         <Flex alignItems="baseline" gap={1} flexWrap="wrap">
           <Heading size="subtitle.md">{camelToTitle(fn.name)}</Heading>
-          <Heading size="subtitle.sm" color="gray.600">
+          <Heading size="subtitle.sm" className="text-muted-foreground">
             ({fn.name}){" "}
           </Heading>
         </Flex>
@@ -145,7 +145,10 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
                         {input?.name ? (
                           <Text fontFamily="mono">{input.name}</Text>
                         ) : (
-                          <Text fontStyle="italic" color="gray.500">
+                          <Text
+                            fontStyle="italic"
+                            className="text-muted-foreground"
+                          >
                             No name defined
                           </Text>
                         )}

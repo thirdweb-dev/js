@@ -140,7 +140,7 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
           ) : hasCompleted ? (
             <CircleCheck className="size-6 text-green-500" />
           ) : (
-            <CircleIcon className="size-6 text-secondary-foreground" />
+            <CircleIcon className="size-6 text-muted-foreground" />
           )}
         </div>
 

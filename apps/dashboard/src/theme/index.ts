@@ -273,7 +273,7 @@ const chakraTheme: Theme = extendTheme({
         item: {
           bg: "backgroundHighlight",
           _hover: {
-            bg: "accent.200",
+            bg: "hsl(var(--muted))",
           },
           py: 3,
         },
@@ -283,7 +283,7 @@ const chakraTheme: Theme = extendTheme({
       baseStyle: {
         thead: {
           background: "backgroundHighlight",
-          borderBottomColor: "accent.100",
+          borderBottomColor: "hsl(var(--border))",
           borderBottomWidth: 1,
         },
         tbody: {
@@ -325,55 +325,23 @@ const chakraTheme: Theme = extendTheme({
   },
   semanticTokens: {
     colors: {
-      // accent color
-      "accent.100": {
-        default: "gray.100",
-        _dark: "gray.900",
-      },
-      "accent.200": {
-        default: "gray.200",
-        _dark: "gray.800",
-      },
-      "accent.300": {
-        default: "gray.300",
-        _dark: "gray.700",
-      },
-      "accent.400": {
-        default: "gray.400",
-        _dark: "gray.600",
-      },
-      "accent.500": {
-        default: "gray.500",
-        _dark: "gray.500",
-      },
-      "accent.600": {
-        default: "gray.600",
-        _dark: "gray.400",
-      },
-      "accent.700": {
-        default: "gray.700",
-        _dark: "gray.300",
-      },
-      "accent.800": {
-        default: "gray.800",
-        _dark: "gray.200",
-      },
-      "accent.900": {
-        default: "gray.900",
-        _dark: "gray.100",
-      },
-
       // inputs
-      inputBg: { default: "gray.50", _dark: "whiteAlpha.50" },
-      inputBgHover: { default: "gray.100", _dark: "whiteAlpha.100" },
-      inputBorder: { default: "gray.200", _dark: "#272B30" },
-      inputBorderHover: { default: "gray.300", _dark: "whiteAlpha.50" },
+      inputBg: { default: "hsl(var(--card))", _dark: "hsl(var(--card))" },
+      inputBgHover: { default: "hsl(var(--card))", _dark: "hsl(var(--card))" },
+      inputBorder: { default: "hsl(var(--input))", _dark: "hsl(var(--input))" },
+      inputBorderHover: {
+        default: "hsl(var(--input))",
+        _dark: "hsl(var(--input))",
+      },
 
       // other
-      badgeBg: { default: "blackAlpha.50", _dark: "whiteAlpha.50" },
+      badgeBg: {
+        default: "hsl(var(--background))",
+        _dark: "hsl(var(--background))",
+      },
       backgroundCardHighlight: {
-        default: "hsl(var(--secondary))",
-        _dark: "hsl(var(--secondary))",
+        default: "hsl(var(--background))",
+        _dark: "hsl(var(--background))",
       },
       bgBlack: { default: "black", _dark: "white" },
       bgWhite: { default: "#fff", _dark: "black" },
@@ -382,29 +350,33 @@ const chakraTheme: Theme = extendTheme({
         _dark: "hsl(var(--background))",
       },
       backgroundHighlight: {
-        default: "hsl(var(--secondary))",
-        _dark: "hsl(var(--secondary))",
+        default: "hsl(var(--background))",
+        _dark: "hsl(var(--background))",
       },
       secondaryCardHighlight: {
-        default: "hsl(var(--secondary))",
-        _dark: "hsl(var(--secondary))",
+        default: "hsl(var(--background))",
+        _dark: "hsl(var(--background))",
       },
-      wordmark: { default: "#262A36", _dark: "whiteAlpha.900" },
-      heading: { default: "#262A36", _dark: "#ECECEC" },
-      paragraph: { default: "rgba(39, 46, 54, 0.9)", _dark: "#b2b2b2" },
+      wordmark: {
+        default: "hsl(var(--muted-foreground))",
+        _dark: "hsl(var(--muted-foreground))",
+      },
+      heading: {
+        default: "hsl(var(--foreground))",
+        _dark: "hsl(var(--foreground))",
+      },
+      paragraph: {
+        default: "hsl(var(--muted-foreground))",
+        _dark: "hsl(var(--muted-foreground))",
+      },
       faded: {
         default: "hsl(var(--muted-foreground))",
         _dark: "hsl(var(--muted-foreground))",
       },
-      headingLight: { default: "#F2FBFF", _dark: "#262A36" },
-      paragraphLight: {
-        default: "rgba(242, 251, 255, 0.8)",
-        _dark: "rgba(39, 46, 54, 0.9)",
-      },
-      borderColor: { default: "gray.200", _dark: "#2B2B2B" },
-      opaqueBg: {
-        default: "whiteAlpha.500",
-        _dark: "blackAlpha.600",
+
+      borderColor: {
+        default: "hsl(var(--border))",
+        _dark: "hsl(var(--border))",
       },
     },
   },

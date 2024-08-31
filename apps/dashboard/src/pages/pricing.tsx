@@ -144,7 +144,9 @@ const Pricing: ThirdwebNextPage = () => {
                             {item?.hint && (
                               <>
                                 {isMobile ? (
-                                  <Text color="gray.700">{item.hint}</Text>
+                                  <Text className="text-muted-foreground">
+                                    {item.hint}
+                                  </Text>
                                 ) : (
                                   <Tooltip
                                     label={
@@ -297,7 +299,7 @@ const Item = ({
           >
             {titleEl}
             {isMobile ? (
-              <Text color="gray.700" minW="max-content">
+              <Text className="text-muted-foreground" minW="max-content">
                 {title[1]}
               </Text>
             ) : (

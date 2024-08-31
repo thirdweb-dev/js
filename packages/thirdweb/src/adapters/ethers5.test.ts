@@ -1,11 +1,19 @@
 import * as ethers5 from "ethers5";
-import { describe, expect, test } from "vitest";
-import { ANVIL_CHAIN } from "../../test/src/chains.js";
+import { describe, expect, it, test } from "vitest";
+import { USDT_CONTRACT } from "~test/test-contracts.js";
+import { ANVIL_CHAIN, FORKED_ETHEREUM_CHAIN } from "../../test/src/chains.js";
 import { TEST_CLIENT } from "../../test/src/test-clients.js";
 import { ANVIL_PKEY_A, TEST_ACCOUNT_B } from "../../test/src/test-wallets.js";
+import { resolveContractAbi } from "../contract/actions/resolve-abi.js";
+import { decimals } from "../extensions/erc20/__generated__/IERC20/read/decimals.js";
 import { randomBytesBuffer } from "../utils/random.js";
 import { privateKeyToAccount } from "../wallets/private-key.js";
-import { toEthersSigner } from "./ethers5.js";
+import {
+  fromEthersContract,
+  toEthersContract,
+  toEthersProvider,
+  toEthersSigner,
+} from "./ethers5.js";
 
 const account = privateKeyToAccount({
   privateKey: ANVIL_PKEY_A,
@@ -109,5 +117,36 @@ describe("ethers5 adapter", () => {
       value: 100,
     });
     expect(txResponse.hash.length).toBe(66);
+  });
+
+  it("toEthersContract should work", async () => {
+    const ethersContract = await toEthersContract(ethers5, USDT_CONTRACT);
+    expect(ethersContract.address.toLowerCase()).toBe(
+      USDT_CONTRACT.address.toLowerCase(),
+    );
+    const decimals = await ethersContract.decimals();
+    expect(decimals.toString()).toBe("6");
+  });
+
+  it("fromEthersContract should work", async () => {
+    const provider = toEthersProvider(
+      ethers5,
+      TEST_CLIENT,
+      FORKED_ETHEREUM_CHAIN,
+    );
+    const ethersContract = new ethers5.Contract(
+      USDT_CONTRACT.address,
+      await resolveContractAbi(USDT_CONTRACT),
+      provider,
+    );
+
+    const thirdwebContract = await fromEthersContract({
+      client: TEST_CLIENT,
+      ethersContract,
+      chain: FORKED_ETHEREUM_CHAIN,
+    });
+
+    const _decimals = await decimals({ contract: thirdwebContract });
+    expect(_decimals).toBe(6);
   });
 });

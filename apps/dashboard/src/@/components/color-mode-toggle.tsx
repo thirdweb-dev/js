@@ -20,9 +20,9 @@ export function ColorModeToggle() {
         aria-label="Toggle theme"
       >
         {theme === "light" ? (
-          <Sun strokeWidth={1} className="size-6" />
+          <Sun strokeWidth={1} className="size-5" />
         ) : (
-          <Moon strokeWidth={1} className="size-6" />
+          <Moon strokeWidth={1} className="size-5" />
         )}
       </Button>
     </ClientOnly>

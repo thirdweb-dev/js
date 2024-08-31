@@ -4,7 +4,8 @@ import { useCallback } from "react";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { getContract } from "../../../../../../contract/contract.js";
-import { getApprovalForTransaction } from "../../../../../../extensions/erc20/write/getApprovalForTransaction.js";
+import { isERC721 } from "../../../../../../extensions/erc721/read/isERC721.js";
+import { isERC1155 } from "../../../../../../extensions/erc1155/read/isERC1155.js";
 import {
   type CreateListingParams,
   createListing,
@@ -74,12 +75,13 @@ export function CreateDirectListingButton(
   });
   const account = useActiveAccount();
   const defaultPayModalMetadata = payModal ? payModal.metadata : undefined;
+  const nftContract = getContract({
+    address: assetContractAddress,
+    chain,
+    client,
+  });
   const { data: payMetadata } = useReadContract(getPayMetadata, {
-    contract: getContract({
-      address: assetContractAddress,
-      chain,
-      client,
-    }),
+    contract: nftContract,
     tokenId,
     queryOptions: {
       enabled: !defaultPayModalMetadata,
@@ -91,19 +93,78 @@ export function CreateDirectListingButton(
     if (!account) {
       throw new Error("No account detected");
     }
+    const [is721, is1155] = await Promise.all([
+      isERC721({ contract: nftContract }),
+      isERC1155({ contract: nftContract }),
+    ]);
+    if (!is1155 && !is721) {
+      throw new Error("Asset must either be ERC721 or ERC1155");
+    }
+    // Check for token approval
+    if (is1155) {
+      const [{ isApprovedForAll }, { setApprovalForAll }] = await Promise.all([
+        import(
+          "../../../../../../extensions/erc1155/__generated__/IERC1155/read/isApprovedForAll.js"
+        ),
+        import(
+          "../../../../../../extensions/erc1155/__generated__/IERC1155/write/setApprovalForAll.js"
+        ),
+      ]);
+      const isApproved = await isApprovedForAll({
+        contract: nftContract,
+        operator: marketplaceContract.address,
+        owner: account.address,
+      });
+      if (!isApproved) {
+        const transaction = setApprovalForAll({
+          contract: nftContract,
+          operator: marketplaceContract.address,
+          approved: true,
+        });
+        await mutateAsync(transaction);
+      }
+    } else {
+      const [{ isApprovedForAll }, { setApprovalForAll }, { getApproved }] =
+        await Promise.all([
+          import(
+            "../../../../../../extensions/erc721/__generated__/IERC721A/read/isApprovedForAll.js"
+          ),
+          import(
+            "../../../../../../extensions/erc721/__generated__/IERC721A/write/setApprovalForAll.js"
+          ),
+          import(
+            "../../../../../../extensions/erc721/__generated__/IERC721A/read/getApproved.js"
+          ),
+        ]);
+      const [isApproved, tokenApproved] = await Promise.all([
+        isApprovedForAll({
+          contract: nftContract,
+          operator: marketplaceContract.address,
+          owner: account.address,
+        }),
+        getApproved({ contract: nftContract, tokenId: props.tokenId }),
+      ]);
+
+      if (
+        !isApproved &&
+        tokenApproved.toLowerCase() !==
+          marketplaceContract.address.toLowerCase()
+      ) {
+        const transaction = setApprovalForAll({
+          contract: nftContract,
+          operator: marketplaceContract.address,
+          approved: true,
+        });
+        await mutateAsync(transaction);
+      }
+    }
     const listingTx = createListing({
       contract: marketplaceContract,
       ...props,
     });
-    const approveTx = await getApprovalForTransaction({
-      transaction: listingTx,
-      account,
-    });
-    if (approveTx) {
-      await mutateAsync(approveTx);
-    }
+
     return listingTx;
-  }, [marketplaceContract, props, account, mutateAsync]);
+  }, [marketplaceContract, props, account, mutateAsync, nftContract]);
 
   return (
     <TransactionButton
@@ -128,14 +189,10 @@ async function getPayMetadata(
   }>,
 ): Promise<{ name?: string; image?: string }> {
   const [
-    { isERC721 },
-    { isERC1155 },
     { getContractMetadata },
     { getNFT: getERC721 },
     { getNFT: getERC1155 },
   ] = await Promise.all([
-    import("../../../../../../extensions/erc721/read/isERC721.js"),
-    import("../../../../../../extensions/erc1155/read/isERC1155.js"),
     import("../../../../../../extensions/common/read/getContractMetadata.js"),
     import("../../../../../../extensions/erc721/read/getNFT.js"),
     import("../../../../../../extensions/erc1155/read/getNFT.js"),

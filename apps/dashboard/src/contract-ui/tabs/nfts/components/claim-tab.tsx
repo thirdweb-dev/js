@@ -5,7 +5,9 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
@@ -40,8 +42,8 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
     contract,
   );
 
-  const mutation = useSendAndConfirmTransaction();
-
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const account = useActiveAccount();
   return (
     <Flex
       w="full"
@@ -53,15 +55,29 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
           action: "claim",
           label: "attempt",
         });
-
+        if (!account) {
+          return toast.error("No account detected");
+        }
         try {
           const transaction = claimTo({
             contract,
             tokenId: BigInt(tokenId),
             quantity: BigInt(data.amount),
             to: data.to,
+            from: account.address,
           });
-          await mutation.mutateAsync(transaction);
+          const approveTx = await getApprovalForTransaction({
+            transaction,
+            account,
+          });
+          if (approveTx) {
+            try {
+              await sendAndConfirmTx.mutateAsync(approveTx);
+            } catch {
+              return toast.error("Error approving ERC20 token");
+            }
+          }
+          await sendAndConfirmTx.mutateAsync(transaction);
           trackEvent({
             category: "nft",
             action: "claim",
@@ -119,7 +135,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
 
         <TransactionButton
           transactionCount={1}
-          isLoading={mutation.isPending || form.formState.isSubmitting}
+          isLoading={form.formState.isSubmitting}
           type="submit"
           colorScheme="primary"
           alignSelf="flex-end"

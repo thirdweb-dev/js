@@ -200,9 +200,7 @@ function VolumeLegend(props: {
         }}
       />
       <div>
-        <p className="text-secondary-foreground font-medium mb-1">
-          {props.label}
-        </p>
+        <p className="text-muted-foreground font-medium mb-1">{props.label}</p>
 
         <SkeletonContainer
           loadedData={props.amount}

@@ -233,7 +233,7 @@ function TableRow(props: { purchase: PayPurchasesData["purchases"][0] }) {
         <CopyAddressButton
           address={purchase.fromAddress}
           variant="ghost"
-          className="text-secondary-foreground"
+          className="text-muted-foreground"
           copyIconPosition="left"
         />
       </TableData>

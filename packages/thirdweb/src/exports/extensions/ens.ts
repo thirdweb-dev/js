@@ -17,3 +17,13 @@ export {
   type ResolveNameOptions,
   resolveName,
 } from "../../extensions/ens/resolve-name.js";
+
+export {
+  type ResolveL2NameOptions,
+  resolveL2Name,
+} from "../../extensions/ens/resolve-l2-name.js";
+
+export {
+  BASENAME_RESOLVER_ADDRESS,
+  BASE_SEPOLIA_BASENAME_RESOLVER_ADDRESS,
+} from "../../extensions/ens/constants.js";

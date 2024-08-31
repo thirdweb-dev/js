@@ -8,7 +8,7 @@ export default function Page() {
         <h2 className="text-4xl font-bold text-foreground">
           Create an Ecosystem
         </h2>
-        <p className="text-secondary-foreground">
+        <p className="text-muted-foreground">
           Create wallets that work across every chain and every app.
         </p>
       </header>

@@ -25,7 +25,7 @@ export function SupportedProductsSection(props: {
           return (
             <div
               key={product.id}
-              className="border rounded-lg p-4 flex gap-3 relative hover:bg-secondary transition-colors duration-300 pr-8"
+              className="border rounded-lg p-4 flex gap-3 relative hover:bg-muted bg-muted/50 transition-colors duration-300 pr-8"
             >
               <CircleCheckIcon className="size-5 text-success-text absolute top-4 right-4" />
               <product.icon className="size-5 shrink-0 mt-0.5" />
@@ -40,7 +40,7 @@ export function SupportedProductsSection(props: {
                     {product.name}{" "}
                   </Link>
                 </h3>
-                <p className="text-sm text-secondary-foreground">
+                <p className="text-sm text-muted-foreground">
                   {product.description}
                 </p>
               </div>

@@ -101,7 +101,7 @@ function ProjectCard(props: {
   return (
     <div
       key={project.id}
-      className="border rounded-lg p-4 relative hover:bg-muted flex items-center gap-4 bg-muted/20 transition-colors"
+      className="border rounded-lg p-4 relative hover:bg-muted flex items-center gap-4 bg-muted/50 transition-colors"
     >
       {/* TODO - replace with project image */}
       <div className="size-10 rounded-full bg-border shrink-0" />

@@ -307,5 +307,5 @@ function TableHeading(props: { children: React.ReactNode }) {
 }
 
 function TableHeadingRow({ children }: { children: React.ReactNode }) {
-  return <tr className="relative bg-secondary">{children}</tr>;
+  return <tr className="relative bg-muted/50">{children}</tr>;
 }

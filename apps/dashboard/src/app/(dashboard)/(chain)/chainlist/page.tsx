@@ -296,7 +296,7 @@ async function ChainsData(props: {
         <ChainlistPagination totalPages={totalPages} activePage={activePage} />
       )}
       <div className="h-4" />
-      <p className="text-sm text-center text-secondary-foreground text-balance">
+      <p className="text-sm text-center text-muted-foreground text-balance">
         Showing{" "}
         <span className="text-accent-foreground">{paginatedChains.length}</span>{" "}
         out of{" "}

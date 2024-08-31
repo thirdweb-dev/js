@@ -4,7 +4,7 @@ import { NavLink } from "../ui/NavLink";
 
 export type SidebarContentProps = {
   header?: React.ReactNode;
-  links: { href: string; label: React.ReactNode }[];
+  links: { href: string; label: React.ReactNode; exactMatch?: boolean }[];
   className?: string;
 };
 
@@ -22,6 +22,7 @@ export function Sidebar(props: SidebarContentProps) {
               href={link.href}
               className="text-sm py-1.5 pl-4 text-muted-foreground hover:text-foreground border-l-2 ml-[-2px] border-transparent hover:border-foreground transition-colors"
               activeClassName="text-foreground border-link-foreground"
+              exactMatch={link.exactMatch}
             >
               {link.label}
             </NavLink>

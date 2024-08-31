@@ -31,16 +31,19 @@ export const AsyncContractNameCell = memo(
     const contractMetadata = useDashboardContractMetadata(contract);
 
     return (
-      <Skeleton isLoaded={!contractMetadata.isFetching}>
-        <ChakraNextLink href={`/${chainSlug}/${cell.address}`} passHref>
-          <Text
-            color="blue.500"
-            _dark={{ color: "blue.400" }}
-            size="label.md"
-            _groupHover={{ textDecor: "underline" }}
-          >
+      <Skeleton
+        isLoaded={!contractMetadata.isFetching}
+        borderRadius={20}
+        className="min-w-[300px] "
+      >
+        <ChakraNextLink
+          href={`/${chainSlug}/${cell.address}`}
+          passHref
+          className="hover:no-underline"
+        >
+          <span>
             {contractMetadata.data?.name || shortenIfAddress(cell.address)}
-          </Text>
+          </span>
         </ChakraNextLink>
       </Skeleton>
     );
@@ -79,6 +82,7 @@ export const AsyncContractTypeCell = memo(
           !publishedContractsFromDeployQuery.isInitialLoading ||
           publishedContractsFromDeployQuery.isLoadingError
         }
+        borderRadius={20}
       >
         {contractType ? (
           <Text noOfLines={1} maxWidth={200} isTruncated>

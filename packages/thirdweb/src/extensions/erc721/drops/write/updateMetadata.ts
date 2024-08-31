@@ -106,6 +106,7 @@ export async function getUpdateMetadataParams(
  * const transaction = updateMetadata({
  *  contract,
  *  targetTokenId: 0n,
+ *  client: thirdwebClient,
  *  newMetadata: {
  *    name: "this is the new nft name",
  *    description: "...",

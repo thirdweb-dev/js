@@ -30,15 +30,7 @@ export const HomeProductCard: React.FC<HomeProductCardProps> = ({
       <Card
         p={4}
         overflow="hidden"
-        bgColor="backgroundCardHighlight"
-        borderWidth={0.5}
-        borderColor="borderColor"
-        transition="border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease"
-        _hover={{
-          borderColor: "blue.500",
-          boxShadow: "0 0 16px hsl(215deg 100% 60% / 30%)",
-          transform: "scale(1.01)",
-        }}
+        className="bg-muted/50 hover:bg-muted"
         h="full"
         minHeight={{ base: "full", md: 28 }}
       >

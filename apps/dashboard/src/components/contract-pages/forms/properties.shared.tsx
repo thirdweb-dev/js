@@ -159,8 +159,7 @@ export const PropertiesFormControl = <
                         >
                           <Icon
                             as={FiUpload}
-                            color="gray.600"
-                            _hover={{ color: "gray.500" }}
+                            className="text-muted-foreground"
                           />
                         </FileInput>
                       </Tooltip>

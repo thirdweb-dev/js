@@ -103,7 +103,7 @@ export const ContractMetadataFieldset: React.FC<
             <FormLabel>Description</FormLabel>
             <Textarea
               {...form.register("contractMetadata.description")}
-              className="grow"
+              className="grow bg-transparent"
             />
             <FormErrorMessage>
               {

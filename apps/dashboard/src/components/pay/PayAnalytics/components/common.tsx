@@ -75,7 +75,7 @@ export function TableHeadingRow({ children }: { children: React.ReactNode }) {
 
 export function TableHeading(props: { children: React.ReactNode }) {
   return (
-    <th className="bg-secondary border-b border-border text-left px-3 py-3 text-sm font-medium text-muted-foreground min-w-[150px]">
+    <th className="bg-muted/50 border-b border-border text-left px-3 py-3 text-sm font-medium text-muted-foreground min-w-[150px]">
       {props.children}
     </th>
   );

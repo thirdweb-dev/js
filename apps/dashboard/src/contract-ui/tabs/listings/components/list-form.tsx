@@ -1,3 +1,4 @@
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
@@ -517,10 +518,10 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       )}
 
       {!form.watch("selected.tokenId") && (
-        <div className="bg-warning text-warning-foreground p-4 rounded-lg border border-warning-foreground/50 flex items-center gap-2 text-sm">
+        <Alert>
           <CircleAlertIcon className="size-4" />
-          <p>No NFT selected</p>
-        </div>
+          <AlertTitle>No NFT selected</AlertTitle>
+        </Alert>
       )}
     </Stack>
   );

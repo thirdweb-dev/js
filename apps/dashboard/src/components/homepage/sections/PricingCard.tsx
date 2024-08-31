@@ -121,10 +121,10 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         gap={3}
         grow={1}
         alignItems="flex-start"
-        color="accent.900"
+        className="!text-foreground"
       >
         {plan.subTitle && (
-          <Text color="accent.900" fontWeight="medium">
+          <Text className="!text-foreground" fontWeight="medium">
             {plan.subTitle}
           </Text>
         )}

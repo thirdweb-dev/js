@@ -1,5 +1,6 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { ChainMetadata } from "thirdweb/chains";
 import { mapV4ChainToV5Chain } from "../../../../../../../contexts/map-chains";
@@ -22,7 +23,7 @@ export function ChainHeader(props: ChainHeaderProps) {
 
       <AspectRatio
         ratio={props.headerImageUrl ? 4 : 8}
-        className="border-b border-border -mx-4 lg:-mx-6"
+        className="border-b border-border max-sm:-mx-4"
       >
         {props.headerImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -40,7 +41,10 @@ export function ChainHeader(props: ChainHeaderProps) {
 
         <ChainIcon
           iconUrl={props.logoUrl}
-          className="p-2 lg:p-4 absolute top-0 left-0 size-20 lg:size-36 rounded-full bg-background -translate-y-[50%] overflow-hidden border border-border"
+          className={cn(
+            "p-2 lg:p-4 absolute top-0 left-0 size-20 lg:size-36 rounded-full -translate-y-[50%] overflow-hidden border border-border bg-muted",
+            props.headerImageUrl && "lg:left-4",
+          )}
         />
 
         {/* action group */}
@@ -54,7 +58,7 @@ export function ChainHeader(props: ChainHeaderProps) {
                 mapV4ChainToV5Chain(props.chain)
               }
             />
-            <Button variant="primary" asChild>
+            <Button variant="default" asChild>
               <Link href="https://thirdweb.com/dashboard" target="_blank">
                 Get started with thirdweb
               </Link>

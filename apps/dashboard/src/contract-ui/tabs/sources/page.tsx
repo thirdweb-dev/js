@@ -106,7 +106,11 @@ const VerifyContractModal: React.FC<
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent pb={2} mx={{ base: 4, md: 0 }}>
+      <ModalContent
+        className="!bg-background border border-border rounded-lg"
+        pb={2}
+        mx={{ base: 4, md: 0 }}
+      >
         <ModalHeader>
           <Flex gap={2} align="center">
             <Heading size="subtitle.md">Contract Verification</Heading>

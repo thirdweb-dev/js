@@ -1,3 +1,5 @@
+import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
+import { Badge } from "@/components/ui/badge";
 import {
   type EngineAdmin,
   useEngineGrantPermissions,
@@ -25,8 +27,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
-import { Badge, Button, FormLabel, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { Button, FormLabel, Text } from "tw-components";
 
 interface AdminsTableProps {
   instanceUrl: string;
@@ -43,11 +44,11 @@ const columns = [
     cell: (cell) => {
       const address = cell.getValue();
       return (
-        <AddressCopyButton
+        <CopyAddressButton
           address={address}
-          shortenAddress={false}
-          size="xs"
-          my={2}
+          className="my-2"
+          copyIconPosition="left"
+          variant="ghost"
         />
       );
     },
@@ -65,18 +66,7 @@ const columns = [
   columnHelper.accessor("permissions", {
     header: "Role",
     cell: (cell) => {
-      return (
-        <Badge
-          borderRadius="full"
-          size="label.sm"
-          variant="subtle"
-          px={3}
-          py={1.5}
-          colorScheme="black"
-        >
-          {cell.getValue()}
-        </Badge>
-      );
+      return <Badge variant="default">{cell.getValue()}</Badge>;
     },
   }),
 ];
@@ -191,7 +181,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Update Admin</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -274,7 +264,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Remove Admin</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

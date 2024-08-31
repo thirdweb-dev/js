@@ -20,6 +20,7 @@ export function CopyTextButton(props: {
     | "secondary"
     | "ghost";
   copyIconPosition: "left" | "right";
+  onClick?: () => void;
 }) {
   const [isCopied, setIsCopied] = useState(false);
   const copyButton = isCopied ? (
@@ -44,10 +45,12 @@ export function CopyTextButton(props: {
           "h-auto w-auto px-2.5 py-1.5 flex gap-2 rounded-lg text-foreground font-normal",
           props.className,
         )}
-        onClick={() => {
+        onClick={(e) => {
           navigator.clipboard.writeText(props.textToCopy);
           setIsCopied(true);
           setTimeout(() => setIsCopied(false), 1000);
+          e.stopPropagation();
+          props.onClick?.();
         }}
       >
         {props.copyIconPosition === "right" ? (

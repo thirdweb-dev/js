@@ -1,5 +1,40 @@
 # thirdweb
 
+## 5.49.0
+
+### Minor Changes
+
+- [#4179](https://github.com/thirdweb-dev/js/pull/4179) [`42d5c65`](https://github.com/thirdweb-dev/js/commit/42d5c65e495d56ee211a7b3075e54c4ea190c1e2) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Add NFT prebuilt components
+
+  ```tsx
+  import { getContract } from "thirdweb";
+  import { NFT } from "thirdweb/react";
+
+  const contract = getContract({
+    address: "0x...",
+    chain: ethereum,
+    client: yourThirdwebClient,
+  });
+
+  <NFT contract={contract} tokenId={0n}>
+    <Suspense fallback={"Loading media..."}>
+      <NFT.Media />
+    </Suspense>
+  </NFT>;
+  ```
+
+### Patch Changes
+
+- [#4316](https://github.com/thirdweb-dev/js/pull/4316) [`a65bb88`](https://github.com/thirdweb-dev/js/commit/a65bb8839bfa6d8ea39e9bee4fd04b91378e3e16) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Include from address in in-app wallet transactions
+
+- [#4322](https://github.com/thirdweb-dev/js/pull/4322) [`3e425ec`](https://github.com/thirdweb-dev/js/commit/3e425ecc68e3b601e439a01ad0df032c4a4b9557) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix accessibility warnings
+
+- [#4317](https://github.com/thirdweb-dev/js/pull/4317) [`1e70bbf`](https://github.com/thirdweb-dev/js/commit/1e70bbf2c3ab24732806d04c67c3ea9a512abde7) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Automatic retries for React Native in-app wallet logins
+
+- [#4306](https://github.com/thirdweb-dev/js/pull/4306) [`9d6eb27`](https://github.com/thirdweb-dev/js/commit/9d6eb270818581dcd1d8628cf680e82f603756e9) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Fix programmatic deployments with smart accounts
+
+- [#4328](https://github.com/thirdweb-dev/js/pull/4328) [`c97b1a5`](https://github.com/thirdweb-dev/js/commit/c97b1a5d7eecf3392fa9b2280a329833b1798141) Thanks [@edwardysun](https://github.com/edwardysun)! - Update default source chain selection in PayEmbed
+
 ## 5.48.3
 
 ### Patch Changes

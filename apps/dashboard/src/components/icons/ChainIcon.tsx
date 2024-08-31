@@ -30,6 +30,8 @@ export const ChainIcon = forwardRef<HTMLImageElement, ChainIconProps>(
         height={size}
         style={{
           objectFit: "contain",
+          width: size,
+          height: size,
         }}
         loading={restProps.loading || "lazy"}
         decoding="async"

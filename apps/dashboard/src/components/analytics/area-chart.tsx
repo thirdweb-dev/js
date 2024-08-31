@@ -218,7 +218,7 @@ export const AreaChartLoadingState = (props: { height?: string }) => {
       }}
     >
       <div className="flex items-center justify-center filter backdrop-blur-sm z-10 absolute inset-0">
-        <p className="text-secondary-foreground">Loading Chart</p>
+        <p className="text-muted-foreground">Loading Chart</p>
       </div>
       <AreaChart
         className="pointer-events-none"

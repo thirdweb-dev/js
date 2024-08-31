@@ -110,7 +110,7 @@ export function CreateTicket() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="primary" className="mt-6" size="lg">
+        <Button variant="default" className="mt-6" size="lg">
           Get Support
         </Button>
       </DialogTrigger>
