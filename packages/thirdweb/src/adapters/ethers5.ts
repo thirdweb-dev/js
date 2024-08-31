@@ -274,7 +274,7 @@ export const ethers5Adapter = /* @__PURE__ */ (() => {
  * @returns The ethers.js provider.
  * @internal
  */
-function toEthersProvider(
+export function toEthersProvider(
   ethers: Ethers5,
   client: ThirdwebClient,
   chain: Chain,
@@ -299,7 +299,7 @@ function toEthersProvider(
  * @returns A Promise that resolves to an ethers.js Contract.
  * @internal
  */
-async function toEthersContract<abi extends Abi = []>(
+export async function toEthersContract<abi extends Abi = []>(
   ethers: Ethers5,
   twContract: ThirdwebContract<abi>,
 ): Promise<ethers5.Contract> {
@@ -336,7 +336,7 @@ type FromEthersContractOptions = {
  * @returns A promise that resolves to a ThirdwebContract instance.
  * @internal
  */
-async function fromEthersContract<abi extends Abi>(
+export async function fromEthersContract<abi extends Abi>(
   options: FromEthersContractOptions,
 ): Promise<ThirdwebContract<abi>> {
   return getContract({
