@@ -29,7 +29,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center bg-background text-foreground justify-between px-6 py-4",
+        "flex flex-row gap-2 items-center text-foreground justify-between px-6 py-4",
         props.className,
       )}
     >

@@ -74,10 +74,10 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
             isDisabled={isDisabled}
             display="flex"
             color="secondary"
-            _hover={{
-              bg: "inputBg",
-              color: "heading",
-            }}
+            // _hover={{
+            //   bg: "inputBg",
+            //   color: "heading",
+            // }}
             variant="ghost"
             style={{
               textAlign: "left",
@@ -108,16 +108,11 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
             </Text>
           </MenuButton>
 
-          <MenuList overflow="auto" maxH="500px">
+          <MenuList overflow="auto" maxH="500px" className="!bg-background">
             <MenuItem
               p={3}
-              _hover={{
-                bg: "inputBg",
-                color: "heading",
-              }}
               onClick={() => handleSelection(undefined)}
-              borderBottom="2px solid"
-              borderColor="inputBg"
+              className="!bg-transparent hover:!bg-muted border-b"
             >
               <Flex alignItems="center" gap={3}>
                 <ChainIcon ipfsSrc={undefined} size={24} />
@@ -129,10 +124,7 @@ export const NetworkSelectDropdown: React.FC<NetworkSelectDropdownProps> = ({
               <MenuItem
                 p={3}
                 key={chain.chainId}
-                _hover={{
-                  bg: "inputBg",
-                  color: "heading",
-                }}
+                className="!bg-transparent hover:!bg-muted"
                 onClick={() => handleSelection(chain)}
               >
                 <Flex alignItems="center" gap={3}>

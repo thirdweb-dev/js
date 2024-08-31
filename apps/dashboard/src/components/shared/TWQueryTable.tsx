@@ -107,7 +107,7 @@ export function TWQueryTable<TRowData, TInputData>(
                       <Td
                         key={cell.id}
                         borderBottomWidth="inherit"
-                        borderBottomColor="accent.100"
+                        borderBottomColor="hsl(var(--border))"
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -121,7 +121,7 @@ export function TWQueryTable<TRowData, TInputData>(
                     <Td
                       isNumeric
                       borderBottomWidth="inherit"
-                      borderBottomColor="accent.100"
+                      borderBottomColor="hsl(var(--border))"
                     >
                       <Icon as={FiArrowRight} />
                     </Td>

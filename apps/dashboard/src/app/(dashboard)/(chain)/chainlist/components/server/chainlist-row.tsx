@@ -36,7 +36,7 @@ export async function ChainListRow({
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
-    <tr className="border-b relative hover:bg-secondary">
+    <tr className="border-b relative hover:bg-muted/50">
       <TableData>{favoriteButton}</TableData>
       {/* Name */}
       <TableData>

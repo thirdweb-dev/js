@@ -271,6 +271,7 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
       gap={8}
       justifyContent="space-between"
       overflow="hidden"
+      className="bg-muted/50"
     >
       <VStack
         gap={2}

@@ -42,10 +42,10 @@ export const SearchInput: React.FC = () => {
 
   return (
     <div className="relative w-full">
-      <SearchIcon className="absolute size-5 top-[50%] -translate-y-1/2 left-4 text-muted-foreground" />
+      <SearchIcon className="absolute size-4 top-[50%] -translate-y-1/2 left-3 text-muted-foreground" />
       <Input
         placeholder="Search by name or chain ID"
-        className={"pl-12 h-10 py-2 text-base bg-secondary rounded-lg"}
+        className={"pl-9 h-10 py-2 rounded-lg"}
         defaultValue={searchParams?.get("query") || ""}
         onChange={(e) => handleSearch(e.target.value)}
         ref={inputRef}

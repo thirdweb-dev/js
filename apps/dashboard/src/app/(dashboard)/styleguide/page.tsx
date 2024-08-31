@@ -1,5 +1,15 @@
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { CircleAlertIcon } from "lucide-react";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "../../../@/components/ui/alert";
+import { Badge } from "../../../@/components/ui/badge";
+import { Button } from "../../../@/components/ui/button";
+import { Checkbox } from "../../../@/components/ui/checkbox";
+import { Input } from "../../../@/components/ui/input";
+import { Label } from "../../../@/components/ui/label";
 
 export const metadata = {
   robots: "noindex, nofollow",
@@ -7,11 +17,11 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <div className="container py-10">
+    <div className="max-w-[700px] py-10 mx-auto">
       <h1 className="text-5xl tracking-tighter font-semibold mb-8">
         Styleguide
       </h1>
-      <Separator className="my-10" />
+      <div className="my-10" />
       <Colors />
     </div>
   );
@@ -21,65 +31,205 @@ function Colors() {
   return (
     <div>
       <h2 className="text-2xl mb-5 font-semibold tracking-tight">
-        Neutral background Colors
+        Backgrounds
       </h2>
       <div className="flex-col md:flex-row flex gap-4 flex-wrap">
         <BgColorPreview className="bg-background" />
-        <BgColorPreview className="bg-secondary" />
+        <BgColorPreview className="bg-muted/30" />
+        <BgColorPreview className="bg-muted/50" />
         <BgColorPreview className="bg-muted" />
         <BgColorPreview className="bg-accent" />
-        <BgColorPreview className="bg-card" />
-        <BgColorPreview className="bg-popover" />
       </div>
 
-      <Separator className="my-10" />
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Buttons</h2>
+
+      <ButtonsPreview />
+
+      <div className="my-14" />
 
       <h2 className="text-2xl mb-5 font-semibold tracking-tight">
-        Foreground Colors with Background
+        Disabled Buttons
+      </h2>
+
+      <ButtonsPreview disabled />
+
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Badges</h2>
+
+      <div className="flex items-center gap-4">
+        <Badge> Default </Badge>
+        <Badge variant="outline"> Outline </Badge>
+        <Badge variant="secondary"> Secondary </Badge>
+        <Badge variant="destructive"> Destructive </Badge>
+        <Badge variant="success"> Success </Badge>
+        <Badge variant="warning"> Warning </Badge>
+      </div>
+
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+        Foregrounds
       </h2>
 
       <div className="flex flex-col gap-2">
         <TextColorPreview className="text-foreground" />
-        <TextColorPreview className="text-secondary-foreground" />
         <TextColorPreview className="text-muted-foreground" />
-        <TextColorPreview className="text-popover-foreground bg-popover" />
-        <TextColorPreview className="text-card-foreground bg-card" />
-        <TextColorPreview className="text-secondary-foreground bg-secondary" />
-        <TextColorPreview className="text-muted-foreground bg-muted" />
-        <TextColorPreview className="text-accent-foreground bg-accent" />
-        <TextColorPreview className="text-primary-foreground bg-primary" />
-        <TextColorPreview className="text-success-foreground bg-success" />
-        <TextColorPreview className="text-destructive-foreground bg-destructive" />
-        <TextColorPreview className="text-warning-foreground bg-warning" />
-        <TextColorPreview className="text-inverted-foreground bg-inverted" />
         <TextColorPreview className="text-destructive-text" />
+        <TextColorPreview className="text-warning-text" />
         <TextColorPreview className="text-success-text" />
       </div>
+
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+        Chart colors
+      </h2>
+
+      <div className="flex-col md:flex-row flex gap-4 flex-wrap">
+        <ChartColorPreview name="1" />
+        <ChartColorPreview name="2" />
+        <ChartColorPreview name="3" />
+        <ChartColorPreview name="4" />
+        <ChartColorPreview name="5" />
+      </div>
+
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Alerts</h2>
+
+      <div className="flex-col flex gap-6">
+        <AlertPreview variant="default" />
+        <AlertPreview variant="destructive" />
+        <AlertPreview variant="info" />
+        <AlertPreview variant="warning" />
+      </div>
+
+      <div className="my-10" />
+
+      <div className="flex-col flex gap-6">
+        <AlertPreview variant="default" showDescription />
+        <AlertPreview variant="destructive" showDescription />
+        <AlertPreview variant="info" showDescription />
+        <AlertPreview variant="warning" showDescription />
+      </div>
+
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">
+        Inputs + Label
+      </h2>
+
+      <div className="flex flex-col gap-6">
+        <div>
+          <Label className="mb-2 block"> Placeholder </Label>
+          <Input placeholder="placeholder" />
+        </div>
+
+        <div>
+          <Label className="mb-2 block"> No value, No placeholder </Label>
+          <Input />
+        </div>
+
+        <div>
+          <Label className="mb-2 block"> Value filled </Label>
+          <Input value="some value" />
+        </div>
+
+        <div>
+          <Label className="mb-2 block">Disabled</Label>
+          <Input value="some value" disabled />
+        </div>
+      </div>
+
+      <div className="my-14" />
+
+      <h2 className="text-2xl mb-5 font-semibold tracking-tight">Checkboxes</h2>
+
+      <div className="flex gap-4">
+        <Checkbox />
+        <Checkbox checked />
+      </div>
+    </div>
+  );
+}
+
+function ButtonsPreview(props: {
+  disabled?: boolean;
+}) {
+  return (
+    <div className="gap-4 flex items-center">
+      <Button disabled={props.disabled}> Default </Button>
+      <Button variant="outline" disabled={props.disabled}>
+        Outline
+      </Button>
+      <Button variant="secondary" disabled={props.disabled}>
+        Secondary
+      </Button>
+      <Button variant="destructive" disabled={props.disabled}>
+        Destructive
+      </Button>
+      <Button variant="primary" disabled={props.disabled}>
+        Primary
+      </Button>
+      <Button variant="ghost" disabled={props.disabled}>
+        Ghost
+      </Button>
+    </div>
+  );
+}
+
+function AlertPreview(props: {
+  variant: "default" | "destructive" | "info" | "warning";
+  showDescription?: boolean;
+}) {
+  return (
+    <Alert variant={props.variant}>
+      <CircleAlertIcon className="size-4" />
+      <AlertTitle>This is {props.variant} alert title</AlertTitle>
+      {props.showDescription && (
+        <AlertDescription>
+          This is the {props.variant} alert description
+        </AlertDescription>
+      )}
+    </Alert>
+  );
+}
+
+function ChartColorPreview(props: { name: string }) {
+  return (
+    <div
+      className={
+        "md:w-[100px] h-[100px] rounded-lg flex items-center justify-center text-xs text-white"
+      }
+      style={{
+        background: `hsl(var(--chart-${props.name}))`,
+      }}
+    >
+      <p className="font-semibold"> chart-{props.name}</p>
     </div>
   );
 }
 
 function BgColorPreview(props: { className: string }) {
   return (
-    <div>
+    <div
+      className={cn(
+        "w-full md:w-[150px] h-[150px] rounded-lg border border-border flex items-center justify-center text-xs",
+        props.className,
+      )}
+    >
       <p className="mb-1"> {props.className}</p>
-      <div
-        className={cn(
-          "w-full md:w-[200px] h-[100px] rounded-xl shadow-md border",
-          props.className,
-        )}
-      />
     </div>
   );
 }
 
 function TextColorPreview(props: { className: string }) {
   return (
-    <div className="grid grid-cols-2">
-      <p>{props.className}</p>
-      <p className={cn("text-base p-2 rounded-lg", props.className)}>
-        The quick brown fox jumps over the lazy dog
-      </p>
-    </div>
+    <p className={cn("text-base rounded-lg", props.className)}>
+      {props.className}
+    </p>
   );
 }

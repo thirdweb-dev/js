@@ -175,19 +175,18 @@ export function EcosystemHeader(props: { ecosystem: Ecosystem }) {
               name: "Permissions",
               href: `/dashboard/connect/ecosystem/${ecosystem.slug}/permissions`,
               isActive: pathname?.endsWith("/permissions") || false, // pathname will almost never be null: https://nextjs.org/docs/app/api-reference/functions/use-pathname
-              isEnabled: true,
             },
             {
               name: "Analytics (Coming Soon)",
               href: "#",
               isActive: false,
-              isEnabled: false,
+              isDisabled: true,
             },
             {
               name: "Design (Coming Soon)",
               href: "#",
               isActive: false,
-              isEnabled: false,
+              isDisabled: true,
             },
           ]}
         />

@@ -44,7 +44,7 @@ export const FeatureItem: React.FC<FeatureItemProps> = ({ text }) => {
             </Flex>
           </Tooltip>
           <Text
-            color="gray.700"
+            className="text-muted-foreground"
             minW="max-content"
             display={{ base: "block", md: "none" }}
           >

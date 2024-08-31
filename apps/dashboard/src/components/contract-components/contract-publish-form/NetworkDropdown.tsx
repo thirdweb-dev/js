@@ -88,11 +88,11 @@ export const NetworkDropdown: React.FC<NetworkDropdownProps> = ({
           }),
           downChevron: (provided) => ({
             ...provided,
-            color: "gray.500",
+            color: "hsl(var(--text-muted-foreground)/50%)",
           }),
           dropdownIndicator: (provided) => ({
             ...provided,
-            color: "gray.500",
+            color: "hsl(var(--text-muted-foreground)/50%)",
           }),
           control: (provided) => ({
             ...provided,

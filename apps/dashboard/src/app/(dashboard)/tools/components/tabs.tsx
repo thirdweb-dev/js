@@ -23,7 +23,6 @@ export function ToolsTabs() {
         name: tab.name,
         href: `/tools/${tab.segment}`,
         isActive: layoutSegment === tab.segment,
-        isEnabled: true,
       }))}
     />
   );

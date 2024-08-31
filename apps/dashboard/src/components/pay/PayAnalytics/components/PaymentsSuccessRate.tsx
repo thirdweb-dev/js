@@ -204,7 +204,7 @@ function InfoRow(props: {
                 : "bg-destructive-text"
           }`}
         />
-        <p className="text-base text-secondary-foreground">{props.label}</p>
+        <p className="text-base text-muted-foreground">{props.label}</p>
       </div>
       <SkeletonContainer
         loadedData={

@@ -81,7 +81,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="!bg-background border border-border rounded-lg">
           <ModalHeader>
             <Heading size="title.md" mt={2}>
               Are you sure you want to upgrade to the Growth plan?
@@ -93,9 +93,9 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({
               gap={3}
               grow={1}
               alignItems="flex-start"
-              color="accent.900"
+              className="!text-foreground"
             >
-              <Text color="accent.900" fontWeight="medium">
+              <Text className="!text-foreground" fontWeight="medium">
                 This entails unlocking exclusive features below:
               </Text>
 

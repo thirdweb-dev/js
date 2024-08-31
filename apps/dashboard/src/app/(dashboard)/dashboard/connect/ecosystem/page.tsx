@@ -62,7 +62,7 @@ export default async function Page() {
         <h2 className="text-2xl font-bold sm:text-3xl text-foreground text-balance">
           One wallet, a whole ecosystem of apps and games
         </h2>
-        <p className="text-secondary-foreground">
+        <p className="text-muted-foreground">
           With Ecosystem Wallets, your users can access their assets across
           hundreds of apps and games within your ecosystem. You can control
           which apps join your ecosystem and how their users interact with your
@@ -99,10 +99,10 @@ export default async function Page() {
       >
         <Card className="flex flex-col gap-3 p-6 md:p-8 md:px-10">
           <div className="flex items-center gap-2">
-            <BookMarkedIcon className="size-5 text-secondary-foreground" />
+            <BookMarkedIcon className="size-5 text-muted-foreground" />
             <h4 className="text-lg font-bold">Learn more</h4>
           </div>
-          <p className="text-secondary-foreground text-md">
+          <p className="text-muted-foreground text-md">
             Learn how to create and manage Ecosystem Wallets in our docs.
           </p>
           <div className="flex flex-row items-center gap-2 mt-4 transition-all group-hover:gap-3 group-hover:text-primary/80 text-primary text-md">

@@ -26,8 +26,8 @@ import { useState } from "react";
 import { BiPencil } from "react-icons/bi";
 import { FiTrash } from "react-icons/fi";
 import { Button, FormLabel, Text } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { toDateTimeLocal } from "utils/date-utils";
+import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
 
 interface AccessTokensTableProps {
   instanceUrl: string;
@@ -43,9 +43,7 @@ const columns = [
     header: "Access Token",
     cell: (cell) => {
       return (
-        <Text fontFamily="mono" fontSize="small">
-          {cell.getValue()}
-        </Text>
+        <p className="font-mono py-3 text-foreground">{cell.getValue()}</p>
       );
     },
   }),
@@ -63,7 +61,13 @@ const columns = [
     header: "Created By",
     cell: (cell) => {
       const address = cell.getValue();
-      return <AddressCopyButton address={address} size="xs" />;
+      return (
+        <CopyAddressButton
+          address={address}
+          copyIconPosition="left"
+          variant="ghost"
+        />
+      );
     },
   }),
   columnHelper.accessor("createdAt", {
@@ -188,7 +192,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Update Access Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -271,7 +275,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Delete Access Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

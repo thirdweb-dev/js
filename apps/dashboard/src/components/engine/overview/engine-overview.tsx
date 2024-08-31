@@ -1,12 +1,14 @@
+import { Badge } from "@/components/ui/badge";
 import {
   useEngineBackendWallets,
   useEngineTransactions,
   useEngineWalletConfig,
 } from "@3rdweb-sdk/react/hooks/useEngine";
-import { Flex, FormControl, Switch, Tooltip } from "@chakra-ui/react";
+import { Flex, FormControl, Switch } from "@chakra-ui/react";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { useState } from "react";
-import { Badge, Card, FormLabel, Heading, Link, Text } from "tw-components";
+import { FormLabel, Heading, Link, Text } from "tw-components";
+import { ToolTipLabel } from "../../../@/components/ui/tooltip";
 import { BackendWalletsTable } from "./backend-wallets-table";
 import { CreateBackendWalletButton } from "./create-backend-wallet-button";
 import { ImportBackendWalletButton } from "./import-backend-wallet-button";
@@ -33,38 +35,25 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
               <Flex gap={3}>
                 <Heading size="title.sm">Backend Wallets</Heading>
                 {walletConfig?.type && (
-                  <Tooltip
-                    placement="auto-end"
-                    borderRadius="md"
-                    bg="transparent"
-                    boxShadow="none"
-                    p={4}
-                    minW={{ md: "450px" }}
+                  <ToolTipLabel
                     label={
-                      <Card bgColor="backgroundHighlight">
-                        <Text>
-                          Engine is configured to use{" "}
-                          {walletConfig.type === "aws-kms"
-                            ? "backend wallets secured by AWS KMS"
-                            : walletConfig.type === "gcp-kms"
-                              ? "backend wallets secured by GCP KMS"
-                              : "local backend wallets"}
-                          . You can change this in the Configuration tab.
-                        </Text>
-                      </Card>
+                      <>
+                        This engine is configured to use{" "}
+                        {walletConfig.type === "aws-kms"
+                          ? "backend wallets secured by AWS KMS"
+                          : walletConfig.type === "gcp-kms"
+                            ? "backend wallets secured by GCP KMS"
+                            : "local backend wallets"}
+                        . You can change this in the Configuration tab.
+                      </>
                     }
                   >
-                    <Badge
-                      borderRadius="full"
-                      size="label.sm"
-                      variant="outline"
-                      px={3}
-                      py={1.5}
-                      colorScheme="green"
-                    >
-                      {walletConfig.type.replace("-", " ")}
-                    </Badge>
-                  </Tooltip>
+                    <div>
+                      <Badge variant="outline">
+                        {walletConfig.type.replace("-", " ")}
+                      </Badge>
+                    </div>
+                  </ToolTipLabel>
                 )}
               </Flex>
               <Text>
@@ -77,7 +66,6 @@ export const EngineOverview: React.FC<EngineOverviewProps> = ({
                 >
                   Learn more
                 </Link>
-                .
               </Text>
             </Flex>
 

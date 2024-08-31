@@ -25,29 +25,31 @@ export default async function TeamLayout(props: {
 
   return (
     <div className="h-full flex flex-col">
-      <TeamHeader
-        currentTeam={team}
-        teamsAndProjects={teamsAndProjects}
-        currentProject={undefined}
-      />
+      <div className="bg-muted/50">
+        <TeamHeader
+          currentTeam={team}
+          teamsAndProjects={teamsAndProjects}
+          currentProject={undefined}
+        />
 
-      <TeamTabs
-        links={[
-          {
-            href: `/team/${props.params.team_slug}`,
-            name: "Projects",
-            strictMatch: true,
-          },
-          {
-            href: `/team/${props.params.team_slug}/~/usage`,
-            name: "Usage",
-          },
-          {
-            href: `/team/${props.params.team_slug}/~/settings`,
-            name: "Settings",
-          },
-        ]}
-      />
+        <TeamTabs
+          links={[
+            {
+              href: `/team/${props.params.team_slug}`,
+              name: "Projects",
+              strictMatch: true,
+            },
+            {
+              href: `/team/${props.params.team_slug}/~/usage`,
+              name: "Usage",
+            },
+            {
+              href: `/team/${props.params.team_slug}/~/settings`,
+              name: "Settings",
+            },
+          ]}
+        />
+      </div>
 
       <main className="grow">{props.children}</main>
     </div>

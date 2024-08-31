@@ -41,9 +41,6 @@ module.exports = {
           text: "hsl(var(--destructive-text))",
         },
         success: {
-          DEFAULT: "hsl(var(--success))",
-          // success-foreground should only be used on success bg
-          foreground: "hsl(var(--success-foreground))",
           // success-text can be used on neutral bg, it's green-ish
           text: "hsl(var(--success-text))",
         },
@@ -68,8 +65,7 @@ module.exports = {
           foreground: "hsl(var(--inverted-foreground))",
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
+          text: "hsl(var(--warning-text))",
         },
         link: {
           foreground: "hsl(var(--link-foreground))",

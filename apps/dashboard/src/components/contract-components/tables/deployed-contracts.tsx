@@ -28,15 +28,11 @@ import type { BasicContract } from "contract-ui/types/types";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useChainSlug } from "hooks/chains/chainSlug";
 import { useSupportedChainsRecord } from "hooks/chains/configureChains";
+import { DownloadIcon, PlusIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { memo, useEffect, useMemo, useState } from "react";
-import {
-  FiArrowRight,
-  FiFilePlus,
-  FiMoreVertical,
-  FiPlus,
-  FiX,
-} from "react-icons/fi";
+import { FiArrowRight, FiMoreVertical, FiX } from "react-icons/fi";
 import {
   type Column,
   type ColumnInstance,
@@ -47,17 +43,15 @@ import {
 } from "react-table";
 import {
   Badge,
-  Button,
   CodeBlock,
-  Heading,
-  LinkButton,
   MenuItem,
   Text,
   TrackedIconButton,
 } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { TableContainer } from "tw-components/table-container";
 import type { ComponentWithChildren } from "types/component-with-children";
+import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
+import { Button } from "../../../@/components/ui/button";
 import { ImportModal } from "../import-contract/modal";
 import { AsyncContractNameCell, AsyncContractTypeCell } from "./cells";
 import { ShowMoreButton } from "./show-more-button";
@@ -102,27 +96,29 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
             py={{ base: 4, md: 8 }}
           >
             <Flex gap={2} direction="column">
-              <Heading size="title.md">Your contracts</Heading>
-              <Text fontStyle="italic" maxW="container.md">
+              <h1 className="text-3xl font-semibold tracking-tight">
+                Your contracts
+              </h1>
+              <p className="text-muted-foreground text-sm">
                 The list of contract instances that you have deployed or
-                imported with thirdweb across all networks.
-              </Text>
+                imported with thirdweb across all networks
+              </p>
             </Flex>
             <ButtonGroup>
               <Button
-                leftIcon={<FiFilePlus />}
+                className="gap-2"
                 variant="outline"
                 onClick={modalState.onOpen}
               >
+                <DownloadIcon className="size-4" />
                 Import contract
               </Button>
-              <LinkButton
-                leftIcon={<FiPlus />}
-                colorScheme="primary"
-                href="/explore"
-              >
-                Deploy contract
-              </LinkButton>
+              <Button asChild className="gap-2">
+                <Link href="/explore">
+                  <PlusIcon className="size-4" />
+                  Deploy contract
+                </Link>
+              </Button>
             </ButtonGroup>
           </Flex>
         </>
@@ -235,6 +231,7 @@ const RemoveFromDashboardButton: React.FC<RemoveFromDashboardButtonProps> = ({
       }}
       isDisabled={mutation.isLoading}
       closeOnSelect={false}
+      className="!bg-background hover:!bg-accent"
       icon={
         mutation.isLoading ? (
           <Spinner size="sm" />
@@ -343,7 +340,13 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
         accessor: (row) => row.address,
         // biome-ignore lint/suspicious/noExplicitAny: FIXME
         Cell: (cell: any) => {
-          return <AddressCopyButton address={cell.row.original.address} />;
+          return (
+            <CopyAddressButton
+              copyIconPosition="left"
+              address={cell.row.original.address}
+              variant="ghost"
+            />
+          );
         },
       },
       {
@@ -358,7 +361,10 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
                 variant="gost"
                 onClick={(e) => e.stopPropagation()}
               />
-              <MenuList onClick={(e) => e.stopPropagation()}>
+              <MenuList
+                onClick={(e) => e.stopPropagation()}
+                className="bg-background"
+              >
                 <RemoveFromDashboardButton
                   contractAddress={cell.cell.row.original.address}
                   chainId={cell.cell.row.original.chainId}
@@ -427,8 +433,8 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
           right={4}
         />
       )}
-      <Table {...getTableProps()}>
-        <Thead>
+      <Table {...getTableProps()} className="bg-background">
+        <Thead className="!bg-muted/50">
           {headerGroups.map((headerGroup, index) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
             <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
@@ -447,7 +453,7 @@ const ContractTable: ComponentWithChildren<ContractTableProps> = ({
           ))}
         </Thead>
 
-        <Tbody {...getTableBodyProps()}>
+        <Tbody {...getTableBodyProps()} className="!bg-background">
           {page.map((row) => {
             prepareRow(row);
             return (
@@ -487,6 +493,7 @@ const ContractTableRow = memo(({ row }: { row: Row<BasicContract> }) => {
       // end hack
       borderBottomWidth={1}
       _last={{ borderBottomWidth: 0 }}
+      className="hover:bg-muted/50"
     >
       {row.cells.map((cell, cellIndex) => {
         return (

@@ -31,7 +31,7 @@ export async function ChainListCard({
 
   return (
     <div className="relative h-full">
-      <Card className="w-full h-full hover:bg-muted">
+      <Card className="w-full h-full bg-muted/50 hover:bg-muted">
         <CardHeader className="flex flex-row items-center justify-between p-4">
           <div className="flex flex-row items-center gap-2">
             <ChainIcon iconUrl={iconUrl} className="size-6" />
@@ -51,7 +51,7 @@ export async function ChainListCard({
           <table className="w-full">
             <tbody className="[&_td>*]:min-h-[25px] text-sm">
               <tr>
-                <th className="font-normal text-left text-secondary-foreground">
+                <th className="font-normal text-left text-muted-foreground">
                   Chain ID
                 </th>
                 <td className="text-right">
@@ -66,7 +66,7 @@ export async function ChainListCard({
                 </td>
               </tr>
               <tr>
-                <th className="font-normal text-left text-secondary-foreground">
+                <th className="font-normal text-left text-muted-foreground">
                   Native Token
                 </th>
                 <td className="text-right">
@@ -76,7 +76,7 @@ export async function ChainListCard({
                 </td>
               </tr>
               <tr>
-                <th className="font-normal text-left text-secondary-foreground">
+                <th className="font-normal text-left text-muted-foreground">
                   Available Services
                 </th>
 

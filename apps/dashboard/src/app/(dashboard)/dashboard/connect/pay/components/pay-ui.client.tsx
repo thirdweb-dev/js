@@ -31,7 +31,22 @@ export function PayUI(props: {
 
   return (
     <>
-      <div className="flex flex-row w-full">
+      <div className="flex-col gap-4 flex lg:flex-row w-full relative">
+        <div className="max-sm:w-full lg:min-w-[200px] lg:absolute right-0 bottom-3 z-10">
+          <Select defaultValue={selectedKeyId} onValueChange={setSelectedKeyId}>
+            <SelectTrigger>
+              <SelectValue>{selectedKey?.name || selectedKeyId}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {props.apiKeys.map((key) => (
+                <SelectItem key={key.key} value={key.key}>
+                  {key.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         <TabButtons
           containerClassName="w-full"
           tabs={[
@@ -55,22 +70,6 @@ export function PayUI(props: {
             },
           ]}
         />
-        <div className="flex-shrink-0 flex-grow-0 relative md:min-w-[200px]">
-          <Select defaultValue={selectedKeyId} onValueChange={setSelectedKeyId}>
-            <SelectTrigger>
-              <SelectValue>{selectedKey?.name || selectedKeyId}</SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {props.apiKeys.map((key) => (
-                <SelectItem key={key.key} value={key.key}>
-                  {key.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-border -translate-y-[2px]" />
-        </div>
       </div>
 
       {/* TODO: split this into sub-pages */}

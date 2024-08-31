@@ -79,7 +79,7 @@ export const CreateBackendWalletButton: React.FC<
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="!bg-background border border-border rounded-lg">
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <ModalHeader>Create {walletType} wallet</ModalHeader>
             <ModalCloseButton />

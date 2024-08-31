@@ -19,7 +19,7 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
             </h2>
           </Link>
 
-          <p className="text-secondary-foreground">
+          <p className="text-muted-foreground">
             {category.description}{" "}
             {category.learnMore && (
               <Link

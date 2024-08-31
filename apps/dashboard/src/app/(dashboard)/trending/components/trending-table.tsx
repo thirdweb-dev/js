@@ -36,7 +36,7 @@ export function TrendingContractSection(props: {
         <ScrollShadow scrollableClassName="rounded-lg border">
           <Table className="w-full">
             <TableHeader>
-              <TableRow className="bg-secondary">
+              <TableRow className="bg-muted/50">
                 <TableHead className="text-left">Rank</TableHead>
                 <TableHead>Contract</TableHead>
                 <TableHead>Change</TableHead>
@@ -75,7 +75,7 @@ export function TrendingContractSection(props: {
             <TableBody>
               {props.topContracts.map((contract, index) => (
                 <TableRow
-                  className="relative hover:bg-muted even:bg-secondary/30 "
+                  className="relative hover:bg-muted/50"
                   key={`${contract.chainMetadata.chainId}${contract.contractAddress}${index}`}
                 >
                   {/* Rank */}
@@ -116,7 +116,7 @@ export function TrendingContractSection(props: {
                         {contract.type}
                       </Badge>
                     ) : (
-                      <DotIcon className="size-6 inline text-secondary-foreground" />
+                      <DotIcon className="size-6 inline text-muted-foreground" />
                     )}
                   </TableCell>
 
@@ -138,7 +138,7 @@ export function TrendingContractSection(props: {
                   {/* Value Moved */}
                   <TableCell className="text-right">
                     {contract.valueMoved || (
-                      <DotIcon className="size-6 inline text-secondary-foreground" />
+                      <DotIcon className="size-6 inline text-muted-foreground" />
                     )}
                   </TableCell>
                 </TableRow>
@@ -161,9 +161,11 @@ function ChangeCell(props: { displayCount: string; change: number }) {
   if (!props.displayCount) {
     return null;
   }
+
+  const variant = props.change > 0 ? "success" : "destructive";
   const badge = (
     <Badge
-      variant={props.change > 0 ? "success" : "destructive"}
+      variant={variant}
       className="gap-1.5 px-2 py-1 min-w-[80px] flex justify-center"
     >
       {props.change > 0 ? (

@@ -106,7 +106,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
   return (
     <>
       <Button
-        variant="secondary"
+        variant="outline"
         disabled={isDisabled || !wallet}
         className="w-full text-left justify-start gap-2"
         onClick={() => {
@@ -155,7 +155,7 @@ export const NetworkSelectorButton: React.FC<NetworkSelectorButtonProps> = ({
         <ChainIcon ipfsSrc={chain?.icon?.url} size={20} />
         {chain?.name || "Select Network"}
 
-        <BiChevronDown className="ml-auto size-3" />
+        <BiChevronDown className="ml-auto size-4" />
       </Button>
     </>
   );
