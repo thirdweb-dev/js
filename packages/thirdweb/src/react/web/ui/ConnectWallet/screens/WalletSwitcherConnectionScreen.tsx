@@ -38,7 +38,7 @@ export function WalletSwitcherConnectionScreen(
     getDefaultWallets({
       appMetadata: props.appMetadata,
       chains: props.chains,
-    });
+    }).filter((w) => w.id !== "inApp");
 
   const screenSetup = useSetupScreen({
     size: "compact",
