@@ -7,10 +7,9 @@ import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
-import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
-import { claimTo } from "thirdweb/extensions/erc1155";
-import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
+import { useActiveAccount } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
+import { useClaimNFT, useContract } from "@thirdweb-dev/react";
 
 interface ClaimTabProps {
   contractAddress: string;
@@ -23,6 +22,8 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
   chainId,
   tokenId,
 }) => {
+  const contractV4Query = useContract(contractAddress);
+  const claimNftV4 = useClaimNFT(contractV4Query.contract);
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const form = useForm<{ to: string; amount: string }>({
@@ -41,8 +42,6 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
     "Failed to claim",
     contract,
   );
-
-  const sendAndConfirmTx = useSendAndConfirmTransaction();
   const account = useActiveAccount();
   return (
     <Flex
@@ -59,25 +58,11 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
           return toast.error("No account detected");
         }
         try {
-          const transaction = claimTo({
-            contract,
-            tokenId: BigInt(tokenId),
-            quantity: BigInt(data.amount),
+          await claimNftV4.mutateAsync({
+            tokenId,
+            quantity: data.amount,
             to: data.to,
-            from: account.address,
           });
-          const approveTx = await getApprovalForTransaction({
-            transaction,
-            account,
-          });
-          if (approveTx) {
-            try {
-              await sendAndConfirmTx.mutateAsync(approveTx);
-            } catch {
-              return toast.error("Error approving ERC20 token");
-            }
-          }
-          await sendAndConfirmTx.mutateAsync(transaction);
           trackEvent({
             category: "nft",
             action: "claim",
