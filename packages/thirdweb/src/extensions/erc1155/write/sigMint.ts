@@ -8,7 +8,7 @@ import type { ThirdwebContract } from "../../../contract/contract.js";
 import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { toBigInt } from "../../../utils/bigint.js";
 import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
-import type { Hex } from "../../../utils/encoding/hex.js";
+import { type Hex, isHex, stringToHex } from "../../../utils/encoding/hex.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
@@ -135,7 +135,14 @@ export async function generateMintSignature(
       return "";
     })(),
     // uid computation
-    mintRequest.uid || (await randomBytesHex()),
+    ((): Hex => {
+      if (mintRequest.uid) {
+        return isHex(mintRequest.uid)
+          ? mintRequest.uid
+          : stringToHex(mintRequest.uid, { size: 32 });
+      }
+      return randomBytesHex();
+    })(),
   ]);
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
@@ -190,7 +197,7 @@ type GeneratePayloadInput = {
   currency?: Address;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;
-  uid?: Hex;
+  uid?: string;
 } & (
   | {
       metadata: NFTInput | string;

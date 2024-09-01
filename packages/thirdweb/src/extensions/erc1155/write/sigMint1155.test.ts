@@ -194,4 +194,38 @@ describe.runIf(process.env.TW_SECRET_KEY)("generateMintSignature1155", () => {
     expect(payload.uid).toBe(uid);
     expect(signature.length).toBe(132);
   });
+
+  it("should generate a mint signature with custom values", async () => {
+    const { payload, signature } = await generateMintSignature({
+      mintRequest: {
+        to: TEST_ACCOUNT_B.address,
+        quantity: 10n,
+        royaltyRecipient: TEST_ACCOUNT_B.address,
+        royaltyBps: 500,
+        primarySaleRecipient: TEST_ACCOUNT_A.address,
+        tokenId: 0n,
+        pricePerToken: "0.2",
+        currency: erc20TokenContract.address,
+        validityStartTimestamp: new Date(1635724800),
+        validityEndTimestamp: new Date(1867260800),
+        uid: "abcdef1234567890",
+      },
+      account: TEST_ACCOUNT_A,
+      contract: erc1155Contract,
+    });
+
+    expect(payload.to).toBe(TEST_ACCOUNT_B.address);
+    expect(payload.tokenId).toBe(0n);
+    expect(payload.royaltyRecipient).toBe(TEST_ACCOUNT_B.address);
+    expect(payload.royaltyBps).toBe(500n);
+    expect(payload.primarySaleRecipient).toBe(TEST_ACCOUNT_A.address);
+    expect(payload.uri).toBe("");
+    expect(payload.pricePerToken).toBe(200000000000000000n);
+    expect(payload.quantity).toBe(10n);
+    expect(payload.currency).toBe(erc20TokenContract.address);
+    expect(payload.validityStartTimestamp).toBe(1635724n);
+    expect(payload.validityEndTimestamp).toBe(1867260n);
+    expect(payload.uid).toBe(toHex("abcdef1234567890", { size: 32 }));
+    expect(signature.length).toBe(132);
+  });
 });
