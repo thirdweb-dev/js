@@ -242,7 +242,7 @@ function ModuleRow(props: {
         open={isUninstallModalOpen}
         onOpenChange={setIsUninstallModalOpen}
       >
-        <DialogContent>
+        <DialogContent className="z-[10001]" dialogOverlayClassName="z-[10000]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
