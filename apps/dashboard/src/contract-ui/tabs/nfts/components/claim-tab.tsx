@@ -1,5 +1,6 @@
 import { thirdwebClient } from "@/constants/client";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { useClaimNFT, useContract } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -9,7 +10,6 @@ import { toast } from "sonner";
 import { ZERO_ADDRESS, getContract } from "thirdweb";
 import { useActiveAccount } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
-import { useClaimNFT, useContract } from "@thirdweb-dev/react";
 
 interface ClaimTabProps {
   contractAddress: string;
