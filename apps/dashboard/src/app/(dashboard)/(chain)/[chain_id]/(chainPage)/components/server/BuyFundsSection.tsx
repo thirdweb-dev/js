@@ -12,7 +12,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
   return (
     <section>
       <SectionTitle title="Buy Funds" />
-      <div className="border border-border px-4 py-10 rounded-lg flex justify-center">
+      <div className="border border-border px-4 py-10 rounded-lg flex justify-center bg-muted/30">
         <div className="max-w-[520px] flex flex-col items-center ">
           <div className="flex items-center">
             <ChainIcon
@@ -33,7 +33,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
 
           <div className="h-2" />
 
-          <p className="text-secondary-foreground text-sm max-w-[520px] text-center px-4">
+          <p className="text-muted-foreground text-sm max-w-[520px] text-center px-4">
             Instantly onramp, bridge & swap into {sanitizedChainName} with any
             token.
           </p>
@@ -49,7 +49,7 @@ export function BuyFundsSection(props: { chain: ChainMetadata }) {
 
           <Link
             href="https://portal.thirdweb.com/connect/pay/overview"
-            className="inline-flex gap-1.5 items-center text-sm text-secondary-foreground hover:text-foreground"
+            className="inline-flex gap-1.5 items-center text-sm text-muted-foreground hover:text-foreground"
           >
             Learn more about thirdweb Pay{" "}
             <ExternalLinkIcon className="size-3" />

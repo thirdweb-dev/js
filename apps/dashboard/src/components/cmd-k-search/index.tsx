@@ -253,7 +253,7 @@ export const CmdKSearchModal = (props: {
             <div className="border-t border-border">
               <ScrollShadow scrollableClassName="max-h-[50vh] md:max-h-[500px] p-2 rounded-lg">
                 {!data || data?.length === 0 ? (
-                  <div className="h-[100px] flex justify-center items-center p-4 text-secondary-foreground">
+                  <div className="h-[100px] flex justify-center items-center p-4 text-muted-foreground">
                     No contracts found
                   </div>
                 ) : (

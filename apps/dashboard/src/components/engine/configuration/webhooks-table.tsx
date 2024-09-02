@@ -166,7 +166,7 @@ export const WebhooksTable: React.FC<WebhooksTableProps> = ({
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="!bg-background border border-border rounded-lg">
           <ModalHeader>Delete webhook</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

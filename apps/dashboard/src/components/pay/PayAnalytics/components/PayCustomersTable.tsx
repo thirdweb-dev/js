@@ -216,7 +216,7 @@ function CustomerTableRow(props: {
               <CopyAddressButton
                 address={v}
                 variant="ghost"
-                className="text-secondary-foreground"
+                className="text-muted-foreground"
                 copyIconPosition="left"
               />
             );

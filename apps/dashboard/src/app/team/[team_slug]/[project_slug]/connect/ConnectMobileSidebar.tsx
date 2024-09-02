@@ -15,7 +15,7 @@ export function ConnectMobileSidebar(props: {
       links={props.links}
       trigger={
         <Button
-          className="w-full lg:hidden text-left justify-between gap-2 bg-muted"
+          className="w-full lg:hidden text-left justify-between gap-2"
           variant="outline"
         >
           {activeLink?.label || "Connect"}

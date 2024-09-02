@@ -11,7 +11,7 @@ export type TabLink = {
   name: string;
   href: string;
   isActive: boolean;
-  isEnabled?: boolean;
+  isDisabled?: boolean;
 };
 
 export function TabLinks(props: {
@@ -37,20 +37,19 @@ export function TabLinks(props: {
               <Button
                 asChild
                 key={tab.name}
-                disabled={!tab.isEnabled}
+                disabled={tab.isDisabled}
                 variant="ghost"
               >
                 <Link
                   data-active={tab.isActive}
                   ref={tab.isActive ? activeTabRef : undefined}
                   href={tab.href}
-                  aria-disabled={!tab.isEnabled}
+                  aria-disabled={tab.isDisabled}
                   className={cn(
-                    "rounded-lg hover:bg-muted px-3 font-normal text-sm lg:text-sm relative h-auto",
-                    !tab.isActive &&
-                      tab.isEnabled &&
-                      "opacity-50 hover:opacity-100",
-                    !tab.isEnabled && "opacity-50 pointer-events-none",
+                    "rounded-lg hover:bg-muted px-3 font-normal text-sm lg:text-sm relative h-auto text-muted-foreground",
+                    !tab.isActive && !tab.isDisabled && "hover:text-foreground",
+                    tab.isDisabled && "pointer-events-none",
+                    tab.isActive && "!text-foreground",
                   )}
                 >
                   {tab.name}

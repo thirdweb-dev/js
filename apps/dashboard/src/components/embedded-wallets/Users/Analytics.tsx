@@ -1,5 +1,5 @@
 import { useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
-import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { UsageCard } from "components/settings/Account/UsageCard";
 import { useMemo } from "react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
@@ -10,7 +10,6 @@ interface AnalyticsProps {
 }
 
 export const Analytics: React.FC<AnalyticsProps> = ({ trackingCategory }) => {
-  const bg = useColorModeValue("backgroundCardHighlight", "transparent");
   const usageQuery = useAccountUsage();
 
   const walletsMetrics = useMemo(() => {
@@ -42,7 +41,7 @@ export const Analytics: React.FC<AnalyticsProps> = ({ trackingCategory }) => {
   }
 
   return (
-    <Card p={{ base: 6, lg: 12 }} bg={bg}>
+    <Card p={{ base: 6, lg: 12 }}>
       <Flex
         flexDir={{ base: "column", lg: "row" }}
         justifyContent="space-evenly"

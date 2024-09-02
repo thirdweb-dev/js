@@ -4,7 +4,7 @@ import { type TabLink, TabLinks } from "@/components/ui/tabs";
 import { usePathname } from "next/navigation";
 
 export default function TeamTabs(props: {
-  links: (Omit<TabLink, "isActive" | "isEnabled"> & {
+  links: (Omit<TabLink, "isActive"> & {
     strictMatch?: boolean;
   })[];
 }) {
@@ -19,7 +19,6 @@ export default function TeamTabs(props: {
           : pathname
             ? pathname.startsWith(l.href)
             : i === 0,
-        isEnabled: true,
       }))}
     />
   );

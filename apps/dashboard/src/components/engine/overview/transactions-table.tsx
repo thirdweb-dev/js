@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import type { Transaction } from "@3rdweb-sdk/react/hooks/useEngine";
 import {
   Collapse,
@@ -12,16 +13,14 @@ import {
 } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChainIcon } from "components/icons/ChainIcon";
-import { TWTable } from "components/shared/TWTable";
+import { formatDistanceToNowStrict } from "date-fns";
 import { format } from "date-fns/format";
-import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useState } from "react";
 import { FiArrowLeft, FiArrowRight, FiInfo } from "react-icons/fi";
 import { toTokens } from "thirdweb";
 import type { ChainMetadata } from "thirdweb/chains";
 import {
-  Badge,
   Button,
   Card,
   Drawer,
@@ -30,7 +29,9 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
-import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
+import { CopyTextButton } from "../../../@/components/ui/CopyTextButton";
+import { TWTable } from "../../shared/TWTable";
 import { TransactionTimeline } from "./transaction-timeline";
 
 interface TransactionsTableProps {
@@ -53,41 +54,41 @@ const statusDetails: Record<
   EngineStatus,
   {
     name: string;
-    colorScheme: string;
+    type: "success" | "destructive" | "warning";
     showTooltipIcon?: boolean;
   }
 > = {
   processed: {
     name: "Processed",
-    colorScheme: "yellow",
+    type: "warning",
   },
   queued: {
     name: "Queued",
-    colorScheme: "yellow",
+    type: "warning",
   },
   sent: {
     name: "Sent",
-    colorScheme: "yellow",
+    type: "warning",
   },
   "user-op-sent": {
     name: "User Op Sent",
-    colorScheme: "yellow",
+    type: "warning",
   },
   mined: {
     name: "Mined",
-    colorScheme: "green",
+    type: "success",
   },
   retried: {
     name: "Retried",
-    colorScheme: "green",
+    type: "success",
   },
   errored: {
     name: "Failed",
-    colorScheme: "red",
+    type: "destructive",
   },
   cancelled: {
     name: "Cancelled",
-    colorScheme: "red",
+    type: "destructive",
   },
 };
 
@@ -109,10 +110,11 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
       header: "Queue ID",
       cell: (cell) => {
         return (
-          <AddressCopyButton
+          <CopyAddressButton
             address={cell.getValue() ?? ""}
-            title="queue ID"
-            size="xs"
+            copyIconPosition="left"
+            variant="ghost"
+            className="text-muted-foreground"
           />
         );
       },
@@ -128,7 +130,7 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
         const chain = chainIdToChainRecord[Number.parseInt(chainId)];
         if (chain) {
           return (
-            <Flex align="center" gap={2}>
+            <Flex align="center" gap={2} className="py-2">
               <ChainIcon size={12} ipfsSrc={chain?.icon?.url} />
               <Text maxW={150} isTruncated>
                 {chain?.name ?? "N/A"}
@@ -170,19 +172,14 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
                 ) : undefined
               }
             >
-              <Badge
-                borderRadius="full"
-                size="label.sm"
-                variant="subtle"
-                px={3}
-                py={1.5}
-                colorScheme={statusDetails[status].colorScheme}
-              >
-                <Flex gap={1} align="center">
-                  {statusDetails[status].name}
-                  {statusDetails[status].showTooltipIcon && <FiInfo />}
-                </Flex>
-              </Badge>
+              <div>
+                <Badge variant={statusDetails[status].type}>
+                  <Flex gap={1} align="center">
+                    {statusDetails[status].name}
+                    {statusDetails[status].showTooltipIcon && <FiInfo />}
+                  </Flex>
+                </Badge>
+              </div>
             </Tooltip>
           </Flex>
         );
@@ -191,7 +188,14 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
     columnHelper.accessor("fromAddress", {
       header: "From",
       cell: (cell) => {
-        return <AddressCopyButton size="xs" address={cell.getValue() ?? ""} />;
+        return (
+          <CopyAddressButton
+            address={cell.getValue() ?? ""}
+            copyIconPosition="left"
+            variant="ghost"
+            className="text-muted-foreground"
+          />
+        );
       },
     }),
     columnHelper.accessor("transactionHash", {
@@ -207,17 +211,23 @@ export const TransactionsTable: React.FC<TransactionsTableProps> = ({
           const explorer = chain.explorers?.[0];
           if (!explorer) {
             return (
-              <AddressCopyButton
+              <CopyAddressButton
                 address={transactionHash}
-                title="transaction hash"
+                copyIconPosition="left"
+                variant="ghost"
               />
             );
           }
 
           return (
-            <Text fontFamily="mono" maxW="100px" isTruncated>
-              {transactionHash}
-            </Text>
+            <CopyTextButton
+              textToCopy={transactionHash}
+              copyIconPosition="left"
+              textToShow={`${transactionHash.slice(0, 6)}...${transactionHash.slice(-4)}`}
+              variant="ghost"
+              tooltip="Copy transaction hash"
+              className="font-mono text-sm text-muted-foreground"
+            />
           );
         }
       },
@@ -344,17 +354,7 @@ const TransactionDetailsDrawer = ({
         children: (
           <DrawerHeader as={Flex} gap={3}>
             <Heading size="title.sm">Transaction Details</Heading>
-            <Badge
-              borderRadius="full"
-              size="label.sm"
-              variant="subtle"
-              px={3}
-              py={1.5}
-              colorScheme={status.colorScheme}
-              w="fit-content"
-            >
-              {status.name}
-            </Badge>
+            <Badge variant="outline">{status.name}</Badge>
           </DrawerHeader>
         ),
       }}

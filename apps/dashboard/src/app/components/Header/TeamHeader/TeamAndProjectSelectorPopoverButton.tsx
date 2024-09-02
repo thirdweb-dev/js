@@ -51,18 +51,21 @@ export function TeamAndProjectSelectorPopoverButton(props: TeamSwitcherProps) {
           aria-expanded={open}
           aria-label={`Select a ${props.focus === "project-selection" ? "project" : "team"}`}
         >
-          <ChevronsUpDownIcon className="shrink-0 text-muted-foreground hover:text-foreground size-5" />
+          <ChevronsUpDownIcon
+            className="shrink-0 text-muted-foreground hover:text-foreground size-5"
+            strokeWidth={1.5}
+          />
         </Button>
       </PopoverTrigger>
 
       {/* Dropdown */}
       <PopoverContent
         sideOffset={5}
-        className="p-0 w-auto rounded-xl "
+        className="p-0 w-auto rounded-xl shadow-xl"
         align={props.focus === "project-selection" ? "center" : "start"}
       >
         <DynamicHeight>
-          <div className="flex [&>div]:w-[280px] no-scrollbar">
+          <div className="flex [&>div]:min-w-[280px] no-scrollbar">
             {/* Left */}
             <TeamSelectionUI
               currentTeam={currentTeam}

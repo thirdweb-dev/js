@@ -29,24 +29,26 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center bg-background text-foreground justify-between px-6 py-4",
+        "flex flex-row gap-2 items-center text-foreground justify-between px-6 py-4",
         props.className,
       )}
     >
       <div className="flex items-center gap-2">
-        <ThirdwebMiniLogo className="h-5" />
+        <Link href="/team">
+          <ThirdwebMiniLogo className="h-5" />
+        </Link>
 
         <SlashSeparator />
 
         <div className="flex items-center gap-1">
           <Link
             href={`/team/${currentTeam.slug}`}
-            className="font-normal text-sm flex flex-row gap-2 items-center text-foreground"
+            className="font-normal text-sm flex flex-row gap-2 items-center"
           >
             {/* TODO - replace with team image */}
-            <div className="bg-border size-7 rounded-full" />
+            <div className="bg-muted border size-6 rounded-full" />
 
-            <span className="font-semibold"> {currentTeam.name} </span>
+            <span> {currentTeam.name} </span>
             <Badge
               variant={
                 teamPlan === "free"
@@ -119,9 +121,7 @@ export function TeamHeaderDesktopUI(props: TeamHeaderCompProps) {
 }
 
 function SlashSeparator() {
-  return (
-    <div className="h-5 w-[1px] bg-muted-foreground rotate-[25deg] mx-2" />
-  );
+  return <div className="h-5 w-[1.5px] bg-foreground/30 rotate-[25deg] mx-2" />;
 }
 
 export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
@@ -133,7 +133,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
   return (
     <header
       className={cn(
-        "flex flex-row gap-2 items-center bg-background text-foreground justify-between px-4 py-4",
+        "flex flex-row gap-2 items-center text-foreground justify-between px-4 py-4",
         props.className,
       )}
     >
@@ -146,7 +146,7 @@ export function TeamHeaderMobileUI(props: TeamHeaderCompProps) {
             )}
           >
             {/* TODO - replace with team image */}
-            <div className="bg-border size-7 rounded-full" />
+            <div className="bg-muted border size-7 rounded-full" />
 
             {!props.currentProject && (
               <span className="font-semibold">{currentTeam.name}</span>

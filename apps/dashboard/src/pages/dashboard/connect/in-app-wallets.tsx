@@ -134,9 +134,7 @@ const DashboardConnectEmbeddedWallets: ThirdwebNextPage = () => {
 function FooterSection() {
   return (
     <Grid templateColumns={["1fr", "1fr 1fr"]} gap={5}>
-      <Grid templateColumns="1fr" gap={5}>
-        <ViewDocs />
-      </Grid>
+      <ViewDocs />
       <Templates />
     </Grid>
   );
@@ -144,7 +142,7 @@ function FooterSection() {
 
 function ViewDocs() {
   return (
-    <Card p={5}>
+    <Card p={5} className="bg-muted/50">
       <Flex gap={2} alignItems="center">
         <Heading fontSize={16} as="h3">
           View Docs
@@ -186,7 +184,7 @@ function ViewDocs() {
         />
       </Grid>
 
-      <Spacer height={5} />
+      <Spacer height={8} />
 
       <Flex gap={2} alignItems="center">
         <Heading fontSize={16} as="h3">
@@ -250,11 +248,8 @@ function GuideLink(props: {
         guide: props.label,
       }}
       href={props.href}
-      color="paragraph"
+      className="text-sm !text-muted-foreground hover:!text-foreground"
       isExternal
-      _hover={{
-        color: "blue.500",
-      }}
     >
       {props.children}
     </TrackedLink>
@@ -263,7 +258,7 @@ function GuideLink(props: {
 
 function Templates() {
   return (
-    <Card p={5}>
+    <Card p={5} className="bg-muted/50">
       <Flex gap={2} alignItems="center">
         <Heading fontSize={16} as="h3">
           Relevant Templates

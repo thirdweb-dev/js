@@ -265,7 +265,7 @@ function BuyScreenContent(props: BuyScreenContentProps) {
             : props.connectOptions?.showAllWallets
         }
         walletConnect={props.connectOptions?.walletConnect}
-        wallets={props.connectOptions?.wallets}
+        wallets={props.connectOptions?.wallets?.filter((w) => w.id !== "inApp")}
       />
     );
   }

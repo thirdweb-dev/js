@@ -180,7 +180,10 @@ const ConfirmEngineTierDialog = (props: {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[400px]">
+      <DialogContent
+        className="md:max-w-[400px] z-[10001]"
+        dialogOverlayClassName="z-[10000]"
+      >
         <DialogHeader>
           <DialogTitle className="leading-snug pr-4">
             Are you sure you want to deploy a{" "}

@@ -77,7 +77,7 @@ const Page: ThirdwebNextPage = () => {
       <div className="h-3" />
 
       <TrackedLinkTW
-        className="p-3 rounded-lg border border-border bg-secondary flex items-center gap-2 justify-between hover:bg-accent text-sm"
+        className="p-3 rounded-lg border border-border bg-muted/50 flex items-center gap-2 justify-between hover:bg-accent text-sm"
         href="https://portal.thirdweb.com/infrastructure/engine/get-started"
         target="_blank"
         category="engine"

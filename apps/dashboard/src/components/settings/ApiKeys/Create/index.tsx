@@ -141,7 +141,7 @@ export const CreateApiKeyButton: React.FC<CreateAPIKeyButtonProps> = ({
     <>
       <Modal isOpen={isOpen} onClose={handleClose} size="lg" isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="!bg-background border border-border rounded-lg">
           <form onSubmit={handleSubmit} autoComplete="off">
             <ModalHeader>
               {step === "create" && "Create an API Key"}

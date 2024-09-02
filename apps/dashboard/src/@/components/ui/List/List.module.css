@@ -1,6 +1,6 @@
 .unorderedList,
 .orderedList {
-  @apply pl-5 leading-relaxed list-none text-secondary-foreground;
+  @apply pl-5 leading-relaxed list-none text-muted-foreground;
 }
 
 .unorderedList > li {

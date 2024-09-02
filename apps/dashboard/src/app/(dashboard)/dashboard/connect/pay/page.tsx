@@ -48,7 +48,7 @@ export default async function DashboardConnectPayPage() {
       <div className="flex flex-col lg:flex-row gap-6 justify-between items-start">
         <div className="max-w-[800px]">
           <h1 className="text-5xl tracking-tight font-bold mb-5">Pay</h1>
-          <p className="text-secondary-foreground leading-7">
+          <p className="text-muted-foreground leading-7">
             Pay allows your users to purchase cryptocurrencies and execute
             transactions with their credit card or debit card, or with any token
             via cross-chain routing.{" "}

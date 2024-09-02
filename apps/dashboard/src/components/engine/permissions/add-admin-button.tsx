@@ -59,6 +59,7 @@ export const AddAdminButton: React.FC<AddAdminButtonProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent
+          className="!bg-background border border-border rounded-lg"
           as="form"
           onSubmit={form.handleSubmit((data) => {
             grantPermissions(data, {

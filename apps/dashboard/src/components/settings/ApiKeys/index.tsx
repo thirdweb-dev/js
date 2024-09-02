@@ -1,3 +1,5 @@
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { Badge } from "@/components/ui/badge";
 import type { ApiKey } from "@3rdweb-sdk/react/hooks/useApi";
 import { Flex } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
@@ -8,9 +10,9 @@ import {
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
 import { useRouter } from "next/router";
-import { Badge, Text } from "tw-components";
+import { Text } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
-import { CopyApiKeyButton } from "./CopyButton";
+import { useTrack } from "../../../hooks/analytics/useTrack";
 import { HIDDEN_SERVICES } from "./validations";
 
 interface ApiKeysProps {
@@ -27,17 +29,33 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
   isFetched,
 }) => {
   const router = useRouter();
+  const trackEvent = useTrack();
 
   const columns = [
     columnHelper.accessor("name", {
       header: "Name",
-      cell: (cell) => <Text>{cell.getValue()}</Text>,
+      cell: (cell) => <p className="py-3 text-foreground">{cell.getValue()}</p>,
     }),
 
     columnHelper.accessor("key", {
       header: "Client ID",
       cell: (cell) => (
-        <CopyApiKeyButton apiKey={cell.getValue()} label="Client ID" />
+        <CopyTextButton
+          textToCopy={cell.getValue()}
+          copyIconPosition="right"
+          textToShow={`${cell.getValue().slice(0, 5)}...${cell.getValue().slice(-5)}`}
+          tooltip="Copy Client ID"
+          variant="ghost"
+          className="font-mono text-muted-foreground"
+          onClick={() => {
+            trackEvent({
+              category: "api_key_button",
+              action: "copy",
+              apiKey: cell.getValue(),
+              label: "Client ID",
+            });
+          }}
+        />
       ),
     }),
 
@@ -60,11 +78,11 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
         const value = cell.getValue();
 
         if (!value) {
-          return "Never";
+          return <p className="text-muted-foreground"> Never </p>;
         }
 
         const createdDate = format(new Date(value), "MMM dd, yyyy");
-        return <Text>{createdDate}</Text>;
+        return <p className="text-muted-foreground">{createdDate}</p>;
       },
     }),
 
@@ -80,19 +98,13 @@ export const ApiKeys: ComponentWithChildren<ApiKeysProps> = ({
           <Flex
             flexDir={{ base: "column", xl: "row" }}
             alignItems="flex-start"
-            gap={{ base: 2, xl: 1 }}
+            gap={2}
           >
             {value.map((srv) => {
               const service = getServiceByName(srv.name as ServiceName);
               return !HIDDEN_SERVICES.includes(service?.name) ? (
-                <Badge
-                  key={srv.name}
-                  textTransform="capitalize"
-                  color="blue.500"
-                  px={2}
-                  rounded="md"
-                >
-                  {service?.title}
+                <Badge variant="default" key={srv.name}>
+                  {service?.title}{" "}
                 </Badge>
               ) : null;
             })}

@@ -129,7 +129,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   return (
     <TableContainer>
       <Table>
-        <Thead>
+        <Thead className="!bg-muted/50">
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
@@ -188,7 +188,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                     <Td
                       key={cell.id}
                       borderBottomWidth="inherit"
-                      borderBottomColor="accent.100"
+                      borderBottomColor="hsl(var(--border))"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -203,7 +203,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                   <Td
                     isNumeric
                     borderBottomWidth="inherit"
-                    borderBottomColor="accent.100"
+                    borderBottomColor="hsl(var(--border))"
                   >
                     <Icon as={FiArrowRight} />
                   </Td>
@@ -211,7 +211,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                   <Td
                     isNumeric
                     borderBottomWidth="inherit"
-                    borderBottomColor="accent.100"
+                    borderBottomColor="hsl(var(--border))"
                   >
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -232,8 +232,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                                 onClick={() => onClick(row.original)}
                                 className={cn(
                                   "gap-3 px-3 py-3 min-w-[170px] cursor-pointer",
-                                  isDestructive &&
-                                    "!text-destructive-text hover:!bg-destructive",
+                                  isDestructive && "!text-destructive-text",
                                 )}
                               >
                                 {icon && <Icon as={icon} boxSize={4} />}

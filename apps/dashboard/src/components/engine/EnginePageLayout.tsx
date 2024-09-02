@@ -302,7 +302,7 @@ function EngineErrorPage(props: {
         <MessageContainer>
           <div className="flex flex-col gap-4 items-center">
             <CircleAlertIcon className="size-16 text-destructive-text" />
-            <p className="text-secondary-foreground text-center">
+            <p className="text-muted-foreground text-center">
               {props.children}
             </p>
           </div>

@@ -217,7 +217,7 @@ const CancelTransactionButton = ({
     <>
       <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={closeButtonRef}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="!bg-background border border-border rounded-lg">
           <ModalHeader>Cancel Transaction</ModalHeader>
           <ModalBody>
             <Stack gap={4}>

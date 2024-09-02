@@ -230,7 +230,10 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
 
   return (
     <Flex gap={4} direction="column">
-      <TableContainer maxW="100%" className="relative">
+      <TableContainer
+        maxW="100%"
+        className="relative border border-border rounded-lg"
+      >
         {getNFTsQuery.isFetching && (
           <Spinner
             color="primary"
@@ -241,7 +244,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           />
         )}
         <Table {...getTableProps()}>
-          <Thead>
+          <Thead className="!bg-muted/50">
             {headerGroups.map((headerGroup, headerGroupIndex) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
               <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroupIndex}>
@@ -262,7 +265,11 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
               </Tr>
             ))}
           </Thead>
-          <Tbody {...getTableBodyProps()} position="relative">
+          <Tbody
+            {...getTableBodyProps()}
+            position="relative"
+            className="!bg-background"
+          >
             {page.map((row, rowIndex) => {
               const failedToLoad = !row.original.tokenURI;
               prepareRow(row);
@@ -270,7 +277,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                 <Tr
                   {...row.getRowProps()}
                   role="group"
-                  _hover={{ bg: "accent.100" }}
+                  className="hover:bg-muted/50"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     const tokenId = row.original.id;

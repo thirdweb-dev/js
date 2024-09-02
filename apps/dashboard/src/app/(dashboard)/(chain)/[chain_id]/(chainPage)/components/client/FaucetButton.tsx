@@ -120,7 +120,7 @@ export function FaucetButton({
   // loading state
   if (faucetWalletBalanceQuery.isLoading || canClaimFaucetQuery.isLoading) {
     return (
-      <Button variant="secondary" className="w-full gap-2">
+      <Button variant="outline" className="w-full gap-2">
         Checking Faucet <Spinner className="size-3" />
       </Button>
     );
@@ -129,7 +129,7 @@ export function FaucetButton({
   // faucet is empty
   if (isFaucetEmpty) {
     return (
-      <Button variant="secondary" disabled className="w-full !opacity-100 ">
+      <Button variant="outline" disabled className="w-full !opacity-100 ">
         Faucet is empty right now
       </Button>
     );
@@ -138,7 +138,7 @@ export function FaucetButton({
   // Can not claim
   if (canClaimFaucetQuery.data && canClaimFaucetQuery.data.canClaim === false) {
     return (
-      <Button variant="secondary" className="w-full !opacity-100 " disabled>
+      <Button variant="outline" className="w-full !opacity-100 " disabled>
         {canClaimFaucetQuery.data.type === "throttle" && (
           <>
             Your next claim is available{" "}
@@ -185,7 +185,7 @@ export function FaucetButton({
       </Button>
 
       {faucetWalletBalanceQuery.data && (
-        <p className="mt-3 text-xs text-secondary-foreground">
+        <p className="mt-3 text-xs text-muted-foreground">
           {Number(faucetWalletBalanceQuery.data.displayValue).toFixed(3)}{" "}
           {faucetWalletBalanceQuery.data.symbol} left in the faucet
         </p>

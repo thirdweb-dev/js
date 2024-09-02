@@ -11,13 +11,13 @@ import { headerLinks } from "./headerLinks";
 export function DashboardHeader() {
   return (
     // the "h-24" avoids layout shift when connecting wallet (connected wallet button is taller than disconnected...)
-    <header className="flex flex-row items-center justify-between flex-shrink-0 h-20 border-b border-border bg-background md:h-24 py-4 px-4 lg:px-6">
+    <header className="flex flex-row items-center justify-between flex-shrink-0 h-20 border-b border-border md:h-20 py-4 px-4 lg:px-6 bg-muted/50">
       {/* Left */}
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-2">
           <MobileBurgerMenu />
           <Link href="/dashboard">
-            <ThirdwebMiniLogo className="h-7" />
+            <ThirdwebMiniLogo className="h-6" />
           </Link>
         </div>
 
@@ -27,7 +27,7 @@ export function DashboardHeader() {
               key={link.href}
               href={link.href}
               target={link.href.startsWith("https") ? "_blank" : undefined}
-              className="text-secondary-foreground font-medium py-2 px-[10px] hover:text-foreground"
+              className="text-muted-foreground font-normal text-sm py-2 px-[10px] hover:text-foreground"
               activeClassName="font-medium text-foreground"
             >
               {link.name}
@@ -45,7 +45,7 @@ export function DashboardHeader() {
                 key={link.href}
                 href={link.href}
                 target={link.href.startsWith("https") ? "_blank" : undefined}
-                className="text-secondary-foreground font-medium py-2 px-[10px] hover:text-foreground"
+                className="text-muted-foreground font-normal text-sm py-2 px-[10px] hover:text-foreground"
               >
                 {link.name}
               </Link>
@@ -56,7 +56,7 @@ export function DashboardHeader() {
 
         <ClientOnly
           ssr={
-            <div className="w-[144px] h-[48px] bg-muted border rounded-lg flex items-center justify-center">
+            <div className="w-[144px] h-[48px] bg-muted/50 border rounded-lg flex items-center justify-center">
               <Spinner className="size-4" />
             </div>
           }

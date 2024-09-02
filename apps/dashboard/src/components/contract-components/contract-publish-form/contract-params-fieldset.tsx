@@ -172,8 +172,6 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                                   },
                                 );
                               }}
-                              bgColor="gray.700"
-                              _hover={{ bgColor: "gray.800" }}
                             >
                               {paramTemplateValues[0].value}
                             </Button>

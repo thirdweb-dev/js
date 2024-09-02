@@ -29,7 +29,7 @@ export function PartnersTable({ ecosystem }: { ecosystem: Ecosystem }) {
   return (
     <table className="w-full">
       <thead>
-        <tr className="border-b bg-muted">
+        <tr className="border-b bg-muted/50">
           <TableHeading>Name</TableHeading>
           <TableHeading className="hidden md:table-cell">Domains</TableHeading>
           <TableHeading className="hidden md:table-cell">
@@ -85,7 +85,7 @@ function TableRow(props: {
   return (
     <tr
       className={cn(
-        "relative border-b hover:bg-secondary",
+        "relative border-b hover:bg-muted/50",
         isDeleting && "animate-pulse",
       )}
     >

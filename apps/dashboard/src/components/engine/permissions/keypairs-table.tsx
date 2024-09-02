@@ -149,7 +149,7 @@ const RemoveModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Remove Keypair</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
