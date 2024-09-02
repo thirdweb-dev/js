@@ -1,74 +1,49 @@
-import { useAccount } from "@3rdweb-sdk/react/hooks/useApi";
-import { Flex, Switch, type SwitchProps, Tooltip } from "@chakra-ui/react";
-import { Badge, Card, Text, TrackedLink } from "tw-components";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
+
+type SwitchProps = React.ComponentProps<typeof Switch>;
 
 interface GatedSwitchProps extends SwitchProps {
   trackingLabel?: string;
-  togglable?: boolean;
+  upgradeRequired: boolean;
 }
 
-export const GatedSwitch: React.FC<GatedSwitchProps> = ({
-  isChecked,
-  isDisabled,
-  trackingLabel,
-  togglable = false,
-  ...props
-}: GatedSwitchProps) => {
-  const meQuery = useAccount();
-  const { data: account } = meQuery;
-
-  if (!account && !togglable) {
-    return null;
-  }
+export const GatedSwitch: React.FC<GatedSwitchProps> = (
+  allProps: GatedSwitchProps,
+) => {
+  const { upgradeRequired, trackingLabel, checked, ...props } = allProps;
 
   return (
-    <Tooltip
-      closeDelay={3000}
-      isDisabled={!!account?.advancedEnabled}
-      p={0}
-      bg="transparent"
-      boxShadow="none"
-      pointerEvents="all"
+    <ToolTipLabel
+      hoverable
       label={
-        <Card py={2} px={4} bgColor="backgroundHighlight">
-          <Text size="body.md">
+        upgradeRequired ? (
+          <div className="w-[220px]">
             To access this feature, you need to upgrade to the{" "}
-            <TrackedLink
-              textAlign="center"
+            <TrackedLinkTW
+              target="_blank"
               href={"/dashboard/settings/billing"}
               category="advancedFeature"
               label={trackingLabel}
-              color="blue.500"
-              fontWeight="medium"
+              className="text-link-foreground hover:text-foreground"
             >
               Growth plan
-            </TrackedLink>
+            </TrackedLinkTW>
             .
-          </Text>
-        </Card>
+          </div>
+        ) : undefined
       }
     >
-      <Flex flexDir="row" gap={2} alignItems="center">
-        {!account?.advancedEnabled && (
-          <Badge
-            textTransform="capitalize"
-            px={2}
-            rounded="md"
-            color="blue.500"
-          >
-            Growth
-          </Badge>
-        )}
+      <div className="inline-flex gap-2 items-center">
+        {upgradeRequired && <Badge>Growth</Badge>}
         <Switch
-          isChecked={
-            !account?.advancedEnabled && !togglable ? false : isChecked
-          }
-          isDisabled={
-            !account?.advancedEnabled && !togglable ? true : isDisabled
-          }
+          checked={checked}
+          disabled={upgradeRequired || props.disabled}
           {...props}
         />
-      </Flex>
-    </Tooltip>
+      </div>
+    </ToolTipLabel>
   );
 };

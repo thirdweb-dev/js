@@ -2,6 +2,7 @@ import {
   type ApiKey,
   type ApiKeyServicePolicy,
   type ApiKeyServicePolicyLimits,
+  useAccount,
   usePolicies,
   useUpdatePolicies,
 } from "@3rdweb-sdk/react/hooks/useApi";
@@ -39,6 +40,7 @@ import {
 import { fromArrayToList, toArrFromList } from "utils/string";
 import { validStrList } from "utils/validations";
 import { z } from "zod";
+import { Spinner } from "../../../@/components/ui/Spinner/Spinner";
 
 interface SponsorshipPoliciesProps {
   apiKey: ApiKey;
@@ -104,6 +106,7 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
   const { data: policy } = usePolicies(bundlerServiceId);
   const { mutate: updatePolicy } = useUpdatePolicies();
   const trackEvent = useTrack();
+  const dashboardAccountQuery = useAccount();
 
   const transformedQueryData = useMemo(
     () => ({
@@ -157,6 +160,14 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
     "Sponsorship rules updated",
     "Failed to update sponsorship rules",
   );
+
+  if (!dashboardAccountQuery.data) {
+    return (
+      <div className="flex items-center justify-center h-[400px]">
+        <Spinner className="size-4" />
+      </div>
+    );
+  }
 
   return (
     <Flex flexDir="column" gap={8}>
@@ -534,12 +545,15 @@ export const SponsorshipPolicies: React.FC<SponsorshipPoliciesProps> = ({
               </Box>
 
               <GatedSwitch
-                colorScheme="primary"
-                isChecked={form.watch("serverVerifier").enabled}
-                onChange={() => {
+                upgradeRequired={!dashboardAccountQuery.data.advancedEnabled}
+                checked={
+                  form.watch("serverVerifier").enabled &&
+                  dashboardAccountQuery.data.advancedEnabled
+                }
+                onCheckedChange={(checked) => {
                   form.setValue(
                     "serverVerifier",
-                    form.watch("serverVerifier").enabled
+                    !checked
                       ? { enabled: false, url: null, headers: null }
                       : { enabled: true, url: "", headers: [] },
                   );

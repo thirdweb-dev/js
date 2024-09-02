@@ -1,6 +1,8 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import {
   type ApiKey,
   type ApiKeyService,
+  useAccount,
   useUpdateApiKey,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import {
@@ -51,6 +53,7 @@ export const Configure: React.FC<ConfigureProps> = ({
   apiKey,
   trackingCategory,
 }) => {
+  const { data: dashboardAccount } = useAccount();
   // safe to type assert here as this component only renders
   // for an api key with an active embeddedWallets service
   const services = apiKey.services as ApiKeyService[];
@@ -181,6 +184,14 @@ export const Configure: React.FC<ConfigureProps> = ({
     });
   });
 
+  if (!dashboardAccount) {
+    return (
+      <div className="flex items-center justify-center h-[400px]">
+        <Spinner className="size-4" />
+      </div>
+    );
+  }
+
   return (
     <Flex flexDir="column">
       <form
@@ -207,12 +218,14 @@ export const Configure: React.FC<ConfigureProps> = ({
 
                 <GatedSwitch
                   trackingLabel="customEmailLogoAndName"
-                  colorScheme="primary"
-                  isChecked={!!form.watch("branding")}
-                  onChange={() =>
+                  checked={
+                    !!form.watch("branding") && dashboardAccount.advancedEnabled
+                  }
+                  upgradeRequired={!dashboardAccount.advancedEnabled}
+                  onCheckedChange={(checked) =>
                     form.setValue(
                       "branding",
-                      !form.watch("branding")
+                      checked
                         ? {
                             applicationImageUrl: "",
                             applicationName: "",
@@ -324,13 +337,16 @@ export const Configure: React.FC<ConfigureProps> = ({
                 </Box>
 
                 <GatedSwitch
+                  upgradeRequired={!dashboardAccount.advancedEnabled}
                   trackingLabel="customAuthJWT"
-                  colorScheme="primary"
-                  isChecked={!!form.watch("customAuthentication")}
-                  onChange={() => {
+                  checked={
+                    !!form.watch("customAuthentication") &&
+                    dashboardAccount.advancedEnabled
+                  }
+                  onCheckedChange={(checked) => {
                     form.setValue(
                       "customAuthentication",
-                      !form.watch("customAuthentication")
+                      checked
                         ? {
                             jwksUri: "",
                             aud: "",
@@ -438,12 +454,15 @@ export const Configure: React.FC<ConfigureProps> = ({
 
                 <GatedSwitch
                   trackingLabel="customAuthEndpoint"
-                  colorScheme="primary"
-                  isChecked={!!form.watch("customAuthEndpoint")}
-                  onChange={() => {
+                  checked={
+                    !!form.watch("customAuthEndpoint") &&
+                    dashboardAccount.advancedEnabled
+                  }
+                  upgradeRequired={!dashboardAccount.advancedEnabled}
+                  onCheckedChange={(checked) => {
                     form.setValue(
                       "customAuthEndpoint",
-                      !form.watch("customAuthEndpoint")
+                      checked
                         ? {
                             authEndpoint: "",
                             customHeaders: [],

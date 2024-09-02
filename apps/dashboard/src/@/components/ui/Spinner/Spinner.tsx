@@ -4,7 +4,7 @@ export function Spinner(props: { className?: string }) {
   return (
     <svg
       viewBox="0 0 50 50"
-      className={`${style.loader} ${props.className || ""}`}
+      className={`${style.loader} ${props.className || "size-4"}`}
     >
       <title>loading</title>
       <circle
