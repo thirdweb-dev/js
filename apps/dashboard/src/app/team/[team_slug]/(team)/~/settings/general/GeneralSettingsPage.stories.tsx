@@ -21,16 +21,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dark: Story = {
-  args: {
-    theme: "dark",
-  },
-};
-
-export const Light: Story = {
-  args: {
-    theme: "light",
-  },
+export const AllVariants: Story = {
+  args: {},
 };
 
 const testTeam: Team = {
@@ -45,12 +37,9 @@ const testTeam: Team = {
   billingPlan: "free",
 };
 
-function Story(props: { theme: "light" | "dark" }) {
+function Story() {
   return (
-    <div
-      className={`bg-background min-h-screen text-foreground ${props.theme === "light" ? "light" : "dark"}`}
-      data-theme={props.theme}
-    >
+    <div className="bg-background min-h-screen text-foreground">
       <SettingsLayout
         params={{
           team_slug: testTeam.slug,

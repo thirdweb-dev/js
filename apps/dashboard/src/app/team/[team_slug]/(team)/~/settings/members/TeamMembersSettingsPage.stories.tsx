@@ -2,10 +2,7 @@ import type { Team } from "@/api/team";
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
 import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  BadgeContainer,
-  useSetStoryTheme,
-} from "../../../../../../../stories/utils";
+import { BadgeContainer } from "../../../../../../../stories/utils";
 import SettingsLayout from "../layout";
 import { InviteSection } from "./InviteSection";
 import { ManageMembersSection } from "./ManageMembersSection";
@@ -24,16 +21,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dark: Story = {
-  args: {
-    theme: "dark",
-  },
-};
-
-export const Light: Story = {
-  args: {
-    theme: "light",
-  },
+export const AllVariants: Story = {
+  args: {},
 };
 
 const freeTeam: Team = {
@@ -87,13 +76,9 @@ const membersStub: TeamMember[] = [
   createMemberStub("3", "OWNER"),
 ];
 
-function Story(props: { theme: "light" | "dark" }) {
-  useSetStoryTheme(props.theme);
+function Story() {
   return (
-    <div
-      className={`bg-background min-h-screen text-foreground ${props.theme === "light" ? "light" : "dark"}`}
-      data-theme={props.theme}
-    >
+    <div className="bg-background min-h-screen text-foreground">
       <SettingsLayout
         params={{
           team_slug: freeTeam.slug,

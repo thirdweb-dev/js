@@ -15,24 +15,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dark: Story = {
-  args: {
-    theme: "dark",
-  },
+export const AllVariants: Story = {
+  args: {},
 };
 
-export const Light: Story = {
-  args: {
-    theme: "light",
-  },
-};
-
-function Story(props: { theme: "light" | "dark" }) {
+function Story() {
   return (
-    <div
-      className={"min-h-screen bg-background text-foreground"}
-      data-theme={props.theme}
-    >
+    <div className="min-h-screen bg-background text-foreground">
       <div className="lg:p-10 container max-w-[1100px] flex flex-col gap-10">
         <BadgeContainer label="No Header">
           <SettingsCard

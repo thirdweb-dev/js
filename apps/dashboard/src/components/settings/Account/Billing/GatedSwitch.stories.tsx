@@ -4,7 +4,7 @@ import { BadgeContainer } from "../../../../stories/utils";
 import { GatedSwitch } from "./GatedSwitch";
 
 const meta = {
-  title: "Shadcn/blocks/GatedSwitch",
+  title: "Billing/GatedSwitch",
   component: Variants,
   parameters: {
     layout: "centered",
@@ -14,26 +14,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dark: Story = {
+export const AllVariants: Story = {
   args: {
     theme: "dark",
   },
 };
 
-export const Light: Story = {
-  args: {
-    theme: "light",
-  },
-};
-
-function Variants(props: {
-  theme: "light" | "dark";
-}) {
+function Variants() {
   return (
-    <div
-      data-theme={props.theme}
-      className="bg-background p-7 min-h-screen text-foreground"
-    >
+    <div className="bg-background p-7 min-h-screen text-foreground">
       <div className="flex flex-col gap-8">
         <BadgeContainer label="upgradeRequired">
           <GatedSwitch upgradeRequired />

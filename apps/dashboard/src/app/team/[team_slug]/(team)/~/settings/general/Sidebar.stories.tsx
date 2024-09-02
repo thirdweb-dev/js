@@ -17,26 +17,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dark: Story = {
+export const AllVariants: Story = {
   args: {
     theme: "dark",
   },
 };
 
-export const Light: Story = {
-  args: {
-    theme: "light",
-  },
-};
-
-function Story(props: { theme: "light" | "dark" }) {
+function Story() {
   return (
-    <div
-      className={`min-h-screen bg-zinc-800 text-foreground ${
-        props.theme === "light" ? "light" : "dark"
-      }`}
-      data-theme={props.theme}
-    >
+    <div className={"min-h-screen bg-zinc-800 text-foreground"}>
       <div className="lg:p-10 container max-w-[1100px]">
         <div className="grid gap-8 grid-cols-2">
           <HighlightContainer title="Desktop">

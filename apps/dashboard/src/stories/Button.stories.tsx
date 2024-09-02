@@ -3,35 +3,24 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Shadcn/Buttons",
-  component: Variants,
+  component: Component,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Variants>;
+} satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Light: Story = {
+export const Variants: Story = {
   args: {
     theme: "light",
   },
 };
 
-export const Dark: Story = {
-  args: {
-    theme: "dark",
-  },
-};
-
-function Variants(props: {
-  theme: "light" | "dark";
-}) {
+function Component() {
   return (
-    <div
-      data-theme={props.theme}
-      className="min-h-screen bg-background p-6 text-foreground"
-    >
+    <div className="min-h-screen bg-background p-6 text-foreground">
       <div className="flex gap-6">
         <Button> Default </Button>
         <Button variant="primary"> Primary </Button>

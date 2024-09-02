@@ -4,7 +4,7 @@ import type { Project } from "../../../../@/api/projects";
 import type { Team } from "../../../../@/api/team";
 import { Button } from "../../../../@/components/ui/button";
 import { Separator } from "../../../../@/components/ui/separator";
-import { BadgeContainer, useSetStoryTheme } from "../../../../stories/utils";
+import { BadgeContainer } from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {
@@ -20,38 +20,27 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Dark: Story = {
-  args: {
-    theme: "dark",
-  },
+export const AllVariants: Story = {
+  args: {},
 };
 
-export const Light: Story = {
-  args: {
-    theme: "light",
-  },
-};
-
-function Story(props: { theme: "light" | "dark" }) {
-  useSetStoryTheme(props.theme);
-
+function Story() {
   return (
     <div className="dark:bg-zinc-900 bg-zinc-300 p-6">
       <h2 className="text-3xl mb-6 font-semibold tracking-tight">Desktop</h2>
-      <Variants theme={props.theme} type="desktop" />
+      <Variants type="desktop" />
       <Separator className="my-10" />
       <h2 className="mt-10 mb-6 text-3xl font-semibold tracking-tight">
         Mobile
       </h2>
       <div className="w-[400px]">
-        <Variants theme={props.theme} type="mobile" />
+        <Variants type="mobile" />
       </div>
     </div>
   );
 }
 
 function Variants(props: {
-  theme: "light" | "dark";
   type: "mobile" | "desktop";
 }) {
   const Comp =
@@ -59,7 +48,7 @@ function Variants(props: {
 
   return (
     <ThirdwebProvider>
-      <div className={`flex flex-col gap-6 ${props.theme}`}>
+      <div className={"flex flex-col gap-6"}>
         <BadgeContainer label="Team, Free">
           <Comp
             teamsAndProjects={teamsAndProjects}
