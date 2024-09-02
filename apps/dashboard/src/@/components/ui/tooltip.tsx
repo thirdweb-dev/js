@@ -34,6 +34,7 @@ export function ToolTipLabel(props: {
   label: React.ReactNode;
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
+  hoverable?: boolean;
 }) {
   if (!props.label) {
     return props.children;
@@ -41,7 +42,7 @@ export function ToolTipLabel(props: {
 
   return (
     <TooltipProvider>
-      <Tooltip delayDuration={100} disableHoverableContent={true}>
+      <Tooltip delayDuration={100} disableHoverableContent={!props.hoverable}>
         <TooltipTrigger asChild className="!pointer-events-auto">
           {props.children}
         </TooltipTrigger>
