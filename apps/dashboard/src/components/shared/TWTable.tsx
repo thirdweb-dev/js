@@ -115,7 +115,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   });
 
   return (
-    <ScrollShadow className="border border-border rounded-lg overflow-hidden">
+    <ScrollShadow className="border border-border rounded-lg overflow-hidden whitespace-nowrap">
       <table className="w-full border-collapse tabular-nums lining-nums align-top">
         <thead className="bg-muted/50 border-b border-border">
           {table.getHeaderGroups().map((headerGroup) => (
