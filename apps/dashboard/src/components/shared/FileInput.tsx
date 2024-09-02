@@ -28,6 +28,7 @@ interface IFileInputProps {
   showPreview?: boolean;
   children?: React.ReactNode;
   className?: string;
+  disableHelperText?: boolean;
 }
 
 export const FileInput: React.FC<IFileInputProps> = ({
@@ -44,6 +45,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
   showPreview = true,
   className,
   previewMaxWidth,
+  disableHelperText,
 }) => {
   const onDrop = useCallback<
     <T extends File>(
@@ -162,9 +164,11 @@ export const FileInput: React.FC<IFileInputProps> = ({
                   <div className="p-3 bg-background rounded-full flex items-center justify-center border border-border">
                     <FiUpload className="size-5" />
                   </div>
-                  <p className="text-sm text-center">
-                    Upload {helperTextOrFile}
-                  </p>
+                  {!disableHelperText && (
+                    <p className="text-sm text-center">
+                      Upload {helperTextOrFile}
+                    </p>
+                  )}
                 </div>
               )}
             </div>

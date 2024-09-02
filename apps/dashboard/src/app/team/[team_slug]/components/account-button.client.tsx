@@ -29,7 +29,7 @@ export function AccountButton(props: {
           variant="ghost"
         >
           {/* TODO - replace with account image */}
-          <div className="size-9 rounded-full bg-gradient-to-r from-blue-300 to-blue-500" />
+          <div className="size-9 rounded-full bg-muted border" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent

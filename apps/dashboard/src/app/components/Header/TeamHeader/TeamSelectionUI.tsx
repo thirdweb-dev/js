@@ -41,10 +41,12 @@ export function TeamSelectionUI(props: {
         <div className="p-2 flex flex-col">
           {/* TODO - onclick */}
           <Button
-            className={cn("w-full justify-between !opacity-100 px-2")}
+            className={cn("w-full justify-start px-2 gap-2")}
             variant="ghost"
             onMouseEnter={() => setHoveredTeam(undefined)}
           >
+            {/* TODO - placeholder for now */}
+            <div className="size-4 bg-muted border rounded-full" />
             My Account
           </Button>
 
@@ -73,7 +75,12 @@ export function TeamSelectionUI(props: {
                     asChild
                   >
                     <Link href={`/team/${team.slug}`}>
-                      <span className="truncate"> {team.name} </span>
+                      <div className="flex items-center gap-2">
+                        {/* TODO - placeholder for now */}
+                        <div className="size-4 bg-muted border rounded-full" />
+
+                        <span className="truncate"> {team.name} </span>
+                      </div>
                       {isSelected && (
                         <CheckIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
                       )}

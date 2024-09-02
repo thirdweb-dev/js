@@ -1,7 +1,6 @@
 "use client";
 
 import type { Project } from "@/api/projects";
-import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
@@ -16,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { CopyButton } from "@/components/ui/CopyButton";
 import {
   Select,
   SelectContent,
@@ -75,7 +75,7 @@ export function TeamOverviewPage(props: {
           No projects found
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {projectsToShow.map((project) => {
             return (
               <ProjectCard
@@ -101,7 +101,7 @@ function ProjectCard(props: {
   return (
     <div
       key={project.id}
-      className="border rounded-lg p-4 relative hover:bg-muted flex items-center gap-4 bg-muted/50 transition-colors"
+      className="border rounded-lg p-4 relative hover:bg-muted/70 flex items-center gap-4 bg-muted/50 transition-colors"
     >
       {/* TODO - replace with project image */}
       <div className="size-10 rounded-full bg-border shrink-0" />
@@ -110,21 +110,21 @@ function ProjectCard(props: {
         <Link
           className="static group before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:z-0"
           // remove /connect when we have overview page
-          href={`/team/${team_slug}/${project.slug}/connect`}
+          href={`/team/${team_slug}/${project.slug}/connect/in-app-wallets`}
         >
-          <h2 className="text-base">{project.name}</h2>
+          <h2 className="text-base font-medium">{project.name}</h2>
         </Link>
 
-        <CopyTextButton
-          copyIconPosition="right"
-          textToCopy={project.publishableKey}
-          textToShow={truncate(project.publishableKey, 32)}
-          tooltip="Copy Client ID"
-          variant="ghost"
-          className="px-2 -translate-x-2 text-muted-foreground text-xs"
-        />
+        <p className="text-muted-foreground text-xs mb-1 flex items-center gap-0.5">
+          {truncate(project.publishableKey, 32)}
+          <CopyButton
+            text={project.publishableKey}
+            iconClassName="z-10 size-3"
+            className="p-2 !h-auto !w-auto hover:bg-background -translate-x-1"
+          />
+        </p>
 
-        <p className="text-xs text-muted-foreground my-1">
+        <p className="text-xs text-muted-foreground/70 my-1">
           Created on {format(new Date(project.createdAt), "MMM dd, yyyy")}
         </p>
       </div>
@@ -146,7 +146,7 @@ function SearchInput(props: {
         placeholder="Search Projects by name or Client ID"
         value={props.value}
         onChange={(e) => props.onValueChange(e.target.value)}
-        className="pl-9"
+        className="pl-9 bg-muted/50"
       />
       <SearchIcon className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
     </div>
@@ -157,7 +157,7 @@ function AddNewButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="primary" className="gap-2">
+        <Button variant="default" className="gap-2">
           Add New
           <ChevronDownIcon className="size-4" />
         </Button>
@@ -197,7 +197,7 @@ function SelectBy(props: {
         props.onChange(v as SortyById);
       }}
     >
-      <SelectTrigger className="min-w-[200px] capitalize">
+      <SelectTrigger className="min-w-[200px] capitalize bg-muted/50">
         Sort by {valueToLabel[props.value]}
       </SelectTrigger>
       <SelectContent>

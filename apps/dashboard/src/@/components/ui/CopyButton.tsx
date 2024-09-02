@@ -10,12 +10,13 @@ export function CopyButton(props: {
   text: string;
   className?: string;
   iconClassName?: string;
+  variant?: "ghost" | "primary" | "secondary";
 }) {
   const [isCopied, setIsCopied] = useState(false);
   return (
     <ToolTipLabel label="Copy">
       <Button
-        variant="ghost"
+        variant={props.variant || "ghost"}
         aria-label="Copy"
         className={cn("h-auto w-auto p-1", props.className)}
         onClick={() => {

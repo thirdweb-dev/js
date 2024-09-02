@@ -103,6 +103,7 @@ const AppHeader: React.FC = () => {
         py={3}
         as="header"
         alignItems="center"
+        className="!px-4 lg:!px-6"
       >
         <Flex align="center" gap={4}>
           <Link href="/dashboard">
@@ -177,7 +178,8 @@ const AppHeader: React.FC = () => {
 
       {/* Tabs */}
       <TabLinks
-        className="w-full px-4"
+        className="w-full"
+        tabContainerClassName="px-4 lg:px-6"
         links={[
           {
             href: "/dashboard",
