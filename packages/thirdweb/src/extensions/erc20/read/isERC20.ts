@@ -1,10 +1,17 @@
-import type { BaseTransactionOptions } from "../../../transaction/types.js";
-import { supportsInterface } from "../../erc165/__generated__/IERC165/read/supportsInterface.js";
+import { isNameSupported } from "../../common/__generated__/IContractMetadata/read/name.js";
+import { isSymbolSupported } from "../../common/__generated__/IContractMetadata/read/symbol.js";
+import { isAllowanceSupported } from "../__generated__/IERC20/read/allowance.js";
+import { isBalanceOfSupported } from "../__generated__/IERC20/read/balanceOf.js";
+import { isDecimalsSupported } from "../__generated__/IERC20/read/decimals.js";
+import { isTotalSupplySupported } from "../__generated__/IERC20/read/totalSupply.js";
+import { isApproveSupported } from "../__generated__/IERC20/write/approve.js";
+import { isTransferSupported } from "../__generated__/IERC20/write/transfer.js";
+import { isTransferFromSupported } from "../__generated__/IERC20/write/transferFrom.js";
 
 /**
- * Check if a contract supports the ERC20 interface.
+ * Check if a contract is an ERC20 token.
  * @param options - The transaction options.
- * @returns A boolean indicating whether the contract supports the ERC20 interface.
+ * @returns A boolean indicating whether the contract is an ERC20 token.
  * @extension ERC20
  * @example
  * ```ts
@@ -12,9 +19,20 @@ import { supportsInterface } from "../../erc165/__generated__/IERC165/read/suppo
  * const result = await isERC20({ contract });
  * ```
  */
-export function isERC20(options: BaseTransactionOptions) {
-  return supportsInterface({
-    contract: options.contract,
-    interfaceId: "0x36372b07",
-  });
+export function isERC20(availableSelectors: string[]) {
+  // there is no trustworthy way to check if a contract is ERC20 via ERC165, so we do this manually.
+  // see: https://github.com/OpenZeppelin/openzeppelin-contracts/issues/3575
+  // see: https://ethereum.org/en/developers/docs/standards/tokens/erc-20/
+
+  return [
+    isNameSupported(availableSelectors),
+    isSymbolSupported(availableSelectors),
+    isDecimalsSupported(availableSelectors),
+    isTotalSupplySupported(availableSelectors),
+    isBalanceOfSupported(availableSelectors),
+    isTransferSupported(availableSelectors),
+    isTransferFromSupported(availableSelectors),
+    isApproveSupported(availableSelectors),
+    isAllowanceSupported(availableSelectors),
+  ].every(Boolean);
 }

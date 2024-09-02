@@ -75,7 +75,8 @@ export function ConnectSmartAccountCustomPreview() {
           onClick={connect}
           className="p-6 rounded-full"
         >
-          <img src={socialIcons.google} alt="Google" className="w-4 h-4 mr-2" />{" "}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={socialIcons.google} alt="Google" className="w-4 h-4 mr-2" />
           Connect with Google
         </Button>
       )}
