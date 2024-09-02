@@ -35,8 +35,8 @@
 
     /* Borders */
     --border: 0 0% 80%;
-    --input: var(--border);
-    --ring: 215.88 100% 60%;
+    --input: 0 0% 80%;
+    --ring: 0 0% 85%;
 
     /* Others */
     --radius: 0.5rem;
