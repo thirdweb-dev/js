@@ -225,7 +225,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
 
       {tableProps.isLoading && (
         <div className="flex items-center justify-center">
-          <div className="flex py-4 gap-4 items-center">
+          <div className="flex py-4 gap-2 items-center">
             <Spinner className="size-4" />
             <p className="text-muted-foreground text-sm">
               Loading {pluralize(tableProps.title, 0, false)}
