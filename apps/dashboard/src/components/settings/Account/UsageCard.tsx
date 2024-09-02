@@ -1,13 +1,6 @@
-import {
-  Box,
-  Icon,
-  Progress,
-  Tooltip,
-  VStack,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FiHelpCircle } from "react-icons/fi";
-import { Card, Heading, Text } from "tw-components";
+import { ToolTipLabel } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { CircleHelpIcon } from "lucide-react";
 import { toUSD } from "utils/number";
 
 interface UsageCardProps {
@@ -19,16 +12,6 @@ interface UsageCardProps {
   tooltip?: string;
 }
 
-const getProgressColor = (percent: number) => {
-  if (percent > 90) {
-    return "red";
-  }
-  if (percent > 50) {
-    return "yellow";
-  }
-  return "blue";
-};
-
 export const UsageCard: React.FC<UsageCardProps> = ({
   name,
   title,
@@ -37,75 +20,59 @@ export const UsageCard: React.FC<UsageCardProps> = ({
   progress,
   tooltip,
 }) => {
-  const bg = useColorModeValue("backgroundCardHighlight", "transparent");
-
   return (
-    <Card minH={36} p={6} bg={bg}>
-      <VStack gap={6} alignItems="flex-start">
-        <Heading as="h3" size="label.lg">
-          {name}
+    <div className="p-4 bg-background border border-border rounded-lg min-h-[140px] flex flex-col">
+      <div className="flex items-center gap-2">
+        <h3 className="text-base font-medium">{name}</h3>
+        {tooltip && (
+          <ToolTipLabel label={tooltip}>
+            <CircleHelpIcon className="text-muted-foreground size-4" />
+          </ToolTipLabel>
+        )}
+      </div>
 
-          {tooltip && (
-            <Tooltip
-              p={0}
-              bg="transparent"
-              boxShadow={"none"}
-              label={
-                <Card py={2} px={4} bgColor="backgroundHighlight">
-                  <Text size="body.md">{tooltip}</Text>
-                </Card>
-              }
-            >
-              <Box as="span" display="relative">
-                <Icon
-                  opacity={0.5}
-                  as={FiHelpCircle}
-                  position="absolute"
-                  ml={1}
-                />
-              </Box>
-            </Tooltip>
-          )}
-        </Heading>
+      <div className="h-6" />
 
-        <VStack gap={2} alignItems="flex-start" w="full">
-          {title && (
-            <Text size="body.md" mb={2}>
-              {title}
-            </Text>
-          )}
+      <div className="flex flex-col gap-2 mt-auto">
+        {title && <p className="mb-2 text-foreground font-semibold">{title}</p>}
 
-          {total !== undefined && (
-            <Text
-              size="body.md"
-              mb={2}
-              color={typeof total === "number" ? "bgBlack" : undefined}
-            >
-              {typeof total === "number" ? toUSD(total) : total}
-            </Text>
-          )}
+        {total !== undefined && (
+          <p className="text-muted-foreground text-sm">
+            {typeof total === "number" ? toUSD(total) : total}
+          </p>
+        )}
 
-          {progress !== undefined && (
-            <Progress
-              w="full"
-              size="xs"
-              value={progress}
-              rounded="full"
-              colorScheme={getProgressColor(progress)}
-            />
-          )}
+        {progress !== undefined && <Progress value={progress} />}
 
-          {overage && (
-            <Text size="body.md" mt={2}>
-              Additional overage fees to your next invoice will be{" "}
-              <Text as="span" size="label.sm" color="bgBlack">
-                {toUSD(overage)}
-              </Text>
-              .
-            </Text>
-          )}
-        </VStack>
-      </VStack>
-    </Card>
+        {overage && (
+          <p className="text-muted-foreground mt-2 text-sm">
+            Additional overage fees to your next invoice will be{" "}
+            <span className="text-foreground">{toUSD(overage)}</span>
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
+
+function Progress(props: {
+  value: number;
+}) {
+  return (
+    <div className="bg-muted rounded-full">
+      <div
+        className={cn(
+          "h-2 rounded-full",
+          props.value > 90
+            ? "bg-red-600"
+            : props.value > 50
+              ? "bg-yellow-600"
+              : "bg-blue-600",
+        )}
+        style={{
+          width: `${props.value}%`,
+        }}
+      />
+    </div>
+  );
+}
