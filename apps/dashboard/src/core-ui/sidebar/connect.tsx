@@ -14,14 +14,14 @@ type ConnectSidebarProps = {
 
 const links: Route[] = [
   {
-    path: "/dashboard/connect/in-app-wallets",
-    title: "In-App Wallets",
-    name: "embedded-wallets",
-  },
-  {
     path: "/dashboard/connect/analytics",
     title: "Analytics",
     name: "analytics",
+  },
+  {
+    path: "/dashboard/connect/in-app-wallets",
+    title: "In-App Wallets",
+    name: "embedded-wallets",
   },
   {
     path: "/dashboard/connect/ecosystem",

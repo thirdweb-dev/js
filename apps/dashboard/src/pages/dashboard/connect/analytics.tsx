@@ -20,7 +20,12 @@ import {
 } from "components/analytics/auto-bar-chart";
 import { ChartContainer } from "components/analytics/chart-container";
 import { AppLayout } from "components/app-layouts/app";
-import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
+import DocsButton from "components/buttons/DocsButton";
+import { DotNetIcon } from "components/icons/DotNetIcon";
+import { ReactIcon } from "components/icons/ReactIcon";
+import { TypeScriptIcon } from "components/icons/TypeScriptIcon";
+import { UnityIcon } from "components/icons/UnityIcon";
+import { UnrealIcon } from "components/icons/UnrealIcon";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { useTheme } from "next-themes";
@@ -243,168 +248,191 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   }
 
   return (
-    <GatedFeature
-      title="Wallet Analytics is an advanced feature."
-      description="Dive into user analytics and gather user insights on connect, smart and in-app wallets."
-      trackingLabel="analytics"
-      imgSrc="/assets/dashboard/features/analytics.png"
-      imgWidth={576}
-      imgHeight={624}
-    >
-      <Flex flexDir="column" gap={8}>
-        <Flex flexDir="column" gap={2}>
-          <Heading size="title.lg" as="h1">
-            Connect Analytics
-          </Heading>
-          <Text>Visualize how users are connecting to your apps.</Text>
-        </Flex>
-        {keysQuery.data && selectedKey && (
-          <Flex
-            w="full"
-            alignItems={{ base: "flex-start", lg: "center" }}
-            gap={1}
-            flexDir={{ base: "column", lg: "row" }}
-          >
-            <Text minW={32}>Select a Client ID:</Text>
+    <Flex flexDir="column" gap={8}>
+      <Flex flexDir="column" gap={2}>
+        <Heading size="title.lg" as="h1">
+          Connect Analytics
+        </Heading>
+        <Text>Visualize how users are connecting to your apps.</Text>
+      </Flex>
+      {keysQuery.data && selectedKey && (
+        <Flex
+          w="full"
+          alignItems={{ base: "flex-start", lg: "center" }}
+          gap={1}
+          flexDir={{ base: "column", lg: "row" }}
+        >
+          <Text minW={32}>Select a Client ID:</Text>
 
+          <Flex maxW="sm" w="full">
             <ApiKeysMenu
               apiKeys={keysQuery.data}
               selectedKey={selectedKey}
               onSelect={setSelectedKey}
             />
           </Flex>
-        )}
-        <Flex flexDir="column" gap={8}>
-          {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
-            <>
-              <Flex gap={4}>
-                <WalletStatCard
-                  label="Connections"
-                  value={totalStatsData.totalWallets}
-                />
-                <WalletStatCard
-                  label="Unique Wallets"
-                  value={totalStatsData.uniqueWallets}
-                />
-              </Flex>
-              <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
-                <Stack spacing={0} padding={{ base: 2, md: 6 }}>
-                  <Heading as="h3" size="subtitle.sm">
-                    Daily Connections
-                  </Heading>
-                  <Text>
-                    Total and unique wallets addresses that connected to your
-                    app each day.
-                  </Text>
-                </Stack>
-                <ChartContainer className="w-full" ratio={21 / 9}>
-                  <AutoBarChart
-                    data={barChartData}
-                    showXAxis
-                    showYAxis
-                    index={{
-                      id: "time",
-                    }}
-                  />
-                </ChartContainer>
-              </Flex>
-              <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
-                <Stack spacing={0} padding={{ base: 2, md: 6 }}>
-                  <Heading as="h3" size="subtitle.sm">
-                    Wallet Connectors
-                  </Heading>
-                  <Text>
-                    The different types of wallets used to connect to your app
-                    each day.
-                  </Text>
-                </Stack>
-                <ChartContainer className="w-full" ratio={21 / 9}>
-                  <AutoBarChart
-                    data={walletBarChartData}
-                    showXAxis
-                    showYAxis
-                    index={{
-                      id: "time",
-                    }}
-                    stacked
-                  />
-                </ChartContainer>
-              </Flex>
-              <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
-                <Stack spacing={0} padding={{ base: 2, md: 6 }}>
-                  <Heading as="h3" size="subtitle.sm">
-                    Wallet Distribution
-                  </Heading>
-                  <Text>
-                    Distribution of wallet types used to connect to your app.
-                  </Text>
-                </Stack>
-                <ChartContainer
-                  className="w-full"
-                  ratio={isMobile ? 1.5 : 21 / 9}
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        activeIndex={activeIndex}
-                        activeShape={renderActiveShape}
-                        onMouseEnter={onPieEnter}
-                        data={pieChartData}
-                        outerRadius={"70%"}
-                        dataKey="totalWallets"
-                        valueKey="walletType"
-                        nameKey="walletType"
-                        strokeWidth={2}
-                        stroke={"var(--chakra-colors-backgroundHighlight)"}
-                      >
-                        {pieChartData.map((_entry, index) => (
-                          <Cell
-                            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                            key={index}
-                            fill={barColors[index % barColors.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Legend
-                        layout={isMobile ? "horizontal" : "radial"}
-                        verticalAlign={isMobile ? "bottom" : "middle"}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
-              </Flex>
-            </>
-          ) : selectedKey ? (
-            <Stack>
-              <Heading as="h3" size="subtitle.sm">
-                No data found for this Client ID.
-              </Heading>
-              <Text>
-                Make sure you are running the latest version of the SDK with
-                wallet analytics enabled.
-              </Text>
-            </Stack>
-          ) : (
-            <Stack>
-              <Heading as="h3" size="subtitle.sm">
-                No API keys found
-              </Heading>
-              <Text>
-                Create a free API key and set it into your app to get started
-                with wallet analytics.
-              </Text>
-              <LinkButton
-                variant="solid"
-                href={"/dashboard/settings/api-keys"}
-                maxW={"sm"}
-              >
-                Create API Key
-              </LinkButton>
-            </Stack>
-          )}
         </Flex>
+      )}
+      <Flex flexDir="column" gap={8}>
+        {statsQuery.data && statsQuery.data.timeSeries.length > 0 ? (
+          <>
+            <Flex gap={4}>
+              <WalletStatCard
+                label="Connections"
+                value={totalStatsData.totalWallets}
+              />
+              <WalletStatCard
+                label="Unique Wallets"
+                value={totalStatsData.uniqueWallets}
+              />
+            </Flex>
+            <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
+              <Stack spacing={0} padding={{ base: 2, md: 6 }}>
+                <Heading as="h3" size="subtitle.sm">
+                  Daily Connections
+                </Heading>
+                <Text>
+                  Total and unique wallets addresses that connected to your app
+                  each day.
+                </Text>
+              </Stack>
+              <ChartContainer className="w-full" ratio={21 / 9}>
+                <AutoBarChart
+                  data={barChartData}
+                  showXAxis
+                  showYAxis
+                  index={{
+                    id: "time",
+                  }}
+                />
+              </ChartContainer>
+            </Flex>
+            <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
+              <Stack spacing={0} padding={{ base: 2, md: 6 }}>
+                <Heading as="h3" size="subtitle.sm">
+                  Wallet Connectors
+                </Heading>
+                <Text>
+                  The different types of wallets used to connect to your app
+                  each day.
+                </Text>
+              </Stack>
+              <ChartContainer className="w-full" ratio={21 / 9}>
+                <AutoBarChart
+                  data={walletBarChartData}
+                  showXAxis
+                  showYAxis
+                  index={{
+                    id: "time",
+                  }}
+                  stacked
+                />
+              </ChartContainer>
+            </Flex>
+            <Flex flexDir="column" gap={4} as={Card} bg="backgroundHighlight">
+              <Stack spacing={0} padding={{ base: 2, md: 6 }}>
+                <Heading as="h3" size="subtitle.sm">
+                  Wallet Distribution
+                </Heading>
+                <Text>
+                  Distribution of wallet types used to connect to your app.
+                </Text>
+              </Stack>
+              <ChartContainer
+                className="w-full"
+                ratio={isMobile ? 1.5 : 21 / 9}
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      activeIndex={activeIndex}
+                      activeShape={renderActiveShape}
+                      onMouseEnter={onPieEnter}
+                      data={pieChartData}
+                      outerRadius={"70%"}
+                      dataKey="totalWallets"
+                      valueKey="walletType"
+                      nameKey="walletType"
+                      strokeWidth={2}
+                      stroke={"var(--chakra-colors-backgroundHighlight)"}
+                    >
+                      {pieChartData.map((_entry, index) => (
+                        <Cell
+                          // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
+                          key={index}
+                          fill={barColors[index % barColors.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Legend
+                      layout={isMobile ? "horizontal" : "radial"}
+                      verticalAlign={isMobile ? "bottom" : "middle"}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </Flex>
+          </>
+        ) : selectedKey ? (
+          <Stack>
+            <Heading as="h3" size="subtitle.sm">
+              No data found for this Client ID.
+            </Heading>
+            <Text>
+              Add the Connect SDK to your app to start collecting analytics.
+            </Text>
+            <div className="mt-2 grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-w-xl">
+              <DocsButton
+                link="https://portal.thirdweb.com/typescript/v5/getting-started"
+                icon={<TypeScriptIcon />}
+                label="TypeScript SDK"
+              />
+              <DocsButton
+                link="https://portal.thirdweb.com/react/v5/getting-started"
+                icon={<ReactIcon />}
+                label="React SDK"
+              />
+              <DocsButton
+                link="https://portal.thirdweb.com/react-native/v5/getting-started"
+                icon={<ReactIcon />}
+                label="React Native SDK"
+              />
+              <DocsButton
+                link="https://portal.thirdweb.com/unity/v4/getting-started"
+                icon={<UnityIcon />}
+                label="Unity SDK"
+              />
+              <DocsButton
+                link="https://portal.thirdweb.com/unreal/getting-started"
+                icon={<UnrealIcon />}
+                label="Unreal SDK"
+              />
+              <DocsButton
+                link="https://portal.thirdweb.com/dotnet/getting-started"
+                icon={<DotNetIcon />}
+                label=".NET SDK"
+              />
+            </div>
+          </Stack>
+        ) : (
+          <Stack>
+            <Heading as="h3" size="subtitle.sm">
+              No API keys found
+            </Heading>
+            <Text>
+              Start using the Connect SDK in your app with a free API key.
+            </Text>
+            <LinkButton
+              variant="solid"
+              href={"/dashboard/settings/api-keys"}
+              maxW={"sm"}
+            >
+              Create API Key
+            </LinkButton>
+          </Stack>
+        )}
       </Flex>
-    </GatedFeature>
+    </Flex>
   );
 };
 
