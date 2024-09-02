@@ -7,6 +7,9 @@ import zeroGBanner from "./temp-assets/0gLabsBanner.png";
 import alephZeroBaner from "./temp-assets/AlephZeroBanner.jpg";
 import alephZeroCTA from "./temp-assets/AlephZeroCTA.jpg";
 import ancient8Banner from "./temp-assets/ancient8-banner.png";
+import assetChainBanner from "./temp-assets/assetChainBanner.png";
+import assetChainCTABG from "./temp-assets/assetChainCTABanner.png";
+
 // TEMPORARY
 import baseBanner from "./temp-assets/base-banner.jpeg";
 import superchainCTABG from "./temp-assets/cta-bg-superchain.png";
@@ -14,7 +17,7 @@ import xaiCTABg from "./temp-assets/cta-bg-xai-connect.png";
 import thirdwebCTA from "./temp-assets/cta-thirdweb.png";
 import lumiaCTA from "./temp-assets/lumia-cta.png";
 import lumiaBanner from "./temp-assets/lumiaBanner.png";
-import mantleBanner from "./temp-assets/mantle-banner.jpeg";
+import mantleBanner from "./temp-assets/mantle.png";
 import plumeBanner from "./temp-assets/plumeBanner.png";
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
@@ -27,6 +30,8 @@ import treasureCTA from "./temp-assets/treasureCta.png";
 import vanarBanner from "./temp-assets/vanar-banner.png";
 import vanarCTABG from "./temp-assets/vanar-cta.png";
 import xaiBanner from "./temp-assets/xai-banner.jpg";
+import zytronBanner from "./temp-assets/zytronBanner.png";
+import zytronCTA from "./temp-assets/zytronCTA.jpg";
 
 // END TEMPORARY
 
@@ -170,17 +175,14 @@ const chainMetaRecord = {
   },
   // mantle
   5000: {
-    about:
-      "A fast-growing, DAO-led web3 ecosystem whose mission is the mass adoption of token-governed technologies. Mantle Ecosystem comprises Mantle Network, an Ethereum layer 2; Mantle Governance, Mantle Treasury and Mantle LSP.",
+    about: `Build dApps with exceptional UX, all while relying on Ethereum's unrivaled security, with our high-performance Ethereum layer-2 network built with modular architecture.`,
     headerImgUrl: mantleBanner.src,
-    // TODO: waiting on CTA copy
-    // cta: {
-    //   backgroundImageUrl: mantleCTA.src,
-    //   title: "Title Goes Here",
-    //   description: "Optional description goes here",
-    //   buttonText: "Learn More",
-    //   buttonLink: "https://www.mantle.xyz",
-    // },
+    cta: {
+      backgroundImageUrl: mantleBanner.src,
+      title: "Reach out to bring your brilliant ideas to life",
+      buttonText: "Learn More",
+      buttonLink: "https://x.com/0xMantleDevs",
+    },
   },
   // rootstock
   30: {
@@ -359,6 +361,30 @@ const chainMetaRecord = {
       backgroundImageUrl: treasureCTA.src,
       title: "Start building on Treasure!",
       buttonLink: "https://portal.treasure.lol",
+      buttonText: "Learn more",
+    },
+  },
+  //AssetChain
+  42421: {
+    headerImgUrl: assetChainBanner.src,
+    about:
+      "Asset Chain is the native blockchain for Xend Finance's Real-World Asset OAE (Onchain Asset Environment), with its consensus based on Fantom's Lachesis consensus mechanism.",
+    cta: {
+      backgroundImageUrl: assetChainCTABG.src,
+      title: "Start Building",
+      buttonLink: "https://docs.assetchain.org",
+      buttonText: "Learn more",
+    },
+  },
+  //zytron
+  9901: {
+    headerImgUrl: zytronBanner.src,
+    about:
+      "Discover Zytron - a highly customizable Layer 3 roll up stack, natively supporting Zypher’s blockchain abstraction layer for games. It is designed for production level gaming experiences, from autonomous worlds to TON-based hyper casual games.",
+    cta: {
+      backgroundImageUrl: zytronCTA.src,
+      title: "Unlock ZK Gaming with Zytron Layer3.",
+      buttonLink: "https://zytron.zypher.network/",
       buttonText: "Learn more",
     },
   },
