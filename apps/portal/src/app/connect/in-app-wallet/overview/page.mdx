@@ -1,6 +1,12 @@
 import { CatIcon } from "lucide-react";
 import EmbedOverview from "./embed-overview.svg";
-import { Callout, DocImage, createMetadata, FeatureCard, ArticleIconCard } from "@doc";
+import {
+	Callout,
+	DocImage,
+	createMetadata,
+	FeatureCard,
+	ArticleIconCard,
+} from "@doc";
 
 export const metadata = createMetadata({
 	image: {
@@ -51,23 +57,24 @@ See In-App Wallets in action with our demo app:
 		description="Enable free transactions with smart accounts"
 		iconUrl="/icons/feature-cards/gasless.svg"
 	/>
-	<FeatureCard
-		title="Full Compatibility"
-		description="Connect to other web3 apps via WalletConnect"
-		iconUrl="/icons/feature-cards/compatibility.svg"
-	/>
+
+    <FeatureCard
+    	title="Unified Identity"
+    	description="Link multiple authentication methods to one wallet"
+    	iconUrl="/icons/feature-cards/global-coverage.svg"
+    />
 
     <FeatureCard
     	title="Secure"
     	description="No single point of failure"
-			iconUrl="/icons/feature-cards/security.svg"
+    		iconUrl="/icons/feature-cards/security.svg"
     />
 
 
     <FeatureCard
     	title="Wallet Management"
     	description="Easily transfer assets or export private keys"
-			iconUrl="/icons/feature-cards/key.svg"
+    		iconUrl="/icons/feature-cards/key.svg"
     />
 
 </div>
