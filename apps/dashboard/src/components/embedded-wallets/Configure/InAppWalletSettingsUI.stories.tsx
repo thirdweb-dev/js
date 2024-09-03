@@ -1,5 +1,6 @@
 import type { ApiKey, ApiKeyService } from "@3rdweb-sdk/react/hooks/useApi";
 import type { Meta, StoryObj } from "@storybook/react";
+import { mobileViewport } from "../../../stories/utils";
 import { InAppWalletSettingsUI } from "./index";
 
 const meta = {
@@ -24,6 +25,24 @@ export const GrowthPlan: Story = {
 export const FreePlan: Story = {
   args: {
     canEditAdvancedFeatures: false,
+  },
+};
+
+export const GrowthPlanMobile: Story = {
+  args: {
+    canEditAdvancedFeatures: true,
+  },
+  parameters: {
+    viewport: mobileViewport("iphone14"),
+  },
+};
+
+export const FreePlanMobile: Story = {
+  args: {
+    canEditAdvancedFeatures: false,
+  },
+  parameters: {
+    viewport: mobileViewport("iphone14"),
   },
 };
 
@@ -56,7 +75,7 @@ function Variants(props: {
   canEditAdvancedFeatures: boolean;
 }) {
   return (
-    <div className="min-h-screen bg-background p-6 text-foreground max-w-[1140px] mx-auto">
+    <div className="min-h-screen bg-background px-4 py-6 text-foreground max-w-[1140px] mx-auto">
       <div className="flex gap-10 flex-col">
         <InAppWalletSettingsUI
           canEditAdvancedFeatures={props.canEditAdvancedFeatures}

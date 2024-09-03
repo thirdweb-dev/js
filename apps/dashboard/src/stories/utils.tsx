@@ -1,3 +1,4 @@
+import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 import { Badge } from "../@/components/ui/badge";
 
 export function StoryBadge(props: {
@@ -23,4 +24,13 @@ export function BadgeContainer(props: {
       <div className="bg-background">{props.children}</div>
     </div>
   );
+}
+
+export function mobileViewport(
+  key: "iphone14" | "iphone14promax" | "ipad11p" | "ipad12p",
+) {
+  return {
+    viewports: INITIAL_VIEWPORTS,
+    defaultViewport: key,
+  };
 }

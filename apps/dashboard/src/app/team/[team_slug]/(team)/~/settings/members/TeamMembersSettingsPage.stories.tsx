@@ -2,7 +2,10 @@ import type { Team } from "@/api/team";
 import type { TeamAccountRole, TeamMember } from "@/api/team-members";
 import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer } from "../../../../../../../stories/utils";
+import {
+  BadgeContainer,
+  mobileViewport,
+} from "../../../../../../../stories/utils";
 import SettingsLayout from "../layout";
 import { InviteSection } from "./InviteSection";
 import { ManageMembersSection } from "./ManageMembersSection";
@@ -21,8 +24,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AllVariants: Story = {
+export const Desktop: Story = {
   args: {},
+};
+
+export const Mobile: Story = {
+  args: {},
+  parameters: {
+    viewport: mobileViewport("iphone14"),
+  },
 };
 
 const freeTeam: Team = {

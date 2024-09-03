@@ -1,6 +1,7 @@
 import type { Team } from "@/api/team";
 import { Toaster } from "@/components/ui/sonner";
 import type { Meta, StoryObj } from "@storybook/react";
+import { mobileViewport } from "../../../../../../../stories/utils";
 import SettingsLayout from "../layout";
 import {
   DeleteTeamCard,
@@ -21,8 +22,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AllVariants: Story = {
+export const Desktop: Story = {
   args: {},
+};
+
+export const Mobile: Story = {
+  args: {},
+  parameters: {
+    viewport: mobileViewport("iphone14"),
+  },
 };
 
 const testTeam: Team = {

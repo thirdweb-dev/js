@@ -52,7 +52,7 @@ function StoryLayout(props: {
 
   return (
     <div>
-      <div className="flex justify-end p-4 border-b mb-5 gap-2">
+      <div className="flex justify-end p-4 border-b gap-2">
         <Button
           onClick={() => setTheme("dark")}
           size="sm"

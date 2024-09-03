@@ -3,42 +3,36 @@ import { ThirdwebProvider } from "thirdweb/react";
 import type { Project } from "../../../../@/api/projects";
 import type { Team } from "../../../../@/api/team";
 import { Button } from "../../../../@/components/ui/button";
-import { Separator } from "../../../../@/components/ui/separator";
-import { BadgeContainer } from "../../../../stories/utils";
+import { BadgeContainer, mobileViewport } from "../../../../stories/utils";
 import { TeamHeaderDesktopUI, TeamHeaderMobileUI } from "./TeamHeaderUI";
 
 const meta = {
   title: "Team/Team selector",
-  component: Story,
+  component: Variants,
   parameters: {
     nextjs: {
       appDirectory: true,
     },
   },
-} satisfies Meta<typeof Story>;
+} satisfies Meta<typeof Variants>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AllVariants: Story = {
-  args: {},
+export const Desktop: Story = {
+  args: {
+    type: "desktop",
+  },
 };
 
-function Story() {
-  return (
-    <div className="dark:bg-zinc-900 bg-zinc-300 p-6">
-      <h2 className="text-3xl mb-6 font-semibold tracking-tight">Desktop</h2>
-      <Variants type="desktop" />
-      <Separator className="my-10" />
-      <h2 className="mt-10 mb-6 text-3xl font-semibold tracking-tight">
-        Mobile
-      </h2>
-      <div className="w-[400px]">
-        <Variants type="mobile" />
-      </div>
-    </div>
-  );
-}
+export const Mobile: Story = {
+  args: {
+    type: "mobile",
+  },
+  parameters: {
+    viewport: mobileViewport("iphone14"),
+  },
+};
 
 function Variants(props: {
   type: "mobile" | "desktop";
@@ -48,7 +42,9 @@ function Variants(props: {
 
   return (
     <ThirdwebProvider>
-      <div className={"flex flex-col gap-6"}>
+      <div
+        className={"flex flex-col gap-6 bg-gray-700 px-4 py-10 min-h-screen"}
+      >
         <BadgeContainer label="Team, Free">
           <Comp
             teamsAndProjects={teamsAndProjects}

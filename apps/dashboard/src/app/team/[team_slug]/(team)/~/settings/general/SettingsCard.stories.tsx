@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BadgeContainer } from "../../../../../../../stories/utils";
+import {
+  BadgeContainer,
+  mobileViewport,
+} from "../../../../../../../stories/utils";
 import { SettingsCard } from "./SettingsCard";
 
 const meta = {
@@ -15,13 +18,20 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AllVariants: Story = {
+export const Desktop: Story = {
   args: {},
+};
+
+export const Mobile: Story = {
+  args: {},
+  parameters: {
+    viewport: mobileViewport("iphone14"),
+  },
 };
 
 function Story() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground py-6">
       <div className="lg:p-10 container max-w-[1100px] flex flex-col gap-10">
         <BadgeContainer label="No Header">
           <SettingsCard
