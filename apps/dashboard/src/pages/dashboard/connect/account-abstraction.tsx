@@ -28,6 +28,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
+import { useActiveWalletChain } from "thirdweb/react";
 import {
   Card,
   Heading,
@@ -53,6 +54,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
   const meQuery = useAccount();
   const account = meQuery?.data;
+  const chain = useActiveWalletChain();
 
   const apiKeys = useMemo(() => {
     return (keysQuery?.data || []).filter((key) => {
@@ -88,6 +90,10 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
       ),
     );
   }, [apiKeys, account]);
+
+  const isOpChain = useMemo(() => {
+    return [10, 8453, 7777777, 252, 34443].includes(chain?.id || 0);
+  }, [chain]);
 
   const seo = {
     title: "The Complete Account Abstraction Toolkit | thirdweb",
@@ -167,27 +173,29 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
       {hasSmartWalletsWithoutBilling ? (
         <SmartWalletsBillingAlert />
       ) : (
-        <Alert
-          status="info"
-          borderRadius="lg"
-          backgroundColor="backgroundCardHighlight"
-          borderLeftColor="blue.500"
-          borderLeftWidth={4}
-          as={Flex}
-          gap={1}
-        >
-          <AlertIcon />
-          <Flex flexDir="column">
-            <AlertTitle>
-              Using the gas credits for OP chain paymaster
-            </AlertTitle>
-            <AlertDescription as={Text}>
-              Credits will automatically be applied to cover gas fees for any
-              onchain activity across thirdweb services. <br />
-              Eligible chains: OP Mainnet, Base, Zora, Frax, Mode.
-            </AlertDescription>
-          </Flex>
-        </Alert>
+        isOpChain && (
+          <Alert
+            status="info"
+            borderRadius="lg"
+            backgroundColor="backgroundCardHighlight"
+            borderLeftColor="blue.500"
+            borderLeftWidth={4}
+            as={Flex}
+            gap={1}
+          >
+            <AlertIcon />
+            <Flex flexDir="column">
+              <AlertTitle>
+                Using the gas credits for OP chain paymaster
+              </AlertTitle>
+              <AlertDescription as={Text}>
+                Credits will automatically be applied to cover gas fees for any
+                onchain activity across thirdweb services. <br />
+                Eligible chains: OP Mainnet, Base, Zora, Frax, Mode.
+              </AlertDescription>
+            </Flex>
+          </Alert>
+        )
       )}
 
       {!hasApiKeys && <NoApiKeys service="Account Abstraction" />}
