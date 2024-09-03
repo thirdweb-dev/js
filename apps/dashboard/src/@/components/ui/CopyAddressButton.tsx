@@ -16,7 +16,7 @@ export function CopyAddressButton(props: {
     | "ghost";
   copyIconPosition: "left" | "right";
 }) {
-  const shortenedAddress = `${props.address.slice(0, 6)}...${props.address.slice(4)}`;
+  const shortenedAddress = `${props.address.slice(0, 6)}...${props.address.slice(-4)}`;
 
   return (
     <CopyTextButton
