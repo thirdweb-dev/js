@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import { useAccountUsage } from "@3rdweb-sdk/react/hooks/useApi";
@@ -6,11 +8,13 @@ import { ArrowRightIcon } from "lucide-react";
 import { useMemo } from "react";
 import { toNumber, toPercent } from "utils/number";
 
-interface AnalyticsProps {
+type AnalyticsCalloutProps = {
   trackingCategory: string;
-}
+};
 
-export const Analytics: React.FC<AnalyticsProps> = ({ trackingCategory }) => {
+export const AnalyticsCallout: React.FC<AnalyticsCalloutProps> = ({
+  trackingCategory,
+}) => {
   const usageQuery = useAccountUsage();
 
   const walletsMetrics = useMemo(() => {

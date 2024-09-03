@@ -39,7 +39,10 @@ import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
 
 interface ConfigureProps {
-  apiKey: ApiKey;
+  apiKey: Pick<
+    ApiKey,
+    "id" | "name" | "domains" | "bundleIds" | "services" | "redirectUrls"
+  >;
   trackingCategory: string;
 }
 
@@ -60,7 +63,7 @@ export const Configure: React.FC<ConfigureProps> = (props) => {
   if (!dashboardAccount) {
     return (
       <div className="flex items-center justify-center h-[500px]">
-        <Spinner className="size-4" />
+        <Spinner className="size-10" />
       </div>
     );
   }
@@ -209,7 +212,7 @@ export const InAppWalletSettingsUI: React.FC<
       <form
         onSubmit={handleSubmit}
         autoComplete="off"
-        className="px-[1px] flex flex-col gap-6"
+        className="flex flex-col gap-6"
       >
         {/* Branding */}
         <BrandingFieldset

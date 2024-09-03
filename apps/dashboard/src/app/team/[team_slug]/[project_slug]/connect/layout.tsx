@@ -40,7 +40,7 @@ export default function Layout(props: {
   return (
     <div className="h-full container flex gap-4">
       <Sidebar links={links} />
-      <div className="grow py-6">
+      <div className="grow py-6 max-sm:w-full">
         <ConnectMobileSidebar links={links} />
         {props.children}
       </div>

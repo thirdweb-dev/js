@@ -1,8 +1,13 @@
+"use client";
+
 import { PaginationButtons } from "@/components/pagination-buttons";
 import { CopyAddressButton } from "@/components/ui/CopyAddressButton";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import type { EmbeddedWalletUser } from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
+import {
+  type EmbeddedWalletUser,
+  useEmbeddedWallets,
+} from "@3rdweb-sdk/react/hooks/useEmbeddedWallets";
 import { createColumnHelper } from "@tanstack/react-table";
 import { TWTable } from "components/shared/TWTable";
 import { format } from "date-fns/format";
@@ -11,13 +16,6 @@ import { useCallback, useMemo, useState } from "react";
 import { withinDays } from "utils/date-utils";
 
 const ACTIVE_THRESHOLD_DAYS = 30;
-
-interface UsersProps {
-  wallets: EmbeddedWalletUser[];
-  isLoading: boolean;
-  isFetched: boolean;
-  trackingCategory: string;
-}
 
 const columnHelper = createColumnHelper<EmbeddedWalletUser>();
 
@@ -75,12 +73,13 @@ const columns = [
   }),
 ];
 
-export const Users: React.FC<UsersProps> = ({
-  wallets,
-  isLoading,
-  isFetched,
+export const Users = (props: {
+  clientId: string;
+  trackingCategory: string;
 }) => {
   const [onlyActive, setOnlyActive] = useState(true);
+  const walletsQuery = useEmbeddedWallets(props.clientId);
+  const wallets = walletsQuery?.data || [];
 
   const activeWallets = useMemo(() => {
     if (!wallets) {
@@ -163,8 +162,8 @@ export const Users: React.FC<UsersProps> = ({
           title="active in-app wallets"
           data={itemsToShow}
           columns={columns}
-          isLoading={isLoading}
-          isFetched={isFetched}
+          isLoading={walletsQuery.isLoading}
+          isFetched={walletsQuery.isFetched}
         />
 
         {totalPages > 1 && (
