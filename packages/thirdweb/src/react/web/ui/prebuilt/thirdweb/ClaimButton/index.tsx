@@ -232,8 +232,9 @@ export async function getERC721ClaimTo({
 
   return claimTo({
     contract,
-    to: account?.address || "",
+    to: claimParams.to || account?.address || "",
     quantity: claimParams.quantity,
+    from: claimParams.from,
   });
 }
 
@@ -255,9 +256,10 @@ export async function getERC1155ClaimTo({
 
   return claimTo({
     contract,
-    to: account?.address || "",
+    to: claimParams.to || account?.address || "",
     quantity: claimParams.quantity,
     tokenId: claimParams.tokenId,
+    from: claimParams.from,
   });
 }
 
@@ -282,15 +284,17 @@ export async function getERC20ClaimTo({
   if ("quantity" in claimParams) {
     return claimTo({
       contract,
-      to: account?.address || "",
+      to: claimParams.to || account?.address || "",
       quantity: claimParams.quantity,
+      from: claimParams.from,
     });
   }
   if ("quantityInWei" in claimParams) {
     return claimTo({
       contract,
-      to: account?.address || "",
+      to: claimParams.to || account?.address || "",
       quantityInWei: claimParams.quantityInWei,
+      from: claimParams.from,
     });
   }
   throw new Error("Missing quantity or quantityInWei");
