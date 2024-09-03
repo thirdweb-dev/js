@@ -180,3 +180,103 @@ Example Response:
 ```
 </TabsContent>
 </Tabs>
+
+## Webhook Verification (Recommended)
+
+Since any outside origin can call your webhook endpoint, it is recommended to verify the webhook signature to ensure a request comes from your Pay instance.
+
+### Check the Signature
+
+The payload body is signed with the webhook secret and provided in the X-Pay-Signature request header.
+
+Get the webhook secret for your webhook endpoint from the dashboard.
+
+This code example checks if the signature is valid:
+
+```tsx
+const generateSignature = (
+	body: string,
+	timestamp: string,
+	secret: string,
+): string => {
+	const payload = `${timestamp}.${body}`;
+	return crypto.createHmac("sha256", secret).update(payload).digest("hex");
+};
+
+const isValidSignature = (
+	body: string,
+	timestamp: string,
+	signature: string,
+	secret: string,
+): boolean => {
+	const expectedSignature = generateSignature(body, timestamp, secret);
+	return crypto.timingSafeEqual(
+		Buffer.from(expectedSignature),
+		Buffer.from(signature),
+	);
+};
+```
+
+Check the timestamp
+The event timestamp is provided in the X-Pay-Timestamp request header.
+
+This code example checks if the event exceeds a given expiration duration:
+
+```tsx
+export const isExpired = (
+	timestamp: string,
+	expirationInSeconds: number,
+): boolean => {
+	const currentTime = Math.floor(Date.now() / 1000);
+	return currentTime - parseInt(timestamp) > expirationInSeconds;
+};
+```
+
+### Example webhook endpoint
+
+This NodeJS code example listens for event notifications on the /webhook endpoint:
+
+```tsx
+import express from "express";
+import bodyParser from "body-parser";
+import { isValidSignature, isExpired } from "./webhookHelper";
+
+const app = express();
+const port = 3000;
+
+const WEBHOOK_SECRET = "<your_webhook_auth_secret>";
+
+app.use(bodyParser.text());
+
+app.post("/webhook", (req, res) => {
+	const signatureFromHeader = req.header("X-Pay-Signature");
+	const timestampFromHeader = req.header("X-Pay-Timestamp");
+
+	if (!signatureFromHeader || !timestampFromHeader) {
+		return res.status(401).send("Missing signature or timestamp header");
+	}
+
+	if (
+		!isValidSignature(
+			req.body,
+			timestampFromHeader,
+			signatureFromHeader,
+			WEBHOOK_SECRET,
+		)
+	) {
+		return res.status(401).send("Invalid signature");
+	}
+
+	if (isExpired(timestampFromHeader, 300)) {
+		// Assuming expiration time is 5 minutes (300 seconds)
+		return res.status(401).send("Request has expired");
+	}
+
+	// Process the request
+	res.status(200).send("Webhook received!");
+});
+
+app.listen(port, () => {
+	console.log(`Server started on http://localhost:${port}`);
+});
+```
