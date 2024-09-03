@@ -233,8 +233,8 @@ export function useContractRouteConfig(
   const embedType: "marketplace-v3" | "erc20" | "erc1155" | "erc721" | null =
     useMemo(() => {
       if (
-        contractData.detectedEnglishAuctions ||
-        contractData.detectedDirectListings
+        contractData.detectedEnglishAuctions === "enabled" &&
+        contractData.detectedDirectListings === "enabled"
       ) {
         // this means its marketplace v3
         return "marketplace-v3";
