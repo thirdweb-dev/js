@@ -22,6 +22,7 @@ import plumeBanner from "./temp-assets/plumeBanner.png";
 import plumeCTA from "./temp-assets/plumeCTA.png";
 import rootStockBanner from "./temp-assets/rootstock-banner.png";
 import rootStockCTABG from "./temp-assets/rootstock-cta.png";
+import soneiumBanner from "./temp-assets/soneiumBanner.png";
 import superpositionBanner from "./temp-assets/superpositionBanner.png";
 import superpositionCTA from "./temp-assets/superpositionCTA.png";
 import thirdwebBanner from "./temp-assets/thirdweb-banner.png";
@@ -385,6 +386,19 @@ const chainMetaRecord = {
       backgroundImageUrl: zytronCTA.src,
       title: "Unlock ZK Gaming with Zytron Layer3.",
       buttonLink: "https://zytron.zypher.network/",
+      buttonText: "Learn more",
+    },
+  },
+  //Soneium
+  1946: {
+    headerImgUrl: soneiumBanner.src,
+    about:
+      "Soneium, an Ethereum layer-2 developed by Sony Block Solutions Labs. This versatile chain is a general-purpose blockchain platform that aims to evoke emotion, empower creativity, and meet diverse needs to go mainstream. Soneium will be simplifying blockchain experiences while empowering developers, creators, and communities. Built on accessibility, scalability, and efficiency, it aims to solve real-world problems across industries globally. Soneium will change the way we interact with the internet, opening up a world of innovative applications and unlimited potential for users worldwide.",
+    cta: {
+      backgroundImageUrl: soneiumBanner.src,
+      title: "Begin your journey with Soneium Spark",
+      buttonLink:
+        "https://soneium.org/en/blog/soneium-minato-testnet-is-live-along-with-soneium-spark-incubation-program/",
       buttonText: "Learn more",
     },
   },
