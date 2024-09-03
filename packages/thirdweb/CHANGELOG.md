@@ -1,5 +1,23 @@
 # thirdweb
 
+## 5.50.0
+
+### Minor Changes
+
+- [#4334](https://github.com/thirdweb-dev/js/pull/4334) [`6432e8d`](https://github.com/thirdweb-dev/js/commit/6432e8dc6bdd0ed985fe0d76e47b36601bfa8be3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Adds L2 ENS name resolution
+
+### Patch Changes
+
+- [#4270](https://github.com/thirdweb-dev/js/pull/4270) [`5475551`](https://github.com/thirdweb-dev/js/commit/5475551e5de0750ff1b780522cb01e974a828dd2) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Allow accepting a string for signature mint UIDs
+
+- [#4336](https://github.com/thirdweb-dev/js/pull/4336) [`8b137f0`](https://github.com/thirdweb-dev/js/commit/8b137f0fe2acd1ccd0a2d2e217493f018a603de3) Thanks [@gregfromstl](https://github.com/gregfromstl)! - Hide in-app wallet connection in Pay Embed
+
+- [#4344](https://github.com/thirdweb-dev/js/pull/4344) [`915e7fb`](https://github.com/thirdweb-dev/js/commit/915e7fb8795e359c7907d4f13351536ea71ad566) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix merkletree proof for Drop contracts
+
+- [#4343](https://github.com/thirdweb-dev/js/pull/4343) [`a2f2c7e`](https://github.com/thirdweb-dev/js/commit/a2f2c7e172f9baea1c649a22abeff6a70aa200d3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Better error message when smart wallet connection fails due to rpc error
+
+- [#4327](https://github.com/thirdweb-dev/js/pull/4327) [`bdb814d`](https://github.com/thirdweb-dev/js/commit/bdb814df6ca2c1fb1068de5be1598695880eed32) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Fix nft approval for CreateDirectListingButton
+
 ## 5.49.0
 
 ### Minor Changes
