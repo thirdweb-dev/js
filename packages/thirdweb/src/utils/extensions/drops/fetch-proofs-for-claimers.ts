@@ -1,5 +1,5 @@
 import {
-  ADDRESS_ZERO,
+  ZERO_ADDRESS,
   isNativeTokenAddress,
 } from "../../../constants/addresses.js";
 import type { ThirdwebContract } from "../../../contract/contract.js";
@@ -69,8 +69,8 @@ export async function fetchProofsForClaimer(options: {
       });
     }),
   );
-  const tree = new MerkleTree(hashedEntries);
   // 5. get the proof for the claimer + the sub merkle tree root
+  const tree = new MerkleTree(hashedEntries);
   const entry = shardData.entries.find(
     (i) => i.address.toLowerCase() === claimer.toLowerCase(),
   );
@@ -88,11 +88,11 @@ export async function fetchProofsForClaimer(options: {
     )
     .concat(shardData.proofs);
   // 6. return the proof and the entry data for the contract call
-  const currencyAddress = (entry.currencyAddress || ADDRESS_ZERO) as Address;
+  const currencyAddress = (entry.currencyAddress || ZERO_ADDRESS) as Address;
   const currencyDecimals = await (async () => {
     if (
       isNativeTokenAddress(currencyAddress) ||
-      currencyAddress === ADDRESS_ZERO
+      currencyAddress === ZERO_ADDRESS
     ) {
       return 18;
     }
