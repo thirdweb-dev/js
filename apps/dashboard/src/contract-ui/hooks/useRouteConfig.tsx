@@ -114,6 +114,11 @@ const LazyContractEditModulesPage = dynamic(() =>
     ({ ContractEditModulesPage }) => ContractEditModulesPage,
   ),
 );
+const LazyContractEmbedPage = dynamic(() =>
+  import("../tabs/embed/page").then(
+    ({ ContractEmbedPage }) => ContractEmbedPage,
+  ),
+);
 
 export function useContractRouteConfig(
   contractAddress: string,
@@ -225,6 +230,32 @@ export function useContractRouteConfig(
     };
   }, [contractQuery]);
 
+  const embedType: "marketplace-v3" | "erc20" | "erc1155" | "erc721" | null =
+    useMemo(() => {
+      if (
+        contractData.detectedEnglishAuctions ||
+        contractData.detectedDirectListings
+      ) {
+        // this means its marketplace v3
+        return "marketplace-v3";
+      }
+      // others only matter if claim conditions are detected
+      if (contractData.hasNewClaimConditions) {
+        // if erc721 its that
+        if (isERC721Query.data) {
+          return "erc721";
+        }
+        // if erc1155 its that
+        if (isERC1155Query.data) {
+          return "erc1155";
+        }
+        // otherwise it has to be erc20
+        return "erc20";
+      }
+      // otherwise null
+      return null;
+    }, [contractData, isERC721Query.data, isERC1155Query.data]);
+
   return [
     {
       title: "Overview",
@@ -281,6 +312,29 @@ export function useContractRouteConfig(
         <>{contract && <LazyContractEventsPage contract={contract} />}</>
       ),
       isDefault: true,
+    },
+    {
+      title: "Embed",
+      path: "embed",
+      isDefault: true,
+      isEnabled:
+        embedType !== null
+          ? "enabled"
+          : isERC721Query.isLoading || isERC1155Query.isLoading
+            ? "loading"
+            : "disabled",
+      component: () => {
+        return (
+          <>
+            {contract && (
+              <LazyContractEmbedPage
+                contract={contract}
+                ercOrMarketplace={embedType}
+              />
+            )}
+          </>
+        );
+      },
     },
     {
       title: "Analytics",
