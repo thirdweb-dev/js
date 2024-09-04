@@ -10,7 +10,7 @@ import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-co
 import { deployERC20Contract } from "../prebuilts/deploy-erc20.js";
 import { getAllRoleMembers } from "./read/getAllMembers.js";
 import { hasRole } from "./read/hasRole.js";
-import { grantRole } from "./write/grant.js";
+import { grantRole } from "./write/grantRole.js";
 import { revokeRole } from "./write/revokeRole.js";
 
 describe.runIf(process.env.TW_SECRET_KEY)("Permissions", () => {
