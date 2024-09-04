@@ -15,24 +15,31 @@ import {
 } from "../fiat/currencies.js";
 import type { SupportedChainAndTokens } from "../swap/useSwapSupportedChains.js";
 
-// handle states for token and chain selection
+type SupportedSourcesInputData = {
+  chain: Chain;
+  tokens: {
+    address: string;
+    buyWithCryptoEnabled: boolean;
+    buyWithFiatEnabled: boolean;
+    name: string;
+    symbol: string;
+  }[];
+};
 
-export function useUISelectionStates(options: {
+// handle states for token and chain selection
+export function useToTokenSelectionStates(options: {
   payOptions: PayUIOptions;
   supportedDestinations: SupportedChainAndTokens;
 }) {
-  const activeChain = useActiveWalletChain();
   const { payOptions, supportedDestinations } = options;
-
+  // --------------------------------------------------------------------------
   // buy token amount ---------------------------------------------------------
   // NOTE - for transaction / direct payment modes, the token amount is set when the user tap continue
   const prefillBuy = (payOptions as FundWalletOptions)?.prefillBuy;
+  const activeChain = useActiveWalletChain();
   const initialTokenAmount = prefillBuy?.amount || "";
-
   const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
   const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
-
-  // --------------------------------------------------------------------------
 
   // Destination chain and token selection -----------------------------------
   const [toChain, setToChain] = useState<Chain>(
@@ -52,27 +59,73 @@ export function useUISelectionStates(options: {
       (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
       NATIVE_TOKEN,
   );
+
+  return {
+    toChain,
+    setToChain,
+    toToken,
+    setToToken,
+    tokenAmount,
+    setTokenAmount,
+    deferredTokenAmount,
+  };
+}
+
+export function useFromTokenSelectionStates(options: {
+  payOptions: PayUIOptions;
+  supportedSources: SupportedSourcesInputData[];
+}) {
+  const { payOptions, supportedSources } = options;
+
   // --------------------------------------------------------------------------
+  const firstSupportedSource = supportedSources?.length
+    ? supportedSources[0]
+    : undefined;
 
   // Source token and chain selection ---------------------------------------------------
-  const [fromChain, setFromChain] = useState<Chain>(
-    // use prefill chain if available
+  const [fromChain_, setFromChain] = useState<Chain>();
+
+  // use prefill chain if available
+  const fromChainDevSpecified =
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.chain) ||
-      (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
-      (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain) ||
-      // default to polygon
-      polygon,
-  );
+    (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
+    (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain);
 
-  const [fromToken, setFromToken] = useState<ERC20OrNativeToken>(
-    // use prefill token if available
+  const fromChainFromApi = firstSupportedSource?.chain
+    ? firstSupportedSource.chain
+    : undefined;
+
+  const fromChain =
+    fromChain_ || fromChainDevSpecified || fromChainFromApi || polygon;
+
+  const [fromToken_, setFromToken] = useState<ERC20OrNativeToken>();
+
+  // use prefill token if available
+  const fromTokenDevSpecified =
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.token) ||
-      (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
-      // default to native token
-      NATIVE_TOKEN,
-  );
+    (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token);
+
+  // May be updated in the future
+  const fromTokenFromApi = NATIVE_TOKEN;
+
+  // supported tokens query in here
+  const fromToken =
+    fromToken_ || fromTokenDevSpecified || fromTokenFromApi || NATIVE_TOKEN;
+
+  return {
+    fromChain,
+    setFromChain,
+    fromToken,
+    setFromToken,
+  };
+}
+
+export function useFiatCurrencySelectionStates(options: {
+  payOptions: PayUIOptions;
+}) {
+  const { payOptions } = options;
 
   // --------------------------------------------------------------------------
   const devSpecifiedDefaultCurrency =
@@ -89,20 +142,7 @@ export function useUISelectionStates(options: {
   );
 
   return {
-    tokenAmount,
-    setTokenAmount,
-
-    toChain,
-    setToChain,
-    deferredTokenAmount,
-    fromChain,
-    setFromChain,
-    toToken,
-    setToToken,
-    fromToken,
-    setFromToken,
     selectedCurrency,
-
     setSelectedCurrency,
   };
 }

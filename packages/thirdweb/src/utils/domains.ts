@@ -11,7 +11,7 @@ type DomainOverrides = {
   inAppWallet?: string;
   /**
    * The base URL for the payment server.
-   * @default "interstate.thirdweb.com"
+   * @default "pay.thirdweb.com"
    */
   pay?: string;
   /**

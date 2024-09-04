@@ -59,7 +59,11 @@ import {
   type PaymentMethods,
   useEnabledPaymentMethods,
 } from "./main/useEnabledPaymentMethods.js";
-import { useUISelectionStates } from "./main/useUISelectionStates.js";
+import {
+  useFiatCurrencySelectionStates,
+  useFromTokenSelectionStates,
+  useToTokenSelectionStates,
+} from "./main/useUISelectionStates.js";
 import { openOnrampPopup } from "./openOnRamppopup.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
@@ -134,32 +138,25 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     id: "main",
   });
 
-  const [hasEditedAmount, setHasEditedAmount] = useState(false);
-
-  const onDone = useCallback(() => {
-    setScreen({ id: "main" });
-    props.onDone();
-  }, [props.onDone]);
-
-  // UI selection
   const {
     tokenAmount,
     setTokenAmount,
     toChain,
     setToChain,
     deferredTokenAmount,
-    fromChain,
-    setFromChain,
     toToken,
     setToToken,
-    fromToken,
-    setFromToken,
-    selectedCurrency,
-    setSelectedCurrency,
-  } = useUISelectionStates({
+  } = useToTokenSelectionStates({
     payOptions,
     supportedDestinations,
   });
+
+  const [hasEditedAmount, setHasEditedAmount] = useState(false);
+
+  const onDone = useCallback(() => {
+    setScreen({ id: "main" });
+    props.onDone();
+  }, [props.onDone]);
 
   // check if the screen is expanded or not
 
@@ -186,21 +183,24 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     }
 
     const supportedSources = supportedSourcesQuery.data;
-    if (supportedSources[0]?.chain) {
-      setFromChain(supportedSources[0]?.chain);
-    }
 
     return createSupportedTokens(
       supportedSources,
       payOptions,
       props.supportedTokens,
     );
-  }, [
-    props.supportedTokens,
-    supportedSourcesQuery.data,
-    payOptions,
-    setFromChain,
-  ]);
+  }, [props.supportedTokens, supportedSourcesQuery.data, payOptions]);
+
+  const { fromChain, setFromChain, fromToken, setFromToken } =
+    useFromTokenSelectionStates({
+      payOptions,
+      supportedSources: supportedSourcesQuery.data || [],
+    });
+
+  const { selectedCurrency, setSelectedCurrency } =
+    useFiatCurrencySelectionStates({
+      payOptions,
+    });
 
   const enabledPaymentMethods = useEnabledPaymentMethods({
     payOptions: props.payOptions,
