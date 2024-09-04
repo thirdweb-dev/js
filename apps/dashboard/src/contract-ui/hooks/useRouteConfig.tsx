@@ -1,7 +1,6 @@
 import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
-import { detectFeatures } from "components/contract-components/utils";
 import { ContractOverviewPage } from "contract-ui/tabs/overview/page";
 import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
@@ -210,21 +209,24 @@ export function useContractRouteConfig(
       ],
     });
 
-    const hasNewClaimConditions = detectFeatures(contractQuery.contract, [
-      // erc721
-      "ERC721ClaimConditionsV2",
-      "ERC721ClaimPhasesV2",
-      // erc1155
-      "ERC1155ClaimConditionsV2",
-      "ERC1155ClaimPhasesV2",
-      // erc20
-      "ERC20ClaimConditionsV2",
-      "ERC20ClaimPhasesV2",
-    ]);
+    const hasNewClaimConditions = extensionDetectedState({
+      contractQuery,
+      feature: [
+        // erc721
+        "ERC721ClaimConditionsV2",
+        "ERC721ClaimPhasesV2",
+        // erc1155
+        "ERC1155ClaimConditionsV2",
+        "ERC1155ClaimPhasesV2",
+        // erc20
+        "ERC20ClaimConditionsV2",
+        "ERC20ClaimPhasesV2",
+      ],
+    });
 
-    const hasMultiPhaseClaimConditions = detectFeatures(
-      contractQuery.contract,
-      [
+    const hasMultiPhaseClaimConditions = extensionDetectedState({
+      contractQuery,
+      feature: [
         // erc721
         "ERC721ClaimPhasesV2",
         // erc1155
@@ -232,7 +234,7 @@ export function useContractRouteConfig(
         // erc20
         "ERC20ClaimPhasesV2",
       ],
-    );
+    });
 
     return {
       claimconditionExtensionDetection,
@@ -354,7 +356,12 @@ export function useContractRouteConfig(
           : isERC721Query.isLoading || isERC1155Query.isLoading
             ? "loading"
             : "disabled",
-      component: () => <LazyContractNFTPage contract={contract} />,
+      component: () => (
+        <LazyContractNFTPage
+          contract={contract}
+          isErc721={isERC721Query.data || false}
+        />
+      ),
     },
     {
       title: "Tokens",
@@ -420,8 +427,10 @@ export function useContractRouteConfig(
             contractData.claimconditionExtensionDetection
           }
           isERC20={isERC20}
-          hasNewClaimConditions={contractData.hasNewClaimConditions}
-          isMultiPhase={contractData.hasMultiPhaseClaimConditions}
+          hasNewClaimConditions={
+            contractData.hasNewClaimConditions === "enabled"
+          }
+          isMultiPhase={contractData.hasMultiPhaseClaimConditions === "enabled"}
         />
       ),
     },

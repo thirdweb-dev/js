@@ -17,6 +17,7 @@ import { TokenIdPage } from "./components/token-id";
 
 interface NftOverviewPageProps {
   contract: ThirdwebContract;
+  isErc721: boolean;
 }
 
 function isOnlyNumbers(str: string) {
@@ -25,11 +26,11 @@ function isOnlyNumbers(str: string) {
 
 export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   contract,
+  isErc721,
 }) => {
   const contractQuery = useContract(contract.address);
   const router = useRouter();
   const tokenId = router.query?.paths?.[2];
-  const isErc721 = detectFeatures(contractQuery?.contract, ["ERC721"]);
 
   if (tokenId && isOnlyNumbers(tokenId)) {
     return (
