@@ -340,8 +340,9 @@ const chakraTheme: Theme = extendTheme({
         _dark: "hsl(var(--background))",
       },
       backgroundCardHighlight: {
-        default: "hsl(var(--background))",
-        _dark: "hsl(var(--background))",
+        // equivalent to muted/50 but without transparency
+        default: "#f8f8f8",
+        _dark: "#0b0b0b",
       },
       bgBlack: { default: "black", _dark: "white" },
       bgWhite: { default: "#fff", _dark: "black" },
@@ -350,8 +351,9 @@ const chakraTheme: Theme = extendTheme({
         _dark: "hsl(var(--background))",
       },
       backgroundHighlight: {
-        default: "hsl(var(--background))",
-        _dark: "hsl(var(--background))",
+        // equivalent to muted/50 but without transparency
+        default: "#f8f8f8",
+        _dark: "#0b0b0b",
       },
       secondaryCardHighlight: {
         default: "hsl(var(--background))",

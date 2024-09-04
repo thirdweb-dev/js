@@ -228,7 +228,7 @@ export interface UsageBillableByService {
   };
 }
 
-interface WalletStats {
+export interface WalletStats {
   timeSeries: {
     dayTime: string;
     clientId: string;

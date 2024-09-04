@@ -1,5 +1,5 @@
+import { Badge } from "@/components/ui/badge";
 import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
-import { Badge } from "../@/components/ui/badge";
 
 export function StoryBadge(props: {
   label: string;
@@ -19,7 +19,7 @@ export function BadgeContainer(props: {
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="w-full">
       <StoryBadge label={props.label} />
       <div className="bg-background">{props.children}</div>
     </div>
