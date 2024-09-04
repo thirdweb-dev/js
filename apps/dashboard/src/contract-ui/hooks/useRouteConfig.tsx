@@ -9,10 +9,11 @@ import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
 import * as CommonExt from "thirdweb/extensions/common";
 import * as ERC20Ext from "thirdweb/extensions/erc20";
-import { isERC721 } from "thirdweb/extensions/erc721";
-import { isERC1155 } from "thirdweb/extensions/erc1155";
+import * as ERC721Ext from "thirdweb/extensions/erc721";
+import * as ERC1155Ext from "thirdweb/extensions/erc1155";
+import * as ERC4337Ext from "thirdweb/extensions/erc4337";
 import * as PermissionExt from "thirdweb/extensions/permissions";
-import { contractType } from "thirdweb/extensions/thirdweb";
+import * as ThirdwebExt from "thirdweb/extensions/thirdweb";
 import { useReadContract } from "thirdweb/react";
 import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
 import { useContractFunctionSelectors } from "./useContractFunctionSelectors";
@@ -110,10 +111,12 @@ export function useContractRouteConfig(
 ): EnhancedRoute[] {
   // new
   const functionSelectorQuery = useContractFunctionSelectors(contract);
-  const contractTypeQuery = useReadContract(contractType, { contract });
+  const contractTypeQuery = useReadContract(ThirdwebExt.contractType, {
+    contract,
+  });
   const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
-  const isERC721Query = useReadContract(isERC721, { contract });
-  const isERC1155Query = useReadContract(isERC1155, { contract });
+  const isERC721Query = useReadContract(ERC721Ext.isERC721, { contract });
+  const isERC1155Query = useReadContract(ERC1155Ext.isERC1155, { contract });
   const isERC20 = useMemo(
     () => ERC20Ext.isERC20(functionSelectorQuery.data),
     [functionSelectorQuery.data],
@@ -141,6 +144,32 @@ export function useContractRouteConfig(
     ].every(Boolean);
   }, [isPermissions, functionSelectorQuery.data]);
 
+  const isAccount = useMemo(
+    () => ERC4337Ext.isValidateUserOpSupported(functionSelectorQuery.data),
+    [functionSelectorQuery.data],
+  );
+
+  const accountPermissions = useMemo(() => {
+    return [
+      ERC4337Ext.isGetAllActiveSignersSupported(functionSelectorQuery.data),
+      ERC4337Ext.isGetAllAdminsSupported(functionSelectorQuery.data),
+      ERC4337Ext.isGetAllSignersSupported(functionSelectorQuery.data),
+      ERC4337Ext.isIsActiveSignerSupported(functionSelectorQuery.data),
+      ERC4337Ext.isIsAdminSupported(functionSelectorQuery.data),
+      ERC4337Ext.isAddAdminSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
+  const accountFactory = useMemo(() => {
+    return [
+      ERC4337Ext.isGetAllAccountsSupported(functionSelectorQuery.data),
+      ERC4337Ext.isGetAccountsSupported(functionSelectorQuery.data),
+      ERC4337Ext.isTotalAccountsSupported(functionSelectorQuery.data),
+      ERC4337Ext.isGetAccountsOfSignerSupported(functionSelectorQuery.data),
+      ERC4337Ext.isPredictAccountAddressSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
   // old
   const ensQuery = useEns(contract.address);
 
@@ -148,23 +177,6 @@ export function useContractRouteConfig(
   const contractQuery = useContract(ensQuery.data?.address);
   // TODO: remove all below
   const contractData = useMemo(() => {
-    // AccountPage
-    const detectedAccountFeature = extensionDetectedState({
-      contractQuery,
-      feature: ["Account"],
-    });
-
-    // AccountPermissionsPage
-    const detectedAccountPermissionFeature = extensionDetectedState({
-      contractQuery,
-      feature: ["AccountPermissions", "AccountPermissionsV1"],
-    });
-
-    const detectedAccountFactory = extensionDetectedState({
-      contractQuery,
-      feature: ["AccountFactory"],
-    });
-
     const detectedEnglishAuctions = extensionDetectedState({
       contractQuery,
       feature: "EnglishAuctions",
@@ -224,9 +236,6 @@ export function useContractRouteConfig(
 
     return {
       claimconditionExtensionDetection,
-      detectedAccountFeature,
-      detectedAccountPermissionFeature,
-      detectedAccountFactory,
       detectedEnglishAuctions,
       detectedDirectListings,
       detectedModularExtension,
@@ -419,36 +428,33 @@ export function useContractRouteConfig(
     {
       title: "Accounts",
       path: "accounts",
-      isEnabled: contractData.detectedAccountFactory,
-      component: () => (
-        <LazyContractAccountsPage
-          contract={contract}
-          detectedAccountFactory={contractData.detectedAccountFactory}
-        />
-      ),
+      isEnabled: accountFactory
+        ? "enabled"
+        : functionSelectorQuery.isLoading
+          ? "loading"
+          : "disabled",
+      component: () => <LazyContractAccountsPage contract={contract} />,
     },
     {
       title: "Balance",
       path: "account",
-      isEnabled: contractData.detectedAccountFeature,
-      component: () => (
-        <LazyContractAccountPage
-          contract={contract}
-          detectedAccountFeature={contractData.detectedAccountFeature}
-        />
-      ),
+      isEnabled: isAccount
+        ? "enabled"
+        : functionSelectorQuery.isLoading
+          ? "loading"
+          : "disabled",
+      component: () => <LazyContractAccountPage contract={contract} />,
     },
     {
       title: "Account Permissions",
       path: "account-permissions",
-      isEnabled: contractData.detectedAccountPermissionFeature,
+      isEnabled: accountPermissions
+        ? "enabled"
+        : functionSelectorQuery.isLoading
+          ? "loading"
+          : "disabled",
       component: () => (
-        <LazyContractAccountPermissionsPage
-          contract={contract}
-          detectedPermissionFeature={
-            contractData.detectedAccountPermissionFeature
-          }
-        />
+        <LazyContractAccountPermissionsPage contract={contract} />
       ),
     },
     {
