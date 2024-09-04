@@ -3,9 +3,7 @@ import { beforeAll, describe, expect, test } from "vitest";
 import { TEST_WALLET_B } from "../../../test/src/addresses.js";
 import { FORKED_ETHEREUM_CHAIN } from "../../../test/src/chains.js";
 import { TEST_CLIENT } from "../../../test/src/test-clients.js";
-
 import { arbitrumSepolia } from "../../chains/chain-definitions/arbitrum-sepolia.js";
-import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { toWei } from "../../utils/units.js";
 import {
   type PreparedTransaction,
@@ -403,15 +401,16 @@ describe.runIf(process.env.TW_SECRET_KEY)("toSerializableTransaction", () => {
     });
   });
 
+  // skipping this test for now, it fails when batching eth_estimateGas with eth_maxFeePerGas together on arbitrumSepolia
+  // works if you run it individually, but when run in parallel the batching kicks in and it fails
   test("should respect 0 maxPriorityFeePerGas chains", async () => {
     const serializableTransaction = await toSerializableTransaction({
       transaction: prepareTransaction({
         to: TEST_WALLET_B,
         chain: arbitrumSepolia,
-        value: toWei("0.000001"),
+        value: 0n,
         client: TEST_CLIENT,
       }),
-      from: ZERO_ADDRESS,
     });
 
     // gasPrice should be undefined for arbSepolia which has 0 maxPriorityFeePerGas

@@ -1,5 +1,10 @@
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
+import { isZkSyncChain } from "../../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { ClientAndChainAndAccount } from "../../../utils/types.js";
+import { type ThirdwebContract, getContract } from "../../contract.js";
+import { fetchPublishedContractMetadata } from "../publisher.js";
+import { zkDeployCreate2Factory } from "../zksync/zkDeployCreate2Factory.js";
+import { zkDeployContractDeterministic } from "../zksync/zkDeployDeterministic.js";
 import { getDeployedCloneFactoryContract } from "./clone-factory.js";
 import {
   deployCreate2Factory,
@@ -19,10 +24,56 @@ export async function getOrDeployInfraForPublishedContract(
     contractId: string;
     constructorParams: unknown[];
     publisher?: string;
+    version?: string;
   },
-) {
-  const { chain, client, account, contractId, constructorParams, publisher } =
-    args;
+): Promise<{
+  cloneFactoryContract: ThirdwebContract;
+  implementationContract: ThirdwebContract;
+}> {
+  const {
+    chain,
+    client,
+    account,
+    contractId,
+    constructorParams,
+    publisher,
+    version,
+  } = args;
+
+  if (isZkSyncChain(chain)) {
+    const cloneFactoryContract = await zkDeployCreate2Factory({
+      chain,
+      client,
+      account,
+    });
+    const { compilerMetadata } = await fetchPublishedContractMetadata({
+      client,
+      contractId: `${contractId}_ZkSync`, // different contract id for zkSync
+      publisher,
+      version,
+    });
+    const implementationContract = await zkDeployContractDeterministic({
+      chain,
+      client,
+      account,
+      abi: compilerMetadata.abi,
+      bytecode: compilerMetadata.bytecode,
+      params: constructorParams,
+    });
+    return {
+      cloneFactoryContract: getContract({
+        address: cloneFactoryContract,
+        chain,
+        client,
+      }),
+      implementationContract: getContract({
+        address: implementationContract,
+        chain,
+        client,
+      }),
+    };
+  }
+
   let [cloneFactoryContract, implementationContract] = await Promise.all([
     getDeployedCloneFactoryContract({
       chain,
@@ -34,6 +85,7 @@ export async function getOrDeployInfraForPublishedContract(
       contractId,
       constructorParams,
       publisher,
+      version,
     }),
   ]);
 
@@ -51,6 +103,7 @@ export async function getOrDeployInfraForPublishedContract(
       contractId,
       constructorParams,
       publisher,
+      version,
     });
   }
   return { cloneFactoryContract, implementationContract };

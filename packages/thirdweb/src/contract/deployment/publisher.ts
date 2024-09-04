@@ -30,6 +30,11 @@ export async function fetchPublishedContractMetadata(options: {
     contractId: options.contractId,
     version: options.version,
   });
+  if (!publishedContract.publishMetadataUri) {
+    throw new Error(
+      `No published metadata URI found for ${options.contractId}`,
+    );
+  }
   return fetchDeployMetadata({
     client: options.client,
     uri: publishedContract.publishMetadataUri,

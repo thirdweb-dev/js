@@ -1,0 +1,3 @@
+[
+  "event ContractDeployed(address indexed deployerAddress, bytes32 indexed bytecodeHash, address indexed contractAddress)"
+]
