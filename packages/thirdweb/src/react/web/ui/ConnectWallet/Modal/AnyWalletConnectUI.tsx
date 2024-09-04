@@ -299,9 +299,7 @@ export function AnyWalletConnectUI(props: {
       locale={locale}
       wallet={props.wallet}
       walletInfo={walletInfo.data}
-      onBack={() => {
-        setScreen("main");
-      }}
+      onBack={props.onBack}
       client={props.client}
     />
   );
