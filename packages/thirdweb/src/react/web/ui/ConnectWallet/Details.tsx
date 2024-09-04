@@ -373,6 +373,11 @@ function DetailsModal(props: {
   const avatarSrc =
     props.detailsModal?.connectedAccountAvatarUrl ?? ensAvatarQuery.data;
 
+  const { hideSendFunds, hideReceiveFunds, hideBuyFunds } =
+    props.detailsModal || {};
+
+  const hideAllButtons = hideSendFunds && hideReceiveFunds && hideBuyFunds;
+
   const avatarContent = (
     <Container
       style={{
@@ -438,7 +443,16 @@ function DetailsModal(props: {
   let content = (
     <div>
       <Spacer y="xs" />
-      <Container p="lg" gap="sm" flex="row" center="y">
+      <Container
+        px="lg"
+        gap="sm"
+        flex="row"
+        center="y"
+        style={{
+          paddingTop: spacing.lg,
+          paddingBottom: hideAllButtons ? spacing.md : spacing.lg,
+        }}
+      >
         {props.detailsModal?.hideSwitchWallet ? (
           avatarContent
         ) : (
@@ -481,81 +495,99 @@ function DetailsModal(props: {
           <InAppWalletUserInfo client={client} locale={locale} />
         </Container>
       </Container>
-      <Container px="lg">
-        {/* Send, Receive, Swap */}
-        <Container
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: spacing.xs,
-          }}
-        >
-          <Button
-            variant="outline"
-            style={{
-              fontSize: fontSize.sm,
-              display: "flex",
-              gap: spacing.xs,
-              alignItems: "center",
-              padding: spacing.sm,
-            }}
-            onClick={() => {
-              setScreen("send");
-            }}
-          >
-            <Container color="secondaryText" flex="row" center="both">
-              <PaperPlaneIcon
-                width={iconSize.sm}
-                height={iconSize.sm}
-                style={{
-                  transform: "translateY(-10%) rotate(-45deg) ",
-                }}
-              />
-            </Container>
 
-            {locale.send}
-          </Button>
+      {!hideAllButtons && (
+        <>
+          <Container px="lg">
+            {/* Send, Receive, Swap */}
+            <Container
+              style={{
+                display: "flex",
+                gap: spacing.xs,
+              }}
+            >
+              {!hideSendFunds && (
+                <Button
+                  variant="outline"
+                  style={{
+                    fontSize: fontSize.sm,
+                    display: "flex",
+                    gap: spacing.xs,
+                    alignItems: "center",
+                    padding: spacing.sm,
+                    flex: 1,
+                  }}
+                  onClick={() => {
+                    setScreen("send");
+                  }}
+                >
+                  <Container color="secondaryText" flex="row" center="both">
+                    <PaperPlaneIcon
+                      width={iconSize.sm}
+                      height={iconSize.sm}
+                      style={{
+                        transform: "translateY(-10%) rotate(-45deg) ",
+                      }}
+                    />
+                  </Container>
 
-          <Button
-            variant="outline"
-            style={{
-              fontSize: fontSize.sm,
-              display: "flex",
-              gap: spacing.xs,
-              alignItems: "center",
-              padding: spacing.sm,
-            }}
-            onClick={() => {
-              setScreen("receive");
-            }}
-          >
-            <Container color="secondaryText" flex="row" center="both">
-              <PinBottomIcon width={iconSize.sm} height={iconSize.sm} />{" "}
-            </Container>
-            {locale.receive}{" "}
-          </Button>
+                  {locale.send}
+                </Button>
+              )}
 
-          <Button
-            variant="outline"
-            style={{
-              fontSize: fontSize.sm,
-              display: "flex",
-              gap: spacing.xs,
-              alignItems: "center",
-              padding: spacing.sm,
-            }}
-            onClick={() => {
-              setScreen("buy");
-            }}
-          >
-            <Container color="secondaryText" flex="row" center="both">
-              <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+              {!hideReceiveFunds && (
+                <Button
+                  variant="outline"
+                  style={{
+                    fontSize: fontSize.sm,
+                    display: "flex",
+                    gap: spacing.xs,
+                    alignItems: "center",
+                    padding: spacing.sm,
+                    flex: 1,
+                  }}
+                  onClick={() => {
+                    setScreen("receive");
+                  }}
+                >
+                  <Container color="secondaryText" flex="row" center="both">
+                    <PinBottomIcon
+                      width={iconSize.sm}
+                      height={iconSize.sm}
+                    />{" "}
+                  </Container>
+                  {locale.receive}{" "}
+                </Button>
+              )}
+
+              {!hideBuyFunds && (
+                <Button
+                  variant="outline"
+                  style={{
+                    fontSize: fontSize.sm,
+                    display: "flex",
+                    gap: spacing.xs,
+                    alignItems: "center",
+                    padding: spacing.sm,
+                    flex: 1,
+                  }}
+                  onClick={() => {
+                    setScreen("buy");
+                  }}
+                >
+                  <Container color="secondaryText" flex="row" center="both">
+                    <PlusIcon width={iconSize.sm} height={iconSize.sm} />
+                  </Container>
+                  {locale.buy}
+                </Button>
+              )}
             </Container>
-            {locale.buy}
-          </Button>
-        </Container>
-      </Container>
-      <Spacer y="md" />
+          </Container>
+
+          <Spacer y="md" />
+        </>
+      )}
+
       <Container px="md">
         <Container
           flex="column"
@@ -1122,6 +1154,9 @@ export type DetailsModalConnectOptions = {
   chains?: Chain[];
   recommendedWallets?: Wallet[];
   showAllWallets?: boolean;
+  hideSendFunds?: boolean;
+  hideReceiveFunds?: boolean;
+  hideBuyFunds?: boolean;
 };
 
 export type UseWalletDetailsModalOptions = {
