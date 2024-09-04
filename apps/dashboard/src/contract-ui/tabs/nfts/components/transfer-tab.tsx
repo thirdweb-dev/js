@@ -1,12 +1,10 @@
-import { thirdwebClient } from "@/constants/client";
 import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
 import { transferFrom } from "thirdweb/extensions/erc721";
 import { isERC1155, safeTransferFrom } from "thirdweb/extensions/erc1155";
 import {
@@ -16,23 +14,13 @@ import {
 } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 interface TransferTabProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
   tokenId: string;
 }
 
-const TransferTab: React.FC<TransferTabProps> = ({
-  contractAddress,
-  chainId,
-  tokenId,
-}) => {
+const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   const account = useActiveAccount();
-  const chain = useV5DashboardChain(chainId);
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
-  });
+
   const trackEvent = useTrack();
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { to: "", amount: "1" },

@@ -1,4 +1,3 @@
-import { thirdwebClient } from "@/constants/client";
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
@@ -7,37 +6,26 @@ import {
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { multicall } from "thirdweb/extensions/common";
 import { balanceOf, encodeSafeTransferFrom } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { Button, Text } from "tw-components";
 
 interface AirdropTabProps {
-  contractAddress: string;
+  contract: ThirdwebContract;
   tokenId: string;
-  chainId: number;
 }
 
 /**
  * This component must only take in ERC1155 contracts
  */
-const AirdropTab: React.FC<AirdropTabProps> = ({
-  contractAddress,
-  tokenId,
-  chainId,
-}) => {
+const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   const account = useActiveAccount();
-  const chain = useV5DashboardChain(chainId);
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
-  });
+
   const address = useActiveAccount()?.address;
   const { handleSubmit, setValue, watch, reset, formState } = useForm<{
     addresses: AirdropAddressInput[];
@@ -66,7 +54,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
             category: "nft",
             action: "airdrop",
             label: "attempt",
-            contractAddress,
+            contract_address: contract.address,
             token_id: tokenId,
           });
           const totalOwned = await balanceOf({
@@ -101,7 +89,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
                 category: "nft",
                 action: "airdrop",
                 label: "success",
-                contract_address: contractAddress,
+                contract_address: contract.address,
                 token_id: tokenId,
               });
               onSuccess();
@@ -112,7 +100,7 @@ const AirdropTab: React.FC<AirdropTabProps> = ({
                 category: "nft",
                 action: "airdrop",
                 label: "success",
-                contract_address: contractAddress,
+                contract_address: contract.address,
                 token_id: tokenId,
                 error,
               });

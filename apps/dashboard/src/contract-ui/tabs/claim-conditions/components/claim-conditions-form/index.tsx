@@ -25,7 +25,6 @@ import {
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { TooltipBox } from "components/configure-networks/Form/TooltipBox";
-import { detectFeatures } from "components/contract-components/utils";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -178,11 +177,16 @@ export function useClaimConditionsFormContext() {
   return data;
 }
 
+// TODO: refactor, this is no longer supported
+const isClaimPhaseV1 = false;
+
 interface ClaimConditionsFormProps {
   contract: DropContract;
   tokenId?: string;
   isColumn?: true;
   contractV5: ThirdwebContract;
+  isErc20: boolean;
+  isMultiPhase: boolean;
 }
 
 export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
@@ -190,41 +194,9 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
   tokenId,
   isColumn,
   contractV5,
+  isErc20,
+  isMultiPhase,
 }) => {
-  const isMultiPhase = useMemo(
-    () =>
-      detectFeatures(contract, [
-        // erc721
-        "ERC721ClaimPhasesV1",
-        "ERC721ClaimPhasesV2",
-        // erc1155
-        "ERC1155ClaimPhasesV1",
-        "ERC1155ClaimPhasesV2",
-        // erc 20
-        "ERC20ClaimPhasesV1",
-        "ERC20ClaimPhasesV2",
-      ]),
-    [contract],
-  );
-  const isClaimPhaseV1 = useMemo(
-    () =>
-      detectFeatures(contract, [
-        // erc721
-        "ERC721ClaimConditionsV1",
-        "ERC721ClaimPhasesV1",
-        // erc1155
-        "ERC1155ClaimConditionsV1",
-        "ERC1155ClaimPhasesV1",
-        // erc20
-        "ERC20ClaimConditionsV1",
-        "ERC20ClaimPhasesV1",
-      ]),
-    [contract],
-  );
-  const isErc20 = useMemo(
-    () => detectFeatures(contract, ["ERC20"]),
-    [contract],
-  );
   const walletAddress = useActiveAccount()?.address;
   const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);

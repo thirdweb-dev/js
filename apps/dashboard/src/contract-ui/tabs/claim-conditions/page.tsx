@@ -9,6 +9,7 @@ interface ContractClaimConditionsPageProps {
   claimconditionExtensionDetection: ExtensionDetectedState;
   isERC20: boolean;
   hasNewClaimConditions: boolean;
+  isMultiPhase: boolean;
 }
 
 export const ContractClaimConditionsPage: React.FC<
@@ -18,6 +19,7 @@ export const ContractClaimConditionsPage: React.FC<
   claimconditionExtensionDetection,
   isERC20,
   hasNewClaimConditions,
+  isMultiPhase,
 }) => {
   if (!claimconditionExtensionDetection) {
     return (
@@ -49,7 +51,7 @@ export const ContractClaimConditionsPage: React.FC<
     <Flex direction="column" gap={6}>
       <ClaimConditions
         contract={contract}
-        contractInfo={{ isErc20: isERC20, hasNewClaimConditions }}
+        contractInfo={{ isErc20: isERC20, hasNewClaimConditions, isMultiPhase }}
       />
     </Flex>
   );

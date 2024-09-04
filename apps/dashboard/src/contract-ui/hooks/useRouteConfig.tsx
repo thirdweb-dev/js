@@ -7,21 +7,8 @@ import type { EnhancedRoute } from "contract-ui/types/types";
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import type { ThirdwebContract } from "thirdweb";
-import {
-  isGetContractMetadataSupported,
-  isGetDefaultRoyaltyInfoSupported,
-  isGetPlatformFeeInfoSupported,
-  isPrimarySaleRecipientSupported,
-  isSetContractMetadataSupported,
-  isSetDefaultRoyaltyInfoSupported,
-  isSetPlatformFeeInfoSupported,
-  isSetPrimarySaleRecipientSupported,
-} from "thirdweb/extensions/common";
-import {
-  isClaimToSupported,
-  isERC20,
-  isMintToSupported,
-} from "thirdweb/extensions/erc20";
+import * as CommonExt from "thirdweb/extensions/common";
+import * as ERC20Ext from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
 import { isERC1155 } from "thirdweb/extensions/erc1155";
 import * as PermissionExt from "thirdweb/extensions/permissions";
@@ -127,6 +114,10 @@ export function useContractRouteConfig(
   const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
   const isERC721Query = useReadContract(isERC721, { contract });
   const isERC1155Query = useReadContract(isERC1155, { contract });
+  const isERC20 = useMemo(
+    () => ERC20Ext.isERC20(functionSelectorQuery.data),
+    [functionSelectorQuery.data],
+  );
   const isPermissions = useMemo(() => {
     // all of these need to be supported for permissions to be enabled
     return [
@@ -157,23 +148,6 @@ export function useContractRouteConfig(
   const contractQuery = useContract(ensQuery.data?.address);
   // TODO: remove all below
   const contractData = useMemo(() => {
-    const claimconditionExtensionDetection = extensionDetectedState({
-      contractQuery,
-      feature: [
-        // erc 721
-        "ERC721ClaimPhasesV1",
-        "ERC721ClaimPhasesV2",
-        "ERC721ClaimConditionsV1",
-        "ERC721ClaimConditionsV2",
-
-        // erc 20
-        "ERC20ClaimConditionsV1",
-        "ERC20ClaimConditionsV2",
-        "ERC20ClaimPhasesV1",
-        "ERC20ClaimPhasesV2",
-      ],
-    });
-
     // AccountPage
     const detectedAccountFeature = extensionDetectedState({
       contractQuery,
@@ -206,6 +180,24 @@ export function useContractRouteConfig(
       feature: ["ModularCore"],
     });
 
+    // claim condition related stuff
+    const claimconditionExtensionDetection = extensionDetectedState({
+      contractQuery,
+      feature: [
+        // erc 721
+        "ERC721ClaimPhasesV1",
+        "ERC721ClaimPhasesV2",
+        "ERC721ClaimConditionsV1",
+        "ERC721ClaimConditionsV2",
+
+        // erc 20
+        "ERC20ClaimConditionsV1",
+        "ERC20ClaimConditionsV2",
+        "ERC20ClaimPhasesV1",
+        "ERC20ClaimPhasesV2",
+      ],
+    });
+
     const hasNewClaimConditions = detectFeatures(contractQuery.contract, [
       // erc721
       "ERC721ClaimConditionsV2",
@@ -218,6 +210,18 @@ export function useContractRouteConfig(
       "ERC20ClaimPhasesV2",
     ]);
 
+    const hasMultiPhaseClaimConditions = detectFeatures(
+      contractQuery.contract,
+      [
+        // erc721
+        "ERC721ClaimPhasesV2",
+        // erc1155
+        "ERC1155ClaimPhasesV2",
+        // erc20
+        "ERC20ClaimPhasesV2",
+      ],
+    );
+
     return {
       claimconditionExtensionDetection,
       detectedAccountFeature,
@@ -227,6 +231,7 @@ export function useContractRouteConfig(
       detectedDirectListings,
       detectedModularExtension,
       hasNewClaimConditions,
+      hasMultiPhaseClaimConditions,
     };
   }, [contractQuery]);
 
@@ -269,7 +274,7 @@ export function useContractRouteConfig(
             contractData.detectedEnglishAuctions === "enabled"
           }
           isErc1155={isERC1155Query.data || false}
-          isErc20={isERC20(functionSelectorQuery.data)}
+          isErc20={isERC20}
           isErc721={isERC721Query.data || false}
           isPermissionsEnumerable={isPermissionsEnumerable}
         />
@@ -347,15 +352,19 @@ export function useContractRouteConfig(
       path: "tokens",
       isEnabled: functionSelectorQuery.isLoading
         ? "loading"
-        : isERC20(functionSelectorQuery.data)
+        : isERC20
           ? "enabled"
           : "disabled",
       component: () => (
         <LazyContractTokensPage
           contract={contract}
-          isERC20={isERC20(functionSelectorQuery.data)}
-          isMintToSupported={isMintToSupported(functionSelectorQuery.data)}
-          isClaimToSupported={isClaimToSupported(functionSelectorQuery.data)}
+          isERC20={isERC20}
+          isMintToSupported={ERC20Ext.isMintToSupported(
+            functionSelectorQuery.data,
+          )}
+          isClaimToSupported={ERC20Ext.isClaimToSupported(
+            functionSelectorQuery.data,
+          )}
         />
       ),
     },
@@ -401,8 +410,9 @@ export function useContractRouteConfig(
           claimconditionExtensionDetection={
             contractData.claimconditionExtensionDetection
           }
-          isERC20={isERC20(functionSelectorQuery.data)}
+          isERC20={isERC20}
           hasNewClaimConditions={contractData.hasNewClaimConditions}
+          isMultiPhase={contractData.hasMultiPhaseClaimConditions}
         />
       ),
     },
@@ -464,20 +474,32 @@ export function useContractRouteConfig(
           contract={contract}
           isLoading={functionSelectorQuery.isLoading}
           isContractMetadataSupported={[
-            isGetContractMetadataSupported(functionSelectorQuery.data),
-            isSetContractMetadataSupported(functionSelectorQuery.data),
+            CommonExt.isGetContractMetadataSupported(
+              functionSelectorQuery.data,
+            ),
+            CommonExt.isSetContractMetadataSupported(
+              functionSelectorQuery.data,
+            ),
           ].every(Boolean)}
           isPrimarySaleSupported={[
-            isPrimarySaleRecipientSupported(functionSelectorQuery.data),
-            isSetPrimarySaleRecipientSupported(functionSelectorQuery.data),
+            CommonExt.isPrimarySaleRecipientSupported(
+              functionSelectorQuery.data,
+            ),
+            CommonExt.isSetPrimarySaleRecipientSupported(
+              functionSelectorQuery.data,
+            ),
           ].every(Boolean)}
           isRoyaltiesSupported={[
-            isGetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
-            isSetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
+            CommonExt.isGetDefaultRoyaltyInfoSupported(
+              functionSelectorQuery.data,
+            ),
+            CommonExt.isSetDefaultRoyaltyInfoSupported(
+              functionSelectorQuery.data,
+            ),
           ].every(Boolean)}
           isPlatformFeesSupported={[
-            isGetPlatformFeeInfoSupported(functionSelectorQuery.data),
-            isSetPlatformFeeInfoSupported(functionSelectorQuery.data),
+            CommonExt.isGetPlatformFeeInfoSupported(functionSelectorQuery.data),
+            CommonExt.isSetPlatformFeeInfoSupported(functionSelectorQuery.data),
           ].every(Boolean)}
         />
       ),

@@ -12,6 +12,7 @@ interface ClaimConditionsProps {
   contractInfo: {
     hasNewClaimConditions: boolean;
     isErc20: boolean;
+    isMultiPhase: boolean;
   };
 }
 export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
@@ -58,10 +59,12 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           {/* Set Claim Conditions */}
           {contractQuery.contract && (
             <ClaimConditionsForm
+              isErc20={contractInfo.isErc20}
               contract={contractQuery.contract}
               tokenId={tokenId}
               isColumn={isColumn}
               contractV5={contract}
+              isMultiPhase={contractInfo.isMultiPhase}
             />
           )}
         </Flex>
