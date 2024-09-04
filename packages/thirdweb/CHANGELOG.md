@@ -1,5 +1,31 @@
 # thirdweb
 
+## 5.50.1
+
+### Patch Changes
+
+- [#4388](https://github.com/thirdweb-dev/js/pull/4388) [`82a30af`](https://github.com/thirdweb-dev/js/commit/82a30afd4bced6071d87c5c018a33ecf22c0449e) Thanks [@edwardysun](https://github.com/edwardysun)! - Update setting default source chain and token
+
+- [#4375](https://github.com/thirdweb-dev/js/pull/4375) [`edb95d0`](https://github.com/thirdweb-dev/js/commit/edb95d00ca71385459181ced58117dec6619f6e7) Thanks [@jnsdls](https://github.com/jnsdls)! - [Extensions] expose permission detection logic
+
+- [#4390](https://github.com/thirdweb-dev/js/pull/4390) [`d74e61b`](https://github.com/thirdweb-dev/js/commit/d74e61b58162e97327928f6b5117bed2ec09c1b4) Thanks [@MananTank](https://github.com/MananTank)! - Fix Swap Fees layout in fees drawer in pay UI
+
+- [#4319](https://github.com/thirdweb-dev/js/pull/4319) [`73e5dc7`](https://github.com/thirdweb-dev/js/commit/73e5dc727668fb9c6cf185f16d28d28ab248558a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix direct payments to the same wallet
+
+- [#4382](https://github.com/thirdweb-dev/js/pull/4382) [`9e8d3e6`](https://github.com/thirdweb-dev/js/commit/9e8d3e66393acb70fb2209c04628aad663e93e03) Thanks [@MananTank](https://github.com/MananTank)! - Add props for hiding "Send", "Receive" and "Send" buttons in Connect Details Modal UI for `ConnectButton` component. By default, all buttons are visible in the modal.
+
+  ```tsx
+  <ConnectButton
+    detailsModal={{
+      hideSendFunds: false,
+      hideReceiveFunds: true,
+      hideBuyFunds: false,
+    }}
+  />
+  ```
+
+- [#4363](https://github.com/thirdweb-dev/js/pull/4363) [`066aede`](https://github.com/thirdweb-dev/js/commit/066aede2d1bf42201c181a1cd12e1655131d1212) Thanks [@kien-ngo](https://github.com/kien-ngo)! - Allow to specify "from" and "to" props for the ClaimButton
+
 ## 5.50.0
 
 ### Minor Changes
