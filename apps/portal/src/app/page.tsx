@@ -239,7 +239,7 @@ function WalletsSection() {
 				/>
 				<SDKCardIndex href="/dotnet" title=".NET" icon={DotNetIcon} />
 				<SDKCardIndex href="/unity" title="Unity" icon={UnityIcon} />
-				<SDKCardIndex href="/unreal" title="Unreal" icon={UnrealIcon} />
+				<SDKCardIndex href="/unreal" title="Unreal Engine" icon={UnrealIcon} />
 			</Grid>
 			<SectionTitle id="connect-learn" title="Learn" level={5} />
 

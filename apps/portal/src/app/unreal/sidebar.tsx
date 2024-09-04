@@ -2,7 +2,7 @@ import { SideBar } from "@/components/Layouts/DocLayout";
 import { ZapIcon } from "lucide-react";
 
 export const sidebar: SideBar = {
-	name: "Unreal SDK",
+	name: "Unreal Engine SDK",
 	links: [
 		{ separator: true },
 		{
@@ -15,7 +15,7 @@ export const sidebar: SideBar = {
 			icon: <ZapIcon />,
 		},
 		{
-			name: "Core",
+			name: "Classes",
 			isCollapsible: false,
 			links: [
 				{

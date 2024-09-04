@@ -1,11 +1,16 @@
+import Script from 'next/script';
 import { Details, Callout, createMetadata } from "@doc";
-import { GraduationCap } from "lucide-react";
+import { Blueprint } from "../../../components/ui/blueprint";
+import { createOAuthWalletNode } from "./nodes";
 
 export const metadata = createMetadata({
-    title: "Blueprint Overview | Thirdweb Unreal SDK",
-    description: "Overview of the Thirdweb Unreal SDK Blueprint system.",
+    title: "Blueprint Overview | Thirdweb Unreal Engine SDK",
+    description: "Overview of the Thirdweb Unreal Engine SDK Blueprint system.",
 });
 
 # Blueprint Overview
 
-This section is currently under construction. Please check back soon for detailed information about the Thirdweb Unreal SDK Blueprint system.
+This section is currently under construction. Please check back soon for detailed information about the Thirdweb Unreal Engine SDK Blueprint system.
+
+<Blueprint code={createOAuthWalletNode} />
+<Script src="/lib/klee.min.js" />

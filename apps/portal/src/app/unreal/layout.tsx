@@ -11,7 +11,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
 			sidebarHeader={
 				<div className="flex-col items-center gap-1">
 					<p className="py-5 text-lg font-semibold text-f-100">Connect</p>
-					<PlatformSelector selected="Unreal" />
+					<PlatformSelector selected="Unreal Engine" />
 				</div>
 			}
 		>
@@ -22,10 +22,10 @@ export default async function Layout(props: { children: React.ReactNode }) {
 
 export const metadata = createMetadata({
 	image: {
-		title: "thirdweb Unreal SDK",
+		title: "Thirdweb Unreal Engine SDK",
 		icon: "unreal",
 	},
-	title: "thirdweb Unreal SDK",
+	title: "Thirdweb Unreal Engine SDK",
 	description:
 		"Seamlessly create In-App Wallets, sign in with email or socials, unlock Account Abstraction features and more.",
 });
