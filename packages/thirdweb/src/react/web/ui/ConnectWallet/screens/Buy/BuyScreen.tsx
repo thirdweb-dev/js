@@ -1081,13 +1081,21 @@ function SwapScreenContent(props: {
 
   function showSwapFlow() {
     if (
-      (props.payOptions.mode === "transaction" ||
-        props.payOptions.mode === "direct_payment") &&
+      props.payOptions.mode === "direct_payment" &&
+      !isNotEnoughBalance &&
+      !swapRequired
+    ) {
+      // same currency, just direct transfer
+      setScreen({
+        id: "transfer-flow",
+      });
+    } else if (
+      props.payOptions.mode === "transaction" &&
       !isNotEnoughBalance &&
       !swapRequired
     ) {
       if (payer.account.address !== receiverAddress) {
-        // same currency, just transfer, but from another wallet
+        // needs transfer from another wallet before executing the transaction
         setScreen({
           id: "transfer-flow",
         });

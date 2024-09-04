@@ -1,4 +1,4 @@
-import { CheckCircledIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { Chain } from "../../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../../client/client.js";
@@ -59,9 +59,12 @@ export function TransferConfirmationScreen(
   const [step, setStep] = useState<"approve" | "transfer" | "execute">(
     "transfer",
   );
-  const [status, setStatus] = useState<"idle" | "pending" | "error" | "done">(
-    "idle",
-  );
+  const [status, setStatus] = useState<
+    | { id: "idle" }
+    | { id: "pending" }
+    | { id: "error"; error: string }
+    | { id: "done" }
+  >({ id: "idle" });
   const { symbol } = useChainSymbol(chain);
 
   return (
@@ -156,19 +159,20 @@ export function TransferConfirmationScreen(
         </>
       )}
 
-      {status === "error" && (
+      {status.id === "error" && (
         <>
           <Container flex="row" gap="xs" center="both" color="danger">
-            <CrossCircledIcon width={iconSize.sm} height={iconSize.sm} />
-            <Text color="danger" size="sm">
-              {step === "transfer" ? "Failed to Transfer" : "Failed to Execute"}
+            <Text color="danger" size="sm" style={{ textAlign: "center" }}>
+              {step === "transfer"
+                ? `${status.error || "Failed to Transfer"}`
+                : "Failed to Execute"}
             </Text>
           </Container>
           <Spacer y="md" />
         </>
       )}
 
-      {!transactionMode && step === "execute" && status === "done" && (
+      {!transactionMode && step === "execute" && status.id === "done" && (
         <>
           <Container flex="row" gap="xs" center="both" color="success">
             <CheckCircledIcon width={iconSize.sm} height={iconSize.sm} />
@@ -193,7 +197,7 @@ export function TransferConfirmationScreen(
         <Button
           variant="accent"
           fullWidth
-          disabled={status === "pending"}
+          disabled={status.id === "pending"}
           onClick={async () => {
             if (step === "execute") {
               onDone();
@@ -201,7 +205,7 @@ export function TransferConfirmationScreen(
             }
 
             try {
-              setStatus("pending");
+              setStatus({ id: "pending" });
 
               // TRANSACTION MODE = transfer funds to another one of your wallets before executing the tx
               if (transactionMode) {
@@ -227,7 +231,7 @@ export function TransferConfirmationScreen(
                 });
                 // switch to execute step
                 setStep("execute");
-                setStatus("idle");
+                setStatus({ id: "idle" });
               } else {
                 const transferResponse = await getBuyWithCryptoTransfer({
                   client,
@@ -241,7 +245,6 @@ export function TransferConfirmationScreen(
                   purchaseData: undefined, // TODO (pay): add purchase data
                 });
 
-                console.log("transferResponse", transferResponse);
                 if (transferResponse.approval) {
                   setStep("approve");
                   // approve the transfer
@@ -260,21 +263,25 @@ export function TransferConfirmationScreen(
                 });
                 // switches to the status polling screen
                 setTransactionHash(tx.transactionHash);
-                setStatus("idle");
+                setStatus({ id: "idle" });
               }
-            } catch (e) {
+              // biome-ignore lint/suspicious/noExplicitAny: catch multiple errors
+            } catch (e: any) {
               console.error(e);
-              setStatus("error");
+              setStatus({
+                id: "error",
+                error: "error" in e ? e.error?.message : e?.message,
+              });
             }
           }}
           gap="xs"
         >
-          {step === "execute" && (status === "done" ? "Done" : "Continue")}
+          {step === "execute" && (status.id === "done" ? "Done" : "Continue")}
           {step === "transfer" &&
-            (status === "pending" ? "Confirming" : "Confirm")}
+            (status.id === "pending" ? "Confirming" : "Confirm")}
           {step === "approve" &&
-            (status === "pending" ? "Approving" : "Approve")}
-          {status === "pending" && (
+            (status.id === "pending" ? "Approving" : "Approve")}
+          {status.id === "pending" && (
             <Spinner size="sm" color="accentButtonText" />
           )}
         </Button>
