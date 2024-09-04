@@ -11,35 +11,29 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type EncodeBytesUploadMetadataParams = {
   encryptedURI: AbiParameterToPrimitiveType<{
-    name: "encryptedURI";
     type: "bytes";
-    internalType: "bytes";
+    name: "encryptedURI";
   }>;
   provenanceHash: AbiParameterToPrimitiveType<{
-    name: "provenanceHash";
     type: "bytes32";
-    internalType: "bytes32";
+    name: "provenanceHash";
   }>;
 };
 
 export const FN_SELECTOR = "0x479eac8a" as const;
 const FN_INPUTS = [
   {
-    name: "encryptedURI",
     type: "bytes",
-    internalType: "bytes",
+    name: "encryptedURI",
   },
   {
-    name: "provenanceHash",
     type: "bytes32",
-    internalType: "bytes32",
+    name: "provenanceHash",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bytes",
-    internalType: "bytes",
   },
 ] as const;
 

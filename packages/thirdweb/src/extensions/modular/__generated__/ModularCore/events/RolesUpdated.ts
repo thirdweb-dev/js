@@ -6,16 +6,14 @@ import type { AbiParameterToPrimitiveType } from "abitype";
  */
 export type RolesUpdatedEventFilters = Partial<{
   user: AbiParameterToPrimitiveType<{
-    name: "user";
     type: "address";
+    name: "user";
     indexed: true;
-    internalType: "address";
   }>;
   roles: AbiParameterToPrimitiveType<{
-    name: "roles";
     type: "uint256";
+    name: "roles";
     indexed: true;
-    internalType: "uint256";
   }>;
 }>;
 

@@ -1,1 +1,3 @@
-["function nextTokenIdToMint() view returns (uint256)"]
+[
+  "function nextTokenIdToMint() view returns (uint256)"
+]

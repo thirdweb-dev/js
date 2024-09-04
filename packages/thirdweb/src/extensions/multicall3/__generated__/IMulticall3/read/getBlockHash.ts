@@ -11,25 +11,22 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type GetBlockHashParams = {
   blockNumber: AbiParameterToPrimitiveType<{
-    internalType: "uint256";
-    name: "blockNumber";
     type: "uint256";
+    name: "blockNumber";
   }>;
 };
 
 export const FN_SELECTOR = "0xee82ac5e" as const;
 const FN_INPUTS = [
   {
-    internalType: "uint256",
-    name: "blockNumber",
     type: "uint256",
+    name: "blockNumber",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "bytes32",
-    name: "blockHash",
     type: "bytes32",
+    name: "blockHash",
   },
 ] as const;
 

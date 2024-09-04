@@ -13,18 +13,16 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type CompleteOwnershipHandoverParams = WithOverrides<{
   pendingOwner: AbiParameterToPrimitiveType<{
-    name: "pendingOwner";
     type: "address";
-    internalType: "address";
+    name: "pendingOwner";
   }>;
 }>;
 
 export const FN_SELECTOR = "0xf04e283e" as const;
 const FN_INPUTS = [
   {
-    name: "pendingOwner",
     type: "address",
-    internalType: "address",
+    name: "pendingOwner",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

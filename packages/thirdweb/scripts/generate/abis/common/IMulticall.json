@@ -1,1 +1,3 @@
-["function multicall(bytes[] data) returns (bytes[] results)"]
+[
+  "function multicall(bytes[] data) returns (bytes[] results)"
+]

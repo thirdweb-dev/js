@@ -12,19 +12,14 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "transferOwnership" function.
  */
 export type TransferOwnershipParams = WithOverrides<{
-  newOwner: AbiParameterToPrimitiveType<{
-    name: "newOwner";
-    type: "address";
-    internalType: "address";
-  }>;
+  newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "newOwner" }>;
 }>;
 
 export const FN_SELECTOR = "0xf2fde38b" as const;
 const FN_INPUTS = [
   {
-    name: "newOwner",
     type: "address",
-    internalType: "address",
+    name: "newOwner",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

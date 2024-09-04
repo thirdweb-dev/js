@@ -78,12 +78,14 @@ export { freezeMetadata } from "../../extensions/erc1155/__generated__/INFTMetad
 /**
  * DROPS extension for ERC1155
  */
+// READ
 export { getActiveClaimCondition } from "../../extensions/erc1155/drops/read/getActiveClaimCondition.js";
 export {
   claimTo,
   type ClaimToParams,
 } from "../../extensions/erc1155/drops/write/claimTo.js";
 
+// WRITE
 export {
   lazyMint,
   type LazyMintParams,

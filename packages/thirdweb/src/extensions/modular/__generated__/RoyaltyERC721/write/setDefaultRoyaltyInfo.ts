@@ -13,28 +13,24 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type SetDefaultRoyaltyInfoParams = WithOverrides<{
   royaltyRecipient: AbiParameterToPrimitiveType<{
-    name: "_royaltyRecipient";
     type: "address";
-    internalType: "address";
+    name: "_royaltyRecipient";
   }>;
   royaltyBps: AbiParameterToPrimitiveType<{
-    name: "_royaltyBps";
     type: "uint256";
-    internalType: "uint256";
+    name: "_royaltyBps";
   }>;
 }>;
 
 export const FN_SELECTOR = "0x600dd5ea" as const;
 const FN_INPUTS = [
   {
-    name: "_royaltyRecipient",
     type: "address",
-    internalType: "address",
+    name: "_royaltyRecipient",
   },
   {
-    name: "_royaltyBps",
     type: "uint256",
-    internalType: "uint256",
+    name: "_royaltyBps",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

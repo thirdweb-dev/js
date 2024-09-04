@@ -10,41 +10,32 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "royaltyInfo" function.
  */
 export type RoyaltyInfoParams = {
-  tokenId: AbiParameterToPrimitiveType<{
-    name: "_tokenId";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_tokenId" }>;
   salePrice: AbiParameterToPrimitiveType<{
-    name: "_salePrice";
     type: "uint256";
-    internalType: "uint256";
+    name: "_salePrice";
   }>;
 };
 
 export const FN_SELECTOR = "0x2a55205a" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenId",
     type: "uint256",
-    internalType: "uint256",
+    name: "_tokenId",
   },
   {
-    name: "_salePrice",
     type: "uint256",
-    internalType: "uint256",
+    name: "_salePrice",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "receiver",
     type: "address",
-    internalType: "address",
+    name: "receiver",
   },
   {
-    name: "royaltyAmount",
     type: "uint256",
-    internalType: "uint256",
+    name: "royaltyAmount",
   },
 ] as const;
 
