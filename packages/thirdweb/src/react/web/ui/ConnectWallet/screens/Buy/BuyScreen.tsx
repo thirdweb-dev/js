@@ -1138,7 +1138,7 @@ function SwapScreenContent(props: {
                   Fees
                 </Text>
                 <Spacer y="lg" />
-                <SwapFees quote={quoteQuery.data} align="left" />
+                <SwapFees quote={quoteQuery.data} />
               </div>
             )}
           </Drawer>
