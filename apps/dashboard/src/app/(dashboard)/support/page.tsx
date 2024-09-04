@@ -135,7 +135,7 @@ export default function SupportPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-center md:text-balance">
               How can we help?
             </h1>
-            <p className="text-lg md:text-xl text-center">
+            <p className="text-lg text-center text-muted-foreground">
               Our dedicated support team is here to help you with any questions
               or issues you may have. Contact us today and let us assist you.
             </p>
@@ -147,23 +147,26 @@ export default function SupportPage() {
         <h2 className="text-3xl font-bold">Knowledge base</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {HELP_PRODUCTS.map((product) => (
-            <Card className="col-span-1" key={product.title}>
+            <Card
+              className="col-span-1 bg-muted/50 relative"
+              key={product.title}
+            >
               <CardHeader className="flex flex-row gap-2 items-center justify-between">
                 <div className="flex flex-row gap-2 items-center">
                   {product.icon && (
                     <Image
                       src={product.icon}
                       alt={product.title}
-                      className="size-6"
+                      className="size-5"
                     />
                   )}
                   <CardTitle className="text-xl">{product.title}</CardTitle>
                 </div>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   asChild
-                  className="gap-2 flex flex-row"
+                  className="gap-1 flex flex-row absolute right-2 top-4 px-2 text-muted-foreground hover:text-foreground text-sm"
                 >
                   <Link href={product.viewAllUrl} target="_blank">
                     <span>View All</span>
@@ -171,15 +174,16 @@ export default function SupportPage() {
                   </Link>
                 </Button>
               </CardHeader>
+
               <CardContent>
-                <ul>
+                <ul className="flex flex-col gap-1">
                   {product.helpArticles.map((article) => (
                     <li key={article.title}>
                       <Link
                         href={article.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-link-foreground hover:underline"
+                        className="text-muted-foreground hover:text-foreground text-sm"
                       >
                         {article.title}
                       </Link>
@@ -215,7 +219,7 @@ export default function SupportPage() {
               </Button>
             </CardContent>
             <CardFooter>
-              <p className="text-secondary-foreground text-sm italic">
+              <p className="text-muted-foreground text-sm italic">
                 Please note that our Discord server is managed by our community
                 moderators and does not offer official support.
               </p>

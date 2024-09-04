@@ -11,7 +11,7 @@ export const DeployUpsellCard: React.FC = () => {
 
       <div className="h-8" />
 
-      <p className="text-secondary-foreground ">
+      <p className="text-muted-foreground ">
         Create a contract with a single command.{" "}
         <TrackedLinkTW
           category="deploy_upsell"
@@ -35,7 +35,7 @@ export const DeployUpsellCard: React.FC = () => {
 
       <div className="h-8" />
 
-      <p className="text-secondary-foreground ">
+      <p className="text-muted-foreground ">
         Deploy a contract with a single command.{" "}
         <TrackedLinkTW
           category="deploy_upsell"

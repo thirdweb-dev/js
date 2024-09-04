@@ -5,14 +5,15 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 import dynamic from "next/dynamic";
-import { Inter as interFont } from "next/font/google";
+import { Inter } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { PostHogProvider } from "./components/root-providers";
 import { AppRouterProviders } from "./providers";
 
-const fontSans = interFont({
+const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

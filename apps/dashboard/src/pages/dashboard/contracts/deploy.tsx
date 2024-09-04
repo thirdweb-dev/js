@@ -1,10 +1,10 @@
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { useAllContractList } from "@3rdweb-sdk/react/hooks/useRegistry";
 import {
   Box,
   Flex,
   Icon,
-  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -211,8 +211,14 @@ const Contracts: ThirdwebNextPage = () => {
 
   if (address && deployedContracts.isLoading) {
     return (
-      <Flex w="full" h="full" alignItems="center" justifyContent="center">
-        <Spinner />
+      <Flex
+        w="full"
+        h="full"
+        alignItems="center"
+        justifyContent="center"
+        className="min-h-[500px]"
+      >
+        <Spinner className="size-10" />
       </Flex>
     );
   }

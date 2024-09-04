@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   type BackendWallet,
   useEngineBackendWalletBalance,
@@ -38,7 +39,6 @@ import { BiExport, BiImport, BiPencil } from "react-icons/bi";
 import { getAddress } from "thirdweb";
 import { shortenAddress } from "thirdweb/utils";
 import {
-  Badge,
   Button,
   FormHelperText,
   FormLabel,
@@ -46,6 +46,7 @@ import {
   Text,
 } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { CopyAddressButton } from "../../../@/components/ui/CopyAddressButton";
 import { prettyPrintCurrency } from "../utils";
 
 interface BackendWalletsTableProps {
@@ -67,10 +68,10 @@ const setColumns = (instanceUrl: string) => [
     cell: (cell) => {
       const address = cell.getValue();
       return (
-        <AddressCopyButton
+        <CopyAddressButton
           address={getAddress(address)}
-          shortenAddress={false}
-          size="xs"
+          copyIconPosition="left"
+          variant="ghost"
         />
       );
     },
@@ -88,18 +89,7 @@ const setColumns = (instanceUrl: string) => [
   columnHelper.accessor("type", {
     header: "Type",
     cell: (cell) => {
-      return (
-        <Badge
-          borderRadius="full"
-          size="label.sm"
-          variant="subtle"
-          px={3}
-          py={1.5}
-          colorScheme="black"
-        >
-          {cell.getValue()}
-        </Badge>
-      );
+      return <Badge variant="outline">{cell.getValue()}</Badge>;
     },
   }),
   columnHelper.accessor("address", {
@@ -287,7 +277,7 @@ const EditModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Update Backend Wallet</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -354,7 +344,7 @@ const ReceiveFundsModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent className="!bg-background border border-border rounded-lg">
         <ModalHeader>Receive Funds</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -435,7 +425,11 @@ const SendFundsModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <ModalContent
+        as="form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="!bg-background border border-border rounded-lg"
+      >
         <ModalHeader>Send Funds</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

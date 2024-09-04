@@ -23,7 +23,7 @@ export function ChainCTA(props: ChainCTAProps) {
             {props.title}
           </h2>
           {props.description && (
-            <p className="max-w-[600px] text-secondary-foreground leading-relaxed text-sm md:text-base">
+            <p className="max-w-[600px] text-muted-foreground leading-relaxed text-sm md:text-base">
               {props.description}
             </p>
           )}

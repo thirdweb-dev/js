@@ -30,7 +30,7 @@ interface AutoBarChartProps<
   stacked?: boolean;
 }
 
-export const BAR_COLORS_LIGHT = [
+const BAR_COLORS_LIGHT = [
   "#649CDD",
   "#92BBE8",
   "#407DCC",
@@ -51,7 +51,7 @@ export const BAR_COLORS_LIGHT = [
   "#CEE9E9",
 ];
 
-export const BAR_COLORS_DARK = [
+const BAR_COLORS_DARK = [
   "#3682DA",
   "#6AADF5",
   "#1769D3",

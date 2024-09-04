@@ -70,8 +70,8 @@ export async function fetchProofsForClaimer(options: {
       });
     }),
   );
-  const tree = new MerkleTree(hashedEntries);
   // 5. get the proof for the claimer + the sub merkle tree root
+  const tree = new MerkleTree(hashedEntries);
   const entry = shardData.entries.find(
     (i) => i.address.toLowerCase() === claimer.toLowerCase(),
   );

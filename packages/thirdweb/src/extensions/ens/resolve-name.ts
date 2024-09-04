@@ -65,7 +65,7 @@ export async function resolveName(options: ResolveNameOptions) {
       return name;
     },
     {
-      cacheKey: `ens:name:${address}`,
+      cacheKey: `ens:name:${resolverChain?.id || 1}:${address}`,
       // 1min cache
       cacheTime: 60 * 1000,
     },

@@ -17,7 +17,7 @@ interface ParamProps {
   };
   deployParam?: {
     type: string;
-    name: string;
+    name?: string;
   };
 }
 

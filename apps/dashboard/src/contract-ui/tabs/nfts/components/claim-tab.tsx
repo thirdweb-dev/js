@@ -1,37 +1,25 @@
-import { thirdwebClient } from "@/constants/client";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { ZERO_ADDRESS, getContract } from "thirdweb";
+import { toast } from "sonner";
+import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
+import { getApprovalForTransaction } from "thirdweb/extensions/erc20";
 import { claimTo } from "thirdweb/extensions/erc1155";
 import { useActiveAccount, useSendAndConfirmTransaction } from "thirdweb/react";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface ClaimTabProps {
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
   tokenId: string;
 }
 
-const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
-  contractAddress,
-  chainId,
-  tokenId,
-}) => {
+const ClaimTabERC1155: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
   const form = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1", to: address },
-  });
-  const chain = useV5DashboardChain(chainId);
-
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
   });
 
   const { onSuccess, onError } = useTxNotifications(
@@ -40,8 +28,8 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
     contract,
   );
 
-  const mutation = useSendAndConfirmTransaction();
-
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const account = useActiveAccount();
   return (
     <Flex
       w="full"
@@ -53,15 +41,29 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
           action: "claim",
           label: "attempt",
         });
-
+        if (!account) {
+          return toast.error("No account detected");
+        }
         try {
           const transaction = claimTo({
             contract,
             tokenId: BigInt(tokenId),
             quantity: BigInt(data.amount),
             to: data.to,
+            from: account.address,
           });
-          await mutation.mutateAsync(transaction);
+          const approveTx = await getApprovalForTransaction({
+            transaction,
+            account,
+          });
+          if (approveTx) {
+            try {
+              await sendAndConfirmTx.mutateAsync(approveTx);
+            } catch {
+              return toast.error("Error approving ERC20 token");
+            }
+          }
+          await sendAndConfirmTx.mutateAsync(transaction);
           trackEvent({
             category: "nft",
             action: "claim",
@@ -119,7 +121,7 @@ const ClaimTabERC1155: React.FC<ClaimTabProps> = ({
 
         <TransactionButton
           transactionCount={1}
-          isLoading={mutation.isPending || form.formState.isSubmitting}
+          isLoading={form.formState.isSubmitting}
           type="submit"
           colorScheme="primary"
           alignSelf="flex-end"

@@ -1,3 +1,4 @@
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { APIHeader } from "../../../components/blocks/APIHeader";
@@ -15,35 +16,37 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="pb-20 container px-0">
-      <APIHeader
-        title="The easiest way for users to transact in your app"
-        description={
-          <>
-            Onramp users with credit card &amp; cross-chain crypto payments —
-            and generate revenue for each user transaction.
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/connect/pay/get-started"
-        heroLink="/pay.png"
-      />
+    <ThirdwebProvider>
+      <main className="pb-20 container px-0">
+        <APIHeader
+          title="The easiest way for users to transact in your app"
+          description={
+            <>
+              Onramp users with credit card &amp; cross-chain crypto payments —
+              and generate revenue for each user transaction.
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/connect/pay/get-started"
+          heroLink="/pay.png"
+        />
 
-      <section className="space-y-8">
-        <StyledPayEmbed />
-      </section>
+        <section className="space-y-8">
+          <StyledPayEmbed />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <BuyMerch />
-      </section>
+        <section className="space-y-8">
+          <BuyMerch />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <BuyOnchainAsset />
-      </section>
-    </main>
+        <section className="space-y-8">
+          <BuyOnchainAsset />
+        </section>
+      </main>
+    </ThirdwebProvider>
   );
 }
 

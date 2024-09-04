@@ -152,7 +152,11 @@ const AddModal = ({
       size="lg"
     >
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <ModalContent
+        className="!bg-background border border-border rounded-lg"
+        as="form"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <ModalHeader>Add Contract Subscription</ModalHeader>
         <ModalCloseButton />
 

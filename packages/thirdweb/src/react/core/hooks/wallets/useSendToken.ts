@@ -55,7 +55,7 @@ export function useSendToken(client: ThirdwebClient) {
         !receiverAddress ||
         (!receiverAddress.endsWith(".eth") && !isAddress(receiverAddress))
       ) {
-        throw new Error("Invalid address");
+        throw new Error("Invalid receiver address");
       }
 
       if (!amount || Number.isNaN(Number(amount)) || Number(amount) < 0) {

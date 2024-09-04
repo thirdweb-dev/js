@@ -3,6 +3,8 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { grantRole as generatedGrantRole } from "../__generated__/IPermissions/write/grantRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+export { isGrantRoleSupported } from "../__generated__/IPermissions/write/grantRole.js";
+
 /**
  * @extension PERMISSIONS
  */

@@ -6,24 +6,29 @@
 export {
   hasRole,
   type HasRoleParams,
+  isHasRoleSupported,
 } from "../../extensions/permissions/read/hasRole.js";
 export {
   getRoleAdmin,
   type GetRoleAdminParams,
+  isGetRoleAdminSupported,
 } from "../../extensions/permissions/read/getRoleAdmin.js";
 
 // WRITE
 export {
   grantRole,
   type GrantRoleParams,
-} from "../../extensions/permissions/write/grant.js";
+  isGrantRoleSupported,
+} from "../../extensions/permissions/write/grantRole.js";
 export {
   revokeRole,
   type RevokeRoleParams,
+  isRevokeRoleSupported,
 } from "../../extensions/permissions/write/revokeRole.js";
 export {
   renounceRole,
   type RenounceRoleParams,
+  isRenounceRoleSupported,
 } from "../../extensions/permissions/write/renounceRole.js";
 
 // EVENTS
@@ -48,14 +53,17 @@ export {
 export {
   getRoleMember,
   type GetRoleMemberParams,
+  isGetRoleMemberSupported,
 } from "../../extensions/permissions/read/getRoleMember.js";
 export {
   getRoleMemberCount,
   type GetRoleMemberCountParams,
+  isGetRoleMemberCountSupported,
 } from "../../extensions/permissions/read/getRoleMemberCount.js";
 export {
   getAllRoleMembers,
   type GetAllRoleMembersParams,
+  isGetAllRoleMembersSupported,
 } from "../../extensions/permissions/read/getAllMembers.js";
 
 // --------------------------------------------------------

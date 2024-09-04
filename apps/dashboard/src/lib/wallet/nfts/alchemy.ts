@@ -36,8 +36,8 @@ export async function transformAlchemyResponseToNFT(
 
         try {
           return {
+            id: BigInt(alchemyNFT.id.tokenId),
             contractAddress: alchemyNFT.contract.address,
-            tokenId: alchemyNFT.id.tokenId,
             metadata: shouldDownloadURI(rawUri)
               ? await StorageSingleton.downloadJSON(
                   handleArbitraryTokenURI(rawUri),
@@ -46,6 +46,7 @@ export async function transformAlchemyResponseToNFT(
             owner,
             supply: alchemyNFT.balance || "1",
             type: alchemyNFT.id.tokenMetadata.tokenType,
+            tokenURI: rawUri,
           } as WalletNFT;
         } catch {
           return undefined as unknown as WalletNFT;

@@ -1,5 +1,4 @@
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import type { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import type { ThirdwebContract } from "thirdweb";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
@@ -8,54 +7,80 @@ import { SettingsRoyalties } from "./components/royalties";
 
 interface ContractSettingsPageProps {
   contract: ThirdwebContract;
-  detectedMetadata: ExtensionDetectedState;
-  detectedPrimarySale: ExtensionDetectedState;
-  detectedRoyalties: ExtensionDetectedState;
-  detectedPlatformFees: ExtensionDetectedState;
+  isContractMetadataSupported: boolean;
+  isPrimarySaleSupported: boolean;
+  isRoyaltiesSupported: boolean;
+  isPlatformFeesSupported: boolean;
+  isLoading: boolean;
 }
 
 export const ContractSettingsPage: React.FC<ContractSettingsPageProps> = ({
   contract,
-  detectedMetadata,
-  detectedPlatformFees,
-  detectedPrimarySale,
-  detectedRoyalties,
+  isContractMetadataSupported,
+  isPrimarySaleSupported,
+  isRoyaltiesSupported,
+  isPlatformFeesSupported,
+  isLoading,
 }) => {
   return (
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
         <SimpleGrid columns={1} w="100%" gap={8}>
           {contract && (
-            <GridItem order={detectedMetadata === "enabled" ? 0 : 100}>
+            <GridItem order={isContractMetadataSupported ? 0 : 100}>
               <SettingsMetadata
                 contract={contract}
-                detectedState={detectedMetadata}
+                detectedState={
+                  isLoading
+                    ? "loading"
+                    : isContractMetadataSupported
+                      ? "enabled"
+                      : "disabled"
+                }
               />
             </GridItem>
           )}
           {contract && (
-            <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
+            <GridItem order={isPrimarySaleSupported ? 2 : 101}>
               <SettingsPrimarySale
                 contract={contract}
-                detectedState={detectedPrimarySale}
+                detectedState={
+                  isLoading
+                    ? "loading"
+                    : isPrimarySaleSupported
+                      ? "enabled"
+                      : "disabled"
+                }
               />
             </GridItem>
           )}
 
           {contract && (
-            <GridItem order={detectedRoyalties === "enabled" ? 3 : 102}>
+            <GridItem order={isRoyaltiesSupported ? 3 : 102}>
               <SettingsRoyalties
                 contract={contract}
-                detectedState={detectedRoyalties}
+                detectedState={
+                  isLoading
+                    ? "loading"
+                    : isRoyaltiesSupported
+                      ? "enabled"
+                      : "disabled"
+                }
               />
             </GridItem>
           )}
 
           {contract && (
-            <GridItem order={detectedPlatformFees === "enabled" ? 4 : 103}>
+            <GridItem order={isPlatformFeesSupported ? 4 : 103}>
               <SettingsPlatformFees
                 contract={contract}
-                detectedState={detectedPlatformFees}
+                detectedState={
+                  isLoading
+                    ? "loading"
+                    : isPlatformFeesSupported
+                      ? "enabled"
+                      : "disabled"
+                }
               />
             </GridItem>
           )}

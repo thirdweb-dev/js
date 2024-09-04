@@ -11,15 +11,15 @@ import { TokenTransferButton } from "./components/transfer-button";
 interface ContractTokenPageProps {
   contract: ThirdwebContract;
   isERC20: boolean;
-  isERC20Mintable: boolean;
-  isERC20Claimable: boolean;
+  isMintToSupported: boolean;
+  isClaimToSupported: boolean;
 }
 
 export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   contract,
   isERC20,
-  isERC20Claimable,
-  isERC20Mintable,
+  isMintToSupported,
+  isClaimToSupported,
 }) => {
   if (!isERC20) {
     return (
@@ -52,13 +52,14 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           gap={2}
           w="inherit"
         >
-          {isERC20Claimable && <TokenClaimButton contract={contract} />}
+          {isClaimToSupported && <TokenClaimButton contract={contract} />}
           <TokenBurnButton contract={contract} />
 
           <TokenAirdropButton contract={contract} />
 
           <TokenTransferButton contract={contract} />
-          {isERC20Mintable && <TokenMintButton contract={contract} />}
+          {/* TODO: show skeleton or disabled while loading? */}
+          {isMintToSupported && <TokenMintButton contract={contract} />}
         </ButtonGroup>
       </Flex>
 

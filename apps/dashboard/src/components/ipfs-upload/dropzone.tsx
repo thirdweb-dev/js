@@ -89,7 +89,11 @@ export const IpfsUploadDropzone: React.FC = () => {
             borderColor="borderColor"
             borderRadius="xl"
           >
-            <Text size="label.lg" color="gray.700" textAlign="center">
+            <Text
+              size="label.lg"
+              className="text-muted-foreground"
+              textAlign="center"
+            >
               Please connect your wallet to begin uploading.
             </Text>
           </Center>

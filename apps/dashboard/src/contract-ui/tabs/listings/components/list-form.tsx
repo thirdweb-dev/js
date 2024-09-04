@@ -1,3 +1,4 @@
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { thirdwebClient } from "@/constants/client";
 import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useDashboardOwnedNFTs } from "@3rdweb-sdk/react/hooks/useDashboardOwnedNFTs";
@@ -99,7 +100,12 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       isAlchemySupported(chainId) ||
       isMoralisSupported(chainId));
 
-  const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs();
+  const account = useActiveAccount();
+
+  const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs(
+    account?.address,
+    chainId,
+  );
   const sendAndConfirmTx = useSendAndConfirmTransaction();
 
   const form = useForm<ListForm>({
@@ -115,8 +121,6 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
       listingDurationInSeconds: (60 * 60 * 24 * 30).toString(),
     },
   });
-
-  const account = useActiveAccount();
 
   const selectedContract = form.watch("selected.contractAddress")
     ? getContract({
@@ -140,7 +144,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
 
   const isSelected = (nft: WalletNFT) => {
     return (
-      form.watch("selected")?.tokenId === nft.tokenId &&
+      form.watch("selected")?.id === nft.id &&
       form.watch("selected")?.contractAddress === nft.contractAddress
     );
   };
@@ -215,6 +219,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             try {
               await sendAndConfirmTx.mutateAsync(approveTx);
             } catch {
+              setIsFormLoading(false);
               return toast.error("Failed to approve NFT for marketplace");
             }
           }
@@ -227,7 +232,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             const transaction = createListing({
               contract,
               assetContractAddress: formData.selected.contractAddress,
-              tokenId: BigInt(formData.selected.tokenId),
+              tokenId: BigInt(formData.selected.id),
               currencyContractAddress: formData.currencyContractAddress,
               quantity: BigInt(formData.quantity),
               startTimestamp: formData.startTimestamp,
@@ -274,7 +279,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
             const transaction = createAuction({
               contract,
               assetContractAddress: formData.selected.contractAddress,
-              tokenId: BigInt(formData.selected.tokenId),
+              tokenId: BigInt(formData.selected.id),
               startTimestamp: formData.startTimestamp,
               currencyContractAddress: formData.currencyContractAddress,
               endTimestamp: new Date(
@@ -390,7 +395,7 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
                   boxShadow="none"
                   shouldWrapChildren
                   placement="left-end"
-                  key={nft.contractAddress + nft.tokenId}
+                  key={nft.contractAddress + nft.id}
                   label={<ListLabel nft={nft} />}
                 >
                   <Box
@@ -515,11 +520,11 @@ export const CreateListingsForm: React.FC<CreateListingsFormProps> = ({
         </>
       )}
 
-      {!form.watch("selected.tokenId") && (
-        <div className="bg-warning text-warning-foreground p-4 rounded-lg border border-warning-foreground/50 flex items-center gap-2 text-sm">
+      {!form.watch("selected.id") && (
+        <Alert>
           <CircleAlertIcon className="size-4" />
-          <p>No NFT selected</p>
-        </div>
+          <AlertTitle>No NFT selected</AlertTitle>
+        </Alert>
       )}
     </Stack>
   );

@@ -1,6 +1,4 @@
 "use client";
-
-import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import {
   Alert,
   AlertDescription,
@@ -28,16 +26,17 @@ import {
   useUniqueWalletsAnalytics,
 } from "data/analytics/hooks";
 import { Suspense, useMemo, useState } from "react";
+import type { ThirdwebContract } from "thirdweb";
 import { Card, Heading } from "tw-components";
 import { ThirdwebBarChart } from "../../../@/components/blocks/charts/bar-chart";
 import { useIsomorphicLayoutEffect } from "../../../@/lib/useIsomorphicLayoutEffect";
 
 interface ContractAnalyticsPageProps {
-  contractAddress?: string;
+  contract: ThirdwebContract;
 }
 
 export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
-  contractAddress,
+  contract,
 }) => {
   const [startDate] = useState(
     (() => {
@@ -52,17 +51,9 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
     window?.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const evmContractInfo = useEVMContractInfo();
+  const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
 
-  const analyticsSupported = useAnalyticsSupportedForChain(
-    evmContractInfo?.chain?.chainId,
-  );
-
-  if (
-    !contractAddress ||
-    !evmContractInfo?.chain?.chainId ||
-    analyticsSupported.isLoading
-  ) {
+  if (analyticsSupported.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
@@ -82,7 +73,7 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      {contractAddress && evmContractInfo?.chain && (
+      {contract && (
         <>
           <Flex gap={10} direction="column">
             <Flex direction="column" gap={2}>
@@ -98,24 +89,24 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
               </Heading>
               <Flex gap={4}>
                 <AnalyticsStat
-                  chainId={evmContractInfo.chain.chainId}
-                  contractAddress={contractAddress}
+                  chainId={contract.chain.id}
+                  contractAddress={contract.address}
                   // FIXME
                   // eslint-disable-next-line react-compiler/react-compiler
                   useTotal={useTotalWalletsAnalytics}
                   label="Unique Wallets"
                 />
                 <AnalyticsStat
-                  chainId={evmContractInfo.chain.chainId}
-                  contractAddress={contractAddress}
+                  chainId={contract.chain.id}
+                  contractAddress={contract.address}
                   // FIXME
                   // eslint-disable-next-line react-compiler/react-compiler
                   useTotal={useTotalTransactionAnalytics}
                   label="Total Transactions"
                 />
                 <AnalyticsStat
-                  chainId={evmContractInfo.chain.chainId}
-                  contractAddress={contractAddress}
+                  chainId={contract.chain.id}
+                  contractAddress={contract.address}
                   // FIXME
                   // eslint-disable-next-line react-compiler/react-compiler
                   useTotal={useTotalLogsAnalytics}
@@ -126,36 +117,36 @@ export const ContractAnalyticsPage: React.FC<ContractAnalyticsPageProps> = ({
           </Flex>
           <SimpleGrid columns={{ base: 1, md: 1 }} gap={4}>
             <UniqueWalletsChart
-              chainId={evmContractInfo.chain.chainId}
-              contractAddress={contractAddress}
+              chainId={contract.chain.id}
+              contractAddress={contract.address}
               startDate={startDate}
               endDate={endDate}
             />
 
             <TotalTransactionsChart
-              chainId={evmContractInfo.chain.chainId}
-              contractAddress={contractAddress}
+              chainId={contract.chain.id}
+              contractAddress={contract.address}
               startDate={startDate}
               endDate={endDate}
             />
 
             <TotalEventsChart
-              chainId={evmContractInfo.chain.chainId}
-              contractAddress={contractAddress}
+              chainId={contract.chain.id}
+              contractAddress={contract.address}
               startDate={startDate}
               endDate={endDate}
             />
 
             <FunctionBreakdownChart
-              chainId={evmContractInfo.chain.chainId}
-              contractAddress={contractAddress}
+              chainId={contract.chain.id}
+              contractAddress={contract.address}
               startDate={startDate}
               endDate={endDate}
             />
 
             <EventBreakdownChart
-              chainId={evmContractInfo.chain.chainId}
-              contractAddress={contractAddress}
+              chainId={contract.chain.id}
+              contractAddress={contract.address}
               startDate={startDate}
               endDate={endDate}
             />

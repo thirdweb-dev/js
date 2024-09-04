@@ -94,7 +94,7 @@ function Content(props: { contractAddress: string; chainId: number }) {
             <h2 className="text-2xl tracking-tight font-bold mb-1">
               Edit Modules
             </h2>
-            <p className="text-secondary-foreground">
+            <p className="text-muted-foreground">
               Add capabilities to your contract by installing modules
             </p>
           </div>

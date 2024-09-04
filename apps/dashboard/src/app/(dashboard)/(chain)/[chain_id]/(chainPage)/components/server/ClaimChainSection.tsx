@@ -7,9 +7,9 @@ export function ClaimChainSection() {
   return (
     <section>
       <SectionTitle title="Claim Chain" />
-      <div className="border p-4 rounded-lg">
+      <div className="border p-4 rounded-lg bg-muted/50">
         <p className="mb-1"> This chain page is unclaimed </p>
-        <p className="text-secondary-foreground text-sm mb-5">
+        <p className="text-muted-foreground text-sm mb-5">
           Are you the owner of this ecosystem? Claim this page to add additional
           information on this page to help your developers get started!
         </p>
@@ -17,7 +17,7 @@ export function ClaimChainSection() {
         <Button variant="outline" asChild>
           <Link
             className="gap-2"
-            href="https://share.hsforms.com/1o01TyfsZRAao2eCrzuXSVgea58c"
+            href="https://share.hsforms.com/1qAViW3U5SoKbabNhRZy4Kgea58c"
             target="_blank"
           >
             <span>Claim Chain</span>

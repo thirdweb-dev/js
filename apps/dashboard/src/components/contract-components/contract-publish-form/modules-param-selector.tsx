@@ -6,16 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { AbiParameter } from "abitype";
 import type React from "react";
-import type {
-  useConstructorParamsFromABI,
-  useFunctionParamsFromABI,
-} from "../hooks";
 
 interface ModulesParamSelectorProps {
-  deployParams:
-    | ReturnType<typeof useFunctionParamsFromABI>
-    | ReturnType<typeof useConstructorParamsFromABI>;
+  deployParams: readonly AbiParameter[];
   value: string;
   onChange: (fn: string) => void;
 }
@@ -34,7 +29,7 @@ export const ModulesParamSelector: React.FC<ModulesParamSelectorProps> = ({
         <SelectGroup>
           {deployParams.map((param) => {
             return (
-              <SelectItem key={param.name} value={param.name}>
+              <SelectItem key={param.name} value={param.name || ""}>
                 {param.name}
               </SelectItem>
             );

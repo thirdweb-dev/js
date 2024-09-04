@@ -125,7 +125,7 @@ export const AddKeypairButton: React.FC<AddKeypairButtonProps> = ({
         size="2xl"
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="!bg-background border border-border rounded-lg">
           <ModalHeader>Add Public Key</ModalHeader>
           <ModalBody as={Flex} flexDir="column" gap={8}>
             <FormControl>

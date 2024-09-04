@@ -26,7 +26,7 @@ export const FormItem: React.FC<{
               label={<Box>{props.description}</Box>}
             >
               <div>
-                <AiOutlineInfoCircle color="gray.700" />
+                <AiOutlineInfoCircle className="text-muted-foreground" />
               </div>
             </Tooltip>
           )}

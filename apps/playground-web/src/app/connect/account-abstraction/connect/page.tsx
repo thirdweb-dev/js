@@ -1,3 +1,4 @@
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import {
@@ -16,24 +17,26 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="pb-20 container px-0">
-      <APIHeader
-        title="Account Abstraction"
-        description={
-          <>
-            Let users connect to their smart accounts with any wallet and unlock
-            gas sponsorship, batched transactions, session keys and full wallet
-            programmability.
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview"
-        heroLink="/account-abstraction.png"
-      />
+    <ThirdwebProvider>
+      <main className="pb-20 container px-0">
+        <APIHeader
+          title="Account Abstraction"
+          description={
+            <>
+              Let users connect to their smart accounts with any wallet and
+              unlock gas sponsorship, batched transactions, session keys and
+              full wallet programmability.
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/connect/account-abstraction/overview"
+          heroLink="/account-abstraction.png"
+        />
 
-      <section className="space-y-8">
-        <ConnectSmartAccount />
-      </section>
-    </main>
+        <section className="space-y-8">
+          <ConnectSmartAccount />
+        </section>
+      </main>
+    </ThirdwebProvider>
   );
 }
 

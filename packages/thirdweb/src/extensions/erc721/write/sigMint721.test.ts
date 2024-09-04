@@ -156,6 +156,43 @@ describe.runIf(process.env.TW_SECRET_KEY)(
       expect(signature.length).toBe(132);
     });
 
+    it("should automatically encode a provided string uid", async () => {
+      const { payload, signature } = await generateMintSignature({
+        mintRequest: {
+          to: TEST_ACCOUNT_B.address,
+          royaltyRecipient: TEST_ACCOUNT_B.address,
+          royaltyBps: 500,
+          primarySaleRecipient: TEST_ACCOUNT_A.address,
+          metadata: "https://example.com/token",
+          price: "0.2",
+          currency: erc20TokenContract.address,
+          validityStartTimestamp: new Date(1635724800),
+          validityEndTimestamp: new Date(1867260800),
+          uid: "abcdef1234567890",
+        },
+        account: TEST_ACCOUNT_A,
+        contract: erc721Contract,
+      });
+
+      expect(payload.to).toBe("0x70997970C51812dc3A010C7d01b50e0d17dc79C8");
+      expect(payload.royaltyRecipient).toBe(
+        "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      );
+      expect(payload.royaltyBps).toBe(500n);
+      expect(payload.primarySaleRecipient).toBe(
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      );
+      expect(payload.uri).toBe("https://example.com/token");
+      expect(payload.price).toBe(200000000000000000n);
+      expect(payload.currency).toBe(erc20TokenContract.address);
+      expect(payload.validityStartTimestamp).toBe(1635724n);
+      expect(payload.validityEndTimestamp).toBe(1867260n);
+      expect(payload.uid).toBe(
+        "0x6162636465663132333435363738393000000000000000000000000000000000",
+      );
+      expect(signature.length).toBe(132);
+    });
+
     it("should default sale recipient to the contract's primarySaleRecipient when empty", async () => {
       const { payload, signature } = await generateMintSignature({
         mintRequest: {

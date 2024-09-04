@@ -1,9 +1,28 @@
-export default function Page() {
+import { getTeamBySlug } from "@/api/team";
+import { getMembers } from "@/api/team-members";
+import { notFound } from "next/navigation";
+import { TeamMembersSettingsPage } from "./TeamMembersSettingsPage";
+
+export default async function Page(props: {
+  params: {
+    team_slug: string;
+  };
+}) {
+  const [team, members] = await Promise.all([
+    getTeamBySlug(props.params.team_slug),
+    getMembers(props.params.team_slug),
+  ]);
+
+  if (!team) {
+    notFound();
+  }
+
   return (
-    <div className="h-full py-6 container flex items-center justify-center">
-      <h1 className="text-4xl tracking-tighter text-muted-foreground">
-        Member Settings
-      </h1>
-    </div>
+    <TeamMembersSettingsPage
+      team={team}
+      members={members}
+      // TODO
+      userHasEditPermission={true}
+    />
   );
 }

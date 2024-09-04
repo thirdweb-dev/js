@@ -1,13 +1,6 @@
 import { AppFooter } from "@/components/blocks/app-footer";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import {
-  ButtonGroup,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  Icon,
-} from "@chakra-ui/react";
+import { Container, Flex, Grid, GridItem, Icon } from "@chakra-ui/react";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
@@ -25,6 +18,7 @@ import {
   TrackedLink,
 } from "tw-components";
 import type { ComponentWithChildren } from "types/component-with-children";
+import { TabLinks } from "../../../@/components/ui/tabs";
 
 export interface AppShellProps {
   layout?: "custom-contract";
@@ -44,7 +38,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   mainClassName,
 }) => {
   return (
-    <div>
+    <div className="bg-background">
       <Grid
         minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
         templateColumns={"auto 1fr"}
@@ -61,7 +55,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           position="sticky"
           zIndex="sticky"
           w={{ md: hasSidebar ? SIDEBAR_WIDTH : "auto" }}
-          className="top-0 bg-background border-b md:border-r border-border"
+          className="top-0 bg-background border-b md:border-b-0 md:border-r border-border"
         >
           {" "}
         </GridItem>
@@ -94,17 +88,14 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
 };
 
 const AppHeader: React.FC = () => {
-  const { pathname, route } = useRouter();
+  const { pathname } = useRouter();
 
   return (
     <GridItem
       colSpan={{ base: 2, md: 2 }}
       rowSpan={1}
       zIndex="sticky"
-      boxShadow="sm"
-      borderBottom="1px solid"
-      borderColor="borderColor"
-      pb={2}
+      className="bg-muted/50"
     >
       <Container
         maxW="100%"
@@ -112,6 +103,7 @@ const AppHeader: React.FC = () => {
         py={3}
         as="header"
         alignItems="center"
+        className="!px-4 lg:!px-6"
       >
         <Flex align="center" gap={4}>
           <Link href="/dashboard">
@@ -119,6 +111,7 @@ const AppHeader: React.FC = () => {
           </Link>
           <CmdKSearch />
         </Flex>
+
         <Flex align="center" gap={[2, 4]} marginLeft="auto">
           <Flex display={{ base: "none", md: "flex" }} gap={2}>
             <CreditsButton />
@@ -182,78 +175,41 @@ const AppHeader: React.FC = () => {
           </div>
         </Flex>
       </Container>
-      <Container
-        maxW="100%"
-        display="flex"
-        py={2}
-        as="nav"
-        alignItems="center"
-        overflowX={{ base: "auto", md: "hidden" }}
-      >
-        <ButtonGroup size="sm" variant="ghost" spacing={{ base: 0.5, md: 2 }}>
-          <LinkButton
-            href="/dashboard"
-            isActive={pathname === "/dashboard"}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Home
-          </LinkButton>
-          <LinkButton
-            href="/dashboard/connect"
-            isActive={
-              pathname.startsWith("/dashboard/connect") ||
-              pathname.startsWith("/dashboard/payments")
-            }
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Connect
-          </LinkButton>
-          <LinkButton
-            href="/dashboard/contracts/deploy"
-            isActive={
+
+      {/* Tabs */}
+      <TabLinks
+        className="w-full"
+        tabContainerClassName="px-4 lg:px-6"
+        links={[
+          {
+            href: "/dashboard",
+            name: "Home",
+            isActive: pathname === "/dashboard",
+          },
+          {
+            href: "/dashboard/connect",
+            name: "Connect",
+            isActive: pathname.startsWith("/dashboard/connect"),
+          },
+          {
+            href: "/dashboard/contracts/deploy",
+            name: "Contracts",
+            isActive:
               pathname.startsWith("/dashboard/contracts") ||
-              route === "/[networkOrAddress]/[...catchAll]"
-            }
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Contracts
-          </LinkButton>
-          <LinkButton
-            href="/dashboard/engine"
-            isActive={pathname.startsWith("/dashboard/engine")}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Engine
-          </LinkButton>
-          <LinkButton
-            href="/dashboard/settings/api-keys"
-            isActive={pathname.startsWith("/dashboard/settings")}
-            _active={{
-              bg: "bgBlack",
-              color: "bgWhite",
-            }}
-            rounded="lg"
-          >
-            Settings
-          </LinkButton>
-        </ButtonGroup>
-      </Container>
+              pathname === "/explore",
+          },
+          {
+            href: "/dashboard/engine",
+            name: "Engine",
+            isActive: pathname.startsWith("/dashboard/engine"),
+          },
+          {
+            href: "/dashboard/settings/api-keys",
+            name: "Settings",
+            isActive: pathname.startsWith("/dashboard/settings"),
+          },
+        ]}
+      />
     </GridItem>
   );
 };

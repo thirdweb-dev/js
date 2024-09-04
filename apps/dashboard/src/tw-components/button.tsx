@@ -157,9 +157,7 @@ export const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
     const trackEvent = useTrack();
     return (
       <IconButton
-        _light={{
-          color: "gray.700",
-        }}
+        className="text-muted-foreground"
         ref={ref}
         onClick={() =>
           trackEvent({

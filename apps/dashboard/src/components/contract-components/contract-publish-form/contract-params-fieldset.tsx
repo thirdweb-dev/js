@@ -9,6 +9,7 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import type { AbiParameter } from "abitype";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { getTemplateValuesForType } from "lib/deployment/template-values";
@@ -23,15 +24,9 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import type {
-  useConstructorParamsFromABI,
-  useFunctionParamsFromABI,
-} from "../hooks";
 
 interface ContractParamsFieldsetProps {
-  deployParams:
-    | ReturnType<typeof useFunctionParamsFromABI>
-    | ReturnType<typeof useConstructorParamsFromABI>;
+  deployParams: readonly AbiParameter[];
 }
 export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
   deployParams,
@@ -172,8 +167,6 @@ export const ContractParamsFieldset: React.FC<ContractParamsFieldsetProps> = ({
                                   },
                                 );
                               }}
-                              bgColor="gray.700"
-                              _hover={{ bgColor: "gray.800" }}
                             >
                               {paramTemplateValues[0].value}
                             </Button>

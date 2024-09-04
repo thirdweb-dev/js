@@ -77,7 +77,8 @@ export function DeployStatusModal(props: {
     <Dialog open={isModalOpen}>
       <DialogContent
         dialogCloseClassName="hidden"
-        className="max-w-[480px] p-0 gap-0"
+        className="md:max-w-[480px] p-0 gap-0 z-[10001]"
+        dialogOverlayClassName="z-[10000]"
       >
         <div className="p-6 flex flex-col gap-6">
           <DialogHeader>
@@ -140,7 +141,7 @@ function RenderDeployModalStep(props: DeployModalStepProps) {
           ) : hasCompleted ? (
             <CircleCheck className="size-6 text-green-500" />
           ) : (
-            <CircleIcon className="size-6 text-secondary-foreground" />
+            <CircleIcon className="size-6 text-muted-foreground" />
           )}
         </div>
 

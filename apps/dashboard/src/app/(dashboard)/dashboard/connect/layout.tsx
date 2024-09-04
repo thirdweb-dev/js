@@ -7,14 +7,14 @@ const SIDEBAR_SECTIONS = [
     title: "Connect",
     items: [
       {
-        id: "embedded-wallets",
-        title: "In-App Wallets",
-        href: "/dashboard/connect/in-app-wallets",
-      },
-      {
         id: "analytics",
         title: "Analytics",
         href: "/dashboard/connect/analytics",
+      },
+      {
+        id: "embedded-wallets",
+        title: "In-App Wallets",
+        href: "/dashboard/connect/in-app-wallets",
       },
       {
         id: "ecosystem",

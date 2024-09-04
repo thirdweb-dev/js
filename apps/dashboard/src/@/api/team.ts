@@ -6,11 +6,22 @@ const THIRDWEB_API_HOST =
   process.env.NEXT_PUBLIC_THIRDWEB_API_HOST || "https://api.thirdweb.com";
 
 export type Team = {
+  id: string;
   name: string;
   slug: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  bannedAt: string | null;
   // image: string; // -> TODO
   billingPlan: "pro" | "growth" | "free";
   billingStatus: "validPayment" | (string & {}); // what's the other value?
+  // billingEmail: string;
+  // billingExternalId: string;
+  // billingType: "STRIPE" | ??
+  // billingCustomerPayload: ?? | null
+  // paymentAttemptCount: number
+  // trialPeriodEndedAt: string | null;
 };
 
 export async function getTeamBySlug(slug: string) {

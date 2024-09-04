@@ -1,9 +1,17 @@
-export default function Page() {
-  return (
-    <div className="h-full py-6 container flex items-center justify-center">
-      <h1 className="text-4xl tracking-tighter text-muted-foreground">
-        General Settings
-      </h1>
-    </div>
-  );
+import { getTeamBySlug } from "@/api/team";
+import { notFound } from "next/navigation";
+import { GeneralSettingsPage } from "./general/GeneralSettingsPage";
+
+export default async function Page(props: {
+  params: {
+    team_slug: string;
+  };
+}) {
+  const team = await getTeamBySlug(props.params.team_slug);
+
+  if (!team) {
+    notFound();
+  }
+
+  return <GeneralSettingsPage team={team} />;
 }

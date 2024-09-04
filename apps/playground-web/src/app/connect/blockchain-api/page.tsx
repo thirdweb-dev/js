@@ -4,6 +4,7 @@ import { WatchEventPreview } from "@/components/blockchain-api/watch-event-previ
 import { WriteContractExtensionPreview } from "@/components/blockchain-api/write-contract-extension";
 import { WriteContractRawPreview } from "@/components/blockchain-api/write-contract-raw";
 import { CodeExample } from "@/components/code/code-example";
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { APIHeader } from "../../../components/blocks/APIHeader";
@@ -17,47 +18,49 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="pb-20 container px-0">
-      <APIHeader
-        title="Blockchain API"
-        description={
-          <>
-            Performant, reliable and type safe API to read write to any contract
-            on any EVM chain through our RPC Edge endpoints.
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/typescript/v5"
-        heroLink="/blockchain-api.png"
-      />
+    <ThirdwebProvider>
+      <main className="pb-20 container px-0">
+        <APIHeader
+          title="Blockchain API"
+          description={
+            <>
+              Performant, reliable and type safe API to read write to any
+              contract on any EVM chain through our RPC Edge endpoints.
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/typescript/v5"
+          heroLink="/blockchain-api.png"
+        />
 
-      <section className="space-y-8">
-        <ReadContractRaw />
-      </section>
+        <section className="space-y-8">
+          <ReadContractRaw />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <ReadContractExtension />
-      </section>
+        <section className="space-y-8">
+          <ReadContractExtension />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <WriteContractExtension />
-      </section>
+        <section className="space-y-8">
+          <WriteContractExtension />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <WriteContractRaw />
-      </section>
+        <section className="space-y-8">
+          <WriteContractRaw />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <WatchEvent />
-      </section>
-    </main>
+        <section className="space-y-8">
+          <WatchEvent />
+        </section>
+      </main>
+    </ThirdwebProvider>
   );
 }
 

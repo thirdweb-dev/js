@@ -94,6 +94,21 @@ const GUIDES = [
 ];
 
 const ConnectLanding: ThirdwebNextPage = () => {
+  const platforms = [
+    {
+      platform: "React",
+      href: "https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton",
+    },
+    {
+      platform: "React Native",
+      href: "https://portal.thirdweb.com/react-native/latest/components/ConnectWallet",
+    },
+    {
+      platform: "Unity",
+      href: "https://portal.thirdweb.com/unity/wallets/prefab",
+    },
+  ] as const;
+
   return (
     <LandingLayout
       bgColor="#0F0F0F"
@@ -228,27 +243,15 @@ const ConnectLanding: ThirdwebNextPage = () => {
               >
                 Supports
               </Text>
-              <SupportedPlatformLink
-                trackingCategory={TRACKING_CATEGORY}
-                size="sm"
-                platform="React"
-                href="https://portal.thirdweb.com/typescript/v5/react/components/ConnectButton"
-                bg="#0E0E0E"
-              />
-              <SupportedPlatformLink
-                trackingCategory={TRACKING_CATEGORY}
-                size="sm"
-                platform="React Native"
-                href="https://portal.thirdweb.com/react-native/latest/components/ConnectWallet"
-                bg="#0E0E0E"
-              />
-              <SupportedPlatformLink
-                trackingCategory={TRACKING_CATEGORY}
-                size="sm"
-                platform="Unity"
-                href="https://portal.thirdweb.com/unity/wallets/prefab"
-                bg="#0E0E0E"
-              />
+              {platforms.map(({ platform, href }) => (
+                <SupportedPlatformLink
+                  key={platform}
+                  trackingCategory={TRACKING_CATEGORY}
+                  platform={platform}
+                  href={href}
+                  className="text-foreground hover:text-link-foreground bg-background px-3 py-2 rounded-lg text-xs border border-border hover:border-link-foreground"
+                />
+              ))}
             </Flex>
 
             <MiniPlayground trackingCategory={TRACKING_CATEGORY} />

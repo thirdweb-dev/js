@@ -1,3 +1,4 @@
+import type { NFT } from "thirdweb";
 import {
   arbitrum,
   arbitrumNova,
@@ -50,25 +51,8 @@ import {
   zoraSepolia,
 } from "thirdweb/chains";
 
-type NFT = {
-  metadata: {
-    name?: string;
-    description?: string;
-    image?: string | null;
-    animation_url?: string | null;
-    external_url?: string | null;
-    background_color?: string;
-    properties?: Record<string, unknown> | Array<Record<string, unknown>>;
-  } & Record<string, unknown>;
-  owner: string;
-  type: "ERC1155" | "ERC721";
-  supply: string;
-  quantityOwned?: bigint;
-};
-
 export type WalletNFT = NFT & {
   contractAddress: string;
-  tokenId: string;
 };
 
 // List: https://docs.alchemy.com/reference/nft-api-faq

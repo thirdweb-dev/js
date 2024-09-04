@@ -124,7 +124,11 @@ const AddModal = ({
   return (
     <Modal isOpen={disclosure.isOpen} onClose={disclosure.onClose} isCentered>
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <ModalContent
+        className="!bg-background border border-border rounded-lg"
+        as="form"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <ModalHeader>Add Relayer</ModalHeader>
         <ModalCloseButton />
 

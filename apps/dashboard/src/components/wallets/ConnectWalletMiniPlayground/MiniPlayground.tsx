@@ -11,10 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
-import {
-  Londrina_Solid as londrinaSolidConstructor,
-  Source_Serif_4 as sourceSerif4Constructor,
-} from "next/font/google";
+import { Londrina_Solid, Source_Serif_4 } from "next/font/google";
 import { useEffect, useMemo, useState } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import {
@@ -41,14 +38,16 @@ import { ThemeButton } from "../ConnectWalletPlayground/ThemeButton";
 import { usePlaygroundTheme } from "../ConnectWalletPlayground/usePlaygroundTheme";
 
 // If loading a variable font, you don't need to specify the font weight
-const nounsDaoFont = londrinaSolidConstructor({
+const nounsDaoFont = Londrina_Solid({
   subsets: ["latin"],
   weight: ["900", "400"],
+  display: "swap",
 });
 
-const web3WarriorsFont = sourceSerif4Constructor({
+const web3WarriorsFont = Source_Serif_4({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 type WalletIdSubset =

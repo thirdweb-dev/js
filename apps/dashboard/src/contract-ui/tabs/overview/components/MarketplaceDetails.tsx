@@ -41,26 +41,6 @@ type ListingData =
       currencyValue: DirectListing["currencyValuePerToken"];
     });
 
-type MarketplaceDetailsProps = {
-  contract: ThirdwebContract;
-  features: string[];
-  trackingCategory: string;
-};
-
-export const MarketplaceDetails: React.FC<MarketplaceDetailsProps> = ({
-  contract,
-  trackingCategory,
-  features,
-}) => {
-  return (
-    <MarketplaceV3Details
-      contract={contract}
-      trackingCategory={trackingCategory}
-      features={features}
-    />
-  );
-};
-
 type ListingCardsSectionProps = {
   contract: ThirdwebContract;
   trackingCategory: string;
@@ -193,17 +173,16 @@ const EnglishAuctionCards: React.FC<ListingCardsSectionProps> = ({
 interface MarketplaceDetailsVersionProps {
   contract: ThirdwebContract;
   trackingCategory: string;
-  features: MarketplaceDetailsProps["features"];
+  hasEnglishAuctions: boolean;
+  hasDirectListings: boolean;
 }
 
-const MarketplaceV3Details: React.FC<MarketplaceDetailsVersionProps> = ({
+export const MarketplaceDetails: React.FC<MarketplaceDetailsVersionProps> = ({
   contract,
   trackingCategory,
-  features,
+  hasDirectListings,
+  hasEnglishAuctions,
 }) => {
-  const hasDirectListings = features.includes("DirectListings");
-  const hasEnglishAuctions = features.includes("EnglishAuctions");
-
   return (
     <Flex gap={6} flexDirection="column">
       <Heading size="title.sm">Listings</Heading>

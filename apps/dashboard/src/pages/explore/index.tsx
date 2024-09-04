@@ -41,7 +41,7 @@ const ExplorePage: ThirdwebNextPage = (
 
       <div>
         <h1 className="mb-3 text-5xl font-bold tracking-tighter">Explore</h1>
-        <p className="text-lg text-secondary-foreground max-w-screen-md">
+        <p className="text-lg text-muted-foreground max-w-screen-md">
           The best place for web3 developers to explore smart contracts from
           world-class web3 protocols & engineers — all deployable with one
           click.

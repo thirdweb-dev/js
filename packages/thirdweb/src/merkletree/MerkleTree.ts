@@ -26,7 +26,7 @@ export class MerkleTree {
       el instanceof Uint8Array ? el : hexToBytes(el),
     );
 
-    this.leaves = this.leaves.sort();
+    this.leaves = this.leaves.sort(compareUint8Arrays);
 
     this.createHashes(this.leaves);
   }

@@ -4,13 +4,13 @@ import Image from "next/image";
 
 export const PublishUpsellCard: React.FC = () => {
   return (
-    <div className="border border-border rounded-xl p-8 md:p-10 flex gap-10 shadow-lg">
+    <div className="border border-border rounded-xl p-8 md:p-10 flex gap-10 shadow-lg bg-muted/50">
       <div className="flex flex-col gap-6">
         <h2 className="text-3xl tracking-tigher font-bold">
           {"Accelerate your protocol's growth"}
         </h2>
 
-        <p className="text-secondary-foreground">
+        <p className="text-muted-foreground">
           Publishing your contract is the best way to get your contracts in
           front of our 70k+ community of web3 developers.
         </p>
@@ -22,7 +22,7 @@ export const PublishUpsellCard: React.FC = () => {
             alt=""
           />
 
-          <p className="text-secondary-foreground">
+          <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
               Save development time.{" "}
             </span>
@@ -37,7 +37,7 @@ export const PublishUpsellCard: React.FC = () => {
             src={require("/public/assets/product-pages/publish/hero-icon-2.png")}
             alt=""
           />
-          <p className="text-secondary-foreground">
+          <p className="text-muted-foreground">
             <span className="font-semibold text-foreground">
               Shareable landing page.{" "}
             </span>

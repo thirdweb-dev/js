@@ -120,7 +120,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
         >
           {description && <Text mt={4}>{description}</Text>}
           <Progress value={percentage} mt={2} mb={2} rounded="full" size="sm" />
-          <Text size="body.md" color="gray.700">
+          <Text size="body.md" className="text-muted-foreground">
             {lastStepCompleted + 1}/{steps.length} tasks completed
           </Text>
 
@@ -143,8 +143,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
                   rounded="full"
                   alignItems="center"
                   justifyContent="center"
-                  border="1px solid"
-                  borderColor={step.completed ? "gray.500" : "gray.700"}
+                  className="border border-border"
                   mt={-1}
                 >
                   {step.completed ? (
@@ -164,7 +163,7 @@ export const StepsCard: React.FC<StepsCardProps> = ({
                   {(step.showCompletedChildren || stepCompleted) && (
                     <>
                       {step.description && (
-                        <Text my={2} color="gray.700">
+                        <Text my={2} className="text-muted-foreground">
                           {step.description}
                         </Text>
                       )}

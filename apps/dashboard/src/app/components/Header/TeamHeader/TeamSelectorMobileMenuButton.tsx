@@ -26,7 +26,10 @@ export function TeamSelectorMobileMenuButton(props: TeamSwitcherProps) {
           variant="ghost"
           aria-label="Select Project"
         >
-          <ChevronsUpDownIcon className="shrink-0 text-muted-foreground hover:text-foreground size-5" />
+          <ChevronsUpDownIcon
+            className="shrink-0 text-muted-foreground hover:text-foreground size-5"
+            strokeWidth={1.5}
+          />
         </Button>
       </DialogTrigger>
 

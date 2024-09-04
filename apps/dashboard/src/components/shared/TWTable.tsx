@@ -1,3 +1,5 @@
+import { ScrollShadow } from "@/components/ui/ScrollShadow/ScrollShadow";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -5,21 +7,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import {
-  ButtonGroup,
-  Center,
-  Divider,
-  Flex,
-  Icon,
-  Spinner,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
 import {
   type ColumnDef,
   type PaginationState,
@@ -33,7 +22,6 @@ import { type SetStateAction, useMemo, useState } from "react";
 import { FaEllipsisVertical } from "react-icons/fa6";
 import { FiArrowRight } from "react-icons/fi";
 import type { IconType } from "react-icons/lib";
-import { TableContainer, Text } from "tw-components";
 
 type CtaMenuItem<TRowData> = {
   icon?: IconType;
@@ -127,46 +115,42 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
   });
 
   return (
-    <TableContainer>
-      <Table>
-        <Thead>
+    <ScrollShadow className="border border-border rounded-lg overflow-hidden whitespace-nowrap">
+      <table className="w-full border-collapse tabular-nums lining-nums align-top">
+        <thead className="bg-muted/50 border-b border-border">
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <Th key={header.id} colSpan={header.colSpan} border="none">
+                <Th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : (
-                    <Flex align="center" gap={2}>
-                      <Text as="label" size="label.sm" color="faded">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                      </Text>
+                    <div className="flex items-center gap-2 ">
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                       {/* TODO add fitlering? */}
                       {/* {header.column.getCanFilter() ? (
                         <div>
                           <Filter column={header.column} table={table} />
                         </div>
                       ) : null} */}
-                    </Flex>
+                    </div>
                   )}
                 </Th>
               ))}
               {(tableProps.onRowClick || tableProps.onMenuClick) && (
-                <Th border="none" className="w-0" />
+                <Th className="w-0" />
               )}
             </Tr>
           ))}
-        </Thead>
+        </thead>
 
-        <Tbody className="!bg-background">
+        <tbody className="bg-background">
           {table.getRowModel().rows.map((row) => {
             return (
               <Tr
                 key={row.id}
                 role="group"
-                borderBottomWidth={1}
-                _last={{ borderBottomWidth: 0 }}
                 {...(tableProps.onRowClick
                   ? {
                       style: {
@@ -185,11 +169,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
               >
                 {row.getVisibleCells().map((cell) => {
                   return (
-                    <Td
-                      key={cell.id}
-                      borderBottomWidth="inherit"
-                      borderBottomColor="accent.100"
-                    >
+                    <Td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -200,19 +180,11 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
 
                 {/* Show a ... menu or individual CTA buttons. */}
                 {tableProps.onRowClick ? (
-                  <Td
-                    isNumeric
-                    borderBottomWidth="inherit"
-                    borderBottomColor="accent.100"
-                  >
-                    <Icon as={FiArrowRight} />
+                  <Td className="text-end">
+                    <FiArrowRight className="size-4" />
                   </Td>
                 ) : tableProps.onMenuClick ? (
-                  <Td
-                    isNumeric
-                    borderBottomWidth="inherit"
-                    borderBottomColor="accent.100"
-                  >
+                  <Td className="text-end">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -232,11 +204,10 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
                                 onClick={() => onClick(row.original)}
                                 className={cn(
                                   "gap-3 px-3 py-3 min-w-[170px] cursor-pointer",
-                                  isDestructive &&
-                                    "!text-destructive-text hover:!bg-destructive",
+                                  isDestructive && "!text-destructive-text",
                                 )}
                               >
-                                {icon && <Icon as={icon} boxSize={4} />}
+                                {icon?.({ className: "size-4" })}
                                 {text}
                               </DropdownMenuItem>
                             );
@@ -249,25 +220,33 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
               </Tr>
             );
           })}
-        </Tbody>
-      </Table>
+        </tbody>
+      </table>
+
       {tableProps.isLoading && (
-        <Center>
-          <Flex py={4} direction="row" gap={4} align="center">
-            <Spinner size="sm" />
-            <Text>Loading {pluralize(tableProps.title, 0, false)}</Text>
-          </Flex>
-        </Center>
+        <div className="flex items-center justify-center">
+          <div className="flex py-4 gap-2 items-center">
+            <Spinner className="size-4" />
+            <p className="text-muted-foreground text-sm">
+              Loading {pluralize(tableProps.title, 0, false)}
+            </p>
+          </div>
+        </div>
       )}
+
       {!tableProps.isLoading &&
         tableProps.data.length === 0 &&
         tableProps.isFetched && (
-          <Center>
-            <Flex py={4} direction="column" gap={4} align="center">
-              <Text>No {pluralize(tableProps.title, 0, false)} found.</Text>
-            </Flex>
-          </Center>
+          <div className="flex items-center justify-center">
+            <div className="flex py-4 gap-4 items-center">
+              <p className="text-muted-foreground text-sm">
+                {" "}
+                No {pluralize(tableProps.title, 0, false)} found.
+              </p>
+            </div>
+          </div>
         )}
+
       <ShowMoreButton
         shouldShowMore={slicedData.length < tableProps.data.length}
         shouldShowLess={
@@ -278,7 +257,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         showMoreLimit={showMoreLimit}
         setShowMoreLimit={setShowMoreLimit}
       />
-    </TableContainer>
+    </ScrollShadow>
   );
 }
 
@@ -306,22 +285,63 @@ const ShowMoreButton: React.FC<ShowMoreButtonProps> = ({
   }
 
   return (
-    <Flex flexDir="column">
-      <Divider color="borderColor" />
-      <Center>
-        <ButtonGroup variant="ghost" size="sm" py={2}>
+    <div className="flex flex-col">
+      <Separator />
+      <div className="flex items-center justify-center">
+        <div className="gap-2 flex items-center">
           {shouldShowMore && (
-            <Button onClick={() => setShowMoreLimit(showMoreLimit + pageSize)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowMoreLimit(showMoreLimit + pageSize)}
+            >
               Show more
             </Button>
           )}
           {shouldShowLess && (
-            <Button onClick={() => setShowMoreLimit(newShowLess)}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowMoreLimit(newShowLess)}
+            >
               Show Less
             </Button>
           )}
-        </ButtonGroup>
-      </Center>
-    </Flex>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Th = (props: React.ThHTMLAttributes<HTMLTableCellElement>) => {
+  return (
+    <th
+      {...props}
+      className={cn(
+        "border-none px-6 py-4 uppercase font-medium text-muted-foreground tracking-wider text-xs text-start",
+        props.className,
+      )}
+    />
+  );
+};
+
+const Tr = (props: React.HTMLAttributes<HTMLTableRowElement>) => {
+  return (
+    <tr
+      {...props}
+      className={cn("border-b border-border last:border-0", props.className)}
+    />
+  );
+};
+
+const Td = (props: React.TdHTMLAttributes<HTMLTableCellElement>) => {
+  return (
+    <td
+      {...props}
+      className={cn(
+        "px-6 py-3 text-sm text-start items-center",
+        props.className,
+      )}
+    />
   );
 };

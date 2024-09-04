@@ -49,7 +49,7 @@ export function MobileBurgerMenuButton(props: {
         className="!h-auto p-1"
         onClick={() => setIsMenuOpen(true)}
       >
-        <MenuIcon className="size-7 text-muted-foreground" />
+        <MenuIcon className="size-6 text-muted-foreground" />
       </Button>
 
       {isMenuOpen && (

@@ -1,78 +1,142 @@
+"use client";
+
+import { DynamicHeight } from "@/components/ui/DynamicHeight";
+import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
+import { cn } from "@/lib/utils";
 import {
   type ApiKey,
   type ApiKeyService,
+  type UpdateKeyInput,
+  useAccount,
   useUpdateApiKey,
 } from "@3rdweb-sdk/react/hooks/useApi";
-import {
-  Box,
-  Divider,
-  Flex,
-  FormControl,
-  HStack,
-  IconButton,
-  Input,
-  Spacer,
-  Stack,
-  Textarea,
-  useColorModeValue,
-  useToast,
-} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GatedFeature } from "components/settings/Account/Billing/GatedFeature";
 import { GatedSwitch } from "components/settings/Account/Billing/GatedSwitch";
 import {
   type ApiKeyEmbeddedWalletsValidationSchema,
   apiKeyEmbeddedWalletsValidationSchema,
 } from "components/settings/ApiKeys/validations";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { LuTrash2 } from "react-icons/lu";
-import {
-  Button,
-  Card,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Text,
-  TrackedLink,
-} from "tw-components";
+import { PlusIcon, Trash2Icon } from "lucide-react";
+import type React from "react";
+import { type UseFormReturn, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { toArrFromList } from "utils/string";
 
 interface ConfigureProps {
-  apiKey: ApiKey;
+  apiKey: Pick<
+    ApiKey,
+    "id" | "name" | "domains" | "bundleIds" | "services" | "redirectUrls"
+  >;
   trackingCategory: string;
 }
 
 const TRACKING_CATEGORY = "embedded-wallet";
 
-export const Configure: React.FC<ConfigureProps> = ({
-  apiKey,
-  trackingCategory,
-}) => {
-  // safe to type assert here as this component only renders
-  // for an api key with an active embeddedWallets service
-  const services = apiKey.services as ApiKeyService[];
+type UpdateAPIKeyTrackingData = {
+  hasCustomBranding: boolean;
+  hasCustomJwt: boolean;
+  hasCustomAuthEndpoint: boolean;
+};
+
+export const Configure: React.FC<ConfigureProps> = (props) => {
+  const { data: dashboardAccount } = useAccount();
+  const mutation = useUpdateApiKey();
+  const { trackingCategory } = props;
+  const trackEvent = useTrack();
+
+  if (!dashboardAccount) {
+    return (
+      <div className="flex items-center justify-center h-[500px]">
+        <Spinner className="size-10" />
+      </div>
+    );
+  }
+
+  function handleAPIKeyUpdate(
+    newValue: UpdateKeyInput,
+    trackingData: UpdateAPIKeyTrackingData,
+  ) {
+    trackEvent({
+      category: trackingCategory,
+      action: "configuration-update",
+      label: "attempt",
+    });
+
+    mutation.mutate(newValue, {
+      onSuccess: () => {
+        toast.success("In-App Wallet API Key configuration updated");
+        trackEvent({
+          category: trackingCategory,
+          action: "configuration-update",
+          label: "success",
+          data: trackingData,
+        });
+      },
+      onError: (err) => {
+        toast.error("Failed to update an API Key");
+        console.error(err);
+        trackEvent({
+          category: trackingCategory,
+          action: "configuration-update",
+          label: "error",
+          error: err,
+        });
+      },
+    });
+  }
+
+  return (
+    <InAppWalletSettingsUI
+      {...props}
+      canEditAdvancedFeatures={dashboardAccount.advancedEnabled}
+      updateApiKey={handleAPIKeyUpdate}
+      isUpdating={mutation.isLoading}
+    />
+  );
+};
+
+export const InAppWalletSettingsUI: React.FC<
+  ConfigureProps & {
+    canEditAdvancedFeatures: boolean;
+    updateApiKey: (
+      apiKey: UpdateKeyInput,
+      trackingData: UpdateAPIKeyTrackingData,
+    ) => void;
+    isUpdating: boolean;
+  }
+> = (props) => {
+  const { canEditAdvancedFeatures, apiKey } = props;
+  const services: ApiKeyService[] = apiKey.services || [];
 
   const serviceIdx = services.findIndex(
     (srv) => srv.name === "embeddedWallets",
   );
-  const config = services[serviceIdx];
+  const config: ApiKeyService | undefined = services[serviceIdx];
 
-  const mutation = useUpdateApiKey();
-  const trackEvent = useTrack();
-  const toast = useToast();
-  const bg = useColorModeValue("backgroundCardHighlight", "transparent");
   const hasCustomBranding =
-    !!config.applicationImageUrl?.length || !!config.applicationName?.length;
+    !!config?.applicationImageUrl?.length || !!config?.applicationName?.length;
 
   const form = useForm<ApiKeyEmbeddedWalletsValidationSchema>({
     resolver: zodResolver(apiKeyEmbeddedWalletsValidationSchema),
-    defaultValues: {
-      customAuthEndpoint: config.customAuthEndpoint,
-      customAuthentication: config.customAuthentication,
+    values: {
+      customAuthEndpoint: config?.customAuthEndpoint,
+      customAuthentication: config?.customAuthentication,
       ...(hasCustomBranding
         ? {
             branding: {
@@ -84,32 +148,6 @@ export const Configure: React.FC<ConfigureProps> = ({
       redirectUrls: apiKey.redirectUrls.join("\n"),
     },
   });
-  const customHeaderFields = useFieldArray({
-    control: form.control,
-    name: "customAuthEndpoint.customHeaders",
-  });
-
-  // FIXME: jesus do we need this? - there has to be a better way
-  // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => {
-    form.reset({
-      customAuthEndpoint: config.customAuthEndpoint,
-      customAuthentication: config.customAuthentication,
-      ...(hasCustomBranding
-        ? {
-            branding: {
-              applicationName: config.applicationName,
-              applicationImageUrl: config.applicationImageUrl,
-            },
-          }
-        : undefined),
-    });
-  }, [config, form, hasCustomBranding]);
-
-  const { onSuccess, onError } = useTxNotifications(
-    "In-App Wallet API Key configuration updated",
-    "Failed to update an API Key",
-  );
 
   const handleSubmit = form.handleSubmit((values) => {
     const { customAuthentication, customAuthEndpoint, branding, redirectUrls } =
@@ -119,36 +157,25 @@ export const Configure: React.FC<ConfigureProps> = ({
       customAuthentication &&
       (!customAuthentication.aud.length || !customAuthentication.jwksUri.length)
     ) {
-      return toast({
-        title: "Custom JSON Web Token configuration is invalid",
+      return toast.error("Custom JSON Web Token configuration is invalid", {
         description:
           "To use In-App Wallets with Custom JSON Web Token, provide JWKS URI and AUD.",
-        position: "bottom",
-        variant: "solid",
-        status: "error",
         duration: 9000,
-        isClosable: true,
+        dismissible: true,
       });
     }
 
     if (customAuthEndpoint && !customAuthEndpoint.authEndpoint.length) {
-      return toast({
-        title: "Custom Authentication Endpoint configuration is invalid",
-        description:
-          "To use In-App Wallets with Custom Authentication Endpoint, provide a valid URL.",
-        position: "bottom",
-        variant: "solid",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
+      return toast.error(
+        "Custom Authentication Endpoint configuration is invalid",
+        {
+          description:
+            "To use In-App Wallets with Custom Authentication Endpoint, provide a valid URL.",
+          duration: 9000,
+          dismissible: true,
+        },
+      );
     }
-
-    trackEvent({
-      category: trackingCategory,
-      action: "configuration-update",
-      label: "attempt",
-    });
 
     const { id, name, domains, bundleIds } = apiKey;
 
@@ -163,479 +190,447 @@ export const Configure: React.FC<ConfigureProps> = ({
       applicationName: branding?.applicationName || apiKey.name,
     };
 
-    const formattedValues = {
-      id,
-      name,
-      domains,
-      bundleIds,
-      redirectUrls: toArrFromList(redirectUrls || "", true),
-      services: newServices,
-    };
-
-    mutation.mutate(formattedValues, {
-      onSuccess: () => {
-        onSuccess();
-        trackEvent({
-          category: trackingCategory,
-          action: "configuration-update",
-          label: "success",
-          data: {
-            hasCustomBranding: !!branding,
-            hasCustomJwt: !!customAuthentication,
-            hasCustomAuthEndpoint: !!customAuthEndpoint,
-          },
-        });
+    props.updateApiKey(
+      {
+        id,
+        name,
+        domains,
+        bundleIds,
+        redirectUrls: toArrFromList(redirectUrls || "", true),
+        services: newServices,
       },
-      onError: (err) => {
-        onError(err);
-        trackEvent({
-          category: trackingCategory,
-          action: "configuration-update",
-          label: "error",
-          error: err,
-        });
+      {
+        hasCustomBranding: !!branding,
+        hasCustomJwt: !!customAuthentication,
+        hasCustomAuthEndpoint: !!customAuthEndpoint,
       },
-    });
+    );
   });
 
   return (
-    <Flex flexDir="column">
+    <Form {...form}>
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
+        onSubmit={handleSubmit}
         autoComplete="off"
+        className="flex flex-col gap-6"
       >
-        <Flex flexDir="column" gap={4}>
-          <Heading size="title.sm">Branding</Heading>
-          <Flex flexDir="column" gap={8}>
-            <FormControl>
-              <HStack justifyContent="space-between" alignItems="flex-start">
-                <Box>
-                  <FormLabel pointerEvents={"none"}>
-                    Custom email logo and name
-                  </FormLabel>
-                  <Text>
-                    Pass a custom logo and app name to be used in the emails
-                    sent to users.
-                  </Text>
-                </Box>
+        {/* Branding */}
+        <BrandingFieldset
+          form={form}
+          canEditAdvancedFeatures={canEditAdvancedFeatures}
+        />
 
-                <GatedSwitch
-                  trackingLabel="customEmailLogoAndName"
-                  colorScheme="primary"
-                  isChecked={!!form.watch("branding")}
-                  onChange={() =>
-                    form.setValue(
-                      "branding",
-                      !form.watch("branding")
-                        ? {
-                            applicationImageUrl: "",
-                            applicationName: "",
-                          }
-                        : undefined,
-                    )
-                  }
-                />
-              </HStack>
-            </FormControl>
+        {/* Authentication */}
+        <Fieldset legend="Authentication">
+          <JSONWebTokenFields
+            form={form}
+            canEditAdvancedFeatures={canEditAdvancedFeatures}
+          />
 
-            {!!form.watch("branding") && (
-              <GatedFeature>
-                <Flex flexDir="column" gap={6}>
-                  <FormControl
-                    isInvalid={
-                      !!form.getFieldState(
-                        "branding.applicationName",
-                        form.formState,
-                      ).error
-                    }
-                  >
-                    <FormLabel size="label.sm">Application Name</FormLabel>
-                    <Input
-                      placeholder="Application Name"
-                      type="text"
-                      {...form.register("branding.applicationName")}
-                    />
-                    {!form.getFieldState(
-                      "branding.applicationName",
-                      form.formState,
-                    ).error ? (
-                      <FormHelperText>
-                        Name that will display in the emails sent to users.
-                        Defaults to your API Key&apos;s name.
-                      </FormHelperText>
-                    ) : (
-                      <FormErrorMessage>
-                        {
-                          form.getFieldState(
-                            "branding.applicationName",
-                            form.formState,
-                          ).error?.message
-                        }
-                      </FormErrorMessage>
-                    )}
-                  </FormControl>
+          <Separator className="my-5" />
 
-                  <FormControl
-                    isInvalid={
-                      !!form.getFieldState(
-                        "branding.applicationImageUrl",
-                        form.formState,
-                      ).error
-                    }
-                  >
-                    <FormLabel size="label.sm">Application Image URL</FormLabel>
-                    <Input
-                      placeholder="https://"
-                      type="text"
-                      {...form.register("branding.applicationImageUrl")}
-                    />
-                    {!form.getFieldState(
-                      "branding.applicationImageUrl",
-                      form.formState,
-                    ).error ? (
-                      <FormHelperText>
-                        Logo that will display in the emails sent to users. The
-                        image must be squared with recommended size of 72x72 px.
-                      </FormHelperText>
-                    ) : (
-                      <FormErrorMessage>
-                        {
-                          form.getFieldState(
-                            "branding.applicationImageUrl",
-                            form.formState,
-                          ).error?.message
-                        }
-                      </FormErrorMessage>
-                    )}
-                  </FormControl>
-                </Flex>
-              </GatedFeature>
-            )}
-          </Flex>
-          <Spacer />
-          <Divider />
-          <Spacer />
-          <Heading size="title.sm">Authentication</Heading>
-          <Flex flexDir="column" gap={8}>
-            <FormControl>
-              <HStack justifyContent="space-between" alignItems="flex-start">
-                <Box>
-                  <FormLabel pointerEvents={"none"}>
-                    Custom JSON Web Token
-                  </FormLabel>
-                  <Text>
-                    Optionally allow users to authenticate with a custom JWT.{" "}
-                    <TrackedLink
-                      isExternal
-                      href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
-                      label="learn-more"
-                      category={TRACKING_CATEGORY}
-                      color="primary.500"
-                    >
-                      Learn more
-                    </TrackedLink>
-                  </Text>
-                </Box>
+          <AuthEndpointFields
+            form={form}
+            canEditAdvancedFeatures={canEditAdvancedFeatures}
+          />
+        </Fieldset>
 
-                <GatedSwitch
-                  trackingLabel="customAuthJWT"
-                  colorScheme="primary"
-                  isChecked={!!form.watch("customAuthentication")}
-                  onChange={() => {
-                    form.setValue(
-                      "customAuthentication",
-                      !form.watch("customAuthentication")
-                        ? {
-                            jwksUri: "",
-                            aud: "",
-                          }
-                        : undefined,
-                    );
-                  }}
-                />
-              </HStack>
-            </FormControl>
+        <NativeAppsFieldset form={form} />
 
-            {form.watch("customAuthentication") && (
-              <GatedFeature>
-                <Card p={6} bg={bg}>
-                  <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
-                    <FormControl
-                      isInvalid={
-                        !!form.getFieldState(
-                          "customAuthentication.jwksUri",
-                          form.formState,
-                        ).error
-                      }
-                    >
-                      <FormLabel size="label.sm">JWKS URI</FormLabel>
-                      <Input
-                        placeholder="https://example.com/.well-known/jwks.json"
-                        type="text"
-                        {...form.register("customAuthentication.jwksUri")}
-                      />
-                      {!form.getFieldState(
-                        "customAuthentication.jwksUri",
-                        form.formState,
-                      ).error ? (
-                        <FormHelperText>
-                          Enter the URI of the JWKS
-                        </FormHelperText>
-                      ) : (
-                        <FormErrorMessage>
-                          {
-                            form.getFieldState(
-                              "customAuthentication.jwksUri",
-                              form.formState,
-                            ).error?.message
-                          }
-                        </FormErrorMessage>
-                      )}
-                    </FormControl>
-                    <FormControl
-                      isInvalid={
-                        !!form.getFieldState(
-                          "customAuthentication.aud",
-                          form.formState,
-                        ).error
-                      }
-                    >
-                      <FormLabel size="label.sm">AUD Value</FormLabel>
-                      <Input
-                        placeholder="AUD"
-                        type="text"
-                        {...form.register("customAuthentication.aud")}
-                      />
-                      {!form.getFieldState(
-                        "customAuthentication.aud",
-                        form.formState,
-                      ).error ? (
-                        <FormHelperText>
-                          Enter the audience claim for the JWT
-                        </FormHelperText>
-                      ) : (
-                        <FormErrorMessage>
-                          {
-                            form.getFieldState(
-                              "customAuthentication.aud",
-                              form.formState,
-                            ).error?.message
-                          }
-                        </FormErrorMessage>
-                      )}
-                    </FormControl>
-                  </Flex>
-                </Card>
-              </GatedFeature>
-            )}
-
-            <FormControl>
-              <HStack justifyContent="space-between" alignItems="flex-start">
-                <Box>
-                  <FormLabel pointerEvents={"none"}>
-                    Custom Authentication Endpoint
-                  </FormLabel>
-                  <Text>
-                    Optionally allow users to authenticate with any arbitrary
-                    payload that you provide.{" "}
-                    <TrackedLink
-                      isExternal
-                      href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
-                      label="learn-more"
-                      category={TRACKING_CATEGORY}
-                      color="primary.500"
-                    >
-                      Learn more
-                    </TrackedLink>
-                  </Text>
-                </Box>
-
-                <GatedSwitch
-                  trackingLabel="customAuthEndpoint"
-                  colorScheme="primary"
-                  isChecked={!!form.watch("customAuthEndpoint")}
-                  onChange={() => {
-                    form.setValue(
-                      "customAuthEndpoint",
-                      !form.watch("customAuthEndpoint")
-                        ? {
-                            authEndpoint: "",
-                            customHeaders: [],
-                          }
-                        : undefined,
-                    );
-                  }}
-                />
-              </HStack>
-            </FormControl>
-
-            {form.watch("customAuthEndpoint") && (
-              <GatedFeature>
-                <Card p={6} bg={bg}>
-                  <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
-                    <FormControl
-                      isInvalid={
-                        !!form.getFieldState(
-                          "customAuthEndpoint.authEndpoint",
-                          form.formState,
-                        ).error
-                      }
-                    >
-                      <FormLabel size="label.sm">
-                        Authentication Endpoint
-                      </FormLabel>
-                      <Input
-                        placeholder="https://example.com/your-auth-verifier"
-                        type="text"
-                        {...form.register("customAuthEndpoint.authEndpoint")}
-                      />
-                      {!form.getFieldState(
-                        "customAuthEndpoint.authEndpoint",
-                        form.formState,
-                      ).error && (
-                        <FormHelperText>
-                          Enter the URL of your server where we will send the
-                          user payload for verification
-                        </FormHelperText>
-                      )}
-                      <FormErrorMessage>
-                        {
-                          form.getFieldState(
-                            "customAuthEndpoint.authEndpoint",
-                            form.formState,
-                          ).error?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                    <FormControl
-                      isInvalid={
-                        !!form.getFieldState(
-                          "customAuthEndpoint.customHeaders",
-                          form.formState,
-                        ).error
-                      }
-                    >
-                      <FormLabel size="label.sm">Custom Headers</FormLabel>
-                      <Stack gap={3} alignItems={"end"}>
-                        {customHeaderFields.fields.map((_, customHeaderIdx) => {
-                          return (
-                            // biome-ignore lint/suspicious/noArrayIndexKey: FIXME
-                            <Flex key={customHeaderIdx} gap={2} w="full">
-                              <Input
-                                placeholder="Key"
-                                type="text"
-                                {...form.register(
-                                  `customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
-                                )}
-                              />
-                              <Input
-                                placeholder="Value"
-                                type="text"
-                                {...form.register(
-                                  `customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
-                                )}
-                              />
-                              <IconButton
-                                aria-label="Remove header"
-                                icon={<LuTrash2 />}
-                                onClick={() => {
-                                  customHeaderFields.remove(customHeaderIdx);
-                                }}
-                              />
-                            </Flex>
-                          );
-                        })}
-                        <Button
-                          onClick={() => {
-                            customHeaderFields.append({
-                              key: "",
-                              value: "",
-                            });
-                          }}
-                          w={
-                            customHeaderFields.fields.length === 0
-                              ? "full"
-                              : "fit-content"
-                          }
-                        >
-                          Add header
-                        </Button>
-                      </Stack>
-
-                      {!form.getFieldState(
-                        "customAuthEndpoint.customHeaders",
-                        form.formState,
-                      ).error && (
-                        <FormHelperText>
-                          Set custom headers to be sent along the request with
-                          the payload to the authentication endpoint above. You
-                          can set values to verify the incoming request here.
-                        </FormHelperText>
-                      )}
-                      <FormErrorMessage>
-                        {
-                          form.getFieldState(
-                            "customAuthEndpoint.customHeaders",
-                            form.formState,
-                          ).error?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  </Flex>
-                </Card>
-              </GatedFeature>
-            )}
-          </Flex>
-          <Spacer />
-          <Divider />
-          <Spacer />
-          <Heading size="title.sm">Native Apps</Heading>
-          <Flex flexDir="column" gap={8}>
-            <FormControl
-              isInvalid={
-                !!form.getFieldState("redirectUrls", form.formState).error
-              }
-            >
-              <Box my={3}>
-                <FormLabel>Allowed redirect URIs (native apps only)</FormLabel>
-                <Text>
-                  Enter redirect URIs separated by commas or new lines. This is
-                  often your application&apos;s deep link.
-                </Text>
-              </Box>
-
-              <Textarea
-                placeholder="thirdweb://"
-                {...form.register("redirectUrls")}
-              />
-              {!form.getFieldState("redirectUrls", form.formState).error ? (
-                <FormHelperText>
-                  Currently only used in Unity and React Native platform when
-                  users authenticate through social logins.
-                </FormHelperText>
-              ) : (
-                <FormErrorMessage>
-                  {
-                    form.getFieldState("redirectUrls", form.formState).error
-                      ?.message
-                  }
-                </FormErrorMessage>
-              )}
-            </FormControl>
-          </Flex>
-          <Spacer />
-          <Divider />
-
-          <Box alignSelf="flex-end">
-            <Button type="submit" colorScheme="primary">
-              Save changes
-            </Button>
-          </Box>
-        </Flex>
+        <div className="flex justify-end">
+          <Button type="submit" variant={"primary"} className="gap-2">
+            {props.isUpdating && <Spinner className="size-4" />}
+            Save changes
+          </Button>
+        </div>
       </form>
-    </Flex>
+    </Form>
   );
 };
+
+function BrandingFieldset(props: {
+  form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+  canEditAdvancedFeatures: boolean;
+}) {
+  const { form, canEditAdvancedFeatures } = props;
+
+  return (
+    <Fieldset legend="Branding">
+      <SwitchContainer
+        switchId="branding-switch"
+        title="Custom email logo and name"
+        description="Pass a custom logo and app name to be used in the emails sent to users."
+      >
+        <GatedSwitch
+          id="branding-switch"
+          trackingLabel="customEmailLogoAndName"
+          checked={!!form.watch("branding") && canEditAdvancedFeatures}
+          upgradeRequired={!canEditAdvancedFeatures}
+          onCheckedChange={(checked) =>
+            form.setValue(
+              "branding",
+              checked
+                ? {
+                    applicationImageUrl: "",
+                    applicationName: "",
+                  }
+                : undefined,
+            )
+          }
+        />
+      </SwitchContainer>
+
+      <AdvancedConfigurationContainer
+        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+        show={canEditAdvancedFeatures && !!form.watch("branding")}
+      >
+        {/* Application Name */}
+        <FormField
+          control={form.control}
+          name="branding.applicationName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Application Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                Name that will be displayed in the emails sent to users.{" "}
+                <br className="max-sm:hidden" /> Defaults to your API Key's
+                name.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Application Image */}
+        <FormField
+          control={form.control}
+          name="branding.applicationImageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Application Image URL</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>
+                Logo that will display in the emails sent to users.{" "}
+                <br className="max-sm:hidden" /> The image must be squared with
+                recommended size of 72x72 px.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </AdvancedConfigurationContainer>
+    </Fieldset>
+  );
+}
+
+function JSONWebTokenFields(props: {
+  form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+  canEditAdvancedFeatures: boolean;
+}) {
+  const { form, canEditAdvancedFeatures } = props;
+
+  return (
+    <div>
+      <SwitchContainer
+        switchId="authentication-switch"
+        title="Custom JSON Web Token"
+        description={
+          <>
+            Optionally allow users to authenticate with a custom JWT.{" "}
+            <TrackedLinkTW
+              target="_blank"
+              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-jwt-auth-server"
+              label="learn-more"
+              category={TRACKING_CATEGORY}
+              className="text-link-foreground hover:text-foreground"
+            >
+              Learn more
+            </TrackedLinkTW>
+          </>
+        }
+      >
+        <GatedSwitch
+          id="authentication-switch"
+          upgradeRequired={!canEditAdvancedFeatures}
+          trackingLabel="customAuthJWT"
+          checked={
+            !!form.watch("customAuthentication") && canEditAdvancedFeatures
+          }
+          onCheckedChange={(checked) => {
+            form.setValue(
+              "customAuthentication",
+              checked
+                ? {
+                    jwksUri: "",
+                    aud: "",
+                  }
+                : undefined,
+            );
+          }}
+        />
+      </SwitchContainer>
+
+      <AdvancedConfigurationContainer
+        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+        show={canEditAdvancedFeatures && !!form.watch("customAuthentication")}
+      >
+        <FormField
+          control={form.control}
+          name="customAuthentication.jwksUri"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>JWKS URI</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="https://example.com/.well-known/jwks.json"
+                />
+              </FormControl>
+              <FormDescription>Enter the URI of the JWKS</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="customAuthentication.aud"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>AUD Value</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="AUD" />
+              </FormControl>
+              <FormDescription>
+                Enter the audience claim for the JWT
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </AdvancedConfigurationContainer>
+    </div>
+  );
+}
+
+function AuthEndpointFields(props: {
+  form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+  canEditAdvancedFeatures: boolean;
+}) {
+  const { form, canEditAdvancedFeatures } = props;
+  const customHeaderFields = useFieldArray({
+    control: form.control,
+    name: "customAuthEndpoint.customHeaders",
+  });
+
+  return (
+    <div>
+      <SwitchContainer
+        switchId="auth-endpoint-switch"
+        title="Custom Authentication Endpoint"
+        description={
+          <>
+            Optionally allow users to authenticate with any arbitrary payload
+            that you provide.{" "}
+            <TrackedLinkTW
+              target="_blank"
+              href="https://portal.thirdweb.com/connect/in-app-wallet/custom-auth/custom-auth-server"
+              label="learn-more"
+              category={TRACKING_CATEGORY}
+              className="text-link-foreground hover:text-foreground"
+            >
+              Learn more
+            </TrackedLinkTW>
+          </>
+        }
+      >
+        <GatedSwitch
+          trackingLabel="customAuthEndpoint"
+          checked={
+            !!form.watch("customAuthEndpoint") && canEditAdvancedFeatures
+          }
+          upgradeRequired={!canEditAdvancedFeatures}
+          onCheckedChange={(checked) => {
+            form.setValue(
+              "customAuthEndpoint",
+              checked
+                ? {
+                    authEndpoint: "",
+                    customHeaders: [],
+                  }
+                : undefined,
+            );
+          }}
+        />
+      </SwitchContainer>
+
+      <AdvancedConfigurationContainer
+        show={canEditAdvancedFeatures && !!form.watch("customAuthEndpoint")}
+        className="grid grid-cols-1 gap-6 lg:grid-cols-2"
+      >
+        <FormField
+          control={form.control}
+          name="customAuthEndpoint.authEndpoint"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Authentication Endpoint</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder="https://example.com/your-auth-verifier"
+                />
+              </FormControl>
+              <FormDescription>
+                Enter the URL of your server where we will send the user payload
+                for verification
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div>
+          <Label className="inline-block mb-3">Custom Headers</Label>
+          <div className="flex flex-col gap-4">
+            {customHeaderFields.fields.map((field, customHeaderIdx) => {
+              return (
+                <div className="flex gap-4" key={field.id}>
+                  <Input
+                    placeholder="Name"
+                    type="text"
+                    {...form.register(
+                      `customAuthEndpoint.customHeaders.${customHeaderIdx}.key`,
+                    )}
+                  />
+                  <Input
+                    placeholder="Value"
+                    type="text"
+                    {...form.register(
+                      `customAuthEndpoint.customHeaders.${customHeaderIdx}.value`,
+                    )}
+                  />
+                  <Button
+                    variant="outline"
+                    aria-label="Remove header"
+                    onClick={() => {
+                      customHeaderFields.remove(customHeaderIdx);
+                    }}
+                    className="!w-auto px-3"
+                  >
+                    <Trash2Icon className="size-4 text-destructive-text shrink-0" />
+                  </Button>
+                </div>
+              );
+            })}
+
+            <Button
+              variant="outline"
+              className="w-full gap-2 bg-card"
+              onClick={() => {
+                customHeaderFields.append({
+                  key: "",
+                  value: "",
+                });
+              }}
+            >
+              <PlusIcon className="size-4" />
+              Add header
+            </Button>
+          </div>
+
+          <p className="text-muted-foreground text-sm mt-3">
+            Set custom headers to be sent along the request with the payload to
+            the authentication endpoint above. This can be used to verify the
+            incoming requests
+          </p>
+        </div>
+      </AdvancedConfigurationContainer>
+    </div>
+  );
+}
+
+function NativeAppsFieldset(props: {
+  form: UseFormReturn<ApiKeyEmbeddedWalletsValidationSchema>;
+}) {
+  const { form } = props;
+  return (
+    <Fieldset legend="Native Apps">
+      <FormField
+        control={form.control}
+        name="redirectUrls"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Allowed redirect URIs</FormLabel>
+            <FormControl>
+              <Textarea {...field} placeholder="appName://" />
+            </FormControl>
+            <FormDescription>
+              Enter redirect URIs separated by commas or new lines. This is
+              often your application's deep link.
+              <br className="max-sm:hidden" />
+              Currently only used in Unity and React Native platform when users
+              authenticate through social logins.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </Fieldset>
+  );
+}
+
+function AdvancedConfigurationContainer(props: {
+  children: React.ReactNode;
+  show: boolean;
+  className?: string;
+}) {
+  if (!props.show) {
+    return null;
+  }
+
+  return <div className={cn("mt-6", props.className)}>{props.children}</div>;
+}
+
+function Fieldset(props: {
+  legend: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <DynamicHeight>
+      <fieldset className="border p-4 md:p-6 border-border rounded-lg bg-muted/50">
+        {/* put inside div to remove defualt styles on legend  */}
+        <div className="text-xl font-semibold tracking-tight mb-4">
+          <legend> {props.legend}</legend>
+        </div>
+
+        {props.children}
+      </fieldset>
+    </DynamicHeight>
+  );
+}
+
+function SwitchContainer(props: {
+  switchId: string;
+  title: string;
+  description: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex justify-between items-center gap-6">
+      <div>
+        <Label htmlFor={props.switchId} className="text-base">
+          {props.title}
+        </Label>
+        <p className="text-muted-foreground text-sm mt-0.5 ">
+          {props.description}
+        </p>
+      </div>
+      {props.children}
+    </div>
+  );
+}

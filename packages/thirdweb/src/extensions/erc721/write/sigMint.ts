@@ -1,5 +1,5 @@
 import type { AbiParameterToPrimitiveType, Address } from "abitype";
-import type { Hex } from "viem";
+import { type Hex, isHex, stringToHex } from "viem";
 import {
   NATIVE_TOKEN_ADDRESS,
   isNativeTokenAddress,
@@ -131,7 +131,14 @@ export async function generateMintSignature(
       return "";
     })(),
     // uid computation
-    mintRequest.uid || (await randomBytesHex()),
+    ((): Hex => {
+      if (mintRequest.uid) {
+        return isHex(mintRequest.uid)
+          ? mintRequest.uid
+          : stringToHex(mintRequest.uid, { size: 32 });
+      }
+      return randomBytesHex();
+    })(),
   ]);
 
   const startTime = mintRequest.validityStartTimestamp || new Date(0);
@@ -212,7 +219,7 @@ type GeneratePayloadInput = {
   currency?: Address;
   validityStartTimestamp?: Date;
   validityEndTimestamp?: Date;
-  uid?: Hex;
+  uid?: string;
 };
 
 const MintRequest721 = [

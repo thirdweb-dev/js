@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 export function SidebarLink(props: {
   href: string;
   label: string;
+  onClick?: () => void;
 }) {
   const pathname = usePathname();
 
@@ -15,8 +16,9 @@ export function SidebarLink(props: {
     <Button asChild variant="ghost">
       <Link
         href={props.href}
+        onClick={props.onClick}
         className={cn(
-          "w-full text-muted-foreground text-left !justify-start",
+          "w-full text-muted-foreground text-left !justify-start font-normal",
           pathname === props.href && "text-foreground",
         )}
       >

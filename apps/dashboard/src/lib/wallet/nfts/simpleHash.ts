@@ -30,6 +30,7 @@ export async function transformSimpleHashResponseToNFT(
       simpleHashResponse.nfts.map(async (simpleHashNft) => {
         try {
           return {
+            id: BigInt(simpleHashNft.token_id),
             contractAddress: simpleHashNft.contract_address,
             tokenId: simpleHashNft.token_id,
             metadata: {
@@ -49,6 +50,7 @@ export async function transformSimpleHashResponseToNFT(
             owner: walletAddress,
             supply: simpleHashNft.token_count.toString(),
             type: simpleHashNft.contract.type,
+            tokenURI: simpleHashNft.extra_metadata.metadata_original_url,
           } as WalletNFT;
         } catch {
           return undefined as unknown as WalletNFT;

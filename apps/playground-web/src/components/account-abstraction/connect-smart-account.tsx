@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { baseSepolia } from "thirdweb/chains";
 import {
   useActiveAccount,
@@ -16,14 +15,6 @@ import { StyledConnectButton } from "../styled-connect-button";
 import { Button } from "../ui/button";
 
 export function ConnectSmartAccountPreview() {
-  // force disconnect if not smart wallet already
-  const wallet = useActiveWallet();
-  const { disconnect } = useDisconnect();
-  useEffect(() => {
-    if (wallet && wallet.id !== "smart") {
-      disconnect(wallet);
-    }
-  }, [wallet, disconnect]);
   return (
     <div className="flex flex-col">
       <StyledConnectButton
@@ -84,7 +75,8 @@ export function ConnectSmartAccountCustomPreview() {
           onClick={connect}
           className="p-6 rounded-full"
         >
-          <img src={socialIcons.google} alt="Google" className="w-4 h-4 mr-2" />{" "}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={socialIcons.google} alt="Google" className="w-4 h-4 mr-2" />
           Connect with Google
         </Button>
       )}

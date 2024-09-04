@@ -1,4 +1,5 @@
 import { CodeExample } from "@/components/code/code-example";
+import ThirdwebProvider from "@/components/thirdweb-provider";
 import { metadataBase } from "@/lib/constants";
 import type { Metadata } from "next";
 import { APIHeader } from "../../../components/blocks/APIHeader";
@@ -14,29 +15,31 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="pb-20 container px-0">
-      <APIHeader
-        title="Onboard users to web3"
-        description={
-          <>
-            Onboard anyone with flexible auth options, secure account recovery,
-            and smart account integration.
-          </>
-        }
-        docsLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
-        heroLink="/in-app-wallet.png"
-      />
+    <ThirdwebProvider>
+      <main className="pb-20 container px-0">
+        <APIHeader
+          title="Onboard users to web3"
+          description={
+            <>
+              Onboard anyone with flexible auth options, secure account
+              recovery, and smart account integration.
+            </>
+          }
+          docsLink="https://portal.thirdweb.com/connect/in-app-wallet/overview"
+          heroLink="/in-app-wallet.png"
+        />
 
-      <section className="space-y-8">
-        <AnyAuth />
-      </section>
+        <section className="space-y-8">
+          <AnyAuth />
+        </section>
 
-      <div className="h-14" />
+        <div className="h-14" />
 
-      <section className="space-y-8">
-        <SponsoredInAppTx />
-      </section>
-    </main>
+        <section className="space-y-8">
+          <SponsoredInAppTx />
+        </section>
+      </main>
+    </ThirdwebProvider>
   );
 }
 

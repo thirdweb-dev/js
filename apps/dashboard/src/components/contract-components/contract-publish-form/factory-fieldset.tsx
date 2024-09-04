@@ -1,12 +1,8 @@
 import { ButtonGroup, Flex } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import type { Abi, AbiParameter } from "abitype";
 import type { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, Heading } from "tw-components";
-import type {
-  useConstructorParamsFromABI,
-  useFunctionParamsFromABI,
-} from "../hooks";
 import { CustomFactory } from "./custom-factory";
 import { DefaultFactory } from "./default-factory";
 
@@ -16,9 +12,7 @@ interface FactoryFieldsetProps {
   shouldShowDynamicFactoryInput: boolean;
   shouldShowModularFactoryInput: boolean;
   shouldShowModulesParamInput: boolean;
-  deployParams:
-    | ReturnType<typeof useFunctionParamsFromABI>
-    | ReturnType<typeof useConstructorParamsFromABI>;
+  deployParams: readonly AbiParameter[];
 }
 
 export const FactoryFieldset: React.FC<FactoryFieldsetProps> = ({

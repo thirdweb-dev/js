@@ -11,7 +11,7 @@ import { CreateApiKeyButton } from "components/settings/ApiKeys/Create";
 import { SettingsSidebar } from "core-ui/sidebar/settings";
 import { PageId } from "page-id";
 import { useMemo } from "react";
-import { Heading, Link, Text } from "tw-components";
+import { Link } from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
 
 const SettingsApiKeysPage: ThirdwebNextPage = () => {
@@ -42,13 +42,11 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           direction={{ base: "column", md: "row" }}
           gap={4}
         >
-          <Heading size="title.lg" as="h1">
-            API Keys
-          </Heading>
+          <h1 className="text-3xl font-semibold tracking-tight">API Keys</h1>
           <CreateApiKeyButton />
         </Flex>
 
-        <Text>
+        <p className="text-muted-foreground text-sm">
           An API key is required to use thirdweb&apos;s services through the SDK
           and CLI.{" "}
           <Link
@@ -59,7 +57,7 @@ const SettingsApiKeysPage: ThirdwebNextPage = () => {
           >
             Learn more
           </Link>
-        </Text>
+        </p>
       </Flex>
 
       {hasSmartWalletsWithoutBilling && (

@@ -1,11 +1,9 @@
-import { thirdwebClient } from "@/constants/client";
 import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useV5DashboardChain } from "lib/v5-adapter";
 import { useForm } from "react-hook-form";
-import { getContract } from "thirdweb";
+import type { ThirdwebContract } from "thirdweb";
 import { burn as burn721, isERC721 } from "thirdweb/extensions/erc721";
 import { burn as burn1155, isERC1155 } from "thirdweb/extensions/erc1155";
 import {
@@ -23,17 +21,11 @@ import {
 
 interface BurnTabProps {
   tokenId: string;
-  contractAddress: string;
-  chainId: number;
+  contract: ThirdwebContract;
 }
 
-const BurnTab: React.FC<BurnTabProps> = ({
-  contractAddress,
-  chainId,
-  tokenId,
-}) => {
+const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
   const account = useActiveAccount();
-  const chain = useV5DashboardChain(chainId);
   const trackEvent = useTrack();
   const {
     register,
@@ -45,11 +37,7 @@ const BurnTab: React.FC<BurnTabProps> = ({
     defaultValues: { amount: "1" },
   });
   const invalidateContractQuery = useInvalidateContractQuery();
-  const contract = getContract({
-    address: contractAddress,
-    chain: chain,
-    client: thirdwebClient,
-  });
+
   const { onSuccess, onError } = useTxNotifications(
     "Burn successful",
     "Error burning",
@@ -90,8 +78,8 @@ const BurnTab: React.FC<BurnTabProps> = ({
               onSuccess();
               if (contract) {
                 invalidateContractQuery({
-                  chainId,
-                  contractAddress,
+                  chainId: contract.chain.id,
+                  contractAddress: contract.address,
                 });
               }
               reset();

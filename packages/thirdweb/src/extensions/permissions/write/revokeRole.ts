@@ -3,6 +3,8 @@ import type { BaseTransactionOptions } from "../../../transaction/types.js";
 import { revokeRole as generatedRevokeRole } from "../__generated__/IPermissions/write/revokeRole.js";
 import { type RoleInput, getRoleHash } from "../utils.js";
 
+export { isRevokeRoleSupported } from "../__generated__/IPermissions/write/revokeRole.js";
+
 /**
  * @extension PERMISSIONS
  */

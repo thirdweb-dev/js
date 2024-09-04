@@ -23,7 +23,7 @@ export function ResourcesDropdownButton() {
         <DropdownMenuTrigger asChild>
           <Button
             variant="link"
-            className="text-muted-foreground text-sm gap-1 !p-0 !h-auto hover:!no-underline hover:text-foreground"
+            className="text-muted-foreground text-sm gap-1 !p-0 !h-auto hover:!no-underline hover:text-foreground font-normal"
           >
             Resources
             <ChevronDownIcon className="size-4" />

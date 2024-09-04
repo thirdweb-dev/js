@@ -11,8 +11,13 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { type ThirdwebContract, ZERO_ADDRESS } from "thirdweb";
-import { claimTo, decimals } from "thirdweb/extensions/erc20";
+import {
+  claimTo,
+  decimals,
+  getApprovalForTransaction,
+} from "thirdweb/extensions/erc20";
 import {
   useActiveAccount,
   useReadContract,
@@ -33,14 +38,12 @@ interface TokenClaimFormProps {
 export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
   const address = useActiveAccount()?.address;
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-  } = useForm({ defaultValues: { amount: "0", to: address } });
+  const { register, handleSubmit, formState } = useForm({
+    defaultValues: { amount: "0", to: address },
+  });
   const modalContext = useModalContext();
-
-  const { onSuccess, onError } = useTxNotifications(
+  const { errors, isDirty } = formState;
+  const txNotifications = useTxNotifications(
     "Tokens claimed successfully",
     "Failed to claim tokens",
     contract,
@@ -49,7 +52,8 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
   const { data: _decimals, isLoading } = useReadContract(decimals, {
     contract,
   });
-  const { mutate, isPending } = useSendAndConfirmTransaction();
+  const sendAndConfirmTx = useSendAndConfirmTransaction();
+  const account = useActiveAccount();
 
   return (
     <>
@@ -85,42 +89,58 @@ export const TokenClaimForm: React.FC<TokenClaimFormProps> = ({ contract }) => {
         <TransactionButton
           transactionCount={1}
           form={CLAIM_FORM_ID}
-          isLoading={isPending}
+          isLoading={formState.isSubmitting}
           type="submit"
           colorScheme="primary"
           isDisabled={!isDirty || isLoading}
-          onClick={handleSubmit((d) => {
+          onClick={handleSubmit(async (d) => {
             if (d.to) {
               trackEvent({
                 category: "token",
                 action: "claim",
                 label: "attempt",
               });
-              const transaction = claimTo({
-                contract,
-                to: d.to,
-                quantity: d.amount,
-              });
-              mutate(transaction, {
-                onSuccess: () => {
-                  trackEvent({
-                    category: "token",
-                    action: "claim",
-                    label: "success",
-                  });
-                  onSuccess();
-                  modalContext.onClose();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "token",
-                    action: "claim",
-                    label: "error",
-                    error,
-                  });
-                  onError(error);
-                },
-              });
+              if (!account) {
+                return toast.error("No account detected");
+              }
+              try {
+                const transaction = claimTo({
+                  contract,
+                  to: d.to,
+                  quantity: d.amount,
+                });
+
+                const approveTx = await getApprovalForTransaction({
+                  transaction,
+                  account,
+                });
+
+                if (approveTx) {
+                  try {
+                    await sendAndConfirmTx.mutateAsync(approveTx);
+                  } catch {
+                    return toast.error("Error approving ERC20 token");
+                  }
+                }
+
+                await sendAndConfirmTx.mutateAsync(transaction);
+
+                trackEvent({
+                  category: "token",
+                  action: "claim",
+                  label: "success",
+                });
+                txNotifications.onSuccess();
+                modalContext.onClose();
+              } catch (error) {
+                trackEvent({
+                  category: "token",
+                  action: "claim",
+                  label: "error",
+                  error,
+                });
+                txNotifications.onError(error);
+              }
             }
           })}
         >

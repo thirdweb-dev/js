@@ -131,7 +131,7 @@ function redirects() {
     },
     {
       source: "/dashboard/connect",
-      destination: "/dashboard/connect/in-app-wallets",
+      destination: "/dashboard/connect/analytics",
       permanent: false,
     },
     {

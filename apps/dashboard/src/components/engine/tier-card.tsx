@@ -1,7 +1,7 @@
+import { Button } from "@/components/ui/button";
 import type { EngineTier } from "@3rdweb-sdk/react/hooks/useEngine";
-import { DarkMode, Flex, Icon, Spacer, Stack } from "@chakra-ui/react";
-import { FiCheck } from "react-icons/fi";
-import { Badge, Button, Card, Heading, Text } from "tw-components";
+import { Flex, Spacer, Stack } from "@chakra-ui/react";
+import { CheckIcon } from "lucide-react";
 
 interface EngineTierCardConfig {
   name: string;
@@ -67,53 +67,44 @@ export const EngineTierCard = ({
     monthlyPriceUsd === "custom" ? "Contact us" : "Deploy now";
 
   const card = (
-    <Card
-      as={Stack}
-      gap={6}
-      background={
-        isPrimaryCta
-          ? `linear-gradient(-5deg, #CE7161FF, #CE716120 80%),
-          linear-gradient(110deg, #40358EFF, #40358E20 70%),
-          linear-gradient(240deg, #180217FF, #18021720 100%);`
-          : undefined
-      }
-      p={6}
+    <div
+      className="border border-border rounded-xl flex flex-col gap-6 p-6 bg-muted/20"
+      style={{
+        background: isPrimaryCta
+          ? "linear-gradient(to top, hsl(var(--muted)), hsl(var(--muted)/50%))"
+          : undefined,
+      }}
     >
       <Flex flexDir="column" gap={4}>
         {/* Name */}
-        <Heading as="h3" size="title.md">
-          {name}
-        </Heading>
+        <h3 className="text-3xl font-semibold tracking-tight">{name}</h3>
 
         {/* Price */}
         {monthlyPriceUsd === "custom" ? (
-          <Badge w="fit-content" my={4}>
+          <p className="text-lg font-semibold text-muted-foreground">
             Custom Pricing
-          </Badge>
+          </p>
         ) : (
           <Flex gap={2} alignItems="baseline">
-            <Text color="accent.900" fontSize="xx-large">
+            <p className="text-foreground text-3xl font-semibold tracking-tight">
               ${monthlyPriceUsd}
-            </Text>
-            <Text color="accent.900">per month</Text>
+            </p>
+            <p className="text-muted-foreground">per month</p>
           </Flex>
         )}
       </Flex>
 
       {/* Features */}
       <Stack spacing={3}>
-        <Text>Includes</Text>
         {previousTier && (
-          <Text color="accent.900" fontWeight="bold">
-            All of <u>{previousTier}</u>, plus:
-          </Text>
+          <p>
+            <span className="font-semibold"> All of {previousTier}</span>, plus:
+          </p>
         )}
         {features.map((feature) => (
           <Flex key={feature} gap={3} align="center">
-            <Icon as={FiCheck} boxSize={4} color="green.500" />
-            <Text color="accent.900" fontWeight="medium">
-              {feature}
-            </Text>
+            <CheckIcon className="size-4 text-green-500 shrink-0" />
+            <p className="text-sm text-muted-foreground">{feature}</p>
           </Flex>
         ))}
       </Stack>
@@ -121,24 +112,11 @@ export const EngineTierCard = ({
       <Spacer />
 
       {/* CTA */}
-      <Button
-        onClick={onClick}
-        variant={isPrimaryCta ? "solid" : "outline"}
-        colorScheme={isPrimaryCta ? "blackAlpha" : undefined}
-        bg={isPrimaryCta ? "black" : undefined}
-        _hover={
-          isPrimaryCta
-            ? {
-                bg: "black",
-                opacity: 0.75,
-              }
-            : {}
-        }
-      >
+      <Button onClick={onClick} variant={isPrimaryCta ? "default" : "outline"}>
         {ctaText ?? defaultCtaText}
       </Button>
-    </Card>
+    </div>
   );
 
-  return isPrimaryCta ? <DarkMode>{card}</DarkMode> : card;
+  return card;
 };

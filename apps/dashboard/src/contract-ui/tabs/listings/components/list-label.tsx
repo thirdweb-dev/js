@@ -19,7 +19,7 @@ export const ListLabel: React.FC<ListLabelProps> = ({ nft }) => {
           {shortenIfAddress(nft.contractAddress)}
         </ListItem>
         <ListItem>
-          <strong>Token ID: </strong> {nft.tokenId}
+          <strong>Token ID: </strong> {nft.id.toString()}
         </ListItem>
         <ListItem>
           <>

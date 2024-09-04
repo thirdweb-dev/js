@@ -180,13 +180,14 @@ interface CreateKeyInput {
   services?: UpdateKeyServiceInput[];
 }
 
-interface UpdateKeyInput {
+export interface UpdateKeyInput {
   id: string;
   name: string;
   domains: string[];
   bundleIds: string[];
   walletAddresses?: string[];
   services?: UpdateKeyServiceInput[];
+  redirectUrls: string[];
 }
 
 interface UsageBundler {
@@ -227,7 +228,7 @@ export interface UsageBillableByService {
   };
 }
 
-interface WalletStats {
+export interface WalletStats {
   timeSeries: {
     dayTime: string;
     clientId: string;

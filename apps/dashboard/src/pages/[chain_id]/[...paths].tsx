@@ -30,7 +30,12 @@ import { useRouter } from "next/router";
 import { ContractOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { getAddress, getContract, isAddress } from "thirdweb";
+import {
+  type ThirdwebContract,
+  getAddress,
+  getContract,
+  isAddress,
+} from "thirdweb";
 import { getContractMetadata } from "thirdweb/extensions/common";
 import { isERC20 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
@@ -43,6 +48,7 @@ import { Alert } from "../../@/components/ui/alert";
 import { ClientOnly } from "../../components/ClientOnly/ClientOnly";
 import { DeprecatedAlert } from "../../components/shared/DeprecatedAlert";
 import { mapV4ChainToV5Chain } from "../../contexts/map-chains";
+import { resolveFunctionSelectors } from "../../lib/selectors";
 import { useV5DashboardChain } from "../../lib/v5-adapter";
 
 type EVMContractProps = {
@@ -171,13 +177,6 @@ const ContractPage: ThirdwebNextPage = () => {
     });
   }, [contractAddress, v5Chain]);
 
-  const routes = useContractRouteConfig(contractAddress, contract);
-
-  const activeRoute = useMemo(
-    () => routes.find((route) => route.path === activeTab),
-    [activeTab, routes],
-  );
-
   if (!contractInfo) {
     return (
       <div className="h-full flex items-center justify-center">
@@ -248,24 +247,40 @@ const ContractPage: ThirdwebNextPage = () => {
           </Flex>
         </Container>
       </Box>
-      {contract && (
-        <ContractSidebar
-          contract={contract}
-          routes={routes}
-          activeRoute={activeRoute}
-        />
-      )}
-      <Container pt={8} maxW="container.page">
-        {activeRoute?.component && contractAddress && contract && (
-          <activeRoute.component
-            contractAddress={contractAddress}
-            contract={contract}
-          />
-        )}
-      </Container>
+      {contract && <Inner contract={contract} activeTab={activeTab} />}
     </Flex>
   );
 };
+
+type InnerProps = {
+  contract: ThirdwebContract;
+  activeTab: string;
+};
+function Inner(props: InnerProps) {
+  const routes = useContractRouteConfig(props.contract);
+
+  const activeRoute = useMemo(
+    () => routes.find((route) => route.path === props.activeTab),
+    [props.activeTab, routes],
+  );
+  return (
+    <>
+      <ContractSidebar
+        contract={props.contract}
+        routes={routes}
+        activeRoute={activeRoute}
+      />
+      <Container pt={8} maxW="container.page">
+        {activeRoute?.component && (
+          <activeRoute.component
+            contractAddress={props.contract.address}
+            contract={props.contract}
+          />
+        )}
+      </Container>
+    </>
+  );
+}
 
 export default ContractPage;
 ContractPage.pageId = PageId.DeployedContract;
@@ -413,9 +428,12 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
         chain: mapV4ChainToV5Chain(chain),
         client: thirdwebClient,
       });
+
       const [isErc20, isErc721, isErc1155, _contractMetadata] =
         await Promise.all([
-          isERC20({ contract }).catch(() => false),
+          resolveFunctionSelectors(contract)
+            .then((selectors) => isERC20(selectors))
+            .catch(() => false),
           isERC721({ contract }).catch(() => false),
           isERC1155({ contract }).catch(() => false),
           getContractMetadata({ contract }).catch(() => null),

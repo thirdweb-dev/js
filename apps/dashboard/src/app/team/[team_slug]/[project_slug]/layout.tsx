@@ -35,31 +35,33 @@ export default async function TeamLayout(props: {
 
   return (
     <div className="h-full flex flex-col">
-      <TeamHeader
-        currentProject={project}
-        currentTeam={team}
-        teamsAndProjects={teamsAndProjects}
-      />
-      <TeamTabs
-        links={[
-          {
-            href: `/team/${props.params.team_slug}/${props.params.project_slug}/connect`,
-            name: "Connect",
-          },
-          {
-            href: `/team/${props.params.team_slug}/${props.params.project_slug}/contracts`,
-            name: "Contracts",
-          },
-          {
-            href: `/team/${props.params.team_slug}/${props.params.project_slug}/engine`,
-            name: "Engine",
-          },
-          {
-            href: `/team/${props.params.team_slug}/${props.params.project_slug}/settings`,
-            name: "Settings",
-          },
-        ]}
-      />
+      <div className="bg-muted/50">
+        <TeamHeader
+          currentProject={project}
+          currentTeam={team}
+          teamsAndProjects={teamsAndProjects}
+        />
+        <TeamTabs
+          links={[
+            {
+              href: `/team/${props.params.team_slug}/${props.params.project_slug}/connect`,
+              name: "Connect",
+            },
+            {
+              href: `/team/${props.params.team_slug}/${props.params.project_slug}/contracts`,
+              name: "Contracts",
+            },
+            {
+              href: `/team/${props.params.team_slug}/${props.params.project_slug}/engine`,
+              name: "Engine",
+            },
+            {
+              href: `/team/${props.params.team_slug}/${props.params.project_slug}/settings`,
+              name: "Settings",
+            },
+          ]}
+        />
+      </div>
       <main className="grow">{props.children}</main>
     </div>
   );

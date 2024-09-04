@@ -8,7 +8,7 @@ import {
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { type Dispatch, type SetStateAction, useEffect } from "react";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { FiPlus, FiTrash } from "react-icons/fi";
