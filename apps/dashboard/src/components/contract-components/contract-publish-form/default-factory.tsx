@@ -1,11 +1,7 @@
 import { Flex, FormControl, ListItem, UnorderedList } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import type { Abi, AbiParameter } from "abitype";
 import { useFormContext } from "react-hook-form";
 import { Heading, Link, Text } from "tw-components";
-import type {
-  useConstructorParamsFromABI,
-  useFunctionParamsFromABI,
-} from "../hooks";
 import { AbiSelector } from "./abi-selector";
 import { DynamicContractsFieldset } from "./dynamic-contract-fieldset";
 import { ModularContractsFieldset } from "./modular-contract-fieldset";
@@ -17,9 +13,7 @@ interface DefaultFactoryProps {
   shouldShowDynamicFactoryInput: boolean;
   shouldShowModularFactoryInput: boolean;
   shouldShowModulesParamInput: boolean;
-  deployParams:
-    | ReturnType<typeof useFunctionParamsFromABI>
-    | ReturnType<typeof useConstructorParamsFromABI>;
+  deployParams: readonly AbiParameter[];
 }
 
 export const DefaultFactory: React.FC<DefaultFactoryProps> = ({

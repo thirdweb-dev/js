@@ -1,23 +1,30 @@
 import { Center, Flex, Skeleton } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import { useQuery } from "@tanstack/react-query";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import type { ThirdwebContract } from "thirdweb";
+import { resolveContractAbi } from "thirdweb/contract";
 import { Heading, Text } from "tw-components";
 
 interface ContractCodePageProps {
   contract: ThirdwebContract;
-  abi: Abi;
 }
 
 export const ContractExplorerPage: React.FC<ContractCodePageProps> = ({
   contract,
-  abi,
 }) => {
-  const functions = useContractFunctions(abi);
+  const contractAbiQuery = useQuery({
+    queryKey: ["contractAbi", contract],
+    queryFn: () => resolveContractAbi(contract),
+    enabled: !!contract,
+  });
+  const functions = useContractFunctions(contractAbiQuery.data || []);
   return (
     <Flex direction="column" h="70vh">
-      <Skeleton height="100%" isLoaded={!!contract}>
+      <Skeleton
+        height="100%"
+        isLoaded={!!contract && contractAbiQuery.isSuccess}
+      >
         {functions && functions.length > 0 ? (
           <ContractFunctionsOverview
             onlyFunctions

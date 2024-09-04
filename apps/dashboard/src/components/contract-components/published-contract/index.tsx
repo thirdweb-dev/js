@@ -13,6 +13,7 @@ import {
   type PublishedMetadata,
   fetchSourceFilesFromMetadata,
 } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { replaceDeployerAddress } from "components/explore/publisher";
 import { ShareButton } from "components/share-buttom";
@@ -101,7 +102,9 @@ export const PublishedContract: React.FC<PublishedContractProps> = ({
       ? compositeAbi
       : contractPublishMetadata.data?.abi;
 
-  const enabledExtensions = useContractEnabledExtensions(abi);
+  const enabledExtensions = useContractEnabledExtensions(
+    abi as Abi | undefined,
+  );
 
   const publisherProfile = usePublisherProfile(contract.publisher);
 
@@ -333,9 +336,12 @@ Deploy it in one click`,
           {contractFunctions && (
             <Card p={0}>
               <ContractFunctionsOverview
+                // @ts-expect-error - wrong function type
                 functions={contractFunctions}
+                // @ts-expect-error - wrong event type
                 events={contractEvents}
                 sources={sources.data}
+                // @ts-expect-error - wrong contract type
                 abi={contractPublishMetadata.data?.abi}
               />
             </Card>
@@ -457,6 +463,7 @@ Deploy it in one click`,
           <Divider />
           {contractPublishMetadata.data?.abi && (
             <Extensions
+              // @ts-expect-error - wrong abi type
               abi={
                 compositeAbi &&
                 (dynamicContractType === "plugin" ||

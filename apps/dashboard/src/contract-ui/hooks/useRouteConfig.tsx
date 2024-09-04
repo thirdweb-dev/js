@@ -1,8 +1,4 @@
-import {
-  contractType,
-  getAllDetectedFeatureNames,
-  useContract,
-} from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
 import { detectFeatures } from "components/contract-components/utils";
@@ -28,6 +24,7 @@ import {
 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
 import { isERC1155 } from "thirdweb/extensions/erc1155";
+import { contractType } from "thirdweb/extensions/thirdweb";
 import { useReadContract } from "thirdweb/react";
 import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
 import { useContractFunctionSelectors } from "./useContractFunctionSelectors";
@@ -124,19 +121,19 @@ export function useContractRouteConfig(
   contractAddress: string,
   contract: ThirdwebContract,
 ): EnhancedRoute[] {
-  const ensQuery = useEns(contractAddress);
-  const functinSelectorQuery = useContractFunctionSelectors(contract);
-  const contractQuery = useContract(ensQuery.data?.address);
-  const contractTypeQuery = contractType.useQuery(contractAddress);
-
-  const analyticsSupported = useAnalyticsSupportedForChain(
-    contractQuery.contract?.chainId,
-  );
-
-  // ContractTokensPage
+  // new
+  const functionSelectorQuery = useContractFunctionSelectors(contract);
+  const contractTypeQuery = useReadContract(contractType, { contract });
+  const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
   const isERC721Query = useReadContract(isERC721, { contract });
   const isERC1155Query = useReadContract(isERC1155, { contract });
 
+  // old
+  const ensQuery = useEns(contractAddress);
+
+  // TODO: remove
+  const contractQuery = useContract(ensQuery.data?.address);
+  // TODO: remove all below
   const contractData = useMemo(() => {
     const claimconditionExtensionDetection = extensionDetectedState({
       contractQuery,
@@ -211,10 +208,6 @@ export function useContractRouteConfig(
       ["PermissionsEnumerable"],
     );
 
-    const detectedFeatureNames = contractQuery.contract?.abi
-      ? getAllDetectedFeatureNames(contractQuery.contract.abi)
-      : [];
-
     return {
       claimconditionExtensionDetection,
       detectedAccountFeature,
@@ -226,7 +219,6 @@ export function useContractRouteConfig(
       detectedModularExtension,
       hasNewClaimConditions,
       detectedPermissionEnumerable,
-      detectedFeatureNames,
     };
   }, [contractQuery]);
 
@@ -266,8 +258,18 @@ export function useContractRouteConfig(
           {contract && (
             <ContractOverviewPage
               contract={contract}
-              contractType={contractTypeQuery.data || "custom"}
-              detectedFeatureNames={contractData.detectedFeatureNames}
+              hasDirectListings={
+                contractData.detectedDirectListings === "enabled"
+              }
+              hasEnglishAuctions={
+                contractData.detectedEnglishAuctions === "enabled"
+              }
+              isErc1155={isERC1155Query.data || false}
+              isErc20={isERC20(functionSelectorQuery.data)}
+              isErc721={isERC721Query.data || false}
+              isPermissionsEnumerable={
+                contractData.detectedPermissionEnumerable
+              }
             />
           )}
         </>
@@ -285,32 +287,22 @@ export function useContractRouteConfig(
     {
       title: "Code Snippets",
       path: "code",
-      component: () => (
-        <>{contract && <LazyContractCodePage contract={contract} />}</>
-      ),
+      component: () =>
+        contract ? <LazyContractCodePage contract={contract} /> : null,
       isDefault: true,
     },
     {
       title: "Explorer",
       path: "explorer",
-      component: () => (
-        <>
-          {contract && contractQuery.contract?.abi && (
-            <LazyContractExplorerPage
-              contract={contract}
-              abi={contractQuery.contract.abi}
-            />
-          )}
-        </>
-      ),
+      component: () =>
+        contract ? <LazyContractExplorerPage contract={contract} /> : null,
       isDefault: true,
     },
     {
       title: "Events",
       path: "events",
-      component: () => (
-        <>{contract && <LazyContractEventsPage contract={contract} />}</>
-      ),
+      component: () =>
+        contract ? <LazyContractEventsPage contract={contract} /> : null,
       isDefault: true,
     },
     {
@@ -324,22 +316,19 @@ export function useContractRouteConfig(
             ? "loading"
             : "disabled",
       component: () => {
-        return (
-          <>
-            {contract && (
-              <LazyContractEmbedPage
-                contract={contract}
-                ercOrMarketplace={embedType}
-              />
-            )}
-          </>
-        );
+        return contract ? (
+          <LazyContractEmbedPage
+            contract={contract}
+            ercOrMarketplace={embedType}
+          />
+        ) : null;
       },
     },
     {
       title: "Analytics",
       path: "analytics",
-      component: LazyContractAnalyticsPage,
+      component: () =>
+        contract ? <LazyContractAnalyticsPage contract={contract} /> : null,
       isDefault: true,
       isBeta: true,
       isEnabled: analyticsSupported.isLoading
@@ -364,9 +353,9 @@ export function useContractRouteConfig(
     {
       title: "Tokens",
       path: "tokens",
-      isEnabled: functinSelectorQuery.isLoading
+      isEnabled: functionSelectorQuery.isLoading
         ? "loading"
-        : isERC20(functinSelectorQuery.data)
+        : isERC20(functionSelectorQuery.data)
           ? "enabled"
           : "disabled",
       component: () => (
@@ -374,9 +363,11 @@ export function useContractRouteConfig(
           {contract && (
             <LazyContractTokensPage
               contract={contract}
-              isERC20={isERC20(functinSelectorQuery.data)}
-              isMintToSupported={isMintToSupported(functinSelectorQuery.data)}
-              isClaimToSupported={isClaimToSupported(functinSelectorQuery.data)}
+              isERC20={isERC20(functionSelectorQuery.data)}
+              isMintToSupported={isMintToSupported(functionSelectorQuery.data)}
+              isClaimToSupported={isClaimToSupported(
+                functionSelectorQuery.data,
+              )}
             />
           )}
         </>
@@ -407,7 +398,7 @@ export function useContractRouteConfig(
       path: "split",
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
-        : contractTypeQuery.data === "split"
+        : contractTypeQuery.data === "Split"
           ? "enabled"
           : "disabled",
       component: () => (
@@ -419,10 +410,12 @@ export function useContractRouteConfig(
       path: "proposals",
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
-        : contractTypeQuery.data === "vote"
+        : contractTypeQuery.data === "Vote"
           ? "enabled"
           : "disabled",
-      component: LazyContractProposalsPage,
+      component: () => (
+        <>{contract && <LazyContractProposalsPage contract={contract} />}</>
+      ),
     },
     {
       title: "Claim Conditions",
@@ -436,7 +429,7 @@ export function useContractRouteConfig(
               claimconditionExtensionDetection={
                 contractData.claimconditionExtensionDetection
               }
-              isERC20={isERC20(functinSelectorQuery.data)}
+              isERC20={isERC20(functionSelectorQuery.data)}
               hasNewClaimConditions={contractData.hasNewClaimConditions}
             />
           )}
@@ -513,22 +506,22 @@ export function useContractRouteConfig(
           {contract && (
             <LazyContractSettingsPage
               contract={contract}
-              isLoading={functinSelectorQuery.isLoading}
+              isLoading={functionSelectorQuery.isLoading}
               isContractMetadataSupported={[
-                isGetContractMetadataSupported(functinSelectorQuery.data),
-                isSetContractMetadataSupported(functinSelectorQuery.data),
+                isGetContractMetadataSupported(functionSelectorQuery.data),
+                isSetContractMetadataSupported(functionSelectorQuery.data),
               ].every(Boolean)}
               isPrimarySaleSupported={[
-                isPrimarySaleRecipientSupported(functinSelectorQuery.data),
-                isSetPrimarySaleRecipientSupported(functinSelectorQuery.data),
+                isPrimarySaleRecipientSupported(functionSelectorQuery.data),
+                isSetPrimarySaleRecipientSupported(functionSelectorQuery.data),
               ].every(Boolean)}
               isRoyaltiesSupported={[
-                isGetDefaultRoyaltyInfoSupported(functinSelectorQuery.data),
-                isSetDefaultRoyaltyInfoSupported(functinSelectorQuery.data),
+                isGetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
+                isSetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
               ].every(Boolean)}
               isPlatformFeesSupported={[
-                isGetPlatformFeeInfoSupported(functinSelectorQuery.data),
-                isSetPlatformFeeInfoSupported(functinSelectorQuery.data),
+                isGetPlatformFeeInfoSupported(functionSelectorQuery.data),
+                isSetPlatformFeeInfoSupported(functionSelectorQuery.data),
               ].every(Boolean)}
             />
           )}

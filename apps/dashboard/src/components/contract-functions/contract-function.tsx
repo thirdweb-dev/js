@@ -20,14 +20,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import {
-  type AbiEvent,
-  type AbiFunction,
-  extractFunctionsFromAbi,
-  joinABIs,
-} from "@thirdweb-dev/sdk";
+import type { Abi, AbiEvent, AbiFunction } from "abitype";
 import { useContractEnabledExtensions } from "components/contract-components/hooks";
-import { MarkdownRenderer } from "components/contract-components/published-contract/markdown-renderer";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
 import { useRouter } from "next/router";
 import { type Dispatch, type SetStateAction, useMemo, useState } from "react";
@@ -40,6 +34,48 @@ import {
 import { CodeSegment } from "../contract-tabs/code/CodeSegment";
 import type { CodeEnvironment } from "../contract-tabs/code/types";
 import { InteractiveAbiFunction } from "./interactive-abi-function";
+
+// internal helpers
+export function unique<T>(a: T[], fn: (a: T, b: T) => boolean): T[] {
+  if (a.length === 0 || a.length === 1) {
+    return a;
+  }
+  if (!fn) {
+    return a;
+  }
+
+  for (let i = 0; i < a.length; i++) {
+    for (let j = i + 1; j < a.length; j++) {
+      if (fn(a[i], a[j])) {
+        a.splice(j, 1);
+        j--;
+      }
+    }
+  }
+  return a;
+}
+function joinABIs(abis: Abi[], abiWithConstructor?: Abi): Abi {
+  const filteredABIs: Abi[] = abis.map((abi) =>
+    abi.filter((item) => item.type !== "constructor"),
+  );
+
+  if (abiWithConstructor) {
+    filteredABIs.push(abiWithConstructor);
+  }
+  const flattenedAbis = filteredABIs.flat();
+
+  const finalABIs = unique(flattenedAbis, (a, b): boolean => {
+    return (
+      "name" in a &&
+      "name" in b &&
+      a.name === b.name &&
+      a.type === b.type &&
+      a.inputs.length === b.inputs.length
+    );
+  });
+
+  return finalABIs;
+}
 
 interface ContractFunctionProps {
   fn?: AbiFunction | AbiEvent;
@@ -96,7 +132,8 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
           </Badge>
         )}
       </Flex>
-      {fn.comment && (
+      {/* TODO: bring this back eventually */}
+      {/* {fn.comment && (
         <MarkdownRenderer
           markdownText={fn.comment
             ?.replaceAll(/See \{(.+)\}(\.)?/gm, "")
@@ -104,7 +141,7 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
             .replaceAll("}", '"')
             .replaceAll("'", '"')}
         />
-      )}
+      )} */}
       {fn.inputs?.length && !contract ? (
         <>
           <Divider my={2} />
@@ -176,28 +213,30 @@ const ContractFunction: React.FC<ContractFunctionProps> = ({
         />
       )}
 
-      <Heading size="subtitle.md" mt={6}>
-        Use this function in your app
-      </Heading>
-      <Divider mb={2} />
       {contract && (
-        <CodeSegment
-          environment={environment}
-          setEnvironment={setEnvironment}
-          snippet={formatSnippet(
-            COMMANDS[
-              isFunction ? (isRead ? "read" : "write") : "events"
-              // biome-ignore lint/suspicious/noExplicitAny: FIXME
-            ] as any,
-            {
-              contractAddress: contract.address,
-              fn,
-              args: fn.inputs?.map((i) => i.name),
-              chainId: contract.chain.id,
-              extensionNamespace,
-            },
-          )}
-        />
+        <>
+          <Heading size="subtitle.md" mt={6}>
+            Use this function in your app
+          </Heading>
+          <Divider mb={2} />
+          <CodeSegment
+            environment={environment}
+            setEnvironment={setEnvironment}
+            snippet={formatSnippet(
+              COMMANDS[
+                isFunction ? (isRead ? "read" : "write") : "events"
+                // biome-ignore lint/suspicious/noExplicitAny: FIXME
+              ] as any,
+              {
+                contractAddress: contract.address,
+                fn,
+                args: fn.inputs?.map((i) => i.name || ""),
+                chainId: contract.chain.id,
+                extensionNamespace,
+              },
+            )}
+          />
+        </>
       )}
     </Flex>
   );
@@ -219,15 +258,14 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
 }) => {
   const abiQuery = useResolveContractAbi(contract);
   const extensions = useContractEnabledExtensions(abiQuery.data);
-  const isFunction = "stateMutability" in fnsOrEvents[0];
   const functionsWithExtension = useMemo(() => {
-    let allFunctions = fnsOrEvents as AbiFunction[];
+    let allFunctions = fnsOrEvents.filter((f) => f.type === "function");
     const results: ExtensionFunctions[] = [];
     const processedFunctions: string[] = [];
     // biome-ignore lint/complexity/noForEach: FIXME
     extensions.forEach((ext) => {
-      // biome-ignore lint/suspicious/noExplicitAny: FIXME
-      let functions = extractFunctionsFromAbi(joinABIs(ext.abis as any));
+      // @ts-expect-error - this is the "wrong" abi type
+      let functions = joinABIs(ext.abis).filter((f) => f.type === "function");
       allFunctions = allFunctions.filter(
         (fn) => !functions.map((f) => f.name).includes(fn.name),
       );
@@ -251,8 +289,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       .map((e) => {
         const filteredFunctions = e.functions.filter(
           (fn) =>
-            (fn as AbiFunction).stateMutability !== "pure" &&
-            (fn as AbiFunction).stateMutability !== "view",
+            fn.stateMutability !== "pure" && fn.stateMutability !== "view",
         );
         if (filteredFunctions.length === 0) {
           return undefined;
@@ -332,9 +369,8 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       )}
       {e.functions.map((fn) => (
         <FunctionsOrEventsListItem
-          key={fn.signature}
+          key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
           fn={fn}
-          isFunction={isFunction}
           selectedFunction={selectedFunction}
           setSelectedFunction={setSelectedFunction}
         />
@@ -398,9 +434,8 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
             <Box px={4} pt={2} overflowX="hidden">
               {events.map((fn) => (
                 <FunctionsOrEventsListItem
-                  key={isFunction ? (fn as AbiFunction).signature : fn.name}
+                  key={`${fn.name}_${fn.type}_${fn.inputs.length}`}
                   fn={fn}
-                  isFunction={isFunction}
                   selectedFunction={selectedFunction}
                   setSelectedFunction={setSelectedFunction}
                 />
@@ -423,40 +458,26 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
 
 interface FunctionsOrEventsListItemProps {
   fn: AbiFunction | AbiEvent;
-  isFunction: boolean;
   selectedFunction: AbiFunction | AbiEvent;
   setSelectedFunction: Dispatch<SetStateAction<AbiFunction | AbiEvent>>;
 }
 
 const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
   fn,
-  isFunction,
+
   selectedFunction,
   setSelectedFunction,
 }) => {
+  const isActive =
+    selectedFunction?.name === fn.name &&
+    selectedFunction.inputs?.length === fn.inputs?.length;
   const router = useRouter();
   return (
     <ListItem my={0.5}>
       <Button
         size="sm"
-        fontWeight={
-          (isFunction &&
-            (selectedFunction as AbiFunction).signature ===
-              (fn as AbiFunction).signature) ||
-          (!isFunction &&
-            (selectedFunction as AbiEvent).name === (fn as AbiEvent).name)
-            ? 600
-            : 400
-        }
-        opacity={
-          (isFunction &&
-            (selectedFunction as AbiFunction).signature ===
-              (fn as AbiFunction).signature) ||
-          (!isFunction &&
-            (selectedFunction as AbiEvent).name === (fn as AbiEvent).name)
-            ? 1
-            : 0.65
-        }
+        fontWeight={isActive ? 600 : 400}
+        opacity={isActive ? 1 : 0.65}
         onClick={() => {
           setSelectedFunction(fn);
           const { name } = fn;

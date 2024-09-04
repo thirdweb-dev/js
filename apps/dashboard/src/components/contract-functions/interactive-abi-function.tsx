@@ -8,7 +8,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import type { AbiFunction } from "@thirdweb-dev/sdk";
+import type { AbiFunction, AbiParameter } from "abitype";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { camelToTitle } from "contract-ui/components/solidity-inputs/helpers";
@@ -84,14 +84,7 @@ function formatContractCall(
     key: string;
     value: string;
     type: string;
-    components:
-      | {
-          // biome-ignore lint/suspicious/noExplicitAny: FIXME
-          [x: string]: any;
-          type: string;
-          name?: string;
-        }[]
-      | undefined;
+    components: Readonly<AbiParameter[]> | undefined;
   }[],
 ) {
   const parsedParams = params
@@ -142,7 +135,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           key: i.name || "key",
           value: "",
           type: i.type,
-          components: i.components,
+          components: "components" in i ? i.components : undefined,
         })) || [],
       value: "0",
     },
@@ -266,7 +259,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                     <SolidityInput
                       solidityName={item.key}
                       solidityType={item.type}
-                      solidityComponents={item.components}
+                      // solidityComponents={item.components}
                       {...form.register(`params.${index}.value`)}
                       functionName={abiFunction.name}
                     />

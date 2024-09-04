@@ -50,6 +50,7 @@ const ContractDeployDetailPage: ThirdwebNextPage = () => {
   }, [publishMetadataQuery.data, trackEvent]);
 
   const enabledFeatures = useContractEnabledExtensions(
+    // @ts-expect-error - "wrong" ABI data type
     publishMetadataQuery.data?.abi,
   );
 

@@ -6,7 +6,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import type { Abi, AbiEvent, AbiFunction } from "@thirdweb-dev/sdk";
+import type { Abi, AbiEvent, AbiFunction } from "abitype";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import type { SourceFile } from "components/contract-components/types";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
@@ -100,7 +100,6 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           )}
           {(sources || abi) && (
             <TabPanel>
-              {/* @ts-expect-error This won't cause any error and will auto-resolve itself once we have fully migrated to v5 */}
               <SourcesPanel sources={sources} abi={abi} />
             </TabPanel>
           )}

@@ -12,6 +12,7 @@ import {
   Flex,
   FormControl,
 } from "@chakra-ui/react";
+import type { Abi } from "abitype";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { NetworkSelectorButton } from "components/selects/NetworkSelectorButton";
 import { DeprecatedAlert } from "components/shared/DeprecatedAlert";
@@ -32,7 +33,6 @@ import { encodeAbiParameters } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import {
-  useConstructorParamsFromABI,
   useContractEnabledExtensions,
   useContractFullPublishMetadata,
   useContractPublishMetadataFromURI,
@@ -123,9 +123,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const fullPublishMetadata = useContractFullPublishMetadata(ipfsHash);
-  const constructorParams = useConstructorParamsFromABI(
-    compilerMetadata.data?.abi,
-  );
+  const constructorParams =
+    compilerMetadata.data?.abi?.find((c) => c.type === "constructor")?.inputs ||
+    [];
 
   const [customFactoryNetwork, customFactoryAddress] = Object.entries(
     fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
@@ -141,10 +141,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     fullPublishMetadata.data?.publisher === "deployer.thirdweb.eth";
 
   const initializerParams = useFunctionParamsFromABI(
-    fullPublishMetadata.data?.deployType === "customFactory" &&
-      customFactoryAbi?.data
+    (fullPublishMetadata.data?.deployType === "customFactory" &&
+    customFactoryAbi?.data
       ? customFactoryAbi.data
-      : compilerMetadata.data?.abi,
+      : compilerMetadata.data?.abi) as Abi | undefined,
     fullPublishMetadata.data?.deployType === "customFactory"
       ? fullPublishMetadata.data?.factoryDeploymentData?.customFactoryInput
           ?.factoryFunction || "deployProxyByImplementation"
@@ -168,9 +168,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       isQueryEnabled: isModular,
     });
 
-  const deployParams = isFactoryDeployment
-    ? initializerParams
-    : constructorParams;
+  const deployParams =
+    (isFactoryDeployment ? initializerParams : constructorParams) || [];
 
   const isAccountFactory =
     !isFactoryDeployment &&
@@ -319,7 +318,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     return false;
   };
 
-  const extensions = useContractEnabledExtensions(compilerMetadata.data?.abi);
+  const extensions = useContractEnabledExtensions(
+    compilerMetadata.data?.abi as Abi | undefined,
+  );
   const isErc721SharedMetadadata = extensions.some(
     (extension) => extension.name === "ERC721SharedMetadata",
   );

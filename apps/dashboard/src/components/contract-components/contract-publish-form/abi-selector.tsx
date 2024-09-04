@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import type { Abi } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { Select } from "chakra-react-select";
 import { useMemo } from "react";
 
@@ -16,16 +16,15 @@ export const AbiSelector: React.FC<AbiSelectorProps> = ({
   defaultValue,
   onChange,
 }) => {
-  const writeFunctions = abi.filter(
-    (f) => f.type === "function" && f.stateMutability !== "view",
-  );
-
   const options = useMemo(() => {
-    return writeFunctions.map((f) => ({
-      label: f.name,
-      value: f.name,
-    }));
-  }, [writeFunctions]);
+    return abi
+      .filter((f) => f.type === "function")
+      .filter((f) => f.stateMutability !== "view")
+      .map((f) => ({
+        label: f.name,
+        value: f.name,
+      }));
+  }, [abi]);
 
   return (
     <Flex gap={2} alignItems="center" w="full">

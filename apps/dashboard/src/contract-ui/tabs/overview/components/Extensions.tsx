@@ -1,10 +1,10 @@
 import { Flex, Image, List, ListItem } from "@chakra-ui/react";
+import type { Abi } from "abitype";
 import { useContractEnabledExtensions } from "components/contract-components/hooks";
-import type { ContractInterface } from "ethers";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 type ExtensionsProps = {
-  abi: ContractInterface;
+  abi: Abi;
 };
 
 export const Extensions: React.FC<ExtensionsProps> = ({ abi }) => {

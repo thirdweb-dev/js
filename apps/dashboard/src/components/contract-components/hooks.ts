@@ -12,7 +12,6 @@ import {
 } from "@tanstack/react-query";
 import { useSDK, useSigner } from "@thirdweb-dev/react";
 import {
-  type Abi,
   type DeploymentTransaction,
   type ExtraPublishMetadata,
   type FeatureName,
@@ -20,10 +19,6 @@ import {
   type PublishedContract,
   type ThirdwebSDK,
   detectFeatures,
-  extractConstructorParamsFromAbi,
-  extractEventsFromAbi,
-  extractFunctionParamsFromAbi,
-  extractFunctionsFromAbi,
   fetchAndCacheDeployMetadata,
   fetchContractMetadata,
   fetchPreDeployMetadata,
@@ -35,6 +30,7 @@ import {
   getZkTransactionsForDeploy,
   zkDeployContractFromUri,
 } from "@thirdweb-dev/sdk/evm/zksync";
+import type { Abi } from "abitype";
 import type { ProfileMetadata, ProfileMetadataInput } from "constants/schemas";
 import type { providers } from "ethers";
 import { useSupportedChain } from "hooks/chains/configureChains";
@@ -43,6 +39,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getThirdwebSDK } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { getContract } from "thirdweb";
 import {
   abstractTestnet,
   polygon,
@@ -50,6 +47,7 @@ import {
   zkSync,
   zkSyncSepolia,
 } from "thirdweb/chains";
+import { resolveContractAbi } from "thirdweb/contract";
 import {
   useActiveAccount,
   useActiveWallet,
@@ -58,6 +56,8 @@ import {
 import { isAddress } from "thirdweb/utils";
 import invariant from "tiny-invariant";
 import { Web3Provider } from "zksync-ethers";
+import { thirdwebClient } from "../../@/constants/client";
+import { useV5DashboardChain } from "../../lib/v5-adapter";
 import type { CustomContractDeploymentFormData } from "./contract-deploy-form/custom-contract";
 import type {
   DeployModalStep,
@@ -439,12 +439,10 @@ export function usePublishedContractFunctions(contract: PublishedContract) {
         "MarketplaceV3",
       ))
   ) {
-    return extractFunctionsFromAbi(compositeAbi);
+    return compositeAbi.filter((f) => f.type === "function");
   }
 
-  return meta
-    ? extractFunctionsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
-    : undefined;
+  return meta?.abi?.filter((f) => f.type === "function") || [];
 }
 export function usePublishedContractEvents(contract: PublishedContract) {
   const publishedContractInfo = usePublishedContractInfo(contract);
@@ -466,12 +464,10 @@ export function usePublishedContractEvents(contract: PublishedContract) {
         "MarketplaceV3",
       ))
   ) {
-    return extractEventsFromAbi(compositeAbi);
+    return compositeAbi.filter((f) => f.type === "event");
   }
 
-  return meta
-    ? extractEventsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
-    : undefined;
+  return meta?.abi?.filter((f) => f.type === "event") || [];
 }
 
 export function usePublishedContractCompilerMetadata(
@@ -480,17 +476,12 @@ export function usePublishedContractCompilerMetadata(
   return useContractPublishMetadataFromURI(contract.metadataUri);
 }
 
-export function useConstructorParamsFromABI(abi?: Abi) {
-  return useMemo(() => {
-    return abi ? extractConstructorParamsFromAbi(abi) : [];
-  }, [abi]);
-}
-
-// biome-ignore lint/suspicious/noExplicitAny: FIXME
-export function useFunctionParamsFromABI(abi?: any, functionName?: string) {
+export function useFunctionParamsFromABI(abi?: Abi, functionName?: string) {
   return useMemo(() => {
     return abi && functionName
-      ? extractFunctionParamsFromAbi(abi, functionName)
+      ? abi
+          .filter((a) => a.type === "function")
+          .find((a) => a.name === functionName)?.inputs || []
       : [];
   }, [abi, functionName]);
 }
@@ -991,7 +982,9 @@ export async function fetchPublishedContractsWithFeature(
   );
 
   return resultWithFeature.filter((c) => {
+    // @ts-expect-error - this is the "wrong" abi type, but it works fine
     const extensions = detectFeatures(c.deployMetadata.abi as Abi);
+    // @ts-expect-error - this is the "wrong" abi type, but it works fine
     return isExtensionEnabled(c.deployMetadata.abi as Abi, feature, extensions);
   });
 }
@@ -1063,10 +1056,10 @@ function extractExtensions(
   };
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: FIXME
-function useContractDetectedExtensions(abi?: any) {
+function useContractDetectedExtensions(abi?: Abi) {
   const features = useMemo(() => {
     if (abi) {
+      // @ts-expect-error - this is the "wrong" abi type, but it works fine
       return extractExtensions(detectFeatures(abi));
     }
     return undefined;
@@ -1074,8 +1067,7 @@ function useContractDetectedExtensions(abi?: any) {
   return features;
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: FIXME
-export function useContractEnabledExtensions(abi?: any) {
+export function useContractEnabledExtensions(abi?: Abi) {
   const extensions = useContractDetectedExtensions(abi);
   return extensions ? extensions.enabledExtensions : [];
 }
@@ -1139,22 +1131,31 @@ export function useEns(addressOrEnsName?: string) {
 }
 
 export function useContractFunctions(abi: Abi) {
-  return abi ? extractFunctionsFromAbi(abi) : undefined;
+  return abi
+    .filter((a) => a.type === "function")
+    .map((f) => ({
+      ...f,
+      // fake "field" for the "signature"
+      signature: `${f.name}(${f.inputs.map((i) => i.type).join(",")})`,
+    }));
 }
 
 export function useContractEvents(abi: Abi) {
-  return abi ? extractEventsFromAbi(abi) : undefined;
+  return abi.filter((a) => a.type === "event");
 }
 
 export function useCustomFactoryAbi(contractAddress: string, chainId: number) {
-  const chain = useSupportedChain(chainId);
+  const chain = useV5DashboardChain(chainId);
+  const contract = useMemo(() => {
+    return getContract({
+      client: thirdwebClient,
+      address: contractAddress,
+      chain,
+    });
+  }, [contractAddress, chain]);
   return useQuery({
-    queryKey: ["custom-factory-abi", { contractAddress, chainId }],
-    queryFn: async () => {
-      const sdk = getThirdwebSDK(chainId, getDashboardChainRpc(chainId, chain));
-      return (await sdk.getContract(contractAddress)).abi;
-    },
-
-    enabled: !!contractAddress && !!chainId,
+    queryKey: ["custom-factory-abi", contract],
+    queryFn: () => resolveContractAbi<Abi>(contract),
+    enabled: !!contract,
   });
 }

@@ -16,9 +16,12 @@ import {
   Tabs,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import type { Abi, AbiEvent, AbiFunction } from "@thirdweb-dev/sdk";
-import { formatAbiItem } from "abitype";
-import type { Abi as AbiType } from "abitype";
+import {
+  type Abi,
+  type AbiEvent,
+  type AbiFunction,
+  formatAbiItem,
+} from "abitype";
 import {
   useContractEnabledExtensions,
   useContractEvents,
@@ -33,8 +36,7 @@ import { useActiveAccount } from "thirdweb/react";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
 interface CodeOverviewProps {
-  // TODO: Remove v4's `Abi` type
-  abi?: Abi | AbiType;
+  abi?: Abi;
   contractAddress?: string;
   onlyInstall?: boolean;
   chainId?: number;
@@ -562,7 +564,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   const chainId = useDashboardEVMChainId() || chainIdProp || 1;
   const chainInfo = useSupportedChain(chainId || -1);
 
-  const functions = useContractFunctions(abi as Abi);
+  const functions = useContractFunctions(abi || []);
   const events = useContractEvents(abi as Abi);
   const { readFunctions, writeFunctions } = useMemo(() => {
     return {
@@ -778,15 +780,13 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                 size="sm"
                                 fontWeight={
                                   tab === "write" &&
-                                  (write as AbiFunction).signature ===
-                                    (fn as AbiFunction).signature
+                                  write?.signature === fn.signature
                                     ? 600
                                     : 400
                                 }
                                 opacity={
                                   tab === "write" &&
-                                  (write as AbiFunction).signature ===
-                                    (fn as AbiFunction).signature
+                                  write?.signature === fn.signature
                                     ? 1
                                     : 0.65
                                 }
@@ -814,15 +814,13 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                                 size="sm"
                                 fontWeight={
                                   tab === "read" &&
-                                  (read as AbiFunction).signature ===
-                                    (fn as AbiFunction).signature
+                                  read?.signature === fn.signature
                                     ? 600
                                     : 400
                                 }
                                 opacity={
                                   tab === "read" &&
-                                  (read as AbiFunction).signature ===
-                                    (fn as AbiFunction).signature
+                                  read?.signature === fn.signature
                                     ? 1
                                     : 0.65
                                 }
@@ -900,22 +898,18 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                       contractAddress,
                       fn:
                         tab === "read" ? read : tab === "write" ? write : event,
-                      args: (tab === "read"
-                        ? readFunctions
-                        : tab === "write"
-                          ? writeFunctions
-                          : events
-                      )
-                        ?.find(
-                          (f) =>
-                            f.name ===
-                            (tab === "read"
-                              ? read?.name
-                              : tab === "write"
-                                ? write?.name
-                                : event?.name),
-                        )
-                        ?.inputs?.map((i) => i.name),
+                      args:
+                        abi
+                          ?.filter(
+                            (f) => f.type === "function" || f.type === "event",
+                          )
+                          ?.find((f) =>
+                            f.type === "function"
+                              ? f.name ===
+                                (tab === "read" ? read?.name : write?.name)
+                              : f.name === event?.name,
+                          )
+                          ?.inputs.map((i) => i.name || "") || [],
 
                       chainId,
                       extensionNamespace,

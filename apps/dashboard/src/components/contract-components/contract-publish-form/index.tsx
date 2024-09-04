@@ -4,12 +4,12 @@ import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 import { CustomConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Divider, Flex, Icon, IconButton } from "@chakra-ui/react";
 import {
-  type Abi,
   CONTRACT_ADDRESSES,
   ExtraPublishMetadataSchemaInput,
   detectFeatures,
   isExtensionEnabled,
 } from "@thirdweb-dev/sdk";
+import type { Abi } from "abitype";
 import { defaultChains } from "constants/chains";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -21,7 +21,6 @@ import { useActiveAccount } from "thirdweb/react";
 import { Button, Text } from "tw-components";
 import { z } from "zod";
 import {
-  useConstructorParamsFromABI,
   useContractFullPublishMetadata,
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
@@ -212,14 +211,14 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   );
 
   const fullPublishMetadata = useContractFullPublishMetadata(contractId);
-  const constructorParams = useConstructorParamsFromABI(
-    publishMetadata.data?.abi,
-  );
+  const constructorParams =
+    publishMetadata.data?.abi?.find((c) => c.type === "constructor")?.inputs ||
+    [];
 
   const initializerParams = useFunctionParamsFromABI(
-    form.watch("deployType") === "customFactory"
+    (form.watch("deployType") === "customFactory"
       ? customFactoryAbi
-      : publishMetadata.data?.abi,
+      : publishMetadata.data?.abi) as Abi,
     form.watch("deployType") === "customFactory"
       ? form.watch(
           "factoryDeploymentData.customFactoryInput.factoryFunction",
@@ -238,12 +237,12 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
       ? constructorParams
       : initializerParams;
 
-  const extensions = detectFeatures(publishMetadata.data?.abi as Abi);
+  const extensions = detectFeatures(publishMetadata.data?.abi || []);
 
   const isPluginRouter = useMemo(
     () =>
       isExtensionEnabled(
-        publishMetadata.data?.abi as Abi,
+        publishMetadata.data?.abi || [],
         "PluginRouter",
         extensions,
       ),
@@ -253,7 +252,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   const isDynamicContract = useMemo(
     () =>
       isExtensionEnabled(
-        publishMetadata.data?.abi as Abi,
+        publishMetadata.data?.abi || [],
         "DynamicContract",
         extensions,
       ),
@@ -263,7 +262,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
   const isModularContract = useMemo(
     () =>
       isExtensionEnabled(
-        publishMetadata.data?.abi as Abi,
+        publishMetadata.data?.abi || [],
         "ModularCore",
         extensions,
       ),
@@ -445,7 +444,7 @@ export const ContractPublishForm: React.FC<ContractPublishFormProps> = ({
           {fieldsetToShow === "factory" && (
             <Flex flexDir="column" gap={24}>
               <FactoryFieldset
-                abi={publishMetadata.data?.abi || []}
+                abi={(publishMetadata.data?.abi || []) as Abi}
                 setCustomFactoryAbi={setCustomFactoryAbi}
                 shouldShowDynamicFactoryInput={shouldShowDynamicFactoryInput}
                 shouldShowModularFactoryInput={shouldShowModularFactoryInput}
