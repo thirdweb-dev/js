@@ -7,7 +7,7 @@ import type { Hex } from "../../../utils/encoding/hex.js";
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { mint as generatedMint } from "../__generated__/ERC1155Core/write/mint.js";
+import { mintWithSignature as generatedMint } from "../__generated__/ERC1155Core/write/mintWithSignature.js";
 import {
   type EncodeBytesBeforeMintWithSignatureERC1155Params,
   encodeBytesBeforeMintWithSignatureERC1155Params,
@@ -21,15 +21,13 @@ export function mintWithSignature(
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature, mintParams } = options;
+      const { payload, signature } = options;
       return {
         to: payload.to,
         tokenId: payload.tokenId,
         baseURI: payload.baseURI,
         amount: payload.amount,
-        data: encodeBytesBeforeMintWithSignatureERC1155Params({
-          params: mintParams,
-        }),
+        data: payload.data,
         signature,
       };
     },
@@ -114,7 +112,7 @@ export async function generateMintSignature(
 
   const signature = await account.signTypedData({
     domain: {
-      name: "MintableERC1155",
+      name: "ERC1155Core",
       version: "1",
       chainId: contract.chain.id,
       verifyingContract: contract.address as Hex,
@@ -123,7 +121,7 @@ export async function generateMintSignature(
     primaryType: "MintRequestERC1155",
     message: payload,
   });
-  return { payload, signature, mintParams };
+  return { payload, signature };
 }
 
 type GeneratePayloadInput = {

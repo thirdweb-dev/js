@@ -646,7 +646,7 @@ const contractId = "${moduleName}";
  * \`\`\`
  * @module ${moduleName}
  */
-export function module(${needsParams ? "params: EncodeBytesOnInstallParams" : ""}) {
+export function module(${needsParams ? "params: EncodeBytesOnInstallParams & { publisher?: string }" : "params?: { publisher?: string }"}) {
   return async (args: {
     client: ThirdwebClient;
     chain: Chain;
@@ -658,6 +658,7 @@ export function module(${needsParams ? "params: EncodeBytesOnInstallParams" : ""
       chain: args.chain,
       client: args.client,
       contractId,
+      publisher: params?.publisher,
     });
     return {
       module: moduleContract.address as Address,
@@ -696,13 +697,14 @@ export function module(${needsParams ? "params: EncodeBytesOnInstallParams" : ""
 export function install(options: {
   contract: ThirdwebContract;
   account: Account;
-  ${needsParams ? "params: EncodeBytesOnInstallParams;" : ""}
+  ${needsParams ? "params: EncodeBytesOnInstallParams & { publisher?: string };" : "params?: { publisher?: string }"}
 }): PreparedTransaction {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
     moduleName: contractId,
     moduleData: ${needsParams ? "encodeInstall(options.params)" : `"0x" as const`},
+    publisher: options.params?.publisher,
   });
 }
 

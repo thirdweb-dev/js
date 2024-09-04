@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { formatAbi } from "abitype";
 
-const contract = "BatchMetadataERC1155";
+const contract = "BatchMetadataERC721";
 
 const file = JSON.parse(
   fs.readFileSync(

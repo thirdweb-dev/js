@@ -56,8 +56,6 @@ describe(
       // install module with published name
       const installTransaction = installPublishedModule({
         contract: core,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
         account: TEST_ACCOUNT_A,
         moduleName: "DemoModuleWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",

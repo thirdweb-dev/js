@@ -19,6 +19,7 @@ import {
 } from "../../transaction/actions/zksync/send-eip712-transaction.js";
 import type { PreparedTransaction } from "../../transaction/prepare-transaction.js";
 import { getAddress } from "../../utils/address.js";
+import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import { concatHex } from "../../utils/encoding/helpers/concat-hex.js";
 import type { Hex } from "../../utils/encoding/hex.js";
 import { parseTypedData } from "../../utils/signatures/helpers/parseTypedData.js";
@@ -48,7 +49,6 @@ import {
   signUserOp,
   waitForUserOpReceipt,
 } from "./lib/userop.js";
-import { isNativeAAChain } from "./lib/utils.js";
 import type {
   BundlerOptions,
   PaymasterResult,
@@ -58,7 +58,6 @@ import type {
   UserOperationV06,
   UserOperationV07,
 } from "./types.js";
-
 /**
  * Checks if the provided wallet is a smart wallet.
  *
@@ -104,7 +103,7 @@ export async function connectSmartWallet(
   const sponsorGas =
     "gasless" in options ? options.gasless : options.sponsorGas;
 
-  if (isNativeAAChain(chain)) {
+  if (isZkSyncChain(chain)) {
     return [
       createZkSyncAccount({
         creationOptions,

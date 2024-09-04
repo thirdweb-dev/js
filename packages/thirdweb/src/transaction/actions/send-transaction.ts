@@ -144,6 +144,17 @@ export async function sendTransaction(
     await account.onTransactionRequested(transaction);
   }
 
+  // if zksync transaction params are set, send with eip712
+  if (options.transaction.eip712) {
+    const { sendEip712Transaction } = await import(
+      "./zksync/send-eip712-transaction.js"
+    );
+    return sendEip712Transaction({
+      account,
+      transaction,
+    });
+  }
+
   const serializableTransaction = await toSerializableTransaction({
     transaction: transaction,
     from: account.address,

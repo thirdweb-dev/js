@@ -1,12 +1,15 @@
-import type { AbiConstructor } from "abitype";
+import type { AbiConstructor, AbiFunction } from "abitype";
 import type { Chain } from "../../chains/types.js";
 import type { ThirdwebClient } from "../../client/client.js";
 import { getContract } from "../../contract/contract.js";
 import { fetchPublishedContractMetadata } from "../../contract/deployment/publisher.js";
+import { zkDeployContract } from "../../contract/deployment/zksync/zkDeployContract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
 import { simulateTransaction } from "../../transaction/actions/simulate.js";
 import { prepareContractCall } from "../../transaction/prepare-contract-call.js";
 import { resolveMethod } from "../../transaction/resolve-method.js";
+import type { CompilerMetadata } from "../../utils/any-evm/deploy-metadata.js";
+import { isZkSyncChain } from "../../utils/any-evm/zksync/isZkSyncChain.js";
 import type { Account } from "../../wallets/interfaces/wallet.js";
 
 /**
@@ -58,26 +61,19 @@ export async function deployPublishedContract(
   const { compilerMetadata, extendedMetadata } =
     await fetchPublishedContractMetadata({
       client,
-      contractId,
+      contractId: isZkSyncChain(chain) ? `${contractId}_ZkSync` : contractId,
       publisher,
       version,
     });
 
   switch (extendedMetadata?.deployType) {
     case "standard": {
-      const { deployContract } = await import(
-        "../../contract/deployment/deploy-with-abi.js"
-      );
-      return deployContract({
+      return directDeploy({
         account,
         client,
         chain,
-        bytecode: compilerMetadata.bytecode,
-        constructorAbi:
-          (compilerMetadata.abi.find(
-            (i) => i.type === "constructor",
-          ) as AbiConstructor) || [],
-        constructorParams: contractParams,
+        compilerMetadata,
+        contractParams,
       });
     }
     case "autoFactory": {
@@ -97,16 +93,23 @@ export async function deployPublishedContract(
           constructorParams: implementationConstructorParams || [],
           publisher,
         });
+      const initializeFunction = compilerMetadata.abi.find(
+        (i) =>
+          i.type === "function" &&
+          i.name ===
+            (extendedMetadata.factoryDeploymentData
+              ?.implementationInitializerFunction || "initialize"),
+      ) as AbiFunction;
+      if (!initializeFunction) {
+        throw new Error(`Could not find initialize function for ${contractId}`);
+      }
       const initializeTransaction = prepareContractCall({
         contract: getContract({
           client,
           chain,
           address: implementationContract.address,
         }),
-        method: resolveMethod(
-          extendedMetadata.factoryDeploymentData
-            ?.implementationInitializerFunction || "initialize",
-        ),
+        method: initializeFunction,
         params: contractParams,
       });
 
@@ -154,19 +157,12 @@ export async function deployPublishedContract(
     }
     case undefined: {
       // Default to standard deployment if none was specified
-      const { deployContract } = await import(
-        "../../contract/deployment/deploy-with-abi.js"
-      );
-      return deployContract({
+      return directDeploy({
         account,
         client,
         chain,
-        bytecode: compilerMetadata.bytecode,
-        constructorAbi:
-          (compilerMetadata.abi.find(
-            (i) => i.type === "constructor",
-          ) as AbiConstructor) || [],
-        constructorParams: contractParams,
+        compilerMetadata,
+        contractParams,
       });
     }
     default:
@@ -175,4 +171,40 @@ export async function deployPublishedContract(
         `Unsupported deploy type: ${extendedMetadata?.deployType}`,
       );
   }
+}
+
+async function directDeploy(options: {
+  account: Account;
+  client: ThirdwebClient;
+  chain: Chain;
+  compilerMetadata: CompilerMetadata;
+  contractParams: unknown[];
+}) {
+  const { account, client, chain, compilerMetadata, contractParams } = options;
+
+  if (isZkSyncChain(chain)) {
+    return zkDeployContract({
+      account,
+      client,
+      chain,
+      bytecode: compilerMetadata.bytecode,
+      abi: compilerMetadata.abi,
+      params: contractParams,
+    });
+  }
+
+  const { deployContract } = await import(
+    "../../contract/deployment/deploy-with-abi.js"
+  );
+  return deployContract({
+    account,
+    client,
+    chain,
+    bytecode: compilerMetadata.bytecode,
+    constructorAbi:
+      (compilerMetadata.abi.find(
+        (i) => i.type === "constructor",
+      ) as AbiConstructor) || [],
+    constructorParams: contractParams,
+  });
 }

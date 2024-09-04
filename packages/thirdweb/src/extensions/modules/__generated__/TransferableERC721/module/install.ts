@@ -33,7 +33,7 @@ const contractId = "TransferableERC721";
  * ```
  * @module TransferableERC721
  */
-export function module() {
+export function module(params?: { publisher?: string }) {
   return async (args: {
     client: ThirdwebClient;
     chain: Chain;
@@ -45,6 +45,7 @@ export function module() {
       chain: args.chain,
       client: args.client,
       contractId,
+      publisher: params?.publisher,
     });
     return {
       module: moduleContract.address as Address,
@@ -77,12 +78,14 @@ export function module() {
 export function install(options: {
   contract: ThirdwebContract;
   account: Account;
+  params?: { publisher?: string };
 }): PreparedTransaction {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
     moduleName: contractId,
     moduleData: "0x" as const,
+    publisher: options.params?.publisher,
   });
 }
 

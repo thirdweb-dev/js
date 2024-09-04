@@ -13,7 +13,7 @@ import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
 import { startTokenId } from "../../erc721/__generated__/IERC721A/read/startTokenId.js";
 import { totalMinted } from "../__generated__/ERC721Core/read/totalMinted.js";
-import { mint as generatedMint } from "../__generated__/ERC721Core/write/mint.js";
+import { mintWithSignature as generatedMint } from "../__generated__/ERC721Core/write/mintWithSignature.js";
 import {
   type EncodeBytesBeforeMintWithSignatureERC721Params,
   encodeBytesBeforeMintWithSignatureERC721Params,
@@ -27,14 +27,12 @@ export function mintWithSignature(
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { payload, signature, mintParams } = options;
+      const { payload, signature } = options;
       return {
         to: payload.to,
         amount: payload.amount,
         baseURI: payload.baseURI,
-        data: encodeBytesBeforeMintWithSignatureERC721Params({
-          params: mintParams,
-        }),
+        data: payload.data,
         signature,
       };
     },
@@ -111,7 +109,7 @@ export async function generateMintSignature(
   const payload = {
     to: getAddress(mintRequest.recipient),
     amount: quantity,
-    baseURI,
+    baseURI: baseURI,
     data: encodeBytesBeforeMintWithSignatureERC721Params({
       params: mintParams,
     }),
@@ -119,7 +117,7 @@ export async function generateMintSignature(
 
   const signature = await account.signTypedData({
     domain: {
-      name: "MintableERC721",
+      name: "ERC721Core",
       version: "1",
       chainId: contract.chain.id,
       verifyingContract: contract.address as Hex,
@@ -128,7 +126,8 @@ export async function generateMintSignature(
     primaryType: "MintRequestERC721",
     message: payload,
   });
-  return { payload, signature, mintParams };
+
+  return { payload, signature };
 }
 
 type GeneratePayloadInput = {

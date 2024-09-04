@@ -11,7 +11,9 @@ import {
 } from "../../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../../transaction/actions/send-and-confirm-transaction.js";
 import { balanceOf } from "../../erc721/__generated__/IERC721A/read/balanceOf.js";
+import { tokenURI } from "../../erc721/__generated__/IERC721A/read/tokenURI.js";
 import { getNFT } from "../../erc721/read/getNFT.js";
+import * as BatchMetadataERC721 from "../../modules/BatchMetadataERC721/index.js";
 import { deployModularContract } from "../../prebuilts/deploy-modular.js";
 import { getInstalledModules } from "../__generated__/IModularCore/read/getInstalledModules.js";
 import { grantMinterRole } from "../common/grantMinterRole.js";
@@ -25,6 +27,7 @@ describe("ModularTokenERC721", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC721",
+      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestTokenERC721",
         symbol: "TT",
@@ -32,8 +35,11 @@ describe("ModularTokenERC721", () => {
       modules: [
         MintableERC721.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7",
         }),
-        // TODO (modular) SimpleMetadataERC721.module(),
+        BatchMetadataERC721.module({
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7",
+        }),
       ],
     });
     contract = getContract({
@@ -45,7 +51,7 @@ describe("ModularTokenERC721", () => {
 
   it("should have erc721 module", async () => {
     const modules = await getInstalledModules({ contract });
-    expect(modules.length).toBe(1);
+    expect(modules.length).toBe(2);
   });
 
   it("should not mint without signature", async () => {
@@ -131,5 +137,44 @@ describe("ModularTokenERC721", () => {
       contract,
     });
     expect(balance).toBe(1n);
+  });
+  it("should mint tokens with batch metadata", async () => {
+    // should have minted 2 tokens at this point
+    await sendAndConfirmTransaction({
+      transaction: MintableERC721.mintWithRole({
+        contract,
+        nfts: ["ipfs://some-uri/0", "ipfs://some-uri/1"],
+        to: TEST_ACCOUNT_A.address,
+      }),
+      account: TEST_ACCOUNT_A,
+    });
+
+    await sendAndConfirmTransaction({
+      transaction: MintableERC721.mintWithRole({
+        contract,
+        nfts: ["ipfs://some-other-uri/0"],
+        to: TEST_ACCOUNT_A.address,
+      }),
+      account: TEST_ACCOUNT_A,
+    });
+
+    expect(
+      await tokenURI({
+        contract,
+        tokenId: 2n,
+      }),
+    ).toBe("ipfs://some-uri/0");
+    expect(
+      await tokenURI({
+        contract,
+        tokenId: 3n,
+      }),
+    ).toBe("ipfs://some-uri/1");
+    expect(
+      await tokenURI({
+        contract,
+        tokenId: 4n,
+      }),
+    ).toBe("ipfs://some-other-uri/0");
   });
 });

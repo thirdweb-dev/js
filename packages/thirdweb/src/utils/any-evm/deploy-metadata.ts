@@ -53,13 +53,22 @@ async function fetchCompilerMetadata(
     uri: options.uri,
     client: options.client,
   }).then((r) => r.json());
+  // TODO: proper handling of different compiler metadata types
+  const metadataUri =
+    rawMeta.compilers?.zksolc?.length > 0 && rawMeta.name.endsWith("_ZkSync")
+      ? rawMeta.compilers.zksolc[0].metadataUri
+      : rawMeta.metadataUri;
+  const bytecodeUri =
+    rawMeta.compilers?.zksolc?.length > 0 && rawMeta.name.endsWith("_ZkSync")
+      ? rawMeta.compilers.zksolc[0].bytecodeUri
+      : rawMeta.bytecodeUri;
   const [deployBytecode, parsedMeta] = await Promise.all([
-    download({ uri: rawMeta.bytecodeUri, client: options.client }).then(
+    download({ uri: bytecodeUri, client: options.client }).then(
       (res) => res.text() as Promise<Hex>,
     ),
     fetchAndParseCompilerMetadata({
       client: options.client,
-      uri: rawMeta.metadataUri,
+      uri: metadataUri,
     }),
   ]);
 

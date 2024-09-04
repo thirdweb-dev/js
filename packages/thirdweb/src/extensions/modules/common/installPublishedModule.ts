@@ -10,7 +10,7 @@ export type InstallPublishedModuleOptions = {
   account: Account;
   contract: ThirdwebContract;
   moduleName: string;
-  publisherAddress?: string;
+  publisher?: string;
   version?: string;
   constructorParams?: unknown[];
   moduleData?: `0x${string}`;
@@ -41,7 +41,7 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
     contract,
     moduleName,
     constructorParams,
-    publisherAddress,
+    publisher,
     moduleData,
   } = options;
 
@@ -54,7 +54,7 @@ export function installPublishedModule(options: InstallPublishedModuleOptions) {
         account,
         contractId: moduleName,
         constructorParams: constructorParams || [],
-        publisher: publisherAddress,
+        publisher,
       });
       return {
         moduleContract: deployedModule.implementationContract.address as string,

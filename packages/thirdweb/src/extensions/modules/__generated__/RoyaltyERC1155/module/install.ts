@@ -40,7 +40,9 @@ const contractId = "RoyaltyERC1155";
  * ```
  * @module RoyaltyERC1155
  */
-export function module(params: EncodeBytesOnInstallParams) {
+export function module(
+  params: EncodeBytesOnInstallParams & { publisher?: string },
+) {
   return async (args: {
     client: ThirdwebClient;
     chain: Chain;
@@ -52,6 +54,7 @@ export function module(params: EncodeBytesOnInstallParams) {
       chain: args.chain,
       client: args.client,
       contractId,
+      publisher: params?.publisher,
     });
     return {
       module: moduleContract.address as Address,
@@ -88,13 +91,14 @@ export function module(params: EncodeBytesOnInstallParams) {
 export function install(options: {
   contract: ThirdwebContract;
   account: Account;
-  params: EncodeBytesOnInstallParams;
+  params: EncodeBytesOnInstallParams & { publisher?: string };
 }): PreparedTransaction {
   return installPublishedModule({
     account: options.account,
     contract: options.contract,
     moduleName: contractId,
     moduleData: encodeInstall(options.params),
+    publisher: options.params?.publisher,
   });
 }
 

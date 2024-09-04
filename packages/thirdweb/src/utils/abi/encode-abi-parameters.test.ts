@@ -30,7 +30,7 @@ describe("encodeAbiParameters", () => {
   it("should throw error when encoding invalid address", () => {
     const invalidAddress = "0x_hello_world";
     expect(() => encodeAddress(invalidAddress)).toThrowError(
-      "Invalid address.",
+      `Invalid address: ${invalidAddress}`,
     );
   });
 

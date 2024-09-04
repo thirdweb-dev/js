@@ -6,7 +6,7 @@ import { dateToSeconds, tenYearsFromNow } from "../../../utils/date.js";
 import type { Hex } from "../../../utils/encoding/hex.js";
 import { randomBytesHex } from "../../../utils/random.js";
 import type { Account } from "../../../wallets/interfaces/wallet.js";
-import { mint as generatedMint } from "../__generated__/ERC20Core/write/mint.js";
+import { mintWithSignature as generatedMint } from "../__generated__/ERC20Core/write/mintWithSignature.js";
 import {
   type EncodeBytesBeforeMintWithSignatureERC20Params,
   encodeBytesBeforeMintWithSignatureERC20Params,
@@ -20,13 +20,11 @@ export function mintWithSignature(
   return generatedMint({
     contract: options.contract,
     asyncParams: async () => {
-      const { mintParams, payload, signature } = options;
+      const { payload, signature } = options;
       return {
         to: payload.to,
         amount: payload.amount,
-        data: encodeBytesBeforeMintWithSignatureERC20Params({
-          params: mintParams,
-        }),
+        data: payload.data,
         signature,
       };
     },
@@ -122,7 +120,7 @@ export async function generateMintSignature(
 
   const signature = await account.signTypedData({
     domain: {
-      name: "MintableERC20",
+      name: "ERC20Core",
       version: "1",
       chainId: contract.chain.id,
       verifyingContract: contract.address as Hex,
@@ -131,7 +129,7 @@ export async function generateMintSignature(
     primaryType: "MintRequestERC20",
     message: payload,
   });
-  return { mintParams, payload, signature };
+  return { payload, signature };
 }
 
 type GeneratePayloadInput = {

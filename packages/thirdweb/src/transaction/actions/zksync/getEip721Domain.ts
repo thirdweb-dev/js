@@ -1,5 +1,7 @@
 import type { TransactionSerializable } from "viem";
+import { hashBytecode } from "viem/zksync";
 import type { Address } from "../../../utils/address.js";
+import { toHex } from "../../../utils/encoding/hex.js";
 import type {
   EIP712SerializedTransaction,
   EIP712TransactionOptions,
@@ -56,6 +58,7 @@ function transactionToMessage(
     paymasterInput,
     gasPerPubdata,
     data,
+    factoryDeps,
   } = transaction;
 
   return {
@@ -70,8 +73,7 @@ function transactionToMessage(
     nonce: nonce ? BigInt(nonce) : 0n,
     value: value ?? 0n,
     data: data ? data : "0x0",
-    // TODO suport factoryDeps
-    factoryDeps: [],
+    factoryDeps: factoryDeps?.map((dep) => toHex(hashBytecode(dep))) ?? [],
     paymasterInput: paymasterInput ? paymasterInput : "0x",
   };
 }

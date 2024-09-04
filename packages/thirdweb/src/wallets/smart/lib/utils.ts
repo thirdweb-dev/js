@@ -1,5 +1,4 @@
 import { concat } from "viem";
-import type { Chain } from "../../../chains/types.js";
 import { isHex, numberToHex, toHex } from "../../../utils/encoding/hex.js";
 import type {
   UserOperationV06,
@@ -47,13 +46,4 @@ export function hexlifyUserOp(
       val === undefined || val === null || isHex(val) ? val : toHex(val),
     ]),
   ) as UserOperationV06Hexed | UserOperationV07Hexed;
-}
-
-export function isNativeAAChain(chain: Chain) {
-  return (
-    chain.id === 324 ||
-    chain.id === 300 ||
-    chain.id === 302 ||
-    chain.id === 11124
-  );
 }

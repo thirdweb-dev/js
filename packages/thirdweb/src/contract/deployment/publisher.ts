@@ -12,8 +12,12 @@ import { resolveImplementation } from "../../utils/bytecode/resolveImplementatio
 import { type ThirdwebContract, getContract } from "../contract.js";
 
 const CONTRACT_PUBLISHER_ADDRESS = "0xf5b896Ddb5146D5dA77efF4efBb3Eae36E300808"; // Polygon only
-// export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024"; // FIXME
-export const THIRDWEB_DEPLOYER = "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7";
+export const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
+
+const cache = new Map<
+  string,
+  { data: FetchDeployMetadataResult; timestamp: number }
+>();
 
 /**
  * @internal
@@ -24,17 +28,29 @@ export async function fetchPublishedContractMetadata(options: {
   publisher?: string;
   version?: string;
 }): Promise<FetchDeployMetadataResult> {
-  // TODO LRU cache
+  const cacheKey = `${options.contractId}-${options.publisher}-${options.version}`;
+  const cached = cache.get(cacheKey);
+  // 1 hour cache
+  if (cached && Date.now() - cached.timestamp < 1000 * 60 * 60) {
+    return cached.data;
+  }
   const publishedContract = await fetchPublishedContract({
     client: options.client,
     publisherAddress: options.publisher || THIRDWEB_DEPLOYER,
     contractId: options.contractId,
     version: options.version,
   });
-  return fetchDeployMetadata({
+  if (!publishedContract.publishMetadataUri) {
+    throw new Error(
+      `No published metadata URI found for ${options.contractId}`,
+    );
+  }
+  const data = await fetchDeployMetadata({
     client: options.client,
     uri: publishedContract.publishMetadataUri,
   });
+  cache.set(cacheKey, { data, timestamp: Date.now() });
+  return data;
 }
 
 // TODO: clean this up
