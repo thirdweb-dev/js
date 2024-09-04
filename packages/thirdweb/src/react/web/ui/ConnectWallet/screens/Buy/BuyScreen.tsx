@@ -1,6 +1,5 @@
 import { IdCardIcon } from "@radix-ui/react-icons";
 import { useCallback, useMemo, useState } from "react";
-import { polygon } from "../../../../../../chains/chain-definitions/polygon.js";
 import type { Chain } from "../../../../../../chains/types.js";
 import type { ThirdwebClient } from "../../../../../../client/client.js";
 import { NATIVE_TOKEN_ADDRESS } from "../../../../../../constants/addresses.js";
@@ -23,7 +22,6 @@ import { useWalletBalance } from "../../../../../core/hooks/others/useWalletBala
 import { useBuyWithCryptoQuote } from "../../../../../core/hooks/pay/useBuyWithCryptoQuote.js";
 import { useBuyWithFiatQuote } from "../../../../../core/hooks/pay/useBuyWithFiatQuote.js";
 import { useActiveAccount } from "../../../../../core/hooks/wallets/useActiveAccount.js";
-import { useActiveWalletChain } from "../../../../../core/hooks/wallets/useActiveWalletChain.js";
 import type { SupportedTokens } from "../../../../../core/utils/defaultTokens.js";
 import { LoadingScreen } from "../../../../wallets/shared/LoadingScreen.js";
 import type { PayEmbedConnectOptions } from "../../../PayEmbed.js";
@@ -40,18 +38,13 @@ import { Container, Line, ModalHeader } from "../../../components/basic.js";
 import { Button } from "../../../components/buttons.js";
 import { Text } from "../../../components/text.js";
 import { TokenSymbol } from "../../../components/token/TokenSymbol.js";
-import { useDebouncedValue } from "../../../hooks/useDebouncedValue.js";
 import { ConnectButton } from "../../ConnectButton.js";
 import { ChainButton, NetworkSelectorContent } from "../../NetworkSelector.js";
 import { CoinsIcon } from "../../icons/CoinsIcon.js";
 import type { ConnectLocale } from "../../locale/types.js";
 import { TokenSelector } from "../TokenSelector.js";
 import { WalletSwitcherConnectionScreen } from "../WalletSwitcherConnectionScreen.js";
-import {
-  type ERC20OrNativeToken,
-  NATIVE_TOKEN,
-  isNativeToken,
-} from "../nativeToken.js";
+import { type ERC20OrNativeToken, isNativeToken } from "../nativeToken.js";
 import { DirectPaymentModeScreen } from "./DirectPaymentModeScreen.js";
 import { EstimatedTimeAndFees } from "./EstimatedTimeAndFees.js";
 import { PayTokenIcon } from "./PayTokenIcon.js";
@@ -66,7 +59,11 @@ import {
   type PaymentMethods,
   useEnabledPaymentMethods,
 } from "./main/useEnabledPaymentMethods.js";
-import { useUISelectionStates } from "./main/useUISelectionStates.js";
+import {
+  useFiatCurrencySelectionStates,
+  useFromTokenSelectionStates,
+  useToTokenSelectionStates,
+} from "./main/useUISelectionStates.js";
 import { openOnrampPopup } from "./openOnRamppopup.js";
 import { BuyTokenInput } from "./swap/BuyTokenInput.js";
 import { FiatFees, SwapFees } from "./swap/Fees.js";
@@ -141,33 +138,18 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     id: "main",
   });
 
-  // --------------------------------------------------------------------------
-  // buy token amount ---------------------------------------------------------
-  // NOTE - for transaction / direct payment modes, the token amount is set when the user tap continue
-  const prefillBuy = (payOptions as FundWalletOptions)?.prefillBuy;
-  const activeChain = useActiveWalletChain();
-  const initialTokenAmount = prefillBuy?.amount || "";
-  const [tokenAmount, setTokenAmount] = useState<string>(initialTokenAmount);
-  const deferredTokenAmount = useDebouncedValue(tokenAmount, 300);
-
-  // Destination chain and token selection -----------------------------------
-  const [toChain, setToChain] = useState<Chain>(
-    // use prefill chain if available
-    prefillBuy?.chain ||
-      (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
-      (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain) ||
-      // use active chain if its supported as destination
-      supportedDestinations.find((x) => x.chain.id === activeChain?.id)
-        ?.chain ||
-      // default to polygon
-      polygon,
-  );
-
-  const [toToken, setToToken] = useState<ERC20OrNativeToken>(
-    prefillBuy?.token ||
-      (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
-      NATIVE_TOKEN,
-  );
+  const {
+    tokenAmount,
+    setTokenAmount,
+    toChain,
+    setToChain,
+    deferredTokenAmount,
+    toToken,
+    setToToken,
+  } = useToTokenSelectionStates({
+    payOptions,
+    supportedDestinations,
+  });
 
   const [hasEditedAmount, setHasEditedAmount] = useState(false);
 
@@ -209,17 +191,16 @@ function BuyScreenContent(props: BuyScreenContentProps) {
     );
   }, [props.supportedTokens, supportedSourcesQuery.data, payOptions]);
 
-  const {
-    fromChain,
-    setFromChain,
-    fromToken,
-    setFromToken,
-    selectedCurrency,
-    setSelectedCurrency,
-  } = useUISelectionStates({
-    payOptions,
-    supportedSources: supportedSourcesQuery.data || [],
-  });
+  const { fromChain, setFromChain, fromToken, setFromToken } =
+    useFromTokenSelectionStates({
+      payOptions,
+      supportedSources: supportedSourcesQuery.data || [],
+    });
+
+  const { selectedCurrency, setSelectedCurrency } =
+    useFiatCurrencySelectionStates({
+      payOptions,
+    });
 
   const enabledPaymentMethods = useEnabledPaymentMethods({
     payOptions: props.payOptions,
