@@ -86,36 +86,33 @@ export function useFromTokenSelectionStates(options: {
   const [fromChain_, setFromChain] = useState<Chain>();
 
   // use prefill chain if available
-  const fromChainDefault =
+  const fromChainDevSpecified =
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.chain) ||
     (payOptions.mode === "transaction" && payOptions.transaction?.chain) ||
-    (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain) ||
-    // default to polygon
-    polygon;
+    (payOptions.mode === "direct_payment" && payOptions.paymentInfo?.chain);
 
   const fromChainFromApi = firstSupportedSource?.chain
     ? firstSupportedSource.chain
     : undefined;
 
-  const fromChain = fromChain_ || fromChainFromApi || fromChainDefault;
+  const fromChain =
+    fromChain_ || fromChainDevSpecified || fromChainFromApi || polygon;
 
   const [fromToken_, setFromToken] = useState<ERC20OrNativeToken>();
 
   // use prefill token if available
-  const fromTokenDefault =
+  const fromTokenDevSpecified =
     (payOptions.buyWithCrypto !== false &&
       payOptions.buyWithCrypto?.prefillSource?.token) ||
-    (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token) ||
-    // default to native token
-    NATIVE_TOKEN;
+    (payOptions.mode === "direct_payment" && payOptions.paymentInfo.token);
 
-  const fromTokenFromApi = firstSupportedSource?.chain
-    ? ({ nativeToken: true } as ERC20OrNativeToken)
-    : undefined;
+  // May be updated in the future
+  const fromTokenFromApi = NATIVE_TOKEN;
 
   // supported tokens query in here
-  const fromToken = fromToken_ || fromTokenFromApi || fromTokenDefault;
+  const fromToken =
+    fromToken_ || fromTokenDevSpecified || fromTokenFromApi || NATIVE_TOKEN;
 
   return {
     fromChain,
