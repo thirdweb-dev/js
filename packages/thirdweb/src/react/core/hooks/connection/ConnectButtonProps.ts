@@ -288,6 +288,27 @@ export type ConnectButton_detailsModalOptions = {
    * Use custom avatar URL for the connected wallet image in the `ConnectButton` Details Modal, overriding ENS avatar or Blobbie icon.
    */
   connectedAccountAvatarUrl?: string;
+
+  /**
+   * Hide the "Send Funds" button in the `ConnectButton` Details Modal.
+   *
+   * By default the "Send Funds" button is shown.
+   */
+  hideSendFunds?: boolean;
+
+  /**
+   * Hide the "Receive Funds" button in the `ConnectButton` Details Modal.
+   *
+   * By default the "Receive Funds" button is shown.
+   */
+  hideReceiveFunds?: boolean;
+
+  /**
+   * Hide the "Buy Funds" button in the `ConnectButton` Details Modal.
+   *
+   * By default the "Buy Funds" button is shown.
+   */
+  hideBuyFunds?: boolean;
 };
 
 /**

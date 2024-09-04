@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ConnectButton } from "../react/web/ui/ConnectWallet/ConnectButton.js";
-import { storyClient } from "./utils.js";
+import { ConnectButton } from "../../react/web/ui/ConnectWallet/ConnectButton.js";
+import { storyClient } from "../utils.js";
 
 const meta = {
-  title: "Connect/ConnectButton",
+  title: "Connect/ConnectButton/themes",
   component: ConnectButton,
   parameters: {
     layout: "centered",
   },
-  tags: ["autodocs"],
   args: {
     client: storyClient,
   },
