@@ -903,11 +903,14 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
                           ?.filter(
                             (f) => f.type === "function" || f.type === "event",
                           )
-                          ?.find((f) =>
-                            f.type === "function"
-                              ? f.name ===
-                                (tab === "read" ? read?.name : write?.name)
-                              : f.name === event?.name,
+                          ?.find(
+                            (f) =>
+                              f.name ===
+                              (tab === "read"
+                                ? read?.name
+                                : tab === "write"
+                                  ? write?.name
+                                  : event?.name),
                           )
                           ?.inputs.map((i) => i.name || "") || [],
 
