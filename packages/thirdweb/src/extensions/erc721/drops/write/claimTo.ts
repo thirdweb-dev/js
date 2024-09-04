@@ -1,7 +1,11 @@
 import type { Address } from "abitype";
 import type { BaseTransactionOptions } from "../../../../transaction/types.js";
 import { getClaimParams } from "../../../../utils/extensions/drops/get-claim-params.js";
-import { claim } from "../../__generated__/IDrop/write/claim.js";
+import {
+  claim,
+  isClaimSupported,
+} from "../../__generated__/IDrop/write/claim.js";
+import { isGetActiveClaimConditionSupported } from "../read/getActiveClaimCondition.js";
 
 /**
  * Represents the parameters for claiming an ERC721 token.
@@ -45,4 +49,24 @@ export function claimTo(options: BaseTransactionOptions<ClaimToParams>) {
         from: options.from,
       }),
   });
+}
+
+/**
+ * Checks if the `claimTo` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `claimTo` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isClaimToSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isClaimToSupported(["0x..."]);
+ * ```
+ */
+export function isClaimToSupported(availableSelectors: string[]) {
+  return (
+    isClaimSupported(availableSelectors) &&
+    // required to check if the contract supports the getActiveClaimCondition method
+    isGetActiveClaimConditionSupported(availableSelectors)
+  );
 }
