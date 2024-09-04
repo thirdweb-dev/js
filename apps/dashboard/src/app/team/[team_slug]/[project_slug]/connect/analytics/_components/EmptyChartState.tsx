@@ -1,3 +1,5 @@
+"use client";
+
 import { Spinner } from "@/components/ui/Spinner/Spinner";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { useMemo } from "react";
