@@ -73,9 +73,9 @@ export function PayUI(props: {
       </div>
 
       {/* TODO: split this into sub-pages */}
-      {activeTab === "analytics" && <PayAnalytics apiKey={selectedKey} />}
+      {activeTab === "analytics" && <PayAnalytics clientId={selectedKey.key} />}
       {activeTab === "settings" && <PayConfig apiKey={selectedKey} />}
-      {activeTab === "webhooks" && <WebhooksPage apiKey={selectedKey} />}
+      {activeTab === "webhooks" && <WebhooksPage clientId={selectedKey.key} />}
     </>
   );
 }

@@ -103,7 +103,7 @@ export function PaymentsSuccessRate(props: {
     <div className="w-full relative flex flex-col">
       <div className="flex justify-between gap-2 items-center">
         <CardHeading> Payments </CardHeading>
-        {uiQuery.data && (
+        {!uiQuery.isLoading && (
           <Select
             value={type}
             onValueChange={(value: PayVolumeType) => {
@@ -197,7 +197,7 @@ function InfoRow(props: {
       <div className="flex items-center gap-2">
         <div
           className={`size-5 rounded-lg ${
-            !props.amount
+            props.amount === undefined
               ? "bg-accent"
               : props.type === "success"
                 ? "bg-success-text"
@@ -210,7 +210,7 @@ function InfoRow(props: {
         loadedData={
           props.isEmpty
             ? "$-"
-            : props.amount
+            : props.amount !== undefined
               ? `$${props.amount.toLocaleString()}`
               : undefined
         }

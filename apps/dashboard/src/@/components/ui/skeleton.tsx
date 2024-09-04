@@ -36,7 +36,12 @@ function SkeletonContainer<T>(props: {
             isLoading ? "opacity-0" : "opacity-100",
           )}
         >
-          {props.render(props.loadedData ?? props.skeletonData, !isLoading)}
+          {props.render(
+            props.loadedData === undefined
+              ? props.skeletonData
+              : props.loadedData,
+            !isLoading,
+          )}
         </div>
       </div>
     </div>
