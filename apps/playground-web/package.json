@@ -3,12 +3,15 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "dev": "rm -rf .next && next dev",
+    "predev": "git clean -xdf",
+    "dev": " next dev",
     "build": "next build",
     "start": "next start",
     "format": "biome format ./src --write",
-    "lint": "biome check ./src && eslint ./src",
-    "fix": "biome check ./src --fix && eslint ./src --fix"
+    "prelint": "biome check ./src",
+    "lint": "eslint ./src",
+    "prefix": "biome check ./src --fix",
+    "fix": "eslint ./src --fix"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
