@@ -61,7 +61,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">NFTs owned</Heading>
       </Flex>
-      <NftsOwned address={contract.address} />
+      <NftsOwned contract={contract} />
     </Flex>
   );
 };

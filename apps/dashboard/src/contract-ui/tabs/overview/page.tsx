@@ -55,6 +55,7 @@ export const ContractOverviewPage: React.FC<ContractOverviewPageProps> = ({
           <NFTDetails
             contract={contract}
             trackingCategory={TRACKING_CATEGORY}
+            isErc721={isErc721}
           />
         )}
         {isErc20 && <TokenDetails contract={contract} />}

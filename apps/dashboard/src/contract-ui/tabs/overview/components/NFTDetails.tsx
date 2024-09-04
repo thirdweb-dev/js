@@ -1,7 +1,8 @@
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useTabHref } from "contract-ui/utils";
 import type { ThirdwebContract } from "thirdweb";
-import { getNFTs } from "thirdweb/extensions/erc721";
+import * as ERC721 from "thirdweb/extensions/erc721";
+import * as ERC1155 from "thirdweb/extensions/erc1155";
 import { useReadContract } from "thirdweb/react";
 import { Heading, TrackedLink, type TrackedLinkProps } from "tw-components";
 import { NFTCards } from "./NFTCards";
@@ -9,20 +10,25 @@ import { NFTCards } from "./NFTCards";
 interface NFTDetailsProps {
   contract: ThirdwebContract;
   trackingCategory: TrackedLinkProps["category"];
+  isErc721: boolean;
 }
 
 export const NFTDetails: React.FC<NFTDetailsProps> = ({
   contract,
   trackingCategory,
+  isErc721,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const nftsHref = useTabHref("nfts");
 
-  const nftQuery = useReadContract(getNFTs, {
-    contract,
-    count: 5,
-    includeOwners: true,
-  });
+  const nftQuery = useReadContract(
+    isErc721 ? ERC721.getNFTs : ERC1155.getNFTs,
+    {
+      contract,
+      count: 5,
+      includeOwners: false,
+    },
+  );
 
   const displayableNFTs =
     nftQuery.data
@@ -47,8 +53,11 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
         </TrackedLink>
       </Flex>
       <NFTCards
-        contractAddress={contract.address}
-        nfts={displayableNFTs}
+        nfts={displayableNFTs.map((t) => ({
+          ...t,
+          contractAddress: contract.address,
+          chainId: contract.chain.id,
+        }))}
         trackingCategory={trackingCategory}
         isLoading={nftQuery.isLoading}
       />

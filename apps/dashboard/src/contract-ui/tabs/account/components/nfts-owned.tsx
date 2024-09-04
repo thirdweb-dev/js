@@ -1,21 +1,28 @@
 import { useWalletNFTs } from "@3rdweb-sdk/react";
 import { NFTCards } from "contract-ui/tabs/overview/components/NFTCards";
+import type { ThirdwebContract } from "thirdweb";
 import { Text } from "tw-components";
 
 interface NftsOwnedProps {
-  address: string;
+  contract: ThirdwebContract;
 }
 
-export const NftsOwned: React.FC<NftsOwnedProps> = ({ address }) => {
-  const { data: walletNFTs, isLoading: isWalletNFTsLoading } =
-    useWalletNFTs(address);
+export const NftsOwned: React.FC<NftsOwnedProps> = ({ contract }) => {
+  const { data: walletNFTs, isLoading: isWalletNFTsLoading } = useWalletNFTs(
+    contract.address,
+    contract.chain.id,
+  );
 
   const nfts = walletNFTs?.result || [];
   const error = walletNFTs?.error;
 
   return nfts.length !== 0 ? (
     <NFTCards
-      nfts={nfts}
+      nfts={nfts.map((nft) => ({
+        ...nft,
+        contractAddress: nft.contractAddress,
+        chainId: contract.chain.id,
+      }))}
       allNfts
       isLoading={isWalletNFTsLoading}
       trackingCategory="account_nfts_owned"

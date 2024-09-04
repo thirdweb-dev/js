@@ -31,6 +31,7 @@ export async function transformMoralisResponseToNFT(
       moralisResponse.result.map(async (moralisNft) => {
         try {
           return {
+            id: BigInt(moralisNft.token_id),
             contractAddress: moralisNft.token_address,
             tokenId: moralisNft.token_id,
             metadata: shouldDownloadURI(moralisNft.token_uri)
@@ -39,6 +40,7 @@ export async function transformMoralisResponseToNFT(
                 )
               : moralisNft.token_uri,
             owner,
+            tokenURI: moralisNft.token_uri,
             supply: moralisNft.amount || "1",
             type: moralisNft.contract_type,
           } as WalletNFT;
