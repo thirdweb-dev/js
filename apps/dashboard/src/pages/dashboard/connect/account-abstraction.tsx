@@ -1,4 +1,6 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TrackedLinkTW } from "@/components/ui/tracked-link";
 import {
   AccountStatus,
   type ApiKey,
@@ -6,17 +8,6 @@ import {
   useApiKeys,
 } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Flex,
-  HStack,
-  ListItem,
-  SimpleGrid,
-  UnorderedList,
-} from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { SmartWalletsBillingAlert } from "components/settings/ApiKeys/Alerts";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
@@ -24,19 +15,15 @@ import { NoApiKeys } from "components/settings/ApiKeys/NoApiKeys";
 import { SmartWallets } from "components/smart-wallets";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
 import { getAbsoluteUrl } from "lib/vercel-utils";
+import { CircleAlertIcon } from "lucide-react";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
 import { useActiveWalletChain } from "thirdweb/react";
-import {
-  Card,
-  Heading,
-  Text,
-  TrackedLink,
-  TrackedLinkButton,
-} from "tw-components";
+import {} from "tw-components";
 import type { ThirdwebNextPage } from "utils/types";
+import { AAFooterSection } from "../../../app/team/[team_slug]/[project_slug]/connect/account-abstraction/AAFooterSection";
 
 const TRACKING_CATEGORY = "smart-wallet";
 
@@ -49,7 +36,7 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
   const router = useRouter();
   const defaultTabIndex = Number.parseInt(router.query.tab?.toString() || "0");
   const defaultClientId = router.query.clientId?.toString();
-  const { isLoading } = useLoggedInUser();
+  const looggedInUserQuery = useLoggedInUser();
   const keysQuery = useApiKeys();
   const [selectedKey_, setSelectedKey] = useState<undefined | ApiKey>();
   const meQuery = useAccount();
@@ -100,16 +87,10 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
     desc: "Add account abstraction to your web3 app & unlock powerful features for seamless onboarding, customizable transactions, & maximum security. Get started.",
   };
 
-  if (isLoading) {
-    return (
-      <div className="grid w-full place-items-center">
-        <Spinner className="size-14" />
-      </div>
-    );
-  }
+  const isLoading = looggedInUserQuery.isLoading || keysQuery.isLoading;
 
   return (
-    <Flex flexDir="column" gap={10}>
+    <div className="flex flex-col gap-10">
       <NextSeo
         title={seo.title}
         description={seo.desc}
@@ -127,38 +108,29 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
         }}
       />
 
-      <Flex
-        flexDir={{ base: "column", lg: "row" }}
-        gap={4}
-        alignContent={"top"}
-        justifyContent={"space-between"}
-      >
-        <Flex flexDir="column" gap={4}>
-          <Flex
-            gap={8}
-            alignItems={"center"}
-            flexDir={{ base: "column", md: "row" }}
-          >
-            <Heading size="title.lg" as="h1">
-              Account Abstraction
-            </Heading>
-            <TrackedLinkButton
-              category={TRACKING_CATEGORY}
-              variant={"solid"}
+      <div className="flex flex-col gap-4 lg:flex-row content-start justify-between">
+        <div className="flex flex-col gap-1.5">
+          <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight">
+            Account Abstraction
+          </h1>
+
+          <p className="text-muted-foreground text-sm">
+            Easily integrate Account abstraction (ERC-4337) compliant smart
+            accounts into your apps.{" "}
+            <TrackedLinkTW
+              target="_blank"
               label="docs-wallets"
+              category={TRACKING_CATEGORY}
               href="https://portal.thirdweb.com/wallets/smart-wallet"
-              isExternal
+              className="text-link-foreground hover:text-foreground"
             >
               View Documentation
-            </TrackedLinkButton>
-          </Flex>
-          <Text>
-            Easily integrate Account abstraction (ERC-4337) compliant smart
-            accounts into your apps.
-          </Text>
-        </Flex>
+            </TrackedLinkTW>
+          </p>
+        </div>
+
         {hasApiKeys && (
-          <HStack gap={3}>
+          <div>
             {selectedKey && (
               <ApiKeysMenu
                 apiKeys={apiKeys}
@@ -166,197 +138,48 @@ const DashboardConnectAccountAbstraction: ThirdwebNextPage = () => {
                 onSelect={setSelectedKey}
               />
             )}
-          </HStack>
+          </div>
         )}
-      </Flex>
+      </div>
 
-      {hasSmartWalletsWithoutBilling ? (
-        <SmartWalletsBillingAlert />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-[400px] border border-border rounded-lg">
+          <Spinner className="size-14" />
+        </div>
       ) : (
-        isOpChain && (
-          <Alert
-            status="info"
-            borderRadius="lg"
-            backgroundColor="backgroundCardHighlight"
-            borderLeftColor="blue.500"
-            borderLeftWidth={4}
-            as={Flex}
-            gap={1}
-          >
-            <AlertIcon />
-            <Flex flexDir="column">
-              <AlertTitle>
-                Using the gas credits for OP chain paymaster
-              </AlertTitle>
-              <AlertDescription as={Text}>
-                Credits will automatically be applied to cover gas fees for any
-                onchain activity across thirdweb services. <br />
-                Eligible chains: OP Mainnet, Base, Zora, Frax, Mode.
-              </AlertDescription>
-            </Flex>
-          </Alert>
-        )
+        <>
+          {hasSmartWalletsWithoutBilling ? (
+            <SmartWalletsBillingAlert />
+          ) : (
+            isOpChain && (
+              <Alert variant="info">
+                <CircleAlertIcon className="size-4" />
+                <AlertTitle>
+                  Using the gas credits for OP chain paymaster
+                </AlertTitle>
+                <AlertDescription>
+                  Credits will automatically be applied to cover gas fees for
+                  any onchain activity across thirdweb services. <br />
+                  Eligible chains: OP Mainnet, Base, Zora, Frax, Mode.
+                </AlertDescription>
+              </Alert>
+            )
+          )}
+
+          {!hasApiKeys && <NoApiKeys service="Account Abstraction" />}
+
+          {hasApiKeys && selectedKey && (
+            <SmartWallets
+              apiKey={selectedKey}
+              trackingCategory={TRACKING_CATEGORY}
+              defaultTabIndex={defaultTabIndex}
+            />
+          )}
+        </>
       )}
 
-      {!hasApiKeys && <NoApiKeys service="Account Abstraction" />}
-
-      {hasApiKeys && selectedKey && (
-        <SmartWallets
-          apiKey={selectedKey}
-          trackingCategory={TRACKING_CATEGORY}
-          defaultTabIndex={defaultTabIndex}
-        />
-      )}
-
-      <SimpleGrid columns={{ base: 1, lg: 3 }} gap={4}>
-        <Card
-          as={Flex}
-          gap={4}
-          flex={1}
-          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-          p={6}
-        >
-          <Flex flexDir={"column"} gap={2}>
-            <Heading size="title.sm" as="h1">
-              Docs
-            </Heading>
-            <UnorderedList>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="full-docs"
-                  href="https://portal.thirdweb.com/wallets/smart-wallet"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  Full Docs
-                </TrackedLink>
-              </Text>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="smart-wallet-react"
-                  href="https://portal.thirdweb.com/wallets/smart-wallet/guides/react"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  Using Account Abstraction in React
-                </TrackedLink>
-              </Text>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="smart-wallet-typescript"
-                  href="https://portal.thirdweb.com/wallets/smart-wallet/guides/typescript"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  Using Account Abstraction with the Typescript SDK
-                </TrackedLink>
-              </Text>
-            </UnorderedList>
-          </Flex>
-        </Card>
-        <Card
-          as={Flex}
-          flexDir={"row"}
-          gap={4}
-          flex={1}
-          p={6}
-          overflow="hidden"
-          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-        >
-          <Flex flexDir={"column"} gap={2}>
-            <Heading size="title.sm" as="h1">
-              Account Abstraction Guides
-            </Heading>
-            <UnorderedList>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="deploy-smart-wallet"
-                  href="https://blog.thirdweb.com/guides/how-to-use-erc4337-smart-wallets/"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  How to Deploy an Smart Account (ERC-4337)
-                </TrackedLink>
-              </Text>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="extend-base-smart-wallet"
-                  href="https://blog.thirdweb.com/guides/custom-smart-wallet-contracts/"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  How to Extend the Base Account Abstraction Contracts Using the
-                  Solidity SDK
-                </TrackedLink>
-              </Text>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="batch-txns"
-                  href="https://blog.thirdweb.com/guides/how-to-batch-transactions-with-the-thirdweb-sdk/"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  Batch Transactions with Account Abstraction
-                </TrackedLink>
-              </Text>
-            </UnorderedList>
-          </Flex>
-        </Card>
-        <Card
-          as={Flex}
-          flexDir={"row"}
-          gap={4}
-          flex={1}
-          p={6}
-          overflow="hidden"
-          bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
-        >
-          <Flex flexDir={"column"} gap={2}>
-            <Heading size="title.sm" as="h1">
-              Account Abstraction Templates
-            </Heading>
-            <UnorderedList>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="node-template"
-                  href="https://github.com/thirdweb-example/smart-wallet-script"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  Node.js template
-                </TrackedLink>
-              </Text>
-              <Text as={ListItem} color="blue.500">
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="react-template"
-                  href="https://github.com/thirdweb-example/smart-wallet-react"
-                  isExternal
-                  _hover={{ opacity: 0.8 }}
-                  color="blue.500"
-                >
-                  React template
-                </TrackedLink>
-              </Text>
-            </UnorderedList>
-          </Flex>
-        </Card>
-      </SimpleGrid>
-    </Flex>
+      <AAFooterSection trackingCategory={TRACKING_CATEGORY} />
+    </div>
   );
 };
 
