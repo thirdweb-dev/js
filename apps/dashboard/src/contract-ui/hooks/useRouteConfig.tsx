@@ -24,6 +24,7 @@ import {
 } from "thirdweb/extensions/erc20";
 import { isERC721 } from "thirdweb/extensions/erc721";
 import { isERC1155 } from "thirdweb/extensions/erc1155";
+import * as PermissionExt from "thirdweb/extensions/permissions";
 import { contractType } from "thirdweb/extensions/thirdweb";
 import { useReadContract } from "thirdweb/react";
 import { useAnalyticsSupportedForChain } from "../../data/analytics/hooks";
@@ -118,7 +119,6 @@ const LazyContractEmbedPage = dynamic(() =>
 );
 
 export function useContractRouteConfig(
-  contractAddress: string,
   contract: ThirdwebContract,
 ): EnhancedRoute[] {
   // new
@@ -127,9 +127,31 @@ export function useContractRouteConfig(
   const analyticsSupported = useAnalyticsSupportedForChain(contract.chain.id);
   const isERC721Query = useReadContract(isERC721, { contract });
   const isERC1155Query = useReadContract(isERC1155, { contract });
+  const isPermissions = useMemo(() => {
+    // all of these need to be supported for permissions to be enabled
+    return [
+      PermissionExt.isGetRoleAdminSupported(functionSelectorQuery.data),
+      PermissionExt.isGrantRoleSupported(functionSelectorQuery.data),
+      PermissionExt.isHasRoleSupported(functionSelectorQuery.data),
+      PermissionExt.isRenounceRoleSupported(functionSelectorQuery.data),
+      PermissionExt.isRevokeRoleSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [functionSelectorQuery.data]);
+
+  const isPermissionsEnumerable = useMemo(() => {
+    // if direct permissions isn't supported, then enumerable also isn't
+    if (!isPermissions) {
+      return false;
+    }
+    // all of these need to be supported for permissions to be enumerable
+    return [
+      PermissionExt.isGetRoleMemberSupported(functionSelectorQuery.data),
+      PermissionExt.isGetRoleMemberCountSupported(functionSelectorQuery.data),
+    ].every(Boolean);
+  }, [isPermissions, functionSelectorQuery.data]);
 
   // old
-  const ensQuery = useEns(contractAddress);
+  const ensQuery = useEns(contract.address);
 
   // TODO: remove
   const contractQuery = useContract(ensQuery.data?.address);
@@ -159,7 +181,7 @@ export function useContractRouteConfig(
     });
 
     // AccountPermissionsPage
-    const detectedPermissionFeature = extensionDetectedState({
+    const detectedAccountPermissionFeature = extensionDetectedState({
       contractQuery,
       feature: ["AccountPermissions", "AccountPermissionsV1"],
     });
@@ -167,13 +189,6 @@ export function useContractRouteConfig(
     const detectedAccountFactory = extensionDetectedState({
       contractQuery,
       feature: ["AccountFactory"],
-    });
-
-    // Permission page
-    const detectedPermissionFeatures = extensionDetectedState({
-      contractQuery,
-      matchStrategy: "any",
-      feature: ["Permissions", "PermissionsEnumerable"],
     });
 
     const detectedEnglishAuctions = extensionDetectedState({
@@ -203,22 +218,15 @@ export function useContractRouteConfig(
       "ERC20ClaimPhasesV2",
     ]);
 
-    const detectedPermissionEnumerable = detectFeatures(
-      contractQuery.contract,
-      ["PermissionsEnumerable"],
-    );
-
     return {
       claimconditionExtensionDetection,
       detectedAccountFeature,
-      detectedPermissionFeature,
+      detectedAccountPermissionFeature,
       detectedAccountFactory,
-      detectedPermissionFeatures,
       detectedEnglishAuctions,
       detectedDirectListings,
       detectedModularExtension,
       hasNewClaimConditions,
-      detectedPermissionEnumerable,
     };
   }, [contractQuery]);
 
@@ -254,25 +262,17 @@ export function useContractRouteConfig(
       path: "overview",
       // not lazy because this is typically the landing spot so we want it to always be there immediately
       component: () => (
-        <>
-          {contract && (
-            <ContractOverviewPage
-              contract={contract}
-              hasDirectListings={
-                contractData.detectedDirectListings === "enabled"
-              }
-              hasEnglishAuctions={
-                contractData.detectedEnglishAuctions === "enabled"
-              }
-              isErc1155={isERC1155Query.data || false}
-              isErc20={isERC20(functionSelectorQuery.data)}
-              isErc721={isERC721Query.data || false}
-              isPermissionsEnumerable={
-                contractData.detectedPermissionEnumerable
-              }
-            />
-          )}
-        </>
+        <ContractOverviewPage
+          contract={contract}
+          hasDirectListings={contractData.detectedDirectListings === "enabled"}
+          hasEnglishAuctions={
+            contractData.detectedEnglishAuctions === "enabled"
+          }
+          isErc1155={isERC1155Query.data || false}
+          isErc20={isERC20(functionSelectorQuery.data)}
+          isErc721={isERC721Query.data || false}
+          isPermissionsEnumerable={isPermissionsEnumerable}
+        />
       ),
       isEnabled: contractQuery.isLoading ? "loading" : "enabled",
       isDefault: true,
@@ -287,22 +287,19 @@ export function useContractRouteConfig(
     {
       title: "Code Snippets",
       path: "code",
-      component: () =>
-        contract ? <LazyContractCodePage contract={contract} /> : null,
+      component: () => <LazyContractCodePage contract={contract} />,
       isDefault: true,
     },
     {
       title: "Explorer",
       path: "explorer",
-      component: () =>
-        contract ? <LazyContractExplorerPage contract={contract} /> : null,
+      component: () => <LazyContractExplorerPage contract={contract} />,
       isDefault: true,
     },
     {
       title: "Events",
       path: "events",
-      component: () =>
-        contract ? <LazyContractEventsPage contract={contract} /> : null,
+      component: () => <LazyContractEventsPage contract={contract} />,
       isDefault: true,
     },
     {
@@ -315,20 +312,17 @@ export function useContractRouteConfig(
           : isERC721Query.isLoading || isERC1155Query.isLoading
             ? "loading"
             : "disabled",
-      component: () => {
-        return contract ? (
-          <LazyContractEmbedPage
-            contract={contract}
-            ercOrMarketplace={embedType}
-          />
-        ) : null;
-      },
+      component: () => (
+        <LazyContractEmbedPage
+          contract={contract}
+          ercOrMarketplace={embedType}
+        />
+      ),
     },
     {
       title: "Analytics",
       path: "analytics",
-      component: () =>
-        contract ? <LazyContractAnalyticsPage contract={contract} /> : null,
+      component: () => <LazyContractAnalyticsPage contract={contract} />,
       isDefault: true,
       isBeta: true,
       isEnabled: analyticsSupported.isLoading
@@ -346,9 +340,7 @@ export function useContractRouteConfig(
           : isERC721Query.isLoading || isERC1155Query.isLoading
             ? "loading"
             : "disabled",
-      component: () => (
-        <>{contract && <LazyContractNFTPage contract={contract} />}</>
-      ),
+      component: () => <LazyContractNFTPage contract={contract} />,
     },
     {
       title: "Tokens",
@@ -359,39 +351,25 @@ export function useContractRouteConfig(
           ? "enabled"
           : "disabled",
       component: () => (
-        <>
-          {contract && (
-            <LazyContractTokensPage
-              contract={contract}
-              isERC20={isERC20(functionSelectorQuery.data)}
-              isMintToSupported={isMintToSupported(functionSelectorQuery.data)}
-              isClaimToSupported={isClaimToSupported(
-                functionSelectorQuery.data,
-              )}
-            />
-          )}
-        </>
+        <LazyContractTokensPage
+          contract={contract}
+          isERC20={isERC20(functionSelectorQuery.data)}
+          isMintToSupported={isMintToSupported(functionSelectorQuery.data)}
+          isClaimToSupported={isClaimToSupported(functionSelectorQuery.data)}
+        />
       ),
     },
     {
       title: "Direct Listings",
       path: "direct-listings",
       isEnabled: contractData.detectedDirectListings,
-      component: () => (
-        <>
-          {contract && <LazyContractDirectListingsPage contract={contract} />}
-        </>
-      ),
+      component: () => <LazyContractDirectListingsPage contract={contract} />,
     },
     {
       title: "English Auctions",
       path: "english-auctions",
       isEnabled: contractData.detectedEnglishAuctions,
-      component: () => (
-        <>
-          {contract && <LazyContractEnglishAuctionsPage contract={contract} />}
-        </>
-      ),
+      component: () => <LazyContractEnglishAuctionsPage contract={contract} />,
     },
     {
       title: "Balances",
@@ -401,9 +379,7 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "Split"
           ? "enabled"
           : "disabled",
-      component: () => (
-        <>{contract && <LazyContractSplitPage contract={contract} />}</>
-      ),
+      component: () => <LazyContractSplitPage contract={contract} />,
     },
     {
       title: "Proposals",
@@ -413,27 +389,21 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "Vote"
           ? "enabled"
           : "disabled",
-      component: () => (
-        <>{contract && <LazyContractProposalsPage contract={contract} />}</>
-      ),
+      component: () => <LazyContractProposalsPage contract={contract} />,
     },
     {
       title: "Claim Conditions",
       path: "claim-conditions",
       isEnabled: contractData.claimconditionExtensionDetection,
       component: () => (
-        <>
-          {contract && (
-            <LazyContractClaimConditionsPage
-              contract={contract}
-              claimconditionExtensionDetection={
-                contractData.claimconditionExtensionDetection
-              }
-              isERC20={isERC20(functionSelectorQuery.data)}
-              hasNewClaimConditions={contractData.hasNewClaimConditions}
-            />
-          )}
-        </>
+        <LazyContractClaimConditionsPage
+          contract={contract}
+          claimconditionExtensionDetection={
+            contractData.claimconditionExtensionDetection
+          }
+          isERC20={isERC20(functionSelectorQuery.data)}
+          hasNewClaimConditions={contractData.hasNewClaimConditions}
+        />
       ),
     },
     {
@@ -441,14 +411,10 @@ export function useContractRouteConfig(
       path: "accounts",
       isEnabled: contractData.detectedAccountFactory,
       component: () => (
-        <>
-          {contract && (
-            <LazyContractAccountsPage
-              contract={contract}
-              detectedAccountFactory={contractData.detectedAccountFactory}
-            />
-          )}
-        </>
+        <LazyContractAccountsPage
+          contract={contract}
+          detectedAccountFactory={contractData.detectedAccountFactory}
+        />
       ),
     },
     {
@@ -456,85 +422,71 @@ export function useContractRouteConfig(
       path: "account",
       isEnabled: contractData.detectedAccountFeature,
       component: () => (
-        <>
-          {contract && (
-            <LazyContractAccountPage
-              contract={contract}
-              detectedAccountFeature={contractData.detectedAccountFeature}
-            />
-          )}
-        </>
+        <LazyContractAccountPage
+          contract={contract}
+          detectedAccountFeature={contractData.detectedAccountFeature}
+        />
       ),
     },
     {
       title: "Account Permissions",
       path: "account-permissions",
-      isEnabled: contractData.detectedPermissionFeature,
+      isEnabled: contractData.detectedAccountPermissionFeature,
       component: () => (
-        <>
-          {contract && (
-            <LazyContractAccountPermissionsPage
-              contract={contract}
-              detectedPermissionFeature={contractData.detectedPermissionFeature}
-            />
-          )}
-        </>
+        <LazyContractAccountPermissionsPage
+          contract={contract}
+          detectedPermissionFeature={
+            contractData.detectedAccountPermissionFeature
+          }
+        />
       ),
     },
     {
       title: "Permissions",
       path: "permissions",
-      isEnabled: contractData.detectedPermissionFeatures,
+      isEnabled: isPermissions
+        ? "enabled"
+        : functionSelectorQuery.isLoading
+          ? "loading"
+          : "disabled",
       component: () => (
-        <>
-          {contract && (
-            <LazyContractPermissionsPage
-              contract={contract}
-              detectedPermissionEnumerable={
-                contractData.detectedPermissionEnumerable
-              }
-            />
-          )}
-        </>
+        <LazyContractPermissionsPage
+          contract={contract}
+          detectedPermissionEnumerable={isPermissionsEnumerable}
+        />
       ),
     },
     {
       title: "Settings",
       path: "settings",
       component: () => (
-        <>
-          {contract && (
-            <LazyContractSettingsPage
-              contract={contract}
-              isLoading={functionSelectorQuery.isLoading}
-              isContractMetadataSupported={[
-                isGetContractMetadataSupported(functionSelectorQuery.data),
-                isSetContractMetadataSupported(functionSelectorQuery.data),
-              ].every(Boolean)}
-              isPrimarySaleSupported={[
-                isPrimarySaleRecipientSupported(functionSelectorQuery.data),
-                isSetPrimarySaleRecipientSupported(functionSelectorQuery.data),
-              ].every(Boolean)}
-              isRoyaltiesSupported={[
-                isGetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
-                isSetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
-              ].every(Boolean)}
-              isPlatformFeesSupported={[
-                isGetPlatformFeeInfoSupported(functionSelectorQuery.data),
-                isSetPlatformFeeInfoSupported(functionSelectorQuery.data),
-              ].every(Boolean)}
-            />
-          )}
-        </>
+        <LazyContractSettingsPage
+          contract={contract}
+          isLoading={functionSelectorQuery.isLoading}
+          isContractMetadataSupported={[
+            isGetContractMetadataSupported(functionSelectorQuery.data),
+            isSetContractMetadataSupported(functionSelectorQuery.data),
+          ].every(Boolean)}
+          isPrimarySaleSupported={[
+            isPrimarySaleRecipientSupported(functionSelectorQuery.data),
+            isSetPrimarySaleRecipientSupported(functionSelectorQuery.data),
+          ].every(Boolean)}
+          isRoyaltiesSupported={[
+            isGetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
+            isSetDefaultRoyaltyInfoSupported(functionSelectorQuery.data),
+          ].every(Boolean)}
+          isPlatformFeesSupported={[
+            isGetPlatformFeeInfoSupported(functionSelectorQuery.data),
+            isSetPlatformFeeInfoSupported(functionSelectorQuery.data),
+          ].every(Boolean)}
+        />
       ),
       isDefault: true,
     },
     {
       title: "Sources",
       path: "sources",
-      component: () => (
-        <>{contract && <LazyContractSourcesPage contract={contract} />}</>
-      ),
+      component: () => <LazyContractSourcesPage contract={contract} />,
       isDefault: true,
     },
   ];

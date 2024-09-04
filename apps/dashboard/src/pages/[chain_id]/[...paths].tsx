@@ -257,7 +257,7 @@ type InnerProps = {
   activeTab: string;
 };
 function Inner(props: InnerProps) {
-  const routes = useContractRouteConfig(props.contract.address, props.contract);
+  const routes = useContractRouteConfig(props.contract);
 
   const activeRoute = useMemo(
     () => routes.find((route) => route.path === props.activeTab),
@@ -265,15 +265,13 @@ function Inner(props: InnerProps) {
   );
   return (
     <>
-      {props.contract && (
-        <ContractSidebar
-          contract={props.contract}
-          routes={routes}
-          activeRoute={activeRoute}
-        />
-      )}
+      <ContractSidebar
+        contract={props.contract}
+        routes={routes}
+        activeRoute={activeRoute}
+      />
       <Container pt={8} maxW="container.page">
-        {activeRoute?.component && props.contract && (
+        {activeRoute?.component && (
           <activeRoute.component
             contractAddress={props.contract.address}
             contract={props.contract}
