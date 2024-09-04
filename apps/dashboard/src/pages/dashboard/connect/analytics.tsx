@@ -1,13 +1,6 @@
 import { Spinner } from "@/components/ui/Spinner/Spinner";
-import {
-  type ApiKey,
-  useApiKeys,
-  useWalletStats,
-} from "@3rdweb-sdk/react/hooks/useApi";
+import { type ApiKey, useApiKeys } from "@3rdweb-sdk/react/hooks/useApi";
 import { useLoggedInUser } from "@3rdweb-sdk/react/hooks/useLoggedInUser";
-import { SiReact } from "@react-icons/all-files/si/SiReact";
-import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
-import { SiUnity } from "@react-icons/all-files/si/SiUnity";
 import { AppLayout } from "components/app-layouts/app";
 import { ApiKeysMenu } from "components/settings/ApiKeys/Menu";
 import { ConnectSidebar } from "core-ui/sidebar/connect";
@@ -15,11 +8,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useMemo, useState } from "react";
-import { SiUnrealengine } from "react-icons/si";
-import { SiDotnet } from "react-icons/si";
 import type { ThirdwebNextPage } from "utils/types";
 import { Button } from "../../../@/components/ui/button";
 import { ConnectAnalyticsDashboard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/ConnectAnalyticsDashboard";
+import { ConnectSDKCard } from "../../../app/team/[team_slug]/[project_slug]/connect/analytics/_components/ConnectSDKCard";
 
 const DashboardConnectAnalytics: ThirdwebNextPage = () => {
   const router = useRouter();
@@ -46,7 +38,6 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
     return undefined;
   }, [apiKeys, defaultClientId, selectedKey_]);
 
-  const statsQuery = useWalletStats(selectedKey?.key);
   const showLoader = loggedInUser.isLoading || keysQuery.isLoading;
 
   return (
@@ -82,14 +73,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
       ) : (
         <>
           {selectedKey ? (
-            <ConnectAnalyticsDashboard
-              walletStats={
-                statsQuery.data || {
-                  timeSeries: [],
-                }
-              }
-              isLoading={statsQuery.isLoading}
-            />
+            <ConnectAnalyticsDashboard clientId={selectedKey.key} />
           ) : (
             <NoAPIFoundCard />
           )}
@@ -97,7 +81,7 @@ const DashboardConnectAnalytics: ThirdwebNextPage = () => {
       )}
 
       <div className="h-4 lg:h-8" />
-      <SDKCtaSection />
+      <ConnectSDKCard />
     </div>
   );
 };
@@ -113,85 +97,6 @@ function NoAPIFoundCard() {
         <Link href={"/dashboard/settings/api-keys"}>Create API Key</Link>
       </Button>
     </div>
-  );
-}
-
-function SDKCtaSection() {
-  return (
-    <div className="border border-border bg-muted/50 rounded-lg p-6 relative">
-      <h3 className="text-2xl font-semibold tracking-tight mb-1">
-        Connect SDK
-      </h3>
-      <p className="mb-8 text-muted-foreground text-sm">
-        Add the Connect SDK to your app to start collecting analytics.
-      </p>
-
-      <div className="grid gap-6 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-[500px]">
-        <DocLink
-          link="https://portal.thirdweb.com/typescript/v5/getting-started"
-          icon={SiTypescript}
-          label="TypeScript SDK"
-        />
-        <DocLink
-          link="https://portal.thirdweb.com/react/v5/getting-started"
-          icon={SiReact}
-          label="React SDK"
-        />
-        <DocLink
-          link="https://portal.thirdweb.com/react-native/v5/getting-started"
-          icon={SiReact}
-          label="React Native SDK"
-        />
-        <DocLink
-          link="https://portal.thirdweb.com/unity/v4/getting-started"
-          icon={SiUnity}
-          label="Unity SDK"
-        />
-        <DocLink
-          link="https://portal.thirdweb.com/unreal/getting-started"
-          icon={SiUnrealengine}
-          label="Unreal SDK"
-        />
-        <DocLink
-          link="https://portal.thirdweb.com/dotnet/getting-started"
-          icon={SiDotnet}
-          label=".NET SDK"
-        />
-      </div>
-
-      <BackgroundPattern />
-    </div>
-  );
-}
-
-function BackgroundPattern() {
-  const color = "hsl(var(--foreground)/50%)";
-  return (
-    <div
-      className="hidden xl:block absolute w-[50%] right-2 top-4 bottom-4 z-[1]"
-      style={{
-        backgroundImage: `radial-gradient(${color} 1px, transparent 1px)`,
-        backgroundSize: "20px 20px",
-        maskImage: "linear-gradient(to left, black, transparent)",
-      }}
-    />
-  );
-}
-
-function DocLink(props: {
-  link: string;
-  label: string;
-  icon: React.FC<{ className?: string }>;
-}) {
-  return (
-    <Link
-      href={props.link}
-      target="_blank"
-      className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm"
-    >
-      <props.icon className="size-4" />
-      {props.label}
-    </Link>
   );
 }
 

@@ -21,7 +21,7 @@ const pickRandomWallet = () => {
   ];
 };
 
-export function createWalletStatusStub(days: number): WalletStats {
+export function createWalletStatsStub(days: number): WalletStats {
   const timeSeries: WalletStats["timeSeries"] = [];
 
   let d = days;

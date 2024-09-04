@@ -7,5 +7,5 @@ export default function Page(props: {
   };
 }) {
   const { team_slug, project_slug } = props.params;
-  redirect(`/team/${team_slug}/${project_slug}/connect/in-app-wallets`);
+  redirect(`/team/${team_slug}/${project_slug}/connect/analytics`);
 }
