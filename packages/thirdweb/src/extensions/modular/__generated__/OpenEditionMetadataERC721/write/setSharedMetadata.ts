@@ -13,14 +13,13 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type SetSharedMetadataParams = WithOverrides<{
   metadata: AbiParameterToPrimitiveType<{
-    name: "_metadata";
     type: "tuple";
-    internalType: "struct OpenEditionMetadataERC721.SharedMetadata";
+    name: "_metadata";
     components: [
-      { name: "name"; type: "string"; internalType: "string" },
-      { name: "description"; type: "string"; internalType: "string" },
-      { name: "imageURI"; type: "string"; internalType: "string" },
-      { name: "animationURI"; type: "string"; internalType: "string" },
+      { type: "string"; name: "name" },
+      { type: "string"; name: "description" },
+      { type: "string"; name: "imageURI" },
+      { type: "string"; name: "animationURI" },
     ];
   }>;
 }>;
@@ -28,29 +27,24 @@ export type SetSharedMetadataParams = WithOverrides<{
 export const FN_SELECTOR = "0xa7d27d9d" as const;
 const FN_INPUTS = [
   {
-    name: "_metadata",
     type: "tuple",
-    internalType: "struct OpenEditionMetadataERC721.SharedMetadata",
+    name: "_metadata",
     components: [
       {
+        type: "string",
         name: "name",
-        type: "string",
-        internalType: "string",
       },
       {
+        type: "string",
         name: "description",
-        type: "string",
-        internalType: "string",
       },
       {
+        type: "string",
         name: "imageURI",
-        type: "string",
-        internalType: "string",
       },
       {
-        name: "animationURI",
         type: "string",
-        internalType: "string",
+        name: "animationURI",
       },
     ],
   },

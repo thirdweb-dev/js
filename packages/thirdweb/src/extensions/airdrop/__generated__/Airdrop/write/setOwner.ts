@@ -12,19 +12,14 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setOwner" function.
  */
 export type SetOwnerParams = WithOverrides<{
-  newOwner: AbiParameterToPrimitiveType<{
-    name: "_newOwner";
-    type: "address";
-    internalType: "address";
-  }>;
+  newOwner: AbiParameterToPrimitiveType<{ type: "address"; name: "_newOwner" }>;
 }>;
 
 export const FN_SELECTOR = "0x13af4035" as const;
 const FN_INPUTS = [
   {
-    name: "_newOwner",
     type: "address",
-    internalType: "address",
+    name: "_newOwner",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

@@ -9,9 +9,7 @@ export const FN_SELECTOR = "0xf5b75d2a" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bytes",
-    internalType: "bytes",
   },
 ] as const;
 

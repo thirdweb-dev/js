@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "getEthBalance" function.
  */
 export type GetEthBalanceParams = {
-  addr: AbiParameterToPrimitiveType<{
-    internalType: "address";
-    name: "addr";
-    type: "address";
-  }>;
+  addr: AbiParameterToPrimitiveType<{ type: "address"; name: "addr" }>;
 };
 
 export const FN_SELECTOR = "0x4d2301cc" as const;
 const FN_INPUTS = [
   {
-    internalType: "address",
-    name: "addr",
     type: "address",
+    name: "addr",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    internalType: "uint256",
-    name: "balance",
     type: "uint256",
+    name: "balance",
   },
 ] as const;
 

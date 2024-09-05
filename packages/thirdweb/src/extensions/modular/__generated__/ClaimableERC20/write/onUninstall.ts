@@ -12,19 +12,14 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "onUninstall" function.
  */
 export type OnUninstallParams = WithOverrides<{
-  data: AbiParameterToPrimitiveType<{
-    name: "data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "data" }>;
 }>;
 
 export const FN_SELECTOR = "0x8a91b0e3" as const;
 const FN_INPUTS = [
   {
-    name: "data",
     type: "bytes",
-    internalType: "bytes",
+    name: "data",
   },
 ] as const;
 const FN_OUTPUTS = [] as const;

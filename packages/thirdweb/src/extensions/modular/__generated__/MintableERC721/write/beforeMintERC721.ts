@@ -12,56 +12,37 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "beforeMintERC721" function.
  */
 export type BeforeMintERC721Params = WithOverrides<{
-  to: AbiParameterToPrimitiveType<{
-    name: "_to";
-    type: "address";
-    internalType: "address";
-  }>;
+  to: AbiParameterToPrimitiveType<{ type: "address"; name: "_to" }>;
   startTokenId: AbiParameterToPrimitiveType<{
+    type: "uint256";
     name: "_startTokenId";
-    type: "uint256";
-    internalType: "uint256";
   }>;
-  quantity: AbiParameterToPrimitiveType<{
-    name: "_quantity";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
-  data: AbiParameterToPrimitiveType<{
-    name: "_data";
-    type: "bytes";
-    internalType: "bytes";
-  }>;
+  quantity: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_quantity" }>;
+  data: AbiParameterToPrimitiveType<{ type: "bytes"; name: "_data" }>;
 }>;
 
 export const FN_SELECTOR = "0x765e8093" as const;
 const FN_INPUTS = [
   {
-    name: "_to",
     type: "address",
-    internalType: "address",
+    name: "_to",
   },
   {
+    type: "uint256",
     name: "_startTokenId",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
+    type: "uint256",
     name: "_quantity",
-    type: "uint256",
-    internalType: "uint256",
   },
   {
-    name: "_data",
     type: "bytes",
-    internalType: "bytes",
+    name: "_data",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bytes",
-    internalType: "bytes",
   },
 ] as const;
 

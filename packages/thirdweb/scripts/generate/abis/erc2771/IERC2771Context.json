@@ -1,1 +1,3 @@
-["function isTrustedForwarder(address forwarder) view returns (bool)"]
+[
+  "function isTrustedForwarder(address forwarder) view returns (bool)"
+]

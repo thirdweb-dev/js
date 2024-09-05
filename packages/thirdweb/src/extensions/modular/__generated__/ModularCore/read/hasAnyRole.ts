@@ -10,36 +10,24 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "hasAnyRole" function.
  */
 export type HasAnyRoleParams = {
-  user: AbiParameterToPrimitiveType<{
-    name: "user";
-    type: "address";
-    internalType: "address";
-  }>;
-  roles: AbiParameterToPrimitiveType<{
-    name: "roles";
-    type: "uint256";
-    internalType: "uint256";
-  }>;
+  user: AbiParameterToPrimitiveType<{ type: "address"; name: "user" }>;
+  roles: AbiParameterToPrimitiveType<{ type: "uint256"; name: "roles" }>;
 };
 
 export const FN_SELECTOR = "0x514e62fc" as const;
 const FN_INPUTS = [
   {
-    name: "user",
     type: "address",
-    internalType: "address",
+    name: "user",
   },
   {
-    name: "roles",
     type: "uint256",
-    internalType: "uint256",
+    name: "roles",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "",
     type: "bool",
-    internalType: "bool",
   },
 ] as const;
 

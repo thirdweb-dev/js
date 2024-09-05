@@ -10,26 +10,20 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "maxRedeem" function.
  */
 export type MaxRedeemParams = {
-  owner: AbiParameterToPrimitiveType<{
-    name: "owner";
-    type: "address";
-    internalType: "address";
-  }>;
+  owner: AbiParameterToPrimitiveType<{ type: "address"; name: "owner" }>;
 };
 
 export const FN_SELECTOR = "0xd905777e" as const;
 const FN_INPUTS = [
   {
-    name: "owner",
     type: "address",
-    internalType: "address",
+    name: "owner",
   },
 ] as const;
 const FN_OUTPUTS = [
   {
-    name: "maxShares",
     type: "uint256",
-    internalType: "uint256",
+    name: "maxShares",
   },
 ] as const;
 

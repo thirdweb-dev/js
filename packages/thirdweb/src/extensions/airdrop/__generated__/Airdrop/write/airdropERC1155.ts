@@ -13,18 +13,16 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  */
 export type AirdropERC1155Params = WithOverrides<{
   tokenAddress: AbiParameterToPrimitiveType<{
-    name: "_tokenAddress";
     type: "address";
-    internalType: "address";
+    name: "_tokenAddress";
   }>;
   contents: AbiParameterToPrimitiveType<{
-    name: "_contents";
     type: "tuple[]";
-    internalType: "struct Airdrop.AirdropContentERC1155[]";
+    name: "_contents";
     components: [
-      { name: "recipient"; type: "address"; internalType: "address" },
-      { name: "tokenId"; type: "uint256"; internalType: "uint256" },
-      { name: "amount"; type: "uint256"; internalType: "uint256" },
+      { type: "address"; name: "recipient" },
+      { type: "uint256"; name: "tokenId" },
+      { type: "uint256"; name: "amount" },
     ];
   }>;
 }>;
@@ -32,29 +30,24 @@ export type AirdropERC1155Params = WithOverrides<{
 export const FN_SELECTOR = "0x2d89e38b" as const;
 const FN_INPUTS = [
   {
-    name: "_tokenAddress",
     type: "address",
-    internalType: "address",
+    name: "_tokenAddress",
   },
   {
-    name: "_contents",
     type: "tuple[]",
-    internalType: "struct Airdrop.AirdropContentERC1155[]",
+    name: "_contents",
     components: [
       {
-        name: "recipient",
         type: "address",
-        internalType: "address",
+        name: "recipient",
       },
       {
+        type: "uint256",
         name: "tokenId",
-        type: "uint256",
-        internalType: "uint256",
       },
       {
-        name: "amount",
         type: "uint256",
-        internalType: "uint256",
+        name: "amount",
       },
     ],
   },

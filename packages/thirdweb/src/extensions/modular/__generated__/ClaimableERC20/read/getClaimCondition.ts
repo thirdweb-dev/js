@@ -9,44 +9,36 @@ export const FN_SELECTOR = "0x30a63e11" as const;
 const FN_INPUTS = [] as const;
 const FN_OUTPUTS = [
   {
-    name: "claimCondition",
     type: "tuple",
-    internalType: "struct ClaimableERC20.ClaimCondition",
+    name: "claimCondition",
     components: [
       {
+        type: "uint256",
         name: "availableSupply",
-        type: "uint256",
-        internalType: "uint256",
       },
       {
-        name: "allowlistMerkleRoot",
         type: "bytes32",
-        internalType: "bytes32",
+        name: "allowlistMerkleRoot",
       },
       {
-        name: "pricePerUnit",
         type: "uint256",
-        internalType: "uint256",
+        name: "pricePerUnit",
       },
       {
-        name: "currency",
         type: "address",
-        internalType: "address",
+        name: "currency",
       },
       {
+        type: "uint48",
         name: "startTimestamp",
-        type: "uint48",
-        internalType: "uint48",
       },
       {
+        type: "uint48",
         name: "endTimestamp",
-        type: "uint48",
-        internalType: "uint48",
       },
       {
-        name: "auxData",
         type: "string",
-        internalType: "string",
+        name: "auxData",
       },
     ],
   },
