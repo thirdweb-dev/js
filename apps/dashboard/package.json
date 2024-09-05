@@ -65,7 +65,7 @@
     "color": "^4.2.3",
     "compare-versions": "^6.1.0",
     "date-fns": "^3.6.0",
-    "ethers": "^5.7.2",
+    "ethers": "5.7.2",
     "flat": "^6.0.1",
     "framer-motion": "^11.2.12",
     "fuse.js": "7.0.0",
