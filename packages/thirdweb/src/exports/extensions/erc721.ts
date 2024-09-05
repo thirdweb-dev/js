@@ -5,12 +5,17 @@ export { isERC721 } from "../../extensions/erc721/read/isERC721.js";
 export {
   getNFT,
   type GetNFTParams,
+  isGetNFTSupported,
 } from "../../extensions/erc721/read/getNFT.js";
 export {
   getNFTs,
   type GetNFTsParams,
+  isGetNFTsSupported,
 } from "../../extensions/erc721/read/getNFTs.js";
-export { nextTokenIdToMint } from "../../extensions/erc721/__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
+export {
+  nextTokenIdToMint,
+  isNextTokenIdToMintSupported,
+} from "../../extensions/erc721/__generated__/IERC721Enumerable/read/nextTokenIdToMint.js";
 export {
   ownerOf,
   type OwnerOfParams,
@@ -20,7 +25,10 @@ export {
   tokenURI,
   type TokenURIParams,
 } from "../../extensions/erc721/__generated__/IERC721A/read/tokenURI.js";
-export { totalSupply } from "../../extensions/erc721/__generated__/IERC721A/read/totalSupply.js";
+export {
+  totalSupply,
+  isTotalSupplySupported,
+} from "../../extensions/erc721/__generated__/IERC721A/read/totalSupply.js";
 export {
   balanceOf,
   type BalanceOfParams,
@@ -57,6 +65,7 @@ export {
 export {
   mintTo,
   type MintToParams,
+  isMintToSupported,
 } from "../../extensions/erc721/write/mintTo.js";
 export {
   transferFrom,
@@ -65,6 +74,7 @@ export {
 export {
   burn,
   type BurnParams,
+  isBurnSupported,
 } from "../../extensions/erc721/__generated__/IBurnableERC721/write/burn.js";
 export {
   setApprovalForAll,
@@ -137,6 +147,7 @@ export { sharedMetadata } from "../../extensions/erc721/__generated__/ISharedMet
 export {
   setSharedMetadata,
   type SetSharedMetadataParams,
+  isSetSharedMetadataSupported,
 } from "../../extensions/erc721/write/setSharedMetadata.js";
 
 /**
@@ -189,8 +200,10 @@ export {
 export {
   updateMetadata,
   type UpdateMetadataParams,
+  isUpdateMetadataSupported,
 } from "../../extensions/erc721/drops/write/updateMetadata.js";
 export {
   updateTokenURI,
   type UpdateTokenURIParams,
+  isUpdateTokenURISupported,
 } from "../../extensions/erc721/write/updateTokenURI.js";

@@ -8,16 +8,16 @@ interface UpdateMetadataTabProps {
   nft: NFT;
 
   /**
-   * If isDropContract (NFT Drop, Edition Drop) -> use `updateMetadata`
+   * If useUpdateMetadata (NFT Drop, Edition Drop) -> use `updateMetadata`
    * else (NFT Collection, Edition) -> use `setTokenURI`
    */
-  isDropContract: boolean;
+  useUpdateMetadata: boolean;
 }
 
 const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
   contract,
   nft,
-  isDropContract,
+  useUpdateMetadata,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,7 +33,7 @@ const UpdateMetadataTab: React.FC<UpdateMetadataTabProps> = ({
         <UpdateNftMetadata
           contract={contract}
           nft={nft}
-          isDropContract={isDropContract}
+          useUpdateMetadata={useUpdateMetadata}
         />
       </Drawer>
       <Flex direction={"column"} gap={6}>
