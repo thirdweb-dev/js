@@ -11,12 +11,16 @@ export {
 export {
   getNFTs,
   type GetNFTsParams,
+  isGetNFTsSupported,
 } from "../../extensions/erc1155/read/getNFTs.js";
 export {
   getOwnedNFTs,
   type GetOwnedNFTsParams,
 } from "../../extensions/erc1155/read/getOwnedNFTs.js";
-export { nextTokenIdToMint } from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
+export {
+  nextTokenIdToMint,
+  isNextTokenIdToMintSupported,
+} from "../../extensions/erc1155/__generated__/IERC1155Enumerable/read/nextTokenIdToMint.js";
 export {
   uri,
   /**
@@ -28,6 +32,7 @@ export {
 export {
   totalSupply,
   type TotalSupplyParams,
+  isTotalSupplySupported,
 } from "../../extensions/erc1155/__generated__/IERC1155/read/totalSupply.js";
 export {
   balanceOf,
@@ -43,6 +48,7 @@ export {
 export {
   burn,
   type BurnParams,
+  isBurnSupported,
 } from "../../extensions/erc1155/__generated__/IBurnableERC1155/write/burn.js";
 export {
   burnBatch,
@@ -64,10 +70,12 @@ export {
 export {
   mintTo,
   type MintToParams,
+  isMintToSupported,
 } from "../../extensions/erc1155/write/mintTo.js";
 export {
   mintAdditionalSupplyTo,
   type MintAdditionalSupplyToParams,
+  isMintAdditionalSupplyToSupported,
 } from "../../extensions/erc1155/write/mintAdditionalSupplyTo.js";
 export {
   setTokenURI,
@@ -120,10 +128,12 @@ export {
 export {
   updateMetadata,
   type UpdateMetadataParams,
+  isUpdateMetadataSupported,
 } from "../../extensions/erc1155/drops/write/updateMetadata.js";
 export {
   updateTokenURI,
   type UpdateTokenURIParams,
+  isUpdateTokenURISupported,
 } from "../../extensions/erc1155/write/updateTokenURI.js";
 
 /**

@@ -5,6 +5,8 @@ import type {
 import type { NFTInput } from "../../../utils/nft/parseNft.js";
 import { mintTo as generatedMintTo } from "../__generated__/IMintableERC721/write/mintTo.js";
 
+export { isMintToSupported } from "../__generated__/IMintableERC721/write/mintTo.js";
+
 /**
  * @extension ERC721
  */

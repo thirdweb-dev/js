@@ -7,6 +7,8 @@ import {
   tokenURI,
 } from "../__generated__/IERC721A/read/tokenURI.js";
 
+export { isTokenURISupported as isGetNFTSupported } from "../__generated__/IERC721A/read/tokenURI.js";
+
 /**
  * Parameters for getting an NFT.
  * @extension ERC721

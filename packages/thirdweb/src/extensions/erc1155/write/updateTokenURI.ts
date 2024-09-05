@@ -6,6 +6,7 @@ import {
   setTokenURI,
 } from "../../erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
 
+export { isSetTokenURISupported as isUpdateTokenURISupported } from "../../erc1155/__generated__/INFTMetadata/write/setTokenURI.js";
 /**
  * @extension ERC1155
  */
