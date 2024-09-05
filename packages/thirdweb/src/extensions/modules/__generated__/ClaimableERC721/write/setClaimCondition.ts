@@ -20,6 +20,7 @@ export type SetClaimConditionParams = WithOverrides<{
       { type: "bytes32"; name: "allowlistMerkleRoot" },
       { type: "uint256"; name: "pricePerUnit" },
       { type: "address"; name: "currency" },
+      { type: "uint256"; name: "maxMintPerWallet" },
       { type: "uint48"; name: "startTimestamp" },
       { type: "uint48"; name: "endTimestamp" },
       { type: "string"; name: "auxData" },
@@ -27,7 +28,7 @@ export type SetClaimConditionParams = WithOverrides<{
   }>;
 }>;
 
-export const FN_SELECTOR = "0x3564659c" as const;
+export const FN_SELECTOR = "0xac0c12f4" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
@@ -48,6 +49,10 @@ const FN_INPUTS = [
       {
         type: "address",
         name: "currency",
+      },
+      {
+        type: "uint256",
+        name: "maxMintPerWallet",
       },
       {
         type: "uint48",

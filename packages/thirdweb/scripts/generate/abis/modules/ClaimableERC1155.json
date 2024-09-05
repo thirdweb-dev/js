@@ -1,10 +1,9 @@
 [
-  "function beforeMintERC1155(address _to, uint256 _id, uint256 _quantity, bytes _data) payable returns (bytes)",
   "function encodeBytesBeforeMintERC1155((address currency, uint256 pricePerUnit, bytes32[] recipientAllowlistProof) params) pure returns (bytes)",
-  "function encodeBytesBeforeMintWithSignatureERC1155((uint48 startTimestamp, uint48 endTimestamp, address currency, uint256 pricePerUnit, bytes32 uid) params) pure returns (bytes)",
+  "function encodeBytesBeforeMintWithSignatureERC1155((uint48 startTimestamp, uint48 endTimestamp, address currency, uint256 maxMintPerWallet, uint256 pricePerUnit, bytes32 uid) params) pure returns (bytes)",
   "function encodeBytesOnInstall(address primarySaleRecipient) pure returns (bytes)",
-  "function getClaimConditionByTokenId(uint256 _id) view returns ((uint256 availableSupply, bytes32 allowlistMerkleRoot, uint256 pricePerUnit, address currency, uint48 startTimestamp, uint48 endTimestamp, string auxData) claimCondition)",
+  "function getClaimConditionByTokenId(uint256 tokenId) view returns ((uint256 availableSupply, bytes32 allowlistMerkleRoot, uint256 pricePerUnit, address currency, uint256 maxMintPerWallet, uint48 startTimestamp, uint48 endTimestamp, string auxData) claimCondition)",
   "function getSaleConfig() view returns (address primarySaleRecipient)",
-  "function setClaimConditionByTokenId(uint256 _id, (uint256 availableSupply, bytes32 allowlistMerkleRoot, uint256 pricePerUnit, address currency, uint48 startTimestamp, uint48 endTimestamp, string auxData) _claimCondition)",
+  "function setClaimConditionByTokenId(uint256 tokenId, (uint256 availableSupply, bytes32 allowlistMerkleRoot, uint256 pricePerUnit, address currency, uint256 maxMintPerWallet, uint48 startTimestamp, uint48 endTimestamp, string auxData) _claimCondition)",
   "function setSaleConfig(address _primarySaleRecipient)"
 ]

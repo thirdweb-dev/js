@@ -19,7 +19,7 @@ export function mint(options: BaseTransactionOptions<MintParams>) {
     asyncParams: async () => {
       const cc = await getClaimConditionByTokenId({
         contract: options.contract,
-        id: options.tokenId,
+        tokenId: options.tokenId,
       });
 
       const totalPrice = cc.pricePerUnit * BigInt(options.quantity);

@@ -178,4 +178,42 @@ describe("ModularClaimableERC721", () => {
     });
     expect(balance).toBe(2n);
   });
+
+  it("should claim tokens with max per wallet", async () => {
+    await sendAndConfirmTransaction({
+      transaction: ClaimableERC721.setClaimCondition({
+        contract,
+        maxClaimableSupply: 10,
+        maxClaimablePerWallet: 1,
+      }),
+      account: TEST_ACCOUNT_A,
+    });
+
+    // should throw if max per wallet is reached
+    await expect(
+      sendAndConfirmTransaction({
+        transaction: ClaimableERC721.mint({
+          contract,
+          quantity: 4,
+          to: TEST_ACCOUNT_C.address,
+        }),
+        account: TEST_ACCOUNT_C,
+      }),
+    ).rejects.toThrowError(/ClaimableMaxMintPerWalletExceeded/);
+
+    await sendAndConfirmTransaction({
+      transaction: ClaimableERC721.mint({
+        contract,
+        quantity: 1,
+        to: TEST_ACCOUNT_C.address,
+      }),
+      account: TEST_ACCOUNT_C,
+    });
+
+    const balance = await balanceOf({
+      owner: TEST_ACCOUNT_C.address,
+      contract,
+    });
+    expect(balance).toBe(1n);
+  });
 });

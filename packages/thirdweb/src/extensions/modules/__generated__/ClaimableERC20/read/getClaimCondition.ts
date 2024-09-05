@@ -29,6 +29,10 @@ const FN_OUTPUTS = [
         name: "currency",
       },
       {
+        type: "uint256",
+        name: "maxMintPerWallet",
+      },
+      {
         type: "uint48",
         name: "startTimestamp",
       },

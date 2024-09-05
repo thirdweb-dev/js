@@ -24,6 +24,7 @@ describe("ModularDropERC20", () => {
       chain: ANVIL_CHAIN,
       account: TEST_ACCOUNT_A,
       core: "ERC20",
+      publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
       params: {
         name: "TestDropERC20",
         symbol: "TT",
@@ -31,6 +32,7 @@ describe("ModularDropERC20", () => {
       modules: [
         ClaimableERC20.module({
           primarySaleRecipient: TEST_ACCOUNT_A.address,
+          publisher: "0x611e71B12a2B1C0c884574042414Fe360aF0C5A7", // TODO (modular): remove once published
         }),
       ],
     });
@@ -149,5 +151,46 @@ describe("ModularDropERC20", () => {
       tokenAddress: contract.address,
     });
     expect(balance.value).toBe(200000000000000000n);
+  });
+
+  it("should claim tokens with max per wallet", async () => {
+    await sendAndConfirmTransaction({
+      transaction: ClaimableERC20.setClaimCondition({
+        contract,
+        maxClaimableSupply: "1",
+        pricePerToken: "0.1",
+        maxClaimablePerWallet: "0.1",
+      }),
+      account: TEST_ACCOUNT_A,
+    });
+
+    // should throw if max per wallet is reached
+    await expect(
+      sendAndConfirmTransaction({
+        transaction: ClaimableERC20.mint({
+          contract,
+          quantity: "0.12",
+          to: TEST_ACCOUNT_C.address,
+        }),
+        account: TEST_ACCOUNT_C,
+      }),
+    ).rejects.toThrowError(/ClaimableMaxMintPerWalletExceeded/);
+
+    await sendAndConfirmTransaction({
+      transaction: ClaimableERC20.mint({
+        contract,
+        quantity: "0.05",
+        to: TEST_ACCOUNT_C.address,
+      }),
+      account: TEST_ACCOUNT_C,
+    });
+
+    const balance = await getWalletBalance({
+      address: TEST_ACCOUNT_C.address,
+      chain: ANVIL_CHAIN,
+      client: TEST_CLIENT,
+      tokenAddress: contract.address,
+    });
+    expect(balance.value).toBe(50000000000000000n);
   });
 });

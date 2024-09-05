@@ -10,14 +10,14 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "getClaimConditionByTokenId" function.
  */
 export type GetClaimConditionByTokenIdParams = {
-  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
 };
 
 export const FN_SELECTOR = "0x29a20bf4" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
-    name: "_id",
+    name: "tokenId",
   },
 ] as const;
 const FN_OUTPUTS = [
@@ -40,6 +40,10 @@ const FN_OUTPUTS = [
       {
         type: "address",
         name: "currency",
+      },
+      {
+        type: "uint256",
+        name: "maxMintPerWallet",
       },
       {
         type: "uint48",
@@ -86,14 +90,14 @@ export function isGetClaimConditionByTokenIdSupported(
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
  * const result = ClaimableERC1155.encodeGetClaimConditionByTokenIdParams({
- *  id: ...,
+ *  tokenId: ...,
  * });
  * ```
  */
 export function encodeGetClaimConditionByTokenIdParams(
   options: GetClaimConditionByTokenIdParams,
 ) {
-  return encodeAbiParameters(FN_INPUTS, [options.id]);
+  return encodeAbiParameters(FN_INPUTS, [options.tokenId]);
 }
 
 /**
@@ -105,7 +109,7 @@ export function encodeGetClaimConditionByTokenIdParams(
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
  * const result = ClaimableERC1155.encodeGetClaimConditionByTokenId({
- *  id: ...,
+ *  tokenId: ...,
  * });
  * ```
  */
@@ -146,7 +150,7 @@ export function decodeGetClaimConditionByTokenIdResult(result: Hex) {
  *
  * const result = await ClaimableERC1155.getClaimConditionByTokenId({
  *  contract,
- *  id: ...,
+ *  tokenId: ...,
  * });
  *
  * ```
@@ -157,6 +161,6 @@ export async function getClaimConditionByTokenId(
   return readContract({
     contract: options.contract,
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
-    params: [options.id],
+    params: [options.tokenId],
   });
 }

@@ -79,6 +79,10 @@ export type ClaimConditionInput = {
    */
   maxClaimableSupply?: number | string;
   /**
+   * The maximum amount of tokens that can be claimed per wallet, defaults to unlimited.
+   */
+  maxClaimablePerWallet?: number | string;
+  /**
    * List of overrides per wallet address.
    */
   allowList?: string[];

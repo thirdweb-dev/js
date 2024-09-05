@@ -5,8 +5,8 @@ import { TEST_ACCOUNT_A } from "../../../test/src/test-wallets.js";
 import { ZERO_ADDRESS } from "../../constants/addresses.js";
 import { getContract } from "../../contract/contract.js";
 import { sendAndConfirmTransaction } from "../../transaction/actions/send-and-confirm-transaction.js";
-import * as ERC20Claimable from "../modular/ClaimableERC20/index.js";
-import { getInstalledModules } from "../modular/__generated__/IModularCore/read/getInstalledModules.js";
+import * as ERC20Claimable from "../modules/ClaimableERC20/index.js";
+import { getInstalledModules } from "../modules/__generated__/IModularCore/read/getInstalledModules.js";
 import { installPublishedModule } from "../modules/common/installPublishedModule.js";
 import { uninstallModuleByProxy } from "../modules/common/uninstallModuleByProxy.js";
 import { uninstallPublishedModule } from "../modules/common/uninstallPublishedModule.js";
@@ -58,7 +58,7 @@ describe(
         contract: core,
         account: TEST_ACCOUNT_A,
         moduleName: "DemoModuleWithFunctions",
-        publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
+        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
       await sendAndConfirmTransaction({
         transaction: installTransaction,
@@ -104,7 +104,7 @@ describe(
         contract: core,
         account: TEST_ACCOUNT_A,
         moduleName: "DemoModuleWithFunctions",
-        publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
+        publisher: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
       });
       await sendAndConfirmTransaction({
         transaction: installTransaction,
@@ -120,8 +120,6 @@ describe(
       // uninstall module
       const uninstallTransaction = uninstallPublishedModule({
         contract: core,
-        chain: ANVIL_CHAIN,
-        client: TEST_CLIENT,
         moduleName: "DemoModuleWithFunctions",
         publisherAddress: "0xFD78F7E2dF2B8c3D5bff0413c96f3237500898B3",
         moduleData: "0x",

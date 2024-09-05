@@ -14,12 +14,13 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
 export type SetClaimConditionParams = WithOverrides<{
   claimCondition: AbiParameterToPrimitiveType<{
     type: "tuple";
-    name: "claimCondition";
+    name: "_claimCondition";
     components: [
       { type: "uint256"; name: "availableSupply" },
       { type: "bytes32"; name: "allowlistMerkleRoot" },
       { type: "uint256"; name: "pricePerUnit" },
       { type: "address"; name: "currency" },
+      { type: "uint256"; name: "maxMintPerWallet" },
       { type: "uint48"; name: "startTimestamp" },
       { type: "uint48"; name: "endTimestamp" },
       { type: "string"; name: "auxData" },
@@ -27,11 +28,11 @@ export type SetClaimConditionParams = WithOverrides<{
   }>;
 }>;
 
-export const FN_SELECTOR = "0x3564659c" as const;
+export const FN_SELECTOR = "0xac0c12f4" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
-    name: "claimCondition",
+    name: "_claimCondition",
     components: [
       {
         type: "uint256",
@@ -48,6 +49,10 @@ const FN_INPUTS = [
       {
         type: "address",
         name: "currency",
+      },
+      {
+        type: "uint256",
+        name: "maxMintPerWallet",
       },
       {
         type: "uint48",

@@ -13,13 +13,14 @@ export type EncodeBytesBeforeMintWithSignatureERC721Params = {
       { type: "uint48"; name: "startTimestamp" },
       { type: "uint48"; name: "endTimestamp" },
       { type: "address"; name: "currency" },
+      { type: "uint256"; name: "maxMintPerWallet" },
       { type: "uint256"; name: "pricePerUnit" },
       { type: "bytes32"; name: "uid" },
     ];
   }>;
 };
 
-export const FN_SELECTOR = "0xcab11f42" as const;
+export const FN_SELECTOR = "0x937bdca4" as const;
 const FN_INPUTS = [
   {
     type: "tuple",
@@ -36,6 +37,10 @@ const FN_INPUTS = [
       {
         type: "address",
         name: "currency",
+      },
+      {
+        type: "uint256",
+        name: "maxMintPerWallet",
       },
       {
         type: "uint256",

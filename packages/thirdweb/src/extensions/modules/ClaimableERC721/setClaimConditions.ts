@@ -21,19 +21,23 @@ export function setClaimCondition(
       );
       const startTime = options.startTime || new Date(0);
       const endTime = options.endTime || tenYearsFromNow();
-      const [pricePerUnit, availableSupply] = await Promise.all([
-        options.pricePerToken
-          ? convertErc20Amount({
-              chain: options.contract.chain,
-              client: options.contract.client,
-              erc20Address: options.currencyAddress || NATIVE_TOKEN_ADDRESS,
-              amount: options.pricePerToken.toString(),
-            })
-          : 0n,
-        options.maxClaimableSupply
-          ? BigInt(options.maxClaimableSupply)
-          : maxUint256,
-      ]);
+      const [pricePerUnit, availableSupply, maxMintPerWallet] =
+        await Promise.all([
+          options.pricePerToken
+            ? convertErc20Amount({
+                chain: options.contract.chain,
+                client: options.contract.client,
+                erc20Address: options.currencyAddress || NATIVE_TOKEN_ADDRESS,
+                amount: options.pricePerToken.toString(),
+              })
+            : 0n,
+          options.maxClaimableSupply
+            ? BigInt(options.maxClaimableSupply)
+            : maxUint256,
+          options.maxClaimablePerWallet
+            ? BigInt(options.maxClaimablePerWallet)
+            : maxUint256,
+        ]);
 
       // allowlist + metadata
       let metadata = "";
@@ -71,6 +75,7 @@ export function setClaimCondition(
           pricePerUnit,
           currency: getAddress(options.currencyAddress || NATIVE_TOKEN_ADDRESS),
           availableSupply,
+          maxMintPerWallet,
           allowlistMerkleRoot: merkleRoot,
           auxData: metadata, // stores the merkle root and merkle tree uri in IPFS
         },

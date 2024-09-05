@@ -103,7 +103,6 @@ describe("ModularTokenERC721", () => {
     expect(balance).toBe(1n);
 
     const nfts = await getNFTs({ contract });
-    console.log(nfts);
     expect(nfts.length).toBe(1);
     expect(nfts?.[0]?.metadata.name).toBe("Test");
 

@@ -12,7 +12,7 @@ import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
  * Represents the parameters for the "setClaimConditionByTokenId" function.
  */
 export type SetClaimConditionByTokenIdParams = WithOverrides<{
-  id: AbiParameterToPrimitiveType<{ type: "uint256"; name: "_id" }>;
+  tokenId: AbiParameterToPrimitiveType<{ type: "uint256"; name: "tokenId" }>;
   claimCondition: AbiParameterToPrimitiveType<{
     type: "tuple";
     name: "_claimCondition";
@@ -21,6 +21,7 @@ export type SetClaimConditionByTokenIdParams = WithOverrides<{
       { type: "bytes32"; name: "allowlistMerkleRoot" },
       { type: "uint256"; name: "pricePerUnit" },
       { type: "address"; name: "currency" },
+      { type: "uint256"; name: "maxMintPerWallet" },
       { type: "uint48"; name: "startTimestamp" },
       { type: "uint48"; name: "endTimestamp" },
       { type: "string"; name: "auxData" },
@@ -28,11 +29,11 @@ export type SetClaimConditionByTokenIdParams = WithOverrides<{
   }>;
 }>;
 
-export const FN_SELECTOR = "0xb7720475" as const;
+export const FN_SELECTOR = "0x3bcec708" as const;
 const FN_INPUTS = [
   {
     type: "uint256",
-    name: "_id",
+    name: "tokenId",
   },
   {
     type: "tuple",
@@ -53,6 +54,10 @@ const FN_INPUTS = [
       {
         type: "address",
         name: "currency",
+      },
+      {
+        type: "uint256",
+        name: "maxMintPerWallet",
       },
       {
         type: "uint48",
@@ -101,7 +106,7 @@ export function isSetClaimConditionByTokenIdSupported(
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
  * const result = ClaimableERC1155.encodeSetClaimConditionByTokenIdParams({
- *  id: ...,
+ *  tokenId: ...,
  *  claimCondition: ...,
  * });
  * ```
@@ -109,7 +114,10 @@ export function isSetClaimConditionByTokenIdSupported(
 export function encodeSetClaimConditionByTokenIdParams(
   options: SetClaimConditionByTokenIdParams,
 ) {
-  return encodeAbiParameters(FN_INPUTS, [options.id, options.claimCondition]);
+  return encodeAbiParameters(FN_INPUTS, [
+    options.tokenId,
+    options.claimCondition,
+  ]);
 }
 
 /**
@@ -121,7 +129,7 @@ export function encodeSetClaimConditionByTokenIdParams(
  * ```ts
  * import { ClaimableERC1155 } from "thirdweb/modules";
  * const result = ClaimableERC1155.encodeSetClaimConditionByTokenId({
- *  id: ...,
+ *  tokenId: ...,
  *  claimCondition: ...,
  * });
  * ```
@@ -149,7 +157,7 @@ export function encodeSetClaimConditionByTokenId(
  *
  * const transaction = ClaimableERC1155.setClaimConditionByTokenId({
  *  contract,
- *  id: ...,
+ *  tokenId: ...,
  *  claimCondition: ...,
  *  overrides: {
  *    ...
@@ -177,7 +185,7 @@ export function setClaimConditionByTokenId(
     method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS] as const,
     params: async () => {
       const resolvedOptions = await asyncOptions();
-      return [resolvedOptions.id, resolvedOptions.claimCondition] as const;
+      return [resolvedOptions.tokenId, resolvedOptions.claimCondition] as const;
     },
     value: async () => (await asyncOptions()).overrides?.value,
     accessList: async () => (await asyncOptions()).overrides?.accessList,

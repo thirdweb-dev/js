@@ -204,4 +204,53 @@ describe("ModularClaimableERC1155", () => {
     });
     expect(balance).toBe(2n);
   });
+
+  it("should claim tokens with max per wallet", async () => {
+    await sendAndConfirmTransaction({
+      transaction: ClaimableERC1155.setClaimCondition({
+        contract,
+        tokenId: 0n,
+        maxClaimableSupply: 10,
+        maxClaimablePerWallet: 1,
+      }),
+      account: TEST_ACCOUNT_A,
+    });
+
+    let balance = await balanceOf({
+      owner: TEST_ACCOUNT_C.address,
+      contract,
+      tokenId: 0n,
+    });
+    expect(balance).toBe(0n);
+
+    // should throw if max per wallet is reached
+    await expect(
+      sendAndConfirmTransaction({
+        transaction: ClaimableERC1155.mint({
+          contract,
+          tokenId: 0n,
+          quantity: 4,
+          to: TEST_ACCOUNT_C.address,
+        }),
+        account: TEST_ACCOUNT_C,
+      }),
+    ).rejects.toThrowError(/ClaimableMaxMintPerWalletExceeded/);
+
+    await sendAndConfirmTransaction({
+      transaction: ClaimableERC1155.mint({
+        contract,
+        tokenId: 0n,
+        quantity: 1,
+        to: TEST_ACCOUNT_C.address,
+      }),
+      account: TEST_ACCOUNT_C,
+    });
+
+    balance = await balanceOf({
+      owner: TEST_ACCOUNT_C.address,
+      contract,
+      tokenId: 0n,
+    });
+    expect(balance).toBe(1n);
+  });
 });
