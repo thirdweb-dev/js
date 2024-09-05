@@ -11,8 +11,8 @@
     "postbuild": "pnpm run extract-search-data",
     "start": "next start",
     "lint": "next lint",
-    "create-index": "pnpm ts-node scripts/createEmptySearchIndex.ts",
-    "extract-search-data": "pnpm ts-node scripts/extractSearchData.ts",
+    "create-index": "pnpm tsx scripts/createEmptySearchIndex.ts",
+    "extract-search-data": "pnpm tsx scripts/extractSearchData.ts",
     "postextract-search-data": "next-sitemap"
   },
   "dependencies": {
@@ -71,6 +71,6 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.10",
     "typescript": "5.5.4",
-    "ts-node": "^10.9.2"
+    "tsx": "^4.19.0"
   }
 }

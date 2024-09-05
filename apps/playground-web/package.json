@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "predev": "git clean -xdf",
     "dev": " next dev",
     "build": "next build",
     "start": "next start",
