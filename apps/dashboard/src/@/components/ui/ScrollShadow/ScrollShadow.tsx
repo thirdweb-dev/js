@@ -10,6 +10,7 @@ export function ScrollShadow(props: {
   className?: string;
   scrollableClassName?: string;
   disableTopShadow?: boolean;
+  shadowColor?: string;
 }) {
   const scrollableEl = useRef<HTMLDivElement>(null);
   const shadowTopEl = useRef<HTMLDivElement>(null);
@@ -30,19 +31,20 @@ export function ScrollShadow(props: {
       return;
     }
 
-    const contentScrollHeight = content.scrollHeight - wrapper.offsetHeight;
-    const contentScrollWidth = content.scrollWidth - wrapper.offsetWidth;
-
     function handleScroll() {
       if (
         !content ||
         !shadowTop ||
         !shadowBottom ||
         !shadowLeft ||
-        !shadowRight
+        !shadowRight ||
+        !wrapper
       ) {
         return;
       }
+
+      const contentScrollHeight = content.scrollHeight - wrapper.offsetHeight;
+      const contentScrollWidth = content.scrollWidth - wrapper.offsetWidth;
 
       if (contentScrollHeight > 10) {
         const currentScroll = content.scrollTop / contentScrollHeight;
@@ -63,7 +65,11 @@ export function ScrollShadow(props: {
       }
     }
 
-    handleScroll();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        handleScroll();
+      });
+    });
     content.addEventListener("scroll", handleScroll);
     return () => {
       content.removeEventListener("scroll", handleScroll);
@@ -74,6 +80,11 @@ export function ScrollShadow(props: {
     <div
       className={cn(props.className, "relative overflow-hidden z-base")}
       ref={wrapperEl}
+      style={
+        {
+          "--shadow": props.shadowColor || "hsl(var(--muted))",
+        } as React.CSSProperties
+      }
     >
       <div
         className={`${styles.scrollShadowTop} ${styles.scrollShadowY}`}
@@ -105,10 +116,7 @@ export function ScrollShadow(props: {
         }}
       />
       <div
-        className={cn("overflow-auto", props.scrollableClassName)}
-        style={{
-          scrollbarWidth: "none",
-        }}
+        className={cn("overflow-auto no-scrollbar", props.scrollableClassName)}
         ref={scrollableEl}
       >
         {props.children}

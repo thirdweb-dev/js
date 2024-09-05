@@ -18,6 +18,7 @@ export function TabLinks(props: {
   links: TabLink[];
   className?: string;
   tabContainerClassName?: string;
+  shadowColor?: string;
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLAnchorElement>();
@@ -27,7 +28,10 @@ export function TabLinks(props: {
       {/* Bottom line */}
       <div className="h-[1px] bg-border absolute bottom-0 left-0 right-0" />
 
-      <ScrollShadow scrollableClassName="pb-[8px] relative">
+      <ScrollShadow
+        scrollableClassName="pb-[8px] relative"
+        shadowColor={props.shadowColor}
+      >
         <div
           className={cn("flex", props.tabContainerClassName)}
           ref={containerRef}
@@ -81,6 +85,7 @@ export function TabButtons(props: {
   activeTabClassName?: string;
   tabContainerClassName?: string;
   containerClassName?: string;
+  shadowColor?: string;
 }) {
   const { containerRef, lineRef, activeTabRef } =
     useUnderline<HTMLButtonElement>();
@@ -90,7 +95,10 @@ export function TabButtons(props: {
       {/* Bottom line */}
       <div className="h-[1px] bg-border absolute bottom-0 left-0 right-0" />
 
-      <ScrollShadow scrollableClassName="pb-[8px] relative">
+      <ScrollShadow
+        scrollableClassName="pb-[8px] relative"
+        shadowColor={props.shadowColor}
+      >
         <div
           className={cn("flex", props.tabContainerClassName)}
           ref={containerRef}

@@ -1,4 +1,5 @@
 import { CopyTextButton } from "@/components/ui/CopyTextButton";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { ToolTipLabel } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
@@ -36,10 +37,10 @@ export async function ChainListRow({
 }: ChainListRowProps) {
   const chainMetadata = await getChainMetadata(chainId);
   return (
-    <tr className="border-b relative hover:bg-muted/50">
-      <TableData>{favoriteButton}</TableData>
+    <TableRow className="relative hover:bg-muted/50">
+      <TableCell>{favoriteButton}</TableCell>
       {/* Name */}
-      <TableData>
+      <TableCell>
         <div className="flex flex-row items-center gap-4 w-[370px]">
           <div className="flex items-center gap-2">
             <ChainIcon iconUrl={iconUrl} className="size-6" />
@@ -63,9 +64,9 @@ export async function ChainListRow({
             )}
           </div>
         </div>
-      </TableData>
+      </TableCell>
 
-      <TableData>
+      <TableCell>
         <CopyTextButton
           textToCopy={chainId.toString()}
           textToShow={chainId.toString()}
@@ -74,11 +75,11 @@ export async function ChainListRow({
           variant="ghost"
           copyIconPosition="right"
         />
-      </TableData>
+      </TableCell>
 
-      <TableData>{currencySymbol}</TableData>
+      <TableCell>{currencySymbol}</TableCell>
 
-      <TableData>
+      <TableCell>
         <div className="flex flex-row gap-14 items-center w-[520px] ">
           <div className="flex items-center gap-7 z-10">
             {products.map((p) => {
@@ -94,13 +95,9 @@ export async function ChainListRow({
             })}
           </div>
         </div>
-      </TableData>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
-}
-
-function TableData({ children }: { children: React.ReactNode }) {
-  return <td className="p-4">{children}</td>;
 }
 
 function ProductIcon(props: {
